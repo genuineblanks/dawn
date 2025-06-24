@@ -1,0 +1,201 @@
+{% comment %}
+Tech-Pack Step 1: Client Information Section
+{% endcomment %}
+
+<section id="techpack-step-1" class="techpack-step" data-step="1" style="display: none;">
+  <div class="techpack-container">
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 25%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">2</div>
+          <div class="techpack-progress__step-label">Garments</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Details</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      <h2 class="techpack-title">Client Information</h2>
+      <p class="techpack-subtitle">Tell us about your project requirements</p>
+
+      <form class="techpack-form" autocomplete="off" novalidate>
+        <!-- Row 1: Client Name - Company Name -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="client-name" class="techpack-form__label">Client Name</label>
+            <input
+              type="text"
+              id="client-name"
+              name="clientName"
+              class="techpack-form__input"
+              required
+              data-validate="required"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="company-name" class="techpack-form__label">Company Name</label>
+            <input
+              type="text"
+              id="company-name"
+              name="companyName"
+              class="techpack-form__input"
+              required
+              data-validate="required"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 2: Email Address - VAT/EIN Number -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="email" class="techpack-form__label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="techpack-form__input"
+              required
+              data-validate="email"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group" id="vat-ein-group">
+            <label for="vat-ein" class="techpack-form__label" id="vat-ein-label">
+              VAT/EIN Number <span class="techpack-form__label-status" id="vat-ein-status">(optional)</span>
+            </label>
+            <input
+              type="text"
+              id="vat-ein"
+              name="vatEin"
+              class="techpack-form__input"
+              data-validate="vat-ein"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 3: Phone Number - Country -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group">
+            <label for="phone" class="techpack-form__label">
+              Phone Number <span class="techpack-form__label-status">(optional)</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="techpack-form__input"
+              placeholder="+1 234 567 8901"
+              maxlength="20"
+              data-validate="phone"
+            >
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="country" class="techpack-form__label">Country</label>
+            <div class="techpack-form__country-wrapper">
+              <input
+                type="text"
+                id="country"
+                name="country"
+                class="techpack-form__input techpack-form__country-input"
+                required
+                data-validate="required"
+                autocomplete="off"
+                placeholder="Select or type country name..."
+                readonly
+              >
+              <div class="techpack-form__country-toggle" id="country-toggle">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </div>
+              <div class="techpack-form__dropdown" id="country-dropdown"></div>
+            </div>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 4: Production Type - Project Deadline -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="production-type" class="techpack-form__label">Production Type</label>
+            <select
+              id="production-type"
+              name="productionType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
+            >
+              <option value="">Select production type...</option>
+              <option value="custom-production">Custom Production</option>
+              <option value="our-blanks">Our Blanks</option>
+            </select>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+
+          <div class="techpack-form__group">
+            <label for="deadline" class="techpack-form__label"
+              >Project Deadline <span class="techpack-form__label-status">(optional)</span></label
+            >
+            <div class="techpack-form__date-wrapper">
+              <input
+                type="date"
+                id="deadline"
+                name="deadline"
+                class="techpack-form__input techpack-form__input--date"
+                min=""
+                max=""
+              >
+            </div>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Row 5: Additional Notes (Full Width) -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--full">
+            <label for="notes" class="techpack-form__label"
+              >Additional Notes <span class="techpack-form__label-status">(optional)</span></label
+            >
+            <textarea
+              id="notes"
+              name="notes"
+              class="techpack-form__textarea"
+              rows="4"
+              placeholder="Any specific requirements or additional information..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="techpack-form__actions">
+          <button type="button" class="techpack-btn techpack-btn--primary" id="step-1-next">
+            Next Step
+            <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

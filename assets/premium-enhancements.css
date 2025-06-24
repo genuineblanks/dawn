@@ -1,0 +1,825 @@
+/* ===============================================
+   COMPLETE PREMIUM ENHANCEMENTS CSS FILE
+   All fixes included - ready to replace entire file
+   =============================================== */
+
+/* ===============================================
+   PREMIUM BUTTON ENHANCEMENTS
+   =============================================== */
+
+/* Enhanced Primary Button Styles */
+.button,
+.shopify-challenge__button,
+.customer button,
+button.shopify-payment-button__button--unbranded {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0); /* Enable hardware acceleration */
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  letter-spacing: 0.15rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(var(--color-button), var(--alpha-button-background)) 0%, rgba(var(--color-button), calc(var(--alpha-button-background) * 0.9)) 100%);
+}
+
+/* Premium hover effect with shimmer */
+.button::before,
+.shopify-challenge__button::before,
+.customer button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+  z-index: 2;
+}
+
+.button:hover::before,
+.shopify-challenge__button:hover::before,
+.customer button:hover::before {
+  left: 100%;
+}
+
+/* Enhanced hover states */
+.button:not([disabled]):hover,
+.shopify-challenge__button:hover,
+.customer button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(var(--color-button), 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.18rem;
+}
+
+.button:active,
+.shopify-challenge__button:active,
+.customer button:active {
+  transform: translateY(0) scale(1);
+  transition: all 0.1s ease;
+}
+
+/* Secondary Button Premium Style */
+.button--secondary {
+  background: linear-gradient(135deg, transparent 0%, rgba(var(--color-button), 0.05) 100%);
+  border: 2px solid rgba(var(--color-button), 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.button--secondary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(var(--color-button), 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.button--secondary:hover::after {
+  opacity: 1;
+}
+
+/* Buy Now Button Special Treatment */
+.button[name="add"],
+.button[data-action="add-to-cart"],
+.product-form__cart-submit {
+  background: linear-gradient(135deg, #000 0%, #333 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.button[name="add"]::after,
+.button[data-action="add-to-cart"]::after,
+.product-form__cart-submit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  transition: all 0.4s ease;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.button[name="add"]:hover::after,
+.button[data-action="add-to-cart"]:hover::after,
+.product-form__cart-submit:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* ===============================================
+   BSS WHOLESALE BUTTON COMPLETE FIX
+   =============================================== */
+
+/* Hide ALL duplicate and problematic BSS buttons */
+.bss-b2b-btn-buyitnow[style*="display: none"],
+.shopify-payment-button__button[style*="display: none"],
+.bss-b2b-btn-buyitnow:not(.bss-b2b-cp-dynamic),
+.shopify-payment-button__button.bss-b2b-btn-buyitnow:nth-child(n+2) {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Target ONLY the correct BSS button */
+.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic,
+.shopify-payment-button__button--unbranded.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic {
+  /* Force override ALL BSS styles */
+  all: unset !important;
+  
+  /* Rebuild the button from scratch */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  
+  /* Size and spacing */
+  width: auto !important;
+  min-width: 150px !important;
+  max-width: 250px !important;
+  height: 45px !important;
+  min-height: 45px !important;
+  padding: 12px 24px !important;
+  margin: 0 !important;
+  
+  /* Typography */
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.15rem !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  color: #ffffff !important;
+  
+  /* Background and visual effects */
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%) !important;
+  background-size: 200% 100% !important;
+  
+  border: none !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  outline: none !important;
+  
+  /* Transitions and transforms */
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transform: translateZ(0) !important;
+  overflow: hidden !important;
+  
+  /* Animation */
+  animation: bssGradientShift 3s ease infinite !important;
+}
+
+/* Force override any inline styles */
+.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic[style],
+.shopify-payment-button__button--unbranded.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic[style] {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%) !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  margin-left: 0px !important;
+}
+
+/* BSS Button hover effects */
+.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic:hover,
+.shopify-payment-button__button--unbranded.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 5px 15px rgba(0, 0, 0, 0.2) !important;
+  animation-duration: 1s !important;
+}
+
+/* BSS Button gradient animation */
+@keyframes bssGradientShift {
+  0%, 100% { 
+    background-position: 0% 0%; 
+  }
+  50% { 
+    background-position: 100% 0%; 
+  }
+}
+
+/* ===============================================
+   PREMIUM PRODUCT CARD ENHANCEMENTS
+   =============================================== */
+
+/* Enhanced Product Card Container */
+.product-card-wrapper,
+.card-wrapper {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateZ(0);
+  position: relative;
+  cursor: pointer;
+}
+
+.product-card-wrapper:hover,
+.card-wrapper:hover {
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+}
+
+/* Premium Product Card Styling */
+.product-card-wrapper .card,
+.card-wrapper .card,
+.contains-card--product {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgb(var(--color-background)) 0%, rgba(var(--color-foreground), 0.02) 100%);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(var(--color-foreground), 0.08);
+}
+
+.product-card-wrapper:hover .card,
+.card-wrapper:hover .card {
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(var(--color-foreground), 0.05),
+    0 0 20px rgba(var(--color-foreground), 0.05);
+  border-color: rgba(var(--color-foreground), 0.15);
+}
+
+/* Product Image Enhancement */
+.card__media img,
+.product-card-wrapper .card__media img {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1);
+}
+
+.product-card-wrapper:hover .card__media img,
+.card-wrapper:hover .card__media img {
+  transform: scale(1.05);
+}
+
+/* Image overlay effect */
+.card__media::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.product-card-wrapper:hover .card__media::after,
+.card-wrapper:hover .card__media::after {
+  opacity: 1;
+}
+
+/* Enhanced Product Title with Futuristic Bar */
+.card__heading,
+.card__information .card__heading {
+  position: relative;
+  overflow: visible;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Ensure text is visible and clickable */
+.product-card-wrapper .card__heading a span,
+.card-wrapper .card__heading a span {
+  position: relative;
+  z-index: 3;
+  color: rgba(var(--color-foreground), 0.75) !important;
+  text-decoration: none;
+  pointer-events: auto;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+/* Futuristic animated underline bar */
+.card__heading::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg, 
+    rgba(var(--color-foreground), 0.8) 0%,
+    rgba(var(--color-foreground), 0.5) 50%, 
+    rgba(var(--color-foreground), 0.8) 100%
+  );
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(var(--color-foreground), 0.3);
+}
+
+/* Hover effects for the futuristic bar */
+.product-card-wrapper:hover .card__heading::after,
+.card-wrapper:hover .card__heading::after {
+  width: 100%;
+  background: linear-gradient(
+    90deg, 
+    rgba(var(--color-foreground), 1) 0%,
+    rgba(var(--color-foreground), 0.7) 50%, 
+    rgba(var(--color-foreground), 1) 100%
+  );
+  box-shadow: 
+    0 0 12px rgba(var(--color-foreground), 0.5),
+    0 0 24px rgba(var(--color-foreground), 0.2);
+}
+
+/* Enhanced text hover effects */
+.product-card-wrapper:hover .card__heading,
+.card-wrapper:hover .card__heading {
+  color: rgba(var(--color-foreground), 0.9);
+  transform: translateY(-2px);
+}
+
+.product-card-wrapper:hover .card__heading a span,
+.card-wrapper:hover .card__heading a span {
+  color: rgba(var(--color-foreground), 0.95) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Price Enhancement */
+.price,
+.card__information .price {
+  transition: all 0.3s ease;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.product-card-wrapper:hover .price,
+.card-wrapper:hover .price {
+  transform: translateY(-1px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: rgba(var(--color-foreground), 0.9);
+}
+
+/* Sale Badge Enhancement */
+.badge {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgb(var(--color-badge-background)) 0%, rgba(var(--color-badge-background), 0.8) 100%);
+  transition: all 0.3s ease;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.product-card-wrapper:hover .badge::before,
+.card-wrapper:hover .badge::before {
+  left: 100%;
+}
+
+.product-card-wrapper:hover .badge,
+.card-wrapper:hover .badge {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(var(--color-badge-background), 0.3);
+}
+
+/* ===============================================
+   MAKE PRODUCT CARDS CLICKABLE
+   =============================================== */
+
+/* Create invisible overlay for clickability */
+.product-card-wrapper::before,
+.card-wrapper::before,
+.product-recommendations .card-wrapper::before,
+.you-may-also-like .card-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Ensure buttons and interactive elements stay on top */
+.card__information .button,
+.card__information .btn,
+.card__information input,
+.card__information select,
+.card__information .swatch {
+  position: relative;
+  z-index: 15;
+  pointer-events: auto;
+}
+
+/* Ensure card content is positioned properly */
+.card__content .card__information {
+  position: relative;
+  z-index: 2;
+}
+
+.card__content .card__heading a {
+  display: block;
+  text-decoration: none;
+  position: static;
+}
+
+/* Make entire card area clickable */
+.card {
+  position: relative;
+}
+
+/* Product media clickability */
+.card__media {
+  position: relative;
+}
+
+.card__media a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===============================================
+   COLOR SWATCH ENHANCEMENTS
+   =============================================== */
+
+/* Premium Color Swatch Styling */
+.product-form__buttons .swatch,
+.swatch {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.swatch::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(var(--color-foreground), 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.swatch:hover::before {
+  opacity: 1;
+}
+
+.swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.swatch input:checked + label,
+.swatch[aria-checked="true"] {
+  transform: scale(1.05);
+  border-color: rgba(var(--color-foreground), 0.6);
+  box-shadow: 
+    0 0 0 3px rgba(var(--color-foreground), 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================================
+   QUANTITY SELECTOR ENHANCEMENT
+   =============================================== */
+
+.quantity {
+  background: linear-gradient(135deg, rgb(var(--color-background)) 0%, rgba(var(--color-foreground), 0.02) 100%);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.quantity:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.quantity__button {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.quantity__button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(var(--color-foreground), 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.quantity__button:hover::before {
+  width: 40px;
+  height: 40px;
+}
+
+.quantity__button:hover {
+  transform: scale(1.1);
+  color: rgba(var(--color-foreground), 0.8);
+}
+
+/* ===============================================
+   ADD TO CART BUTTON SPECIAL EFFECTS
+   =============================================== */
+
+.btn.product-form__cart-submit,
+.product-form__cart-submit[type="submit"] {
+  position: relative;
+  background: linear-gradient(135deg, #000 0%, #2d2d2d 50%, #000 100%);
+  background-size: 200% 100%;
+  animation: mainGradientShift 3s ease infinite;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  overflow: hidden;
+}
+
+@keyframes mainGradientShift {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 0%; }
+}
+
+.product-form__cart-submit:hover {
+  animation-duration: 1s;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading state enhancement */
+.product-form__cart-submit.loading {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(45, 45, 45, 0.7) 100%);
+  pointer-events: none;
+}
+
+/* ===============================================
+   DAWN THEME PRODUCT GALLERY ENHANCEMENTS
+   =============================================== */
+
+/* Subtle hover effect on main product images */
+.product__media.media.media--transparent:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+/* Smooth image transitions */
+.product__media img.global-media-settings {
+  transition: all 0.4s ease;
+}
+
+.product__media:hover img.global-media-settings {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+/* Enhanced thumbnail hover effects */
+.thumbnail.global-media-settings {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.thumbnail.global-media-settings:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth thumbnail image effects */
+.thumbnail.global-media-settings img {
+  transition: all 0.3s ease;
+}
+
+.thumbnail.global-media-settings:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.08);
+}
+
+/* Active thumbnail enhancement */
+.thumbnail.global-media-settings[aria-current="true"] {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
+/* Subtle shimmer effect on thumbnails */
+.thumbnail.global-media-settings::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.thumbnail.global-media-settings:hover::after {
+  opacity: 1;
+}
+
+/* Smooth scrolling for thumbnail list */
+.thumbnail-list.slider {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for thumbnails */
+.thumbnail-list.slider::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thumbnail-list.slider::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+
+.thumbnail-list.slider::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.thumbnail-list.slider::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* ===============================================
+   PREMIUM MICRO-INTERACTIONS
+   =============================================== */
+
+/* Ripple effect for touch interactions */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.button:active::after,
+.swatch:active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+/* ===============================================
+   MOBILE RESPONSIVE ADJUSTMENTS
+   =============================================== */
+
+@media screen and (max-width: 749px) {
+  .product-card-wrapper:hover,
+  .card-wrapper:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  .button:not([disabled]):hover,
+  .shopify-challenge__button:hover,
+  .customer button:hover {
+    transform: translateY(-1px) scale(1.01);
+  }
+  
+  .swatch:hover {
+    transform: scale(1.05);
+  }
+  
+  .bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic,
+  .shopify-payment-button__button--unbranded.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic {
+    min-width: 120px !important;
+    max-width: 100% !important;
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+  
+  .card__heading::after {
+    height: 2px;
+    bottom: -2px;
+  }
+}
+
+/* ===============================================
+   ACCESSIBILITY IMPROVEMENTS
+   =============================================== */
+
+/* Focus states for accessibility */
+.thumbnail.global-media-settings:focus {
+  outline: 2px solid rgba(0, 0, 0, 0.5);
+  outline-offset: 2px;
+}
+
+/* Ensure keyboard navigation works */
+.product-card-wrapper:focus-within,
+.card-wrapper:focus-within {
+  outline: 2px solid rgba(var(--color-foreground), 0.5);
+  outline-offset: 2px;
+}
+
+/* BSS Button focus */
+.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic:focus,
+.shopify-payment-button__button--unbranded.bss-b2b-btn-buyitnow.bss-b2b-cp-dynamic:focus {
+  outline: 0.2rem solid rgba(255, 255, 255, 0.5) !important;
+  outline-offset: 0.3rem !important;
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .product-card-wrapper,
+  .card-wrapper {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-card-wrapper:active,
+  .card-wrapper:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .product-card-wrapper,
+  .card-wrapper,
+  .button,
+  .swatch,
+  .quantity,
+  .product__media,
+  .thumbnail.global-media-settings,
+  .product__media img,
+  .thumbnail img {
+    transition: none;
+    animation: none;
+  }
+  
+  .product-card-wrapper:hover,
+  .card-wrapper:hover,
+  .product__media:hover,
+  .thumbnail.global-media-settings:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .button::before,
+  .swatch::before,
+  .card__media::after,
+  .card__heading::after {
+    display: none;
+  }
+}

@@ -1,0 +1,115 @@
+<div class="pdfDnd_holder" id="who_weAre">
+  <div class="pdfSecInfotext">
+    {{ section.settings.pdfsecinfotext }}
+  </div>
+  <div class="pdfList_holde" id="pdfList">
+    {% for block in section.blocks %} 
+    <a data-src="{{ block.settings.pdfurl }}" style="display:none;">PDF File 1</a> 
+      <div class="pdfList_item">
+      <div class="pdfList_img" >
+        {{ block.settings.pdfimage | image_url:width:220, height:220 | image_tag }} 
+      </div>
+      <div class="pdfList_text">
+        <h3 class="pdfname">{{ block.settings.pdfname }}</h3>
+        <div class="pdfinfo">{{ block.settings.pdfinfo }} </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="pdfdownload">
+  {%- if section.settings.pdfbutton != blank -%}
+<button id="downloadAll" class="pdfbutton">{{ section.settings.pdfbutton }}</button>
+     {% endif %}
+  
+  {%- if section.settings.pdfemail != blank -%}
+<span>Send email to <a href="mailto:{{ section.settings.pdfemail }}">{{ section.settings.pdfemail }}</a> for further questions</span>   {% endif %}
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('downloadAll').addEventListener('click', function() {
+        var pdfLinks = document.querySelectorAll('#pdfList a');
+        pdfLinks.forEach(function(link) {
+            var pdfUrl = link.href;
+            var pdfFileName = pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1);
+            downloadFile(pdfUrl, pdfFileName);
+        });
+    });
+
+    function downloadFile(url, filename) {
+        var link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.download = filename;
+
+        // Append the anchor to the body
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+    }
+});
+</script>
+
+
+
+{% schema %}
+{
+  "name": "pdf download",
+  "class": "pdfDndSection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "label": "Enter Info",
+      "id": "pdfsecinfotext"
+    },
+    {
+      "type": "text",
+      "label": "Enter Email id",
+      "id": "pdfemail"
+    },
+    {
+      "type": "richtext",
+      "label": "Enter buttton text",
+      "id": "pdfbutton"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "PDF List",
+      "settings": [
+        {
+          "type": "image_picker",
+          "label": "Enter PDF image",
+          "id": "pdfimage"
+        },
+        {
+          "type": "url",
+          "label": "PDF URL",
+          "id": "pdfurl"
+        },
+        {
+          "type": "text",
+          "label": "Enter Name",
+          "id": "pdfname"
+        },
+        {
+          "type": "text",
+          "label": "Enter PDF info",
+          "id": "pdfinfo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDF Download",
+      "category": "Custom"
+    }
+  ]
+}
+
+{% endschema %}

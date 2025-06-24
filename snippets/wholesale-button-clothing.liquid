@@ -1,0 +1,24 @@
+{% comment %}
+  Wholesale Button Snippet
+  PREVIOUS CODE - Works on all products - Usage: {% render 'wholesale-button', product: product %}
+  now code - {% case product.type %}
+              {% when 'Clothing' %}
+                {% render 'wholesale-button-clothing', product: product %}
+{% endcomment %}
+
+<button 
+  type="button" 
+  class="wholesale-btn" 
+  data-product-id="{{ product.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-handle="{{ product.handle }}"
+  data-product-price="{{ product.price }}"
+  data-product-colors="{% for option in product.options_with_values %}{% if option.name contains 'Color' or option.name contains 'Colour' %}{{ option.values | join: ',' | escape }}{% endif %}{% endfor %}"
+  aria-label="Open wholesale inquiry for {{ product.title | escape }}"
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+  </svg>
+  Wholesale Inquiry
+</button>

@@ -15,7 +15,40 @@
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
-  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+  <div class="contact page-width section-{{ section.id }}-padding">
+    <div class="grid grid--2-col-desktop half_width grid--1-col-tablet-down">
+      <div class="grid__item">
+        <div class="contactDetails">
+          <div class="scroll-trigger animate--slide-in">
+            <div class="contactInfo d-flex align-items-center">
+              <i>{% render 'icon-phone' %}</i>
+              <div class="contact-text">
+                <h3>Contact</h3>
+                <a href="tel:+1 (415) 555‑0132">+1 (415) 555‑0132</a>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-trigger animate--slide-in">
+            <div class="contactInfo d-flex align-items-center">
+              <i>{% render 'icon-envelope' %}</i>
+              <div class="contact-text">
+                <h3>Email</h3>
+                <a href="mailto:info@houseoflivity.com">info@genuineblanks.com</a>
+              </div>  
+            </div>  
+          </div>
+          <div class="scroll-trigger animate--slide-in">
+            <div class="contactInfo d-flex align-items-center">
+              <i>{% render 'icon-map' %}</i>
+              <div class="contact-text">
+                <h3>Address</h3>
+                <p>Hofstede 30, 3297GN Puttershoek</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class=" grid__item">
     {%- if section.settings.heading != blank -%}
       <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         {{ section.settings.heading }}
@@ -32,13 +65,13 @@
     {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
       {%- if form.posted_successfully? -%}
         <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
-          {{- 'icon-success.svg' | inline_asset_content -}}
+          {% render 'icon-success' %}
           {{ 'templates.contact.form.post_success' | t }}
         </h2>
       {%- elsif form.errors -%}
         <div class="form__message">
           <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>
-            {{- 'icon-error.svg' | inline_asset_content -}}
+            {% render 'icon-error' %}
             {{ 'templates.contact.form.error_heading' | t }}
           </h2>
         </div>
@@ -89,9 +122,7 @@
             <small class="contact__field-error" id="ContactForm-email-error">
               <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
               <span class="form__message">
-                <span class="svg-wrapper">
-                  {{- 'icon-error.svg' | inline_asset_content -}}
-                </span>
+                {%- render 'icon-error' -%}
                 {{- form.errors.translated_fields.email | capitalize }}
                 {{ form.errors.messages.email -}}
               </span>
@@ -132,6 +163,8 @@
         </button>
       </div>
     {%- endform -%}
+    </div>
+      </div>
   </div>
 </div>
 
@@ -147,8 +180,8 @@
     {
       "type": "inline_richtext",
       "id": "heading",
-      "default": "t:sections.contact-form.settings.title.default",
-      "label": "t:sections.contact-form.settings.title.label"
+      "default": "Contact form",
+      "label": "Heading"
     },
     {
       "type": "select",
@@ -165,14 +198,6 @@
         {
           "value": "h0",
           "label": "t:sections.all.heading_size.options__3.label"
-        },
-        {
-          "value": "hxl",
-          "label": "t:sections.all.heading_size.options__4.label"
-        },
-        {
-          "value": "hxxl",
-          "label": "t:sections.all.heading_size.options__5.label"
         }
       ],
       "default": "h1",

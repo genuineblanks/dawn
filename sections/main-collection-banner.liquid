@@ -9,14 +9,74 @@
   }
 {%- endstyle -%}
 
+{% assign current_collection_index = '' %}
+{% for collectionlist in collections %}
+  {% if collectionlist.handle == collection.handle %}
+    {% assign current_collection_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% assign previous_index = current_collection_index | minus: 1 %}
+{% assign next_index = current_collection_index | plus: 1 %}
+
+{% if previous_index >= 0 %}
+  {% for collectionlist in collections %}
+    {% if forloop.index0 == previous_index %}
+      {% assign previous_collection_url = collectionlist.url %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if next_index < collections.size %}
+    {% for collectionlist in collections %}
+      {% if forloop.index0 == previous_index %}
+        {% assign next_collection_url = collectionlist.url %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
   <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
-      <h1 class="collection-hero__title">
+      {% comment %}
+      {% if previous_collection_url %}
+        <a href="{{ previous_collection_url }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg>
+          Previous Page
+        </a>
+      {% endif %}
+      {% endcomment %}
+      <!-- <h1 class="collection-hero__title">
         <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
         {{- collection.title | escape -}}
-      </h1>
+      </h1> -->
+      {% assign metaFieldCollection = collection.metafields.custom.next_collection.value %}
+      {% if metaFieldCollection != blank %}
+  <div class="collection-btn">
+    <!-- Always LEFT: current collection -->
+    <a class="collection-title active">
+      {{ collection.title }}
+    </a>
 
+    <!-- Always RIGHT: next collection -->
+    <a class="collection-title" href="{{ metaFieldCollection.url }}">
+      {{ metaFieldCollection.title }}
+    </a>
+  </div>
+{% endif %}
+
+      {% comment %}
+      {% if next_collection_url %}
+        <a href="{{ next_collection_url }}">
+          Next Page
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+          </svg>
+        </a>
+      {% endif %}
+      {% endcomment %}
       {%- if section.settings.show_collection_description -%}
         <div class="collection-hero__description rte">{{ collection.description }}</div>
       {%- endif -%}
@@ -36,7 +96,7 @@
           "
           src="{{ collection.image | image_url: width: 750 }}"
           sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc(50vw - 130px), calc(50vw - 55px)"
-          alt="{{ collection.image.alt | escape }}"
+          alt=""
           width="{{ collection.image.width }}"
           height="{{ collection.image.height }}"
         >
@@ -64,7 +124,8 @@
       "type": "checkbox",
       "id": "show_collection_image",
       "default": false,
-      "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+      "label": "t:sections.main-collection-banner.settings.show_collection_image.label",
+      "info": "t:sections.main-collection-banner.settings.show_collection_image.info"
     },
     {
       "type": "color_scheme",

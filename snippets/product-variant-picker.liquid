@@ -5,20 +5,47 @@
   - product: {Object} product object.
   - block: {Object} passing the block information.
   - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
   Usage:
   {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
 {% endcomment %}
+{% assign productdata = product.metafields.custom.color_products.value  %}
+{% assign currentcolor = product.metafields.custom.product_color %}
+<ul class="productcolors">
+  <li>
+    <a href="javascript:void(0);" class="prodlink active" style="background:{{ currentcolor }};"></a>
+  </li>
+{% for productmeta in productdata %}
+  {% assign metafieldcolor = productmeta.metafields.custom.product_color %}
+  {% if metafieldcolor != blank %}
+    <li class="productitems">
+     <a href="{{ productmeta.url }}" class="prodlink" style="background:{{ metafieldcolor }};"></a>
+    </li>
+  {% endif %}
+{% endfor %}
+   <li>
+    <a href="" title="Custom Color" class="prodlink custom-color"><img src="https://cdn.shopify.com/s/files/1/0686/0809/8520/files/multiColor.png?v=1720504665" height="35px" width="35px"></a>
+  </li>
+</ul>
+ <div class="select-color hide" >    
+    <label for="favcolor">Select your favorite color:</label>
+    <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+  </div>
 {%- unless product.has_only_default_variant -%}
   <variant-selects
     id="variant-selects-{{ section.id }}"
+    class="no-js-hidden"
     data-section="{{ section.id }}"
+    data-url="{{ product.url }}"
+    {% if update_url == false %}
+      data-update-url="false"
+    {% endif %}
     {{ block.shopify_attributes }}
   >
     {%- for option in product.options_with_values -%}
       {%- liquid
         assign swatch_count = option.values | map: 'swatch' | compact | size
         assign picker_type = block.settings.picker_type
-
         if swatch_count > 0 and block.settings.swatch_shape != 'none'
           if block.settings.picker_type == 'dropdown'
             assign picker_type = 'swatch_dropdown'
@@ -26,12 +53,18 @@
             assign picker_type = 'swatch'
           endif
         endif
+         if block.settings.enable_color_swatch == true and option.name == 'Color' or option.name == 'colour'
+           if picker_type == 'dropdown' or picker_type == 'button' and option.name == 'Color' or option.name == 'colour' or option.name == 'Colour' or option.name == 'color'
+            assign picker_type = 'swatch'
+           endif
+         endif
+       
       -%}
       {%- if picker_type == 'swatch' -%}
         <fieldset class="js product-form__input product-form__input--swatch">
           <legend class="form__label">
             {{ option.name }}:
-            <span data-selected-value>
+            <span data-selected-swatch-value="{{ option.name }}">
               {{- option.selected_value -}}
             </span>
           </legend>
@@ -60,7 +93,7 @@
           <div class="select">
             {%- if picker_type == 'swatch_dropdown' -%}
               <span
-                data-selected-value
+                data-selected-dropdown-swatch="options[{{ option.name | escape }}]"
                 class="dropdown-swatch"
               >
                 {% render 'swatch', swatch: option.selected_value.swatch, shape: block.settings.swatch_shape %}
@@ -79,16 +112,67 @@
                 picker_type: picker_type
               %}
             </select>
-            <span class="svg-wrapper">
-              {{- 'icon-caret.svg' | inline_asset_content -}}
-            </span>
+            {% render 'icon-caret' %}
           </div>
         </div>
       {%- endif -%}
     {%- endfor -%}
-
-    <script type="application/json" data-selected-variant>
-      {{ product.selected_or_first_available_variant | json }}
+    <script type="application/json">
+      {{ product.variants | json }}
     </script>
+     
   </variant-selects>
 {%- endunless -%}
+
+<noscript class="product-form__noscript-wrapper-{{ section.id }}">
+  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>

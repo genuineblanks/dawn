@@ -1,0 +1,193 @@
+.banner ul.banner__box li.item-banner img+h2.banner__heading.inline-richtext {
+  display: none;
+}
+
+@media screen and (max-width: 1390px) {
+  .banner ul.banner__box li.item-banner a {display: flex;}
+
+nav ul li a.header__menu-item, nav ul li .list-menu__item {font-size: 1.2rem;}
+.banner ul.banner__box li.item-banner img {
+    max-height: 200px;
+}
+.textGrid .grid h3, .textGrid .grid p {
+    font-size: 12px;
+}  
+.textGrid .grid .grid__item+.grid__item h3 {
+    font-size: 15px;
+}  
+  
+}
+
+@media (min-width: 1281px) and (max-width: 1366px) {
+.banner ul.banner__box li.item-banner img {
+    max-height: 150px;
+}
+  
+}  
+
+
+@media (min-width: 992px) and (max-width: 1280px) {
+.banner ul.banner__box li.item-banner img {
+    max-height: 120px;
+}
+  
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+.hide-1000.search-form-custom {
+    display: none;
+}    
+
+}  
+@media (max-width: 767px) {
+header.header {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}  
+.product-banner .banner__media {
+    display: none;
+}
+.header header-drawer {
+    margin-left: -1rem;
+}
+.product-count-5 {
+    background-color: #f8faf9;
+}
+.towbutonbaner {
+    gap: 8px;
+}  
+.towbutonbaner a {
+    font-size: 12px;
+    letter-spacing: 0;
+      min-width: 160px;
+}
+.newsletter_Klaviyo form.klaviyo-form>.needsclick>.needsclick {
+    min-width: 100px;
+}  
+.aboutus-page .rich-text__heading {
+    font-size: 40px;
+}  
+div.banner {
+    padding-top: 0!important;
+}  
+.autoplay-video .video-text-overlay {
+    position: static;
+    transform: initial;
+    padding: 5rem 1.5rem;
+    color: #000;
+}
+.autoplay-video .video-section {
+    display: flex;
+    flex-direction: column-reverse;
+}
+.autoplay-video .video-section {
+    display: flex;
+    flex-direction: column-reverse;
+    background-color: #f8faf9;
+}
+.video-text-overlay h2.banner__heading {
+    color: #000;
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+.video-text-overlay .videotoptext p {
+    font-size: 16px;
+    color: #000;
+    letter-spacing: 1px;
+}  
+.product-count-5 .video-bottom-text p {
+    color: #000;
+}
+.video-text-overlay .banner__buttons {
+    margin: 4% 0; 
+}  
+.worldwide-brands .banner__content .banner__box .banner__buttons a.button--primary {
+    font-size: 16px;
+    letter-spacing: 0;
+    padding: 10px 30px; 
+    width: auto;
+}
+.banner .banner__box {
+    padding: 4rem 1.5rem;
+}
+.button-above p {
+    font-size: 18px;
+    letter-spacing: 1px;
+    line-height: 30px;
+}
+.banner, .autoplay-video {
+    height: auto;
+}  
+.home-section section {
+    height: auto;
+}
+footer .footer__content-bottom {
+    padding-bottom: 4.5rem;
+}  
+.footer-banner-img .footer__content-top {
+    flex-direction: column;
+    padding: 0 1.5rem;
+}
+.footer-banner-img .newsletter-form__field-wrapper .inner-folder .field__input {
+    min-width: auto;
+}
+.footer-banner-img .newsletter-form__field-wrapper .newsletter-form__button {
+    min-width: 110px;
+}
+.footer__content-top .footer__blocks-wrapper .footer-block-image {
+    margin: 0;
+}
+.footer .footer-block.grid__item {
+    margin: 2rem 0 0;
+}
+footer .footer__copyright {
+    padding: 1.5rem 0 0;
+}  
+.footer-banner-img .footer-block--newsletter {
+    padding: 0 0 0.5rem;
+}
+footer .footer__content-bottom .page-width {
+    padding: 0 1.5rem;
+}
+.whatYouNeed .collapsible-content__header {
+    padding: 0;
+}
+.wholeProcess .image-with-text__content {
+    padding: 2rem 0 1rem;
+}  
+.wholeProcess .image-with-text__content h2 {
+    font-size: calc(var(--font-heading-scale) * 2.2rem);
+}
+.wholeProcess .image-with-text__text {
+    margin-top: 1rem;
+}
+.brandsAdvantages h2.title {
+    font-size: 1.8rem;
+}  
+.brandsAdvantages .description p {
+    padding-right: 0;
+}  
+.brandsAdvantages h2.title.text-center {
+    padding: 0 0 4rem;
+    font-size: 2.5rem;
+}
+.newsletter-form__field-wrapper .field .inner-folder {
+    width: 30rem;
+}
+.footer__copyright ul li {
+    padding-right: 5px;
+}
+footer .footer__copyright {
+    flex-direction: column;
+}  
+footer .footer__content-top {
+    padding-bottom: 1rem;
+    padding-left: calc(2rem / var(--font-body-scale));
+    padding-right: calc(2rem / var(--font-body-scale));
+}
+.video-bottom-text p {
+    color: #000;
+}
+  
+  
+}

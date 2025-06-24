@@ -1,0 +1,267 @@
+{% comment %}
+Tech-Pack Step 3: Garment Specifications Section
+{% endcomment %}
+
+<section id="techpack-step-3" class="techpack-step" data-step="3" style="display: none;">
+  <div class="techpack-container">
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 75%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step--completed">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step--completed">2</div>
+          <div class="techpack-progress__step-label">File Upload</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">3</div>
+          <div class="techpack-progress__step-label">Garments</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      <h2 class="techpack-title">Garment Specifications</h2>
+      <p class="techpack-subtitle">Define your garment details and quantity requirements</p>
+
+      <div class="techpack-quantity-tracker">
+        <div class="techpack-quantity-tracker__content">
+          <span class="techpack-quantity-tracker__label">Total Quantity:</span>
+          <span class="techpack-quantity-tracker__value" id="total-quantity">0</span>
+          <span class="techpack-quantity-tracker__minimum">
+            / <span id="min-text">75 minimum</span>
+          </span>
+        </div>
+        <div class="techpack-quantity-tracker__bar">
+          <div class="techpack-quantity-tracker__fill" id="quantity-progress" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="techpack-garments" id="garments-container">
+        <!-- Garments will be dynamically added here -->
+      </div>
+
+      <button type="button" class="techpack-btn techpack-btn--secondary techpack-btn--add-garment" id="add-garment">
+        <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Add Garment
+      </button>
+
+      <div class="techpack-form__actions">
+        <button type="button" class="techpack-btn techpack-btn--ghost" id="step-3-prev">
+          <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          Previous
+        </button>
+        <button type="button" class="techpack-btn techpack-btn--primary" id="step-3-next" disabled>
+          Next Step
+          <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Garment Template -->
+<template id="garment-template">
+  <div class="techpack-garment" data-garment-id="">
+    <div class="techpack-garment__header">
+      <h3 class="techpack-garment__title">Garment <span class="techpack-garment__number"></span></h3>
+      <button type="button" class="techpack-garment__remove" aria-label="Remove garment">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="techpack-garment__content">
+      <div class="techpack-form__row">
+        <div class="techpack-form__group techpack-form__group--required">
+          <label class="techpack-form__label">Garment Type</label>
+          <select class="techpack-form__select" name="garmentType" required>
+            <option value="">Select garment type...</option>
+            <option value="Zip-Up Hoodie">Zip-Up Hoodie</option>
+            <option value="Hoodie">Hoodie</option>
+            <option value="T-Shirt">T-Shirt</option>
+            <option value="Crewneck Sweatshirt">Crewneck Sweatshirt</option>
+            <option value="Sweatpants">Sweatpants</option>
+            <option value="Shorts">Shorts</option>
+            <option value="Long Sleeve T-Shirt">Long Sleeve T-Shirt</option>
+            <option value="Polo Shirt">Polo Shirt</option>
+            <option value="Tank Top">Tank Top</option>
+            <option value="Hat/Cap">Hat/Cap</option>
+            <option value="Beanie">Beanie</option>
+            <option value="Other">Other (Specify in Notes)</option>
+          </select>
+          <div class="techpack-form__error" role="alert"></div>
+        </div>
+
+        <div class="techpack-form__group techpack-form__group--required">
+          <label class="techpack-form__label">Fabric Type</label>
+          <select class="techpack-form__select" name="fabricType" required>
+            <option value="" selected>Select fabric type...</option>
+            <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
+            <option value="French Terry 100% Organic Cotton Fleece">French Terry 100% Organic Cotton</option>
+            <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
+            <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
+            <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
+            <option value="100% Polyester">100% Polyester</option>
+            <option value="100% Linen">100% Linen</option>
+            <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
+            <option value="Jersey Knit">Jersey Knit</option>
+            <option value="Pique">Pique</option>
+            <option value="Canvas">Canvas</option>
+            <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
+          </select>
+          <div class="techpack-form__error" role="alert"></div>
+        </div>
+      </div>
+
+      <div class="techpack-form__group techpack-form__group--required">
+        <label class="techpack-form__label">Printing Methods (Select at least one) *</label>
+        <div class="techpack-form__checkboxes">
+          <label class="techpack-form__checkbox">
+            <input type="checkbox" name="printingMethods[]" value="Embroidery">
+            <span class="techpack-form__checkbox-mark"></span>
+            Embroidery
+          </label>
+          <label class="techpack-form__checkbox">
+            <input type="checkbox" name="printingMethods[]" value="Screen Print">
+            <span class="techpack-form__checkbox-mark"></span>
+            Screen Print
+          </label>
+          <label class="techpack-form__checkbox">
+            <input type="checkbox" name="printingMethods[]" value="Digital Print">
+            <span class="techpack-form__checkbox-mark"></span>
+            Digital Print
+          </label>
+          <label class="techpack-form__checkbox">
+            <input type="checkbox" name="printingMethods[]" value="Other">
+            <span class="techpack-form__checkbox-mark"></span>
+            Other
+          </label>
+        </div>
+        <div class="techpack-form__error" role="alert"></div>
+      </div>
+
+      <div class="techpack-colorways">
+        <div class="techpack-colorways__header">
+          <h4 class="techpack-colorways__title">Colorways</h4>
+          <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary add-colorway">
+            <svg class="techpack-btn__icon" width="14" height="14" viewBox="0 0 16 16">
+              <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Add Colorway
+          </button>
+        </div>
+        <div class="techpack-colorways__list">
+          <!-- Colorways will be added here -->
+        </div>
+      </div>
+
+      <div class="techpack-garment__total">
+        <span class="techpack-garment__total-label">Garment Total:</span>
+        <span class="techpack-garment__total-value">0</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Colorway Template -->
+<template id="colorway-template">
+  <div class="techpack-colorway" data-colorway-id="">
+    <div class="techpack-colorway__header">
+      <div class="techpack-colorway__color">
+        <label class="techpack-form__label">Color</label>
+        <div class="techpack-color-picker">
+          <input type="color" class="techpack-color-picker__input" value="#000000">
+          <div class="techpack-color-picker__preview"></div>
+        </div>
+      </div>
+      <div class="techpack-colorway__pantone">
+        <label class="techpack-form__label">PANTONE TCX</label>
+        <input type="text" class="techpack-form__input" placeholder="e.g., 18-1664 TPX">
+      </div>
+      <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="techpack-size-grid">
+      <div class="techpack-size-grid__header">
+        <span class="techpack-size-grid__label">Size</span>
+        <span class="techpack-size-grid__label">XXS</span>
+        <span class="techpack-size-grid__label">XS</span>
+        <span class="techpack-size-grid__label">S</span>
+        <span class="techpack-size-grid__label">M</span>
+        <span class="techpack-size-grid__label">L</span>
+        <span class="techpack-size-grid__label">XL</span>
+        <span class="techpack-size-grid__label">XXL</span>
+      </div>
+      <div class="techpack-size-grid__row">
+        <span class="techpack-size-grid__label">Qty</span>
+        <input type="number" class="techpack-size-grid__input" name="qty-xxs" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-xs" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-s" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-m" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-l" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-xl" min="0" value="0">
+        <input type="number" class="techpack-size-grid__input" name="qty-xxl" min="0" value="0">
+      </div>
+    </div>
+
+    <div class="techpack-colorway__total">
+      <span class="techpack-colorway__total-label">Colorway Total:</span>
+      <span class="techpack-colorway__total-value">0</span>
+    </div>
+  </div>
+</template>
+
+{% schema %}
+{
+  "name": "Tech-Pack Step 3",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Garment Specifications Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Garment Specifications"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Define your garment details and quantity requirements"
+    },
+    {
+      "type": "number",
+      "id": "minimum_quantity",
+      "label": "Minimum Total Quantity",
+      "default": 75
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tech-Pack Step 3"
+    }
+  ]
+}
+{% endschema %}

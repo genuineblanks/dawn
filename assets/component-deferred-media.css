@@ -31,7 +31,7 @@
 }
 
 .deferred-media[loaded] > .deferred-media__poster {
-  display: none;
+  display: block;
 }
 
 .deferred-media__poster:focus-visible {

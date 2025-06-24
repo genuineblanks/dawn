@@ -1,0 +1,181 @@
+{% assign bss-b2b-enable-form = true %}{% assign bss-b2b-include-password = true %}
+        <script id="bss-b2b-wholesaler-form">
+        if (typeof BSS_B2B == 'undefined') {
+            var BSS_B2B = {};
+        }
+        BSS_B2B.password_condition = {"minLength":5,"containCapitals":0,"containDigits":0,"containSpecials":0}
+        BSS_B2B.formDataRender = [{"type":"text","required":false,"label":"Address","className":"form-control","name":"text-1710324618961-0","access":false,"subtype":"text","maxlength":50,"placement":"bottom"},{"type":"text","required":false,"label":"Address Line 2","className":"form-control","name":"text-1710395028742","access":false,"subtype":"text","maxlength":50,"placement":"bottom"},{"type":"text","required":true,"label":"City","className":"form-control","name":"text-1710324801748-0","access":false,"subtype":"text","maxlength":20,"placement":"bottom"},{"type":"autocomplete","required":true,"label":"Country","className":"form-control country-field","name":"country-field","access":false,"requireValidOption":false,"values":[{"label":"","value":"","selected":false}],"placement":"bottom"},{"type":"select","label":"State","className":"form-control state-field","name":"state-field","access":false,"values":[{"label":"","value":"","selected":false}],"placement":"bottom"},{"type":"text","required":true,"label":"Zip Code","className":"form-control","name":"text-1710324871619-0","access":false,"subtype":"text","maxlength":8,"placement":"bottom"},{"type":"select","required":true,"label":"How did you here about us?","className":"form-control","name":"select-1710405344202-0","access":false,"values":[{"label":"Social Media","value":"Social Media","selected":false},{"label":"Street Ads","value":"Street Ads","selected":false},{"label":"Google Ads","value":"Google Ads","selected":false},{"label":"Through Friend/Family","value":"Through Friend/Family","selected":true}],"placement":"bottom"},{"type":"header","subtype":"h5","label":"Company Information","access":false,"placement":"bottom"},{"type":"text","required":true,"label":"Brand Name/ Company","className":"form-control","name":"text-1710324980013-0","access":false,"subtype":"text","maxlength":30,"placement":"bottom"},{"type":"text","required":false,"label":"Website","className":"form-control","name":"text-1710325006625-0","access":false,"subtype":"text","maxlength":35,"placement":"bottom"},{"type":"text","required":true,"label":"About Your Company","className":"form-control","name":"text-1710325074208-0","access":false,"subtype":"text","maxlength":100,"placement":"bottom"},{"type":"text","required":true,"label":"@Instagram","className":"form-control","name":"text-1710325105706-0","access":false,"subtype":"text","maxlength":30,"placement":"bottom"},{"type":"text","required":false,"label":"2nd Instagram / Personal","className":"form-control","name":"text-1710325147539-0","access":false,"subtype":"text","maxlength":30,"placement":"bottom"},{"type":"date","required":true,"label":"Establishment Date","className":"form-control","name":"date-1710325194994-0","access":false,"subtype":"date","placement":"bottom"},{"type":"checkbox-group","required":false,"label":"Subscribe to our newsletter","toggle":false,"inline":false,"className":"form-control accepts-marketing-field","name":"accepts-marketing","access":false,"other":false,"values":[{"label":"Option 1","value":"option-1","selected":true}],"placement":"bottom"}];
+        BSS_B2B.formId = 22949;
+        BSS_B2B.reCAPCHA = 0;
+        BSS_B2B.CAPCHA_SITE_KEY = "6LcYPEgbAAAAAKEQdimI1PPA4vuOJHxNb5p6eLUo";
+        BSS_B2B.status = 1;
+        BSS_B2B.created_account = 3;
+        BSS_B2B.redirect_url = "";
+        BSS_B2B.taxExempt = 0;
+        BSS_B2B.formPrivacyPolicyStatus = 0;
+        BSS_B2B.formPrivacyPolicyContent = `<p>By clicking Create, I confirm that I have read and accepted the <a href="/">privacy policy</a></p>`;
+        BSS_B2B.conditionalLogic = [];
+        </script>
+            <style>.grid:has(.rendered-form) .grid__item {
+   width: 100% !important;
+   max-width: 100% !important;
+}
+
+.grid:has(.rendered-form) .form-vertical {
+    width: 470px;
+    margin: 0 auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.form-vertical div.field::before, .form-vertical div.field::after {
+  content: none
+}
+
+.field input, .rendered-form .form-control {
+   height: 45px;
+   border-radius: 0;
+   border: 1px solid black;   
+}
+
+.field input {
+   padding-left: 12px;
+   font-size: 14px;
+}
+.field input:focus, .rendered-form .form-control:focus {
+   box-shadow: 0 0 0 calc(0.1rem) rgba(18,18,18) !important;
+}
+
+
+.field input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+#RegisterForm input.btn {
+    padding: 15px 0;
+    background-color: black !important;
+    color: white !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 492px) {
+.grid:has(.rendered-form) .form-vertical {
+    width: 100%;
+}
+}</style>
+            <div class="page-width">
+    <div class="grid">
+        <div class="grid__item medium-up--five-sixths medium-up--push-one-twelfth">
+            <div class="section-header text-center">
+                <h1>{{ page.title }}</h1>
+            </div>
+            <div class="rte">
+                {{ page.content }}
+            </div>
+        </div>
+{% if bss-b2b-enable-form %}
+  <div class="grid__item medium-up--one-half medium-up--push-one-quarter">
+    <div class="form-vertical">
+      {%- assign formId = 'RegisterForm' -%}
+      {% form 'create_customer', id: formId %}
+        <div id="bss-b2b-registration-form-top"></div>
+        <div class="field">
+          <label for="{{ formId }}-FirstName">{{ 'customer.register.first_name' | t }}</label>
+          <input
+            type="text"
+            name="customer[first_name]"
+            id="{{ formId }}-FirstName"
+            {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+            autocomplete="given-name" />
+        </div>
+        <div class="field {{ formId }}-LastName">
+          <label for="{{ formId }}-LastName">{{ 'customer.register.last_name' | t }}</label>
+          <input
+            type="text"
+            name="customer[last_name]"
+            id="{{ formId }}-LastName"
+            {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+            autocomplete="family-name" />
+        </div>
+        <div class="field {{ formId }}-email">
+          <label for="{{ formId }}-email">{{ 'customer.register.email' | t }}</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="{{ formId }}-email"
+            class="{% if form.errors contains 'email' %} input--error{% endif %}"
+            {% if form.email %}
+            value="{{ form.email }}"
+            {% endif %}
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            aria-required="true"
+            {%- if form.errors contains 'email' -%}
+            class="input--error"
+            aria-invalid="true"
+            aria-describedby="{{ formId }}-email-error"
+            {%- endif -%}>
+        </div>
+        {%- if form.errors contains 'email' -%}
+          <span id="{{ formId }}-email-error" class="input-error-message">
+            <span class="visually-hidden">{{ 'general.accessibility.error' | t }}
+            </span>
+            {% include 'icon-error' %}
+            <span>{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+          </span>
+        {%- endif -%}
+        {%- if bss-b2b-include-password == true -%}
+          <div class="field {{ formId }}-password">
+            <label for="{{ formId }}-password">{{ 'customer.register.password' | t }}</label>
+            <input
+              type="password"
+              name="customer[password]"
+              id="{{ formId }}-password"
+              class="{% if form.errors contains 'password' %} input--error{% endif %}"
+              aria-required="true"
+              {%- if form.errors contains 'password' -%}
+              class="input--error"
+              aria-invalid="true"
+              aria-describedby="{{ formId }}-password-error"
+              {%- endif -%}>
+          </div>
+        {%- endif -%}
+        {%- if form.errors contains 'password' and bss-b2b-include-password == true -%}
+          <span id="{{ formId}}-password-error" class="input-error-message">
+            {% include 'icon-error' %}
+            <span>{{ form.errors.translated_fields['password'] | capitalize }} {{ form.errors.messages['password'] }}.</span>
+          </span>
+        {%- endif -%}
+        <div id="bss-b2b-registration-form-render"></div>
+        <p class="text-center">
+          <input
+            type="submit"
+            value="{{ 'customer.register.submit' | t }}"
+            class="btn">
+        </p>
+      {% endform %}
+    </div>
+  </div>
+{% endif %}
+    </div>
+</div>
+            <style>
+            .grid {
+                display: grid;
+            }
+            .field {
+                display: grid;
+                position: unset;
+            }
+            .page-width .grid .shopify-section .grid__item {
+                margin: 0 auto;
+                min-width: 50%;
+            }
+            </style>
+            

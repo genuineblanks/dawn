@@ -1,0 +1,263 @@
+<div class="textGrid">
+    {% for block in section.blocks %} 
+      {%- case block.type -%}
+        {%- when 'Add-text-grid' -%}
+        <a href="{{ block.settings.link }}">
+          <ul class="grid product-grid grid--2-col-tablet-down grid--3-col-desktop">
+            <li class="grid__item"><h3>{{ block.settings.title }}</h3></li>
+            <li class="grid__item"><h3>{{ block.settings.subtitle }}</h3></li> 
+            <li class="grid__item">{{ block.settings.rich }}</li>
+          </ul>
+        </a>
+     {%- endcase -%}    
+    {% endfor %}
+</div>
+{% if section.settings.enable_footer == true and template contains 'index' %}
+  {% include 'footer-homepage' %}
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Text grid",
+    "tag": "section",
+    "class": "text-grid",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_footer",
+        "default": false,
+        "label": "Enable Footer in the section."
+      },
+      {
+      "type":"header",
+      "content": "Footer Section Settings"
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "scheme-1"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__1.content",
+        "info": "t:sections.footer.settings.header__1.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "newsletter_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.newsletter_enable.label"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "newsletter_heading",
+        "default": "Subscribe to our emails",
+        "label": "t:sections.footer.settings.newsletter_heading.label"
+      },
+       {
+        "type": "inline_richtext",
+        "id": "newsletter_paragraph",
+        "label": "Paragraph"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__9.content",
+        "info": "t:sections.footer.settings.header__9.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_follow_on_shop",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_follow_on_shop.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__2.content",
+        "info": "t:sections.footer.settings.header__2.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "default": true,
+        "label": "t:sections.footer.settings.show_social.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__3.content",
+        "info": "t:sections.footer.settings.header__4.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_country_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_country_selector.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__5.content",
+        "info": "t:sections.footer.settings.header__6.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_language_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_language_selector.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__7.content"
+      },
+      {
+        "type": "checkbox",
+        "id": "payment_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.payment_enable.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__8.content",
+        "info": "t:sections.footer.settings.header__8.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_policy",
+        "default": false,
+        "label": "t:sections.footer.settings.show_policy.label"
+      },
+      {
+        "type": "link_list",
+        "id": "show_policy_menu",
+        "label": "Select Menu"
+      },
+      {
+        "type": "text",
+        "id": "copyright_text",
+        "label": "Enter Copyright Text Here"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.footer.settings.margin_top.label",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "max_blocks": 10,
+    "blocks": [
+      {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "richtext",
+          "label": "Enter text here."
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 50,
+          "max": 550,
+          "step": 5,
+          "unit": "px",
+          "label": "Image width",
+          "default": 100
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Image alignment on large screen",
+          "options": [
+            {
+              "value": "",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        }
+      ]
+    },
+      {
+        "name": "Add-text-grid",
+        "type": "Add-text-grid",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Sub heading"
+          },
+          {
+            "type": "richtext",
+            "id": "rich",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Url"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text grid"
+      }
+    ]
+  }
+{% endschema %}

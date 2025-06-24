@@ -278,7 +278,7 @@
 
 @media screen and (min-width: 750px) {
   .banner__content {
-    padding: 5rem;
+    padding: 3rem;
   }
 
   .banner__content--top-left {
@@ -339,7 +339,7 @@
 }
 
 .banner__box {
-  padding: 4rem 1.5rem;
+  padding: 4rem 3.5rem;
   position: relative;
   height: fit-content;
   align-items: center;
@@ -349,17 +349,8 @@
   z-index: 1;
 }
 
-.banner--mobile-bottom .banner__box {
-  padding: 4rem 3.5rem;
-}
-
 @media screen and (min-width: 750px) {
-  .banner__box {
-    padding: 4rem 3.5rem;
-  }
-
   .banner--desktop-transparent .banner__box {
-    padding: 4rem 0;
     background: transparent;
     max-width: 89rem;
     border: none;
@@ -463,7 +454,7 @@
 @media screen and (min-width: 750px) {
   .banner--content-align-center .banner__buttons--multiple > * {
     flex-grow: 1;
-    min-width: 22rem;
+    min-width: 25rem;
   }
 
   .banner--content-align-right .banner__buttons--multiple {
