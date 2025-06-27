@@ -302,13 +302,10 @@
     {% if template == 'index' %}
     (function() {
       'use strict';
-      console.log('🏠 CLEAN SCROLL FIX');
-      
-      let fixed = false;
+      console.log('🏠 PERSISTENT SCROLL FIX');
       
       function doScrollFix() {
-        if (fixed) return;
-        fixed = true;
+        console.log('🔧 Applying scroll fix...');
         
         function handleScroll() {
           document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
@@ -319,12 +316,38 @@
           });
         }
         
+        // Remove existing scroll listeners to avoid duplicates
+        window.removeEventListener('scroll', handleScroll);
+        
+        // Apply immediately
         handleScroll();
+        
+        // Add scroll listener
         window.addEventListener('scroll', handleScroll, { passive: true });
         console.log('✅ SCROLL FIXED');
       }
       
-      window.addEventListener('load', () => setTimeout(doScrollFix, 1000));
+      // Apply on initial load
+      if (document.readyState === 'complete') {
+        setTimeout(doScrollFix, 500);
+      } else {
+        window.addEventListener('load', () => setTimeout(doScrollFix, 500));
+        document.addEventListener('DOMContentLoaded', () => setTimeout(doScrollFix, 300));
+      }
+      
+      // Apply on page navigation (back/forward/refresh)
+      window.addEventListener('pageshow', () => setTimeout(doScrollFix, 200));
+      
+      // Apply when page becomes visible again (tab switching)
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          setTimeout(doScrollFix, 300);
+        }
+      });
+      
+      // Apply on Shopify section loads
+      document.addEventListener('shopify:section:load', () => setTimeout(doScrollFix, 200));
+      
     })();
     {% endif %}
     </script>
