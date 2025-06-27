@@ -299,7 +299,7 @@
     <script>
     (function() {
       'use strict';
-      console.log('🏠 HOMEPAGE SCROLL FIX - PRIORITY LOAD');
+      console.log('🏠 HOMEPAGE SCROLL FIX - ENHANCED');
       
       var scrollHandlerAdded = false;
       
@@ -307,7 +307,7 @@
         if (scrollHandlerAdded) return;
         scrollHandlerAdded = true;
         
-        console.log('🔧 Adding scroll fix...');
+        console.log('🔧 Adding enhanced scroll fix...');
         
         // First, reset all elements to proper state
         document.querySelectorAll('.scroll-trigger').forEach(function(el) {
@@ -330,15 +330,30 @@
           offscreenElements.forEach(function(el) {
             var rect = el.getBoundingClientRect();
             if (rect.top < window.innerHeight - 100) {
+              // Remove offscreen class
               el.classList.remove('scroll-trigger--offscreen');
-              console.log('🎉 SCROLL REVEALED:', el.className.split(' ')[0]);
+              
+              // Force animation by adding CSS properties
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+              el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+              
+              // Also try triggering any existing animation classes
+              if (el.classList.contains('animate--fade-in')) {
+                el.style.animation = 'animate--fade-in 0.6s ease forwards';
+              }
+              if (el.classList.contains('animate--slide-in')) {
+                el.style.animation = 'animate--slide-in 0.6s ease forwards';
+              }
+              
+              console.log('🎉 SCROLL REVEALED + ANIMATED:', el.className.split(' ')[0]);
             }
           });
         }
         
         // Add scroll listener
         window.addEventListener('scroll', revealElements, { passive: true });
-        console.log('✅ SCROLL FIX ACTIVE');
+        console.log('✅ ENHANCED SCROLL FIX ACTIVE');
       }
       
       // Try multiple initialization points
