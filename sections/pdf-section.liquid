@@ -28,32 +28,28 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('downloadAll').addEventListener('click', function() {
-        var pdfLinks = document.querySelectorAll('#pdfList a');
-        pdfLinks.forEach(function(link) {
-            var pdfUrl = link.href;
-            var pdfFileName = pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1);
-            downloadFile(pdfUrl, pdfFileName);
-        });
+        // Get only the FIRST PDF link
+        var firstPdfLink = document.querySelector('#pdfList a');
+        
+        if (firstPdfLink) {
+            var pdfUrl = firstPdfLink.getAttribute('data-src');
+            
+            if (pdfUrl && pdfUrl !== '' && pdfUrl !== '#') {
+                // Create download link
+                var link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = 'GENUINEBLANKS_GUIDE.pdf';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('Please configure the PDF URL in the first block');
+            }
+        }
     });
-
-    function downloadFile(url, filename) {
-        var link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.download = filename;
-
-        // Append the anchor to the body
-        document.body.appendChild(link);
-        link.click();
-
-        // Clean up
-        document.body.removeChild(link);
-    }
 });
 </script>
-
-
-
 {% schema %}
 {
   "name": "pdf download",
