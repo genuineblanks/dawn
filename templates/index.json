@@ -15,42 +15,37 @@
         "collection_rVnGNr": {
           "type": "collection",
           "settings": {
-            "collection": "jacket",
-            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
+            "collection": "jacket"
           }
         },
         "collection_gXkdqm": {
           "type": "collection",
           "settings": {
-            "collection": "hoodie",
-            "product_image": "shopify://shop_images/ONYX_02HOODIE_PNG.png"
+            "collection": "hoodie"
           }
         },
         "collection_RQi7BY": {
           "type": "collection",
           "settings": {
-            "collection": "t-shirts",
-            "product_image": "shopify://shop_images/ONYX_04TSHIRT_PNG.png"
+            "collection": "t-shirts"
           }
         },
         "collection_6Frqk6": {
           "type": "collection",
           "settings": {
-            "collection": "sweatshirt",
-            "product_image": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png"
+            "collection": "sweatshirt"
           }
         },
         "collection_wMaVtn": {
           "type": "collection",
           "settings": {
-            "collection": "sweatpants",
-            "product_image": "shopify://shop_images/ONYX_05SWEATPANTS_PNG.png"
+            "collection": "sweatpants"
           }
         },
         "link_list_cJFdTd": {
           "type": "link_list",
           "settings": {
-            "account_menu": "account-menu"
+            "account_menu": ""
           }
         }
       },
@@ -137,7 +132,7 @@
         "link_list_cYVVVY": {
           "type": "link_list",
           "settings": {
-            "account_menu": "account-menu"
+            "account_menu": ""
           }
         }
       },
@@ -268,7 +263,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "SUBMIT YOUR TECH-PACK",
-            "button_link_1": "shopify://pages/tech-pack-submission-1",
+            "button_link_1": "shopify://pages/tech-pack-submission",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
@@ -302,7 +297,6 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands",
-        "image": "shopify://shop_images/Tech-Pack_-_Website.jpg",
         "image_overlay_opacity": 10,
         "image_height": "large",
         "desktop_content_position": "middle-center",
@@ -419,7 +413,6 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "button-above bring-creativity",
-        "image": "shopify://shop_images/Design_Page_-_website2.jpg",
         "image_overlay_opacity": 20,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
@@ -486,7 +479,6 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands button-above bring-creativity",
-        "image": "shopify://shop_images/Accessories_Page_-_website_V2.jpg",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
@@ -558,7 +550,6 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands",
-        "image": "shopify://shop_images/The-Best-Hoodies-for-Branding-Merch-scaled.webp",
         "image_overlay_opacity": 40,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
