@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
   const $sections = $('section');
-  let inScroll = true;
+  let inScroll = false;
   const durationOneScroll = 600;
   let currentSection = 0;
 
