@@ -302,6 +302,7 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands",
+        "image": "shopify://shop_images/Tech-Pack_-_Website.jpg",
         "image_overlay_opacity": 10,
         "image_height": "large",
         "desktop_content_position": "middle-center",
@@ -418,6 +419,7 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "button-above bring-creativity",
+        "image": "shopify://shop_images/Design_Page_-_website2.jpg",
         "image_overlay_opacity": 20,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
@@ -470,7 +472,7 @@
         "text_Bjz4EN": {
           "type": "text",
           "settings": {
-            "text": "<ul style=\"color: #000000;\">\n  <h3>*Available for retail:</h3>\n  <li>- Branding labels</li>\n  <li>- Hang-tags</li>\n  <li>- Composition labels</li>\n</ul>\n\n<ul style=\"color: #000000;\">\n  <h3>*Available for wholesale:</h3>\n  <li>- Anything available in today’s market.</li>\n</ul>",
+            "text": "<div style=\"color: #000000 !important;\">\n  <h3 style=\"color: #000000 !important;\">\n  <ul style=\"color: #000000 !important;\">\n    <li style=\"color: #000000 !important;\">- Branding labels</li>\n    <li style=\"color: #000000 !important;\">- Hang-tags</li>\n    <li style=\"color: #000000 !important;\">- Composition labels</li>\n  </ul>\n  \n  <ul style=\"color: #000000 !important;\">\n    <li style=\"color: #000000 !important;\">\n  </li>\n</ul>\n</h3>\n</div>",
             "text_style": "subtitle",
             "class_text": ""
           }
@@ -484,6 +486,7 @@
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands button-above bring-creativity",
+        "image": "shopify://shop_images/Accessories_Page_-_website_V2.jpg",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
