@@ -17,27 +17,36 @@
     "image_luxury_products_TXYaMb": {
       "type": "image-luxury-products",
       "blocks": {
-        "collection_mh6KmG": {
-          "type": "collection",
-          "settings": {
-            "collection": "hoodie",
-            "product_image": "shopify://shop_images/ONYX_01ZIPPER.jpg"
-          }
-        },
         "collection_tQQYQm": {
           "type": "collection",
           "settings": {
             "collection": "jacket",
             "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
           }
+        },
+        "collection_kdCLwm": {
+          "type": "collection",
+          "settings": {
+            "collection": "t-shirts",
+            "product_image": "shopify://shop_images/ONYX_04TSHIRT_PNG.png"
+          }
+        },
+        "collection_mh6KmG": {
+          "type": "collection",
+          "settings": {
+            "collection": "hoodie",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER.jpg"
+          }
         }
       },
       "block_order": [
-        "collection_mh6KmG",
-        "collection_tQQYQm"
+        "collection_tQQYQm",
+        "collection_kdCLwm",
+        "collection_mh6KmG"
       ],
       "name": "Image Luxury Products",
       "settings": {
+        "image": "shopify://shop_images/Front_Page_3_Image.jpg",
         "banner_heading": "GENUINE BLANKS",
         "banner_paragraph": "",
         "banner_subtext1": "OVERSIZED LUXURY COLLECTION",
