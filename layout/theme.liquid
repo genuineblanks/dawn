@@ -954,10 +954,14 @@
     </script>
 
     <script>
-    // Force scroll animations to work properly
+    // Only run scroll animations on the main homepage (index template)
+    {% if template == 'index' %}
+    console.log('🏠 Main homepage detected - initializing scroll animations');
+    
+    // Force scroll animations to work properly on homepage only
     window.addEventListener('load', function() {
       setTimeout(() => {
-        console.log('🔄 FIXING SCROLL ANIMATIONS...');
+        console.log('🔄 FIXING SCROLL ANIMATIONS ON MAIN PAGE...');
         
         // Create our own intersection observer that actually works
         const observer = new IntersectionObserver((entries) => {
@@ -969,7 +973,7 @@
             }
           });
         }, {
-          rootMargin: '0px 0px -50px 0px', // Same as original
+          rootMargin: '0px 0px -50px 0px',
           threshold: 0.1
         });
         
@@ -984,11 +988,11 @@
           }
         });
         
-        console.log('✅ Custom scroll observer activated');
+        console.log('✅ Custom scroll observer activated on main page');
       }, 500);
     });
     
-    // Also fix on navigation
+    // Also fix on navigation within homepage
     document.addEventListener('shopify:section:load', function() {
       setTimeout(() => {
         document.querySelectorAll('.scroll-trigger').forEach(element => {
@@ -999,6 +1003,10 @@
         });
       }, 200);
     });
+    
+    {% else %}
+    console.log('📄 Not main homepage (template: {{ template }}) - skipping scroll animations');
+    {% endif %}
     </script>
     
   </body>
