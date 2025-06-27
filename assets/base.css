@@ -3518,34 +3518,7 @@ details-disclosure > details {
   }
 }
 
-/* Learn More Link Styling */
-.header__learn-more-link {
-  display: none;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  color: rgba(var(--color-foreground), 0.75);
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
-  margin-right: 1rem;
-}
-
-@media screen and (min-width: 990px) {
-  .header__learn-more-link {
-    display: inline-block;
-  }
-}
-
-.header__learn-more-link:hover {
-  color: rgb(var(--color-foreground));
-}
-
-.header__learn-more-link span {
-  transition: text-decoration var(--duration-short) ease;
-}
-
-.header__learn-more-link:hover span {
-  text-decoration: underline;
-  text-underline-offset: 0.3rem;
+.header {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
 }
