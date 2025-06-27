@@ -1,8 +1,3 @@
-{% comment %}
-{% unless template contains 'index' %}
-  {% sections 'header-group' %}
-{% endunless %}
-{% endcomment %}
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
@@ -33,6 +28,7 @@
 
     {% render 'meta-tags' %}
 
+    <!-- Core Shopify Scripts -->
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
@@ -283,75 +279,87 @@
     {%- endif -%}
 
     <script>
-    try {
-      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-      if (Shopify.designMode) {
-        document.documentElement.classList.add('shopify-design-mode');
+      try {
+        document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+        if (Shopify.designMode) {
+          document.documentElement.classList.add('shopify-design-mode');
+        }
+      } catch(e) {
+        console.warn('Header script error:', e);
       }
-    } catch(e) {
-      console.warn('Header script error:', e);
-    }
     </script>
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
   </head>
-
-  <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
-    <script>
+<body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+    
+    <!-- HOMEPAGE SCROLL FIX - RUNS FIRST -->
     {% if template == 'index' %}
+    <script>
     (function() {
       'use strict';
-      console.log('🏠 PERSISTENT SCROLL FIX');
+      console.log('🏠 HOMEPAGE SCROLL FIX - PRIORITY LOAD');
       
-      function doScrollFix() {
-        console.log('🔧 Applying scroll fix...');
+      var scrollHandlerAdded = false;
+      
+      function addScrollFix() {
+        if (scrollHandlerAdded) return;
+        scrollHandlerAdded = true;
         
-        function handleScroll() {
-          document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
-            const rect = el.getBoundingClientRect();
+        console.log('🔧 Adding scroll fix...');
+        
+        function revealElements() {
+          var offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+          offscreenElements.forEach(function(el) {
+            var rect = el.getBoundingClientRect();
             if (rect.top < window.innerHeight - 50) {
               el.classList.remove('scroll-trigger--offscreen');
+              console.log('📜 Revealed:', el.className.split(' ')[0]);
             }
           });
         }
         
-        // Remove existing scroll listeners to avoid duplicates
-        window.removeEventListener('scroll', handleScroll);
-        
         // Apply immediately
-        handleScroll();
+        revealElements();
         
         // Add scroll listener
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        console.log('✅ SCROLL FIXED');
+        window.addEventListener('scroll', revealElements, { passive: true });
+        console.log('✅ SCROLL FIX ACTIVE');
       }
       
-      // Apply on initial load
-      if (document.readyState === 'complete') {
-        setTimeout(doScrollFix, 500);
+      // Try multiple initialization points
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(addScrollFix, 100);
+        });
       } else {
-        window.addEventListener('load', () => setTimeout(doScrollFix, 500));
-        document.addEventListener('DOMContentLoaded', () => setTimeout(doScrollFix, 300));
+        setTimeout(addScrollFix, 100);
       }
       
-      // Apply on page navigation (back/forward/refresh)
-      window.addEventListener('pageshow', () => setTimeout(doScrollFix, 200));
+      // Also try on load
+      window.addEventListener('load', function() {
+        setTimeout(addScrollFix, 200);
+      });
       
-      // Apply when page becomes visible again (tab switching)
-      document.addEventListener('visibilitychange', () => {
+      // Handle navigation
+      window.addEventListener('pageshow', function(event) {
+        scrollHandlerAdded = false;
+        setTimeout(addScrollFix, 100);
+      });
+      
+      // Handle visibility changes
+      document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
-          setTimeout(doScrollFix, 300);
+          setTimeout(addScrollFix, 200);
         }
       });
       
-      // Apply on Shopify section loads
-      document.addEventListener('shopify:section:load', () => setTimeout(doScrollFix, 200));
-      
     })();
-    {% endif %}
     </script>
-  
+    {% endif %}
+    <!-- END SCROLL FIX -->
+
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -425,8 +433,7 @@
     {% elsif template contains 'product' %}
       <script src="{{ 'custom-product-page.js' | asset_url }}" async></script>
     {% endif %}
-
-    <!-- ADD THE CLICKABLE CARDS SCRIPT HERE -->
+<!-- ADD THE CLICKABLE CARDS SCRIPT HERE -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Make entire product cards clickable
@@ -449,8 +456,7 @@
     });
     </script>
     <!-- END CLICKABLE CARDS SCRIPT -->
-
-    <!-- PREMIUM SCROLL EFFECTS SCRIPT -->
+<!-- PREMIUM SCROLL EFFECTS SCRIPT -->
     <script>
     // ===============================================
     // PREMIUM SCROLL EFFECTS JAVASCRIPT
@@ -757,8 +763,7 @@
     });
     </script>
     <!-- END PREMIUM SCROLL EFFECTS SCRIPT -->
-
-    {% render 'wholesale-modal' %}
+{% render 'wholesale-modal' %}
     <script src="{{ 'wholesale.js'  | asset_url }}" defer></script>
     <script src="{{ 'techpack-app.js' | asset_url }}" defer></script>
     <script>
