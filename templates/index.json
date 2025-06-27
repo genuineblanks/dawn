@@ -15,31 +15,31 @@
         "collection_rVnGNr": {
           "type": "collection",
           "settings": {
-            "collection": "jacket"
+            "collection": "jacket-luxury"
           }
         },
         "collection_gXkdqm": {
           "type": "collection",
           "settings": {
-            "collection": "hoodie"
+            "collection": "hoodie-luxury"
           }
         },
         "collection_RQi7BY": {
           "type": "collection",
           "settings": {
-            "collection": "t-shirts"
+            "collection": "t-shirts-luxury"
           }
         },
         "collection_6Frqk6": {
           "type": "collection",
           "settings": {
-            "collection": "sweatshirt"
+            "collection": "sweatshirt-luxury"
           }
         },
         "collection_wMaVtn": {
           "type": "collection",
           "settings": {
-            "collection": "sweatpants"
+            "collection": "sweatpants-luxury"
           }
         },
         "link_list_cJFdTd": {
@@ -66,7 +66,7 @@
         "banner_subtext2": "RELAXED HIGH-END COLLECTION",
         "banner_subtext_url2": "",
         "banner_link_txt": "LOOKBOOK & SIZE CHART",
-        "banner_link_url": "shopify://pages/luxary-lookbook",
+        "banner_link_url": "shopify://pages/luxury-lookbook",
         "banner_botton_text": "<p class=\"click-to-scroll\"><span>Click to go into the product, or</span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"></path>\n</svg></a><br>\nto get to know us better</p>",
         "image_overlay_opacity": 0,
         "image_height": "medium",
