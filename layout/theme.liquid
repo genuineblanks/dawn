@@ -955,88 +955,45 @@
 
 <script>
 {% if template == 'index' %}
-console.log('🏠 Homepage - Robust scroll fix');
-
-let scrollHandler = null;
-let fixAttempts = 0;
-const maxAttempts = 10;
-
-function applyScrollFix() {
-  fixAttempts++;
-  console.log(`🔧 Attempt ${fixAttempts}: Applying scroll fix...`);
+// Simple one-time scroll fix - no multiple attempts, no conflicts
+document.addEventListener('DOMContentLoaded', function() {
+  let scrollFixed = false;
   
-  // Check if animations.js is loaded and elements exist
-  const scrollTriggers = document.querySelectorAll('.scroll-trigger');
-  const animationsLoaded = typeof initializeScrollAnimationTrigger === 'function';
-  
-  console.log(`📊 Found ${scrollTriggers.length} scroll triggers, animations loaded: ${animationsLoaded}`);
-  
-  if (scrollTriggers.length === 0 && fixAttempts < maxAttempts) {
-    console.log('⏳ No scroll triggers found yet, retrying...');
-    setTimeout(applyScrollFix, 200);
-    return;
-  }
-  
-  // Remove existing scroll listener
-  if (scrollHandler) {
-    window.removeEventListener('scroll', scrollHandler);
-  }
-  
-  // Force reset all elements to their correct state
-  scrollTriggers.forEach(element => {
-    const rect = element.getBoundingClientRect();
-    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+  function fixScrollOnce() {
+    if (scrollFixed) return; // Prevent multiple executions
+    scrollFixed = true;
     
-    if (isInView) {
-      element.classList.remove('scroll-trigger--offscreen');
-      console.log('✅ Visible:', element.className.split(' ')[0]);
-    } else {
-      // Make sure elements below the fold are hidden
-      element.classList.add('scroll-trigger--offscreen');
-      console.log('🙈 Hidden:', element.className.split(' ')[0]);
-    }
-  });
-  
-  // Create robust scroll handler
-  let ticking = false;
-  scrollHandler = function() {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
-          const rect = element.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 50) {
-            element.classList.remove('scroll-trigger--offscreen');
-            console.log('📜 Revealed:', element.className.split(' ')[0]);
-          }
-        });
-        ticking = false;
+    console.log('🔧 ONE-TIME scroll fix');
+    
+    // Simple scroll handler
+    function handleScroll() {
+      document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+          element.classList.remove('scroll-trigger--offscreen');
+        }
       });
-      ticking = true;
     }
-  };
+    
+    // Apply immediately for visible elements
+    handleScroll();
+    
+    // Listen for scroll
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    console.log('✅ Scroll fix done');
+  }
   
-  window.addEventListener('scroll', scrollHandler);
-  console.log('✅ Scroll fix applied successfully');
-}
-
-// Multiple initialization points with different delays
-setTimeout(() => applyScrollFix(), 500);   // Quick start
-setTimeout(() => applyScrollFix(), 1000);  // After load
-setTimeout(() => applyScrollFix(), 2000);  // Fallback
-
-window.addEventListener('load', () => {
-  setTimeout(applyScrollFix, 800);
+  // Wait for everything to load, then fix ONCE
+  setTimeout(fixScrollOnce, 1500);
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(applyScrollFix, 600);
+// Handle page refresh/navigation
+window.addEventListener('pageshow', function(event) {
+  if (event.persisted) {
+    location.reload();
+  }
 });
-
-window.addEventListener('pageshow', () => {
-  fixAttempts = 0; // Reset counter for new page show
-  setTimeout(applyScrollFix, 400);
-});
-
 {% endif %}
 </script>
     
