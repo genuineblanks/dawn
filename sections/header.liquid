@@ -1,3 +1,11 @@
+<!-- BLOCK DEBUG -->
+{%- for block in section.blocks -%}
+  <p>Block type: {{ block.type }}</p>
+  <p>Block settings: {{ block.settings }}</p>
+  <p>Account menu setting: {{ block.settings.account_menu }}</p>
+{%- endfor -%}
+<!-- END BLOCK DEBUG -->
+
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
