@@ -294,7 +294,7 @@
   </head>
 <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     
-    <!-- HOMEPAGE SCROLL FIX - RUNS FIRST -->
+<!-- HOMEPAGE SCROLL FIX - RUNS FIRST -->
     {% if template == 'index' %}
     <script>
     (function() {
@@ -309,19 +309,32 @@
         
         console.log('🔧 Adding scroll fix...');
         
+        // First, reset all elements to proper state
+        document.querySelectorAll('.scroll-trigger').forEach(function(el) {
+          var rect = el.getBoundingClientRect();
+          var viewportHeight = window.innerHeight;
+          
+          // Only show elements in the top 20% of viewport
+          if (rect.top < viewportHeight * 0.2) {
+            el.classList.remove('scroll-trigger--offscreen');
+            console.log('👁️ Initially visible:', el.className.split(' ')[0]);
+          } else {
+            // Hide elements that should animate in
+            el.classList.add('scroll-trigger--offscreen');
+            console.log('🙈 Hidden for scroll reveal:', el.className.split(' ')[0]);
+          }
+        });
+        
         function revealElements() {
           var offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
           offscreenElements.forEach(function(el) {
             var rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 50) {
+            if (rect.top < window.innerHeight - 100) {
               el.classList.remove('scroll-trigger--offscreen');
-              console.log('📜 Revealed:', el.className.split(' ')[0]);
+              console.log('🎉 SCROLL REVEALED:', el.className.split(' ')[0]);
             }
           });
         }
-        
-        // Apply immediately
-        revealElements();
         
         // Add scroll listener
         window.addEventListener('scroll', revealElements, { passive: true });
@@ -331,34 +344,34 @@
       // Try multiple initialization points
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-          setTimeout(addScrollFix, 100);
+          setTimeout(addScrollFix, 500);
         });
       } else {
-        setTimeout(addScrollFix, 100);
+        setTimeout(addScrollFix, 500);
       }
       
       // Also try on load
       window.addEventListener('load', function() {
-        setTimeout(addScrollFix, 200);
+        setTimeout(addScrollFix, 800);
       });
       
       // Handle navigation
       window.addEventListener('pageshow', function(event) {
         scrollHandlerAdded = false;
-        setTimeout(addScrollFix, 100);
+        setTimeout(addScrollFix, 200);
       });
       
       // Handle visibility changes
       document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
-          setTimeout(addScrollFix, 200);
+          scrollHandlerAdded = false;
+          setTimeout(addScrollFix, 300);
         }
       });
       
     })();
     </script>
     {% endif %}
-    <!-- END SCROLL FIX -->
 
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
