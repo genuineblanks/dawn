@@ -356,7 +356,7 @@
           "type": "button",
           "settings": {
             "button_label": "WHAT YOU NEED TO GET STARTED",
-            "button_link": "shopify://pages/what-we-offer",
+            "button_link": "shopify://pages/how-does-it-work",
             "button_style_secondary": false,
             "button_label_2": "",
             "button_link_2": "https://genuine-blanks.myshopify.com/pages/how-does-it-work#who_weAre",
