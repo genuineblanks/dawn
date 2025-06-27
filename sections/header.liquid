@@ -298,8 +298,8 @@
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
-          {%- when 'link_list' -%}
-            {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
+        {%- when 'link_list' -%}
+          {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
         {%- endcase -%}
       {%- endfor -%}
       
