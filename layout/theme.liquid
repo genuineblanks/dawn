@@ -293,13 +293,6 @@
     }
     </script>
 
-    <script>
-      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-      if (Shopify.designMode) {
-        document.documentElement.classList.add('shopify-design-mode');
-      }
-    </script>
-
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
   </head>
@@ -309,64 +302,32 @@
     {% if template == 'index' %}
     (function() {
       'use strict';
-      
-      console.log('🏠 Homepage scroll fix - loading...');
+      console.log('🏠 CLEAN SCROLL FIX');
       
       let fixed = false;
       
-      function applyFix() {
+      function doScrollFix() {
         if (fixed) return;
         fixed = true;
         
-        console.log('🔧 Applying scroll fix...');
-        
-        function doFix() {
-          try {
-            document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
-              const rect = el.getBoundingClientRect();
-              if (rect.top < window.innerHeight - 50) {
-                el.classList.remove('scroll-trigger--offscreen');
-              }
-            });
-            
-            let ticking = false;
-            window.addEventListener('scroll', function() {
-              if (!ticking) {
-                requestAnimationFrame(() => {
-                  document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top < window.innerHeight - 50) {
-                      el.classList.remove('scroll-trigger--offscreen');
-                    }
-                  });
-                  ticking = false;
-                });
-                ticking = true;
-              }
-            }, { passive: true });
-            
-            console.log('✅ Scroll fix applied');
-          } catch (e) {
-            console.error('❌ Scroll fix error:', e);
-          }
+        function handleScroll() {
+          document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 50) {
+              el.classList.remove('scroll-trigger--offscreen');
+            }
+          });
         }
         
-        if (document.readyState === 'complete') {
-          setTimeout(doFix, 100);
-        } else {
-          window.addEventListener('load', () => setTimeout(doFix, 100));
-          document.addEventListener('DOMContentLoaded', () => setTimeout(doFix, 100));
-        }
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        console.log('✅ SCROLL FIXED');
       }
       
-      applyFix();
-      setTimeout(applyFix, 1000);
-      setTimeout(applyFix, 2000);
-      
+      window.addEventListener('load', () => setTimeout(doScrollFix, 1000));
     })();
     {% endif %}
     </script>
-    <!-- END SCRIPT -->
   
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
