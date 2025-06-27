@@ -358,7 +358,7 @@
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     {% if template contains 'index' %}
-      <script src="{{ 'custom.js' | asset_url }}"></script>
+      <script src="{{ 'custom.js' | asset_url }}" preload></script>
     {% elsif template contains 'product' %}
       <script src="{{ 'custom-product-page.js' | asset_url }}" async></script>
     {% endif %}
