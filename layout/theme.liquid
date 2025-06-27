@@ -283,6 +283,17 @@
     {%- endif -%}
 
     <script>
+    try {
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    } catch(e) {
+      console.warn('Header script error:', e);
+    }
+    </script>
+
+    <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
