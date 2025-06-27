@@ -462,7 +462,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "CHECK OUR ACCESSORIES WITH US",
-            "button_link_1": "shopify://collections/accessories",
+            "button_link_1": "shopify://collections/frontpage",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
