@@ -958,54 +958,74 @@
     {% if template == 'index' %}
     console.log('🏠 Main homepage detected - initializing scroll animations');
     
-    // Force scroll animations to work properly on homepage only
-    window.addEventListener('load', function() {
-      setTimeout(() => {
-        console.log('🔄 FIXING SCROLL ANIMATIONS ON MAIN PAGE...');
-        
-        // Create our own intersection observer that actually works
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              // Remove offscreen class when element enters viewport
-              entry.target.classList.remove('scroll-trigger--offscreen');
-              console.log('✅ Revealed element:', entry.target.classList[0]);
-            }
-          });
-        }, {
-          rootMargin: '0px 0px -50px 0px',
-          threshold: 0.1
-        });
-        
-        // Observe all scroll trigger elements
-        document.querySelectorAll('.scroll-trigger').forEach(element => {
-          observer.observe(element);
-          
-          // Also manually check if already visible
-          const rect = element.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            element.classList.remove('scroll-trigger--offscreen');
+    let scrollObserver = null;
+    
+    function initializeScrollAnimations() {
+      console.log('🔄 INITIALIZING SCROLL ANIMATIONS...');
+      
+      // Clean up existing observer
+      if (scrollObserver) {
+        scrollObserver.disconnect();
+      }
+      
+      // Reset ALL scroll trigger elements to offscreen state first
+      document.querySelectorAll('.scroll-trigger').forEach(element => {
+        // Only reset elements that are actually below the viewport
+        const rect = element.getBoundingClientRect();
+        if (rect.top > window.innerHeight * 0.8) {
+          element.classList.add('scroll-trigger--offscreen');
+        } else {
+          element.classList.remove('scroll-trigger--offscreen');
+        }
+      });
+      
+      // Create fresh intersection observer
+      scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('scroll-trigger--offscreen');
+            console.log('✅ Revealed:', entry.target.className.split(' ')[0]);
           }
         });
-        
-        console.log('✅ Custom scroll observer activated on main page');
-      }, 500);
+      }, {
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1
+      });
+      
+      // Observe all scroll trigger elements
+      document.querySelectorAll('.scroll-trigger').forEach(element => {
+        scrollObserver.observe(element);
+      });
+      
+      console.log('✅ Fresh scroll observer activated');
+    }
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+      setTimeout(initializeScrollAnimations, 500);
     });
     
-    // Also fix on navigation within homepage
+    // Re-initialize on page visibility change (when coming back to tab)
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        setTimeout(initializeScrollAnimations, 200);
+      }
+    });
+    
+    // Re-initialize on browser navigation (back/forward)
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        setTimeout(initializeScrollAnimations, 200);
+      }
+    });
+    
+    // Re-initialize on section loads
     document.addEventListener('shopify:section:load', function() {
-      setTimeout(() => {
-        document.querySelectorAll('.scroll-trigger').forEach(element => {
-          const rect = element.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            element.classList.remove('scroll-trigger--offscreen');
-          }
-        });
-      }, 200);
+      setTimeout(initializeScrollAnimations, 200);
     });
     
     {% else %}
-    console.log('📄 Not main homepage (template: {{ template }}) - skipping scroll animations');
+    console.log('📄 Not main homepage - skipping scroll animations');
     {% endif %}
     </script>
     
