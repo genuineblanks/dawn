@@ -957,55 +957,72 @@
 {% if template == 'index' %}
 console.log('🏠 Homepage - Simple scroll fix');
 
-// Simple fix: just remove the broken animation system and let CSS handle it
-window.addEventListener('load', function() {
-  setTimeout(() => {
-    console.log('🔧 Applying simple scroll fix...');
-    
-    // Remove ALL offscreen classes from visible elements
-    document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
-      const rect = element.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        element.classList.remove('scroll-trigger--offscreen');
-        console.log('✅ Made visible:', element.className.split(' ')[0]);
-      }
-    });
-    
-    // Add a simple scroll listener for remaining elements
-    let ticking = false;
-    function handleScroll() {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
-            const rect = element.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 100) {
-              element.classList.remove('scroll-trigger--offscreen');
-              console.log('📜 Scroll revealed:', element.className.split(' ')[0]);
-            }
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
+let scrollHandler = null;
+
+function applyScrollFix() {
+  console.log('🔧 Applying simple scroll fix...');
+  
+  // Remove existing scroll listener to avoid duplicates
+  if (scrollHandler) {
+    window.removeEventListener('scroll', scrollHandler);
+  }
+  
+  // Remove ALL offscreen classes from visible elements
+  document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+    const rect = element.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      element.classList.remove('scroll-trigger--offscreen');
+      console.log('✅ Made visible:', element.className.split(' ')[0]);
     }
-    
-    window.addEventListener('scroll', handleScroll);
-    console.log('✅ Simple scroll fix applied');
-  }, 1000);
+  });
+  
+  // Create scroll handler
+  let ticking = false;
+  scrollHandler = function() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+          const rect = element.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 100) {
+            element.classList.remove('scroll-trigger--offscreen');
+            console.log('📜 Scroll revealed:', element.className.split(' ')[0]);
+          }
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+  
+  window.addEventListener('scroll', scrollHandler);
+  console.log('✅ Simple scroll fix applied');
+}
+
+// Apply on initial load
+window.addEventListener('load', function() {
+  setTimeout(applyScrollFix, 1000);
 });
 
-// Fix on navigation
+// Apply on DOMContentLoaded (for refresh)
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(applyScrollFix, 800);
+});
+
+// Apply on page show (handles back/forward and refresh)
+window.addEventListener('pageshow', function(event) {
+  setTimeout(applyScrollFix, 500);
+});
+
+// Apply on visibility change
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
-    setTimeout(() => {
-      document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
-        const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight) {
-          element.classList.remove('scroll-trigger--offscreen');
-        }
-      });
-    }, 500);
+    setTimeout(applyScrollFix, 300);
   }
+});
+
+// Apply on Shopify section loads
+document.addEventListener('shopify:section:load', function() {
+  setTimeout(applyScrollFix, 200);
 });
 
 {% endif %}
