@@ -174,27 +174,24 @@
             >
               {{ block.settings.heading }}
             </h2>
-        {%- when 'collection' -%}
-        {% assign blockCollection = block.settings.collection %}
-        {% if blockCollection != blank %}
-          {% assign collectionObj = collections[blockCollection] %}
-          {% if collectionObj != blank %}
-            <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-              <a href="{{ collectionObj.url }}">
-                {{ block.settings.product_image | default: collectionObj.featured_image | image_url: width: 200, height: 300 | image_tag }}
+          {%- when 'product' -%}
+          {% assign blockProduct =  block.settings.product %}
+          {% if blockProduct != blank %}
+            {% assign productObj = all_products[blockProduct] %}
+              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+                <a href="{{ productObj.url }}">
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag }}
                 {% if block.settings.show_title != false %}
-                  <h2 class="banner__heading inline-richtext">
-                    {{ collectionObj.title | truncate: 20 }}
+                   <h2 class="banner__heading inline-richtext" >
+                    {{ productObj.title | truncate: 20 }}
                   </h2>
                 {% endif %} 
-                {% comment %} Collections don't have prices, so we remove this {% endcomment %}
-                {% if block.settings.show_price != false and collectionObj.products.size > 0 %}
-                  <span>From {{ collectionObj.products.first.price | money }}</span>
-                {% endif %}
-              </a>
-            </div>
-          {% endif %}
-        {% endif %}
+                  {% if block.settings.show_price != false %}
+                    <span>{{ productObj.price | money }}</span>
+                  {% endif %}
+                </a>
+              </div>
+            {% endif %}
           {%- when 'collection' -%}
           {% assign blockProduct =  block.settings.collection %}
             {% if blockProduct != blank %}
