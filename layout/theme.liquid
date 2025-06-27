@@ -953,74 +953,63 @@
     });
     </script>
 
-    <script>
-    // Only run scroll animations on the main homepage (index template)
-    {% if template == 'index' %}
-    console.log('🏠 Main homepage detected - initializing scroll animations');
+<script>
+{% if template == 'index' %}
+console.log('🏠 Homepage - Simple scroll fix');
+
+// Simple fix: just remove the broken animation system and let CSS handle it
+window.addEventListener('load', function() {
+  setTimeout(() => {
+    console.log('🔧 Applying simple scroll fix...');
     
-    let scrollObserver = null;
-    
-    function initializeScrollAnimations() {
-      console.log('🔄 INITIALIZING SCROLL ANIMATIONS...');
-      
-      // Clean up existing observer
-      if (scrollObserver) {
-        scrollObserver.disconnect();
+    // Remove ALL offscreen classes from visible elements
+    document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+      const rect = element.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        element.classList.remove('scroll-trigger--offscreen');
+        console.log('✅ Made visible:', element.className.split(' ')[0]);
       }
-      
-      // Reset ALL scroll trigger elements properly
-      document.querySelectorAll('.scroll-trigger').forEach(element => {
-        const rect = element.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        // Only show elements that are clearly in the top section of viewport
-        if (rect.top < viewportHeight * 0.3) {
-          element.classList.remove('scroll-trigger--offscreen');
-          console.log('👁️ Initially visible:', element.className.split(' ')[0]);
-        } else {
-          // Hide elements that are below the fold
-          element.classList.add('scroll-trigger--offscreen');
-          console.log('🙈 Hidden for scroll reveal:', element.className.split(' ')[0]);
-        }
-      });
-      
-      // Create fresh intersection observer
-      scrollObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove('scroll-trigger--offscreen');
-            console.log('🎉 SCROLL REVEALED:', entry.target.className.split(' ')[0]);
-          }
+    });
+    
+    // Add a simple scroll listener for remaining elements
+    let ticking = false;
+    function handleScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+            const rect = element.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+              element.classList.remove('scroll-trigger--offscreen');
+              console.log('📜 Scroll revealed:', element.className.split(' ')[0]);
+            }
+          });
+          ticking = false;
         });
-      }, {
-        rootMargin: '0px 0px -100px 0px', // More conservative trigger
-        threshold: 0.1
-      });
-      
-      // Observe all scroll trigger elements
-      document.querySelectorAll('.scroll-trigger').forEach(element => {
-        scrollObserver.observe(element);
-      });
-      
-      console.log('✅ Fresh scroll observer activated');
+        ticking = true;
+      }
     }
     
-    // Initialize on page load
-    window.addEventListener('load', function() {
-      setTimeout(initializeScrollAnimations, 800);
-    });
-    
-    // Re-initialize on page visibility change
-    document.addEventListener('visibilitychange', function() {
-      if (!document.hidden) {
-        setTimeout(initializeScrollAnimations, 300);
-      }
-    });
-    
-    {% else %}
-    console.log('📄 Not main homepage - skipping scroll animations');
-    {% endif %}
-    </script>
+    window.addEventListener('scroll', handleScroll);
+    console.log('✅ Simple scroll fix applied');
+  }, 1000);
+});
+
+// Fix on navigation
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    setTimeout(() => {
+      document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          element.classList.remove('scroll-trigger--offscreen');
+        }
+      });
+    }, 500);
+  }
+});
+
+{% endif %}
+</script>
     
   </body>
 </html>
