@@ -50,7 +50,7 @@
         "link_list_cJFdTd": {
           "type": "link_list",
           "settings": {
-            "account_menu": ""
+            "account_menu": "account-menu"
           }
         }
       },
