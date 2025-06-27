@@ -1,1 +1,696 @@
-{"sections":{"image_luxury_products_fVNxeh":{"type":"image-luxury-products","blocks":{"collection_rVnGNr":{"type":"collection","settings":{"collection":"jacket","product_image":"shopify:\/\/shop_images\/ONYX_01ZIPPER_PNG.png"}},"collection_gXkdqm":{"type":"collection","settings":{"collection":"hoodie","product_image":"shopify:\/\/shop_images\/ONYX_02HOODIE_PNG.png"}},"collection_RQi7BY":{"type":"collection","settings":{"collection":"t-shirts","product_image":"shopify:\/\/shop_images\/ONYX_04TSHIRT_PNG.png"}},"collection_6Frqk6":{"type":"collection","settings":{"collection":"sweatshirt","product_image":"shopify:\/\/shop_images\/ONYX_03SWEATSHIRT_PNG.png"}},"collection_wMaVtn":{"type":"collection","settings":{"collection":"sweatpants","product_image":"shopify:\/\/shop_images\/ONYX_05SWEATPANTS_PNG.png"}},"link_list_cJFdTd":{"type":"link_list","settings":{"account_menu":"account-menu"}}},"block_order":["collection_rVnGNr","collection_gXkdqm","collection_RQi7BY","collection_6Frqk6","collection_wMaVtn","link_list_cJFdTd"],"settings":{"image":"shopify:\/\/shop_images\/Front_Page_3_Image.jpg","banner_heading":"GENUINE BLANKS","banner_paragraph":"","banner_subtext1":"OVERSIZED LUXURY COLLECTION","banner_link_url1":"","banner_subtext2":"RELAXED HIGH-END COLLECTION","banner_subtext_url2":"","banner_link_txt":"LOOKBOOK & SIZE CHART","banner_link_url":"shopify:\/\/pages\/luxary-lookbook","banner_botton_text":"<p class=\"click-to-scroll\"><span>Click to go into the product, or<\/span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"><\/path>\n<\/svg><\/a><br>\nto get to know us better<\/p>","image_overlay_opacity":0,"image_height":"medium","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"scheme-1","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":true,"logo_position":"middle-left","menu":"main-menu","menu_type_desktop":"dropdown","sticky_header_type":"none","show_line_separator":true,"hide_cart_icon":false,"hide_search_icon":true,"color_scheme":"scheme-f7cb6d06-fa57-48ad-b559-ee98b022bdc6","menu_color_scheme":"scheme-1","enable_country_selector":false,"enable_language_selector":false,"mobile_logo_position":"center","margin_bottom":0,"padding_top":20,"padding_bottom":20}},"image_high_end_products_amWbDP":{"type":"image-high-end-products","blocks":{"collection_4tkaVR":{"type":"collection","settings":{"collection":"jacket-high-end","product_image":"shopify:\/\/shop_images\/JACKET-FILLIN_1_f068fa6f-c991-4c74-be2b-f22af7bb5260.png"}},"collection_CVxfcp":{"type":"collection","settings":{"collection":"hoodie-high-end"}},"collection_B77dEm":{"type":"collection","settings":{"collection":"t-shirts-high-end"}},"collection_Ppw48X":{"type":"collection","settings":{"collection":"sweatshirt-high-end"}},"collection_BTWtgq":{"type":"collection","settings":{"collection":"sweatpants-high-end"}},"link_list_cYVVVY":{"type":"link_list","settings":{"account_menu":"account-menu"}}},"block_order":["collection_4tkaVR","collection_CVxfcp","collection_B77dEm","collection_Ppw48X","collection_BTWtgq","link_list_cYVVVY"],"settings":{"image":"shopify:\/\/shop_images\/Front_Page_3_Image.jpg","banner_heading":"GENUINE BLANKS","banner_paragraph":"","banner_subtext1":"OVERSIZED LUXURY COLLECTION","banner_link_url1":"","banner_subtext2":"RELAXED HIGH-END COLLECTION","banner_subtext_url2":"","banner_link_txt":"LOOKBOOK & SIZE CHART","banner_link_url":"shopify:\/\/pages\/hign-end-lookbook","banner_botton_text":"<p class=\"click-to-scroll\"><span>Click to go into the product, or<\/span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"><\/path>\n<\/svg><\/a><br>\nto get to know us better<\/p>","image_overlay_opacity":0,"image_height":"medium","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":false,"logo_position":"middle-left","menu":"main-menu","menu_type_desktop":"dropdown","sticky_header_type":"none","show_line_separator":true,"hide_cart_icon":false,"hide_search_icon":true,"color_scheme":"","menu_color_scheme":"","enable_country_selector":false,"enable_language_selector":false,"mobile_logo_position":"center","margin_bottom":0,"padding_top":20,"padding_bottom":20}},"autoplay_video_PAxbzR":{"type":"autoplay-video","blocks":{"heading_7gE4AW":{"type":"heading","settings":{"heading":"<strong>Currently accepting brands<\/strong> to manufacture & develop their pieces with us","heading_size":"h1"}},"text_eExxPr":{"type":"text","settings":{"text":"<p>limited availability<\/p>","text_style":"body","class_text":"videotoptext"}},"text_VRpcXA":{"type":"text","settings":{"text":"<p>15% Bulk order discount to the 100 \"FIrst TIme\" Orders<\/p>","text_style":"caption-with-letter-spacing","class_text":"video-bottom-text"}},"buttons_z7PYJ8":{"type":"buttons","settings":{"button_label_1":"Apply Now","button_link_1":"shopify:\/\/pages\/wholesale-form","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}},"text_Eaxb3b":{"type":"text","settings":{"text":"<p>* Must be accepted  make an order with in 45 days<\/p><p>* Must be registered to purchase wholesale<\/p>","text_style":"body","class_text":"video-bottom-text"}}},"block_order":["heading_7gE4AW","text_eExxPr","text_VRpcXA","buttons_z7PYJ8","text_Eaxb3b"],"disabled":true,"settings":{"heading":"","heading_size":"h1","enable_video_looping":true,"video":"shopify:\/\/files\/videos\/Ecommerce_video.mp4","video_url":"https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc","description":"","full_width":false,"color_scheme":"","padding_top":0,"padding_bottom":0}},"image_banner_kEcnHz":{"type":"image-banner","blocks":{"text_4tbUgD":{"type":"text","settings":{"text":"<p>For brands ready to move — we’re ready to build. <\/p><p>\nOur production team reviews every detail for precision, feasibility, and flow.\nEnsuring a smooth transition from design to sample. <\/p>","text_style":"subtitle","class_text":"button-above"}},"buttons_YbRbmi":{"type":"buttons","settings":{"button_label_1":"SUBMIT YOUR TECH-PACK","button_link_1":"shopify:\/\/pages\/tech-pack-submission-1","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}},"text_7NXkff":{"type":"text","settings":{"text":"<p>* Quotations within 2-5 business days<\/p><p>* Must be registered to submit<\/p>","text_style":"caption-with-letter-spacing","class_text":"video-bottom-text"}},"image_DUWW4x":{"type":"image","settings":{"title":"Genuineblanks","richtext":"","image_width":100,"alignment":"center"}}},"block_order":["text_4tbUgD","buttons_YbRbmi","text_7NXkff","image_DUWW4x"],"settings":{"enable_footer":false,"dynamic-class":"worldwide-brands","image":"shopify:\/\/shop_images\/Tech-Pack_-_Website.jpg","image_overlay_opacity":10,"image_height":"large","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":false,"color_scheme":"scheme-2","newsletter_enable":true,"newsletter_heading":"","newsletter_paragraph":"","enable_follow_on_shop":false,"show_social":false,"enable_country_selector":false,"enable_language_selector":false,"payment_enable":true,"show_policy":false,"show_policy_menu":"privacy-menu","copyright_text":"","margin_top":0,"padding_top":20,"padding_bottom":20}},"rich_text_iBiEKf":{"type":"rich-text","blocks":{"heading_3B7gU6":{"type":"heading","settings":{"heading":"<strong>Who We Are.<\/strong>","heading_size":"h1"}},"text_biLyAG":{"type":"text","settings":{"text":"<p>We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Portugal, our facilities and machines are at the cutting edge of<br\/>technology.<\/p>"}},"text_PNPFBE":{"type":"text","settings":{"text":"<p>We help avant-garde brands and designers to grow and expand by giving them access to a range of Organic Luxury Blanks and customization services with no minimums. We also supply our blank apparel in an affordable way to the retail market.<\/p>"}},"button_wGNftm":{"type":"button","settings":{"button_label":"WHAT YOU NEED TO GET STARTED","button_link":"https:\/\/genuine-blanks.myshopify.com\/pages\/how-does-it-work#who_weAre","button_style_secondary":false,"button_label_2":"","button_link_2":"https:\/\/genuine-blanks.myshopify.com\/pages\/how-does-it-work#who_weAre","button_style_secondary_2":true}}},"block_order":["heading_3B7gU6","text_biLyAG","text_PNPFBE","button_wGNftm"],"settings":{"additional-classroom":"aboutus-page who-we-are","desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":40,"padding_bottom":52}},"image_banner_tFFqdH":{"type":"image-banner","blocks":{"text_x8mhKq":{"type":"text","settings":{"text":"<p><\/p> Our in-house design team works side by side \nwith brands to translate abstract ideas into detailed \ngraphics, placements, and concepts ready for production. <p><\/p>","text_style":"subtitle","class_text":""}},"text_qcNjYb":{"type":"text","settings":{"text":"We don't follow trends, we build from vision.","text_style":"caption-with-letter-spacing","class_text":""}},"buttons_U7f6Q8":{"type":"buttons","settings":{"button_label_1":"DISCOVER CUSTOM DESIGN SOLUTIONS","button_link_1":"shopify:\/\/collections\/design","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}}},"block_order":["text_x8mhKq","text_qcNjYb","buttons_U7f6Q8"],"settings":{"enable_footer":false,"dynamic-class":"button-above bring-creativity","image":"shopify:\/\/shop_images\/Design_Page_-_website2.jpg","image_overlay_opacity":20,"image_height":"medium","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"scheme-3","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":true,"color_scheme":"","newsletter_enable":true,"newsletter_heading":"Subscribe to our emails","newsletter_paragraph":"","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":false,"show_policy_menu":"","copyright_text":"","margin_top":0,"padding_top":36,"padding_bottom":36}},"image_banner_DBzJcE":{"type":"image-banner","blocks":{"text_qPxpUx":{"type":"text","settings":{"text":"<p style=\"color: #000000;\">Create anything you'll need for your brand<\/p>\n<p style=\"color: #000000;\">Hang-tags, Labels, Flyers,<br>You create, we'll produce.<\/p>","text_style":"body","class_text":""}},"buttons_mbfi7y":{"type":"buttons","settings":{"button_label_1":"CHECK OUR ACCESSORIES WITH US","button_link_1":"shopify:\/\/collections\/accessories","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}},"text_Bjz4EN":{"type":"text","settings":{"text":"<ul style=\"color: #000000;\">\n  <h3>*Available for retail:<\/h3>\n  <li>- Branding labels<\/li>\n  <li>- Hang-tags<\/li>\n  <li>- Composition labels<\/li>\n<\/ul>\n\n<ul style=\"color: #000000;\">\n  <h3>*Available for wholesale:<\/h3>\n  <li>- Anything available in today’s market.<\/li>\n<\/ul>","text_style":"subtitle","class_text":""}}},"block_order":["text_qPxpUx","buttons_mbfi7y","text_Bjz4EN"],"settings":{"enable_footer":false,"dynamic-class":"worldwide-brands button-above bring-creativity","image":"shopify:\/\/shop_images\/Accessories_Page_-_website_V2.jpg","image_overlay_opacity":0,"image_height":"medium","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"scheme-4","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":true,"color_scheme":"scheme-1","newsletter_enable":true,"newsletter_heading":"Subscribe to our emails","newsletter_paragraph":"","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":false,"show_policy_menu":"","copyright_text":"","margin_top":0,"padding_top":36,"padding_bottom":36}},"image_banner_mbytrt":{"type":"image-banner","blocks":{"buttons_YfbFih":{"type":"buttons","settings":{"button_label_1":"LUXURY COLLECTION LOOKBOOK","button_link_1":"shopify:\/\/collections\/sweatshirt","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}},"buttons_3CkR8q":{"type":"buttons","settings":{"button_label_1":"HIGH END COLLECTION LOOKBOOK","button_link_1":"shopify:\/\/collections\/sweatshirt-high-end","button_style_secondary_1":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}},"image_LRmjQ3":{"type":"image","settings":{"title":"GENUINEBLANKS","richtext":"","image_width":100,"alignment":""}}},"block_order":["buttons_YfbFih","buttons_3CkR8q","image_LRmjQ3"],"disabled":true,"settings":{"enable_footer":false,"dynamic-class":"worldwide-brands","image":"shopify:\/\/shop_images\/The-Best-Hoodies-for-Branding-Merch-scaled.webp","image_overlay_opacity":40,"image_height":"medium","desktop_content_position":"middle-center","show_text_box":false,"desktop_content_alignment":"center","color_scheme_section":"","image_behavior":"none","mobile_content_alignment":"center","stack_images_on_mobile":true,"show_text_below":false,"color_scheme":"scheme-2","newsletter_enable":true,"newsletter_heading":"","newsletter_paragraph":"","enable_follow_on_shop":true,"show_social":false,"enable_country_selector":false,"enable_language_selector":true,"payment_enable":true,"show_policy":false,"show_policy_menu":"privacy-menu","copyright_text":"","margin_top":0,"padding_top":36,"padding_bottom":36}},"text_grid_itwK3a":{"type":"text-grid","blocks":{"add_text_grid_jJzfCM":{"type":"Add-text-grid","settings":{"title":"","subtitle":"LUXURY & HIGH END BLANKS","rich":"<p>1ST - REDIRECTS TO THE SHOP BLANKS OVERALL PAGE<\/p>","link":"shopify:\/\/pages\/luxary-lookbook"}},"add_text_grid_zc3Xgn":{"type":"Add-text-grid","settings":{"title":"","subtitle":"DESIGNER LAB","rich":"<p>2ND - REDIRECTS TO THE DESIGNERS LAB PAGE<\/p>","link":"shopify:\/\/pages\/design-lab"}},"add_text_grid_Nz7RMR":{"type":"Add-text-grid","settings":{"title":"","subtitle":"LABELLING & ACCESSORIES SERVICE","rich":"<p>3RD - REDIRECTS TO THE LABELS PAGE<\/p>","link":"shopify:\/\/pages\/labelling-acessories-service"}},"add_text_grid_cKpzzE":{"type":"Add-text-grid","settings":{"title":"","subtitle":"ABOUT US - GET TO KNOW US BETTER","rich":"<p>4TH - REDIRECTS TO THE ABOUT US PAGE<\/p>","link":"shopify:\/\/pages\/about-us"}},"add_text_grid_ktQ6ix":{"type":"Add-text-grid","settings":{"title":"","subtitle":"LUXURY & HIGH END LOOKBOOK","rich":"<p>5TH - REDIRECTS TO THE HOME PAGE LOOKBOOK<\/p>","link":"shopify:\/\/pages\/luxary-lookbook"}},"add_text_grid_atVwXA":{"type":"Add-text-grid","settings":{"title":"","subtitle":"HELP CENTER","rich":"<p>6TH - REDIRECTS TO THE HELP CENTER PAGE<\/p>","link":"shopify:\/\/pages\/learn-more"}},"image_7eijNM":{"type":"image","settings":{"title":"GENUINEBLANKS","richtext":"","image_width":100,"alignment":""}}},"block_order":["add_text_grid_jJzfCM","add_text_grid_zc3Xgn","add_text_grid_Nz7RMR","add_text_grid_cKpzzE","add_text_grid_ktQ6ix","add_text_grid_atVwXA","image_7eijNM"],"settings":{"enable_footer":true,"color_scheme":"scheme-1","newsletter_enable":true,"newsletter_heading":"","newsletter_paragraph":"","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":true,"enable_language_selector":true,"payment_enable":true,"show_policy":false,"show_policy_menu":"privacy-menu","copyright_text":"","margin_top":0,"padding_top":36,"padding_bottom":36}}},"order":["image_luxury_products_fVNxeh","image_high_end_products_amWbDP","autoplay_video_PAxbzR","image_banner_kEcnHz","rich_text_iBiEKf","image_banner_tFFqdH","image_banner_DBzJcE","image_banner_mbytrt","text_grid_itwK3a"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_luxury_products_fVNxeh": {
+      "type": "image-luxury-products",
+      "blocks": {
+        "collection_rVnGNr": {
+          "type": "collection",
+          "settings": {
+            "collection": "jacket",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
+          }
+        },
+        "collection_gXkdqm": {
+          "type": "collection",
+          "settings": {
+            "collection": "hoodie",
+            "product_image": "shopify://shop_images/ONYX_02HOODIE_PNG.png"
+          }
+        },
+        "collection_RQi7BY": {
+          "type": "collection",
+          "settings": {
+            "collection": "t-shirts",
+            "product_image": "shopify://shop_images/ONYX_04TSHIRT_PNG.png"
+          }
+        },
+        "collection_6Frqk6": {
+          "type": "collection",
+          "settings": {
+            "collection": "sweatshirt",
+            "product_image": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png"
+          }
+        },
+        "collection_wMaVtn": {
+          "type": "collection",
+          "settings": {
+            "collection": "sweatpants",
+            "product_image": "shopify://shop_images/ONYX_05SWEATPANTS_PNG.png"
+          }
+        },
+        "link_list_cJFdTd": {
+          "type": "link_list",
+          "settings": {
+            "account_menu": "account-menu"
+          }
+        }
+      },
+      "block_order": [
+        "collection_rVnGNr",
+        "collection_gXkdqm",
+        "collection_RQi7BY",
+        "collection_6Frqk6",
+        "collection_wMaVtn",
+        "link_list_cJFdTd"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Front_Page_3_Image.jpg",
+        "banner_heading": "GENUINE BLANKS",
+        "banner_paragraph": "",
+        "banner_subtext1": "OVERSIZED LUXURY COLLECTION",
+        "banner_link_url1": "",
+        "banner_subtext2": "RELAXED HIGH-END COLLECTION",
+        "banner_subtext_url2": "",
+        "banner_link_txt": "LOOKBOOK & SIZE CHART",
+        "banner_link_url": "shopify://pages/luxary-lookbook",
+        "banner_botton_text": "<p class=\"click-to-scroll\"><span>Click to go into the product, or</span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"></path>\n</svg></a><br>\nto get to know us better</p>",
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "scheme-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "logo_position": "middle-left",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "none",
+        "show_line_separator": true,
+        "hide_cart_icon": false,
+        "hide_search_icon": true,
+        "color_scheme": "scheme-f7cb6d06-fa57-48ad-b559-ee98b022bdc6",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "image_high_end_products_amWbDP": {
+      "type": "image-high-end-products",
+      "blocks": {
+        "collection_4tkaVR": {
+          "type": "collection",
+          "settings": {
+            "collection": "jacket-high-end",
+            "product_image": "shopify://shop_images/JACKET-FILLIN_1_f068fa6f-c991-4c74-be2b-f22af7bb5260.png"
+          }
+        },
+        "collection_CVxfcp": {
+          "type": "collection",
+          "settings": {
+            "collection": "hoodie-high-end"
+          }
+        },
+        "collection_B77dEm": {
+          "type": "collection",
+          "settings": {
+            "collection": "t-shirts-high-end"
+          }
+        },
+        "collection_Ppw48X": {
+          "type": "collection",
+          "settings": {
+            "collection": "sweatshirt-high-end"
+          }
+        },
+        "collection_BTWtgq": {
+          "type": "collection",
+          "settings": {
+            "collection": "sweatpants-high-end"
+          }
+        },
+        "link_list_cYVVVY": {
+          "type": "link_list",
+          "settings": {
+            "account_menu": "account-menu"
+          }
+        }
+      },
+      "block_order": [
+        "collection_4tkaVR",
+        "collection_CVxfcp",
+        "collection_B77dEm",
+        "collection_Ppw48X",
+        "collection_BTWtgq",
+        "link_list_cYVVVY"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Front_Page_3_Image.jpg",
+        "banner_heading": "GENUINE BLANKS",
+        "banner_paragraph": "",
+        "banner_subtext1": "OVERSIZED LUXURY COLLECTION",
+        "banner_link_url1": "",
+        "banner_subtext2": "RELAXED HIGH-END COLLECTION",
+        "banner_subtext_url2": "",
+        "banner_link_txt": "LOOKBOOK & SIZE CHART",
+        "banner_link_url": "shopify://pages/hign-end-lookbook",
+        "banner_botton_text": "<p class=\"click-to-scroll\"><span>Click to go into the product, or</span>\n<a href=\"#autoplay-video\">scroll down <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"10\" height=\"10\" fill=\"currentColor\" class=\"bi bi-arrow-down\" viewbox=\"0 0 16 16\">\n  <path fill-rule=\"evenodd\" d=\"M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1\"></path>\n</svg></a><br>\nto get to know us better</p>",
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": false,
+        "logo_position": "middle-left",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "none",
+        "show_line_separator": true,
+        "hide_cart_icon": false,
+        "hide_search_icon": true,
+        "color_scheme": "",
+        "menu_color_scheme": "",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "autoplay_video_PAxbzR": {
+      "type": "autoplay-video",
+      "blocks": {
+        "heading_7gE4AW": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Currently accepting brands</strong> to manufacture & develop their pieces with us",
+            "heading_size": "h1"
+          }
+        },
+        "text_eExxPr": {
+          "type": "text",
+          "settings": {
+            "text": "<p>limited availability</p>",
+            "text_style": "body",
+            "class_text": "videotoptext"
+          }
+        },
+        "text_VRpcXA": {
+          "type": "text",
+          "settings": {
+            "text": "<p>15% Bulk order discount to the 100 \"FIrst TIme\" Orders</p>",
+            "text_style": "caption-with-letter-spacing",
+            "class_text": "video-bottom-text"
+          }
+        },
+        "buttons_z7PYJ8": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Apply Now",
+            "button_link_1": "shopify://pages/wholesale-form",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "text_Eaxb3b": {
+          "type": "text",
+          "settings": {
+            "text": "<p>* Must be accepted  make an order with in 45 days</p><p>* Must be registered to purchase wholesale</p>",
+            "text_style": "body",
+            "class_text": "video-bottom-text"
+          }
+        }
+      },
+      "block_order": [
+        "heading_7gE4AW",
+        "text_eExxPr",
+        "text_VRpcXA",
+        "buttons_z7PYJ8",
+        "text_Eaxb3b"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "heading_size": "h1",
+        "enable_video_looping": true,
+        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "description": "",
+        "full_width": false,
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "image_banner_kEcnHz": {
+      "type": "image-banner",
+      "blocks": {
+        "text_4tbUgD": {
+          "type": "text",
+          "settings": {
+            "text": "<p>For brands ready to move — we’re ready to build. </p><p>\nOur production team reviews every detail for precision, feasibility, and flow.\nEnsuring a smooth transition from design to sample. </p>",
+            "text_style": "subtitle",
+            "class_text": "button-above"
+          }
+        },
+        "buttons_YbRbmi": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "SUBMIT YOUR TECH-PACK",
+            "button_link_1": "shopify://pages/tech-pack-submission-1",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "text_7NXkff": {
+          "type": "text",
+          "settings": {
+            "text": "<p>* Quotations within 2-5 business days</p><p>* Must be registered to submit</p>",
+            "text_style": "caption-with-letter-spacing",
+            "class_text": "video-bottom-text"
+          }
+        },
+        "image_DUWW4x": {
+          "type": "image",
+          "settings": {
+            "title": "Genuineblanks",
+            "richtext": "",
+            "image_width": 100,
+            "alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "text_4tbUgD",
+        "buttons_YbRbmi",
+        "text_7NXkff",
+        "image_DUWW4x"
+      ],
+      "settings": {
+        "enable_footer": false,
+        "dynamic-class": "worldwide-brands",
+        "image": "shopify://shop_images/Tech-Pack_-_Website.jpg",
+        "image_overlay_opacity": 10,
+        "image_height": "large",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": false,
+        "color_scheme": "scheme-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": false,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "privacy-menu",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "rich_text_iBiEKf": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_3B7gU6": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Who We Are.</strong>",
+            "heading_size": "h1"
+          }
+        },
+        "text_biLyAG": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Portugal, our facilities and machines are at the cutting edge of<br/>technology.</p>"
+          }
+        },
+        "text_PNPFBE": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We help avant-garde brands and designers to grow and expand by giving them access to a range of Organic Luxury Blanks and customization services with no minimums. We also supply our blank apparel in an affordable way to the retail market.</p>"
+          }
+        },
+        "button_wGNftm": {
+          "type": "button",
+          "settings": {
+            "button_label": "WHAT YOU NEED TO GET STARTED",
+            "button_link": "https://genuine-blanks.myshopify.com/pages/how-does-it-work#who_weAre",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "https://genuine-blanks.myshopify.com/pages/how-does-it-work#who_weAre",
+            "button_style_secondary_2": true
+          }
+        }
+      },
+      "block_order": [
+        "heading_3B7gU6",
+        "text_biLyAG",
+        "text_PNPFBE",
+        "button_wGNftm"
+      ],
+      "settings": {
+        "additional-classroom": "aboutus-page who-we-are",
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "image_banner_tFFqdH": {
+      "type": "image-banner",
+      "blocks": {
+        "text_x8mhKq": {
+          "type": "text",
+          "settings": {
+            "text": "<p></p> Our in-house design team works side by side \nwith brands to translate abstract ideas into detailed \ngraphics, placements, and concepts ready for production. <p></p>",
+            "text_style": "subtitle",
+            "class_text": ""
+          }
+        },
+        "text_qcNjYb": {
+          "type": "text",
+          "settings": {
+            "text": "We don't follow trends, we build from vision.",
+            "text_style": "caption-with-letter-spacing",
+            "class_text": ""
+          }
+        },
+        "buttons_U7f6Q8": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "DISCOVER CUSTOM DESIGN SOLUTIONS",
+            "button_link_1": "shopify://collections/design",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "text_x8mhKq",
+        "text_qcNjYb",
+        "buttons_U7f6Q8"
+      ],
+      "settings": {
+        "enable_footer": false,
+        "dynamic-class": "button-above bring-creativity",
+        "image": "shopify://shop_images/Design_Page_-_website2.jpg",
+        "image_overlay_opacity": 20,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "scheme-3",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "color_scheme": "",
+        "newsletter_enable": true,
+        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_banner_DBzJcE": {
+      "type": "image-banner",
+      "blocks": {
+        "text_qPxpUx": {
+          "type": "text",
+          "settings": {
+            "text": "<p style=\"color: #000000;\">Create anything you'll need for your brand</p>\n<p style=\"color: #000000;\">Hang-tags, Labels, Flyers,<br>You create, we'll produce.</p>",
+            "text_style": "body",
+            "class_text": ""
+          }
+        },
+        "buttons_mbfi7y": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "CHECK OUR ACCESSORIES WITH US",
+            "button_link_1": "shopify://collections/accessories",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "text_Bjz4EN": {
+          "type": "text",
+          "settings": {
+            "text": "<ul style=\"color: #000000;\">\n  <h3>*Available for retail:</h3>\n  <li>- Branding labels</li>\n  <li>- Hang-tags</li>\n  <li>- Composition labels</li>\n</ul>\n\n<ul style=\"color: #000000;\">\n  <h3>*Available for wholesale:</h3>\n  <li>- Anything available in today’s market.</li>\n</ul>",
+            "text_style": "subtitle",
+            "class_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "text_qPxpUx",
+        "buttons_mbfi7y",
+        "text_Bjz4EN"
+      ],
+      "settings": {
+        "enable_footer": false,
+        "dynamic-class": "worldwide-brands button-above bring-creativity",
+        "image": "shopify://shop_images/Accessories_Page_-_website_V2.jpg",
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "scheme-4",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "color_scheme": "scheme-1",
+        "newsletter_enable": true,
+        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_banner_mbytrt": {
+      "type": "image-banner",
+      "blocks": {
+        "buttons_YfbFih": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "LUXURY COLLECTION LOOKBOOK",
+            "button_link_1": "shopify://collections/sweatshirt",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "buttons_3CkR8q": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "HIGH END COLLECTION LOOKBOOK",
+            "button_link_1": "shopify://collections/sweatshirt-high-end",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "image_LRmjQ3": {
+          "type": "image",
+          "settings": {
+            "title": "GENUINEBLANKS",
+            "richtext": "",
+            "image_width": 100,
+            "alignment": ""
+          }
+        }
+      },
+      "block_order": [
+        "buttons_YfbFih",
+        "buttons_3CkR8q",
+        "image_LRmjQ3"
+      ],
+      "disabled": true,
+      "settings": {
+        "enable_footer": false,
+        "dynamic-class": "worldwide-brands",
+        "image": "shopify://shop_images/The-Best-Hoodies-for-Branding-Merch-scaled.webp",
+        "image_overlay_opacity": 40,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": false,
+        "color_scheme": "scheme-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "privacy-menu",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "text_grid_itwK3a": {
+      "type": "text-grid",
+      "blocks": {
+        "add_text_grid_jJzfCM": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "LUXURY & HIGH END BLANKS",
+            "rich": "<p>1ST - REDIRECTS TO THE SHOP BLANKS OVERALL PAGE</p>",
+            "link": "shopify://pages/luxary-lookbook"
+          }
+        },
+        "add_text_grid_zc3Xgn": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "DESIGNER LAB",
+            "rich": "<p>2ND - REDIRECTS TO THE DESIGNERS LAB PAGE</p>",
+            "link": "shopify://pages/design-lab"
+          }
+        },
+        "add_text_grid_Nz7RMR": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "LABELLING & ACCESSORIES SERVICE",
+            "rich": "<p>3RD - REDIRECTS TO THE LABELS PAGE</p>",
+            "link": "shopify://pages/labelling-acessories-service"
+          }
+        },
+        "add_text_grid_cKpzzE": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "ABOUT US - GET TO KNOW US BETTER",
+            "rich": "<p>4TH - REDIRECTS TO THE ABOUT US PAGE</p>",
+            "link": "shopify://pages/about-us"
+          }
+        },
+        "add_text_grid_ktQ6ix": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "LUXURY & HIGH END LOOKBOOK",
+            "rich": "<p>5TH - REDIRECTS TO THE HOME PAGE LOOKBOOK</p>",
+            "link": "shopify://pages/luxary-lookbook"
+          }
+        },
+        "add_text_grid_atVwXA": {
+          "type": "Add-text-grid",
+          "settings": {
+            "title": "",
+            "subtitle": "HELP CENTER",
+            "rich": "<p>6TH - REDIRECTS TO THE HELP CENTER PAGE</p>",
+            "link": "shopify://pages/learn-more"
+          }
+        },
+        "image_7eijNM": {
+          "type": "image",
+          "settings": {
+            "title": "GENUINEBLANKS",
+            "richtext": "",
+            "image_width": 100,
+            "alignment": ""
+          }
+        }
+      },
+      "block_order": [
+        "add_text_grid_jJzfCM",
+        "add_text_grid_zc3Xgn",
+        "add_text_grid_Nz7RMR",
+        "add_text_grid_cKpzzE",
+        "add_text_grid_ktQ6ix",
+        "add_text_grid_atVwXA",
+        "image_7eijNM"
+      ],
+      "settings": {
+        "enable_footer": true,
+        "color_scheme": "scheme-1",
+        "newsletter_enable": true,
+        "newsletter_heading": "",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "privacy-menu",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "image_luxury_products_fVNxeh",
+    "image_high_end_products_amWbDP",
+    "autoplay_video_PAxbzR",
+    "image_banner_kEcnHz",
+    "rich_text_iBiEKf",
+    "image_banner_tFFqdH",
+    "image_banner_DBzJcE",
+    "image_banner_mbytrt",
+    "text_grid_itwK3a"
+  ]
+}
