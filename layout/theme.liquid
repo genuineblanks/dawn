@@ -1,3 +1,8 @@
+{% comment %}
+{% unless template contains 'index' %}
+  {% sections 'header-group' %}
+{% endunless %}
+{% endcomment %}
 <!doctype html>
 <html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
