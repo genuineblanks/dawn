@@ -1010,6 +1010,30 @@
     
     console.log('🔍 DEBUG SCRIPT LOADED');
     </script>
+
+    <script>
+    // Force reinitialize animations after all conflicts
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        console.log('🔄 Force reinitializing scroll animations...');
+        
+        // Clear any existing observers and reinitialize
+        if (typeof initializeScrollAnimationTrigger === 'function') {
+          // Remove offscreen class from elements that should be visible
+          document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+              el.classList.remove('scroll-trigger--offscreen');
+            }
+          });
+          
+          // Reinitialize the observer
+          initializeScrollAnimationTrigger(document, false);
+          console.log('✅ Scroll animations reinitialized');
+        }
+      }, 1000);
+    });
+    </script>
     
   </body>
 </html>
