@@ -152,7 +152,7 @@
       </div>
       
        {%- if section.settings.banner_link_txt != blank -%}
-        
+        <a
           {% if section.settings.banner_link_url != blank %}
             href="{{ section.settings.banner_link_url }}"
           {% endif %}
@@ -174,14 +174,34 @@
             >
               {{ block.settings.heading }}
             </h2>
-          {%- when 'product' -%}
-          {% assign blockProduct = block.settings.product %}
-          {% if blockProduct != blank %}
-            {% assign productObj = all_products[blockProduct] %}
-            {% if productObj != blank %}
+        {%- when 'collection' -%}
+        {% assign blockCollection = block.settings.collection %}
+        {% if blockCollection != blank %}
+          {% assign collectionObj = collections[blockCollection] %}
+          {% if collectionObj != blank %}
+            <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+              <a href="{{ collectionObj.url }}">
+                {{ block.settings.product_image | default: collectionObj.featured_image | image_url: width: 200, height: 300 | image_tag }}
+                {% if block.settings.show_title != false %}
+                  <h2 class="banner__heading inline-richtext">
+                    {{ collectionObj.title | truncate: 20 }}
+                  </h2>
+                {% endif %} 
+                {% comment %} Collections don't have prices, so we remove this {% endcomment %}
+                {% if block.settings.show_price != false and collectionObj.products.size > 0 %}
+                  <span>From {{ collectionObj.products.first.price | money }}</span>
+                {% endif %}
+              </a>
+            </div>
+          {% endif %}
+        {% endif %}
+          {%- when 'collection' -%}
+          {% assign blockProduct =  block.settings.collection %}
+            {% if blockProduct != blank %}
+            {% assign productObj = collections[blockProduct] %}
               <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 200, height: 300 | image_tag }}
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:2000, height:3000 | image_tag }}
                 {% if block.settings.show_title != false %}
                    <h2 class="banner__heading inline-richtext" >
                     {{ productObj.title | truncate: 20 }}
@@ -193,28 +213,6 @@
                 </a>
               </div>
             {% endif %}
-          {% endif %}
-          {%- when 'collection' -%}
-          {% assign blockCollection = block.settings.collection %}
-          {% if blockCollection != blank %}
-            {% assign collectionObj = collections[blockCollection] %}
-            {% if collectionObj != blank %}
-              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-                <a href="{{ collectionObj.url }}">
-                {{ block.settings.product_image | default: collectionObj.featured_image | image_url: width: 200, height: 300 | image_tag }}
-                {% if block.settings.show_title != false %}
-                   <h2 class="banner__heading inline-richtext" >
-                    {{ collectionObj.title | truncate: 20 }}
-                  </h2>
-                {% endif %} 
-                {% comment %} Collections don't have direct prices, show starting from price {% endcomment %}
-                {% if block.settings.show_price != false and collectionObj.products.size > 0 %}
-                  <span>From {{ collectionObj.products.first.price | money }}</span>
-                {% endif %}
-                </a>
-              </div>
-            {% endif %}
-          {% endif %}
           {%- when 'text' -%}
             <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
               <p>{{ block.settings.text }}</p>
@@ -225,7 +223,7 @@
               {{ block.shopify_attributes }}
             >
               {%- if block.settings.button_label_1 != blank -%}
-                
+                <a
                   {% if block.settings.button_link_1 == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
@@ -237,7 +235,7 @@
                 </a>
               {%- endif -%}
               {%- if block.settings.button_label_2 != blank -%}
-                
+                <a
                   {% if block.settings.button_link_2 == blank %}
                     role="link" aria-disabled="true"
                   {% else %}
@@ -259,7 +257,7 @@
   </div>
 </div>
 <!-- dynamic css for banner products -->
-{% assign totalProd = 8 | minus: productBlockCount %}
+{% assign totalProd = 8 | minus:productBlockCount  %}
 {% style %}
  
   .product-count-{{productBlockCount}} .banner__box{
@@ -324,8 +322,8 @@
     },
      {
       "type": "text",
-      "id": "banner_link_url2",
-      "label": "Button Sub Text URL2"
+      "id": "banner_subtext_url2",
+      "label": "Button Sub Text URL"
     },
     {
       "type": "text",
@@ -638,277 +636,263 @@
     },
     {
       "type": "checkbox",
-  "id": "enable_country_selector",
-       "default": false,
-       "label": "t:sections.header.settings.enable_country_selector.label"
-     },
+      "id": "enable_country_selector",
+      "default": false,
+      "label": "t:sections.header.settings.enable_country_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__5.content",
+      "info": "t:sections.header.settings.header__6.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": false,
+      "label": "t:sections.header.settings.enable_language_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.mobile_layout.content"
+    },
+    {
+      "type": "select",
+      "id": "mobile_logo_position",
+      "options": [
+        {
+          "value": "center",
+          "label": "t:sections.header.settings.mobile_logo_position.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.header.settings.mobile_logo_position.options__2.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.header.settings.mobile_logo_position.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.header.settings.margin_bottom.label",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.image-banner.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Image banner",
+          "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h2",
+              "label": "t:sections.all.heading_size.options__1.label"
+            },
+            {
+              "value": "h1",
+              "label": "t:sections.all.heading_size.options__2.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.heading_size.options__3.label"
+            }
+          ],
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        }
+      ]
+    },
      {
-       "type": "header",
-       "content": "t:sections.header.settings.header__5.content",
-       "info": "t:sections.header.settings.header__6.info"
-     },
-     {
-       "type": "checkbox",
-       "id": "enable_language_selector",
-       "default": false,
-       "label": "t:sections.header.settings.enable_language_selector.label"
-     },
-     {
-       "type": "header",
-       "content": "t:sections.header.settings.mobile_layout.content"
-     },
-     {
-       "type": "select",
-       "id": "mobile_logo_position",
-       "options": [
+      "type": "product",
+      "name": "Products",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product Here."
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Select Product Image Here."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_title",
+          "label": "Show Product Title"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show Product Price"
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection Here."
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Select Product Image Here."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.image-banner.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "Give customers details about the banner image(s) or content on the template.",
+          "label": "t:sections.image-banner.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label"
+            },
+            {
+              "value": "caption-with-letter-spacing",
+              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.image-banner.blocks.buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "default": "Button label",
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label",
+          "info": "t:sections.image-banner.blocks.buttons.settings.button_label_1.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary_1",
+          "default": false,
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "default": "Button label",
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label",
+          "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary_2",
+          "default": false,
+          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
+        }
+      ]
+    },
+    {
+      "type":"link_list",
+      "name":"Account Menu",
+      "limit":1,
+      "settings":[
          {
-           "value": "center",
-           "label": "t:sections.header.settings.mobile_logo_position.options__1.label"
-         },
-         {
-           "value": "left",
-           "label": "t:sections.header.settings.mobile_logo_position.options__2.label"
-         }
-       ],
-       "default": "center",
-       "label": "t:sections.header.settings.mobile_logo_position.label"
-     },
-     {
-       "type": "header",
-       "content": "t:sections.all.spacing"
-     },
-     {
-       "type": "range",
-       "id": "margin_bottom",
-       "min": 0,
-       "max": 100,
-       "step": 4,
-       "unit": "px",
-       "label": "t:sections.header.settings.margin_bottom.label",
-       "default": 0
-     },
-     {
-       "type": "header",
-       "content": "t:sections.all.padding.section_padding_heading"
-     },
-     {
-       "type": "range",
-       "id": "padding_top",
-       "min": 0,
-       "max": 36,
-       "step": 4,
-       "unit": "px",
-       "label": "t:sections.all.padding.padding_top",
-       "default": 20
-     },
-     {
-       "type": "range",
-       "id": "padding_bottom",
-       "min": 0,
-       "max": 36,
-       "step": 4,
-       "unit": "px",
-       "label": "t:sections.all.padding.padding_bottom",
-       "default": 20
-     }
-   ],
-   "blocks": [
-     {
-       "type": "heading",
-       "name": "t:sections.image-banner.blocks.heading.name",
-       "limit": 1,
-       "settings": [
-         {
-           "type": "inline_richtext",
-           "id": "heading",
-           "default": "Image banner",
-           "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
-         },
-         {
-           "type": "select",
-           "id": "heading_size",
-           "options": [
-             {
-               "value": "h2",
-               "label": "t:sections.all.heading_size.options__1.label"
-             },
-             {
-               "value": "h1",
-               "label": "t:sections.all.heading_size.options__2.label"
-             },
-             {
-               "value": "h0",
-               "label": "t:sections.all.heading_size.options__3.label"
-             }
-           ],
-           "default": "h1",
-           "label": "t:sections.all.heading_size.label"
-         }
-       ]
-     },
-      {
-       "type": "product",
-       "name": "Products",
-       "limit": 8,
-       "settings": [
-         {
-           "type": "product",
-           "id": "product",
-           "label": "Select Product Here."
-         },
-         {
-           "type": "image_picker",
-           "id": "product_image",
-           "label": "Select Product Image Here."
-         },
-         {
-           "type": "checkbox",
-           "id": "show_title",
-           "default": true,
-           "label": "Show Product Title"
-         },
-         {
-           "type": "checkbox",
-           "id": "show_price",
-           "default": true,
-           "label": "Show Product Price"
-         }
-       ]
-     },
-     {
-       "type": "collection",
-       "name": "Collection",
-       "limit": 8,
-       "settings": [
-         {
-           "type": "collection",
-           "id": "collection",
-           "label": "Select Collection Here."
-         },
-         {
-           "type": "image_picker",
-           "id": "product_image",
-           "label": "Select Collection Image Here."
-         },
-         {
-           "type": "checkbox",
-           "id": "show_title",
-           "default": true,
-           "label": "Show Collection Title"
-         },
-         {
-           "type": "checkbox",
-           "id": "show_price",
-           "default": true,
-           "label": "Show Starting Price"
-         }
-       ]
-     },
-     {
-       "type": "text",
-       "name": "t:sections.image-banner.blocks.text.name",
-       "limit": 1,
-       "settings": [
-         {
-           "type": "inline_richtext",
-           "id": "text",
-           "default": "Give customers details about the banner image(s) or content on the template.",
-           "label": "t:sections.image-banner.blocks.text.settings.text.label"
-         },
-         {
-           "type": "select",
-           "id": "text_style",
-           "options": [
-             {
-               "value": "body",
-               "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label"
-             },
-             {
-               "value": "subtitle",
-               "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label"
-             },
-             {
-               "value": "caption-with-letter-spacing",
-               "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label"
-             }
-           ],
-           "default": "body",
-           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
-         }
-       ]
-     },
-     {
-       "type": "buttons",
-       "name": "t:sections.image-banner.blocks.buttons.name",
-       "limit": 1,
-       "settings": [
-         {
-           "type": "text",
-           "id": "button_label_1",
-           "default": "Button label",
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label",
-           "info": "t:sections.image-banner.blocks.buttons.settings.button_label_1.info"
-         },
-         {
-           "type": "url",
-           "id": "button_link_1",
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label"
-         },
-         {
-           "type": "checkbox",
-           "id": "button_style_secondary_1",
-           "default": false,
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
-         },
-         {
-           "type": "text",
-           "id": "button_label_2",
-           "default": "Button label",
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label",
-           "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info"
-         },
-         {
-           "type": "url",
-           "id": "button_link_2",
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label"
-         },
-         {
-           "type": "checkbox",
-           "id": "button_style_secondary_2",
-           "default": false,
-           "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
-         }
-       ]
-     },
-     {
-       "type":"link_list",
-       "name":"Account Menu",
-       "limit":1,
-       "settings":[
-          {
-             "type": "link_list",
-             "id": "account_menu",
-             "default": "main-menu",
-             "label": "Account Menu"
-           }
-       ]
-     }
-   ],
-   "presets": [
-     {
-       "name": "Image Luxury Products",
-       "blocks": [
-         {
-           "type": "heading"
-         },
-         {
-           "type": "text"
-         },
-         {
-           "type": "buttons"
-         }
-       ]
-     }
-   ]
-  }
-  {% endschema %}
+            "type": "link_list",
+            "id": "account_menu",
+            "default": "main-menu",
+            "label": "Account Menu"
+          }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Luxury Products",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "buttons"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
