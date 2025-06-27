@@ -35,14 +35,29 @@ document.addEventListener('DOMContentLoaded', function() {
             var pdfUrl = firstPdfLink.getAttribute('data-src');
             
             if (pdfUrl && pdfUrl !== '' && pdfUrl !== '#') {
-                // Create download link
-                var link = document.createElement('a');
-                link.href = pdfUrl;
-                link.download = 'GENUINEBLANKS_GUIDE.pdf';
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // Force download using fetch method
+                fetch(pdfUrl)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Create download link with blob
+                        var link = document.createElement('a');
+                        var url = window.URL.createObjectURL(blob);
+                        link.href = url;
+                        link.download = 'GENUINEBLANKS_GUIDE.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => {
+                        console.error('Download failed:', error);
+                        // Fallback: open in new tab with instructions
+                        window.open(pdfUrl, '_blank');
+                        alert('PDF opened in new tab. Right-click and select "Save As" to download.');
+                    });
             } else {
                 alert('Please configure the PDF URL in the first block');
             }
