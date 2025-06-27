@@ -4,14 +4,6 @@
   Usage:
   {% render 'header-dropdown-menu' %}
 {% endcomment %}
-
-<!-- DEBUG -->
-<p>Menu param: {{ menu }}</p>
-<p>Menu type: {{ menu | type }}</p>
-<p>Menu links: {{ menu.links | map: 'title' | join: ', ' }}</p>
-<p>Section menu: {{ section.settings.menu }}</p>
-<!-- END DEBUG -->
-
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {% if menu != blank %} 
