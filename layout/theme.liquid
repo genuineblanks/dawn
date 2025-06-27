@@ -949,43 +949,33 @@
     </script>
 
     <script>
-    // Fix scroll animations after navigation/refresh
-    function reinitializeScrollAnimations() {
-      // Re-run the scroll animation initialization
-      if (typeof initializeScrollAnimationTrigger === 'function') {
-        initializeScrollAnimationTrigger();
-      }
-      
-      // Re-run zoom animations
-      if (typeof initializeScrollZoomAnimationTrigger === 'function') {
-        initializeScrollZoomAnimationTrigger();
-      }
-      
-      // Reset any offscreen elements
-      const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
-      offscreenElements.forEach(element => {
-        if (element.getBoundingClientRect().top < window.innerHeight) {
-          element.classList.remove('scroll-trigger--offscreen');
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for animations.js to load
+      function waitForAnimations() {
+        if (typeof initializeScrollAnimationTrigger === 'function') {
+          // Reinitialize scroll animations
+          initializeScrollAnimationTrigger();
+          
+          if (typeof initializeScrollZoomAnimationTrigger === 'function') {
+            initializeScrollZoomAnimationTrigger();
+          }
+        } else {
+          // Try again in 100ms
+          setTimeout(waitForAnimations, 100);
         }
-      });
-    }
-    
-    // Reinitialize on page navigation
-    document.addEventListener('shopify:section:load', reinitializeScrollAnimations);
-    document.addEventListener('DOMContentLoaded', reinitializeScrollAnimations);
-    
-    // Fix for theme editor and navigation
-    if (Shopify && Shopify.designMode) {
-      document.addEventListener('shopify:section:load', () => {
-        setTimeout(reinitializeScrollAnimations, 100);
-      });
-    }
-    
-    // Additional fix for page visibility changes
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        setTimeout(reinitializeScrollAnimations, 100);
       }
+      
+      // Start the process
+      waitForAnimations();
+    });
+    
+    // Handle page navigation and refresh
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        if (typeof initializeScrollAnimationTrigger === 'function') {
+          initializeScrollAnimationTrigger();
+        }
+      }, 500);
     });
     </script>
     
