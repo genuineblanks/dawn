@@ -954,89 +954,50 @@
     </script>
 
     <script>
-    console.log('🔍 SCROLL ANIMATION DEBUG STARTING...');
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('✅ DOM Content Loaded');
-      
-      // 1. Check if animations are enabled in settings
-      const animationsEnabled = {{ settings.animations_reveal_on_scroll | json }};
-      console.log('🎯 Animations enabled in settings:', animationsEnabled);
-      
-      // 2. Check if animations.js loaded
-      setTimeout(() => {
-        const animationsJsLoaded = typeof initializeScrollAnimationTrigger === 'function';
-        console.log('📜 animations.js loaded:', animationsJsLoaded);
-        
-        if (animationsJsLoaded) {
-          console.log('✅ initializeScrollAnimationTrigger function exists');
-        } else {
-          console.log('❌ initializeScrollAnimationTrigger function missing');
-        }
-        
-        // 3. Check for scroll trigger elements
-        const scrollTriggers = document.querySelectorAll('.scroll-trigger');
-        console.log('🎯 Found scroll-trigger elements:', scrollTriggers.length);
-        
-        scrollTriggers.forEach((el, index) => {
-          const classes = Array.from(el.classList);
-          const isOffscreen = el.classList.contains('scroll-trigger--offscreen');
-          console.log(`Element ${index}:`, {
-            classes: classes,
-            isOffscreen: isOffscreen,
-            element: el
-          });
-        });
-        
-        // 4. Check for IntersectionObserver support
-        const hasIntersectionObserver = 'IntersectionObserver' in window;
-        console.log('🔍 IntersectionObserver supported:', hasIntersectionObserver);
-        
-        // 5. Check for any existing observers
-        console.log('🔍 Current page URL:', window.location.href);
-        console.log('🔍 Document ready state:', document.readyState);
-        
-      }, 1000);
-    });
-    
-    // 6. Debug scroll events
-    let scrollCount = 0;
-    window.addEventListener('scroll', () => {
-      scrollCount++;
-      if (scrollCount <= 5) { // Only log first 5 scroll events
-        console.log('📜 Scroll event fired:', scrollCount, 'Position:', window.pageYOffset);
-      }
-    });
-    
-    // 7. Debug page navigation
-    document.addEventListener('shopify:section:load', () => {
-      console.log('🔄 Shopify section loaded');
-    });
-    
-    console.log('🔍 DEBUG SCRIPT LOADED');
-    </script>
-
-    <script>
-    // Force reinitialize animations after all conflicts
+    // Force scroll animations to work properly
     window.addEventListener('load', function() {
       setTimeout(() => {
-        console.log('🔄 Force reinitializing scroll animations...');
+        console.log('🔄 FIXING SCROLL ANIMATIONS...');
         
-        // Clear any existing observers and reinitialize
-        if (typeof initializeScrollAnimationTrigger === 'function') {
-          // Remove offscreen class from elements that should be visible
-          document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight) {
-              el.classList.remove('scroll-trigger--offscreen');
+        // Create our own intersection observer that actually works
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Remove offscreen class when element enters viewport
+              entry.target.classList.remove('scroll-trigger--offscreen');
+              console.log('✅ Revealed element:', entry.target.classList[0]);
             }
           });
+        }, {
+          rootMargin: '0px 0px -50px 0px', // Same as original
+          threshold: 0.1
+        });
+        
+        // Observe all scroll trigger elements
+        document.querySelectorAll('.scroll-trigger').forEach(element => {
+          observer.observe(element);
           
-          // Reinitialize the observer
-          initializeScrollAnimationTrigger(document, false);
-          console.log('✅ Scroll animations reinitialized');
-        }
-      }, 1000);
+          // Also manually check if already visible
+          const rect = element.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            element.classList.remove('scroll-trigger--offscreen');
+          }
+        });
+        
+        console.log('✅ Custom scroll observer activated');
+      }, 500);
+    });
+    
+    // Also fix on navigation
+    document.addEventListener('shopify:section:load', function() {
+      setTimeout(() => {
+        document.querySelectorAll('.scroll-trigger').forEach(element => {
+          const rect = element.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            element.classList.remove('scroll-trigger--offscreen');
+          }
+        });
+      }, 200);
     });
     </script>
     
