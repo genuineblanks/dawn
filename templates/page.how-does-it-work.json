@@ -93,7 +93,7 @@
           "type": "text_block",
           "settings": {
             "pdfimage": "shopify://shop_images/ChatGPT_Image_17_05_2025_20_02_42.png",
-            "pdfurl": "",
+            "pdfurl": "https://cdn.shopify.com/s/files/1/0686/0809/8520/files/dummy-pdf_2.pdf?v=1718715554",
             "pdfname": "Types of Fabrics",
             "pdfinfo": "Browse available fabrics, ribbing options, and stitching methods to tailor your garment’s structure and feel."
           }
@@ -102,7 +102,7 @@
           "type": "text_block",
           "settings": {
             "pdfimage": "shopify://shop_images/ChatGPT_Image_17_05_2025_20_19_14.png",
-            "pdfurl": "https://cdn.shopify.com/s/files/1/0686/0809/8520/files/dummy-pdf_2.pdf?v=1718715554",
+            "pdfurl": "#",
             "pdfname": "Dye Process",
             "pdfinfo": "Explore our range of dye techniques, from garment dye to pigment and vintage washes—each offering unique textures, tones, and finish qualities."
           }
