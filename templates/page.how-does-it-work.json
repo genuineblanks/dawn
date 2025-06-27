@@ -93,7 +93,7 @@
           "type": "text_block",
           "settings": {
             "pdfimage": "shopify://shop_images/ChatGPT_Image_17_05_2025_20_02_42.png",
-            "pdfurl": "https://cdn.shopify.com/s/files/1/0686/0809/8520/files/dummy-pdf_1.pdf?v=1718715554",
+            "pdfurl": "",
             "pdfname": "Types of Fabrics",
             "pdfinfo": "Browse available fabrics, ribbing options, and stitching methods to tailor your garment’s structure and feel."
           }
