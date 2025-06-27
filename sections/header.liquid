@@ -294,14 +294,6 @@
         {%- endif -%}
       </div>
 
-      <!-- BLOCK DEBUG -->
-      {%- for block in section.blocks -%}
-        <p>Block type: {{ block.type }}</p>
-        <p>Block settings: {{ block.settings }}</p>
-        <p>Account menu setting: {{ block.settings.account_menu }}</p>
-      {%- endfor -%}
-      <!-- END BLOCK DEBUG -->
-
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
