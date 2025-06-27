@@ -968,14 +968,19 @@
         scrollObserver.disconnect();
       }
       
-      // Reset ALL scroll trigger elements to offscreen state first
+      // Reset ALL scroll trigger elements properly
       document.querySelectorAll('.scroll-trigger').forEach(element => {
-        // Only reset elements that are actually below the viewport
         const rect = element.getBoundingClientRect();
-        if (rect.top > window.innerHeight * 0.8) {
-          element.classList.add('scroll-trigger--offscreen');
-        } else {
+        const viewportHeight = window.innerHeight;
+        
+        // Only show elements that are clearly in the top section of viewport
+        if (rect.top < viewportHeight * 0.3) {
           element.classList.remove('scroll-trigger--offscreen');
+          console.log('👁️ Initially visible:', element.className.split(' ')[0]);
+        } else {
+          // Hide elements that are below the fold
+          element.classList.add('scroll-trigger--offscreen');
+          console.log('🙈 Hidden for scroll reveal:', element.className.split(' ')[0]);
         }
       });
       
@@ -984,11 +989,11 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.remove('scroll-trigger--offscreen');
-            console.log('✅ Revealed:', entry.target.className.split(' ')[0]);
+            console.log('🎉 SCROLL REVEALED:', entry.target.className.split(' ')[0]);
           }
         });
       }, {
-        rootMargin: '0px 0px -50px 0px',
+        rootMargin: '0px 0px -100px 0px', // More conservative trigger
         threshold: 0.1
       });
       
@@ -1002,26 +1007,14 @@
     
     // Initialize on page load
     window.addEventListener('load', function() {
-      setTimeout(initializeScrollAnimations, 500);
+      setTimeout(initializeScrollAnimations, 800);
     });
     
-    // Re-initialize on page visibility change (when coming back to tab)
+    // Re-initialize on page visibility change
     document.addEventListener('visibilitychange', function() {
       if (!document.hidden) {
-        setTimeout(initializeScrollAnimations, 200);
+        setTimeout(initializeScrollAnimations, 300);
       }
-    });
-    
-    // Re-initialize on browser navigation (back/forward)
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        setTimeout(initializeScrollAnimations, 200);
-      }
-    });
-    
-    // Re-initialize on section loads
-    document.addEventListener('shopify:section:load', function() {
-      setTimeout(initializeScrollAnimations, 200);
     });
     
     {% else %}
