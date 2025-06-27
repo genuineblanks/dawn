@@ -294,6 +294,69 @@
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+    <script>
+    {% if template == 'index' %}
+    (function() {
+      'use strict';
+      
+      console.log('🏠 Homepage scroll fix - loading...');
+      
+      let fixed = false;
+      
+      function applyFix() {
+        if (fixed) return;
+        fixed = true;
+        
+        console.log('🔧 Applying scroll fix...');
+        
+        function doFix() {
+          try {
+            document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
+              const rect = el.getBoundingClientRect();
+              if (rect.top < window.innerHeight - 50) {
+                el.classList.remove('scroll-trigger--offscreen');
+              }
+            });
+            
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+              if (!ticking) {
+                requestAnimationFrame(() => {
+                  document.querySelectorAll('.scroll-trigger--offscreen').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 50) {
+                      el.classList.remove('scroll-trigger--offscreen');
+                    }
+                  });
+                  ticking = false;
+                });
+                ticking = true;
+              }
+            }, { passive: true });
+            
+            console.log('✅ Scroll fix applied');
+          } catch (e) {
+            console.error('❌ Scroll fix error:', e);
+          }
+        }
+        
+        if (document.readyState === 'complete') {
+          setTimeout(doFix, 100);
+        } else {
+          window.addEventListener('load', () => setTimeout(doFix, 100));
+          document.addEventListener('DOMContentLoaded', () => setTimeout(doFix, 100));
+        }
+      }
+      
+      applyFix();
+      setTimeout(applyFix, 1000);
+      setTimeout(applyFix, 2000);
+      
+    })();
+    {% endif %}
+    </script>
+    <!-- END SCRIPT -->
+  
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -952,50 +1015,6 @@
       console.log('🚀 Product card enhancement complete!');
     });
     </script>
-
-<script>
-{% if template == 'index' %}
-// Simple one-time scroll fix - no multiple attempts, no conflicts
-document.addEventListener('DOMContentLoaded', function() {
-  let scrollFixed = false;
-  
-  function fixScrollOnce() {
-    if (scrollFixed) return; // Prevent multiple executions
-    scrollFixed = true;
-    
-    console.log('🔧 ONE-TIME scroll fix');
-    
-    // Simple scroll handler
-    function handleScroll() {
-      document.querySelectorAll('.scroll-trigger--offscreen').forEach(element => {
-        const rect = element.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) {
-          element.classList.remove('scroll-trigger--offscreen');
-        }
-      });
-    }
-    
-    // Apply immediately for visible elements
-    handleScroll();
-    
-    // Listen for scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    console.log('✅ Scroll fix done');
-  }
-  
-  // Wait for everything to load, then fix ONCE
-  setTimeout(fixScrollOnce, 1500);
-});
-
-// Handle page refresh/navigation
-window.addEventListener('pageshow', function(event) {
-  if (event.persisted) {
-    location.reload();
-  }
-});
-{% endif %}
-</script>
     
   </body>
 </html>
