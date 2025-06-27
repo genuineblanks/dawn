@@ -196,10 +196,17 @@
     {%- endif -%}
 
     {%- liquid
-      assign menu_handle = 'main-menu'
-      if linklists[menu_handle] != blank
-        render 'header-dropdown-menu'
-      endif
+      comment
+        Only render main menu on non-homepage pages
+        Homepage will only show account menu
+      endcomment
+      
+      unless request.page_type == 'index'
+        assign menu_handle = 'main-menu'
+        if linklists[menu_handle] != blank
+          render 'header-dropdown-menu'
+        endif
+      endunless
     -%}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
