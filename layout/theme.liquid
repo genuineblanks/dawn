@@ -284,10 +284,11 @@
       }
     </script>
 
+    {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
   </head>
 
-  <body class="{% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+  <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -295,19 +296,17 @@
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}
     {%- endif -%}
-    
     {% unless template contains 'index' %}
       {% sections 'header-group' %}
     {% endunless %}
-    
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-    
     {% unless template contains 'index' %}
+      {%- comment -%} Wholesale Inquiry Modal goes here {%- endcomment -%}
+      {% render 'wholesale-modal' %}
       {% sections 'footer-group' %}
     {% endunless %}
-
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
       <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
@@ -358,20 +357,594 @@
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    
     {% if template contains 'index' %}
       <script src="{{ 'custom.js' | asset_url }}"></script>
     {% elsif template contains 'product' %}
       <script src="{{ 'custom-product-page.js' | asset_url }}" async></script>
     {% endif %}
 
-    <script src="{{ 'techpack-app.js' | asset_url }}" defer></script>
-    
-    <!-- Your existing JavaScript for product cards and gallery -->
+    <!-- ADD THE CLICKABLE CARDS SCRIPT HERE -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // All your existing JavaScript code stays the same
-      // I'll keep this section unchanged to avoid breaking anything
+      // Make entire product cards clickable
+      const productCards = document.querySelectorAll('.product-card-wrapper, .card-wrapper');
+      
+      productCards.forEach(card => {
+        const link = card.querySelector('.card__heading a, .full-unstyled-link');
+        
+        if (link) {
+          card.style.cursor = 'pointer';
+          
+          card.addEventListener('click', function(e) {
+            // Prevent double-click if clicking on the actual link
+            if (e.target.tagName !== 'A') {
+              window.location.href = link.href;
+            }
+          });
+        }
+      });
+    });
+    </script>
+    <!-- END CLICKABLE CARDS SCRIPT -->
+
+    <!-- PREMIUM SCROLL EFFECTS SCRIPT -->
+    <script>
+    // ===============================================
+    // PREMIUM SCROLL EFFECTS JAVASCRIPT
+    // Works with existing scroll-to-section system
+    // ===============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // ===============================================
+      // SCROLL PROGRESS BAR
+      // ===============================================
+      function createScrollProgress() {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'scroll-progress';
+        document.body.appendChild(progressBar);
+        
+        function updateProgress() {
+          const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+          progressBar.style.width = scrolled + '%';
+        }
+        
+        window.addEventListener('scroll', updateProgress);
+        updateProgress();
+      }
+      
+      // ===============================================
+      // SCROLL INDICATORS (DOT NAVIGATION)
+      // ===============================================
+      function createScrollIndicators() {
+        const sections = document.querySelectorAll('.section, .shopify-section');
+        if (sections.length <= 1) return;
+        
+        const indicators = document.createElement('div');
+        indicators.className = 'scroll-indicators';
+        
+        sections.forEach((section, index) => {
+          const indicator = document.createElement('div');
+          indicator.className = 'scroll-indicator';
+          indicator.setAttribute('data-section', index);
+          
+          indicator.addEventListener('click', () => {
+            section.scrollIntoView({ behavior: 'smooth' });
+          });
+          
+          indicators.appendChild(indicator);
+        });
+        
+        document.body.appendChild(indicators);
+        
+        // Update active indicator on scroll
+        function updateActiveIndicator() {
+          const scrollPosition = window.pageYOffset + window.innerHeight / 2;
+          
+          sections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            const indicator = indicators.children[index];
+            
+            if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+              indicator.classList.add('active');
+            } else {
+              indicator.classList.remove('active');
+            }
+          });
+        }
+        
+        window.addEventListener('scroll', updateActiveIndicator);
+        updateActiveIndicator();
+      }
+      
+      // ===============================================
+      // FLOATING PARTICLES
+      // ===============================================
+      function createFloatingElements() {
+        const container = document.createElement('div');
+        container.className = 'floating-elements';
+        
+        for (let i = 0; i < 4; i++) {
+          const shape = document.createElement('div');
+          shape.className = 'floating-shape';
+          container.appendChild(shape);
+        }
+        
+        document.body.appendChild(container);
+      }
+      
+      // ===============================================
+      // ENHANCED PRODUCT GRID ANIMATIONS
+      // ===============================================
+      function animateProductGrids() {
+        const productGrids = document.querySelectorAll('.product-grid, .collection-grid');
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-in');
+              
+              // Stagger animation for grid items
+              const items = entry.target.querySelectorAll('.grid__item');
+              items.forEach((item, index) => {
+                setTimeout(() => {
+                  item.style.opacity = '1';
+                  item.style.transform = 'translateY(0)';
+                }, index * 100);
+              });
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '50px'
+        });
+        
+        productGrids.forEach(grid => observer.observe(grid));
+      }
+      
+      // ===============================================
+      // SECTION REVEAL ANIMATIONS
+      // ===============================================
+      function animateSections() {
+        const sections = document.querySelectorAll('.section, .shopify-section');
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('section-entering');
+            }
+          });
+        }, {
+          threshold: 0.2,
+          rootMargin: '100px'
+        });
+        
+        sections.forEach(section => observer.observe(section));
+      }
+      
+      // ===============================================
+      // CUSTOM CURSOR (Desktop only)
+      // ===============================================
+      function createCustomCursor() {
+        if (window.innerWidth <= 768) return; // Skip on mobile
+        
+        const cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        
+        const follower = document.createElement('div');
+        follower.className = 'custom-cursor-follower';
+        
+        document.body.appendChild(cursor);
+        document.body.appendChild(follower);
+        
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          
+          cursor.style.left = mouseX + 'px';
+          cursor.style.top = mouseY + 'px';
+        });
+        
+        // Smooth follower animation
+        function animateFollower() {
+          followerX += (mouseX - followerX) * 0.1;
+          followerY += (mouseY - followerY) * 0.1;
+          
+          follower.style.left = followerX + 'px';
+          follower.style.top = followerY + 'px';
+          
+          requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+        
+        // Cursor hover effects
+        const hoverElements = document.querySelectorAll('a, button, .button, .card-wrapper, .product-card-wrapper');
+        
+        hoverElements.forEach(element => {
+          element.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+          });
+          
+          element.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+          });
+          
+          element.addEventListener('mousedown', () => {
+            cursor.classList.add('click');
+          });
+          
+          element.addEventListener('mouseup', () => {
+            cursor.classList.remove('click');
+          });
+        });
+      }
+      
+      // ===============================================
+      // PARALLAX EFFECT FOR HERO SECTIONS
+      // ===============================================
+      function initParallax() {
+        const heroSections = document.querySelectorAll('.hero-section, .banner-section, [data-section-type="hero"]');
+        
+        function updateParallax() {
+          const scrolled = window.pageYOffset;
+          
+          heroSections.forEach(section => {
+            const rate = scrolled * -0.5;
+            const bg = section.querySelector('::before') || section;
+            if (bg.style) {
+              bg.style.transform = `translateY(${rate}px)`;
+            }
+          });
+        }
+        
+        window.addEventListener('scroll', updateParallax);
+      }
+      
+      // ===============================================
+      // ENHANCED PAGE TRANSITIONS
+      // ===============================================
+      function enhancePageTransitions() {
+        // Work with your existing scroll system
+        let isScrolling = false;
+        
+        window.addEventListener('scroll', () => {
+          if (!isScrolling) {
+            isScrolling = true;
+            
+            // Add transition class during scroll
+            document.body.classList.add('scrolling');
+            
+            setTimeout(() => {
+              isScrolling = false;
+              document.body.classList.remove('scrolling');
+            }, 150);
+          }
+        });
+      }
+      
+      // ===============================================
+      // LOADING SKELETONS
+      // ===============================================
+      function createLoadingSkeletons() {
+        const productCards = document.querySelectorAll('.product-card-wrapper, .card-wrapper');
+        
+        productCards.forEach(card => {
+          const img = card.querySelector('img');
+          if (img && !img.complete) {
+            const skeleton = document.createElement('div');
+            skeleton.className = 'skeleton skeleton-product';
+            img.parentNode.insertBefore(skeleton, img);
+            
+            img.addEventListener('load', () => {
+              skeleton.remove();
+            });
+          }
+        });
+      }
+      
+      // ===============================================
+      // INITIALIZE ALL EFFECTS
+      // ===============================================
+      function initAllEffects() {
+        // Check if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (!prefersReducedMotion) {
+          createScrollProgress();
+          createScrollIndicators();
+          createFloatingElements();
+          animateProductGrids();
+          animateSections();
+          createCustomCursor();
+          initParallax();
+          enhancePageTransitions();
+        }
+        
+        // Always run these (they have reduced motion fallbacks)
+        createLoadingSkeletons();
+      }
+      
+      // Start everything
+      initAllEffects();
+      
+      // ===============================================
+      // COMPATIBILITY WITH EXISTING SCROLL SYSTEM
+      // ===============================================
+      
+      // Listen for your existing scroll events and enhance them
+      window.addEventListener('wheel', (e) => {
+        // Add smooth transition during your page-to-page scroll
+        document.body.classList.add('page-transitioning');
+        
+        setTimeout(() => {
+          document.body.classList.remove('page-transitioning');
+        }, 1000);
+      });
+      
+      // Enhance existing scroll animations
+      const existingScrollElements = document.querySelectorAll('[data-scroll]');
+      existingScrollElements.forEach(element => {
+        element.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      });
+      
+    });
+    </script>
+    <!-- END PREMIUM SCROLL EFFECTS SCRIPT -->
+
+    {% render 'wholesale-modal' %}
+    <script src="{{ 'wholesale.js'  | asset_url }}" defer></script>
+    <script src="{{ 'techpack-app.js' | asset_url }}" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // ===============================================
+      // MAKE PRODUCT CARDS CLICKABLE
+      // ===============================================
+      
+      function makeCardsClickable() {
+        console.log('🎯 Making product cards clickable...');
+        
+        const productCards = document.querySelectorAll(
+          '.product-card-wrapper, .card-wrapper, .product-recommendations .card-wrapper, .you-may-also-like .card-wrapper, .card, .collection .card-wrapper'
+        );
+        
+        productCards.forEach(card => {
+          // Skip if already processed
+          if (card.hasAttribute('data-clickable-processed')) return;
+          
+          // Find the main product link
+          const productLink = card.querySelector(
+            '.card__heading a, .card__information a, .card__media a, a[href*="/products/"]'
+          );
+          
+          if (productLink && productLink.href) {
+            const productUrl = productLink.href;
+            
+            // Mark as processed
+            card.setAttribute('data-clickable-processed', 'true');
+            card.style.cursor = 'pointer';
+            
+            // Add click handler
+            card.addEventListener('click', function(e) {
+              // Don't trigger if clicking on interactive elements
+              if (e.target.closest('button, .btn, input, select, .swatch, .quantity, .product-form__buttons, [role="button"], .shopify-payment-button')) {
+                return;
+              }
+              
+              // Don't trigger if clicking on another link
+              if (e.target.closest('a') && e.target.closest('a') !== productLink) {
+                return;
+              }
+              
+              // Navigate to product page
+              if (e.ctrlKey || e.metaKey) {
+                // Open in new tab if Ctrl/Cmd+click
+                window.open(productUrl, '_blank');
+              } else {
+                window.location.href = productUrl;
+              }
+            });
+            
+            // Add keyboard support
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'link');
+            card.setAttribute('aria-label', 'View product: ' + (productLink.textContent || 'Product'));
+            
+            card.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = productUrl;
+              }
+            });
+            
+            console.log('✅ Made card clickable:', productUrl);
+          } else {
+            console.log('❌ No product link found in card:', card);
+          }
+        });
+        
+        console.log(`🎯 Processed ${productCards.length} product cards`);
+      }
+      
+      // ===============================================
+      // ENHANCED DAWN GALLERY FUNCTIONALITY
+      // ===============================================
+      
+      function enhanceDawnGallery() {
+        console.log('🖼️ Enhancing Dawn gallery...');
+        
+        // Find the main product image
+        const mainImage = document.querySelector('.product__media img, .product-media img, .media img, img[src*="product"]');
+        
+        // Find thumbnail containers
+        const thumbnails = document.querySelectorAll('.product__media-toggle, .thumbnail-list button, .slider-counter__link, [data-media-id], .thumbnail.global-media-settings');
+        
+        console.log(`🎯 Main image found:`, !!mainImage);
+        console.log(`🎯 Thumbnails found:`, thumbnails.length);
+        
+        if (mainImage && thumbnails.length > 0) {
+          console.log('✅ Setting up enhanced gallery functionality...');
+          
+          // Add click handlers to thumbnails
+          thumbnails.forEach((thumbnail, index) => {
+            // Skip if already processed
+            if (thumbnail.hasAttribute('data-gallery-processed')) return;
+            thumbnail.setAttribute('data-gallery-processed', 'true');
+            
+            thumbnail.addEventListener('click', function(e) {
+              e.preventDefault();
+              
+              // Find the image source
+              const img = this.querySelector('img');
+              const newSrc = img?.src || this.href || this.dataset.src;
+              
+              if (newSrc && mainImage) {
+                console.log(`🔄 Switching to image: ${newSrc}`);
+                
+                // Smooth transition
+                mainImage.style.opacity = '0.7';
+                mainImage.style.transform = 'scale(0.98)';
+                
+                setTimeout(() => {
+                  mainImage.src = newSrc;
+                  mainImage.style.opacity = '1';
+                  mainImage.style.transform = 'scale(1)';
+                }, 200);
+                
+                // Update active states
+                thumbnails.forEach(t => {
+                  t.classList.remove('active');
+                  t.removeAttribute('aria-current');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-current', 'true');
+              }
+            });
+            
+            // Add keyboard support
+            if (!thumbnail.hasAttribute('tabindex')) {
+              thumbnail.setAttribute('tabindex', '0');
+            }
+            thumbnail.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+              }
+            });
+          });
+          
+          // Add zoom functionality to main image
+          if (mainImage && !mainImage.hasAttribute('data-zoom-processed')) {
+            mainImage.setAttribute('data-zoom-processed', 'true');
+            let isZoomed = false;
+            
+            mainImage.addEventListener('click', function() {
+              isZoomed = !isZoomed;
+              const container = this.closest('.product__media, .product-media, .media');
+              
+              if (container) {
+                container.style.overflow = isZoomed ? 'hidden' : 'visible';
+                this.style.transform = isZoomed ? 'scale(2)' : 'scale(1)';
+                this.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
+                this.style.transition = 'transform 0.3s ease';
+              }
+            });
+            
+            mainImage.addEventListener('mousemove', function(e) {
+              if (isZoomed) {
+                const rect = this.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                this.style.transformOrigin = `${x}% ${y}%`;
+              }
+            });
+          }
+          
+          console.log('✅ Enhanced gallery functionality activated!');
+        } else {
+          console.log('❌ Could not find required gallery elements');
+        }
+      }
+      
+      // ===============================================
+      // INITIALIZATION AND MONITORING
+      // ===============================================
+      
+      // Run functions initially
+      makeCardsClickable();
+      setTimeout(enhanceDawnGallery, 500);
+      
+      // Monitor for dynamically loaded content
+      const observer = new MutationObserver(function(mutations) {
+        let shouldReprocess = false;
+        
+        mutations.forEach(function(mutation) {
+          if (mutation.addedNodes.length > 0) {
+            // Check if new product cards or images were added
+            const hasNewContent = Array.from(mutation.addedNodes).some(node => 
+              node.nodeType === Node.ELEMENT_NODE && 
+              (node.matches('.product-card-wrapper, .card-wrapper, .card, img') || 
+               node.querySelector('.product-card-wrapper, .card-wrapper, .card, img'))
+            );
+            
+            if (hasNewContent) {
+              shouldReprocess = true;
+            }
+          }
+        });
+        
+        if (shouldReprocess) {
+          console.log('🔄 New content detected, re-processing...');
+          setTimeout(() => {
+            makeCardsClickable();
+            enhanceDawnGallery();
+          }, 100);
+        }
+      });
+      
+      // Start observing
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      // Handle Shopify section loading
+      document.addEventListener('shopify:section:load', function() {
+        console.log('🔄 Shopify section loaded, re-processing...');
+        setTimeout(() => {
+          makeCardsClickable();
+          enhanceDawnGallery();
+        }, 200);
+      });
+      
+      // Handle AJAX loading for recommendations
+      document.addEventListener('DOMContentLoaded', function() {
+        // Look for recommendation sections that might load via AJAX
+        const recommendationSections = document.querySelectorAll('.product-recommendations, .you-may-also-like, [data-recommendations]');
+        
+        recommendationSections.forEach(section => {
+          // Set up observer for this specific section
+          const sectionObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              if (mutation.addedNodes.length > 0) {
+                console.log('🔄 Recommendation section updated, re-processing...');
+                setTimeout(makeCardsClickable, 100);
+              }
+            });
+          });
+          
+          sectionObserver.observe(section, {
+            childList: true,
+            subtree: true
+          });
+        });
+      });
+      
+      console.log('🚀 Product card enhancement complete!');
     });
     </script>
   </body>
