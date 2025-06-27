@@ -17,36 +17,24 @@
     "image_luxury_products_TXYaMb": {
       "type": "image-luxury-products",
       "blocks": {
-        "heading_dphfVD": {
-          "type": "heading",
+        "collection_mh6KmG": {
+          "type": "collection",
           "settings": {
-            "heading": "Image banner",
-            "heading_size": "h1"
+            "collection": "hoodie",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER.jpg"
           }
         },
-        "text_6XC9iB": {
-          "type": "text",
+        "collection_tQQYQm": {
+          "type": "collection",
           "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_style": "body"
-          }
-        },
-        "buttons_9cQynQ": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Button label",
-            "button_link_1": "",
-            "button_style_secondary_1": false,
-            "button_label_2": "Button label",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "collection": "jacket",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
           }
         }
       },
       "block_order": [
-        "heading_dphfVD",
-        "text_6XC9iB",
-        "buttons_9cQynQ"
+        "collection_mh6KmG",
+        "collection_tQQYQm"
       ],
       "name": "Image Luxury Products",
       "settings": {
