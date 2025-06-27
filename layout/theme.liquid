@@ -949,33 +949,46 @@
     </script>
 
     <script>
+    // Fix scroll animations after navigation/refresh
     document.addEventListener('DOMContentLoaded', function() {
-      // Wait for animations.js to load
-      function waitForAnimations() {
-        if (typeof initializeScrollAnimationTrigger === 'function') {
-          // Reinitialize scroll animations
-          initializeScrollAnimationTrigger();
-          
-          if (typeof initializeScrollZoomAnimationTrigger === 'function') {
-            initializeScrollZoomAnimationTrigger();
+      // Only run if animations are enabled
+      {% if settings.animations_reveal_on_scroll %}
+        function reinitializeScrollAnimations() {
+          // Wait for animations.js to be ready
+          if (typeof initializeScrollAnimationTrigger === 'function') {
+            initializeScrollAnimationTrigger();
+            
+            if (typeof initializeScrollZoomAnimationTrigger === 'function') {
+              initializeScrollZoomAnimationTrigger();
+            }
+            
+            // Reset offscreen elements that should be visible
+            const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+            offscreenElements.forEach(element => {
+              const rect = element.getBoundingClientRect();
+              if (rect.top < window.innerHeight && rect.bottom > 0) {
+                element.classList.remove('scroll-trigger--offscreen');
+              }
+            });
+          } else {
+            // Retry if animations.js isn't ready yet
+            setTimeout(reinitializeScrollAnimations, 100);
           }
-        } else {
-          // Try again in 100ms
-          setTimeout(waitForAnimations, 100);
         }
-      }
-      
-      // Start the process
-      waitForAnimations();
-    });
-    
-    // Handle page navigation and refresh
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        if (typeof initializeScrollAnimationTrigger === 'function') {
-          initializeScrollAnimationTrigger();
-        }
-      }, 500);
+        
+        // Run on page load
+        reinitializeScrollAnimations();
+        
+        // Handle navigation
+        document.addEventListener('shopify:section:load', reinitializeScrollAnimations);
+        
+        // Handle page visibility
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            setTimeout(reinitializeScrollAnimations, 200);
+          }
+        });
+      {% endif %}
     });
     </script>
     
