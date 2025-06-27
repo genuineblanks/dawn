@@ -296,15 +296,6 @@
           </localization-form>
         {%- endif -%}
       </div>
-
-      {%- for block in section.blocks -%}
-        {%- case block.type -%}
-          {%- when '@app' -%}
-            {% render block %}
-          {%- when 'link_list' -%}
-            {% render  'header-dropdown-menu', menu:block.settings.account_menu %}
-        {%- endcase -%}
-      {%- endfor -%}
       
       {% if section.settings.hide_search_icon != true %}
         {% render 'header-search', input_id: 'Search-In-Modal' %}
