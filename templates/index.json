@@ -330,54 +330,72 @@
         "padding_bottom": 20
       }
     },
-    "rich_text_iBiEKf": {
-      "type": "rich-text",
+    "image_banner_PJVdGt": {
+      "type": "image-banner",
       "blocks": {
-        "heading_3B7gU6": {
-          "type": "heading",
-          "settings": {
-            "heading": "<strong>Who We Are.</strong>",
-            "heading_size": "h1"
-          }
-        },
-        "text_biLyAG": {
+        "text_iyTpQ9": {
           "type": "text",
           "settings": {
-            "text": "<p>We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Portugal, our facilities and machines are at the cutting edge of<br/>technology.</p>"
+            "text": "<p style=\"color: #000;\">We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Portugal, our facilities and machines are at the cutting edge oftechnology.\n</p>",
+            "text_style": "subtitle",
+            "class_text": "button-above"
           }
         },
-        "text_PNPFBE": {
-          "type": "text",
+        "buttons_6jQWih": {
+          "type": "buttons",
           "settings": {
-            "text": "<p>We help avant-garde brands and designers to grow and expand by giving them access to a range of Organic Luxury Blanks and customization services with no minimums. We also supply our blank apparel in an affordable way to the retail market.</p>"
-          }
-        },
-        "button_wGNftm": {
-          "type": "button",
-          "settings": {
-            "button_label": "WHAT YOU NEED TO GET STARTED",
-            "button_link": "shopify://pages/how-does-it-work",
-            "button_style_secondary": false,
+            "button_label_1": "WHAT YOU NEED TO GET STARTED",
+            "button_link_1": "shopify://pages/how-does-it-work",
+            "button_style_secondary_1": false,
             "button_label_2": "",
-            "button_link_2": "https://genuine-blanks.myshopify.com/pages/how-does-it-work#who_weAre",
-            "button_style_secondary_2": true
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "image_9Qxz73": {
+          "type": "image",
+          "settings": {
+            "title": "Genuineblanks",
+            "richtext": "",
+            "image_width": 100,
+            "alignment": "center"
           }
         }
       },
       "block_order": [
-        "heading_3B7gU6",
-        "text_biLyAG",
-        "text_PNPFBE",
-        "button_wGNftm"
+        "text_iyTpQ9",
+        "buttons_6jQWih",
+        "image_9Qxz73"
       ],
       "settings": {
-        "additional-classroom": "aboutus-page who-we-are",
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": false,
-        "padding_top": 100,
-        "padding_bottom": 100
+        "enable_footer": false,
+        "dynamic-class": "worldwide-brands",
+        "image": "shopify://shop_images/WHO_ARE_WE_Front_Page_3.jpg",
+        "image_overlay_opacity": 0,
+        "image_height": "large",
+        "desktop_content_position": "middle-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme_section": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true,
+        "color_scheme": "scheme-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "",
+        "newsletter_paragraph": "",
+        "enable_follow_on_shop": false,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "privacy-menu",
+        "copyright_text": "",
+        "margin_top": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
       }
     },
     "image_banner_tFFqdH": {
@@ -686,7 +704,7 @@
     "image_high_end_products_amWbDP",
     "autoplay_video_PAxbzR",
     "image_banner_kEcnHz",
-    "rich_text_iBiEKf",
+    "image_banner_PJVdGt",
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
     "image_banner_mbytrt",
