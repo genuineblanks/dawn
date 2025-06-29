@@ -3565,12 +3565,3 @@ details-disclosure > details {
   padding-top: 20px !important;
   padding-bottom: 20px !important;
 }
-
-/* Hide the existing TOP button */
-#button,
-.scroll-to-top,
-.back-to-top,
-[href="#top"],
-.top-button {
-  display: none !important;
-}
