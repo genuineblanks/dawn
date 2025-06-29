@@ -23,52 +23,64 @@ function waitForJQuery(callback) {
 }
 
 function createDotNavigation() {
+  console.log('🎯 Creating dot navigation...');
+  
   // Remove existing dot navigation if it exists
   if (scrollSystem.dotNavigation) {
     scrollSystem.dotNavigation.remove();
   }
   
-  // Create navigation container
-  scrollSystem.dotNavigation = document.createElement('div');
-  scrollSystem.dotNavigation.className = 'section-dot-navigation';
-  
-  // Section labels for 7 sections
-  const sectionLabels = [
-    'Home',
-    'Products', 
-    'Luxury',
-    'High-End',
-    'Tech-Pack',
-    'About',
-    'Footer'
-  ];
-  
-  console.log('🎯 Creating dots for', scrollSystem.arrSections.length, 'sections');
-  
-  // Filter out duplicate positions and create clean section array
+  // Filter out duplicate positions first
   const cleanSections = [];
-  const cleanLabels = [];
   const usedPositions = new Set();
   
   scrollSystem.arrSections.forEach((pos, index) => {
     if (!usedPositions.has(pos) || cleanSections.length === 0) {
       cleanSections.push(pos);
-      cleanLabels.push(sectionLabels[index] || `Section ${cleanSections.length}`);
       usedPositions.add(pos);
     }
   });
   
   // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  
   console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+  
+  // Create navigation container with inline styles
+  scrollSystem.dotNavigation = document.createElement('div');
+  scrollSystem.dotNavigation.style.cssText = `
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 20px !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 15px 10px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+    pointer-events: auto !important;
+  `;
+  
+  // Section labels
+  const sectionLabels = ['Home', 'Luxury', 'High-End', 'Tech-Pack', 'About', 'Footer'];
   
   // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     const dot = document.createElement('div');
-    dot.className = 'section-dot';
+    dot.style.cssText = `
+      width: 12px !important;
+      height: 12px !important;
+      border-radius: 50% !important;
+      background: rgba(0,0,0,0.4) !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      border: 2px solid transparent !important;
+      pointer-events: auto !important;
+    `;
+    
     dot.setAttribute('data-section', index);
-    dot.setAttribute('data-label', cleanLabels[index]);
+    dot.setAttribute('data-label', sectionLabels[index] || `Section ${index + 1}`);
     
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
@@ -78,29 +90,49 @@ function createDotNavigation() {
       goToSection(index);
     });
     
+    // Add hover effects
+    dot.addEventListener('mouseenter', function() {
+      if (!this.classList.contains('active')) {
+        this.style.background = 'rgba(0,0,0,0.7) !important';
+        this.style.transform = 'scale(1.2) !important';
+      }
+    });
+    
+    dot.addEventListener('mouseleave', function() {
+      if (!this.classList.contains('active')) {
+        this.style.background = 'rgba(0,0,0,0.4) !important';
+        this.style.transform = 'scale(1) !important';
+      }
+    });
+    
     scrollSystem.dotNavigation.appendChild(dot);
   });
   
   // Add to page
   document.body.appendChild(scrollSystem.dotNavigation);
-  
   console.log('🎯 Dot navigation created with', scrollSystem.arrSections.length, 'dots');
 }
 
 function updateDotNavigation() {
   if (!scrollSystem.dotNavigation) return;
   
-  const dots = scrollSystem.dotNavigation.querySelectorAll('.section-dot');
+  const dots = scrollSystem.dotNavigation.children;
   console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
   
-  dots.forEach((dot, index) => {
-    if (index === scrollSystem.currentSection) {
-      dot.classList.add('active');
-      console.log('🎯 Activated dot', index);
+  for (let i = 0; i < dots.length; i++) {
+    if (i === scrollSystem.currentSection) {
+      dots[i].style.background = '#000 !important';
+      dots[i].style.border = '2px solid #fff !important';
+      dots[i].style.transform = 'scale(1.3) !important';
+      dots[i].classList.add('active');
+      console.log('🎯 Activated dot', i);
     } else {
-      dot.classList.remove('active');
+      dots[i].style.background = 'rgba(0,0,0,0.4) !important';
+      dots[i].style.border = '2px solid transparent !important';
+      dots[i].style.transform = 'scale(1) !important';
+      dots[i].classList.remove('active');
     }
-  });
+  }
 }
 
 function goToSection(sectionIndex) {
