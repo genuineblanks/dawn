@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with Dot Navigation
+// Section Scroll JS - Enhanced with Fixed Dot Navigation
 
 let scrollSystem = {
   $sections: null,
@@ -32,24 +32,43 @@ function createDotNavigation() {
   scrollSystem.dotNavigation = document.createElement('div');
   scrollSystem.dotNavigation.className = 'section-dot-navigation';
   
-  // Section labels for 6 sections (update these based on your actual sections)
+  // Section labels for 7 sections
   const sectionLabels = [
     'Home',
-    'Luxury Products', 
-    'High-End Products',
+    'Products', 
+    'Luxury',
+    'High-End',
     'Tech-Pack',
-    'About Us',
-    'Footer/Contact'  // 6th section
+    'About',
+    'Footer'
   ];
   
   console.log('🎯 Creating dots for', scrollSystem.arrSections.length, 'sections');
   
-  // Create dots for each section
+  // Filter out duplicate positions and create clean section array
+  const cleanSections = [];
+  const cleanLabels = [];
+  const usedPositions = new Set();
+  
+  scrollSystem.arrSections.forEach((pos, index) => {
+    if (!usedPositions.has(pos) || cleanSections.length === 0) {
+      cleanSections.push(pos);
+      cleanLabels.push(sectionLabels[index] || `Section ${cleanSections.length}`);
+      usedPositions.add(pos);
+    }
+  });
+  
+  // Update the clean sections array
+  scrollSystem.arrSections = cleanSections;
+  
+  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+  
+  // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     const dot = document.createElement('div');
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
-    dot.setAttribute('data-label', sectionLabels[index] || `Section ${index + 1}`);
+    dot.setAttribute('data-label', cleanLabels[index]);
     
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
@@ -72,9 +91,12 @@ function updateDotNavigation() {
   if (!scrollSystem.dotNavigation) return;
   
   const dots = scrollSystem.dotNavigation.querySelectorAll('.section-dot');
+  console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
+  
   dots.forEach((dot, index) => {
     if (index === scrollSystem.currentSection) {
       dot.classList.add('active');
+      console.log('🎯 Activated dot', index);
     } else {
       dot.classList.remove('active');
     }
@@ -89,18 +111,18 @@ function goToSection(sectionIndex) {
   scrollSystem.inScroll = true;
   scrollSystem.currentSection = sectionIndex;
   
+  // Update dots immediately
+  updateDotNavigation();
+  
   $('html, body').animate({
     scrollTop: scrollSystem.arrSections[sectionIndex]
   }, {
     duration: scrollSystem.durationOneScroll,
     complete: function() {
       scrollSystem.inScroll = false;
-      updateDotNavigation();
       console.log('✅ Navigation to section', sectionIndex, 'complete');
     }
   });
-  
-  updateDotNavigation();
 }
 
 function calculateSectionPositions() {
@@ -111,16 +133,10 @@ function calculateSectionPositions() {
     return $(this).offset().top;
   }).get();
   
-  console.log('📍 Section positions updated:', scrollSystem.arrSections);
+  console.log('📍 Raw section positions:', scrollSystem.arrSections);
   
   // Update current section based on current scroll position
   updateCurrentSectionFromScrollPosition();
-  
-  // Recreate dot navigation with new positions
-  if (scrollSystem.initialized) {
-    createDotNavigation();
-    updateDotNavigation();
-  }
   
   return oldPositions;
 }
@@ -152,14 +168,8 @@ function initializeScrollSystem() {
   
   console.log('🚀 Initializing scroll system...');
   
-  // Debug: Let's see what sections we're finding
   scrollSystem.$sections = $('section');
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
-  console.log('🔍 Section elements:', scrollSystem.$sections);
-  
-  // Also try looking for other common section selectors
-  const altSections = $('.shopify-section, .section, [data-section-type]');
-  console.log('🔍 Alternative sections found:', altSections.length);
   
   calculateSectionPositions();
   
@@ -201,18 +211,18 @@ function bindScrollEvents() {
 
     console.log('📍 Scrolling to section:', scrollSystem.currentSection, 'at position:', scrollSystem.arrSections[scrollSystem.currentSection]);
 
+    // Update dots immediately
+    updateDotNavigation();
+
     $('html, body').animate({
       scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
     }, {
       duration: scrollSystem.durationOneScroll,
       complete: function() {
         scrollSystem.inScroll = false;
-        updateDotNavigation();
         console.log('✅ Scroll complete');
       }
     });
-    
-    updateDotNavigation();
   });
 }
 
@@ -228,20 +238,12 @@ function handleWindowResize() {
   scrollSystem.resizeTimeout = setTimeout(function() {
     if (scrollSystem.initialized) {
       const oldPositions = calculateSectionPositions();
-      
-      // Check if positions changed significantly
-      const hasSignificantChange = scrollSystem.arrSections.some((newPos, index) => {
-        const oldPos = oldPositions[index];
-        return oldPos && Math.abs(newPos - oldPos) > 50; // 50px threshold
-      });
-      
-      if (hasSignificantChange) {
-        console.log('📐 Significant position changes detected - scroll system updated');
-      }
+      createDotNavigation(); // Recreate dots with clean positions
+      updateDotNavigation();
     }
     
     scrollSystem.resizeTimeout = null;
-  }, 250); // Wait 250ms after resize stops
+  }, 250);
 }
 
 function resetScrollSystem() {
@@ -263,6 +265,7 @@ function resetScrollSystem() {
   if (typeof $ !== 'undefined') {
     $(document).off('wheel.scrollSystem');
     $(window).off('resize.scrollSystem');
+    $(window).off('scroll.dotNavigation');
   }
 }
 
@@ -286,6 +289,8 @@ function initializeAllFeatures() {
     // Re-calculate sections after showing/hiding
     setTimeout(function() {
       calculateSectionPositions();
+      createDotNavigation();
+      updateDotNavigation();
     }, 150);
   });
 
@@ -309,7 +314,7 @@ function initializeAllFeatures() {
    $(window).on('orientationchange.scrollSystem', function() {
      setTimeout(function() {
        handleWindowResize();
-     }, 500); // Wait longer for orientation change
+     }, 500);
    });
    
    // Monitor scroll position for dot navigation updates
@@ -346,7 +351,11 @@ waitForJQuery(function() {
       setTimeout(initializeScrollSystem, 200);
     } else {
       // Recalculate once everything is fully loaded
-      setTimeout(calculateSectionPositions, 300);
+      setTimeout(function() {
+        calculateSectionPositions();
+        createDotNavigation();
+        updateDotNavigation();
+      }, 300);
     }
   });
 });
