@@ -421,7 +421,7 @@
         "dynamic-class": "button-above bring-creativity",
         "image": "shopify://shop_images/Design_Page_-_website2.jpg",
         "image_overlay_opacity": 20,
-        "image_height": "medium",
+        "image_height": "large",
         "desktop_content_position": "middle-center",
         "show_text_box": false,
         "desktop_content_alignment": "center",
