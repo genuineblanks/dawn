@@ -1156,3 +1156,56 @@ ul.productcolors li,ul.productcolors li a { width: 35px; height: 35px; display: 
 ul.productcolors li a { box-shadow: 0 0 2px #000;}
 ul.productcolors li a.active {box-shadow: 0 0 3px; border: 1px solid #000;}
 ul.productcolors li a.active[style="background: #000;"] {border-color: #ff0;}
+
+/* Section Dot Navigation */
+.section-dot-navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px 10px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  gap: 12px;
+}
+
+.section-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.section-dot:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: scale(1.2);
+}
+
+.section-dot.active {
+  background: #000;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+  transform: scale(1.3);
+}
+
+/* Hide on mobile (optional) */
+@media screen and (max-width: 768px) {
+  .section-dot-navigation {
+    right: 15px;
+    bottom: 15px;
+    padding: 12px 8px;
+    gap: 10px;
+  }
+  
+  .section-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
