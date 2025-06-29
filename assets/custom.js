@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with Fixed Dot Navigation
+// Section Scroll JS - Enhanced with Dot Navigation
 
 let scrollSystem = {
   $sections: null,
@@ -8,8 +8,7 @@ let scrollSystem = {
   arrSections: [],
   isEnabled: true,
   initialized: false,
-  resizeTimeout: null,
-  dotNavigation: null
+  resizeTimeout: null
 };
 
 function waitForJQuery(callback) {
@@ -25,12 +24,16 @@ function waitForJQuery(callback) {
 function createDotNavigation() {
   console.log('🎯 Creating dot navigation...');
   
-  // Remove existing dot navigation if it exists
-  if (scrollSystem.dotNavigation) {
-    scrollSystem.dotNavigation.remove();
+  const dotContainer = $('#section-dots');
+  if (!dotContainer.length) {
+    console.log('❌ Dot container not found');
+    return;
   }
   
-  // Filter out duplicate positions first
+  // Clear existing dots
+  dotContainer.empty();
+  
+  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -45,76 +48,38 @@ function createDotNavigation() {
   scrollSystem.arrSections = cleanSections;
   console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
   
-  // Create navigation container with inline styles
-  scrollSystem.dotNavigation = document.createElement('div');
-  scrollSystem.dotNavigation.style.cssText = `
-    position: fixed !important;
-    right: 20px !important;
-    bottom: 20px !important;
-    z-index: 99999 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    padding: 15px 10px !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
-    pointer-events: auto !important;
-  `;
-  
-  // Section labels
-  const sectionLabels = ['Home', 'Luxury', 'High-End', 'Tech-Pack', 'About', 'Footer'];
-  
   // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    const dot = document.createElement('div');
-    dot.style.cssText = `
-      width: 12px !important;
-      height: 12px !important;
-      border-radius: 50% !important;
-      background: rgba(0,0,0,0.4) !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-      border: 2px solid transparent !important;
-      pointer-events: auto !important;
-    `;
+    const dot = $('<div class="section-dot"></div>');
+    dot.attr('data-section', index);
     
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Add click handler
-    dot.addEventListener('click', function() {
+    // Add click handler (following the backtotop pattern)
+    dot.on('click', function() {
       console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    scrollSystem.dotNavigation.appendChild(dot);
+    dotContainer.append(dot);
   });
   
-  // Add to page
-  document.body.appendChild(scrollSystem.dotNavigation);
-  console.log('🎯 Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  updateDotNavigation();
 }
 
 function updateDotNavigation() {
-  if (!scrollSystem.dotNavigation) return;
-  
-  const dots = scrollSystem.dotNavigation.children;
+  const dots = $('.section-dot');
   console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
   
-  for (let i = 0; i < dots.length; i++) {
-    if (i === scrollSystem.currentSection) {
-      dots[i].style.background = '#000 !important';
-      dots[i].style.border = '2px solid #fff !important';
-      dots[i].style.transform = 'scale(1.3) !important';
-      dots[i].classList.add('active');
-      console.log('🎯 Activated dot', i);
+  dots.each(function(index) {
+    if (index === scrollSystem.currentSection) {
+      $(this).addClass('active');
+      console.log('🎯 Activated dot', index);
     } else {
-      dots[i].style.background = 'rgba(0,0,0,0.4) !important';
-      dots[i].style.border = '2px solid transparent !important';
-      dots[i].style.transform = 'scale(1) !important';
-      dots[i].classList.remove('active');
+      $(this).removeClass('active');
     }
-  }
+  });
 }
 
 function goToSection(sectionIndex) {
@@ -197,7 +162,6 @@ function initializeScrollSystem() {
     console.log('✅ Scroll system enabled');
     createDotNavigation();
     bindScrollEvents();
-    updateDotNavigation();
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
   }
@@ -253,7 +217,6 @@ function handleWindowResize() {
     if (scrollSystem.initialized) {
       const oldPositions = calculateSectionPositions();
       createDotNavigation(); // Recreate dots with clean positions
-      updateDotNavigation();
     }
     
     scrollSystem.resizeTimeout = null;
@@ -269,11 +232,6 @@ function resetScrollSystem() {
   if (scrollSystem.resizeTimeout) {
     clearTimeout(scrollSystem.resizeTimeout);
     scrollSystem.resizeTimeout = null;
-  }
-  
-  if (scrollSystem.dotNavigation) {
-    scrollSystem.dotNavigation.remove();
-    scrollSystem.dotNavigation = null;
   }
   
   if (typeof $ !== 'undefined') {
@@ -304,7 +262,6 @@ function initializeAllFeatures() {
     setTimeout(function() {
       calculateSectionPositions();
       createDotNavigation();
-      updateDotNavigation();
     }, 150);
   });
 
@@ -368,7 +325,6 @@ waitForJQuery(function() {
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
-        updateDotNavigation();
       }, 300);
     }
   });
