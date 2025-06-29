@@ -1,65 +1,113 @@
-// Section Scroll JS - Enhanced with back button detection
+// Section Scroll JS - Enhanced with proper navigation handling
 
-$(document).ready(function() {
-  const $sections = $('section');
-  let inScroll = false;
-  const durationOneScroll = 600;
-  let currentSection = 0;
-  let isBackButtonNavigation = false;
+let scrollSystem = {
+  $sections: null,
+  inScroll: false,
+  durationOneScroll: 600,
+  currentSection: 0,
+  arrSections: [],
+  isEnabled: true,
+  initialized: false
+};
 
-  // Detect back button navigation
-  window.addEventListener('pageshow', function(event) {
-    if (event.persisted) {
-      isBackButtonNavigation = true;
-      // Disable wheel hijacking for 2 seconds after back navigation
-      setTimeout(() => {
-        isBackButtonNavigation = false;
-      }, 2000);
-    }
-  });
-
-  const arrSections = $sections.map(function() {
+function initializeScrollSystem() {
+  if (scrollSystem.initialized) return;
+  
+  console.log('🚀 Initializing scroll system...');
+  
+  scrollSystem.$sections = $('section');
+  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
     return $(this).offset().top;
   }).get();
+  
+  console.log('📍 Found sections at positions:', scrollSystem.arrSections);
+  
+  // Enable scroll system only if we have multiple sections
+  scrollSystem.isEnabled = scrollSystem.arrSections.length > 1;
+  scrollSystem.initialized = true;
+  
+  if (scrollSystem.isEnabled) {
+    console.log('✅ Scroll system enabled');
+    bindScrollEvents();
+  } else {
+    console.log('❌ Scroll system disabled - not enough sections');
+  }
+}
 
-  $(document).on('wheel', function(event) {
-    // Skip wheel hijacking if back button was used
-    if (isBackButtonNavigation || inScroll) return;
+function bindScrollEvents() {
+  // Remove any existing wheel event listeners
+  $(document).off('wheel.scrollSystem');
+  
+  $(document).on('wheel.scrollSystem', function(event) {
+    if (!scrollSystem.isEnabled || scrollSystem.inScroll) return;
     
-    inScroll = true;
+    scrollSystem.inScroll = true;
+    console.log('🎯 Wheel event - current section:', scrollSystem.currentSection);
 
     // move down
     if (event.originalEvent.deltaY > 0) {
-      currentSection = currentSection >= arrSections.length - 1
-        ? arrSections.length - 1
-        : currentSection + 1;
+      scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
+        ? scrollSystem.arrSections.length - 1
+        : scrollSystem.currentSection + 1;
     } else {
       // move up
-      currentSection = currentSection === 0 ? 0 : currentSection - 1;
+      scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
     }
 
+    console.log('📍 Scrolling to section:', scrollSystem.currentSection, 'at position:', scrollSystem.arrSections[scrollSystem.currentSection]);
+
     $('html, body').animate({
-      scrollTop: arrSections[currentSection]
+      scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
     }, {
-      duration: durationOneScroll,
+      duration: scrollSystem.durationOneScroll,
       complete: function() {
-        inScroll = false;
+        scrollSystem.inScroll = false;
+        console.log('✅ Scroll complete');
       }
     });
   });
+}
 
+function resetScrollSystem() {
+  console.log('🔄 Resetting scroll system...');
+  scrollSystem.initialized = false;
+  scrollSystem.currentSection = 0;
+  scrollSystem.inScroll = false;
+  $(document).off('wheel.scrollSystem');
+}
+
+// Initialize when DOM is ready
+$(document).ready(function() {
+  console.log('📱 DOM Ready - initializing scroll system');
+  
+  // Wait a bit for all content to load
+  setTimeout(initializeScrollSystem, 500);
+  
+  // Button functionality
   var btn = $('#button');
   btn.on('click', function(e) {
     e.preventDefault();
     $('html, body').animate({scrollTop: 0}, 300);
-    currentSection = 0;
+    scrollSystem.currentSection = 0;
   });
 });
 
+// Re-initialize on page navigation (Shopify AJAX navigation)
+$(window).on('beforeunload', function() {
+  resetScrollSystem();
+});
+
+$(window).on('load', function() {
+  console.log('🌐 Window loaded - checking scroll system');
+  if (!scrollSystem.initialized) {
+    setTimeout(initializeScrollSystem, 200);
+  }
+});
+
+// Handle section switching
 $(document).ready(function(){
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
-    // Check if the parent section's class contains 'hidden'
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
        $('.high-end-collection').show();
        $('.luxury-collection').hide();
@@ -67,11 +115,17 @@ $(document).ready(function(){
       $('.high-end-collection').hide();
        $('.luxury-collection').show();
     }
+    
+    // Re-calculate sections after showing/hiding
+    setTimeout(function() {
+      resetScrollSystem();
+      initializeScrollSystem();
+    }, 100);
   });  
 });
-//document.querySelectorAll('video').forEach((video) => video.play());
 
- $(document).ready(function(){
+// Handle smooth scroll links
+$(document).ready(function(){
    $(".click-to-scroll a").on('click', function(event) {
      if (this.hash !== "") {
       event.preventDefault();
@@ -84,3 +138,6 @@ $(document).ready(function(){
      }
    });
 });
+
+// Debug: Log when script loads
+console.log('📜 Custom.js script loaded');
