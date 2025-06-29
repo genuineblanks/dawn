@@ -25,12 +25,26 @@ function waitForJQuery(callback) {
 function createDotNavigation() {
   console.log('🎯 Creating dot navigation...');
   
-  // Remove existing dot navigation if it exists
-  if (scrollSystem.dotNavigation) {
-    scrollSystem.dotNavigation.remove();
+  // Try multiple ways to find the container
+  let dotContainer = $('#section-dots');
+  if (!dotContainer.length) {
+    dotContainer = document.getElementById('section-dots');
+    if (dotContainer) {
+      dotContainer = $(dotContainer);
+    }
   }
   
-  // Filter out duplicate positions first
+  if (!dotContainer || !dotContainer.length) {
+    console.log('❌ Dot container not found');
+    return;
+  }
+  
+  console.log('✅ Dot container found:', dotContainer);
+  
+  // Clear existing dots
+  dotContainer.empty();
+  
+  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -45,54 +59,28 @@ function createDotNavigation() {
   scrollSystem.arrSections = cleanSections;
   console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
   
-  // Create navigation container with inline styles
-  scrollSystem.dotNavigation = document.createElement('div');
-  scrollSystem.dotNavigation.style.cssText = `
-    position: fixed !important;
-    right: 20px !important;
-    bottom: 20px !important;
-    z-index: 99999 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    padding: 15px 10px !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
-    pointer-events: auto !important;
-  `;
-  
-  // Section labels
-  const sectionLabels = ['Home', 'Luxury', 'High-End', 'Tech-Pack', 'About', 'Footer'];
-  
   // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    const dot = document.createElement('div');
-    dot.style.cssText = `
-      width: 12px !important;
-      height: 12px !important;
-      border-radius: 50% !important;
-      background: rgba(0,0,0,0.4) !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-      border: 2px solid transparent !important;
-      pointer-events: auto !important;
-    `;
-    
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
+    // Create dot element
+    const dot = $('<div></div>');
+    dot.addClass('section-dot');
+    dot.attr('data-section', index);
+    
     // Add click handler
-    dot.addEventListener('click', function() {
+    dot.on('click', function() {
       console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    scrollSystem.dotNavigation.appendChild(dot);
+    // Append to container
+    dotContainer.append(dot);
+    console.log('🎯 Dot', index, 'added to container');
   });
   
-  // Add to page
-  document.body.appendChild(scrollSystem.dotNavigation);
-  console.log('🎯 Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  updateDotNavigation();
 }
 
 function updateDotNavigation() {
