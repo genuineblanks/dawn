@@ -495,7 +495,7 @@
         "color_scheme_section": "scheme-4",
         "image_behavior": "none",
         "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
+        "stack_images_on_mobile": true,
         "show_text_below": true,
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
