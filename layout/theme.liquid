@@ -988,6 +988,68 @@
       }
     });
     </script>
+
+    <script>
+    // Enhanced Scroll Restoration for Live Site
+    (function() {
+      // Only run on live site, not in preview
+      if (window.location.hostname.includes('myshopify.com') && !Shopify.designMode) return;
+      
+      // Disable browser's automatic scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      
+      let scrollPositions = {};
+      
+      function saveScrollPosition() {
+        const key = window.location.pathname;
+        scrollPositions[key] = window.pageYOffset;
+        try {
+          sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+        } catch(e) {
+          console.log('Could not save scroll position');
+        }
+      }
+      
+      function restoreScrollPosition() {
+        const key = window.location.pathname;
+        try {
+          const saved = sessionStorage.getItem('shopifyScrollPositions');
+          if (saved) {
+            scrollPositions = JSON.parse(saved);
+            if (scrollPositions[key]) {
+              // Use setTimeout to ensure DOM is ready
+              setTimeout(() => {
+                window.scrollTo(0, scrollPositions[key]);
+                delete scrollPositions[key];
+                sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+              }, 100);
+            }
+          }
+        } catch(e) {
+          console.log('Could not restore scroll position');
+        }
+      }
+      
+      // Save position when leaving page
+      window.addEventListener('beforeunload', saveScrollPosition);
+      
+      // Restore position on page show (handles back button)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          restoreScrollPosition();
+        }
+      });
+      
+      // Initial restore on load
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', restoreScrollPosition);
+      } else {
+        restoreScrollPosition();
+      }
+    })();
+    </script>
     
   </body>
 </html>
