@@ -1,38 +1,51 @@
-// Section Scroll JS
+// Section Scroll JS - Enhanced with back button detection
 
 $(document).ready(function() {
   const $sections = $('section');
   let inScroll = false;
   const durationOneScroll = 600;
   let currentSection = 0;
+  let isBackButtonNavigation = false;
+
+  // Detect back button navigation
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      isBackButtonNavigation = true;
+      // Disable wheel hijacking for 2 seconds after back navigation
+      setTimeout(() => {
+        isBackButtonNavigation = false;
+      }, 2000);
+    }
+  });
 
   const arrSections = $sections.map(function() {
     return $(this).offset().top;
   }).get();
 
   $(document).on('wheel', function(event) {
-    if (!inScroll) {
-      inScroll = true;
+    // Skip wheel hijacking if back button was used
+    if (isBackButtonNavigation || inScroll) return;
+    
+    inScroll = true;
 
-      // move down
-      if (event.originalEvent.deltaY > 0) {
-        currentSection = currentSection >= arrSections.length - 1
-          ? arrSections.length - 1
-          : currentSection + 1;
-      } else {
-        // move up
-        currentSection = currentSection === 0 ? 0 : currentSection - 1;
-      }
-
-      $('html, body').animate({
-        scrollTop: arrSections[currentSection]
-      }, {
-        duration: durationOneScroll,
-        complete: function() {
-          inScroll = false;
-        }
-      });
+    // move down
+    if (event.originalEvent.deltaY > 0) {
+      currentSection = currentSection >= arrSections.length - 1
+        ? arrSections.length - 1
+        : currentSection + 1;
+    } else {
+      // move up
+      currentSection = currentSection === 0 ? 0 : currentSection - 1;
     }
+
+    $('html, body').animate({
+      scrollTop: arrSections[currentSection]
+    }, {
+      duration: durationOneScroll,
+      complete: function() {
+        inScroll = false;
+      }
+    });
   });
 
   var btn = $('#button');
