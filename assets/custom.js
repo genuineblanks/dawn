@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with Dynamic Viewport Support
+// Section Scroll JS - Enhanced with Robust Browser UI Handling
 
 let scrollSystem = {
   $sections: null,
@@ -11,18 +11,22 @@ let scrollSystem = {
   isMobile: false,
   touchStartY: 0,
   touchEndY: 0,
-  minSwipeDistance: 50,
-  realViewportHeight: 0
+  minSwipeDistance: 80,
+  initialViewportHeight: 0,
+  lastRecalculation: 0,
+  isWaitingForStabilization: false
 };
 
 function updateViewportHeight() {
-  // Get real viewport height accounting for mobile browser UI
-  scrollSystem.realViewportHeight = window.innerHeight;
+  const currentHeight = window.innerHeight;
   
-  // Update CSS custom property
-  document.documentElement.style.setProperty('--real-viewport-height', `${scrollSystem.realViewportHeight}px`);
+  // Store initial height on first load
+  if (scrollSystem.initialViewportHeight === 0) {
+    scrollSystem.initialViewportHeight = currentHeight;
+  }
   
-  console.log('📐 Updated viewport height to:', scrollSystem.realViewportHeight);
+  document.documentElement.style.setProperty('--real-viewport-height', `${currentHeight}px`);
+  console.log('📐 Viewport height updated to:', currentHeight);
 }
 
 function detectMobile() {
@@ -40,6 +44,38 @@ function waitForJQuery(callback) {
   }
 }
 
+function recalculateSections() {
+  if (!scrollSystem.initialized || !scrollSystem.$sections) return;
+  
+  // Prevent too frequent recalculations
+  const now = Date.now();
+  if (now - scrollSystem.lastRecalculation < 100) return;
+  scrollSystem.lastRecalculation = now;
+  
+  const oldSections = [...scrollSystem.arrSections];
+  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
+    return $(this).offset().top;
+  }).get();
+  
+  // Update current section based on scroll position
+  const currentScrollPos = window.pageYOffset;
+  let closestSection = 0;
+  let minDistance = Infinity;
+  
+  scrollSystem.arrSections.forEach((sectionTop, index) => {
+    const distance = Math.abs(currentScrollPos - sectionTop);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestSection = index;
+    }
+  });
+  
+  scrollSystem.currentSection = closestSection;
+  
+  console.log('📐 Sections recalculated:', scrollSystem.arrSections);
+  console.log('📍 Current section updated to:', scrollSystem.currentSection);
+}
+
 function initializeScrollSystem() {
   if (scrollSystem.initialized) return;
   
@@ -49,9 +85,7 @@ function initializeScrollSystem() {
   console.log('🚀 Initializing scroll system...');
   
   scrollSystem.$sections = $('section');
-  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
-    return $(this).offset().top;
-  }).get();
+  recalculateSections();
   
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
@@ -62,9 +96,46 @@ function initializeScrollSystem() {
   if (scrollSystem.isEnabled) {
     console.log('✅ Scroll system enabled');
     bindScrollEvents();
+    setupViewportMonitoring();
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
   }
+}
+
+function setupViewportMonitoring() {
+  if (!scrollSystem.isMobile) return;
+  
+  let stabilizationTimer;
+  let lastHeight = window.innerHeight;
+  
+  // Monitor viewport changes for mobile browser UI
+  const viewportObserver = new ResizeObserver(entries => {
+    const currentHeight = window.innerHeight;
+    
+    // Only react to significant height changes (browser UI)
+    if (Math.abs(currentHeight - lastHeight) > 50) {
+      console.log('📱 Browser UI changed:', lastHeight, '→', currentHeight);
+      
+      updateViewportHeight();
+      
+      // Mark as waiting for stabilization
+      scrollSystem.isWaitingForStabilization = true;
+      
+      // Clear existing timer
+      clearTimeout(stabilizationTimer);
+      
+      // Wait for UI to stabilize before recalculating
+      stabilizationTimer = setTimeout(() => {
+        recalculateSections();
+        scrollSystem.isWaitingForStabilization = false;
+        console.log('✅ Viewport stabilized, sections updated');
+      }, 300);
+      
+      lastHeight = currentHeight;
+    }
+  });
+  
+  viewportObserver.observe(document.documentElement);
 }
 
 function bindScrollEvents() {
@@ -117,35 +188,62 @@ function bindMobileEvents() {
   let touchDirection = '';
   let touchDistance = 0;
   let isValidSwipe = false;
+  let touchStartTime = 0;
   
   $(document).on('touchstart.scrollSystem', function(event) {
-    if (!scrollSystem.isEnabled) return;
+    if (!scrollSystem.isEnabled || scrollSystem.isWaitingForStabilization) return;
     
-    // Don't interfere with normal scrolling if user is in middle of page
+    // Don't interfere if user is doing a quick scroll gesture
     const currentScrollPos = window.pageYOffset;
-    const sectionIndex = scrollSystem.arrSections.findIndex(pos => Math.abs(pos - currentScrollPos) < 100);
+    const tolerance = window.innerHeight * 0.2; // 20% tolerance
     
-    if (sectionIndex === -1) {
-      // User is between sections, allow normal scrolling
+    // Find closest section
+    let closestSectionIndex = 0;
+    let minDistance = Infinity;
+    
+    scrollSystem.arrSections.forEach((sectionTop, index) => {
+      const distance = Math.abs(sectionTop - currentScrollPos);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestSectionIndex = index;
+      }
+    });
+    
+    // Only enable section scrolling if we're close to a section boundary
+    if (minDistance > tolerance) {
+      console.log('👆 User not near section boundary, allowing natural scroll');
       return;
     }
     
     scrollSystem.touchStartY = event.originalEvent.touches[0].clientY;
+    touchStartTime = Date.now();
     isValidSwipe = true;
-    console.log('👆 Touch start at:', scrollSystem.touchStartY);
+    scrollSystem.currentSection = closestSectionIndex;
+    console.log('👆 Touch start at:', scrollSystem.touchStartY, 'Section:', scrollSystem.currentSection);
+  });
+  
+  $(document).on('touchmove.scrollSystem', function(event) {
+    if (!isValidSwipe || !scrollSystem.isEnabled) return;
+    
+    // If this is a long touch, cancel section scrolling
+    if (Date.now() - touchStartTime > 500) {
+      isValidSwipe = false;
+      console.log('👆 Long touch detected, disabling section scroll');
+    }
   });
   
   $(document).on('touchend.scrollSystem', function(event) {
-    if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isValidSwipe) return;
+    if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isValidSwipe || scrollSystem.isWaitingForStabilization) return;
     
     scrollSystem.touchEndY = event.originalEvent.changedTouches[0].clientY;
     touchDistance = Math.abs(scrollSystem.touchEndY - scrollSystem.touchStartY);
+    const touchDuration = Date.now() - touchStartTime;
     
-    console.log('👆 Touch end at:', scrollSystem.touchEndY, 'Distance:', touchDistance);
+    console.log('👆 Touch end - Distance:', touchDistance, 'Duration:', touchDuration);
     
-    // Only trigger if swipe is long enough
-    if (touchDistance < scrollSystem.minSwipeDistance) {
-      console.log('❌ Swipe too short, ignoring');
+    // Only trigger if swipe is long enough and quick enough
+    if (touchDistance < scrollSystem.minSwipeDistance || touchDuration > 400) {
+      console.log('❌ Swipe invalid (too short or too slow), ignoring');
       isValidSwipe = false;
       return;
     }
@@ -159,7 +257,7 @@ function bindMobileEvents() {
       touchDirection = 'up';
     }
     
-    console.log('📱 Mobile swipe detected:', touchDirection);
+    console.log('📱 Valid swipe detected:', touchDirection);
     
     // Prevent default scrolling for section navigation
     event.preventDefault();
@@ -179,7 +277,7 @@ function bindMobileEvents() {
     $('html, body').animate({
       scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
     }, {
-      duration: scrollSystem.durationOneScroll * 0.8, // Slightly faster for mobile
+      duration: scrollSystem.durationOneScroll * 0.8,
       complete: function() {
         scrollSystem.inScroll = false;
         isValidSwipe = false;
@@ -194,9 +292,11 @@ function resetScrollSystem() {
   scrollSystem.initialized = false;
   scrollSystem.currentSection = 0;
   scrollSystem.inScroll = false;
+  scrollSystem.isWaitingForStabilization = false;
   if (typeof $ !== 'undefined') {
     $(document).off('wheel.scrollSystem');
     $(document).off('touchstart.scrollSystem');
+    $(document).off('touchmove.scrollSystem');
     $(document).off('touchend.scrollSystem');
   }
 }
@@ -246,48 +346,18 @@ function initializeAllFeatures() {
      }
    });
    
-   // Handle window resize and viewport changes
-   $(window).on('resize.scrollSystem orientationchange.scrollSystem', function() {
+   // Handle window resize (but not viewport changes - those are handled separately)
+   $(window).on('resize.scrollSystem', function() {
      const wasMobile = scrollSystem.isMobile;
      detectMobile();
-     updateViewportHeight();
      
-     // If device type changed or viewport changed significantly, reinitialize
+     // Only reinitialize if device type actually changed
      if (wasMobile !== scrollSystem.isMobile) {
        console.log('📱 Device type changed, reinitializing...');
        resetScrollSystem();
        setTimeout(initializeScrollSystem, 300);
-     } else {
-       // Just recalculate section positions
-       setTimeout(function() {
-         if (scrollSystem.initialized) {
-           scrollSystem.arrSections = scrollSystem.$sections.map(function() {
-             return $(this).offset().top;
-           }).get();
-           console.log('📐 Recalculated sections:', scrollSystem.arrSections);
-         }
-       }, 100);
      }
    });
-   
-   // Handle mobile browser UI changes (address bar show/hide)
-   let viewportHeight = window.innerHeight;
-   setInterval(function() {
-     if (scrollSystem.isMobile && Math.abs(window.innerHeight - viewportHeight) > 50) {
-       viewportHeight = window.innerHeight;
-       updateViewportHeight();
-       
-       // Recalculate section positions after viewport change
-       setTimeout(function() {
-         if (scrollSystem.initialized) {
-           scrollSystem.arrSections = scrollSystem.$sections.map(function() {
-             return $(this).offset().top;
-           }).get();
-           console.log('📐 Viewport changed - recalculated sections:', scrollSystem.arrSections);
-         }
-       }, 100);
-     }
-   }, 200);
 }
 
 // Make functions globally accessible for debugging
