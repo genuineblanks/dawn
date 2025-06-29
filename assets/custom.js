@@ -79,30 +79,12 @@ function createDotNavigation() {
       pointer-events: auto !important;
     `;
     
-    dot.setAttribute('data-section', index);
-    dot.setAttribute('data-label', sectionLabels[index] || `Section ${index + 1}`);
-    
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
     // Add click handler
     dot.addEventListener('click', function() {
       console.log('🎯 Dot clicked:', index);
       goToSection(index);
-    });
-    
-    // Add hover effects
-    dot.addEventListener('mouseenter', function() {
-      if (!this.classList.contains('active')) {
-        this.style.background = 'rgba(0,0,0,0.7) !important';
-        this.style.transform = 'scale(1.2) !important';
-      }
-    });
-    
-    dot.addEventListener('mouseleave', function() {
-      if (!this.classList.contains('active')) {
-        this.style.background = 'rgba(0,0,0,0.4) !important';
-        this.style.transform = 'scale(1) !important';
-      }
     });
     
     scrollSystem.dotNavigation.appendChild(dot);
