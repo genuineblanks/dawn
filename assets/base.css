@@ -1,3 +1,46 @@
+/* ===============================================
+   MOBILE DYNAMIC VIEWPORT FIX
+   =============================================== */
+
+:root {
+  --viewport-height: 100vh;
+  --real-viewport-height: 100vh;
+}
+
+/* Dynamic viewport height for mobile browsers */
+@supports (height: 100dvh) {
+  :root {
+    --viewport-height: 100dvh;
+    --real-viewport-height: 100dvh;
+  }
+}
+
+/* Fallback for older browsers */
+@supports not (height: 100dvh) {
+  @media screen and (max-width: 749px) {
+    :root {
+      --viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      --real-viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* Mobile sections should use real viewport height */
+@media screen and (max-width: 749px) {
+  section {
+    min-height: var(--real-viewport-height);
+  }
+  
+  .banner,
+  .image-banner {
+    min-height: var(--real-viewport-height);
+  }
+  
+  .banner__media {
+    height: var(--real-viewport-height);
+  }
+}
+
 :root {
   --alpha-button-background: 1;
   --alpha-button-border: 1;
