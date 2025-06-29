@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with Resize Handling
+// Section Scroll JS - Enhanced with Dot Navigation
 
 let scrollSystem = {
   $sections: null,
@@ -8,7 +8,8 @@ let scrollSystem = {
   arrSections: [],
   isEnabled: true,
   initialized: false,
-  resizeTimeout: null
+  resizeTimeout: null,
+  dotNavigation: null
 };
 
 function waitForJQuery(callback) {
@@ -19,6 +20,81 @@ function waitForJQuery(callback) {
     console.log('⏳ Waiting for jQuery...');
     setTimeout(() => waitForJQuery(callback), 100);
   }
+}
+
+function createDotNavigation() {
+  // Remove existing dot navigation if it exists
+  if (scrollSystem.dotNavigation) {
+    scrollSystem.dotNavigation.remove();
+  }
+  
+  // Create navigation container
+  scrollSystem.dotNavigation = document.createElement('div');
+  scrollSystem.dotNavigation.className = 'section-dot-navigation';
+  
+  // Section labels (customize these based on your sections)
+  const sectionLabels = [
+    'Home',
+    'Luxury Products', 
+    'High-End Products',
+    'Tech-Pack',
+    'About Us'
+  ];
+  
+  // Create dots for each section
+  scrollSystem.arrSections.forEach((sectionPos, index) => {
+    const dot = document.createElement('div');
+    dot.className = 'section-dot';
+    dot.setAttribute('data-section', index);
+    dot.setAttribute('data-label', sectionLabels[index] || `Section ${index + 1}`);
+    
+    // Add click handler
+    dot.addEventListener('click', function() {
+      goToSection(index);
+    });
+    
+    scrollSystem.dotNavigation.appendChild(dot);
+  });
+  
+  // Add to page
+  document.body.appendChild(scrollSystem.dotNavigation);
+  
+  console.log('🎯 Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+}
+
+function updateDotNavigation() {
+  if (!scrollSystem.dotNavigation) return;
+  
+  const dots = scrollSystem.dotNavigation.querySelectorAll('.section-dot');
+  dots.forEach((dot, index) => {
+    if (index === scrollSystem.currentSection) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+}
+
+function goToSection(sectionIndex) {
+  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length) return;
+  
+  console.log('🎯 Going to section:', sectionIndex);
+  
+  scrollSystem.inScroll = true;
+  scrollSystem.currentSection = sectionIndex;
+  
+  $('html, body').animate({
+    scrollTop: scrollSystem.arrSections[sectionIndex]
+  }, {
+    duration: scrollSystem.durationOneScroll,
+    complete: function() {
+      scrollSystem.inScroll = false;
+      updateDotNavigation();
+      console.log('✅ Navigation to section', sectionIndex, 'complete');
+    }
+  });
+  
+  updateDotNavigation();
 }
 
 function calculateSectionPositions() {
@@ -33,6 +109,12 @@ function calculateSectionPositions() {
   
   // Update current section based on current scroll position
   updateCurrentSectionFromScrollPosition();
+  
+  // Recreate dot navigation with new positions
+  if (scrollSystem.initialized) {
+    createDotNavigation();
+    updateDotNavigation();
+  }
   
   return oldPositions;
 }
@@ -55,6 +137,7 @@ function updateCurrentSectionFromScrollPosition() {
   
   if (oldSection !== closestSection) {
     console.log('📍 Current section updated from', oldSection, 'to', closestSection);
+    updateDotNavigation();
   }
 }
 
@@ -74,7 +157,9 @@ function initializeScrollSystem() {
   
   if (scrollSystem.isEnabled) {
     console.log('✅ Scroll system enabled');
+    createDotNavigation();
     bindScrollEvents();
+    updateDotNavigation();
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
   }
@@ -108,9 +193,12 @@ function bindScrollEvents() {
       duration: scrollSystem.durationOneScroll,
       complete: function() {
         scrollSystem.inScroll = false;
+        updateDotNavigation();
         console.log('✅ Scroll complete');
       }
     });
+    
+    updateDotNavigation();
   });
 }
 
@@ -153,6 +241,11 @@ function resetScrollSystem() {
     scrollSystem.resizeTimeout = null;
   }
   
+  if (scrollSystem.dotNavigation) {
+    scrollSystem.dotNavigation.remove();
+    scrollSystem.dotNavigation = null;
+  }
+  
   if (typeof $ !== 'undefined') {
     $(document).off('wheel.scrollSystem');
     $(window).off('resize.scrollSystem');
@@ -165,14 +258,6 @@ function initializeAllFeatures() {
   // Wait a bit for all content to load
   setTimeout(initializeScrollSystem, 500);
   
-  // Button functionality
-  var btn = $('#button');
-  btn.on('click', function(e) {
-    e.preventDefault();
-    $('html, body').animate({scrollTop: 0}, 300);
-    scrollSystem.currentSection = 0;
-  });
-
   // Handle section switching
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
@@ -213,12 +298,12 @@ function initializeAllFeatures() {
      }, 500); // Wait longer for orientation change
    });
    
-   // Periodically check if we're still in the right section (optional)
-   setInterval(function() {
+   // Monitor scroll position for dot navigation updates
+   $(window).on('scroll.dotNavigation', function() {
      if (scrollSystem.initialized && !scrollSystem.inScroll) {
        updateCurrentSectionFromScrollPosition();
      }
-   }, 2000); // Check every 2 seconds
+   });
 }
 
 // Make functions globally accessible for debugging
@@ -226,6 +311,7 @@ window.scrollSystem = scrollSystem;
 window.resetScrollSystem = resetScrollSystem;
 window.initializeScrollSystem = initializeScrollSystem;
 window.calculateSectionPositions = calculateSectionPositions;
+window.goToSection = goToSection;
 
 // Wait for jQuery and then initialize
 waitForJQuery(function() {
