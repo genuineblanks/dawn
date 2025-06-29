@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with proper navigation handling
+// Section Scroll JS - Enhanced with jQuery loading check
 
 let scrollSystem = {
   $sections: null,
@@ -9,6 +9,16 @@ let scrollSystem = {
   isEnabled: true,
   initialized: false
 };
+
+function waitForJQuery(callback) {
+  if (typeof $ !== 'undefined' && $ && $.fn) {
+    console.log('✅ jQuery is ready');
+    callback();
+  } else {
+    console.log('⏳ Waiting for jQuery...');
+    setTimeout(() => waitForJQuery(callback), 100);
+  }
+}
 
 function initializeScrollSystem() {
   if (scrollSystem.initialized) return;
@@ -73,12 +83,13 @@ function resetScrollSystem() {
   scrollSystem.initialized = false;
   scrollSystem.currentSection = 0;
   scrollSystem.inScroll = false;
-  $(document).off('wheel.scrollSystem');
+  if (typeof $ !== 'undefined') {
+    $(document).off('wheel.scrollSystem');
+  }
 }
 
-// Initialize when DOM is ready
-$(document).ready(function() {
-  console.log('📱 DOM Ready - initializing scroll system');
+function initializeAllFeatures() {
+  console.log('📱 Initializing all features...');
   
   // Wait a bit for all content to load
   setTimeout(initializeScrollSystem, 500);
@@ -90,22 +101,8 @@ $(document).ready(function() {
     $('html, body').animate({scrollTop: 0}, 300);
     scrollSystem.currentSection = 0;
   });
-});
 
-// Re-initialize on page navigation (Shopify AJAX navigation)
-$(window).on('beforeunload', function() {
-  resetScrollSystem();
-});
-
-$(window).on('load', function() {
-  console.log('🌐 Window loaded - checking scroll system');
-  if (!scrollSystem.initialized) {
-    setTimeout(initializeScrollSystem, 200);
-  }
-});
-
-// Handle section switching
-$(document).ready(function(){
+  // Handle section switching
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
@@ -121,12 +118,10 @@ $(document).ready(function(){
       resetScrollSystem();
       initializeScrollSystem();
     }, 100);
-  });  
-});
+  });
 
-// Handle smooth scroll links
-$(document).ready(function(){
-   $(".click-to-scroll a").on('click', function(event) {
+  // Handle smooth scroll links
+  $(".click-to-scroll a").on('click', function(event) {
      if (this.hash !== "") {
       event.preventDefault();
       var hash = this.hash;
@@ -137,7 +132,33 @@ $(document).ready(function(){
        });
      }
    });
+}
+
+// Make functions globally accessible for debugging
+window.scrollSystem = scrollSystem;
+window.resetScrollSystem = resetScrollSystem;
+window.initializeScrollSystem = initializeScrollSystem;
+
+// Wait for jQuery and then initialize
+waitForJQuery(function() {
+  // Initialize when DOM is ready
+  $(document).ready(function() {
+    console.log('📱 DOM Ready with jQuery - initializing features');
+    initializeAllFeatures();
+  });
+
+  // Re-initialize on page navigation
+  $(window).on('beforeunload', function() {
+    resetScrollSystem();
+  });
+
+  $(window).on('load', function() {
+    console.log('🌐 Window loaded - checking scroll system');
+    if (!scrollSystem.initialized) {
+      setTimeout(initializeScrollSystem, 200);
+    }
+  });
 });
 
 // Debug: Log when script loads
-console.log('📜 Custom.js script loaded');
+console.log('📜 Custom.js script loaded - waiting for jQuery...');
