@@ -990,65 +990,137 @@
     </script>
 
     <script>
-    // Enhanced Scroll Restoration for Live Site
+    // Enhanced Scroll Restoration and Navigation Handler
     (function() {
-      // Only run on live site, not in preview
-      if (window.location.hostname.includes('myshopify.com') && !Shopify.designMode) return;
+      console.log('🔧 Scroll restoration script loading...');
       
-      // Disable browser's automatic scroll restoration
+      // Detect if we're on live site (not preview)
+      const isLiveSite = !window.location.hostname.includes('myshopify.com') || window.location.hostname.includes('.myshopify.com');
+      
+      // Always disable browser scroll restoration
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
+        console.log('🚫 Browser scroll restoration disabled');
       }
       
       let scrollPositions = {};
+      let isNavigating = false;
       
       function saveScrollPosition() {
         const key = window.location.pathname;
         scrollPositions[key] = window.pageYOffset;
+        console.log('💾 Saved scroll position:', scrollPositions[key], 'for:', key);
+        
         try {
           sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
         } catch(e) {
-          console.log('Could not save scroll position');
+          console.log('❌ Could not save scroll position to storage');
         }
       }
       
       function restoreScrollPosition() {
         const key = window.location.pathname;
+        
         try {
           const saved = sessionStorage.getItem('shopifyScrollPositions');
           if (saved) {
             scrollPositions = JSON.parse(saved);
-            if (scrollPositions[key]) {
-              // Use setTimeout to ensure DOM is ready
+            if (scrollPositions[key] && scrollPositions[key] > 0) {
+              console.log('📍 Restoring scroll position:', scrollPositions[key], 'for:', key);
+              
               setTimeout(() => {
                 window.scrollTo(0, scrollPositions[key]);
                 delete scrollPositions[key];
                 sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-              }, 100);
+              }, 300);
             }
           }
         } catch(e) {
-          console.log('Could not restore scroll position');
+          console.log('❌ Could not restore scroll position');
         }
       }
       
       // Save position when leaving page
-      window.addEventListener('beforeunload', saveScrollPosition);
-      
-      // Restore position on page show (handles back button)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          restoreScrollPosition();
+      window.addEventListener('beforeunload', function() {
+        if (!isNavigating) {
+          saveScrollPosition();
         }
       });
       
-      // Initial restore on load
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', restoreScrollPosition);
-      } else {
+      // Handle page navigation
+      window.addEventListener('pageshow', function(event) {
+        console.log('📄 Page show event - persisted:', event.persisted);
+        
+        if (event.persisted) {
+          // This is back button navigation
+          isNavigating = false;
+          restoreScrollPosition();
+          
+          // Re-initialize scroll system
+          setTimeout(function() {
+            if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
+              window.resetScrollSystem();
+              window.initializeScrollSystem();
+            }
+          }, 500);
+        }
+      });
+      
+      // Handle initial page load
+      function handleInitialLoad() {
+        console.log('🏠 Initial page load handling');
         restoreScrollPosition();
       }
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', handleInitialLoad);
+      } else {
+        handleInitialLoad();
+      }
+      
+      // Mark navigation when clicking internal links
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && link.href.includes(window.location.hostname)) {
+          isNavigating = true;
+          console.log('🔗 Internal navigation detected');
+        }
+      });
+      
     })();
+    </script>
+
+    <script>
+    // Debug Panel for Scroll System
+    if (window.location.search.includes('debug=scroll')) {
+      const debugPanel = document.createElement('div');
+      debugPanel.style.cssText = `
+        position: fixed; 
+        top: 10px; 
+        right: 10px; 
+        background: rgba(0,0,0,0.8); 
+        color: white; 
+        padding: 10px; 
+        font-family: monospace; 
+        z-index: 9999; 
+        max-width: 300px; 
+        font-size: 12px;
+        border-radius: 4px;
+      `;
+      debugPanel.innerHTML = '<div id="debug-content">Debug info will appear here...</div>';
+      document.body.appendChild(debugPanel);
+      
+      // Override console.log to show in debug panel
+      const originalLog = console.log;
+      console.log = function(...args) {
+        originalLog.apply(console, args);
+        const debugContent = document.getElementById('debug-content');
+        if (debugContent) {
+          debugContent.innerHTML += '<br>' + args.join(' ');
+          debugContent.scrollTop = debugContent.scrollHeight;
+        }
+      };
+    }
     </script>
     
   </body>
