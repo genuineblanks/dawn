@@ -259,7 +259,7 @@
         "text_4tbUgD": {
           "type": "text",
           "settings": {
-            "text": "<p>For brands ready to move — we’re ready to build. </p><p>\nOur production team reviews every detail for precision, feasibility, and flow.\nEnsuring a smooth transition from design to sample. </p>",
+            "text": "<p style=\"color: #000;\">For brands ready to move — we’re ready to build.</p>\n<p style=\"color: #000;\">\n  Our production team reviews every detail for precision, feasibility, and flow.\n  Ensuring a smooth transition from design to sample.\n</p>",
             "text_style": "subtitle",
             "class_text": "button-above"
           }
@@ -312,7 +312,7 @@
         "image_behavior": "none",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": true,
-        "show_text_below": false,
+        "show_text_below": true,
         "color_scheme": "scheme-2",
         "newsletter_enable": true,
         "newsletter_heading": "",
