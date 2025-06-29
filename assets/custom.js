@@ -32,14 +32,17 @@ function createDotNavigation() {
   scrollSystem.dotNavigation = document.createElement('div');
   scrollSystem.dotNavigation.className = 'section-dot-navigation';
   
-  // Section labels (customize these based on your sections)
+  // Section labels for 6 sections (update these based on your actual sections)
   const sectionLabels = [
     'Home',
     'Luxury Products', 
     'High-End Products',
     'Tech-Pack',
-    'About Us'
+    'About Us',
+    'Footer/Contact'  // 6th section
   ];
+  
+  console.log('🎯 Creating dots for', scrollSystem.arrSections.length, 'sections');
   
   // Create dots for each section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
@@ -48,8 +51,11 @@ function createDotNavigation() {
     dot.setAttribute('data-section', index);
     dot.setAttribute('data-label', sectionLabels[index] || `Section ${index + 1}`);
     
+    console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
+    
     // Add click handler
     dot.addEventListener('click', function() {
+      console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
@@ -146,7 +152,15 @@ function initializeScrollSystem() {
   
   console.log('🚀 Initializing scroll system...');
   
+  // Debug: Let's see what sections we're finding
   scrollSystem.$sections = $('section');
+  console.log('🔍 Found sections:', scrollSystem.$sections.length);
+  console.log('🔍 Section elements:', scrollSystem.$sections);
+  
+  // Also try looking for other common section selectors
+  const altSections = $('.shopify-section, .section, [data-section-type]');
+  console.log('🔍 Alternative sections found:', altSections.length);
+  
   calculateSectionPositions();
   
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
