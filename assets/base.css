@@ -3680,7 +3680,7 @@ details-disclosure > details {
   }
 }
 
-/* TEMPORARY DEBUG CSS - Make dots super visible */
+/* FIXED DEBUG CSS - Clickable dots */
 .section-dot-navigation {
   position: fixed !important;
   right: 20px !important;
@@ -3690,9 +3690,10 @@ details-disclosure > details {
   flex-direction: column !important;
   gap: 15px !important;
   padding: 20px 15px !important;
-  background: rgba(255, 0, 0, 0.8) !important; /* Red background for testing */
+  background: rgba(255, 0, 0, 0.5) !important; /* Semi-transparent red */
   border-radius: 25px !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+  pointer-events: auto !important; /* Enable clicks */
 }
 
 .section-dot {
@@ -3703,6 +3704,9 @@ details-disclosure > details {
   cursor: pointer !important;
   border: 3px solid white !important;
   transition: all 0.3s ease !important;
+  pointer-events: auto !important; /* Enable clicks */
+  position: relative !important;
+  z-index: 100000 !important;
 }
 
 .section-dot:hover {
@@ -3715,4 +3719,9 @@ details-disclosure > details {
   background: lime !important;
   border: 3px solid black !important;
   transform: scale(1.4) !important;
+}
+
+/* Remove any conflicting styles */
+.section-dot * {
+  pointer-events: none !important;
 }
