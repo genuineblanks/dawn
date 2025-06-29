@@ -1013,28 +1013,6 @@ footer .grid--4-col-desktop .grid__item {
 .product-banner .banner__content {
     padding: 1rem;
 }
-.back-to-top {
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-    text-align: center;
-    background: black; 
-    font-weight: 700;
-    text-decoration: none;
-    position: fixed;
-    bottom: 125px;
-    right: 20px;
-    color: #fff;
-    border-radius: 100px;
-}
-.back-to-top:hover{
-	text-decoration:none;
-}
-
-.backtotop { display: flex; flex-direction: column; align-items: center; position: absolute; text-align: center; right: 15px; bottom: 105px; cursor: pointer !important; z-index: 9999; background: #120752; font-size: 11px; font-weight: bold; color: #fff; padding: 0; border-radius: 100px; height: 50px; width: 50px; justify-content: center;}
-footer.footer.footer-banner-img{ position: relative;}
-.backtotop span { font-size: 21px; line-height: 15px;}
-.backtotop:hover { background: #202e4c; box-shadow: 0 0 13px #fff;}
 
 /* Klavio Newletter */
 .newsletter_Klaviyo {}
