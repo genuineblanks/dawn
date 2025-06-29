@@ -1,4 +1,4 @@
-// Section Scroll JS - Enhanced with jQuery loading check
+// Section Scroll JS - Enhanced with Resize Handling
 
 let scrollSystem = {
   $sections: null,
@@ -7,7 +7,8 @@ let scrollSystem = {
   currentSection: 0,
   arrSections: [],
   isEnabled: true,
-  initialized: false
+  initialized: false,
+  resizeTimeout: null
 };
 
 function waitForJQuery(callback) {
@@ -20,15 +21,50 @@ function waitForJQuery(callback) {
   }
 }
 
+function calculateSectionPositions() {
+  if (!scrollSystem.$sections || scrollSystem.$sections.length === 0) return;
+  
+  const oldPositions = [...scrollSystem.arrSections];
+  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
+    return $(this).offset().top;
+  }).get();
+  
+  console.log('📍 Section positions updated:', scrollSystem.arrSections);
+  
+  // Update current section based on current scroll position
+  updateCurrentSectionFromScrollPosition();
+  
+  return oldPositions;
+}
+
+function updateCurrentSectionFromScrollPosition() {
+  const currentScrollPos = window.pageYOffset;
+  let closestSection = 0;
+  let minDistance = Infinity;
+  
+  scrollSystem.arrSections.forEach((sectionTop, index) => {
+    const distance = Math.abs(currentScrollPos - sectionTop);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestSection = index;
+    }
+  });
+  
+  const oldSection = scrollSystem.currentSection;
+  scrollSystem.currentSection = closestSection;
+  
+  if (oldSection !== closestSection) {
+    console.log('📍 Current section updated from', oldSection, 'to', closestSection);
+  }
+}
+
 function initializeScrollSystem() {
   if (scrollSystem.initialized) return;
   
   console.log('🚀 Initializing scroll system...');
   
   scrollSystem.$sections = $('section');
-  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
-    return $(this).offset().top;
-  }).get();
+  calculateSectionPositions();
   
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
@@ -78,13 +114,48 @@ function bindScrollEvents() {
   });
 }
 
+function handleWindowResize() {
+  console.log('📐 Window resized - recalculating sections...');
+  
+  // Clear existing timeout
+  if (scrollSystem.resizeTimeout) {
+    clearTimeout(scrollSystem.resizeTimeout);
+  }
+  
+  // Wait for resize to complete before recalculating
+  scrollSystem.resizeTimeout = setTimeout(function() {
+    if (scrollSystem.initialized) {
+      const oldPositions = calculateSectionPositions();
+      
+      // Check if positions changed significantly
+      const hasSignificantChange = scrollSystem.arrSections.some((newPos, index) => {
+        const oldPos = oldPositions[index];
+        return oldPos && Math.abs(newPos - oldPos) > 50; // 50px threshold
+      });
+      
+      if (hasSignificantChange) {
+        console.log('📐 Significant position changes detected - scroll system updated');
+      }
+    }
+    
+    scrollSystem.resizeTimeout = null;
+  }, 250); // Wait 250ms after resize stops
+}
+
 function resetScrollSystem() {
   console.log('🔄 Resetting scroll system...');
   scrollSystem.initialized = false;
   scrollSystem.currentSection = 0;
   scrollSystem.inScroll = false;
+  
+  if (scrollSystem.resizeTimeout) {
+    clearTimeout(scrollSystem.resizeTimeout);
+    scrollSystem.resizeTimeout = null;
+  }
+  
   if (typeof $ !== 'undefined') {
     $(document).off('wheel.scrollSystem');
+    $(window).off('resize.scrollSystem');
   }
 }
 
@@ -115,9 +186,8 @@ function initializeAllFeatures() {
     
     // Re-calculate sections after showing/hiding
     setTimeout(function() {
-      resetScrollSystem();
-      initializeScrollSystem();
-    }, 100);
+      calculateSectionPositions();
+    }, 150);
   });
 
   // Handle smooth scroll links
@@ -132,12 +202,30 @@ function initializeAllFeatures() {
        });
      }
    });
+   
+   // Handle window resize
+   $(window).on('resize.scrollSystem', handleWindowResize);
+   
+   // Also recalculate on orientation change (for tablets)
+   $(window).on('orientationchange.scrollSystem', function() {
+     setTimeout(function() {
+       handleWindowResize();
+     }, 500); // Wait longer for orientation change
+   });
+   
+   // Periodically check if we're still in the right section (optional)
+   setInterval(function() {
+     if (scrollSystem.initialized && !scrollSystem.inScroll) {
+       updateCurrentSectionFromScrollPosition();
+     }
+   }, 2000); // Check every 2 seconds
 }
 
 // Make functions globally accessible for debugging
 window.scrollSystem = scrollSystem;
 window.resetScrollSystem = resetScrollSystem;
 window.initializeScrollSystem = initializeScrollSystem;
+window.calculateSectionPositions = calculateSectionPositions;
 
 // Wait for jQuery and then initialize
 waitForJQuery(function() {
@@ -156,6 +244,9 @@ waitForJQuery(function() {
     console.log('🌐 Window loaded - checking scroll system');
     if (!scrollSystem.initialized) {
       setTimeout(initializeScrollSystem, 200);
+    } else {
+      // Recalculate once everything is fully loaded
+      setTimeout(calculateSectionPositions, 300);
     }
   });
 });
