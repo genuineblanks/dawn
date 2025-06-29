@@ -364,3 +364,14 @@ waitForJQuery(function() {
 
 // Debug: Log when script loads
 console.log('📜 Custom.js script loaded - waiting for jQuery...');
+
+// Fallback initialization if the main one fails
+setTimeout(function() {
+  const container = document.getElementById('section-dots');
+  if (container && container.children.length === 0) {
+    console.log('🔄 Fallback: Creating dots manually...');
+    if (typeof scrollSystem !== 'undefined' && scrollSystem.arrSections && scrollSystem.arrSections.length > 0) {
+      createDotNavigation();
+    }
+  }
+}, 2000);
