@@ -12,8 +12,296 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-  .customer.register{
-    display:block !important;
+  
+  .customer.register {
+    display: block !important;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Account Type Selection Styles */
+  .account-type-selection {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .account-type-selection h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 300;
+    color: #333;
+  }
+
+  .account-type-selection p {
+    color: #666;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+  }
+
+  .account-type-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .account-type-btn {
+    padding: 15px 40px;
+    border: 2px solid #333;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    border-radius: 0;
+  }
+
+  .account-type-btn:hover,
+  .account-type-btn.active {
+    background: #333;
+    color: white;
+  }
+
+  /* Form Container */
+  .registration-form {
+    display: none;
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .registration-form.active {
+    display: block;
+  }
+
+  .registration-form h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: #333;
+  }
+
+  /* Form Field Styles */
+  .field {
+    margin-bottom: 25px;
+    position: relative;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    font-size: 14px;
+    background: white;
+    box-sizing: border-box;
+    border-radius: 0;
+    transition: border-color 0.3s ease;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: #333;
+    box-shadow: 0 0 0 1px #333;
+  }
+
+  .field label {
+    position: absolute;
+    top: -8px;
+    left: 15px;
+    background: white;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    z-index: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .field input[type="date"] {
+    font-family: inherit;
+  }
+
+  /* Wholesale Form Specific Styles */
+  .wholesale-form {
+    max-width: 800px;
+    padding: 50px;
+  }
+
+  .wholesale-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+  }
+
+  .wholesale-form .form-row.full-width {
+    grid-template-columns: 1fr;
+  }
+
+  .wholesale-form .form-row .field {
+    margin-bottom: 0;
+  }
+
+  .wholesale-form .section-header {
+    margin: 50px 0 30px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #333;
+    text-align: center;
+  }
+
+  .wholesale-form .section-header h3 {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .wholesale-form .checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0;
+    justify-content: center;
+  }
+
+  .wholesale-form .checkbox-field input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin: 0;
+  }
+
+  .wholesale-form .checkbox-field label {
+    position: static;
+    background: none;
+    padding: 0;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #666;
+  }
+
+  /* Button Styles */
+  .submit-btn,
+  .retail-form button {
+    width: 100%;
+    padding: 18px;
+    background: #333;
+    color: white;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 30px;
+    transition: background-color 0.3s ease;
+    border-radius: 0;
+  }
+
+  .submit-btn:hover,
+  .retail-form button:hover {
+    background: #000;
+  }
+
+  /* Required asterisk */
+  .required {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  /* Error message styles */
+  .error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .form__message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .form__message svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .form__message ul {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .customer.register {
+      padding: 10px;
+    }
+
+    .account-type-buttons {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .account-type-btn {
+      min-width: 250px;
+    }
+
+    .registration-form {
+      padding: 30px 20px;
+    }
+
+    .wholesale-form {
+      padding: 30px 20px;
+    }
+
+    .wholesale-form .form-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .account-type-selection h1 {
+      font-size: 2rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .account-type-btn {
+      min-width: 200px;
+      padding: 12px 30px;
+    }
+
+    .registration-form {
+      padding: 20px 15px;
+    }
+
+    .wholesale-form {
+      padding: 20px 15px;
+    }
   }
 {%- endstyle -%}
 
@@ -26,123 +314,441 @@
       <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
     </symbol>
   </svg>
-  <h1>
-    {{ 'customer.register.title' | t }}
-  </h1>
-  {%- form 'create_customer', novalidate: 'novalidate' -%}
-    {%- if form.errors -%}
-      <h2 class="form__message" tabindex="-1" autofocus>
-        <svg aria-hidden="true" focusable="false">
-          <use href="#icon-error" />
-        </svg>
-        {{ 'templates.contact.form.error_heading' | t }}
-      </h2>
-      <ul>
-        {%- for field in form.errors -%}
-          <li>
-            {%- if field == 'form' -%}
-              {{ form.errors.messages[field] }}
-            {%- else -%}
-              <a href="#RegisterForm-{{ field }}">
-                {{ form.errors.translated_fields[field] | capitalize }}
-                {{ form.errors.messages[field] }}
-              </a>
-            {%- endif -%}
-          </li>
-        {%- endfor -%}
-      </ul>
-    {%- endif -%}
-    <div class="field">
-      <input
-        type="text"
-        name="customer[first_name]"
-        id="RegisterForm-FirstName"
-        {% if form.first_name %}
-          value="{{ form.first_name }}"
-        {% endif %}
-        autocomplete="given-name"
-        placeholder="{{ 'customer.register.first_name' | t }}"
-      >
-      <label for="RegisterForm-FirstName">
-        {{ 'customer.register.first_name' | t }}
-      </label>
+
+  <!-- Account Type Selection -->
+  <div class="account-type-selection">
+    <h1>Create account</h1>
+    <p>Please select your account type:</p>
+    
+    <div class="account-type-buttons">
+      <button type="button" class="account-type-btn" data-account-type="retail">
+        Retail Account
+      </button>
+      <button type="button" class="account-type-btn" data-account-type="wholesale">
+        Wholesale Account
+      </button>
     </div>
-    <div class="field">
-      <input
-        type="text"
-        name="customer[last_name]"
-        id="RegisterForm-LastName"
-        {% if form.last_name %}
-          value="{{ form.last_name }}"
-        {% endif %}
-        autocomplete="family-name"
-        placeholder="{{ 'customer.register.last_name' | t }}"
-      >
-      <label for="RegisterForm-LastName">
-        {{ 'customer.register.last_name' | t }}
-      </label>
-    </div>
-    <div class="field">
-      <input
-        type="email"
-        name="customer[email]"
-        id="RegisterForm-email"
-        {% if form.email %}
-          value="{{ form.email }}"
-        {% endif %}
-        spellcheck="false"
-        autocapitalize="off"
-        autocomplete="email"
-        aria-required="true"
-        {% if form.errors contains 'email' %}
-          aria-invalid="true"
-          aria-describedby="RegisterForm-email-error"
-        {% endif %}
-        placeholder="{{ 'customer.register.email' | t }}"
-      >
-      <label for="RegisterForm-email">
-        {{ 'customer.register.email' | t }}
-      </label>
-    </div>
-    {%- if form.errors contains 'email' -%}
-      <span id="RegisterForm-email-error" class="form__message">
-        <svg aria-hidden="true" focusable="false">
-          <use href="#icon-error" />
-        </svg>
-        {{ form.errors.translated_fields.email | capitalize }}
-        {{ form.errors.messages.email }}.
-      </span>
-    {%- endif -%}
-    <div class="field">
-      <input
-        type="password"
-        name="customer[password]"
-        id="RegisterForm-password"
-        aria-required="true"
-        {% if form.errors contains 'password' %}
-          aria-invalid="true"
-          aria-describedby="RegisterForm-password-error"
-        {% endif %}
-        placeholder="{{ 'customer.register.password' | t }}"
-      >
-      <label for="RegisterForm-password">
-        {{ 'customer.register.password' | t }}
-      </label>
-    </div>
-    {%- if form.errors contains 'password' -%}
-      <span id="RegisterForm-password-error" class="form__message">
-        <svg aria-hidden="true" focusable="false">
-          <use href="#icon-error" />
-        </svg>
-        {{ form.errors.translated_fields.password | capitalize }}
-        {{ form.errors.messages.password }}.
-      </span>
-    {%- endif -%}
-    <button>
-      {{ 'customer.register.submit' | t }}
-    </button>
-  {%- endform -%}
+  </div>
+
+  <!-- Retail Registration Form -->
+  <div class="registration-form retail-form" id="retail-form">
+    <h2>Create Retail Account</h2>
+    
+    {%- form 'create_customer', novalidate: 'novalidate', class: 'retail-customer-form' -%}
+      <input type="hidden" name="customer[tags]" value="retail">
+      
+      {%- if form.errors -%}
+        <div class="form__message" tabindex="-1" autofocus>
+          <svg aria-hidden="true" focusable="false">
+            <use href="#icon-error" />
+          </svg>
+          <div>
+            <strong>{{ 'templates.contact.form.error_heading' | t }}</strong>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    {{ form.errors.translated_fields[field] | capitalize }}
+                    {{ form.errors.messages[field] }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="field">
+        <input
+          type="text"
+          name="customer[first_name]"
+          id="RegisterForm-FirstName"
+          {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+          autocomplete="given-name"
+          required>
+        <label for="RegisterForm-FirstName">First name</label>
+      </div>
+
+      <div class="field">
+        <input
+          type="text"
+          name="customer[last_name]"
+          id="RegisterForm-LastName"
+          {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+          autocomplete="family-name"
+          required>
+        <label for="RegisterForm-LastName">Last name</label>
+      </div>
+
+      <div class="field">
+        <input
+          type="email"
+          name="customer[email]"
+          id="RegisterForm-email"
+          {% if form.email %}value="{{ form.email }}"{% endif %}
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="email"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-email-error"
+          {% endif %}
+          required>
+        <label for="RegisterForm-email">Email</label>
+      </div>
+      
+      {%- if form.errors contains 'email' -%}
+        <div id="RegisterForm-email-error" class="error-message">
+          <svg aria-hidden="true" focusable="false">
+            <use href="#icon-error" />
+          </svg>
+          {{ form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}
+        </div>
+      {%- endif -%}
+
+      <div class="field">
+        <input
+          type="password"
+          name="customer[password]"
+          id="RegisterForm-password"
+          aria-required="true"
+          {% if form.errors contains 'password' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-password-error"
+          {% endif %}
+          required>
+        <label for="RegisterForm-password">Password</label>
+      </div>
+      
+      {%- if form.errors contains 'password' -%}
+        <div id="RegisterForm-password-error" class="error-message">
+          <svg aria-hidden="true" focusable="false">
+            <use href="#icon-error" />
+          </svg>
+          {{ form.errors.translated_fields.password | capitalize }}
+          {{ form.errors.messages.password }}
+        </div>
+      {%- endif -%}
+
+      <button type="submit">Create</button>
+    {%- endform -%}
+  </div>
+
+  <!-- Wholesale Registration Form -->
+  <div class="registration-form wholesale-form" id="wholesale-form">
+    <h2>Create Wholesale Account</h2>
+    
+    {%- form 'create_customer', novalidate: 'novalidate', class: 'wholesale-customer-form' -%}
+      <input type="hidden" name="customer[tags]" value="wholesale">
+      
+      {%- if form.errors -%}
+        <div class="form__message" tabindex="-1" autofocus>
+          <svg aria-hidden="true" focusable="false">
+            <use href="#icon-error" />
+          </svg>
+          <div>
+            <strong>{{ 'templates.contact.form.error_heading' | t }}</strong>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    {{ form.errors.translated_fields[field] | capitalize }}
+                    {{ form.errors.messages[field] }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- Basic Information -->
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[first_name]"
+            id="WholesaleForm-FirstName"
+            {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+            autocomplete="given-name"
+            required>
+          <label for="WholesaleForm-FirstName">First name <span class="required">*</span></label>
+        </div>
+        <div class="field">
+          <input
+            type="text"
+            name="customer[last_name]"
+            id="WholesaleForm-LastName"
+            {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+            autocomplete="family-name"
+            required>
+          <label for="WholesaleForm-LastName">Last name <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="email"
+            name="customer[email]"
+            id="WholesaleForm-email"
+            {% if form.email %}value="{{ form.email }}"{% endif %}
+            spellcheck="false"
+            autocapitalize="off"
+            autocomplete="email"
+            aria-required="true"
+            required>
+          <label for="WholesaleForm-email">Email <span class="required">*</span></label>
+        </div>
+        <div class="field">
+          <input
+            type="password"
+            name="customer[password]"
+            id="WholesaleForm-password"
+            aria-required="true"
+            required>
+          <label for="WholesaleForm-password">Password <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <!-- Address Information -->
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][address]"
+            id="WholesaleForm-Address"
+            maxlength="50">
+          <label for="WholesaleForm-Address">Address</label>
+        </div>
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][address_line_2]"
+            id="WholesaleForm-Address2"
+            maxlength="50">
+          <label for="WholesaleForm-Address2">Address Line 2</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][city]"
+            id="WholesaleForm-City"
+            maxlength="20"
+            required>
+          <label for="WholesaleForm-City">City <span class="required">*</span></label>
+        </div>
+        <div class="field">
+          <select name="customer[note][country]" id="WholesaleForm-Country" required>
+            <option value="">Select Country</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="GB">United Kingdom</option>
+            <option value="AU">Australia</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            <option value="IT">Italy</option>
+            <option value="ES">Spain</option>
+            <option value="NL">Netherlands</option>
+            <option value="BE">Belgium</option>
+            <option value="CH">Switzerland</option>
+            <option value="AT">Austria</option>
+            <option value="SE">Sweden</option>
+            <option value="NO">Norway</option>
+            <option value="DK">Denmark</option>
+            <option value="FI">Finland</option>
+            <option value="JP">Japan</option>
+            <option value="KR">South Korea</option>
+            <option value="SG">Singapore</option>
+            <option value="HK">Hong Kong</option>
+            <option value="NZ">New Zealand</option>
+          </select>
+          <label for="WholesaleForm-Country">Country <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][state]"
+            id="WholesaleForm-State">
+          <label for="WholesaleForm-State">State</label>
+        </div>
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][zip_code]"
+            id="WholesaleForm-ZipCode"
+            maxlength="8"
+            required>
+          <label for="WholesaleForm-ZipCode">Zip Code <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <div class="form-row full-width">
+        <div class="field">
+          <select name="customer[note][how_did_you_hear]" id="WholesaleForm-HowDidYouHear" required>
+            <option value="">Select an option</option>
+            <option value="Social Media">Social Media</option>
+            <option value="Street Ads">Street Ads</option>
+            <option value="Google Ads">Google Ads</option>
+            <option value="Through Friend/Family" selected>Through Friend/Family</option>
+          </select>
+          <label for="WholesaleForm-HowDidYouHear">How did you hear about us? <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <!-- Company Information -->
+      <div class="section-header">
+        <h3>Company Information</h3>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][brand_name]"
+            id="WholesaleForm-BrandName"
+            maxlength="30"
+            required>
+          <label for="WholesaleForm-BrandName">Brand Name/ Company <span class="required">*</span></label>
+        </div>
+        <div class="field">
+          <input
+            type="url"
+            name="customer[note][website]"
+            id="WholesaleForm-Website"
+            maxlength="35">
+          <label for="WholesaleForm-Website">Website</label>
+        </div>
+      </div>
+
+      <div class="form-row full-width">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][about_company]"
+            id="WholesaleForm-AboutCompany"
+            maxlength="100"
+            required>
+          <label for="WholesaleForm-AboutCompany">About Your Company <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][instagram]"
+            id="WholesaleForm-Instagram"
+            maxlength="30"
+            required>
+          <label for="WholesaleForm-Instagram">@Instagram <span class="required">*</span></label>
+        </div>
+        <div class="field">
+          <input
+            type="text"
+            name="customer[note][instagram_2]"
+            id="WholesaleForm-Instagram2"
+            maxlength="30">
+          <label for="WholesaleForm-Instagram2">2nd Instagram / Personal</label>
+        </div>
+      </div>
+
+      <div class="form-row full-width">
+        <div class="field">
+          <input
+            type="date"
+            name="customer[note][establishment_date]"
+            id="WholesaleForm-EstablishmentDate"
+            required>
+          <label for="WholesaleForm-EstablishmentDate">Establishment Date <span class="required">*</span></label>
+        </div>
+      </div>
+
+      <div class="checkbox-field">
+        <input
+          type="checkbox"
+          name="customer[accepts_marketing]"
+          id="WholesaleForm-Newsletter"
+          value="1">
+        <label for="WholesaleForm-Newsletter">Subscribe to our newsletter</label>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit</button>
+    {%- endform -%}
+  </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const accountTypeButtons = document.querySelectorAll('.account-type-btn');
+  const registrationForms = document.querySelectorAll('.registration-form');
+  const accountTypeSelection = document.querySelector('.account-type-selection');
+
+  accountTypeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const accountType = this.getAttribute('data-account-type');
+      
+      // Remove active class from all buttons
+      accountTypeButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      // Hide all forms
+      registrationForms.forEach(form => form.classList.remove('active'));
+      
+      // Show selected form
+      const selectedForm = document.getElementById(accountType + '-form');
+      if (selectedForm) {
+        selectedForm.classList.add('active');
+        
+        // Smooth scroll to form
+        setTimeout(() => {
+          selectedForm.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100);
+      }
+    });
+  });
+
+  // Form validation enhancement
+  const forms = document.querySelectorAll('form[data-type]');
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const requiredFields = form.querySelectorAll('[required]');
+      let isValid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          isValid = false;
+          field.style.borderColor = '#e74c3c';
+        } else {
+          field.style.borderColor = '#ddd';
+        }
+      });
+      
+      if (!isValid) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+      }
+    });
+  });
+});
+</script>
 
 {% schema %}
 {
