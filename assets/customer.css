@@ -1,188 +1,188 @@
-.customer_account {
-  background: #f8f9fa !important;
-  min-height: 100vh !important;
-  padding: 2rem !important;
-}
-
-.customer.account {
-  max-width: 1200px !important;
-  margin: 0 auto !important;
-  background: white !important;
-  border-radius: 8px !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-  overflow: hidden !important;
-}
-
-.customer.account h1 {
-  background: #000 !important;
-  color: white !important;
-  margin: 0 !important;
-  padding: 2rem 3rem !important;
-  font-size: 1.5rem !important;
-  font-weight: 600 !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-}
-
-.customer.account h1 a {
-  color: white !important;
-  text-decoration: none !important;
-  font-size: 0.875rem !important;
-  padding: 0.5rem 1rem !important;
-  border: 1px solid rgba(255,255,255,0.3) !important;
-  border-radius: 4px !important;
-  transition: all 0.2s ease !important;
-}
-
-.customer.account h1 a:hover {
-  background: rgba(255,255,255,0.1) !important;
-  border-color: rgba(255,255,255,0.5) !important;
-}
-
-.account-content {
-  padding: 3rem !important;
-}
-
-.account-grid {
-  display: grid !important;
-  grid-template-columns: 1fr 350px !important;
-  gap: 4rem !important;
-  margin-top: 2rem !important;
-}
-
-.account-section h2 {
-  font-size: 1.25rem !important;
-  font-weight: 600 !important;
-  color: #1f2937 !important;
-  margin: 0 0 1.5rem 0 !important;
-  padding-bottom: 0.75rem !important;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-.account-section p {
-  color: #6b7280 !important;
-  margin: 0 0 1rem 0 !important;
-  font-size: 1rem !important;
-}
-
-.account-details {
-  background: #f8f9fa !important;
-  border-radius: 8px !important;
-  padding: 2rem !important;
-  border: 1px solid #e5e7eb !important;
-}
-
-.account-details h3 {
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  color: #1f2937 !important;
-  margin: 0 0 1rem 0 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-}
-
-.account-details p {
-  margin: 0 0 0.5rem 0 !important;
-  color: #374151 !important;
-}
-
-.account-details a {
-  color: #3b82f6 !important;
-  text-decoration: none !important;
-  font-weight: 500 !important;
-  border-bottom: 1px solid transparent !important;
-  transition: border-color 0.2s ease !important;
-}
-
-.account-details a:hover {
-  border-bottom-color: #3b82f6 !important;
-}
-
-.order-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  margin-top: 1rem !important;
-}
-
-.order-table th,
-.order-table td {
-  padding: 1rem !important;
-  text-align: left !important;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-.order-table th {
-  background: #f8f9fa !important;
-  font-weight: 600 !important;
-  color: #374151 !important;
-  font-size: 0.875rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-}
-
-.order-table td {
-  color: #1f2937 !important;
-}
-
-.order-table tr:hover {
-  background: #f8f9fa !important;
-}
-
-.order-table a {
-  color: #3b82f6 !important;
-  text-decoration: none !important;
-  font-weight: 500 !important;
-  padding: 0.25rem 0.5rem !important;
-  border-radius: 4px !important;
-  transition: background-color 0.2s ease !important;
-}
-
-.order-table a:hover {
-  background: rgba(59, 130, 246, 0.1) !important;
-}
-
-.empty-state {
-  text-align: center !important;
-  padding: 3rem 2rem !important;
-  color: #6b7280 !important;
-}
-
-.empty-state svg {
-  width: 4rem !important;
-  height: 4rem !important;
-  margin: 0 auto 1rem !important;
-  opacity: 0.5 !important;
-}
-
-@media screen and (max-width: 768px) {
   .customer_account {
-    padding: 1rem !important;
-  }
-
-  .customer.account h1 {
-    padding: 1.5rem 2rem !important;
-    flex-direction: column !important;
-    gap: 1rem !important;
-  }
-
-  .account-content {
+    background: #f8f9fa !important;
+    min-height: 100vh !important;
     padding: 2rem !important;
   }
 
+  .customer.account {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    overflow: hidden !important;
+  }
+
+  .customer.account h1 {
+    background: #000 !important;
+    color: white !important;
+    margin: 0 !important;
+    padding: 2rem 3rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .customer.account h1 a {
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 0.875rem !important;
+    padding: 0.5rem 1rem !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .customer.account h1 a:hover {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+  }
+
+  .account-content {
+    padding: 3rem !important;
+  }
+
   .account-grid {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 350px !important;
+    gap: 4rem !important;
+    margin-top: 2rem !important;
+  }
+
+  .account-section h2 {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 0 1.5rem 0 !important;
+    padding-bottom: 0.75rem !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .account-section p {
+    color: #6b7280 !important;
+    margin: 0 0 1rem 0 !important;
+    font-size: 1rem !important;
+  }
+
+  .account-details {
+    background: #f8f9fa !important;
+    border-radius: 8px !important;
+    padding: 2rem !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  .account-details h3 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 0 1rem 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .account-details p {
+    margin: 0 0 0.5rem 0 !important;
+    color: #374151 !important;
+  }
+
+  .account-details a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    border-bottom: 1px solid transparent !important;
+    transition: border-color 0.2s ease !important;
+  }
+
+  .account-details a:hover {
+    border-bottom-color: #3b82f6 !important;
   }
 
   .order-table {
-    font-size: 0.875rem !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 1rem !important;
   }
 
   .order-table th,
   .order-table td {
-    padding: 0.75rem 0.5rem !important;
+    padding: 1rem !important;
+    text-align: left !important;
+    border-bottom: 1px solid #e5e7eb !important;
   }
+
+  .order-table th {
+    background: #f8f9fa !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    font-size: 0.875rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .order-table td {
+    color: #1f2937 !important;
+  }
+
+  .order-table tr:hover {
+    background: #f8f9fa !important;
+  }
+
+  .order-table a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  .order-table a:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+  }
+
+  .empty-state {
+    text-align: center !important;
+    padding: 3rem 2rem !important;
+    color: #6b7280 !important;
+  }
+
+  .empty-state svg {
+    width: 4rem !important;
+    height: 4rem !important;
+    margin: 0 auto 1rem !important;
+    opacity: 0.5 !important;
+  }
+
+  @media screen and (max-width: 768px) {
+    .customer_account {
+      padding: 1rem !important;
+    }
+
+    .customer.account h1 {
+      padding: 1.5rem 2rem !important;
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+
+    .account-content {
+      padding: 2rem !important;
+    }
+
+    .account-grid {
+      grid-template-columns: 1fr !important;
+      gap: 2rem !important;
+    }
+
+    .order-table {
+      font-size: 0.875rem !important;
+    }
+
+    .order-table th,
+    .order-table td {
+      padding: 0.75rem 0.5rem !important;
+    }
 
 .customer:not(.account):not(.order) {
   margin: 0 auto;
