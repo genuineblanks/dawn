@@ -12,6 +12,29 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* FIX: Hide recover form by default, show login form by default */
+  #recover,
+  #recover + div {
+    display: none;
+  }
+
+  #login,
+  #login + div {
+    display: block;
+  }
+
+  /* Show recover form when #recover is targeted */
+  #recover:target,
+  #recover:target + div {
+    display: block;
+  }
+
+  /* Hide login form when #recover is targeted */
+  #recover:target ~ #login,
+  #recover:target ~ #login + div {
+    display: none;
+  }
 {%- endstyle -%}
 <div class="customer_account">
   <div class="customer login section-{{ section.id }}-padding">
