@@ -1,5 +1,94 @@
 /* Portfolio Showcase Styles */
-.portfolio-showcase {
+.portfolio-showcase__selector-item.active .portfolio-showcase__selector-number {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+.portfolio-showcase__selector-name {
+  font-family: var(--font-body-family);
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: rgb(var(--color-foreground));
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 749px) {
+  .portfolio-showcase {
+    padding: 4rem 0;
+  }
+  
+  .portfolio-showcase__main-display {
+    aspect-ratio: 3/2;
+  }
+  
+  .portfolio-showcase__navigation {
+    padding: 0 1rem;
+  }
+  
+  .portfolio-showcase__nav {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+/* Focus States */
+.portfolio-showcase__nav:focus-visible,
+.portfolio-showcase__selector-item:focus-visible,
+.portfolio-showcase__thumb-image:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.2rem;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .portfolio-showcase__main-display {
+    border: 0.2rem solid rgba(var(--color-foreground), 0.2);
+  }
+  
+  .portfolio-showcase__info {
+    border-width: 0.2rem;
+  }
+  
+  .portfolio-showcase__selector-item {
+    border-width: 0.2rem;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-showcase__image,
+  .portfolio-showcase__nav,
+  .portfolio-showcase__selector-item,
+  .portfolio-showcase__thumb-image {
+    transition: none;
+  }
+  
+  .portfolio-showcase__slide:hover .portfolio-showcase__image {
+    transform: none;
+  }
+}
+
+/* Empty State */
+.portfolio-showcase__empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.portfolio-showcase__empty-content h3 {
+  font-family: var(--font-heading-family);
+  font-size: 2.4rem;
+  color: rgba(var(--color-foreground), 0.7);
+  margin: 0 0 1rem 0;
+}
+
+.portfolio-showcase__empty-content p {
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  color: rgba(var(--color-foreground), 0.5);
+  margin: 0;
+} {
   position: relative;
   width: 100%;
   padding: 6rem 0;
