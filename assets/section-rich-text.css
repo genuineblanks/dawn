@@ -1,25 +1,3 @@
-{%- assign has_content = false -%}
-{%- for block in section.blocks -%}
-  {%- if block.type != 'heading' -%}
-    {%- assign has_content = true -%}
-  {%- endif -%}
-{%- endfor -%}
-
-{%- style -%}
-  .section-{{ section.id }}-padding {
-    padding-top: {% if has_content %}{{ section.settings.padding_top | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
-    padding-bottom: {% if has_content %}{{ section.settings.padding_bottom | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
-      padding-top: {% if has_content %}{{ section.settings.padding_top }}{% else %}10{% endif %}px;
-      padding-bottom: {% if has_content %}{{ section.settings.padding_bottom }}{% else %}10{% endif %}px;
-    }
-  }
-{%- endstyle -%}
-
-
 .rich-text {
   z-index: 1;
 }
@@ -106,3 +84,38 @@
 .rich-text__blocks.right .rich-text__buttons {
   justify-content: flex-end;
 }
+
+/* ✅ Force zero height if blocks are empty */
+.rich-text__blocks:empty {
+  display: none !important;
+}
+
+/* ✅ Or: kill empty wrappers with only whitespace */
+.rich-text__blocks:has(> *:only-child:empty) {
+  display: none !important;
+}
+
+/* ✅ If blocks exist but all children are empty, kill them too */
+.rich-text__blocks:has(> *:only-child:blank) {
+  display: none !important;
+}
+
+/* ✅ And make sure no margin */
+.rich-text__blocks > *:only-child {
+  margin: 0 !important;
+}
+
+/* ✅ Also force the container to collapse if its child is hidden */
+.rich-text__wrapper:has(.rich-text__blocks:empty) {
+  display: none !important;
+}
+
+.rich-text__wrapper:has(.rich-text__blocks:has(> *:only-child:empty)) {
+  display: none !important;
+}
+
+/* ✅ And zero out the padding of the parent if empty */
+.section-padding:has(.rich-text__blocks:empty) {
+  padding: 0 !important;
+}
+
