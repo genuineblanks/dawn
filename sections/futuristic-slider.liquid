@@ -1,51 +1,103 @@
 {{ 'futuristic-slider.css' | asset_url | stylesheet_tag }}
 
-<div class="futuristic-slider" data-section-id="{{ section.id }}">
-  <div class="futuristic-slider__container">
-    <div class="swiper futuristic-swiper" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.autoplay_speed }}">
+<div class="premium-slider" data-section-id="{{ section.id }}" style="--slider-height-desktop: {{ section.settings.slider_height_desktop }}vh; --slider-height-mobile: {{ section.settings.slider_height_mobile }}vh;">
+  <div class="premium-slider__container">
+    <div class="swiper premium-swiper" 
+         data-autoplay="{{ section.settings.autoplay }}" 
+         data-speed="{{ section.settings.autoplay_speed }}"
+         data-effect="{{ section.settings.transition_effect }}">
       <div class="swiper-wrapper">
         {% for block in section.blocks %}
-          <div class="swiper-slide futuristic-slide" {{ block.shopify_attributes }}>
-            <div class="futuristic-slide__media">
-              {% if block.settings.media_type == 'video' and block.settings.video_url != blank %}
-                <div class="futuristic-slide__video-wrapper">
-                  <video class="futuristic-slide__video" autoplay muted loop playsinline>
-                    <source src="{{ block.settings.video_url }}" type="video/mp4">
-                  </video>
-                </div>
-              {% elsif block.settings.image != blank %}
-                <div class="futuristic-slide__image-wrapper">
-                  {{ block.settings.image | image_url: width: 2048 | image_tag: class: 'futuristic-slide__image', loading: 'lazy' }}
+          <div class="swiper-slide premium-slide" {{ block.shopify_attributes }}>
+            <div class="premium-slide__content-wrapper" style="--content-width: {{ section.settings.content_width }}%;">
+              
+              {% comment %} Media Section {% endcomment %}
+              {% if block.settings.image != blank or block.settings.video_url != blank %}
+                <div class="premium-slide__media" style="--media-width: {{ block.settings.media_width }}%;">
+                  {% if block.settings.video_url != blank %}
+                    <div class="premium-slide__video-container">
+                      <video class="premium-slide__video" autoplay muted loop playsinline>
+                        <source src="{{ block.settings.video_url }}" type="video/mp4">
+                      </video>
+                    </div>
+                  {% elsif block.settings.image != blank %}
+                    <div class="premium-slide__image-container">
+                      {{ block.settings.image | image_url: width: 2048 | image_tag: 
+                        class: 'premium-slide__image', 
+                        loading: 'lazy',
+                        alt: block.settings.image.alt | escape
+                      }}
+                    </div>
+                  {% endif %}
                 </div>
               {% endif %}
-              <div class="futuristic-slide__overlay"></div>
-            </div>
-            
-            {% if block.settings.heading != blank or block.settings.subheading != blank %}
-              <div class="futuristic-slide__content">
-                <div class="futuristic-slide__content-inner">
-                  {% if block.settings.heading != blank %}
-                    <h2 class="futuristic-slide__heading">{{ block.settings.heading }}</h2>
-                  {% endif %}
-                  {% if block.settings.subheading != blank %}
-                    <div class="futuristic-slide__subheading">{{ block.settings.subheading }}</div>
-                  {% endif %}
-                  {% if block.settings.button_text != blank and block.settings.button_url != blank %}
-                    <a href="{{ block.settings.button_url }}" class="futuristic-slide__button">{{ block.settings.button_text }}</a>
-                  {% endif %}
+              
+              {% comment %} Text Content {% endcomment %}
+              {% if block.settings.heading != blank or block.settings.subheading != blank or block.settings.button_text != blank %}
+                <div class="premium-slide__text" style="--text-width: {{ block.settings.text_width }}%;">
+                  <div class="premium-slide__text-inner">
+                    {% if block.settings.overline != blank %}
+                      <div class="premium-slide__overline">{{ block.settings.overline }}</div>
+                    {% endif %}
+                    
+                    {% if block.settings.heading != blank %}
+                      <h2 class="premium-slide__heading h1">
+                        {{ block.settings.heading }}
+                      </h2>
+                    {% endif %}
+                    
+                    {% if block.settings.subheading != blank %}
+                      <div class="premium-slide__subheading">
+                        {{ block.settings.subheading }}
+                      </div>
+                    {% endif %}
+                    
+                    {% if block.settings.button_text != blank and block.settings.button_url != blank %}
+                      <div class="premium-slide__button-wrapper">
+                        <a href="{{ block.settings.button_url }}" 
+                           class="premium-slide__button btn btn--{{ block.settings.button_style }}">
+                          <span class="premium-slide__button-text">{{ block.settings.button_text }}</span>
+                          <svg class="premium-slide__button-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4.16669 10H15.8334M15.8334 10L10 4.16666M15.8334 10L10 15.8333" 
+                                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
                 </div>
-              </div>
-            {% endif %}
+              {% endif %}
+              
+            </div>
           </div>
         {% endfor %}
       </div>
       
-      {% if section.blocks.size > 1 %}
-        <div class="futuristic-slider__navigation">
-          <button class="futuristic-slider__nav futuristic-slider__nav--prev swiper-button-prev">‹</button>
-          <button class="futuristic-slider__nav futuristic-slider__nav--next swiper-button-next">›</button>
+      {% if section.settings.show_navigation and section.blocks.size > 1 %}
+        <div class="premium-slider__navigation">
+          <button class="premium-slider__nav premium-slider__nav--prev swiper-button-prev" 
+                  type="button" aria-label="Previous slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="premium-slider__nav premium-slider__nav--next swiper-button-next" 
+                  type="button" aria-label="Next slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
-        <div class="futuristic-slider__pagination swiper-pagination"></div>
+      {% endif %}
+      
+      {% if section.settings.show_pagination and section.blocks.size > 1 %}
+        <div class="premium-slider__pagination swiper-pagination"></div>
+      {% endif %}
+      
+      {% if section.settings.show_progress and section.blocks.size > 1 %}
+        <div class="premium-slider__progress">
+          <div class="premium-slider__progress-bar"></div>
+        </div>
       {% endif %}
     </div>
   </div>
@@ -56,32 +108,114 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  new Swiper('.futuristic-swiper', {
+  const swiperElement = document.querySelector('.premium-swiper');
+  if (!swiperElement) return;
+  
+  const autoplay = swiperElement.dataset.autoplay === 'true';
+  const speed = parseInt(swiperElement.dataset.speed) * 1000 || 5000;
+  const effect = swiperElement.dataset.effect || 'fade';
+  
+  new Swiper(swiperElement, {
+    modules: [Swiper.Navigation, Swiper.Pagination, Swiper.Autoplay, Swiper.EffectFade],
     loop: true,
-    autoplay: {{ section.settings.autoplay | json }},
+    speed: 800,
+    effect: effect,
+    fadeEffect: {
+      crossFade: true
+    },
+    autoplay: autoplay ? {
+      delay: speed,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true
+    } : false,
     navigation: {
-      nextEl: '.futuristic-slider__nav--next',
-      prevEl: '.futuristic-slider__nav--prev',
+      nextEl: '.premium-slider__nav--next',
+      prevEl: '.premium-slider__nav--prev',
     },
     pagination: {
-      el: '.futuristic-slider__pagination',
+      el: '.premium-slider__pagination',
       clickable: true,
+      renderBullet: function (index, className) {
+        return '<span class="' + className + '"></span>';
+      },
     },
+    on: {
+      autoplayTimeLeft(s, time, progress) {
+        const progressBar = document.querySelector('.premium-slider__progress-bar');
+        if (progressBar) {
+          progressBar.style.setProperty('--progress', 1 - progress);
+        }
+      }
+    }
   });
 });
 </script>
 
 {% schema %}
 {
-  "name": "Futuristic Slider",
+  "name": "Premium Slider",
   "tag": "section",
   "class": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "slider_height_desktop",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Desktop height",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "slider_height_mobile",
+      "min": 30,
+      "max": 90,
+      "step": 5,
+      "unit": "vh",
+      "label": "Mobile height",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Content container width",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "select",
+      "id": "transition_effect",
+      "label": "Transition effect",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide",
+          "label": "Slide"
+        }
+      ],
+      "default": "fade"
+    },
+    {
       "type": "checkbox",
       "id": "autoplay",
       "label": "Auto-rotate slides",
-      "default": false
+      "default": true
     },
     {
       "type": "range",
@@ -91,29 +225,40 @@ document.addEventListener('DOMContentLoaded', function() {
       "step": 1,
       "unit": "s",
       "label": "Change slides every",
-      "default": 5
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "Show progress bar",
+      "default": false
     }
   ],
   "blocks": [
     {
       "type": "slide",
       "name": "Slide",
+      "limit": 8,
       "settings": [
         {
-          "type": "select",
-          "id": "media_type",
-          "label": "Media type",
-          "options": [
-            {
-              "value": "image",
-              "label": "Image"
-            },
-            {
-              "value": "video",
-              "label": "Video"
-            }
-          ],
-          "default": "image"
+          "type": "header",
+          "content": "Media"
         },
         {
           "type": "image_picker",
@@ -123,41 +268,113 @@ document.addEventListener('DOMContentLoaded', function() {
         {
           "type": "url",
           "id": "video_url",
-          "label": "Video URL"
+          "label": "Video URL",
+          "info": "Direct .mp4 video file URL"
+        },
+        {
+          "type": "range",
+          "id": "media_width",
+          "min": 30,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "label": "Media width",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Content"
         },
         {
           "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Slide heading"
+          "id": "overline",
+          "label": "Overline text",
+          "default": "NEW COLLECTION"
         },
         {
           "type": "textarea",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Premium Quality Blanks"
+        },
+        {
+          "type": "richtext",
           "id": "subheading",
-          "label": "Subheading"
+          "label": "Description",
+          "default": "<p>Discover our curated collection of high-end blank apparel, designed for those who demand excellence in every detail.</p>"
+        },
+        {
+          "type": "range",
+          "id": "text_width",
+          "min": 30,
+          "max": 70,
+          "step": 5,
+          "unit": "%",
+          "label": "Text width",
+          "default": 45
+        },
+        {
+          "type": "header",
+          "content": "Button"
         },
         {
           "type": "text",
           "id": "button_text",
-          "label": "Button text"
+          "label": "Button text",
+          "default": "Shop Collection"
         },
         {
           "type": "url",
           "id": "button_url",
           "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "primary",
+              "label": "Primary"
+            },
+            {
+              "value": "secondary",
+              "label": "Secondary"
+            },
+            {
+              "value": "outline",
+              "label": "Outline"
+            }
+          ],
+          "default": "primary"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Futuristic Slider",
+      "name": "Premium Slider",
       "blocks": [
         {
           "type": "slide",
           "settings": {
-            "heading": "Welcome to the Future",
-            "subheading": "Experience innovation like never before"
+            "overline": "NEW ARRIVALS",
+            "heading": "Premium Blank Apparel",
+            "subheading": "<p>Discover our meticulously crafted collection designed for discerning customers who value quality and sophistication.</p>",
+            "button_text": "Explore Collection",
+            "media_width": 55,
+            "text_width": 40
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "overline": "LUXURY ESSENTIALS",
+            "heading": "Elevated Basics",
+            "subheading": "<p>Experience the perfect blend of comfort and style with our premium blank essentials.</p>",
+            "button_text": "Shop Now",
+            "media_width": 50,
+            "text_width": 45
           }
         }
       ]
