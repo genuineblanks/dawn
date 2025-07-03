@@ -1,0 +1,1444 @@
+/* TECHPACK STYLING VARIABLES - Add at TOP of customer-registration.css */
+
+/* Techpack Color Palette - Sophisticated Black/Grey */
+:root {
+  /* Primary Colors - Sophisticated Black/Grey */
+  --techpack-primary: #1a1a1a;
+  --techpack-primary-hover: #2d2d2d;
+  --techpack-primary-light: #f5f5f5;
+  --techpack-primary-dark: #000000;
+  
+  /* Secondary & Neutral Colors - Professional Grey Scale */
+  --techpack-secondary: #666666;
+  --techpack-success: #2d2d2d;
+  --techpack-error: #d32f2f;
+  --techpack-warning: #666666;
+  --techpack-info: #1a1a1a;
+  
+  /* Background Colors - Clean & Minimal */
+  --techpack-bg: #ffffff;
+  --techpack-bg-secondary: #f8f8f8;
+  --techpack-bg-tertiary: #f0f0f0;
+  --techpack-bg-accent: #eeeeee;
+  --techpack-bg-dark: #1a1a1a;
+  
+  /* Border & Divider Colors - Subtle & Clean */
+  --techpack-border: #e0e0e0;
+  --techpack-border-light: #f0f0f0;
+  --techpack-border-accent: #cccccc;
+  --techpack-border-dark: #333333;
+  
+  /* Text Colors - High Contrast & Readable */
+  --techpack-text: #1a1a1a;
+  --techpack-text-secondary: #666666;
+  --techpack-text-muted: #999999;
+  --techpack-text-light: #ffffff;
+  --techpack-text-disabled: #cccccc;
+  
+  /* Enhanced Shadows - Subtle & Professional */
+  --techpack-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --techpack-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --techpack-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --techpack-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --techpack-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.10);
+  --techpack-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.03);
+  
+  /* Border Radius - Minimal & Clean */
+  --techpack-radius: 0px;
+  --techpack-radius-sm: 0px;
+  --techpack-radius-lg: 2px;
+  --techpack-radius-xl: 4px;
+  --techpack-radius-full: 9999px;
+  
+  /* Transitions & Animations - Smooth & Professional */
+  --techpack-transition: all 0.2s ease;
+  --techpack-transition-fast: all 0.1s ease;
+  --techpack-transition-slow: all 0.3s ease;
+  
+  /* Spacing Scale - Consistent & Balanced */
+  --techpack-space-xs: 0.25rem;
+  --techpack-space-sm: 0.5rem;
+  --techpack-space-md: 1rem;
+  --techpack-space-lg: 1.5rem;
+  --techpack-space-xl: 2rem;
+  --techpack-space-2xl: 3rem;
+  --techpack-space-3xl: 4rem;
+}
+
+/* ENHANCED FORM STYLING - Techpack Design */
+
+/* Override existing wholesale form styling with techpack design */
+.wholesale-form,
+.retail-form {
+  background: linear-gradient(135deg, var(--techpack-bg) 0%, var(--techpack-bg-secondary) 100%) !important;
+  border: 1px solid var(--techpack-border-light) !important;
+  border-radius: var(--techpack-radius-xl) !important;
+  box-shadow: var(--techpack-shadow-xl) !important;
+  padding: var(--techpack-space-2xl) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.wholesale-form::before,
+.retail-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--techpack-primary) 0%, var(--techpack-secondary) 50%, var(--techpack-primary) 100%);
+}
+
+/* Enhanced Input Styling */
+.wholesale-form .field input,
+.retail-form .field input,
+.wholesale-form .field select,
+.retail-form .field select,
+.wholesale-form .field textarea,
+.retail-form .field textarea {
+  width: 100% !important;
+  padding: 1rem var(--techpack-space-lg) !important;
+  border: 2px solid var(--techpack-border) !important;
+  border-radius: var(--techpack-radius) !important;
+  background: var(--techpack-bg) !important;
+  color: var(--techpack-text) !important;
+  font-size: 1rem !important;
+  font-family: inherit !important;
+  transition: var(--techpack-transition) !important;
+  box-shadow: var(--techpack-shadow-inner) !important;
+}
+
+.wholesale-form .field input:focus,
+.retail-form .field input:focus,
+.wholesale-form .field select:focus,
+.retail-form .field select:focus,
+.wholesale-form .field textarea:focus,
+.retail-form .field textarea:focus {
+  outline: none !important;
+  border-color: var(--techpack-primary) !important;
+  box-shadow: 0 0 0 4px var(--techpack-primary-light), var(--techpack-shadow) !important;
+  transform: translateY(-1px) !important;
+}
+
+.wholesale-form .field input:hover,
+.retail-form .field input:hover,
+.wholesale-form .field select:hover,
+.retail-form .field select:hover,
+.wholesale-form .field textarea:hover,
+.retail-form .field textarea:hover {
+  border-color: var(--techpack-border-accent) !important;
+  box-shadow: var(--techpack-shadow) !important;
+}
+
+/* Enhanced Labels */
+.wholesale-form .field label,
+.retail-form .field label {
+  display: block !important;
+  font-weight: 600 !important;
+  color: var(--techpack-text-secondary) !important;
+  margin-bottom: var(--techpack-space-sm) !important;
+  font-size: 0.875rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Required Field Styling */
+.wholesale-form .field label .required,
+.retail-form .field label .required {
+  color: var(--techpack-error) !important;
+  font-weight: 700 !important;
+}
+
+/* Enhanced Button Styling */
+.wholesale-form button[type="submit"],
+.retail-form button[type="submit"],
+.account-type-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: var(--techpack-space-lg) var(--techpack-space-xl) !important;
+  border: none !important;
+  border-radius: var(--techpack-radius) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer !important;
+  transition: var(--techpack-transition) !important;
+  text-decoration: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  background: linear-gradient(135deg, var(--techpack-primary) 0%, var(--techpack-primary-hover) 100%) !important;
+  color: white !important;
+  box-shadow: var(--techpack-shadow) !important;
+}
+
+.wholesale-form button[type="submit"]::before,
+.retail-form button[type="submit"]::before,
+.account-type-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.wholesale-form button[type="submit"]:hover::before,
+.retail-form button[type="submit"]:hover::before,
+.account-type-btn:hover::before {
+  left: 100%;
+}
+
+.wholesale-form button[type="submit"]:hover:not(:disabled),
+.retail-form button[type="submit"]:hover:not(:disabled),
+.account-type-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--techpack-primary-hover) 0%, var(--techpack-primary-dark) 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--techpack-shadow-lg) !important;
+}
+
+/* Account Type Button Specific Styling */
+.account-type-btn {
+  background: var(--techpack-bg) !important;
+  color: var(--techpack-text) !important;
+  border: 2px solid var(--techpack-border) !important;
+  box-shadow: var(--techpack-shadow-sm) !important;
+}
+
+.account-type-btn.active {
+  background: linear-gradient(135deg, var(--techpack-primary) 0%, var(--techpack-primary-hover) 100%) !important;
+  color: white !important;
+  border-color: var(--techpack-primary) !important;
+}
+
+.account-type-btn:hover:not(.active) {
+  background: var(--techpack-bg-accent) !important;
+  border-color: var(--techpack-primary) !important;
+  color: var(--techpack-primary) !important;
+}
+
+/* Enhanced Error Styling */
+.registration-errors .error-message,
+.wholesale-form .form__message,
+.retail-form .form__message {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(248, 113, 113, 0.05) 100%) !important;
+  border: 2px solid rgba(248, 113, 113, 0.2) !important;
+  border-radius: var(--techpack-radius) !important;
+  color: var(--techpack-error) !important;
+  padding: var(--techpack-space-lg) !important;
+  margin-bottom: var(--techpack-space-lg) !important;
+  box-shadow: var(--techpack-shadow) !important;
+}
+
+/* Field Error Styling */
+.wholesale-form .field input.field-error,
+.retail-form .field input.field-error,
+.wholesale-form .field select.field-error,
+.retail-form .field select.field-error {
+  border-color: var(--techpack-error) !important;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1) !important;
+  background: rgba(248, 113, 113, 0.02) !important;
+}
+
+.field-error-message.show {
+  display: block !important;
+  color: var(--techpack-error) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  margin-top: 0.25rem !important;
+  padding: 0.375rem 0.75rem !important;
+  background: #f9fafb !important;
+  border-left: 3px solid var(--techpack-error) !important;
+  border-radius: 0 0.375rem 0.375rem 0 !important;
+}
+
+/* Customer Registration Styles */
+
+/* CRITICAL OVERRIDES - Override customer.css conflicts */
+.customer.register {
+  max-width: none !important;
+  padding: 2rem !important;
+  text-align: left !important;
+}
+
+/* Override width restrictions specifically for registration */
+.customer.register:not(.account):not(.order) {
+  max-width: none !important;
+}
+
+@media screen and (min-width: 750px) {
+  .customer.register:not(.account):not(.order) {
+    max-width: none !important;
+  }
+}
+
+.customer.register h1 {
+  text-align: center !important;
+  margin-bottom: 3rem !important;
+}
+
+/* Override form margins */
+.customer.register form {
+  margin-top: 0 !important;
+}
+
+/* Override field margins */
+.customer.register .field {
+  margin: 2rem 0 !important;
+}
+
+.customer.register .field:first-of-type {
+  margin-top: 0 !important;
+}
+
+/* Override button margins */
+.customer.register button {
+  margin: 4rem 0 1.5rem !important;
+}
+
+/* Account Type Selection */
+.account-type-selection {
+  text-align: center;
+  margin-bottom: 5rem;
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account-type-selection p {
+  color: rgba(var(--color-foreground), 0.75);
+  margin-bottom: 4rem;
+  font-size: 1.6rem;
+}
+
+.account-type-buttons {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 0;
+}
+
+.account-type-btn {
+  padding: 1.5rem 4rem;
+  border: 0.2rem solid rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  min-width: 18rem;
+}
+
+.account-type-btn:hover,
+.account-type-btn.active {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+/* Registration Forms */
+.registration-form {
+  display: none;
+}
+
+.registration-form.active {
+  display: block;
+}
+
+.registration-form h2 {
+  text-align: center;
+  margin-bottom: 4rem;
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+}
+
+/* Retail Form - Standard Width */
+.retail-form {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+/* Wholesale Form - MUCH WIDER with stronger overrides */
+.wholesale-form {
+  max-width: 140rem !important;
+  margin: 0 auto !important;
+  padding: 5rem !important;
+  background: white;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  box-shadow: 0 0.8rem 3rem rgba(0,0,0,0.15);
+  border-radius: 0.8rem;
+}
+
+.registration-success {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+  border: 2px solid #10b981;
+  border-radius: 1rem;
+  margin: 2rem auto;
+  max-width: 60rem;
+}
+
+/* Override customer.css field margins for wholesale grid */
+.wholesale-form .field {
+  margin: 0 !important;
+}
+
+.wholesale-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 5rem !important;
+  margin-bottom: 3rem !important;
+}
+
+.wholesale-/* Customer Registration Styles */
+
+/* Override default customer styles for registration */
+.customer.register {
+  max-width: none !important;
+  padding: 2rem;
+  text-align: left;
+}
+
+.customer.register h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Account Type Selection */
+.account-type-selection {
+  text-align: center;
+  margin-bottom: 5rem;
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account-type-selection p {
+  color: rgba(var(--color-foreground), 0.75);
+  margin-bottom: 4rem;
+  font-size: 1.6rem;
+}
+
+.account-type-buttons {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 0;
+}
+
+.account-type-btn {
+  padding: 1.5rem 4rem;
+  border: 0.2rem solid rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  font-weight: 500;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  min-width: 18rem;
+}
+
+.account-type-btn:hover,
+.account-type-btn.active {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+/* Registration Forms */
+.registration-form {
+  display: none;
+}
+
+.registration-form.active {
+  display: block;
+}
+
+.registration-form h2 {
+  text-align: center;
+  margin-bottom: 4rem;
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+}
+
+/* Retail Form - Standard Width */
+.retail-form {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+/* Wholesale Form - Much Wider */
+.wholesale-form {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 4rem;
+  background: white;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  box-shadow: 0 0.4rem 2rem rgba(0,0,0,0.1);
+}
+
+.wholesale-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 2rem;
+}
+
+.wholesale-row.wholesale-full {
+  grid-template-columns: 1fr;
+}
+
+/* Field Styling - Larger for Wholesale */
+.wholesale-form .field input,
+.wholesale-form .field select {
+  width: 100%;
+  height: 6rem;
+  border: 0.1rem solid #ddd;
+  padding: 0 2rem;
+  font-size: 1.6rem;
+  background: white;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.wholesale-form .field input:focus,
+.wholesale-form .field select:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-foreground), 0.1);
+}
+
+.wholesale-form .field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 2rem center;
+  background-size: 2rem;
+  padding-right: 5rem;
+  cursor: pointer;
+}
+
+/* Section Headers */
+.wholesale-section-header {
+  margin: 5rem 0 3rem 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 0.2rem solid rgb(var(--color-foreground));
+  text-align: center;
+}
+
+.wholesale-section-header h3 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-size: calc(var(--font-heading-scale) * 1.8rem);
+  font-weight: 500;
+}
+
+/* Newsletter Checkbox */
+.wholesale-newsletter {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 3rem 0;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(var(--color-foreground), 0.05);
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+}
+
+.wholesale-newsletter input[type="checkbox"] {
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+}
+
+.wholesale-newsletter label {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+/* Required asterisk */
+.required {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 749px) {
+  .customer.register {
+    padding: 1rem;
+  }
+
+  .account-type-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .account-type-btn {
+    min-width: 25rem;
+  }
+
+  .wholesale-form {
+    max-width: 100%;
+    padding: 2rem;
+  }
+
+  .wholesale-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .wholesale-form .field input,
+  .wholesale-form .field select {
+    height: 5rem;
+    font-size: 1.4rem;
+  }
+}
+
+/* Override customer.css conflicts */
+.customer.register form {
+  margin-top: 0 !important;
+}
+
+.customer.register .field {
+  margin: 2rem 0 !important;
+}
+
+.customer.register .field:first-of-type {
+  margin-top: 0 !important;
+}
+
+.customer.register button {
+  margin: 4rem 0 1.5rem !important;
+}
+
+/* Force proper wholesale field styling */
+.wholesale-form .field {
+  margin: 0 0 2rem 0 !important;
+  position: relative;
+}
+
+.wholesale-form .wholesale-row .field {
+  margin: 0 !important;
+}
+
+/* Ensure labels display properly */
+.wholesale-form label,
+.retail-form label {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Button styling for wholesale form */
+.wholesale-form button {
+  width: 100%;
+  padding: 2rem;
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  transition: background-color 0.3s ease;
+}
+
+.wholesale-form button:hover {
+  opacity: 0.8;
+}: 30px;
+  margin-bottom: 25px;
+  align-items: end;
+}
+
+.wholesale-row.wholesale-full {
+  grid-template-columns: 1fr;
+}
+
+.wholesale-row .field {
+  margin-bottom: 0;
+}
+
+.wholesale-form .field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wholesale-form .field input,
+.wholesale-form .field select {
+  width: 100%;
+  height: 55px;
+  border: 1px solid #ddd;
+  padding: 0 15px;
+  font-size: 14px;
+  background: white;
+  box-sizing: border-box;
+  border-radius: 0;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.wholesale-form .field input:focus,
+.wholesale-form .field select:focus {
+  outline: none;
+  border-color: #333;
+  box-shadow: 0 0 0 1px #333;
+}
+
+.wholesale-form .field select {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  padding-right: 45px;
+}
+
+.wholesale-form .field select:focus {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.wholesale-form .field select option {
+  padding: 12px;
+  font-size: 14px;
+  color: #333;
+}
+
+.wholesale-section-header {
+  margin: 50px 0 35px 0;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #333;
+  text-align: center;
+}
+
+.wholesale-section-header h3 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.wholesale-newsletter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 35px 0;
+  justify-content: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.wholesale-newsletter input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #333;
+}
+
+.wholesale-newsletter label {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.wholesale-submit {
+  width: 100%;
+  padding: 20px;
+  background: #333;
+  color: white;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 30px;
+  transition: background-color 0.3s ease;
+  border-radius: 0;
+}
+
+.wholesale-submit:hover {
+  background: #000;
+}
+
+/* Required asterisk */
+.required {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Error message styles */
+.field__message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.form__message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.form__message svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.form__message ul {
+  margin: 10px 0 0 0;
+  padding-left: 20px;
+  text-align: left;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .customer.register {
+    padding: 10px;
+  }
+
+  .registration-type-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .registration-type-btn {
+    min-width: 250px;
+  }
+
+  .registration-form-wrapper {
+    padding: 30px 20px;
+  }
+
+  .wholesale-registration .registration-form-wrapper {
+    padding: 30px 25px;
+  }
+
+  .wholesale-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .registration-selector .customer__title {
+    font-size: 2rem;
+  }
+
+  .wholesale-newsletter {
+    padding: 15px;
+    margin: 25px 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .registration-type-btn {
+    min-width: 200px;
+    padding: 12px 30px;
+  }
+
+  .registration-form-wrapper {
+    padding: 20px 15px;
+  }
+
+  .wholesale-registration .registration-form-wrapper {
+    padding: 20px 15px;
+  }
+
+  .wholesale-row {
+    gap: 15px;
+  }
+
+  .wholesale-form .field input,
+  .wholesale-form .field select,
+  .retail-form .field input {
+    height: 50px;
+    padding: 0 12px;
+  }
+
+  .wholesale-form .field label,
+  .retail-form .field label {
+    font-size: 11px;
+  }
+
+  .registration-selector .customer__title {
+    font-size: 1.8rem;
+  }
+
+  .registration-subtitle {
+    font-size: 1rem;
+  }
+
+  .wholesale-section-header {
+    margin: 35px 0 25px 0;
+  }
+
+  .wholesale-section-header h3 {
+    font-size: 1rem;
+  }
+}
+
+/* CRITICAL OVERRIDES - Override any conflicting customer.css styles */
+.customer.register form {
+  margin-top: 0 !important;
+}
+
+.customer.register .field {
+  margin: 0 !important;
+}
+
+.customer.register .field:first-of-type {
+  margin-top: 0 !important;
+}
+
+.customer.register button {
+  margin: 0 !important;
+}
+
+.customer.register .registration-form .field {
+  margin-bottom: 25px !important;
+}
+
+.customer.register .wholesale-row .field {
+  margin-bottom: 0 !important;
+}
+
+/* Ensure buttons work properly */
+.registration-form .button,
+.registration-form button {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Fix any text alignment issues */
+.registration-form,
+.wholesale-form,
+.retail-form {
+  text-align: left;
+}
+
+.registration-form .field label {
+  text-align: left;
+}
+
+/* Ensure proper spacing for wholesale form sections */
+.wholesale-form .wholesale-row:last-of-type {
+  margin-bottom: 25px;
+}
+
+.wholesale-form .wholesale-section-header + .wholesale-row {
+  margin-top: 0;
+}
+
+/* Force display of labels - Important for troubleshooting */
+.registration-form label {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #666 !important;
+  font-size: 12px !important;
+  margin-bottom: 8px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure form containers display properly */
+.registration-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+.registration-container.active {
+  display: block !important;
+}
+
+/* Premium enhancements */
+.registration-form-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.registration-type-btn {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.registration-type-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.registration-type-btn.active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(51,51,51,0.3);
+}
+
+.retail-form .field input:focus,
+.wholesale-form .field input:focus,
+.wholesale-form .field select:focus {
+  border-color: #333;
+  box-shadow: 0 0 0 3px rgba(51,51,51,0.1);
+  transform: translateY(-1px);
+}
+
+.retail-form .button,
+.wholesale-submit {
+  box-shadow: 0 4px 14px 0 rgba(51,51,51,0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.retail-form .button:hover,
+.wholesale-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* REMOVE ALL DEBUG STYLES AND REPLACE WITH THESE CLEAN STYLES */
+/* Add this to customer-registration.css and REMOVE the debug styles */
+
+/* FINAL SELECT DROPDOWN FIXES - Clean Version */
+
+/* Force select styling with highest specificity */
+.customer.register .wholesale-form .field select,
+.customer.register .retail-form .field select,
+.wholesale-form select,
+.retail-form select,
+select[name*="customer"],
+select[id*="WholesaleForm"],
+select[id*="RegisterForm"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-color: rgb(var(--color-background)) !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 1.5rem !important;
+  border: 1px solid rgba(var(--color-foreground), 0.3) !important;
+  border-radius: 0 !important;
+  color: rgb(var(--color-foreground)) !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 1.4rem !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+  min-height: 4.8rem !important;
+  padding: 1.2rem 4rem 1.2rem 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+/* Focus state for selects */
+.customer.register .wholesale-form .field select:focus,
+.customer.register .retail-form .field select:focus,
+.wholesale-form select:focus,
+.retail-form select:focus,
+select[name*="customer"]:focus,
+select[id*="WholesaleForm"]:focus,
+select[id*="RegisterForm"]:focus {
+  border-color: rgb(var(--color-foreground)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(var(--color-foreground), 0.2) !important;
+  background-color: rgb(var(--color-background)) !important;
+}
+
+/* Remove any conflicting select wrapper styling */
+.customer.register .field .select,
+.wholesale-form .field .select,
+.retail-form .field .select {
+  position: relative !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove any SVG icons that might be added by theme */
+.customer.register .field .select svg,
+.wholesale-form .field .select svg,
+.retail-form .field .select svg {
+  display: none !important;
+}
+
+/* Option styling */
+.customer.register .wholesale-form .field select option,
+.customer.register .retail-form .field select option,
+.wholesale-form select option,
+.retail-form select option,
+select[name*="customer"] option,
+select[id*="WholesaleForm"] option,
+select[id*="RegisterForm"] option {
+  background-color: rgb(var(--color-background)) !important;
+  color: rgb(var(--color-foreground)) !important;
+  padding: 0.8rem !important;
+}
+
+/* Placeholder option styling */
+.customer.register .wholesale-form .field select option[value=""],
+.customer.register .retail-form .field select option[value=""],
+.wholesale-form select option[value=""],
+.retail-form select option[value=""],
+select[name*="customer"] option[value=""],
+select[id*="WholesaleForm"] option[value=""],
+select[id*="RegisterForm"] option[value=""] {
+  color: rgba(var(--color-foreground), 0.6) !important;
+  font-style: italic !important;
+}
+
+/* Ensure the field container doesn't interfere */
+.customer.register .wholesale-form .field,
+.customer.register .retail-form .field {
+  position: relative !important;
+  margin-bottom: 2rem !important;
+}
+
+/* Fix any potential z-index issues */
+.customer.register .wholesale-form .field select,
+.customer.register .retail-form .field select {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Additional browser-specific fixes */
+select[name*="customer"]::-ms-expand,
+select[id*="WholesaleForm"]::-ms-expand,
+select[id*="RegisterForm"]::-ms-expand {
+  display: none !important;
+}
+
+/* Firefox specific */
+@-moz-document url-prefix() {
+  .customer.register .wholesale-form .field select,
+  .customer.register .retail-form .field select,
+  .wholesale-form select,
+  .retail-form select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  }
+}
+
+/* Textarea Styling */
+.wholesale-form .field textarea,
+.retail-form .field textarea {
+  width: 100% !important;
+  padding: 1.5rem !important;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.2) !important;
+  border-radius: 0 !important;
+  background: rgb(var(--color-background)) !important;
+  color: rgb(var(--color-foreground)) !important;
+  font-size: 1.4rem !important;
+  line-height: 1.4 !important;
+  min-height: 10rem !important;
+  resize: vertical !important;
+  font-family: inherit !important;
+}
+
+.wholesale-form .field textarea:focus,
+.retail-form .field textarea:focus {
+  border-color: rgb(var(--color-foreground)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-foreground), 0.1) !important;
+}
+
+.wholesale-form .field textarea::placeholder,
+.retail-form .field textarea::placeholder {
+  color: rgba(var(--color-foreground), 0.6) !important;
+}
+
+/* Full width field for single items in a row */
+.wholesale-row.wholesale-full {
+  grid-template-columns: 1fr !important;
+}
+
+/* Date input styling */
+.wholesale-form .field input[type="date"],
+.retail-form .field input[type="date"] {
+  cursor: pointer !important;
+  color: rgb(var(--color-foreground)) !important;
+}
+
+.wholesale-form .field input[type="date"]::-webkit-calendar-picker-indicator,
+.retail-form .field input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  filter: invert(var(--color-foreground)) !important;
+}
+
+/* COUNTRY DROPDOWN STYLING - Add to customer-registration.css */
+
+/* Enhanced Country Dropdown - Beautiful Modern Design */
+.techpack-form__country-wrapper {
+  position: relative;
+}
+
+.techpack-form__country-input {
+  cursor: pointer !important;
+  padding-right: 3.5rem !important;
+  position: relative !important;
+  background: linear-gradient(135deg, var(--techpack-bg) 0%, var(--techpack-bg-secondary) 100%) !important;
+  border: 2px solid var(--techpack-border) !important;
+  transition: var(--techpack-transition) !important;
+}
+
+.techpack-form__country-input:hover {
+  border-color: var(--techpack-primary-light) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.techpack-form__country-input:focus {
+  border-color: var(--techpack-primary) !important;
+  box-shadow: 0 0 0 4px var(--techpack-primary-light), 0 8px 25px rgba(139, 92, 246, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.techpack-form__country-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  color: var(--techpack-text-muted);
+  font-size: 1.25rem;
+}
+
+.techpack-form__country-toggle--open {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--techpack-primary);
+}
+
+.techpack-form__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--techpack-bg);
+  border: 2px solid var(--techpack-border);
+  border-radius: var(--techpack-radius-lg);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(139, 92, 246, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+.techpack-form__dropdown--active {
+  display: block;
+  animation: dropdownSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Custom Scrollbar for Dropdown */
+.techpack-form__dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.techpack-form__dropdown::-webkit-scrollbar-track {
+  background: var(--techpack-bg-secondary);
+  border-radius: var(--techpack-radius-sm);
+}
+
+.techpack-form__dropdown::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--techpack-primary) 0%, var(--techpack-primary-hover) 100%);
+  border-radius: var(--techpack-radius-sm);
+  border: 2px solid var(--techpack-bg-secondary);
+}
+
+.techpack-form__dropdown::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--techpack-primary-hover) 0%, var(--techpack-primary-dark) 100%);
+}
+
+/* Priority Countries Section */
+.techpack-form__dropdown-section {
+  padding: var(--techpack-space-sm) 0;
+}
+
+.techpack-form__dropdown-separator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--techpack-border) 50%, transparent 100%);
+  margin: var(--techpack-space-sm) var(--techpack-space-lg);
+  position: relative;
+}
+
+.techpack-form__dropdown-separator::after {
+  content: "Other Countries";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--techpack-bg);
+  padding: 0 var(--techpack-space-md);
+  font-size: 0.75rem;
+  color: var(--techpack-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.techpack-form__dropdown-item {
+  padding: var(--techpack-space-md) var(--techpack-space-lg);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--techpack-space-md);
+  border-left: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.techpack-form__dropdown-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, var(--techpack-primary-light) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.techpack-form__dropdown-item:hover,
+.techpack-form__dropdown-item--highlighted {
+  background: linear-gradient(135deg, var(--techpack-bg-accent) 0%, var(--techpack-bg-secondary) 100%);
+  color: var(--techpack-primary);
+  transform: translateX(4px);
+  border-left-color: var(--techpack-primary);
+  box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.1);
+}
+
+.techpack-form__dropdown-item:hover::before,
+.techpack-form__dropdown-item--highlighted::before {
+  opacity: 0.1;
+}
+
+/* Priority country styling */
+.techpack-form__dropdown-item--priority {
+  background: linear-gradient(135deg, var(--techpack-bg-secondary) 0%, var(--techpack-bg) 100%);
+  font-weight: 600;
+  border-left: 3px solid var(--techpack-primary-light);
+}
+
+.techpack-form__dropdown-item--priority:hover {
+  background: linear-gradient(135deg, var(--techpack-primary-light) 0%, var(--techpack-bg-accent) 100%);
+  border-left-color: var(--techpack-primary);
+  transform: translateX(6px);
+}
+
+.techpack-form__country-flag {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.techpack-form__country-name {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+/* Search functionality */
+.techpack-form__dropdown-search {
+  padding: var(--techpack-space-md);
+  margin: var(--techpack-space-sm);
+  border: 1px solid var(--techpack-border);
+  border-radius: var(--techpack-radius);
+  font-size: 0.875rem;
+  background: var(--techpack-bg-secondary);
+  width: calc(100% - 2 * var(--techpack-space-sm));
+  color: var(--techpack-text);
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.techpack-form__dropdown-search:focus {
+  border-color: var(--techpack-primary);
+  box-shadow: 0 0 0 3px var(--techpack-primary-light);
+  background: var(--techpack-bg);
+}
+
+.techpack-form__dropdown-search::placeholder {
+  color: var(--techpack-text-muted);
+  opacity: 0.7;
+}
+
+/* Empty state */
+.techpack-form__dropdown-empty {
+  padding: var(--techpack-space-xl);
+  text-align: center;
+  color: var(--techpack-text-muted);
+  font-style: italic;
+}
+
+/* Required field error styling matching techpack app */
+.field-error,
+input.field-error,
+select.field-error,
+.techpack-form__country-input.field-error {
+  border: 2px solid #6b7280 !important;
+  box-shadow: 0 0 0 4px rgba(107, 114, 128, 0.25) !important;
+  background-color: rgba(107, 114, 128, 0.03) !important;
+}
+
+/* Clear error styles when field gets focus */
+.field-error:focus {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
+  border-color: #3b82f6 !important;
+  background-color: transparent !important;
+}
