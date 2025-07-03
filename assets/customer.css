@@ -376,3 +376,127 @@
   padding-right: 0 !important;
   text-align: left !important;
 }
+
+/* ===================================
+   SIMPLE REGISTRATION STYLING - Add to end of customer.css
+   =================================== */
+
+/* TechPack Registration Form Styling */
+.customer.register {
+  background: #f8f9fa !important;
+  min-height: 100vh !important;
+  padding: 2rem !important;
+  max-width: none !important;
+}
+
+.customer.register h1 {
+  text-align: center !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  margin-bottom: 3rem !important;
+}
+
+.customer.register form {
+  max-width: 500px !important;
+  margin: 0 auto !important;
+  background: white !important;
+  padding: 3rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+.customer.register .field {
+  margin-bottom: 1.5rem !important;
+}
+
+.customer.register .field label {
+  display: block !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  margin-bottom: 0.5rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.customer.register .field input {
+  width: 100% !important;
+  padding: 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  font-size: 1rem !important;
+  background: white !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.customer.register .field input:focus {
+  outline: none !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.customer.register button {
+  background: #000 !important;
+  color: white !important;
+  border: none !important;
+  padding: 1rem 3rem !important;
+  border-radius: 6px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  width: 100% !important;
+  margin-top: 1rem !important;
+}
+
+.customer.register button:hover {
+  background: #374151 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Clean Error Styling */
+.customer.register .form__message {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 6px !important;
+  padding: 1rem !important;
+  margin-bottom: 2rem !important;
+  color: #dc2626 !important;
+}
+
+.customer.register .form__message h2 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  margin: 0 0 0.5rem 0 !important;
+}
+
+.customer.register .form__message ul {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.customer.register .form__message li {
+  font-size: 0.875rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.customer.register .form__message a {
+  color: #dc2626 !important;
+  text-decoration: underline !important;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .customer.register {
+    padding: 1rem !important;
+  }
+
+  .customer.register form {
+    padding: 2rem !important;
+  }
+}
