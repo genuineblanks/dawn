@@ -11,11 +11,43 @@
   "sections": {
     "futuristic-slider": {
       "type": "futuristic-slider",
+      "blocks": {
+        "slide_D777Wx": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/Accessories_Page_-_website_V2.jpg",
+            "video_url": "",
+            "heading": "Slide heading",
+            "subheading": "",
+            "button_text": "",
+            "button_url": ""
+          }
+        },
+        "slide_RwE7PJ": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/ChatGPT_Image_17_05_2025_20_02_42.png",
+            "video_url": "",
+            "heading": "Slide heading",
+            "subheading": "",
+            "button_text": "",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_D777Wx",
+        "slide_RwE7PJ"
+      ],
       "settings": {
         "autoplay": false,
         "autoplay_speed": 5
       }
     }
   },
-  "order": ["futuristic-slider"]
+  "order": [
+    "futuristic-slider"
+  ]
 }
