@@ -1,0 +1,420 @@
+/* Futuristic Slider Styles */
+.futuristic-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: rgb(var(--color-background));
+}
+
+.futuristic-slider__container {
+  width: 100%;
+  height: 80vh;
+  position: relative;
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slider__container {
+    height: 60vh;
+  }
+}
+
+.futuristic-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.futuristic-slide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgb(var(--color-background));
+}
+
+/* Media Styles */
+.futuristic-slide__media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.futuristic-slide__image-wrapper,
+.futuristic-slide__video-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.futuristic-slide__image,
+.futuristic-slide__video,
+.futuristic-slide__iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border: none;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.futuristic-slide:hover .futuristic-slide__image,
+.futuristic-slide:hover .futuristic-slide__video {
+  transform: scale(1.05);
+}
+
+/* Overlay */
+.futuristic-slide__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.futuristic-slide:hover .futuristic-slide__overlay {
+  opacity: 0.8;
+}
+
+/* Content Styles */
+.futuristic-slide__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.futuristic-slide__content-inner {
+  max-width: 80rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slide__content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .futuristic-slide__content-inner {
+    gap: 1.5rem;
+  }
+}
+
+/* Typography */
+.futuristic-slide__heading {
+  margin: 0;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-style: var(--font-heading-style);
+  letter-spacing: calc(var(--font-heading-scale) * 0.02rem);
+  line-height: calc(1 + 0.3 / var(--font-heading-scale));
+  font-size: calc(var(--font-heading-scale) * 4rem);
+  text-transform: uppercase;
+  position: relative;
+}
+
+.futuristic-slide__heading-text {
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--color-foreground)) 0%,
+    rgba(var(--color-foreground), 0.8) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: futuristicGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes futuristicGlow {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(var(--color-foreground), 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(var(--color-foreground), 0.6));
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slide__heading {
+    font-size: calc(var(--font-heading-scale) * 2.5rem);
+  }
+}
+
+.futuristic-slide__subheading {
+  color: rgba(var(--color-foreground), 0.9);
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-style: var(--font-body-style);
+  font-size: 1.8rem;
+  line-height: 1.6;
+  max-width: 60rem;
+  letter-spacing: 0.02em;
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slide__subheading {
+    font-size: 1.4rem;
+  }
+}
+
+/* Button Styles */
+.futuristic-slide__button-wrapper {
+  margin-top: 1rem;
+}
+
+.futuristic-slide__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 3rem;
+  background: transparent;
+  border: 0.2rem solid rgb(var(--color-foreground));
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.futuristic-slide__button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--color-foreground), 0.1) 50%,
+    transparent 100%
+  );
+  transition: left 0.6s ease;
+}
+
+.futuristic-slide__button:hover::before {
+  left: 100%;
+}
+
+.futuristic-slide__button:hover {
+  background: rgba(var(--color-foreground), 0.1);
+  border-color: rgb(var(--color-foreground));
+  transform: translateY(-0.2rem);
+  box-shadow: 0 1rem 3rem rgba(var(--color-foreground), 0.2);
+}
+
+.futuristic-slide__button-text {
+  position: relative;
+  z-index: 2;
+}
+
+.futuristic-slide__button-icon {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.futuristic-slide__button:hover .futuristic-slide__button-icon {
+  transform: translateX(0.5rem);
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slide__button {
+    padding: 1.2rem 2.4rem;
+    font-size: 1.2rem;
+    gap: 0.8rem;
+  }
+}
+
+/* Navigation Styles */
+.futuristic-slider__navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none;
+  padding: 0 3rem;
+}
+
+.futuristic-slider__nav {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.3);
+  background: rgba(var(--color-background), 0.1);
+  backdrop-filter: blur(10px);
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  border-radius: 50%;
+}
+
+.futuristic-slider__nav:hover {
+  background: rgba(var(--color-foreground), 0.1);
+  border-color: rgb(var(--color-foreground));
+  transform: scale(1.1);
+}
+
+.futuristic-slider__nav--prev {
+  left: 0;
+}
+
+.futuristic-slider__nav--next {
+  right: 0;
+}
+
+.futuristic-slider__nav.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slider__navigation {
+    padding: 0 1.5rem;
+  }
+  
+  .futuristic-slider__nav {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+/* Pagination Styles */
+.futuristic-slider__pagination {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 1rem;
+}
+
+.futuristic-slider__pagination .swiper-pagination-bullet {
+  width: 1.2rem;
+  height: 1.2rem;
+  background: transparent;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.4);
+  border-radius: 50%;
+  opacity: 1;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.futuristic-pagination-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgb(var(--color-foreground));
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.futuristic-slider__pagination .swiper-pagination-bullet:hover .futuristic-pagination-inner {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.futuristic-slider__pagination .swiper-pagination-bullet-active {
+  border-color: rgb(var(--color-foreground));
+}
+
+.futuristic-slider__pagination .swiper-pagination-bullet-active .futuristic-pagination-inner {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+@media screen and (max-width: 749px) {
+  .futuristic-slider__pagination {
+    bottom: 2rem;
+    gap: 0.8rem;
+  }
+  
+  .futuristic-slider__pagination .swiper-pagination-bullet {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .futuristic-slide__image,
+  .futuristic-slide__video,
+  .futuristic-slide__overlay,
+  .futuristic-slide__button,
+  .futuristic-slider__nav,
+  .futuristic-pagination-inner {
+    transition: none;
+  }
+  
+  .futuristic-slide__heading-text {
+    animation: none;
+  }
+  
+  .futuristic-slide:hover .futuristic-slide__image,
+  .futuristic-slide:hover .futuristic-slide__video {
+    transform: none;
+  }
+}
+
+/* Focus States */
+.futuristic-slide__button:focus-visible,
+.futuristic-slider__nav:focus-visible,
+.futuristic-slider__pagination .swiper-pagination-bullet:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.2rem;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .futuristic-slide__overlay {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .futuristic-slide__button {
+    border-width: 0.3rem;
+  }
+  
+  .futuristic-slider__nav {
+    border-width: 0.2rem;
+  }
+}
