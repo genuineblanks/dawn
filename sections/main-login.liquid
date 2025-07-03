@@ -13,27 +13,31 @@
     }
   }
 
-  /* FIX: Hide recover form by default, show login form by default */
+/* FIX: Hide recover form by default, show login form by default */
   #recover,
-  #recover + div {
+  #recover + .account-content {
     display: none;
   }
 
   #login,
-  #login + div {
+  #login + p,
+  #login + p + .account-content,
+  .guest-login-section {
     display: block;
   }
 
   /* Show recover form when #recover is targeted */
   #recover:target,
-  #recover:target + div {
+  #recover:target + .account-content {
     display: block;
   }
 
-  /* Hide login form when #recover is targeted */
+  /* Hide login form when #recover is targeted - target specific elements after #login */
   #recover:target ~ #login,
-  #recover:target ~ #login + div {
-    display: none;
+  #recover:target ~ #login + p,
+  #recover:target ~ #login + p + .account-content,
+  #recover:target ~ .guest-login-section {
+    display: none !important;
   }
 {%- endstyle -%}
 
