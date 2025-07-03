@@ -25,6 +25,25 @@
   {%- if section.settings.pdfemail != blank -%}
 <span>Send email to <a href="mailto:{{ section.settings.pdfemail }}">{{ section.settings.pdfemail }}</a> for further questions</span>   {% endif %}
 </div>
+
+<style>
+  /* Mobile-only fix for PDF list wrapping */
+  @media (max-width: 767px) {
+    #pdfList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .pdfList_item {
+      flex: 0 1 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('downloadAll').addEventListener('click', function() {
