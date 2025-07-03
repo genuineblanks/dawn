@@ -178,7 +178,7 @@ function initializeScrollSystem() {
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
   // Enable scroll system only if we have multiple sections
-  scrollSystem.isEnabled = scrollSystem.arrSections.length > 1;
+  scrollSystem.isEnabled = scrollSystem.arrSections.length > 4;
   scrollSystem.initialized = true;
   
   if (scrollSystem.isEnabled) {
