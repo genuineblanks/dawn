@@ -1,4 +1,386 @@
-/* Product Showcase Gallery Styles */
+/* Portfolio Showcase Styles */
+.portfolio-showcase {
+  position: relative;
+  width: 100%;
+  padding: 6rem 0;
+  background: rgb(var(--color-background));
+}
+
+.portfolio-showcase__container {
+  max-width: 140rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Section Header */
+.portfolio-showcase__header {
+  text-align: center;
+  margin-bottom: 6rem;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.portfolio-showcase__title {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(3.2rem, 5vw, 5.6rem);
+  line-height: 1.1;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 2rem 0;
+  letter-spacing: -0.02em;
+}
+
+.portfolio-showcase__subtitle {
+  font-family: var(--font-body-family);
+  font-size: 1.8rem;
+  line-height: 1.6;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__header {
+    margin-bottom: 4rem;
+  }
+  
+  .portfolio-showcase__subtitle {
+    font-size: 1.6rem;
+  }
+}
+
+/* Main Content Layout */
+.portfolio-showcase__content {
+  display: grid;
+  grid-template-columns: 1fr 40rem;
+  gap: 6rem;
+  align-items: start;
+}
+
+@media screen and (max-width: 1200px) {
+  .portfolio-showcase__content {
+    grid-template-columns: 1fr 35rem;
+    gap: 4rem;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .portfolio-showcase__content {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+}
+
+/* Gallery Section */
+.portfolio-showcase__gallery {
+  position: relative;
+}
+
+.portfolio-showcase__main-display {
+  position: relative;
+  margin-bottom: 2rem;
+  border-radius: 1.6rem;
+  overflow: hidden;
+  background: rgba(var(--color-foreground), 0.02);
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.08);
+  aspect-ratio: 4/3;
+}
+
+.portfolio-showcase__main-swiper {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.6rem;
+}
+
+.portfolio-showcase__slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-showcase__image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-showcase__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-showcase__slide:hover .portfolio-showcase__image {
+  transform: scale(1.02);
+}
+
+/* Navigation */
+.portfolio-showcase__navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none;
+  padding: 0 2rem;
+}
+
+.portfolio-showcase__nav {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  background: rgba(var(--color-background), 0.95);
+  backdrop-filter: blur(20px);
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  border-radius: 50%;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  box-shadow: 0 0.8rem 3.2rem rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-showcase__nav:hover {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  transform: scale(1.1);
+}
+
+.portfolio-showcase__nav--prev {
+  left: 0;
+}
+
+.portfolio-showcase__nav--next {
+  right: 0;
+}
+
+/* Pagination */
+.portfolio-showcase__pagination {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 1rem;
+}
+
+.portfolio-showcase__pagination .swiper-pagination-bullet {
+  width: 1rem;
+  height: 1rem;
+  background: rgba(var(--color-foreground), 0.3);
+  border-radius: 50%;
+  opacity: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-showcase__pagination .swiper-pagination-bullet-active {
+  background: rgb(var(--color-foreground));
+  transform: scale(1.2);
+}
+
+/* Thumbnails */
+.portfolio-showcase__thumbnails {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.2rem;
+  background: rgba(var(--color-foreground), 0.02);
+  padding: 1rem;
+}
+
+.portfolio-showcase__thumb-swiper {
+  overflow: visible;
+}
+
+.portfolio-showcase__thumb-slide {
+  width: auto !important;
+  margin-right: 1rem;
+}
+
+.portfolio-showcase__thumb-image {
+  width: 8rem;
+  height: 6rem;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.8rem;
+  border: 0.2rem solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.portfolio-showcase__thumb-slide.swiper-slide-thumb-active .portfolio-showcase__thumb-image {
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0.4rem 1.6rem rgba(var(--color-foreground), 0.2);
+}
+
+.portfolio-showcase__thumb-image:hover {
+  border-color: rgba(var(--color-foreground), 0.5);
+  transform: translateY(-0.2rem);
+}
+
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__thumb-image {
+    width: 6rem;
+    height: 4.5rem;
+  }
+}
+
+/* Product Information Panel */
+.portfolio-showcase__info {
+  position: sticky;
+  top: 2rem;
+  background: rgba(var(--color-foreground), 0.02);
+  border-radius: 1.6rem;
+  padding: 3rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+
+@media screen and (max-width: 990px) {
+  .portfolio-showcase__info {
+    position: relative;
+    top: auto;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__info {
+    padding: 2rem;
+  }
+}
+
+.portfolio-showcase__product-title {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: 2.8rem;
+  line-height: 1.2;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 2rem 0;
+  letter-spacing: -0.01em;
+}
+
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__product-title {
+    font-size: 2.4rem;
+  }
+}
+
+.portfolio-showcase__description {
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: rgba(var(--color-foreground), 0.8);
+  margin-bottom: 2.5rem;
+}
+
+.portfolio-showcase__description p {
+  margin: 0 0 1rem 0;
+}
+
+.portfolio-showcase__description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Details Section */
+.portfolio-showcase__details {
+  background: rgba(var(--color-background), 0.8);
+  border-radius: 1.2rem;
+  padding: 2rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.05);
+  margin-bottom: 3rem;
+}
+
+.portfolio-showcase__details-title {
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.02em;
+}
+
+.portfolio-showcase__details-content {
+  font-family: var(--font-body-family);
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: rgba(var(--color-foreground), 0.8);
+}
+
+.portfolio-showcase__details-content p {
+  margin: 0 0 0.8rem 0;
+}
+
+.portfolio-showcase__details-content p:last-child {
+  margin-bottom: 0;
+}
+
+.portfolio-showcase__details-content strong {
+  color: rgb(var(--color-foreground));
+  font-weight: 600;
+}
+
+/* Product Selector */
+.portfolio-showcase__selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  padding-top: 2rem;
+}
+
+.portfolio-showcase__selector-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 1.6rem;
+  background: transparent;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.portfolio-showcase__selector-item:hover {
+  background: rgba(var(--color-foreground), 0.05);
+  border-color: rgba(var(--color-foreground), 0.2);
+}
+
+.portfolio-showcase__selector-item.active {
+  background: rgba(var(--color-foreground), 0.1);
+  border-color: rgb(var(--color-foreground));
+}
+
+.portfolio-showcase__selector-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: rgba(var(--color-foreground), 0.1);
+  border-radius: 50%;
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: rgb(var(--color-foreground));
+  flex-shrink: 0;
+}
+
+.portfolio-showcase/* Product Showcase Gallery Styles */
 .product-showcase {
   position: relative;
   width: 100%;
