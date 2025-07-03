@@ -15,7 +15,18 @@
         "item_jdMBxi": {
           "type": "item",
           "settings": {
-            "collection_type": "team",
+            "collection_type": "products",
+            "product_name": "Premium Hoodie",
+            "product_description": "<p>High-quality item crafted with attention to detail and premium materials.</p>",
+            "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - 3XL</p>",
+            "image_1": "shopify://shop_images/ChatGPT_Image_17_05_2025_18_55_19.png",
+            "image_2": "shopify://shop_images/ONYX_04TSHIRT_PNG.png"
+          }
+        },
+        "item_rGjhm8": {
+          "type": "item",
+          "settings": {
+            "collection_type": "factory",
             "product_name": "Premium Hoodie",
             "product_description": "<p>High-quality item crafted with attention to detail and premium materials.</p>",
             "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - 3XL</p>",
@@ -25,7 +36,8 @@
         }
       },
       "block_order": [
-        "item_jdMBxi"
+        "item_jdMBxi",
+        "item_rGjhm8"
       ],
       "settings": {
         "heading": "Our Manufacturing Portfolio",
