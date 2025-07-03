@@ -28,17 +28,13 @@
 
     {% render 'meta-tags' %}
 
-    <!-- Load jQuery FIRST -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    
-    <!-- Then load Shopify scripts -->
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" async></script>
     {{ content_for_header }}
 
     {%- liquid
@@ -64,40 +60,26 @@
         {% if scheme.settings.background_gradient != empty %}
           --gradient-background: {{ scheme.settings.background_gradient }};
         {% else %}
-          --gradient-background: {{ scheme.settings.background }};
+          --gradient-background: --color-background;
         {% endif %}
-
-        {% liquid
-          assign background_color = scheme.settings.background
-          assign background_color_brightness = background_color | color_brightness
-          if background_color_brightness <= 26
-            assign background_color_contrast = background_color | color_lighten: 50
-          elsif background_color_brightness <= 65
-            assign background_color_contrast = background_color | color_lighten: 5
-          else
-            assign background_color_contrast = background_color | color_darken: 25
-          endif
-        %}
-
-        --color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
-        --color-background-contrast: {{ background_color_contrast.red }},{{ background_color_contrast.green }},{{ background_color_contrast.blue }};
-        --color-shadow: {{ scheme.settings.shadow.red }},{{ scheme.settings.shadow.green }},{{ scheme.settings.shadow.blue }};
-        --color-button: {{ scheme.settings.button.red }},{{ scheme.settings.button.green }},{{ scheme.settings.button.blue }};
-        --color-button-text: {{ scheme.settings.button_label.red }},{{ scheme.settings.button_label.green }},{{ scheme.settings.button_label.blue }};
-        --color-secondary-button: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
-        --color-secondary-button-text: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
-        --color-link: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
-        --color-badge-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
-        --color-badge-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
-        --color-badge-border: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
-        --payment-terms-background-color: rgb({{ scheme.settings.background.rgb }});
-      }
+          --color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+          --color-button: {{ scheme.settings.button.red }},{{ scheme.settings.button.green }},{{ scheme.settings.button.blue }};
+          --color-button-text: {{ scheme.settings.button_label.red }},{{ scheme.settings.button_label.green }},{{ scheme.settings.button_label.blue }};
+          --color-secondary-button: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+          --color-secondary-button-text: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+          --color-link: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+          --color-badge-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+          --color-badge-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+          --color-badge-border: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+          --payment-terms-background-color: {{ scheme.settings.background | color_modify: 'alpha', 0.1 }};
+        }
       {% endfor %}
 
-      {{ scheme_classes | prepend: 'body' }} {
-        color: rgba(var(--color-foreground), 0.75);
-        background-color: rgb(var(--color-background));
-      }
+      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+      {% assign base_font_size = settings.body_scale | divided_by: 100.0 %}
+      {% assign header_font_size = settings.heading_scale | times: 1.0 | divided_by: base_font_size %}
 
       :root {
         --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
@@ -109,8 +91,8 @@
         --font-heading-style: {{ settings.type_header_font.style }};
         --font-heading-weight: {{ settings.type_header_font.weight }};
 
-        --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
-        --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
+        --font-body-scale: {{ base_font_size }};
+        --font-heading-scale: {{ header_font_size }};
 
         --media-padding: {{ settings.media_padding }}px;
         --media-border-opacity: {{ settings.media_border_opacity | divided_by: 100.0 }};
@@ -256,9 +238,6 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'custom.css' | asset_url | stylesheet_tag }}
-    {{ 'responsive.css' | asset_url | stylesheet_tag }}
-    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
@@ -290,6 +269,7 @@
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
+    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
@@ -328,24 +308,15 @@
 
       window.cartStrings = {
         error: `{{ 'sections.cart.cart_error' | t }}`,
-        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
-      };
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+      }
 
       window.variantStrings = {
         addToCart: `{{ 'products.product.add_to_cart' | t }}`,
         soldOut: `{{ 'products.product.sold_out' | t }}`,
         unavailable: `{{ 'products.product.unavailable' | t }}`,
         unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
-      };
-
-      window.quickOrderListStrings = {
-        itemsAdded: `{{ 'sections.quick_order_list.items_added.other' | t: quantity: '[quantity]' }}`,
-        itemAdded: `{{ 'sections.quick_order_list.items_added.one' | t: quantity: '[quantity]' }}`,
-        itemsRemoved: `{{ 'sections.quick_order_list.items_removed.other' | t: quantity: '[quantity]' }}`,
-        itemRemoved: `{{ 'sections.quick_order_list.items_removed.one' | t: quantity: '[quantity]' }}`,
-        viewCart: `{{- 'sections.quick_order_list.view_cart' | t -}}`,
-        each: `{{- 'sections.quick_order_list.each' | t: money: '[money]' }}`,
-      };
+      }
 
       window.accessibilityStrings = {
         imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
@@ -354,51 +325,107 @@
         playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
         recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
         recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
-        countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`,
-      };
+        countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`
+      }
     </script>
 
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    {% if template contains 'index' %}
-      <script src="{{ 'custom.js' | asset_url }}"></script>
-    {% elsif template contains 'product' %}
-      <script src="{{ 'custom-product-page.js' | asset_url }}" async></script>
-    {% endif %}
 
-    <!-- ADD THE CLICKABLE CARDS SCRIPT HERE -->
+    <!-- CLICKABLE CARDS SCRIPT -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Make entire product cards clickable
-      const productCards = document.querySelectorAll('.product-card-wrapper, .card-wrapper');
+      console.log('🎯 Making product cards clickable...');
       
-      productCards.forEach(card => {
-        const link = card.querySelector('.card__heading a, .full-unstyled-link');
+      function makeCardsClickable() {
+        const productCards = document.querySelectorAll(
+          '.product-card-wrapper, .card-wrapper, .product-recommendations .card-wrapper, .you-may-also-like .card-wrapper, .card, .collection .card-wrapper'
+        );
         
-        if (link) {
-          card.style.cursor = 'pointer';
+        productCards.forEach(card => {
+          // Skip if already processed
+          if (card.hasAttribute('data-clickable-processed')) return;
           
-          card.addEventListener('click', function(e) {
-            // Prevent double-click if clicking on the actual link
-            if (e.target.tagName !== 'A') {
-              window.location.href = link.href;
-            }
-          });
+          // Find the main product link
+          const productLink = card.querySelector(
+            '.card__heading a, .card__information a, .card__media a, a[href*="/products/"]'
+          );
+          
+          if (productLink && productLink.href) {
+            const productUrl = productLink.href;
+            
+            // Mark as processed
+            card.setAttribute('data-clickable-processed', 'true');
+            
+            // Make the whole card clickable
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function(e) {
+              // Don't interfere with existing links, buttons, or form elements
+              if (e.target.closest('a, button, input, textarea, select, [contenteditable]')) {
+                return;
+              }
+              
+              // Navigate to product
+              window.location.href = productUrl;
+            });
+            
+            console.log('✅ Made card clickable:', productUrl);
+          }
+        });
+      }
+      
+      // Initial run
+      makeCardsClickable();
+      
+      // Re-run when new content loads (like AJAX pagination)
+      const observer = new MutationObserver(function(mutations) {
+        let shouldReprocess = false;
+        mutations.forEach(mutation => {
+          if (mutation.addedNodes.length > 0) {
+            mutation.addedNodes.forEach(node => {
+              if (node.nodeType === 1 && (
+                node.classList.contains('card-wrapper') ||
+                node.querySelector('.card-wrapper') ||
+                node.classList.contains('product-card-wrapper') ||
+                node.querySelector('.product-card-wrapper')
+              )) {
+                shouldReprocess = true;
+              }
+            });
+          }
+        });
+        
+        if (shouldReprocess) {
+          setTimeout(makeCardsClickable, 100);
         }
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
       });
     });
     </script>
     <!-- END CLICKABLE CARDS SCRIPT -->
 
-    <!-- PREMIUM SCROLL EFFECTS SCRIPT -->
+    <!-- PREMIUM SCROLL EFFECTS SCRIPT - HOMEPAGE ONLY -->
     <script>
     // ===============================================
     // PREMIUM SCROLL EFFECTS JAVASCRIPT
-    // Works with existing scroll-to-section system
+    // 🏠 HOMEPAGE ONLY VERSION
     // ===============================================
     
     document.addEventListener('DOMContentLoaded', function() {
+      
+      // ⚠️ CRITICAL: Check if we're on the homepage before doing ANYTHING
+      const isHomepage = document.body.classList.contains('home-section');
+      if (!isHomepage) {
+        console.log('❌ Not homepage, skipping premium scroll effects');
+        return;
+      }
+      
+      console.log('🏠 Homepage detected - initializing premium scroll effects');
       
       // ===============================================
       // SCROLL PROGRESS BAR
@@ -406,6 +433,16 @@
       function createScrollProgress() {
         const progressBar = document.createElement('div');
         progressBar.className = 'scroll-progress';
+        progressBar.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 0%;
+          height: 3px;
+          background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+          z-index: 9999;
+          transition: width 0.3s ease;
+        `;
         document.body.appendChild(progressBar);
         
         function updateProgress() {
@@ -426,10 +463,28 @@
         
         const indicators = document.createElement('div');
         indicators.className = 'scroll-indicators';
+        indicators.style.cssText = `
+          position: fixed;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 1000;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        `;
         
         sections.forEach((section, index) => {
           const indicator = document.createElement('div');
           indicator.className = 'scroll-indicator';
+          indicator.style.cssText = `
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+          `;
           indicator.setAttribute('data-section', index);
           
           indicator.addEventListener('click', () => {
@@ -451,9 +506,11 @@
             const indicator = indicators.children[index];
             
             if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
-              indicator.classList.add('active');
+              indicator.style.background = '#007bff';
+              indicator.style.transform = 'scale(1.3)';
             } else {
-              indicator.classList.remove('active');
+              indicator.style.background = 'rgba(0,0,0,0.3)';
+              indicator.style.transform = 'scale(1)';
             }
           });
         }
@@ -468,13 +525,53 @@
       function createFloatingElements() {
         const container = document.createElement('div');
         container.className = 'floating-elements';
+        container.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1;
+        `;
         
         for (let i = 0; i < 4; i++) {
           const shape = document.createElement('div');
           shape.className = 'floating-shape';
+          shape.style.cssText = `
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float${i} ${15 + i * 2}s infinite linear;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+          `;
           container.appendChild(shape);
         }
         
+        // Add floating animations
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes float0 {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+          }
+          @keyframes float1 {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(-360deg); }
+          }
+          @keyframes float2 {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(180deg); }
+          }
+          @keyframes float3 {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(-180deg); }
+          }
+        `;
+        document.head.appendChild(style);
         document.body.appendChild(container);
       }
       
@@ -516,79 +613,63 @@
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              entry.target.classList.add('section-entering');
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
             }
           });
         }, {
-          threshold: 0.2,
+          threshold: 0.1,
           rootMargin: '100px'
         });
         
-        sections.forEach(section => observer.observe(section));
+        sections.forEach(section => {
+          section.style.opacity = '0';
+          section.style.transform = 'translateY(30px)';
+          section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          observer.observe(section);
+        });
       }
       
       // ===============================================
-      // CUSTOM CURSOR (Desktop only)
+      // CUSTOM CURSOR
       // ===============================================
       function createCustomCursor() {
-        if (window.innerWidth <= 768) return; // Skip on mobile
-        
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor';
-        
-        const follower = document.createElement('div');
-        follower.className = 'custom-cursor-follower';
-        
+        cursor.style.cssText = `
+          position: fixed;
+          width: 20px;
+          height: 20px;
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9999;
+          transition: transform 0.1s ease;
+          mix-blend-mode: difference;
+        `;
         document.body.appendChild(cursor);
-        document.body.appendChild(follower);
-        
-        let mouseX = 0, mouseY = 0;
-        let followerX = 0, followerY = 0;
         
         document.addEventListener('mousemove', (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          
-          cursor.style.left = mouseX + 'px';
-          cursor.style.top = mouseY + 'px';
+          cursor.style.left = e.clientX - 10 + 'px';
+          cursor.style.top = e.clientY - 10 + 'px';
         });
         
-        // Smooth follower animation
-        function animateFollower() {
-          followerX += (mouseX - followerX) * 0.1;
-          followerY += (mouseY - followerY) * 0.1;
-          
-          follower.style.left = followerX + 'px';
-          follower.style.top = followerY + 'px';
-          
-          requestAnimationFrame(animateFollower);
-        }
-        animateFollower();
+        // Scale cursor on hover
+        document.addEventListener('mouseenter', (e) => {
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+            cursor.style.transform = 'scale(2)';
+          }
+        }, true);
         
-        // Cursor hover effects
-        const hoverElements = document.querySelectorAll('a, button, .button, .card-wrapper, .product-card-wrapper');
-        
-        hoverElements.forEach(element => {
-          element.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-          });
-          
-          element.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-          });
-          
-          element.addEventListener('mousedown', () => {
-            cursor.classList.add('click');
-          });
-          
-          element.addEventListener('mouseup', () => {
-            cursor.classList.remove('click');
-          });
-        });
+        document.addEventListener('mouseleave', (e) => {
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+            cursor.style.transform = 'scale(1)';
+          }
+        }, true);
       }
       
       // ===============================================
-      // PARALLAX EFFECT FOR HERO SECTIONS
+      // PARALLAX FOR HERO SECTIONS
       // ===============================================
       function initParallax() {
         const heroSections = document.querySelectorAll('.hero-section, .banner-section, [data-section-type="hero"]');
@@ -641,6 +722,17 @@
           if (img && !img.complete) {
             const skeleton = document.createElement('div');
             skeleton.className = 'skeleton skeleton-product';
+            skeleton.style.cssText = `
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(90deg, #f0f0f0, #e0e0e0, #f0f0f0);
+              background-size: 200% 100%;
+              animation: shimmer 1.5s infinite;
+            `;
+            img.parentNode.style.position = 'relative';
             img.parentNode.insertBefore(skeleton, img);
             
             img.addEventListener('load', () => {
@@ -648,6 +740,19 @@
             });
           }
         });
+        
+        // Add shimmer animation
+        if (!document.querySelector('#shimmer-style')) {
+          const style = document.createElement('style');
+          style.id = 'shimmer-style';
+          style.textContent = `
+            @keyframes shimmer {
+              0% { background-position: -200% 0; }
+              100% { background-position: 200% 0; }
+            }
+          `;
+          document.head.appendChild(style);
+        }
       }
       
       // ===============================================
@@ -702,6 +807,7 @@
     {% render 'wholesale-modal' %}
     <script src="{{ 'wholesale.js'  | asset_url }}" defer></script>
     <script src="{{ 'techpack-app.js' | asset_url }}" defer></script>
+    <script src="{{ 'scroll-fix.js' | asset_url }}" defer></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       
@@ -730,231 +836,67 @@
             
             // Mark as processed
             card.setAttribute('data-clickable-processed', 'true');
+            
+            // Make the whole card clickable
             card.style.cursor = 'pointer';
-            
-            // Add click handler
             card.addEventListener('click', function(e) {
-              // Don't trigger if clicking on interactive elements
-              if (e.target.closest('button, .btn, input, select, .swatch, .quantity, .product-form__buttons, [role="button"], .shopify-payment-button')) {
+              // Don't interfere with existing links, buttons, or form elements
+              if (e.target.closest('a, button, input, textarea, select, [contenteditable]')) {
                 return;
               }
               
-              // Don't trigger if clicking on another link
-              if (e.target.closest('a') && e.target.closest('a') !== productLink) {
-                return;
-              }
-              
-              // Navigate to product page
-              if (e.ctrlKey || e.metaKey) {
-                // Open in new tab if Ctrl/Cmd+click
-                window.open(productUrl, '_blank');
-              } else {
-                window.location.href = productUrl;
-              }
-            });
-            
-            // Add keyboard support
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'link');
-            card.setAttribute('aria-label', 'View product: ' + (productLink.textContent || 'Product'));
-            
-            card.addEventListener('keydown', function(e) {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = productUrl;
-              }
+              // Navigate to product
+              window.location.href = productUrl;
             });
             
             console.log('✅ Made card clickable:', productUrl);
-          } else {
-            console.log('❌ No product link found in card:', card);
           }
         });
-        
-        console.log(`🎯 Processed ${productCards.length} product cards`);
       }
       
-      // ===============================================
-      // ENHANCED DAWN GALLERY FUNCTIONALITY
-      // ===============================================
-      
-      function enhanceDawnGallery() {
-        console.log('🖼️ Enhancing Dawn gallery...');
-        
-        // Find the main product image
-        const mainImage = document.querySelector('.product__media img, .product-media img, .media img, img[src*="product"]');
-        
-        // Find thumbnail containers
-        const thumbnails = document.querySelectorAll('.product__media-toggle, .thumbnail-list button, .slider-counter__link, [data-media-id], .thumbnail.global-media-settings');
-        
-        console.log(`🎯 Main image found:`, !!mainImage);
-        console.log(`🎯 Thumbnails found:`, thumbnails.length);
-        
-        if (mainImage && thumbnails.length > 0) {
-          console.log('✅ Setting up enhanced gallery functionality...');
-          
-          // Add click handlers to thumbnails
-          thumbnails.forEach((thumbnail, index) => {
-            // Skip if already processed
-            if (thumbnail.hasAttribute('data-gallery-processed')) return;
-            thumbnail.setAttribute('data-gallery-processed', 'true');
-            
-            thumbnail.addEventListener('click', function(e) {
-              e.preventDefault();
-              
-              // Find the image source
-              const img = this.querySelector('img');
-              const newSrc = img?.src || this.href || this.dataset.src;
-              
-              if (newSrc && mainImage) {
-                console.log(`🔄 Switching to image: ${newSrc}`);
-                
-                // Smooth transition
-                mainImage.style.opacity = '0.7';
-                mainImage.style.transform = 'scale(0.98)';
-                
-                setTimeout(() => {
-                  mainImage.src = newSrc;
-                  mainImage.style.opacity = '1';
-                  mainImage.style.transform = 'scale(1)';
-                }, 200);
-                
-                // Update active states
-                thumbnails.forEach(t => {
-                  t.classList.remove('active');
-                  t.removeAttribute('aria-current');
-                });
-                this.classList.add('active');
-                this.setAttribute('aria-current', 'true');
-              }
-            });
-            
-            // Add keyboard support
-            if (!thumbnail.hasAttribute('tabindex')) {
-              thumbnail.setAttribute('tabindex', '0');
-            }
-            thumbnail.addEventListener('keydown', function(e) {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-              }
-            });
-          });
-          
-          // Add zoom functionality to main image
-          if (mainImage && !mainImage.hasAttribute('data-zoom-processed')) {
-            mainImage.setAttribute('data-zoom-processed', 'true');
-            let isZoomed = false;
-            
-            mainImage.addEventListener('click', function() {
-              isZoomed = !isZoomed;
-              const container = this.closest('.product__media, .product-media, .media');
-              
-              if (container) {
-                container.style.overflow = isZoomed ? 'hidden' : 'visible';
-                this.style.transform = isZoomed ? 'scale(2)' : 'scale(1)';
-                this.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
-                this.style.transition = 'transform 0.3s ease';
-              }
-            });
-            
-            mainImage.addEventListener('mousemove', function(e) {
-              if (isZoomed) {
-                const rect = this.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                this.style.transformOrigin = `${x}% ${y}%`;
-              }
-            });
-          }
-          
-          console.log('✅ Enhanced gallery functionality activated!');
-        } else {
-          console.log('❌ Could not find required gallery elements');
-        }
-      }
-      
-      // ===============================================
-      // INITIALIZATION AND MONITORING
-      // ===============================================
-      
-      // Run functions initially
+      // Initial run
       makeCardsClickable();
-      setTimeout(enhanceDawnGallery, 500);
       
-      // Monitor for dynamically loaded content
+      // Re-run when new content loads (like AJAX pagination)
       const observer = new MutationObserver(function(mutations) {
         let shouldReprocess = false;
-        
-        mutations.forEach(function(mutation) {
+        mutations.forEach(mutation => {
           if (mutation.addedNodes.length > 0) {
-            // Check if new product cards or images were added
-            const hasNewContent = Array.from(mutation.addedNodes).some(node => 
-              node.nodeType === Node.ELEMENT_NODE && 
-              (node.matches('.product-card-wrapper, .card-wrapper, .card, img') || 
-               node.querySelector('.product-card-wrapper, .card-wrapper, .card, img'))
-            );
-            
-            if (hasNewContent) {
-              shouldReprocess = true;
-            }
+            mutation.addedNodes.forEach(node => {
+              if (node.nodeType === 1 && (
+                node.classList.contains('card-wrapper') ||
+                node.querySelector('.card-wrapper') ||
+                node.classList.contains('product-card-wrapper') ||
+                node.querySelector('.product-card-wrapper')
+              )) {
+                shouldReprocess = true;
+              }
+            });
           }
         });
         
         if (shouldReprocess) {
-          console.log('🔄 New content detected, re-processing...');
-          setTimeout(() => {
-            makeCardsClickable();
-            enhanceDawnGallery();
-          }, 100);
+          setTimeout(makeCardsClickable, 100);
         }
       });
       
-      // Start observing
       observer.observe(document.body, {
         childList: true,
         subtree: true
       });
-      
-      // Handle Shopify section loading
-      document.addEventListener('shopify:section:load', function() {
-        console.log('🔄 Shopify section loaded, re-processing...');
-        setTimeout(() => {
-          makeCardsClickable();
-          enhanceDawnGallery();
-        }, 200);
-      });
-      
-      // Handle AJAX loading for recommendations
-      document.addEventListener('DOMContentLoaded', function() {
-        // Look for recommendation sections that might load via AJAX
-        const recommendationSections = document.querySelectorAll('.product-recommendations, .you-may-also-like, [data-recommendations]');
-        
-        recommendationSections.forEach(section => {
-          // Set up observer for this specific section
-          const sectionObserver = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              if (mutation.addedNodes.length > 0) {
-                console.log('🔄 Recommendation section updated, re-processing...');
-                setTimeout(makeCardsClickable, 100);
-              }
-            });
-          });
-          
-          sectionObserver.observe(section, {
-            childList: true,
-            subtree: true
-          });
-        });
-      });
-      
-      console.log('🚀 Product card enhancement complete!');
     });
     </script>
 
     <script>
-    // Fix scroll animations after navigation/refresh
+    // Fix scroll animations after navigation/refresh - HOMEPAGE ONLY
     function reinitializeScrollAnimations() {
+      // ⚠️ CRITICAL: Only run on homepage
+      const isHomepage = document.body.classList.contains('home-section');
+      if (!isHomepage) {
+        console.log('❌ Not homepage, skipping scroll animation reinitialization');
+        return;
+      }
+      
       // Re-run the scroll animation initialization
       if (typeof initializeScrollAnimationTrigger === 'function') {
         initializeScrollAnimationTrigger();
@@ -992,143 +934,6 @@
       }
     });
     </script>
-
-    <script>
-    // Enhanced Scroll Restoration and Navigation Handler
-    (function() {
-      console.log('🔧 Scroll restoration script loading...');
-      
-      // Detect if we're on live site (not preview)
-      const isLiveSite = !window.location.hostname.includes('myshopify.com') || window.location.hostname.includes('.myshopify.com');
-      
-      // Always disable browser scroll restoration
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-        console.log('🚫 Browser scroll restoration disabled');
-      }
-      
-      let scrollPositions = {};
-      let isNavigating = false;
-      
-      function saveScrollPosition() {
-        const key = window.location.pathname;
-        scrollPositions[key] = window.pageYOffset;
-        console.log('💾 Saved scroll position:', scrollPositions[key], 'for:', key);
-        
-        try {
-          sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-        } catch(e) {
-          console.log('❌ Could not save scroll position to storage');
-        }
-      }
-      
-      function restoreScrollPosition() {
-        const key = window.location.pathname;
-        
-        try {
-          const saved = sessionStorage.getItem('shopifyScrollPositions');
-          if (saved) {
-            scrollPositions = JSON.parse(saved);
-            if (scrollPositions[key] && scrollPositions[key] > 0) {
-              console.log('📍 Restoring scroll position:', scrollPositions[key], 'for:', key);
-              
-              setTimeout(() => {
-                window.scrollTo(0, scrollPositions[key]);
-                delete scrollPositions[key];
-                sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-              }, 300);
-            }
-          }
-        } catch(e) {
-          console.log('❌ Could not restore scroll position');
-        }
-      }
-      
-      // Save position when leaving page
-      window.addEventListener('beforeunload', function() {
-        if (!isNavigating) {
-          saveScrollPosition();
-        }
-      });
-      
-      // Handle page navigation
-      window.addEventListener('pageshow', function(event) {
-        console.log('📄 Page show event - persisted:', event.persisted);
-        
-        if (event.persisted) {
-          // This is back button navigation
-          isNavigating = false;
-          restoreScrollPosition();
-          
-          // Re-initialize scroll system
-          setTimeout(function() {
-            if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
-              window.resetScrollSystem();
-              window.initializeScrollSystem();
-            }
-          }, 500);
-        }
-      });
-      
-      // Handle initial page load
-      function handleInitialLoad() {
-        console.log('🏠 Initial page load handling');
-        restoreScrollPosition();
-      }
-      
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', handleInitialLoad);
-      } else {
-        handleInitialLoad();
-      }
-      
-      // Mark navigation when clicking internal links
-      document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        if (link && link.href && link.href.includes(window.location.hostname)) {
-          isNavigating = true;
-          console.log('🔗 Internal navigation detected');
-        }
-      });
-      
-    })();
-    </script>
-
-    <script>
-    // Debug Panel for Scroll System
-    if (window.location.search.includes('debug=scroll')) {
-      const debugPanel = document.createElement('div');
-      debugPanel.style.cssText = `
-        position: fixed; 
-        top: 10px; 
-        right: 10px; 
-        background: rgba(0,0,0,0.8); 
-        color: white; 
-        padding: 10px; 
-        font-family: monospace; 
-        z-index: 9999; 
-        max-width: 300px; 
-        font-size: 12px;
-        border-radius: 4px;
-      `;
-      debugPanel.innerHTML = '<div id="debug-content">Debug info will appear here...</div>';
-      document.body.appendChild(debugPanel);
-      
-      // Override console.log to show in debug panel
-      const originalLog = console.log;
-      console.log = function(...args) {
-        originalLog.apply(console, args);
-        const debugContent = document.getElementById('debug-content');
-        if (debugContent) {
-          debugContent.innerHTML += '<br>' + args.join(' ');
-          debugContent.scrollTop = debugContent.scrollHeight;
-        }
-      };
-    }
-    </script>
-
-     <!-- Load custom.js after everything else -->
-    <script src="{{ 'custom.js' | asset_url }}"></script>
     
   </body>
 </html>
