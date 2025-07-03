@@ -1,3 +1,25 @@
+{%- assign has_content = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.type != 'heading' -%}
+    {%- assign has_content = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {% if has_content %}{{ section.settings.padding_top | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
+    padding-bottom: {% if has_content %}{{ section.settings.padding_bottom | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {% if has_content %}{{ section.settings.padding_top }}{% else %}10{% endif %}px;
+      padding-bottom: {% if has_content %}{{ section.settings.padding_bottom }}{% else %}10{% endif %}px;
+    }
+  }
+{%- endstyle -%}
+
+
 .rich-text {
   z-index: 1;
 }
