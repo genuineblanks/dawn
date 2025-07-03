@@ -1,5 +1,4 @@
 {{ 'customer.css' | asset_url | stylesheet_tag }}
-{{ 'premium-registration.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -13,25 +12,12 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-  
-  .customer.register {
-    display: block !important;
+  .customer.register{
+    display:block !important;
   }
 {%- endstyle -%}
 
-<!-- Animated Background -->
-<div class="premium-bg-animation">
-  <div class="floating-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-    <div class="shape shape-4"></div>
-    <div class="shape shape-5"></div>
-  </div>
-</div>
-
-<div class="customer register section-{{ section.id }}-padding premium-registration-wrapper">
-  <!-- Error Icon SVG -->
+<div class="customer register section-{{ section.id }}-padding">
   <svg style="display: none">
     <symbol id="icon-error" viewBox="0 0 13 13">
       <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
@@ -39,243 +25,124 @@
       <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
       <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
     </symbol>
-    
-    <!-- Success Icon -->
-    <symbol id="icon-success" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#10b981" stroke="#10b981"/>
-      <path d="m9 12 2 2 4-4" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </symbol>
-    
-    <!-- Loading Icon -->
-    <symbol id="icon-loading" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" stroke="#e5e7eb" stroke-width="2" fill="none"/>
-      <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="#3b82f6">
-        <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="1s" from="0 12 12" to="360 12 12" repeatCount="indefinite"/>
-      </path>
-    </symbol>
   </svg>
-
-  <!-- Main Container -->
-  <div class="premium-container">
-    <!-- Header Section -->
-    <div class="premium-header">
-      <div class="premium-header-content">
-        <div class="premium-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
-        <h1 class="premium-title">{{ 'customer.register.title' | t }}</h1>
-        <p class="premium-subtitle">Tell us about your project requirements</p>
-      </div>
-      
-      <!-- Progress Indicator -->
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-fill" id="form-progress"></div>
-        </div>
-        <div class="progress-text">
-          <span id="progress-percentage">0%</span> Complete
-        </div>
-      </div>
+  <h1>
+    {{ 'customer.register.title' | t }}
+  </h1>
+  {%- form 'create_customer', novalidate: 'novalidate' -%}
+    {%- if form.errors -%}
+      <h2 class="form__message" tabindex="-1" autofocus>
+        <svg aria-hidden="true" focusable="false">
+          <use href="#icon-error" />
+        </svg>
+        {{ 'templates.contact.form.error_heading' | t }}
+      </h2>
+      <ul>
+        {%- for field in form.errors -%}
+          <li>
+            {%- if field == 'form' -%}
+              {{ form.errors.messages[field] }}
+            {%- else -%}
+              <a href="#RegisterForm-{{ field }}">
+                {{ form.errors.translated_fields[field] | capitalize }}
+                {{ form.errors.messages[field] }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <div class="field">
+      <input
+        type="text"
+        name="customer[first_name]"
+        id="RegisterForm-FirstName"
+        {% if form.first_name %}
+          value="{{ form.first_name }}"
+        {% endif %}
+        autocomplete="given-name"
+        placeholder="{{ 'customer.register.first_name' | t }}"
+      >
+      <label for="RegisterForm-FirstName">
+        {{ 'customer.register.first_name' | t }}
+      </label>
     </div>
-
-    <!-- Form Container -->
-    <div class="premium-form-container">
-      {%- form 'create_customer', novalidate: 'novalidate', class: 'premium-form' -%}
-        
-        {%- if form.errors -%}
-          <div class="premium-error-container" id="error-container">
-            <div class="premium-error-icon">
-              <svg aria-hidden="true" focusable="false">
-                <use href="#icon-error" />
-              </svg>
-            </div>
-            <div class="premium-error-content">
-              <h3>{{ 'templates.contact.form.error_heading' | t }}</h3>
-              <ul>
-                {%- for field in form.errors -%}
-                  <li>
-                    {%- if field == 'form' -%}
-                      {{ form.errors.messages[field] }}
-                    {%- else -%}
-                      <a href="#RegisterForm-{{ field }}">
-                        {{ form.errors.translated_fields[field] | capitalize }}
-                        {{ form.errors.messages[field] }}
-                      </a>
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </div>
-          </div>
-        {%- endif -%}
-
-        <!-- Form Grid -->
-        <div class="premium-form-grid">
-          
-          <!-- First Name -->
-          <div class="premium-field-group" data-field="first_name">
-            <div class="premium-field">
-              <input
-                type="text"
-                name="customer[first_name]"
-                id="RegisterForm-FirstName"
-                {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
-                autocomplete="given-name"
-                required
-                class="premium-input"
-              >
-              <label for="RegisterForm-FirstName" class="premium-label">
-                Client Name <span class="required">*</span>
-              </label>
-              <div class="premium-field-decoration"></div>
-              <div class="premium-field-error" id="error-first_name"></div>
-            </div>
-          </div>
-
-          <!-- Last Name -->
-          <div class="premium-field-group" data-field="last_name">
-            <div class="premium-field">
-              <input
-                type="text"
-                name="customer[last_name]"
-                id="RegisterForm-LastName"
-                {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
-                autocomplete="family-name"
-                required
-                class="premium-input"
-              >
-              <label for="RegisterForm-LastName" class="premium-label">
-                Company Name <span class="required">*</span>
-              </label>
-              <div class="premium-field-decoration"></div>
-              <div class="premium-field-error" id="error-last_name"></div>
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div class="premium-field-group" data-field="email">
-            <div class="premium-field">
-              <input
-                type="email"
-                name="customer[email]"
-                id="RegisterForm-email"
-                {% if form.email %}value="{{ form.email }}"{% endif %}
-                spellcheck="false"
-                autocapitalize="off"
-                autocomplete="email"
-                aria-required="true"
-                {% if form.errors contains 'email' %}
-                  aria-invalid="true"
-                  aria-describedby="RegisterForm-email-error"
-                {% endif %}
-                required
-                class="premium-input"
-              >
-              <label for="RegisterForm-email" class="premium-label">
-                Email Address <span class="required">*</span>
-              </label>
-              <div class="premium-field-decoration"></div>
-              <div class="premium-field-error" id="error-email">
-                {%- if form.errors contains 'email' -%}
-                  <svg aria-hidden="true" focusable="false">
-                    <use href="#icon-error" />
-                  </svg>
-                  {{ form.errors.translated_fields.email | capitalize }}
-                  {{ form.errors.messages.email }}
-                {%- endif -%}
-              </div>
-            </div>
-          </div>
-
-          <!-- Phone Number -->
-          <div class="premium-field-group" data-field="phone">
-            <div class="premium-field">
-              <input
-                type="tel"
-                name="customer[phone]"
-                id="RegisterForm-phone"
-                autocomplete="tel"
-                class="premium-input"
-                placeholder="+1 234 567 8901"
-              >
-              <label for="RegisterForm-phone" class="premium-label">
-                VAT/EIN Number <span class="optional">(optional)</span>
-              </label>
-              <div class="premium-field-decoration"></div>
-              <div class="premium-field-error" id="error-phone"></div>
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div class="premium-field-group premium-field-full" data-field="password">
-            <div class="premium-field">
-              <input
-                type="password"
-                name="customer[password]"
-                id="RegisterForm-password"
-                aria-required="true"
-                {% if form.errors contains 'password' %}
-                  aria-invalid="true"
-                  aria-describedby="RegisterForm-password-error"
-                {% endif %}
-                required
-                class="premium-input"
-                minlength="5"
-              >
-              <label for="RegisterForm-password" class="premium-label">
-                Password <span class="required">*</span>
-              </label>
-              <div class="premium-field-decoration"></div>
-              <div class="premium-field-error" id="error-password">
-                {%- if form.errors contains 'password' -%}
-                  <svg aria-hidden="true" focusable="false">
-                    <use href="#icon-error" />
-                  </svg>
-                  {{ form.errors.translated_fields.password | capitalize }}
-                  {{ form.errors.messages.password }}
-                {%- endif -%}
-              </div>
-              <!-- Password Strength Indicator -->
-              <div class="password-strength">
-                <div class="strength-meter">
-                  <div class="strength-fill"></div>
-                </div>
-                <div class="strength-text">Password strength: <span id="strength-label">Weak</span></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Submit Button -->
-        <div class="premium-submit-container">
-          <button type="submit" class="premium-submit-btn" id="submit-btn">
-            <span class="btn-text">{{ 'customer.register.submit' | t }}</span>
-            <span class="btn-loading" style="display: none;">
-              <svg aria-hidden="true" focusable="false">
-                <use href="#icon-loading" />
-              </svg>
-              Creating Account...
-            </span>
-            <span class="btn-success" style="display: none;">
-              <svg aria-hidden="true" focusable="false">
-                <use href="#icon-success" />
-              </svg>
-              Account Created!
-            </span>
-          </button>
-        </div>
-
-      {%- endform -%}
+    <div class="field">
+      <input
+        type="text"
+        name="customer[last_name]"
+        id="RegisterForm-LastName"
+        {% if form.last_name %}
+          value="{{ form.last_name }}"
+        {% endif %}
+        autocomplete="family-name"
+        placeholder="{{ 'customer.register.last_name' | t }}"
+      >
+      <label for="RegisterForm-LastName">
+        {{ 'customer.register.last_name' | t }}
+      </label>
     </div>
-  </div>
+    <div class="field">
+      <input
+        type="email"
+        name="customer[email]"
+        id="RegisterForm-email"
+        {% if form.email %}
+          value="{{ form.email }}"
+        {% endif %}
+        spellcheck="false"
+        autocapitalize="off"
+        autocomplete="email"
+        aria-required="true"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="RegisterForm-email-error"
+        {% endif %}
+        placeholder="{{ 'customer.register.email' | t }}"
+      >
+      <label for="RegisterForm-email">
+        {{ 'customer.register.email' | t }}
+      </label>
+    </div>
+    {%- if form.errors contains 'email' -%}
+      <span id="RegisterForm-email-error" class="form__message">
+        <svg aria-hidden="true" focusable="false">
+          <use href="#icon-error" />
+        </svg>
+        {{ form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email }}.
+      </span>
+    {%- endif -%}
+    <div class="field">
+      <input
+        type="password"
+        name="customer[password]"
+        id="RegisterForm-password"
+        aria-required="true"
+        {% if form.errors contains 'password' %}
+          aria-invalid="true"
+          aria-describedby="RegisterForm-password-error"
+        {% endif %}
+        placeholder="{{ 'customer.register.password' | t }}"
+      >
+      <label for="RegisterForm-password">
+        {{ 'customer.register.password' | t }}
+      </label>
+    </div>
+    {%- if form.errors contains 'password' -%}
+      <span id="RegisterForm-password-error" class="form__message">
+        <svg aria-hidden="true" focusable="false">
+          <use href="#icon-error" />
+        </svg>
+        {{ form.errors.translated_fields.password | capitalize }}
+        {{ form.errors.messages.password }}.
+      </span>
+    {%- endif -%}
+    <button>
+      {{ 'customer.register.submit' | t }}
+    </button>
+  {%- endform -%}
 </div>
-
-<!-- Premium JavaScript -->
-<script src="{{ 'premium-registration.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
