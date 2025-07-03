@@ -762,3 +762,14 @@
 .customer.login {
   max-width: none !important;
 }
+
+.customer.reset-password #login,
+.customer.reset-password #recover,
+.customer.reset-password .login-form-container,
+.customer.reset-password [data-login-form] {
+  display: none !important;
+}
+
+.customer.reset-password {
+  max-width: none !important;
+}
