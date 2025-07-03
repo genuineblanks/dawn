@@ -330,18 +330,18 @@
 
 /* Product Information Panel */
 .portfolio-showcase__info {
-  position: sticky;
-  top: 2rem;
+  flex: 0 0 35rem;
   background: rgba(var(--color-foreground), 0.02);
   border-radius: 1.6rem;
   padding: 3rem;
   border: 0.1rem solid rgba(var(--color-foreground), 0.08);
+  align-self: flex-start;
 }
 
 @media screen and (max-width: 990px) {
   .portfolio-showcase__info {
-    position: relative;
-    top: auto;
+    flex: none;
+    width: 100%;
   }
 }
 
