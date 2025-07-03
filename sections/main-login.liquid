@@ -46,8 +46,8 @@
       {{ 'customer.recover_password.title' | t }}
     </h1>
     <div class="account-content">
-      <div style="max-width: 500px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <p style="text-align: center; color: #6b7280; margin-bottom: 2rem;">
+      <div class="login-form-container">
+        <p class="login-subtitle">
           {{ 'customer.recover_password.subtext' | t }}
         </p>
 
@@ -89,8 +89,8 @@
             {{ 'customer.login_page.submit' | t }}
           </button>
 
-          <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="#login" style="color: #6b7280; text-decoration: none; font-size: 0.875rem;">
+          <div class="login-cancel">
+            <a href="#login" class="cancel-link">
               {{ 'customer.login_page.cancel' | t }}
             </a>
           </div>
@@ -102,10 +102,10 @@
     <h1 id="login" tabindex="-1">
       {{ 'customer.login_page.title' | t }}
     </h1>
-    <p style="text-align: center; color: #6b7280; margin-bottom: 3rem;">Sign in to manage your orders and account details.</p>
+    <p class="login-subtitle">Sign in to manage your orders and account details.</p>
     
     <div class="account-content">
-      <div style="max-width: 500px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div class="login-form-container">>
         
         {%- if recover_success == true -%}
           <h3 class="form__message" tabindex="-1" autofocus>
@@ -169,8 +169,8 @@
               </label>
             </div>
 
-            <div style="text-align: right; margin-bottom: 1.5rem;">
-              <a href="#recover" class="recover" style="color: #6b7280; text-decoration: none; font-size: 0.875rem;">
+            <div class="forgot-password">
+              <a href="#recover" class="recover">
                 {{ 'customer.login_page.forgot_password' | t }}
               </a>
             </div>
@@ -180,9 +180,9 @@
             {{ 'customer.login_page.sign_in' | t }}
           </button>
           
-          <p style="text-align: center; margin-top: 1.5rem; color: #6b7280;">
+          <p class="signup-link">
             Don't have an account? 
-            <a href="{{ routes.account_register_url }}" style="color: #3b82f6; text-decoration: none; font-weight: 500;">
+            <a href="{{ routes.account_register_url }}" class="register-link">
               {{ 'customer.login_page.create_account' | t }}
             </a>
           </p>
@@ -191,13 +191,13 @@
     </div>
 
     {%- if shop.checkout.guest_login -%}
-      <div style="margin-top: 3rem;">
-        <div style="max-width: 500px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin-bottom: 2rem;">
-          <h2 style="text-align: center; font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 1.5rem;">{{ 'customer.login_page.guest_title' | t }}</h2>
+      <div class="guest-login-section">
+        <div class="login-form-container">
+          <hr class="login-divider">
+          <h2 class="guest-title">{{ 'customer.login_page.guest_title' | t }}</h2>
 
           {%- form 'guest_login' -%}
-            <button style="background: #6b7280 !important;">
+            <button class="guest-button">
               {{ 'customer.login_page.guest_continue' | t }}
             </button>
           {%- endform -%}
