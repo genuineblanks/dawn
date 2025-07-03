@@ -156,7 +156,14 @@
           <h3>{{ 'customer.account.details' | t }}</h3>
 
           <div style="margin-bottom: 2rem;">
-            {{ customer.default_address | format_address }} <br/><span bss-b2b-custom-info-field></span>
+            <p><strong>{{ customer.first_name }} {{ customer.last_name }}</strong></p>
+            <p>{{ customer.email }}</p>
+            {% if customer.phone %}
+              <p>{{ customer.phone }}</p>
+            {% endif %}
+            {% if customer.default_address %}
+              {{ customer.default_address | format_address }}
+            {% endif %}
           </div>
 
           <div>
