@@ -1,105 +1,207 @@
-{{ 'futuristic-slider.css' | asset_url | stylesheet_tag }}
+{{ 'product-showcase-gallery.css' | asset_url | stylesheet_tag }}
 
-<div class="premium-slider" data-section-id="{{ section.id }}" style="--slider-height-desktop: {{ section.settings.slider_height_desktop }}vh; --slider-height-mobile: {{ section.settings.slider_height_mobile }}vh;">
-  <div class="premium-slider__container">
-    <div class="swiper premium-swiper" 
-         data-autoplay="{{ section.settings.autoplay }}" 
-         data-speed="{{ section.settings.autoplay_speed }}"
-         data-effect="{{ section.settings.transition_effect }}">
-      <div class="swiper-wrapper">
-        {% for block in section.blocks %}
-          <div class="swiper-slide premium-slide" {{ block.shopify_attributes }}>
-            <div class="premium-slide__content-wrapper" style="--content-width: {{ section.settings.content_width }}%;">
-              
-              {% comment %} Media Section {% endcomment %}
-              {% if block.settings.image != blank or block.settings.video_url != blank %}
-                <div class="premium-slide__media" style="--media-width: {{ block.settings.media_width }}%;">
-                  {% if block.settings.video_url != blank %}
-                    <div class="premium-slide__video-container">
-                      <video class="premium-slide__video" autoplay muted loop playsinline>
-                        <source src="{{ block.settings.video_url }}" type="video/mp4">
-                      </video>
+<div class="product-showcase" data-section-id="{{ section.id }}">
+  <div class="product-showcase__container">
+    
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="product-showcase__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="product-showcase__title h1">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <div class="product-showcase__subtitle">{{ section.settings.subheading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="product-showcase__content">
+        
+        {% comment %} Main Gallery Display {% endcomment %}
+        <div class="product-showcase__gallery">
+          <div class="product-showcase__main-display">
+            <div class="swiper product-showcase__main-swiper" data-gallery="main">
+              <div class="swiper-wrapper">
+                {% for block in section.blocks %}
+                  {% assign product_images = block.settings.product_images | split: ',' %}
+                  {% for image_handle in product_images %}
+                    {% assign image_url = image_handle | strip | file_url %}
+                    <div class="swiper-slide product-showcase__main-slide" data-product="{{ forloop.parentloop.index0 }}">
+                      <div class="product-showcase__image-container">
+                        <img src="{{ image_url }}" 
+                             alt="{{ block.settings.product_name | escape }}" 
+                             class="product-showcase__main-image"
+                             loading="lazy">
+                        <div class="product-showcase__image-overlay">
+                          <button class="product-showcase__zoom-btn" data-image="{{ image_url }}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  {% elsif block.settings.image != blank %}
-                    <div class="premium-slide__image-container">
-                      {{ block.settings.image | image_url: width: 2048 | image_tag: 
-                        class: 'premium-slide__image', 
-                        loading: 'lazy',
-                        alt: block.settings.image.alt | escape
-                      }}
+                  {% endfor %}
+                {% endfor %}
+              </div>
+              
+              <div class="product-showcase__navigation">
+                <button class="product-showcase__nav product-showcase__nav--prev">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="product-showcase__nav product-showcase__nav--next">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {% comment %} Thumbnail Grid {% endcomment %}
+          <div class="product-showcase__thumbnails">
+            <div class="swiper product-showcase__thumb-swiper" data-gallery="thumbs">
+              <div class="swiper-wrapper">
+                {% for block in section.blocks %}
+                  {% assign product_images = block.settings.product_images | split: ',' %}
+                  {% for image_handle in product_images %}
+                    {% assign image_url = image_handle | strip | file_url %}
+                    <div class="swiper-slide product-showcase__thumb-slide" data-product="{{ forloop.parentloop.index0 }}">
+                      <div class="product-showcase__thumb-container">
+                        <img src="{{ image_url }}" 
+                             alt="{{ block.settings.product_name | escape }}" 
+                             class="product-showcase__thumb-image"
+                             loading="lazy">
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+            
+            {% comment %} Scroll Indicators {% endcomment %}
+            <div class="product-showcase__thumb-nav">
+              <button class="product-showcase__thumb-prev">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="product-showcase__thumb-next">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {% comment %} Product Information Panel {% endcomment %}
+        <div class="product-showcase__info">
+          <div class="product-showcase__info-content">
+            {% for block in section.blocks %}
+              <div class="product-showcase__product-info" 
+                   data-product="{{ forloop.index0 }}" 
+                   {% unless forloop.first %}style="display: none;"{% endunless %}>
+                
+                <div class="product-showcase__product-header">
+                  {% if block.settings.product_category != blank %}
+                    <div class="product-showcase__category">{{ block.settings.product_category }}</div>
+                  {% endif %}
+                  {% if block.settings.product_name != blank %}
+                    <h3 class="product-showcase__product-title">{{ block.settings.product_name }}</h3>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.product_description != blank %}
+                  <div class="product-showcase__description">
+                    {{ block.settings.product_description }}
+                  </div>
+                {% endif %}
+
+                {% comment %} Specifications Grid {% endcomment %}
+                <div class="product-showcase__specs">
+                  {% if block.settings.material != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">Material:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.material }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.gsm != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">GSM:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.gsm }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.sizes != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">Sizes:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.sizes }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.colors != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">Colors:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.colors }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.moq != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">MOQ:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.moq }}</span>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.lead_time != blank %}
+                    <div class="product-showcase__spec">
+                      <span class="product-showcase__spec-label">Lead Time:</span>
+                      <span class="product-showcase__spec-value">{{ block.settings.lead_time }}</span>
                     </div>
                   {% endif %}
                 </div>
-              {% endif %}
-              
-              {% comment %} Text Content {% endcomment %}
-              {% if block.settings.heading != blank or block.settings.subheading != blank or block.settings.button_text != blank %}
-                <div class="premium-slide__text" style="--text-width: {{ block.settings.text_width }}%;">
-                  <div class="premium-slide__text-inner">
-                    {% if block.settings.overline != blank %}
-                      <div class="premium-slide__overline">{{ block.settings.overline }}</div>
-                    {% endif %}
-                    
-                    {% if block.settings.heading != blank %}
-                      <h2 class="premium-slide__heading h1">
-                        {{ block.settings.heading }}
-                      </h2>
-                    {% endif %}
-                    
-                    {% if block.settings.subheading != blank %}
-                      <div class="premium-slide__subheading">
-                        {{ block.settings.subheading }}
-                      </div>
-                    {% endif %}
-                    
-                    {% if block.settings.button_text != blank and block.settings.button_url != blank %}
-                      <div class="premium-slide__button-wrapper">
-                        <a href="{{ block.settings.button_url }}" 
-                           class="premium-slide__button btn btn--{{ block.settings.button_style }}">
-                          <span class="premium-slide__button-text">{{ block.settings.button_text }}</span>
-                          <svg class="premium-slide__button-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4.16669 10H15.8334M15.8334 10L10 4.16666M15.8334 10L10 15.8333" 
-                                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </a>
-                      </div>
-                    {% endif %}
+
+                {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
+                  <div class="product-showcase__cta">
+                    <a href="{{ block.settings.cta_url }}" class="product-showcase__cta-btn btn btn--primary">
+                      {{ block.settings.cta_text }}
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
                   </div>
-                </div>
-              {% endif %}
-              
-            </div>
+                {% endif %}
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
+
+          {% comment %} Product Selector Tabs {% endcomment %}
+          {% if section.blocks.size > 1 %}
+            <div class="product-showcase__tabs">
+              {% for block in section.blocks %}
+                <button class="product-showcase__tab {% if forloop.first %}active{% endif %}" 
+                        data-product="{{ forloop.index0 }}">
+                  <span class="product-showcase__tab-number">{{ forloop.index | prepend: '0' }}</span>
+                  <span class="product-showcase__tab-name">{{ block.settings.product_name | truncate: 20 }}</span>
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
       </div>
-      
-      {% if section.settings.show_navigation and section.blocks.size > 1 %}
-        <div class="premium-slider__navigation">
-          <button class="premium-slider__nav premium-slider__nav--prev swiper-button-prev" 
-                  type="button" aria-label="Previous slide">
+
+      {% comment %} Lightbox Modal {% endcomment %}
+      <div class="product-showcase__lightbox" id="lightbox-{{ section.id }}">
+        <div class="product-showcase__lightbox-content">
+          <button class="product-showcase__lightbox-close">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <button class="premium-slider__nav premium-slider__nav--next swiper-button-next" 
-                  type="button" aria-label="Next slide">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <img src="" alt="" class="product-showcase__lightbox-image">
         </div>
-      {% endif %}
-      
-      {% if section.settings.show_pagination and section.blocks.size > 1 %}
-        <div class="premium-slider__pagination swiper-pagination"></div>
-      {% endif %}
-      
-      {% if section.settings.show_progress and section.blocks.size > 1 %}
-        <div class="premium-slider__progress">
-          <div class="premium-slider__progress-bar"></div>
-        </div>
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
 </div>
 
@@ -108,44 +210,118 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const swiperElement = document.querySelector('.premium-swiper');
-  if (!swiperElement) return;
+  const sectionId = '{{ section.id }}';
+  const mainSwiper = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__main-swiper`);
+  const thumbSwiper = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__thumb-swiper`);
   
-  const autoplay = swiperElement.dataset.autoplay === 'true';
-  const speed = parseInt(swiperElement.dataset.speed) * 1000 || 5000;
-  const effect = swiperElement.dataset.effect || 'fade';
-  
-  new Swiper(swiperElement, {
-    modules: [Swiper.Navigation, Swiper.Pagination, Swiper.Autoplay, Swiper.EffectFade],
-    loop: true,
-    speed: 800,
-    effect: effect,
-    fadeEffect: {
-      crossFade: true
-    },
-    autoplay: autoplay ? {
-      delay: speed,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true
-    } : false,
+  if (!mainSwiper || !thumbSwiper) return;
+
+  // Initialize thumbnail swiper
+  const thumbSwiperInstance = new Swiper(thumbSwiper, {
+    spaceBetween: 10,
+    slidesPerView: 'auto',
+    freeMode: true,
+    watchSlidesProgress: true,
     navigation: {
-      nextEl: '.premium-slider__nav--next',
-      prevEl: '.premium-slider__nav--prev',
+      nextEl: `[data-section-id="${sectionId}"] .product-showcase__thumb-next`,
+      prevEl: `[data-section-id="${sectionId}"] .product-showcase__thumb-prev`,
     },
-    pagination: {
-      el: '.premium-slider__pagination',
-      clickable: true,
-      renderBullet: function (index, className) {
-        return '<span class="' + className + '"></span>';
+    breakpoints: {
+      640: {
+        slidesPerView: 4,
       },
+      768: {
+        slidesPerView: 5,
+      },
+      1024: {
+        slidesPerView: 6,
+      }
+    }
+  });
+
+  // Initialize main swiper
+  const mainSwiperInstance = new Swiper(mainSwiper, {
+    spaceBetween: 10,
+    navigation: {
+      nextEl: `[data-section-id="${sectionId}"] .product-showcase__nav--next`,
+      prevEl: `[data-section-id="${sectionId}"] .product-showcase__nav--prev`,
+    },
+    thumbs: {
+      swiper: thumbSwiperInstance,
     },
     on: {
-      autoplayTimeLeft(s, time, progress) {
-        const progressBar = document.querySelector('.premium-slider__progress-bar');
-        if (progressBar) {
-          progressBar.style.setProperty('--progress', 1 - progress);
-        }
+      slideChange: function() {
+        updateProductInfo(this.activeIndex);
       }
+    }
+  });
+
+  // Product info switching
+  function updateProductInfo(slideIndex) {
+    const activeSlide = mainSwiper.querySelector(`[data-product]`);
+    if (!activeSlide) return;
+    
+    const productIndex = activeSlide.getAttribute('data-product');
+    
+    // Hide all product info
+    document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__product-info`).forEach(info => {
+      info.style.display = 'none';
+    });
+    
+    // Show current product info
+    const currentInfo = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__product-info[data-product="${productIndex}"]`);
+    if (currentInfo) {
+      currentInfo.style.display = 'block';
+    }
+    
+    // Update active tab
+    document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__tab`).forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    const activeTab = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__tab[data-product="${productIndex}"]`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+    }
+  }
+
+  // Tab switching
+  document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__tab`).forEach(tab => {
+    tab.addEventListener('click', function() {
+      const productIndex = parseInt(this.getAttribute('data-product'));
+      
+      // Find the first slide of this product
+      const targetSlide = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__main-slide[data-product="${productIndex}"]`);
+      if (targetSlide) {
+        const slideIndex = Array.from(targetSlide.parentNode.children).indexOf(targetSlide);
+        mainSwiperInstance.slideTo(slideIndex);
+      }
+    });
+  });
+
+  // Lightbox functionality
+  const lightbox = document.getElementById(`lightbox-${sectionId}`);
+  const lightboxImage = lightbox.querySelector('.product-showcase__lightbox-image');
+  const lightboxClose = lightbox.querySelector('.product-showcase__lightbox-close');
+
+  document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__zoom-btn`).forEach(btn => {
+    btn.addEventListener('click', function() {
+      const imageUrl = this.getAttribute('data-image');
+      lightboxImage.src = imageUrl;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  lightboxClose.addEventListener('click', function() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
     }
   });
 });
@@ -153,228 +329,163 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% schema %}
 {
-  "name": "Premium Slider",
+  "name": "Product Showcase Gallery",
   "tag": "section",
   "class": "section",
   "settings": [
     {
       "type": "header",
-      "content": "Layout Settings"
+      "content": "Section Header"
     },
     {
-      "type": "range",
-      "id": "slider_height_desktop",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Desktop height",
-      "default": 75
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Manufacturing Showcase"
     },
     {
-      "type": "range",
-      "id": "slider_height_mobile",
-      "min": 30,
-      "max": 90,
-      "step": 5,
-      "unit": "vh",
-      "label": "Mobile height",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "content_width",
-      "min": 60,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Content container width",
-      "default": 90
-    },
-    {
-      "type": "header",
-      "content": "Slider Settings"
-    },
-    {
-      "type": "select",
-      "id": "transition_effect",
-      "label": "Transition effect",
-      "options": [
-        {
-          "value": "fade",
-          "label": "Fade"
-        },
-        {
-          "value": "slide",
-          "label": "Slide"
-        }
-      ],
-      "default": "fade"
-    },
-    {
-      "type": "checkbox",
-      "id": "autoplay",
-      "label": "Auto-rotate slides",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "autoplay_speed",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "unit": "s",
-      "label": "Change slides every",
-      "default": 6
-    },
-    {
-      "type": "header",
-      "content": "Navigation"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_navigation",
-      "label": "Show navigation arrows",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pagination",
-      "label": "Show pagination dots",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_progress",
-      "label": "Show progress bar",
-      "default": false
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Description",
+      "default": "<p>Explore our premium quality products crafted with precision and attention to detail. Each piece represents our commitment to excellence in manufacturing.</p>"
     }
   ],
   "blocks": [
     {
-      "type": "slide",
-      "name": "Slide",
-      "limit": 8,
+      "type": "product",
+      "name": "Product",
+      "limit": 12,
       "settings": [
         {
           "type": "header",
-          "content": "Media"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "url",
-          "id": "video_url",
-          "label": "Video URL",
-          "info": "Direct .mp4 video file URL"
-        },
-        {
-          "type": "range",
-          "id": "media_width",
-          "min": 30,
-          "max": 70,
-          "step": 5,
-          "unit": "%",
-          "label": "Media width",
-          "default": 50
-        },
-        {
-          "type": "header",
-          "content": "Content"
+          "content": "Product Information"
         },
         {
           "type": "text",
-          "id": "overline",
-          "label": "Overline text",
-          "default": "NEW COLLECTION"
+          "id": "product_category",
+          "label": "Category",
+          "default": "Premium Hoodie",
+          "info": "e.g., Hoodie, T-Shirt, Sweatshirt"
         },
         {
-          "type": "textarea",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Premium Quality Blanks"
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Name",
+          "default": "Premium Cotton Hoodie"
         },
         {
           "type": "richtext",
-          "id": "subheading",
+          "id": "product_description",
           "label": "Description",
-          "default": "<p>Discover our curated collection of high-end blank apparel, designed for those who demand excellence in every detail.</p>"
-        },
-        {
-          "type": "range",
-          "id": "text_width",
-          "min": 30,
-          "max": 70,
-          "step": 5,
-          "unit": "%",
-          "label": "Text width",
-          "default": 45
+          "default": "<p>Crafted from premium cotton blend with superior stitching and attention to detail. Perfect for brands seeking high-quality blank apparel.</p>"
         },
         {
           "type": "header",
-          "content": "Button"
+          "content": "Product Images"
+        },
+        {
+          "type": "textarea",
+          "id": "product_images",
+          "label": "Image URLs",
+          "info": "Enter image URLs separated by commas. Upload images to Files first, then copy URLs here.",
+          "placeholder": "https://cdn.shopify.com/image1.jpg, https://cdn.shopify.com/image2.jpg"
+        },
+        {
+          "type": "header",
+          "content": "Specifications"
         },
         {
           "type": "text",
-          "id": "button_text",
-          "label": "Button text",
-          "default": "Shop Collection"
+          "id": "material",
+          "label": "Material",
+          "default": "100% Cotton",
+          "placeholder": "e.g., 100% Cotton, Cotton Blend"
+        },
+        {
+          "type": "text",
+          "id": "gsm",
+          "label": "GSM/Weight",
+          "default": "280 GSM",
+          "placeholder": "e.g., 280 GSM, 320 GSM"
+        },
+        {
+          "type": "text",
+          "id": "sizes",
+          "label": "Available Sizes",
+          "default": "XS - 3XL",
+          "placeholder": "e.g., XS - 3XL, S - XXL"
+        },
+        {
+          "type": "text",
+          "id": "colors",
+          "label": "Available Colors",
+          "default": "20+ Colors",
+          "placeholder": "e.g., 20+ Colors, Custom Colors"
+        },
+        {
+          "type": "text",
+          "id": "moq",
+          "label": "Minimum Order Quantity",
+          "default": "50 pieces",
+          "placeholder": "e.g., 50 pieces, 100 pieces"
+        },
+        {
+          "type": "text",
+          "id": "lead_time",
+          "label": "Lead Time",
+          "default": "2-3 weeks",
+          "placeholder": "e.g., 2-3 weeks, 15-20 days"
+        },
+        {
+          "type": "header",
+          "content": "Call to Action"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button Text",
+          "default": "Get Quote"
         },
         {
           "type": "url",
-          "id": "button_url",
-          "label": "Button link"
-        },
-        {
-          "type": "select",
-          "id": "button_style",
-          "label": "Button style",
-          "options": [
-            {
-              "value": "primary",
-              "label": "Primary"
-            },
-            {
-              "value": "secondary",
-              "label": "Secondary"
-            },
-            {
-              "value": "outline",
-              "label": "Outline"
-            }
-          ],
-          "default": "primary"
+          "id": "cta_url",
+          "label": "Button Link"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Premium Slider",
+      "name": "Product Showcase Gallery",
       "blocks": [
         {
-          "type": "slide",
+          "type": "product",
           "settings": {
-            "overline": "NEW ARRIVALS",
-            "heading": "Premium Blank Apparel",
-            "subheading": "<p>Discover our meticulously crafted collection designed for discerning customers who value quality and sophistication.</p>",
-            "button_text": "Explore Collection",
-            "media_width": 55,
-            "text_width": 40
+            "product_category": "Premium Hoodie",
+            "product_name": "Cotton Blend Hoodie",
+            "product_description": "<p>Premium quality hoodie made from finest cotton blend. Features reinforced stitching, pre-shrunk fabric, and superior durability.</p>",
+            "material": "80% Cotton, 20% Polyester",
+            "gsm": "320 GSM",
+            "sizes": "XS - 3XL",
+            "colors": "25+ Colors Available",
+            "moq": "50 pieces",
+            "lead_time": "2-3 weeks",
+            "cta_text": "Request Quote"
           }
         },
         {
-          "type": "slide",
+          "type": "product",
           "settings": {
-            "overline": "LUXURY ESSENTIALS",
-            "heading": "Elevated Basics",
-            "subheading": "<p>Experience the perfect blend of comfort and style with our premium blank essentials.</p>",
-            "button_text": "Shop Now",
-            "media_width": 50,
-            "text_width": 45
+            "product_category": "Basic T-Shirt",
+            "product_name": "Premium Cotton Tee",
+            "product_description": "<p>Soft, comfortable basic tee perfect for printing and branding. Made from high-quality ring-spun cotton.</p>",
+            "material": "100% Ring-Spun Cotton",
+            "gsm": "180 GSM",
+            "sizes": "XS - 2XL",
+            "colors": "30+ Colors Available",
+            "moq": "100 pieces",
+            "lead_time": "1-2 weeks",
+            "cta_text": "Get Sample"
           }
         }
       ]
