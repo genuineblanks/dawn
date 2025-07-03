@@ -1,26 +1,18 @@
 {{ 'section-rich-text.css' | asset_url | stylesheet_tag }}
 
-{%- assign has_content = false -%}
-{%- for block in section.blocks -%}
-  {%- if block.type != 'heading' -%}
-    {%- assign has_content = true -%}
-  {%- endif -%}
-{%- endfor -%}
-
 {%- style -%}
   .section-{{ section.id }}-padding {
-    padding-top: {% if has_content %}{{ section.settings.padding_top | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
-    padding-bottom: {% if has_content %}{{ section.settings.padding_bottom | times: 0.75 | round: 0 }}{% else %}10{% endif %}px;
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
-      padding-top: {% if has_content %}{{ section.settings.padding_top }}{% else %}10{% endif %}px;
-      padding-bottom: {% if has_content %}{{ section.settings.padding_bottom }}{% else %}10{% endif %}px;
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
-
 
 <div class="isolate{% unless section.settings.full_width %} page-width{% endunless %} {{ section.settings.additional-classroom }}">
   <div class="rich-text content-container color-{{ section.settings.color_scheme }} gradient{% if section.settings.full_width %} rich-text--full-width content-container--full-width{% endif %} section-{{ section.id }}-padding">
