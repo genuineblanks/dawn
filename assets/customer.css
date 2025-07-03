@@ -581,7 +581,7 @@
   transform: translateY(-1px) !important;
 }
 
-/* Login TechPack Styling - WIDER VERSION */
+/* Login TechPack Styling - WIDER VERSION WITH CLASSES */
 .customer.login {
   background: #f8f9fa !important;
   min-height: 100vh !important;
@@ -596,18 +596,24 @@
   margin-bottom: 1rem !important;
 }
 
-/* Make login forms WIDER */
-.customer.login .account-content > div {
-  max-width: 700px !important; /* Increased from 500px */
+.login-subtitle {
+  text-align: center !important;
+  color: #6b7280 !important;
+  margin-bottom: 3rem !important;
+}
+
+/* WIDER LOGIN FORM CONTAINER */
+.login-form-container {
+  max-width: 700px !important; /* WIDER */
   margin: 0 auto !important;
   background: white !important;
-  padding: 4rem !important; /* Increased padding */
+  padding: 4rem !important; /* MORE PADDING */
   border-radius: 8px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
 }
 
 .customer.login .field {
-  margin-bottom: 2rem !important; /* Increased spacing */
+  margin-bottom: 2rem !important;
 }
 
 .customer.login .field label {
@@ -615,17 +621,17 @@
   font-size: 0.875rem !important;
   font-weight: 600 !important;
   color: #374151 !important;
-  margin-bottom: 0.75rem !important; /* Increased spacing */
+  margin-bottom: 0.75rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
 }
 
 .customer.login .field input {
   width: 100% !important;
-  padding: 1rem !important; /* Increased padding */
+  padding: 1rem !important; /* LARGER INPUTS */
   border: 1px solid #d1d5db !important;
   border-radius: 6px !important;
-  font-size: 1.1rem !important; /* Slightly larger text */
+  font-size: 1.1rem !important;
   background: white !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
   box-sizing: border-box !important;
@@ -641,16 +647,16 @@
   background: #000 !important;
   color: white !important;
   border: none !important;
-  padding: 1.25rem 3rem !important; /* Increased padding */
+  padding: 1.25rem 3rem !important;
   border-radius: 6px !important;
-  font-size: 1.1rem !important; /* Larger text */
+  font-size: 1.1rem !important;
   font-weight: 600 !important;
   cursor: pointer !important;
   transition: background-color 0.2s ease, transform 0.2s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   width: 100% !important;
-  margin-top: 1.5rem !important; /* Increased spacing */
+  margin-top: 1.5rem !important;
 }
 
 .customer.login button:hover {
@@ -658,25 +664,65 @@
   transform: translateY(-1px) !important;
 }
 
-/* Clean Error Styling for Login */
-.customer.login .form__message {
-  background: #fef2f2 !important;
-  border: 1px solid #fecaca !important;
-  border-radius: 6px !important;
-  padding: 1.5rem !important; /* Increased padding */
-  margin-bottom: 2rem !important;
-  color: #dc2626 !important;
+.forgot-password {
+  text-align: right !important;
+  margin-bottom: 1.5rem !important;
 }
 
-.customer.login .form__message h2 {
-  font-size: 1rem !important;
+.forgot-password a {
+  color: #6b7280 !important;
+  text-decoration: none !important;
+  font-size: 0.875rem !important;
+}
+
+.signup-link {
+  text-align: center !important;
+  margin-top: 1.5rem !important;
+  color: #6b7280 !important;
+}
+
+.register-link {
+  color: #3b82f6 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.login-cancel {
+  text-align: center !important;
+  margin-top: 1.5rem !important;
+}
+
+.cancel-link {
+  color: #6b7280 !important;
+  text-decoration: none !important;
+  font-size: 0.875rem !important;
+}
+
+.guest-login-section {
+  margin-top: 3rem !important;
+}
+
+.login-divider {
+  border: none !important;
+  border-top: 1px solid #e5e7eb !important;
+  margin-bottom: 2rem !important;
+}
+
+.guest-title {
+  text-align: center !important;
+  font-size: 1.125rem !important;
   font-weight: 600 !important;
-  margin: 0 0 0.5rem 0 !important;
+  color: #1f2937 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.guest-button {
+  background: #6b7280 !important;
 }
 
 /* Mobile responsive */
 @media screen and (max-width: 768px) {
-  .customer.login .account-content > div {
+  .login-form-container {
     max-width: 100% !important;
     padding: 2rem !important;
   }
