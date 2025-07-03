@@ -12,36 +12,51 @@
     "futuristic-slider": {
       "type": "futuristic-slider",
       "blocks": {
-        "slide_D777Wx": {
-          "type": "slide",
+        "product_6p4by9": {
+          "type": "product",
           "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/Accessories_Page_-_website_V2.jpg",
-            "video_url": "",
-            "heading": "Slide heading",
-            "subheading": "",
-            "button_text": "",
-            "button_url": ""
+            "product_name": "Premium Hoodie",
+            "product_description": "<p>High-quality hoodie manufactured with attention to detail and premium materials.</p>",
+            "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - 3XL</p>",
+            "image_1": "shopify://shop_images/ONYX_05SWEATPANTS_PNG.png",
+            "image_2": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png",
+            "image_3": "shopify://shop_images/TSHIRT-FILLIN_16a36934-4021-4e9f-aa47-04a8204bc570.png"
           }
         },
-        "slide_RwE7PJ": {
-          "type": "slide",
+        "product_KW3dpf": {
+          "type": "product",
           "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/ChatGPT_Image_17_05_2025_20_02_42.png",
-            "video_url": "",
-            "heading": "Slide heading",
-            "subheading": "",
-            "button_text": "",
-            "button_url": ""
+            "product_name": "Premium Hoodie",
+            "product_description": "<p>High-quality hoodie manufactured with attention to detail and premium materials.</p>",
+            "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - 3XL</p>",
+            "image_1": "shopify://shop_images/ONYX_05SWEATPANTS_PNG.png",
+            "image_2": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png",
+            "image_3": "shopify://shop_images/TSHIRT-FILLIN_16a36934-4021-4e9f-aa47-04a8204bc570.png"
+          }
+        },
+        "product_h6ttAe": {
+          "type": "product",
+          "settings": {
+            "product_name": "Premium Hoodie",
+            "product_description": "<p>High-quality hoodie manufactured with attention to detail and premium materials.</p>",
+            "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - 3XL</p>",
+            "image_1": "shopify://shop_images/ONYX_05SWEATPANTS_PNG.png",
+            "image_2": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png",
+            "image_3": "shopify://shop_images/TSHIRT-FILLIN_16a36934-4021-4e9f-aa47-04a8204bc570.png"
           }
         }
       },
       "block_order": [
-        "slide_D777Wx",
-        "slide_RwE7PJ"
+        "product_6p4by9",
+        "product_KW3dpf",
+        "product_h6ttAe"
       ],
       "settings": {
+        "heading": "Our Manufacturing Portfolio",
+        "subheading": "<p>Explore our previous work and see the quality craftsmanship that goes into every piece we manufacture.</p>",
+        "show_thumbnails": true,
+        "show_navigation": true,
+        "show_pagination": false,
         "autoplay": false,
         "autoplay_speed": 5
       }
