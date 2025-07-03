@@ -735,3 +735,30 @@
     padding: 2rem !important;
   }
 }
+
+/* ADD THIS TO THE END OF assets/customer.css */
+
+/* OVERRIDE DAWN'S WIDTH CONSTRAINT FOR LOGIN PAGE */
+.customer.login {
+  max-width: none !important; /* Remove Dawn's 50rem constraint */
+}
+
+/* Optional: Set a specific max-width if you want */
+.customer.login {
+  max-width: 1200px !important; /* Or whatever width you want */
+}
+
+/* The existing .login-form-container will now work properly */
+.login-form-container {
+  max-width: 900px !important; /* This will now actually work */
+  margin: 0 auto !important;
+  background: white !important;
+  padding: 4rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+/* OVERRIDE DAWN'S LOGIN WIDTH CONSTRAINT */
+.customer.login {
+  max-width: none !important;
+}
