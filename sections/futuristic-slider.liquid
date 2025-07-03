@@ -1,7 +1,7 @@
 {{ 'portfolio-showcase.css' | asset_url | stylesheet_tag }}
 
 <div class="portfolio-showcase" data-section-id="{{ section.id }}">
-  <div class="portfolio-showcase__container">
+  <div class="page-width">
     
     {% comment %} Section Header {% endcomment %}
     {% if section.settings.heading != blank or section.settings.subheading != blank %}
@@ -16,67 +16,57 @@
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="portfolio-showcase__content">
+      <div class="portfolio-showcase__wrapper">
         
         {% comment %} Main Gallery Display {% endcomment %}
         <div class="portfolio-showcase__gallery">
-          <div class="portfolio-showcase__main-display">
+          <div class="portfolio-showcase__main-container">
             <div class="swiper portfolio-showcase__main-swiper">
               <div class="swiper-wrapper">
                 {% for block in section.blocks %}
                   {% if block.settings.image_1 != blank %}
                     <div class="swiper-slide portfolio-showcase__slide">
-                      <div class="portfolio-showcase__image-container">
-                        {{ block.settings.image_1 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                      </div>
+                      {{ block.settings.image_1 | image_url: width: 1200 | image_tag: 
+                        class: 'portfolio-showcase__image', 
+                        loading: 'lazy',
+                        alt: block.settings.product_name | escape
+                      }}
                     </div>
                   {% endif %}
                   {% if block.settings.image_2 != blank %}
                     <div class="swiper-slide portfolio-showcase__slide">
-                      <div class="portfolio-showcase__image-container">
-                        {{ block.settings.image_2 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                      </div>
+                      {{ block.settings.image_2 | image_url: width: 1200 | image_tag: 
+                        class: 'portfolio-showcase__image', 
+                        loading: 'lazy',
+                        alt: block.settings.product_name | escape
+                      }}
                     </div>
                   {% endif %}
                   {% if block.settings.image_3 != blank %}
                     <div class="swiper-slide portfolio-showcase__slide">
-                      <div class="portfolio-showcase__image-container">
-                        {{ block.settings.image_3 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                      </div>
+                      {{ block.settings.image_3 | image_url: width: 1200 | image_tag: 
+                        class: 'portfolio-showcase__image', 
+                        loading: 'lazy',
+                        alt: block.settings.product_name | escape
+                      }}
                     </div>
                   {% endif %}
                   {% if block.settings.image_4 != blank %}
                     <div class="swiper-slide portfolio-showcase__slide">
-                      <div class="portfolio-showcase__image-container">
-                        {{ block.settings.image_4 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                      </div>
+                      {{ block.settings.image_4 | image_url: width: 1200 | image_tag: 
+                        class: 'portfolio-showcase__image', 
+                        loading: 'lazy',
+                        alt: block.settings.product_name | escape
+                      }}
                     </div>
                   {% endif %}
                   {% if block.settings.image_5 != blank %}
                     <div class="swiper-slide portfolio-showcase__slide">
-                      <div class="portfolio-showcase__image-container">
-                        {{ block.settings.image_5 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                      </div>
+                      {{ block.settings.image_5 | image_url: width: 1200 | image_tag: 
+                        class: 'portfolio-showcase__image', 
+                        loading: 'lazy',
+                        alt: block.settings.product_name | escape
+                      }}
                     </div>
                   {% endif %}
                 {% endfor %}
@@ -158,7 +148,6 @@
 
         {% comment %} Product Information Panel {% endcomment %}
         <div class="portfolio-showcase__info">
-          {% assign current_product = 0 %}
           {% for block in section.blocks %}
             <div class="portfolio-showcase__product-info" 
                  data-product="{{ forloop.index0 }}" 
@@ -174,7 +163,6 @@
                 </div>
               {% endif %}
 
-              {% comment %} Simple Details List {% endcomment %}
               {% if block.settings.details != blank %}
                 <div class="portfolio-showcase__details">
                   <h4 class="portfolio-showcase__details-title">Product Details</h4>
@@ -186,7 +174,6 @@
             </div>
           {% endfor %}
 
-          {% comment %} Product Selector {% endcomment %}
           {% if section.blocks.size > 1 %}
             <div class="portfolio-showcase__selector">
               {% for block in section.blocks %}
@@ -200,12 +187,11 @@
           {% endif %}
         </div>
       </div>
+
     {% else %}
       <div class="portfolio-showcase__empty">
-        <div class="portfolio-showcase__empty-content">
-          <h3>No products to display</h3>
-          <p>Add product blocks in the theme editor to showcase your manufacturing portfolio.</p>
-        </div>
+        <h3>No products to display</h3>
+        <p>Add product blocks in the theme editor to showcase your portfolio.</p>
       </div>
     {% endif %}
   </div>
@@ -224,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let thumbSwiperInstance;
   
-  // Initialize thumbnail swiper if exists
   if (thumbSwiper) {
     thumbSwiperInstance = new Swiper(thumbSwiper, {
       spaceBetween: 10,
@@ -239,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Initialize main swiper
   const mainSwiperInstance = new Swiper(mainSwiper, {
     spaceBetween: 0,
     effect: 'fade',
@@ -267,9 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Update product info based on slide
   function updateProductInfo(slideIndex) {
-    // Find which product this slide belongs to
     let productIndex = 0;
     let slideCount = 0;
     
@@ -289,18 +271,15 @@ document.addEventListener('DOMContentLoaded', function() {
       slideCount += imagesInBlock;
     }
     
-    // Hide all product info
     document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__product-info`).forEach(info => {
       info.style.display = 'none';
     });
     
-    // Show current product info
     const currentInfo = document.querySelector(`[data-section-id="${sectionId}"] .portfolio-showcase__product-info[data-product="${productIndex}"]`);
     if (currentInfo) {
       currentInfo.style.display = 'block';
     }
     
-    // Update selector
     document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__selector-item`).forEach(item => {
       item.classList.remove('active');
     });
@@ -311,12 +290,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Product selector functionality
   document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__selector-item`).forEach(item => {
     item.addEventListener('click', function() {
       const productIndex = parseInt(this.getAttribute('data-product'));
       
-      // Calculate which slide to go to
       let slideIndex = 0;
       const blocks = {{ section.blocks | json }};
       for (let i = 0; i < productIndex; i++) {
