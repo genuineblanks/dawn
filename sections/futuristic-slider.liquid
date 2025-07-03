@@ -1,204 +1,203 @@
-{{ 'product-showcase-gallery.css' | asset_url | stylesheet_tag }}
+{{ 'portfolio-showcase.css' | asset_url | stylesheet_tag }}
 
-<div class="product-showcase" data-section-id="{{ section.id }}">
-  <div class="product-showcase__container">
+<div class="portfolio-showcase" data-section-id="{{ section.id }}">
+  <div class="portfolio-showcase__container">
     
     {% comment %} Section Header {% endcomment %}
     {% if section.settings.heading != blank or section.settings.subheading != blank %}
-      <div class="product-showcase__header">
+      <div class="portfolio-showcase__header">
         {% if section.settings.heading != blank %}
-          <h2 class="product-showcase__title h1">{{ section.settings.heading }}</h2>
+          <h2 class="portfolio-showcase__title h1">{{ section.settings.heading }}</h2>
         {% endif %}
         {% if section.settings.subheading != blank %}
-          <div class="product-showcase__subtitle">{{ section.settings.subheading }}</div>
+          <div class="portfolio-showcase__subtitle">{{ section.settings.subheading }}</div>
         {% endif %}
       </div>
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="product-showcase__content">
+      <div class="portfolio-showcase__content">
         
         {% comment %} Main Gallery Display {% endcomment %}
-        <div class="product-showcase__gallery">
-          <div class="product-showcase__main-display">
-            <div class="swiper product-showcase__main-swiper" data-gallery="main">
+        <div class="portfolio-showcase__gallery">
+          <div class="portfolio-showcase__main-display">
+            <div class="swiper portfolio-showcase__main-swiper">
               <div class="swiper-wrapper">
                 {% for block in section.blocks %}
-                  {% assign product_images = block.settings.product_images | split: ',' %}
-                  {% for image_handle in product_images %}
-                    {% assign image_url = image_handle | strip | file_url %}
-                    <div class="swiper-slide product-showcase__main-slide" data-product="{{ forloop.parentloop.index0 }}">
-                      <div class="product-showcase__image-container">
-                        <img src="{{ image_url }}" 
-                             alt="{{ block.settings.product_name | escape }}" 
-                             class="product-showcase__main-image"
-                             loading="lazy">
-                        <div class="product-showcase__image-overlay">
-                          <button class="product-showcase__zoom-btn" data-image="{{ image_url }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
+                  {% if block.settings.image_1 != blank %}
+                    <div class="swiper-slide portfolio-showcase__slide">
+                      <div class="portfolio-showcase__image-container">
+                        {{ block.settings.image_1 | image_url: width: 1200 | image_tag: 
+                          class: 'portfolio-showcase__image', 
+                          loading: 'lazy',
+                          alt: block.settings.product_name | escape
+                        }}
                       </div>
                     </div>
-                  {% endfor %}
+                  {% endif %}
+                  {% if block.settings.image_2 != blank %}
+                    <div class="swiper-slide portfolio-showcase__slide">
+                      <div class="portfolio-showcase__image-container">
+                        {{ block.settings.image_2 | image_url: width: 1200 | image_tag: 
+                          class: 'portfolio-showcase__image', 
+                          loading: 'lazy',
+                          alt: block.settings.product_name | escape
+                        }}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image_3 != blank %}
+                    <div class="swiper-slide portfolio-showcase__slide">
+                      <div class="portfolio-showcase__image-container">
+                        {{ block.settings.image_3 | image_url: width: 1200 | image_tag: 
+                          class: 'portfolio-showcase__image', 
+                          loading: 'lazy',
+                          alt: block.settings.product_name | escape
+                        }}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image_4 != blank %}
+                    <div class="swiper-slide portfolio-showcase__slide">
+                      <div class="portfolio-showcase__image-container">
+                        {{ block.settings.image_4 | image_url: width: 1200 | image_tag: 
+                          class: 'portfolio-showcase__image', 
+                          loading: 'lazy',
+                          alt: block.settings.product_name | escape
+                        }}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image_5 != blank %}
+                    <div class="swiper-slide portfolio-showcase__slide">
+                      <div class="portfolio-showcase__image-container">
+                        {{ block.settings.image_5 | image_url: width: 1200 | image_tag: 
+                          class: 'portfolio-showcase__image', 
+                          loading: 'lazy',
+                          alt: block.settings.product_name | escape
+                        }}
+                      </div>
+                    </div>
+                  {% endif %}
                 {% endfor %}
               </div>
               
-              <div class="product-showcase__navigation">
-                <button class="product-showcase__nav product-showcase__nav--prev">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <button class="product-showcase__nav product-showcase__nav--next">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
+              {% if section.settings.show_navigation %}
+                <div class="portfolio-showcase__navigation">
+                  <button class="portfolio-showcase__nav portfolio-showcase__nav--prev swiper-button-prev">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <button class="portfolio-showcase__nav portfolio-showcase__nav--next swiper-button-next">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
+              
+              {% if section.settings.show_pagination %}
+                <div class="portfolio-showcase__pagination swiper-pagination"></div>
+              {% endif %}
             </div>
           </div>
 
-          {% comment %} Thumbnail Grid {% endcomment %}
-          <div class="product-showcase__thumbnails">
-            <div class="swiper product-showcase__thumb-swiper" data-gallery="thumbs">
-              <div class="swiper-wrapper">
-                {% for block in section.blocks %}
-                  {% assign product_images = block.settings.product_images | split: ',' %}
-                  {% for image_handle in product_images %}
-                    {% assign image_url = image_handle | strip | file_url %}
-                    <div class="swiper-slide product-showcase__thumb-slide" data-product="{{ forloop.parentloop.index0 }}">
-                      <div class="product-showcase__thumb-container">
-                        <img src="{{ image_url }}" 
-                             alt="{{ block.settings.product_name | escape }}" 
-                             class="product-showcase__thumb-image"
-                             loading="lazy">
+          {% comment %} Thumbnail Navigation {% endcomment %}
+          {% if section.settings.show_thumbnails %}
+            <div class="portfolio-showcase__thumbnails">
+              <div class="swiper portfolio-showcase__thumb-swiper">
+                <div class="swiper-wrapper">
+                  {% for block in section.blocks %}
+                    {% if block.settings.image_1 != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide">
+                        {{ block.settings.image_1 | image_url: width: 200 | image_tag: 
+                          class: 'portfolio-showcase__thumb-image', 
+                          loading: 'lazy'
+                        }}
                       </div>
-                    </div>
+                    {% endif %}
+                    {% if block.settings.image_2 != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide">
+                        {{ block.settings.image_2 | image_url: width: 200 | image_tag: 
+                          class: 'portfolio-showcase__thumb-image', 
+                          loading: 'lazy'
+                        }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.image_3 != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide">
+                        {{ block.settings.image_3 | image_url: width: 200 | image_tag: 
+                          class: 'portfolio-showcase__thumb-image', 
+                          loading: 'lazy'
+                        }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.image_4 != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide">
+                        {{ block.settings.image_4 | image_url: width: 200 | image_tag: 
+                          class: 'portfolio-showcase__thumb-image', 
+                          loading: 'lazy'
+                        }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.image_5 != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide">
+                        {{ block.settings.image_5 | image_url: width: 200 | image_tag: 
+                          class: 'portfolio-showcase__thumb-image', 
+                          loading: 'lazy'
+                        }}
+                      </div>
+                    {% endif %}
                   {% endfor %}
-                {% endfor %}
+                </div>
               </div>
             </div>
-            
-            {% comment %} Scroll Indicators {% endcomment %}
-            <div class="product-showcase__thumb-nav">
-              <button class="product-showcase__thumb-prev">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <button class="product-showcase__thumb-next">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+          {% endif %}
         </div>
 
         {% comment %} Product Information Panel {% endcomment %}
-        <div class="product-showcase__info">
-          <div class="product-showcase__info-content">
-            {% for block in section.blocks %}
-              <div class="product-showcase__product-info" 
-                   data-product="{{ forloop.index0 }}" 
-                   {% unless forloop.first %}style="display: none;"{% endunless %}>
-                
-                <div class="product-showcase__product-header">
-                  {% if block.settings.product_category != blank %}
-                    <div class="product-showcase__category">{{ block.settings.product_category }}</div>
-                  {% endif %}
-                  {% if block.settings.product_name != blank %}
-                    <h3 class="product-showcase__product-title">{{ block.settings.product_name }}</h3>
-                  {% endif %}
+        <div class="portfolio-showcase__info">
+          {% assign current_product = 0 %}
+          {% for block in section.blocks %}
+            <div class="portfolio-showcase__product-info" 
+                 data-product="{{ forloop.index0 }}" 
+                 {% unless forloop.first %}style="display: none;"{% endunless %}>
+              
+              {% if block.settings.product_name != blank %}
+                <h3 class="portfolio-showcase__product-title">{{ block.settings.product_name }}</h3>
+              {% endif %}
+
+              {% if block.settings.product_description != blank %}
+                <div class="portfolio-showcase__description">
+                  {{ block.settings.product_description }}
                 </div>
+              {% endif %}
 
-                {% if block.settings.product_description != blank %}
-                  <div class="product-showcase__description">
-                    {{ block.settings.product_description }}
+              {% comment %} Simple Details List {% endcomment %}
+              {% if block.settings.details != blank %}
+                <div class="portfolio-showcase__details">
+                  <h4 class="portfolio-showcase__details-title">Product Details</h4>
+                  <div class="portfolio-showcase__details-content">
+                    {{ block.settings.details }}
                   </div>
-                {% endif %}
-
-                {% comment %} Specifications Grid {% endcomment %}
-                <div class="product-showcase__specs">
-                  {% if block.settings.material != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">Material:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.material }}</span>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.gsm != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">GSM:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.gsm }}</span>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.sizes != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">Sizes:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.sizes }}</span>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.colors != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">Colors:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.colors }}</span>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.moq != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">MOQ:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.moq }}</span>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.lead_time != blank %}
-                    <div class="product-showcase__spec">
-                      <span class="product-showcase__spec-label">Lead Time:</span>
-                      <span class="product-showcase__spec-value">{{ block.settings.lead_time }}</span>
-                    </div>
-                  {% endif %}
                 </div>
+              {% endif %}
+            </div>
+          {% endfor %}
 
-                {% if block.settings.cta_text != blank and block.settings.cta_url != blank %}
-                  <div class="product-showcase__cta">
-                    <a href="{{ block.settings.cta_url }}" class="product-showcase__cta-btn btn btn--primary">
-                      {{ block.settings.cta_text }}
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                        <path d="M3.75 9H14.25M14.25 9L9 3.75M14.25 9L9 14.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </a>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-
-          {% comment %} Product Selector Tabs {% endcomment %}
+          {% comment %} Product Selector {% endcomment %}
           {% if section.blocks.size > 1 %}
-            <div class="product-showcase__tabs">
+            <div class="portfolio-showcase__selector">
               {% for block in section.blocks %}
-                <button class="product-showcase__tab {% if forloop.first %}active{% endif %}" 
+                <button class="portfolio-showcase__selector-item {% if forloop.first %}active{% endif %}" 
                         data-product="{{ forloop.index0 }}">
-                  <span class="product-showcase__tab-number">{{ forloop.index | prepend: '0' }}</span>
-                  <span class="product-showcase__tab-name">{{ block.settings.product_name | truncate: 20 }}</span>
+                  <span class="portfolio-showcase__selector-number">{{ forloop.index | prepend: '0' }}</span>
+                  <span class="portfolio-showcase__selector-name">{{ block.settings.product_name | default: 'Product' | truncate: 15 }}</span>
                 </button>
               {% endfor %}
             </div>
           {% endif %}
-        </div>
-      </div>
-
-      {% comment %} Lightbox Modal {% endcomment %}
-      <div class="product-showcase__lightbox" id="lightbox-{{ section.id }}">
-        <div class="product-showcase__lightbox-content">
-          <button class="product-showcase__lightbox-close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <img src="" alt="" class="product-showcase__lightbox-image">
         </div>
       </div>
     {% endif %}
@@ -211,44 +210,49 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const sectionId = '{{ section.id }}';
-  const mainSwiper = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__main-swiper`);
-  const thumbSwiper = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__thumb-swiper`);
+  const mainSwiper = document.querySelector(`[data-section-id="${sectionId}"] .portfolio-showcase__main-swiper`);
+  const thumbSwiper = document.querySelector(`[data-section-id="${sectionId}"] .portfolio-showcase__thumb-swiper`);
   
-  if (!mainSwiper || !thumbSwiper) return;
+  if (!mainSwiper) return;
 
-  // Initialize thumbnail swiper
-  const thumbSwiperInstance = new Swiper(thumbSwiper, {
-    spaceBetween: 10,
-    slidesPerView: 'auto',
-    freeMode: true,
-    watchSlidesProgress: true,
-    navigation: {
-      nextEl: `[data-section-id="${sectionId}"] .product-showcase__thumb-next`,
-      prevEl: `[data-section-id="${sectionId}"] .product-showcase__thumb-prev`,
-    },
-    breakpoints: {
-      640: {
-        slidesPerView: 4,
-      },
-      768: {
-        slidesPerView: 5,
-      },
-      1024: {
-        slidesPerView: 6,
+  let thumbSwiperInstance;
+  
+  // Initialize thumbnail swiper if exists
+  if (thumbSwiper) {
+    thumbSwiperInstance = new Swiper(thumbSwiper, {
+      spaceBetween: 10,
+      slidesPerView: 'auto',
+      freeMode: true,
+      watchSlidesProgress: true,
+      breakpoints: {
+        640: { slidesPerView: 6 },
+        768: { slidesPerView: 8 },
+        1024: { slidesPerView: 10 }
       }
-    }
-  });
+    });
+  }
 
   // Initialize main swiper
   const mainSwiperInstance = new Swiper(mainSwiper, {
-    spaceBetween: 10,
+    spaceBetween: 0,
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    autoplay: {{ section.settings.autoplay | json }} ? {
+      delay: {{ section.settings.autoplay_speed | times: 1000 }},
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true
+    } : false,
     navigation: {
-      nextEl: `[data-section-id="${sectionId}"] .product-showcase__nav--next`,
-      prevEl: `[data-section-id="${sectionId}"] .product-showcase__nav--prev`,
+      nextEl: `[data-section-id="${sectionId}"] .portfolio-showcase__nav--next`,
+      prevEl: `[data-section-id="${sectionId}"] .portfolio-showcase__nav--prev`,
     },
-    thumbs: {
+    pagination: {
+      el: `[data-section-id="${sectionId}"] .portfolio-showcase__pagination`,
+      clickable: true,
+    },
+    thumbs: thumbSwiperInstance ? {
       swiper: thumbSwiperInstance,
-    },
+    } : undefined,
     on: {
       slideChange: function() {
         updateProductInfo(this.activeIndex);
@@ -256,80 +260,75 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Product info switching
+  // Update product info based on slide
   function updateProductInfo(slideIndex) {
-    const activeSlide = mainSwiper.querySelector(`[data-product]`);
-    if (!activeSlide) return;
+    // Find which product this slide belongs to
+    let productIndex = 0;
+    let slideCount = 0;
     
-    const productIndex = activeSlide.getAttribute('data-product');
+    const blocks = {{ section.blocks | json }};
+    for (let i = 0; i < blocks.length; i++) {
+      let imagesInBlock = 0;
+      if (blocks[i].settings.image_1) imagesInBlock++;
+      if (blocks[i].settings.image_2) imagesInBlock++;
+      if (blocks[i].settings.image_3) imagesInBlock++;
+      if (blocks[i].settings.image_4) imagesInBlock++;
+      if (blocks[i].settings.image_5) imagesInBlock++;
+      
+      if (slideIndex < slideCount + imagesInBlock) {
+        productIndex = i;
+        break;
+      }
+      slideCount += imagesInBlock;
+    }
     
     // Hide all product info
-    document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__product-info`).forEach(info => {
+    document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__product-info`).forEach(info => {
       info.style.display = 'none';
     });
     
     // Show current product info
-    const currentInfo = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__product-info[data-product="${productIndex}"]`);
+    const currentInfo = document.querySelector(`[data-section-id="${sectionId}"] .portfolio-showcase__product-info[data-product="${productIndex}"]`);
     if (currentInfo) {
       currentInfo.style.display = 'block';
     }
     
-    // Update active tab
-    document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__tab`).forEach(tab => {
-      tab.classList.remove('active');
+    // Update selector
+    document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__selector-item`).forEach(item => {
+      item.classList.remove('active');
     });
     
-    const activeTab = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__tab[data-product="${productIndex}"]`);
-    if (activeTab) {
-      activeTab.classList.add('active');
+    const activeSelector = document.querySelector(`[data-section-id="${sectionId}"] .portfolio-showcase__selector-item[data-product="${productIndex}"]`);
+    if (activeSelector) {
+      activeSelector.classList.add('active');
     }
   }
 
-  // Tab switching
-  document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__tab`).forEach(tab => {
-    tab.addEventListener('click', function() {
+  // Product selector functionality
+  document.querySelectorAll(`[data-section-id="${sectionId}"] .portfolio-showcase__selector-item`).forEach(item => {
+    item.addEventListener('click', function() {
       const productIndex = parseInt(this.getAttribute('data-product'));
       
-      // Find the first slide of this product
-      const targetSlide = document.querySelector(`[data-section-id="${sectionId}"] .product-showcase__main-slide[data-product="${productIndex}"]`);
-      if (targetSlide) {
-        const slideIndex = Array.from(targetSlide.parentNode.children).indexOf(targetSlide);
-        mainSwiperInstance.slideTo(slideIndex);
+      // Calculate which slide to go to
+      let slideIndex = 0;
+      const blocks = {{ section.blocks | json }};
+      for (let i = 0; i < productIndex; i++) {
+        if (blocks[i].settings.image_1) slideIndex++;
+        if (blocks[i].settings.image_2) slideIndex++;
+        if (blocks[i].settings.image_3) slideIndex++;
+        if (blocks[i].settings.image_4) slideIndex++;
+        if (blocks[i].settings.image_5) slideIndex++;
       }
+      
+      mainSwiperInstance.slideTo(slideIndex);
     });
-  });
-
-  // Lightbox functionality
-  const lightbox = document.getElementById(`lightbox-${sectionId}`);
-  const lightboxImage = lightbox.querySelector('.product-showcase__lightbox-image');
-  const lightboxClose = lightbox.querySelector('.product-showcase__lightbox-close');
-
-  document.querySelectorAll(`[data-section-id="${sectionId}"] .product-showcase__zoom-btn`).forEach(btn => {
-    btn.addEventListener('click', function() {
-      const imageUrl = this.getAttribute('data-image');
-      lightboxImage.src = imageUrl;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  lightboxClose.addEventListener('click', function() {
-    lightbox.classList.remove('active');
-    document.body.style.overflow = '';
-  });
-
-  lightbox.addEventListener('click', function(e) {
-    if (e.target === lightbox) {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
-    }
   });
 });
 </script>
 
 {% schema %}
 {
-  "name": "Product Showcase Gallery",
+  "name": "Portfolio Showcase",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -341,151 +340,119 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Our Manufacturing Showcase"
+      "default": "Our Manufacturing Portfolio"
     },
     {
       "type": "richtext",
       "id": "subheading",
       "label": "Description",
-      "default": "<p>Explore our premium quality products crafted with precision and attention to detail. Each piece represents our commitment to excellence in manufacturing.</p>"
+      "default": "<p>Explore our previous work and see the quality craftsmanship that goes into every piece we manufacture.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Display Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show thumbnail navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show arrow navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show dot pagination",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-rotate speed",
+      "default": 5
     }
   ],
   "blocks": [
     {
       "type": "product",
       "name": "Product",
-      "limit": 12,
+      "limit": 10,
       "settings": [
-        {
-          "type": "header",
-          "content": "Product Information"
-        },
-        {
-          "type": "text",
-          "id": "product_category",
-          "label": "Category",
-          "default": "Premium Hoodie",
-          "info": "e.g., Hoodie, T-Shirt, Sweatshirt"
-        },
         {
           "type": "text",
           "id": "product_name",
           "label": "Product Name",
-          "default": "Premium Cotton Hoodie"
+          "default": "Premium Hoodie"
         },
         {
           "type": "richtext",
           "id": "product_description",
           "label": "Description",
-          "default": "<p>Crafted from premium cotton blend with superior stitching and attention to detail. Perfect for brands seeking high-quality blank apparel.</p>"
+          "default": "<p>High-quality hoodie manufactured with attention to detail and premium materials.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Product Details",
+          "default": "<p><strong>Material:</strong> 100% Cotton<br><strong>Weight:</strong> 280 GSM<br><strong>Sizes:</strong> XS - 3XL</p>"
         },
         {
           "type": "header",
-          "content": "Product Images"
+          "content": "Product Images (up to 5)"
         },
         {
-          "type": "textarea",
-          "id": "product_images",
-          "label": "Image URLs",
-          "info": "Enter image URLs separated by commas. Upload images to Files first, then copy URLs here.",
-          "placeholder": "https://cdn.shopify.com/image1.jpg, https://cdn.shopify.com/image2.jpg"
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image 1"
         },
         {
-          "type": "header",
-          "content": "Specifications"
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
         },
         {
-          "type": "text",
-          "id": "material",
-          "label": "Material",
-          "default": "100% Cotton",
-          "placeholder": "e.g., 100% Cotton, Cotton Blend"
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3"
         },
         {
-          "type": "text",
-          "id": "gsm",
-          "label": "GSM/Weight",
-          "default": "280 GSM",
-          "placeholder": "e.g., 280 GSM, 320 GSM"
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image 4"
         },
         {
-          "type": "text",
-          "id": "sizes",
-          "label": "Available Sizes",
-          "default": "XS - 3XL",
-          "placeholder": "e.g., XS - 3XL, S - XXL"
-        },
-        {
-          "type": "text",
-          "id": "colors",
-          "label": "Available Colors",
-          "default": "20+ Colors",
-          "placeholder": "e.g., 20+ Colors, Custom Colors"
-        },
-        {
-          "type": "text",
-          "id": "moq",
-          "label": "Minimum Order Quantity",
-          "default": "50 pieces",
-          "placeholder": "e.g., 50 pieces, 100 pieces"
-        },
-        {
-          "type": "text",
-          "id": "lead_time",
-          "label": "Lead Time",
-          "default": "2-3 weeks",
-          "placeholder": "e.g., 2-3 weeks, 15-20 days"
-        },
-        {
-          "type": "header",
-          "content": "Call to Action"
-        },
-        {
-          "type": "text",
-          "id": "cta_text",
-          "label": "Button Text",
-          "default": "Get Quote"
-        },
-        {
-          "type": "url",
-          "id": "cta_url",
-          "label": "Button Link"
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Image 5"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Product Showcase Gallery",
+      "name": "Portfolio Showcase",
       "blocks": [
         {
           "type": "product",
           "settings": {
-            "product_category": "Premium Hoodie",
-            "product_name": "Cotton Blend Hoodie",
-            "product_description": "<p>Premium quality hoodie made from finest cotton blend. Features reinforced stitching, pre-shrunk fabric, and superior durability.</p>",
-            "material": "80% Cotton, 20% Polyester",
-            "gsm": "320 GSM",
-            "sizes": "XS - 3XL",
-            "colors": "25+ Colors Available",
-            "moq": "50 pieces",
-            "lead_time": "2-3 weeks",
-            "cta_text": "Request Quote"
-          }
-        },
-        {
-          "type": "product",
-          "settings": {
-            "product_category": "Basic T-Shirt",
-            "product_name": "Premium Cotton Tee",
-            "product_description": "<p>Soft, comfortable basic tee perfect for printing and branding. Made from high-quality ring-spun cotton.</p>",
-            "material": "100% Ring-Spun Cotton",
-            "gsm": "180 GSM",
-            "sizes": "XS - 2XL",
-            "colors": "30+ Colors Available",
-            "moq": "100 pieces",
-            "lead_time": "1-2 weeks",
-            "cta_text": "Get Sample"
+            "product_name": "Premium Cotton Hoodie",
+            "product_description": "<p>Expertly crafted hoodie featuring premium cotton blend, reinforced stitching, and superior comfort.</p>",
+            "details": "<p><strong>Material:</strong> 80% Cotton, 20% Polyester<br><strong>Weight:</strong> 320 GSM<br><strong>Features:</strong> Kangaroo pocket, ribbed cuffs<br><strong>Colors:</strong> Available in 25+ colors</p>"
           }
         }
       ]
