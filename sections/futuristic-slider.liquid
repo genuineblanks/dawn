@@ -363,17 +363,10 @@ document.addEventListener('DOMContentLoaded', function() {
     return categoryMap[slideIndex]?.filter || 'products';
   }
   
-  // Get first slide index for a category
-  // Get first slide index for a category
+  // Get first slide index for a category (dynamic lookup)
   function getFirstSlideForCategory(category) {
-    const range = categoryRanges[category];
-    if (range && range.start !== null && range.start !== undefined) {
-      return range.start;
-    }
-    
-    // Fallback: find first slide with this category
-    const firstSlide = categoryMap.find(item => item.filter === category);
-    return firstSlide ? firstSlide.index : 0;
+    const found = categoryMap.find(item => item.filter === category);
+    return found ? found.index : 0;
   }
   
   // Update active filter tab based on current slide
