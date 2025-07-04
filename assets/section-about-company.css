@@ -345,3 +345,7 @@
 .about-company-section .scroll-indicator {
   z-index: 15;
 }
+
+.about-company-section .company-overlay {
+    display: none !important;
+}
