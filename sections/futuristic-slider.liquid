@@ -62,14 +62,13 @@
                   {% assign slide_index = 0 %}
                   {% for block in section.blocks %}
                     {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                    {% assign block_index = forloop.index0 %}
                     {% for i in (1..5) %}
                       {% assign image_key = 'image_' | append: i %}
                       {% assign current_image = block.settings[image_key] %}
                       {% if current_image != blank %}
                         <div class="swiper-slide portfolio-showcase__slide" 
                              data-filter="{{ block_filter }}" 
-                             data-product="{{ block_index }}"
+                             data-product="{{ forloop.index0 }}"
                              data-slide-index="{{ slide_index }}">
                           <div class="portfolio-showcase__slide-inner">
                             {{ current_image | image_url: width: 800 | image_tag: 
@@ -176,14 +175,13 @@
                 {% assign thumb_index = 0 %}
                 {% for block in section.blocks %}
                   {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                  {% assign block_index = forloop.index0 %}
                   {% for i in (1..5) %}
                     {% assign image_key = 'image_' | append: i %}
                     {% assign current_image = block.settings[image_key] %}
                     {% if current_image != blank %}
                       <div class="swiper-slide portfolio-showcase__thumb-slide" 
                            data-filter="{{ block_filter }}" 
-                           data-product="{{ block_index }}"
+                           data-product="{{ forloop.index0 }}"
                            data-thumb-index="{{ thumb_index }}">
                         <div class="portfolio-showcase__thumb-container">
                           {{ current_image | image_url: width: 150 | image_tag: 
@@ -410,10 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Update product information based on active slide
   function updateProductInfo(slideIndex) {
-    if (!categoryMap[slideIndex]) {
-      console.error('No category mapping found for slide index:', slideIndex);
-      return;
-    }
+    if (!categoryMap[slideIndex]) return;
     
     const currentSlide = categoryMap[slideIndex];
     const productIndex = currentSlide.productIndex;
@@ -426,28 +421,30 @@ document.addEventListener('DOMContentLoaded', function() {
       info.style.display = 'none';
     });
     
-    // Find the correct product info - use exact match first
+    // Show the correct product info - try multiple selectors to ensure we find it
     let targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
+    
+    // If not found, try without filter (fallback)
+    if (!targetInfo) {
+      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"]`);
+    }
+    
+    // If still not found, try by filter only and show first one
+    if (!targetInfo) {
+      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${category}"]`);
+    }
     
     if (targetInfo) {
       targetInfo.style.display = 'block';
-      console.log('✅ Successfully showing product info for product:', productIndex, 'category:', category);
+      console.log('Showing product info for:', targetInfo.getAttribute('data-product'), targetInfo.getAttribute('data-filter'));
     } else {
-      console.error('❌ Could not find product info for product:', productIndex, 'category:', category);
-      
-      // Debug: Show what's available
+      console.error('Could not find product info for product:', productIndex, 'category:', category);
+      // Debug: log all available product info elements
       const allInfos = section.querySelectorAll('.portfolio-showcase__product-info');
       console.log('Available product info elements:');
-      allInfos.forEach((info, index) => {
-        console.log(`${index}: Product=${info.getAttribute('data-product')}, Filter=${info.getAttribute('data-filter')}, HasContent=${info.innerHTML.trim().length > 50}`);
+      allInfos.forEach(info => {
+        console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'));
       });
-      
-      // Fallback: try to show any info for this category
-      const fallbackInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${category}"]`);
-      if (fallbackInfo) {
-        fallbackInfo.style.display = 'block';
-        console.log('🔄 Showing fallback info for category:', category);
-      }
     }
   }
 

@@ -142,23 +142,22 @@
 .portfolio-showcase__wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 2.5rem;
   position: relative;
   z-index: 2;
 }
 
-/* Main Content - Full Width Vertical Layout */
+/* Main Content - Horizontal Layout */
 .portfolio-showcase__main-content {
   display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
+  gap: 2.5rem;
+  align-items: flex-start;
 }
 
-/* Gallery Section - Full Width */
+/* Gallery Section - Left Side */
 .portfolio-showcase__gallery {
-  width: 100%;
-  margin-bottom: 2rem;
+  flex: 2.3;
+  min-width: 0;
 }
 
 .portfolio-showcase__main-container {
@@ -361,19 +360,22 @@
   box-shadow: 0 0.6rem 1.8rem rgba(73, 80, 87, 0.2);
 }
 
-/* Product Information Panel - Middle Section */
+/* Product Information Panel - Right Side */
 .portfolio-showcase__info {
-  width: 100%;
+  flex: 0.7;
+  min-width: 24rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(25px);
   border-radius: 1.5rem;
   padding: 2rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.3);
   box-shadow: 
-    0 1rem 3rem rgba(33, 37, 41, 0.08),
-    0 0.5rem 1.5rem rgba(33, 37, 41, 0.06);
+    0 2rem 6rem rgba(33, 37, 41, 0.1),
+    0 1rem 3rem rgba(33, 37, 41, 0.06);
   position: relative;
-  margin-bottom: 2rem;
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
 }
 
 .portfolio-showcase__info::before {
@@ -389,20 +391,29 @@
 
 .portfolio-showcase__product-info {
   transition: opacity 0.3s ease, transform 0.3s ease;
-  display: flex;
-  gap: 3rem;
-  align-items: flex-start;
 }
 
 .portfolio-showcase__product-title {
-  display: none;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #212529;
+  margin: 0 0 1.2rem 0;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+.portfolio-showcase__product-title {
+  background: linear-gradient(135deg, #212529 0%, #495057 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .portfolio-showcase__description {
-  flex: 2;
-  margin-bottom: 0;
-  font-size: 1.4rem;
-  line-height: 1.6;
+  margin-bottom: 1.8rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
   color: #495057;
   font-weight: 400;
 }
@@ -415,16 +426,14 @@
   margin-bottom: 0;
 }
 
-/* Details Section - Horizontal */
+/* Details Section */
 .portfolio-showcase__details {
-  flex: 1;
   background: linear-gradient(135deg, rgba(248, 249, 250, 0.8) 0%, rgba(233, 236, 239, 0.8) 100%);
   border-radius: 1rem;
   padding: 1.5rem;
   border: 0.1rem solid rgba(222, 226, 230, 0.5);
   position: relative;
   overflow: hidden;
-  margin-bottom: 0;
 }
 
 .portfolio-showcase__details::before {
@@ -690,27 +699,22 @@
   }
   
   .portfolio-showcase__wrapper {
-    gap: 0;
+    gap: 2rem;
   }
   
   .portfolio-showcase__main-content {
     flex-direction: column;
-    gap: 0;
+    gap: 2rem;
   }
   
   .portfolio-showcase__info {
-    margin-bottom: 1.5rem;
-    padding: 1.5rem;
-  }
-  
-  .portfolio-showcase__product-info {
-    flex-direction: column;
-    gap: 1.5rem;
+    min-width: auto;
+    position: static;
+    padding: 2rem;
   }
   
   .portfolio-showcase__main-container {
     aspect-ratio: 3/2;
-    margin-bottom: 1.5rem;
   }
   
   .portfolio-showcase__nav {
@@ -733,6 +737,10 @@
   .portfolio-showcase__filter-tab {
     justify-content: center;
   }
+  
+  .portfolio-showcase__product-title {
+    font-size: 1.8rem;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -741,12 +749,11 @@
   }
   
   .portfolio-showcase__info {
-    padding: 1.2rem;
-    margin-bottom: 1.2rem;
+    padding: 1.8rem;
   }
   
-  .portfolio-showcase__product-info {
-    gap: 1.2rem;
+  .portfolio-showcase__product-title {
+    font-size: 1.6rem;
   }
   
   .portfolio-showcase__thumb-image {
@@ -761,14 +768,6 @@
   .portfolio-showcase__nav {
     width: 3.5rem;
     height: 3.5rem;
-  }
-  
-  .portfolio-showcase__description {
-    font-size: 1.2rem;
-  }
-  
-  .portfolio-showcase__details-content {
-    font-size: 1.1rem;
   }
 }
 
