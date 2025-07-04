@@ -539,7 +539,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "LUXURY COLLECTION LOOKBOOK",
-            "button_link_1": "shopify://collections/sweatshirt",
+            "button_link_1": "shopify://pages/futuristic",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
