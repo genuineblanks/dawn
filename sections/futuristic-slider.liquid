@@ -63,7 +63,7 @@
                   {% for block in section.blocks %}
                     {% assign block_filter = block.settings.collection_type | default: 'products' %}
                     {% assign block_index = forloop.index0 %}
-                    {% for i in (1..5) %}
+                    {% for i in (1..15) %}
                       {% assign image_key = 'image_' | append: i %}
                       {% assign current_image = block.settings[image_key] %}
                       {% if current_image != blank %}
@@ -182,7 +182,7 @@
                 {% for block in section.blocks %}
                   {% assign block_filter = block.settings.collection_type | default: 'products' %}
                   {% assign block_index = forloop.index0 %}
-                  {% for i in (1..5) %}
+                  {% for i in (1..15) %}
                     {% assign image_key = 'image_' | append: i %}
                     {% assign current_image = block.settings[image_key] %}
                     {% if current_image != blank %}
