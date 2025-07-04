@@ -713,31 +713,9 @@
     padding: 2rem;
   }
   
-  /* ——————————— MOBILE SLIDER RATIO ——————————— */
-  /* If browser understands aspect-ratio, use it */
-  @supports (aspect-ratio: 3/2) {
-    .portfolio-showcase__main-container {
-      aspect-ratio: 3/2;
-    }
+  .portfolio-showcase__main-container {
+    aspect-ratio: 3/2;
   }
-  /* Otherwise fall back to padding-top hack */
-  @supports not (aspect-ratio: 3/2) {
-    .portfolio-showcase__main-container {
-      position: relative;
-      height: 0;
-      padding-top: 66.6667%; /* 2 ÷ 3 × 100% */
-    }
-    .portfolio-showcase__main-swiper,
-    .portfolio-showcase__slide,
-    .portfolio-showcase__slide-inner,
-    .portfolio-showcase__image {
-      position: absolute !important;
-      top: 0; left: 0;
-      width: 100% !important;
-      height: 100% !important;
-    }
-  }
-  /* ———————————————————————————————————————— */
   
   .portfolio-showcase__nav {
     width: 4rem;
