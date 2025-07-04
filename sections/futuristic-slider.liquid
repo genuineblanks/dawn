@@ -244,8 +244,6 @@
               </div>
             </div>
           {% endif %}
-        </div>
-
         {% comment %} Product Information Panel {% endcomment %}
         <div class="portfolio-showcase__info">
           <div class="portfolio-showcase__info-content">
@@ -290,21 +288,16 @@
             {% endfor %}
           </div>
 
-          {% comment %} Product Selector {% endcomment %}
+          {% comment %} Product Selector - Display Only {% endcomment %}
           {% if section.blocks.size > 1 %}
             <div class="portfolio-showcase__selector">
               {% for block in section.blocks %}
-                <button class="portfolio-showcase__selector-item {% if forloop.first %}active{% endif %}" 
-                        data-product="{{ forloop.index0 }}"
-                        data-filter="{{ block.settings.collection_type | default: 'products' }}">
+                <div class="portfolio-showcase__selector-item {% if forloop.first %}active{% endif %}" 
+                     data-product="{{ forloop.index0 }}"
+                     data-filter="{{ block.settings.collection_type | default: 'products' }}">
                   <span class="portfolio-showcase__selector-number">{{ forloop.index | prepend: '0' }}</span>
-                  <span class="portfolio-showcase__selector-name">{{ block.settings.product_name | default: 'Item' | truncate: 15 }}</span>
-                  <span class="portfolio-showcase__selector-arrow">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </span>
-                </button>
+                  <span class="portfolio-showcase__selector-name">{{ block.settings.product_name | default: 'Item' | truncate: 20 }}</span>
+                </div>
               {% endfor %}
             </div>
           {% endif %}
@@ -511,6 +504,19 @@ document.addEventListener('DOMContentLoaded', function() {
             slidesPerView: 'auto',
             freeMode: true,
             watchSlidesProgress: true,
+            on: {
+              click: function(swiper, event) {
+                // Handle thumbnail clicks for filtered content
+                const clickedSlide = event.target.closest('.swiper-slide');
+                if (clickedSlide && clickedSlide.style.display !== 'none') {
+                  const visibleSlides = Array.from(thumbSwiper.querySelectorAll('.swiper-slide')).filter(slide => slide.style.display !== 'none');
+                  const slideIndex = visibleSlides.indexOf(clickedSlide);
+                  if (mainSwiperInstance && slideIndex >= 0) {
+                    mainSwiperInstance.slideTo(slideIndex);
+                  }
+                }
+              }
+            },
             breakpoints: {
               640: { slidesPerView: 6, spaceBetween: 16 },
               768: { slidesPerView: 8, spaceBetween: 16 },
@@ -525,7 +531,8 @@ document.addEventListener('DOMContentLoaded', function() {
           effect: 'fade',
           fadeEffect: { crossFade: true },
           speed: 800,
-          autoplay: {{ section.settings.autoplay | json }} ? {
+          loop: visibleSlides.length > 1,
+          autoplay: {{ section.settings.autoplay | json }} && visibleSlides.length > 1 ? {
             delay: {{ section.settings.autoplay_speed | times: 1000 }},
             disableOnInteraction: false,
             pauseOnMouseEnter: true
@@ -549,6 +556,10 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             autoplayTimeLeft(s, time, progress) {
               updateAutoplayProgress(1 - progress);
+            },
+            init: function() {
+              // Ensure navigation works on init
+              this.update();
             }
           }
         });
@@ -630,29 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
     tab.addEventListener('click', function() {
       const filter = this.getAttribute('data-filter');
       filterContent(filter);
-    });
-  });
-
-  section.querySelectorAll('.portfolio-showcase__selector-item').forEach(item => {
-    item.addEventListener('click', function() {
-      const productIndex = parseInt(this.getAttribute('data-product'));
-      const itemFilter = this.getAttribute('data-filter');
-      
-      // Only proceed if this selector is for the current active filter
-      if (itemFilter !== currentFilter) return;
-      
-      // Find the slide index within the current filtered content
-      const visibleSlides = Array.from(section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${currentFilter}"][style*="block"]`));
-      const targetSlides = visibleSlides.filter(slide => parseInt(slide.getAttribute('data-product')) === productIndex);
-      
-      if (targetSlides.length > 0) {
-        // Find the index of the first slide for this product within visible slides
-        const slideIndex = visibleSlides.indexOf(targetSlides[0]);
-        
-        if (mainSwiperInstance && slideIndex >= 0) {
-          mainSwiperInstance.slideTo(slideIndex);
-        }
-      }
     });
   });
 
