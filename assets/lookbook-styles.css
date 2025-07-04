@@ -1,12 +1,13 @@
-/* lookbook-styles.css - Place this in the assets folder */
+/* lookbook-custom.css - Place this in the assets folder */
 
-* {
+/* Reset and base styles for lookbook page */
+.lookbook-page * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
+.lookbook-page {
     font-family: 'Arial', sans-serif;
     background: #000;
     color: #fff;
@@ -136,6 +137,8 @@ body {
     border-color: rgba(255,255,255,0.6);
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    color: #fff;
+    text-decoration: none;
 }
 
 .page-header {
@@ -161,6 +164,7 @@ body {
     font-weight: 300;
     letter-spacing: 0.2em;
     text-transform: uppercase;
+    color: #fff;
 }
 
 .nav-home {
@@ -174,6 +178,7 @@ body {
 
 .nav-home:hover {
     color: #fff;
+    text-decoration: none;
 }
 
 .divider-line {
@@ -250,6 +255,7 @@ body {
     pointer-events: none;
 }
 
+/* Mobile responsiveness */
 @media (max-width: 768px) {
     .lookbook-container {
         flex-direction: column;
@@ -278,5 +284,134 @@ body {
     
     .page-header {
         padding: 1rem;
+    }
+    
+    .section-description {
+        max-width: 250px;
+        font-size: 0.9rem;
+    }
+    
+    .explore-btn {
+        padding: 12px 30px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Additional mobile adjustments */
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 2rem;
+        letter-spacing: 0.15em;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .section-description {
+        max-width: 220px;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-header {
+        padding: 0.75rem;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-home {
+        font-size: 0.8rem;
+    }
+}
+
+/* Override theme styles specifically for lookbook page */
+.lookbook-page .page-width {
+    max-width: none;
+    padding: 0;
+}
+
+.lookbook-page #MainContent {
+    padding: 0;
+    margin: 0;
+}
+
+.lookbook-page .shopify-section {
+    margin: 0;
+}
+
+/* Ensure full viewport coverage */
+.lookbook-page {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.lookbook-page body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Focus states for accessibility */
+.explore-btn:focus {
+    outline: 2px solid rgba(255,255,255,0.8);
+    outline-offset: 2px;
+}
+
+.nav-home:focus {
+    outline: 2px solid rgba(255,255,255,0.8);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .section-overlay {
+        background: rgba(0,0,0,0.6);
+    }
+    
+    .luxury-section .section-title,
+    .highend-section .section-title {
+        color: #fff;
+        -webkit-text-fill-color: #fff;
+    }
+    
+    .explore-btn {
+        border-color: rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.2);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .lookbook-section,
+    .section-content,
+    .section-overlay,
+    .explore-btn {
+        transition: none;
+    }
+    
+    .click-indicator {
+        animation: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .lookbook-container {
+        height: auto;
+        flex-direction: column;
+    }
+    
+    .lookbook-section {
+        width: 100%;
+        height: 50vh;
+        page-break-inside: avoid;
+    }
+    
+    .page-header {
+        position: relative;
+        background: #000;
     }
 }
