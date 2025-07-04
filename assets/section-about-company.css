@@ -10,8 +10,21 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%) !important;
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Override the problematic theme CSS */
+.about-company-section,
+.about-company-section *,
+.about-company-section::before,
+.about-company-section::after {
+  background-color: transparent !important;
+}
+
+/* Then reapply our specific backgrounds */
+.about-company-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%) !important;
 }
 
 .about-company-section .company-media {
@@ -344,8 +357,4 @@
 
 .about-company-section .scroll-indicator {
   z-index: 15;
-}
-
-.about-company-section .company-overlay {
-    display: none !important;
 }
