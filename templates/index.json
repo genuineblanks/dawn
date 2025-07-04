@@ -420,7 +420,7 @@
         "buttons_U7f6Q8": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "WHAT YOU NEED TO GET STARTED",
+            "button_label_1": "WHAT YOU NEED TO GET STARTED & faq's",
             "button_link_1": "shopify://pages/how-does-it-work",
             "button_style_secondary_1": false,
             "button_label_2": "",
