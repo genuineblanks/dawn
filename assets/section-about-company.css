@@ -1,4 +1,4 @@
-/* section-about-company.css - Futuristic About Section */
+/* section-about-company.css - Properly scoped to avoid header conflicts */
 
 .about-company-section {
   height: 80vh;
@@ -14,7 +14,7 @@
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
 }
 
-.company-media {
+.about-company-section .company-media {
   position: absolute;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@
   z-index: 1;
 }
 
-.company-bg-image {
+.about-company-section .company-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -35,7 +35,7 @@
   transform: scale(1.02);
 }
 
-.company-overlay {
+.about-company-section .company-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -50,7 +50,7 @@
   opacity: 0.9;
 }
 
-.company-content {
+.about-company-section .company-content {
   position: relative;
   text-align: center;
   z-index: 10;
@@ -58,13 +58,13 @@
   color: #2c2c2c;
 }
 
-.content-wrapper {
+.about-company-section .content-wrapper {
   max-width: 900px;
   margin: 0 auto;
   padding: 4rem 2rem;
 }
 
-.company-title {
+.about-company-section .company-title {
   font-size: 1.8rem;
   font-weight: 200;
   letter-spacing: 0.05em;
@@ -76,7 +76,7 @@
   position: relative;
 }
 
-.company-title::after {
+.about-company-section .company-title::after {
   content: '';
   position: absolute;
   bottom: -1rem;
@@ -88,7 +88,7 @@
   opacity: 0.3;
 }
 
-.company-description {
+.about-company-section .company-description {
   font-size: 1.1rem;
   line-height: 1.6;
   opacity: 0.8;
@@ -99,7 +99,7 @@
   font-style: italic;
 }
 
-.company-button {
+.about-company-section .company-button {
   display: inline-block;
   padding: 16px 40px;
   border: 1px solid currentColor;
@@ -116,7 +116,7 @@
   overflow: hidden;
 }
 
-.company-button:before {
+.about-company-section .company-button:before {
   content: '';
   position: absolute;
   top: 0;
@@ -128,18 +128,18 @@
   z-index: -1;
 }
 
-.company-button:hover:before {
+.about-company-section .company-button:hover:before {
   left: 0;
 }
 
-.company-button:hover {
+.about-company-section .company-button:hover {
   color: #ffffff;
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(44, 44, 44, 0.2);
 }
 
-.scroll-indicator {
+.about-company-section .scroll-indicator {
   position: absolute;
   bottom: 3rem;
   left: 50%;
@@ -150,7 +150,7 @@
   z-index: 10;
 }
 
-.scroll-line {
+.about-company-section .scroll-line {
   width: 1px;
   height: 40px;
   background: currentColor;
@@ -160,17 +160,17 @@
   transition: all 0.3s ease;
 }
 
-.scroll-text {
+.about-company-section .scroll-text {
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   opacity: 0.5;
   font-weight: 300;
   color: inherit;
-  animation: scroll-pulse 2s infinite;
+  animation: about-scroll-pulse 2s infinite;
 }
 
-@keyframes scroll-pulse {
+@keyframes about-scroll-pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 0.8; }
 }
@@ -201,7 +201,7 @@
 }
 
 /* Geometric accent lines */
-.content-wrapper::before {
+.about-company-section .content-wrapper::before {
   content: '';
   position: absolute;
   top: 0;
@@ -212,7 +212,7 @@
   opacity: 0.15;
 }
 
-.content-wrapper::after {
+.about-company-section .content-wrapper::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -230,102 +230,102 @@
     min-height: 500px;
   }
   
-  .content-wrapper {
+  .about-company-section .content-wrapper {
     max-width: 100%;
     padding: 3rem 1.5rem;
   }
   
-  .company-title {
+  .about-company-section .company-title {
     font-size: 1.4rem;
     letter-spacing: 0.03em;
     margin-bottom: 2.5rem;
   }
   
-  .company-description {
+  .about-company-section .company-description {
     font-size: 1rem;
     max-width: 100%;
     margin-bottom: 2.5rem;
   }
   
-  .company-button {
+  .about-company-section .company-button {
     padding: 14px 32px;
     font-size: 0.8rem;
   }
   
-  .scroll-indicator {
+  .about-company-section .scroll-indicator {
     bottom: 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .company-title {
+  .about-company-section .company-title {
     font-size: 1.2rem;
     line-height: 1.3;
   }
   
-  .company-description {
+  .about-company-section .company-description {
     font-size: 0.95rem;
     line-height: 1.5;
   }
   
-  .content-wrapper {
+  .about-company-section .content-wrapper {
     padding: 2.5rem 1rem;
   }
   
-  .company-button {
+  .about-company-section .company-button {
     padding: 12px 28px;
     font-size: 0.75rem;
   }
 }
 
 /* Focus states for accessibility */
-.company-button:focus {
+.about-company-section .company-button:focus {
   outline: 2px solid currentColor;
   outline-offset: 3px;
 }
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-  .company-overlay {
+  .about-company-section .company-overlay {
     background: rgba(255, 255, 255, 0.95);
   }
   
-  .company-button {
+  .about-company-section .company-button {
     border-width: 2px;
   }
   
-  .scroll-line,
-  .scroll-text {
+  .about-company-section .scroll-line,
+  .about-company-section .scroll-text {
     opacity: 1;
   }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .company-content,
-  .company-button,
-  .company-bg-image,
-  .scroll-line {
+  .about-company-section .company-content,
+  .about-company-section .company-button,
+  .about-company-section .company-bg-image,
+  .about-company-section .scroll-line {
     transition: none;
   }
   
-  .scroll-text {
+  .about-company-section .scroll-text {
     animation: none;
   }
   
-  .company-button:before {
+  .about-company-section .company-button:before {
     display: none;
   }
 }
 
 /* Premium scroll effects */
-.scroll-trigger.animate--fade-in {
+.about-company-section.scroll-trigger.animate--fade-in {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.scroll-trigger.animate--fade-in.animate {
+.about-company-section.scroll-trigger.animate--fade-in.animate {
   opacity: 1;
   transform: translateY(0);
 }
@@ -336,11 +336,11 @@
   z-index: 1;
 }
 
-.company-content {
+.about-company-section .company-content {
   position: relative;
   z-index: 10;
 }
 
-.scroll-indicator {
+.about-company-section .scroll-indicator {
   z-index: 15;
 }
