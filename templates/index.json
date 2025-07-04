@@ -398,6 +398,24 @@
         "padding_bottom": 20
       }
     },
+    "about_company_section_RkhMYH": {
+      "type": "about-company-section",
+      "name": "About Company Section",
+      "settings": {
+        "dynamic_class": "",
+        "section_height": 80,
+        "min_height": 600,
+        "overlay_color": "#ffffff",
+        "overlay_opacity": 85,
+        "text_color": "#2c2c2c",
+        "company_title": "We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal. Our facilities and machines are at the cutting edge of technology.",
+        "company_description": "Our commitment to excellence drives everything we do, from concept to creation.",
+        "button_text": "Explore Past Products, Factory & Team",
+        "button_url": "",
+        "show_scroll_indicator": true,
+        "scroll_text": "Scroll"
+      }
+    },
     "image_banner_tFFqdH": {
       "type": "image-banner",
       "blocks": {
@@ -770,6 +788,7 @@
     "autoplay_video_PAxbzR",
     "image_banner_kEcnHz",
     "image_banner_PJVdGt",
+    "about_company_section_RkhMYH",
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
     "accessories_design_split_GRCNtp",
