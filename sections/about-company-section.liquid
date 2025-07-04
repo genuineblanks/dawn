@@ -31,8 +31,10 @@
   endif
 -%}
 
-<div id="AboutCompany-{{ section.id }}">
-  <div class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}">
+<div
+  id="AboutCompany-{{ section.id }}"
+  class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
+>
     {%- if section.settings.bg_image != blank -%}
       <div class="company-media">
         {{
@@ -78,7 +80,6 @@
       </div>
     {% endif %}
   </div>
-</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
