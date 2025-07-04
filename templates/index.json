@@ -532,6 +532,17 @@
         "padding_bottom": 36
       }
     },
+    "page_yUPEwP": {
+      "type": "page",
+      "name": "t:sections.page.presets.name",
+      "settings": {
+        "page": "lookbook",
+        "heading_size": "h1",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "image_banner_mbytrt": {
       "type": "image-banner",
       "blocks": {
@@ -706,6 +717,7 @@
     "image_banner_PJVdGt",
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
+    "page_yUPEwP",
     "image_banner_mbytrt",
     "text_grid_itwK3a"
   ]
