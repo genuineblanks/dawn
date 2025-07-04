@@ -574,48 +574,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Lightbox functionality
-  const lightbox = section.querySelector('.portfolio-showcase__lightbox');
+  // get references once
+  const spinner      = document.getElementById('zoom-spinner');
+  const lightbox     = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
-
+  
   section.addEventListener('click', function(e) {
     const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
     if (!clickedZoom) return;
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
   
-    // 1) figure out which URL we actually want
-    const activeIndex   = mainSwiperInstance.activeIndex;
-    const activeSlideEl = mainSwiperInstance.slides[activeIndex];
-    const activeBtn     = activeSlideEl.querySelector('.portfolio-showcase__zoom-btn');
+    // determine the correct URL for the active slide
+    const idx           = mainSwiperInstance.activeIndex;
+    const activeSlide   = mainSwiperInstance.slides[idx];
+    const activeBtn     = activeSlide.querySelector('.portfolio-showcase__zoom-btn');
     const imageUrl      = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
   
-    // 2) open the lightbox straight away
-    lightbox.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // show the spinner overlay
+    spinner.style.display = 'flex';
   
-    // 3) clear out or leave the previous src – here we clear it so user sees the frame right away
+    // clear out any old lightbox image
     lightboxImage.src = '';
   
-    // 4) now preload the new image…
+    // preload the new image
     const preload = new Image();
     preload.onload = () => {
-      // …and swap it in as soon as it’s ready
+      // hide spinner, then inject & show lightbox
+      spinner.style.display = 'none';
       lightboxImage.src = imageUrl;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
     };
     preload.src = imageUrl;
-  });
-
-  lightbox.querySelector('.portfolio-showcase__lightbox-close').addEventListener('click', function() {
-    lightbox.classList.remove('active');
-    document.body.style.overflow = '';
-  });
-
-  lightbox.addEventListener('click', function(e) {
-    if (e.target === lightbox || e.target.classList.contains('portfolio-showcase__lightbox-backdrop')) {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
-    }
   });
 
   // Initialize everything
