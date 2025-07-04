@@ -351,24 +351,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show/hide product info based on filter
     section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
-      if (info.getAttribute('data-filter') === filter) {
-        info.style.display = 'block';
-      } else {
-        info.style.display = 'none';
-      }
+      info.style.display = 'none';
     });
     
     // Reinitialize swipers after DOM changes
     setTimeout(() => {
       initializeSwipers();
       
-      // Show first visible product info
+      // Show first visible product info for this filter
       const firstVisibleInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${filter}"]`);
       if (firstVisibleInfo) {
-        section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
-          info.style.display = 'none';
-        });
         firstVisibleInfo.style.display = 'block';
+      }
+      
+      // Reset to first slide when switching filters
+      if (mainSwiperInstance) {
+        mainSwiperInstance.slideTo(0, 0);
       }
     }, 100);
   }
