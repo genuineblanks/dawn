@@ -452,6 +452,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function jumpToCategory(category) {
     const firstSlideIndex = getFirstSlideForCategory(category);
     
+    console.log('Jumping to category:', category, 'First slide index:', firstSlideIndex);
+    
     if (mainSwiperInstance) {
       mainSwiperInstance.slideTo(firstSlideIndex);
     }
@@ -460,7 +462,13 @@ document.addEventListener('DOMContentLoaded', function() {
       thumbSwiperInstance.slideTo(firstSlideIndex);
     }
     
+    // Update the current filter
     currentFilter = category;
+    
+    // Manually update the product info since slideTo might not trigger slideChange event immediately
+    updateProductInfo(firstSlideIndex);
+    
+    // Also ensure the filter tab appearance is updated
     updateActiveFilterTab(firstSlideIndex);
   }
 
