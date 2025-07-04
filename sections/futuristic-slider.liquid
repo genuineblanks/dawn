@@ -578,30 +578,31 @@ document.addEventListener('DOMContentLoaded', function() {
   const lightbox = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
 
-  // Zoom Handler
   section.addEventListener('click', function(e) {
     const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
     if (!clickedZoom) return;
     e.preventDefault();
     e.stopPropagation();
   
-    // figure out the correct image URL for the active slide
+    // 1) figure out which URL we actually want
     const activeIndex   = mainSwiperInstance.activeIndex;
     const activeSlideEl = mainSwiperInstance.slides[activeIndex];
     const activeBtn     = activeSlideEl.querySelector('.portfolio-showcase__zoom-btn');
     const imageUrl      = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
   
-    // preload it first
+    // 2) open the lightbox straight away
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  
+    // 3) clear out or leave the previous src – here we clear it so user sees the frame right away
+    lightboxImage.src = '';
+  
+    // 4) now preload the new image…
     const preload = new Image();
     preload.onload = () => {
-      // once loaded, swap into the lightbox and then show
+      // …and swap it in as soon as it’s ready
       lightboxImage.src = imageUrl;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
     };
-    // immediately clear old image so nothing flashes
-    lightboxImage.src = '';
-    // kick off the preload
     preload.src = imageUrl;
   });
 
