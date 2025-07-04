@@ -16,12 +16,24 @@
           "type": "item",
           "settings": {
             "collection_type": "products",
-            "product_name": "Premium Hoodie",
+            "product_name": "Show - Room",
             "product_description": "<p>High-quality item crafted with attention to detail and premium materials.</p>",
-            "details": "<p><strong>Material:</strong> 100% Cotton<br/><strong>Weight:</strong> 280 GSM<br/><strong>Sizes:</strong> XS - </p>",
-            "image_1": "shopify://shop_images/ChatGPT_Image_17_05_2025_18_55_19.png",
-            "image_2": "shopify://shop_images/ONYX_04TSHIRT_PNG.png",
-            "image_3": "shopify://shop_images/ChatGPT_Image_17_05_2025_18_40_1811.png"
+            "details": "",
+            "image_1": "shopify://shop_images/DSC09644_copiar.jpg",
+            "image_2": "shopify://shop_images/DSC09656_copiar.jpg",
+            "image_3": "shopify://shop_images/DSC09649_copiar.jpg",
+            "image_4": "shopify://shop_images/DSC09685_copiar.jpg",
+            "image_5": "shopify://shop_images/DSC09677_copiar.jpg",
+            "image_6": "shopify://shop_images/DSC09676_copiar.jpg",
+            "image_7": "shopify://shop_images/DSC09673_copiar.jpg",
+            "image_8": "shopify://shop_images/DSC09682_copiar.jpg",
+            "image_9": "shopify://shop_images/DSC09672_copiar.jpg",
+            "image_10": "shopify://shop_images/DSC09678_copiar.jpg",
+            "image_11": "shopify://shop_images/DSC09690_copiar.jpg",
+            "image_12": "shopify://shop_images/DSC09687_copiar.jpg",
+            "image_13": "shopify://shop_images/DSC09693_copiar.jpg",
+            "image_14": "shopify://shop_images/DSC09662_copiar.jpg",
+            "image_15": "shopify://shop_images/DSC09665_copiar.jpg"
           }
         },
         "item_rGjhm8": {
