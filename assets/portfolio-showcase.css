@@ -692,128 +692,181 @@
   margin: 0;
 }
 
-/* Mobile Responsive */
-@media screen and (max-width: 768px) {
-  .portfolio-showcase {
-    padding: 3rem 0;
-  }
-  
-  .portfolio-showcase__wrapper {
-    gap: 2rem;
-  }
-  
-  .portfolio-showcase__main-content {
-    flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .portfolio-showcase__info {
-    min-width: auto;
-    position: static;
-    padding: 2rem;
-  }
-  
-  .portfolio-showcase__main-container {
-    aspect-ratio: 3/2;
-  }
-  
-  .portfolio-showcase__nav {
-    width: 4rem;
-    height: 4rem;
-  }
-  
-  .portfolio-showcase__thumb-image {
-    width: 6.5rem;
-    height: 4.875rem;
-  }
-  
-  .portfolio-showcase__filter-tabs {
-    flex-direction: column;
-    width: 100%;
-    max-width: 28rem;
-    margin: 0 auto;
-  }
-  
-  .portfolio-showcase__filter-tab {
-    justify-content: center;
-  }
-  
-  .portfolio-showcase__product-title {
-    font-size: 1.8rem;
-  }
+/* Portfolio Showcase - Compact Professional Design */
+.portfolio-showcase {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-@media screen and (max-width: 480px) {
-  .portfolio-showcase {
-    padding: 2.5rem 0;
-  }
-  
-  .portfolio-showcase__info {
-    padding: 1.8rem;
-  }
-  
-  .portfolio-showcase__product-title {
-    font-size: 1.6rem;
-  }
-  
-  .portfolio-showcase__thumb-image {
-    width: 5.5rem;
-    height: 4.125rem;
-  }
-  
-  .portfolio-showcase__thumbnails {
-    padding: 1.5rem;
-  }
-  
-  .portfolio-showcase__nav {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-}
-
-/* Performance optimizations */
-@media (prefers-reduced-motion: reduce) {
-  .portfolio-showcase *,
-  .portfolio-showcase *::before,
-  .portfolio-showcase *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Image Protection CSS */
-.portfolio-showcase__image,
-.portfolio-showcase__thumb-image,
-.portfolio-showcase__lightbox-image {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+.portfolio-showcase::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(33, 37, 41, 0.02) 0%, transparent 70%);
+  animation: slowRotate 60s linear infinite;
   pointer-events: none;
 }
 
-/* Disable right-click context menu */
-.portfolio-showcase__slide,
-.portfolio-showcase__thumb-container,
-.portfolio-showcase__lightbox-content {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+@keyframes slowRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* Re-enable pointer events for interactive elements */
-.portfolio-showcase__zoom-btn,
-.portfolio-showcase__nav,
-.portfolio-showcase__filter-tab,
-.portfolio-showcase__lightbox-close {
-  pointer-events: auto;
+/* Section Header */
+.portfolio-showcase__header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
 }
+
+.portfolio-showcase__title {
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #212529;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #212529 0%, #495057 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.portfolio-showcase__title::after {
+  content: '';
+  position: absolute;
+  bottom: -0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6rem;
+  height: 0.3rem;
+  background: linear-gradient(90deg, #6c757d, #adb5bd, #6c757d);
+  border-radius: 0.15rem;
+}
+
+.portfolio-showcase__subtitle {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: #495057;
+  max-width: 50rem;
+  margin: 0 auto;
+  font-weight: 400;
+}
+
+/* Collection Filter */
+.portfolio-showcase__filter {
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.portfolio-showcase__filter-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px);
+  border-radius: 1rem;
+  padding: 0.4rem;
+  box-shadow: 0 0.8rem 3.2rem rgba(33, 37, 41, 0.08);
+  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+  gap: 0.2rem;
+}
+
+.portfolio-showcase__filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-showcase__filter-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.portfolio-showcase__filter-tab:hover::before {
+  left: 100%;
+}
+
+.portfolio-showcase__filter-tab.active {
+  background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+  color: white;
+  box-shadow: 0 0.6rem 2.4rem rgba(73, 80, 87, 0.25);
+  transform: translateY(-0.1rem);
+}
+
+.portfolio-showcase__filter-icon {
+  transition: transform 0.3s ease;
+}
+
+.portfolio-showcase__filter-tab:hover .portfolio-showcase__filter-icon {
+  transform: scale(1.05);
+}
+
+.portfolio-showcase__filter-tab.active .portfolio-showcase__filter-icon {
+  transform: scale(1.02);
+}
+
+/* Main Wrapper */
+.portfolio-showcase__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Main Content - Horizontal Layout */
+.portfolio-showcase__main-content {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+/* Gallery Section - Left Side */
+.portfolio-showcase__gallery {
+  flex: 2.3;
+  min-width: 0;
+}
+
+/* Swiper Container with fallback */
+.portfolio-showcase__main-container {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 2rem 6rem rgba(33, 37, 41, 0.1),
+    0 1rem 3rem rgba(33, 37, 41, 0.06),
+    inset 0 0.1rem 0.1rem rgba(255, 255, 255, 0.4);
+  aspect-ratio: 4/3;
+  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+}
+
+@supports not (aspect-ratio: 4/3) {\
