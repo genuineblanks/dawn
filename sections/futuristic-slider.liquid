@@ -536,6 +536,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     const firstSlideIndex = getFirstSlideForCategory(category);
+    mainSwiperInstance.slideTo(firstSlideIndex, 300);
+    thumbSwiperInstance?.slideTo(firstSlideIndex, 300);
+
     
     console.log('Jumping to category:', category, 'First slide index:', firstSlideIndex);
     
