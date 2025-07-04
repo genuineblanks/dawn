@@ -828,7 +828,7 @@
     gap: 2rem;
   }
 
-  /* Stack slider full-width and hide the info panel */
+  /* Full-width slider, hide description */
   .portfolio-showcase__main-content {
     display: block;
   }
@@ -840,44 +840,33 @@
     display: none !important;
   }
 
-  /* Force a 3:2 slider box via padding-hack */
+  /* Slider container: maintain 3:2 on capable browsers, else use min-height */
   .portfolio-showcase__main-container {
-    aspect-ratio: auto !important;
-    height: 0 !important;
-    padding-top: 66.6667% !important; /* 2 ÷ 3 × 100% */
-    position: relative !important;
-  }
-  .portfolio-showcase__main-swiper,
-  .portfolio-showcase__slide,
-  .portfolio-showcase__slide-inner,
-  .portfolio-showcase__image {
-    position: absolute !important;
-    top: 0; left: 0;
-    width: 100% !important;
-    height: 100% !important;
+    aspect-ratio: 3/2;
+    min-height: 200px;    /* fallback for browsers ignoring aspect-ratio */
+    position: relative;   /* for Swiper’s absolute children */
   }
 
+  /* Navigation & thumbs sizing */
   .portfolio-showcase__nav {
     width: 4rem;
     height: 4rem;
   }
-
   .portfolio-showcase__thumb-image {
     width: 6.5rem;
     height: 4.875rem;
   }
 
+  /* Filter tabs & titles */
   .portfolio-showcase__filter-tabs {
     flex-direction: column;
     width: 100%;
     max-width: 28rem;
     margin: 0 auto;
   }
-
   .portfolio-showcase__filter-tab {
     justify-content: center;
   }
-
   .portfolio-showcase__product-title {
     font-size: 1.8rem;
   }
@@ -887,18 +876,14 @@
   .portfolio-showcase {
     padding: 2.5rem 0;
   }
-  /* Info is already hidden above */
-
   .portfolio-showcase__nav {
     width: 3.5rem;
     height: 3.5rem;
   }
-
   .portfolio-showcase__thumb-image {
     width: 5.5rem;
     height: 4.125rem;
   }
-
   .portfolio-showcase__thumbnails {
     padding: 1.5rem;
   }
