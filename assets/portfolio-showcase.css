@@ -1,727 +1,662 @@
-/* Portfolio Showcase - Compact Professional Design */
-.portfolio-showcase {
-  padding: 4rem 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.portfolio-showcase::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(33, 37, 41, 0.02) 0%, transparent 70%);
-  animation: slowRotate 60s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes slowRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Section Header */
-.portfolio-showcase__header {
-  text-align: center;
-  margin-bottom: 3rem;
-  position: relative;
-  z-index: 2;
-}
-
-.portfolio-showcase__title {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
-  font-weight: 700;
-  line-height: 1.2;
-  color: #212529;
-  margin: 0 0 1.5rem 0;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #212529 0%, #495057 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
-}
-
-.portfolio-showcase__title::after {
-  content: '';
-  position: absolute;
-  bottom: -0.8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6rem;
-  height: 0.3rem;
-  background: linear-gradient(90deg, #6c757d, #adb5bd, #6c757d);
-  border-radius: 0.15rem;
-}
-
-.portfolio-showcase__subtitle {
-  font-size: 1.4rem;
-  line-height: 1.6;
-  color: #495057;
-  max-width: 50rem;
-  margin: 0 auto;
-  font-weight: 400;
-}
-
-/* Collection Filter */
-.portfolio-showcase__filter {
-  margin-bottom: 3rem;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  z-index: 2;
-}
-
-.portfolio-showcase__filter-tabs {
-  display: flex;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(15px);
-  border-radius: 1rem;
-  padding: 0.4rem;
-  box-shadow: 0 0.8rem 3.2rem rgba(33, 37, 41, 0.08);
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  gap: 0.2rem;
-}
-
-.portfolio-showcase__filter-tab {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 1rem 1.5rem;
-  background: transparent;
-  border: none;
-  border-radius: 0.8rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #6c757d;
-  font-weight: 600;
-  font-size: 1.2rem;
-  letter-spacing: 0.01em;
-  position: relative;
-  overflow: hidden;
-}
-
-.portfolio-showcase__filter-tab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
-  transition: left 0.5s ease;
-}
-
-.portfolio-showcase__filter-tab:hover::before {
-  left: 100%;
-}
-
-.portfolio-showcase__filter-tab.active {
-  background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
-  color: white;
-  box-shadow: 0 0.6rem 2.4rem rgba(73, 80, 87, 0.25);
-  transform: translateY(-0.1rem);
-}
-
-.portfolio-showcase__filter-icon {
-  transition: transform 0.3s ease;
-}
-
-.portfolio-showcase__filter-tab:hover .portfolio-showcase__filter-icon {
-  transform: scale(1.05);
-}
-
-.portfolio-showcase__filter-tab.active .portfolio-showcase__filter-icon {
-  transform: scale(1.02);
-}
-
-/* Main Wrapper */
-.portfolio-showcase__wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  position: relative;
-  z-index: 2;
-}
-
-/* Main Content - Horizontal Layout */
-.portfolio-showcase__main-content {
-  display: flex;
-  gap: 2.5rem;
-  align-items: flex-start;
-}
-
-/* Gallery Section - Left Side */
-.portfolio-showcase__gallery {
-  flex: 2.3;
-  min-width: 0;
-}
-
-.portfolio-showcase__main-container {
-  position: relative;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  box-shadow: 
-    0 2rem 6rem rgba(33, 37, 41, 0.1),
-    0 1rem 3rem rgba(33, 37, 41, 0.06),
-    inset 0 0.1rem 0.1rem rgba(255, 255, 255, 0.4);
-  aspect-ratio: 4/3;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-}
-
-.portfolio-showcase__main-swiper {
-  width: 100%;
-  height: 100%;
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__slide {
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__slide-inner {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__slide:hover .portfolio-showcase__image {
-  transform: scale(1.02);
-}
-
-.portfolio-showcase__slide-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(33, 37, 41, 0) 0%,
-    rgba(33, 37, 41, 0.08) 50%,
-    rgba(33, 37, 41, 0.2) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__slide:hover .portfolio-showcase__slide-overlay {
-  opacity: 1;
-}
-
-.portfolio-showcase__zoom-btn {
-  width: 4.5rem;
-  height: 4.5rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  color: #495057;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1.2rem 3.6rem rgba(33, 37, 41, 0.15);
-  transform: scale(0.85);
-}
-
-.portfolio-showcase__slide:hover .portfolio-showcase__zoom-btn {
-  transform: scale(1);
-}
-
-.portfolio-showcase__zoom-btn:hover {
-  background: #495057;
-  color: white;
-  transform: scale(1.05);
-  box-shadow: 0 1.6rem 4.8rem rgba(73, 80, 87, 0.25);
-}
-
-/* Enhanced Navigation */
-.portfolio-showcase__navigation {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 10;
-  pointer-events: none;
-  padding: 0 2rem;
-}
-
-.portfolio-showcase__nav {
-  position: absolute;
-  width: 4.5rem;
-  height: 4.5rem;
-  background: linear-gradient(135deg, rgba(33, 37, 41, 0.95) 0%, rgba(52, 58, 64, 0.95) 100%);
-  backdrop-filter: blur(25px);
-  border: 0.1rem solid rgba(33, 37, 41, 0.2);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: auto;
-  box-shadow: 
-    0 1.2rem 3.6rem rgba(33, 37, 41, 0.2),
-    0 0.6rem 1.8rem rgba(33, 37, 41, 0.12),
-    inset 0 0.1rem 0.1rem rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.portfolio-showcase__nav:hover {
-  background: linear-gradient(135deg, #212529 0%, #343a40 100%);
-  color: white;
-  transform: scale(1.1);
-  box-shadow: 
-    0 1.6rem 4.8rem rgba(33, 37, 41, 0.3),
-    0 0.8rem 2.4rem rgba(33, 37, 41, 0.2),
-    inset 0 0.1rem 0.1rem rgba(255, 255, 255, 0.15);
-}
-
-.portfolio-showcase__nav--prev {
-  left: 0;
-}
-
-.portfolio-showcase__nav--next {
-  right: 0;
-}
-
-.portfolio-showcase__nav.swiper-button-disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.portfolio-showcase__nav.swiper-button-disabled:hover {
-  transform: none;
-  background: linear-gradient(135deg, rgba(33, 37, 41, 0.95) 0%, rgba(52, 58, 64, 0.95) 100%);
-}
-
-.portfolio-showcase__nav::after {
-  display: none;
-}
-
-/* Enhanced Pagination */
-.portfolio-showcase__pagination {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  gap: 1rem;
-}
-
-.portfolio-showcase__pagination .swiper-pagination-bullet {
-  width: 1.2rem;
-  height: 1.2rem;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  opacity: 1;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(8px);
-}
-
-.portfolio-showcase__pagination .swiper-pagination-bullet:hover {
-  background: rgba(255, 255, 255, 0.7);
-  transform: scale(1.15);
-}
-
-.portfolio-showcase__pagination .swiper-pagination-bullet-active {
-  background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
-  transform: scale(1.25);
-  box-shadow: 0 0.6rem 1.8rem rgba(73, 80, 87, 0.2);
-}
-
-/* Product Information Panel - Right Side */
-.portfolio-showcase__info {
-  flex: 0.7;
-  min-width: 24rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(25px);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 2rem 6rem rgba(33, 37, 41, 0.1),
-    0 1rem 3rem rgba(33, 37, 41, 0.06);
-  position: relative;
-  height: fit-content;
-  position: sticky;
-  top: 2rem;
-}
-
-.portfolio-showcase__info::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0.1rem;
-  background: linear-gradient(90deg, transparent, #6c757d, transparent);
-  border-radius: 1.5rem 1.5rem 0 0;
-}
-
-.portfolio-showcase__product-info {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.portfolio-showcase__product-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: #212529;
-  margin: 0 0 1.2rem 0;
-  letter-spacing: -0.01em;
-  position: relative;
-}
-
-.portfolio-showcase__product-title {
-  background: linear-gradient(135deg, #212529 0%, #495057 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.portfolio-showcase__description {
-  margin-bottom: 1.8rem;
-  font-size: 1.3rem;
-  line-height: 1.5;
-  color: #495057;
-  font-weight: 400;
-}
-
-.portfolio-showcase__description p {
-  margin: 0 0 1rem 0;
-}
-
-.portfolio-showcase__description p:last-child {
-  margin-bottom: 0;
-}
-
-/* Details Section */
-.portfolio-showcase__details {
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.8) 0%, rgba(233, 236, 239, 0.8) 100%);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  border: 0.1rem solid rgba(222, 226, 230, 0.5);
-  position: relative;
-  overflow: hidden;
-}
-
-.portfolio-showcase__details::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0.1rem;
-  background: linear-gradient(90deg, transparent, #adb5bd, transparent);
-}
-
-.portfolio-showcase__details-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #212529;
-  margin: 0 0 1rem 0;
-  letter-spacing: 0.01em;
-}
-
-.portfolio-showcase__details-content {
-  font-size: 1.2rem;
-  line-height: 1.5;
-  color: #495057;
-}
-
-.portfolio-showcase__details-content p {
-  margin: 0 0 0.8rem 0;
-}
-
-.portfolio-showcase__details-content p:last-child {
-  margin-bottom: 0;
-}
-
-.portfolio-showcase__details-content strong {
-  color: #212529;
-  font-weight: 700;
-}
-
-/* Thumbnails - Full Width Below Main Content */
-.portfolio-showcase__thumbnails {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 1.2rem 3.6rem rgba(33, 37, 41, 0.08);
-  width: 100%;
-}
-
-.portfolio-showcase__thumb-swiper {
-  overflow: visible;
-}
-
-.portfolio-showcase__thumb-slide {
-  width: auto !important;
-  margin-right: 1.2rem;
-}
-
-.portfolio-showcase__thumb-slide[style*="display: none"] {
-  display: none !important;
-}
-
-.portfolio-showcase__thumb-container {
-  border-radius: 1rem;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 0.2rem solid transparent;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(135deg, transparent, rgba(108, 117, 125, 0.2)) border-box;
-  cursor: pointer;
-}
-
-.portfolio-showcase__thumb-image {
-  width: 8rem;
-  height: 6rem;
-  object-fit: cover;
-  border-radius: 0.8rem;
-  transition: all 0.3s ease;
-}
-
-.portfolio-showcase__thumb-slide.swiper-slide-thumb-active .portfolio-showcase__thumb-container {
-  border: 0.2rem solid #495057;
-  box-shadow: 0 0.6rem 1.8rem rgba(73, 80, 87, 0.25);
-  transform: translateY(-0.3rem);
-}
-
-.portfolio-showcase__thumb-container:hover {
-  transform: translateY(-0.4rem);
-  box-shadow: 0 1rem 3rem rgba(33, 37, 41, 0.15);
-}
-
-/* Lightbox */
-.portfolio-showcase__lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.portfolio-showcase__lightbox.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.portfolio-showcase__lightbox-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(33, 37, 41, 0.95);
-  backdrop-filter: blur(15px);
-}
-
-.portfolio-showcase__lightbox-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 3rem 9rem rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.portfolio-showcase__lightbox.active .portfolio-showcase__lightbox-content {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.portfolio-showcase__lightbox-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 1.5rem;
-}
-
-.portfolio-showcase__lightbox-close {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  width: 4rem;
-  height: 4rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  border: none;
-  border-radius: 50%;
-  color: #495057;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
-  box-shadow: 0 1.2rem 3.6rem rgba(33, 37, 41, 0.25);
-}
-
-.portfolio-showcase__lightbox-close:hover {
-  background: #495057;
-  color: white;
-  transform: scale(1.05);
-  box-shadow: 0 1.6rem 4.8rem rgba(73, 80, 87, 0.35);
-}
-
-/* Empty State */
-.portfolio-showcase__empty {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(15px);
-  border-radius: 1.5rem;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 1.5rem 4.5rem rgba(33, 37, 41, 0.08);
-}
-
-.portfolio-showcase__empty-icon {
-  margin-bottom: 2rem;
-  color: #adb5bd;
-}
-
-.portfolio-showcase__empty h3 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #495057;
-  margin: 0 0 1.2rem 0;
-}
-
-.portfolio-showcase__empty p {
-  font-size: 1.5rem;
-  color: #6c757d;
-  margin: 0;
-}
-
-/* Mobile Responsive */
-@media screen and (max-width: 768px) {
-  .portfolio-showcase {
-    padding: 3rem 0;
+{{ 'portfolio-showcase.css' | asset_url | stylesheet_tag }}
+
+<div class="portfolio-showcase" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    
+    {% comment %} Section Header {% endcomment %}
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="portfolio-showcase__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="portfolio-showcase__title">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <div class="portfolio-showcase__subtitle">{{ section.settings.subheading }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Collection Type Filter {% endcomment %}
+    {% if section.settings.show_collection_filter %}
+      <div class="portfolio-showcase__filter">
+        <div class="portfolio-showcase__filter-tabs">
+          <button class="portfolio-showcase__filter-tab active" data-filter="products">
+            <span class="portfolio-showcase__filter-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 2L3 7V18H8V13H12V18H17V7L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="portfolio-showcase__filter-text">Our Products</span>
+          </button>
+          <button class="portfolio-showcase__filter-tab" data-filter="factory">
+            <span class="portfolio-showcase__filter-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 17H17V9L10 3L3 9V17Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="portfolio-showcase__filter-text">Our Factory</span>
+          </button>
+          <button class="portfolio-showcase__filter-tab" data-filter="team">
+            <span class="portfolio-showcase__filter-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </span>
+            <span class="portfolio-showcase__filter-text">Our Team</span>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="portfolio-showcase__wrapper">
+        
+        {% comment %} Main Content Area - Horizontal Layout {% endcomment %}
+        <div class="portfolio-showcase__main-content">
+          
+          {% comment %} Gallery Section - Left Side {% endcomment %}
+          <div class="portfolio-showcase__gallery">
+            <div class="portfolio-showcase__main-container">
+              <div class="swiper portfolio-showcase__main-swiper">
+                <div class="swiper-wrapper">
+                  {% assign slide_index = 0 %}
+                  {% for block in section.blocks %}
+                    {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                    {% for i in (1..5) %}
+                      {% assign image_key = 'image_' | append: i %}
+                      {% assign current_image = block.settings[image_key] %}
+                      {% if current_image != blank %}
+                        <div class="swiper-slide portfolio-showcase__slide" 
+                             data-filter="{{ block_filter }}" 
+                             data-product="{{ forloop.index0 }}"
+                             data-slide-index="{{ slide_index }}">
+                          <div class="portfolio-showcase__slide-inner">
+                            {{ current_image | image_url: width: 800 | image_tag: 
+                              class: 'portfolio-showcase__image', 
+                              loading: 'lazy',
+                              alt: block.settings.product_name | escape
+                            }}
+                            <div class="portfolio-showcase__slide-overlay">
+                              <button class="portfolio-showcase__zoom-btn" data-image="{{ current_image | image_url: width: 1600 }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                  <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        {% assign slide_index = slide_index | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+                
+                {% if section.settings.show_navigation %}
+                  <div class="portfolio-showcase__navigation">
+                    <button class="portfolio-showcase__nav portfolio-showcase__nav--prev swiper-button-prev">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button class="portfolio-showcase__nav portfolio-showcase__nav--next swiper-button-next">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                {% endif %}
+                
+                {% if section.settings.show_pagination %}
+                  <div class="portfolio-showcase__pagination swiper-pagination"></div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% comment %} Product Information Panel - Right Side {% endcomment %}
+          <div class="portfolio-showcase__info">
+            <div class="portfolio-showcase__info-content">
+              {% for block in section.blocks %}
+                <div class="portfolio-showcase__product-info" 
+                     data-product="{{ forloop.index0 }}"
+                     data-filter="{{ block.settings.collection_type | default: 'products' }}"
+                     {% unless forloop.first %}style="display: none;"{% endunless %}>
+                  
+                  {% if block.settings.product_name != blank %}
+                    <h3 class="portfolio-showcase__product-title">{{ block.settings.product_name }}</h3>
+                  {% endif %}
+
+                  {% if block.settings.product_description != blank %}
+                    <div class="portfolio-showcase__description">
+                      {{ block.settings.product_description }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.details != blank %}
+                    <div class="portfolio-showcase__details">
+                      <h4 class="portfolio-showcase__details-title">
+                        {% case block.settings.collection_type %}
+                          {% when 'factory' %}
+                            Facility Details
+                          {% when 'team' %}
+                            Team Member Info
+                          {% else %}
+                            Product Details
+                        {% endcase %}
+                      </h4>
+                      <div class="portfolio-showcase__details-content">
+                        {{ block.settings.details }}
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% comment %} Thumbnails - Full Width Below Main Content {% endcomment %}
+        {% if section.settings.show_thumbnails %}
+          <div class="portfolio-showcase__thumbnails">
+            <div class="portfolio-showcase__thumb-navigation">
+              <button class="portfolio-showcase__thumb-nav portfolio-showcase__thumb-prev">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="portfolio-showcase__thumb-nav portfolio-showcase__thumb-next">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="swiper portfolio-showcase__thumb-swiper">
+              <div class="swiper-wrapper">
+                {% assign thumb_index = 0 %}
+                {% for block in section.blocks %}
+                  {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                  {% for i in (1..5) %}
+                    {% assign image_key = 'image_' | append: i %}
+                    {% assign current_image = block.settings[image_key] %}
+                    {% if current_image != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide" 
+                           data-filter="{{ block_filter }}" 
+                           data-product="{{ forloop.index0 }}"
+                           data-thumb-index="{{ thumb_index }}">
+                        <div class="portfolio-showcase__thumb-container">
+                          {{ current_image | image_url: width: 150 | image_tag: 
+                            class: 'portfolio-showcase__thumb-image', 
+                            loading: 'lazy'
+                          }}
+                        </div>
+                      </div>
+                      {% assign thumb_index = thumb_index | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Lightbox Modal {% endcomment %}
+      <div class="portfolio-showcase__lightbox" id="lightbox-{{ section.id }}">
+        <div class="portfolio-showcase__lightbox-backdrop"></div>
+        <div class="portfolio-showcase__lightbox-content">
+          <button class="portfolio-showcase__lightbox-close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <img src="" alt="" class="portfolio-showcase__lightbox-image">
+        </div>
+      </div>
+
+    {% else %}
+      <div class="portfolio-showcase__empty">
+        <div class="portfolio-showcase__empty-icon">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+            <path d="M32 8L8 20V52H24V36H40V52H56V20L32 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>No items to display</h3>
+        <p>Add product blocks in the theme editor to showcase your portfolio.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sectionId = '{{ section.id }}';
+  const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  
+  if (!section) return;
+  
+  let mainSwiperInstance = null;
+  let thumbSwiperInstance = null;
+  let currentFilter = 'products';
+  const blocks = {{ section.blocks | json }};
+  
+  // Create category mapping - track which slide belongs to which category and their positions
+  let categoryMap = [];
+  let categoryRanges = {
+    products: { start: null, end: null },
+    factory: { start: null, end: null },
+    team: { start: null, end: null }
+  };
+  
+  // Build category mapping from DOM
+  function buildCategoryMapping() {
+    const allSlides = section.querySelectorAll('.portfolio-showcase__slide');
+    categoryMap = [];
+    
+    allSlides.forEach((slide, index) => {
+      const filter = slide.getAttribute('data-filter');
+      const productIndex = slide.getAttribute('data-product');
+      
+      categoryMap.push({
+        index: index,
+        filter: filter,
+        productIndex: parseInt(productIndex)
+      });
+      
+      // Track category ranges
+      if (categoryRanges[filter].start === null) {
+        categoryRanges[filter].start = index;
+      }
+      categoryRanges[filter].end = index;
+    });
+    
+    console.log('Category Map:', categoryMap);
+    console.log('Category Ranges:', categoryRanges);
   }
   
-  .portfolio-showcase__wrapper {
-    gap: 2rem;
+  // Get category for current slide index
+  function getCategoryForSlide(slideIndex) {
+    return categoryMap[slideIndex]?.filter || 'products';
   }
   
-  .portfolio-showcase__main-content {
-    flex-direction: column;
-    gap: 2rem;
+  // Get first slide index for a category
+  function getFirstSlideForCategory(category) {
+    return categoryRanges[category]?.start || 0;
   }
   
-  .portfolio-showcase__info {
-    min-width: auto;
-    position: static;
-    padding: 2rem;
+  // Update active filter tab based on current slide
+  function updateActiveFilterTab(slideIndex) {
+    const category = getCategoryForSlide(slideIndex);
+    
+    if (category !== currentFilter) {
+      currentFilter = category;
+      
+      // Update filter tab appearance
+      section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      const activeTab = section.querySelector(`[data-filter="${category}"]`);
+      if (activeTab) {
+        activeTab.classList.add('active');
+      }
+    }
   }
   
-  .portfolio-showcase__main-container {
-    aspect-ratio: 3/2;
-  }
-  
-  .portfolio-showcase__nav {
-    width: 4rem;
-    height: 4rem;
-  }
-  
-  .portfolio-showcase__thumb-image {
-    width: 6.5rem;
-    height: 4.875rem;
-  }
-  
-  .portfolio-showcase__filter-tabs {
-    flex-direction: column;
-    width: 100%;
-    max-width: 28rem;
-    margin: 0 auto;
-  }
-  
-  .portfolio-showcase__filter-tab {
-    justify-content: center;
-  }
-  
-  .portfolio-showcase__product-title {
-    font-size: 1.8rem;
-  }
-}
+  // Initialize Swipers - Show ALL slides, no filtering
+  function initializeSwipers() {
+    const mainSwiper = section.querySelector('.portfolio-showcase__main-swiper');
+    const thumbSwiper = section.querySelector('.portfolio-showcase__thumb-swiper');
+    
+    if (!mainSwiper) return;
 
-@media screen and (max-width: 480px) {
-  .portfolio-showcase {
-    padding: 2.5rem 0;
-  }
-  
-  .portfolio-showcase__info {
-    padding: 1.8rem;
-  }
-  
-  .portfolio-showcase__product-title {
-    font-size: 1.6rem;
-  }
-  
-  .portfolio-showcase__thumb-image {
-    width: 5.5rem;
-    height: 4.125rem;
-  }
-  
-  .portfolio-showcase__thumbnails {
-    padding: 1.5rem;
-  }
-  
-  .portfolio-showcase__nav {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-}
+    // Destroy existing instances
+    if (mainSwiperInstance) {
+      mainSwiperInstance.destroy(true, true);
+      mainSwiperInstance = null;
+    }
+    if (thumbSwiperInstance) {
+      thumbSwiperInstance.destroy(true, true);
+      thumbSwiperInstance = null;
+    }
 
-/* Performance optimizations */
-@media (prefers-reduced-motion: reduce) {
-  .portfolio-showcase *,
-  .portfolio-showcase *::before,
-  .portfolio-showcase *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    // Show all slides and thumbnails
+    section.querySelectorAll('.portfolio-showcase__slide').forEach(slide => {
+      slide.style.display = 'block';
+    });
+    
+    section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(slide => {
+      slide.style.display = 'block';
+    });
+
+    // Initialize thumbnail swiper with navigation
+    if (thumbSwiper) {
+      thumbSwiperInstance = new Swiper(thumbSwiper, {
+        spaceBetween: 10,
+        slidesPerView: 'auto',
+        freeMode: false,
+        watchSlidesProgress: true,
+        navigation: {
+          nextEl: '.portfolio-showcase__thumb-next',
+          prevEl: '.portfolio-showcase__thumb-prev',
+        },
+        breakpoints: {
+          640: { slidesPerView: 'auto', spaceBetween: 12 },
+          768: { slidesPerView: 'auto', spaceBetween: 16 }
+        },
+        on: {
+          slideChange: function() {
+            // Sync main slider with thumbnail slider
+            if (mainSwiperInstance) {
+              mainSwiperInstance.slideTo(this.activeIndex);
+            }
+          }
+        }
+      });
+    }
+
+    // Initialize main swiper
+    mainSwiperInstance = new Swiper(mainSwiper, {
+      spaceBetween: 0,
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+      speed: 600,
+      autoplay: {{ section.settings.autoplay | json }} ? {
+        delay: {{ section.settings.autoplay_speed | times: 1000 }},
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      } : false,
+      navigation: {
+        nextEl: section.querySelector('.portfolio-showcase__nav--next'),
+        prevEl: section.querySelector('.portfolio-showcase__nav--prev'),
+      },
+      pagination: {
+        el: section.querySelector('.portfolio-showcase__pagination'),
+        clickable: true,
+      },
+      thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
+      on: {
+        slideChange: function() {
+          const slideIndex = this.activeIndex;
+          updateProductInfo(slideIndex);
+          updateActiveFilterTab(slideIndex);
+          
+          // Sync thumbnail slider
+          if (thumbSwiperInstance && thumbSwiperInstance.activeIndex !== slideIndex) {
+            thumbSwiperInstance.slideTo(slideIndex);
+          }
+        }
+      }
+    });
   }
+
+  // Update product information based on active slide
+  function updateProductInfo(slideIndex) {
+    if (!categoryMap[slideIndex]) return;
+    
+    const currentSlide = categoryMap[slideIndex];
+    const productIndex = currentSlide.productIndex;
+    const category = currentSlide.filter;
+    
+    // Hide all product info
+    section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
+      info.style.display = 'none';
+    });
+    
+    // Show the correct product info
+    const targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
+    if (targetInfo) {
+      targetInfo.style.display = 'block';
+    }
+  }
+
+  // Jump to first slide of specific category
+  function jumpToCategory(category) {
+    const firstSlideIndex = getFirstSlideForCategory(category);
+    
+    if (mainSwiperInstance) {
+      mainSwiperInstance.slideTo(firstSlideIndex);
+    }
+    
+    if (thumbSwiperInstance) {
+      thumbSwiperInstance.slideTo(firstSlideIndex);
+    }
+    
+    currentFilter = category;
+    updateActiveFilterTab(firstSlideIndex);
+  }
+
+  // Event listeners for filter tabs - now jump to category instead of filtering
+  section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      const category = this.getAttribute('data-filter');
+      jumpToCategory(category);
+    });
+  });
+
+  // Lightbox functionality
+  const lightbox = section.querySelector('.portfolio-showcase__lightbox');
+  const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
+  
+  section.addEventListener('click', function(e) {
+    if (e.target.closest('.portfolio-showcase__zoom-btn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const btn = e.target.closest('.portfolio-showcase__zoom-btn');
+      const imageUrl = btn.getAttribute('data-image');
+      lightboxImage.src = imageUrl;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  lightbox.querySelector('.portfolio-showcase__lightbox-close').addEventListener('click', function() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox || e.target.classList.contains('portfolio-showcase__lightbox-backdrop')) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Initialize everything
+  buildCategoryMapping();
+  initializeSwipers();
+  
+  // Set initial state
+  setTimeout(() => {
+    updateActiveFilterTab(0);
+    updateProductInfo(0);
+  }, 100);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Portfolio Showcase",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Manufacturing Portfolio"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Description",
+      "default": "<p>Explore our previous work and see the quality craftsmanship that goes into every piece we manufacture.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Collection Filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_filter",
+      "label": "Show collection type filter",
+      "default": true,
+      "info": "Allows filtering between Products, Factory, and Team"
+    },
+    {
+      "type": "header",
+      "content": "Display Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show thumbnail navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show arrow navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show dot pagination",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-rotate slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-rotate speed",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Portfolio Item",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "select",
+          "id": "collection_type",
+          "label": "Collection Type",
+          "options": [
+            {
+              "value": "products",
+              "label": "Our Products"
+            },
+            {
+              "value": "factory",
+              "label": "Our Factory"
+            },
+            {
+              "value": "team",
+              "label": "Our Team"
+            }
+          ],
+          "default": "products"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Item Name",
+          "default": "Premium Hoodie"
+        },
+        {
+          "type": "richtext",
+          "id": "product_description",
+          "label": "Description",
+          "default": "<p>High-quality item crafted with attention to detail and premium materials.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Details",
+          "default": "<p><strong>Material:</strong> 100% Cotton<br><strong>Weight:</strong> 280 GSM<br><strong>Sizes:</strong> XS - 3XL</p>"
+        },
+        {
+          "type": "header",
+          "content": "Images (up to 5)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Image 5"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Portfolio Showcase",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "product_name": "Premium Cotton Hoodie",
+            "product_description": "<p>Expertly crafted hoodie featuring premium cotton blend, reinforced stitching, and superior comfort.</p>",
+            "details": "<p><strong>Material:</strong> 80% Cotton, 20% Polyester<br><strong>Weight:</strong> 320 GSM<br><strong>Features:</strong> Kangaroo pocket, ribbed cuffs<br><strong>Colors:</strong> Available in 25+ colors</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "collection_type": "factory",
+            "product_name": "Production Floor",
+            "product_description": "<p>State-of-the-art manufacturing facility with modern equipment and quality control processes.</p>",
+            "details": "<p><strong>Capacity:</strong> 10,000+ pieces/month<br><strong>Equipment:</strong> Industrial sewing machines<br><strong>Quality:</strong> ISO certified processes</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "collection_type": "team",
+            "product_name": "Production Manager",
+            "product_description": "<p>Meet our experienced production team dedicated to delivering exceptional quality in every piece.</p>",
+            "details": "<p><strong>Experience:</strong> 15+ years<br><strong>Specialty:</strong> Quality control<br><strong>Role:</strong> Production oversight</p>"
+          }
+        }
+      ]
+    }
+  ]
 }
+{% endschema %}
