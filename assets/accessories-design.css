@@ -1,0 +1,449 @@
+/* section-accessories-design.css - Place this in the assets folder */
+
+.services-section {
+  height: 100vh;
+  display: flex;
+  position: relative;
+  font-family: var(--font-body-family), Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+}
+
+.service-half {
+  width: 50%;
+  height: 100vh;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-half:hover {
+  transform: scale(1.02);
+}
+
+.service-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.service-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.accessories-half {
+  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4)), 
+              linear-gradient(135deg, #495057, #343a40);
+  background-size: cover;
+  background-position: center;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.design-half {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1)), 
+              linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background-size: cover;
+  background-position: center;
+}
+
+.section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.service-half:hover .section-overlay {
+  background: rgba(0,0,0,0.1);
+}
+
+.content-center {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+  transition: all 0.4s ease;
+  max-width: 450px;
+  padding: 2.5rem;
+}
+
+.service-half:hover .content-center {
+  transform: scale(1.05);
+}
+
+.title-main {
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-family: var(--font-heading-family);
+  line-height: 1.2;
+}
+
+.accessories-half .title-main {
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.design-half .title-main {
+  color: #212529;
+  text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 380px;
+  margin: 0 auto 2rem;
+  font-weight: 300;
+  text-align: center;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 2.5rem;
+  max-width: 300px;
+  text-align: left;
+}
+
+.feature-list li {
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  opacity: 0.85;
+  position: relative;
+  padding-left: 1.5rem;
+  font-weight: 500;
+}
+
+.accessories-half .feature-list li:before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.design-half .feature-list li:before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #495057;
+  font-weight: bold;
+}
+
+.explore-button {
+  display: inline-block;
+  padding: 15px 40px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.05);
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.accessories-half .explore-button {
+  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+
+.design-half .explore-button {
+  border-color: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.05);
+  color: #212529;
+}
+
+.accessories-half .explore-button:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.design-half .explore-button:hover {
+  background: rgba(0,0,0,0.1);
+  border-color: #212529;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  color: #212529;
+  text-decoration: none;
+}
+
+.divider {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100vh;
+  background: linear-gradient(to bottom, 
+      transparent 0%, 
+      rgba(255,255,255,0.1) 20%, 
+      rgba(255,255,255,0.3) 50%, 
+      rgba(255,255,255,0.1) 80%, 
+      transparent 100%);
+  z-index: 15;
+  transform: translateX(-50%);
+}
+
+.accessories-accent {
+  position: absolute;
+  top: 20%;
+  right: 10%;
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent);
+  opacity: 0.6;
+  z-index: 5;
+}
+
+.design-accent {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, rgba(128,128,128,0.3), transparent);
+  opacity: 0.6;
+  z-index: 5;
+}
+
+.click-hint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: pulse 2s infinite;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.accessories-half::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.design-half::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 30%, rgba(0,0,0,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Smart text color contrast based on background */
+.accessories-half .content-center {
+  color: #ffffff;
+}
+
+.design-half .content-center {
+  color: #212529;
+}
+
+/* Override text colors when custom colors are set */
+.accessories-half .content-center * {
+  color: inherit;
+}
+
+.design-half .content-center * {
+  color: inherit;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .services-section {
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .service-half {
+    width: 100%;
+    height: 50vh;
+  }
+  
+  .accessories-half {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .title-main {
+    font-size: 2.5rem;
+  }
+  
+  .divider {
+    top: 50%;
+    left: 0;
+    width: 100vw;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+  
+  .content-center {
+    max-width: 320px;
+    padding: 2rem;
+  }
+  
+  .description {
+    max-width: 280px;
+    font-size: 0.95rem;
+  }
+  
+  .feature-list {
+    max-width: 250px;
+  }
+  
+  .explore-button {
+    padding: 12px 30px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-main {
+    font-size: 2rem;
+    letter-spacing: 0.15em;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .description {
+    max-width: 240px;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .feature-list {
+    max-width: 220px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .content-center {
+    padding: 1.5rem;
+  }
+}
+
+/* Focus states for accessibility */
+.explore-button:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .accessories-half {
+    background: #000000;
+  }
+  
+  .design-half {
+    background: #ffffff;
+  }
+  
+  .explore-button {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .service-half,
+  .content-center,
+  .section-overlay,
+  .explore-button {
+    transition: none;
+  }
+  
+  .click-hint {
+    animation: none;
+  }
+}
+
+/* Animation for scroll trigger */
+.scroll-trigger.animate--fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-trigger.animate--fade-in.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure proper z-index stacking */
+.services-section {
+  position: relative;
+  z-index: 1;
+}
+
+.service-half {
+  position: relative;
+  z-index: 2;
+}
+
+.content-center {
+  position: relative;
+  z-index: 10;
+}
+
+.divider {
+  z-index: 15;
+}
