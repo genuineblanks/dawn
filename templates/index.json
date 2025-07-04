@@ -420,8 +420,8 @@
         "buttons_U7f6Q8": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "DISCOVER CUSTOM DESIGN SOLUTIONS",
-            "button_link_1": "shopify://collections/design",
+            "button_label_1": "WHAT YOU NEED TO GET STARTED",
+            "button_link_1": "shopify://pages/how-does-it-work",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",
