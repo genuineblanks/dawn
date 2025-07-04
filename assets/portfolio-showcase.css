@@ -817,3 +817,33 @@
 .portfolio-showcase__lightbox-close {
   pointer-events: auto;
 }
+
+/* Fallback for browsers without aspect-ratio support (e.g. many mobiles) */
+@supports not (aspect-ratio: 4/3) {
+  .portfolio-showcase__main-container {
+    /* Instead of aspect-ratio, use padding-top to force a 4:3 box */
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 75%; /* = 3 ÷ 4 × 100% */
+  }
+  /* Absolutely fill the swiper inside that box */
+  .portfolio-showcase__main-swiper,
+  .portfolio-showcase__slide,
+  .portfolio-showcase__slide-inner,
+  .portfolio-showcase__image {
+    position: absolute !important;
+    top: 0; left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* And for your mobile breakpoint, match the 3:2 aspect-ratio fallback */
+@supports not (aspect-ratio: 3/2) {
+  @media screen and (max-width: 768px) {
+    .portfolio-showcase__main-container {
+      padding-top: 66.6667%; /* = 2 ÷ 3 × 100% */
+    }
+  }
+}
