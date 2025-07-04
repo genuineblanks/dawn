@@ -1,51 +1,91 @@
-/* section-about-company.css - Properly scoped to avoid header conflicts */
+/* section-about-company.css - Premium design */
 
 .about-company-section {
   height: 80vh;
   min-height: 600px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   margin: 0;
   padding: 0;
   overflow: hidden;
   background: #f8f9fa;
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  background-size: cover;
+  background-position: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-company-section .company-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.about-company-section .company-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.8s ease;
+}
+
+.about-company-section:hover .company-bg-image {
+  transform: scale(1.02);
+}
+
+.about-company-section .section-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(248,249,250,0.6) 0%, rgba(233,236,239,0.8) 100%);
+  z-index: 2;
+  transition: all 0.6s ease;
+}
+
+.about-company-section:hover .section-overlay {
+  opacity: 0.7;
 }
 
 .about-company-section .company-content {
   position: relative;
   text-align: center;
   z-index: 10;
+  transition: all 0.5s ease;
+  max-width: 900px;
+  padding: 4rem 3rem;
   color: #2c2c2c;
 }
 
-.about-company-section .content-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-  position: relative;
+.about-company-section:hover .company-content {
+  transform: scale(1.02);
 }
 
 .about-company-section .company-title {
   font-size: 1.8rem;
   font-weight: 200;
   letter-spacing: 0.05em;
-  line-height: 1.4;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
+  line-height: 1.4;
   font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
+  position: relative;
   color: inherit;
 }
 
 .about-company-section .company-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  opacity: 0.8;
+  opacity: 0.9;
   max-width: 600px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 2.5rem;
   font-weight: 300;
+  text-align: center;
   color: inherit;
   font-style: italic;
 }
@@ -53,15 +93,84 @@
 .about-company-section .company-button {
   display: inline-block;
   padding: 16px 40px;
-  border: 1px solid currentColor;
+  border: 1px solid rgba(44,44,44,0.4);
   background: transparent;
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 0.85rem;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-company-section .company-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(44,44,44,0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.about-company-section .company-button:hover:before {
+  left: 100%;
+}
+
+.about-company-section .company-button:hover {
+  background: rgba(44,44,44,0.1);
+  border-color: rgba(44,44,44,0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44,44,44,0.2);
+  color: inherit;
+  text-decoration: none;
+}
+
+.about-company-section .scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  opacity: 0.7;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: pulse-hint 3s infinite;
+  z-index: 10;
+  color: inherit;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-company-section .scroll-line {
+  width: 1px;
+  height: 40px;
+  background: currentColor;
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
+  transform-origin: top;
+  transition: all 0.3s ease;
+}
+
+.about-company-section .scroll-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-weight: 300;
+  color: inherit;
+}
+
+@keyframes pulse-hint {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 /* Mobile responsiveness */
@@ -71,9 +180,9 @@
     min-height: 500px;
   }
   
-  .about-company-section .content-wrapper {
-    max-width: 100%;
-    padding: 3rem 1.5rem;
+  .about-company-section .company-content {
+    max-width: 350px;
+    padding: 2.5rem 2rem;
   }
   
   .about-company-section .company-title {
@@ -84,17 +193,13 @@
   
   .about-company-section .company-description {
     font-size: 1rem;
-    max-width: 100%;
+    max-width: 300px;
     margin-bottom: 2.5rem;
   }
   
   .about-company-section .company-button {
-    padding: 14px 32px;
-    font-size: 0.8rem;
-  }
-  
-  .about-company-section .scroll-indicator {
-    bottom: 2rem;
+    padding: 15px 35px;
+    font-size: 0.85rem;
   }
 }
 
@@ -107,37 +212,36 @@
   .about-company-section .company-description {
     font-size: 0.95rem;
     line-height: 1.5;
+    max-width: 260px;
+    margin-bottom: 2rem;
   }
   
-  .about-company-section .content-wrapper {
-    padding: 2.5rem 1rem;
+  .about-company-section .company-content {
+    padding: 2rem 1.5rem;
+    max-width: 300px;
   }
   
   .about-company-section .company-button {
-    padding: 12px 28px;
-    font-size: 0.75rem;
+    padding: 14px 30px;
+    font-size: 0.8rem;
   }
 }
 
 /* Focus states for accessibility */
 .about-company-section .company-button:focus {
-  outline: 2px solid currentColor;
+  outline: 2px solid rgba(44,44,44,0.8);
   outline-offset: 3px;
 }
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-  .about-company-section .company-overlay {
-    background: rgba(255, 255, 255, 0.95);
+  .about-company-section .section-overlay {
+    background: rgba(248,249,250,0.95);
   }
   
   .about-company-section .company-button {
     border-width: 2px;
-  }
-  
-  .about-company-section .scroll-line,
-  .about-company-section .scroll-text {
-    opacity: 1;
+    background: rgba(44,44,44,0.1);
   }
 }
 
@@ -150,7 +254,7 @@
     transition: none;
   }
   
-  .about-company-section .scroll-text {
+  .about-company-section .scroll-indicator {
     animation: none;
   }
   
