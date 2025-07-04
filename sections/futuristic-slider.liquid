@@ -469,29 +469,32 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
       on: {
-        slideChange: function() {
-          const slideIndex = this.activeIndex;
-          updateProductInfo(slideIndex);
-          updateActiveFilterTab(slideIndex);
-          
-          // Sync thumbnail slider
-          if (thumbSwiperInstance && thumbSwiperInstance.activeIndex !== slideIndex) {
-            thumbSwiperInstance.slideTo(slideIndex);
+        slideChange() {
+          const idx = this.activeIndex;
+          updateProductInfo(idx);
+          updateActiveFilterTab(idx);
+          if (thumbSwiperInstance && thumbSwiperInstance.activeIndex !== idx) {
+            thumbSwiperInstance.slideTo(idx);
           }
         }
       }
     });
   
-    // ─── Force each thumbnail click to jump to its own index ───
+    // Force each thumbnail click to jump to its own index
     section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(thumb => {
       thumb.addEventListener('click', function() {
         const idx = parseInt(this.dataset.thumbIndex, 10);
-        if (!isNaN(idx)) {
-          mainSwiperInstance.slideTo(idx, 300);
-        }
+        if (!isNaN(idx)) mainSwiperInstance.slideTo(idx, 300);
       });
     });
-  }  // ← end initializeSwipers()  
+  
+    // ─── Controller sync so thumbnail arrows also drive main gallery ───
+    if (thumbSwiperInstance && mainSwiperInstance && mainSwiperInstance.controller) {
+      mainSwiperInstance.controller.control = thumbSwiperInstance;
+      thumbSwiperInstance.controller.control = mainSwiperInstance;
+    }
+  
+  } // ← end initializeSwipers()
 
   // Update product information based on active slide
   function updateProductInfo(slideIndex) {
