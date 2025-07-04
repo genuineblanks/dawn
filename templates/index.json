@@ -367,6 +367,7 @@
         "buttons_6jQWih",
         "image_9Qxz73"
       ],
+      "disabled": true,
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands",
@@ -403,8 +404,9 @@
       "name": "About Company Section",
       "settings": {
         "dynamic_class": "",
-        "section_height": 80,
+        "section_height": 100,
         "min_height": 600,
+        "bg_image": "shopify://shop_images/WHO_ARE_WE_Front_Page_3.jpg",
         "overlay_color": "#ffffff",
         "overlay_opacity": 85,
         "text_color": "#2c2c2c",
