@@ -493,6 +493,10 @@
   margin-right: 1.2rem;
 }
 
+.portfolio-showcase__thumb-slide[style*="display: none"] {
+  display: none !important;
+}
+
 .portfolio-showcase__thumb-container {
   border-radius: 1rem;
   overflow: hidden;

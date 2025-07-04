@@ -257,8 +257,12 @@ document.addEventListener('DOMContentLoaded', function() {
       thumbSwiperInstance = null;
     }
 
-    // Initialize thumbnail swiper first
-    if (thumbSwiper) {
+    // Get only visible slides and thumbnails for current filter
+    const visibleSlides = Array.from(section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${currentFilter}"]`));
+    const visibleThumbs = Array.from(section.querySelectorAll(`.portfolio-showcase__thumb-slide[data-filter="${currentFilter}"]`));
+
+    // Initialize thumbnail swiper first (only if we have visible thumbnails)
+    if (thumbSwiper && visibleThumbs.length > 0) {
       thumbSwiperInstance = new Swiper(thumbSwiper, {
         spaceBetween: 10,
         slidesPerView: 'auto',
@@ -271,32 +275,34 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Initialize main swiper
-    mainSwiperInstance = new Swiper(mainSwiper, {
-      spaceBetween: 0,
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      speed: 600,
-      autoplay: {{ section.settings.autoplay | json }} ? {
-        delay: {{ section.settings.autoplay_speed | times: 1000 }},
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true
-      } : false,
-      navigation: {
-        nextEl: section.querySelector('.portfolio-showcase__nav--next'),
-        prevEl: section.querySelector('.portfolio-showcase__nav--prev'),
-      },
-      pagination: {
-        el: section.querySelector('.portfolio-showcase__pagination'),
-        clickable: true,
-      },
-      thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
-      on: {
-        slideChange: function() {
-          updateProductInfo(this.activeIndex);
+    // Initialize main swiper (only if we have visible slides)
+    if (visibleSlides.length > 0) {
+      mainSwiperInstance = new Swiper(mainSwiper, {
+        spaceBetween: 0,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        speed: 600,
+        autoplay: {{ section.settings.autoplay | json }} ? {
+          delay: {{ section.settings.autoplay_speed | times: 1000 }},
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true
+        } : false,
+        navigation: {
+          nextEl: section.querySelector('.portfolio-showcase__nav--next'),
+          prevEl: section.querySelector('.portfolio-showcase__nav--prev'),
+        },
+        pagination: {
+          el: section.querySelector('.portfolio-showcase__pagination'),
+          clickable: true,
+        },
+        thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
+        on: {
+          slideChange: function() {
+            updateProductInfo(this.activeIndex);
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   // Update product information based on active slide
@@ -331,44 +337,61 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     section.querySelector(`[data-filter="${filter}"]`).classList.add('active');
     
-    // Show/hide slides based on filter
+    // Hide ALL slides first
     section.querySelectorAll('.portfolio-showcase__slide').forEach(slide => {
-      if (slide.getAttribute('data-filter') === filter) {
-        slide.style.display = 'block';
-      } else {
-        slide.style.display = 'none';
-      }
+      slide.style.display = 'none';
     });
     
-    // Show/hide thumbnails based on filter
+    // Hide ALL thumbnails first  
     section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(slide => {
-      if (slide.getAttribute('data-filter') === filter) {
-        slide.style.display = 'block';
-      } else {
-        slide.style.display = 'none';
-      }
+      slide.style.display = 'none';
     });
     
-    // Show/hide product info based on filter
+    // Hide ALL product info first
     section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
       info.style.display = 'none';
     });
     
-    // Reinitialize swipers after DOM changes
+    // Now show only the items that match the current filter
+    section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${filter}"]`).forEach(slide => {
+      slide.style.display = 'block';
+    });
+    
+    section.querySelectorAll(`.portfolio-showcase__thumb-slide[data-filter="${filter}"]`).forEach(slide => {
+      slide.style.display = 'block';
+    });
+    
+    // Show first product info for this filter
+    const firstProductInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${filter}"]`);
+    if (firstProductInfo) {
+      firstProductInfo.style.display = 'block';
+    }
+    
+    // Force Swiper to update its slides count after DOM changes
     setTimeout(() => {
-      initializeSwipers();
-      
-      // Show first visible product info for this filter
-      const firstVisibleInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${filter}"]`);
-      if (firstVisibleInfo) {
-        firstVisibleInfo.style.display = 'block';
+      // Trigger Swiper update to recognize filtered slides
+      if (mainSwiperInstance) {
+        mainSwiperInstance.update();
+        mainSwiperInstance.updateSlides();
+        mainSwiperInstance.updateProgress();
+        mainSwiperInstance.updateSlidesClasses();
       }
+      
+      if (thumbSwiperInstance) {
+        thumbSwiperInstance.update();
+        thumbSwiperInstance.updateSlides();
+        thumbSwiperInstance.updateProgress();
+        thumbSwiperInstance.updateSlidesClasses();
+      }
+      
+      // Reinitialize swipers for clean state
+      initializeSwipers();
       
       // Reset to first slide when switching filters
       if (mainSwiperInstance) {
         mainSwiperInstance.slideTo(0, 0);
       }
-    }, 100);
+    }, 150);
   }
 
   // Event listeners for filter tabs
