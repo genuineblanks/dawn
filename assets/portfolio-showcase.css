@@ -444,7 +444,7 @@
   50% { opacity: 1; }
 }
 
-/* Thumbnails */
+/* Thumbnails - Full Width Below Main Content */
 .portfolio-showcase__thumbnails {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
@@ -452,6 +452,7 @@
   padding: 2rem;
   border: 0.1rem solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 1.6rem 4rem rgba(33, 37, 41, 0.1);
+  width: 100%;
 }
 
 .portfolio-showcase__thumb-swiper {
@@ -492,6 +493,13 @@
   box-shadow: 0 1.2rem 3.6rem rgba(33, 37, 41, 0.2);
 }
 
+@media screen and (max-width: 749px) {
+  .portfolio-showcase__thumb-image {
+    width: 7.5rem;
+    height: 5.6rem;
+  }
+}
+
 /* Product Information Panel - Full Width Below Gallery */
 .portfolio-showcase__info {
   width: 100%;
@@ -520,11 +528,11 @@
 }
 
 .portfolio-showcase__product-title {
-  font-size: 3.2rem;
+  font-size: 2.4rem;
   font-weight: 700;
   line-height: 1.2;
   color: #212529;
-  margin: 0 0 2.4rem 0;
+  margin: 0 0 1.5rem 0;
   letter-spacing: -0.01em;
   position: relative;
 }
@@ -537,31 +545,31 @@
 }
 
 .portfolio-showcase__description {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .portfolio-showcase__description-text {
-  font-size: 1.7rem;
-  line-height: 1.7;
+  font-size: 1.5rem;
+  line-height: 1.6;
   color: #495057;
   font-weight: 400;
 }
 
 .portfolio-showcase__description-text p {
-  margin: 0 0 1.2rem 0;
+  margin: 0 0 1rem 0;
 }
 
 .portfolio-showcase__description-text p:last-child {
   margin-bottom: 0;
 }
 
-/* Details Section */
+/* Details Section - Compact */
 .portfolio-showcase__details {
   background: linear-gradient(135deg, rgba(248, 249, 250, 0.8) 0%, rgba(233, 236, 239, 0.8) 100%);
-  border-radius: 1.6rem;
-  padding: 2.4rem;
+  border-radius: 1.2rem;
+  padding: 1.8rem;
   border: 0.1rem solid rgba(222, 226, 230, 0.5);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -577,21 +585,21 @@
 }
 
 .portfolio-showcase__details-title {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #212529;
-  margin: 0 0 1.8rem 0;
+  margin: 0 0 1.2rem 0;
   letter-spacing: 0.02em;
 }
 
 .portfolio-showcase__details-content {
-  font-size: 1.5rem;
-  line-height: 1.7;
+  font-size: 1.3rem;
+  line-height: 1.6;
   color: #495057;
 }
 
 .portfolio-showcase__details-content p {
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.8rem 0;
 }
 
 .portfolio-showcase__details-content p:last-child {
@@ -603,20 +611,25 @@
   font-weight: 700;
 }
 
-/* Product Selector - Display Only */
+/* Product Selector - Full Width Below Thumbnails */
 .portfolio-showcase__selector {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  border-top: 0.1rem solid rgba(222, 226, 230, 0.5);
-  padding-top: 3rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  padding: 2rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1.6rem 4rem rgba(33, 37, 41, 0.1);
+  width: 100%;
 }
 
 .portfolio-showcase__selector-item {
   display: flex;
   align-items: center;
   gap: 1.6rem;
-  padding: 2rem 2.4rem;
+  padding: 1.5rem 2rem;
   background: transparent;
   border: 0.1rem solid rgba(222, 226, 230, 0.3);
   border-radius: 1.6rem;
@@ -639,12 +652,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 3rem;
+  height: 3rem;
   background: linear-gradient(135deg, rgba(222, 226, 230, 0.5) 0%, rgba(173, 181, 189, 0.5) 100%);
   border-radius: 50%;
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: #495057;
   flex-shrink: 0;
   transition: all 0.3s ease;
@@ -659,7 +672,7 @@
 
 .portfolio-showcase__selector-name {
   font-weight: 600;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #212529;
   flex: 1;
 }
