@@ -842,5 +842,74 @@
   pointer-events: auto;
 }
 
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .portfolio-showcase {
+    padding: 3rem 0;
+  }
 
+  .portfolio-showcase__wrapper {
+    gap: 2rem;
+  }
+
+  /* Full-width slider, hide description */
+  .portfolio-showcase__main-content {
+    display: block;
+  }
+  .portfolio-showcase__gallery {
+    width: 100%;
+    flex: none;
+  }
+  .portfolio-showcase__info {
+    display: none !important;
+  }
+
+  /* Slider container: maintain 3:2 on capable browsers, else use min-height */
+  .portfolio-showcase__main-container {
+    aspect-ratio: 3/2;
+    min-height: 200px;    /* fallback for browsers ignoring aspect-ratio */
+    position: relative;   /* for Swiper’s absolute children */
+  }
+
+  /* Navigation & thumbs sizing */
+  .portfolio-showcase__nav {
+    width: 4rem;
+    height: 4rem;
+  }
+  .portfolio-showcase__thumb-image {
+    width: 6.5rem;
+    height: 4.875rem;
+  }
+
+  /* Filter tabs & titles */
+  .portfolio-showcase__filter-tabs {
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+  }
+  .portfolio-showcase__filter-tab {
+    justify-content: center;
+  }
+  .portfolio-showcase__product-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .portfolio-showcase {
+    padding: 2.5rem 0;
+  }
+  .portfolio-showcase__nav {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  .portfolio-showcase__thumb-image {
+    width: 5.5rem;
+    height: 4.125rem;
+  }
+  .portfolio-showcase__thumbnails {
+    padding: 1.5rem;
+  }
+}
 
