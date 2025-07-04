@@ -1,6 +1,390 @@
-{% schema %}
-  {
-    "name": "Section name",
-    "settings": []
+{% comment %}
+  Section: accessories-design-split.liquid
+  Place this file in the sections folder
+  File path: sections/accessories-design-split.liquid
+{% endcomment %}
+
+{{ 'accessories-design.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #AccessoriesDesign-{{ section.id }} .service-half {
+    height: {{ section.settings.section_height }}vh;
   }
+  
+  #AccessoriesDesign-{{ section.id }} {
+    height: {{ section.settings.section_height }}vh;
+  }
+  
+  {% if section.settings.accessories_bg_image != blank %}
+    #AccessoriesDesign-{{ section.id }} .accessories-half {
+      background-image: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
+                        url('{{ section.settings.accessories_bg_image | image_url: width: 1920 }}');
+    }
+  {% endif %}
+  
+  {% if section.settings.design_bg_image != blank %}
+    #AccessoriesDesign-{{ section.id }} .design-half {
+      background-image: linear-gradient(135deg, rgba(248,249,250,0.{{ section.settings.overlay_opacity }}), rgba(233,236,239,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
+                        url('{{ section.settings.design_bg_image | image_url: width: 1920 }}');
+    }
+  {% endif %}
+  
+  #AccessoriesDesign-{{ section.id }} .accessories-half .content-center {
+    color: {{ section.settings.accessories_text_color }};
+  }
+  
+  #AccessoriesDesign-{{ section.id }} .design-half .content-center {
+    color: {{ section.settings.design_text_color }};
+  }
+  
+  #AccessoriesDesign-{{ section.id }} .divider {
+    height: {{ section.settings.section_height }}vh;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign fetch_priority = 'auto'
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+-%}
+
+<div
+  id="AccessoriesDesign-{{ section.id }}"
+  class="services-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
+>
+  <div class="divider"></div>
+  
+  <div class="service-half accessories-half" onclick="goToAccessories{{ section.id }}()">
+    {%- if section.settings.accessories_bg_image != blank -%}
+      <div class="service-media">
+        {{
+          section.settings.accessories_bg_image
+          | image_url: width: 1920
+          | image_tag:
+            width: section.settings.accessories_bg_image.width,
+            height: section.settings.accessories_bg_image.height,
+            class: 'service-bg-image',
+            sizes: '50vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+            fetchpriority: fetch_priority
+        }}
+      </div>
+    {%- endif -%}
+    
+    <div class="section-overlay"></div>
+    <div class="accessories-accent"></div>
+    <div class="content-center">
+      <h2 class="title-main">{{ section.settings.accessories_title | default: 'Accessories' }}</h2>
+      <p class="subtitle">{{ section.settings.accessories_subtitle | default: '& Branding Solutions' }}</p>
+      <p class="description">
+        {{ section.settings.accessories_description | default: 'Create anything you ll need for your brand: hang-tags, labels, flyers. You create, we ll produce.' }}
+      </p>
+      {% if section.settings.show_accessories_features %}
+        <ul class="feature-list">
+          <li>{{ section.settings.accessories_feature_1 | default: 'Branding labels' }}</li>
+          <li>{{ section.settings.accessories_feature_2 | default: 'Hang-tags' }}</li>
+          <li>{{ section.settings.accessories_feature_3 | default: 'Composition labels' }}</li>
+        </ul>
+      {% endif %}
+      <a href="{{ section.settings.accessories_url | default: '#' }}" class="explore-button" onclick="goToAccessories{{ section.id }}(); return false;">
+        {{ section.settings.accessories_button_text | default: 'Check Our Accessories' }}
+      </a>
+    </div>
+    {% if section.settings.show_click_hint %}
+      <div class="click-hint">{{ section.settings.click_hint_text | default: 'Click to Enter' }}</div>
+    {% endif %}
+  </div>
+
+  <div class="service-half design-half" onclick="goToDesign{{ section.id }}()">
+    {%- if section.settings.design_bg_image != blank -%}
+      <div class="service-media">
+        {{
+          section.settings.design_bg_image
+          | image_url: width: 1920
+          | image_tag:
+            width: section.settings.design_bg_image.width,
+            height: section.settings.design_bg_image.height,
+            class: 'service-bg-image',
+            sizes: '50vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+            fetchpriority: fetch_priority
+        }}
+      </div>
+    {%- endif -%}
+    
+    <div class="section-overlay"></div>
+    <div class="design-accent"></div>
+    <div class="content-center">
+      <h2 class="title-main">{{ section.settings.design_title | default: 'Design Services' }}</h2>
+      <p class="subtitle">{{ section.settings.design_subtitle | default: '& Creative Solutions' }}</p>
+      <p class="description">
+        {{ section.settings.design_description | default: 'Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production.' }}
+      </p>
+      {% if section.settings.show_design_features %}
+        <ul class="feature-list">
+          <li>{{ section.settings.design_feature_1 | default: 'Brand development' }}</li>
+          <li>{{ section.settings.design_feature_2 | default: 'Graphic design' }}</li>
+          <li>{{ section.settings.design_feature_3 | default: 'Product concepts' }}</li>
+        </ul>
+      {% endif %}
+      <a href="{{ section.settings.design_url | default: '#' }}" class="explore-button" onclick="goToDesign{{ section.id }}(); return false;">
+        {{ section.settings.design_button_text | default: 'Get Started & FAQs' }}
+      </a>
+    </div>
+    {% if section.settings.show_click_hint %}
+      <div class="click-hint">{{ section.settings.click_hint_text | default: 'Click to Enter' }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function goToAccessories{{ section.id }}() {
+    const accessoriesSection = document.querySelector('#AccessoriesDesign-{{ section.id }} .accessories-half');
+    if (accessoriesSection) {
+      accessoriesSection.style.transform = 'scale(1.1)';
+    }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.accessories_url | default: "#" }}';
+      console.log('Navigating to Accessories');
+    }, 300);
+  }
+
+  function goToDesign{{ section.id }}() {
+    const designSection = document.querySelector('#AccessoriesDesign-{{ section.id }} .design-half');
+    if (designSection) {
+      designSection.style.transform = 'scale(1.1)';
+    }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.design_url | default: "#" }}';
+      console.log('Navigating to Design Services');
+    }, 300);
+  }
+  
+  // Add smooth hover effects
+  document.addEventListener('DOMContentLoaded', function() {
+    const halves = document.querySelectorAll('#AccessoriesDesign-{{ section.id }} .service-half');
+    halves.forEach(half => {
+      half.addEventListener('mouseenter', function() {
+        this.style.filter = 'brightness(1.1)';
+      });
+      
+      half.addEventListener('mouseleave', function() {
+        this.style.filter = 'brightness(1)';
+      });
+    });
+  });
+  
+  // Add subtle parallax effect on mouse move
+  document.addEventListener('mousemove', (e) => {
+    const mouseX = e.clientX / window.innerWidth;
+    const mouseY = e.clientY / window.innerHeight;
+    
+    const accessoriesAccent = document.querySelector('#AccessoriesDesign-{{ section.id }} .accessories-accent');
+    const designAccent = document.querySelector('#AccessoriesDesign-{{ section.id }} .design-accent');
+    
+    if (accessoriesAccent) {
+      accessoriesAccent.style.transform = `translateY(${mouseY * 20 - 10}px)`;
+    }
+    if (designAccent) {
+      designAccent.style.transform = `translateY(${mouseY * -20 + 10}px)`;
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Accessories & Design",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "dynamic_class",
+      "label": "Add Class here if Needed!"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Height",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Background Overlay Opacity",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "show_click_hint",
+      "label": "Show 'Click to Enter' hint",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "click_hint_text",
+      "label": "Click hint text",
+      "default": "Click to Enter"
+    },
+    {
+      "type": "header",
+      "content": "Accessories Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "accessories_bg_image",
+      "label": "Accessories Background Image"
+    },
+    {
+      "type": "color",
+      "id": "accessories_text_color",
+      "label": "Accessories Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "accessories_title",
+      "label": "Accessories Title",
+      "default": "Accessories"
+    },
+    {
+      "type": "text",
+      "id": "accessories_subtitle",
+      "label": "Accessories Subtitle",
+      "default": "& Branding Solutions"
+    },
+    {
+      "type": "textarea",
+      "id": "accessories_description",
+      "label": "Accessories Description",
+      "default": "Create anything you'll need for your brand: hang-tags, labels, flyers. You create, we'll produce."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accessories_features",
+      "label": "Show accessories feature list",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_1",
+      "label": "Accessories Feature 1",
+      "default": "Branding labels"
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_2",
+      "label": "Accessories Feature 2",
+      "default": "Hang-tags"
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_3",
+      "label": "Accessories Feature 3",
+      "default": "Composition labels"
+    },
+    {
+      "type": "text",
+      "id": "accessories_button_text",
+      "label": "Accessories Button Text",
+      "default": "Check Our Accessories"
+    },
+    {
+      "type": "url",
+      "id": "accessories_url",
+      "label": "Accessories Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Design Services Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "design_bg_image",
+      "label": "Design Services Background Image"
+    },
+    {
+      "type": "color",
+      "id": "design_text_color",
+      "label": "Design Services Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "design_title",
+      "label": "Design Services Title",
+      "default": "Design Services"
+    },
+    {
+      "type": "text",
+      "id": "design_subtitle",
+      "label": "Design Services Subtitle",
+      "default": "& Creative Solutions"
+    },
+    {
+      "type": "textarea",
+      "id": "design_description",
+      "label": "Design Services Description",
+      "default": "Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_design_features",
+      "label": "Show design feature list",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "design_feature_1",
+      "label": "Design Feature 1",
+      "default": "Brand development"
+    },
+    {
+      "type": "text",
+      "id": "design_feature_2",
+      "label": "Design Feature 2",
+      "default": "Graphic design"
+    },
+    {
+      "type": "text",
+      "id": "design_feature_3",
+      "label": "Design Feature 3",
+      "default": "Product concepts"
+    },
+    {
+      "type": "text",
+      "id": "design_button_text",
+      "label": "Design Services Button Text",
+      "default": "Get Started & FAQ's"
+    },
+    {
+      "type": "url",
+      "id": "design_url",
+      "label": "Design Services Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accessories & Design Services"
+    }
+  ]
+}
 {% endschema %}
