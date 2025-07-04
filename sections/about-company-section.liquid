@@ -1,0 +1,233 @@
+{% comment %}
+  Section: about-company-section.liquid
+  Place this file in the sections folder
+  File path: sections/about-company-section.liquid
+{% endcomment %}
+
+{{ 'section-about-company.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #AboutCompany-{{ section.id }} {
+    height: {{ section.settings.section_height }}vh;
+    min-height: {{ section.settings.min_height }}px;
+  }
+  
+  {% if section.settings.bg_image != blank %}
+    #AboutCompany-{{ section.id }} {
+      background-image: linear-gradient(135deg, rgba({{ section.settings.overlay_color_r }}, {{ section.settings.overlay_color_g }}, {{ section.settings.overlay_color_b }}, 0.{{ section.settings.overlay_opacity }}), rgba({{ section.settings.overlay_color_r }}, {{ section.settings.overlay_color_g }}, {{ section.settings.overlay_color_b }}, 0.{{ section.settings.overlay_opacity | minus: 10 }})), 
+                        url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+    }
+  {% endif %}
+  
+  #AboutCompany-{{ section.id }} .company-content {
+    color: {{ section.settings.text_color }};
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign fetch_priority = 'auto'
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+-%}
+
+<div
+  id="AboutCompany-{{ section.id }}"
+  class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
+>
+  {%- if section.settings.bg_image != blank -%}
+    <div class="company-media">
+      {{
+        section.settings.bg_image
+        | image_url: width: 1920
+        | image_tag:
+          width: section.settings.bg_image.width,
+          height: section.settings.bg_image.height,
+          class: 'company-bg-image',
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+          fetchpriority: fetch_priority
+      }}
+    </div>
+  {%- endif -%}
+  
+  <div class="company-overlay"></div>
+  
+  <div class="company-content">
+    <div class="content-wrapper">
+      {% if section.settings.company_title != blank %}
+        <h2 class="company-title">{{ section.settings.company_title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.company_description != blank %}
+        <p class="company-description">
+          {{ section.settings.company_description }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_url | default: '#' }}" class="company-button">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% if section.settings.show_scroll_indicator %}
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">{{ section.settings.scroll_text | default: 'Scroll' }}</span>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('#AboutCompany-{{ section.id }}');
+    
+    // Add smooth scroll indicator animation
+    const scrollIndicator = section.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+      window.addEventListener('scroll', function() {
+        const scrollProgress = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
+        const line = scrollIndicator.querySelector('.scroll-line');
+        if (line) {
+          line.style.transform = `scaleY(${Math.min(scrollProgress * 2, 1)})`;
+        }
+      });
+    }
+    
+    // Add hover effect for company content
+    const content = section.querySelector('.company-content');
+    if (content) {
+      content.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+      });
+      
+      content.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "About Company Section",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "dynamic_class",
+      "label": "Add Class here if Needed!"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Height",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 400,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum Height",
+      "default": 600
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Background Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 85
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#2c2c2c"
+    },
+    {
+      "type": "textarea",
+      "id": "company_title",
+      "label": "Company Title",
+      "default": "We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal. Our facilities and machines are at the cutting edge of technology."
+    },
+    {
+      "type": "textarea",
+      "id": "company_description",
+      "label": "Company Description",
+      "default": "Our commitment to excellence drives everything we do, from concept to creation."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Explore Past Products, Factory & Team"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show Scroll Indicator",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "scroll_text",
+      "label": "Scroll Indicator Text",
+      "default": "Scroll"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Company Section"
+    }
+  ]
+}
+{% endschema %}
