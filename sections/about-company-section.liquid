@@ -7,14 +7,14 @@
 {{ 'section-about-company.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  #AboutCompany-{{ section.id }} {
+  #AboutCompany-{{ section.id }} .about-company-section {
     height: {{ section.settings.section_height }}vh;
     min-height: {{ section.settings.min_height }}px;
   }
   
   {% if section.settings.bg_image != blank %}
-    #AboutCompany-{{ section.id }} {
-      background-image: linear-gradient(135deg, rgba({{ section.settings.overlay_color_r }}, {{ section.settings.overlay_color_g }}, {{ section.settings.overlay_color_b }}, 0.{{ section.settings.overlay_opacity }}), rgba({{ section.settings.overlay_color_r }}, {{ section.settings.overlay_color_g }}, {{ section.settings.overlay_color_b }}, 0.{{ section.settings.overlay_opacity | minus: 10 }})), 
+    #AboutCompany-{{ section.id }} .about-company-section {
+      background-image: linear-gradient(135deg, rgba(248,249,250,0.{{ section.settings.overlay_opacity }}), rgba(233,236,239,0.{{ section.settings.overlay_opacity | minus: 10 }})), 
                         url('{{ section.settings.bg_image | image_url: width: 1920 }}');
     }
   {% endif %}
@@ -31,59 +31,58 @@
   endif
 -%}
 
-<div
-  id="AboutCompany-{{ section.id }}"
-  class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
->
-  {%- if section.settings.bg_image != blank -%}
-    <div class="company-media">
-      {{
-        section.settings.bg_image
-        | image_url: width: 1920
-        | image_tag:
-          width: section.settings.bg_image.width,
-          height: section.settings.bg_image.height,
-          class: 'company-bg-image',
-          sizes: '100vw',
-          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-          fetchpriority: fetch_priority
-      }}
+<div id="AboutCompany-{{ section.id }}">
+  <div class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}">
+    {%- if section.settings.bg_image != blank -%}
+      <div class="company-media">
+        {{
+          section.settings.bg_image
+          | image_url: width: 1920
+          | image_tag:
+            width: section.settings.bg_image.width,
+            height: section.settings.bg_image.height,
+            class: 'company-bg-image',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+            fetchpriority: fetch_priority
+        }}
+      </div>
+    {%- endif -%}
+    
+    <div class="company-overlay"></div>
+    
+    <div class="company-content">
+      <div class="content-wrapper">
+        {% if section.settings.company_title != blank %}
+          <h2 class="company-title">{{ section.settings.company_title }}</h2>
+        {% endif %}
+        
+        {% if section.settings.company_description != blank %}
+          <p class="company-description">
+            {{ section.settings.company_description }}
+          </p>
+        {% endif %}
+        
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_url | default: '#' }}" class="company-button">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
     </div>
-  {%- endif -%}
-  
-  <div class="company-overlay"></div>
-  
-  <div class="company-content">
-    <div class="content-wrapper">
-      {% if section.settings.company_title != blank %}
-        <h2 class="company-title">{{ section.settings.company_title }}</h2>
-      {% endif %}
-      
-      {% if section.settings.company_description != blank %}
-        <p class="company-description">
-          {{ section.settings.company_description }}
-        </p>
-      {% endif %}
-      
-      {% if section.settings.button_text != blank %}
-        <a href="{{ section.settings.button_url | default: '#' }}" class="company-button">
-          {{ section.settings.button_text }}
-        </a>
-      {% endif %}
-    </div>
+    
+    {% if section.settings.show_scroll_indicator %}
+      <div class="scroll-indicator">
+        <div class="scroll-line"></div>
+        <span class="scroll-text">{{ section.settings.scroll_text | default: 'Scroll' }}</span>
+      </div>
+    {% endif %}
   </div>
-  
-  {% if section.settings.show_scroll_indicator %}
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-      <span class="scroll-text">{{ section.settings.scroll_text | default: 'Scroll' }}</span>
-    </div>
-  {% endif %}
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const section = document.querySelector('#AboutCompany-{{ section.id }}');
+    const section = document.querySelector('#AboutCompany-{{ section.id }} .about-company-section');
     
     // Add smooth scroll indicator animation
     const scrollIndicator = section.querySelector('.scroll-indicator');
@@ -167,8 +166,8 @@
     {
       "type": "range",
       "id": "overlay_opacity",
-      "min": 0,
-      "max": 95,
+      "min": 10,
+      "max": 90,
       "step": 5,
       "unit": "%",
       "label": "Overlay Opacity",
