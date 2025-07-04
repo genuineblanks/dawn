@@ -817,3 +817,7 @@
 .portfolio-showcase__lightbox-close {
   pointer-events: auto;
 }
+
+.portfolio-showcase__main-container {
+  min-height: 200px;  /* or whatever looks good on mobile */
+}
