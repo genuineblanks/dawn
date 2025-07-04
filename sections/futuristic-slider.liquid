@@ -51,257 +51,141 @@
     {% if section.blocks.size > 0 %}
       <div class="portfolio-showcase__wrapper">
         
-        {% comment %} Main Gallery Display {% endcomment %}
-        <div class="portfolio-showcase__gallery">
-          <div class="portfolio-showcase__main-container">
-            <div class="swiper portfolio-showcase__main-swiper">
-              <div class="swiper-wrapper">
-                {% for block in section.blocks %}
-                  {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                  {% if block.settings.image_1 != blank %}
-                    <div class="swiper-slide portfolio-showcase__slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                      <div class="portfolio-showcase__slide-inner">
-                        {{ block.settings.image_1 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                        <div class="portfolio-showcase__slide-overlay">
-                          <button class="portfolio-showcase__zoom-btn" data-image="{{ block.settings.image_1 | image_url: width: 2048 }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.image_2 != blank %}
-                    <div class="swiper-slide portfolio-showcase__slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                      <div class="portfolio-showcase__slide-inner">
-                        {{ block.settings.image_2 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                        <div class="portfolio-showcase__slide-overlay">
-                          <button class="portfolio-showcase__zoom-btn" data-image="{{ block.settings.image_2 | image_url: width: 2048 }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.image_3 != blank %}
-                    <div class="swiper-slide portfolio-showcase__slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                      <div class="portfolio-showcase__slide-inner">
-                        {{ block.settings.image_3 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                        <div class="portfolio-showcase__slide-overlay">
-                          <button class="portfolio-showcase__zoom-btn" data-image="{{ block.settings.image_3 | image_url: width: 2048 }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.image_4 != blank %}
-                    <div class="swiper-slide portfolio-showcase__slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                      <div class="portfolio-showcase__slide-inner">
-                        {{ block.settings.image_4 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                        <div class="portfolio-showcase__slide-overlay">
-                          <button class="portfolio-showcase__zoom-btn" data-image="{{ block.settings.image_4 | image_url: width: 2048 }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% if block.settings.image_5 != blank %}
-                    <div class="swiper-slide portfolio-showcase__slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                      <div class="portfolio-showcase__slide-inner">
-                        {{ block.settings.image_5 | image_url: width: 1200 | image_tag: 
-                          class: 'portfolio-showcase__image', 
-                          loading: 'lazy',
-                          alt: block.settings.product_name | escape
-                        }}
-                        <div class="portfolio-showcase__slide-overlay">
-                          <button class="portfolio-showcase__zoom-btn" data-image="{{ block.settings.image_5 | image_url: width: 2048 }}">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-              </div>
-              
-              {% if section.settings.show_navigation %}
-                <div class="portfolio-showcase__navigation">
-                  <button class="portfolio-showcase__nav portfolio-showcase__nav--prev swiper-button-prev">
-                    <div class="portfolio-showcase__nav-inner">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </div>
-                  </button>
-                  <button class="portfolio-showcase__nav portfolio-showcase__nav--next swiper-button-next">
-                    <div class="portfolio-showcase__nav-inner">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </div>
-                  </button>
-                </div>
-              {% endif %}
-              
-              {% if section.settings.show_pagination %}
-                <div class="portfolio-showcase__pagination swiper-pagination"></div>
-              {% endif %}
-              
-              {% if section.settings.show_progress %}
-                <div class="portfolio-showcase__progress">
-                  <div class="portfolio-showcase__progress-bar"></div>
-                </div>
-              {% endif %}
-            </div>
-          </div>
-
-          {% comment %} Thumbnail Navigation {% endcomment %}
-          {% if section.settings.show_thumbnails %}
-            <div class="portfolio-showcase__thumbnails">
-              <div class="swiper portfolio-showcase__thumb-swiper">
+        {% comment %} Main Content Area - Horizontal Layout {% endcomment %}
+        <div class="portfolio-showcase__main-content">
+          
+          {% comment %} Gallery Section - Left Side {% endcomment %}
+          <div class="portfolio-showcase__gallery">
+            <div class="portfolio-showcase__main-container">
+              <div class="swiper portfolio-showcase__main-swiper">
                 <div class="swiper-wrapper">
+                  {% assign slide_index = 0 %}
                   {% for block in section.blocks %}
                     {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                    {% if block.settings.image_1 != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          {{ block.settings.image_1 | image_url: width: 200 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
+                    {% for i in (1..5) %}
+                      {% assign image_key = 'image_' | append: i %}
+                      {% assign current_image = block.settings[image_key] %}
+                      {% if current_image != blank %}
+                        <div class="swiper-slide portfolio-showcase__slide" 
+                             data-filter="{{ block_filter }}" 
+                             data-product="{{ forloop.index0 }}"
+                             data-slide-index="{{ slide_index }}">
+                          <div class="portfolio-showcase__slide-inner">
+                            {{ current_image | image_url: width: 800 | image_tag: 
+                              class: 'portfolio-showcase__image', 
+                              loading: 'lazy',
+                              alt: block.settings.product_name | escape
+                            }}
+                            <div class="portfolio-showcase__slide-overlay">
+                              <button class="portfolio-showcase__zoom-btn" data-image="{{ current_image | image_url: width: 1600 }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                  <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    {% endif %}
-                    {% if block.settings.image_2 != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          {{ block.settings.image_2 | image_url: width: 200 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
-                        </div>
-                      </div>
-                    {% endif %}
-                    {% if block.settings.image_3 != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          {{ block.settings.image_3 | image_url: width: 200 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
-                        </div>
-                      </div>
-                    {% endif %}
-                    {% if block.settings.image_4 != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          {{ block.settings.image_4 | image_url: width: 200 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
-                        </div>
-                      </div>
-                    {% endif %}
-                    {% if block.settings.image_5 != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" data-filter="{{ block_filter }}" data-product="{{ forloop.index0 }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          {{ block.settings.image_5 | image_url: width: 200 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
-                        </div>
-                      </div>
-                    {% endif %}
+                        {% assign slide_index = slide_index | plus: 1 %}
+                      {% endif %}
+                    {% endfor %}
                   {% endfor %}
                 </div>
+                
+                {% if section.settings.show_navigation %}
+                  <div class="portfolio-showcase__navigation">
+                    <button class="portfolio-showcase__nav portfolio-showcase__nav--prev swiper-button-prev">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button class="portfolio-showcase__nav portfolio-showcase__nav--next swiper-button-next">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                {% endif %}
+                
+                {% if section.settings.show_pagination %}
+                  <div class="portfolio-showcase__pagination swiper-pagination"></div>
+                {% endif %}
               </div>
             </div>
-          {% endif %}
-        {% comment %} Product Information Panel {% endcomment %}
-        <div class="portfolio-showcase__info">
-          <div class="portfolio-showcase__info-content">
-            {% for block in section.blocks %}
-              <div class="portfolio-showcase__product-info" 
-                   data-product="{{ forloop.index0 }}"
-                   data-filter="{{ block.settings.collection_type | default: 'products' }}"
-                   {% unless forloop.first %}style="display: none;"{% endunless %}>
-                
-                {% if block.settings.product_name != blank %}
-                  <h3 class="portfolio-showcase__product-title">
-                    <span class="portfolio-showcase__title-text">{{ block.settings.product_name }}</span>
-                  </h3>
-                {% endif %}
-
-                {% if block.settings.product_description != blank %}
-                  <div class="portfolio-showcase__description">
-                    <div class="portfolio-showcase__description-text">
-                      {{ block.settings.product_description }}
-                    </div>
-                  </div>
-                {% endif %}
-
-                {% if block.settings.details != blank %}
-                  <div class="portfolio-showcase__details">
-                    <h4 class="portfolio-showcase__details-title">
-                      {% case block.settings.collection_type %}
-                        {% when 'factory' %}
-                          Facility Details
-                        {% when 'team' %}
-                          Team Member Info
-                        {% else %}
-                          Product Details
-                      {% endcase %}
-                    </h4>
-                    <div class="portfolio-showcase__details-content">
-                      {{ block.settings.details }}
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
           </div>
 
-          {% comment %} Product Selector - Display Only {% endcomment %}
-          {% if section.blocks.size > 1 %}
-            <div class="portfolio-showcase__selector">
+          {% comment %} Product Information Panel - Right Side {% endcomment %}
+          <div class="portfolio-showcase__info">
+            <div class="portfolio-showcase__info-content">
               {% for block in section.blocks %}
-                <div class="portfolio-showcase__selector-item {% if forloop.first %}active{% endif %}" 
+                <div class="portfolio-showcase__product-info" 
                      data-product="{{ forloop.index0 }}"
-                     data-filter="{{ block.settings.collection_type | default: 'products' }}">
-                  <span class="portfolio-showcase__selector-number">{{ forloop.index | prepend: '0' }}</span>
-                  <span class="portfolio-showcase__selector-name">{{ block.settings.product_name | default: 'Item' | truncate: 20 }}</span>
+                     data-filter="{{ block.settings.collection_type | default: 'products' }}"
+                     {% unless forloop.first %}style="display: none;"{% endunless %}>
+                  
+                  {% if block.settings.product_name != blank %}
+                    <h3 class="portfolio-showcase__product-title">{{ block.settings.product_name }}</h3>
+                  {% endif %}
+
+                  {% if block.settings.product_description != blank %}
+                    <div class="portfolio-showcase__description">
+                      {{ block.settings.product_description }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.details != blank %}
+                    <div class="portfolio-showcase__details">
+                      <h4 class="portfolio-showcase__details-title">
+                        {% case block.settings.collection_type %}
+                          {% when 'factory' %}
+                            Facility Details
+                          {% when 'team' %}
+                            Team Member Info
+                          {% else %}
+                            Product Details
+                        {% endcase %}
+                      </h4>
+                      <div class="portfolio-showcase__details-content">
+                        {{ block.settings.details }}
+                      </div>
+                    </div>
+                  {% endif %}
                 </div>
               {% endfor %}
             </div>
-          {% endif %}
+          </div>
         </div>
+
+        {% comment %} Thumbnails - Full Width Below Main Content {% endcomment %}
+        {% if section.settings.show_thumbnails %}
+          <div class="portfolio-showcase__thumbnails">
+            <div class="swiper portfolio-showcase__thumb-swiper">
+              <div class="swiper-wrapper">
+                {% assign thumb_index = 0 %}
+                {% for block in section.blocks %}
+                  {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                  {% for i in (1..5) %}
+                    {% assign image_key = 'image_' | append: i %}
+                    {% assign current_image = block.settings[image_key] %}
+                    {% if current_image != blank %}
+                      <div class="swiper-slide portfolio-showcase__thumb-slide" 
+                           data-filter="{{ block_filter }}" 
+                           data-product="{{ forloop.index0 }}"
+                           data-thumb-index="{{ thumb_index }}">
+                        <div class="portfolio-showcase__thumb-container">
+                          {{ current_image | image_url: width: 150 | image_tag: 
+                            class: 'portfolio-showcase__thumb-image', 
+                            loading: 'lazy'
+                          }}
+                        </div>
+                      </div>
+                      {% assign thumb_index = thumb_index | plus: 1 %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
 
       {% comment %} Lightbox Modal {% endcomment %}
@@ -320,7 +204,7 @@
     {% else %}
       <div class="portfolio-showcase__empty">
         <div class="portfolio-showcase__empty-icon">
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
             <path d="M32 8L8 20V52H24V36H40V52H56V20L32 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
@@ -341,9 +225,20 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (!section) return;
   
-  let mainSwiperInstance, thumbSwiperInstance;
+  let mainSwiperInstance = null;
+  let thumbSwiperInstance = null;
   let currentFilter = 'products';
   const blocks = {{ section.blocks | json }};
+  
+  // Helper function to get visible slides for current filter
+  function getVisibleSlides(filter) {
+    return section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${filter}"]`);
+  }
+  
+  // Helper function to get visible thumbs for current filter
+  function getVisibleThumbs(filter) {
+    return section.querySelectorAll(`.portfolio-showcase__thumb-slide[data-filter="${filter}"]`);
+  }
   
   // Initialize Swipers
   function initializeSwipers() {
@@ -353,20 +248,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!mainSwiper) return;
 
     // Destroy existing instances
-    if (mainSwiperInstance) mainSwiperInstance.destroy(true, true);
-    if (thumbSwiperInstance) thumbSwiperInstance.destroy(true, true);
+    if (mainSwiperInstance) {
+      mainSwiperInstance.destroy(true, true);
+      mainSwiperInstance = null;
+    }
+    if (thumbSwiperInstance) {
+      thumbSwiperInstance.destroy(true, true);
+      thumbSwiperInstance = null;
+    }
 
-    // Initialize thumbnail swiper
+    // Initialize thumbnail swiper first
     if (thumbSwiper) {
       thumbSwiperInstance = new Swiper(thumbSwiper, {
-        spaceBetween: 12,
+        spaceBetween: 10,
         slidesPerView: 'auto',
         freeMode: true,
         watchSlidesProgress: true,
         breakpoints: {
-          640: { slidesPerView: 6, spaceBetween: 16 },
-          768: { slidesPerView: 8, spaceBetween: 16 },
-          1024: { slidesPerView: 10, spaceBetween: 20 }
+          640: { slidesPerView: 'auto', spaceBetween: 12 },
+          768: { slidesPerView: 'auto', spaceBetween: 16 }
         }
       });
     }
@@ -376,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
       spaceBetween: 0,
       effect: 'fade',
       fadeEffect: { crossFade: true },
-      speed: 800,
+      speed: 600,
       autoplay: {{ section.settings.autoplay | json }} ? {
         delay: {{ section.settings.autoplay_speed | times: 1000 }},
         disableOnInteraction: false,
@@ -389,43 +289,35 @@ document.addEventListener('DOMContentLoaded', function() {
       pagination: {
         el: section.querySelector('.portfolio-showcase__pagination'),
         clickable: true,
-        renderBullet: function (index, className) {
-          return '<span class="' + className + '"><span class="portfolio-showcase__bullet-inner"></span></span>';
-        },
       },
       thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
       on: {
         slideChange: function() {
           updateProductInfo(this.activeIndex);
-          updateProgress(this.activeIndex, this.slides.length);
-        },
-        autoplayTimeLeft(s, time, progress) {
-          updateAutoplayProgress(1 - progress);
         }
       }
     });
   }
 
-  // Update product information
+  // Update product information based on active slide
   function updateProductInfo(slideIndex) {
-    // Use the filter-aware function instead
-    updateProductInfoForFilter(slideIndex, currentFilter);
-  }
-
-  // Update progress bar
-  function updateProgress(current, total) {
-    const progressBar = section.querySelector('.portfolio-showcase__progress-bar');
-    if (progressBar) {
-      const progress = (current + 1) / total;
-      progressBar.style.transform = `scaleX(${progress})`;
-    }
-  }
-
-  // Update autoplay progress
-  function updateAutoplayProgress(progress) {
-    const progressBar = section.querySelector('.portfolio-showcase__progress-bar');
-    if (progressBar) {
-      progressBar.style.setProperty('--autoplay-progress', progress);
+    const visibleSlides = getVisibleSlides(currentFilter);
+    if (slideIndex >= visibleSlides.length) return;
+    
+    const activeSlide = visibleSlides[slideIndex];
+    if (!activeSlide) return;
+    
+    const productIndex = parseInt(activeSlide.getAttribute('data-product'));
+    
+    // Hide all product info
+    section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
+      info.style.display = 'none';
+    });
+    
+    // Show the correct product info
+    const targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${currentFilter}"]`);
+    if (targetInfo) {
+      targetInfo.style.display = 'block';
     }
   }
 
@@ -439,204 +331,49 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     section.querySelector(`[data-filter="${filter}"]`).classList.add('active');
     
-    // Get all elements that need filtering
-    const slides = section.querySelectorAll('.portfolio-showcase__slide');
-    const thumbSlides = section.querySelectorAll('.portfolio-showcase__thumb-slide');
-    const productInfos = section.querySelectorAll('.portfolio-showcase__product-info');
-    const selectors = section.querySelectorAll('.portfolio-showcase__selector-item');
-    
-    // Hide all elements first
-    slides.forEach(slide => slide.style.display = 'none');
-    thumbSlides.forEach(slide => slide.style.display = 'none');
-    productInfos.forEach(info => info.style.display = 'none');
-    selectors.forEach(selector => selector.style.display = 'none');
-    
-    // Show only elements matching the current filter
-    slides.forEach(slide => {
+    // Show/hide slides based on filter
+    section.querySelectorAll('.portfolio-showcase__slide').forEach(slide => {
       if (slide.getAttribute('data-filter') === filter) {
         slide.style.display = 'block';
+      } else {
+        slide.style.display = 'none';
       }
     });
     
-    thumbSlides.forEach(slide => {
+    // Show/hide thumbnails based on filter
+    section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(slide => {
       if (slide.getAttribute('data-filter') === filter) {
         slide.style.display = 'block';
+      } else {
+        slide.style.display = 'none';
       }
     });
     
-    productInfos.forEach(info => {
+    // Show/hide product info based on filter
+    section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
       if (info.getAttribute('data-filter') === filter) {
         info.style.display = 'block';
-        info.style.opacity = '1';
-        info.style.transform = 'translateY(0)';
+      } else {
+        info.style.display = 'none';
       }
     });
     
-    selectors.forEach(selector => {
-      if (selector.getAttribute('data-filter') === filter) {
-        selector.style.display = 'flex';
-      }
-    });
-    
-    // Destroy and reinitialize swipers with filtered content
-    if (mainSwiperInstance) {
-      mainSwiperInstance.destroy(true, true);
-    }
-    if (thumbSwiperInstance) {
-      thumbSwiperInstance.destroy(true, true);
-    }
-    
-    // Small delay to ensure DOM updates
+    // Reinitialize swipers after DOM changes
     setTimeout(() => {
-      // Reinitialize swipers
-      const mainSwiper = section.querySelector('.portfolio-showcase__main-swiper');
-      const thumbSwiper = section.querySelector('.portfolio-showcase__thumb-swiper');
+      initializeSwipers();
       
-      // Count visible slides for this filter
-      const visibleSlides = section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${filter}"][style*="block"]`);
-      const visibleThumbs = section.querySelectorAll(`.portfolio-showcase__thumb-slide[data-filter="${filter}"][style*="block"]`);
-      
-      if (visibleSlides.length > 0) {
-        // Initialize thumbnail swiper
-        if (thumbSwiper && visibleThumbs.length > 0) {
-          thumbSwiperInstance = new Swiper(thumbSwiper, {
-            spaceBetween: 12,
-            slidesPerView: 'auto',
-            freeMode: true,
-            watchSlidesProgress: true,
-            on: {
-              click: function(swiper, event) {
-                // Handle thumbnail clicks for filtered content
-                const clickedSlide = event.target.closest('.swiper-slide');
-                if (clickedSlide && clickedSlide.style.display !== 'none') {
-                  const visibleSlides = Array.from(thumbSwiper.querySelectorAll('.swiper-slide')).filter(slide => slide.style.display !== 'none');
-                  const slideIndex = visibleSlides.indexOf(clickedSlide);
-                  if (mainSwiperInstance && slideIndex >= 0) {
-                    mainSwiperInstance.slideTo(slideIndex);
-                  }
-                }
-              }
-            },
-            breakpoints: {
-              640: { slidesPerView: 6, spaceBetween: 16 },
-              768: { slidesPerView: 8, spaceBetween: 16 },
-              1024: { slidesPerView: 10, spaceBetween: 20 }
-            }
-          });
-        }
-
-        // Initialize main swiper
-        mainSwiperInstance = new Swiper(mainSwiper, {
-          spaceBetween: 0,
-          effect: 'fade',
-          fadeEffect: { crossFade: true },
-          speed: 800,
-          loop: visibleSlides.length > 1,
-          autoplay: {{ section.settings.autoplay | json }} && visibleSlides.length > 1 ? {
-            delay: {{ section.settings.autoplay_speed | times: 1000 }},
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true
-          } : false,
-          navigation: {
-            nextEl: section.querySelector('.portfolio-showcase__nav--next'),
-            prevEl: section.querySelector('.portfolio-showcase__nav--prev'),
-          },
-          pagination: {
-            el: section.querySelector('.portfolio-showcase__pagination'),
-            clickable: true,
-            renderBullet: function (index, className) {
-              return '<span class="' + className + '"><span class="portfolio-showcase__bullet-inner"></span></span>';
-            },
-          },
-          thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
-          on: {
-            slideChange: function() {
-              updateProductInfoForFilter(this.activeIndex, filter);
-              updateProgress(this.activeIndex, this.slides.length);
-            },
-            autoplayTimeLeft(s, time, progress) {
-              updateAutoplayProgress(1 - progress);
-            },
-            init: function() {
-              // Ensure navigation works on init
-              this.update();
-            }
-          }
-        });
-      }
-      
-      // Show first visible product info and activate first selector
+      // Show first visible product info
       const firstVisibleInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${filter}"]`);
       if (firstVisibleInfo) {
-        // Hide all first
         section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
           info.style.display = 'none';
         });
-        
-        // Show first of current filter
         firstVisibleInfo.style.display = 'block';
-        firstVisibleInfo.style.opacity = '1';
-        firstVisibleInfo.style.transform = 'translateY(0)';
       }
-      
-      // Activate first selector of current filter
-      section.querySelectorAll('.portfolio-showcase__selector-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      
-      const firstVisibleSelector = section.querySelector(`.portfolio-showcase__selector-item[data-filter="${filter}"]`);
-      if (firstVisibleSelector) {
-        firstVisibleSelector.classList.add('active');
-      }
-      
-    }, 150);
+    }, 100);
   }
 
-  // Update product info for filtered content
-  function updateProductInfoForFilter(slideIndex, filter) {
-    // Get all visible slides for current filter
-    const visibleSlides = Array.from(section.querySelectorAll(`.portfolio-showcase__slide[data-filter="${filter}"][style*="block"]`));
-    
-    if (slideIndex >= visibleSlides.length) return;
-    
-    const activeSlide = visibleSlides[slideIndex];
-    if (!activeSlide) return;
-    
-    const productIndex = parseInt(activeSlide.getAttribute('data-product'));
-    
-    // Animate out current info
-    const currentVisibleInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${filter}"][style*="block"]`);
-    if (currentVisibleInfo) {
-      currentVisibleInfo.style.opacity = '0';
-      currentVisibleInfo.style.transform = 'translateY(20px)';
-      
-      setTimeout(() => {
-        currentVisibleInfo.style.display = 'none';
-        
-        // Show new info
-        const newInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${filter}"]`);
-        if (newInfo) {
-          newInfo.style.display = 'block';
-          setTimeout(() => {
-            newInfo.style.opacity = '1';
-            newInfo.style.transform = 'translateY(0)';
-          }, 50);
-        }
-      }, 300);
-    }
-    
-    // Update active selector
-    section.querySelectorAll(`.portfolio-showcase__selector-item[data-filter="${filter}"]`).forEach(item => {
-      item.classList.remove('active');
-    });
-    
-    const activeSelector = section.querySelector(`.portfolio-showcase__selector-item[data-product="${productIndex}"][data-filter="${filter}"]`);
-    if (activeSelector) {
-      activeSelector.classList.add('active');
-    }
-  }
-
-  // Event listeners
+  // Event listeners for filter tabs
   section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
     tab.addEventListener('click', function() {
       const filter = this.getAttribute('data-filter');
@@ -648,14 +385,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const lightbox = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
   
-  section.querySelectorAll('.portfolio-showcase__zoom-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+  section.addEventListener('click', function(e) {
+    if (e.target.closest('.portfolio-showcase__zoom-btn')) {
+      e.preventDefault();
       e.stopPropagation();
-      const imageUrl = this.getAttribute('data-image');
+      const btn = e.target.closest('.portfolio-showcase__zoom-btn');
+      const imageUrl = btn.getAttribute('data-image');
       lightboxImage.src = imageUrl;
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
-    });
+    }
   });
 
   lightbox.querySelector('.portfolio-showcase__lightbox-close').addEventListener('click', function() {
@@ -670,18 +409,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Initialize
+  // Initialize everything
   initializeSwipers();
   
-  // Set up initial filter (default to 'products')
+  // Set initial filter to products
   filterContent('products');
-  
-  // Set initial product info styles
-  section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
-    info.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    info.style.opacity = info.style.display === 'none' ? '0' : '1';
-    info.style.transform = 'translateY(0)';
-  });
 });
 </script>
 
@@ -739,12 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_pagination",
       "label": "Show dot pagination",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_progress",
-      "label": "Show progress bar",
-      "default": false
     },
     {
       "type": "checkbox",
