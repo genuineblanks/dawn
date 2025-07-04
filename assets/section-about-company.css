@@ -1,54 +1,16 @@
-/* NUCLEAR DEBUG - Remove after testing */
+/* section-about-company.css - Clean minimal approach */
+
 .about-company-section {
-  background: red !important;
-  color: white !important;
-  height: 400px !important;
-  display: block !important;
-  width: 100% !important;
-}
-
-.about-company-section * {
-  color: white !important;
-}
-
-/* END NUCLEAR DEBUG */
-
-/* section-about-company.css - Futuristic About Section */
-
-/* Force override all theme defaults with high specificity - NO BACKGROUND */
-html .about-company-section,
-body .about-company-section,
-.shopify-section .about-company-section {
-  background: none !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  height: 80vh !important;
-  min-height: 600px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Override any inherited background properties */
-.about-company-section * {
-  box-sizing: border-box;
-}
-
-/* Reset any problematic theme defaults - TRANSPARENT */
-.about-company-section {
-  background: transparent;
-  background-image: none;
-  background-attachment: scroll;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  height: 80vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
 }
 
 .about-company-section .company-media {
@@ -213,54 +175,6 @@ body .about-company-section,
   50% { opacity: 0.8; }
 }
 
-/* Futuristic accent elements */
-.about-company-section::before {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 5%;
-  width: 100px;
-  height: 1px;
-  background: linear-gradient(90deg, currentColor 0%, transparent 100%);
-  opacity: 0.2;
-  z-index: 5;
-}
-
-.about-company-section::after {
-  content: '';
-  position: absolute;
-  bottom: 10%;
-  right: 5%;
-  width: 100px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, currentColor 100%);
-  opacity: 0.2;
-  z-index: 5;
-}
-
-/* Geometric accent lines */
-.about-company-section .content-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 80px;
-  background: linear-gradient(to bottom, currentColor 0%, transparent 100%);
-  opacity: 0.15;
-}
-
-.about-company-section .content-wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 2px;
-  height: 80px;
-  background: linear-gradient(to top, currentColor 0%, transparent 100%);
-  opacity: 0.15;
-}
-
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .about-company-section {
@@ -316,26 +230,16 @@ body .about-company-section,
   }
 }
 
+/* Fix the root cause - Remove Shopify section default padding for this specific section only */
+[id^="AboutCompany-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 /* Focus states for accessibility */
 .about-company-section .company-button:focus {
   outline: 2px solid currentColor;
   outline-offset: 3px;
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .about-company-section .company-overlay {
-    background: rgba(255, 255, 255, 0.95);
-  }
-  
-  .about-company-section .company-button {
-    border-width: 2px;
-  }
-  
-  .about-company-section .scroll-line,
-  .about-company-section .scroll-text {
-    opacity: 1;
-  }
 }
 
 /* Reduced motion */
@@ -354,31 +258,4 @@ body .about-company-section,
   .about-company-section .company-button:before {
     display: none;
   }
-}
-
-/* Premium scroll effects */
-.about-company-section.scroll-trigger.animate--fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.about-company-section.scroll-trigger.animate--fade-in.animate {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Z-index management */
-.about-company-section {
-  position: relative;
-  z-index: 1;
-}
-
-.about-company-section .company-content {
-  position: relative;
-  z-index: 10;
-}
-
-.about-company-section .scroll-indicator {
-  z-index: 15;
 }
