@@ -486,12 +486,17 @@ document.addEventListener('DOMContentLoaded', function() {
     section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(thumb => {
       thumb.addEventListener('click', function() {
         const idx = parseInt(this.dataset.thumbIndex, 10);
-        if (!isNaN(idx)) {
-          mainSwiperInstance.slideTo(idx, 300);
-        }
+        if (!isNaN(idx)) mainSwiperInstance.slideTo(idx, 300);
       });
     });
-  }  // ← end initializeSwipers()
+  
+    // ─── Mirror any thumbnail slideChange (arrows, drag, autoplay) to the main swiper ───
+    if (thumbSwiperInstance) {
+      thumbSwiperInstance.on('slideChange', function() {
+        mainSwiperInstance.slideTo(this.activeIndex, 300);
+      });
+    }
+  } // ← end initializeSwipers()
 
   // Update product information based on active slide
   function updateProductInfo(slideIndex) {
