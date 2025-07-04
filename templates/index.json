@@ -605,6 +605,97 @@
         "padding_bottom": 36
       }
     },
+    "split_accessories_design_mPBE4B": {
+      "type": "split-accessories-design",
+      "blocks": {
+        "heading_GFMApG": {
+          "type": "heading",
+          "settings": {
+            "service_type": "accessories",
+            "heading": "Accessories",
+            "heading_size": "h1"
+          }
+        },
+        "text_yTBYtk": {
+          "type": "text",
+          "settings": {
+            "service_type": "accessories",
+            "text": "<p>Create anything you'll need for your brand: hang-tags, labels, flyers. You create, we'll produce.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_3U979F": {
+          "type": "button",
+          "settings": {
+            "service_type": "accessories",
+            "button_label": "Check Our Accessories",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        },
+        "heading_3ai7na": {
+          "type": "heading",
+          "settings": {
+            "service_type": "design",
+            "heading": "Design Services",
+            "heading_size": "h1"
+          }
+        },
+        "text_mNnfX6": {
+          "type": "text",
+          "settings": {
+            "service_type": "design",
+            "text": "<p>Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_y6krqM": {
+          "type": "button",
+          "settings": {
+            "service_type": "design",
+            "button_label": "Get Started & FAQ's",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_GFMApG",
+        "text_yTBYtk",
+        "button_3U979F",
+        "heading_3ai7na",
+        "text_mNnfX6",
+        "button_y6krqM"
+      ],
+      "name": "Accessories & Design Services",
+      "settings": {
+        "dynamic_class": "",
+        "section_height": 70,
+        "overlay_opacity": 75,
+        "image_overlay_opacity": 40,
+        "show_click_hint": true,
+        "click_hint_text": "Click to Enter",
+        "accessories_bg_image": "shopify://shop_images/DSC09685_copiar.jpg",
+        "accessories_text_color": "#ffffff",
+        "accessories_title": "Accessories",
+        "accessories_subtitle": "& Branding Solutions",
+        "accessories_description": "Create anything you'll need for your brand: hang-tags, labels, flyers. You create, we'll produce.",
+        "accessories_feature_1": "Branding labels",
+        "accessories_feature_2": "Hang-tags",
+        "accessories_feature_3": "Composition labels",
+        "accessories_button_text": "Check Our Accessories",
+        "accessories_url": "",
+        "design_text_color": "#000000",
+        "design_title": "Design Services",
+        "design_subtitle": "& Creative Solutions",
+        "design_description": "Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production.",
+        "design_feature_1": "Brand development",
+        "design_feature_2": "Graphic design",
+        "design_feature_3": "Product concepts",
+        "design_button_text": "Get Started & FAQ's",
+        "design_url": ""
+      }
+    },
     "lookbook_split_Dpzpe9": {
       "type": "lookbook-split",
       "name": "Lookbook Split Screen",
@@ -617,6 +708,7 @@
         "subtitle_size": 1.2,
         "description_size": 1,
         "button_size": 0.9,
+        "luxury_bg_image": "shopify://shop_images/DSC09685_copiar.jpg",
         "luxury_text_color": "#ffffff",
         "luxury_title": "Luxury",
         "luxury_subtitle": "Collection",
@@ -736,6 +828,7 @@
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
     "image_banner_mbytrt",
+    "split_accessories_design_mPBE4B",
     "lookbook_split_Dpzpe9",
     "text_grid_itwK3a"
   ]
