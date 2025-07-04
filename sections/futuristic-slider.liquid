@@ -578,16 +578,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const lightbox = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
   
+  // NEW: always grab the zoom URL from the active slide
   section.addEventListener('click', function(e) {
-    if (e.target.closest('.portfolio-showcase__zoom-btn')) {
-      e.preventDefault();
-      e.stopPropagation();
-      const btn = e.target.closest('.portfolio-showcase__zoom-btn');
-      const imageUrl = btn.getAttribute('data-image');
-      lightboxImage.src = imageUrl;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
+    if (!clickedZoom) return;
+    e.preventDefault();
+    e.stopPropagation();
+  
+    // find the active Swiper slide element
+    const activeIndex = mainSwiperInstance.activeIndex;
+    const activeSlideEl = mainSwiperInstance.slides[activeIndex];
+    // within that slide, pick its zoom-button
+    const activeBtn = activeSlideEl.querySelector('.portfolio-showcase__zoom-btn');
+    // fall back to the clicked button only if something went wrong
+    const imageUrl = (activeBtn && activeBtn.getAttribute('data-image'))
+                       || clickedZoom.getAttribute('data-image');
+  
+    lightboxImage.src = imageUrl;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
   });
 
   lightbox.querySelector('.portfolio-showcase__lightbox-close').addEventListener('click', function() {
