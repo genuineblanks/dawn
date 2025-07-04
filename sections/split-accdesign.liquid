@@ -1,6 +1,614 @@
-{% schema %}
-  {
-    "name": "Section name",
-    "settings": []
+{% comment %}
+  Section: accessories-design-split.liquid
+  Place this file in the sections folder
+  File path: sections/accessories-design-split.liquid
+{% endcomment %}
+
+<style>
+  .services-section-{{ section.id }} {
+    height: {{ section.settings.section_height }}vh;
+    display: flex;
+    position: relative;
+    font-family: var(--font-body-family), Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
+  
+  .services-section-{{ section.id }} .service-half {
+    width: 50%;
+    height: {{ section.settings.section_height }}vh;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .services-section-{{ section.id }} .service-half:hover {
+    transform: scale(1.02);
+  }
+  
+  .services-section-{{ section.id }} .accessories-half {
+    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
+                {% if section.settings.accessories_bg_image %}url('{{ section.settings.accessories_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #2a2a2a, #1a1a1a){% endif %};
+    background-size: cover;
+    background-position: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  .services-section-{{ section.id }} .design-half {
+    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
+                {% if section.settings.design_bg_image %}url('{{ section.settings.design_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #f5f5f5, #e0e0e0){% endif %};
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Smart text color based on background */
+  .services-section-{{ section.id }} .accessories-half {
+    color: {% if section.settings.accessories_bg_image %}{{ section.settings.accessories_text_color }}{% else %}#ffffff{% endif %};
+  }
+  
+  .services-section-{{ section.id }} .design-half {
+    color: {% if section.settings.design_bg_image %}{{ section.settings.design_text_color }}{% else %}#000000{% endif %};
+  }
+  
+  .services-section-{{ section.id }} .content-center {
+    text-align: center;
+    z-index: 10;
+    transition: all 0.4s ease;
+    max-width: 450px;
+    padding: 2rem;
+  }
+  
+  .services-section-{{ section.id }} .service-half:hover .content-center {
+    transform: scale(1.05);
+  }
+  
+  .services-section-{{ section.id }} .title-main {
+    font-size: {{ section.settings.title_size }}rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-family: var(--font-heading-family);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .services-section-{{ section.id }} .subtitle {
+    font-size: {{ section.settings.subtitle_size }}rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+  
+  .services-section-{{ section.id }} .description {
+    font-size: {{ section.settings.description_size }}rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    max-width: 380px;
+    margin: 0 auto 2.5rem;
+    font-weight: 400;
+  }
+  
+  .services-section-{{ section.id }} .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 2rem;
+    max-width: 300px;
+    text-align: left;
+  }
+  
+  .services-section-{{ section.id }} .feature-list li {
+    font-size: {{ section.settings.description_size | times: 0.9 }}rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+    position: relative;
+    padding-left: 1rem;
+  }
+  
+  .services-section-{{ section.id }} .feature-list li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    opacity: 0.7;
+  }
+  
+  .services-section-{{ section.id }} .explore-button {
+    display: inline-block;
+    padding: 18px 45px;
+    border: 2px solid currentColor;
+    background: rgba(255,255,255,0.1);
+    color: inherit;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    font-size: {{ section.settings.button_size }}rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .services-section-{{ section.id }} .accessories-half .explore-button {
+    border-color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .services-section-{{ section.id }} .design-half .explore-button {
+    border-color: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.05);
+  }
+  
+  .services-section-{{ section.id }} .accessories-half .explore-button:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .services-section-{{ section.id }} .design-half .explore-button:hover {
+    background: rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .services-section-{{ section.id }} .divider {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: {{ section.settings.section_height }}vh;
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        rgba(128,128,128,0.3) 20%, 
+        rgba(128,128,128,0.5) 50%, 
+        rgba(128,128,128,0.3) 80%, 
+        transparent 100%);
+    z-index: 15;
+  }
+  
+  .services-section-{{ section.id }} .click-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: fadeInOut-{{ section.id }} 2s infinite;
+  }
+  
+  @keyframes fadeInOut-{{ section.id }} {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .services-section-{{ section.id }} {
+      flex-direction: column;
+    }
+    
+    .services-section-{{ section.id }} .service-half {
+      width: 100%;
+      height: {{ section.settings.section_height | divided_by: 2 }}vh;
+    }
+    
+    .services-section-{{ section.id }} .accessories-half {
+      border-right: none;
+      border-bottom: 1px solid rgba(128,128,128,0.3);
+    }
+    
+    .services-section-{{ section.id }} .title-main {
+      font-size: {{ section.settings.title_size | times: 0.7 }}rem;
+    }
+    
+    .services-section-{{ section.id }} .divider {
+      top: 50%;
+      left: 0;
+      width: 100vw;
+      height: 1px;
+    }
+    
+    .services-section-{{ section.id }} .description {
+      max-width: 280px;
+      font-size: {{ section.settings.description_size | times: 0.9 }}rem;
+    }
+    
+    .services-section-{{ section.id }} .feature-list {
+      max-width: 250px;
+    }
+    
+    .services-section-{{ section.id }} .explore-button {
+      padding: 12px 30px;
+      font-size: {{ section.settings.button_size | times: 0.9 }}rem;
+    }
+  }
+  
+  /* Additional mobile adjustments */
+  @media (max-width: 480px) {
+    .services-section-{{ section.id }} .title-main {
+      font-size: {{ section.settings.title_size | times: 0.6 }}rem;
+      letter-spacing: 0.05em;
+    }
+    
+    .services-section-{{ section.id }} .subtitle {
+      font-size: {{ section.settings.subtitle_size | times: 0.8 }}rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .services-section-{{ section.id }} .description {
+      max-width: 220px;
+      font-size: {{ section.settings.description_size | times: 0.8 }}rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .services-section-{{ section.id }} .feature-list {
+      max-width: 200px;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  /* Focus states for accessibility */
+  .services-section-{{ section.id }} .explore-button:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .services-section-{{ section.id }} .accessories-half,
+    .services-section-{{ section.id }} .design-half {
+      background-blend-mode: multiply;
+    }
+    
+    .services-section-{{ section.id }} .explore-button {
+      border-width: 3px;
+      background: rgba(255,255,255,0.3);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .services-section-{{ section.id }} .service-half,
+    .services-section-{{ section.id }} .content-center,
+    .services-section-{{ section.id }} .explore-button {
+      transition: none;
+    }
+    
+    .services-section-{{ section.id }} .click-hint {
+      animation: none;
+    }
+  }
+</style>
+
+<div class="services-section-{{ section.id }}">
+  <div class="divider"></div>
+  
+  <div class="service-half accessories-half" onclick="goToAccessories{{ section.id }}()">
+    <div class="content-center">
+      <h2 class="title-main">{{ section.settings.accessories_title | default: 'Accessories' }}</h2>
+      <p class="subtitle">{{ section.settings.accessories_subtitle | default: '& Branding Solutions' }}</p>
+      <p class="description">
+        {{ section.settings.accessories_description | default: 'Create anything you will need for your brand: hang-tags, labels, flyers. You create, we produce.' }}
+      </p>
+      {% if section.settings.show_accessories_features %}
+        <ul class="feature-list">
+          <li>{{ section.settings.accessories_feature_1 | default: 'Branding labels' }}</li>
+          <li>{{ section.settings.accessories_feature_2 | default: 'Hang-tags' }}</li>
+          <li>{{ section.settings.accessories_feature_3 | default: 'Composition labels' }}</li>
+        </ul>
+      {% endif %}
+      <a href="{{ section.settings.accessories_url | default: '#' }}" class="explore-button" onclick="goToAccessories{{ section.id }}(); return false;">
+        {{ section.settings.accessories_button_text | default: 'Check Our Accessories' }}
+      </a>
+    </div>
+    {% if section.settings.show_click_hint %}
+      <div class="click-hint">{{ section.settings.click_hint_text | default: 'Click to Enter' }}</div>
+    {% endif %}
+  </div>
+
+  <div class="service-half design-half" onclick="goToDesign{{ section.id }}()">
+    <div class="content-center">
+      <h2 class="title-main">{{ section.settings.design_title | default: 'Design Services' }}</h2>
+      <p class="subtitle">{{ section.settings.design_subtitle | default: '& Creative Solutions' }}</p>
+      <p class="description">
+        {{ section.settings.design_description | default: 'Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production.' }}
+      </p>
+      {% if section.settings.show_design_features %}
+        <ul class="feature-list">
+          <li>{{ section.settings.design_feature_1 | default: 'Brand development' }}</li>
+          <li>{{ section.settings.design_feature_2 | default: 'Graphic design' }}</li>
+          <li>{{ section.settings.design_feature_3 | default: 'Product concepts' }}</li>
+        </ul>
+      {% endif %}
+      <a href="{{ section.settings.design_url | default: '#' }}" class="explore-button" onclick="goToDesign{{ section.id }}(); return false;">
+        {{ section.settings.design_button_text | default: 'Get Started & FAQs' }}
+      </a>
+    </div>
+    {% if section.settings.show_click_hint %}
+      <div class="click-hint">{{ section.settings.click_hint_text | default: 'Click to Enter' }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function goToAccessories{{ section.id }}() {
+    const accessoriesSection = document.querySelector('.services-section-{{ section.id }} .accessories-half');
+    if (accessoriesSection) {
+      accessoriesSection.style.transform = 'scale(1.1)';
+    }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.accessories_url | default: "#" }}';
+      console.log('Navigating to Accessories');
+    }, 300);
+  }
+
+  function goToDesign{{ section.id }}() {
+    const designSection = document.querySelector('.services-section-{{ section.id }} .design-half');
+    if (designSection) {
+      designSection.style.transform = 'scale(1.1)';
+    }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.design_url | default: "#" }}';
+      console.log('Navigating to Design Services');
+    }, 300);
+  }
+  
+  // Add smooth hover effects
+  document.addEventListener('DOMContentLoaded', function() {
+    const halves = document.querySelectorAll('.services-section-{{ section.id }} .service-half');
+    halves.forEach(half => {
+      half.addEventListener('mouseenter', function() {
+        this.style.filter = 'brightness(1.1)';
+      });
+      
+      half.addEventListener('mouseleave', function() {
+        this.style.filter = 'brightness(1)';
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Accessories - Design",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Height",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Background Overlay Opacity",
+      "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "show_click_hint",
+      "label": "Show 'Click to Enter' hint",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "click_hint_text",
+      "label": "Click hint text",
+      "default": "Click to Enter"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 1.5,
+      "max": 4,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Title Size",
+      "default": 2.5
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 0.8,
+      "max": 1.8,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Subtitle Size",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 0.8,
+      "max": 1.3,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Description Size",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 0.7,
+      "max": 1.1,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Button Size",
+      "default": 0.9
+    },
+    {
+      "type": "header",
+      "content": "Accessories Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "accessories_bg_image",
+      "label": "Accessories Background Image"
+    },
+    {
+      "type": "color",
+      "id": "accessories_text_color",
+      "label": "Accessories Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "accessories_title",
+      "label": "Accessories Title",
+      "default": "Accessories"
+    },
+    {
+      "type": "text",
+      "id": "accessories_subtitle",
+      "label": "Accessories Subtitle",
+      "default": "& Branding Solutions"
+    },
+    {
+      "type": "textarea",
+      "id": "accessories_description",
+      "label": "Accessories Description",
+      "default": "Create anything you'll need for your brand: hang-tags, labels, flyers. You create, we'll produce."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accessories_features",
+      "label": "Show feature list",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_1",
+      "label": "Feature 1",
+      "default": "Branding labels"
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_2",
+      "label": "Feature 2",
+      "default": "Hang-tags"
+    },
+    {
+      "type": "text",
+      "id": "accessories_feature_3",
+      "label": "Feature 3",
+      "default": "Composition labels"
+    },
+    {
+      "type": "text",
+      "id": "accessories_button_text",
+      "label": "Accessories Button Text",
+      "default": "Check Our Accessories"
+    },
+    {
+      "type": "url",
+      "id": "accessories_url",
+      "label": "Accessories Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Design Services Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "design_bg_image",
+      "label": "Design Services Background Image"
+    },
+    {
+      "type": "color",
+      "id": "design_text_color",
+      "label": "Design Services Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "design_title",
+      "label": "Design Services Title",
+      "default": "Design Services"
+    },
+    {
+      "type": "text",
+      "id": "design_subtitle",
+      "label": "Design Services Subtitle",
+      "default": "& Creative Solutions"
+    },
+    {
+      "type": "textarea",
+      "id": "design_description",
+      "label": "Design Services Description",
+      "default": "Our in-house design team works side by side with brands to translate abstract ideas into detailed graphics, placements, and concepts ready for production."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_design_features",
+      "label": "Show feature list",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "design_feature_1",
+      "label": "Feature 1",
+      "default": "Brand development"
+    },
+    {
+      "type": "text",
+      "id": "design_feature_2",
+      "label": "Feature 2",
+      "default": "Graphic design"
+    },
+    {
+      "type": "text",
+      "id": "design_feature_3",
+      "label": "Feature 3",
+      "default": "Product concepts"
+    },
+    {
+      "type": "text",
+      "id": "design_button_text",
+      "label": "Design Services Button Text",
+      "default": "Get Started & FAQ's"
+    },
+    {
+      "type": "url",
+      "id": "design_url",
+      "label": "Design Services Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accessories & Design Services"
+    }
+  ]
+}
 {% endschema %}
