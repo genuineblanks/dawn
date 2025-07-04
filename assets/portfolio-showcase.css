@@ -663,6 +663,30 @@
   box-shadow: 0 1.6rem 4.8rem rgba(73, 80, 87, 0.35);
 }
 
+/* Full-screen semi-transparent overlay with a rotating loader */
+.zoom-spinner {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.zoom-spinner::after {
+  content: '';
+  width: 3rem;
+  height: 3rem;
+  border: 0.4rem solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: zoom-spin 1s linear infinite;
+}
+@keyframes zoom-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Empty State */
 .portfolio-showcase__empty {
   text-align: center;
@@ -888,3 +912,4 @@
     padding: 1.5rem;
   }
 }
+
