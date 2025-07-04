@@ -481,7 +481,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
-  }
+  
+    // ─── Force each thumbnail click to jump to its own index ───
+    section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.thumbIndex, 10);
+        if (!isNaN(idx)) {
+          mainSwiperInstance.slideTo(idx, 300);
+        }
+      });
+    });
+  }  // ← end initializeSwipers()  
 
   // Update product information based on active slide
   function updateProductInfo(slideIndex) {
