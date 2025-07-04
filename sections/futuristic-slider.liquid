@@ -72,11 +72,16 @@
                              data-product="{{ block_index }}"
                              data-slide-index="{{ slide_index }}">
                           <div class="portfolio-showcase__slide-inner">
-                            {{ current_image | image_url: width: 800 | image_tag: 
-                              class: 'portfolio-showcase__image', 
-                              loading: 'lazy',
-                              alt: block.settings.product_name | escape
-                            }}
+                            <img src="{{ current_image | image_url: width: 800 }}" 
+                                 class="portfolio-showcase__image" 
+                                 loading="lazy"
+                                 alt="{{ block.settings.product_name | escape }}"
+                                 width="800"
+                                 height="600"
+                                 draggable="false"
+                                 oncontextmenu="return false;"
+                                 onselectstart="return false;"
+                                 ondragstart="return false;">
                             <div class="portfolio-showcase__slide-overlay">
                               <button class="portfolio-showcase__zoom-btn" data-image="{{ current_image | image_url: width: 1600 }}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -186,10 +191,15 @@
                            data-product="{{ block_index }}"
                            data-thumb-index="{{ thumb_index }}">
                         <div class="portfolio-showcase__thumb-container">
-                          {{ current_image | image_url: width: 150 | image_tag: 
-                            class: 'portfolio-showcase__thumb-image', 
-                            loading: 'lazy'
-                          }}
+                          <img src="{{ current_image | image_url: width: 150 }}" 
+                               class="portfolio-showcase__thumb-image" 
+                               loading="lazy"
+                               width="150"
+                               height="113"
+                               draggable="false"
+                               oncontextmenu="return false;"
+                               onselectstart="return false;"
+                               ondragstart="return false;">
                         </div>
                       </div>
                       {% assign thumb_index = thumb_index | plus: 1 %}
@@ -251,6 +261,62 @@ document.addEventListener('DOMContentLoaded', function() {
     factory: { start: null, end: null },
     team: { start: null, end: null }
   };
+
+  // Image Protection JavaScript
+  function addImageProtection() {
+    // Disable right-click context menu
+    section.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+  
+    // Disable drag and drop
+    section.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+  
+    // Disable text selection
+    section.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+  
+    // Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S
+    document.addEventListener('keydown', function(e) {
+      // F12
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+Shift+I
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+U
+      if (e.ctrlKey && e.keyCode === 85) {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+S
+      if (e.ctrlKey && e.keyCode === 83) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  
+    // Clear browser cache of image URLs
+    const images = section.querySelectorAll('img');
+    images.forEach(img => {
+      img.onload = function() {
+        this.onload = null;
+      };
+    });
+  }
+  
+  // Call the protection function
+  addImageProtection();
   
   // Build category mapping from DOM
   function buildCategoryMapping() {
