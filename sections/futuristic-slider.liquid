@@ -64,17 +64,22 @@
                     {% assign block_filter = block.settings.collection_type | default: 'products' %}
                     {% for i in (1..5) %}
                       {% assign image_key = 'image_' | append: i %}
+                      {% assign title_key = 'title_' | append: i %}
+                      {% assign description_key = 'description_' | append: i %}
                       {% assign current_image = block.settings[image_key] %}
+                      {% assign current_title = block.settings[title_key] %}
+                      {% assign current_description = block.settings[description_key] %}
                       {% if current_image != blank %}
                         <div class="swiper-slide portfolio-showcase__slide" 
                              data-filter="{{ block_filter }}" 
-                             data-product="{{ forloop.index0 }}"
+                             data-block="{{ forloop.index0 }}"
+                             data-image="{{ i }}"
                              data-slide-index="{{ slide_index }}">
                           <div class="portfolio-showcase__slide-inner">
                             {{ current_image | image_url: width: 800 | image_tag: 
                               class: 'portfolio-showcase__image', 
                               loading: 'lazy',
-                              alt: block.settings.product_name | escape
+                              alt: current_title | default: 'Portfolio Image' | escape
                             }}
                             <div class="portfolio-showcase__slide-overlay">
                               <button class="portfolio-showcase__zoom-btn" data-image="{{ current_image | image_url: width: 1600 }}">
@@ -116,41 +121,13 @@
           {% comment %} Product Information Panel - Right Side {% endcomment %}
           <div class="portfolio-showcase__info">
             <div class="portfolio-showcase__info-content">
-              {% for block in section.blocks %}
-                <div class="portfolio-showcase__product-info" 
-                     data-product="{{ forloop.index0 }}"
-                     data-filter="{{ block.settings.collection_type | default: 'products' }}"
-                     {% unless forloop.first %}style="display: none;"{% endunless %}>
-                  
-                  {% if block.settings.product_name != blank %}
-                    <h3 class="portfolio-showcase__product-title">{{ block.settings.product_name }}</h3>
-                  {% endif %}
-
-                  {% if block.settings.product_description != blank %}
-                    <div class="portfolio-showcase__description">
-                      {{ block.settings.product_description }}
-                    </div>
-                  {% endif %}
-
-                  {% if block.settings.details != blank %}
-                    <div class="portfolio-showcase__details">
-                      <h4 class="portfolio-showcase__details-title">
-                        {% case block.settings.collection_type %}
-                          {% when 'factory' %}
-                            Facility Details
-                          {% when 'team' %}
-                            Team Member Info
-                          {% else %}
-                            Product Details
-                        {% endcase %}
-                      </h4>
-                      <div class="portfolio-showcase__details-content">
-                        {{ block.settings.details }}
-                      </div>
-                    </div>
-                  {% endif %}
+              {% comment %} Single info container that will be dynamically updated {% endcomment %}
+              <div class="portfolio-showcase__product-info">
+                <h3 class="portfolio-showcase__product-title" id="current-title">Select an image</h3>
+                <div class="portfolio-showcase__description" id="current-description">
+                  <p>Use the navigation to browse through the portfolio images.</p>
                 </div>
-              {% endfor %}
+              </div>
             </div>
           </div>
         </div>
@@ -181,7 +158,8 @@
                     {% if current_image != blank %}
                       <div class="swiper-slide portfolio-showcase__thumb-slide" 
                            data-filter="{{ block_filter }}" 
-                           data-product="{{ forloop.index0 }}"
+                           data-block="{{ forloop.index0 }}"
+                           data-image="{{ i }}"
                            data-thumb-index="{{ thumb_index }}">
                         <div class="portfolio-showcase__thumb-container">
                           {{ current_image | image_url: width: 150 | image_tag: 
@@ -242,18 +220,18 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentFilter = 'products';
   const blocks = {{ section.blocks | json }};
   
-  // Create category mapping - track which slide belongs to which category and their positions
-  let categoryMap = [];
+  // Create image data mapping - each image has its own title and description
+  let imageDataMap = [];
   let categoryRanges = {
     products: { start: null, end: null },
     factory: { start: null, end: null },
     team: { start: null, end: null }
   };
   
-  // Build category mapping from DOM
-  function buildCategoryMapping() {
+  // Build image data mapping from blocks data and DOM
+  function buildImageDataMapping() {
     const allSlides = section.querySelectorAll('.portfolio-showcase__slide');
-    categoryMap = [];
+    imageDataMap = [];
     
     // Reset category ranges
     categoryRanges = {
@@ -264,12 +242,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     allSlides.forEach((slide, index) => {
       const filter = slide.getAttribute('data-filter');
-      const productIndex = slide.getAttribute('data-product');
+      const blockIndex = parseInt(slide.getAttribute('data-block'));
+      const imageIndex = parseInt(slide.getAttribute('data-image'));
       
-      categoryMap.push({
+      // Get title and description from blocks data
+      const block = blocks[blockIndex];
+      const title = block.settings[`title_${imageIndex}`] || 'Portfolio Image';
+      const description = block.settings[`description_${imageIndex}`] || '';
+      
+      imageDataMap.push({
         index: index,
         filter: filter,
-        productIndex: parseInt(productIndex)
+        blockIndex: blockIndex,
+        imageIndex: imageIndex,
+        title: title,
+        description: description
       });
       
       // Track category ranges
@@ -279,20 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
       categoryRanges[filter].end = index;
     });
     
-    console.log('Category Map:', categoryMap);
+    console.log('Image Data Map:', imageDataMap);
     console.log('Category Ranges:', categoryRanges);
-    
-    // Debug: Also log all product info elements to see what's available
-    const allProductInfos = section.querySelectorAll('.portfolio-showcase__product-info');
-    console.log('Available Product Info Elements:');
-    allProductInfos.forEach(info => {
-      console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'), 'Has content:', info.innerHTML.trim().length > 0);
-    });
   }
   
   // Get category for current slide index
   function getCategoryForSlide(slideIndex) {
-    return categoryMap[slideIndex]?.filter || 'products';
+    return imageDataMap[slideIndex]?.filter || 'products';
   }
   
   // Get first slide index for a category
@@ -394,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
       on: {
         slideChange: function() {
           const slideIndex = this.activeIndex;
-          updateProductInfo(slideIndex);
+          updateImageInfo(slideIndex);
           updateActiveFilterTab(slideIndex);
           
           // Sync thumbnail slider
@@ -406,45 +386,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Update product information based on active slide
-  function updateProductInfo(slideIndex) {
-    if (!categoryMap[slideIndex]) return;
+  // Update image information based on active slide
+  function updateImageInfo(slideIndex) {
+    if (!imageDataMap[slideIndex]) return;
     
-    const currentSlide = categoryMap[slideIndex];
-    const productIndex = currentSlide.productIndex;
-    const category = currentSlide.filter;
+    const imageData = imageDataMap[slideIndex];
+    const titleElement = section.querySelector('#current-title');
+    const descriptionElement = section.querySelector('#current-description');
     
-    console.log('Updating product info for slide:', slideIndex, 'Product:', productIndex, 'Category:', category);
+    console.log('Updating image info for slide:', slideIndex, 'Data:', imageData);
     
-    // Hide all product info first
-    section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
-      info.style.display = 'none';
-    });
-    
-    // Show the correct product info - try multiple selectors to ensure we find it
-    let targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
-    
-    // If not found, try without filter (fallback)
-    if (!targetInfo) {
-      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"]`);
+    if (titleElement) {
+      titleElement.textContent = imageData.title || 'Portfolio Image';
     }
     
-    // If still not found, try by filter only and show first one
-    if (!targetInfo) {
-      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${category}"]`);
-    }
-    
-    if (targetInfo) {
-      targetInfo.style.display = 'block';
-      console.log('Showing product info for:', targetInfo.getAttribute('data-product'), targetInfo.getAttribute('data-filter'));
-    } else {
-      console.error('Could not find product info for product:', productIndex, 'category:', category);
-      // Debug: log all available product info elements
-      const allInfos = section.querySelectorAll('.portfolio-showcase__product-info');
-      console.log('Available product info elements:');
-      allInfos.forEach(info => {
-        console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'));
-      });
+    if (descriptionElement) {
+      if (imageData.description && imageData.description.trim() !== '') {
+        descriptionElement.innerHTML = imageData.description;
+      } else {
+        descriptionElement.innerHTML = '<p>No description available.</p>';
+      }
     }
   }
 
@@ -465,8 +426,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the current filter
     currentFilter = category;
     
-    // Manually update the product info since slideTo might not trigger slideChange event immediately
-    updateProductInfo(firstSlideIndex);
+    // Manually update the image info since slideTo might not trigger slideChange event immediately
+    updateImageInfo(firstSlideIndex);
     
     // Also ensure the filter tab appearance is updated
     updateActiveFilterTab(firstSlideIndex);
@@ -509,13 +470,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Initialize everything
-  buildCategoryMapping();
+  buildImageDataMapping();
   initializeSwipers();
   
   // Set initial state
   setTimeout(() => {
     updateActiveFilterTab(0);
-    updateProductInfo(0);
+    updateImageInfo(0);
   }, 100);
 });
 </script>
@@ -619,26 +580,8 @@ document.addEventListener('DOMContentLoaded', function() {
           "default": "products"
         },
         {
-          "type": "text",
-          "id": "product_name",
-          "label": "Item Name",
-          "default": "Premium Hoodie"
-        },
-        {
-          "type": "richtext",
-          "id": "product_description",
-          "label": "Description",
-          "default": "<p>High-quality item crafted with attention to detail and premium materials.</p>"
-        },
-        {
-          "type": "richtext",
-          "id": "details",
-          "label": "Details",
-          "default": "<p><strong>Material:</strong> 100% Cotton<br><strong>Weight:</strong> 280 GSM<br><strong>Sizes:</strong> XS - 3XL</p>"
-        },
-        {
           "type": "header",
-          "content": "Images (up to 5)"
+          "content": "Image 1"
         },
         {
           "type": "image_picker",
@@ -646,9 +589,41 @@ document.addEventListener('DOMContentLoaded', function() {
           "label": "Image 1"
         },
         {
+          "type": "text",
+          "id": "title_1",
+          "label": "Image 1 Title",
+          "default": "Portfolio Image 1"
+        },
+        {
+          "type": "richtext",
+          "id": "description_1",
+          "label": "Image 1 Description",
+          "default": "<p>Description for the first image in this portfolio item.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Image 2"
+        },
+        {
           "type": "image_picker",
           "id": "image_2",
           "label": "Image 2"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Image 2 Title",
+          "default": "Portfolio Image 2"
+        },
+        {
+          "type": "richtext",
+          "id": "description_2",
+          "label": "Image 2 Description",
+          "default": "<p>Description for the second image in this portfolio item.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Image 3"
         },
         {
           "type": "image_picker",
@@ -656,14 +631,58 @@ document.addEventListener('DOMContentLoaded', function() {
           "label": "Image 3"
         },
         {
+          "type": "text",
+          "id": "title_3",
+          "label": "Image 3 Title",
+          "default": "Portfolio Image 3"
+        },
+        {
+          "type": "richtext",
+          "id": "description_3",
+          "label": "Image 3 Description",
+          "default": "<p>Description for the third image in this portfolio item.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Image 4"
+        },
+        {
           "type": "image_picker",
           "id": "image_4",
           "label": "Image 4"
         },
         {
+          "type": "text",
+          "id": "title_4",
+          "label": "Image 4 Title",
+          "default": "Portfolio Image 4"
+        },
+        {
+          "type": "richtext",
+          "id": "description_4",
+          "label": "Image 4 Description",
+          "default": "<p>Description for the fourth image in this portfolio item.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Image 5"
+        },
+        {
           "type": "image_picker",
           "id": "image_5",
           "label": "Image 5"
+        },
+        {
+          "type": "text",
+          "id": "title_5",
+          "label": "Image 5 Title",
+          "default": "Portfolio Image 5"
+        },
+        {
+          "type": "richtext",
+          "id": "description_5",
+          "label": "Image 5 Description",
+          "default": "<p>Description for the fifth image in this portfolio item.</p>"
         }
       ]
     }
@@ -676,27 +695,30 @@ document.addEventListener('DOMContentLoaded', function() {
           "type": "item",
           "settings": {
             "collection_type": "products",
-            "product_name": "Premium Cotton Hoodie",
-            "product_description": "<p>Expertly crafted hoodie featuring premium cotton blend, reinforced stitching, and superior comfort.</p>",
-            "details": "<p><strong>Material:</strong> 80% Cotton, 20% Polyester<br><strong>Weight:</strong> 320 GSM<br><strong>Features:</strong> Kangaroo pocket, ribbed cuffs<br><strong>Colors:</strong> Available in 25+ colors</p>"
+            "title_1": "Premium Cotton Hoodie - Front View",
+            "description_1": "<p>Front view showcasing the clean design and premium cotton blend material with kangaroo pocket.</p>",
+            "title_2": "Premium Cotton Hoodie - Back View", 
+            "description_2": "<p>Back view highlighting the reinforced stitching and superior construction quality.</p>"
           }
         },
         {
           "type": "item",
           "settings": {
             "collection_type": "factory",
-            "product_name": "Production Floor",
-            "product_description": "<p>State-of-the-art manufacturing facility with modern equipment and quality control processes.</p>",
-            "details": "<p><strong>Capacity:</strong> 10,000+ pieces/month<br><strong>Equipment:</strong> Industrial sewing machines<br><strong>Quality:</strong> ISO certified processes</p>"
+            "title_1": "Production Floor Overview",
+            "description_1": "<p>Wide view of our state-of-the-art manufacturing facility with modern equipment.</p>",
+            "title_2": "Quality Control Station",
+            "description_2": "<p>Our dedicated quality control area where every piece is inspected for perfection.</p>"
           }
         },
         {
           "type": "item",
           "settings": {
             "collection_type": "team",
-            "product_name": "Production Manager",
-            "product_description": "<p>Meet our experienced production team dedicated to delivering exceptional quality in every piece.</p>",
-            "details": "<p><strong>Experience:</strong> 15+ years<br><strong>Specialty:</strong> Quality control<br><strong>Role:</strong> Production oversight</p>"
+            "title_1": "Production Manager",
+            "description_1": "<p>Meet our experienced production manager with 15+ years in quality manufacturing.</p>",
+            "title_2": "Design Team",
+            "description_2": "<p>Our creative design team working on the latest fashion trends and innovations.</p>"
           }
         }
       ]
