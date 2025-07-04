@@ -578,20 +578,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // get references once
-  const spinner      = document.getElementById('zoom-spinner');
-  const lightbox     = section.querySelector('.portfolio-showcase__lightbox');
+  const spinner       = document.getElementById('zoom-spinner');
+  const lightbox      = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
   
+  // Zoom handler (preload + spinner)
   section.addEventListener('click', function(e) {
     const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
     if (!clickedZoom) return;
     e.preventDefault(); e.stopPropagation();
   
     // determine the correct URL for the active slide
-    const idx           = mainSwiperInstance.activeIndex;
-    const activeSlide   = mainSwiperInstance.slides[idx];
-    const activeBtn     = activeSlide.querySelector('.portfolio-showcase__zoom-btn');
-    const imageUrl      = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
+    const idx         = mainSwiperInstance.activeIndex;
+    const activeSlide = mainSwiperInstance.slides[idx];
+    const activeBtn   = activeSlide.querySelector('.portfolio-showcase__zoom-btn');
+    const imageUrl    = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
   
     // show the spinner overlay
     spinner.style.display = 'flex';
@@ -604,13 +605,29 @@ document.addEventListener('DOMContentLoaded', function() {
     preload.onload = () => {
       // hide spinner, then inject & show lightbox
       spinner.style.display = 'none';
-      lightboxImage.src = imageUrl;
+      lightboxImage.src      = imageUrl;
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
     };
     preload.src = imageUrl;
   });
-
+  
+  // ——— Lightbox Close Handlers ———
+  // Close via “X” button
+  const closeBtn = lightbox.querySelector('.portfolio-showcase__lightbox-close');
+  closeBtn.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+    spinner.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+  // Close via clicking backdrop
+  const backdrop = lightbox.querySelector('.portfolio-showcase__lightbox-backdrop');
+  backdrop.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+    spinner.style.display = 'none';
+    document.body.style.overflow = '';
+  });
+  
   // Initialize everything
   buildCategoryMapping();
   initializeSwipers();
