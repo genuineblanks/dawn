@@ -1,6 +1,5 @@
 /* section-accessories-design.css - Place this in the assets folder */
 
-/* Scope all styles to only the services section to avoid conflicts */
 .services-section {
   height: 100vh;
   display: flex;
