@@ -532,34 +532,6 @@
         "padding_bottom": 36
       }
     },
-    "lookbook_split_MxJKgY": {
-      "type": "lookbook-split",
-      "name": "Lookbook Split Screen",
-      "settings": {
-        "section_height": 100,
-        "overlay_opacity": 70,
-        "show_click_hint": true,
-        "click_hint_text": "Click to Enter",
-        "title_size": 3.5,
-        "subtitle_size": 1.2,
-        "description_size": 1,
-        "button_size": 0.9,
-        "luxury_bg_image": "shopify://shop_images/MAIN_PAGE_FILL1_a5647e15-7080-40f4-9b45-994709cdadaf.png",
-        "luxury_text_color": "#ffffff",
-        "luxury_title": "Luxury",
-        "luxury_subtitle": "Collection",
-        "luxury_description": "Discover our premium selection of luxury blanks crafted for the most discerning brands and designers.",
-        "luxury_button_text": "Explore Luxury",
-        "luxury_url": "",
-        "highend_bg_image": "shopify://shop_images/MAIN_PAGE_FILL2_e2d616d4-3700-4e8b-bf94-349b49166e34.png",
-        "highend_text_color": "#ffffff",
-        "highend_title": "High End",
-        "highend_subtitle": "Collection",
-        "highend_description": "Explore our sophisticated high-end blanks designed for elevated fashion and premium applications.",
-        "highend_button_text": "Explore High End",
-        "highend_url": ""
-      }
-    },
     "image_banner_mbytrt": {
       "type": "image-banner",
       "blocks": {
@@ -600,9 +572,12 @@
         "buttons_3CkR8q",
         "image_LRmjQ3"
       ],
+      "disabled": true,
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands",
+        "image": "shopify://shop_images/DSC09682_copiar.jpg",
+        "image_2": "shopify://shop_images/DSC09685_copiar.jpg",
         "image_overlay_opacity": 40,
         "image_height": "medium",
         "desktop_content_position": "middle-center",
@@ -628,6 +603,32 @@
         "margin_top": 0,
         "padding_top": 36,
         "padding_bottom": 36
+      }
+    },
+    "lookbook_split_Dpzpe9": {
+      "type": "lookbook-split",
+      "name": "Lookbook Split Screen",
+      "settings": {
+        "section_height": 100,
+        "overlay_opacity": 70,
+        "show_click_hint": true,
+        "click_hint_text": "Click to Enter",
+        "title_size": 3.5,
+        "subtitle_size": 1.2,
+        "description_size": 1,
+        "button_size": 0.9,
+        "luxury_text_color": "#ffffff",
+        "luxury_title": "Luxury",
+        "luxury_subtitle": "Collection",
+        "luxury_description": "Discover our premium selection of luxury blanks crafted for the most discerning brands and designers.",
+        "luxury_button_text": "Explore Luxury",
+        "luxury_url": "",
+        "highend_text_color": "#ffffff",
+        "highend_title": "High End",
+        "highend_subtitle": "Collection",
+        "highend_description": "Explore our sophisticated high-end blanks designed for elevated fashion and premium applications.",
+        "highend_button_text": "Explore High End",
+        "highend_url": ""
       }
     },
     "text_grid_itwK3a": {
@@ -734,8 +735,8 @@
     "image_banner_PJVdGt",
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
-    "lookbook_split_MxJKgY",
     "image_banner_mbytrt",
+    "lookbook_split_Dpzpe9",
     "text_grid_itwK3a"
   ]
 }
