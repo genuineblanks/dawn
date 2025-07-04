@@ -1,33 +1,32 @@
-/* section-accessories-design.css - Place this in the assets folder */
+/* section-accessories-design.css - Minimal working version */
 
 .services-section {
   height: 100vh;
   display: flex;
   position: relative;
-  font-family: var(--font-body-family), Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+  background: #000;
 }
 
-.services-section .service-half {
+.service-half {
   width: 50%;
   height: 100vh;
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  transition: all 0.6s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.services-section .service-half:hover {
+.service-half:hover {
   transform: scale(1.02);
 }
 
-.services-section .service-media {
+.service-media {
   position: absolute;
   top: 0;
   left: 0;
@@ -36,29 +35,27 @@
   z-index: 1;
 }
 
-.services-section .service-bg-image {
+.service-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
 }
 
-.services-section .accessories-half {
-  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4)), 
-              linear-gradient(135deg, #495057, #343a40);
+.accessories-half {
+  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4)), #333;
   background-size: cover;
   background-position: center;
   border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-.services-section .design-half {
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1)), 
-              linear-gradient(135deg, #f8f9fa, #e9ecef);
+.design-half {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1)), #f8f9fa;
   background-size: cover;
   background-position: center;
 }
 
-.services-section .section-overlay {
+.section-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -69,11 +66,11 @@
   z-index: 2;
 }
 
-.services-section .service-half:hover .section-overlay {
+.service-half:hover .section-overlay {
   background: rgba(0,0,0,0.1);
 }
 
-.services-section .content-center {
+.content-center {
   position: relative;
   text-align: center;
   z-index: 10;
@@ -82,35 +79,30 @@
   padding: 2.5rem;
 }
 
-.services-section .service-half:hover .content-center {
+.service-half:hover .content-center {
   transform: scale(1.05);
 }
 
-.services-section .title-main {
+.title-main {
   font-size: 3.5rem;
   font-weight: 300;
   letter-spacing: 0.2em;
   margin-bottom: 1rem;
   text-transform: uppercase;
-  font-family: var(--font-heading-family);
   line-height: 1.2;
 }
 
-.services-section .accessories-half .title-main {
+.accessories-half .title-main {
   color: #ffffff;
   text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-  background: linear-gradient(45deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
-.services-section .design-half .title-main {
+.design-half .title-main {
   color: #212529;
   text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
 }
 
-.services-section .subtitle {
+.subtitle {
   font-size: 1.2rem;
   font-weight: 300;
   letter-spacing: 0.1em;
@@ -119,7 +111,7 @@
   text-transform: uppercase;
 }
 
-.services-section .description {
+.description {
   font-size: 1rem;
   line-height: 1.6;
   opacity: 0.8;
@@ -129,7 +121,7 @@
   text-align: center;
 }
 
-.services-section .feature-list {
+.feature-list {
   list-style: none;
   padding: 0;
   margin: 0 auto 2.5rem;
@@ -137,31 +129,27 @@
   text-align: center;
 }
 
-.services-section .feature-list li {
+.feature-list li {
   font-size: 0.9rem;
   margin-bottom: 0.8rem;
   opacity: 0.85;
-  position: relative;
-  padding-left: 0;
   font-weight: 500;
   text-align: center;
 }
 
-.services-section .accessories-half .feature-list li:before {
-  content: "−";
-  margin-right: 0.5rem;
+.accessories-half .feature-list li:before {
+  content: "− ";
   color: #ffffff;
   font-weight: bold;
 }
 
-.services-section .design-half .feature-list li:before {
-  content: "−";
-  margin-right: 0.5rem;
+.design-half .feature-list li:before {
+  content: "− ";
   color: #495057;
   font-weight: bold;
 }
 
-.services-section .explore-button {
+.explore-button {
   display: inline-block;
   padding: 15px 40px;
   border: 2px solid rgba(255,255,255,0.3);
@@ -173,40 +161,37 @@
   font-weight: 400;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 }
 
-.services-section .accessories-half .explore-button {
+.accessories-half .explore-button {
   border-color: rgba(255,255,255,0.6);
   background: rgba(255,255,255,0.1);
   color: #ffffff;
 }
 
-.services-section .design-half .explore-button {
+.design-half .explore-button {
   border-color: rgba(0,0,0,0.6);
   background: rgba(0,0,0,0.05);
   color: #212529;
 }
 
-.services-section .accessories-half .explore-button:hover {
+.accessories-half .explore-button:hover {
   background: rgba(255,255,255,0.2);
   border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   color: #ffffff;
   text-decoration: none;
 }
 
-.services-section .design-half .explore-button:hover {
+.design-half .explore-button:hover {
   background: rgba(0,0,0,0.1);
   border-color: #212529;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   color: #212529;
   text-decoration: none;
 }
 
-.services-section .divider {
+.divider {
   position: absolute;
   top: 0;
   left: 50%;
@@ -222,7 +207,7 @@
   transform: translateX(-50%);
 }
 
-.services-section .accessories-accent {
+.accessories-accent {
   position: absolute;
   top: 20%;
   right: 10%;
@@ -233,7 +218,7 @@
   z-index: 5;
 }
 
-.services-section .design-accent {
+.design-accent {
   position: absolute;
   top: 20%;
   left: 10%;
@@ -244,7 +229,7 @@
   z-index: 5;
 }
 
-.services-section .click-hint {
+.click-hint {
   position: absolute;
   bottom: 3rem;
   left: 50%;
@@ -253,54 +238,29 @@
   opacity: 0.6;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  animation: services-pulse 2s infinite;
+  animation: pulse-hint 2s infinite;
   z-index: 10;
 }
 
-@keyframes services-pulse {
+@keyframes pulse-hint {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
 
-.services-section .accessories-half::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 3;
-}
-
-.services-section .design-half::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 70% 30%, rgba(0,0,0,0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* Smart text color contrast based on background */
-.services-section .accessories-half .content-center {
+/* Smart text color contrast */
+.accessories-half .content-center {
   color: #ffffff;
 }
 
-.services-section .design-half .content-center {
+.design-half .content-center {
   color: #212529;
 }
 
-/* Override text colors when custom colors are set */
-.services-section .accessories-half .content-center * {
+.accessories-half .content-center * {
   color: inherit;
 }
 
-.services-section .design-half .content-center * {
+.design-half .content-center * {
   color: inherit;
 }
 
@@ -311,21 +271,21 @@
     height: 100vh;
   }
   
-  .services-section .service-half {
+  .service-half {
     width: 100%;
     height: 50vh;
   }
   
-  .services-section .accessories-half {
+  .accessories-half {
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
   
-  .services-section .title-main {
+  .title-main {
     font-size: 2.5rem;
   }
   
-  .services-section .divider {
+  .divider {
     top: 50%;
     left: 0;
     width: 100vw;
@@ -333,116 +293,22 @@
     transform: translateY(-50%);
   }
   
-  .services-section .content-center {
+  .content-center {
     max-width: 320px;
     padding: 2rem;
   }
   
-  .services-section .description {
+  .description {
     max-width: 280px;
     font-size: 0.95rem;
   }
   
-  .services-section .feature-list {
+  .feature-list {
     max-width: 250px;
   }
   
-  .services-section .explore-button {
+  .explore-button {
     padding: 12px 30px;
     font-size: 0.8rem;
   }
-}
-
-@media (max-width: 480px) {
-  .services-section .title-main {
-    font-size: 2rem;
-    letter-spacing: 0.15em;
-  }
-  
-  .services-section .subtitle {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .services-section .description {
-    max-width: 240px;
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .services-section .feature-list {
-    max-width: 220px;
-    margin-bottom: 1.5rem;
-  }
-  
-  .services-section .content-center {
-    padding: 1.5rem;
-  }
-}
-
-/* Focus states for accessibility */
-.services-section .explore-button:focus {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .services-section .accessories-half {
-    background: #000000;
-  }
-  
-  .services-section .design-half {
-    background: #ffffff;
-  }
-  
-  .services-section .explore-button {
-    border-width: 3px;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .services-section .service-half,
-  .services-section .content-center,
-  .services-section .section-overlay,
-  .services-section .explore-button {
-    transition: none;
-  }
-  
-  .services-section .click-hint {
-    animation: none;
-  }
-}
-
-/* Animation for scroll trigger */
-.services-section.scroll-trigger.animate--fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.services-section.scroll-trigger.animate--fade-in.animate {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Ensure proper z-index stacking */
-.services-section {
-  position: relative;
-  z-index: 1;
-}
-
-.services-section .service-half {
-  position: relative;
-  z-index: 2;
-}
-
-.services-section .content-center {
-  position: relative;
-  z-index: 10;
-}
-
-.services-section .divider {
-  z-index: 15;
 }
