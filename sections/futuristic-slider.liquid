@@ -400,15 +400,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const productIndex = currentSlide.productIndex;
     const category = currentSlide.filter;
     
-    // Hide all product info
+    console.log('Updating product info for slide:', slideIndex, 'Product:', productIndex, 'Category:', category);
+    
+    // Hide all product info first
     section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
       info.style.display = 'none';
     });
     
-    // Show the correct product info
-    const targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
+    // Show the correct product info - try multiple selectors to ensure we find it
+    let targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
+    
+    // If not found, try without filter (fallback)
+    if (!targetInfo) {
+      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"]`);
+    }
+    
+    // If still not found, try by filter only and show first one
+    if (!targetInfo) {
+      targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${category}"]`);
+    }
+    
     if (targetInfo) {
       targetInfo.style.display = 'block';
+      console.log('Showing product info for:', targetInfo.getAttribute('data-product'), targetInfo.getAttribute('data-filter'));
+    } else {
+      console.error('Could not find product info for product:', productIndex, 'category:', category);
+      // Debug: log all available product info elements
+      const allInfos = section.querySelectorAll('.portfolio-showcase__product-info');
+      console.log('Available product info elements:');
+      allInfos.forEach(info => {
+        console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'));
+      });
     }
   }
 
