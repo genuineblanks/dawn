@@ -551,7 +551,7 @@
         "accessories_feature_2": "Hang-tags",
         "accessories_feature_3": "Composition labels",
         "accessories_button_text": "Check Our Accessories",
-        "accessories_url": "",
+        "accessories_url": "shopify://collections/accessories",
         "design_bg_image": "shopify://shop_images/ChatGPT_Image_17_05_2025_17_28_30.png",
         "design_text_color": "#ffffff",
         "design_title": "Design Services",
@@ -562,7 +562,7 @@
         "design_feature_2": "Graphic design",
         "design_feature_3": "Product concepts",
         "design_button_text": "Get Started & FAQ's",
-        "design_url": ""
+        "design_url": "shopify://collections/design"
       }
     },
     "image_banner_mbytrt": {
