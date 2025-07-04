@@ -434,6 +434,7 @@
         "text_qcNjYb",
         "buttons_U7f6Q8"
       ],
+      "disabled": true,
       "settings": {
         "enable_footer": false,
         "dynamic-class": "button-above bring-creativity",
@@ -501,6 +502,7 @@
         "buttons_mbfi7y",
         "text_Bjz4EN"
       ],
+      "disabled": true,
       "settings": {
         "enable_footer": false,
         "dynamic-class": "worldwide-brands button-above bring-creativity",
