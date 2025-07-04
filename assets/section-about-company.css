@@ -1,3 +1,18 @@
+/* NUCLEAR DEBUG - Remove after testing */
+.about-company-section {
+  background: red !important;
+  color: white !important;
+  height: 400px !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.about-company-section * {
+  color: white !important;
+}
+
+/* END NUCLEAR DEBUG */
+
 /* section-about-company.css - Futuristic About Section */
 
 /* Force override all theme defaults with high specificity - NO BACKGROUND */
