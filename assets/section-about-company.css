@@ -1,11 +1,12 @@
 /* section-about-company.css - Futuristic About Section */
 
-/* Force override all theme defaults with high specificity */
+/* Force override all theme defaults with high specificity - NO BACKGROUND */
 html .about-company-section,
 body .about-company-section,
 .shopify-section .about-company-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%) !important;
-  background-color: #f8f9fa !important;
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
   height: 80vh !important;
   min-height: 600px !important;
   display: flex !important;
@@ -25,8 +26,9 @@ body .about-company-section,
   box-sizing: border-box;
 }
 
-/* Reset any problematic theme defaults */
+/* Reset any problematic theme defaults - TRANSPARENT */
 .about-company-section {
+  background: transparent;
   background-image: none;
   background-attachment: scroll;
   background-repeat: no-repeat;

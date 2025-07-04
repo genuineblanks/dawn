@@ -10,13 +10,11 @@
   #AboutCompany-{{ section.id }} {
     height: {{ section.settings.section_height }}vh;
     min-height: {{ section.settings.min_height }}px;
+    background: transparent;
     {% if section.settings.bg_image != blank %}
-      background-image: linear-gradient(135deg, rgba(248,249,250,0.{{ section.settings.overlay_opacity }}), rgba(233,236,239,0.{{ section.settings.overlay_opacity | minus: 10 }})), 
-                        url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
       background-size: cover;
       background-position: center;
-    {% else %}
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
     {% endif %}
   }
   
