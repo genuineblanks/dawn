@@ -11,6 +11,8 @@
   padding: 0;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+  background-size: cover;
+  background-position: center;
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
 }
 
