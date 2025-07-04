@@ -364,26 +364,39 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Get first slide index for a category
+  // Get first slide index for a category
   function getFirstSlideForCategory(category) {
-    return categoryRanges[category]?.start || 0;
+    const range = categoryRanges[category];
+    if (range && range.start !== null && range.start !== undefined) {
+      return range.start;
+    }
+    
+    // Fallback: find first slide with this category
+    const firstSlide = categoryMap.find(item => item.filter === category);
+    return firstSlide ? firstSlide.index : 0;
   }
   
   // Update active filter tab based on current slide
   function updateActiveFilterTab(slideIndex) {
     const category = getCategoryForSlide(slideIndex);
     
-    if (category !== currentFilter) {
-      currentFilter = category;
-      
-      // Update filter tab appearance
-      section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      const activeTab = section.querySelector(`[data-filter="${category}"]`);
-      if (activeTab) {
-        activeTab.classList.add('active');
-      }
+    if (!category) {
+      console.warn('No category found for slide index:', slideIndex);
+      return;
+    }
+    
+    currentFilter = category;
+    
+    // Always update filter tab appearance
+    section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    const activeTab = section.querySelector(`[data-filter="${category}"]`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+    } else {
+      console.warn('No filter tab found for category:', category);
     }
   }
   
@@ -519,26 +532,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Jump to first slide of specific category
   function jumpToCategory(category) {
+    // Update filter tabs first
+    section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    const activeTab = section.querySelector(`[data-filter="${category}"]`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+    }
+    
     const firstSlideIndex = getFirstSlideForCategory(category);
     
     console.log('Jumping to category:', category, 'First slide index:', firstSlideIndex);
     
+    // Ensure we have a valid slide index
+    if (firstSlideIndex === null || firstSlideIndex === undefined) {
+      console.warn('No slides found for category:', category);
+      return;
+    }
+    
     if (mainSwiperInstance) {
-      mainSwiperInstance.slideTo(firstSlideIndex);
+      mainSwiperInstance.slideTo(firstSlideIndex, 300); // Add transition speed
     }
     
     if (thumbSwiperInstance) {
-      thumbSwiperInstance.slideTo(firstSlideIndex);
+      thumbSwiperInstance.slideTo(firstSlideIndex, 300);
     }
     
     // Update the current filter
     currentFilter = category;
     
-    // Manually update the product info since slideTo might not trigger slideChange event immediately
-    updateProductInfo(firstSlideIndex);
-    
-    // Also ensure the filter tab appearance is updated
-    updateActiveFilterTab(firstSlideIndex);
+    // Force update the product info and filter tab
+    setTimeout(() => {
+      updateProductInfo(firstSlideIndex);
+      updateActiveFilterTab(firstSlideIndex);
+    }, 350); // Wait for slide transition to complete
   }
 
   // Event listeners for filter tabs - now jump to category instead of filtering
