@@ -255,6 +255,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const allSlides = section.querySelectorAll('.portfolio-showcase__slide');
     categoryMap = [];
     
+    // Reset category ranges
+    categoryRanges = {
+      products: { start: null, end: null },
+      factory: { start: null, end: null },
+      team: { start: null, end: null }
+    };
+    
     allSlides.forEach((slide, index) => {
       const filter = slide.getAttribute('data-filter');
       const productIndex = slide.getAttribute('data-product');
@@ -274,6 +281,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Category Map:', categoryMap);
     console.log('Category Ranges:', categoryRanges);
+    
+    // Debug: Also log all product info elements to see what's available
+    const allProductInfos = section.querySelectorAll('.portfolio-showcase__product-info');
+    console.log('Available Product Info Elements:');
+    allProductInfos.forEach(info => {
+      console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'), 'Has content:', info.innerHTML.trim().length > 0);
+    });
   }
   
   // Get category for current slide index
