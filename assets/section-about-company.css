@@ -16,27 +16,6 @@
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
 }
 
-.about-company-section .company-media {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.about-company-section .company-bg-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 8s ease-in-out;
-}
-
-.about-company-section:hover .company-bg-image {
-  transform: scale(1.02);
-}
-
 .about-company-section .company-overlay {
   position: absolute;
   top: 0;
