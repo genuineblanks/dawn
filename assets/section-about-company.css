@@ -1,29 +1,37 @@
 /* section-about-company.css - Futuristic About Section */
 
-/* Override the problematic theme CSS first */
-.about-company-section {
+/* Force override all theme defaults with high specificity */
+html .about-company-section,
+body .about-company-section,
+.shopify-section .about-company-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%) !important;
   background-color: #f8f9fa !important;
-  background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%) !important;
-  height: 80vh;
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  height: 80vh !important;
+  min-height: 600px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-/* Reset problematic inherited backgrounds only for child elements */
-.about-company-section .company-content,
-.about-company-section .content-wrapper,
-.about-company-section .company-title,
-.about-company-section .company-description,
-.about-company-section .company-button {
-  background-color: transparent !important;
-  background-image: none !important;
+/* Override any inherited background properties */
+.about-company-section * {
+  box-sizing: border-box;
+}
+
+/* Reset any problematic theme defaults */
+.about-company-section {
+  background-image: none;
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .about-company-section .company-media {
