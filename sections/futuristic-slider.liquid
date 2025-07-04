@@ -577,26 +577,32 @@ document.addEventListener('DOMContentLoaded', function() {
   // Lightbox functionality
   const lightbox = section.querySelector('.portfolio-showcase__lightbox');
   const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
-  
-  // NEW: always grab the zoom URL from the active slide
+
+  // Zoom Handler
   section.addEventListener('click', function(e) {
     const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
     if (!clickedZoom) return;
     e.preventDefault();
     e.stopPropagation();
   
-    // find the active Swiper slide element
-    const activeIndex = mainSwiperInstance.activeIndex;
+    // figure out the correct image URL for the active slide
+    const activeIndex   = mainSwiperInstance.activeIndex;
     const activeSlideEl = mainSwiperInstance.slides[activeIndex];
-    // within that slide, pick its zoom-button
-    const activeBtn = activeSlideEl.querySelector('.portfolio-showcase__zoom-btn');
-    // fall back to the clicked button only if something went wrong
-    const imageUrl = (activeBtn && activeBtn.getAttribute('data-image'))
-                       || clickedZoom.getAttribute('data-image');
+    const activeBtn     = activeSlideEl.querySelector('.portfolio-showcase__zoom-btn');
+    const imageUrl      = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
   
-    lightboxImage.src = imageUrl;
-    lightbox.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // preload it first
+    const preload = new Image();
+    preload.onload = () => {
+      // once loaded, swap into the lightbox and then show
+      lightboxImage.src = imageUrl;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    // immediately clear old image so nothing flashes
+    lightboxImage.src = '';
+    // kick off the preload
+    preload.src = imageUrl;
   });
 
   lightbox.querySelector('.portfolio-showcase__lightbox-close').addEventListener('click', function() {
