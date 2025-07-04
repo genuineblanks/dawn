@@ -532,15 +532,32 @@
         "padding_bottom": 36
       }
     },
-    "page_yUPEwP": {
-      "type": "page",
-      "name": "t:sections.page.presets.name",
+    "lookbook_split_MxJKgY": {
+      "type": "lookbook-split",
+      "name": "Lookbook Split Screen",
       "settings": {
-        "page": "lookbook",
-        "heading_size": "h1",
-        "color_scheme": "",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "section_height": 100,
+        "overlay_opacity": 70,
+        "show_click_hint": true,
+        "click_hint_text": "Click to Enter",
+        "title_size": 3.5,
+        "subtitle_size": 1.2,
+        "description_size": 1,
+        "button_size": 0.9,
+        "luxury_bg_image": "shopify://shop_images/MAIN_PAGE_FILL1_a5647e15-7080-40f4-9b45-994709cdadaf.png",
+        "luxury_text_color": "#ffffff",
+        "luxury_title": "Luxury",
+        "luxury_subtitle": "Collection",
+        "luxury_description": "Discover our premium selection of luxury blanks crafted for the most discerning brands and designers.",
+        "luxury_button_text": "Explore Luxury",
+        "luxury_url": "",
+        "highend_bg_image": "shopify://shop_images/MAIN_PAGE_FILL2_e2d616d4-3700-4e8b-bf94-349b49166e34.png",
+        "highend_text_color": "#ffffff",
+        "highend_title": "High End",
+        "highend_subtitle": "Collection",
+        "highend_description": "Explore our sophisticated high-end blanks designed for elevated fashion and premium applications.",
+        "highend_button_text": "Explore High End",
+        "highend_url": ""
       }
     },
     "image_banner_mbytrt": {
@@ -717,7 +734,7 @@
     "image_banner_PJVdGt",
     "image_banner_tFFqdH",
     "image_banner_DBzJcE",
-    "page_yUPEwP",
+    "lookbook_split_MxJKgY",
     "image_banner_mbytrt",
     "text_grid_itwK3a"
   ]

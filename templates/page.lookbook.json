@@ -1,1 +1,50 @@
-{"sections":{"main":{"type":"main-page","settings":{"padding_top":28,"padding_bottom":28}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "lookbook_split_3raHCR": {
+      "type": "lookbook-split",
+      "name": "Lookbook Split Screen",
+      "settings": {
+        "section_height": 100,
+        "overlay_opacity": 70,
+        "show_click_hint": true,
+        "click_hint_text": "Click to Enter",
+        "title_size": 3.5,
+        "subtitle_size": 1.2,
+        "description_size": 1,
+        "button_size": 0.9,
+        "luxury_text_color": "#ffffff",
+        "luxury_title": "Luxury",
+        "luxury_subtitle": "Collection",
+        "luxury_description": "Discover our premium selection of luxury blanks crafted for the most discerning brands and designers.",
+        "luxury_button_text": "Explore Luxury",
+        "luxury_url": "",
+        "highend_text_color": "#ffffff",
+        "highend_title": "High End",
+        "highend_subtitle": "Collection",
+        "highend_description": "Explore our sophisticated high-end blanks designed for elevated fashion and premium applications.",
+        "highend_button_text": "Explore High End",
+        "highend_url": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "lookbook_split_3raHCR"
+  ]
+}
