@@ -1,0 +1,346 @@
+/* section-about-company.css - Futuristic About Section */
+
+.about-company-section {
+  height: 80vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+}
+
+.company-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.company-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 8s ease-in-out;
+}
+
+.about-company-section:hover .company-bg-image {
+  transform: scale(1.02);
+}
+
+.company-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(248, 249, 250, 0.85) 0%, rgba(233, 236, 239, 0.75) 100%);
+  z-index: 2;
+  transition: all 0.6s ease;
+}
+
+.about-company-section:hover .company-overlay {
+  opacity: 0.9;
+}
+
+.company-content {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+  transition: all 0.5s ease;
+  color: #2c2c2c;
+}
+
+.content-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.company-title {
+  font-size: 1.8rem;
+  font-weight: 200;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
+  color: inherit;
+  position: relative;
+}
+
+.company-title::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.company-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  font-weight: 300;
+  color: inherit;
+  font-style: italic;
+}
+
+.company-button {
+  display: inline-block;
+  padding: 16px 40px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  font-size: 0.85rem;
+  transition: all 0.4s ease;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.company-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+
+.company-button:hover:before {
+  left: 0;
+}
+
+.company-button:hover {
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(44, 44, 44, 0.2);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: currentColor;
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
+  transform-origin: top;
+  transition: all 0.3s ease;
+}
+
+.scroll-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-weight: 300;
+  color: inherit;
+  animation: scroll-pulse 2s infinite;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* Futuristic accent elements */
+.about-company-section::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, currentColor 0%, transparent 100%);
+  opacity: 0.2;
+  z-index: 5;
+}
+
+.about-company-section::after {
+  content: '';
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, currentColor 100%);
+  opacity: 0.2;
+  z-index: 5;
+}
+
+/* Geometric accent lines */
+.content-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to bottom, currentColor 0%, transparent 100%);
+  opacity: 0.15;
+}
+
+.content-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to top, currentColor 0%, transparent 100%);
+  opacity: 0.15;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .about-company-section {
+    height: 90vh;
+    min-height: 500px;
+  }
+  
+  .content-wrapper {
+    max-width: 100%;
+    padding: 3rem 1.5rem;
+  }
+  
+  .company-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 2.5rem;
+  }
+  
+  .company-description {
+    font-size: 1rem;
+    max-width: 100%;
+    margin-bottom: 2.5rem;
+  }
+  
+  .company-button {
+    padding: 14px 32px;
+    font-size: 0.8rem;
+  }
+  
+  .scroll-indicator {
+    bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .company-title {
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+  
+  .company-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .content-wrapper {
+    padding: 2.5rem 1rem;
+  }
+  
+  .company-button {
+    padding: 12px 28px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Focus states for accessibility */
+.company-button:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .company-overlay {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .company-button {
+    border-width: 2px;
+  }
+  
+  .scroll-line,
+  .scroll-text {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .company-content,
+  .company-button,
+  .company-bg-image,
+  .scroll-line {
+    transition: none;
+  }
+  
+  .scroll-text {
+    animation: none;
+  }
+  
+  .company-button:before {
+    display: none;
+  }
+}
+
+/* Premium scroll effects */
+.scroll-trigger.animate--fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.scroll-trigger.animate--fade-in.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Z-index management */
+.about-company-section {
+  position: relative;
+  z-index: 1;
+}
+
+.company-content {
+  position: relative;
+  z-index: 10;
+}
+
+.scroll-indicator {
+  z-index: 15;
+}
