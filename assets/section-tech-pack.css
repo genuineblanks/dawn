@@ -13,7 +13,7 @@
     {% if section.settings.bg_image != blank %}
       background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
       background-size: cover;
-      background-position: center top;
+      background-position: center center;
       background-repeat: no-repeat;
     {% endif %}
   }
@@ -146,22 +146,22 @@
     {
       "type": "range",
       "id": "section_height",
-      "min": 70,
+      "min": 50,
       "max": 100,
       "step": 5,
       "unit": "vh",
       "label": "Section Height",
-      "default": 90
+      "default": 100
     },
     {
       "type": "range",
       "id": "min_height",
-      "min": 500,
-      "max": 900,
+      "min": 400,
+      "max": 800,
       "step": 50,
       "unit": "px",
       "label": "Minimum Height",
-      "default": 700
+      "default": 600
     },
     {
       "type": "image_picker",
