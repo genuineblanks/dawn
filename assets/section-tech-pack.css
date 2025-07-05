@@ -11,6 +11,8 @@
   padding: 0;
   overflow: hidden;
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tech-pack-section .tech-overlay {
