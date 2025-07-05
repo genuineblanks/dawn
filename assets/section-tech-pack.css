@@ -20,16 +20,13 @@
   background-attachment: scroll !important;
 }
 
-/* Add fallback background color to prevent white space */
-.tech-pack-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+/* Add fallback background color only when no image is set */
+.tech-pack-section {
   background-color: #1a1a1a;
-  z-index: 1;
+}
+
+.tech-pack-section[style*="background-image"] {
+  background-color: transparent;
 }
 
 .tech-pack-section .tech-overlay {
