@@ -170,13 +170,13 @@
 }
 
 /* Alternative approach for browsers that don't support CSS custom properties */
-@supports not (width: var(--text-width)) {
+@supports not (width: var(--title-width)) {
   .tech-pack-section .tech-button:hover .button-fill-bar {
-    width: 200px;
+    width: 600px;
   }
   
   .tech-pack-section .tech-button:hover::before {
-    width: 232px;
+    width: 600px;
   }
 }
 
@@ -315,12 +315,12 @@
 }
 
 .tech-pack-section .tech-button:focus .button-fill-bar {
-  width: var(--text-width, 200px);
+  width: var(--title-width, 600px);
   opacity: 1;
 }
 
 .tech-pack-section .tech-button:focus::before {
-  width: calc(var(--text-width, 200px) + 32px);
+  width: var(--title-width, 600px);
 }
 
 .tech-pack-section .tech-button:focus .button-text {
