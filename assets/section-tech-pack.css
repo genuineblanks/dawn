@@ -254,13 +254,12 @@
   margin: 0 !important;
 }
 
-/* Force override all theme defaults with high specificity - NO BACKGROUND CONFLICTS */
+/* Force override all theme defaults with high specificity - FULL WIDTH BACKGROUND */
 html .tech-pack-section,
 body .tech-pack-section,
 .shopify-section .tech-pack-section {
   background: none !important;
   background-color: transparent !important;
-  background-image: none !important;
   height: 80vh !important;
   min-height: 600px !important;
   display: flex !important;
