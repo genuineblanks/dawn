@@ -72,9 +72,9 @@
   <div class="tech-overlay"></div>
   
   <div class="tech-content">
-    <div class="content-wrapper">
+    <a href="{{ section.settings.button_url | default: '#' }}" class="content-wrapper">
       {% if section.settings.tech_title != blank %}
-        <a href="{{ section.settings.button_url | default: '#' }}" class="tech-title">{{ section.settings.tech_title }}</a>
+        <h2 class="tech-title">{{ section.settings.tech_title }}</h2>
       {% endif %}
       
       {% if section.settings.tech_description != blank %}
@@ -84,9 +84,9 @@
       {% endif %}
       
       {% if section.settings.button_text != blank %}
-        <a href="{{ section.settings.button_url | default: '#' }}" class="tech-button">
+        <span class="tech-button">
           {{ section.settings.button_text }}
-        </a>
+        </span>
       {% endif %}
       
       {% if section.settings.show_tech_features %}
@@ -99,7 +99,7 @@
           {% endif %}
         </div>
       {% endif %}
-    </div>
+    </a>
   </div>
   
   {% if section.settings.show_scroll_indicator %}
