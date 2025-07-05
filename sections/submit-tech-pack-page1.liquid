@@ -74,7 +74,7 @@
   <div class="tech-content">
     <div class="content-wrapper">
       {% if section.settings.tech_title != blank %}
-        <h2 class="tech-title">{{ section.settings.tech_title }}</h2>
+        <a href="{{ section.settings.button_url | default: '#' }}" class="tech-title">{{ section.settings.tech_title }}</a>
       {% endif %}
       
       {% if section.settings.tech_description != blank %}
