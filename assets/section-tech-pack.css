@@ -52,185 +52,104 @@
   color: #ffffff;
 }
 
-/* ELEGANT CLICKABLE AREA WITH SOPHISTICATED ANIMATIONS */
 .tech-pack-section .content-wrapper {
-  max-width: 900px !important;
-  margin: 0 auto !important;
-  padding: 3rem 2.5rem !important;
-  position: relative !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  cursor: pointer !important;
-  transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-  overflow: hidden !important;
-  background: transparent !important;
-  min-height: auto !important;
-  display: block !important;
-  box-sizing: border-box !important;
-}
-
-.tech-pack-section .content-wrapper::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(135deg, rgba(240, 240, 240, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%) !important;
-  transition: left 1.5s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-  z-index: 1 !important;
-}
-
-.tech-pack-section .content-wrapper:hover::before {
-  left: 0 !important;
-}
-
-.tech-pack-section .content-wrapper:hover {
-  border-color: rgba(255, 255, 255, 0.6) !important;
-  transform: translateY(-4px) scale(1.005) !important;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Make content appear above the overlay */
-.tech-pack-section .content-wrapper > * {
-  position: relative !important;
-  z-index: 2 !important;
-  transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-}
-
-/* SOFT TITLE ANIMATION - Gentle fade and slight movement */
-.tech-pack-section .content-wrapper:hover .tech-title {
-  opacity: 0.1 !important;
-  transform: translateY(-15px) !important;
-  transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-}
-
-/* SOFT DESCRIPTION ANIMATION - Gentle fade */
-.tech-pack-section .content-wrapper:hover .tech-description {
-  opacity: 0.1 !important;
-  transform: translateY(10px) !important;
-  transition: all 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s !important;
-}
-
-/* SOFT FEATURES ANIMATION - Gentle disappearance */
-.tech-pack-section .content-wrapper:hover .tech-features {
-  opacity: 0.1 !important;
-  transform: translateY(5px) !important;
-  transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s !important;
-}
-
-/* ELEGANT SUBMIT BUTTON TRANSFORMATION */
-.tech-pack-section .content-wrapper:hover .tech-button {
-  font-size: 1.8rem !important;
-  font-weight: 300 !important;
-  letter-spacing: 0.15em !important;
-  padding: 1.5rem 2.5rem !important;
-  color: #2a2a2a !important;
-  border-color: #666666 !important;
-  border-width: 1px !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-  transition: all 1.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  white-space: nowrap !important;
-  z-index: 10 !important;
-  background: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Remove the rainbow effect */
-.tech-pack-section .content-wrapper:hover .tech-button::before {
-  display: none !important;
-}
-
-@keyframes rainbow-glow {
-  /* Remove this animation */
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  position: relative;
 }
 
 .tech-pack-section .tech-title {
-  font-size: 1.8rem !important;
-  font-weight: 200 !important;
-  letter-spacing: 0.05em !important;
-  line-height: 1.4 !important;
-  margin-bottom: 2rem !important;
-  text-transform: uppercase !important;
-  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif !important;
-  color: inherit !important;
-  position: relative !important;
+  font-size: 1.8rem;
+  font-weight: 200;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
+  color: inherit;
+  position: relative;
 }
 
 .tech-pack-section .tech-title::after {
-  content: '' !important;
-  position: absolute !important;
-  bottom: -1rem !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 60px !important;
-  height: 1px !important;
-  background: currentColor !important;
-  opacity: 0.3 !important;
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.3;
 }
 
 .tech-pack-section .tech-description {
-  font-size: 1.1rem !important;
-  line-height: 1.6 !important;
-  opacity: 0.8 !important;
-  max-width: 600px !important;
-  margin: 0 auto 2rem !important;
-  font-weight: 300 !important;
-  color: inherit !important;
-  font-style: italic !important;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  font-weight: 300;
+  color: inherit;
+  font-style: italic;
 }
 
 .tech-pack-section .tech-button {
-  display: inline-block !important;
-  padding: 8px 16px !important;
-  border: 1px solid currentColor !important;
-  background: transparent !important;
-  color: inherit !important;
-  text-decoration: none !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.1em !important;
-  font-weight: 300 !important;
-  font-size: 0.8rem !important;
-  transition: all 0.3s ease !important;
-  border-radius: 0 !important;
-  position: relative !important;
-  overflow: hidden !important;
-  margin-bottom: 1.5rem !important;
-  min-width: auto !important;
-  white-space: nowrap !important;
+  display: inline-block;
+  padding: 16px 40px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  font-size: 0.85rem;
+  transition: all 0.4s ease;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
 }
 
-/* Animate submit button when hovering the big area */
-.tech-pack-section .content-wrapper:hover .tech-button {
-  transform: translateY(-4px) scale(1.15) !important;
-  letter-spacing: 0.2em !important;
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3) !important;
-  border-color: rgba(0, 0, 0, 0.8) !important;
+.tech-pack-section .tech-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  transition: right 0.4s ease;
+  z-index: -1;
 }
 
-/* Change text color when overlay covers */
-.tech-pack-section .content-wrapper:hover > * {
-  color: #000000 !important;
+.tech-pack-section .tech-button:hover:before {
+  right: 0;
+}
+
+.tech-pack-section .tech-button:hover {
+  color: #000000;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 .tech-pack-section .tech-features {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  margin-top: 1rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .tech-pack-section .tech-feature {
-  font-size: 0.8rem !important;
-  font-weight: 300 !important;
-  letter-spacing: 0.1em !important;
-  opacity: 0.7 !important;
-  margin: 0 !important;
-  color: inherit !important;
-  text-transform: uppercase !important;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin: 0;
+  color: inherit;
+  text-transform: uppercase;
 }
 
 .tech-pack-section .scroll-indicator {
@@ -277,25 +196,25 @@
   }
   
   .tech-pack-section .content-wrapper {
-    max-width: 100% !important;
-    padding: 3rem 1.5rem !important;
+    max-width: 100%;
+    padding: 3rem 1.5rem;
   }
   
   .tech-pack-section .tech-title {
-    font-size: 1.4rem !important;
-    letter-spacing: 0.03em !important;
-    margin-bottom: 2.5rem !important;
+    font-size: 1.4rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 2.5rem;
   }
   
   .tech-pack-section .tech-description {
-    font-size: 1rem !important;
-    max-width: 100% !important;
-    margin-bottom: 2.5rem !important;
+    font-size: 1rem;
+    max-width: 100%;
+    margin-bottom: 2.5rem;
   }
   
   .tech-pack-section .tech-button {
-    padding: 14px 32px !important;
-    font-size: 0.8rem !important;
+    padding: 14px 32px;
+    font-size: 0.8rem;
   }
   
   .tech-pack-section .scroll-indicator {
@@ -305,22 +224,22 @@
 
 @media (max-width: 480px) {
   .tech-pack-section .tech-title {
-    font-size: 1.2rem !important;
-    line-height: 1.3 !important;
+    font-size: 1.2rem;
+    line-height: 1.3;
   }
   
   .tech-pack-section .tech-description {
-    font-size: 0.95rem !important;
-    line-height: 1.5 !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
   
   .tech-pack-section .content-wrapper {
-    padding: 2.5rem 1rem !important;
+    padding: 2.5rem 1rem;
   }
   
   .tech-pack-section .tech-button {
-    padding: 12px 28px !important;
-    font-size: 0.75rem !important;
+    padding: 12px 28px;
+    font-size: 0.75rem;
   }
 }
 
