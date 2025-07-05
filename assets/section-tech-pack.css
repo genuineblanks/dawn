@@ -52,18 +52,17 @@
   color: #ffffff;
 }
 
-/* GIANT CLICKABLE AREA WITH VISIBLE BORDER - THIS IS THE MAIN CONTAINER */
+/* GIANT CLICKABLE AREA WITH GODLIKE ANIMATIONS */
 .tech-pack-section .content-wrapper {
   max-width: 900px !important;
   margin: 0 auto !important;
   padding: 3rem 2.5rem !important;
   position: relative !important;
-  /* MAKE THIS BORDER SUPER VISIBLE FOR DEBUGGING */
-  border: 3px solid #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.4) !important;
   cursor: pointer !important;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
   overflow: hidden !important;
-  background: rgba(0, 0, 0, 0.1) !important; /* Temporary background to see the container */
+  background: transparent !important;
   min-height: auto !important;
   display: block !important;
   box-sizing: border-box !important;
@@ -76,8 +75,8 @@
   left: -100% !important;
   width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%) !important;
-  transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%) !important;
+  transition: left 0.8s cubic-bezier(0.23, 1, 0.32, 1) !important;
   z-index: 1 !important;
 }
 
@@ -86,16 +85,82 @@
 }
 
 .tech-pack-section .content-wrapper:hover {
-  border-color: #ffff00 !important; /* Yellow border on hover for debugging */
-  transform: translateY(-8px) scale(1.01) !important;
-  box-shadow: 0 20px 60px rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-12px) scale(1.02) !important;
+  box-shadow: 0 30px 80px rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Make content appear above the overlay */
 .tech-pack-section .content-wrapper > * {
   position: relative !important;
   z-index: 2 !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+/* GODLIKE TITLE ANIMATION - Fades out and slides */
+.tech-pack-section .content-wrapper:hover .tech-title {
+  opacity: 0 !important;
+  transform: translateY(-30px) scale(0.8) !important;
+  filter: blur(3px) !important;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+/* GODLIKE DESCRIPTION ANIMATION - Fades out and slides opposite direction */
+.tech-pack-section .content-wrapper:hover .tech-description {
+  opacity: 0 !important;
+  transform: translateY(30px) scale(0.8) !important;
+  filter: blur(3px) !important;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.1s !important;
+}
+
+/* GODLIKE FEATURES ANIMATION - Dissolve away */
+.tech-pack-section .content-wrapper:hover .tech-features {
+  opacity: 0 !important;
+  transform: scale(0.5) !important;
+  filter: blur(5px) !important;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0.2s !important;
+}
+
+/* EPIC SUBMIT BUTTON TRANSFORMATION */
+.tech-pack-section .content-wrapper:hover .tech-button {
+  font-size: 2.5rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3em !important;
+  padding: 2rem 3rem !important;
+  transform: translateY(-20px) scale(1.3) !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  border-width: 3px !important;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1) 0.3s !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1.3) !important;
+  white-space: nowrap !important;
+  z-index: 10 !important;
+}
+
+/* Add glowing effect to submit button */
+.tech-pack-section .content-wrapper:hover .tech-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: -2px !important;
+  right: -2px !important;
+  bottom: -2px !important;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffecd2) !important;
+  border-radius: inherit !important;
+  z-index: -1 !important;
+  filter: blur(20px) !important;
+  opacity: 0.7 !important;
+  animation: rainbow-glow 2s linear infinite !important;
+}
+
+@keyframes rainbow-glow {
+  0% { filter: blur(20px) hue-rotate(0deg); }
+  100% { filter: blur(20px) hue-rotate(360deg); }
 }
 
 .tech-pack-section .tech-title {
