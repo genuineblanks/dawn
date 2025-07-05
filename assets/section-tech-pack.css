@@ -172,11 +172,11 @@
 /* Alternative approach for browsers that don't support CSS custom properties */
 @supports not (width: var(--title-width)) {
   .tech-pack-section .tech-button:hover .button-fill-bar {
-    width: 600px;
+    width: 800px;
   }
   
   .tech-pack-section .tech-button:hover::before {
-    width: 600px;
+    width: 800px;
   }
 }
 
