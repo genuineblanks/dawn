@@ -134,22 +134,19 @@
           {{ section.settings.banner_heading }}
         </h1>
       {% endif %} 
+
+      <div class="collection-toggle-wrapper">
+      {% if section.settings.banner_subtext1 != blank %}
+        <button class="collection-btn active" data-collection="luxury">{{ section.settings.banner_subtext1 }}</button>
+      {% endif %}
+      {% if section.settings.banner_subtext2 != blank %}
+        <button class="collection-btn" data-collection="relaxed">{{ section.settings.banner_subtext2 }}</button>
+      {% endif %}
+      </div>
+
       {% if section.settings.banner_paragraph != blank %}
         <p class="banner-subtitle">{{ section.settings.banner_paragraph }}</p>
       {% endif %}
-      <div class="collection-toggle-buttons">
-      {% if section.settings.banner_subtext1 != blank %}
-        <a {% if section.settings.banner_link_url1 != blank %}
-            href="{{ section.settings.banner_link_url1 }}"
-          {% endif %} class="collection-btn active" data-collection="luxury">{{ section.settings.banner_subtext1 }}</a>
-      {% endif %}
-      {% if section.settings.banner_subtext2 != blank %}
-        <a {% if section.settings.banner_link_url2 != blank %}
-            href="{{ section.settings.banner_link_url2 }}"
-          {% endif %} class="collection-btn" data-collection="relaxed">{{ section.settings.banner_subtext2 }}</a>
-      {% endif %}
-        
-      </div>
       
        {%- if section.settings.banner_link_txt != blank -%}
         <a
@@ -161,394 +158,382 @@
           {{- section.settings.banner_link_txt -}}
         </a>
       {%- endif -%}
-          <span class="no-minimum">NO MINIMUMS</span>
+          <span class="no-minimum">{{ section.settings.banner_botton_text | default: 'NO MINIMUMS' }}</span>
     </div>
-    <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient">
+    <div class="product-grid">
       {%- for block in section.blocks -%}
-      <li class="item-banner collection-item">
         {%- case block.type -%}
-          {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
-              {{ block.settings.heading }}
-            </h2>
           {%- when 'product' -%}
-          {% assign blockProduct =  block.settings.product %}
+          {% assign blockProduct = block.settings.product %}
           {% if blockProduct != blank %}
             {% assign productObj = all_products[blockProduct] %}
-              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-                <a href="{{ productObj.url }}" class="product-link">
-                  <div class="product-image-wrapper">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:300, height:400 | image_tag: class: 'product-image' }}
-                <div class="hover-overlay"></div>
-                  </div>
-                {% if block.settings.show_title != false %}
-                   <h3 class="product-title" >
-                    {{ productObj.title | truncate: 20 }}
-                  </h3>
-                {% endif %} 
+            <div class="product-item" {{ block.shopify_attributes }}>
+              <a href="{{ productObj.url }}" class="product-link">
+                <div class="product-image-container">
+                  {% if block.settings.product_image != blank %}
+                    {{ block.settings.product_image | image_url: width: 400 | image_tag: class: 'product-image', loading: 'lazy' }}
+                  {% else %}
+                    {{ productObj.featured_image | image_url: width: 400 | image_tag: class: 'product-image', loading: 'lazy' }}
+                  {% endif %}
+                </div>
+                <div class="product-info">
+                  {% if block.settings.show_title != false %}
+                    <h3 class="product-title">{{ productObj.title | upcase }}</h3>
+                  {% endif %}
                   {% if block.settings.show_price != false %}
                     <span class="product-price">{{ productObj.price | money }}</span>
                   {% endif %}
-                </a>
-              </div>
-            {% endif %}
+                </div>
+              </a>
+            </div>
+          {% endif %}
           {%- when 'collection' -%}
-          {% assign blockProduct =  block.settings.collection %}
-            {% if blockProduct != blank %}
-            {% assign productObj = collections[blockProduct] %}
-              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-                <a href="{{ productObj.url }}" class="product-link">
-                  <div class="product-image-wrapper">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:300, height:400 | image_tag: class: 'product-image' }}
-                <div class="hover-overlay"></div>
-                  </div>
-                {% if block.settings.show_title != false %}
-                   <h3 class="product-title" >
-                    {{ productObj.title | truncate: 20 }}
-                  </h3>
-                {% endif %} 
-                  {% if block.settings.show_price != false %}
-                    <span class="product-price">{{ productObj.price | money }}</span>
-                  {% endif %}
-                </a>
-              </div>
-            {% endif %}
-          {%- when 'text' -%}
-            <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-              <p>{{ block.settings.text }}</p>
-            </div>
-          {%- when 'buttons' -%}
-            <div
-              class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %}"
-              {{ block.shopify_attributes }}
-            >
-              {%- if block.settings.button_label_1 != blank -%}
-                <a
-                  {% if block.settings.button_link_1 == blank %}
-                    role="link" aria-disabled="true"
+          {% assign blockCollection = block.settings.collection %}
+          {% if blockCollection != blank %}
+            {% assign collectionObj = collections[blockCollection] %}
+            <div class="product-item" {{ block.shopify_attributes }}>
+              <a href="{{ collectionObj.url }}" class="product-link">
+                <div class="product-image-container">
+                  {% if block.settings.product_image != blank %}
+                    {{ block.settings.product_image | image_url: width: 400 | image_tag: class: 'product-image', loading: 'lazy' }}
                   {% else %}
-                    href="{{ block.settings.button_link_1 }}"
+                    {{ collectionObj.featured_image | image_url: width: 400 | image_tag: class: 'product-image', loading: 'lazy' }}
                   {% endif %}
-                  class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
-                >
-                  {{- block.settings.button_label_1 | escape -}}
-                </a>
-              {%- endif -%}
-              {%- if block.settings.button_label_2 != blank -%}
-                <a
-                  {% if block.settings.button_link_2 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_2 }}"
+                </div>
+                <div class="product-info">
+                  {% if block.settings.show_title != false %}
+                    <h3 class="product-title">{{ collectionObj.title | upcase }}</h3>
                   {% endif %}
-                  class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
-                >
-                  {{- block.settings.button_label_2 | escape -}}
-                </a>
-              {%- endif -%}
+                </div>
+              </a>
             </div>
+          {% endif %}
         {%- endcase -%}
-      </li>
       {%- endfor -%}
-    </ul>
-    {% if section.settings.banner_botton_text != blank %}
-     <div class="banner-bottom-text"> {{ section.settings.banner_botton_text }}</div>
-    {% endif %}
+    </div>
+
+    <div class="banner-bottom">
+      <p class="banner-cta">CLICK TO GO INTO THE PRODUCT, OR</p>
+      <p class="banner-cta-sub">SCROLL DOWN ↓</p>
+      <p class="banner-cta-footer">TO GET TO KNOW US BETTER</p>
+    </div>
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Collection button toggle functionality
   const collectionBtns = document.querySelectorAll('.collection-btn');
   
   collectionBtns.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      
+    btn.addEventListener('click', function() {
       // Remove active class from all buttons
       collectionBtns.forEach(b => b.classList.remove('active'));
       
       // Add active class to clicked button
       this.classList.add('active');
       
-      // Add animation to collection items
-      const items = document.querySelectorAll('.collection-item');
-      items.forEach((item, index) => {
-        item.style.animation = 'none';
+      // Add subtle animation to product grid
+      const productGrid = document.querySelector('.product-grid');
+      if (productGrid) {
+        productGrid.style.opacity = '0.8';
         setTimeout(() => {
-          item.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
-        }, 50);
-      });
+          productGrid.style.opacity = '1';
+        }, 200);
+      }
     });
   });
 });
 </script>
 
-<!-- Enhanced CSS for banner products -->
-{% assign totalProd = 8 | minus:productBlockCount  %}
 {% style %}
-/* Premium Logo Styling */
+/* GENUINEBLANKS Premium Styling */
+
+/* Main Banner Container */
+.banner {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+}
+
+.banner__media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.banner__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.95) contrast(1.05);
+}
+
+.banner__content {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Premium Logo */
 .genuineblanks-logo {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 900;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
   color: #1a1a1a;
-  margin-bottom: 0.5rem;
+  margin: 0 0 2rem 0;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   position: relative;
-  text-align: center;
 }
 
 .genuineblanks-logo::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
+  width: 80px;
   height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #000 50%, transparent 100%);
-}
-
-.banner-subtitle {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 2rem;
-  font-weight: 400;
-  text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: #1a1a1a;
 }
 
 /* Collection Toggle Buttons */
-.collection-toggle-buttons {
+.collection-toggle-wrapper {
   display: flex;
+  justify-content: center;
   gap: 0;
-  margin: 2rem 0;
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  margin: 0 0 1.5rem 0;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50px;
   padding: 4px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .collection-btn {
-  padding: 12px 32px;
+  padding: 14px 28px;
   border: none;
   background: transparent;
   color: #666;
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   border-radius: 50px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  z-index: 2;
-  text-decoration: none;
+  transition: all 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  flex: 1;
+  max-width: 250px;
 }
 
 .collection-btn.active {
+  background: #1a1a1a;
   color: #fff;
-  background: linear-gradient(135deg, #2d2d2d 0%, #000 100%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 }
 
-.collection-btn:not(.active):hover {
+.collection-btn:hover:not(.active) {
   color: #333;
-  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Banner Text */
+.banner-subtitle {
+  font-size: 15px;
+  color: #666;
+  margin: 0 0 1rem 0;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .lookbook-link {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   text-decoration: underline;
-  margin: 1rem 0;
+  margin: 0 0 1rem 0;
   display: inline-block;
-  transition: color 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-}
-
-.lookbook-link:hover {
-  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .no-minimum {
-  font-size: 12px;
+  font-size: 11px;
   color: #999;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-top: 1rem;
-  display: block;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0 0 3rem 0;
 }
 
-/* Enhanced Collection Items */
-.product-count-{{productBlockCount}} .banner__box{
-  padding: 0;
+/* Product Grid */
+.product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  list-style: none;
-  justify-content: center;
-  max-width: 1000px;
-  margin: 0 auto;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
+  margin: 3rem 0;
+  transition: opacity 0.3s ease;
 }
 
-.collection-item {
-  position: relative;
-  cursor: pointer;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(0);
+.product-item {
+  text-align: center;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-.collection-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+.product-item:hover {
+  transform: translateY(-5px);
 }
 
 .product-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  padding: 1rem;
 }
 
-.product-image-wrapper {
+.product-image-container {
   position: relative;
-  overflow: hidden;
-  border-radius: 12px;
   margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f8f8f8;
 }
 
 .product-image {
   width: 100%;
-  height: 250px;
+  height: 200px;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s ease;
+  filter: brightness(1.02) contrast(1.03);
 }
 
-.collection-item:hover .product-image {
-  transform: scale(1.05);
+.product-item:hover .product-image {
+  transform: scale(1.03);
 }
 
-.hover-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.collection-item:hover .hover-overlay {
-  opacity: 1;
+.product-info {
+  padding: 0.5rem 0;
 }
 
 .product-title {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .product-price {
-  font-size: 12px;
+  font-size: 10px;
   color: #666;
   font-weight: 500;
+  letter-spacing: 0.05em;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
-.banner-bottom-text {
-  margin-top: 2rem;
+/* Banner Bottom CTA */
+.banner-bottom {
+  margin-top: 3rem;
   text-align: center;
-  font-size: 14px;
+}
+
+.banner-cta {
+  font-size: 12px;
   color: #666;
+  margin: 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Animation Keyframes */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.banner-cta-sub {
+  font-size: 12px;
+  color: #999;
+  margin: 0.5rem 0;
+  letter-spacing: 0.1em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.banner-cta-footer {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .product-count-{{productBlockCount}} .banner__box {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    padding: 0 1rem;
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
   }
   
-  .collection-toggle-buttons {
+  .collection-toggle-wrapper {
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
     padding: 8px;
+    border-radius: 20px;
   }
   
   .collection-btn {
-    padding: 10px 20px;
-    font-size: 12px;
+    padding: 12px 20px;
+    font-size: 11px;
+    border-radius: 16px;
   }
   
   .product-image {
-    height: 200px;
+    height: 150px;
+  }
+  
+  .banner__content {
+    padding: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .product-count-{{productBlockCount}} .banner__box {
-    grid-template-columns: 1fr 1fr;
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  
+  .product-image {
+    height: 120px;
   }
   
   .genuineblanks-logo {
     font-size: 2rem;
+    letter-spacing: 0.15em;
   }
 }
 
-/* Legacy grid adjustments for different product counts */
+/* Legacy Support */
 ul.banner__box {
-  list-style: none;
-  padding: 0;
-  margin: 2rem 0;
-}
-
-ul.banner__box li.item-banner img {
-  border: 0 none;
-}
-
-.product-count-{{productBlockCount}} ul.banner__box li {
-  display: block;
-  margin: 0 !important;
+  display: none;
 }
 
 {% endstyle %}
@@ -565,57 +550,62 @@ ul.banner__box li.item-banner img {
     {
       "type": "image_picker",
       "id": "image",
-      "label": "t:sections.image-banner.settings.image.label"
+      "label": "Background Image"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "t:sections.image-banner.settings.image_2.label"
+      "label": "Secondary Background Image"
     },
     {
       "type": "text",
       "id": "banner_heading",
-      "label": "Banner Heading"
+      "label": "Brand Logo Text",
+      "default": "GENUINE BLANKS"
     },
      {
       "type": "text",
       "id": "banner_paragraph",
-      "label": "Banner Paragraph"
+      "label": "Subtitle Text",
+      "default": "LOOKBOOK & SIZE CHART"
     },
      {
       "type": "text",
       "id": "banner_subtext1",
-      "label": "Button Sub Text1"
+      "label": "Collection Button 1",
+      "default": "OVERSIZED LUXURY COLLECTION"
     },
      {
-      "type": "text",
+      "type": "url",
       "id": "banner_link_url1",
-      "label": "Button Sub Text URL"
+      "label": "Collection Button 1 URL"
     }, 
      {
       "type": "text",
       "id": "banner_subtext2",
-      "label": "Button Sub Text2"
+      "label": "Collection Button 2",
+      "default": "RELAXED HIGH-END COLLECTION"
     },
      {
-      "type": "text",
-      "id": "banner_subtext_url2",
-      "label": "Button Sub Text URL"
+      "type": "url",
+      "id": "banner_link_url2",
+      "label": "Collection Button 2 URL"
     },
     {
       "type": "text",
       "id": "banner_link_txt",
-      "label": "Banner Link Text"
+      "label": "Lookbook Link Text"
     },
     {
       "type": "url",
       "id": "banner_link_url",
-      "label": "Banner Link Url"
+      "label": "Lookbook Link URL"
     },
     {
-      "type": "html",
+      "type": "text",
       "id": "banner_botton_text",
-      "label": "Banner Bottom Text"
+      "label": "Bottom Text",
+      "default": "NO MINIMUMS"
     },
     {
       "type": "range",
@@ -624,7 +614,7 @@ ul.banner__box li.item-banner img {
       "max": 100,
       "step": 10,
       "unit": "%",
-      "label": "t:sections.image-banner.settings.image_overlay_opacity.label",
+      "label": "Image Overlay Opacity",
       "default": 0
     },
     {
@@ -633,24 +623,23 @@ ul.banner__box li.item-banner img {
       "options": [
         {
           "value": "adapt",
-          "label": "t:sections.image-banner.settings.image_height.options__1.label"
+          "label": "Adapt to image"
         },
         {
           "value": "small",
-          "label": "t:sections.image-banner.settings.image_height.options__2.label"
+          "label": "Small"
         },
         {
           "value": "medium",
-          "label": "t:sections.image-banner.settings.image_height.options__3.label"
+          "label": "Medium"
         },
         {
           "value": "large",
-          "label": "t:sections.image-banner.settings.image_height.options__4.label"
+          "label": "Large"
         }
       ],
       "default": "medium",
-      "label": "t:sections.image-banner.settings.image_height.label",
-      "info": "t:sections.image-banner.settings.image_height.info"
+      "label": "Image Height"
     },
     {
       "type": "select",
@@ -658,49 +647,49 @@ ul.banner__box li.item-banner img {
       "options": [
         {
           "value": "top-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label"
+          "label": "Top left"
         },
         {
           "value": "top-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label"
+          "label": "Top center"
         },
         {
           "value": "top-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label"
+          "label": "Top right"
         },
         {
           "value": "middle-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__4.label"
+          "label": "Middle left"
         },
         {
           "value": "middle-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__5.label"
+          "label": "Middle center"
         },
         {
           "value": "middle-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__6.label"
+          "label": "Middle right"
         },
         {
           "value": "bottom-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__7.label"
+          "label": "Bottom left"
         },
         {
           "value": "bottom-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__8.label"
+          "label": "Bottom center"
         },
         {
           "value": "bottom-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label"
+          "label": "Bottom right"
         }
       ],
       "default": "middle-center",
-      "label": "t:sections.image-banner.settings.desktop_content_position.label"
+      "label": "Desktop Content Position"
     },
     {
       "type": "checkbox",
       "id": "show_text_box",
       "default": true,
-      "label": "t:sections.image-banner.settings.show_text_box.label"
+      "label": "Show text box"
     },
     {
       "type": "select",
@@ -708,29 +697,29 @@ ul.banner__box li.item-banner img {
       "options": [
         {
           "value": "left",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__1.label"
+          "label": "Left"
         },
         {
           "value": "center",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__2.label"
+          "label": "Center"
         },
         {
           "value": "right",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label"
+          "label": "Right"
         }
       ],
       "default": "center",
-      "label": "t:sections.image-banner.settings.desktop_content_alignment.label"
+      "label": "Desktop Content Alignment"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme_section",
-      "label": "t:sections.all.colors.label",
+      "label": "Color scheme",
       "default": "scheme-1"
     },
     {
       "type": "header",
-      "content": "t:sections.all.animation.content"
+      "content": "Animation"
     },
     {
       "type": "select",
@@ -738,27 +727,27 @@ ul.banner__box li.item-banner img {
       "options": [
         {
           "value": "none",
-          "label": "t:sections.all.animation.image_behavior.options__1.label"
+          "label": "None"
         },
         {
           "value": "ambient",
-          "label": "t:sections.all.animation.image_behavior.options__2.label"
+          "label": "Ambient"
         },
         {
           "value": "fixed",
-          "label": "t:sections.all.animation.image_behavior.options__3.label"
+          "label": "Fixed"
         },
         {
           "value": "zoom-in",
-          "label": "t:sections.all.animation.image_behavior.options__4.label"
+          "label": "Zoom in"
         }
       ],
       "default": "none",
-      "label": "t:sections.all.animation.image_behavior.label"
+      "label": "Image behavior"
     },
     {
       "type": "header",
-      "content": "t:sections.image-banner.settings.mobile.content"
+      "content": "Mobile"
     },
     {
       "type": "select",
@@ -766,275 +755,48 @@ ul.banner__box li.item-banner img {
       "options": [
         {
           "value": "left",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__1.label"
+          "label": "Left"
         },
         {
           "value": "center",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__2.label"
+          "label": "Center"
         },
         {
           "value": "right",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label"
+          "label": "Right"
         }
       ],
       "default": "center",
-      "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
+      "label": "Mobile Content Alignment"
     },
     {
       "type": "checkbox",
       "id": "stack_images_on_mobile",
       "default": true,
-      "label": "t:sections.image-banner.settings.stack_images_on_mobile.label"
+      "label": "Stack images on mobile"
     },
     {
       "type": "checkbox",
       "id": "show_text_below",
       "default": true,
-      "label": "t:sections.image-banner.settings.show_text_below.label"
-    },
-    {
-      "type": "header",
-      "content":"Header Section Settings"
-    },
-    {
-      "type": "select",
-      "id": "logo_position",
-      "options": [
-        {
-          "value": "top-left",
-          "label": "t:sections.header.settings.logo_position.options__2.label"
-        },
-        {
-          "value": "top-center",
-          "label": "t:sections.header.settings.logo_position.options__3.label"
-        },
-        {
-          "value": "middle-left",
-          "label": "t:sections.header.settings.logo_position.options__1.label"
-        },
-        {
-          "value": "middle-center",
-          "label": "t:sections.header.settings.logo_position.options__4.label"
-        }
-      ],
-      "default": "middle-left",
-      "label": "t:sections.header.settings.logo_position.label",
-      "info": "t:sections.header.settings.logo_help.content"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "default": "main-menu",
-      "label": "t:sections.header.settings.menu.label"
-    },
-    {
-      "type": "select",
-      "id": "menu_type_desktop",
-      "options": [
-        {
-          "value": "dropdown",
-          "label": "t:sections.header.settings.menu_type_desktop.options__1.label"
-        },
-        {
-          "value": "mega",
-          "label": "t:sections.header.settings.menu_type_desktop.options__2.label"
-        },
-        {
-          "value": "drawer",
-          "label": "t:sections.header.settings.menu_type_desktop.options__3.label"
-        }
-      ],
-      "default": "dropdown",
-      "label": "t:sections.header.settings.menu_type_desktop.label",
-      "info": "t:sections.header.settings.menu_type_desktop.info"
-    },
-    {
-      "type": "select",
-      "id": "sticky_header_type",
-      "options": [
-        {
-          "value": "none",
-          "label": "t:sections.header.settings.sticky_header_type.options__1.label"
-        },
-        {
-          "value": "on-scroll-up",
-          "label": "t:sections.header.settings.sticky_header_type.options__2.label"
-        },
-        {
-          "value": "always",
-          "label": "t:sections.header.settings.sticky_header_type.options__3.label"
-        },
-        {
-          "value": "reduce-logo-size",
-          "label": "t:sections.header.settings.sticky_header_type.options__4.label"
-        }
-      ],
-      "default": "on-scroll-up",
-      "label": "t:sections.header.settings.sticky_header_type.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_line_separator",
-      "default": true,
-      "label": "t:sections.header.settings.show_line_separator.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_cart_icon",
-      "default": true,
-      "label": "Hide Cart icon"
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_search_icon",
-      "default": true,
-      "label": "Hide Search icon"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.settings.header__1.content"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "default": "scheme-1"
-    },
-      {
-      "type": "color_scheme",
-      "id": "menu_color_scheme",
-      "label": "t:sections.header.settings.menu_color_scheme.label",
-      "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.settings.header__3.content",
-      "info": "t:sections.header.settings.header__4.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_country_selector",
-      "default": false,
-      "label": "t:sections.header.settings.enable_country_selector.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.settings.header__5.content",
-      "info": "t:sections.header.settings.header__6.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_language_selector",
-      "default": false,
-      "label": "t:sections.header.settings.enable_language_selector.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.settings.mobile_layout.content"
-    },
-    {
-      "type": "select",
-      "id": "mobile_logo_position",
-      "options": [
-        {
-          "value": "center",
-          "label": "t:sections.header.settings.mobile_logo_position.options__1.label"
-        },
-        {
-          "value": "left",
-          "label": "t:sections.header.settings.mobile_logo_position.options__2.label"
-        }
-      ],
-      "default": "center",
-      "label": "t:sections.header.settings.mobile_logo_position.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.spacing"
-    },
-    {
-      "type": "range",
-      "id": "margin_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.header.settings.margin_bottom.label",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 36,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 36,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 20
+      "label": "Show text below image on mobile"
     }
   ],
   "blocks": [
-    {
-      "type": "heading",
-      "name": "t:sections.image-banner.blocks.heading.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "Image banner",
-          "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
-        },
-        {
-          "type": "select",
-          "id": "heading_size",
-          "options": [
-            {
-              "value": "h2",
-              "label": "t:sections.all.heading_size.options__1.label"
-            },
-            {
-              "value": "h1",
-              "label": "t:sections.all.heading_size.options__2.label"
-            },
-            {
-              "value": "h0",
-              "label": "t:sections.all.heading_size.options__3.label"
-            }
-          ],
-          "default": "h1",
-          "label": "t:sections.all.heading_size.label"
-        }
-      ]
-    },
      {
       "type": "product",
-      "name": "Products",
+      "name": "Product",
       "limit": 8,
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Select Product Here."
+          "label": "Product"
         },
         {
           "type": "image_picker",
           "id": "product_image",
-          "label": "Select Product Image Here."
+          "label": "Custom Product Image"
         },
         {
           "type": "checkbox",
@@ -1058,129 +820,43 @@ ul.banner__box li.item-banner img {
         {
           "type": "collection",
           "id": "collection",
-          "label": "Select Collection Here."
+          "label": "Collection"
         },
         {
           "type": "image_picker",
           "id": "product_image",
-          "label": "Select Product Image Here."
+          "label": "Custom Collection Image"
         },
         {
           "type": "checkbox",
           "id": "show_title",
           "default": true,
           "label": "Show Collection Title"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_price",
-          "default": false,
-          "label": "Show Collection Price"
         }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "t:sections.image-banner.blocks.text.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "inline_richtext",
-          "id": "text",
-          "default": "Give customers details about the banner image(s) or content on the template.",
-          "label": "t:sections.image-banner.blocks.text.settings.text.label"
-        },
-        {
-          "type": "select",
-          "id": "text_style",
-          "options": [
-            {
-              "value": "body",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label"
-            },
-            {
-              "value": "subtitle",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label"
-            },
-            {
-              "value": "caption-with-letter-spacing",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label"
-            }
-          ],
-          "default": "body",
-          "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
-        }
-      ]
-    },
-    {
-      "type": "buttons",
-      "name": "t:sections.image-banner.blocks.buttons.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "default": "Button label",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label",
-          "info": "t:sections.image-banner.blocks.buttons.settings.button_label_1.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_1",
-          "default": false,
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "default": "Button label",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label",
-          "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_2",
-          "default": false,
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
-        }
-      ]
-    },
-    {
-      "type":"link_list",
-      "name":"Account Menu",
-      "limit":1,
-      "settings":[
-         {
-            "type": "link_list",
-            "id": "account_menu",
-            "default": "main-menu",
-            "label": "Account Menu"
-          }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Image Luxury Products",
+      "name": "GENUINEBLANKS Collection",
       "blocks": [
         {
-          "type": "heading"
+          "type": "product"
         },
         {
-          "type": "text"
+          "type": "product"
         },
         {
-          "type": "buttons"
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
         }
       ]
     }
