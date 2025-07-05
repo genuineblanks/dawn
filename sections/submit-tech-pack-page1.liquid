@@ -85,7 +85,8 @@
       
       {% if section.settings.button_text != blank %}
         <a href="{{ section.settings.button_url | default: '#' }}" class="tech-button">
-          {{ section.settings.button_text }}
+          <span class="button-text">{{ section.settings.button_text }}</span>
+          <div class="button-fill-bar"></div>
         </a>
       {% endif %}
       
@@ -142,16 +143,48 @@
       });
     }
     
-    // Add hover effect for tech content
-    const content = section.querySelector('.tech-content');
-    if (content) {
-      content.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.01)';
-      });
+    // Enhanced button hover effect with text-width calculation
+    const techButton = section.querySelector('.tech-button');
+    if (techButton) {
+      const buttonText = techButton.querySelector('.button-text');
+      const fillBar = techButton.querySelector('.button-fill-bar');
       
-      content.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
-      });
+      function updateFillBarWidth() {
+        if (buttonText && fillBar) {
+          // Create a temporary span to measure text width
+          const tempSpan = document.createElement('span');
+          tempSpan.style.visibility = 'hidden';
+          tempSpan.style.position = 'absolute';
+          tempSpan.style.fontSize = window.getComputedStyle(buttonText).fontSize;
+          tempSpan.style.fontFamily = window.getComputedStyle(buttonText).fontFamily;
+          tempSpan.style.fontWeight = window.getComputedStyle(buttonText).fontWeight;
+          tempSpan.style.letterSpacing = window.getComputedStyle(buttonText).letterSpacing;
+          tempSpan.textContent = buttonText.textContent;
+          
+          document.body.appendChild(tempSpan);
+          const textWidth = tempSpan.offsetWidth;
+          document.body.removeChild(tempSpan);
+          
+          // Set the fill bar width to match text width plus some padding
+          fillBar.style.setProperty('--text-width', textWidth + 'px');
+        }
+      }
+      
+      // Update on load and resize
+      updateFillBarWidth();
+      window.addEventListener('resize', updateFillBarWidth);
+      
+      // Add hover effect for tech content
+      const content = section.querySelector('.tech-content');
+      if (content) {
+        content.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.01)';
+        });
+        
+        content.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+        });
+      }
     }
   });
 </script>
