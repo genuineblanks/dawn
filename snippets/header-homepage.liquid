@@ -196,11 +196,14 @@
     {%- endif -%}
 
     {%- liquid
-      assign menu_handle = 'main-menu'
-      if linklists[menu_handle] != blank
-        render 'header-dropdown-menu'
+      if section.settings.menu != blank
+        if section.settings.menu_type_desktop == 'dropdown'
+          render 'header-dropdown-menu'
+        elsif section.settings.menu_type_desktop != 'drawer'
+          render 'header-mega-menu'
+        endif
       endif
-    -%}
+    %}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
@@ -295,8 +298,8 @@
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
-          {%- when 'link_list' -%}
-            {% render  'header-dropdown-menu', menu:block.settings.account_menu %}
+        {%- when 'link_list' -%}
+          {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
         {%- endcase -%}
       {%- endfor -%}
       
@@ -346,7 +349,7 @@
   {%- render 'cart-notification', color_scheme: section.settings.color_scheme, desktop_menu_type: section.settings.menu_type_desktop -%}
 {%- endif -%}
 
-<script>
+{% javascript %}
   class StickyHeader extends HTMLElement {
     constructor() {
       super();
@@ -456,7 +459,7 @@
   }
 
   customElements.define('sticky-header', StickyHeader);
-    </script>
+{% endjavascript %}
 
 <script type="application/ld+json">
   {
