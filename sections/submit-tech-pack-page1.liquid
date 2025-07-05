@@ -85,8 +85,7 @@
       
       {% if section.settings.button_text != blank %}
         <a href="{{ section.settings.button_url | default: '#' }}" class="tech-button">
-          <span class="button-text">{{ section.settings.button_text }}</span>
-          <div class="button-fill-bar"></div>
+          {{ section.settings.button_text }}
         </a>
       {% endif %}
       
@@ -141,37 +140,6 @@
           line.style.transform = `scaleY(${Math.min(scrollProgress * 2, 1)})`;
         }
       });
-    }
-    
-    // Enhanced button hover effect - expand to match title width
-    const techButton = section.querySelector('.tech-button');
-    if (techButton) {
-      const buttonText = techButton.querySelector('.button-text');
-      const fillBar = techButton.querySelector('.button-fill-bar');
-      const titleElement = section.querySelector('.tech-title');
-      
-      function updateFillBarWidth() {
-        if (titleElement) {
-          // Measure the title width
-          const titleWidth = titleElement.offsetWidth;
-          console.log('Title width:', titleWidth); // Debug log
-          
-          // Set the fill bar width to match title width
-          techButton.style.setProperty('--title-width', titleWidth + 'px');
-          
-          // Also set a fallback directly on the elements
-          if (fillBar) {
-            fillBar.setAttribute('data-title-width', titleWidth);
-          }
-        }
-      }
-      
-      // Update on load and resize
-      updateFillBarWidth();
-      window.addEventListener('resize', updateFillBarWidth);
-      
-      // Force update after a short delay to ensure all elements are rendered
-      setTimeout(updateFillBarWidth, 100);
     }
     
     // Add hover effect for tech content
