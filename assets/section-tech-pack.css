@@ -1,299 +1,269 @@
-/* section-tech-pack.css - Clean minimal approach */
+{% comment %}
+  Section: tech-pack-section.liquid
+  Place this file in the sections folder
+  File path: sections/tech-pack-section.liquid
+{% endcomment %}
 
-.tech-pack-section {
-  height: 80vh;
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
-}
+{{ 'section-tech-pack.css' | asset_url | stylesheet_tag }}
 
-.tech-pack-section .tech-media {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.tech-pack-section .tech-bg-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 8s ease-in-out;
-}
-
-.tech-pack-section:hover .tech-bg-image {
-  transform: scale(1.02);
-}
-
-.tech-pack-section .tech-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
-  z-index: 2;
-  transition: all 0.6s ease;
-}
-
-.tech-pack-section:hover .tech-overlay {
-  opacity: 0.9;
-}
-
-.tech-pack-section .tech-content {
-  position: relative;
-  text-align: center;
-  z-index: 10;
-  transition: all 0.5s ease;
-  color: #ffffff;
-}
-
-.tech-pack-section .content-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-  position: relative;
-}
-
-.tech-pack-section .tech-title {
-  font-size: 1.8rem;
-  font-weight: 200;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
-  margin-bottom: 3rem;
-  text-transform: uppercase;
-  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
-  color: inherit;
-  position: relative;
-}
-
-.tech-pack-section .tech-title::after {
-  content: '';
-  position: absolute;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.3;
-}
-
-.tech-pack-section .tech-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  opacity: 0.8;
-  max-width: 600px;
-  margin: 0 auto 3rem;
-  font-weight: 300;
-  color: inherit;
-  font-style: italic;
-}
-
-.tech-pack-section .tech-button {
-  display: inline-block;
-  padding: 16px 40px;
-  border: 1px solid currentColor;
-  background: transparent;
-  color: inherit;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  font-size: 0.85rem;
-  transition: all 0.4s ease;
-  border-radius: 0;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 2rem;
-}
-
-.tech-pack-section .tech-button:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: -100%;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  transition: right 0.4s ease;
-  z-index: -1;
-}
-
-.tech-pack-section .tech-button:hover:before {
-  right: 0;
-}
-
-.tech-pack-section .tech-button:hover {
-  color: #000000;
-  text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-}
-
-.tech-pack-section .tech-features {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.tech-pack-section .tech-feature {
-  font-size: 0.8rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  margin: 0;
-  color: inherit;
-  text-transform: uppercase;
-}
-
-.tech-pack-section .scroll-indicator {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 10;
-}
-
-.tech-pack-section .scroll-line {
-  width: 1px;
-  height: 40px;
-  background: currentColor;
-  opacity: 0.4;
-  margin-bottom: 0.5rem;
-  transform-origin: top;
-  transition: all 0.3s ease;
-}
-
-.tech-pack-section .scroll-text {
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.5;
-  font-weight: 300;
-  color: inherit;
-  animation: tech-scroll-pulse 2s infinite;
-}
-
-@keyframes tech-scroll-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .tech-pack-section {
-    height: 90vh;
-    min-height: 500px;
+<style>
+  #TechPack-{{ section.id }} {
+    height: {{ section.settings.section_height }}vh;
+    min-height: {{ section.settings.min_height }}px;
+    {% if section.settings.bg_image != blank %}
+      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+    {% endif %}
   }
   
-  .tech-pack-section .content-wrapper {
-    max-width: 100%;
-    padding: 3rem 1.5rem;
+  #TechPack-{{ section.id }} .tech-overlay {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.{{ section.settings.overlay_opacity }}) 0%, rgba(0, 0, 0, 0.{{ section.settings.overlay_opacity | minus: 10 }}) 100%);
   }
   
-  .tech-pack-section .tech-title {
-    font-size: 1.4rem;
-    letter-spacing: 0.03em;
-    margin-bottom: 2.5rem;
+  #TechPack-{{ section.id }} .tech-content {
+    color: {{ section.settings.text_color }};
   }
-  
-  .tech-pack-section .tech-description {
-    font-size: 1rem;
-    max-width: 100%;
-    margin-bottom: 2.5rem;
-  }
-  
-  .tech-pack-section .tech-button {
-    padding: 14px 32px;
-    font-size: 0.8rem;
-  }
-  
-  .tech-pack-section .scroll-indicator {
-    bottom: 2rem;
-  }
-}
+</style>
 
-@media (max-width: 480px) {
-  .tech-pack-section .tech-title {
-    font-size: 1.2rem;
-    line-height: 1.3;
-  }
-  
-  .tech-pack-section .tech-description {
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-  
-  .tech-pack-section .content-wrapper {
-    padding: 2.5rem 1rem;
-  }
-  
-  .tech-pack-section .tech-button {
-    padding: 12px 28px;
-    font-size: 0.75rem;
-  }
-}
+{%- liquid
+  assign fetch_priority = 'auto'
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+-%}
 
-/* Fix the root cause - Remove Shopify section default padding for this specific section only */
-[id^="TechPack-"] {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Force override all theme defaults with high specificity - FULL WIDTH BACKGROUND */
-html .tech-pack-section,
-body .tech-pack-section,
-.shopify-section .tech-pack-section {
-  background: none !important;
-  background-color: transparent !important;
-  height: 80vh !important;
-  min-height: 600px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Focus states for accessibility */
-.tech-pack-section .tech-button:focus {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .tech-pack-section .tech-content,
-  .tech-pack-section .tech-button,
-  .tech-pack-section .tech-bg-image,
-  .tech-pack-section .scroll-line {
-    transition: none;
-  }
+<div
+  id="TechPack-{{ section.id }}"
+  class="tech-pack-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
+>
+  {%- if section.settings.bg_image != blank -%}
+    <div class="tech-media">
+      {{
+        section.settings.bg_image
+        | image_url: width: 1920
+        | image_tag:
+          width: section.settings.bg_image.width,
+          height: section.settings.bg_image.height,
+          class: 'tech-bg-image',
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+          fetchpriority: fetch_priority
+      }}
+    </div>
+  {%- endif -%}
   
-  .tech-pack-section .scroll-text {
-    animation: none;
-  }
+  <div class="tech-overlay"></div>
   
-  .tech-pack-section .tech-button:before {
-    display: none;
-  }
+  <div class="tech-content">
+    <div class="content-wrapper">
+      {% if section.settings.tech_title != blank %}
+        <h2 class="tech-title">{{ section.settings.tech_title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.tech_description != blank %}
+        <p class="tech-description">
+          {{ section.settings.tech_description }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_url | default: '#' }}" class="tech-button">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+      
+      {% if section.settings.show_tech_features %}
+        <div class="tech-features">
+          {% if section.settings.tech_feature_1 != blank %}
+            <p class="tech-feature">{{ section.settings.tech_feature_1 }}</p>
+          {% endif %}
+          {% if section.settings.tech_feature_2 != blank %}
+            <p class="tech-feature">{{ section.settings.tech_feature_2 }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% if section.settings.show_scroll_indicator %}
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">{{ section.settings.scroll_text | default: 'Scroll' }}</span>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('#TechPack-{{ section.id }}');
+    
+    // Add smooth scroll indicator animation
+    const scrollIndicator = section.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+      window.addEventListener('scroll', function() {
+        const scrollProgress = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
+        const line = scrollIndicator.querySelector('.scroll-line');
+        if (line) {
+          line.style.transform = `scaleY(${Math.min(scrollProgress * 2, 1)})`;
+        }
+      });
+    }
+    
+    // Add hover effect for tech content
+    const content = section.querySelector('.tech-content');
+    if (content) {
+      content.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+      });
+      
+      content.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Tech Pack Section",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "dynamic_class",
+      "label": "Add Class here if Needed!"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Height",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 500,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum Height",
+      "default": 700
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Background Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "tech_title",
+      "label": "Tech Pack Title",
+      "default": "FOR BRANDS READY TO MOVE — WE'RE READY TO BUILD. OUR PRODUCTION TEAM REVIEWS EVERY DETAIL FOR PRECISION, FEASIBILITY, AND FLOW, ENSURING A SMOOTH TRANSITION FROM DESIGN TO SAMPLE."
+    },
+    {
+      "type": "textarea",
+      "id": "tech_description",
+      "label": "Tech Pack Description",
+      "default": "Transform your design concepts into production-ready specifications with our comprehensive tech pack services."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "SUBMIT YOUR TECH-PACK"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tech_features",
+      "label": "Show tech features",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tech_feature_1",
+      "label": "Feature 1",
+      "default": "• QUOTATIONS WITHIN 2-5 BUSINESS DAYS"
+    },
+    {
+      "type": "text",
+      "id": "tech_feature_2",
+      "label": "Feature 2",
+      "default": "• MUST BE REGISTERED TO SUBMIT"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show Scroll Indicator",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "scroll_text",
+      "label": "Scroll Indicator Text",
+      "default": "Scroll"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tech Pack Section"
+    }
+  ]
 }
+{% endschema %}
