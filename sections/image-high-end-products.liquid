@@ -1,3 +1,6 @@
+{% if template contains 'index' %}
+{% include 'header-homepage' %}
+{% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
 {%- if section.settings.image_height == 'adapt' and section.settings.image != blank -%}
@@ -178,7 +181,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 200, height: 300 | image_tag: class: 'luxury-product-image' }}
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
                    <h2 class="banner__heading luxury-product-title inline-richtext" >
@@ -198,7 +201,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 200, height: 300 | image_tag: class: 'luxury-product-image' }}
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
                    <h2 class="banner__heading luxury-product-title inline-richtext" >
@@ -272,29 +275,9 @@
 .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
   .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
   .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
-  
-  /* PNG TRANSPARENCY FIXES */
-  .luxury-product-image-container {
-    background: transparent !important;
-    position: relative;
-    overflow: hidden;
+  .high-end-collection{
+    display: none;
   }
-  
-  .luxury-product-image {
-    background: transparent !important;
-    mix-blend-mode: normal !important;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .luxury-product-card {
-    background: transparent !important;
-  }
-  
-  .banner__box .luxury-item {
-    background: transparent !important;
-  }
-  
 {% endstyle %}
 
 {% schema %}
@@ -343,7 +326,7 @@
     },
      {
       "type": "text",
-      "id": "banner_link_url2",
+      "id": "banner_subtext_url2",
       "label": "Button Sub Text URL"
     },
     {
@@ -535,6 +518,162 @@
       "id": "show_text_below",
       "default": true,
       "label": "t:sections.image-banner.settings.show_text_below.label"
+    },
+    {
+      "type": "header",
+      "content":"Header Section Settings"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "t:sections.header.settings.logo_position.options__2.label"
+        },
+        {
+          "value": "top-center",
+          "label": "t:sections.header.settings.logo_position.options__3.label"
+        },
+        {
+          "value": "middle-left",
+          "label": "t:sections.header.settings.logo_position.options__1.label"
+        },
+        {
+          "value": "middle-center",
+          "label": "t:sections.header.settings.logo_position.options__4.label"
+        }
+      ],
+      "default": "middle-left",
+      "label": "t:sections.header.settings.logo_position.label",
+      "info": "t:sections.header.settings.logo_help.content"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    },
+    {
+      "type": "select",
+      "id": "menu_type_desktop",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "t:sections.header.settings.menu_type_desktop.options__1.label"
+        },
+        {
+          "value": "mega",
+          "label": "t:sections.header.settings.menu_type_desktop.options__2.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.header.settings.menu_type_desktop.options__3.label"
+        }
+      ],
+      "default": "dropdown",
+      "label": "t:sections.header.settings.menu_type_desktop.label",
+      "info": "t:sections.header.settings.menu_type_desktop.info"
+    },
+    {
+      "type": "select",
+      "id": "sticky_header_type",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.header.settings.sticky_header_type.options__1.label"
+        },
+        {
+          "value": "on-scroll-up",
+          "label": "t:sections.header.settings.sticky_header_type.options__2.label"
+        },
+        {
+          "value": "always",
+          "label": "t:sections.header.settings.sticky_header_type.options__3.label"
+        },
+        {
+          "value": "reduce-logo-size",
+          "label": "t:sections.header.settings.sticky_header_type.options__4.label"
+        }
+      ],
+      "default": "on-scroll-up",
+      "label": "t:sections.header.settings.sticky_header_type.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line_separator",
+      "default": true,
+      "label": "t:sections.header.settings.show_line_separator.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_cart_icon",
+      "default": true,
+      "label": "Hide Cart icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_search_icon",
+      "default": true,
+      "label": "Hide Search icon"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__1.content"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+      {
+      "type": "color_scheme",
+      "id": "menu_color_scheme",
+      "label": "t:sections.header.settings.menu_color_scheme.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__3.content",
+      "info": "t:sections.header.settings.header__4.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": false,
+      "label": "t:sections.header.settings.enable_country_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__5.content",
+      "info": "t:sections.header.settings.header__6.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": false,
+      "label": "t:sections.header.settings.enable_language_selector.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.mobile_layout.content"
+    },
+    {
+      "type": "select",
+      "id": "mobile_logo_position",
+      "options": [
+        {
+          "value": "center",
+          "label": "t:sections.header.settings.mobile_logo_position.options__1.label"
+        },
+        {
+          "value": "left",
+          "label": "t:sections.header.settings.mobile_logo_position.options__2.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.header.settings.mobile_logo_position.label"
     },
     {
       "type": "header",
