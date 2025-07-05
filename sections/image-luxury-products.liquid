@@ -1,5 +1,5 @@
 {% if template contains 'index' %}
-{% include 'header-homepage' %}
+  {% include 'header-homepage' %}
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
@@ -119,158 +119,186 @@
     </div>
   {%- endif -%}
   {% assign productBlockCount = 0 %}
-   {%- for block in section.blocks -%}
+  {%- for block in section.blocks -%}
     {%- case block.type -%}
-     {%- when 'product' -%}
-      {% assign productBlockCount = productBlockCount | plus:1 %}
+      {%- when 'product' -%}
+        {% assign productBlockCount = productBlockCount | plus: 1 %}
       {%- when 'collection' -%}
-      {% assign productBlockCount = productBlockCount | plus:1 %}
-     {%- endcase -%}
+        {% assign productBlockCount = productBlockCount | plus: 1 %}
+    {%- endcase -%}
   {%- endfor -%}
   <div class="{% if productBlockCount != 0 %}product-count-{{ productBlockCount }}{% endif %} banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-    <div class="banner-content">
+    <div class="banner-content luxury-banner-content">
       {% if section.settings.banner_heading != blank %}
-         <h2 class="banner__heading inline-richtext" >
+        <h2 class="banner__heading luxury-heading inline-richtext">
           {{ section.settings.banner_heading }}
         </h2>
-      {% endif %} 
+      {% endif %}
       {% if section.settings.banner_paragraph != blank %}
-        <p>{{ section.settings.banner_paragraph }}</p>
+        <p class="luxury-paragraph">{{ section.settings.banner_paragraph }}</p>
       {% endif %}
-      <div class="towbutonbaner">
-      {% if section.settings.banner_subtext1 != blank %}
-        <a {% if section.settings.banner_link_url1 != blank %}
-            href="{{ section.settings.banner_link_url1 }}"
-          {% endif %} class="banner_subtext2 changeSection">{{ section.settings.banner_subtext1 }}</a>
-      {% endif %}
-      {% if section.settings.banner_subtext2 != blank %}
-        <a {% if section.settings.banner_link_url2 != blank %}
-            href="{{ section.settings.banner_link_url2 }}"
-          {% endif %} class="banner_subtext1 changeSection">{{ section.settings.banner_subtext2 }}</a>
-      {% endif %}
-        
+      <div class="towbutonbaner luxury-button-container">
+        {% if section.settings.banner_subtext1 != blank %}
+          <a
+            {% if section.settings.banner_link_url1 != blank %}
+              href="{{ section.settings.banner_link_url1 }}"
+            {% endif %}
+            class="banner_subtext2 changeSection luxury-button luxury-button--primary"
+          >
+            {{- section.settings.banner_subtext1 -}}
+          </a>
+        {% endif %}
+        {% if section.settings.banner_subtext2 != blank %}
+          <a
+            {% if section.settings.banner_link_url2 != blank %}
+              href="{{ section.settings.banner_link_url2 }}"
+            {% endif %}
+            class="banner_subtext1 changeSection luxury-button luxury-button--secondary"
+          >
+            {{- section.settings.banner_subtext2 -}}
+          </a>
+        {% endif %}
       </div>
-      
-       {%- if section.settings.banner_link_txt != blank -%}
+
+      {%- if section.settings.banner_link_txt != blank -%}
         <a
           {% if section.settings.banner_link_url != blank %}
             href="{{ section.settings.banner_link_url }}"
           {% endif %}
-          class="link"
+          class="link luxury-link"
         >
           {{- section.settings.banner_link_txt -}}
         </a>
       {%- endif -%}
-          <span class="no-minimum">NO MINIMUMS</span>
+      <span class="no-minimum luxury-no-minimum">NO MINIMUMS</span>
     </div>
     <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient">
       {%- for block in section.blocks -%}
-      <li class="item-banner">
-        {%- case block.type -%}
-          {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
-              {{ block.settings.heading }}
-            </h2>
-          {%- when 'product' -%}
-          {% assign blockProduct =  block.settings.product %}
-          {% if blockProduct != blank %}
-            {% assign productObj = all_products[blockProduct] %}
-              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-                <a href="{{ productObj.url }}">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag }}
-                {% if block.settings.show_title != false %}
-                   <h2 class="banner__heading inline-richtext" >
-                    {{ productObj.title | truncate: 20 }}
-                  </h2>
-                {% endif %} 
-                  {% if block.settings.show_price != false %}
-                    <span>{{ productObj.price | money }}</span>
-                  {% endif %}
-                </a>
-              </div>
-            {% endif %}
-          {%- when 'collection' -%}
-          {% assign blockProduct =  block.settings.collection %}
-            {% if blockProduct != blank %}
-            {% assign productObj = collections[blockProduct] %}
-              <div class="banner__text products rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-                <a href="{{ productObj.url }}">
-                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:2000, height:3000 | image_tag }}
-                {% if block.settings.show_title != false %}
-                   <h2 class="banner__heading inline-richtext" >
-                    {{ productObj.title | truncate: 20 }}
-                  </h2>
-                {% endif %} 
-                  {% if block.settings.show_price != false %}
-                    <span>{{ productObj.price | money }}</span>
-                  {% endif %}
-                </a>
-              </div>
-            {% endif %}
-          {%- when 'text' -%}
-            <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-              <p>{{ block.settings.text }}</p>
-            </div>
-          {%- when 'buttons' -%}
-            <div
-              class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %}"
-              {{ block.shopify_attributes }}
-            >
-              {%- if block.settings.button_label_1 != blank -%}
-                <a
-                  {% if block.settings.button_link_1 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_1 }}"
-                  {% endif %}
-                  class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
+        <li class="item-banner luxury-item">
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              <h2
+                class="banner__heading luxury-heading inline-richtext {{ block.settings.heading_size }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.heading }}
+              </h2>
+            {%- when 'product' -%}
+              {% assign blockProduct = block.settings.product %}
+              {% if blockProduct != blank %}
+                {% assign productObj = all_products[blockProduct] %}
+                <div
+                  class="banner__text products luxury-product-card rte {{ block.settings.text_style }}"
+                  {{ block.shopify_attributes }}
                 >
-                  {{- block.settings.button_label_1 | escape -}}
-                </a>
-              {%- endif -%}
-              {%- if block.settings.button_label_2 != blank -%}
-                <a
-                  {% if block.settings.button_link_2 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_2 }}"
-                  {% endif %}
-                  class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
+                  <a href="{{ productObj.url }}" class="luxury-product-link">
+                    <div class="luxury-product-image-container">
+                      {{
+                        block.settings.product_image
+                        | default: productObj.featured_image
+                        | image_url: width: 200, height: 300
+                        | image_tag: class: 'luxury-product-image'
+                      }}
+                    </div>
+                    {% if block.settings.show_title != false %}
+                      <h2 class="banner__heading luxury-product-title inline-richtext">
+                        {{ productObj.title | truncate: 20 }}
+                      </h2>
+                    {% endif %}
+                    {% if block.settings.show_price != false %}
+                      <span class="luxury-product-price">{{ productObj.price | money }}</span>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+            {%- when 'collection' -%}
+              {% assign blockProduct = block.settings.collection %}
+              {% if blockProduct != blank %}
+                {% assign productObj = collections[blockProduct] %}
+                <div
+                  class="banner__text products luxury-product-card rte {{ block.settings.text_style }}"
+                  {{ block.shopify_attributes }}
                 >
-                  {{- block.settings.button_label_2 | escape -}}
-                </a>
-              {%- endif -%}
-            </div>
-        {%- endcase -%}
-      </li>
+                  <a href="{{ productObj.url }}" class="luxury-product-link">
+                    <div class="luxury-product-image-container">
+                      {{
+                        block.settings.product_image
+                        | default: productObj.featured_image
+                        | image_url: width: 2000, height: 3000
+                        | image_tag: class: 'luxury-product-image'
+                      }}
+                    </div>
+                    {% if block.settings.show_title != false %}
+                      <h2 class="banner__heading luxury-product-title inline-richtext">
+                        {{ productObj.title | truncate: 20 }}
+                      </h2>
+                    {% endif %}
+                    {% if block.settings.show_price != false %}
+                      <span class="luxury-product-price">{{ productObj.price | money }}</span>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+            {%- when 'text' -%}
+              <div class="banner__text luxury-text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+                <p>{{ block.settings.text }}</p>
+              </div>
+            {%- when 'buttons' -%}
+              <div
+                class="banner__buttons luxury-buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.button_label_1 != blank -%}
+                  <a
+                    {% if block.settings.button_link_1 == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.button_link_1 }}"
+                    {% endif %}
+                    class="button luxury-button{% if block.settings.button_style_secondary_1 %} luxury-button--secondary{% else %} luxury-button--primary{% endif %}"
+                  >
+                    {{- block.settings.button_label_1 | escape -}}
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.button_label_2 != blank -%}
+                  <a
+                    {% if block.settings.button_link_2 == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.button_link_2 }}"
+                    {% endif %}
+                    class="button luxury-button{% if block.settings.button_style_secondary_2 %} luxury-button--secondary{% else %} luxury-button--primary{% endif %}"
+                  >
+                    {{- block.settings.button_label_2 | escape -}}
+                  </a>
+                {%- endif -%}
+              </div>
+          {%- endcase -%}
+        </li>
       {%- endfor -%}
     </ul>
     {% if section.settings.banner_botton_text != blank %}
-     <div class="banner-bottom"> {{ section.settings.banner_botton_text }}</div>
+      <div class="banner-bottom luxury-banner-bottom">{{ section.settings.banner_botton_text }}</div>
     {% endif %}
   </div>
 </div>
 <!-- dynamic css for banner products -->
-{% assign totalProd = 8 | minus:productBlockCount  %}
+{% assign totalProd = 8 | minus: productBlockCount %}
 {% style %}
- 
-  .product-count-{{productBlockCount}} .banner__box{
-    padding: 0;
-  }
-  ul.banner__box {list-style: none; display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 0;}
-  .product-count-{{productBlockCount}} ul.banner__box li {display: block; width: calc(100%/{{ totalProd }}.1); margin: 0 !important;}
-  .product-count-{{productBlockCount}} ul.banner__box li:nth-child({{ totalProd | minus:1 }}) {margin-left: 28px !important;}
-  ul.banner__box li.item-banner img { max-height: 165px; margin: 0; object-fit: contain; border: 0 none;}
-  
-/* .product-count-{{productBlockCount}} ul.banner__box li:nth-child(3) {margin-left: 25px !important;}
-.product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/4.2); margin: 0 !important;} */
-  .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/3.2); margin: 0 !important;}
-.product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
-  .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
-  .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
+    .product-count-{{productBlockCount}} .banner__box{
+      padding: 0;
+    }
+    ul.banner__box {list-style: none; display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 0;}
+    .product-count-{{productBlockCount}} ul.banner__box li {display: block; width: calc(100%/{{ totalProd }}.1); margin: 0 !important;}
+    .product-count-{{productBlockCount}} ul.banner__box li:nth-child({{ totalProd | minus:1 }}) {margin-left: 28px !important;}
+    ul.banner__box li.item-banner img { max-height: 165px; margin: 0; object-fit: contain; border: 0 none;}
+
+  /* .product-count-{{productBlockCount}} ul.banner__box li:nth-child(3) {margin-left: 25px !important;}
+  .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/4.2); margin: 0 !important;} */
+    .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/3.2); margin: 0 !important;}
+  .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
+    .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
+    .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
 {% endstyle %}
 
 {% schema %}
@@ -311,7 +339,7 @@
       "type": "text",
       "id": "banner_link_url1",
       "label": "Button Sub Text URL"
-    }, 
+    },
      {
       "type": "text",
       "id": "banner_subtext2",
