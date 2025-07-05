@@ -327,6 +327,19 @@
   color: #000000;
 }
 
+.tech-pack-section .tech-button:focus .button-fill-bar {
+  width: var(--text-width, 200px);
+  opacity: 1;
+}
+
+.tech-pack-section .tech-button:focus::before {
+  width: calc(var(--text-width, 200px) + 32px);
+}
+
+.tech-pack-section .tech-button:focus .button-text {
+  color: #000000;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .tech-pack-section .tech-content,
