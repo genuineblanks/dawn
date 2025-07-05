@@ -257,59 +257,26 @@
     {% endif %}
   </div>
 </div>
-
-<!-- FIXED: Simplified and working CSS for banner products -->
+<!-- dynamic css for banner products -->
+{% assign totalProd = 8 | minus:productBlockCount  %}
 {% style %}
-  /* Base styles for product grid */
-  ul.banner__box {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    justify-content: center;
+ 
+  .product-count-{{productBlockCount}} .banner__box{
     padding: 0;
-    margin: 0;
   }
-
-  /* Dynamic grid sizing based on product count */
-  {% if productBlockCount > 0 %}
-    .product-count-{{ productBlockCount }} .banner__box {
-      padding: 0;
-    }
-
-    .product-count-{{ productBlockCount }} ul.banner__box li {
-      display: block;
-      margin: 0 !important;
-      flex: 1 1 auto;
-      max-width: {% if productBlockCount <= 3 %}calc(33.333% - 2px){% elsif productBlockCount == 4 %}calc(25% - 2px){% elsif productBlockCount == 5 %}calc(20% - 2px){% else %}calc(16.666% - 2px){% endif %};
-      min-width: 150px;
-    }
-  {% endif %}
-
-  /* Image styling */
-  ul.banner__box li.item-banner img {
-    max-height: 165px;
-    width: 100%;
-    margin: 0;
-    object-fit: contain;
-    border: 0 none;
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    {% if productBlockCount > 0 %}
-      .product-count-{{ productBlockCount }} ul.banner__box li {
-        max-width: {% if productBlockCount <= 2 %}calc(50% - 2px){% else %}calc(33.333% - 2px){% endif %};
-      }
-    {% endif %}
-  }
-
-  @media (max-width: 480px) {
-    {% if productBlockCount > 0 %}
-      .product-count-{{ productBlockCount }} ul.banner__box li {
-        max-width: calc(50% - 2px);
-      }
-    {% endif %}
+  ul.banner__box {list-style: none; display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 0;}
+  .product-count-{{productBlockCount}} ul.banner__box li {display: block; width: calc(100%/{{ totalProd }}.1); margin: 0 !important;}
+  .product-count-{{productBlockCount}} ul.banner__box li:nth-child({{ totalProd | minus:1 }}) {margin-left: 28px !important;}
+  ul.banner__box li.item-banner img { max-height: 165px; margin: 0; object-fit: contain; border: 0 none;}
+  
+/* .product-count-{{productBlockCount}} ul.banner__box li:nth-child(3) {margin-left: 25px !important;}
+.product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/4.2); margin: 0 !important;} */
+  .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/3.2); margin: 0 !important;}
+.product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
+  .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
+  .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
+  .high-end-collection{
+    display: none;
   }
 {% endstyle %}
 
@@ -359,8 +326,8 @@
     },
      {
       "type": "text",
-      "id": "banner_link_url2",
-      "label": "Button Sub Text URL 2"
+      "id": "banner_subtext_url2",
+      "label": "Button Sub Text URL"
     },
     {
       "type": "text",
@@ -822,16 +789,6 @@
           "type": "image_picker",
           "id": "product_image",
           "label": "Select Product Image Here."
-        },
-        {
-          "type": "checkbox",
-          "id": "show_title",
-          "label": "Show Product Title"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_price",
-          "label": "Show Product Price"
         }
       ]
     },
