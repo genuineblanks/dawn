@@ -29,13 +29,6 @@
     color: {{ section.settings.text_color }};
   }
   
-  /* Ensure no white space appears - only show fallback when no image */
-  #TechPack-{{ section.id }} {
-    {% unless section.settings.bg_image != blank %}
-      background-color: {{ section.settings.overlay_color | default: '#1a1a1a' }} !important;
-    {% endunless %}
-  }
-  
   /* Force background image to cover entire section on all devices */
   @media (max-width: 768px) {
     #TechPack-{{ section.id }} {
@@ -272,7 +265,7 @@
       "type": "text",
       "id": "tech_feature_2",
       "label": "Feature 2",
-      "default": "• MUST BE REGISTERED TO SUBMIT"
+      "default": "• MUST BE A BRAND TO SUBMIT"
     },
     {
       "type": "header",
