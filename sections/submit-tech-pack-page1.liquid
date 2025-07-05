@@ -13,7 +13,7 @@
     {% if section.settings.bg_image != blank %}
       background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
       background-size: cover;
-      background-position: center;
+      background-position: center center;
       background-repeat: no-repeat;
     {% endif %}
   }
@@ -38,22 +38,6 @@
   id="TechPack-{{ section.id }}"
   class="tech-pack-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
 >
-  {%- if section.settings.bg_image != blank -%}
-    <div class="tech-media">
-      {{
-        section.settings.bg_image
-        | image_url: width: 1920
-        | image_tag:
-          width: section.settings.bg_image.width,
-          height: section.settings.bg_image.height,
-          class: 'tech-bg-image',
-          sizes: '100vw',
-          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-          fetchpriority: fetch_priority
-      }}
-    </div>
-  {%- endif -%}
-  
   <div class="tech-overlay"></div>
   
   <div class="tech-content">
@@ -151,7 +135,7 @@
       "step": 5,
       "unit": "vh",
       "label": "Section Height",
-      "default": 80
+      "default": 100
     },
     {
       "type": "range",
