@@ -13,6 +13,23 @@
   font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
   width: 100%;
   box-sizing: border-box;
+  /* Ensure background image always fills the space */
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+}
+
+/* Add fallback background color to prevent white space */
+.tech-pack-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1a1a1a;
+  z-index: 1;
 }
 
 .tech-pack-section .tech-overlay {
@@ -233,6 +250,20 @@
 [id^="TechPack-"] {
   padding: 0 !important;
   margin: 0 !important;
+  /* Ensure consistent background coverage */
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Additional fixes for full coverage */
+.tech-pack-section,
+[id^="TechPack-"] {
+  /* Force background to always cover the entire area */
+  background-clip: border-box !important;
+  -webkit-background-size: cover !important;
+  -moz-background-size: cover !important;
+  -o-background-size: cover !important;
 }
 
 /* Focus states for accessibility */

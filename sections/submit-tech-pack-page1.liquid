@@ -11,10 +11,13 @@
     height: {{ section.settings.section_height }}vh;
     min-height: {{ section.settings.min_height }}px;
     {% if section.settings.bg_image != blank %}
-      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
+      background-image: url('{{ section.settings.bg_image | image_url: width: 2400 }}') !important;
+      background-size: cover !important;
+      background-position: center center !important;
+      background-repeat: no-repeat !important;
+      background-attachment: scroll !important;
+    {% else %}
+      background-color: #1a1a1a !important;
     {% endif %}
   }
   
@@ -24,6 +27,32 @@
   
   #TechPack-{{ section.id }} .tech-content {
     color: {{ section.settings.text_color }};
+  }
+  
+  /* Ensure no white space appears */
+  #TechPack-{{ section.id }}::before {
+    background-color: {{ section.settings.overlay_color | default: '#1a1a1a' }} !important;
+  }
+  
+  /* Force background image to cover entire section on all devices */
+  @media (max-width: 768px) {
+    #TechPack-{{ section.id }} {
+      {% if section.settings.bg_image != blank %}
+        background-image: url('{{ section.settings.bg_image | image_url: width: 1200 }}') !important;
+      {% endif %}
+      background-size: cover !important;
+      background-position: center center !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #TechPack-{{ section.id }} {
+      {% if section.settings.bg_image != blank %}
+        background-image: url('{{ section.settings.bg_image | image_url: width: 800 }}') !important;
+      {% endif %}
+      background-size: cover !important;
+      background-position: center center !important;
+    }
   }
 </style>
 
@@ -82,6 +111,22 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const section = document.querySelector('#TechPack-{{ section.id }}');
+    
+    // Ensure background image covers full section
+    function ensureBackgroundCoverage() {
+      if (section) {
+        const computedStyle = window.getComputedStyle(section);
+        if (computedStyle.backgroundImage !== 'none') {
+          section.style.backgroundSize = 'cover';
+          section.style.backgroundPosition = 'center center';
+          section.style.backgroundRepeat = 'no-repeat';
+        }
+      }
+    }
+    
+    // Call on load and resize
+    ensureBackgroundCoverage();
+    window.addEventListener('resize', ensureBackgroundCoverage);
     
     // Add smooth scroll indicator animation
     const scrollIndicator = section.querySelector('.scroll-indicator');
