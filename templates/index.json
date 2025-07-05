@@ -253,6 +253,27 @@
         "padding_bottom": 0
       }
     },
+    "submit_tech_pack_page1_MjcYmw": {
+      "type": "submit-tech-pack-page1",
+      "name": "Tech Pack Section",
+      "settings": {
+        "dynamic_class": "",
+        "section_height": 80,
+        "min_height": 600,
+        "overlay_color": "#000000",
+        "overlay_opacity": 60,
+        "text_color": "#ffffff",
+        "tech_title": "FOR BRANDS READY TO MOVE — WE'RE READY TO BUILD. OUR PRODUCTION TEAM REVIEWS EVERY DETAIL FOR PRECISION, FEASIBILITY, AND FLOW, ENSURING A SMOOTH TRANSITION FROM DESIGN TO SAMPLE.",
+        "tech_description": "Transform your design concepts into production-ready specifications with our comprehensive tech pack services.",
+        "button_text": "SUBMIT YOUR TECH-PACK",
+        "button_url": "",
+        "show_tech_features": true,
+        "tech_feature_1": "• QUOTATIONS WITHIN 2-5 BUSINESS DAYS",
+        "tech_feature_2": "• MUST BE REGISTERED TO SUBMIT",
+        "show_scroll_indicator": false,
+        "scroll_text": "Scroll"
+      }
+    },
     "image_banner_kEcnHz": {
       "type": "image-banner",
       "blocks": {
@@ -788,6 +809,7 @@
     "image_luxury_products_fVNxeh",
     "image_high_end_products_amWbDP",
     "autoplay_video_PAxbzR",
+    "submit_tech_pack_page1_MjcYmw",
     "image_banner_kEcnHz",
     "image_banner_PJVdGt",
     "about_company_section_RkhMYH",
