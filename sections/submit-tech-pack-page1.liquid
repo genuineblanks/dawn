@@ -143,30 +143,26 @@
       });
     }
     
-    // Enhanced button hover effect with text-width calculation
+    // Enhanced button hover effect - expand to match title width
     const techButton = section.querySelector('.tech-button');
     if (techButton) {
       const buttonText = techButton.querySelector('.button-text');
       const fillBar = techButton.querySelector('.button-fill-bar');
+      const titleElement = section.querySelector('.tech-title');
       
       function updateFillBarWidth() {
-        if (buttonText && fillBar) {
-          // Create a temporary span to measure text width
-          const tempSpan = document.createElement('span');
-          tempSpan.style.visibility = 'hidden';
-          tempSpan.style.position = 'absolute';
-          tempSpan.style.fontSize = window.getComputedStyle(buttonText).fontSize;
-          tempSpan.style.fontFamily = window.getComputedStyle(buttonText).fontFamily;
-          tempSpan.style.fontWeight = window.getComputedStyle(buttonText).fontWeight;
-          tempSpan.style.letterSpacing = window.getComputedStyle(buttonText).letterSpacing;
-          tempSpan.textContent = buttonText.textContent;
+        if (titleElement) {
+          // Measure the title width
+          const titleWidth = titleElement.offsetWidth;
+          console.log('Title width:', titleWidth); // Debug log
           
-          document.body.appendChild(tempSpan);
-          const textWidth = tempSpan.offsetWidth;
-          document.body.removeChild(tempSpan);
+          // Set the fill bar width to match title width
+          techButton.style.setProperty('--title-width', titleWidth + 'px');
           
-          // Set the fill bar width to match text width plus some padding
-          fillBar.style.setProperty('--text-width', textWidth + 'px');
+          // Also set a fallback directly on the elements
+          if (fillBar) {
+            fillBar.setAttribute('data-title-width', titleWidth);
+          }
         }
       }
       
@@ -174,17 +170,20 @@
       updateFillBarWidth();
       window.addEventListener('resize', updateFillBarWidth);
       
-      // Add hover effect for tech content
-      const content = section.querySelector('.tech-content');
-      if (content) {
-        content.addEventListener('mouseenter', function() {
-          this.style.transform = 'scale(1.01)';
-        });
-        
-        content.addEventListener('mouseleave', function() {
-          this.style.transform = 'scale(1)';
-        });
-      }
+      // Force update after a short delay to ensure all elements are rendered
+      setTimeout(updateFillBarWidth, 100);
+    }
+    
+    // Add hover effect for tech content
+    const content = section.querySelector('.tech-content');
+    if (content) {
+      content.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+      });
+      
+      content.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
     }
   });
 </script>
