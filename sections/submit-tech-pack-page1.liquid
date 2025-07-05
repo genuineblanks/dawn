@@ -29,9 +29,11 @@
     color: {{ section.settings.text_color }};
   }
   
-  /* Ensure no white space appears */
-  #TechPack-{{ section.id }}::before {
-    background-color: {{ section.settings.overlay_color | default: '#1a1a1a' }} !important;
+  /* Ensure no white space appears - only show fallback when no image */
+  #TechPack-{{ section.id }} {
+    {% unless section.settings.bg_image != blank %}
+      background-color: {{ section.settings.overlay_color | default: '#1a1a1a' }} !important;
+    {% endunless %}
   }
   
   /* Force background image to cover entire section on all devices */
@@ -70,7 +72,7 @@
   <div class="tech-overlay"></div>
   
   <div class="tech-content">
-    <div class="content-wrapper">
+    <div class="content-wrapper" onclick="window.location.href='{{ section.settings.button_url | default: '#' }}'">
       {% if section.settings.tech_title != blank %}
         <h2 class="tech-title">{{ section.settings.tech_title }}</h2>
       {% endif %}
@@ -82,9 +84,9 @@
       {% endif %}
       
       {% if section.settings.button_text != blank %}
-        <a href="{{ section.settings.button_url | default: '#' }}" class="tech-button">
+        <span class="tech-button">
           {{ section.settings.button_text }}
-        </a>
+        </span>
       {% endif %}
       
       {% if section.settings.show_tech_features %}
