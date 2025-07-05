@@ -1,3 +1,5 @@
+/* Enhanced Banner CSS with Premium Typography and Hover Effects */
+
 .banner {
   display: flex;
   position: relative;
@@ -480,4 +482,439 @@
   .banner--desktop-transparent .rte a:hover {
     color: currentColor;
   }
+}
+
+/* ENHANCED LUXURY STYLING */
+
+/* Premium Logo Styling */
+.genuineblanks-logo {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  text-align: center;
+}
+
+.genuineblanks-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #000 50%, transparent 100%);
+}
+
+.banner-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Collection Toggle Buttons */
+.collection-toggle-buttons {
+  display: flex;
+  gap: 0;
+  margin: 2rem 0;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+}
+
+.collection-btn {
+  padding: 12px 32px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.collection-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, #2d2d2d 0%, #000 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.collection-btn:not(.active):hover {
+  color: #333;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lookbook-link {
+  font-size: 14px;
+  color: #666;
+  text-decoration: underline;
+  margin: 1rem 0;
+  display: inline-block;
+  transition: color 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.lookbook-link:hover {
+  color: #333;
+}
+
+.no-minimum {
+  font-size: 12px;
+  color: #999;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  display: block;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Enhanced Collection Items */
+.banner__box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  list-style: none;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.collection-item {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(0);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.collection-item:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.collection-item:nth-child(1) { animation-delay: 0.1s; }
+.collection-item:nth-child(2) { animation-delay: 0.2s; }
+.collection-item:nth-child(3) { animation-delay: 0.3s; }
+.collection-item:nth-child(4) { animation-delay: 0.4s; }
+.collection-item:nth-child(5) { animation-delay: 0.5s; }
+.collection-item:nth-child(6) { animation-delay: 0.6s; }
+
+.product-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 1.5rem;
+}
+
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+}
+
+.product-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(1.02) contrast(1.05);
+}
+
+.collection-item:hover .product-image {
+  transform: scale(1.08);
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0) 0%, 
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0.15) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.collection-item:hover .hover-overlay {
+  opacity: 1;
+}
+
+.hover-overlay::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.collection-item:hover .hover-overlay::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.collection-item:hover .product-title {
+  color: #000;
+}
+
+.product-price {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
+.banner-bottom-text {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Spectacular Enhancement for Background Integration */
+.banner__media img {
+  filter: brightness(0.98) contrast(1.08) saturate(1.1);
+}
+
+.banner__content {
+  position: relative;
+}
+
+.banner__content::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(255, 255, 255, 0.02) 50%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .banner__box {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .product-image {
+    height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner__box {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .collection-toggle-buttons {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 16px;
+  }
+  
+  .collection-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+  
+  .product-image {
+    height: 180px;
+  }
+  
+  .product-link {
+    padding: 1rem;
+  }
+  
+  .genuineblanks-logo {
+    font-size: 2rem;
+  }
+  
+  .collection-item:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+@media (max-width: 480px) {
+  .banner__box {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  
+  .genuineblanks-logo {
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+  }
+  
+  .product-image {
+    height: 160px;
+  }
+  
+  .collection-item {
+    border-radius: 12px;
+  }
+  
+  .product-image-wrapper {
+    border-radius: 8px;
+  }
+}
+
+/* Special Effects for Premium Feel */
+.collection-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.collection-item:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Typography */
+.banner-content {
+  text-align: center;
+}
+
+.banner-content > * {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.banner-content .genuineblanks-logo {
+  animation-delay: 0.2s;
+}
+
+.banner-content .banner-subtitle {
+  animation-delay: 0.4s;
+}
+
+.banner-content .collection-toggle-buttons {
+  animation-delay: 0.6s;
+}
+
+.banner-content .lookbook-link {
+  animation-delay: 0.8s;
+}
+
+.banner-content .no-minimum {
+  animation-delay: 1s;
+}
+
+/* Performance Optimizations */
+.collection-item {
+  will-change: transform;
+}
+
+.product-image {
+  will-change: transform;
+}
+
+.collection-btn {
+  will-change: transform, background;
+}
+
+/* Legacy Support */
+ul.banner__box {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+ul.banner__box li.item-banner img {
+  border: 0 none;
+  margin: 0;
+  object-fit: cover;
+}
+
+.item-banner {
+  display: block;
+  margin: 0 !important;
 }
