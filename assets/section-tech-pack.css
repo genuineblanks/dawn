@@ -12,9 +12,10 @@
     min-height: {{ section.settings.min_height }}px;
     {% if section.settings.bg_image != blank %}
       background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
-      background-size: 120% auto;
+      background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
+      transform: scale(1.2);
     {% endif %}
   }
   
