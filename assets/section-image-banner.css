@@ -716,17 +716,50 @@
   text-transform: uppercase !important;
 }
 
+/* PNG TRANSPARENCY FIXES */
+.luxury-product-image-container,
+.banner__box .luxury-item,
+.luxury-product-card,
+.banner__text.products {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.luxury-product-image {
+  background: transparent !important;
+  background-color: transparent !important;
+  mix-blend-mode: normal !important;
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+  border: none !important;
+}
+
+.banner__box li.item-banner {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.product-banner .banner__box {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.high-end-collection .banner__box,
+.high-end-collection .luxury-item,
+.high-end-collection .luxury-product-card,
+.high-end-collection .luxury-product-image-container {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 /* Remove product descriptions, keep only images */
 .luxury-product-title,
 .luxury-product-price {
   display: none !important;
-}
-
-/* Make sure product images are clean */
-.luxury-product-image {
-  width: 100% !important;
-  height: auto !important;
-  display: block !important;
 }
 
 /* Mobile Responsiveness */
