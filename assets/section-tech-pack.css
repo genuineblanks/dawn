@@ -254,6 +254,27 @@
   margin: 0 !important;
 }
 
+/* Force override all theme defaults with high specificity - NO BACKGROUND CONFLICTS */
+html .tech-pack-section,
+body .tech-pack-section,
+.shopify-section .tech-pack-section {
+  background: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  height: 80vh !important;
+  min-height: 600px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 /* Focus states for accessibility */
 .tech-pack-section .tech-button:focus {
   outline: 2px solid currentColor;
