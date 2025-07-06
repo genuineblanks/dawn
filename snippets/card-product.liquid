@@ -24,7 +24,19 @@
 {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
 
 {%- if card_product and card_product != empty -%}
-  {%- assign ratio = 1 -%}
+  {%- liquid
+    assign ratio = 1
+    if media_aspect_ratio == 'portrait'
+      assign ratio = 0.8
+    elsif media_aspect_ratio == 'square'
+      assign ratio = 1
+    else
+      assign ratio = 1
+    endif
+    if ratio == 0 or ratio == null
+      assign ratio = 1
+    endif
+  -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
     <div
       class="
@@ -316,7 +328,14 @@
     </div>
   </div>
 {%- else -%}
-  {%- assign ratio = 1 -%}
+  {%- liquid
+    assign ratio = 1
+    if media_aspect_ratio == 'portrait'
+      assign ratio = 0.8
+    else
+      assign ratio = 1
+    endif
+  -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
     <div
       class="
