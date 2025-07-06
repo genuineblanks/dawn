@@ -298,18 +298,8 @@
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
-          {%- when 'link_list' -%}
-            <nav class="account-menu header-account-menu">
-              <ul class="account-menu-list">
-                {%- for link in linklists[block.settings.account_menu].links -%}
-                  <li class="account-menu-item">
-                    <a href="{{ link.url }}" class="account-menu-link">
-                      {{ link.title }}
-                    </a>
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </nav>
+        {%- when 'link_list' -%}
+          {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
         {%- endcase -%}
       {%- endfor -%}
       
