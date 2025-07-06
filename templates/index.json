@@ -173,7 +173,7 @@
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "none",
-        "show_line_separator": true,
+        "show_line_separator": false,
         "hide_cart_icon": false,
         "hide_search_icon": true,
         "color_scheme": "scheme-f7cb6d06-fa57-48ad-b559-ee98b022bdc6",
