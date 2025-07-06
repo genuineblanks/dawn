@@ -137,7 +137,7 @@
         "link_list_cYVVVY": {
           "type": "link_list",
           "settings": {
-            "account_menu": ""
+            "account_menu": "account-menu"
           }
         }
       },
@@ -166,7 +166,7 @@
         "show_text_box": false,
         "desktop_content_alignment": "center",
         "color_scheme_section": "",
-        "image_behavior": "none",
+        "image_behavior": "fixed",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": true,
         "show_text_below": true,
