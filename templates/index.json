@@ -137,7 +137,7 @@
         "link_list_cYVVVY": {
           "type": "link_list",
           "settings": {
-            "account_menu": ""
+            "account_menu": "account-menu"
           }
         }
       },
