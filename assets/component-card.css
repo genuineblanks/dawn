@@ -104,12 +104,11 @@
   text-align: var(--text-alignment);
 }
 
-/* FIXED: Force square aspect ratio instead of absolute positioning */
 .card__media,
 .card .media {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
+  bottom: 0;
+  position: absolute;
+  top: 0;
 }
 
 .card .media {
@@ -187,13 +186,11 @@
   margin: 1.3rem;
 }
 
-/* FIXED: Force square aspect ratio for images */
 .card__media .media img {
   height: 100%;
   object-fit: cover;
   object-position: center center;
   width: 100%;
-  aspect-ratio: 1 / 1;
 }
 
 .card__inner:not(.ratio) > .card__content {
