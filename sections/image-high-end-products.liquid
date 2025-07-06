@@ -248,6 +248,20 @@
                 </a>
               {%- endif -%}
             </div>
+          {%- when 'link_list' -%}
+            {%- if block.settings.account_menu != blank -%}
+              <nav class="account-menu luxury-account-menu" {{ block.shopify_attributes }}>
+                <ul class="account-menu-list">
+                  {%- for link in linklists[block.settings.account_menu].links -%}
+                    <li class="account-menu-item">
+                      <a href="{{ link.url }}" class="account-menu-link luxury-link">
+                        {{ link.title }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </nav>
+            {%- endif -%}
         {%- endcase -%}
       </li>
       {%- endfor -%}
@@ -275,6 +289,51 @@
 .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
   .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
   .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
+  
+  /* Account Menu Styling */
+  .account-menu {
+    margin: 20px 0;
+  }
+  
+  .account-menu-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .account-menu-item {
+    margin: 0;
+  }
+  
+  .account-menu-link {
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .account-menu-link:hover {
+    border-color: currentColor;
+    opacity: 0.8;
+  }
+  
+  @media screen and (max-width: 749px) {
+    .account-menu-list {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .account-menu-link {
+      display: block;
+      text-align: center;
+      width: 100%;
+    }
+  }
 {% endstyle %}
 
 {% schema %}
