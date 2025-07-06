@@ -1,5 +1,12 @@
 {% if template contains 'index' %}
+  <div style="background: green; color: white; padding: 10px; position: fixed; top: 0; right: 0; z-index: 9999;">
+    LUXURY: Loading header-homepage | Template: {{ template }}
+  </div>
   {% include 'header-homepage' %}
+{% else %}
+  <div style="background: orange; color: white; padding: 10px; position: fixed; top: 0; right: 0; z-index: 9999;">
+    LUXURY: NOT loading header-homepage | Template: {{ template }}
+  </div>
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
