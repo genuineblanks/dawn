@@ -3566,28 +3566,34 @@ details-disclosure > details {
   padding-bottom: 20px !important;
 }
 
-/* Force all product card images to be perfect squares */
-.card__inner {
-  --ratio-percent: 100% !important;
+/* FORCE ALL PRODUCT CARD IMAGES TO BE PERFECT SQUARES - FIXED VERSION */
+
+/* Override the absolute positioning that causes aspect ratio issues */
+.card__media,
+.card .media {
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
 }
 
+/* Force all product images to be square and properly cropped */
+.card__media .media img {
+  aspect-ratio: 1 / 1 !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-position: center center !important;
+}
+
+/* Override any CSS variables controlling ratios */
+.card__inner,
 .card {
   --ratio-percent: 100% !important;
 }
 
-/* Target specific collections if needed */
-.collection-oversized-luxury .card__inner,
-.collection-relaxed-high-end .card__inner {
-  --ratio-percent: 100% !important;
-}
-
-/* Alternative approach - force aspect ratio directly on media */
-.card__media .media {
-  aspect-ratio: 1 / 1 !important;
-}
-
-.card__media .media img {
-  object-fit: cover !important;
-  width: 100% !important;
-  height: 100% !important;
+/* Override the ratio class */
+.ratio::before {
+  padding-bottom: 100% !important;
 }
