@@ -299,23 +299,7 @@
           {%- when '@app' -%}
             {% render block %}
         {%- when 'link_list' -%}
-          {%- if block.settings.account_menu != blank -%}
-            <details class="account-menu-dropdown header__icon">
-              <summary class="account-menu-trigger link focus-inset">
-                Account Menu
-                <span class="account-menu-arrow">▼</span>
-              </summary>
-              <ul class="account-menu-dropdown-list">
-                {%- for link in linklists[block.settings.account_menu].links -%}
-                  <li class="account-menu-dropdown-item">
-                    <a href="{{ link.url }}" class="account-menu-dropdown-link">
-                      {{ link.title }}
-                    </a>
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </details>
-          {%- endif -%}
+          {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
         {%- endcase -%}
       {%- endfor -%}
       
