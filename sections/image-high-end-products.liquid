@@ -1,12 +1,5 @@
 {% if template contains 'index' or template contains 'collection' %}
-  <div style="background: red; color: white; padding: 10px; position: fixed; top: 0; left: 0; z-index: 9999;">
-    HIGH-END: Loading header-homepage | Template: {{ template }}
-  </div>
   {% include 'header-homepage' %}
-{% else %}
-  <div style="background: blue; color: white; padding: 10px; position: fixed; top: 0; left: 0; z-index: 9999;">
-    HIGH-END: NOT loading header-homepage | Template: {{ template }}
-  </div>
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
