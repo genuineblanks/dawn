@@ -1,47 +1,35 @@
 {% comment %}
-Add this debug code temporarily to your collection template 
-RIGHT BEFORE the {% render 'card-product' %} line to see what's happening
+  Renders a collection card
+
+  Accepts:
+  - card_collection: {Object} Collection Liquid object
+  - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+  - columns: {Number}
+  - extend_height: {Boolean} Card height extends to available container space. Default: false (optional)
+  - wrapper_class: {String} Wrapper class for card (optional)
+  - placeholder_image: {String} Placeholder image when collection is empty (optional)
+
+  Usage:
+  {% render 'card-collection' %}
 {% endcomment %}
 
-{%- for product in collection.products -%}
-  {% assign lazy_load = false %}
-  {%- if forloop.index > 2 -%}
-    {%- assign lazy_load = true -%}
-  {%- endif -%}
-  
-  {% comment %}DEBUG: Show what values are being passed{% endcomment %}
-  {% if forloop.first %}
-    <div style="background: yellow; padding: 10px; margin: 10px; font-family: monospace;">
-      <strong>DEBUG INFO FOR {{ collection.title }}:</strong><br>
-      Collection Handle: {{ collection.handle }}<br>
-      Section ID: {{ section.id }}<br>
-      Image Ratio Setting: {{ section.settings.image_ratio }}<br>
-      Image Shape Setting: {{ section.settings.image_shape }}<br>
-      Card Style: {{ settings.card_style }}<br>
-      Card Color Scheme: {{ settings.card_color_scheme }}<br>
-    </div>
-  {% endif %}
-  
-  <li
-    class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-    {% if settings.animations_reveal_on_scroll %}
-      data-cascade
-      style="--animation-order: {{ forloop.index }};"
-    {% endif %}
-  >
-    {% render 'card-product',
-      card_product: product,
-      media_aspect_ratio: section.settings.image_ratio,
-      image_shape: section.settings.image_shape,
-      show_secondary_image: section.settings.show_secondary_image,
-      show_vendor: section.settings.show_vendor,
-      show_rating: section.settings.show_rating,
-      lazy_load: lazy_load,
-      show_quick_add: section.settings.enable_quick_add,
-      section_id: section.id
-    %}
-  </li>
-{%- endfor -%}
+{%- liquid
+  assign ratio = 1
+  if card_collection.featured_image and media_aspect_ratio == 'portrait'
+    assign ratio = 0.8
+  elsif card_collection.featured_image and media_aspect_ratio == 'adapt'
+    assign ratio = card_collection.featured_image.aspect_ratio
+  endif
+  if ratio == 0 or ratio == null
+    assign ratio = 1
+  endif
+  assign card_color_scheme = settings.card_color_scheme
+  assign card_style = settings.card_style
+  if wrapper_class == null or wrapper_class == 'none'
+    assign card_color_scheme = settings.collection_card_color_scheme
+    assign card_style = settings.collection_card_style
+  endif
+-%}
 
 <div class="card-wrapper animate-arrow {% if wrapper_class and wrapper_class != 'none' %}{{ wrapper_class }}{% else %}collection-card-wrapper{% endif %}">
   <div
