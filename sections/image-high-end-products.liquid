@@ -267,7 +267,15 @@
   ul.banner__box {list-style: none; display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 0;}
   .product-count-{{productBlockCount}} ul.banner__box li {display: block; width: calc(100%/{{ totalProd }}.1); margin: 0 !important;}
   .product-count-{{productBlockCount}} ul.banner__box li:nth-child({{ totalProd | minus:1 }}) {margin-left: 28px !important;}
-  ul.banner__box li.item-banner img { max-height: 165px; margin: 0; object-fit: contain; border: 0 none;}
+  ul.banner__box li.item-banner img { 
+    max-height: 165px; 
+    width: 165px;
+    height: 165px;
+    margin: 0; 
+    object-fit: cover !important;
+    border: 0 none;
+    aspect-ratio: 1 / 1 !important;
+  }
   
 /* .product-count-{{productBlockCount}} ul.banner__box li:nth-child(3) {margin-left: 25px !important;}
 .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/4.2); margin: 0 !important;} */
