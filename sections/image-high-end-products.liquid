@@ -1,4 +1,4 @@
-{% if template contains 'index' or template contains 'collection' %}
+{% if template contains 'collection' %}
   {% include 'header-homepage' %}
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
