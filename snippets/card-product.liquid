@@ -26,12 +26,12 @@
 {%- if card_product and card_product != empty -%}
   {%- liquid
     assign ratio = 1
-    if media_aspect_ratio == 'portrait'
+    if card_product.featured_media and media_aspect_ratio == 'portrait'
       assign ratio = 0.8
-    else
-      assign ratio = 1
+    elsif card_product.featured_media and media_aspect_ratio == 'adapt'
+      assign ratio = card_product.featured_media.aspect_ratio
     endif
-    if ratio == 0 or ratio == null or ratio == blank
+    if ratio == 0 or ratio == null
       assign ratio = 1
     endif
   -%}
@@ -330,8 +330,6 @@
     assign ratio = 1
     if media_aspect_ratio == 'portrait'
       assign ratio = 0.8
-    else
-      assign ratio = 1
     endif
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
