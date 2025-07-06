@@ -295,11 +295,16 @@
       </div>
 
       {%- for block in section.blocks -%}
+        <!-- DEBUG: Show what blocks exist -->
+        <div style="background: yellow; padding: 5px;">
+          Block type: {{ block.type }} | Settings: {{ block.settings.account_menu }}
+        </div>
+        
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
-        {%- when 'link_list' -%}
-          {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
+          {%- when 'link_list' -%}
+            {% render 'header-dropdown-menu', menu: linklists[block.settings.account_menu] %}
         {%- endcase -%}
       {%- endfor -%}
       
