@@ -2,6 +2,19 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
+<!-- DEBUG: Show collection info -->
+<div style="background: yellow; padding: 20px; margin: 20px; font-family: monospace; position: fixed; top: 0; right: 0; z-index: 9999; max-width: 300px;">
+  <strong>COLLECTION DEBUG:</strong><br>
+  Collection: {{ collection.title }}<br>
+  Handle: {{ collection.handle }}<br>
+  Template: {{ template }}<br>
+  Section ID: {{ section.id }}<br>
+  Image Ratio: {{ section.settings.image_ratio }}<br>
+  Image Shape: {{ section.settings.image_shape }}<br>
+  Columns Desktop: {{ section.settings.columns_desktop }}<br>
+  Columns Mobile: {{ section.settings.columns_mobile }}<br>
+</div>
+
 {% if section.settings.image_shape == 'blob' %}
   {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
@@ -23,6 +36,23 @@
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
+  }
+  
+  /* FORCE SQUARE IMAGES - COLLECTION SPECIFIC */
+  .section-{{ section.id }}-padding .card__media,
+  .section-{{ section.id }}-padding .card .media {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+  }
+  
+  .section-{{ section.id }}-padding .card__media .media img {
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 {%- endstyle -%}
 
@@ -147,6 +177,18 @@
                 {%- if forloop.index > 2 -%}
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
+                
+                <!-- DEBUG: Show what's being passed to card-product -->
+                {% if forloop.first %}
+                  <div style="background: red; color: white; padding: 10px; position: absolute; top: 100px; right: 0; z-index: 9999; max-width: 300px;">
+                    <strong>CARD DEBUG:</strong><br>
+                    Media Aspect Ratio: {{ section.settings.image_ratio }}<br>
+                    Forcing to: square<br>
+                    Product: {{ product.title }}<br>
+                    Image Size: {{ product.featured_media.width }}x{{ product.featured_media.height }}<br>
+                  </div>
+                {% endif %}
+                
                 <li
                   class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
                   {% if settings.animations_reveal_on_scroll %}
