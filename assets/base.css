@@ -3565,3 +3565,29 @@ details-disclosure > details {
   padding-top: 20px !important;
   padding-bottom: 20px !important;
 }
+
+/* Force all product card images to be perfect squares */
+.card__inner {
+  --ratio-percent: 100% !important;
+}
+
+.card {
+  --ratio-percent: 100% !important;
+}
+
+/* Target specific collections if needed */
+.collection-oversized-luxury .card__inner,
+.collection-relaxed-high-end .card__inner {
+  --ratio-percent: 100% !important;
+}
+
+/* Alternative approach - force aspect ratio directly on media */
+.card__media .media {
+  aspect-ratio: 1 / 1 !important;
+}
+
+.card__media .media img {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
