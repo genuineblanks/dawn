@@ -1,7 +1,6 @@
-{% comment %}
-  Header is handled by LUXURY section on homepage
-  Only load header on collection pages
-{% endcomment %}
+{% if template contains 'index' %}
+  {% include 'header-homepage' %}
+{% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
 {%- if section.settings.image_height == 'adapt' and section.settings.image != blank -%}
