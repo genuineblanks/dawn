@@ -685,12 +685,24 @@
             "button_link_2": "",
             "button_style_secondary_2": false
           }
+        },
+        "buttons_kHBUzh": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Submit Tech-Pack",
+            "button_link_1": "shopify://pages/contact",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "shopify://pages/tech-pack-submission",
+            "button_style_secondary_2": false
+          }
         }
       },
       "block_order": [
         "heading_UrL8dq",
         "text_UhWyYH",
-        "buttons_GKtRxP"
+        "buttons_GKtRxP",
+        "buttons_kHBUzh"
       ],
       "settings": {
         "enable_footer": false,
