@@ -5,16 +5,20 @@
       {%- case block.type -%}
         {%- when 'Add-text-grid' -%}
         <a href="{{ block.settings.link }}">
-          <ul class="grid product-grid grid--2-col-tablet-down grid--3-col-desktop">
-            <li class="grid__item"><h3>{{ block.settings.title }}</h3></li>
-            <li class="grid__item"><h3>{{ block.settings.subtitle }}</h3></li> 
-            <li class="grid__item">
+          <div class="grid">
+            <div class="grid__item">
+              <h3>{{ block.settings.title | replace: ' &', ' &' | replace: '<br>', ' ' | replace: '\n', ' ' | strip_newlines }}</h3>
+            </div>
+            <div class="grid__item">
+              <h3>{{ block.settings.subtitle | replace: ' &', ' &' | replace: '<br>', ' ' | replace: '\n', ' ' | strip_newlines }}</h3>
+            </div>
+            <div class="grid__item">
               {%- assign rich_content = block.settings.rich -%}
               {%- unless rich_content contains '1ST -' or rich_content contains '2ND -' or rich_content contains '3RD -' or rich_content contains '4TH -' or rich_content contains '5TH -' or rich_content contains 'REDIRECTS TO' or rich_content contains 'redirects to' -%}
-                {{ block.settings.rich }}
+                {{ block.settings.rich | replace: '<br>', ' ' | replace: '\n', ' ' | strip_newlines }}
               {%- endunless -%}
-            </li>
-          </ul>
+            </div>
+          </div>
         </a>
      {%- endcase -%}    
     {% endfor %}

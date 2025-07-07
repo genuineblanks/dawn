@@ -91,7 +91,7 @@
   text-align: center !important;
 }
 
-/* Force text visibility - Override all conflicting styles */
+/* Force text to stay on single line */
 .textGrid .grid__item h3,
 .textGrid .grid h3,
 .home-section .textGrid .grid h3,
@@ -105,6 +105,9 @@
   text-transform: uppercase !important;
   color: inherit !important;
   text-shadow: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .textGrid .grid__item p,
@@ -122,6 +125,9 @@
   opacity: 0.95 !important;
   letter-spacing: 0.02em !important;
   text-shadow: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 /* Hide the redirect text elements */
