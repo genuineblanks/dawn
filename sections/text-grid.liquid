@@ -1,30 +1,4 @@
-{% if section.settings.enable_footer == true and template contains 'index' %}
-  {% include 'footer-homepage' %}
-{% endif %}
-
-<!-- Load our CSS AFTER all other CSS to ensure it takes priority -->
-<style>
-/* ULTIMATE OVERRIDE - Load directly in HTML for maximum priority */
-
-/* EMERGENCY NUCLEAR OVERRIDE - Force remove all background images and colors */
-.textGrid a,
-.textGrid a *,
-.text-grid .textGrid a,
-.text-grid .textGrid a *,
-section.text-grid .textGrid a,
-section.text-grid .textGrid a *,
-div.textGrid a,
-div.textGrid a *,
-body .textGrid a,
-body .textGrid a *,
-html body .textGrid a,
-html body .textGrid a * {
-  background-image: none !important;
-  background-attachment: initial !important;
-  background-clip: initial !important;
-  background-origin: initial !important;
-  background-position: initial !important;
-  background-repeat: initial !important;{{ 'text-grid.css' | asset_url | stylesheet_tag }}
+{{ 'text-grid.css' | asset_url | stylesheet_tag }}
 
 <div class="textGrid">
     {% for block in section.blocks %} 
@@ -34,13 +8,20 @@ html body .textGrid a * {
           <ul class="grid product-grid grid--2-col-tablet-down grid--3-col-desktop">
             <li class="grid__item"><h3>{{ block.settings.title }}</h3></li>
             <li class="grid__item"><h3>{{ block.settings.subtitle }}</h3></li> 
-            <li class="grid__item">{{ block.settings.rich }}</li>
+            <li class="grid__item">
+              {%- assign rich_content = block.settings.rich -%}
+              {%- unless rich_content contains '1ST -' or rich_content contains '2ND -' or rich_content contains '3RD -' or rich_content contains '4TH -' or rich_content contains '5TH -' or rich_content contains 'REDIRECTS TO' or rich_content contains 'redirects to' -%}
+                {{ block.settings.rich }}
+              {%- endunless -%}
+            </li>
           </ul>
         </a>
      {%- endcase -%}    
     {% endfor %}
 </div>
-{{ 'text-grid.css' | asset_url | stylesheet_tag }}
+{% if section.settings.enable_footer == true and template contains 'index' %}
+  {% include 'footer-homepage' %}
+{% endif %}
 
 {% schema %}
   {
