@@ -106,7 +106,8 @@
         "collection_4tkaVR": {
           "type": "collection",
           "settings": {
-            "collection": "jacket-high-end"
+            "collection": "jacket-high-end",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
           }
         },
         "collection_CVxfcp": {
