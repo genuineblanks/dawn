@@ -1,4 +1,30 @@
-{{ 'text-grid.css' | asset_url | stylesheet_tag }}
+{% if section.settings.enable_footer == true and template contains 'index' %}
+  {% include 'footer-homepage' %}
+{% endif %}
+
+<!-- Load our CSS AFTER all other CSS to ensure it takes priority -->
+<style>
+/* ULTIMATE OVERRIDE - Load directly in HTML for maximum priority */
+
+/* EMERGENCY NUCLEAR OVERRIDE - Force remove all background images and colors */
+.textGrid a,
+.textGrid a *,
+.text-grid .textGrid a,
+.text-grid .textGrid a *,
+section.text-grid .textGrid a,
+section.text-grid .textGrid a *,
+div.textGrid a,
+div.textGrid a *,
+body .textGrid a,
+body .textGrid a *,
+html body .textGrid a,
+html body .textGrid a * {
+  background-image: none !important;
+  background-attachment: initial !important;
+  background-clip: initial !important;
+  background-origin: initial !important;
+  background-position: initial !important;
+  background-repeat: initial !important;{{ 'text-grid.css' | asset_url | stylesheet_tag }}
 
 <div class="textGrid">
     {% for block in section.blocks %} 
