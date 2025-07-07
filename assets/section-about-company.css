@@ -99,6 +99,15 @@
   font-style: italic;
 }
 
+/* Button container styling - CENTER THE BUTTONS */
+.about-company-section .company-buttons {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .about-company-section .company-button {
   display: inline-block;
   padding: 16px 40px;
@@ -116,6 +125,7 @@
   overflow: hidden;
 }
 
+/* First button animation - fills from LEFT to RIGHT */
 .about-company-section .company-button:before {
   content: '';
   position: absolute;
@@ -130,6 +140,24 @@
 
 .about-company-section .company-button:hover:before {
   left: 0;
+}
+
+/* Second button animation - fills from RIGHT to LEFT */
+.about-company-section .company-button-secondary:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -100%;
+  left: auto;
+  width: 100%;
+  height: 100%;
+  background: #2c2c2c;
+  transition: right 0.4s ease;
+  z-index: -1;
+}
+
+.about-company-section .company-button-secondary:hover:before {
+  right: 0;
 }
 
 .about-company-section .company-button:hover {
@@ -207,6 +235,12 @@
   .about-company-section .scroll-indicator {
     bottom: 2rem;
   }
+  
+  /* Stack buttons vertically on mobile and keep them centered */
+  .about-company-section .company-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -227,6 +261,10 @@
   .about-company-section .company-button {
     padding: 12px 28px;
     font-size: 0.75rem;
+  }
+  
+  .about-company-section .company-buttons {
+    gap: 0.75rem;
   }
 }
 
@@ -255,7 +293,8 @@
     animation: none;
   }
   
-  .about-company-section .company-button:before {
+  .about-company-section .company-button:before,
+  .about-company-section .company-button-secondary:before {
     display: none;
   }
 }
