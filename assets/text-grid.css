@@ -96,51 +96,78 @@
   z-index: 15;
 }
 
-/* Premium Typography - Enhanced but keeping structure */
+/* PREMIUM LUXURY TYPOGRAPHY SYSTEM */
 .textGrid .grid__item h3 {
-  font-family: var(--font-heading-family), 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: 1.8rem;
-  line-height: 1.2;
-  margin: 0 0 12px 0;
-  letter-spacing: 0.15em;
+  font-family: 'Futura', 'Avenir Next', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 200;
+  font-size: 2.8rem;
+  line-height: 0.9;
+  margin: 0 0 20px 0;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   word-wrap: break-word;
   hyphens: auto;
   color: #000000 !important;
   text-shadow: 
-    0 1px 2px rgba(255,255,255,0.8),
-    0 2px 4px rgba(255,255,255,0.6);
+    0 2px 4px rgba(255,255,255,0.9),
+    0 4px 8px rgba(255,255,255,0.7),
+    0 1px 0px rgba(0,0,0,0.1);
   transition: all 0.5s ease;
   position: relative;
+  font-variant: small-caps;
+}
+
+/* Subtitle styling (second grid item) */
+.textGrid .grid__item:nth-child(2) h3 {
+  font-family: 'Futura', 'Avenir Next', 'Century Gothic', sans-serif;
+  font-weight: 300;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0 0 25px 0;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #000000 !important;
+  text-shadow: 
+    0 1px 2px rgba(255,255,255,0.8),
+    0 2px 4px rgba(255,255,255,0.6);
+  opacity: 0.85;
+  font-variant: normal;
 }
 
 .textGrid .grid__item p,
 .textGrid .grid__item div {
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
   font-weight: 300;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  line-height: 1.7;
   margin: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   word-wrap: break-word;
   hyphens: auto;
   color: #000000 !important;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+  text-shadow: 
+    0 1px 3px rgba(255,255,255,0.8),
+    0 2px 6px rgba(255,255,255,0.6);
   transition: all 0.3s ease;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 .textGrid a:hover .grid__item h3 {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  letter-spacing: 0.28em;
   text-shadow: 
-    0 2px 4px rgba(255,255,255,1),
-    0 4px 8px rgba(255,255,255,0.8);
+    0 3px 6px rgba(255,255,255,1),
+    0 6px 12px rgba(255,255,255,0.8),
+    0 1px 0px rgba(0,0,0,0.2);
 }
 
 .textGrid a:hover .grid__item p,
 .textGrid a:hover .grid__item div {
-  transform: translateY(-2px);
-  text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+  transform: translateY(-3px);
+  letter-spacing: 0.1em;
+  text-shadow: 
+    0 2px 6px rgba(255,255,255,0.9),
+    0 4px 12px rgba(255,255,255,0.7);
 }
 
 /* SPECTACULAR GRADIENT PROGRESSIONS - ORIGINAL nth-child STRUCTURE */
@@ -225,7 +252,7 @@ body .textGrid a[href]:nth-child(10) {
   background: linear-gradient(135deg, #505050 0%, #404040 25%, #303030 50%, #202020 75%, #000000 100%) !important;
 }
 
-/* Responsive - ORIGINAL STRUCTURE */
+/* Responsive - PREMIUM TYPOGRAPHY SCALING */
 @media screen and (max-width: 768px) {
   .textGrid a {
     padding: 40px 20px;
@@ -233,7 +260,7 @@ body .textGrid a[href]:nth-child(10) {
   
   .textGrid .grid {
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
   }
   
   .textGrid .grid__item {
@@ -242,12 +269,40 @@ body .textGrid a[href]:nth-child(10) {
   }
   
   .textGrid .grid__item h3 {
-    font-size: 1.4rem;
+    font-size: 2.2rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 15px;
+  }
+  
+  .textGrid .grid__item:nth-child(2) h3 {
+    font-size: 1rem;
+    letter-spacing: 0.25em;
+    margin-bottom: 20px;
   }
   
   .textGrid .grid__item p,
   .textGrid .grid__item div {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .textGrid .grid__item h3 {
+    font-size: 1.8rem;
+    letter-spacing: 0.18em;
+  }
+  
+  .textGrid .grid__item:nth-child(2) h3 {
+    font-size: 0.95rem;
+    letter-spacing: 0.22em;
+  }
+  
+  .textGrid .grid__item p,
+  .textGrid .grid__item div {
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
   }
 }
 
