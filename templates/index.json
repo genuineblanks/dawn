@@ -127,7 +127,8 @@
         "collection_B77dEm": {
           "type": "collection",
           "settings": {
-            "collection": "t-shirt-high-end"
+            "collection": "t-shirt-high-end",
+            "product_image": "shopify://shop_images/High_End_TSHIRT_PNG_94323d07-7fb6-47f0-82b8-a96342a99851.png"
           }
         },
         "collection_BTWtgq": {
