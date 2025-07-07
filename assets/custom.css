@@ -807,7 +807,34 @@ body .available-retail {
 body .available-retail + .available-retail {
     margin-right: 0;
 }  
-
+.home-section .textGrid {
+    display: grid;
+    background: transparent !important;  /* Remove purple background */
+    align-items: center;
+    height: calc(100% - 152px);
+}
+.home-section .textGrid .grid {
+    align-items: center;
+    width: 100%;
+}
+.home-section .textGrid a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    /* Remove the background override */
+}
+.home-section .textGrid a:nth-child(2n+1) {
+    /* Remove the blue background override */
+    background: inherit !important;
+}
+.home-section .textGrid a:hover {
+    /* Remove the purple hover override */
+    background: inherit !important;
+}
 .bring-creativity p {
     text-transform: uppercase;
 }
