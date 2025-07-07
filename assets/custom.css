@@ -581,22 +581,6 @@ a.recover {
     display: inline-block;
     vertical-align: text-bottom;
 }
-.textGrid .grid {
-    justify-content: space-between;
-    padding: 20px;
-    color: #fff;
-    margin: 0;
-    align-items: center;
-}
-.textGrid .grid h3, .textGrid .grid p {
-    color: #fff;
-    margin: 0;
-    font-size: 15px;
-}
-.textGrid .grid .grid__item+.grid__item h3 {
-    text-align: center;
-    font-size: 18px;
-}
 .half_width {
     max-width: 1000px;
     margin: 0 auto;
