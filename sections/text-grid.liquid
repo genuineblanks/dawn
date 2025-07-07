@@ -20,26 +20,6 @@
             </div>
           </div>
         </a>
-        
-        {%- when 'image' -%}
-        <div class="text-grid-image-block" style="text-align: {{ block.settings.alignment }}; padding: 40px 20px;">
-          {%- if block.settings.image != blank -%}
-            <img src="{{ block.settings.image | image_url: width: block.settings.image_width }}"
-                 alt="{{ block.settings.image.alt | escape }}"
-                 width="{{ block.settings.image_width }}"
-                 height="auto"
-                 loading="lazy"
-                 style="max-width: {{ block.settings.image_width }}px; width: 100%; height: auto;">
-          {%- endif -%}
-          
-          {%- if block.settings.title != blank -%}
-            <h3 style="margin-top: 20px; font-family: var(--font-heading-family); font-weight: 600; color: var(--color-base-text);">{{ block.settings.title }}</h3>
-          {%- endif -%}
-          
-          {%- if block.settings.richtext != blank -%}
-            <div style="margin-top: 12px; font-family: var(--font-body-family); color: var(--color-base-text);">{{ block.settings.richtext }}</div>
-          {%- endif -%}
-        </div>
      {%- endcase -%}    
     {% endfor %}
 </div>
