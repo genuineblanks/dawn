@@ -1,0 +1,230 @@
+/* Text Grid Section Styling */
+.textGrid {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* Full width clickable sections */
+.textGrid a {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 80px 60px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: none;
+}
+
+/* Grid layout inside each button */
+.textGrid .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.textGrid .grid__item {
+  position: relative;
+}
+
+/* Typography */
+.textGrid .grid__item h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.textGrid .grid__item p,
+.textGrid .grid__item div {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  color: inherit;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+}
+
+/* Progressive gradient styling for buttons */
+.textGrid a:nth-child(1) {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  color: #1a1a1a;
+}
+
+.textGrid a:nth-child(2) {
+  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+  color: #2a2a2a;
+}
+
+.textGrid a:nth-child(3) {
+  background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
+  color: #3a3a3a;
+}
+
+.textGrid a:nth-child(4) {
+  background: linear-gradient(135deg, #c8c8c8 0%, #b8b8b8 100%);
+  color: #4a4a4a;
+}
+
+.textGrid a:nth-child(5) {
+  background: linear-gradient(135deg, #a8a8a8 0%, #989898 100%);
+  color: #ffffff;
+}
+
+.textGrid a:nth-child(6) {
+  background: linear-gradient(135deg, #808080 0%, #707070 100%);
+  color: #ffffff;
+}
+
+.textGrid a:nth-child(7) {
+  background: linear-gradient(135deg, #606060 0%, #505050 100%);
+  color: #ffffff;
+}
+
+.textGrid a:nth-child(8) {
+  background: linear-gradient(135deg, #404040 0%, #303030 100%);
+  color: #ffffff;
+}
+
+.textGrid a:nth-child(9) {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  color: #ffffff;
+}
+
+.textGrid a:nth-child(10) {
+  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+  color: #ffffff;
+}
+
+/* Hover animations - pop effect */
+.textGrid a:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.textGrid a:active {
+  transform: scale(1.01);
+  transition-duration: 0.1s;
+}
+
+/* Click animation overlay - ripple effect */
+.textGrid a::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.textGrid a.clicked::before {
+  width: 500px;
+  height: 500px;
+}
+
+/* Loading animation for smooth entry */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.textGrid a {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.textGrid a:nth-child(1) { animation-delay: 0.1s; }
+.textGrid a:nth-child(2) { animation-delay: 0.2s; }
+.textGrid a:nth-child(3) { animation-delay: 0.3s; }
+.textGrid a:nth-child(4) { animation-delay: 0.4s; }
+.textGrid a:nth-child(5) { animation-delay: 0.5s; }
+.textGrid a:nth-child(6) { animation-delay: 0.6s; }
+.textGrid a:nth-child(7) { animation-delay: 0.7s; }
+.textGrid a:nth-child(8) { animation-delay: 0.8s; }
+.textGrid a:nth-child(9) { animation-delay: 0.9s; }
+.textGrid a:nth-child(10) { animation-delay: 1.0s; }
+
+/* Responsive design */
+@media screen and (max-width: 1024px) {
+  .textGrid a {
+    padding: 60px 40px;
+  }
+  
+  .textGrid .grid {
+    gap: 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .textGrid a {
+    padding: 50px 20px;
+  }
+  
+  .textGrid .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .textGrid .grid__item h3 {
+    font-size: 1.2rem;
+  }
+  
+  .textGrid .grid__item p,
+  .textGrid .grid__item div {
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .textGrid a {
+    padding: 40px 16px;
+  }
+  
+  .textGrid .grid__item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+}
+
+/* Enhanced typography */
+.textGrid .grid__item p strong,
+.textGrid .grid__item div strong {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.textGrid .grid__item p em,
+.textGrid .grid__item div em {
+  font-style: italic;
+  opacity: 0.7;
+}
