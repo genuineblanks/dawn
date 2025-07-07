@@ -14,7 +14,7 @@
   padding: 80px 60px;
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   cursor: pointer;
   overflow: hidden;
@@ -62,70 +62,71 @@
   letter-spacing: 0.02em;
 }
 
-/* Progressive gradient styling for buttons */
+/* Progressive gradient styling - White to Black progression */
 .textGrid a:nth-child(1) {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  background: #ffffff;
   color: #1a1a1a;
 }
 
 .textGrid a:nth-child(2) {
-  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-  color: #2a2a2a;
+  background: #f5f5f5;
+  color: #1a1a1a;
 }
 
 .textGrid a:nth-child(3) {
-  background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
-  color: #3a3a3a;
+  background: #e8e8e8;
+  color: #2a2a2a;
 }
 
 .textGrid a:nth-child(4) {
-  background: linear-gradient(135deg, #c8c8c8 0%, #b8b8b8 100%);
-  color: #4a4a4a;
+  background: #d0d0d0;
+  color: #3a3a3a;
 }
 
 .textGrid a:nth-child(5) {
-  background: linear-gradient(135deg, #a8a8a8 0%, #989898 100%);
+  background: #b8b8b8;
   color: #ffffff;
 }
 
 .textGrid a:nth-child(6) {
-  background: linear-gradient(135deg, #808080 0%, #707070 100%);
+  background: #999999;
   color: #ffffff;
 }
 
 .textGrid a:nth-child(7) {
-  background: linear-gradient(135deg, #606060 0%, #505050 100%);
+  background: #777777;
   color: #ffffff;
 }
 
 .textGrid a:nth-child(8) {
-  background: linear-gradient(135deg, #404040 0%, #303030 100%);
+  background: #555555;
   color: #ffffff;
 }
 
 .textGrid a:nth-child(9) {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  background: #333333;
   color: #ffffff;
 }
 
 .textGrid a:nth-child(10) {
-  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+  background: #1a1a1a;
   color: #ffffff;
 }
 
-/* Hover animations - pop effect */
+/* Enhanced hover animations - Smooth pop effect */
 .textGrid a:hover {
-  transform: scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.005);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
   z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .textGrid a:active {
-  transform: scale(1.01);
-  transition-duration: 0.1s;
+  transform: translateY(-4px) scale(1.002);
+  transition-duration: 0.15s;
 }
 
-/* Click animation overlay - ripple effect */
+/* Click animation overlay - Better ripple effect */
 .textGrid a::before {
   content: '';
   position: absolute;
@@ -133,45 +134,48 @@
   left: 50%;
   width: 0;
   height: 0;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 1;
+  opacity: 0;
 }
 
 .textGrid a.clicked::before {
-  width: 500px;
-  height: 500px;
+  width: 600px;
+  height: 600px;
+  opacity: 1;
 }
 
-/* Loading animation for smooth entry */
-@keyframes fadeInUp {
-  from {
+/* Enhanced loading animation */
+@keyframes fadeInScale {
+  0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px) scale(0.95);
   }
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .textGrid a {
-  animation: fadeInUp 0.6s ease forwards;
+  animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
 }
 
 .textGrid a:nth-child(1) { animation-delay: 0.1s; }
-.textGrid a:nth-child(2) { animation-delay: 0.2s; }
-.textGrid a:nth-child(3) { animation-delay: 0.3s; }
-.textGrid a:nth-child(4) { animation-delay: 0.4s; }
-.textGrid a:nth-child(5) { animation-delay: 0.5s; }
-.textGrid a:nth-child(6) { animation-delay: 0.6s; }
-.textGrid a:nth-child(7) { animation-delay: 0.7s; }
-.textGrid a:nth-child(8) { animation-delay: 0.8s; }
-.textGrid a:nth-child(9) { animation-delay: 0.9s; }
-.textGrid a:nth-child(10) { animation-delay: 1.0s; }
+.textGrid a:nth-child(2) { animation-delay: 0.15s; }
+.textGrid a:nth-child(3) { animation-delay: 0.2s; }
+.textGrid a:nth-child(4) { animation-delay: 0.25s; }
+.textGrid a:nth-child(5) { animation-delay: 0.3s; }
+.textGrid a:nth-child(6) { animation-delay: 0.35s; }
+.textGrid a:nth-child(7) { animation-delay: 0.4s; }
+.textGrid a:nth-child(8) { animation-delay: 0.45s; }
+.textGrid a:nth-child(9) { animation-delay: 0.5s; }
+.textGrid a:nth-child(10) { animation-delay: 0.55s; }
 
 /* Responsive design */
 @media screen and (max-width: 1024px) {
@@ -203,6 +207,10 @@
   .textGrid .grid__item div {
     font-size: 0.85rem;
   }
+  
+  .textGrid a:hover {
+    transform: translateY(-4px) scale(1.002);
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -227,4 +235,15 @@
 .textGrid .grid__item div em {
   font-style: italic;
   opacity: 0.7;
+}
+
+/* Improved focus states for accessibility */
+.textGrid a:focus {
+  outline: 2px solid rgba(26, 26, 26, 0.3);
+  outline-offset: 4px;
+}
+
+/* Smooth transitions for all interactive elements */
+.textGrid a * {
+  transition: inherit;
 }
