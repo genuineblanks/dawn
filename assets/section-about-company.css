@@ -62,10 +62,6 @@
   margin: 0 auto;
   padding: 4rem 2rem;
   position: relative;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .about-company-section .company-title {
@@ -112,10 +108,6 @@
   flex-wrap: wrap;
   text-align: center;
   width: 100%;
-  margin: 0 auto;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .about-company-section .company-button {
