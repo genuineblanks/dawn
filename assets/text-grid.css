@@ -1,10 +1,51 @@
-/* Text Grid Section Styling - Glass Effect */
+/* Text Grid Section Styling - Enhanced Glass Effect */
 .textGrid {
   width: 100%;
   margin: 0;
   padding: 0;
   background: transparent;
   position: relative;
+}
+
+/* Home section specific styling */
+.home-section .textGrid {
+  display: grid;
+  background: transparent !important;
+  align-items: center;
+  height: calc(100% - 152px);
+}
+
+.home-section .textGrid .grid {
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 20px;
+  color: #fff;
+  margin: 0;
+}
+
+.home-section .textGrid a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  background: inherit !important;
+}
+
+/* Grid styling from custom.css */
+.textGrid .grid h3, 
+.textGrid .grid p {
+  color: #fff !important;
+  margin: 0;
+  font-size: 15px;
+}
+
+.textGrid .grid .grid__item+.grid__item h3 {
+  text-align: center;
+  font-size: 18px;
 }
 
 /* Full width clickable sections with glass effect */
@@ -45,169 +86,112 @@
   position: relative;
 }
 
-/* Typography */
-.textGrid .grid__item h3 {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.4rem;
-  line-height: 1.3;
-  margin: 0 0 12px 0;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: inherit;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Force text visibility - Override all conflicting styles */
+.textGrid .grid__item h3,
+.textGrid .grid h3,
+.home-section .textGrid .grid h3,
+.home-section .textGrid .grid__item h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.6rem !important;
+  line-height: 1.3 !important;
+  margin: 0 0 12px 0 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: inherit !important;
+  text-shadow: none !important;
 }
 
 .textGrid .grid__item p,
-.textGrid .grid__item div {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin: 0;
-  color: inherit;
-  opacity: 0.9;
-  letter-spacing: 0.02em;
+.textGrid .grid__item div,
+.textGrid .grid p,
+.textGrid .grid div,
+.home-section .textGrid .grid p,
+.home-section .textGrid .grid div {
+  font-family: 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  color: inherit !important;
+  opacity: 0.95 !important;
+  letter-spacing: 0.02em !important;
+  text-shadow: none !important;
 }
 
-/* AGGRESSIVE OVERRIDE - Force our glass styles over any existing CSS */
+/* Hide the redirect text elements */
+.textGrid .grid__item p:contains("1ST"),
+.textGrid .grid__item p:contains("2ND"),
+.textGrid .grid__item p:contains("3RD"),
+.textGrid .grid__item p:contains("4TH"),
+.textGrid .grid__item p:contains("5TH"),
+.textGrid .grid__item div:contains("REDIRECTS TO"),
+.textGrid .grid__item p:contains("REDIRECTS TO"),
+.textGrid .grid__item div:contains("redirects to"),
+.textGrid .grid__item p:contains("redirects to") {
+  display: none !important;
+  visibility: hidden !important;
+}
 
-/* Target every possible selector combination */
-.textGrid a:nth-child(1),
-.text-grid .textGrid a:nth-child(1),
-section.text-grid .textGrid a:nth-child(1),
-div.textGrid a:nth-child(1),
-body .textGrid a:nth-child(1),
-html body .textGrid a:nth-child(1) {
-  background: rgba(255, 255, 255, 0.25) !important;
-  background-color: rgba(255, 255, 255, 0.25) !important;
-  background-image: none !important;
+/* Progressive glass effect styling with SOLID colors for better visibility */
+.textGrid a:nth-child(1) {
+  background: #ffffff !important;
   color: #1a1a1a !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.textGrid a:nth-child(2),
-.text-grid .textGrid a:nth-child(2),
-section.text-grid .textGrid a:nth-child(2),
-div.textGrid a:nth-child(2),
-body .textGrid a:nth-child(2),
-html body .textGrid a:nth-child(2) {
-  background: rgba(245, 245, 245, 0.3) !important;
-  background-color: rgba(245, 245, 245, 0.3) !important;
-  background-image: none !important;
+.textGrid a:nth-child(2) {
+  background: #f5f5f5 !important;
   color: #1a1a1a !important;
-  border: 1px solid rgba(245, 245, 245, 0.4) !important;
+  border: 1px solid rgba(245, 245, 245, 0.5);
 }
 
-.textGrid a:nth-child(3),
-.text-grid .textGrid a:nth-child(3),
-section.text-grid .textGrid a:nth-child(3),
-div.textGrid a:nth-child(3),
-body .textGrid a:nth-child(3),
-html body .textGrid a:nth-child(3) {
-  background: rgba(232, 232, 232, 0.35) !important;
-  background-color: rgba(232, 232, 232, 0.35) !important;
-  background-image: none !important;
+.textGrid a:nth-child(3) {
+  background: #e8e8e8 !important;
+  color: #1a1a1a !important;
+  border: 1px solid rgba(232, 232, 232, 0.55);
+}
+
+.textGrid a:nth-child(4) {
+  background: #d0d0d0 !important;
   color: #2a2a2a !important;
-  border: 1px solid rgba(232, 232, 232, 0.45) !important;
+  border: 1px solid rgba(208, 208, 208, 0.6);
 }
 
-.textGrid a:nth-child(4),
-.text-grid .textGrid a:nth-child(4),
-section.text-grid .textGrid a:nth-child(4),
-div.textGrid a:nth-child(4),
-body .textGrid a:nth-child(4),
-html body .textGrid a:nth-child(4) {
-  background: rgba(208, 208, 208, 0.4) !important;
-  background-color: rgba(208, 208, 208, 0.4) !important;
-  background-image: none !important;
-  color: #3a3a3a !important;
-  border: 1px solid rgba(208, 208, 208, 0.5) !important;
-}
-
-.textGrid a:nth-child(5),
-.text-grid .textGrid a:nth-child(5),
-section.text-grid .textGrid a:nth-child(5),
-div.textGrid a:nth-child(5),
-body .textGrid a:nth-child(5),
-html body .textGrid a:nth-child(5) {
-  background: rgba(184, 184, 184, 0.45) !important;
-  background-color: rgba(184, 184, 184, 0.45) !important;
-  background-image: none !important;
+.textGrid a:nth-child(5) {
+  background: #b8b8b8 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(184, 184, 184, 0.55) !important;
+  border: 1px solid rgba(184, 184, 184, 0.65);
 }
 
-.textGrid a:nth-child(6),
-.text-grid .textGrid a:nth-child(6),
-section.text-grid .textGrid a:nth-child(6),
-div.textGrid a:nth-child(6),
-body .textGrid a:nth-child(6),
-html body .textGrid a:nth-child(6) {
-  background: rgba(153, 153, 153, 0.5) !important;
-  background-color: rgba(153, 153, 153, 0.5) !important;
-  background-image: none !important;
+.textGrid a:nth-child(6) {
+  background: #999999 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(153, 153, 153, 0.6) !important;
+  border: 1px solid rgba(153, 153, 153, 0.7);
 }
 
-.textGrid a:nth-child(7),
-.text-grid .textGrid a:nth-child(7),
-section.text-grid .textGrid a:nth-child(7),
-div.textGrid a:nth-child(7),
-body .textGrid a:nth-child(7),
-html body .textGrid a:nth-child(7) {
-  background: rgba(119, 119, 119, 0.55) !important;
-  background-color: rgba(119, 119, 119, 0.55) !important;
-  background-image: none !important;
+.textGrid a:nth-child(7) {
+  background: #777777 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(119, 119, 119, 0.65) !important;
+  border: 1px solid rgba(119, 119, 119, 0.75);
 }
 
-.textGrid a:nth-child(8),
-.text-grid .textGrid a:nth-child(8),
-section.text-grid .textGrid a:nth-child(8),
-div.textGrid a:nth-child(8),
-body .textGrid a:nth-child(8),
-html body .textGrid a:nth-child(8) {
-  background: rgba(85, 85, 85, 0.6) !important;
-  background-color: rgba(85, 85, 85, 0.6) !important;
-  background-image: none !important;
+.textGrid a:nth-child(8) {
+  background: #555555 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(85, 85, 85, 0.7) !important;
+  border: 1px solid rgba(85, 85, 85, 0.8);
 }
 
-.textGrid a:nth-child(9),
-.text-grid .textGrid a:nth-child(9),
-section.text-grid .textGrid a:nth-child(9),
-div.textGrid a:nth-child(9),
-body .textGrid a:nth-child(9),
-html body .textGrid a:nth-child(9) {
-  background: rgba(51, 51, 51, 0.65) !important;
-  background-color: rgba(51, 51, 51, 0.65) !important;
-  background-image: none !important;
+.textGrid a:nth-child(9) {
+  background: #333333 !important;
   color: #ffffff !important;
-  border: 1px solid rgba(51, 51, 51, 0.75) !important;
+  border: 1px solid rgba(51, 51, 51, 0.85);
 }
 
-.textGrid a:nth-child(10),
-.text-grid .textGrid a:nth-child(10),
-section.text-grid .textGrid a:nth-child(10),
-div.textGrid a:nth-child(10),
-body .textGrid a:nth-child(10),
-html body .textGrid a:nth-child(10) {
-  background: rgba(26, 26, 26, 0.7) !important;
-  background-color: rgba(26, 26, 26, 0.7) !important;
-  background-image: none !important;
+.textGrid a:nth-child(10) {
+  background: #1a1a1a !important;
   color: #ffffff !important;
-  border: 1px solid rgba(26, 26, 26, 0.8) !important;
-}
-
-/* NUCLEAR OPTION - Override everything with inline-style level specificity */
-.textGrid a[style],
-.text-grid .textGrid a[style],
-section.text-grid .textGrid a[style] {
-  background-image: none !important;
+  border: 1px solid rgba(26, 26, 26, 0.9);
 }
 
 /* Enhanced hover animations - Glass lift effect */
@@ -362,12 +346,12 @@ section.text-grid .textGrid a[style] {
   }
   
   .textGrid .grid__item h3 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
   
   .textGrid .grid__item p,
   .textGrid .grid__item div {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
   
   .textGrid a:hover {
@@ -383,7 +367,7 @@ section.text-grid .textGrid a[style] {
   }
   
   .textGrid .grid__item h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: 8px;
   }
 }
@@ -412,4 +396,83 @@ section.text-grid .textGrid a[style] {
 /* Smooth transitions for all interactive elements */
 .textGrid a * {
   transition: inherit;
+}
+
+/* Force override any conflicting styles from custom.css */
+.home-section .textGrid a,
+.textGrid a {
+  background-image: none !important;
+}
+
+.home-section .textGrid a:nth-child(2n+1) {
+  background: inherit !important;
+}
+
+.home-section .textGrid a:hover {
+  background: inherit !important;
+}
+
+/* Override any existing home-section textGrid styles */
+.home-section .textGrid a:nth-child(1),
+.home-section .textGrid a:nth-child(2),
+.home-section .textGrid a:nth-child(3),
+.home-section .textGrid a:nth-child(4),
+.home-section .textGrid a:nth-child(5),
+.home-section .textGrid a:nth-child(6),
+.home-section .textGrid a:nth-child(7),
+.home-section .textGrid a:nth-child(8),
+.home-section .textGrid a:nth-child(9),
+.home-section .textGrid a:nth-child(10) {
+  background: inherit !important;
+}
+
+/* Additional text contrast enhancement */
+.textGrid a:nth-child(1) .grid__item h3,
+.textGrid a:nth-child(2) .grid__item h3,
+.textGrid a:nth-child(3) .grid__item h3,
+.textGrid a:nth-child(4) .grid__item h3 {
+  color: #000000 !important;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+.textGrid a:nth-child(1) .grid__item p,
+.textGrid a:nth-child(1) .grid__item div,
+.textGrid a:nth-child(2) .grid__item p,
+.textGrid a:nth-child(2) .grid__item div,
+.textGrid a:nth-child(3) .grid__item p,
+.textGrid a:nth-child(3) .grid__item div,
+.textGrid a:nth-child(4) .grid__item p,
+.textGrid a:nth-child(4) .grid__item div {
+  color: #000000 !important;
+  opacity: 0.8;
+  text-shadow: none;
+}
+
+.textGrid a:nth-child(5) .grid__item h3,
+.textGrid a:nth-child(6) .grid__item h3,
+.textGrid a:nth-child(7) .grid__item h3,
+.textGrid a:nth-child(8) .grid__item h3,
+.textGrid a:nth-child(9) .grid__item h3,
+.textGrid a:nth-child(10) .grid__item h3 {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.textGrid a:nth-child(5) .grid__item p,
+.textGrid a:nth-child(5) .grid__item div,
+.textGrid a:nth-child(6) .grid__item p,
+.textGrid a:nth-child(6) .grid__item div,
+.textGrid a:nth-child(7) .grid__item p,
+.textGrid a:nth-child(7) .grid__item div,
+.textGrid a:nth-child(8) .grid__item p,
+.textGrid a:nth-child(8) .grid__item div,
+.textGrid a:nth-child(9) .grid__item p,
+.textGrid a:nth-child(9) .grid__item div,
+.textGrid a:nth-child(10) .grid__item p,
+.textGrid a:nth-child(10) .grid__item div {
+  color: #ffffff !important;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
