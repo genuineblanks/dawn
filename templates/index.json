@@ -113,7 +113,8 @@
         "collection_CVxfcp": {
           "type": "collection",
           "settings": {
-            "collection": "hoodie-high-end"
+            "collection": "hoodie-high-end",
+            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
           }
         },
         "collection_Ppw48X": {
