@@ -438,8 +438,10 @@
         "text_color": "#2c2c2c",
         "company_title": "We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal. Our facilities and machines are at the cutting edge of technology.",
         "company_description": "Our commitment to excellence drives everything we do, from concept to creation.",
-        "button_text": "Explore Past Products, Factory & Team",
+        "button_text": "‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ Explore Past Products, Factory & Team ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎  ‎ ‎",
         "button_url": "shopify://pages/futuristic",
+        "button_2_text": "‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎ what do you need to get started? & FAQ's ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎ ‎",
+        "button_2_url": "shopify://pages/how-does-it-work",
         "show_scroll_indicator": true,
         "scroll_text": "Scroll"
       }
