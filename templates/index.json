@@ -120,14 +120,14 @@
         "collection_Ppw48X": {
           "type": "collection",
           "settings": {
-            "collection": "sweatshirt-high-end"
+            "collection": "sweatshirt-high-end",
+            "product_image": "shopify://shop_images/High_End_SWEATSHIRT_PNG_356ec5e5-c846-47e2-823f-00f08f3bdc03.png"
           }
         },
         "collection_B77dEm": {
           "type": "collection",
           "settings": {
-            "collection": "t-shirt-high-end",
-            "product_image": "shopify://shop_images/High_End_TSHIRT_PNG.png"
+            "collection": "t-shirt-high-end"
           }
         },
         "collection_BTWtgq": {
