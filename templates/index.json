@@ -106,28 +106,28 @@
         "collection_4tkaVR": {
           "type": "collection",
           "settings": {
-            "collection": "jacket-high-end"
+            "collection": "jacket-high-end",
+            "product_image": "shopify://shop_images/High_End_Jacket_PNG.png"
           }
         },
         "collection_CVxfcp": {
           "type": "collection",
           "settings": {
             "collection": "hoodie-high-end",
-            "product_image": "shopify://shop_images/ONYX_01ZIPPER_PNG.png"
+            "product_image": "shopify://shop_images/High_End_HOODIE_PNG.png"
           }
         },
         "collection_Ppw48X": {
           "type": "collection",
           "settings": {
             "collection": "sweatshirt-high-end",
-            "product_image": "shopify://shop_images/ONYX_03SWEATSHIRT_PNG.png"
+            "product_image": "shopify://shop_images/High_End_SWEATSHIRT_PNG.png"
           }
         },
         "collection_B77dEm": {
           "type": "collection",
           "settings": {
-            "collection": "t-shirt-high-end",
-            "product_image": "shopify://shop_images/ONYX_04TSHIRT_PNG.png"
+            "collection": "t-shirt-high-end"
           }
         },
         "collection_BTWtgq": {
