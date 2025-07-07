@@ -3585,13 +3585,3 @@ details-disclosure > details {
 .card__media .media {
   aspect-ratio: 1 / 1 !important;
 }
-
-/* OVERRIDE FOR TEXT GRID GLASS EFFECT */
-.text-grid .gradient,
-.text-grid.gradient,
-section.text-grid .gradient,
-section.text-grid.gradient {
-  background: transparent !important;
-  background-image: none !important;
-  background-attachment: initial !important;
-}
