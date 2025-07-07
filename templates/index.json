@@ -722,7 +722,7 @@
           "settings": {
             "title": "",
             "subtitle": "LUXURY & HIGH END BLANKS",
-            "rich": "<p>1ST - REDIRECTS TO THE SHOP BLANKS OVERALL PAGE</p>",
+            "rich": "",
             "link": "shopify://pages/luxary-lookbook"
           }
         },
@@ -731,7 +731,7 @@
           "settings": {
             "title": "",
             "subtitle": "DESIGNER LAB",
-            "rich": "<p>2ND - REDIRECTS TO THE DESIGNERS LAB PAGE</p>",
+            "rich": "",
             "link": "shopify://pages/design-lab"
           }
         },
@@ -740,7 +740,7 @@
           "settings": {
             "title": "",
             "subtitle": "LABELLING & ACCESSORIES SERVICE",
-            "rich": "<p>3RD - REDIRECTS TO THE LABELS PAGE</p>",
+            "rich": "",
             "link": "shopify://pages/labelling-acessories-service"
           }
         },
@@ -749,7 +749,7 @@
           "settings": {
             "title": "",
             "subtitle": "ABOUT US - GET TO KNOW US BETTER",
-            "rich": "<p>4TH - REDIRECTS TO THE ABOUT US PAGE</p>",
+            "rich": "",
             "link": "shopify://pages/about-us"
           }
         },
@@ -758,7 +758,7 @@
           "settings": {
             "title": "",
             "subtitle": "LUXURY & HIGH END LOOKBOOK",
-            "rich": "<p>5TH - REDIRECTS TO THE HOME PAGE LOOKBOOK</p>",
+            "rich": "",
             "link": "shopify://pages/luxary-lookbook"
           }
         },
@@ -767,7 +767,7 @@
           "settings": {
             "title": "",
             "subtitle": "HELP CENTER",
-            "rich": "<p>6TH - REDIRECTS TO THE HELP CENTER PAGE</p>",
+            "rich": "",
             "link": "shopify://pages/learn-more"
           }
         },
