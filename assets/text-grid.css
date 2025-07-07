@@ -70,65 +70,144 @@
   letter-spacing: 0.02em;
 }
 
-/* Progressive glass effect styling - White to Black with transparency */
-.textGrid a:nth-child(1) {
-  background: rgba(255, 255, 255, 0.25);
-  color: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+/* AGGRESSIVE OVERRIDE - Force our glass styles over any existing CSS */
+
+/* Target every possible selector combination */
+.textGrid a:nth-child(1),
+.text-grid .textGrid a:nth-child(1),
+section.text-grid .textGrid a:nth-child(1),
+div.textGrid a:nth-child(1),
+body .textGrid a:nth-child(1),
+html body .textGrid a:nth-child(1) {
+  background: rgba(255, 255, 255, 0.25) !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  background-image: none !important;
+  color: #1a1a1a !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
-.textGrid a:nth-child(2) {
-  background: rgba(245, 245, 245, 0.3);
-  color: #1a1a1a;
-  border: 1px solid rgba(245, 245, 245, 0.4);
+.textGrid a:nth-child(2),
+.text-grid .textGrid a:nth-child(2),
+section.text-grid .textGrid a:nth-child(2),
+div.textGrid a:nth-child(2),
+body .textGrid a:nth-child(2),
+html body .textGrid a:nth-child(2) {
+  background: rgba(245, 245, 245, 0.3) !important;
+  background-color: rgba(245, 245, 245, 0.3) !important;
+  background-image: none !important;
+  color: #1a1a1a !important;
+  border: 1px solid rgba(245, 245, 245, 0.4) !important;
 }
 
-.textGrid a:nth-child(3) {
-  background: rgba(232, 232, 232, 0.35);
-  color: #2a2a2a;
-  border: 1px solid rgba(232, 232, 232, 0.45);
+.textGrid a:nth-child(3),
+.text-grid .textGrid a:nth-child(3),
+section.text-grid .textGrid a:nth-child(3),
+div.textGrid a:nth-child(3),
+body .textGrid a:nth-child(3),
+html body .textGrid a:nth-child(3) {
+  background: rgba(232, 232, 232, 0.35) !important;
+  background-color: rgba(232, 232, 232, 0.35) !important;
+  background-image: none !important;
+  color: #2a2a2a !important;
+  border: 1px solid rgba(232, 232, 232, 0.45) !important;
 }
 
-.textGrid a:nth-child(4) {
-  background: rgba(208, 208, 208, 0.4);
-  color: #3a3a3a;
-  border: 1px solid rgba(208, 208, 208, 0.5);
+.textGrid a:nth-child(4),
+.text-grid .textGrid a:nth-child(4),
+section.text-grid .textGrid a:nth-child(4),
+div.textGrid a:nth-child(4),
+body .textGrid a:nth-child(4),
+html body .textGrid a:nth-child(4) {
+  background: rgba(208, 208, 208, 0.4) !important;
+  background-color: rgba(208, 208, 208, 0.4) !important;
+  background-image: none !important;
+  color: #3a3a3a !important;
+  border: 1px solid rgba(208, 208, 208, 0.5) !important;
 }
 
-.textGrid a:nth-child(5) {
-  background: rgba(184, 184, 184, 0.45);
-  color: #ffffff;
-  border: 1px solid rgba(184, 184, 184, 0.55);
+.textGrid a:nth-child(5),
+.text-grid .textGrid a:nth-child(5),
+section.text-grid .textGrid a:nth-child(5),
+div.textGrid a:nth-child(5),
+body .textGrid a:nth-child(5),
+html body .textGrid a:nth-child(5) {
+  background: rgba(184, 184, 184, 0.45) !important;
+  background-color: rgba(184, 184, 184, 0.45) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(184, 184, 184, 0.55) !important;
 }
 
-.textGrid a:nth-child(6) {
-  background: rgba(153, 153, 153, 0.5);
-  color: #ffffff;
-  border: 1px solid rgba(153, 153, 153, 0.6);
+.textGrid a:nth-child(6),
+.text-grid .textGrid a:nth-child(6),
+section.text-grid .textGrid a:nth-child(6),
+div.textGrid a:nth-child(6),
+body .textGrid a:nth-child(6),
+html body .textGrid a:nth-child(6) {
+  background: rgba(153, 153, 153, 0.5) !important;
+  background-color: rgba(153, 153, 153, 0.5) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(153, 153, 153, 0.6) !important;
 }
 
-.textGrid a:nth-child(7) {
-  background: rgba(119, 119, 119, 0.55);
-  color: #ffffff;
-  border: 1px solid rgba(119, 119, 119, 0.65);
+.textGrid a:nth-child(7),
+.text-grid .textGrid a:nth-child(7),
+section.text-grid .textGrid a:nth-child(7),
+div.textGrid a:nth-child(7),
+body .textGrid a:nth-child(7),
+html body .textGrid a:nth-child(7) {
+  background: rgba(119, 119, 119, 0.55) !important;
+  background-color: rgba(119, 119, 119, 0.55) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(119, 119, 119, 0.65) !important;
 }
 
-.textGrid a:nth-child(8) {
-  background: rgba(85, 85, 85, 0.6);
-  color: #ffffff;
-  border: 1px solid rgba(85, 85, 85, 0.7);
+.textGrid a:nth-child(8),
+.text-grid .textGrid a:nth-child(8),
+section.text-grid .textGrid a:nth-child(8),
+div.textGrid a:nth-child(8),
+body .textGrid a:nth-child(8),
+html body .textGrid a:nth-child(8) {
+  background: rgba(85, 85, 85, 0.6) !important;
+  background-color: rgba(85, 85, 85, 0.6) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(85, 85, 85, 0.7) !important;
 }
 
-.textGrid a:nth-child(9) {
-  background: rgba(51, 51, 51, 0.65);
-  color: #ffffff;
-  border: 1px solid rgba(51, 51, 51, 0.75);
+.textGrid a:nth-child(9),
+.text-grid .textGrid a:nth-child(9),
+section.text-grid .textGrid a:nth-child(9),
+div.textGrid a:nth-child(9),
+body .textGrid a:nth-child(9),
+html body .textGrid a:nth-child(9) {
+  background: rgba(51, 51, 51, 0.65) !important;
+  background-color: rgba(51, 51, 51, 0.65) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(51, 51, 51, 0.75) !important;
 }
 
-.textGrid a:nth-child(10) {
-  background: rgba(26, 26, 26, 0.7);
-  color: #ffffff;
-  border: 1px solid rgba(26, 26, 26, 0.8);
+.textGrid a:nth-child(10),
+.text-grid .textGrid a:nth-child(10),
+section.text-grid .textGrid a:nth-child(10),
+div.textGrid a:nth-child(10),
+body .textGrid a:nth-child(10),
+html body .textGrid a:nth-child(10) {
+  background: rgba(26, 26, 26, 0.7) !important;
+  background-color: rgba(26, 26, 26, 0.7) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(26, 26, 26, 0.8) !important;
+}
+
+/* NUCLEAR OPTION - Override everything with inline-style level specificity */
+.textGrid a[style],
+.text-grid .textGrid a[style],
+section.text-grid .textGrid a[style] {
+  background-image: none !important;
 }
 
 /* Enhanced hover animations - Glass lift effect */

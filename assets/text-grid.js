@@ -57,8 +57,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Clean text on load
-  cleanButtonText();
+  // Force remove conflicting styles and apply our glass effect
+  function forceGlassStyles() {
+    gridButtons.forEach((button, index) => {
+      // Remove any inline styles that might be conflicting
+      button.removeAttribute('style');
+      
+      // Force remove background images and conflicting properties
+      button.style.removeProperty('background-image');
+      button.style.removeProperty('background');
+      button.style.removeProperty('background-color');
+      
+      // Apply our glass styles directly via JavaScript as backup
+      const glassStyles = [
+        { bg: 'rgba(255, 255, 255, 0.25)', color: '#1a1a1a', border: 'rgba(255, 255, 255, 0.3)' },
+        { bg: 'rgba(245, 245, 245, 0.3)', color: '#1a1a1a', border: 'rgba(245, 245, 245, 0.4)' },
+        { bg: 'rgba(232, 232, 232, 0.35)', color: '#2a2a2a', border: 'rgba(232, 232, 232, 0.45)' },
+        { bg: 'rgba(208, 208, 208, 0.4)', color: '#3a3a3a', border: 'rgba(208, 208, 208, 0.5)' },
+        { bg: 'rgba(184, 184, 184, 0.45)', color: '#ffffff', border: 'rgba(184, 184, 184, 0.55)' },
+        { bg: 'rgba(153, 153, 153, 0.5)', color: '#ffffff', border: 'rgba(153, 153, 153, 0.6)' },
+        { bg: 'rgba(119, 119, 119, 0.55)', color: '#ffffff', border: 'rgba(119, 119, 119, 0.65)' },
+        { bg: 'rgba(85, 85, 85, 0.6)', color: '#ffffff', border: 'rgba(85, 85, 85, 0.7)' },
+        { bg: 'rgba(51, 51, 51, 0.65)', color: '#ffffff', border: 'rgba(51, 51, 51, 0.75)' },
+        { bg: 'rgba(26, 26, 26, 0.7)', color: '#ffffff', border: 'rgba(26, 26, 26, 0.8)' }
+      ];
+      
+      if (glassStyles[index]) {
+        const style = glassStyles[index];
+        button.style.setProperty('background', style.bg, 'important');
+        button.style.setProperty('background-color', style.bg, 'important');
+        button.style.setProperty('background-image', 'none', 'important');
+        button.style.setProperty('color', style.color, 'important');
+        button.style.setProperty('border', `1px solid ${style.border}`, 'important');
+        button.style.setProperty('backdrop-filter', 'blur(10px)', 'important');
+        button.style.setProperty('-webkit-backdrop-filter', 'blur(10px)', 'important');
+        button.style.setProperty('box-shadow', '0 8px 32px 0 rgba(0, 0, 0, 0.1)', 'important');
+      }
+    });
+  }
+  
+  // Apply glass styles immediately and on intervals
+  forceGlassStyles();
+  setTimeout(forceGlassStyles, 100);
+  setTimeout(forceGlassStyles, 500);
+  setTimeout(forceGlassStyles, 1000);
   
   // Enhanced intersection observer for glass effect loading
   const observerOptions = {
