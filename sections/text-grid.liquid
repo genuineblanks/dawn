@@ -4,19 +4,20 @@
     {% for block in section.blocks %} 
       {%- case block.type -%}
         {%- when 'Add-text-grid' -%}
-        <a href="{{ block.settings.link }}">
-          <div class="grid">
-            <div class="grid__item">
-              <h3>{{ block.settings.title | strip_html | strip }}</h3>
-            </div>
-            <div class="grid__item">
-              <h3>{{ block.settings.subtitle | strip_html | strip }}</h3>
-            </div>
-            <div class="grid__item">
-              {%- assign rich_content = block.settings.rich | strip_html | strip -%}
-              {%- unless rich_content contains '1ST -' or rich_content contains '2ND -' or rich_content contains '3RD -' or rich_content contains '4TH -' or rich_content contains '5TH -' or rich_content contains 'REDIRECTS TO' or rich_content contains 'redirects to' -%}
-                <p>{{ rich_content }}</p>
-              {%- endunless -%}
+        <a href="{{ block.settings.link }}" class="textGrid__button" data-button-index="{{ forloop.index }}">
+          <div class="textGrid__overlay"></div>
+          <div class="textGrid__content">
+            <div class="textGrid__content-inner">
+              <div class="textGrid__header">
+                <h3 class="textGrid__title">{{ block.settings.title | strip_html | strip }}</h3>
+                <div class="textGrid__subtitle">{{ block.settings.subtitle | strip_html | strip }}</div>
+              </div>
+              <div class="textGrid__description">
+                {%- assign rich_content = block.settings.rich | strip_html | strip -%}
+                {%- unless rich_content contains '1ST -' or rich_content contains '2ND -' or rich_content contains '3RD -' or rich_content contains '4TH -' or rich_content contains '5TH -' or rich_content contains 'REDIRECTS TO' or rich_content contains 'redirects to' -%}
+                  <p>{{ rich_content }}</p>
+                {%- endunless -%}
+              </div>
             </div>
           </div>
         </a>
