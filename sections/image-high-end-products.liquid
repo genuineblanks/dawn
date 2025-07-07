@@ -181,8 +181,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                /* FIXED: Changed to square dimensions and proper CSS handling */
-                {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 300 | image_tag: class: 'luxury-product-image' }}
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
                    <h2 class="banner__heading luxury-product-title inline-richtext" >
@@ -202,8 +201,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                /* FIXED: Changed to square dimensions and proper CSS handling */
-                {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 300 | image_tag: class: 'luxury-product-image' }}
+                {{ block.settings.product_image | default: productObj.featured_image | image_url:width:200, height:300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
                    <h2 class="banner__heading luxury-product-title inline-richtext" >
@@ -259,7 +257,7 @@
     {% endif %}
   </div>
 </div>
-<!-- FIXED: Updated CSS for square product images with proper aspect ratio control -->
+<!-- dynamic css for banner products -->
 {% assign totalProd = 8 | minus:productBlockCount  %}
 {% style %}
   .product-count-{{productBlockCount}} .banner__box{
@@ -268,33 +266,7 @@
   ul.banner__box {list-style: none; display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; padding: 0;}
   .product-count-{{productBlockCount}} ul.banner__box li {display: block; width: calc(100%/{{ totalProd }}.1); margin: 0 !important;}
   .product-count-{{productBlockCount}} ul.banner__box li:nth-child({{ totalProd | minus:1 }}) {margin-left: 28px !important;}
-  
-  /* FIXED: Square aspect ratio for product images */
-  .luxury-product-image-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1; /* This creates a perfect square container */
-    overflow: hidden;
-    background: #f8f8f8;
-  }
-  
-  .luxury-product-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Changed from 'contain' to 'cover' to fill square without stretching */
-    object-position: center; /* Centers the image within the square */
-    border: 0 none;
-    margin: 0;
-  }
-  
-  /* Remove the old max-height constraint that was causing issues */
-  ul.banner__box li.item-banner img { 
-    border: 0 none;
-    margin: 0;
-  }
+  ul.banner__box li.item-banner img { max-height: 165px; margin: 0; object-fit: contain; border: 0 none;}
   
   .product-count-{{productBlockCount}} ul.banner__box li {width: calc(100%/3.2); margin: 0 !important;}
   .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
@@ -302,12 +274,6 @@
   .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
   .high-end-collection{
     display: none;
-  }
-  
-  /* Optional: Add hover effect for better UX */
-  .luxury-product-image-container:hover .luxury-product-image {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
   }
 {% endstyle %}
 
