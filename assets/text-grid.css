@@ -16,7 +16,7 @@
   height: calc(100% - 152px);
 }
 
-/* Button styling - KEEP ORIGINAL STRUCTURE, ADD PREMIUM EFFECTS */
+/* Button styling - PREMIUM GLASS MORPHISM BUTTONS */
 .textGrid a {
   display: block;
   width: 100%;
@@ -29,17 +29,34 @@
   transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
   border: none;
   outline: none;
+  
+  /* Glass Morphism Effect */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* Premium hover effects */
+/* Premium hover effects - Enhanced Glass */
 .textGrid a:hover {
-  transform: translateY(-4px) scale(1.005);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  transform: translateY(-8px) scale(1.005);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   filter: brightness(1.08) contrast(1.05);
   z-index: 10;
 }
 
-/* Premium overlay system */
+/* Enhanced glass overlay system */
 .textGrid a::before {
   content: '';
   position: absolute;
@@ -47,15 +64,24 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+  background: 
+    linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(0, 0, 0, 0.05) 100%);
   z-index: 2;
   transition: all 0.6s ease;
   opacity: 0;
+  border-radius: 14px;
 }
 
 .textGrid a:hover::before {
   opacity: 1;
-  background: radial-gradient(circle at center, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%);
+  background: 
+    linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(0, 0, 0, 0.02) 100%);
 }
 
 /* Shimmer effect */
@@ -75,17 +101,19 @@
   left: 100%;
 }
 
-/* Grid layout - ORIGINAL STRUCTURE */
+/* Grid layout - PERFECT CENTER ALIGNMENT */
 .textGrid .grid {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
+  height: 100%;
   max-width: 1200px;
   margin: 0 auto;
   gap: 30px;
   position: relative;
   z-index: 10;
+  min-height: 100%;
 }
 
 .textGrid .grid__item {
@@ -94,15 +122,20 @@
   padding: 0 10px;
   position: relative;
   z-index: 15;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-/* PREMIUM LUXURY TYPOGRAPHY SYSTEM - BOLD & CLEAN */
+/* PREMIUM LUXURY TYPOGRAPHY SYSTEM - PERFECT CENTER */
 .textGrid .grid__item h3 {
   font-family: 'Futura', 'Avenir Next', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
   font-size: 3.5rem;
-  line-height: 0.9;
-  margin: 0 0 20px 0;
+  line-height: 1.1;
+  margin: 0;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   word-wrap: break-word;
@@ -112,6 +145,8 @@
   transition: all 0.5s ease;
   position: relative;
   font-variant: small-caps;
+  text-align: center;
+  align-self: center;
 }
 
 /* Subtitle styling (second grid item) */
@@ -120,13 +155,15 @@
   font-weight: 600;
   font-size: 1.3rem;
   line-height: 1.4;
-  margin: 0 0 25px 0;
+  margin: 0;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: #000000 !important;
   text-shadow: none;
   opacity: 1;
   font-variant: normal;
+  text-align: center;
+  align-self: center;
 }
 
 .textGrid .grid__item p,
@@ -143,6 +180,8 @@
   text-shadow: none;
   transition: all 0.3s ease;
   font-feature-settings: "kern" 1, "liga" 1;
+  text-align: center;
+  align-self: center;
 }
 
 .textGrid a:hover .grid__item h3 {
@@ -240,32 +279,51 @@ body .textGrid a[href]:nth-child(10) {
   background: linear-gradient(135deg, #505050 0%, #404040 25%, #303030 50%, #202020 75%, #000000 100%) !important;
 }
 
-/* Responsive - PREMIUM TYPOGRAPHY SCALING */
+/* Responsive - PERFECT CENTER ALIGNMENT */
 @media screen and (max-width: 768px) {
   .textGrid a {
     padding: 40px 20px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .textGrid a:hover {
+    transform: translateY(-6px) scale(1.005);
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .textGrid a::before {
+    border-radius: 10px;
   }
   
   .textGrid .grid {
     flex-direction: column;
     gap: 25px;
+    justify-content: center;
+    align-items: center;
   }
   
   .textGrid .grid__item {
     width: 100%;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   
   .textGrid .grid__item h3 {
     font-size: 2.8rem;
     letter-spacing: 0.2em;
-    margin-bottom: 15px;
+    margin: 0;
+    line-height: 1.1;
   }
   
   .textGrid .grid__item:nth-child(2) h3 {
     font-size: 1.2rem;
     letter-spacing: 0.25em;
-    margin-bottom: 20px;
+    margin: 0;
   }
   
   .textGrid .grid__item p,
@@ -273,10 +331,25 @@ body .textGrid a[href]:nth-child(10) {
     font-size: 1.2rem;
     letter-spacing: 0.06em;
     line-height: 1.6;
+    margin: 0;
   }
 }
 
 @media screen and (max-width: 480px) {
+  .textGrid a {
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .textGrid a:hover {
+    transform: translateY(-4px) scale(1.005);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .textGrid a::before {
+    border-radius: 8px;
+  }
+  
   .textGrid .grid__item h3 {
     font-size: 2.2rem;
     letter-spacing: 0.18em;
