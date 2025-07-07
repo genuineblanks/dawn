@@ -181,7 +181,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                {%- comment -%} FIXED: Changed to square dimensions and proper CSS handling {%- endcomment -%}
+                /* FIXED: Changed to square dimensions and proper CSS handling */
                 {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
@@ -202,7 +202,7 @@
               <div class="banner__text products luxury-product-card rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
                 <a href="{{ productObj.url }}" class="luxury-product-link">
                 <div class="luxury-product-image-container">
-                {%- comment -%} FIXED: Changed to square dimensions and proper CSS handling {%- endcomment -%}
+                /* FIXED: Changed to square dimensions and proper CSS handling */
                 {{ block.settings.product_image | default: productObj.featured_image | image_url: width: 300 | image_tag: class: 'luxury-product-image' }}
                 </div>
                 {% if block.settings.show_title != false %}
