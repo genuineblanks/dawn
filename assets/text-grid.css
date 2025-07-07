@@ -96,11 +96,11 @@
   z-index: 15;
 }
 
-/* PREMIUM LUXURY TYPOGRAPHY SYSTEM */
+/* PREMIUM LUXURY TYPOGRAPHY SYSTEM - BOLD & CLEAN */
 .textGrid .grid__item h3 {
   font-family: 'Futura', 'Avenir Next', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 200;
-  font-size: 2.8rem;
+  font-weight: 700;
+  font-size: 3.5rem;
   line-height: 0.9;
   margin: 0 0 20px 0;
   letter-spacing: 0.25em;
@@ -108,10 +108,7 @@
   word-wrap: break-word;
   hyphens: auto;
   color: #000000 !important;
-  text-shadow: 
-    0 2px 4px rgba(255,255,255,0.9),
-    0 4px 8px rgba(255,255,255,0.7),
-    0 1px 0px rgba(0,0,0,0.1);
+  text-shadow: none;
   transition: all 0.5s ease;
   position: relative;
   font-variant: small-caps;
@@ -120,34 +117,30 @@
 /* Subtitle styling (second grid item) */
 .textGrid .grid__item:nth-child(2) h3 {
   font-family: 'Futura', 'Avenir Next', 'Century Gothic', sans-serif;
-  font-weight: 300;
-  font-size: 1.1rem;
+  font-weight: 600;
+  font-size: 1.3rem;
   line-height: 1.4;
   margin: 0 0 25px 0;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: #000000 !important;
-  text-shadow: 
-    0 1px 2px rgba(255,255,255,0.8),
-    0 2px 4px rgba(255,255,255,0.6);
-  opacity: 0.85;
+  text-shadow: none;
+  opacity: 1;
   font-variant: normal;
 }
 
 .textGrid .grid__item p,
 .textGrid .grid__item div {
   font-family: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
-  font-weight: 300;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 1.3rem;
   line-height: 1.7;
   margin: 0;
   letter-spacing: 0.08em;
   word-wrap: break-word;
   hyphens: auto;
   color: #000000 !important;
-  text-shadow: 
-    0 1px 3px rgba(255,255,255,0.8),
-    0 2px 6px rgba(255,255,255,0.6);
+  text-shadow: none;
   transition: all 0.3s ease;
   font-feature-settings: "kern" 1, "liga" 1;
 }
@@ -155,19 +148,14 @@
 .textGrid a:hover .grid__item h3 {
   transform: scale(1.03);
   letter-spacing: 0.28em;
-  text-shadow: 
-    0 3px 6px rgba(255,255,255,1),
-    0 6px 12px rgba(255,255,255,0.8),
-    0 1px 0px rgba(0,0,0,0.2);
+  text-shadow: none;
 }
 
 .textGrid a:hover .grid__item p,
 .textGrid a:hover .grid__item div {
   transform: translateY(-3px);
   letter-spacing: 0.1em;
-  text-shadow: 
-    0 2px 6px rgba(255,255,255,0.9),
-    0 4px 12px rgba(255,255,255,0.7);
+  text-shadow: none;
 }
 
 /* SPECTACULAR GRADIENT PROGRESSIONS - ORIGINAL nth-child STRUCTURE */
@@ -269,20 +257,20 @@ body .textGrid a[href]:nth-child(10) {
   }
   
   .textGrid .grid__item h3 {
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     letter-spacing: 0.2em;
     margin-bottom: 15px;
   }
   
   .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 1rem;
+    font-size: 1.2rem;
     letter-spacing: 0.25em;
     margin-bottom: 20px;
   }
   
   .textGrid .grid__item p,
   .textGrid .grid__item div {
-    font-size: 1rem;
+    font-size: 1.2rem;
     letter-spacing: 0.06em;
     line-height: 1.6;
   }
@@ -290,18 +278,18 @@ body .textGrid a[href]:nth-child(10) {
 
 @media screen and (max-width: 480px) {
   .textGrid .grid__item h3 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     letter-spacing: 0.18em;
   }
   
   .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     letter-spacing: 0.22em;
   }
   
   .textGrid .grid__item p,
   .textGrid .grid__item div {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     letter-spacing: 0.05em;
   }
 }
