@@ -6,19 +6,22 @@
   background: transparent;
 }
 
-/* Full width clickable sections */
-.textGrid a {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 80px 60px;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  border: none;
+/* Full width clickable sections - FORCE OVERRIDE */
+.textGrid a,
+.text-grid .textGrid a,
+section.text-grid .textGrid a {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 80px 60px !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  position: relative !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
 /* Grid layout inside each button */
@@ -38,79 +41,125 @@
   position: relative;
 }
 
-/* Typography */
-.textGrid .grid__item h3 {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.4rem;
-  line-height: 1.3;
-  margin: 0 0 12px 0;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: inherit;
+/* Typography - FORCE OVERRIDE */
+.textGrid .grid__item h3,
+.text-grid .textGrid .grid__item h3,
+section.text-grid .textGrid .grid__item h3 {
+  font-family: 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.4rem !important;
+  line-height: 1.3 !important;
+  margin: 0 0 12px 0 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: inherit !important;
 }
 
 .textGrid .grid__item p,
-.textGrid .grid__item div {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin: 0;
-  color: inherit;
-  opacity: 0.8;
-  letter-spacing: 0.02em;
+.textGrid .grid__item div,
+.text-grid .textGrid .grid__item p,
+.text-grid .textGrid .grid__item div,
+section.text-grid .textGrid .grid__item p,
+section.text-grid .textGrid .grid__item div {
+  font-family: 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  color: inherit !important;
+  opacity: 0.8 !important;
+  letter-spacing: 0.02em !important;
 }
 
-/* Progressive gradient styling - White to Black progression */
-.textGrid a:nth-child(1) {
-  background: #ffffff;
-  color: #1a1a1a;
+/* Progressive gradient styling - White to Black progression - FORCE OVERRIDE */
+.textGrid a:nth-child(1),
+.text-grid .textGrid a:nth-child(1),
+section.text-grid .textGrid a:nth-child(1) {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  color: #1a1a1a !important;
 }
 
-.textGrid a:nth-child(2) {
-  background: #f5f5f5;
-  color: #1a1a1a;
+.textGrid a:nth-child(2),
+.text-grid .textGrid a:nth-child(2),
+section.text-grid .textGrid a:nth-child(2) {
+  background: #f5f5f5 !important;
+  background-color: #f5f5f5 !important;
+  background-image: none !important;
+  color: #1a1a1a !important;
 }
 
-.textGrid a:nth-child(3) {
-  background: #e8e8e8;
-  color: #2a2a2a;
+.textGrid a:nth-child(3),
+.text-grid .textGrid a:nth-child(3),
+section.text-grid .textGrid a:nth-child(3) {
+  background: #e8e8e8 !important;
+  background-color: #e8e8e8 !important;
+  background-image: none !important;
+  color: #2a2a2a !important;
 }
 
-.textGrid a:nth-child(4) {
-  background: #d0d0d0;
-  color: #3a3a3a;
+.textGrid a:nth-child(4),
+.text-grid .textGrid a:nth-child(4),
+section.text-grid .textGrid a:nth-child(4) {
+  background: #d0d0d0 !important;
+  background-color: #d0d0d0 !important;
+  background-image: none !important;
+  color: #3a3a3a !important;
 }
 
-.textGrid a:nth-child(5) {
-  background: #b8b8b8;
-  color: #ffffff;
+.textGrid a:nth-child(5),
+.text-grid .textGrid a:nth-child(5),
+section.text-grid .textGrid a:nth-child(5) {
+  background: #b8b8b8 !important;
+  background-color: #b8b8b8 !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
-.textGrid a:nth-child(6) {
-  background: #999999;
-  color: #ffffff;
+.textGrid a:nth-child(6),
+.text-grid .textGrid a:nth-child(6),
+section.text-grid .textGrid a:nth-child(6) {
+  background: #999999 !important;
+  background-color: #999999 !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
-.textGrid a:nth-child(7) {
-  background: #777777;
-  color: #ffffff;
+.textGrid a:nth-child(7),
+.text-grid .textGrid a:nth-child(7),
+section.text-grid .textGrid a:nth-child(7) {
+  background: #777777 !important;
+  background-color: #777777 !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
-.textGrid a:nth-child(8) {
-  background: #555555;
-  color: #ffffff;
+.textGrid a:nth-child(8),
+.text-grid .textGrid a:nth-child(8),
+section.text-grid .textGrid a:nth-child(8) {
+  background: #555555 !important;
+  background-color: #555555 !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
-.textGrid a:nth-child(9) {
-  background: #333333;
-  color: #ffffff;
+.textGrid a:nth-child(9),
+.text-grid .textGrid a:nth-child(9),
+section.text-grid .textGrid a:nth-child(9) {
+  background: #333333 !important;
+  background-color: #333333 !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
-.textGrid a:nth-child(10) {
-  background: #1a1a1a;
-  color: #ffffff;
+.textGrid a:nth-child(10),
+.text-grid .textGrid a:nth-child(10),
+section.text-grid .textGrid a:nth-child(10) {
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
+  background-image: none !important;
+  color: #ffffff !important;
 }
 
 /* Enhanced hover animations - Smooth pop effect */
