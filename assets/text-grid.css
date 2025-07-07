@@ -1,9 +1,11 @@
-/* Text Grid Section Styling */
-.textGrid {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: transparent;
+/* Text Grid Section Styling - FORCE OVERRIDE */
+.textGrid,
+.text-grid .textGrid,
+section.text-grid .textGrid {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
 }
 
 /* Full width clickable sections - FORCE OVERRIDE */
@@ -24,21 +26,24 @@ section.text-grid .textGrid a {
   border-radius: 0 !important;
 }
 
-/* Grid layout inside each button */
-.textGrid .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
-  align-items: start;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-width: 1200px;
-  margin: 0 auto;
+/* Grid layout inside each button - FORCE OVERRIDE */
+.textGrid .grid,
+.text-grid .textGrid .grid,
+section.text-grid .textGrid .grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 40px !important;
+  align-items: start !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  max-width: 1200px !important;
 }
 
-.textGrid .grid__item {
-  position: relative;
+.textGrid .grid__item,
+.text-grid .textGrid .grid__item,
+section.text-grid .textGrid .grid__item {
+  position: relative !important;
 }
 
 /* Typography - FORCE OVERRIDE */
@@ -162,137 +167,179 @@ section.text-grid .textGrid a:nth-child(10) {
   color: #ffffff !important;
 }
 
-/* Enhanced hover animations - Smooth pop effect */
-.textGrid a:hover {
-  transform: translateY(-8px) scale(1.005);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Enhanced hover animations - Smooth pop effect - FORCE OVERRIDE */
+.textGrid a:hover,
+.text-grid .textGrid a:hover,
+section.text-grid .textGrid a:hover {
+  transform: translateY(-8px) scale(1.005) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+  z-index: 10 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.textGrid a:active {
-  transform: translateY(-4px) scale(1.002);
-  transition-duration: 0.15s;
+.textGrid a:active,
+.text-grid .textGrid a:active,
+section.text-grid .textGrid a:active {
+  transform: translateY(-4px) scale(1.002) !important;
+  transition-duration: 0.15s !important;
 }
 
-/* Click animation overlay - Better ripple effect */
-.textGrid a::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
+/* Click animation overlay - Better ripple effect - FORCE OVERRIDE */
+.textGrid a::before,
+.text-grid .textGrid a::before,
+section.text-grid .textGrid a::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 70%) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0 !important;
 }
 
-.textGrid a.clicked::before {
-  width: 600px;
-  height: 600px;
-  opacity: 1;
+.textGrid a.clicked::before,
+.text-grid .textGrid a.clicked::before,
+section.text-grid .textGrid a.clicked::before {
+  width: 600px !important;
+  height: 600px !important;
+  opacity: 1 !important;
 }
 
-/* Enhanced loading animation */
+/* Enhanced loading animation - FORCE OVERRIDE */
 @keyframes fadeInScale {
   0% {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
+    opacity: 0 !important;
+    transform: translateY(40px) scale(0.95) !important;
   }
   100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
   }
 }
 
-.textGrid a {
-  animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  opacity: 0;
+.textGrid a,
+.text-grid .textGrid a,
+section.text-grid .textGrid a {
+  animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  opacity: 0 !important;
 }
 
-.textGrid a:nth-child(1) { animation-delay: 0.1s; }
-.textGrid a:nth-child(2) { animation-delay: 0.15s; }
-.textGrid a:nth-child(3) { animation-delay: 0.2s; }
-.textGrid a:nth-child(4) { animation-delay: 0.25s; }
-.textGrid a:nth-child(5) { animation-delay: 0.3s; }
-.textGrid a:nth-child(6) { animation-delay: 0.35s; }
-.textGrid a:nth-child(7) { animation-delay: 0.4s; }
-.textGrid a:nth-child(8) { animation-delay: 0.45s; }
-.textGrid a:nth-child(9) { animation-delay: 0.5s; }
-.textGrid a:nth-child(10) { animation-delay: 0.55s; }
+.textGrid a:nth-child(1) { animation-delay: 0.1s !important; }
+.textGrid a:nth-child(2) { animation-delay: 0.15s !important; }
+.textGrid a:nth-child(3) { animation-delay: 0.2s !important; }
+.textGrid a:nth-child(4) { animation-delay: 0.25s !important; }
+.textGrid a:nth-child(5) { animation-delay: 0.3s !important; }
+.textGrid a:nth-child(6) { animation-delay: 0.35s !important; }
+.textGrid a:nth-child(7) { animation-delay: 0.4s !important; }
+.textGrid a:nth-child(8) { animation-delay: 0.45s !important; }
+.textGrid a:nth-child(9) { animation-delay: 0.5s !important; }
+.textGrid a:nth-child(10) { animation-delay: 0.55s !important; }
 
-/* Responsive design */
+/* Responsive design - FORCE OVERRIDE */
 @media screen and (max-width: 1024px) {
-  .textGrid a {
-    padding: 60px 40px;
+  .textGrid a,
+  .text-grid .textGrid a,
+  section.text-grid .textGrid a {
+    padding: 60px 40px !important;
   }
   
-  .textGrid .grid {
-    gap: 30px;
+  .textGrid .grid,
+  .text-grid .textGrid .grid,
+  section.text-grid .textGrid .grid {
+    gap: 30px !important;
   }
 }
 
 @media screen and (max-width: 768px) {
-  .textGrid a {
-    padding: 50px 20px;
+  .textGrid a,
+  .text-grid .textGrid a,
+  section.text-grid .textGrid a {
+    padding: 50px 20px !important;
   }
   
-  .textGrid .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    text-align: center;
+  .textGrid .grid,
+  .text-grid .textGrid .grid,
+  section.text-grid .textGrid .grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    text-align: center !important;
   }
   
-  .textGrid .grid__item h3 {
-    font-size: 1.2rem;
+  .textGrid .grid__item h3,
+  .text-grid .textGrid .grid__item h3,
+  section.text-grid .textGrid .grid__item h3 {
+    font-size: 1.2rem !important;
   }
   
   .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    font-size: 0.85rem;
+  .textGrid .grid__item div,
+  .text-grid .textGrid .grid__item p,
+  .text-grid .textGrid .grid__item div,
+  section.text-grid .textGrid .grid__item p,
+  section.text-grid .textGrid .grid__item div {
+    font-size: 0.85rem !important;
   }
   
-  .textGrid a:hover {
-    transform: translateY(-4px) scale(1.002);
+  .textGrid a:hover,
+  .text-grid .textGrid a:hover,
+  section.text-grid .textGrid a:hover {
+    transform: translateY(-4px) scale(1.002) !important;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .textGrid a {
-    padding: 40px 16px;
+  .textGrid a,
+  .text-grid .textGrid a,
+  section.text-grid .textGrid a {
+    padding: 40px 16px !important;
   }
   
-  .textGrid .grid__item h3 {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
+  .textGrid .grid__item h3,
+  .text-grid .textGrid .grid__item h3,
+  section.text-grid .textGrid .grid__item h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
   }
 }
 
-/* Enhanced typography */
+/* Enhanced typography - FORCE OVERRIDE */
 .textGrid .grid__item p strong,
-.textGrid .grid__item div strong {
-  font-weight: 600;
-  opacity: 1;
+.textGrid .grid__item div strong,
+.text-grid .textGrid .grid__item p strong,
+.text-grid .textGrid .grid__item div strong,
+section.text-grid .textGrid .grid__item p strong,
+section.text-grid .textGrid .grid__item div strong {
+  font-weight: 600 !important;
+  opacity: 1 !important;
 }
 
 .textGrid .grid__item p em,
-.textGrid .grid__item div em {
-  font-style: italic;
-  opacity: 0.7;
+.textGrid .grid__item div em,
+.text-grid .textGrid .grid__item p em,
+.text-grid .textGrid .grid__item div em,
+section.text-grid .textGrid .grid__item p em,
+section.text-grid .textGrid .grid__item div em {
+  font-style: italic !important;
+  opacity: 0.7 !important;
 }
 
-/* Improved focus states for accessibility */
-.textGrid a:focus {
-  outline: 2px solid rgba(26, 26, 26, 0.3);
-  outline-offset: 4px;
+/* Improved focus states for accessibility - FORCE OVERRIDE */
+.textGrid a:focus,
+.text-grid .textGrid a:focus,
+section.text-grid .textGrid a:focus {
+  outline: 2px solid rgba(26, 26, 26, 0.3) !important;
+  outline-offset: 4px !important;
 }
 
-/* Smooth transitions for all interactive elements */
-.textGrid a * {
-  transition: inherit;
+/* Smooth transitions for all interactive elements - FORCE OVERRIDE */
+.textGrid a *,
+.text-grid .textGrid a *,
+section.text-grid .textGrid a * {
+  transition: inherit !important;
 }
