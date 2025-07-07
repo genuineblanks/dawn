@@ -3585,9 +3585,3 @@ details-disclosure > details {
 .card__media .media {
   aspect-ratio: 1 / 1 !important;
 }
-
-.card__media .media img {
-  object-fit: cover !important;
-  width: 100% !important;
-  height: 100% !important;
-}
