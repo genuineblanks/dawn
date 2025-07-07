@@ -68,22 +68,27 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* Grid layout inside each button */
+/* Grid layout inside each button - FIXED */
 .textGrid .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
-  align-items: start;
-  list-style: none;
-  padding: 0;
-  margin: 0 auto;
-  max-width: 1200px;
-  position: relative;
-  z-index: 2;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  list-style: none !important;
+  gap: 40px !important;
 }
 
 .textGrid .grid__item {
   position: relative;
+  flex: 1;
+  text-align: center;
+}
+
+/* Center the middle item specifically */
+.textGrid .grid__item:nth-child(2) {
+  text-align: center !important;
 }
 
 /* Force text visibility - Override all conflicting styles */
@@ -426,53 +431,48 @@
   background: inherit !important;
 }
 
-/* Additional text contrast enhancement */
-.textGrid a:nth-child(1) .grid__item h3,
-.textGrid a:nth-child(2) .grid__item h3,
-.textGrid a:nth-child(3) .grid__item h3,
-.textGrid a:nth-child(4) .grid__item h3 {
+/* Force text visibility and proper colors */
+.textGrid a:nth-child(1) h3,
+.textGrid a:nth-child(1) p,
+.textGrid a:nth-child(1) div {
   color: #000000 !important;
-  font-weight: 800;
-  text-shadow: none;
 }
 
-.textGrid a:nth-child(1) .grid__item p,
-.textGrid a:nth-child(1) .grid__item div,
-.textGrid a:nth-child(2) .grid__item p,
-.textGrid a:nth-child(2) .grid__item div,
-.textGrid a:nth-child(3) .grid__item p,
-.textGrid a:nth-child(3) .grid__item div,
-.textGrid a:nth-child(4) .grid__item p,
-.textGrid a:nth-child(4) .grid__item div {
+.textGrid a:nth-child(2) h3,
+.textGrid a:nth-child(2) p,
+.textGrid a:nth-child(2) div {
   color: #000000 !important;
-  opacity: 0.8;
-  text-shadow: none;
 }
 
-.textGrid a:nth-child(5) .grid__item h3,
-.textGrid a:nth-child(6) .grid__item h3,
-.textGrid a:nth-child(7) .grid__item h3,
-.textGrid a:nth-child(8) .grid__item h3,
-.textGrid a:nth-child(9) .grid__item h3,
-.textGrid a:nth-child(10) .grid__item h3 {
-  color: #ffffff !important;
-  font-weight: 800;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+.textGrid a:nth-child(3) h3,
+.textGrid a:nth-child(3) p,
+.textGrid a:nth-child(3) div {
+  color: #000000 !important;
 }
 
-.textGrid a:nth-child(5) .grid__item p,
-.textGrid a:nth-child(5) .grid__item div,
-.textGrid a:nth-child(6) .grid__item p,
-.textGrid a:nth-child(6) .grid__item div,
-.textGrid a:nth-child(7) .grid__item p,
-.textGrid a:nth-child(7) .grid__item div,
-.textGrid a:nth-child(8) .grid__item p,
-.textGrid a:nth-child(8) .grid__item div,
-.textGrid a:nth-child(9) .grid__item p,
-.textGrid a:nth-child(9) .grid__item div,
-.textGrid a:nth-child(10) .grid__item p,
-.textGrid a:nth-child(10) .grid__item div {
+.textGrid a:nth-child(4) h3,
+.textGrid a:nth-child(4) p,
+.textGrid a:nth-child(4) div {
+  color: #000000 !important;
+}
+
+.textGrid a:nth-child(5) h3,
+.textGrid a:nth-child(5) p,
+.textGrid a:nth-child(5) div,
+.textGrid a:nth-child(6) h3,
+.textGrid a:nth-child(6) p,
+.textGrid a:nth-child(6) div,
+.textGrid a:nth-child(7) h3,
+.textGrid a:nth-child(7) p,
+.textGrid a:nth-child(7) div,
+.textGrid a:nth-child(8) h3,
+.textGrid a:nth-child(8) p,
+.textGrid a:nth-child(8) div,
+.textGrid a:nth-child(9) h3,
+.textGrid a:nth-child(9) p,
+.textGrid a:nth-child(9) div,
+.textGrid a:nth-child(10) h3,
+.textGrid a:nth-child(10) p,
+.textGrid a:nth-child(10) div {
   color: #ffffff !important;
-  opacity: 0.95;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
