@@ -1,4 +1,4 @@
-/* Text Grid - Complete Remake from Scratch */
+/* Text Grid - Complete Remake with Light Grey to Black Progression */
 
 /* Container */
 .textGrid {
@@ -45,7 +45,7 @@
   padding: 0 10px;
 }
 
-/* Typography - NO text overflow */
+/* Typography - ALL TEXT STAYS BLACK */
 .textGrid .grid__item h3 {
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
@@ -56,6 +56,7 @@
   text-transform: uppercase;
   word-wrap: break-word;
   hyphens: auto;
+  color: #000000 !important;
 }
 
 .textGrid .grid__item p,
@@ -68,128 +69,129 @@
   letter-spacing: 0.05em;
   word-wrap: break-word;
   hyphens: auto;
+  color: #000000 !important;
 }
 
-/* WHITE TO BLACK COLOR PROGRESSION */
+/* LIGHT GREY TO BLACK COLOR PROGRESSION - ALL TEXT REMAINS BLACK */
 
-/* Button 1 - Pure White */
+/* Button 1 - Very Light Grey */
 .textGrid a:nth-child(1) {
-  background: #ffffff;
+  background: #f8f8f8;
   color: #000000;
 }
 
 .textGrid a:nth-child(1) h3,
 .textGrid a:nth-child(1) p,
 .textGrid a:nth-child(1) div {
-  color: #000000;
+  color: #000000 !important;
 }
 
-/* Button 2 - Very Light Grey */
+/* Button 2 - Light Grey */
 .textGrid a:nth-child(2) {
-  background: #f5f5f5;
+  background: #e8e8e8;
   color: #000000;
 }
 
 .textGrid a:nth-child(2) h3,
 .textGrid a:nth-child(2) p,
 .textGrid a:nth-child(2) div {
-  color: #000000;
+  color: #000000 !important;
 }
 
-/* Button 3 - Light Grey */
+/* Button 3 - Medium Light Grey */
 .textGrid a:nth-child(3) {
-  background: #e8e8e8;
+  background: #d8d8d8;
   color: #000000;
 }
 
 .textGrid a:nth-child(3) h3,
 .textGrid a:nth-child(3) p,
 .textGrid a:nth-child(3) div {
-  color: #000000;
+  color: #000000 !important;
 }
 
-/* Button 4 - Medium Light Grey */
+/* Button 4 - Medium Grey */
 .textGrid a:nth-child(4) {
-  background: #d0d0d0;
+  background: #c8c8c8;
   color: #000000;
 }
 
 .textGrid a:nth-child(4) h3,
 .textGrid a:nth-child(4) p,
 .textGrid a:nth-child(4) div {
-  color: #000000;
+  color: #000000 !important;
 }
 
-/* Button 5 - Medium Grey */
+/* Button 5 - Darker Medium Grey */
 .textGrid a:nth-child(5) {
   background: #b8b8b8;
-  color: #ffffff;
+  color: #000000;
 }
 
 .textGrid a:nth-child(5) h3,
 .textGrid a:nth-child(5) p,
 .textGrid a:nth-child(5) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Button 6 - Dark Medium Grey */
 .textGrid a:nth-child(6) {
-  background: #999999;
-  color: #ffffff;
+  background: #a8a8a8;
+  color: #000000;
 }
 
 .textGrid a:nth-child(6) h3,
 .textGrid a:nth-child(6) p,
 .textGrid a:nth-child(6) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
-/* Button 7 - Dark Grey */
+/* Button 7 - Darker Grey */
 .textGrid a:nth-child(7) {
-  background: #777777;
-  color: #ffffff;
+  background: #888888;
+  color: #000000;
 }
 
 .textGrid a:nth-child(7) h3,
 .textGrid a:nth-child(7) p,
 .textGrid a:nth-child(7) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Button 8 - Very Dark Grey */
 .textGrid a:nth-child(8) {
-  background: #555555;
-  color: #ffffff;
+  background: #666666;
+  color: #000000;
 }
 
 .textGrid a:nth-child(8) h3,
 .textGrid a:nth-child(8) p,
 .textGrid a:nth-child(8) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Button 9 - Almost Black */
 .textGrid a:nth-child(9) {
   background: #333333;
-  color: #ffffff;
+  color: #000000;
 }
 
 .textGrid a:nth-child(9) h3,
 .textGrid a:nth-child(9) p,
 .textGrid a:nth-child(9) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Button 10 - Pure Black */
 .textGrid a:nth-child(10) {
   background: #000000;
-  color: #ffffff;
+  color: #000000;
 }
 
 .textGrid a:nth-child(10) h3,
 .textGrid a:nth-child(10) p,
 .textGrid a:nth-child(10) div {
-  color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Hover effects */
@@ -224,8 +226,19 @@
   }
 }
 
-/* Force override any conflicting styles */
+/* Force override any conflicting styles and ensure all text stays black */
 .home-section .textGrid a:nth-child(2n+1),
 .home-section .textGrid a:hover {
   background: inherit !important;
+}
+
+.textGrid * {
+  color: #000000 !important;
+}
+
+/* Additional overrides to ensure black text everywhere */
+.textGrid a *,
+.textGrid .grid *,
+.textGrid .grid__item * {
+  color: #000000 !important;
 }
