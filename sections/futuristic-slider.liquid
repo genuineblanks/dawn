@@ -13,6 +13,8 @@
     padding: 0;
     background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
     overflow: hidden;
+    opacity: 0;
+    animation: sectionFadeIn-{{ section.id }} 1.5s ease-out 0.3s forwards;
   }
   
   .factory-section-{{ section.id }}::before {
@@ -28,128 +30,15 @@
     z-index: 1;
   }
   
-  /* Hero Section */
-  .factory-hero-{{ section.id }} {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.hero_overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.hero_overlay_opacity | minus: 15 }})), 
-                {% if section.settings.hero_bg_image %}url('{{ section.settings.hero_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #1a1a1a, #2d2d2d){% endif %};
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-  }
-  
-  .factory-hero-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
-    z-index: 1;
-  }
-  
-  .factory-hero-content-{{ section.id }} {
-    text-align: center;
-    z-index: 10;
-    position: relative;
-    max-width: 800px;
-    padding: 3rem;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-  }
-  
-  .factory-hero-title-{{ section.id }} {
-    font-size: {{ section.settings.hero_title_size }}rem;
-    font-weight: 200;
-    letter-spacing: 0.4em;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.8);
-    font-family: var(--font-heading-family);
-    color: {{ section.settings.hero_text_color }};
-    position: relative;
-  }
-  
-  .factory-hero-title-{{ section.id }}::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-  }
-  
-  .factory-hero-subtitle-{{ section.id }} {
-    font-size: {{ section.settings.hero_subtitle_size }}rem;
-    font-weight: 300;
-    letter-spacing: 0.25em;
-    opacity: 0.9;
-    margin-bottom: 2.5rem;
-    text-transform: uppercase;
-    color: {{ section.settings.hero_text_color }};
-  }
-  
-  .factory-hero-description-{{ section.id }} {
-    font-size: {{ section.settings.hero_description_size }}rem;
-    line-height: 1.8;
-    opacity: 0.85;
-    max-width: 600px;
-    margin: 0 auto 3rem;
-    font-weight: 300;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    color: {{ section.settings.hero_text_color }};
-  }
-  
-  .factory-scroll-hint-{{ section.id }} {
-    position: absolute;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: {{ section.settings.hero_text_color }};
-    z-index: 10;
-    animation: fadeInOut-{{ section.id }} 3s infinite;
-  }
-  
-  .factory-scroll-text-{{ section.id }} {
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    opacity: 0.8;
-  }
-  
-  .factory-scroll-arrow-{{ section.id }} {
-    width: 2px;
-    height: 30px;
-    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8));
-    position: relative;
-    animation: scrollBounce-{{ section.id }} 2s infinite;
-  }
-  
-  @keyframes fadeInOut-{{ section.id }} {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-  
-  @keyframes scrollBounce-{{ section.id }} {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(10px); }
+  @keyframes sectionFadeIn-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   /* Main Content Wrapper */
@@ -171,6 +60,19 @@
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    opacity: 0;
+    animation: filterSlideDown-{{ section.id }} 1s ease-out 0.8s forwards;
+  }
+  
+  @keyframes filterSlideDown-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .factory-filter-tabs-{{ section.id }} {
@@ -178,7 +80,7 @@
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 50px;
+    border-radius: 8px;
     padding: 8px;
     gap: 8px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -192,7 +94,7 @@
     padding: 16px 32px;
     background: transparent;
     border: none;
-    border-radius: 40px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     color: rgba(255, 255, 255, 0.7);
@@ -245,6 +147,19 @@
   .factory-gallery-{{ section.id }} {
     padding: 4rem 0;
     position: relative;
+    opacity: 0;
+    animation: galleryFadeIn-{{ section.id }} 1.2s ease-out 1.2s forwards;
+  }
+  
+  @keyframes galleryFadeIn-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .factory-gallery-wrapper-{{ section.id }} {
@@ -253,17 +168,18 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
+    align-items: stretch;
   }
   
   /* Main Image Display */
   .factory-main-display-{{ section.id }} {
     flex: 2.5;
-    position: relative;
+    min-width: 0;
   }
   
   .factory-main-container-{{ section.id }} {
     position: relative;
-    border-radius: 20px;
+    border-radius: 8px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(25px);
@@ -293,7 +209,7 @@
     height: 100%;
     opacity: 0;
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 20px;
+    border-radius: 8px;
     overflow: hidden;
   }
   
@@ -306,7 +222,7 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border-radius: 20px;
+    border-radius: 8px;
     transition: transform 0.6s ease;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -336,7 +252,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 20px;
+    border-radius: 8px;
     z-index: 5;
   }
   
@@ -347,7 +263,7 @@
   .factory-zoom-btn-{{ section.id }} {
     width: 60px;
     height: 60px;
-    border-radius: 50%;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -393,7 +309,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -425,13 +341,17 @@
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 3rem;
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-    height: fit-content;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     position: sticky;
     top: 8rem;
+    min-height: calc(100vh - 16rem);
   }
   
   .factory-info-{{ section.id }}::before {
@@ -442,7 +362,7 @@
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    border-radius: 20px 20px 0 0;
+    border-radius: 8px 8px 0 0;
   }
   
   .factory-item-info-{{ section.id }} {
@@ -507,7 +427,7 @@
   
   .factory-item-details-{{ section.id }} {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 2rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
@@ -559,12 +479,25 @@
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 2.5rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     margin-top: 4rem;
     position: relative;
+    opacity: 0;
+    animation: thumbnailsSlideUp-{{ section.id }} 1s ease-out 1.6s forwards;
+  }
+  
+  @keyframes thumbnailsSlideUp-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .factory-thumb-navigation-{{ section.id }} {
@@ -586,7 +519,7 @@
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -628,7 +561,7 @@
   
   .factory-thumb-slide-{{ section.id }} {
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 6px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid transparent;
@@ -646,7 +579,7 @@
     background: rgba(255, 255, 255, 0.05);
     opacity: 0;
     transition: opacity 0.3s ease;
-    border-radius: 10px;
+    border-radius: 4px;
     z-index: 2;
   }
   
@@ -658,7 +591,7 @@
     width: 100px;
     height: 75px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 4px;
     transition: all 0.3s ease;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -719,7 +652,7 @@
     transform: translate(-50%, -50%) scale(0.8);
     max-width: 90vw;
     max-height: 90vh;
-    border-radius: 20px;
+    border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 50px 120px rgba(0, 0, 0, 0.6);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -735,7 +668,7 @@
     object-fit: contain;
     max-width: 90vw;
     max-height: 90vh;
-    border-radius: 20px;
+    border-radius: 8px;
   }
   
   .factory-lightbox-close-{{ section.id }} {
@@ -748,7 +681,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: none;
-    border-radius: 50%;
+    border-radius: 8px;
     color: white;
     cursor: pointer;
     display: flex;
@@ -801,30 +734,6 @@
       overflow-x: hidden;
     }
     
-    .factory-hero-{{ section.id }} {
-      background-attachment: scroll;
-    }
-    
-    .factory-hero-content-{{ section.id }} {
-      padding: 2rem;
-      margin: 0 1rem;
-    }
-    
-    .factory-hero-title-{{ section.id }} {
-      font-size: {{ section.settings.hero_title_size | times: 0.7 }}rem;
-      letter-spacing: 0.2em;
-    }
-    
-    .factory-hero-subtitle-{{ section.id }} {
-      font-size: {{ section.settings.hero_subtitle_size | times: 0.8 }}rem;
-      margin-bottom: 2rem;
-    }
-    
-    .factory-hero-description-{{ section.id }} {
-      font-size: {{ section.settings.hero_description_size | times: 0.9 }}rem;
-      margin-bottom: 2rem;
-    }
-    
     .factory-filter-tabs-{{ section.id }} {
       flex-direction: column;
       width: 100%;
@@ -848,6 +757,7 @@
     .factory-info-{{ section.id }} {
       position: static;
       padding: 2rem;
+      min-height: auto;
     }
     
     .factory-main-container-{{ section.id }} {
@@ -876,15 +786,6 @@
   }
   
   @media (max-width: 480px) {
-    .factory-hero-content-{{ section.id }} {
-      padding: 1.5rem;
-    }
-    
-    .factory-hero-title-{{ section.id }} {
-      font-size: {{ section.settings.hero_title_size | times: 0.6 }}rem;
-      letter-spacing: 0.15em;
-    }
-    
     .factory-filter-{{ section.id }} {
       padding: 3rem 0 1.5rem;
     }
@@ -923,7 +824,6 @@
   
   /* High contrast mode */
   @media (prefers-contrast: high) {
-    .factory-hero-{{ section.id }},
     .factory-main-container-{{ section.id }},
     .factory-info-{{ section.id }},
     .factory-thumbnails-{{ section.id }} {
@@ -951,24 +851,6 @@
 </style>
 
 <div class="factory-section-{{ section.id }}">
-  
-  <!-- Hero Section -->
-  <div class="factory-hero-{{ section.id }}">
-    <div class="factory-hero-content-{{ section.id }}">
-      <h1 class="factory-hero-title-{{ section.id }}">{{ section.settings.hero_title | default: 'Know My Factory' }}</h1>
-      <p class="factory-hero-subtitle-{{ section.id }}">{{ section.settings.hero_subtitle | default: 'Manufacturing Excellence' }}</p>
-      <div class="factory-hero-description-{{ section.id }}">
-        {{ section.settings.hero_description | default: 'Discover the craftsmanship, technology, and dedicated team behind every piece we create. Experience transparency in manufacturing.' }}
-      </div>
-    </div>
-    
-    {% if section.settings.show_scroll_hint %}
-      <div class="factory-scroll-hint-{{ section.id }}">
-        <div class="factory-scroll-text-{{ section.id }}">{{ section.settings.scroll_hint_text | default: 'Explore Below' }}</div>
-        <div class="factory-scroll-arrow-{{ section.id }}"></div>
-      </div>
-    {% endif %}
-  </div>
   
   <!-- Main Content -->
   <div class="factory-main-{{ section.id }}">
@@ -1026,8 +908,7 @@
                     <div class="factory-slide-{{ section.id }}" 
                          data-filter="{{ block_filter }}" 
                          data-product="{{ block_index }}"
-                         data-slide-index="{{ slide_index }}"
-                         {% if slide_index == 0 %}style="opacity: 1;"{% endif %}>
+                         data-slide-index="{{ slide_index }}">
                       <img src="{{ current_image | image_url: width: 1200 }}" 
                            class="factory-image-{{ section.id }}" 
                            loading="lazy"
@@ -1074,8 +955,7 @@
             {% for block in section.blocks %}
               <div class="factory-item-info-{{ section.id }}" 
                    data-product="{{ forloop.index0 }}"
-                   data-filter="{{ block.settings.collection_type | default: 'products' }}"
-                   {% if forloop.first %}style="display: block;"{% endif %}>
+                   data-filter="{{ block.settings.collection_type | default: 'products' }}">
                 
                 {% if block.settings.product_name != blank %}
                   <h3 class="factory-item-title-{{ section.id }}">{{ block.settings.product_name }}</h3>
@@ -1136,8 +1016,7 @@
                     <div class="factory-thumb-slide-{{ section.id }}" 
                          data-filter="{{ block_filter }}" 
                          data-product="{{ block_index }}"
-                         data-thumb-index="{{ thumb_index }}"
-                         {% if thumb_index == 0 %}class="factory-thumb-slide-{{ section.id }} active"{% endif %}>
+                         data-thumb-index="{{ thumb_index }}">
                       <img src="{{ current_image | image_url: width: 200 }}" 
                            class="factory-thumb-image-{{ section.id }}" 
                            loading="lazy"
@@ -1485,17 +1364,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Smooth scroll for hero section
-  const scrollHint = section.querySelector('.factory-scroll-hint-' + sectionId);
-  if (scrollHint) {
-    scrollHint.addEventListener('click', function() {
-      const mainSection = section.querySelector('.factory-main-' + sectionId);
-      if (mainSection) {
-        mainSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
-  
   // Initialize
   buildCategoryMapping();
   addImageProtection();
@@ -1546,92 +1414,7 @@ document.addEventListener('DOMContentLoaded', function() {
   "settings": [
     {
       "type": "header",
-      "content": "Hero Section"
-    },
-    {
-      "type": "image_picker",
-      "id": "hero_bg_image",
-      "label": "Hero Background Image"
-    },
-    {
-      "type": "range",
-      "id": "hero_overlay_opacity",
-      "min": 10,
-      "max": 90,
-      "step": 5,
-      "unit": "%",
-      "label": "Hero Overlay Opacity",
-      "default": 70
-    },
-    {
-      "type": "color",
-      "id": "hero_text_color",
-      "label": "Hero Text Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "text",
-      "id": "hero_title",
-      "label": "Hero Title",
-      "default": "Know My Factory"
-    },
-    {
-      "type": "text",
-      "id": "hero_subtitle",
-      "label": "Hero Subtitle",
-      "default": "Manufacturing Excellence"
-    },
-    {
-      "type": "richtext",
-      "id": "hero_description",
-      "label": "Hero Description",
-      "default": "<p>Discover the craftsmanship, technology, and dedicated team behind every piece we create. Experience transparency in manufacturing.</p>"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_scroll_hint",
-      "label": "Show scroll hint",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "scroll_hint_text",
-      "label": "Scroll hint text",
-      "default": "Explore Below"
-    },
-    {
-      "type": "header",
       "content": "Typography Sizes"
-    },
-    {
-      "type": "range",
-      "id": "hero_title_size",
-      "min": 2,
-      "max": 6,
-      "step": 0.1,
-      "unit": "rem",
-      "label": "Hero Title Size",
-      "default": 4.5
-    },
-    {
-      "type": "range",
-      "id": "hero_subtitle_size",
-      "min": 0.8,
-      "max": 2.5,
-      "step": 0.1,
-      "unit": "rem",
-      "label": "Hero Subtitle Size",
-      "default": 1.4
-    },
-    {
-      "type": "range",
-      "id": "hero_description_size",
-      "min": 0.8,
-      "max": 1.8,
-      "step": 0.1,
-      "unit": "rem",
-      "label": "Hero Description Size",
-      "default": 1.1
     },
     {
       "type": "range",
