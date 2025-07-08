@@ -453,8 +453,8 @@ This is my about-company.css
 
 <style>
   .about-company-section-{{ section.id }} {
-    height: {{ section.settings.section_height }}vh;
-    min-height: {{ section.settings.min_height }}px;
+    height: auto;
+    min-height: {{ section.settings.min_height }}px; /* optional, or remove entirely */
     display: flex;
     flex-direction: column;
     position: relative;
@@ -466,10 +466,10 @@ This is my about-company.css
   
   .about-company-section-{{ section.id }} .company-half {
     width: 100%;
-    height: 50%;
+    height: auto;
     position: relative;
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
     display: flex;
     align-items: center;
