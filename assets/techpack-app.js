@@ -220,6 +220,11 @@
       if (stepNumber === 2) {
         syncStep2DOM();
       }
+
+      // NEW: Refresh Step 3 interface when entering
+      if (stepNumber === 3) {
+        refreshStep3Interface();
+      }
   
       // Populate review when reaching step 4
       if (stepNumber === 4) {
@@ -1489,6 +1494,9 @@ function setupCountryDropdown() {
       });
     }
 
+    // NEW: Refresh interface based on production type when entering step 3
+    refreshStep3Interface();
+
     // Add initial garment
     addGarment();
     debug.log('Step 3 initialized successfully');
@@ -1517,6 +1525,10 @@ function setupCountryDropdown() {
     setupGarmentEventListeners(garment, garmentId);
     
     container.appendChild(garment);
+
+    // NEW: Apply production-specific interface immediately
+    const productionType = window.currentProductionType || 'custom-production';
+    updateGarmentInterface(garment, productionType);    
     
     formData.garments.push({
       id: garmentId,
