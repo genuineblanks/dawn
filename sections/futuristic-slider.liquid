@@ -1,329 +1,1212 @@
-{{ 'portfolio-showcase.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Section: know-my-factory.liquid
+  Place this file in the sections folder
+  File path: sections/know-my-factory.liquid
+{% endcomment %}
 
-<div class="portfolio-showcase" data-section-id="{{ section.id }}">
-  <div class="page-width">
+<style>
+  .factory-section-{{ section.id }} {
+    min-height: 100vh;
+    position: relative;
+    font-family: var(--font-body-family), Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
+    overflow: hidden;
+  }
+  
+  .factory-section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Hero Section */
+  .factory-hero-{{ section.id }} {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.hero_overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.hero_overlay_opacity | minus: 15 }})), 
+                {% if section.settings.hero_bg_image %}url('{{ section.settings.hero_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #1a1a1a, #2d2d2d){% endif %};
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  
+  .factory-hero-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    z-index: 1;
+  }
+  
+  .factory-hero-content-{{ section.id }} {
+    text-align: center;
+    z-index: 10;
+    position: relative;
+    max-width: 800px;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+  }
+  
+  .factory-hero-title-{{ section.id }} {
+    font-size: {{ section.settings.hero_title_size }}rem;
+    font-weight: 200;
+    letter-spacing: 0.4em;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+    font-family: var(--font-heading-family);
+    color: {{ section.settings.hero_text_color }};
+    position: relative;
+  }
+  
+  .factory-hero-title-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  }
+  
+  .factory-hero-subtitle-{{ section.id }} {
+    font-size: {{ section.settings.hero_subtitle_size }}rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    opacity: 0.9;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+    color: {{ section.settings.hero_text_color }};
+  }
+  
+  .factory-hero-description-{{ section.id }} {
+    font-size: {{ section.settings.hero_description_size }}rem;
+    line-height: 1.8;
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    color: {{ section.settings.hero_text_color }};
+  }
+  
+  .factory-scroll-hint-{{ section.id }} {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: {{ section.settings.hero_text_color }};
+    z-index: 10;
+    animation: fadeInOut-{{ section.id }} 3s infinite;
+  }
+  
+  .factory-scroll-text-{{ section.id }} {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+  
+  .factory-scroll-arrow-{{ section.id }} {
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8));
+    position: relative;
+    animation: scrollBounce-{{ section.id }} 2s infinite;
+  }
+  
+  @keyframes fadeInOut-{{ section.id }} {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes scrollBounce-{{ section.id }} {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+  
+  /* Main Content Wrapper */
+  .factory-main-{{ section.id }} {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  }
+  
+  /* Filter Navigation */
+  .factory-filter-{{ section.id }} {
+    padding: 4rem 0 2rem;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .factory-filter-tabs-{{ section.id }} {
+    display: flex;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 50px;
+    padding: 8px;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  
+  .factory-filter-tab-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: transparent;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .factory-filter-tab-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .factory-filter-tab-{{ section.id }}:hover::before {
+    left: 100%;
+  }
+  
+  .factory-filter-tab-{{ section.id }}.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
+  
+  .factory-filter-tab-{{ section.id }}:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+  }
+  
+  .factory-filter-icon-{{ section.id }} {
+    transition: transform 0.3s ease;
+  }
+  
+  .factory-filter-tab-{{ section.id }}:hover .factory-filter-icon-{{ section.id }} {
+    transform: scale(1.1);
+  }
+  
+  /* Gallery Section */
+  .factory-gallery-{{ section.id }} {
+    padding: 4rem 0;
+    position: relative;
+  }
+  
+  .factory-gallery-wrapper-{{ section.id }} {
+    display: flex;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  /* Main Image Display */
+  .factory-main-display-{{ section.id }} {
+    flex: 2.5;
+    position: relative;
+  }
+  
+  .factory-main-container-{{ section.id }} {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    aspect-ratio: 4/3;
+  }
+  
+  .factory-main-container-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .factory-slide-{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .factory-slide-{{ section.id }}.active {
+    opacity: 1;
+  }
+  
+  .factory-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 20px;
+    transition: transform 0.6s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+  }
+  
+  .factory-slide-{{ section.id }}:hover .factory-image-{{ section.id }} {
+    transform: scale(1.02);
+  }
+  
+  .factory-slide-overlay-{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    z-index: 5;
+  }
+  
+  .factory-slide-{{ section.id }}:hover .factory-slide-overlay-{{ section.id }} {
+    opacity: 1;
+  }
+  
+  .factory-zoom-btn-{{ section.id }} {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    transform: scale(0.8);
+    pointer-events: auto;
+  }
+  
+  .factory-slide-{{ section.id }}:hover .factory-zoom-btn-{{ section.id }} {
+    transform: scale(1);
+  }
+  
+  .factory-zoom-btn-{{ section.id }}:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 20px 50px rgba(255,255,255,0.1);
+  }
+  
+  /* Navigation */
+  .factory-navigation-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
+    padding: 0 2rem;
+  }
+  
+  .factory-nav-{{ section.id }} {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .factory-nav-{{ section.id }}:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 20px 50px rgba(255,255,255,0.1);
+  }
+  
+  .factory-nav-prev-{{ section.id }} {
+    left: 0;
+  }
+  
+  .factory-nav-next-{{ section.id }} {
+    right: 0;
+  }
+  
+  /* Information Panel */
+  .factory-info-{{ section.id }} {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 20px;
+    padding: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    height: fit-content;
+    position: sticky;
+    top: 8rem;
+  }
+  
+  .factory-info-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .factory-item-info-{{ section.id }} {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
+  }
+  
+  .factory-item-info-{{ section.id }}.active {
+    display: block;
+    animation: fadeInUp-{{ section.id }} 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .factory-item-title-{{ section.id }} {
+    font-size: {{ section.settings.item_title_size }}rem;
+    font-weight: 200;
+    line-height: 1.3;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 1.5rem 0;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: var(--font-heading-family);
+    position: relative;
+  }
+  
+  .factory-item-title-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
+  }
+  
+  .factory-item-description-{{ section.id }} {
+    margin-bottom: 2rem;
+    font-size: {{ section.settings.description_text_size }}rem;
+    line-height: 1.7;
+    color: {{ section.settings.text_color }};
+    opacity: 0.9;
+    font-weight: 300;
+  }
+  
+  .factory-item-description-{{ section.id }} p {
+    margin: 0 0 1rem 0;
+  }
+  
+  .factory-item-description-{{ section.id }} p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .factory-item-details-{{ section.id }} {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .factory-item-details-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  
+  .factory-details-title-{{ section.id }} {
+    font-size: {{ section.settings.details_title_size }}rem;
+    font-weight: 400;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 1.5rem 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  .factory-details-content-{{ section.id }} {
+    font-size: {{ section.settings.details_text_size }}rem;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+    opacity: 0.85;
+  }
+  
+  .factory-details-content-{{ section.id }} p {
+    margin: 0 0 1rem 0;
+  }
+  
+  .factory-details-content-{{ section.id }} p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .factory-details-content-{{ section.id }} strong {
+    color: {{ section.settings.text_color }};
+    font-weight: 500;
+    opacity: 1;
+  }
+  
+  /* Thumbnails */
+  .factory-thumbnails-{{ section.id }} {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    margin-top: 4rem;
+    position: relative;
+  }
+  
+  .factory-thumb-navigation-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
+    padding: 0 1rem;
+  }
+  
+  .factory-thumb-nav-{{ section.id }} {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .factory-thumb-nav-{{ section.id }}:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(255,255,255,0.1);
+    color: white;
+  }
+  
+  .factory-thumb-prev-{{ section.id }} {
+    left: 0;
+  }
+  
+  .factory-thumb-next-{{ section.id }} {
+    right: 0;
+  }
+  
+  .factory-thumb-container-{{ section.id }} {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0 3rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .factory-thumb-container-{{ section.id }}::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .factory-thumb-slide-{{ section.id }} {
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .factory-thumb-slide-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px;
+    z-index: 2;
+  }
+  
+  .factory-thumb-slide-{{ section.id }}:hover::before {
+    opacity: 1;
+  }
+  
+  .factory-thumb-image-{{ section.id }} {
+    width: 100px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+  }
+  
+  .factory-thumb-slide-{{ section.id }}.active {
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+  }
+  
+  .factory-thumb-slide-{{ section.id }}:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  }
+  
+  /* Lightbox */
+  .factory-lightbox-{{ section.id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .factory-lightbox-{{ section.id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .factory-lightbox-backdrop-{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .factory-lightbox-content-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 50px 120px rgba(0, 0, 0, 0.6);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .factory-lightbox-{{ section.id }}.active .factory-lightbox-content-{{ section.id }} {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .factory-lightbox-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 20px;
+  }
+  
+  .factory-lightbox-close-{{ section.id }} {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  }
+  
+  .factory-lightbox-close-{{ section.id }}:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 20px 50px rgba(255,255,255,0.1);
+  }
+  
+  /* Loading Spinner */
+  .factory-spinner-{{ section.id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .factory-spinner-{{ section.id }}::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: factorySpinnerRotate-{{ section.id }} 1s linear infinite;
+  }
+  
+  @keyframes factorySpinnerRotate-{{ section.id }} {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .factory-section-{{ section.id }} {
+      overflow-x: hidden;
+    }
     
-    {% comment %} Section Header {% endcomment %}
-    {% if section.settings.heading != blank or section.settings.subheading != blank %}
-      <div class="portfolio-showcase__header">
-        {% if section.settings.heading != blank %}
-          <h2 class="portfolio-showcase__title">{{ section.settings.heading }}</h2>
-        {% endif %}
-        {% if section.settings.subheading != blank %}
-          <div class="portfolio-showcase__subtitle">{{ section.settings.subheading }}</div>
-        {% endif %}
+    .factory-hero-{{ section.id }} {
+      background-attachment: scroll;
+    }
+    
+    .factory-hero-content-{{ section.id }} {
+      padding: 2rem;
+      margin: 0 1rem;
+    }
+    
+    .factory-hero-title-{{ section.id }} {
+      font-size: {{ section.settings.hero_title_size | times: 0.7 }}rem;
+      letter-spacing: 0.2em;
+    }
+    
+    .factory-hero-subtitle-{{ section.id }} {
+      font-size: {{ section.settings.hero_subtitle_size | times: 0.8 }}rem;
+      margin-bottom: 2rem;
+    }
+    
+    .factory-hero-description-{{ section.id }} {
+      font-size: {{ section.settings.hero_description_size | times: 0.9 }}rem;
+      margin-bottom: 2rem;
+    }
+    
+    .factory-filter-tabs-{{ section.id }} {
+      flex-direction: column;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 6px;
+    }
+    
+    .factory-filter-tab-{{ section.id }} {
+      justify-content: center;
+      padding: 14px 24px;
+      font-size: 0.9rem;
+    }
+    
+    .factory-gallery-wrapper-{{ section.id }} {
+      flex-direction: column;
+      gap: 2rem;
+      padding: 0 1rem;
+    }
+    
+    .factory-info-{{ section.id }} {
+      position: static;
+      padding: 2rem;
+    }
+    
+    .factory-main-container-{{ section.id }} {
+      aspect-ratio: 3/2;
+    }
+    
+    .factory-nav-{{ section.id }} {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .factory-thumb-image-{{ section.id }} {
+      width: 80px;
+      height: 60px;
+    }
+    
+    .factory-thumbnails-{{ section.id }} {
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .factory-zoom-btn-{{ section.id }},
+    .factory-slide-overlay-{{ section.id }} {
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .factory-hero-content-{{ section.id }} {
+      padding: 1.5rem;
+    }
+    
+    .factory-hero-title-{{ section.id }} {
+      font-size: {{ section.settings.hero_title_size | times: 0.6 }}rem;
+      letter-spacing: 0.15em;
+    }
+    
+    .factory-filter-{{ section.id }} {
+      padding: 3rem 0 1.5rem;
+    }
+    
+    .factory-info-{{ section.id }} {
+      padding: 1.5rem;
+    }
+    
+    .factory-nav-{{ section.id }} {
+      width: 45px;
+      height: 45px;
+    }
+    
+    .factory-thumb-image-{{ section.id }} {
+      width: 70px;
+      height: 52px;
+    }
+    
+    .factory-thumbnails-{{ section.id }} {
+      padding: 1.5rem;
+    }
+    
+    .factory-thumb-container-{{ section.id }} {
+      padding: 0 2.5rem;
+    }
+  }
+  
+  /* Accessibility */
+  .factory-filter-tab-{{ section.id }}:focus,
+  .factory-nav-{{ section.id }}:focus,
+  .factory-zoom-btn-{{ section.id }}:focus,
+  .factory-thumb-slide-{{ section.id }}:focus {
+    outline: 2px solid rgba(255,255,255,0.8);
+    outline-offset: 3px;
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .factory-hero-{{ section.id }},
+    .factory-main-container-{{ section.id }},
+    .factory-info-{{ section.id }},
+    .factory-thumbnails-{{ section.id }} {
+      background-blend-mode: multiply;
+    }
+    
+    .factory-filter-tab-{{ section.id }}.active,
+    .factory-nav-{{ section.id }},
+    .factory-zoom-btn-{{ section.id }} {
+      border-color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.2);
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .factory-section-{{ section.id }} *,
+    .factory-section-{{ section.id }} *::before,
+    .factory-section-{{ section.id }} *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<div class="factory-section-{{ section.id }}">
+  
+  <!-- Hero Section -->
+  <div class="factory-hero-{{ section.id }}">
+    <div class="factory-hero-content-{{ section.id }}">
+      <h1 class="factory-hero-title-{{ section.id }}">{{ section.settings.hero_title | default: 'Know My Factory' }}</h1>
+      <p class="factory-hero-subtitle-{{ section.id }}">{{ section.settings.hero_subtitle | default: 'Manufacturing Excellence' }}</p>
+      <div class="factory-hero-description-{{ section.id }}">
+        {{ section.settings.hero_description | default: 'Discover the craftsmanship, technology, and dedicated team behind every piece we create. Experience transparency in manufacturing.' }}
+      </div>
+    </div>
+    
+    {% if section.settings.show_scroll_hint %}
+      <div class="factory-scroll-hint-{{ section.id }}">
+        <div class="factory-scroll-text-{{ section.id }}">{{ section.settings.scroll_hint_text | default: 'Explore Below' }}</div>
+        <div class="factory-scroll-arrow-{{ section.id }}"></div>
       </div>
     {% endif %}
-
-    {% comment %} Collection Type Filter {% endcomment %}
+  </div>
+  
+  <!-- Main Content -->
+  <div class="factory-main-{{ section.id }}">
+    
+    <!-- Filter Navigation -->
     {% if section.settings.show_collection_filter %}
-      <div class="portfolio-showcase__filter">
-        <div class="portfolio-showcase__filter-tabs">
-          <button class="portfolio-showcase__filter-tab active" data-filter="products">
-            <span class="portfolio-showcase__filter-icon">
+      <div class="factory-filter-{{ section.id }}">
+        <div class="factory-filter-tabs-{{ section.id }}">
+          <button class="factory-filter-tab-{{ section.id }} active" data-filter="products">
+            <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 2L3 7V18H8V13H12V18H17V7L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span class="portfolio-showcase__filter-text">Our Products</span>
+            <span class="factory-filter-text-{{ section.id }}">Our Products</span>
           </button>
-          <button class="portfolio-showcase__filter-tab" data-filter="factory">
-            <span class="portfolio-showcase__filter-icon">
+          <button class="factory-filter-tab-{{ section.id }}" data-filter="factory">
+            <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M3 17H17V9L10 3L3 9V17Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span class="portfolio-showcase__filter-text">Our Factory</span>
+            <span class="factory-filter-text-{{ section.id }}">Our Factory</span>
           </button>
-          <button class="portfolio-showcase__filter-tab" data-filter="team">
-            <span class="portfolio-showcase__filter-icon">
+          <button class="factory-filter-tab-{{ section.id }}" data-filter="team">
+            <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5"/>
                 <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5"/>
               </svg>
             </span>
-            <span class="portfolio-showcase__filter-text">Our Team</span>
+            <span class="factory-filter-text-{{ section.id }}">Our Team</span>
           </button>
         </div>
       </div>
     {% endif %}
-
+    
+    <!-- Gallery Section -->
     {% if section.blocks.size > 0 %}
-      <div class="portfolio-showcase__wrapper">
-        
-        {% comment %} Main Content Area - Horizontal Layout {% endcomment %}
-        <div class="portfolio-showcase__main-content">
+      <div class="factory-gallery-{{ section.id }}">
+        <div class="factory-gallery-wrapper-{{ section.id }}">
           
-          {% comment %} Gallery Section - Left Side {% endcomment %}
-          <div class="portfolio-showcase__gallery">
-            <div class="portfolio-showcase__main-container">
-              <div class="swiper portfolio-showcase__main-swiper">
-                <div class="swiper-wrapper">
-                  {% assign slide_index = 0 %}
-                  {% for block in section.blocks %}
-                    {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                    {% assign block_index = forloop.index0 %}
-                    {% for i in (1..15) %}
-                      {% assign image_key = 'image_' | append: i %}
-                      {% assign current_image = block.settings[image_key] %}
-                      {% if current_image != blank %}
-                        <div class="swiper-slide portfolio-showcase__slide" 
-                             data-filter="{{ block_filter }}" 
-                             data-product="{{ block_index }}"
-                             data-slide-index="{{ slide_index }}">
-                          <div class="portfolio-showcase__slide-inner">
-                            <img src="{{ current_image | image_url: width: 800 }}" 
-                                 class="portfolio-showcase__image" 
-                                 loading="lazy"
-                                 alt="{{ block.settings.product_name | escape }}"
-                                 width="800"
-                                 height="600"
-                                 draggable="false"
-                                 oncontextmenu="return false;"
-                                 onselectstart="return false;"
-                                 ondragstart="return false;">
-                            <div class="portfolio-showcase__slide-overlay">
-                              <button class="portfolio-showcase__zoom-btn" data-image="{{ current_image | image_url: width: 1600 }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                  <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        {% assign slide_index = slide_index | plus: 1 %}
-                      {% endif %}
-                    {% endfor %}
-                  {% endfor %}
-                </div>
-                
-                {% if section.settings.show_navigation %}
-                  <div class="portfolio-showcase__navigation">
-                    <button class="portfolio-showcase__nav portfolio-showcase__nav--prev swiper-button-prev">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                    <button class="portfolio-showcase__nav portfolio-showcase__nav--next swiper-button-next">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                {% endif %}
-                
-                {% if section.settings.show_pagination %}
-                  <div class="portfolio-showcase__pagination swiper-pagination"></div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-
-          {% comment %} Product Information Panel - Right Side {% endcomment %}
-          <div class="portfolio-showcase__info">
-            <div class="portfolio-showcase__info-content">
+          <!-- Main Image Display -->
+          <div class="factory-main-display-{{ section.id }}">
+            <div class="factory-main-container-{{ section.id }}">
+              
+              {% assign slide_index = 0 %}
               {% for block in section.blocks %}
-                <div class="portfolio-showcase__product-info" 
-                     data-product="{{ forloop.index0 }}"
-                     data-filter="{{ block.settings.collection_type | default: 'products' }}"
-                     {% unless forloop.first %}style="display: none;"{% endunless %}>
-                  
-                  {% if block.settings.product_name != blank %}
-                    <h3 class="portfolio-showcase__product-title">{{ block.settings.product_name }}</h3>
-                  {% endif %}
-
-                  {% if block.settings.product_description != blank %}
-                    <div class="portfolio-showcase__description">
-                      {{ block.settings.product_description }}
-                    </div>
-                  {% endif %}
-
-                  {% if block.settings.details != blank %}
-                    <div class="portfolio-showcase__details">
-                      <h4 class="portfolio-showcase__details-title">
-                        {% case block.settings.collection_type %}
-                          {% when 'factory' %}
-                            Facility Details
-                          {% when 'team' %}
-                            Team Member Info
-                          {% else %}
-                            Product Details
-                        {% endcase %}
-                      </h4>
-                      <div class="portfolio-showcase__details-content">
-                        {{ block.settings.details }}
+                {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                {% assign block_index = forloop.index0 %}
+                {% for i in (1..15) %}
+                  {% assign image_key = 'image_' | append: i %}
+                  {% assign current_image = block.settings[image_key] %}
+                  {% if current_image != blank %}
+                    <div class="factory-slide-{{ section.id }}" 
+                         data-filter="{{ block_filter }}" 
+                         data-product="{{ block_index }}"
+                         data-slide-index="{{ slide_index }}"
+                         {% if slide_index == 0 %}style="opacity: 1;"{% endif %}>
+                      <img src="{{ current_image | image_url: width: 1200 }}" 
+                           class="factory-image-{{ section.id }}" 
+                           loading="lazy"
+                           alt="{{ block.settings.product_name | escape }}"
+                           width="1200"
+                           height="900"
+                           draggable="false"
+                           oncontextmenu="return false;"
+                           onselectstart="return false;"
+                           ondragstart="return false;">
+                      <div class="factory-slide-overlay-{{ section.id }}">
+                        <button class="factory-zoom-btn-{{ section.id }}" data-image="{{ current_image | image_url: width: 1600 }}">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
                       </div>
                     </div>
+                    {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
-                </div>
+                {% endfor %}
               {% endfor %}
+              
+              <!-- Navigation -->
+              {% if section.settings.show_navigation %}
+                <div class="factory-navigation-{{ section.id }}">
+                  <button class="factory-nav-{{ section.id }} factory-nav-prev-{{ section.id }}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <button class="factory-nav-{{ section.id }} factory-nav-next-{{ section.id }}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
             </div>
           </div>
-        </div>
+          
+          <!-- Information Panel -->
+          <div class="factory-info-{{ section.id }}">
+            {% for block in section.blocks %}
+              <div class="factory-item-info-{{ section.id }}" 
+                   data-product="{{ forloop.index0 }}"
+                   data-filter="{{ block.settings.collection_type | default: 'products' }}"
+                   {% if forloop.first %}style="display: block;"{% endif %}>
+                
+                {% if block.settings.product_name != blank %}
+                  <h3 class="factory-item-title-{{ section.id }}">{{ block.settings.product_name }}</h3>
+                {% endif %}
 
-        {% comment %} Thumbnails - Full Width Below Main Content {% endcomment %}
+                {% if block.settings.product_description != blank %}
+                  <div class="factory-item-description-{{ section.id }}">
+                    {{ block.settings.product_description }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.details != blank %}
+                  <div class="factory-item-details-{{ section.id }}">
+                    <h4 class="factory-details-title-{{ section.id }}">
+                      {% case block.settings.collection_type %}
+                        {% when 'factory' %}
+                          Facility Details
+                        {% when 'team' %}
+                          Team Member Info
+                        {% else %}
+                          Product Details
+                      {% endcase %}
+                    </h4>
+                    <div class="factory-details-content-{{ section.id }}">
+                      {{ block.settings.details }}
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        
+        <!-- Thumbnails -->
         {% if section.settings.show_thumbnails %}
-          <div class="portfolio-showcase__thumbnails">
-            <div class="portfolio-showcase__thumb-navigation">
-              <button class="portfolio-showcase__thumb-nav portfolio-showcase__thumb-prev">
+          <div class="factory-thumbnails-{{ section.id }}">
+            <div class="factory-thumb-navigation-{{ section.id }}">
+              <button class="factory-thumb-nav-{{ section.id }} factory-thumb-prev-{{ section.id }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-              <button class="portfolio-showcase__thumb-nav portfolio-showcase__thumb-next">
+              <button class="factory-thumb-nav-{{ section.id }} factory-thumb-next-{{ section.id }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
             </div>
-            <div class="swiper portfolio-showcase__thumb-swiper">
-              <div class="swiper-wrapper">
-                {% assign thumb_index = 0 %}
-                {% for block in section.blocks %}
-                  {% assign block_filter = block.settings.collection_type | default: 'products' %}
-                  {% assign block_index = forloop.index0 %}
-                  {% for i in (1..15) %}
-                    {% assign image_key = 'image_' | append: i %}
-                    {% assign current_image = block.settings[image_key] %}
-                    {% if current_image != blank %}
-                      <div class="swiper-slide portfolio-showcase__thumb-slide" 
-                           data-filter="{{ block_filter }}" 
-                           data-product="{{ block_index }}"
-                           data-thumb-index="{{ thumb_index }}">
-                        <div class="portfolio-showcase__thumb-container">
-                          <img src="{{ current_image | image_url: width: 150 }}" 
-                               class="portfolio-showcase__thumb-image" 
-                               loading="lazy"
-                               width="150"
-                               height="113"
-                               draggable="false"
-                               oncontextmenu="return false;"
-                               onselectstart="return false;"
-                               ondragstart="return false;">
-                        </div>
-                      </div>
-                      {% assign thumb_index = thumb_index | plus: 1 %}
-                    {% endif %}
-                  {% endfor %}
+            <div class="factory-thumb-container-{{ section.id }}">
+              {% assign thumb_index = 0 %}
+              {% for block in section.blocks %}
+                {% assign block_filter = block.settings.collection_type | default: 'products' %}
+                {% assign block_index = forloop.index0 %}
+                {% for i in (1..15) %}
+                  {% assign image_key = 'image_' | append: i %}
+                  {% assign current_image = block.settings[image_key] %}
+                  {% if current_image != blank %}
+                    <div class="factory-thumb-slide-{{ section.id }}" 
+                         data-filter="{{ block_filter }}" 
+                         data-product="{{ block_index }}"
+                         data-thumb-index="{{ thumb_index }}"
+                         {% if thumb_index == 0 %}class="factory-thumb-slide-{{ section.id }} active"{% endif %}>
+                      <img src="{{ current_image | image_url: width: 200 }}" 
+                           class="factory-thumb-image-{{ section.id }}" 
+                           loading="lazy"
+                           width="200"
+                           height="150"
+                           draggable="false"
+                           oncontextmenu="return false;"
+                           onselectstart="return false;"
+                           ondragstart="return false;">
+                    </div>
+                    {% assign thumb_index = thumb_index | plus: 1 %}
+                  {% endif %}
                 {% endfor %}
-              </div>
+              {% endfor %}
             </div>
           </div>
         {% endif %}
       </div>
-
-      {% comment %} Lightbox Modal {% endcomment %}
-      <div class="portfolio-showcase__lightbox" id="lightbox-{{ section.id }}">
-        <div class="portfolio-showcase__lightbox-backdrop"></div>
-        <div class="portfolio-showcase__lightbox-content">
-          <button class="portfolio-showcase__lightbox-close">
+      
+      <!-- Lightbox -->
+      <div class="factory-lightbox-{{ section.id }}">
+        <div class="factory-lightbox-backdrop-{{ section.id }}"></div>
+        <div class="factory-lightbox-content-{{ section.id }}">
+          <button class="factory-lightbox-close-{{ section.id }}">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <img src="" alt="" class="portfolio-showcase__lightbox-image">
+          <img src="" alt="" class="factory-lightbox-image-{{ section.id }}">
         </div>
       </div>
-
-      <!-- Zoom-loading spinner (hidden by default) -->
-      <div id="zoom-spinner" class="zoom-spinner" style="display: none;"></div>
-
+      
+      <!-- Loading Spinner -->
+      <div class="factory-spinner-{{ section.id }}"></div>
+      
     {% else %}
-      <div class="portfolio-showcase__empty">
-        <div class="portfolio-showcase__empty-icon">
-          <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+      <div class="factory-empty-{{ section.id }}">
+        <div class="factory-empty-content-{{ section.id }}">
+          <svg width="80" height="80" viewBox="0 0 64 64" fill="none">
             <path d="M32 8L8 20V52H24V36H40V52H56V20L32 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          <h3>No Factory Content Available</h3>
+          <p>Add blocks in the theme editor to showcase your factory, products, and team.</p>
         </div>
-        <h3>No items to display</h3>
-        <p>Add product blocks in the theme editor to showcase your portfolio.</p>
       </div>
     {% endif %}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const sectionId = '{{ section.id }}';
-  const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+  const section = document.querySelector('.factory-section-' + sectionId);
   
   if (!section) return;
   
-  let mainSwiperInstance = null;
-  let thumbSwiperInstance = null;
+  let currentSlideIndex = 0;
   let currentFilter = 'products';
-  const blocks = {{ section.blocks | json }};
-  
-  // Create category mapping - track which slide belongs to which category and their positions
+  let allSlides = [];
   let categoryMap = [];
   let categoryRanges = {
     products: { start: null, end: null },
     factory: { start: null, end: null },
     team: { start: null, end: null }
   };
-
-  // Image Protection JavaScript
-  function addImageProtection() {
-    // Disable right-click context menu
-    section.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      return false;
-    });
   
-    // Disable drag and drop
-    section.addEventListener('dragstart', function(e) {
-      e.preventDefault();
-      return false;
-    });
-  
-    // Disable text selection
-    section.addEventListener('selectstart', function(e) {
-      e.preventDefault();
-      return false;
-    });
-  
-    // Disable F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S
-    document.addEventListener('keydown', function(e) {
-      // F12
-      if (e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-      }
-      // Ctrl+Shift+I
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-        return false;
-      }
-      // Ctrl+U
-      if (e.ctrlKey && e.keyCode === 85) {
-        e.preventDefault();
-        return false;
-      }
-      // Ctrl+S
-      if (e.ctrlKey && e.keyCode === 83) {
-        e.preventDefault();
-        return false;
-      }
-    });
-  
-    // Clear browser cache of image URLs
-    const images = section.querySelectorAll('img');
-    images.forEach(img => {
-      img.onload = function() {
-        this.onload = null;
-      };
-    });
-  }
-  
-  // Call the protection function
-  addImageProtection();
-  
-  // Build category mapping from DOM
+  // Build category mapping
   function buildCategoryMapping() {
-    const allSlides = section.querySelectorAll('.portfolio-showcase__slide');
+    const slides = section.querySelectorAll('.factory-slide-' + sectionId);
     categoryMap = [];
     
     // Reset category ranges
@@ -333,15 +1216,18 @@ document.addEventListener('DOMContentLoaded', function() {
       team: { start: null, end: null }
     };
     
-    allSlides.forEach((slide, index) => {
+    slides.forEach((slide, index) => {
       const filter = slide.getAttribute('data-filter');
       const productIndex = slide.getAttribute('data-product');
       
       categoryMap.push({
         index: index,
         filter: filter,
-        productIndex: parseInt(productIndex)
+        productIndex: parseInt(productIndex),
+        element: slide
       });
+      
+      allSlides.push(slide);
       
       // Track category ranges
       if (categoryRanges[filter].start === null) {
@@ -349,202 +1235,54 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       categoryRanges[filter].end = index;
     });
-    
-    console.log('Category Map:', categoryMap);
-    console.log('Category Ranges:', categoryRanges);
-    
-    // Debug: Also log all product info elements to see what's available
-    const allProductInfos = section.querySelectorAll('.portfolio-showcase__product-info');
-    console.log('Available Product Info Elements:');
-    allProductInfos.forEach(info => {
-      console.log('- Product:', info.getAttribute('data-product'), 'Filter:', info.getAttribute('data-filter'), 'Has content:', info.innerHTML.trim().length > 0);
-    });
   }
   
-  // Get category for current slide index
-  function getCategoryForSlide(slideIndex) {
-    return categoryMap[slideIndex]?.filter || 'products';
+  // Show specific slide
+  function showSlide(slideIndex) {
+    allSlides.forEach((slide, index) => {
+      slide.style.opacity = index === slideIndex ? '1' : '0';
+      slide.classList.toggle('active', index === slideIndex);
+    });
+    
+    // Update thumbnails
+    const thumbSlides = section.querySelectorAll('.factory-thumb-slide-' + sectionId);
+    thumbSlides.forEach((thumb, index) => {
+      thumb.classList.toggle('active', index === slideIndex);
+    });
+    
+    currentSlideIndex = slideIndex;
+    updateProductInfo(slideIndex);
+    updateActiveFilterTab(slideIndex);
   }
   
-  // Get first slide index for a category (dynamic lookup)
-  function getFirstSlideForCategory(category) {
-    const found = categoryMap.find(item => item.filter === category);
-    return found ? found.index : 0;
-  }
-  
-  // Update active filter tab based on current slide
-  function updateActiveFilterTab(slideIndex) {
-    const category = getCategoryForSlide(slideIndex);
-    
-    if (!category) {
-      console.warn('No category found for slide index:', slideIndex);
-      return;
-    }
-    
-    currentFilter = category;
-    
-    // Always update filter tab appearance
-    section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    
-    const activeTab = section.querySelector(`[data-filter="${category}"]`);
-    if (activeTab) {
-      activeTab.classList.add('active');
-    } else {
-      console.warn('No filter tab found for category:', category);
-    }
-  }
-  
-  // Initialize Swipers - Show ALL slides, no filtering
-  function initializeSwipers() {
-    const mainSwiper = section.querySelector('.portfolio-showcase__main-swiper');
-    const thumbSwiper = section.querySelector('.portfolio-showcase__thumb-swiper');
-    
-    if (!mainSwiper) return;
-
-    // Destroy existing instances
-    if (mainSwiperInstance) {
-      mainSwiperInstance.destroy(true, true);
-      mainSwiperInstance = null;
-    }
-    if (thumbSwiperInstance) {
-      thumbSwiperInstance.destroy(true, true);
-      thumbSwiperInstance = null;
-    }
-
-    // Show all slides and thumbnails
-    section.querySelectorAll('.portfolio-showcase__slide').forEach(slide => {
-      slide.style.display = 'block';
-    });
-    
-    section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(slide => {
-      slide.style.display = 'block';
-    });
-
-    // Initialize thumbnail swiper with navigation
-    if (thumbSwiper) {
-      thumbSwiperInstance = new Swiper(thumbSwiper, {
-        spaceBetween: 10,
-        slidesPerView: 'auto',
-        freeMode: false,
-        watchSlidesProgress: true,
-        navigation: {
-          nextEl: '.portfolio-showcase__thumb-next',
-          prevEl: '.portfolio-showcase__thumb-prev',
-        },
-        breakpoints: {
-          640: { slidesPerView: 'auto', spaceBetween: 12 },
-          768: { slidesPerView: 'auto', spaceBetween: 16 }
-        },
-        on: {
-          slideChange: function() {
-            // Sync main slider with thumbnail slider
-            if (mainSwiperInstance) {
-              mainSwiperInstance.slideTo(this.activeIndex);
-            }
-          }
-        }
-      });
-    }
-
-    // Initialize main swiper
-    mainSwiperInstance = new Swiper(mainSwiper, {
-      spaceBetween: 0,
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      speed: 600,
-      autoplay: {{ section.settings.autoplay | json }} ? {
-        delay: {{ section.settings.autoplay_speed | times: 1000 }},
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true
-      } : false,
-      navigation: {
-        nextEl: section.querySelector('.portfolio-showcase__nav--next'),
-        prevEl: section.querySelector('.portfolio-showcase__nav--prev'),
-      },
-      pagination: {
-        el: section.querySelector('.portfolio-showcase__pagination'),
-        clickable: true,
-      },
-      thumbs: thumbSwiperInstance ? { swiper: thumbSwiperInstance } : undefined,
-      on: {
-        slideChange: function() {
-          const slideIndex = this.activeIndex;
-          updateProductInfo(slideIndex);
-          updateActiveFilterTab(slideIndex);
-          
-          // Sync thumbnail slider
-          if (thumbSwiperInstance && thumbSwiperInstance.activeIndex !== slideIndex) {
-            thumbSwiperInstance.slideTo(slideIndex);
-          }
-        }
-      }
-    });
-  
-    // ─── Force each thumbnail click to jump to its own index ───
-    section.querySelectorAll('.portfolio-showcase__thumb-slide').forEach(thumb => {
-      thumb.addEventListener('click', function() {
-        const idx = parseInt(this.dataset.thumbIndex, 10);
-        if (!isNaN(idx)) mainSwiperInstance.slideTo(idx, 300);
-      });
-    });
-  
-    // ─── Mirror any thumbnail slideChange (arrows, drag, autoplay) to the main swiper ───
-    if (thumbSwiperInstance) {
-      thumbSwiperInstance.on('slideChange', function() {
-        mainSwiperInstance.slideTo(this.activeIndex, 300);
-      });
-    }
-  } // ← end initializeSwipers()
-
-  // Update product information based on active slide
+  // Update product information
   function updateProductInfo(slideIndex) {
-    if (!categoryMap[slideIndex]) {
-      console.error('No category mapping found for slide index:', slideIndex);
-      return;
-    }
+    if (!categoryMap[slideIndex]) return;
     
     const currentSlide = categoryMap[slideIndex];
     const productIndex = currentSlide.productIndex;
     const category = currentSlide.filter;
     
-    console.log('Updating product info for slide:', slideIndex, 'Product:', productIndex, 'Category:', category);
-    
-    // Hide all product info first
-    section.querySelectorAll('.portfolio-showcase__product-info').forEach(info => {
+    // Hide all product info
+    section.querySelectorAll('.factory-item-info-' + sectionId).forEach(info => {
       info.style.display = 'none';
+      info.classList.remove('active');
     });
     
-    // Find the correct product info - use exact match first
-    let targetInfo = section.querySelector(`.portfolio-showcase__product-info[data-product="${productIndex}"][data-filter="${category}"]`);
-    
+    // Show correct product info
+    const targetInfo = section.querySelector(`.factory-item-info-${sectionId}[data-product="${productIndex}"][data-filter="${category}"]`);
     if (targetInfo) {
       targetInfo.style.display = 'block';
-      console.log('✅ Successfully showing product info for product:', productIndex, 'category:', category);
-    } else {
-      console.error('❌ Could not find product info for product:', productIndex, 'category:', category);
-      
-      // Debug: Show what's available
-      const allInfos = section.querySelectorAll('.portfolio-showcase__product-info');
-      console.log('Available product info elements:');
-      allInfos.forEach((info, index) => {
-        console.log(`${index}: Product=${info.getAttribute('data-product')}, Filter=${info.getAttribute('data-filter')}, HasContent=${info.innerHTML.trim().length > 50}`);
-      });
-      
-      // Fallback: try to show any info for this category
-      const fallbackInfo = section.querySelector(`.portfolio-showcase__product-info[data-filter="${category}"]`);
-      if (fallbackInfo) {
-        fallbackInfo.style.display = 'block';
-        console.log('🔄 Showing fallback info for category:', category);
-      }
+      targetInfo.classList.add('active');
     }
   }
-
-  // Jump to first slide of specific category
-  function jumpToCategory(category) {
-    // Update filter tabs first
-    section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+  
+  // Update active filter tab
+  function updateActiveFilterTab(slideIndex) {
+    const category = categoryMap[slideIndex]?.filter || 'products';
+    currentFilter = category;
+    
+    section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
       tab.classList.remove('active');
     });
     
@@ -552,139 +1290,398 @@ document.addEventListener('DOMContentLoaded', function() {
     if (activeTab) {
       activeTab.classList.add('active');
     }
-    
-    const firstSlideIndex = getFirstSlideForCategory(category);
-    mainSwiperInstance.slideTo(firstSlideIndex, 300);
-    thumbSwiperInstance?.slideTo(firstSlideIndex, 300);
-
-    
-    console.log('Jumping to category:', category, 'First slide index:', firstSlideIndex);
-    
-    // Ensure we have a valid slide index
-    if (firstSlideIndex === null || firstSlideIndex === undefined) {
-      console.warn('No slides found for category:', category);
-      return;
-    }
-    
-    if (mainSwiperInstance) {
-      mainSwiperInstance.slideTo(firstSlideIndex, 300); // Add transition speed
-    }
-    
-    if (thumbSwiperInstance) {
-      thumbSwiperInstance.slideTo(firstSlideIndex, 300);
-    }
-    
-    // Update the current filter
-    currentFilter = category;
-    
-    // Force update the product info and filter tab
-    setTimeout(() => {
-      updateProductInfo(firstSlideIndex);
-      updateActiveFilterTab(firstSlideIndex);
-    }, 350); // Wait for slide transition to complete
   }
-
-  // Event listeners for filter tabs - now jump to category instead of filtering
-  section.querySelectorAll('.portfolio-showcase__filter-tab').forEach(tab => {
+  
+  // Jump to category
+  function jumpToCategory(category) {
+    const firstSlideIndex = categoryMap.findIndex(item => item.filter === category);
+    if (firstSlideIndex !== -1) {
+      showSlide(firstSlideIndex);
+    }
+  }
+  
+  // Navigation functions
+  function nextSlide() {
+    const nextIndex = (currentSlideIndex + 1) % allSlides.length;
+    showSlide(nextIndex);
+  }
+  
+  function prevSlide() {
+    const prevIndex = (currentSlideIndex - 1 + allSlides.length) % allSlides.length;
+    showSlide(prevIndex);
+  }
+  
+  // Thumbnail navigation
+  function scrollThumbnails(direction) {
+    const container = section.querySelector('.factory-thumb-container-' + sectionId);
+    const scrollAmount = 120;
+    
+    if (direction === 'next') {
+      container.scrollLeft += scrollAmount;
+    } else {
+      container.scrollLeft -= scrollAmount;
+    }
+  }
+  
+  // Image protection
+  function addImageProtection() {
+    section.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    
+    section.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    
+    section.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode === 123 || 
+          (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+          (e.ctrlKey && e.keyCode === 85) ||
+          (e.ctrlKey && e.keyCode === 83)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  }
+  
+  // Lightbox functionality
+  function openLightbox(imageSrc) {
+    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
+    const lightboxImage = section.querySelector('.factory-lightbox-image-' + sectionId);
+    const spinner = section.querySelector('.factory-spinner-' + sectionId);
+    
+    spinner.style.display = 'flex';
+    lightboxImage.src = '';
+    
+    const preload = new Image();
+    preload.onload = function() {
+      spinner.style.display = 'none';
+      lightboxImage.src = imageSrc;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    preload.src = imageSrc;
+  }
+  
+  function closeLightbox() {
+    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
+    const spinner = section.querySelector('.factory-spinner-' + sectionId);
+    
+    lightbox.classList.remove('active');
+    spinner.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  
+  // Event listeners
+  
+  // Filter tabs
+  section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
     tab.addEventListener('click', function() {
       const category = this.getAttribute('data-filter');
       jumpToCategory(category);
     });
   });
-
-  // get references once
-  const spinner       = document.getElementById('zoom-spinner');
-  const lightbox      = section.querySelector('.portfolio-showcase__lightbox');
-  const lightboxImage = lightbox.querySelector('.portfolio-showcase__lightbox-image');
   
-  // Zoom handler (preload + spinner)
+  // Navigation buttons
+  const prevBtn = section.querySelector('.factory-nav-prev-' + sectionId);
+  const nextBtn = section.querySelector('.factory-nav-next-' + sectionId);
+  
+  if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+  if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+  
+  // Thumbnail navigation
+  const thumbPrevBtn = section.querySelector('.factory-thumb-prev-' + sectionId);
+  const thumbNextBtn = section.querySelector('.factory-thumb-next-' + sectionId);
+  
+  if (thumbPrevBtn) thumbPrevBtn.addEventListener('click', () => scrollThumbnails('prev'));
+  if (thumbNextBtn) thumbNextBtn.addEventListener('click', () => scrollThumbnails('next'));
+  
+  // Thumbnail clicks
+  section.querySelectorAll('.factory-thumb-slide-' + sectionId).forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      const thumbIndex = parseInt(this.dataset.thumbIndex);
+      if (!isNaN(thumbIndex)) {
+        showSlide(thumbIndex);
+      }
+    });
+  });
+  
+  // Zoom buttons
   section.addEventListener('click', function(e) {
-    const clickedZoom = e.target.closest('.portfolio-showcase__zoom-btn');
-    if (!clickedZoom) return;
-    e.preventDefault(); e.stopPropagation();
-  
-    // determine the correct URL for the active slide
-    const idx         = mainSwiperInstance.activeIndex;
-    const activeSlide = mainSwiperInstance.slides[idx];
-    const activeBtn   = activeSlide.querySelector('.portfolio-showcase__zoom-btn');
-    const imageUrl    = (activeBtn && activeBtn.dataset.image) || clickedZoom.dataset.image;
-  
-    // show the spinner overlay
-    spinner.style.display = 'flex';
-  
-    // clear out any old lightbox image
-    lightboxImage.src = '';
-  
-    // preload the new image
-    const preload = new Image();
-    preload.onload = () => {
-      // hide spinner, then inject & show lightbox
-      spinner.style.display = 'none';
-      lightboxImage.src      = imageUrl;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    };
-    preload.src = imageUrl;
-  });
-  
-  // ——— Lightbox Close Handlers ———
-  // Close via “X” button
-  const closeBtn = lightbox.querySelector('.portfolio-showcase__lightbox-close');
-  closeBtn.addEventListener('click', () => {
-    lightbox.classList.remove('active');
-    spinner.style.display = 'none';
-    document.body.style.overflow = '';
-  });
-  // Close via clicking backdrop
-  const backdrop = lightbox.querySelector('.portfolio-showcase__lightbox-backdrop');
-  backdrop.addEventListener('click', () => {
-    lightbox.classList.remove('active');
-    spinner.style.display = 'none';
-    document.body.style.overflow = '';
-  });
-
-  // Close via ESC key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-      lightbox.classList.remove('active');
-      spinner.style.display = 'none';
-      document.body.style.overflow = '';
+    const zoomBtn = e.target.closest('.factory-zoom-btn-' + sectionId);
+    if (zoomBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const imageUrl = zoomBtn.dataset.image;
+      if (imageUrl) {
+        openLightbox(imageUrl);
+      }
     }
   });
   
-  // Initialize everything
+  // Lightbox close events
+  const lightboxClose = section.querySelector('.factory-lightbox-close-' + sectionId);
+  const lightboxBackdrop = section.querySelector('.factory-lightbox-backdrop-' + sectionId);
+  
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  
+  // ESC key to close lightbox
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
+      if (lightbox && lightbox.classList.contains('active')) {
+        closeLightbox();
+      }
+    }
+  });
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
+    if (lightbox && lightbox.classList.contains('active')) return;
+    
+    if (e.key === 'ArrowLeft') {
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      nextSlide();
+    }
+  });
+  
+  // Touch/swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  const mainContainer = section.querySelector('.factory-main-container-' + sectionId);
+  if (mainContainer) {
+    mainContainer.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    mainContainer.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+  }
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+  }
+  
+  // Smooth scroll for hero section
+  const scrollHint = section.querySelector('.factory-scroll-hint-' + sectionId);
+  if (scrollHint) {
+    scrollHint.addEventListener('click', function() {
+      const mainSection = section.querySelector('.factory-main-' + sectionId);
+      if (mainSection) {
+        mainSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+  
+  // Initialize
   buildCategoryMapping();
-  initializeSwipers();
+  addImageProtection();
   
   // Set initial state
   setTimeout(() => {
-    updateActiveFilterTab(0);
-    updateProductInfo(0);
+    showSlide(0);
   }, 100);
+  
+  // Auto-play functionality (optional)
+  {% if section.settings.autoplay %}
+    let autoplayInterval;
+    
+    function startAutoplay() {
+      autoplayInterval = setInterval(() => {
+        nextSlide();
+      }, {{ section.settings.autoplay_speed | times: 1000 }});
+    }
+    
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+        autoplayInterval = null;
+      }
+    }
+    
+    // Start autoplay
+    startAutoplay();
+    
+    // Pause on hover
+    section.addEventListener('mouseenter', stopAutoplay);
+    section.addEventListener('mouseleave', startAutoplay);
+    
+    // Pause on interaction
+    section.addEventListener('click', function() {
+      stopAutoplay();
+      setTimeout(startAutoplay, 5000); // Restart after 5 seconds
+    });
+  {% endif %}
 });
 </script>
 
 {% schema %}
 {
-  "name": "Portfolio Showcase",
+  "name": "Know My Factory",
   "tag": "section",
   "class": "section",
   "settings": [
     {
       "type": "header",
-      "content": "Section Header"
+      "content": "Hero Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_bg_image",
+      "label": "Hero Background Image"
+    },
+    {
+      "type": "range",
+      "id": "hero_overlay_opacity",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Hero Overlay Opacity",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Hero Text Color",
+      "default": "#ffffff"
     },
     {
       "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Our Manufacturing Portfolio"
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "Know My Factory"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "Manufacturing Excellence"
     },
     {
       "type": "richtext",
-      "id": "subheading",
-      "label": "Description",
-      "default": "<p>Explore our previous work and see the quality craftsmanship that goes into every piece we manufacture.</p>"
+      "id": "hero_description",
+      "label": "Hero Description",
+      "default": "<p>Discover the craftsmanship, technology, and dedicated team behind every piece we create. Experience transparency in manufacturing.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_hint",
+      "label": "Show scroll hint",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "scroll_hint_text",
+      "label": "Scroll hint text",
+      "default": "Explore Below"
+    },
+    {
+      "type": "header",
+      "content": "Typography Sizes"
+    },
+    {
+      "type": "range",
+      "id": "hero_title_size",
+      "min": 2,
+      "max": 6,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Hero Title Size",
+      "default": 4.5
+    },
+    {
+      "type": "range",
+      "id": "hero_subtitle_size",
+      "min": 0.8,
+      "max": 2.5,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Hero Subtitle Size",
+      "default": 1.4
+    },
+    {
+      "type": "range",
+      "id": "hero_description_size",
+      "min": 0.8,
+      "max": 1.8,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Hero Description Size",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "item_title_size",
+      "min": 1.2,
+      "max": 3,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Item Title Size",
+      "default": 2.2
+    },
+    {
+      "type": "range",
+      "id": "description_text_size",
+      "min": 0.8,
+      "max": 1.6,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Description Text Size",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "details_title_size",
+      "min": 0.8,
+      "max": 1.8,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Details Title Size",
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "details_text_size",
+      "min": 0.8,
+      "max": 1.4,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Details Text Size",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main Text Color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
@@ -715,12 +1712,6 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     {
       "type": "checkbox",
-      "id": "show_pagination",
-      "label": "Show dot pagination",
-      "default": true
-    },
-    {
-      "type": "checkbox",
       "id": "autoplay",
       "label": "Auto-rotate slides",
       "default": false
@@ -729,17 +1720,17 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "range",
       "id": "autoplay_speed",
       "min": 3,
-      "max": 10,
+      "max": 15,
       "step": 1,
       "unit": "s",
       "label": "Auto-rotate speed",
-      "default": 5
+      "default": 8
     }
   ],
   "blocks": [
     {
       "type": "item",
-      "name": "Portfolio Item",
+      "name": "Factory Item",
       "limit": 20,
       "settings": [
         {
@@ -760,29 +1751,29 @@ document.addEventListener('DOMContentLoaded', function() {
               "label": "Our Team"
             }
           ],
-          "default": "products"
+          "default": "factory"
         },
         {
           "type": "text",
           "id": "product_name",
           "label": "Item Name",
-          "default": "Premium Hoodie"
+          "default": "Production Floor"
         },
         {
           "type": "richtext",
           "id": "product_description",
           "label": "Description",
-          "default": "<p>High-quality item crafted with attention to detail and premium materials.</p>"
+          "default": "<p>State-of-the-art manufacturing facility with cutting-edge technology and quality control processes that ensure every product meets our exacting standards.</p>"
         },
         {
           "type": "richtext",
           "id": "details",
           "label": "Details",
-          "default": "<p><strong>Material:</strong> 100% Cotton<br><strong>Weight:</strong> 280 GSM<br><strong>Sizes:</strong> XS - 3XL</p>"
+          "default": "<p><strong>Capacity:</strong> 50,000+ pieces/month<br><strong>Equipment:</strong> Industrial sewing machines<br><strong>Quality:</strong> ISO 9001 certified<br><strong>Workforce:</strong> 150+ skilled professionals</p>"
         },
         {
           "type": "header",
-          "content": "Images (up to 5)"
+          "content": "Images (up to 15)"
         },
         {
           "type": "image_picker",
@@ -864,33 +1855,42 @@ document.addEventListener('DOMContentLoaded', function() {
   ],
   "presets": [
     {
-      "name": "Portfolio Showcase",
+      "name": "Know My Factory",
       "blocks": [
         {
           "type": "item",
           "settings": {
-            "collection_type": "products",
-            "product_name": "Premium Cotton Hoodie",
-            "product_description": "<p>Expertly crafted hoodie featuring premium cotton blend, reinforced stitching, and superior comfort.</p>",
-            "details": "<p><strong>Material:</strong> 80% Cotton, 20% Polyester<br><strong>Weight:</strong> 320 GSM<br><strong>Features:</strong> Kangaroo pocket, ribbed cuffs<br><strong>Colors:</strong> Available in 25+ colors</p>"
+            "collection_type": "factory",
+            "product_name": "Production Floor",
+            "product_description": "<p>Our state-of-the-art manufacturing facility spans over 50,000 square feet and houses the latest in textile production technology. Every corner is designed for efficiency, quality, and worker safety.</p>",
+            "details": "<p><strong>Capacity:</strong> 50,000+ pieces per month<br><strong>Equipment:</strong> 200+ industrial sewing machines<br><strong>Quality Control:</strong> ISO 9001:2015 certified<br><strong>Workforce:</strong> 150+ skilled professionals<br><strong>Specialization:</strong> Premium apparel manufacturing</p>"
           }
         },
         {
           "type": "item",
           "settings": {
             "collection_type": "factory",
-            "product_name": "Production Floor",
-            "product_description": "<p>State-of-the-art manufacturing facility with modern equipment and quality control processes.</p>",
-            "details": "<p><strong>Capacity:</strong> 10,000+ pieces/month<br><strong>Equipment:</strong> Industrial sewing machines<br><strong>Quality:</strong> ISO certified processes</p>"
+            "product_name": "Quality Control Department",
+            "product_description": "<p>Our dedicated quality control department ensures that every single product meets our rigorous standards before leaving the facility. Multiple checkpoints guarantee consistent excellence.</p>",
+            "details": "<p><strong>Inspection Points:</strong> 7 quality checkpoints<br><strong>Standards:</strong> International quality protocols<br><strong>Testing:</strong> Fabric strength & colorfastness<br><strong>Approval Rate:</strong> 99.2% first-pass quality<br><strong>Certifications:</strong> OEKO-TEX Standard 100</p>"
           }
         },
         {
           "type": "item",
           "settings": {
             "collection_type": "team",
-            "product_name": "Production Manager",
-            "product_description": "<p>Meet our experienced production team dedicated to delivering exceptional quality in every piece.</p>",
-            "details": "<p><strong>Experience:</strong> 15+ years<br><strong>Specialty:</strong> Quality control<br><strong>Role:</strong> Production oversight</p>"
+            "product_name": "Master Craftspeople",
+            "product_description": "<p>Meet our highly skilled team of master craftspeople who bring decades of experience to every piece. Their expertise and attention to detail are what make our products exceptional.</p>",
+            "details": "<p><strong>Average Experience:</strong> 12+ years<br><strong>Training:</strong> Continuous skill development<br><strong>Specializations:</strong> Precision stitching, pattern making<br><strong>Team Size:</strong> 25 master craftspeople<br><strong>Achievement:</strong> Zero-defect production specialists</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "collection_type": "products",
+            "product_name": "Premium Cotton Hoodie",
+            "product_description": "<p>Expertly crafted premium hoodie featuring our signature cotton blend, reinforced construction, and superior comfort. Each piece represents the pinnacle of our manufacturing capabilities.</p>",
+            "details": "<p><strong>Material:</strong> 80% Premium Cotton, 20% Polyester<br><strong>Weight:</strong> 320 GSM heavyweight construction<br><strong>Features:</strong> Kangaroo pocket, ribbed cuffs & hem<br><strong>Colors:</strong> 25+ premium colorways available<br><strong>Sizes:</strong> XS - 3XL (unisex sizing)</p>"
           }
         }
       ]
