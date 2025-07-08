@@ -465,18 +465,13 @@ This is my about-company.css
   }
   
   .about-company-section-{{ section.id }} .company-half {
-    width: 100%;
+    flex: 1 0 auto;
     height: auto;
-    position: relative;
-    cursor: pointer;
     overflow: visible;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    padding: 2rem;
   }
   
   .about-company-section-{{ section.id }} .company-half::before {
