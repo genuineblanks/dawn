@@ -577,6 +577,9 @@
     // Setup phone formatting
     setupPhoneFormatting();
 
+    // NEW: Setup production type listener
+    setupProductionTypeListener();
+
     // Form validation
     form.addEventListener('input', validateStep1);
     form.addEventListener('change', validateStep1);
@@ -1128,6 +1131,116 @@ function setupCountryDropdown() {
     
     formData.clientInfo = data;
     debug.log('Step 1 data saved', data);
+  }
+
+  function setupProductionTypeListener() {
+    const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
+    if (!productionTypeSelect) return;
+  
+    productionTypeSelect.addEventListener('change', function() {
+      const selectedType = this.value;
+      debug.log('Production type changed', selectedType);
+      
+      // Store the production type in formData
+      if (formData.clientInfo) {
+        formData.clientInfo.productionType = selectedType;
+      }
+      
+      // Update Step 3 interface based on selection
+      updateStep3Interface(selectedType);
+    });
+  }
+  
+  function updateStep3Interface(productionType) {
+    debug.log('Updating Step 3 interface for production type:', productionType);
+    
+    // Store the production type globally so Step 3 can access it
+    window.currentProductionType = productionType;
+    
+    // If we're currently on Step 3, update it immediately
+    if (currentStep === 3) {
+      refreshStep3Interface();
+    }
+  }
+  
+  function refreshStep3Interface() {
+    const productionType = window.currentProductionType || 'custom-production';
+    
+    // Update all existing garments
+    const garments = document.querySelectorAll('.techpack-garment');
+    garments.forEach(garment => {
+      updateGarmentInterface(garment, productionType);
+    });
+  }
+  
+  function updateGarmentInterface(garment, productionType) {
+    const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
+    const fabricTypeSelect = garment.querySelector('select[name="fabricType"]');
+    const fabricLabel = garment.querySelector('select[name="fabricType"]').closest('.techpack-form__group').querySelector('.techpack-form__label');
+    
+    if (!garmentTypeSelect || !fabricTypeSelect || !fabricLabel) return;
+    
+    if (productionType === 'our-blanks') {
+      // Update Garment Type options for "Our Blanks"
+      garmentTypeSelect.innerHTML = `
+        <option value="">Select garment type...</option>
+        <option value="Jacket">Jacket</option>
+        <option value="Hoodie">Hoodie</option>
+        <option value="Sweatshirt">Sweatshirt</option>
+        <option value="T-Shirt">T-Shirt</option>
+        <option value="Sweatpants">Sweatpants</option>
+      `;
+      
+      // Update Fabric Type to Collection Type
+      fabricLabel.textContent = 'Collection Type';
+      fabricTypeSelect.innerHTML = `
+        <option value="">Select collection type...</option>
+        <option value="Oversized Luxury Collection">Oversized Luxury Collection</option>
+        <option value="Relaxed High-End Collection">Relaxed High-End Collection</option>
+      `;
+    } else {
+      // Restore original options for "Custom Production"
+      garmentTypeSelect.innerHTML = `
+        <option value="">Select garment type...</option>
+        <option value="Zip-Up Hoodie">Zip-Up Hoodie</option>
+        <option value="Hoodie">Hoodie</option>
+        <option value="T-Shirt">T-Shirt</option>
+        <option value="Crewneck Sweatshirt">Crewneck Sweatshirt</option>
+        <option value="Sweatpants">Sweatpants</option>
+        <option value="Shorts">Shorts</option>
+        <option value="Long Sleeve T-Shirt">Long Sleeve T-Shirt</option>
+        <option value="Polo Shirt">Polo Shirt</option>
+        <option value="Tank Top">Tank Top</option>
+        <option value="Hat/Cap">Hat/Cap</option>
+        <option value="Beanie">Beanie</option>
+        <option value="Other">Other (Specify in Notes)</option>
+      `;
+      
+      // Restore original Fabric Type
+      fabricLabel.textContent = 'Fabric Type';
+      fabricTypeSelect.innerHTML = `
+        <option value="" selected>Select fabric type...</option>
+        <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
+        <option value="French Terry 100% Organic Cotton Fleece">French Terry 100% Organic Cotton</option>
+        <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
+        <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
+        <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
+        <option value="100% Polyester">100% Polyester</option>
+        <option value="100% Linen">100% Linen</option>
+        <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
+        <option value="Jersey Knit">Jersey Knit</option>
+        <option value="Pique">Pique</option>
+        <option value="Canvas">Canvas</option>
+        <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
+      `;
+    }
+    
+    // Clear current selections since options changed
+    garmentTypeSelect.value = '';
+    fabricTypeSelect.value = '';
+    
+    // Re-trigger validation
+    validateStep3();
   }
 
 // Step 2: File Upload
