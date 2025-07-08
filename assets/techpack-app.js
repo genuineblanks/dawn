@@ -125,7 +125,9 @@
       document.body.appendChild(debug.panel);
       debug.content = document.getElementById('debug-content');
     }
-
+  
+    // COMMENT OUT OR REMOVE THIS SECTION:
+    /*
     // Create debug toggle if it doesn't exist
     if (!document.querySelector('.debug-toggle')) {
       const toggleBtn = document.createElement('button');
@@ -134,7 +136,8 @@
       toggleBtn.onclick = toggleDebug;
       document.body.appendChild(toggleBtn);
     }
-
+    */
+  
     // Add debug controls
     if (debug.panel && debug.content) {
       const clearButton = document.createElement('button');
@@ -145,7 +148,7 @@
       };
       debug.panel.appendChild(clearButton);
     }
-
+  
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
