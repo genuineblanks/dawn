@@ -1,656 +1,440 @@
-{% comment %}
-  Section: about-company-section.liquid
-  Place this file in the sections folder
-  File path: sections/about-company-section.liquid
-{% endcomment %}
+/* section-about-company.css - Premium Horizontal Split Design */
 
-<style>
-  /* Ultra-specific selectors to override any existing CSS */
-  div#AboutCompany-{{ section.id }}.about-company-section-{{ section.id }} {
-    height: {{ section.settings.section_height }}vh !important;
-    min-height: {{ section.settings.min_height }}px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    font-family: var(--font-body-family), Arial, sans-serif !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-    width: 100% !important;
-  }
-  
-  /* Force remove any default section padding/margin */
-  div#AboutCompany-{{ section.id }}.about-company-section-{{ section.id }},
-  div#AboutCompany-{{ section.id }}.about-company-section-{{ section.id }} * {
-    box-sizing: border-box !important;
-  }
-  
-  /* Ultra-specific company half selectors */
-  div#AboutCompany-{{ section.id }} .company-half.company-top,
-  div#AboutCompany-{{ section.id }} .company-half.company-bottom {
-    width: 100% !important;
-    height: 50% !important;
-    max-height: 50% !important;
-    min-height: 50% !important;
-    position: relative !important;
-    cursor: pointer !important;
-    overflow: hidden !important;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    flex-shrink: 0 !important;
-    flex-grow: 0 !important;
-    flex-basis: 50% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  /* Glass morphism effects with ultra-specific selectors */
-  div#AboutCompany-{{ section.id }} .company-half.company-top::before,
-  div#AboutCompany-{{ section.id }} .company-half.company-bottom::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    transition: all 0.6s ease !important;
-    z-index: 1 !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-half.company-top:hover::before,
-  div#AboutCompany-{{ section.id }} .company-half.company-bottom:hover::before {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(30px) !important;
-    -webkit-backdrop-filter: blur(30px) !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-half.company-top:hover,
-  div#AboutCompany-{{ section.id }} .company-half.company-bottom:hover {
-    transform: scale(1.02) !important;
-  }
-  
-  /* Background styling with ultra-specific selectors */
-  div#AboutCompany-{{ section.id }} .company-half.company-top {
-    background: linear-gradient(135deg, rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 }}), rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 | minus: 0.15 }})), 
-                {% if section.settings.bg_image %}url('{{ section.settings.bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #f8f9fa, #e9ecef){% endif %} !important;
-    background-size: cover !important;
-    background-position: center !important;
-    color: {{ section.settings.text_color }} !important;
-    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-half.company-bottom {
-    background: linear-gradient(135deg, rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 }}), rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 | minus: 0.15 }})), 
-                {% if section.settings.bg_image_2 %}url('{{ section.settings.bg_image_2 | image_url: width: 1920 }}'){% else if section.settings.bg_image %}url('{{ section.settings.bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #e9ecef, #dee2e6){% endif %} !important;
-    background-size: cover !important;
-    background-position: center !important;
-    color: {{ section.settings.text_color }} !important;
-  }
-  
-  /* Content center with ultra-specific selectors */
-  div#AboutCompany-{{ section.id }} .content-center {
-    text-align: center !important;
-    z-index: 10 !important;
-    transition: all 0.6s ease !important;
-    max-width: 700px !important;
-    padding: 2.5rem !important;
-    position: relative !important;
-    margin: 0 auto !important;
-    width: 100% !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-half:hover .content-center {
-    transform: scale(1.05) translateY(-5px) !important;
-  }
-  
-  /* Typography with ultra-specific selectors */
-  div#AboutCompany-{{ section.id }} .company-title {
-    font-size: 2.2rem !important;
-    font-weight: 200 !important;
-    letter-spacing: 0.2em !important;
-    margin-bottom: 1.2rem !important;
-    text-transform: uppercase !important;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-    font-family: var(--font-heading-family) !important;
-    position: relative !important;
-    line-height: 1.3 !important;
-    color: inherit !important;
-    margin-top: 0 !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-title::after {
-    content: '' !important;
-    position: absolute !important;
-    bottom: -8px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 60px !important;
-    height: 1px !important;
-    background: linear-gradient(90deg, transparent, currentColor, transparent) !important;
-    opacity: 0.6 !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-description {
-    font-size: 1.1rem !important;
-    line-height: 1.7 !important;
-    opacity: 0.85 !important;
-    max-width: 600px !important;
-    margin: 0 auto 3rem !important;
-    font-weight: 300 !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
-    color: inherit !important;
-  }
-  
-  /* Button styling with ultra-specific selectors */
-  div#AboutCompany-{{ section.id }} .company-button {
-    display: inline-block !important;
-    padding: 20px 50px !important;
-    border: 2px solid rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.3) !important;
-    background: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.08) !important;
-    color: inherit !important;
-    text-decoration: none !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.2em !important;
-    font-weight: 400 !important;
-    font-size: 0.9rem !important;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    border-radius: 2px !important;
-    position: relative !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-button::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: -100% !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: linear-gradient(90deg, transparent, rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.1), transparent) !important;
-    transition: left 0.6s ease !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-button:hover::before {
-    left: 100% !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .company-button:hover {
-    background: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.15) !important;
-    border-color: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.5) !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
-    color: inherit !important;
-    text-decoration: none !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-  }
-  
-  /* Divider line with ultra-specific selector */
-  div#AboutCompany-{{ section.id }} .divider {
-    position: absolute !important;
-    top: 50% !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 1px !important;
-    background: linear-gradient(to right, 
-        transparent 0%, 
-        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.2) 20%, 
-        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.4) 50%, 
-        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.2) 80%, 
-        transparent 100%) !important;
-    z-index: 15 !important;
-    transform: translateY(-50%) !important;
-  }
-  
-  /* Scroll indicator with ultra-specific selector */
-  div#AboutCompany-{{ section.id }} .scroll-indicator {
-    position: absolute !important;
-    bottom: 2rem !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 10 !important;
-    background: rgba(0,0,0,0.3) !important;
-    padding: 8px 16px !important;
-    border-radius: 20px !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    opacity: 0.7 !important;
-    animation: fadeInOut-{{ section.id }} 3s infinite !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .scroll-line {
-    width: 1px !important;
-    height: 20px !important;
-    background: currentColor !important;
-    margin-bottom: 0.5rem !important;
-    transform-origin: top !important;
-    transition: all 0.3s ease !important;
-  }
-  
-  div#AboutCompany-{{ section.id }} .scroll-text {
-    font-size: 0.7rem !important;
-    letter-spacing: 0.15em !important;
-    text-transform: uppercase !important;
-    font-weight: 300 !important;
-    color: inherit !important;
-  }
-  
-  @keyframes fadeInOut-{{ section.id }} {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-  }
-  
-  /* Enhanced glass morphism effect */
-  div#AboutCompany-{{ section.id }} .company-half::after {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%) !important;
-    pointer-events: none !important;
-    z-index: 2 !important;
-  }
-  
-  /* Mobile responsiveness with ultra-specific selectors */
-  @media (max-width: 768px) {
-    div#AboutCompany-{{ section.id }}.about-company-section-{{ section.id }} {
-      height: 100vh !important;
-      min-height: 500px !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-half.company-top,
-    div#AboutCompany-{{ section.id }} .company-half.company-bottom {
-      height: 50vh !important;
-      max-height: 50vh !important;
-      min-height: 50vh !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-title {
-      font-size: 1.6rem !important;
-      letter-spacing: 0.15em !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .content-center {
-      padding: 2rem !important;
-      max-width: 400px !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-description {
-      max-width: 350px !important;
-      font-size: 1rem !important;
-      margin-bottom: 2rem !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-button {
-      padding: 16px 40px !important;
-      font-size: 0.8rem !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    div#AboutCompany-{{ section.id }} .company-title {
-      font-size: 1.4rem !important;
-      letter-spacing: 0.1em !important;
-      line-height: 1.2 !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-description {
-      max-width: 300px !important;
-      font-size: 0.95rem !important;
-      margin-bottom: 2rem !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .company-button {
-      padding: 14px 35px !important;
-      font-size: 0.75rem !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .content-center {
-      padding: 1.5rem !important;
-    }
-  }
-
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    div#AboutCompany-{{ section.id }} .company-half,
-    div#AboutCompany-{{ section.id }} .content-center,
-    div#AboutCompany-{{ section.id }} .company-button,
-    div#AboutCompany-{{ section.id }} .company-button::before {
-      transition: none !important;
-    }
-    
-    div#AboutCompany-{{ section.id }} .scroll-indicator {
-      animation: none !important;
-    }
-  }
-</style>
-
-{%- liquid
-  assign fetch_priority = 'auto'
-  if section.index == 1
-    assign fetch_priority = 'high'
-  endif
--%}
-
-<div
-  id="AboutCompany-{{ section.id }}"
-  class="about-company-section-{{ section.id }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
->
-  <div class="divider"></div>
-  
-  <div class="company-half company-top" onclick="goToAboutTop{{ section.id }}()" tabindex="0" role="button" aria-label="Learn more about {{ section.settings.company_title | default: 'Our Story' }}">
-    {%- if section.settings.bg_image != blank -%}
-      <div class="company-media">
-        {{
-          section.settings.bg_image
-          | image_url: width: 1920
-          | image_tag:
-            width: section.settings.bg_image.width,
-            height: section.settings.bg_image.height,
-            class: 'company-bg-image',
-            sizes: '100vw',
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-            fetchpriority: fetch_priority
-        }}
-      </div>
-    {%- endif -%}
-    
-    <div class="content-center">
-      {% if section.settings.company_title != blank %}
-        <h2 class="company-title">{{ section.settings.company_title }}</h2>
-      {% endif %}
-      
-      {% if section.settings.company_description != blank %}
-        <p class="company-description">
-          {{ section.settings.company_description }}
-        </p>
-      {% endif %}
-      
-      {% if section.settings.button_text != blank %}
-        <a href="{{ section.settings.button_url | default: '#' }}" class="company-button" onclick="goToAboutTop{{ section.id }}(); return false;" aria-label="Learn more about {{ section.settings.company_title | default: 'Our Story' }}">
-          {{ section.settings.button_text }}
-        </a>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="company-half company-bottom" onclick="goToAboutBottom{{ section.id }}()" tabindex="0" role="button" aria-label="Learn more about {{ section.settings.company_title_2 | default: 'Our Mission' }}">
-    {%- if section.settings.bg_image_2 != blank -%}
-      <div class="company-media">
-        {{
-          section.settings.bg_image_2
-          | image_url: width: 1920
-          | image_tag:
-            width: section.settings.bg_image_2.width,
-            height: section.settings.bg_image_2.height,
-            class: 'company-bg-image',
-            sizes: '100vw',
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-            fetchpriority: fetch_priority
-        }}
-      </div>
-    {%- endif -%}
-    
-    <div class="content-center">
-      {% if section.settings.company_title_2 != blank %}
-        <h2 class="company-title">{{ section.settings.company_title_2 }}</h2>
-      {% endif %}
-      
-      {% if section.settings.company_description_2 != blank %}
-        <p class="company-description">
-          {{ section.settings.company_description_2 }}
-        </p>
-      {% endif %}
-      
-      {% if section.settings.button_2_text != blank %}
-        <a href="{{ section.settings.button_2_url | default: '#' }}" class="company-button" onclick="goToAboutBottom{{ section.id }}(); return false;" aria-label="Learn more about {{ section.settings.company_title_2 | default: 'Our Mission' }}">
-          {{ section.settings.button_2_text }}
-        </a>
-      {% endif %}
-    </div>
-  </div>
-  
-  {% if section.settings.show_scroll_indicator %}
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-      <span class="scroll-text">{{ section.settings.scroll_text | default: 'Scroll' }}</span>
-    </div>
-  {% endif %}
-</div>
-
-<script>
-  function goToAboutTop{{ section.id }}() {
-    const topSection = document.querySelector('#AboutCompany-{{ section.id }} .company-top');
-    if (topSection) {
-      topSection.style.transform = 'scale(1.05)';
-      topSection.style.filter = 'brightness(1.2)';
-    }
-    
-    setTimeout(() => {
-      window.location.href = '{{ section.settings.button_url | default: "#" }}';
-    }, 400);
-  }
-
-  function goToAboutBottom{{ section.id }}() {
-    const bottomSection = document.querySelector('#AboutCompany-{{ section.id }} .company-bottom');
-    if (bottomSection) {
-      bottomSection.style.transform = 'scale(1.05)';
-      bottomSection.style.filter = 'brightness(1.2)';
-    }
-    
-    setTimeout(() => {
-      window.location.href = '{{ section.settings.button_2_url | default: "#" }}';
-    }, 400);
-  }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    const halves = document.querySelectorAll('#AboutCompany-{{ section.id }} .company-half');
-    
-    halves.forEach(half => {
-      half.addEventListener('mouseenter', function() {
-        this.style.filter = 'brightness(1.1) contrast(1.05)';
-      });
-      
-      half.addEventListener('mouseleave', function() {
-        this.style.filter = 'brightness(1) contrast(1)';
-      });
-      
-      half.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          this.click();
-        }
-      });
-    });
-    
-    const scrollIndicator = document.querySelector('#AboutCompany-{{ section.id }} .scroll-indicator');
-    if (scrollIndicator) {
-      window.addEventListener('scroll', function() {
-        const scrollProgress = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
-        const line = scrollIndicator.querySelector('.scroll-line');
-        if (line) {
-          line.style.transform = `scaleY(${Math.min(scrollProgress * 2, 1)})`;
-        }
-      });
-    }
-  });
-</script>
-
-{% schema %}
-{
-  "name": "About Company Section",
-  "tag": "section",
-  "class": "section",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
-  "settings": [
-    {
-      "type": "text",
-      "id": "dynamic_class",
-      "label": "Add Class here if Needed!"
-    },
-    {
-      "type": "header",
-      "content": "Section Settings"
-    },
-    {
-      "type": "range",
-      "id": "section_height",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "unit": "vh",
-      "label": "Section Height",
-      "default": 100
-    },
-    {
-      "type": "range",
-      "id": "min_height",
-      "min": 400,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Minimum Height",
-      "default": 600
-    },
-    {
-      "type": "header",
-      "content": "Background Images"
-    },
-    {
-      "type": "image_picker",
-      "id": "bg_image",
-      "label": "Top Section Background Image"
-    },
-    {
-      "type": "image_picker",
-      "id": "bg_image_2",
-      "label": "Bottom Section Background Image"
-    },
-    {
-      "type": "header",
-      "content": "Background Overlay"
-    },
-    {
-      "type": "color",
-      "id": "overlay_color",
-      "label": "Overlay Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 10,
-      "max": 90,
-      "step": 5,
-      "unit": "%",
-      "label": "Overlay Opacity",
-      "default": 75
-    },
-    {
-      "type": "header",
-      "content": "Text Settings"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#2c2c2c"
-    },
-    {
-      "type": "header",
-      "content": "Top Section Content"
-    },
-    {
-      "type": "text",
-      "id": "company_title",
-      "label": "Top Section Title",
-      "default": "Our Story"
-    },
-    {
-      "type": "textarea",
-      "id": "company_description",
-      "label": "Top Section Description",
-      "default": "We are fashion experts with over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal, where tradition meets innovation."
-    },
-    {
-      "type": "text",
-      "id": "button_text",
-      "label": "Top Section Button Text",
-      "default": "Explore Our Story"
-    },
-    {
-      "type": "url",
-      "id": "button_url",
-      "label": "Top Section Button URL"
-    },
-    {
-      "type": "header",
-      "content": "Bottom Section Content"
-    },
-    {
-      "type": "text",
-      "id": "company_title_2",
-      "label": "Bottom Section Title",
-      "default": "Our Mission"
-    },
-    {
-      "type": "textarea",
-      "id": "company_description_2",
-      "label": "Bottom Section Description",
-      "default": "Our facilities and machines are at the cutting edge of technology. We combine craftsmanship with innovation to deliver exceptional quality products that exceed expectations in every detail."
-    },
-    {
-      "type": "text",
-      "id": "button_2_text",
-      "label": "Bottom Section Button Text",
-      "default": "View Our Process"
-    },
-    {
-      "type": "url",
-      "id": "button_2_url",
-      "label": "Bottom Section Button URL"
-    },
-    {
-      "type": "header",
-      "content": "Scroll Indicator"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_scroll_indicator",
-      "label": "Show Scroll Indicator",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "scroll_text",
-      "label": "Scroll Indicator Text",
-      "default": "Scroll"
-    }
-  ],
-  "presets": [
-    {
-      "name": "About Company Section"
-    }
-  ]
+/* Reset and base styles */
+[id^="AboutCompany-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box;
 }
-{% endschema %}
+
+.about-company-section {
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Company half sections - horizontal split */
+.about-company-section .company-half {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Premium glass morphism effects */
+.about-company-section .company-half::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+
+.about-company-section .company-half:hover::before {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.about-company-section .company-half:hover {
+  transform: scale(1.02);
+}
+
+/* Top section styling */
+.about-company-section .company-top {
+  background: linear-gradient(135deg, rgba(248, 249, 250, 0.75), rgba(233, 236, 239, 0.60));
+  background-size: cover;
+  background-position: center;
+  color: #2c2c2c;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Bottom section styling */
+.about-company-section .company-bottom {
+  background: linear-gradient(135deg, rgba(233, 236, 239, 0.75), rgba(222, 226, 230, 0.60));
+  background-size: cover;
+  background-position: center;
+  color: #2c2c2c;
+}
+
+/* Background image handling */
+.about-company-section .company-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.about-company-section .company-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 8s ease-in-out;
+}
+
+.about-company-section .company-half:hover .company-bg-image {
+  transform: scale(1.02);
+}
+
+/* Content center styling */
+.about-company-section .content-center {
+  text-align: center;
+  z-index: 10;
+  transition: all 0.6s ease;
+  max-width: 700px;
+  padding: 2.5rem;
+  position: relative;
+}
+
+.about-company-section .company-half:hover .content-center {
+  transform: scale(1.05) translateY(-5px);
+}
+
+/* Typography */
+.about-company-section .company-title {
+  font-size: 2.2rem;
+  font-weight: 200;
+  letter-spacing: 0.2em;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
+  position: relative;
+  line-height: 1.3;
+  color: inherit;
+}
+
+.about-company-section .company-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.6;
+}
+
+.about-company-section .company-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: inherit;
+}
+
+/* Premium button styling */
+.about-company-section .company-button {
+  display: inline-block;
+  padding: 20px 50px;
+  border: 2px solid rgba(44, 44, 44, 0.3);
+  background: rgba(44, 44, 44, 0.08);
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-company-section .company-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(44, 44, 44, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.about-company-section .company-button:hover::before {
+  left: 100%;
+}
+
+.about-company-section .company-button:hover {
+  background: rgba(44, 44, 44, 0.15);
+  border-color: rgba(44, 44, 44, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  color: inherit;
+  text-decoration: none;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Divider line */
+.about-company-section .divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, 
+      transparent 0%, 
+      rgba(44, 44, 44, 0.2) 20%, 
+      rgba(44, 44, 44, 0.4) 50%, 
+      rgba(44, 44, 44, 0.2) 80%, 
+      transparent 100%);
+  z-index: 15;
+  transform: translateY(-50%);
+}
+
+/* Scroll indicator */
+.about-company-section .scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.7;
+  animation: company-scroll-pulse 3s infinite;
+}
+
+.about-company-section .scroll-line {
+  width: 1px;
+  height: 20px;
+  background: currentColor;
+  margin-bottom: 0.5rem;
+  transform-origin: top;
+  transition: all 0.3s ease;
+}
+
+.about-company-section .scroll-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: inherit;
+}
+
+@keyframes company-scroll-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Enhanced glass morphism effect */
+.about-company-section .company-half::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Enhanced hover states for premium feel */
+.about-company-section .company-half:hover {
+  background-attachment: fixed;
+}
+
+.about-company-section .company-half:active {
+  transform: scale(0.98);
+}
+
+/* Subtle animation on load */
+.about-company-section .company-half {
+  animation: company-slideInHorizontal 1.2s ease-out;
+}
+
+.about-company-section .company-top {
+  animation-delay: 0.1s;
+}
+
+.about-company-section .company-bottom {
+  animation-delay: 0.2s;
+}
+
+@keyframes company-slideInHorizontal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .about-company-section {
+    height: 100vh;
+    min-height: 500px;
+  }
+  
+  .about-company-section .company-half {
+    height: 50vh;
+  }
+  
+  .about-company-section .company-title {
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+  }
+  
+  .about-company-section .content-center {
+    padding: 2rem;
+    max-width: 400px;
+  }
+  
+  .about-company-section .company-description {
+    max-width: 350px;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .about-company-section .company-button {
+    padding: 16px 40px;
+    font-size: 0.8rem;
+  }
+  
+  .about-company-section .scroll-indicator {
+    bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-company-section .company-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+  
+  .about-company-section .company-description {
+    max-width: 300px;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+  
+  .about-company-section .company-button {
+    padding: 14px 35px;
+    font-size: 0.75rem;
+  }
+  
+  .about-company-section .content-center {
+    padding: 1.5rem;
+  }
+}
+
+/* Focus states for accessibility */
+.about-company-section .company-button:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.8);
+  outline-offset: 3px;
+}
+
+.about-company-section .company-half:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.6);
+  outline-offset: -2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .about-company-section .company-top,
+  .about-company-section .company-bottom {
+    background-blend-mode: multiply;
+  }
+  
+  .about-company-section .company-button {
+    border-color: rgba(44, 44, 44, 0.8);
+    background: rgba(44, 44, 44, 0.2);
+  }
+  
+  .about-company-section .company-half::before {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .about-company-section .company-half,
+  .about-company-section .content-center,
+  .about-company-section .company-button,
+  .about-company-section .company-button::before,
+  .about-company-section .company-bg-image {
+    transition: none;
+  }
+  
+  .about-company-section .scroll-indicator {
+    animation: none;
+  }
+  
+  .about-company-section .company-half {
+    animation: none;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .about-company-section .company-half:hover {
+    transform: none;
+  }
+  
+  .about-company-section .company-half:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Print styles */
+@media print {
+  .about-company-section {
+    height: auto;
+    min-height: auto;
+  }
+  
+  .about-company-section .company-half {
+    height: auto;
+    min-height: 300px;
+    page-break-inside: avoid;
+  }
+  
+  .about-company-section .scroll-indicator {
+    display: none;
+  }
+}
