@@ -126,3 +126,30 @@
     margin: 0 !important;
   }
 }
+
+/* TEMPORARY DEBUG - Remove after finding the issue */
+@media screen and (max-width: 749px) {
+  * {
+    outline: 1px solid red !important;
+  }
+  
+  .page-width {
+    background: yellow !important;
+  }
+  
+  .content-container {
+    background: blue !important;
+  }
+  
+  .rich-text {
+    background: green !important;
+  }
+  
+  .section {
+    background: purple !important;
+  }
+  
+  .isolate {
+    background: orange !important;
+  }
+}
