@@ -2345,3 +2345,759 @@
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
+
+/* =========================================
+   PREMIUM MOBILE-ONLY CSS FOR TECHPACK APP
+   Add this AFTER your existing CSS
+   ========================================= */
+
+@media (max-width: 768px) {
+  
+  /* =================== MOBILE CONTAINER RESET =================== */
+  .techpack-container {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+  
+  /* =================== MOBILE PROGRESS BAR =================== */
+  .techpack-progress {
+    background: white !important;
+    margin: 0 !important;
+    padding: 1rem 1rem 0.5rem !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+  }
+  
+  .techpack-progress__steps {
+    gap: 0.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .techpack-progress__step {
+    flex: 1 !important;
+    gap: 0.25rem !important;
+  }
+  
+  .techpack-progress__step-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  }
+  
+  .techpack-progress__step-label {
+    font-size: 0.6rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.2 !important;
+  }
+  
+  .techpack-progress__bar {
+    height: 4px !important;
+    margin-bottom: 0 !important;
+    border-radius: 2px !important;
+  }
+  
+  /* =================== MOBILE CONTENT CONTAINER =================== */
+  .techpack-content {
+    background: #fafafa !important;
+    border-radius: 0 !important;
+    padding: 1.5rem 1rem !important;
+    box-shadow: none !important;
+    border: none !important;
+    min-height: calc(100vh - 140px) !important;
+  }
+  
+  .techpack-content::before {
+    display: none !important;
+  }
+  
+  /* =================== MOBILE FORM LAYOUT =================== */
+  .techpack-title {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    text-align: center !important;
+    font-weight: 700 !important;
+  }
+  
+  .techpack-subtitle {
+    font-size: 0.875rem !important;
+    margin-bottom: 1.5rem !important;
+    text-align: center !important;
+    color: #666 !important;
+  }
+  
+  /* =================== MOBILE FORM GROUPS =================== */
+  .techpack-form__row {
+    display: block !important;
+    gap: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .techpack-form__group {
+    margin-bottom: 1.25rem !important;
+    background: white !important;
+    padding: 1rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+    border: 1px solid #f0f0f0 !important;
+  }
+  
+  .techpack-form__label {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    color: #374151 !important;
+    margin-bottom: 0.5rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+  
+  .techpack-form__input,
+  .techpack-form__select,
+  .techpack-form__textarea {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.875rem !important;
+    font-size: 1rem !important;
+    background: #fafafa !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .techpack-form__input:focus,
+  .techpack-form__select:focus,
+  .techpack-form__textarea:focus {
+    background: white !important;
+    border-color: #1a1a1a !important;
+    box-shadow: 0 0 0 3px rgba(26,26,26,0.1) !important;
+    transform: none !important;
+  }
+  
+  /* =================== MOBILE QUANTITY TRACKER =================== */
+  .techpack-quantity-tracker {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin: 1rem 0 1.5rem !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+    border: 1px solid #f0f0f0 !important;
+  }
+  
+  .techpack-quantity-tracker__content {
+    margin-bottom: 0.75rem !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  
+  .techpack-quantity-tracker__label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+  }
+  
+  .techpack-quantity-tracker__value {
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+  }
+  
+  .techpack-quantity-tracker__minimum {
+    font-size: 0.75rem !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  .techpack-quantity-tracker__bar {
+    height: 8px !important;
+    border-radius: 4px !important;
+    background: #f3f4f6 !important;
+  }
+  
+  /* =================== MOBILE GARMENT CARDS =================== */
+  .techpack-garment {
+    background: white !important;
+    border-radius: 16px !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    border: 1px solid #f0f0f0 !important;
+    overflow: hidden !important;
+  }
+  
+  .techpack-garment:hover {
+    transform: none !important;
+  }
+  
+  .techpack-garment__header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    color: white !important;
+    padding: 1rem 1.25rem !important;
+    border-bottom: none !important;
+  }
+  
+  .techpack-garment__title {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+  }
+  
+  .techpack-garment__remove {
+    background: rgba(255,255,255,0.1) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .techpack-garment__remove:hover {
+    background: rgba(239, 68, 68, 0.8) !important;
+    border-color: rgba(239, 68, 68, 1) !important;
+    transform: none !important;
+  }
+  
+  .techpack-garment__content {
+    padding: 1.25rem !important;
+  }
+  
+  /* =================== MOBILE FORM GROUPS IN GARMENTS =================== */
+  .techpack-garment .techpack-form__group {
+    background: #fafafa !important;
+    border: 1px solid #e5e7eb !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* =================== MOBILE CHECKBOXES =================== */
+  .techpack-form__checkboxes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+    margin-top: 0.75rem !important;
+  }
+  
+  .techpack-form__checkbox {
+    background: #fafafa !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 0.875rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    transition: all 0.2s ease !important;
+    min-width: auto !important;
+    justify-content: center !important;
+  }
+  
+  .techpack-form__checkbox:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  .techpack-form__checkbox input[type="checkbox"]:checked ~ span {
+    color: white !important;
+  }
+  
+  .techpack-form__checkbox:has(input:checked) {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    color: white !important;
+  }
+  
+  .techpack-form__checkbox-mark {
+    display: none !important;
+  }
+  
+  /* =================== MOBILE COLORWAYS =================== */
+  .techpack-colorways {
+    margin-top: 1.5rem !important;
+  }
+  
+  .techpack-colorways__header {
+    background: #f8f9fa !important;
+    padding: 1rem !important;
+    border-radius: 10px !important;
+    margin-bottom: 1rem !important;
+    border: 1px solid #e9ecef !important;
+  }
+  
+  .techpack-colorways__title {
+    font-size: 1rem !important;
+    color: #374151 !important;
+    margin: 0 !important;
+  }
+  
+  .techpack-btn--secondary {
+    background: #1a1a1a !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.625rem 1rem !important;
+    font-size: 0.75rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+  }
+  
+  .techpack-colorway {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    margin-bottom: 1rem !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+  }
+  
+  .techpack-colorway__header {
+    display: block !important;
+    gap: 0 !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+  }
+  
+  .techpack-colorway__remove {
+    position: absolute !important;
+    top: -0.5rem !important;
+    right: -0.5rem !important;
+    background: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.875rem !important;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3) !important;
+  }
+  
+  .techpack-colorway__color,
+  .techpack-colorway__pantone {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .techpack-colorway__color .techpack-form__label,
+  .techpack-colorway__pantone .techpack-form__label {
+    background: none !important;
+    padding: 0 !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.75rem !important;
+    color: #6b7280 !important;
+  }
+  
+  .techpack-color-picker {
+    background: #f9fafb !important;
+    padding: 0.75rem !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  .techpack-color-picker__input {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    border: 2px solid white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  }
+  
+  .techpack-colorway__pantone input {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* =================== MOBILE SIZE GRID - COMPLETELY REDESIGNED =================== */
+  .techpack-size-grid {
+    background: #f8f9fa !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    border: 1px solid #e9ecef !important;
+    overflow: visible !important;
+    margin: 1rem 0 !important;
+  }
+  
+  .techpack-size-grid__header {
+    display: none !important;
+  }
+  
+  .techpack-size-grid__row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    grid-template-columns: none !important;
+    background: none !important;
+    min-width: auto !important;
+  }
+  
+  /* Create individual size input cards */
+  .techpack-size-grid__input {
+    position: relative !important;
+    background: white !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    padding: 1rem 0.875rem 0.75rem !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    height: auto !important;
+    min-width: auto !important;
+    width: 100% !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .techpack-size-grid__input:focus {
+    border-color: #1a1a1a !important;
+    background: white !important;
+    box-shadow: 0 0 0 3px rgba(26,26,26,0.1) !important;
+    transform: none !important;
+  }
+  
+  /* Add size labels as placeholders/pseudo elements */
+  .techpack-size-grid__input[name*="qty-xxs"] {
+    order: 1;
+  }
+  .techpack-size-grid__input[name*="qty-xxs"]::before {
+    content: "XXS";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-xs"] {
+    order: 2;
+  }
+  .techpack-size-grid__input[name*="qty-xs"]::before {
+    content: "XS";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-s"]:not([name*="qty-xs"]):not([name*="qty-xxs"]) {
+    order: 3;
+  }
+  .techpack-size-grid__input[name*="qty-s"]:not([name*="qty-xs"]):not([name*="qty-xxs"])::before {
+    content: "S";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-m"] {
+    order: 4;
+  }
+  .techpack-size-grid__input[name*="qty-m"]::before {
+    content: "M";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-l"]:not([name*="qty-xl"]):not([name*="qty-xxl"]) {
+    order: 5;
+  }
+  .techpack-size-grid__input[name*="qty-l"]:not([name*="qty-xl"]):not([name*="qty-xxl"])::before {
+    content: "L";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-xl"]:not([name*="qty-xxl"]) {
+    order: 6;
+  }
+  .techpack-size-grid__input[name*="qty-xl"]:not([name*="qty-xxl"])::before {
+    content: "XL";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .techpack-size-grid__input[name*="qty-xxl"] {
+    order: 7;
+  }
+  .techpack-size-grid__input[name*="qty-xxl"]::before {
+    content: "XXL";
+    position: absolute;
+    top: 0.375rem;
+    left: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Remove scroll hint on mobile */
+  .techpack-size-grid::after {
+    display: none !important;
+  }
+  
+  /* =================== MOBILE COLORWAY TOTAL =================== */
+  .techpack-colorway__total {
+    background: #f8f9fa !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 8px !important;
+    padding: 0.875rem !important;
+    margin-top: 1rem !important;
+    border-top: 1px solid #e9ecef !important;
+  }
+  
+  .techpack-colorway__total-value {
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+  }
+  
+  /* =================== MOBILE GARMENT TOTAL =================== */
+  .techpack-garment__total {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    padding: 1rem 1.25rem !important;
+    border-top: 1px solid #e5e7eb !important;
+  }
+  
+  .techpack-garment__total-value {
+    font-size: 1.75rem !important;
+    font-weight: 900 !important;
+  }
+  
+  /* =================== MOBILE ADD GARMENT BUTTON =================== */
+  .techpack-btn--add-garment {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 1.25rem !important;
+    margin: 1.5rem 0 !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(26,26,26,0.2) !important;
+    transform: none !important;
+  }
+  
+  .techpack-btn--add-garment:hover {
+    transform: none !important;
+    box-shadow: 0 6px 16px rgba(26,26,26,0.3) !important;
+  }
+  
+  /* =================== MOBILE FORM ACTIONS =================== */
+  .techpack-form__actions {
+    background: white !important;
+    border-top: 1px solid #f0f0f0 !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+    margin: 1.5rem -1rem -1.5rem !important;
+    flex-direction: row !important;
+    gap: 0.75rem !important;
+  }
+  
+  .techpack-btn {
+    border-radius: 12px !important;
+    padding: 0.875rem 1.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 700 !important;
+    flex: 1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+  
+  .techpack-btn--primary {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    box-shadow: 0 4px 12px rgba(26,26,26,0.2) !important;
+  }
+  
+  .techpack-btn--ghost {
+    background: #f8f9fa !important;
+    color: #374151 !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  /* =================== MOBILE VALIDATION MESSAGES =================== */
+  .techpack-form__error,
+  .field-error-message {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+  }
+  
+  /* =================== MOBILE COUNTRY DROPDOWN =================== */
+  .techpack-form__country-wrapper {
+    position: relative !important;
+  }
+  
+  .techpack-form__dropdown {
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+    max-height: 240px !important;
+  }
+  
+  .techpack-form__dropdown-item {
+    padding: 0.875rem 1rem !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+  }
+  
+  .techpack-form__dropdown-search {
+    border-radius: 8px !important;
+    margin: 0.75rem !important;
+    width: calc(100% - 1.5rem) !important;
+    padding: 0.75rem !important;
+    border: 1px solid #e5e7eb !important;
+    background: #fafafa !important;
+  }
+  
+  /* =================== MOBILE FILE UPLOAD =================== */
+  .techpack-upload__zone {
+    border-radius: 16px !important;
+    padding: 2rem 1rem !important;
+    border: 2px dashed #d1d5db !important;
+    background: white !important;
+    margin: 1rem 0 !important;
+  }
+  
+  .techpack-file {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+    border: 1px solid #f0f0f0 !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  .techpack-file__tag {
+    width: 100% !important;
+    min-width: auto !important;
+  }
+  
+  .techpack-file__tag-select {
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    border: 1px solid #e5e7eb !important;
+    background: #fafafa !important;
+  }
+  
+  /* =================== MOBILE UTILITIES =================== */
+  
+  /* Hide desktop-only elements on mobile */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Ensure no horizontal scroll */
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Add mobile-specific spacing */
+  .mobile-spacer {
+    height: 1rem;
+  }
+  
+  /* Mobile-specific success states */
+  .techpack-form__group--success {
+    border-color: #10b981 !important;
+    background: #f0fdf4 !important;
+  }
+  
+  /* Mobile-specific error states */
+  .techpack-form__group--error {
+    border-color: #ef4444 !important;
+    background: #fef2f2 !important;
+  }
+  
+  /* Improve touch targets */
+  button, 
+  select, 
+  input[type="submit"], 
+  input[type="button"], 
+  .techpack-btn {
+    min-height: 44px !important;
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* =================== MOBILE LANDSCAPE ADJUSTMENTS =================== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .techpack-progress {
+    padding: 0.75rem 1rem 0.25rem !important;
+  }
+  
+  .techpack-content {
+    padding: 1rem !important;
+    min-height: calc(100vh - 100px) !important;
+  }
+  
+  .techpack-form__group {
+    padding: 0.75rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* =================== VERY SMALL SCREENS (≤ 375px) =================== */
+@media (max-width: 375px) {
+  .techpack-content {
+    padding: 1rem 0.75rem !important;
+  }
+  
+  .techpack-form__group {
+    padding: 0.875rem !important;
+  }
+  
+  .techpack-garment__content {
+    padding: 1rem !important;
+  }
+  
+  .techpack-colorway {
+    padding: 1rem !important;
+  }
+}
