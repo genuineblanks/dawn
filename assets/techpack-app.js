@@ -2004,25 +2004,36 @@ function setupCountryDropdown() {
       return;
     }
 
-    const filesHtml = formData.files.map(fileData => `
-      <div class="techpack-review__file">
-        <div class="techpack-review__file-info">
-          <svg class="techpack-review__file-icon" width="16" height="16" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-          <span class="techpack-review__file-name">${fileData.file.name}</span>
+    const filesHtml = formData.files.map(fileData => {
+      // Choose icon based on file type
+      let iconPath;
+      switch(fileData.type) {
+        case 'Collection':
+          iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z';
+          break;
+        case 'Single':
+          iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z';
+          break;
+        case 'Design':
+          iconPath = 'M12 2l3.09 6.26L22 9l-5 4.87L18.18 22 12 18.27 5.82 22 7 13.87 2 9l6.91-.74L12 2z';
+          break;
+        default:
+          iconPath = 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z';
+      }
+    
+      return `
+        <div class="techpack-review__file">
+          <div class="techpack-review__file-info">
+            <svg class="techpack-review__file-icon" width="16" height="16" viewBox="0 0 24 24">
+              <path d="${iconPath}" stroke="currentColor" stroke-width="2" fill="none"/>
+              ${fileData.type === 'Design' ? '' : '<path d="M14 2v6h6" stroke="currentColor" stroke-width="2" fill="none"/>'}
+            </svg>
+            <span class="techpack-review__file-name">${fileData.file.name}</span>
+          </div>
+          <span class="techpack-review__file-type">${fileData.type}</span>
         </div>
-        <span class="techpack-review__file-type">${fileData.type}</span>
-      </div>
-    `).join('');
-
-    container.innerHTML = `
-      <div class="techpack-review__files">
-        ${filesHtml}
-      </div>
-    `;
-  }
+      `;
+    }).join('');
 
   function populateReviewStep3() {
     const container = document.querySelector('#review-step-3');
