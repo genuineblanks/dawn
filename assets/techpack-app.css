@@ -1499,8 +1499,20 @@
 @media (max-width: 767px) {
   .techpack-size-grid__header,
   .techpack-size-grid__row {
-    grid-template-columns: 50px repeat(7, minmax(45px, 1fr));
-    gap: 3px;
+    grid-template-columns: 45px repeat(7, minmax(42px, 1fr));
+    gap: 2px;
+    font-size: 10px;
+  }
+
+  .techpack-size-grid {
+    overflow-x: auto;
+    padding: 8px;
+    margin: 0 -8px;
+  }
+  
+  .techpack-size-grid__header,
+  .techpack-size-grid__row {
+    min-width: 320px;
   }
   
   .techpack-size-grid__label {
@@ -1532,13 +1544,24 @@
 @media (max-width: 480px) {
   .techpack-size-grid__header,
   .techpack-size-grid__row {
-    grid-template-columns: 40px repeat(7, minmax(40px, 1fr));
-    gap: 2px;
+    grid-template-columns: 40px repeat(7, minmax(38px, 1fr));
+    gap: 1px;
+    min-width: 300px;
   }
   
   .techpack-size-grid__input {
-    height: 32px !important;
-    font-size: 11px !important;
+    height: 30px !important;
+    font-size: 10px !important;
+    padding: 1px !important;
+  }
+  
+  .techpack-size-grid__label {
+    font-size: 9px;
+    padding: 4px 2px;
+  }
+  
+  .techpack-colorway {
+    padding: 8px;
   }
 }
 
@@ -2071,15 +2094,25 @@
     margin-bottom: 20px;
     padding: 12px;
   }
-  
+
   .techpack-colorway__header {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    position: relative;
   }
   
   .techpack-colorway__remove {
-    justify-self: end;
-    margin-top: -40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .techpack-colorway__color,
+  .techpack-colorway__pantone {
+    width: 100%;
   }
   
   .techpack-color-picker__input {
