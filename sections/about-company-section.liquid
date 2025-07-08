@@ -60,11 +60,10 @@
     <!-- Top Half Section -->
     <div 
       class="about-company__half company-top" 
-      onclick="navigateToSection{{ section.id }}('top')" 
+      onclick="goToAboutTop{{ section.id }}()" 
       tabindex="0" 
       role="button" 
       aria-label="{{ section.settings.company_title | default: 'Learn more about our story' | escape }}"
-      onkeydown="handleKeyNavigation{{ section.id }}(event, 'top')"
     >
       {%- if section.settings.bg_image != blank -%}
         <div class="about-company__media">
@@ -101,10 +100,10 @@
             <a 
               href="{{ section.settings.button_url | default: '#' }}" 
               class="about-company__button"
+              onclick="goToAboutTop{{ section.id }}(); return false;"
               aria-label="{{ section.settings.button_text | escape }} - {{ section.settings.company_title | default: 'Learn more' | escape }}"
             >
-              <span class="about-company__button-text">{{ section.settings.button_text }}</span>
-              <span class="about-company__button-fill"></span>
+              {{ section.settings.button_text }}
             </a>
           {% endif %}
         </div>
@@ -114,11 +113,10 @@
     <!-- Bottom Half Section -->
     <div 
       class="about-company__half company-bottom" 
-      onclick="navigateToSection{{ section.id }}('bottom')" 
+      onclick="goToAboutBottom{{ section.id }}()" 
       tabindex="0" 
       role="button" 
       aria-label="{{ section.settings.company_title_2 | default: 'Learn more about our mission' | escape }}"
-      onkeydown="handleKeyNavigation{{ section.id }}(event, 'bottom')"
     >
       {%- if section.settings.bg_image_2 != blank -%}
         <div class="about-company__media">
@@ -155,10 +153,10 @@
             <a 
               href="{{ section.settings.button_2_url | default: '#' }}" 
               class="about-company__button"
+              onclick="goToAboutBottom{{ section.id }}(); return false;"
               aria-label="{{ section.settings.button_2_text | escape }} - {{ section.settings.company_title_2 | default: 'Learn more' | escape }}"
             >
-              <span class="about-company__button-text">{{ section.settings.button_2_text }}</span>
-              <span class="about-company__button-fill"></span>
+              {{ section.settings.button_2_text }}
             </a>
           {% endif %}
         </div>
@@ -176,29 +174,32 @@
 
 <script>
   // Navigation Functions for Section {{ section.id }}
-  function navigateToSection{{ section.id }}(section) {
-    const element = document.querySelector('.about-company-{{ section.id }} .company-' + section);
-    if (element) {
-      // Add premium interaction effect
-      element.style.transform = 'scale(1.02)';
-      element.style.filter = 'brightness(1.1)';
-      
-      // Navigate after animation
-      setTimeout(() => {
-        if (section === 'top') {
-          window.location.href = '{{ section.settings.button_url | default: "#" }}';
-        } else {
-          window.location.href = '{{ section.settings.button_2_url | default: "#" }}';
-        }
-      }, 300);
+  function goToAboutTop{{ section.id }}() {
+    // Add premium transition effect
+    const topSection = document.querySelector('.about-company-{{ section.id }} .company-top');
+    if (topSection) {
+      topSection.style.transform = 'scale(1.05)';
+      topSection.style.filter = 'brightness(1.2)';
     }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.button_url | default: "#" }}';
+      console.log('Navigating to About Top Section');
+    }, 400);
   }
 
-  function handleKeyNavigation{{ section.id }}(event, section) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      navigateToSection{{ section.id }}(section);
+  function goToAboutBottom{{ section.id }}() {
+    // Add premium transition effect
+    const bottomSection = document.querySelector('.about-company-{{ section.id }} .company-bottom');
+    if (bottomSection) {
+      bottomSection.style.transform = 'scale(1.05)';
+      bottomSection.style.filter = 'brightness(1.2)';
     }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.button_2_url | default: "#" }}';
+      console.log('Navigating to About Bottom Section');
+    }, 400);
   }
 
   // Enhanced Interaction Effects for Section {{ section.id }}
