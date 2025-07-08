@@ -7,33 +7,361 @@
 {{ 'section-about-company.css' | asset_url | stylesheet_tag }}
 
 <style>
-  #AboutCompany-{{ section.id }} {
+  .about-company-section-{{ section.id }} {
     height: {{ section.settings.section_height }}vh;
     min-height: {{ section.settings.min_height }}px;
-    background: transparent;
-    {% if section.settings.bg_image != blank %}
-      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
-      background-size: cover;
-      background-position: center;
-    {% endif %}
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-family: var(--font-body-family), Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
   
-  #AboutCompany-{{ section.id }} .company-content {
+  .about-company-section-{{ section.id }} .company-half {
+    width: 100%;
+    height: 50%;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .about-company-section-{{ section.id }} .company-half::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.6s ease;
+    z-index: 1;
+  }
+  
+  .about-company-section-{{ section.id }} .company-half:hover::before {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
+  
+  .about-company-section-{{ section.id }} .company-half:hover {
+    transform: scale(1.02);
+  }
+  
+  .about-company-section-{{ section.id }} .company-top {
+    background: linear-gradient(135deg, rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 }}), rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 | minus: 0.15 }})), 
+                {% if section.settings.bg_image %}url('{{ section.settings.bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #f8f9fa, #e9ecef){% endif %};
+    background-size: cover;
+    background-position: center;
+    color: {{ section.settings.text_color }};
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  
+  .about-company-section-{{ section.id }} .company-bottom {
+    background: linear-gradient(135deg, rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 }}), rgba({{ section.settings.overlay_color | color_extract: 'red' }}, {{ section.settings.overlay_color | color_extract: 'green' }}, {{ section.settings.overlay_color | color_extract: 'blue' }}, 0.{{ section.settings.overlay_opacity | divided_by: 100 | minus: 0.15 }})), 
+                {% if section.settings.bg_image_2 %}url('{{ section.settings.bg_image_2 | image_url: width: 1920 }}'){% else if section.settings.bg_image %}url('{{ section.settings.bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #e9ecef, #dee2e6){% endif %};
+    background-size: cover;
+    background-position: center;
     color: {{ section.settings.text_color }};
   }
   
-  #AboutCompany-{{ section.id }} .company-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
+  .about-company-section-{{ section.id }} .content-center {
+    text-align: center;
+    z-index: 10;
+    transition: all 0.6s ease;
+    max-width: 700px;
+    padding: 2.5rem;
+    position: relative;
   }
   
+  .about-company-section-{{ section.id }} .company-half:hover .content-center {
+    transform: scale(1.05) translateY(-5px);
+  }
+  
+  .about-company-section-{{ section.id }} .company-title {
+    font-size: 2.2rem;
+    font-weight: 200;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    font-family: var(--font-heading-family);
+    position: relative;
+    line-height: 1.3;
+  }
+  
+  .about-company-section-{{ section.id }} .company-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: 0.6;
+  }
+  
+  .about-company-section-{{ section.id }} .company-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .about-company-section-{{ section.id }} .company-button {
+    display: inline-block;
+    padding: 20px 50px;
+    border: 2px solid rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.3);
+    background: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.08);
+    color: inherit;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 400;
+    font-size: 0.9rem;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .about-company-section-{{ section.id }} .company-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.1), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .about-company-section-{{ section.id }} .company-button:hover::before {
+    left: 100%;
+  }
+  
+  .about-company-section-{{ section.id }} .company-button:hover {
+    background: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.15);
+    border-color: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    color: inherit;
+    text-decoration: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .about-company-section-{{ section.id }} .divider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, 
+        transparent 0%, 
+        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.2) 20%, 
+        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.4) 50%, 
+        rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.2) 80%, 
+        transparent 100%);
+    z-index: 15;
+    transform: translateY(-50%);
+  }
+  
+  .about-company-section-{{ section.id }} .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0.7;
+    animation: fadeInOut-{{ section.id }} 3s infinite;
+  }
+  
+  .about-company-section-{{ section.id }} .scroll-line {
+    width: 1px;
+    height: 20px;
+    background: currentColor;
+    margin-bottom: 0.5rem;
+    transform-origin: top;
+    transition: all 0.3s ease;
+  }
+  
+  .about-company-section-{{ section.id }} .scroll-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: inherit;
+  }
+  
+  @keyframes fadeInOut-{{ section.id }} {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  /* Enhanced glass morphism effect */
+  .about-company-section-{{ section.id }} .company-half::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  /* Mobile responsiveness */
   @media (max-width: 768px) {
-    #AboutCompany-{{ section.id }} .company-buttons {
-      flex-direction: column;
-      gap: 0.75rem;
+    .about-company-section-{{ section.id }} .company-half {
+      height: 50vh;
+    }
+    
+    .about-company-section-{{ section.id }} .company-title {
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+    }
+    
+    .about-company-section-{{ section.id }} .content-center {
+      padding: 2rem;
+      max-width: 400px;
+    }
+    
+    .about-company-section-{{ section.id }} .company-description {
+      max-width: 350px;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .about-company-section-{{ section.id }} .company-button {
+      padding: 16px 40px;
+      font-size: 0.8rem;
+    }
+  }
+  
+  /* Additional mobile adjustments */
+  @media (max-width: 480px) {
+    .about-company-section-{{ section.id }} .company-title {
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      line-height: 1.2;
+    }
+    
+    .about-company-section-{{ section.id }} .company-description {
+      max-width: 300px;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    
+    .about-company-section-{{ section.id }} .company-button {
+      padding: 14px 35px;
+      font-size: 0.75rem;
+    }
+    
+    .about-company-section-{{ section.id }} .content-center {
+      padding: 1.5rem;
+    }
+  }
+
+  /* Focus states for accessibility */
+  .about-company-section-{{ section.id }} .company-button:focus {
+    outline: 2px solid rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.8);
+    outline-offset: 3px;
+  }
+  
+  .about-company-section-{{ section.id }} .company-half:focus {
+    outline: 2px solid rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.6);
+    outline-offset: -2px;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .about-company-section-{{ section.id }} .company-top,
+    .about-company-section-{{ section.id }} .company-bottom {
+      background-blend-mode: multiply;
+    }
+    
+    .about-company-section-{{ section.id }} .company-button {
+      border-color: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.8);
+      background: rgba({{ section.settings.text_color | color_extract: 'red' }}, {{ section.settings.text_color | color_extract: 'green' }}, {{ section.settings.text_color | color_extract: 'blue' }}, 0.2);
+    }
+    
+    .about-company-section-{{ section.id }} .company-half::before {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .about-company-section-{{ section.id }} .company-half,
+    .about-company-section-{{ section.id }} .content-center,
+    .about-company-section-{{ section.id }} .company-button,
+    .about-company-section-{{ section.id }} .company-button::before {
+      transition: none;
+    }
+    
+    .about-company-section-{{ section.id }} .scroll-indicator {
+      animation: none;
+    }
+  }
+  
+  /* Enhanced hover states for premium feel */
+  .about-company-section-{{ section.id }} .company-half:hover {
+    background-attachment: fixed;
+  }
+  
+  .about-company-section-{{ section.id }} .company-half:active {
+    transform: scale(0.98);
+  }
+  
+  /* Subtle animation on load */
+  .about-company-section-{{ section.id }} .company-half {
+    animation: slideInHorizontal-{{ section.id }} 1.2s ease-out;
+  }
+  
+  .about-company-section-{{ section.id }} .company-top {
+    animation-delay: 0.1s;
+  }
+  
+  .about-company-section-{{ section.id }} .company-bottom {
+    animation-delay: 0.2s;
+  }
+  
+  @keyframes slideInHorizontal-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 </style>
@@ -47,28 +375,28 @@
 
 <div
   id="AboutCompany-{{ section.id }}"
-  class="about-company-section{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
+  class="about-company-section-{{ section.id }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} {{ section.settings.dynamic_class }}"
 >
-  {%- if section.settings.bg_image != blank -%}
-    <div class="company-media">
-      {{
-        section.settings.bg_image
-        | image_url: width: 1920
-        | image_tag:
-          width: section.settings.bg_image.width,
-          height: section.settings.bg_image.height,
-          class: 'company-bg-image',
-          sizes: '100vw',
-          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-          fetchpriority: fetch_priority
-      }}
-    </div>
-  {%- endif -%}
+  <div class="divider"></div>
   
-  <div class="company-overlay"></div>
-  
-  <div class="company-content">
-    <div class="content-wrapper">
+  <div class="company-half company-top" onclick="goToAboutTop{{ section.id }}()" tabindex="0" role="button" aria-label="Learn more about {{ section.settings.company_title | default: 'Our Story' }}">
+    {%- if section.settings.bg_image != blank -%}
+      <div class="company-media">
+        {{
+          section.settings.bg_image
+          | image_url: width: 1920
+          | image_tag:
+            width: section.settings.bg_image.width,
+            height: section.settings.bg_image.height,
+            class: 'company-bg-image',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+            fetchpriority: fetch_priority
+        }}
+      </div>
+    {%- endif -%}
+    
+    <div class="content-center">
       {% if section.settings.company_title != blank %}
         <h2 class="company-title">{{ section.settings.company_title }}</h2>
       {% endif %}
@@ -79,20 +407,46 @@
         </p>
       {% endif %}
       
-      {% if section.settings.button_text != blank or section.settings.button_2_text != blank %}
-        <div class="company-buttons">
-          {% if section.settings.button_text != blank %}
-            <a href="{{ section.settings.button_url | default: '#' }}" class="company-button">
-              {{ section.settings.button_text }}
-            </a>
-          {% endif %}
-          
-          {% if section.settings.button_2_text != blank %}
-            <a href="{{ section.settings.button_2_url | default: '#' }}" class="company-button company-button-secondary">
-              {{ section.settings.button_2_text }}
-            </a>
-          {% endif %}
-        </div>
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_url | default: '#' }}" class="company-button" onclick="goToAboutTop{{ section.id }}(); return false;" aria-label="Learn more about {{ section.settings.company_title | default: 'Our Story' }}">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="company-half company-bottom" onclick="goToAboutBottom{{ section.id }}()" tabindex="0" role="button" aria-label="Learn more about {{ section.settings.company_title_2 | default: 'Our Mission' }}">
+    {%- if section.settings.bg_image_2 != blank -%}
+      <div class="company-media">
+        {{
+          section.settings.bg_image_2
+          | image_url: width: 1920
+          | image_tag:
+            width: section.settings.bg_image_2.width,
+            height: section.settings.bg_image_2.height,
+            class: 'company-bg-image',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+            fetchpriority: fetch_priority
+        }}
+      </div>
+    {%- endif -%}
+    
+    <div class="content-center">
+      {% if section.settings.company_title_2 != blank %}
+        <h2 class="company-title">{{ section.settings.company_title_2 }}</h2>
+      {% endif %}
+      
+      {% if section.settings.company_description_2 != blank %}
+        <p class="company-description">
+          {{ section.settings.company_description_2 }}
+        </p>
+      {% endif %}
+      
+      {% if section.settings.button_2_text != blank %}
+        <a href="{{ section.settings.button_2_url | default: '#' }}" class="company-button" onclick="goToAboutBottom{{ section.id }}(); return false;" aria-label="Learn more about {{ section.settings.company_title_2 | default: 'Our Mission' }}">
+          {{ section.settings.button_2_text }}
+        </a>
       {% endif %}
     </div>
   </div>
@@ -106,11 +460,77 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const section = document.querySelector('#AboutCompany-{{ section.id }}');
+  function goToAboutTop{{ section.id }}() {
+    // Add premium transition effect
+    const topSection = document.querySelector('.about-company-section-{{ section.id }} .company-top');
+    if (topSection) {
+      topSection.style.transform = 'scale(1.05)';
+      topSection.style.filter = 'brightness(1.2)';
+    }
     
-    // Add smooth scroll indicator animation
-    const scrollIndicator = section.querySelector('.scroll-indicator');
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.button_url | default: "#" }}';
+      console.log('Navigating to About Top Section');
+    }, 400);
+  }
+
+  function goToAboutBottom{{ section.id }}() {
+    // Add premium transition effect
+    const bottomSection = document.querySelector('.about-company-section-{{ section.id }} .company-bottom');
+    if (bottomSection) {
+      bottomSection.style.transform = 'scale(1.05)';
+      bottomSection.style.filter = 'brightness(1.2)';
+    }
+    
+    setTimeout(() => {
+      window.location.href = '{{ section.settings.button_2_url | default: "#" }}';
+      console.log('Navigating to About Bottom Section');
+    }, 400);
+  }
+  
+  // Enhanced interaction effects
+  document.addEventListener('DOMContentLoaded', function() {
+    const halves = document.querySelectorAll('.about-company-section-{{ section.id }} .company-half');
+    
+    halves.forEach(half => {
+      // Mouse enter effect
+      half.addEventListener('mouseenter', function() {
+        this.style.filter = 'brightness(1.1) contrast(1.05)';
+        const content = this.querySelector('.content-center');
+        if (content) {
+          content.style.textShadow = '0 6px 20px rgba(0,0,0,0.4)';
+        }
+      });
+      
+      // Mouse leave effect
+      half.addEventListener('mouseleave', function() {
+        this.style.filter = 'brightness(1) contrast(1)';
+        const content = this.querySelector('.content-center');
+        if (content) {
+          content.style.textShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        }
+      });
+      
+      // Keyboard navigation support
+      half.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.click();
+        }
+      });
+      
+      // Touch device optimization
+      half.addEventListener('touchstart', function() {
+        this.style.transform = 'scale(0.98)';
+      });
+      
+      half.addEventListener('touchend', function() {
+        this.style.transform = 'scale(1)';
+      });
+    });
+    
+    // Scroll indicator animation
+    const scrollIndicator = document.querySelector('.about-company-section-{{ section.id }} .scroll-indicator');
     if (scrollIndicator) {
       window.addEventListener('scroll', function() {
         const scrollProgress = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
@@ -121,16 +541,31 @@
       });
     }
     
-    // Add hover effect for company content
-    const content = section.querySelector('.company-content');
-    if (content) {
-      content.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.01)';
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
       });
+    }, { threshold: 0.1 });
+    
+    halves.forEach(half => {
+      observer.observe(half);
+    });
+  });
+  
+  // Add smooth page transitions
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.about-company-section-{{ section.id }}');
+    if (section) {
+      section.style.opacity = '0';
+      section.style.transition = 'opacity 0.8s ease-in-out';
       
-      content.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
-      });
+      setTimeout(() => {
+        section.style.opacity = '1';
+      }, 100);
     }
   });
 </script>
@@ -161,7 +596,7 @@
       "step": 5,
       "unit": "vh",
       "label": "Section Height",
-      "default": 80
+      "default": 100
     },
     {
       "type": "range",
@@ -174,9 +609,18 @@
       "default": 600
     },
     {
+      "type": "header",
+      "content": "Background Images"
+    },
+    {
       "type": "image_picker",
       "id": "bg_image",
-      "label": "Background Image"
+      "label": "Top Section Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_2",
+      "label": "Bottom Section Background Image"
     },
     {
       "type": "header",
@@ -196,11 +640,11 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay Opacity",
-      "default": 85
+      "default": 75
     },
     {
       "type": "header",
-      "content": "Content"
+      "content": "Text Settings"
     },
     {
       "type": "color",
@@ -209,46 +653,58 @@
       "default": "#2c2c2c"
     },
     {
-      "type": "textarea",
+      "type": "header",
+      "content": "Top Section Content"
+    },
+    {
+      "type": "text",
       "id": "company_title",
-      "label": "Company Title",
-      "default": "We are fashion experts and have over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal. Our facilities and machines are at the cutting edge of technology."
+      "label": "Top Section Title",
+      "default": "Our Story"
     },
     {
       "type": "textarea",
       "id": "company_description",
-      "label": "Company Description",
-      "default": "Our commitment to excellence drives everything we do, from concept to creation."
-    },
-    {
-      "type": "header",
-      "content": "First Button"
+      "label": "Top Section Description",
+      "default": "We are fashion experts with over 20 years of experience developing collections for the best luxury streetwear brands. Our committed and passionate team is located in Barcelos, Portugal, where tradition meets innovation."
     },
     {
       "type": "text",
       "id": "button_text",
-      "label": "Button Text",
-      "default": "Explore Past Products, Factory & Team"
+      "label": "Top Section Button Text",
+      "default": "Explore Our Story"
     },
     {
       "type": "url",
       "id": "button_url",
-      "label": "Button URL"
+      "label": "Top Section Button URL"
     },
     {
       "type": "header",
-      "content": "Second Button"
+      "content": "Bottom Section Content"
+    },
+    {
+      "type": "text",
+      "id": "company_title_2",
+      "label": "Bottom Section Title",
+      "default": "Our Mission"
+    },
+    {
+      "type": "textarea",
+      "id": "company_description_2",
+      "label": "Bottom Section Description",
+      "default": "Our facilities and machines are at the cutting edge of technology. We combine craftsmanship with innovation to deliver exceptional quality products that exceed expectations in every detail."
     },
     {
       "type": "text",
       "id": "button_2_text",
-      "label": "Second Button Text",
-      "default": "Contact Us"
+      "label": "Bottom Section Button Text",
+      "default": "View Our Process"
     },
     {
       "type": "url",
       "id": "button_2_url",
-      "label": "Second Button URL"
+      "label": "Bottom Section Button URL"
     },
     {
       "type": "header",

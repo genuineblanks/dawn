@@ -1,25 +1,91 @@
-/* section-about-company.css - Clean minimal approach */
+/* section-about-company.css - Premium Horizontal Split Design */
+
+/* Reset and base styles */
+[id^="AboutCompany-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
 
 .about-company-section {
-  height: 80vh;
+  height: 100vh;
   min-height: 600px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   position: relative;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Company half sections - horizontal split */
+.about-company-section .company-half {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Premium glass morphism effects */
+.about-company-section .company-half::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+
+.about-company-section .company-half:hover::before {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.about-company-section .company-half:hover {
+  transform: scale(1.02);
+}
+
+/* Top section styling */
+.about-company-section .company-top {
+  background: linear-gradient(135deg, rgba(248, 249, 250, 0.75), rgba(233, 236, 239, 0.60));
+  background-size: cover;
+  background-position: center;
+  color: #2c2c2c;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Bottom section styling */
+.about-company-section .company-bottom {
+  background: linear-gradient(135deg, rgba(233, 236, 239, 0.75), rgba(222, 226, 230, 0.60));
+  background-size: cover;
+  background-position: center;
+  color: #2c2c2c;
+}
+
+/* Background image handling */
 .about-company-section .company-media {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0;
 }
 
 .about-company-section .company-bg-image {
@@ -30,160 +96,147 @@
   transition: transform 8s ease-in-out;
 }
 
-.about-company-section:hover .company-bg-image {
+.about-company-section .company-half:hover .company-bg-image {
   transform: scale(1.02);
 }
 
-.about-company-section .company-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.85) 0%, rgba(233, 236, 239, 0.75) 100%);
-  z-index: 2;
-  transition: all 0.6s ease;
-}
-
-.about-company-section:hover .company-overlay {
-  opacity: 0.9;
-}
-
-.about-company-section .company-content {
-  position: relative;
+/* Content center styling */
+.about-company-section .content-center {
   text-align: center;
   z-index: 10;
-  transition: all 0.5s ease;
-  color: #2c2c2c;
-}
-
-.about-company-section .content-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
+  transition: all 0.6s ease;
+  max-width: 700px;
+  padding: 2.5rem;
   position: relative;
 }
 
+.about-company-section .company-half:hover .content-center {
+  transform: scale(1.05) translateY(-5px);
+}
+
+/* Typography */
 .about-company-section .company-title {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   font-weight: 200;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
-  margin-bottom: 3rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 1.2rem;
   text-transform: uppercase;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
   font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
-  color: inherit;
   position: relative;
+  line-height: 1.3;
+  color: inherit;
 }
 
 .about-company-section .company-title::after {
   content: '';
   position: absolute;
-  bottom: -1rem;
+  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
   width: 60px;
   height: 1px;
-  background: currentColor;
-  opacity: 0.3;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.6;
 }
 
 .about-company-section .company-description {
   font-size: 1.1rem;
-  line-height: 1.6;
-  opacity: 0.8;
+  line-height: 1.7;
+  opacity: 0.85;
   max-width: 600px;
   margin: 0 auto 3rem;
   font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
   color: inherit;
-  font-style: italic;
 }
 
-/* Button container styling - CENTER THE BUTTONS */
-.about-company-section .company-buttons {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  text-align: center;
-  width: 100%;
-}
-
+/* Premium button styling */
 .about-company-section .company-button {
   display: inline-block;
-  padding: 16px 40px;
-  border: 1px solid currentColor;
-  background: transparent;
+  padding: 20px 50px;
+  border: 2px solid rgba(44, 44, 44, 0.3);
+  background: rgba(44, 44, 44, 0.08);
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
   font-weight: 400;
-  font-size: 0.85rem;
-  transition: all 0.4s ease;
-  border-radius: 0;
+  font-size: 0.9rem;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 2px;
   position: relative;
   overflow: hidden;
 }
 
-/* First button animation - fills from LEFT to RIGHT */
-.about-company-section .company-button:before {
+.about-company-section .company-button::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: #2c2c2c;
-  transition: left 0.4s ease;
-  z-index: -1;
+  background: linear-gradient(90deg, transparent, rgba(44, 44, 44, 0.1), transparent);
+  transition: left 0.6s ease;
 }
 
-.about-company-section .company-button:hover:before {
-  left: 0;
-}
-
-/* Second button animation - fills from RIGHT to LEFT */
-.about-company-section .company-button-secondary:before {
-  content: '';
-  position: absolute;
-  top: 0;
+.about-company-section .company-button:hover::before {
   left: 100%;
-  width: 100%;
-  height: 100%;
-  background: #2c2c2c;
-  transition: left 0.4s ease;
-  z-index: -1;
-}
-
-.about-company-section .company-button-secondary:hover:before {
-  left: 0;
 }
 
 .about-company-section .company-button:hover {
-  color: #ffffff;
+  background: rgba(44, 44, 44, 0.15);
+  border-color: rgba(44, 44, 44, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  color: inherit;
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(44, 44, 44, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
+/* Divider line */
+.about-company-section .divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, 
+      transparent 0%, 
+      rgba(44, 44, 44, 0.2) 20%, 
+      rgba(44, 44, 44, 0.4) 50%, 
+      rgba(44, 44, 44, 0.2) 80%, 
+      transparent 100%);
+  z-index: 15;
+  transform: translateY(-50%);
+}
+
+/* Scroll indicator */
 .about-company-section .scroll-indicator {
   position: absolute;
-  bottom: 3rem;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 10;
+  opacity: 0.7;
+  animation: company-scroll-pulse 3s infinite;
 }
 
 .about-company-section .scroll-line {
   width: 1px;
-  height: 40px;
+  height: 20px;
   background: currentColor;
-  opacity: 0.4;
   margin-bottom: 0.5rem;
   transform-origin: top;
   transition: all 0.3s ease;
@@ -191,111 +244,197 @@
 
 .about-company-section .scroll-text {
   font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  opacity: 0.5;
   font-weight: 300;
   color: inherit;
-  animation: about-scroll-pulse 2s infinite;
 }
 
-@keyframes about-scroll-pulse {
+@keyframes company-scroll-pulse {
   0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Enhanced glass morphism effect */
+.about-company-section .company-half::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Enhanced hover states for premium feel */
+.about-company-section .company-half:hover {
+  background-attachment: fixed;
+}
+
+.about-company-section .company-half:active {
+  transform: scale(0.98);
+}
+
+/* Subtle animation on load */
+.about-company-section .company-half {
+  animation: company-slideInHorizontal 1.2s ease-out;
+}
+
+.about-company-section .company-top {
+  animation-delay: 0.1s;
+}
+
+.about-company-section .company-bottom {
+  animation-delay: 0.2s;
+}
+
+@keyframes company-slideInHorizontal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .about-company-section {
-    height: 90vh;
+    height: 100vh;
     min-height: 500px;
   }
   
-  .about-company-section .content-wrapper {
-    max-width: 100%;
-    padding: 3rem 1.5rem;
+  .about-company-section .company-half {
+    height: 50vh;
   }
   
   .about-company-section .company-title {
-    font-size: 1.4rem;
-    letter-spacing: 0.03em;
-    margin-bottom: 2.5rem;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+  }
+  
+  .about-company-section .content-center {
+    padding: 2rem;
+    max-width: 400px;
   }
   
   .about-company-section .company-description {
+    max-width: 350px;
     font-size: 1rem;
-    max-width: 100%;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
   }
   
   .about-company-section .company-button {
-    padding: 14px 32px;
+    padding: 16px 40px;
     font-size: 0.8rem;
   }
   
   .about-company-section .scroll-indicator {
-    bottom: 2rem;
-  }
-  
-  /* Stack buttons vertically on mobile and keep them centered */
-  .about-company-section .company-buttons {
-    flex-direction: column;
-    gap: 1rem;
+    bottom: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .about-company-section .company-title {
-    font-size: 1.2rem;
-    line-height: 1.3;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
   }
   
   .about-company-section .company-description {
+    max-width: 300px;
     font-size: 0.95rem;
+    margin-bottom: 2rem;
     line-height: 1.5;
   }
   
-  .about-company-section .content-wrapper {
-    padding: 2.5rem 1rem;
-  }
-  
   .about-company-section .company-button {
-    padding: 12px 28px;
+    padding: 14px 35px;
     font-size: 0.75rem;
   }
   
-  .about-company-section .company-buttons {
-    gap: 0.75rem;
+  .about-company-section .content-center {
+    padding: 1.5rem;
   }
-}
-
-/* Fix the root cause - Remove Shopify section default padding for this specific section only */
-[id^="AboutCompany-"] {
-  padding: 0 !important;
-  margin: 0 !important;
 }
 
 /* Focus states for accessibility */
 .about-company-section .company-button:focus {
-  outline: 2px solid currentColor;
+  outline: 2px solid rgba(44, 44, 44, 0.8);
   outline-offset: 3px;
 }
 
-/* Reduced motion */
+.about-company-section .company-half:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.6);
+  outline-offset: -2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .about-company-section .company-top,
+  .about-company-section .company-bottom {
+    background-blend-mode: multiply;
+  }
+  
+  .about-company-section .company-button {
+    border-color: rgba(44, 44, 44, 0.8);
+    background: rgba(44, 44, 44, 0.2);
+  }
+  
+  .about-company-section .company-half::before {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+  }
+}
+
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .about-company-section .company-content,
+  .about-company-section .company-half,
+  .about-company-section .content-center,
   .about-company-section .company-button,
-  .about-company-section .company-bg-image,
-  .about-company-section .scroll-line {
+  .about-company-section .company-button::before,
+  .about-company-section .company-bg-image {
     transition: none;
   }
   
-  .about-company-section .scroll-text {
+  .about-company-section .scroll-indicator {
     animation: none;
   }
   
-  .about-company-section .company-button:before,
-  .about-company-section .company-button-secondary:before {
+  .about-company-section .company-half {
+    animation: none;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .about-company-section .company-half:hover {
+    transform: none;
+  }
+  
+  .about-company-section .company-half:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Print styles */
+@media print {
+  .about-company-section {
+    height: auto;
+    min-height: auto;
+  }
+  
+  .about-company-section .company-half {
+    height: auto;
+    min-height: 300px;
+    page-break-inside: avoid;
+  }
+  
+  .about-company-section .scroll-indicator {
     display: none;
   }
 }
