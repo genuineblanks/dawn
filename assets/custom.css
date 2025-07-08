@@ -64,13 +64,7 @@ summary svg.icon.icon-plus, summary svg.icon.icon-minus {
     font-style: normal;
     font-display: swap;
 }
-.home-section section {
-    height: 100vh;
-}
-/* Override for about section specifically */
-.home-section .about-company-section-[section-id] {
-    height: 100vh !important; /* Keep this for the wrapper */
-}
+
 .d-flex {
     display: flex;
     display: -webkit-box;
