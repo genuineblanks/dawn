@@ -1,94 +1,70 @@
-/* section-about-company.css - Premium Horizontal Split Design */
+/* 
+ * About Company Section - Shopify Online Store 2.0 Compatible
+ * File: assets/section-about-company.css
+ * Clean, performance-optimized, premium design
+ */
 
-/* Reset and base styles */
-[id^="AboutCompany-"] {
-  padding: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box;
-}
+/* ================================
+   SECTION BASE STYLES
+   ================================ */
 
 .about-company-section {
-  height: 100vh;
-  min-height: 600px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  background: transparent;
 }
 
-/* Company half sections - horizontal split */
-.about-company-section .company-half {
+/* Remove any inherited spacing from Shopify theme */
+.about-company-section * {
+  box-sizing: border-box;
+}
+
+/* ================================
+   SECTION LAYOUT - HORIZONTAL SPLIT
+   ================================ */
+
+.about-company__half {
+  position: relative;
   width: 100%;
   height: 50%;
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Premium glass morphism effects */
-.about-company-section .company-half::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.6s ease;
-  z-index: 1;
-}
-
-.about-company-section .company-half:hover::before {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-}
-
-.about-company-section .company-half:hover {
-  transform: scale(1.02);
-}
-
-/* Top section styling */
-.about-company-section .company-top {
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.75), rgba(233, 236, 239, 0.60));
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
   background-size: cover;
   background-position: center;
-  color: #2c2c2c;
-  border-bottom: 1px solid rgba(255,255,255,0.15);
+  background-repeat: no-repeat;
 }
 
-/* Bottom section styling */
-.about-company-section .company-bottom {
-  background: linear-gradient(135deg, rgba(233, 236, 239, 0.75), rgba(222, 226, 230, 0.60));
-  background-size: cover;
-  background-position: center;
-  color: #2c2c2c;
+.about-company__half:hover {
+  transform: scale(1.01);
 }
 
-/* Background image handling */
-.about-company-section .company-media {
+.about-company__half:active {
+  transform: scale(0.99);
+}
+
+/* ================================
+   BACKGROUND MEDIA HANDLING
+   ================================ */
+
+.about-company__media {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 1;
 }
 
-.about-company-section .company-bg-image {
+.about-company__bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -96,42 +72,79 @@
   transition: transform 8s ease-in-out;
 }
 
-.about-company-section .company-half:hover .company-bg-image {
+.about-company__half:hover .about-company__bg-image {
   transform: scale(1.02);
 }
 
-/* Content center styling */
-.about-company-section .content-center {
-  text-align: center;
-  z-index: 10;
+/* ================================
+   OVERLAY SYSTEM
+   ================================ */
+
+.about-company__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(var(--section-overlay-color), var(--section-overlay-opacity));
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: 2;
   transition: all 0.6s ease;
-  max-width: 700px;
-  padding: 2.5rem;
+}
+
+.about-company__half:hover .about-company__overlay {
+  background: rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) + 0.05));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ================================
+   CONTENT POSITIONING & LAYOUT
+   ================================ */
+
+.about-company__content {
   position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--section-text-color);
 }
 
-.about-company-section .company-half:hover .content-center {
-  transform: scale(1.05) translateY(-5px);
+.about-company__content-wrapper {
+  text-align: center;
+  max-width: 800px;
+  padding: 3rem 2rem;
+  transition: all 0.5s ease;
 }
 
-/* Typography */
-.about-company-section .company-title {
-  font-size: 2.2rem;
+.about-company__half:hover .about-company__content-wrapper {
+  transform: translateY(-3px);
+}
+
+/* ================================
+   TYPOGRAPHY SYSTEM
+   ================================ */
+
+.about-company__title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 200;
-  letter-spacing: 0.2em;
-  margin-bottom: 1.2rem;
-  text-transform: uppercase;
-  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
-  position: relative;
+  letter-spacing: 0.15em;
   line-height: 1.3;
-  color: inherit;
+  margin: 0 0 1.5rem 0;
+  text-transform: uppercase;
+  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
-.about-company-section .company-title::after {
+.about-company__title::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
   width: 60px;
@@ -140,301 +153,503 @@
   opacity: 0.6;
 }
 
-.about-company-section .company-description {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  opacity: 0.85;
-  max-width: 600px;
-  margin: 0 auto 3rem;
+.about-company__description {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 300;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  color: inherit;
+  line-height: 1.6;
+  margin: 0 0 2.5rem 0;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Premium button styling */
-.about-company-section .company-button {
+/* ================================
+   PREMIUM BUTTON SYSTEM
+   ================================ */
+
+.about-company__button {
+  position: relative;
   display: inline-block;
-  padding: 20px 50px;
-  border: 2px solid rgba(44, 44, 44, 0.3);
-  background: rgba(44, 44, 44, 0.08);
+  padding: 18px 45px;
+  border: 2px solid currentColor;
+  background: transparent;
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
   font-weight: 400;
-  font-size: 0.9rem;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 2px;
-  position: relative;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  letter-spacing: 0.15em;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
   overflow: hidden;
+  cursor: pointer;
 }
 
-.about-company-section .company-button::before {
+.about-company__button-text {
+  position: relative;
+  z-index: 2;
+  transition: color 0.4s ease;
+}
+
+.about-company__button-fill {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  transition: left 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  z-index: 1;
+}
+
+.about-company__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.about-company__button:hover .about-company__button-fill {
+  left: 0;
+}
+
+.about-company__button:hover .about-company__button-text {
+  color: var(--section-overlay-color, 255, 255, 255);
+  mix-blend-mode: difference;
+}
+
+/* ================================
+   DIVIDER ELEMENT
+   ================================ */
+
+.about-company__divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right, 
+    transparent 0%, 
+    rgba(var(--section-text-color), 0.2) 20%, 
+    rgba(var(--section-text-color), 0.4) 50%, 
+    rgba(var(--section-text-color), 0.2) 80%, 
+    transparent 100%
+  );
+  z-index: 15;
+  transform: translateY(-50%);
+}
+
+/* ================================
+   SCROLL INDICATOR
+   ================================ */
+
+.about-company__scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0.7;
+  animation: scroll-pulse 3s infinite;
+}
+
+.about-company__scroll-line {
+  width: 1px;
+  height: 20px;
+  background: currentColor;
+  margin-bottom: 0.5rem;
+  transform-origin: top;
+  transition: transform 0.3s ease;
+}
+
+.about-company__scroll-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: inherit;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+/* Tablet styles */
+@media screen and (max-width: 768px) {
+  .about-company-section {
+    min-height: 80vh;
+  }
+  
+  .about-company__content-wrapper {
+    padding: 2.5rem 1.5rem;
+    max-width: 600px;
+  }
+  
+  .about-company__title {
+    margin-bottom: 1.2rem;
+  }
+  
+  .about-company__description {
+    margin-bottom: 2rem;
+  }
+  
+  .about-company__button {
+    padding: 16px 35px;
+    font-size: 0.85rem;
+  }
+  
+  .about-company__scroll-indicator {
+    bottom: 1.5rem;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 480px) {
+  .about-company__content-wrapper {
+    padding: 2rem 1rem;
+    max-width: 400px;
+  }
+  
+  .about-company__title {
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  
+  .about-company__description {
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .about-company__button {
+    padding: 14px 30px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  
+  .about-company__half:hover {
+    transform: none; /* Reduce motion on mobile */
+  }
+}
+
+/* Very small mobile */
+@media screen and (max-width: 375px) {
+  .about-company__content-wrapper {
+    padding: 1.5rem 0.8rem;
+  }
+}
+
+/* ================================
+   ACCESSIBILITY FEATURES
+   ================================ */
+
+/* Focus states */
+.about-company__half:focus {
+  outline: 2px solid rgba(var(--section-text-color), 0.8);
+  outline-offset: -2px;
+}
+
+.about-company__button:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .about-company__overlay {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  
+  .about-company__button {
+    border-width: 3px;
+    background: rgba(var(--section-text-color), 0.1);
+  }
+  
+  .about-company__divider {
+    background: linear-gradient(
+      to right, 
+      transparent 0%, 
+      rgba(var(--section-text-color), 0.6) 20%, 
+      rgba(var(--section-text-color), 0.8) 50%, 
+      rgba(var(--section-text-color), 0.6) 80%, 
+      transparent 100%
+    );
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .about-company__half,
+  .about-company__content-wrapper,
+  .about-company__button,
+  .about-company__button-fill,
+  .about-company__bg-image {
+    transition: none;
+  }
+  
+  .about-company__scroll-indicator {
+    animation: none;
+  }
+  
+  .about-company__half:hover {
+    transform: none;
+  }
+  
+  .about-company__half:hover .about-company__bg-image {
+    transform: none;
+  }
+}
+
+/* ================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  .about-company__half:hover {
+    transform: none;
+  }
+  
+  .about-company__half:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .about-company__button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .about-company__button:active {
+    transform: scale(0.95);
+  }
+}
+
+/* ================================
+   PERFORMANCE OPTIMIZATIONS
+   ================================ */
+
+/* GPU acceleration for smooth animations */
+.about-company__half,
+.about-company__content-wrapper,
+.about-company__bg-image,
+.about-company__button-fill {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize background attachment on mobile */
+@media screen and (max-width: 768px) {
+  .about-company__bg-image {
+    transform: none !important;
+  }
+}
+
+/* ================================
+   PRINT STYLES
+   ================================ */
+
+@media print {
+  .about-company-section {
+    height: auto;
+    min-height: auto;
+    page-break-inside: avoid;
+  }
+  
+  .about-company__half {
+    height: auto;
+    min-height: 400px;
+    page-break-inside: avoid;
+  }
+  
+  .about-company__scroll-indicator {
+    display: none;
+  }
+  
+  .about-company__button {
+    border: 2px solid #000;
+    color: #000;
+  }
+  
+  .about-company__overlay {
+    background: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* ================================
+   THEME INTEGRATION FIXES
+   ================================ */
+
+/* Ensure section works with any Shopify theme */
+.section .about-company-section {
+  margin: 0;
+  padding: 0;
+}
+
+/* Override any global section styles that might interfere */
+.about-company-section .page-width {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ensure proper stacking context */
+.about-company-section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix any potential layout shifts */
+.about-company__half {
+  contain: layout style paint;
+}
+
+/* ================================
+   BROWSER COMPATIBILITY
+   ================================ */
+
+/* Fallback for older browsers without CSS custom properties */
+.no-cssvar .about-company__overlay {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.no-cssvar .about-company__content {
+  color: #2c2c2c;
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(1px)) {
+  .about-company__overlay {
+    background: rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) + 0.1));
+  }
+  
+  .about-company__scroll-indicator {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .about-company__bg-image {
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* ================================
+   ANIMATION REFINEMENTS
+   ================================ */
+
+/* Entrance animation for the entire section */
+.about-company-section {
+  opacity: 0;
+  animation: fadeInSection 1s ease-out forwards;
+}
+
+@keyframes fadeInSection {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staggered animation for section halves */
+.about-company__half:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.about-company__half:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+/* Subtle hover animation for buttons */
+.about-company__button::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(44, 44, 44, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transition: left 0.6s ease;
+  z-index: 3;
 }
 
-.about-company-section .company-button:hover::before {
+.about-company__button:hover::before {
   left: 100%;
 }
 
-.about-company-section .company-button:hover {
-  background: rgba(44, 44, 44, 0.15);
-  border-color: rgba(44, 44, 44, 0.5);
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-  color: inherit;
-  text-decoration: none;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* ================================
+   FINAL CLEANUP & OVERRIDES
+   ================================ */
+
+/* Ensure no conflicts with existing theme styles */
+.about-company-section * {
+  box-sizing: border-box;
 }
 
-/* Divider line */
-.about-company-section .divider {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, 
-      transparent 0%, 
-      rgba(44, 44, 44, 0.2) 20%, 
-      rgba(44, 44, 44, 0.4) 50%, 
-      rgba(44, 44, 44, 0.2) 80%, 
-      transparent 100%);
-  z-index: 15;
-  transform: translateY(-50%);
+/* Remove any unwanted margins from theme */
+.about-company-section h1,
+.about-company-section h2,
+.about-company-section h3,
+.about-company-section p {
+  margin: 0;
+  padding: 0;
 }
 
-/* Scroll indicator */
-.about-company-section .scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  background: rgba(0,0,0,0.3);
-  padding: 8px 16px;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  opacity: 0.7;
-  animation: company-scroll-pulse 3s infinite;
+.about-company__title,
+.about-company__description {
+  margin: 0;
+  padding: 0;
 }
 
-.about-company-section .scroll-line {
-  width: 1px;
-  height: 20px;
-  background: currentColor;
-  margin-bottom: 0.5rem;
-  transform-origin: top;
-  transition: all 0.3s ease;
+.about-company__title {
+  margin-bottom: 1.5rem;
 }
 
-.about-company-section .scroll-text {
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 300;
-  color: inherit;
+.about-company__description {
+  margin-bottom: 2.5rem;
 }
 
-@keyframes company-scroll-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+/* Ensure proper line heights */
+.about-company__title {
+  line-height: 1.3;
 }
 
-/* Enhanced glass morphism effect */
-.about-company-section .company-half::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 2;
+.about-company__description {
+  line-height: 1.6;
 }
 
-/* Enhanced hover states for premium feel */
-.about-company-section .company-half:hover {
-  background-attachment: fixed;
-}
-
-.about-company-section .company-half:active {
-  transform: scale(0.98);
-}
-
-/* Subtle animation on load */
-.about-company-section .company-half {
-  animation: company-slideInHorizontal 1.2s ease-out;
-}
-
-.about-company-section .company-top {
-  animation-delay: 0.1s;
-}
-
-.about-company-section .company-bottom {
-  animation-delay: 0.2s;
-}
-
-@keyframes company-slideInHorizontal {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .about-company-section {
-    height: 100vh;
-    min-height: 500px;
+/* Final responsive adjustments */
+@media screen and (max-width: 600px) {
+  .about-company__title {
+    margin-bottom: 1.2rem;
   }
   
-  .about-company-section .company-half {
-    height: 50vh;
-  }
-  
-  .about-company-section .company-title {
-    font-size: 1.6rem;
-    letter-spacing: 0.15em;
-  }
-  
-  .about-company-section .content-center {
-    padding: 2rem;
-    max-width: 400px;
-  }
-  
-  .about-company-section .company-description {
-    max-width: 350px;
-    font-size: 1rem;
+  .about-company__description {
     margin-bottom: 2rem;
   }
-  
-  .about-company-section .company-button {
-    padding: 16px 40px;
-    font-size: 0.8rem;
-  }
-  
-  .about-company-section .scroll-indicator {
-    bottom: 1.5rem;
-  }
 }
 
-@media (max-width: 480px) {
-  .about-company-section .company-title {
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    line-height: 1.2;
+@media screen and (max-width: 400px) {
+  .about-company__title {
+    margin-bottom: 1rem;
   }
   
-  .about-company-section .company-description {
-    max-width: 300px;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-    line-height: 1.5;
-  }
-  
-  .about-company-section .company-button {
-    padding: 14px 35px;
-    font-size: 0.75rem;
-  }
-  
-  .about-company-section .content-center {
-    padding: 1.5rem;
-  }
-}
-
-/* Focus states for accessibility */
-.about-company-section .company-button:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.8);
-  outline-offset: 3px;
-}
-
-.about-company-section .company-half:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.6);
-  outline-offset: -2px;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .about-company-section .company-top,
-  .about-company-section .company-bottom {
-    background-blend-mode: multiply;
-  }
-  
-  .about-company-section .company-button {
-    border-color: rgba(44, 44, 44, 0.8);
-    background: rgba(44, 44, 44, 0.2);
-  }
-  
-  .about-company-section .company-half::before {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,255,255,0.4);
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .about-company-section .company-half,
-  .about-company-section .content-center,
-  .about-company-section .company-button,
-  .about-company-section .company-button::before,
-  .about-company-section .company-bg-image {
-    transition: none;
-  }
-  
-  .about-company-section .scroll-indicator {
-    animation: none;
-  }
-  
-  .about-company-section .company-half {
-    animation: none;
-  }
-}
-
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-  .about-company-section .company-half:hover {
-    transform: none;
-  }
-  
-  .about-company-section .company-half:active {
-    transform: scale(0.98);
-  }
-}
-
-/* Print styles */
-@media print {
-  .about-company-section {
-    height: auto;
-    min-height: auto;
-  }
-  
-  .about-company-section .company-half {
-    height: auto;
-    min-height: 300px;
-    page-break-inside: avoid;
-  }
-  
-  .about-company-section .scroll-indicator {
-    display: none;
+  .about-company__description {
+    margin-bottom: 1.5rem;
   }
 }
