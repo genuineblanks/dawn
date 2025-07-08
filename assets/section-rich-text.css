@@ -104,3 +104,25 @@
 .section-padding:has(.rich-text__blocks:empty) {
   padding: 0 !important;
 }
+
+/* Mobile white space fix */
+@media screen and (max-width: 749px) {
+  .page-width {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .content-container {
+    padding: 0 !important;
+  }
+  
+  .rich-text {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .isolate {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
