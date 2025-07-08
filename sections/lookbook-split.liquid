@@ -8,6 +8,7 @@
   .lookbook-section-{{ section.id }} {
     height: {{ section.settings.section_height }}vh;
     display: flex;
+    flex-direction: column;
     position: relative;
     font-family: var(--font-body-family), Arial, sans-serif;
     margin: 0;
@@ -16,15 +17,39 @@
   }
   
   .lookbook-section-{{ section.id }} .lookbook-half {
-    width: 50%;
-    height: {{ section.settings.section_height }}vh;
+    width: 100%;
+    height: 50%;
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .lookbook-section-{{ section.id }} .lookbook-half::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.6s ease;
+    z-index: 1;
+  }
+  
+  .lookbook-section-{{ section.id }} .lookbook-half:hover::before {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
   }
   
   .lookbook-section-{{ section.id }} .lookbook-half:hover {
@@ -32,17 +57,17 @@
   }
   
   .lookbook-section-{{ section.id }} .luxury-half {
-    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
-                {% if section.settings.luxury_bg_image %}url('{{ section.settings.luxury_bg_image | image_url: width: 1920 }}'){% else %}#111{% endif %};
+    background: linear-gradient(135deg, rgba(0,0,0,0.{{ section.settings.overlay_opacity }}), rgba(0,0,0,0.{{ section.settings.overlay_opacity | minus: 15 }})), 
+                {% if section.settings.luxury_bg_image %}url('{{ section.settings.luxury_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #1a1a1a, #2d2d2d){% endif %};
     background-size: cover;
     background-position: center;
     color: {{ section.settings.luxury_text_color }};
-    border-right: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
   
   .lookbook-section-{{ section.id }} .highend-half {
-    background: linear-gradient(135deg, rgba(20,20,20,0.{{ section.settings.overlay_opacity }}), rgba(40,40,40,0.{{ section.settings.overlay_opacity | minus: 20 }})), 
-                {% if section.settings.highend_bg_image %}url('{{ section.settings.highend_bg_image | image_url: width: 1920 }}'){% else %}#333{% endif %};
+    background: linear-gradient(135deg, rgba(20,20,20,0.{{ section.settings.overlay_opacity }}), rgba(40,40,40,0.{{ section.settings.overlay_opacity | minus: 15 }})), 
+                {% if section.settings.highend_bg_image %}url('{{ section.settings.highend_bg_image | image_url: width: 1920 }}'){% else %}linear-gradient(135deg, #2a2a2a, #3d3d3d){% endif %};
     background-size: cover;
     background-position: center;
     color: {{ section.settings.highend_text_color }};
@@ -51,29 +76,42 @@
   .lookbook-section-{{ section.id }} .content-center {
     text-align: center;
     z-index: 10;
-    transition: all 0.4s ease;
-    max-width: 400px;
-    padding: 2rem;
+    transition: all 0.6s ease;
+    max-width: 500px;
+    padding: 2.5rem;
+    position: relative;
   }
   
   .lookbook-section-{{ section.id }} .lookbook-half:hover .content-center {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-5px);
   }
   
   .lookbook-section-{{ section.id }} .title-main {
     font-size: {{ section.settings.title_size }}rem;
-    font-weight: 300;
-    letter-spacing: 0.3em;
-    margin-bottom: 1rem;
+    font-weight: 200;
+    letter-spacing: 0.4em;
+    margin-bottom: 1.2rem;
     text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    text-shadow: 0 4px 12px rgba(0,0,0,0.8);
     font-family: var(--font-heading-family);
+    position: relative;
+  }
+  
+  .lookbook-section-{{ section.id }} .title-main::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
   }
   
   .lookbook-section-{{ section.id }} .subtitle {
     font-size: {{ section.settings.subtitle_size }}rem;
     font-weight: 300;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.25em;
     opacity: 0.9;
     margin-bottom: 2rem;
     text-transform: uppercase;
@@ -81,103 +119,135 @@
   
   .lookbook-section-{{ section.id }} .description {
     font-size: {{ section.settings.description_size }}rem;
-    line-height: 1.6;
-    opacity: 0.8;
-    max-width: 320px;
-    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    opacity: 0.85;
+    max-width: 400px;
+    margin: 0 auto 3rem;
     font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   }
   
   .lookbook-section-{{ section.id }} .explore-button {
     display: inline-block;
-    padding: 18px 45px;
-    border: 2px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.1);
+    padding: 20px 50px;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
     color: inherit;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
     font-weight: 400;
     font-size: {{ section.settings.button_size }}rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .lookbook-section-{{ section.id }} .explore-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .lookbook-section-{{ section.id }} .explore-button:hover::before {
+    left: 100%;
   }
   
   .lookbook-section-{{ section.id }} .explore-button:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.5);
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
     color: inherit;
     text-decoration: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
   
   .lookbook-section-{{ section.id }} .divider {
     position: absolute;
-    top: 0;
-    left: 50%;
-    width: 1px;
-    height: {{ section.settings.section_height }}vh;
-    background: linear-gradient(to bottom, 
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, 
         transparent 0%, 
         rgba(255,255,255,0.2) 20%, 
         rgba(255,255,255,0.4) 50%, 
         rgba(255,255,255,0.2) 80%, 
         transparent 100%);
     z-index: 15;
+    transform: translateY(-50%);
   }
   
   .lookbook-section-{{ section.id }} .click-hint {
     position: absolute;
-    bottom: 3rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     opacity: 0.7;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    animation: fadeInOut-{{ section.id }} 2s infinite;
+    animation: fadeInOut-{{ section.id }} 3s infinite;
+    z-index: 10;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   
   @keyframes fadeInOut-{{ section.id }} {
-    0%, 100% { opacity: 0.7; }
+    0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
+  }
+  
+  /* Enhanced glass morphism effect */
+  .lookbook-section-{{ section.id }} .lookbook-half::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 2;
   }
   
   /* Mobile responsiveness */
   @media (max-width: 768px) {
-    .lookbook-section-{{ section.id }} {
-      flex-direction: column;
-    }
-    
     .lookbook-section-{{ section.id }} .lookbook-half {
-      width: 100%;
-      height: {{ section.settings.section_height | divided_by: 2 }}vh;
-    }
-    
-    .lookbook-section-{{ section.id }} .luxury-half {
-      border-right: none;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
+      height: 50vh;
     }
     
     .lookbook-section-{{ section.id }} .title-main {
-      font-size: {{ section.settings.title_size | times: 0.7 }}rem;
+      font-size: {{ section.settings.title_size | times: 0.8 }}rem;
+      letter-spacing: 0.25em;
     }
     
-    .lookbook-section-{{ section.id }} .divider {
-      top: 50%;
-      left: 0;
-      width: 100vw;
-      height: 1px;
+    .lookbook-section-{{ section.id }} .content-center {
+      padding: 2rem;
+      max-width: 350px;
     }
     
     .lookbook-section-{{ section.id }} .description {
-      max-width: 250px;
+      max-width: 280px;
       font-size: {{ section.settings.description_size | times: 0.9 }}rem;
+      margin-bottom: 2rem;
     }
     
     .lookbook-section-{{ section.id }} .explore-button {
-      padding: 12px 30px;
+      padding: 16px 40px;
       font-size: {{ section.settings.button_size | times: 0.9 }}rem;
     }
   }
@@ -185,8 +255,8 @@
   /* Additional mobile adjustments */
   @media (max-width: 480px) {
     .lookbook-section-{{ section.id }} .title-main {
-      font-size: {{ section.settings.title_size | times: 0.6 }}rem;
-      letter-spacing: 0.15em;
+      font-size: {{ section.settings.title_size | times: 0.7 }}rem;
+      letter-spacing: 0.2em;
     }
     
     .lookbook-section-{{ section.id }} .subtitle {
@@ -195,16 +265,30 @@
     }
     
     .lookbook-section-{{ section.id }} .description {
-      max-width: 220px;
-      font-size: {{ section.settings.description_size | times: 0.8 }}rem;
-      margin-bottom: 1.5rem;
+      max-width: 250px;
+      font-size: {{ section.settings.description_size | times: 0.85 }}rem;
+      margin-bottom: 2rem;
+    }
+    
+    .lookbook-section-{{ section.id }} .explore-button {
+      padding: 14px 35px;
+      font-size: {{ section.settings.button_size | times: 0.85 }}rem;
+    }
+    
+    .lookbook-section-{{ section.id }} .content-center {
+      padding: 1.5rem;
     }
   }
 
   /* Focus states for accessibility */
   .lookbook-section-{{ section.id }} .explore-button:focus {
     outline: 2px solid rgba(255,255,255,0.8);
-    outline-offset: 2px;
+    outline-offset: 3px;
+  }
+  
+  .lookbook-section-{{ section.id }} .lookbook-half:focus {
+    outline: 2px solid rgba(255,255,255,0.6);
+    outline-offset: -2px;
   }
 
   /* High contrast mode support */
@@ -218,13 +302,19 @@
       border-color: rgba(255,255,255,0.8);
       background: rgba(255,255,255,0.2);
     }
+    
+    .lookbook-section-{{ section.id }} .lookbook-half::before {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+    }
   }
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .lookbook-section-{{ section.id }} .lookbook-half,
     .lookbook-section-{{ section.id }} .content-center,
-    .lookbook-section-{{ section.id }} .explore-button {
+    .lookbook-section-{{ section.id }} .explore-button,
+    .lookbook-section-{{ section.id }} .explore-button::before {
       transition: none;
     }
     
@@ -232,19 +322,52 @@
       animation: none;
     }
   }
+  
+  /* Enhanced hover states for premium feel */
+  .lookbook-section-{{ section.id }} .lookbook-half:hover {
+    background-attachment: fixed;
+  }
+  
+  .lookbook-section-{{ section.id }} .lookbook-half:active {
+    transform: scale(0.98);
+  }
+  
+  /* Subtle animation on load */
+  .lookbook-section-{{ section.id }} .lookbook-half {
+    animation: slideInHorizontal-{{ section.id }} 1.2s ease-out;
+  }
+  
+  .lookbook-section-{{ section.id }} .luxury-half {
+    animation-delay: 0.1s;
+  }
+  
+  .lookbook-section-{{ section.id }} .highend-half {
+    animation-delay: 0.2s;
+  }
+  
+  @keyframes slideInHorizontal-{{ section.id }} {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <div class="lookbook-section-{{ section.id }}">
   <div class="divider"></div>
   
-  <div class="lookbook-half luxury-half" onclick="goToLuxury{{ section.id }}()">
+  <div class="lookbook-half luxury-half" onclick="goToLuxury{{ section.id }}()" tabindex="0" role="button" aria-label="Navigate to {{ section.settings.luxury_title | default: 'Luxury' }} collection">
     <div class="content-center">
       <h2 class="title-main">{{ section.settings.luxury_title | default: 'Luxury' }}</h2>
       <p class="subtitle">{{ section.settings.luxury_subtitle | default: 'Collection' }}</p>
       <p class="description">
         {{ section.settings.luxury_description | default: 'Discover our premium selection of luxury blanks crafted for the most discerning brands and designers.' }}
       </p>
-      <a href="{{ section.settings.luxury_url | default: '#' }}" class="explore-button" onclick="goToLuxury{{ section.id }}(); return false;">
+      <a href="{{ section.settings.luxury_url | default: '#' }}" class="explore-button" onclick="goToLuxury{{ section.id }}(); return false;" aria-label="Explore {{ section.settings.luxury_title | default: 'Luxury' }} collection">
         {{ section.settings.luxury_button_text | default: 'Explore Luxury' }}
       </a>
     </div>
@@ -253,14 +376,14 @@
     {% endif %}
   </div>
 
-  <div class="lookbook-half highend-half" onclick="goToHighEnd{{ section.id }}()">
+  <div class="lookbook-half highend-half" onclick="goToHighEnd{{ section.id }}()" tabindex="0" role="button" aria-label="Navigate to {{ section.settings.highend_title | default: 'High End' }} collection">
     <div class="content-center">
       <h2 class="title-main">{{ section.settings.highend_title | default: 'High End' }}</h2>
       <p class="subtitle">{{ section.settings.highend_subtitle | default: 'Collection' }}</p>
       <p class="description">
         {{ section.settings.highend_description | default: 'Explore our sophisticated high-end blanks designed for elevated fashion and premium applications.' }}
       </p>
-      <a href="{{ section.settings.highend_url | default: '#' }}" class="explore-button" onclick="goToHighEnd{{ section.id }}(); return false;">
+      <a href="{{ section.settings.highend_url | default: '#' }}" class="explore-button" onclick="goToHighEnd{{ section.id }}(); return false;" aria-label="Explore {{ section.settings.highend_title | default: 'High End' }} collection">
         {{ section.settings.highend_button_text | default: 'Explore High End' }}
       </a>
     </div>
@@ -272,43 +395,100 @@
 
 <script>
   function goToLuxury{{ section.id }}() {
-    // Add smooth transition effect
+    // Add premium transition effect
     const luxurySection = document.querySelector('.lookbook-section-{{ section.id }} .luxury-half');
     if (luxurySection) {
-      luxurySection.style.transform = 'scale(1.1)';
+      luxurySection.style.transform = 'scale(1.05)';
+      luxurySection.style.filter = 'brightness(1.2)';
     }
     
     setTimeout(() => {
       window.location.href = '{{ section.settings.luxury_url | default: "#" }}';
       console.log('Navigating to Luxury Lookbook');
-    }, 300);
+    }, 400);
   }
 
   function goToHighEnd{{ section.id }}() {
-    // Add smooth transition effect
+    // Add premium transition effect
     const highendSection = document.querySelector('.lookbook-section-{{ section.id }} .highend-half');
     if (highendSection) {
-      highendSection.style.transform = 'scale(1.1)';
+      highendSection.style.transform = 'scale(1.05)';
+      highendSection.style.filter = 'brightness(1.2)';
     }
     
     setTimeout(() => {
       window.location.href = '{{ section.settings.highend_url | default: "#" }}';
       console.log('Navigating to High End Lookbook');
-    }, 300);
+    }, 400);
   }
   
-  // Add smooth hover effects
+  // Enhanced interaction effects
   document.addEventListener('DOMContentLoaded', function() {
     const halves = document.querySelectorAll('.lookbook-section-{{ section.id }} .lookbook-half');
+    
     halves.forEach(half => {
+      // Mouse enter effect
       half.addEventListener('mouseenter', function() {
-        this.style.filter = 'brightness(1.1)';
+        this.style.filter = 'brightness(1.1) contrast(1.05)';
+        const content = this.querySelector('.content-center');
+        if (content) {
+          content.style.textShadow = '0 6px 20px rgba(0,0,0,0.8)';
+        }
       });
       
+      // Mouse leave effect
       half.addEventListener('mouseleave', function() {
-        this.style.filter = 'brightness(1)';
+        this.style.filter = 'brightness(1) contrast(1)';
+        const content = this.querySelector('.content-center');
+        if (content) {
+          content.style.textShadow = '0 4px 12px rgba(0,0,0,0.8)';
+        }
+      });
+      
+      // Keyboard navigation support
+      half.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.click();
+        }
+      });
+      
+      // Touch device optimization
+      half.addEventListener('touchstart', function() {
+        this.style.transform = 'scale(0.98)';
+      });
+      
+      half.addEventListener('touchend', function() {
+        this.style.transform = 'scale(1)';
       });
     });
+    
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    halves.forEach(half => {
+      observer.observe(half);
+    });
+  });
+  
+  // Add smooth page transitions
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.lookbook-section-{{ section.id }}');
+    if (section) {
+      section.style.opacity = '0';
+      section.style.transition = 'opacity 0.8s ease-in-out';
+      
+      setTimeout(() => {
+        section.style.opacity = '1';
+      }, 100);
+    }
   });
 </script>
 
@@ -340,7 +520,7 @@
       "step": 5,
       "unit": "%",
       "label": "Background Overlay Opacity",
-      "default": 70
+      "default": 75
     },
     {
       "type": "checkbox",
