@@ -1,6 +1,6 @@
 {% comment %}
   Section: about-company-section.liquid
-  Shopify Online Store 2.0 Compatible
+  Shopify Online Store 2.0 Compatible - Matching Lookbook Structure
   File path: sections/about-company-section.liquid
 {% endcomment %}
 
@@ -19,26 +19,36 @@
     }
   }
 
-  .about-company-{{ section.id }} {
+  .about-company-section-{{ section.id }} {
     height: {{ section.settings.section_height }}vh;
-    min-height: {{ section.settings.min_height }}px;
     --section-overlay-color: {{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }};
     --section-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
     --section-text-color: {{ section.settings.text_color }};
   }
 
-  .about-company-{{ section.id }} .company-top {
+  .about-company-section-{{ section.id }} .company-top {
     {% if section.settings.bg_image %}
-      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+      background-image: linear-gradient(135deg, rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 | minus: 0.15 }})), url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+    {% else %}
+      background: linear-gradient(135deg, rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 | minus: 0.15 }}));
     {% endif %}
+    background-size: cover;
+    background-position: center;
+    color: {{ section.settings.text_color }};
+    border-bottom: 1px solid rgba(255,255,255,0.15);
   }
 
-  .about-company-{{ section.id }} .company-bottom {
+  .about-company-section-{{ section.id }} .company-bottom {
     {% if section.settings.bg_image_2 %}
-      background-image: url('{{ section.settings.bg_image_2 | image_url: width: 1920 }}');
+      background-image: linear-gradient(135deg, rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 | minus: 0.15 }})), url('{{ section.settings.bg_image_2 | image_url: width: 1920 }}');
     {% elsif section.settings.bg_image %}
-      background-image: url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+      background-image: linear-gradient(135deg, rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 | minus: 0.15 }})), url('{{ section.settings.bg_image | image_url: width: 1920 }}');
+    {% else %}
+      background: linear-gradient(135deg, rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba({{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }}, {{ section.settings.overlay_opacity | divided_by: 100.0 | minus: 0.15 }}));
     {% endif %}
+    background-size: cover;
+    background-position: center;
+    color: {{ section.settings.text_color }};
   }
 {%- endstyle -%}
 
@@ -50,40 +60,10 @@
 -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient {{ section.settings.additional_class }}">
-  <div
-    id="AboutCompany-{{ section.id }}"
-    class="about-company-{{ section.id }} about-company-section section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-  >
-    <!-- Central divider line -->
+  <div class="about-company-section-{{ section.id }} about-company-section section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="about-company__divider"></div>
     
-    <!-- Top Half Section -->
-    <div 
-      class="about-company__half company-top" 
-      onclick="goToAboutTop{{ section.id }}()" 
-      tabindex="0" 
-      role="button" 
-      aria-label="{{ section.settings.company_title | default: 'Learn more about our story' | escape }}"
-    >
-      {%- if section.settings.bg_image != blank -%}
-        <div class="about-company__media">
-          {{
-            section.settings.bg_image
-            | image_url: width: 1920
-            | image_tag:
-              width: section.settings.bg_image.width,
-              height: section.settings.bg_image.height,
-              class: 'about-company__bg-image',
-              sizes: '100vw',
-              widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-              fetchpriority: fetch_priority,
-              alt: section.settings.company_title | default: 'About our company'
-          }}
-        </div>
-      {%- endif -%}
-      
-      <div class="about-company__overlay"></div>
-      
+    <div class="about-company__half company-top" onclick="goToAboutTop{{ section.id }}()" tabindex="0" role="button" aria-label="Navigate to {{ section.settings.company_title | default: 'Our Story' }}">
       <div class="about-company__content">
         <div class="about-company__content-wrapper">
           {% if section.settings.company_title != blank %}
@@ -97,46 +77,18 @@
           {% endif %}
           
           {% if section.settings.button_text != blank %}
-            <a 
-              href="{{ section.settings.button_url | default: '#' }}" 
-              class="about-company__button"
-              onclick="goToAboutTop{{ section.id }}(); return false;"
-              aria-label="{{ section.settings.button_text | escape }} - {{ section.settings.company_title | default: 'Learn more' | escape }}"
-            >
+            <a href="{{ section.settings.button_url | default: '#' }}" class="about-company__button" onclick="goToAboutTop{{ section.id }}(); return false;" aria-label="Explore {{ section.settings.company_title | default: 'Our Story' }}">
               {{ section.settings.button_text }}
             </a>
           {% endif %}
         </div>
       </div>
+      {% if section.settings.show_scroll_indicator %}
+        <div class="click-hint">{{ section.settings.scroll_text | default: 'Click to Enter' }}</div>
+      {% endif %}
     </div>
 
-    <!-- Bottom Half Section -->
-    <div 
-      class="about-company__half company-bottom" 
-      onclick="goToAboutBottom{{ section.id }}()" 
-      tabindex="0" 
-      role="button" 
-      aria-label="{{ section.settings.company_title_2 | default: 'Learn more about our mission' | escape }}"
-    >
-      {%- if section.settings.bg_image_2 != blank -%}
-        <div class="about-company__media">
-          {{
-            section.settings.bg_image_2
-            | image_url: width: 1920
-            | image_tag:
-              width: section.settings.bg_image_2.width,
-              height: section.settings.bg_image_2.height,
-              class: 'about-company__bg-image',
-              sizes: '100vw',
-              widths: '375, 550, 750, 1100, 1500, 1780, 2000',
-              fetchpriority: fetch_priority,
-              alt: section.settings.company_title_2 | default: 'About our mission'
-          }}
-        </div>
-      {%- endif -%}
-      
-      <div class="about-company__overlay"></div>
-      
+    <div class="about-company__half company-bottom" onclick="goToAboutBottom{{ section.id }}()" tabindex="0" role="button" aria-label="Navigate to {{ section.settings.company_title_2 | default: 'Our Mission' }}">
       <div class="about-company__content">
         <div class="about-company__content-wrapper">
           {% if section.settings.company_title_2 != blank %}
@@ -150,17 +102,15 @@
           {% endif %}
           
           {% if section.settings.button_2_text != blank %}
-            <a 
-              href="{{ section.settings.button_2_url | default: '#' }}" 
-              class="about-company__button"
-              onclick="goToAboutBottom{{ section.id }}(); return false;"
-              aria-label="{{ section.settings.button_2_text | escape }} - {{ section.settings.company_title_2 | default: 'Learn more' | escape }}"
-            >
+            <a href="{{ section.settings.button_2_url | default: '#' }}" class="about-company__button" onclick="goToAboutBottom{{ section.id }}(); return false;" aria-label="Explore {{ section.settings.company_title_2 | default: 'Our Mission' }}">
               {{ section.settings.button_2_text }}
             </a>
           {% endif %}
         </div>
       </div>
+      {% if section.settings.show_scroll_indicator %}
+        <div class="click-hint">{{ section.settings.scroll_text | default: 'Click to Enter' }}</div>
+      {% endif %}
     </div>
     
     {% if section.settings.show_scroll_indicator %}
