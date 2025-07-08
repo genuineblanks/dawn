@@ -1586,6 +1586,23 @@
   }
 }
 
+}
+
+/* Add scroll hint for mobile size grids */
+@media (max-width: 767px) {
+  .techpack-size-grid::after {
+    content: "← Scroll to see all sizes →";
+    display: block;
+    text-align: center;
+    font-size: 10px;
+    color: var(--techpack-text-muted);
+    padding: 4px;
+    font-style: italic;
+  }
+}
+
+/* Colorway Mobile Improvements */
+
 .techpack-size-grid__label {
   font-size: 0.8125rem;
   font-weight: 700;
