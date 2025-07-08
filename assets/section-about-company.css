@@ -1,11 +1,11 @@
 /* 
- * About Company Section - Shopify Online Store 2.0 Compatible
+ * About Company Section - Matching Lookbook Premium Aesthetic
  * File: assets/section-about-company.css
- * Clean, performance-optimized, premium design
+ * Based on lookbook-split styling for consistency
  */
 
 /* ================================
-   SECTION BASE STYLES
+   SECTION BASE - LOOKBOOK STYLE
    ================================ */
 
 .about-company-section {
@@ -15,32 +15,55 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: var(--font-body-family), 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body-family), Arial, sans-serif;
   background: transparent;
 }
 
-/* Remove any inherited spacing from Shopify theme */
 .about-company-section * {
   box-sizing: border-box;
 }
 
 /* ================================
-   SECTION LAYOUT - HORIZONTAL SPLIT
+   HORIZONTAL SPLIT LAYOUT - MATCHING LOOKBOOK
    ================================ */
 
 .about-company__half {
-  position: relative;
   width: 100%;
   height: 50%;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.about-company__half::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+
+.about-company__half:hover::before {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 }
 
 .about-company__half:hover {
@@ -48,11 +71,11 @@
 }
 
 .about-company__half:active {
-  transform: scale(0.99);
+  transform: scale(0.98);
 }
 
 /* ================================
-   BACKGROUND MEDIA HANDLING
+   BACKGROUND MEDIA - LOOKBOOK STYLE
    ================================ */
 
 .about-company__media {
@@ -77,50 +100,23 @@
 }
 
 /* ================================
-   OVERLAY SYSTEM - ENHANCED GLASS MORPHISM
+   SECTION BACKGROUNDS - MATCHING LOOKBOOK GRADIENTS
    ================================ */
 
-.about-company__overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(var(--section-overlay-color), var(--section-overlay-opacity));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 2;
-  transition: all 0.6s ease;
+.about-company__half.company-top {
+  background: linear-gradient(135deg, rgba(var(--section-overlay-color), var(--section-overlay-opacity)), rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) - 0.15)));
+  color: var(--section-text-color);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
-.about-company__half:hover .about-company__overlay {
-  background: rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) + 0.05));
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+.about-company__half.company-bottom {
+  background: linear-gradient(135deg, rgba(var(--section-overlay-color), var(--section-overlay-opacity)), rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) - 0.15)));
+  color: var(--section-text-color);
 }
 
-/* Enhanced glass morphism effects */
-.about-company__half::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.6s ease;
-  z-index: 1;
-}
-
-.about-company__half:hover::before {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-}
+/* ================================
+   ENHANCED GLASS MORPHISM - LOOKBOOK STYLE
+   ================================ */
 
 .about-company__half::after {
   content: '';
@@ -129,13 +125,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
   pointer-events: none;
   z-index: 2;
 }
 
 /* ================================
-   CONTENT POSITIONING & LAYOUT
+   CONTENT POSITIONING - LOOKBOOK STYLE
    ================================ */
 
 .about-company__content {
@@ -146,14 +142,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--section-text-color);
+  color: inherit;
 }
 
 .about-company__content-wrapper {
   text-align: center;
-  max-width: 700px;
-  padding: 2.5rem;
+  z-index: 10;
   transition: all 0.6s ease;
+  max-width: 500px;
+  padding: 2.5rem;
   position: relative;
 }
 
@@ -162,20 +159,20 @@
 }
 
 /* ================================
-   TYPOGRAPHY SYSTEM - ORIGINAL AESTHETIC RESTORED
+   TYPOGRAPHY - EXACT LOOKBOOK STYLE
    ================================ */
 
 .about-company__title {
   font-size: 2.2rem;
   font-weight: 200;
-  letter-spacing: 0.2em;
-  line-height: 1.3;
-  margin: 0 0 1.2rem 0;
+  letter-spacing: 0.4em;
+  margin-bottom: 1.2rem;
   text-transform: uppercase;
-  font-family: var(--font-heading-family), 'Helvetica Neue', sans-serif;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  font-family: var(--font-heading-family);
   position: relative;
   color: inherit;
+  line-height: 1.3;
 }
 
 .about-company__title::after {
@@ -186,54 +183,44 @@
   transform: translateX(-50%);
   width: 60px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor, transparent);
-  opacity: 0.6;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
 }
 
 .about-company__description {
-  font-size: 1.1rem;
-  font-weight: 300;
+  font-size: 1rem;
   line-height: 1.7;
-  margin: 0 0 3rem 0;
   opacity: 0.85;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin: 0 auto 3rem;
+  font-weight: 300;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   color: inherit;
 }
 
 /* ================================
-   PREMIUM BUTTON SYSTEM - ORIGINAL AESTHETIC RESTORED
+   PREMIUM BUTTON - EXACT LOOKBOOK STYLE
    ================================ */
 
 .about-company__button {
-  position: relative;
   display: inline-block;
   padding: 20px 50px;
-  border: 2px solid rgba(44, 44, 44, 0.3);
-  background: rgba(44, 44, 44, 0.08);
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
+  letter-spacing: 0.2em;
   font-weight: 400;
   font-size: 0.9rem;
-  letter-spacing: 0.2em;
   transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-radius: 2px;
+  position: relative;
   overflow: hidden;
   cursor: pointer;
 }
 
-.about-company__button-text {
-  position: relative;
-  z-index: 2;
-  transition: color 0.5s ease;
-}
-
-.about-company__button-fill,
 .about-company__button::before {
   content: '';
   position: absolute;
@@ -241,29 +228,27 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(44, 44, 44, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   transition: left 0.6s ease;
-  z-index: 1;
+}
+
+.about-company__button:hover::before {
+  left: 100%;
 }
 
 .about-company__button:hover {
-  background: rgba(44, 44, 44, 0.15);
-  border-color: rgba(44, 44, 44, 0.5);
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.5);
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
   color: inherit;
   text-decoration: none;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.about-company__button:hover .about-company__button-fill,
-.about-company__button:hover::before {
-  left: 100%;
-}
-
 /* ================================
-   DIVIDER ELEMENT
+   DIVIDER - LOOKBOOK STYLE
    ================================ */
 
 .about-company__divider {
@@ -272,20 +257,18 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(
-    to right, 
-    transparent 0%, 
-    rgba(var(--section-text-color), 0.2) 20%, 
-    rgba(var(--section-text-color), 0.4) 50%, 
-    rgba(var(--section-text-color), 0.2) 80%, 
-    transparent 100%
-  );
+  background: linear-gradient(to right, 
+      transparent 0%, 
+      rgba(255,255,255,0.2) 20%, 
+      rgba(255,255,255,0.4) 50%, 
+      rgba(255,255,255,0.2) 80%, 
+      transparent 100%);
   z-index: 15;
   transform: translateY(-50%);
 }
 
 /* ================================
-   SCROLL INDICATOR
+   SCROLL INDICATOR - LOOKBOOK STYLE
    ================================ */
 
 .about-company__scroll-indicator {
@@ -293,17 +276,20 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: about-fadeInOut 3s infinite;
   z-index: 10;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.5rem 1rem;
+  background: rgba(0,0,0,0.3);
+  padding: 8px 16px;
   border-radius: 20px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  opacity: 0.7;
-  animation: scroll-pulse 3s infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .about-company__scroll-line {
@@ -312,28 +298,72 @@
   background: currentColor;
   margin-bottom: 0.5rem;
   transform-origin: top;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .about-company__scroll-text {
   font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 300;
   color: inherit;
 }
 
-@keyframes scroll-pulse {
+@keyframes about-fadeInOut {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 
 /* ================================
-   RESPONSIVE DESIGN
+   ENHANCED HOVER STATES - LOOKBOOK STYLE
+   ================================ */
+
+.about-company__half:hover {
+  background-attachment: fixed;
+}
+
+/* Mouse interaction improvements */
+.about-company__half:hover {
+  filter: brightness(1.1) contrast(1.05);
+}
+
+.about-company__half:hover .about-company__content-wrapper {
+  text-shadow: 0 6px 20px rgba(0,0,0,0.8);
+}
+
+/* ================================
+   ENTRANCE ANIMATIONS - LOOKBOOK STYLE
+   ================================ */
+
+.about-company__half {
+  animation: about-slideInHorizontal 1.2s ease-out;
+}
+
+.about-company__half.company-top {
+  animation-delay: 0.1s;
+}
+
+.about-company__half.company-bottom {
+  animation-delay: 0.2s;
+}
+
+@keyframes about-slideInHorizontal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+   RESPONSIVE DESIGN - LOOKBOOK STYLE
    ================================ */
 
 /* Tablet styles */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .about-company-section {
     min-height: 80vh;
   }
@@ -342,25 +372,25 @@
     height: 50vh;
   }
   
-  .about-company__content-wrapper {
-    padding: 2rem;
-    max-width: 400px;
+  .about-company__title {
+    font-size: 1.76rem; /* 2.2 * 0.8 */
+    letter-spacing: 0.25em;
   }
   
-  .about-company__title {
-    font-size: 1.6rem;
-    letter-spacing: 0.15em;
+  .about-company__content-wrapper {
+    padding: 2rem;
+    max-width: 350px;
   }
   
   .about-company__description {
-    max-width: 350px;
-    font-size: 1rem;
+    max-width: 280px;
+    font-size: 0.9rem;
     margin-bottom: 2rem;
   }
   
   .about-company__button {
     padding: 16px 40px;
-    font-size: 0.8rem;
+    font-size: 0.81rem; /* 0.9 * 0.9 */
   }
   
   .about-company__scroll-indicator {
@@ -369,78 +399,65 @@
 }
 
 /* Mobile styles */
-@media screen and (max-width: 480px) {
-  .about-company__content-wrapper {
-    padding: 1.5rem;
-    max-width: 400px;
-  }
-  
+@media (max-width: 480px) {
   .about-company__title {
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    line-height: 1.2;
+    font-size: 1.54rem; /* 2.2 * 0.7 */
+    letter-spacing: 0.2em;
   }
   
   .about-company__description {
-    max-width: 300px;
-    font-size: 0.95rem;
+    max-width: 250px;
+    font-size: 0.85rem;
     margin-bottom: 2rem;
-    line-height: 1.5;
   }
   
   .about-company__button {
     padding: 14px 35px;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: 0.765rem; /* 0.9 * 0.85 */
   }
   
-  .about-company__half:hover {
-    transform: none; /* Reduce motion on mobile */
+  .about-company__content-wrapper {
+    padding: 1.5rem;
   }
 }
 
 /* Very small mobile */
-@media screen and (max-width: 375px) {
+@media (max-width: 375px) {
   .about-company__content-wrapper {
     padding: 1.5rem 0.8rem;
   }
 }
 
 /* ================================
-   ACCESSIBILITY FEATURES
+   ACCESSIBILITY - LOOKBOOK STYLE
    ================================ */
 
 /* Focus states */
-.about-company__half:focus {
-  outline: 2px solid rgba(var(--section-text-color), 0.8);
-  outline-offset: -2px;
+.about-company__button:focus {
+  outline: 2px solid rgba(255,255,255,0.8);
+  outline-offset: 3px;
 }
 
-.about-company__button:focus {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
+.about-company__half:focus {
+  outline: 2px solid rgba(255,255,255,0.6);
+  outline-offset: -2px;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .about-company__overlay {
-    background: rgba(0, 0, 0, 0.6);
+  .about-company__half.company-top,
+  .about-company__half.company-bottom {
+    background-blend-mode: multiply;
   }
   
   .about-company__button {
-    border-width: 3px;
-    background: rgba(var(--section-text-color), 0.1);
+    border-color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.2);
   }
   
-  .about-company__divider {
-    background: linear-gradient(
-      to right, 
-      transparent 0%, 
-      rgba(var(--section-text-color), 0.6) 20%, 
-      rgba(var(--section-text-color), 0.8) 50%, 
-      rgba(var(--section-text-color), 0.6) 80%, 
-      transparent 100%
-    );
+  .about-company__half::before {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
   }
 }
 
@@ -449,12 +466,16 @@
   .about-company__half,
   .about-company__content-wrapper,
   .about-company__button,
-  .about-company__button-fill,
+  .about-company__button::before,
   .about-company__bg-image {
     transition: none;
   }
   
   .about-company__scroll-indicator {
+    animation: none;
+  }
+  
+  .about-company__half {
     animation: none;
   }
   
@@ -499,7 +520,7 @@
 .about-company__half,
 .about-company__content-wrapper,
 .about-company__bg-image,
-.about-company__button-fill {
+.about-company__button::before {
   will-change: transform;
   transform: translateZ(0);
 }
@@ -508,6 +529,10 @@
 @media screen and (max-width: 768px) {
   .about-company__bg-image {
     transform: none !important;
+  }
+  
+  .about-company__half:hover {
+    background-attachment: scroll;
   }
 }
 
@@ -537,13 +562,13 @@
     color: #000;
   }
   
-  .about-company__overlay {
+  .about-company__half::before {
     background: rgba(255, 255, 255, 0.8);
   }
 }
 
 /* ================================
-   THEME INTEGRATION FIXES
+   THEME INTEGRATION & FINAL FIXES
    ================================ */
 
 /* Ensure section works with any Shopify theme */
@@ -570,89 +595,19 @@
   contain: layout style paint;
 }
 
-/* ================================
-   BROWSER COMPATIBILITY
-   ================================ */
-
-/* Fallback for older browsers without CSS custom properties */
-.no-cssvar .about-company__overlay {
-  background: rgba(255, 255, 255, 0.75);
-}
-
-.no-cssvar .about-company__content {
-  color: #2c2c2c;
-}
-
-/* Fallback for browsers without backdrop-filter */
-@supports not (backdrop-filter: blur(1px)) {
-  .about-company__overlay {
-    background: rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) + 0.1));
-  }
-  
-  .about-company__scroll-indicator {
-    background: rgba(0, 0, 0, 0.5);
-  }
-}
-
-/* Safari-specific fixes */
-@supports (-webkit-touch-callout: none) {
-  .about-company__bg-image {
-    -webkit-transform: translateZ(0);
-  }
-}
-
-/* ================================
-   ANIMATION REFINEMENTS
-   ================================ */
-
 /* Entrance animation for the entire section */
 .about-company-section {
   opacity: 0;
-  animation: fadeInSection 1s ease-out forwards;
+  animation: about-fadeInSection 1s ease-out forwards;
 }
 
-@keyframes fadeInSection {
+@keyframes about-fadeInSection {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
   }
-}
-
-/* Staggered animation for section halves */
-.about-company__half:nth-child(2) {
-  animation-delay: 0.1s;
-}
-
-.about-company__half:nth-child(3) {
-  animation-delay: 0.2s;
-}
-
-/* Subtle hover animation for buttons */
-.about-company__button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
-  z-index: 3;
-}
-
-.about-company__button:hover::before {
-  left: 100%;
-}
-
-/* ================================
-   FINAL CLEANUP & OVERRIDES
-   ================================ */
-
-/* Ensure no conflicts with existing theme styles */
-.about-company-section * {
-  box-sizing: border-box;
 }
 
 /* Remove any unwanted margins from theme */
@@ -664,27 +619,12 @@
   padding: 0;
 }
 
-.about-company__title,
-.about-company__description {
-  margin: 0;
-  padding: 0;
-}
-
 .about-company__title {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .about-company__description {
-  margin-bottom: 2.5rem;
-}
-
-/* Ensure proper line heights */
-.about-company__title {
-  line-height: 1.3;
-}
-
-.about-company__description {
-  line-height: 1.6;
+  margin-bottom: 3rem;
 }
 
 /* Final responsive adjustments */
