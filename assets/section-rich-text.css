@@ -138,11 +138,16 @@
   /* Also target any section padding classes */
   [class*="section-"][class*="-padding"] {
     padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding-bottom: 2rem !important; /* Add controlled bottom spacing */
   }
   
   /* Remove any default section spacing */
   .section + .section {
     margin-top: 0 !important;
+  }
+  
+  /* Or target buttons specifically for spacing */
+  .rich-text__buttons {
+    margin-bottom: 2rem !important;
   }
 }
