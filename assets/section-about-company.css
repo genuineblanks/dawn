@@ -5,10 +5,11 @@
  */
 
 /* ================================
-   SECTION BASE - LOOKBOOK STYLE
+   SECTION BASE - FIXED TARGETING
    ================================ */
 
-.about-company-section {
+.about-company-section,
+[class*="about-company-section-"] {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -19,15 +20,19 @@
   background: transparent;
 }
 
-.about-company-section * {
+.about-company-section *,
+[class*="about-company-section-"] * {
   box-sizing: border-box;
 }
 
 /* ================================
-   HORIZONTAL SPLIT LAYOUT - MATCHING LOOKBOOK
+   HORIZONTAL SPLIT LAYOUT - FIXED TARGETING
    ================================ */
 
-.about-company__half {
+.about-company__half,
+[class*="about-company-section-"] .about-company__half,
+[class*="about-company-section-"] .company-top,
+[class*="about-company-section-"] .company-bottom {
   width: 100%;
   height: 50%;
   position: relative;
@@ -44,7 +49,10 @@
   background-repeat: no-repeat;
 }
 
-.about-company__half::before {
+.about-company__half::before,
+[class*="about-company-section-"] .about-company__half::before,
+[class*="about-company-section-"] .company-top::before,
+[class*="about-company-section-"] .company-bottom::before {
   content: '';
   position: absolute;
   top: 0;
@@ -59,18 +67,27 @@
   z-index: 1;
 }
 
-.about-company__half:hover::before {
+.about-company__half:hover::before,
+[class*="about-company-section-"] .about-company__half:hover::before,
+[class*="about-company-section-"] .company-top:hover::before,
+[class*="about-company-section-"] .company-bottom:hover::before {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 }
 
-.about-company__half:hover {
+.about-company__half:hover,
+[class*="about-company-section-"] .about-company__half:hover,
+[class*="about-company-section-"] .company-top:hover,
+[class*="about-company-section-"] .company-bottom:hover {
   transform: scale(1.02);
 }
 
-.about-company__half:active {
+.about-company__half:active,
+[class*="about-company-section-"] .about-company__half:active,
+[class*="about-company-section-"] .company-top:active,
+[class*="about-company-section-"] .company-bottom:active {
   transform: scale(0.98);
 }
 
@@ -100,25 +117,28 @@
 }
 
 /* ================================
-   SECTION BACKGROUNDS - MATCHING LOOKBOOK GRADIENTS
+   SECTION BACKGROUNDS - FIXED TARGETING
    ================================ */
 
-.about-company__half.company-top {
-  background: linear-gradient(135deg, rgba(var(--section-overlay-color), var(--section-overlay-opacity)), rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) - 0.15)));
+.about-company__half.company-top,
+[class*="about-company-section-"] .company-top {
   color: var(--section-text-color);
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
-.about-company__half.company-bottom {
-  background: linear-gradient(135deg, rgba(var(--section-overlay-color), var(--section-overlay-opacity)), rgba(var(--section-overlay-color), calc(var(--section-overlay-opacity) - 0.15)));
+.about-company__half.company-bottom,
+[class*="about-company-section-"] .company-bottom {
   color: var(--section-text-color);
 }
 
 /* ================================
-   ENHANCED GLASS MORPHISM - LOOKBOOK STYLE
+   ENHANCED GLASS MORPHISM - FIXED TARGETING
    ================================ */
 
-.about-company__half::after {
+.about-company__half::after,
+[class*="about-company-section-"] .about-company__half::after,
+[class*="about-company-section-"] .company-top::after,
+[class*="about-company-section-"] .company-bottom::after {
   content: '';
   position: absolute;
   top: 0;
@@ -131,10 +151,11 @@
 }
 
 /* ================================
-   CONTENT POSITIONING - LOOKBOOK STYLE
+   CONTENT POSITIONING - FIXED TARGETING
    ================================ */
 
-.about-company__content {
+.about-company__content,
+[class*="about-company-section-"] .about-company__content {
   position: relative;
   z-index: 10;
   width: 100%;
@@ -145,7 +166,8 @@
   color: inherit;
 }
 
-.about-company__content-wrapper {
+.about-company__content-wrapper,
+[class*="about-company-section-"] .about-company__content-wrapper {
   text-align: center;
   z-index: 10;
   transition: all 0.6s ease;
@@ -154,15 +176,19 @@
   position: relative;
 }
 
-.about-company__half:hover .about-company__content-wrapper {
+.about-company__half:hover .about-company__content-wrapper,
+[class*="about-company-section-"] .about-company__half:hover .about-company__content-wrapper,
+[class*="about-company-section-"] .company-top:hover .about-company__content-wrapper,
+[class*="about-company-section-"] .company-bottom:hover .about-company__content-wrapper {
   transform: scale(1.05) translateY(-5px);
 }
 
 /* ================================
-   TYPOGRAPHY - EXACT LOOKBOOK STYLE
+   TYPOGRAPHY - FIXED TARGETING
    ================================ */
 
-.about-company__title {
+.about-company__title,
+[class*="about-company-section-"] .about-company__title {
   font-size: 2.2rem;
   font-weight: 200;
   letter-spacing: 0.4em;
@@ -175,7 +201,8 @@
   line-height: 1.3;
 }
 
-.about-company__title::after {
+.about-company__title::after,
+[class*="about-company-section-"] .about-company__title::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -186,7 +213,8 @@
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
 }
 
-.about-company__description {
+.about-company__description,
+[class*="about-company-section-"] .about-company__description {
   font-size: 1rem;
   line-height: 1.7;
   opacity: 0.85;
@@ -198,10 +226,11 @@
 }
 
 /* ================================
-   PREMIUM BUTTON - EXACT LOOKBOOK STYLE
+   PREMIUM BUTTON - FIXED TARGETING
    ================================ */
 
-.about-company__button {
+.about-company__button,
+[class*="about-company-section-"] .about-company__button {
   display: inline-block;
   padding: 20px 50px;
   border: 2px solid rgba(255,255,255,0.3);
@@ -221,7 +250,8 @@
   cursor: pointer;
 }
 
-.about-company__button::before {
+.about-company__button::before,
+[class*="about-company-section-"] .about-company__button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -232,11 +262,13 @@
   transition: left 0.6s ease;
 }
 
-.about-company__button:hover::before {
+.about-company__button:hover::before,
+[class*="about-company-section-"] .about-company__button:hover::before {
   left: 100%;
 }
 
-.about-company__button:hover {
+.about-company__button:hover,
+[class*="about-company-section-"] .about-company__button:hover {
   background: rgba(255,255,255,0.15);
   border-color: rgba(255,255,255,0.5);
   transform: translateY(-3px);
@@ -248,10 +280,11 @@
 }
 
 /* ================================
-   DIVIDER - LOOKBOOK STYLE
+   DIVIDER - FIXED TARGETING
    ================================ */
 
-.about-company__divider {
+.about-company__divider,
+[class*="about-company-section-"] .about-company__divider {
   position: absolute;
   top: 50%;
   left: 0;
