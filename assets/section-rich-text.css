@@ -1,63 +1,60 @@
 .rich-text {
   z-index: 1;
 }
-
 .rich-text__wrapper {
   display: flex;
   justify-content: center;
-  width: calc(100% - 4rem / var(--font-body-scale));
+  width: 100%;
+  padding: 0 1rem;
 }
-
 .rich-text:not(.rich-text--full-width) .rich-text__wrapper {
   margin: auto;
-  width: calc(100% - 8rem / var(--font-body-scale));
+  width: 100%;
+  padding: 0 1rem;
 }
-
 .rich-text__blocks {
   width: 100%;
 }
-
 @media screen and (min-width: 750px) {
+  .rich-text__wrapper {
+    width: calc(100% - 4rem / var(--font-body-scale));
+    padding: 0;
+  }
+  .rich-text:not(.rich-text--full-width) .rich-text__wrapper {
+    width: calc(100% - 8rem / var(--font-body-scale));
+    padding: 0;
+  }
   .rich-text__wrapper {
     width: 100%;
   }
-
   .rich-text__wrapper--left {
     justify-content: flex-start;
   }
-
   .rich-text__wrapper--right {
     justify-content: flex-end;
   }
-
   .rich-text__blocks {
     max-width: 50rem;
   }
 }
-
 @media screen and (min-width: 990px) {
   .rich-text__blocks {
     max-width: 78rem;
   }
 }
-
 .rich-text__blocks * {
   overflow-wrap: break-word;
 }
-
 .rich-text__blocks > * {
   margin-top: 0;
   margin-bottom: 0;
 }
-
 .rich-text__blocks > * + * {
   margin-top: 2rem;
 }
-
 .rich-text__blocks > * + a {
   margin-top: 3rem;
 }
-
 .rich-text__buttons {
   display: inline-flex;
   justify-content: center;
@@ -67,55 +64,43 @@
   max-width: 45rem;
   word-break: break-word;
 }
-
 .rich-text__buttons--multiple > * {
   flex-grow: 1;
   min-width: 22rem;
 }
-
 .rich-text__buttons + .rich-text__buttons {
   margin-top: 1rem;
 }
-
 .rich-text__blocks.left .rich-text__buttons {
   justify-content: flex-start;
 }
-
 .rich-text__blocks.right .rich-text__buttons {
   justify-content: flex-end;
 }
-
 /* ✅ Force zero height if blocks are empty */
 .rich-text__blocks:empty {
   display: none !important;
 }
-
 /* ✅ Or: kill empty wrappers with only whitespace */
 .rich-text__blocks:has(> *:only-child:empty) {
   display: none !important;
 }
-
 /* ✅ If blocks exist but all children are empty, kill them too */
 .rich-text__blocks:has(> *:only-child:blank) {
   display: none !important;
 }
-
 /* ✅ And make sure no margin */
 .rich-text__blocks > *:only-child {
   margin: 0 !important;
 }
-
 /* ✅ Also force the container to collapse if its child is hidden */
 .rich-text__wrapper:has(.rich-text__blocks:empty) {
   display: none !important;
 }
-
 .rich-text__wrapper:has(.rich-text__blocks:has(> *:only-child:empty)) {
   display: none !important;
 }
-
 /* ✅ And zero out the padding of the parent if empty */
 .section-padding:has(.rich-text__blocks:empty) {
   padding: 0 !important;
 }
-
