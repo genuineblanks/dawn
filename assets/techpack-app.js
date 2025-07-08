@@ -1549,6 +1549,33 @@ function setupCountryDropdown() {
     validateStep3();
   }
 
+  // None or Design Switch Button
+  function setupPrintingMethodsLogic(garment) {
+    const checkboxes = garment.querySelectorAll('input[name="printingMethods[]"]');
+    const noneCheckbox = garment.querySelector('input[value="None"]');
+    
+    if (!noneCheckbox) return;
+    
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (this.value === 'None' && this.checked) {
+          // If "None" is checked, uncheck all others
+          checkboxes.forEach(cb => {
+            if (cb.value !== 'None') {
+              cb.checked = false;
+            }
+          });
+        } else if (this.value !== 'None' && this.checked) {
+          // If any other option is checked, uncheck "None"
+          noneCheckbox.checked = false;
+        }
+        
+        // Trigger validation update
+        validateStep3();
+      });
+    });
+  }
+
   // Setup event listeners for all garment form elements
   function setupGarmentEventListeners(garment, garmentId) {
     // Garment type select
@@ -1574,6 +1601,9 @@ function setupCountryDropdown() {
         validateStep3();
       });
     }
+
+    // NEW: Add printing methods logic for "None" exclusivity
+    setupPrintingMethodsLogic(garment);    
   
     // Printing method checkboxes
     const printingCheckboxes = garment.querySelectorAll('input[name="printingMethods[]"]');
