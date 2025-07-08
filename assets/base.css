@@ -26,7 +26,10 @@
 }
 
 /* Mobile sections should use real viewport height */
-
+@media screen and (max-width: 749px) {
+  section {
+    min-height: var(--real-viewport-height);
+  }
   
   .banner,
   .image-banner {
