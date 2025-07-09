@@ -189,15 +189,23 @@ Tech-Pack Step 3: Garment Specifications Section
   <div class="techpack-colorway" data-colorway-id="">
     <div class="techpack-colorway__header">
       <div class="techpack-colorway__color">
-        <label class="techpack-form__label">Color</label>
+        <label class="techpack-form__label">Color Picker</label>
         <div class="techpack-color-picker">
           <input type="color" class="techpack-color-picker__input" value="#000000">
           <div class="techpack-color-picker__preview"></div>
+          <div class="techpack-color-picker__info">
+            <span class="color-hex-display">#000000</span>
+          </div>
         </div>
       </div>
       <div class="techpack-colorway__pantone">
-        <label class="techpack-form__label">PANTONE TCX</label>
-        <input type="text" class="techpack-form__input" placeholder="e.g., 18-1664 TPX">
+        <label class="techpack-form__label">PANTONE TCX *</label>
+        <div class="techpack-pantone-container">
+          <input type="text" class="techpack-form__input pantone-input" placeholder="e.g., 18-1664 TPG" required>
+          <div class="pantone-recommendation"></div>
+          <div class="pantone-warning" style="display: none;"></div>
+        </div>
+        <div class="techpack-form__error" role="alert"></div>
       </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
         <svg width="16" height="16" viewBox="0 0 16 16">
