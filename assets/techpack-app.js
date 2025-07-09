@@ -1924,49 +1924,6 @@
         
         debugSystem.log('VAT field hidden for non-European country', { country: country.name });
       }
-          
-          // Set country-specific placeholder
-          const countryCode = country.code;
-          const placeholders = {
-            'PT': 'e.g., PT123456789',
-            'ES': 'e.g., ESA12345674', 
-            'DE': 'e.g., DE123456789',
-            'FR': 'e.g., FR12345678901',
-            'IT': 'e.g., IT12345678901',
-            'NL': 'e.g., NL123456789B01',
-            'BE': 'e.g., BE0123456789',
-            'AT': 'e.g., ATU12345678'
-          };
-          
-          vatInput.placeholder = placeholders[countryCode] || 'e.g., PT123456789';
-          
-          if (vatLabel) {
-            vatLabel.innerHTML = 'VAT Number <span class="techpack-form__required">*</span>';
-          }
-        
-        debugSystem.log('VAT field required for European country', { country: country.name });
-      } else {
-        // Make VAT optional for non-European countries
-        vatContainer.style.display = 'block';
-        vatContainer.classList.remove('techpack-form__group--required');
-        vatInput.removeAttribute('required');
-        vatInput.removeAttribute('data-required');
-        
-        if (vatLabel) {
-          vatLabel.innerHTML = 'EIN Number <span class="techpack-form__label-status">(optional)</span>';
-        }
-        
-        // Clear errors since it's optional
-        vatInput.classList.remove('techpack-form__input--error');
-        const errorDiv = vatContainer.querySelector('.techpack-form__error');
-        if (errorDiv) {
-          errorDiv.textContent = '';
-          errorDiv.style.display = 'none';
-        }
-        
-        debugSystem.log('EIN field optional for non-European country', { country: country.name });
-      }
-    }
 
     updateHighlight(items) {
       items.forEach((item, i) => {
