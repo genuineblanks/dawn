@@ -1,4 +1,74 @@
-(function() {
+setupColorwayEventListeners(colorway, garmentId, colorwayId) {
+      // Remove button
+      const removeBtn = colorway.querySelector('.techpack-colorway__remove');
+      removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
+      
+      // Color picker
+      const colorPicker = colorway.querySelector('.techpack-color-picker__input');
+      const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
+      
+      colorPicker.addEventListener('change', function() {
+        colorPreview.style.backgroundColor = this.value;
+        const garmentData = state.formData.garments.find(g => g.id === garmentId);
+        if (garmentData) {
+          const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+          if (colorwayData) {
+            colorwayData.color = this.value;
+          }
+        }
+      });
+      colorPreview.style.backgroundColor = colorPicker.value;
+      
+      // Pantone input
+      const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
+      if (pantoneInput) {
+        pantoneInput.addEventListener('input', () => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (colorwayData) {
+              colorwayData.pantone = pantoneInput.value;
+            }
+          }
+        });
+      }
+
+      // FIXED: Quantity inputs with proper state management
+      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+      qtyInputs.forEach(input => {
+        input.addEventListener('input', () => {
+          // Update state immediately
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (colorwayData) {
+              const size = input.name.replace('qty-', '');
+              const value = parseInt(input.value) || 0;
+              colorwayData.quantities[size] = value;
+            }
+          }
+
+          // Update UI
+          quantityCalculator.validateQuantityInputs(colorwayId);
+          quantityCalculator.updateColorwayTotal(colorwayId);
+          quantityCalculator.updateGarmentTotal(garmentId);
+          
+          // Trigger main calculation with debounce
+          clearTimeout(this.calculateTimeout);
+          this.calculateTimeout = setTimeout(() => {
+            quantityCalculator.calculateAndUpdateProgress();
+            stepManager.validateStep3();
+          }, 200);
+        });
+
+        input.addEventListener('change', () => {
+          // Ensure state is updated
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (colorwayData) {
+              const size = input.name.replace('qty-', '');
+              (function() {
   'use strict';
 
   // Enhanced Configuration
@@ -703,8 +773,6 @@
       }
 
       let isValid = true;
-      const colorwayCount = this.getColorwayCount();
-      const requiredPerColorway = colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
 
       state.formData.garments.forEach((garment, index) => {
         if (!garment.type || !garment.fabric || garment.printingMethods.length === 0) {
@@ -712,17 +780,32 @@
           debugSystem.log(`Garment ${index + 1} missing required fields`, garment, 'error');
         }
 
-        garment.colorways.forEach((colorway, colorwayIndex) => {
-          const total = Object.values(colorway.quantities).reduce((sum, qty) => sum + (qty || 0), 0);
-          if (total < requiredPerColorway) {
-            isValid = false;
-            debugSystem.log(`Colorway ${colorwayIndex + 1} below minimum quantity`, { 
-              total, 
-              required: requiredPerColorway 
-            }, 'error');
-          }
-        });
+        // FIXED: Validate each garment's colorways individually
+        const garmentElement = document.querySelector(`[data-garment-id="${garment.id}"]`);
+        if (garmentElement) {
+          const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
+          const colorwayCountInGarment = colorwaysInGarment.length;
+          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+
+          garment.colorways.forEach((colorway, colorwayIndex) => {
+            const total = Object.values(colorway.quantities).reduce((sum, qty) => sum + (qty || 0), 0);
+            if (total < requiredPerColorway) {
+              isValid = false;
+              debugSystem.log(`Garment ${index + 1}, Colorway ${colorwayIndex + 1} below minimum`, { 
+                total, 
+                required: requiredPerColorway,
+                garmentColorways: colorwayCountInGarment
+              }, 'error');
+            }
+          });
+        }
       });
+
+      // Update button state
+      const nextBtn = document.querySelector('#step-3-next');
+      if (nextBtn) {
+        nextBtn.disabled = !isValid;
+      }
 
       if (isValid) {
         debugSystem.log('Step 3 validation passed', null, 'success');
@@ -1418,16 +1501,30 @@
       // Listen for quantity input changes with debouncing
       const debouncedCalculate = Utils.debounce(() => {
         this.calculateAndUpdateProgress();
-      }, CONFIG.DEBOUNCE_DELAY);
+      }, 200);
 
       document.addEventListener('input', (e) => {
         if (e.target.matches('.techpack-size-grid__input[type="number"]')) {
+          // Update individual colorway totals immediately
+          const colorway = e.target.closest('.techpack-colorway');
+          if (colorway) {
+            const colorwayId = colorway.dataset.colorwayId;
+            this.updateColorwayTotal(colorwayId);
+            this.validateQuantityInputs(colorwayId);
+          }
           debouncedCalculate();
         }
       });
 
       document.addEventListener('change', (e) => {
         if (e.target.matches('.techpack-size-grid__input[type="number"]')) {
+          const colorway = e.target.closest('.techpack-colorway');
+          if (colorway) {
+            const colorwayId = colorway.dataset.colorwayId;
+            this.updateColorwayTotal(colorwayId);
+            this.validateQuantityInputs(colorwayId);
+            this.updateGarmentTotal(colorway.closest('.techpack-garment').dataset.garmentId);
+          }
           this.calculateAndUpdateProgress();
         }
       });
@@ -1438,14 +1535,27 @@
       return Math.max(colorways.length, 1);
     }
 
+    // FIXED: Calculate minimum based on EACH GARMENT individually
     calculateMinimumRequired() {
-      const colorwayCount = this.getColorwayCount();
+      let totalMinimum = 0;
       
-      if (colorwayCount === 1) {
-        return CONFIG.MIN_ORDER_QUANTITY;
-      } else {
-        return colorwayCount * CONFIG.MIN_COLORWAY_QUANTITY;
-      }
+      // Get all garments and calculate minimum for each
+      const garments = document.querySelectorAll('.techpack-garment');
+      
+      garments.forEach(garment => {
+        const colorwaysInGarment = garment.querySelectorAll('.techpack-colorway');
+        const colorwayCount = colorwaysInGarment.length;
+        
+        if (colorwayCount === 1) {
+          // Single colorway = 75 units minimum
+          totalMinimum += CONFIG.MIN_ORDER_QUANTITY;
+        } else {
+          // Multiple colorways = 50 units per colorway
+          totalMinimum += colorwayCount * CONFIG.MIN_COLORWAY_QUANTITY;
+        }
+      });
+      
+      return Math.max(totalMinimum, CONFIG.MIN_ORDER_QUANTITY); // At least 75 total
     }
 
     getTotalQuantityFromAllColorways() {
@@ -1463,22 +1573,67 @@
     calculateAndUpdateProgress() {
       const totalQuantity = this.getTotalQuantityFromAllColorways();
       const minimumRequired = this.calculateMinimumRequired();
-      const colorwayCount = this.getColorwayCount();
+      
+      // FIXED: Get detailed garment breakdown for better messaging
+      const garmentDetails = this.getGarmentDetails();
       const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
       
-      this.updateTotalQuantityDisplay(totalQuantity, minimumRequired, colorwayCount);
-      this.updateStatusMessage(totalQuantity, minimumRequired, percentage, colorwayCount);
+      this.updateTotalQuantityDisplay(totalQuantity, minimumRequired, garmentDetails);
+      this.updateStatusMessage(totalQuantity, minimumRequired, percentage, garmentDetails);
       this.updateColorwayValidationMessages();
       this.updateQuantityProgressBar(percentage);
       
       debugSystem.log('Quantity progress calculated', {
-        colorways: colorwayCount,
         total: totalQuantity,
         minRequired: minimumRequired,
-        progress: percentage.toFixed(1) + '%'
+        progress: percentage.toFixed(1) + '%',
+        garmentDetails
       });
       
       return percentage;
+    }
+
+    // NEW: Get detailed breakdown of each garment
+    getGarmentDetails() {
+      const garments = document.querySelectorAll('.techpack-garment');
+      return Array.from(garments).map(garment => {
+        const colorways = garment.querySelectorAll('.techpack-colorway');
+        return {
+          colorways: colorways.length,
+          total: this.getGarmentTotal(garment.dataset.garmentId)
+        };
+      });
+    }
+
+    // NEW: Get total for a specific garment
+    getGarmentTotal(garmentId) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) return 0;
+
+      const colorways = garment.querySelectorAll('.techpack-colorway');
+      let total = 0;
+
+      colorways.forEach(colorway => {
+        const colorwayId = colorway.dataset.colorwayId;
+        total += this.updateColorwayTotal(colorwayId);
+      });
+
+      return total;
+    }
+
+    // FIXED: Update garment total display
+    updateGarmentTotal(garmentId) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) return 0;
+
+      const total = this.getGarmentTotal(garmentId);
+
+      const totalElement = garment.querySelector('.techpack-garment__total-value');
+      if (totalElement) {
+        totalElement.textContent = total;
+      }
+
+      return total;
     }
 
     updateTotalQuantityDisplay(totalQuantity, minimumRequired, colorwayCount) {
@@ -1531,32 +1686,60 @@
     }
 
     updateColorwayValidationMessages() {
-      const colorways = document.querySelectorAll('.techpack-colorway[data-colorway-id]');
-      const totalColorways = colorways.length;
+      const garments = document.querySelectorAll('.techpack-garment');
       
-      colorways.forEach(colorway => {
-        const colorwayId = colorway.dataset.colorwayId;
-        const colorwayTotal = this.updateColorwayTotal(colorwayId);
-        const requiredPerColorway = totalColorways === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+      garments.forEach(garment => {
+        const colorwaysInGarment = garment.querySelectorAll('.techpack-colorway[data-colorway-id]');
+        const colorwayCountInGarment = colorwaysInGarment.length;
         
-        let warningEl = colorway.querySelector('.colorway-minimum-warning');
-        if (!warningEl) {
-          warningEl = this.createColorwayWarningElement(colorway);
-        }
-        
-        if (colorwayTotal < requiredPerColorway) {
-          const remaining = requiredPerColorway - colorwayTotal;
-          const message = totalColorways === 1 
-            ? `⚠️ Need ${remaining} more units (75 minimum for single colorway)`
-            : `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
+        colorwaysInGarment.forEach(colorway => {
+          const colorwayId = colorway.dataset.colorwayId;
+          const colorwayTotal = this.updateColorwayTotal(colorwayId);
           
-          warningEl.innerHTML = message;
-          warningEl.style.display = 'block';
-          warningEl.className = 'colorway-minimum-warning warning';
+          // FIXED: Determine minimum for THIS specific garment's colorway count
+          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
           
-          // Add red highlight to colorway total
-          const totalEl = colorway.querySelector('.techpack-colorway__total-value');
-          if (totalEl) {
+          let warningEl = colorway.querySelector('.colorway-minimum-warning');
+          if (!warningEl) {
+            warningEl = this.createColorwayWarningElement(colorway);
+          }
+          
+          if (colorwayTotal < requiredPerColorway) {
+            const remaining = requiredPerColorway - colorwayTotal;
+            const message = colorwayCountInGarment === 1 
+              ? `⚠️ Need ${remaining} more units (75 minimum for single colorway)`
+              : `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
+            
+            warningEl.innerHTML = message;
+            warningEl.style.display = 'block';
+            warningEl.className = 'colorway-minimum-warning warning';
+            
+            // Add red highlight to colorway total
+            const totalEl = colorway.querySelector('.techpack-colorway__total-value');
+            if (totalEl) {
+              totalEl.style.cssText = `
+                color: #ef4444 !important;
+                font-weight: bold !important;
+                background: #fef2f2;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                border: 1px solid #fecaca;
+              `;
+            }
+          } else {
+            warningEl.style.display = 'block';
+            warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${requiredPerColorway})`;
+            warningEl.className = 'colorway-minimum-warning success';
+            
+            // Remove red styling from colorway total
+            const totalEl = colorway.querySelector('.techpack-colorway__total-value');
+            if (totalEl) {
+              totalEl.style.cssText = '';
+            }
+          }
+        });
+      });
+    }
             totalEl.style.cssText = `
               color: #ef4444 !important;
               font-weight: bold !important;
@@ -1670,8 +1853,11 @@
 
       const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
       const colorwayTotal = this.updateColorwayTotal(colorwayId);
-      const colorwayCount = this.getColorwayCount();
-      const requiredPerColorway = colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+      
+      // FIXED: Get colorway count for THIS garment only
+      const garment = colorway.closest('.techpack-garment');
+      const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
+      const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
       
       const activeSizes = Array.from(qtyInputs).filter(input => parseInt(input.value) || 0 > 0).length;
       const maxAllowedSizes = this.getMaxAllowedSizes(colorwayTotal);
@@ -1702,6 +1888,46 @@
           input.title = '';
         }
       });
+      
+      // Update size distribution warning
+      let warningEl = colorway.querySelector('.size-distribution-warning');
+      if (!warningEl) {
+        warningEl = this.createSizeWarningElement(colorway);
+      }
+      
+      if (activeSizes > maxAllowedSizes) {
+        warningEl.style.display = 'block';
+        warningEl.innerHTML = `⚠️ Too many sizes! With ${colorwayTotal} units, you can use maximum ${maxAllowedSizes} sizes.`;
+        warningEl.className = 'size-distribution-warning warning';
+      } else if (colorwayTotal < requiredPerColorway) {
+        warningEl.style.display = 'block';
+        warningEl.innerHTML = `📊 Need ${requiredPerColorway - colorwayTotal} more units. Current: ${activeSizes} sizes, Max allowed: ${maxAllowedSizes} sizes.`;
+        warningEl.className = 'size-distribution-warning info';
+      } else {
+        warningEl.style.display = 'block';
+        warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units across ${activeSizes} sizes (Max: ${maxAllowedSizes}).`;
+        warningEl.className = 'size-distribution-warning success';
+      }
+    }
+
+    createSizeWarningElement(colorway) {
+      const warningEl = document.createElement('div');
+      warningEl.className = 'size-distribution-warning';
+      warningEl.style.cssText = `
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-top: 0.75rem;
+        transition: all 0.3s ease;
+      `;
+      
+      const sizeGrid = colorway.querySelector('.techpack-size-grid');
+      if (sizeGrid) {
+        sizeGrid.insertAdjacentElement('afterend', warningEl);
+      }
+      
+      return warningEl;
     }
   }
 
@@ -1883,52 +2109,19 @@
       debugSystem.log('Colorway added', { garmentId, colorwayId });
     }
 
-    setupColorwayEventListeners(colorway, garmentId, colorwayId) {
-      // Remove button
-      const removeBtn = colorway.querySelector('.techpack-colorway__remove');
-      removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
-      
-      // Color picker
-      const colorPicker = colorway.querySelector('.techpack-color-picker__input');
-      const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      
-      colorPicker.addEventListener('change', function() {
-        colorPreview.style.backgroundColor = this.value;
-        const garmentData = state.formData.garments.find(g => g.id === garmentId);
-        if (garmentData) {
-          const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-          if (colorwayData) {
-            colorwayData.color = this.value;
-          }
-        }
-      });
-      colorPreview.style.backgroundColor = colorPicker.value;
-      
-      // Pantone input
-      const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
-      if (pantoneInput) {
-        pantoneInput.addEventListener('input', () => {
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              colorwayData.pantone = pantoneInput.value;
+              const size = input.name.replace('qty-', '');
+              const value = parseInt(input.value) || 0;
+              colorwayData.quantities[size] = value;
             }
           }
-        });
-      }
 
-      // Quantity inputs
-      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-      qtyInputs.forEach(input => {
-        const debouncedUpdate = Utils.debounce(() => {
+          // Final update
           quantityCalculator.validateQuantityInputs(colorwayId);
           quantityCalculator.updateColorwayTotal(colorwayId);
+          quantityCalculator.updateGarmentTotal(garmentId);
           quantityCalculator.calculateAndUpdateProgress();
-        }, 200);
-
-        input.addEventListener('input', debouncedUpdate);
-        input.addEventListener('change', debouncedUpdate);
+          stepManager.validateStep3();
+        });
       });
     }
 
