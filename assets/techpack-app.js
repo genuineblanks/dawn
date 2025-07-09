@@ -2433,8 +2433,14 @@
       const checkboxes = garment.querySelectorAll('input[name="printingMethods[]"]');
       const noneCheckbox = garment.querySelector('input[value="None"]');
       
+      // Create a debounced validation function
+      const debouncedValidation = Utils.debounce(() => {
+        stepManager.validateStep3();
+      }, 100);
+      
       checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
+          // Handle "None" checkbox logic
           if (checkbox.value === 'None' && checkbox.checked) {
             checkboxes.forEach(cb => {
               if (cb.value !== 'None') cb.checked = false;
@@ -2443,14 +2449,26 @@
             if (noneCheckbox) noneCheckbox.checked = false;
           }
           
-          // Update state
+          // Update state immediately
           const garmentData = state.formData.garments.find(g => g.id === garmentId);
           if (garmentData) {
             const checkedBoxes = garment.querySelectorAll('input[name="printingMethods[]"]:checked');
             garmentData.printingMethods = Array.from(checkedBoxes).map(cb => cb.value);
           }
           
-          stepManager.validateStep3();
+          // Clear any existing error state immediately
+          const printingGroup = garment.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
+          const printingError = printingGroup?.querySelector('.techpack-form__error');
+          
+          if (printingGroup) {
+            printingGroup.classList.remove('techpack-form__group--error');
+          }
+          if (printingError) {
+            printingError.textContent = '';
+          }
+          
+          // Validate with debounce to prevent interference
+          debouncedValidation();
         });
       });
     }
