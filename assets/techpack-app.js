@@ -2557,6 +2557,58 @@ function downloadSubmissionPDF() {
         .details-header h3 {
           margin: 0;
           font-size: 14px;
+          font-weight// Generate and download submission PDF - GLOBAL FUNCTION
+window.downloadSubmissionPDF = function() {
+  debug.log('Generating submission PDF');
+  
+  // Create a clean PDF content
+  const pdfContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Tech-Pack Submission Confirmation</title>
+      <style>
+        body {
+          font-family: system-ui, -apple-system, sans-serif;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 40px 20px;
+          color: #111827;
+          line-height: 1.6;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 40px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid #e5e7eb;
+        }
+        .header h1 {
+          font-size: 28px;
+          font-weight: 300;
+          margin: 0 0 10px 0;
+          letter-spacing: -0.025em;
+        }
+        .header p {
+          color: #6b7280;
+          margin: 0;
+          font-size: 14px;
+        }
+        .details-card {
+          background: #fafbfc;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 30px;
+        }
+        .details-header {
+          background: #f1f3f4;
+          padding: 20px;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .details-header h3 {
+          margin: 0;
+          font-size: 14px;
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.1em;
@@ -2616,23 +2668,23 @@ function downloadSubmissionPDF() {
           </div>
           <div class="detail-item">
             <span class="detail-label">Total Quantity</span>
-            <span class="detail-value">${updateTotalQuantity()} units</span>
+            <span class="detail-value">${window.techpackApp?.formData ? updateTotalQuantity() : 'N/A'} units</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Files Uploaded</span>
-            <span class="detail-value">${formData.files.length} ${formData.files.length === 1 ? 'file' : 'files'}</span>
+            <span class="detail-value">${window.techpackApp?.formData?.files?.length || 0} files</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Client Name</span>
-            <span class="detail-value">${formData.clientInfo?.clientName || formData.clientInfo?.contactName || 'N/A'}</span>
+            <span class="detail-value">${window.techpackApp?.formData?.clientInfo?.clientName || window.techpackApp?.formData?.clientInfo?.contactName || 'N/A'}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Company</span>
-            <span class="detail-value">${formData.clientInfo?.companyName || formData.clientInfo?.company || 'N/A'}</span>
+            <span class="detail-value">${window.techpackApp?.formData?.clientInfo?.companyName || window.techpackApp?.formData?.clientInfo?.company || 'N/A'}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Email</span>
-            <span class="detail-value">${formData.clientInfo?.email || formData.clientInfo?.emailAddress || 'N/A'}</span>
+            <span class="detail-value">${window.techpackApp?.formData?.clientInfo?.email || window.techpackApp?.formData?.clientInfo?.emailAddress || 'N/A'}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Submitted</span>
@@ -2662,20 +2714,24 @@ function downloadSubmissionPDF() {
 
   // Create a new window with the PDF content
   const printWindow = window.open('', '_blank');
-  printWindow.document.write(pdfContent);
-  printWindow.document.close();
-  
-  // Wait for content to load, then trigger save dialog
-  printWindow.onload = function() {
-    setTimeout(() => {
-      printWindow.print();
-      // Close the window after printing
+  if (printWindow) {
+    printWindow.document.write(pdfContent);
+    printWindow.document.close();
+    
+    // Wait for content to load, then trigger save dialog
+    printWindow.onload = function() {
       setTimeout(() => {
-        printWindow.close();
-      }, 1000);
-    }, 500);
-  };
-}
+        printWindow.print();
+        // Close the window after printing
+        setTimeout(() => {
+          printWindow.close();
+        }, 1000);
+      }, 500);
+    };
+  } else {
+    alert('Please allow popups to download the confirmation PDF');
+  }
+};
 
   // Debug toggle function
   function toggleDebug() {
