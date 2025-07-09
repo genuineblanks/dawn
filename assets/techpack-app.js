@@ -2506,6 +2506,8 @@
             }
           }
         });
+      }
+    }
 
     setupProductionTypeListener() {
       const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
