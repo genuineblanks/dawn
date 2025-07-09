@@ -885,69 +885,90 @@
     }
 
     scrollToTechPackTopEnhanced() {
-      // Look for the TechPack app starting point
+      // More aggressive search for TechPack elements
       const selectors = [
-        '#techpack-step-1',        // Your main section ID
-        '.techpack-container',     // Container div
-        '.techpack-step',          // Step class
-        '.techpack-progress'       // Progress bar
+        'section[id*="techpack"]',     // Any section with techpack in ID
+        'div[class*="techpack"]',      // Any div with techpack in class
+        '.techpack-progress',          // Progress bar specifically
+        '[data-step]',                 // Any element with data-step
+        'h2.techpack-title',           // The "Client Information" title
+        'h1.techpack-success__title',  // Thank you page title
+        '.techpack-success-page',      // Thank you page container
+        '*[id*="step"]'                // Any element with "step" in ID
       ];
       
-      let techPackStart = null;
+      let techPackElement = null;
       
-      // Find the TechPack starting point
+      // Try each selector until we find something
       for (const selector of selectors) {
-        techPackStart = document.querySelector(selector);
-        if (techPackStart) {
-          debugSystem.log('Found TechPack start point', { selector });
-          break;
+        const elements = document.querySelectorAll(selector);
+        if (elements.length > 0) {
+          // Take the first visible element
+          for (const element of elements) {
+            const rect = element.getBoundingClientRect();
+            if (rect.height > 0 && rect.width > 0) { // Element is visible
+              techPackElement = element;
+              debugSystem.log('Found TechPack element', { 
+                selector, 
+                elementId: element.id,
+                elementClass: element.className 
+              });
+              break;
+            }
+          }
+          if (techPackElement) break;
         }
       }
       
-      if (techPackStart) {
-        // Scroll to just above the TechPack section
-        const rect = techPackStart.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const offset = 80; // 80px above the TechPack to show some context
-        const targetPosition = rect.top + scrollTop - offset;
-        
-        window.scrollTo({
-          top: Math.max(0, targetPosition),
-          behavior: 'smooth'
+      if (techPackElement) {
+        // Use scrollIntoView for more reliable positioning
+        techPackElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',    // Align to top of viewport
+          inline: 'nearest'
         });
         
-        debugSystem.log('Scrolled to TechPack start', { 
-          targetPosition,
-          offset,
-          elementFound: techPackStart.id || techPackStart.className
-        });
-      } else {
-        // Fallback: Look for the "Client Information" heading
-        const headings = document.querySelectorAll('h1, h2, h3, .techpack-title');
-        let foundHeading = null;
-        
-        headings.forEach(heading => {
-          const text = heading.textContent.toLowerCase();
-          if (text.includes('client information') || text.includes('tech pack')) {
-            foundHeading = heading;
-          }
-        });
-        
-        if (foundHeading) {
-          const rect = foundHeading.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const targetPosition = rect.top + scrollTop - 100;
-          
+        // Add a small offset after scrolling
+        setTimeout(() => {
+          const currentScroll = window.pageYOffset;
           window.scrollTo({
-            top: Math.max(0, targetPosition),
+            top: currentScroll - 60, // 60px offset from top
             behavior: 'smooth'
           });
+        }, 500);
+        
+        debugSystem.log('Scrolled to TechPack element successfully');
+      } else {
+        // Ultimate fallback - look for ANY text containing "techpack" or "client"
+        const allElements = document.querySelectorAll('*');
+        let foundByText = null;
+        
+        for (const element of allElements) {
+          const text = element.textContent || '';
+          const id = element.id || '';
+          const className = element.className || '';
           
-          debugSystem.log('Scrolled to TechPack via heading');
+          if ((text.toLowerCase().includes('client information') ||
+               text.toLowerCase().includes('tech pack') ||
+               text.toLowerCase().includes('submission received') ||
+               text.toLowerCase().includes('thank you') ||
+               id.toLowerCase().includes('techpack') ||
+               className.toLowerCase().includes('techpack')) &&
+              element.getBoundingClientRect().height > 50) { // Must be substantial element
+            foundByText = element;
+            break;
+          }
+        }
+        
+        if (foundByText) {
+          foundByText.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          debugSystem.log('Found TechPack by text content');
         } else {
-          // Final fallback to page top
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          debugSystem.log('Could not find TechPack start, scrolled to page top');
+          debugSystem.log('Complete fallback to page top');
         }
       }
     }
@@ -1010,6 +1031,11 @@
       setTimeout(() => {
         this.syncStep3GarmentData();
         this.validateStep3();
+        
+        // ADD: Scroll to center TechPack after garments load
+        setTimeout(() => {
+          this.scrollToTechPackTopEnhanced();
+        }, 300);
       }, 100);
     }
 
@@ -3172,13 +3198,13 @@
       if (step1Next) {
         step1Next.addEventListener('click', () => {
           stepManager.navigateToStep(2);
-          // Force scroll to top
+          // Force scroll to TechPack
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
-
+    
       // Step 2
       const step2Prev = document.querySelector('#step-2-prev');
       const step2Next = document.querySelector('#step-2-next');
@@ -3187,19 +3213,19 @@
         step2Prev.addEventListener('click', () => {
           stepManager.navigateToStep(1);
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
       if (step2Next) {
         step2Next.addEventListener('click', () => {
           stepManager.navigateToStep(3);
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
-
+    
       // Step 3
       const step3Prev = document.querySelector('#step-3-prev');
       const step3Next = document.querySelector('#step-3-next');
@@ -3208,30 +3234,30 @@
         step3Prev.addEventListener('click', () => {
           stepManager.navigateToStep(2);
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
       if (step3Next) {
         step3Next.addEventListener('click', () => {
           stepManager.navigateToStep(4);
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
-
+    
       // Step 4
       const step4Prev = document.querySelector('#step-4-prev');
       if (step4Prev) {
         step4Prev.addEventListener('click', () => {
           stepManager.navigateToStep(3);
           setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 300);
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
       }
-
+    
       // EDIT BUTTONS - Review Page
       this.setupEditButtons();
     }
@@ -3305,13 +3331,19 @@
                 }
               }
               
+              // Navigate AND scroll
               stepManager.navigateToStep(targetStep);
-              debugSystem.log('Edit button navigation', { targetStep, found });
+              
+              // IMPORTANT: Add scroll after navigation
+              setTimeout(() => {
+                stepManager.scrollToTechPackTopEnhanced();
+              }, 600); // Wait for navigation to complete
+              
+              debugSystem.log('Edit button navigation with scroll', { targetStep, found });
             };
           }
         });
       }, 200);
-
       debugSystem.log('Edit buttons setup complete');
     }
 
@@ -3353,7 +3385,7 @@
     showThankYou() {
       const step4 = document.querySelector('#techpack-step-4');
       if (!step4) return;
-
+    
       const totalQuantity = quantityCalculator.getTotalQuantityFromAllColorways();
       
       step4.innerHTML = `
@@ -3367,11 +3399,11 @@
                 </svg>
               </div>
             </div>
-
+    
             <div class="techpack-success__content">
               <h1 class="techpack-success__title">Submission Received</h1>
               <p class="techpack-success__subtitle">Your tech-pack has been successfully submitted to our production team.</p>
-
+    
               <div class="techpack-success__card">
                 <div class="techpack-success__card-header">
                   <h3>Submission Details</h3>
@@ -3405,7 +3437,7 @@
                   </div>
                 </div>
               </div>
-
+    
               <div class="techpack-success__next-steps">
                 <h4 class="techpack-success__next-title">What happens next?</h4>
                 <div class="techpack-success__steps">
@@ -3434,7 +3466,7 @@
                   </div>
                 </div>
               </div>
-
+    
               <div class="techpack-success__actions">
                 <button type="button" class="techpack-btn techpack-btn--primary" onclick="location.reload()">
                   <span>Submit Another Tech-Pack</span>
@@ -3447,6 +3479,11 @@
           </div>
         </div>
       `;
+    
+      // IMPORTANT: Scroll to center the thank you page after it's rendered
+      setTimeout(() => {
+        this.scrollToTechPackTopEnhanced();
+      }, 500);
     }
 
     showStep(stepNumber) {
