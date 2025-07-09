@@ -353,7 +353,7 @@ body {
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Premium Buttons */
+/* Premium Buttons - More Interactive with Enhanced Effects */
 .techpack-btn {
   display: inline-flex;
   align-items: center;
@@ -373,16 +373,44 @@ body {
   letter-spacing: 0.05em;
   font-family: var(--techpack-font-family);
   min-height: 48px;
+  transform: translateY(0);
+  box-shadow: var(--techpack-shadow-sm);
+}
+
+.techpack-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.techpack-btn:hover::before {
+  left: 100%;
+}
+
+.techpack-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: var(--techpack-shadow-xs);
 }
 
 .techpack-btn--primary {
   background: var(--techpack-primary);
   color: var(--techpack-text-light);
+  box-shadow: var(--techpack-shadow);
 }
 
 .techpack-btn--primary:hover:not(:disabled) {
   background: var(--techpack-primary-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--techpack-shadow-lg);
+}
+
+.techpack-btn--primary:active {
+  transform: translateY(0) scale(0.98);
   box-shadow: var(--techpack-shadow);
 }
 
@@ -390,30 +418,47 @@ body {
   background: var(--techpack-bg);
   color: var(--techpack-text);
   border: 1px solid var(--techpack-border);
+  box-shadow: var(--techpack-shadow-sm);
 }
 
 .techpack-btn--secondary:hover:not(:disabled) {
   background: var(--techpack-bg-secondary);
   border-color: var(--techpack-primary);
   color: var(--techpack-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--techpack-shadow);
+}
+
+.techpack-btn--secondary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--techpack-shadow-xs);
 }
 
 .techpack-btn--ghost {
   background: transparent;
   color: var(--techpack-text-muted);
   border: 1px solid transparent;
+  box-shadow: none;
 }
 
 .techpack-btn--ghost:hover:not(:disabled) {
   background: var(--techpack-bg-secondary);
   color: var(--techpack-text);
   border-color: var(--techpack-border);
+  transform: translateY(-1px);
+  box-shadow: var(--techpack-shadow-sm);
+}
+
+.techpack-btn--ghost:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
 }
 
 .techpack-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
 }
 
 .techpack-btn__icon {
@@ -423,6 +468,10 @@ body {
 
 .techpack-btn:hover .techpack-btn__icon {
   transform: translateX(2px);
+}
+
+.techpack-btn:active .techpack-btn__icon {
+  transform: translateX(0);
 }
 
 /* Premium Form Actions */
@@ -558,6 +607,7 @@ body {
   letter-spacing: 0.1em;
 }
 
+/* Premium File Type Selection - RED when Required */
 .techpack-file__tag-select {
   width: 100%;
   padding: var(--techpack-space-md) var(--techpack-space-lg);
@@ -574,6 +624,57 @@ body {
 .techpack-file__tag-select:focus {
   border-color: var(--techpack-primary);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* RED styling when no file type is selected */
+.techpack-file__tag-select[value=""],
+.techpack-file__tag-select:invalid {
+  border: 2px solid var(--techpack-error) !important;
+  background-color: rgba(220, 38, 38, 0.05) !important;
+  color: var(--techpack-error) !important;
+  font-weight: var(--techpack-font-weight-semibold) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+  animation: pulseRed 2s infinite;
+}
+
+/* When a valid option is selected */
+.techpack-file__tag-select:valid:not([value=""]) {
+  border: 1px solid var(--techpack-success) !important;
+  background-color: var(--techpack-bg) !important;
+  color: var(--techpack-text) !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1) !important;
+  animation: none;
+}
+
+/* Make the placeholder option red */
+.techpack-file__tag-select option[value=""] {
+  color: var(--techpack-error) !important;
+  font-weight: var(--techpack-font-weight-semibold) !important;
+  font-style: italic !important;
+}
+
+/* RED label when required */
+.techpack-file__tag-label {
+  display: block;
+  font-size: 0.625rem;
+  color: var(--techpack-error) !important;
+  margin-bottom: var(--techpack-space-sm);
+  font-weight: var(--techpack-font-weight-semibold) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Pulsing red animation for required state */
+@keyframes pulseRed {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
 }
 
 .techpack-file__remove {
@@ -687,12 +788,12 @@ body {
   letter-spacing: -0.025em;
 }
 
-/* Premium Checkboxes */
+/* Premium Checkboxes - Full Width with Spacing */
 .techpack-form__checkboxes {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--techpack-space-lg);
+  gap: var(--techpack-space-md);
   align-items: center;
+  width: 100%;
 }
 
 .techpack-form__checkbox {
@@ -705,17 +806,23 @@ body {
   transition: var(--techpack-transition);
   border: 1px solid var(--techpack-border);
   background: var(--techpack-bg);
-  flex: 0 0 auto;
-  min-width: 120px;
+  flex: 1;
+  min-width: 0;
   font-weight: var(--techpack-font-weight-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .techpack-form__checkbox:hover {
   background: var(--techpack-bg-secondary);
   border-color: var(--techpack-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--techpack-shadow-sm);
 }
 
 .techpack-form__checkbox input[type="checkbox"] {
@@ -730,6 +837,8 @@ body {
   background: var(--techpack-primary);
   border-color: var(--techpack-primary);
   color: var(--techpack-text-light);
+  transform: translateY(-2px);
+  box-shadow: var(--techpack-shadow);
 }
 
 .techpack-form__checkbox-mark {
@@ -856,6 +965,7 @@ body {
   letter-spacing: 0.1em;
 }
 
+/* Premium Size Grid - RED Quantities Until Number Entered */
 .techpack-size-grid__input {
   width: 100%;
   padding: var(--techpack-space-lg);
@@ -869,11 +979,29 @@ body {
   font-family: var(--techpack-font-family);
 }
 
+/* RED styling for empty/zero quantities */
+.techpack-size-grid__input:placeholder-shown,
+.techpack-size-grid__input[value=""],
+.techpack-size-grid__input[value="0"] {
+  background: rgba(220, 38, 38, 0.05) !important;
+  color: var(--techpack-error) !important;
+  border: 1px solid var(--techpack-error) !important;
+  font-weight: var(--techpack-font-weight-semibold) !important;
+}
+
+/* Normal styling when number is entered */
+.techpack-size-grid__input:not(:placeholder-shown):not([value=""]):not([value="0"]) {
+  background: var(--techpack-bg) !important;
+  color: var(--techpack-text) !important;
+  border: none !important;
+  font-weight: var(--techpack-font-weight-medium) !important;
+}
+
 .techpack-size-grid__input:focus {
   outline: none;
-  background: var(--techpack-bg-tertiary);
-  color: var(--techpack-primary);
-  box-shadow: inset 0 0 0 2px var(--techpack-primary);
+  background: var(--techpack-bg-tertiary) !important;
+  color: var(--techpack-primary) !important;
+  box-shadow: inset 0 0 0 2px var(--techpack-primary) !important;
 }
 
 .techpack-colorway__total {
@@ -1294,7 +1422,7 @@ body {
   color: var(--techpack-primary);
 }
 
-/* Premium Date Input */
+/* Premium Date Input - Fixed Calendar Functionality */
 .techpack-form__date-wrapper {
   position: relative;
   display: block;
@@ -1304,6 +1432,17 @@ body {
   cursor: pointer;
   position: relative;
   padding-right: 3rem;
+  background: var(--techpack-bg) !important;
+}
+
+.techpack-form__input--date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 2;
 }
 
 .techpack-form__date-wrapper::after {
@@ -1315,6 +1454,7 @@ body {
   pointer-events: none;
   font-size: 1rem;
   opacity: 0.6;
+  z-index: 1;
 }
 
 /* Premium Error States */
@@ -1470,9 +1610,18 @@ body {
     grid-template-columns: 1fr;
   }
   
+  /* Mobile checkboxes - keep full width with spacing */
   .techpack-form__checkboxes {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--techpack-space-md);
+    display: flex;
+    gap: var(--techpack-space-sm);
+    flex-wrap: wrap;
+  }
+  
+  .techpack-form__checkbox {
+    flex: 1;
+    min-width: calc(50% - var(--techpack-space-sm) / 2);
+    font-size: 0.625rem;
+    padding: var(--techpack-space-md) var(--techpack-space-sm);
   }
   
   .techpack-form__actions {
@@ -1517,6 +1666,17 @@ body {
   
   .techpack-file__tag {
     min-width: auto;
+  }
+  
+  /* Mobile file type selection - ensure RED styling works */
+  .techpack-file__tag-select[value=""],
+  .techpack-file__tag-select:invalid {
+    border: 2px solid var(--techpack-error) !important;
+    background-color: rgba(220, 38, 38, 0.05) !important;
+    color: var(--techpack-error) !important;
+    font-weight: var(--techpack-font-weight-semibold) !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    animation: pulseRed 2s infinite;
   }
   
   .techpack-colorway__header {
