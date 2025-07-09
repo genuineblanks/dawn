@@ -940,22 +940,71 @@
       }
     }
 
-    // Enhanced scroll function - ALWAYS scroll to top
     scrollToTechPackTopEnhanced() {
-      // SIMPLE: Always scroll to the very top of the page
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      // Look for the TechPack app starting point
+      const selectors = [
+        '#techpack-step-1',        // Your main section ID
+        '.techpack-container',     // Container div
+        '.techpack-step',          // Step class
+        '.techpack-progress'       // Progress bar
+      ];
       
-      debugSystem.log('Scrolled to top of page');
+      let techPackStart = null;
       
-      // Alternative method for older browsers
-      if (window.pageYOffset > 0) {
-        setTimeout(() => {
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }, 100);
+      // Find the TechPack starting point
+      for (const selector of selectors) {
+        techPackStart = document.querySelector(selector);
+        if (techPackStart) {
+          debugSystem.log('Found TechPack start point', { selector });
+          break;
+        }
+      }
+      
+      if (techPackStart) {
+        // Scroll to just above the TechPack section
+        const rect = techPackStart.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const offset = 80; // 80px above the TechPack to show some context
+        const targetPosition = rect.top + scrollTop - offset;
+        
+        window.scrollTo({
+          top: Math.max(0, targetPosition),
+          behavior: 'smooth'
+        });
+        
+        debugSystem.log('Scrolled to TechPack start', { 
+          targetPosition,
+          offset,
+          elementFound: techPackStart.id || techPackStart.className
+        });
+      } else {
+        // Fallback: Look for the "Client Information" heading
+        const headings = document.querySelectorAll('h1, h2, h3, .techpack-title');
+        let foundHeading = null;
+        
+        headings.forEach(heading => {
+          const text = heading.textContent.toLowerCase();
+          if (text.includes('client information') || text.includes('tech pack')) {
+            foundHeading = heading;
+          }
+        });
+        
+        if (foundHeading) {
+          const rect = foundHeading.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const targetPosition = rect.top + scrollTop - 100;
+          
+          window.scrollTo({
+            top: Math.max(0, targetPosition),
+            behavior: 'smooth'
+          });
+          
+          debugSystem.log('Scrolled to TechPack via heading');
+        } else {
+          // Final fallback to page top
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          debugSystem.log('Could not find TechPack start, scrolled to page top');
+        }
       }
     }
 
