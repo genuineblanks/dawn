@@ -1,52 +1,14 @@
-// ULTIMATE SCROLL FIX - HOMEPAGE ONLY
+// ULTIMATE SCROLL FIX - OVERWRITES EVERYTHING
 (function() {
   'use strict';
   
   console.log('💪 ULTIMATE SCROLL FIX LOADING...');
   
-  // Multiple ways to check if we're on homepage
-  function isHomepage() {
-    // Check URL path
-    var path = window.location.pathname;
-    var isRootPath = path === '/' || path === '/index.html' || path === '/home' || path === '';
-    
-    // Check for home-section class
-    var hasHomeClass = document.body.classList.contains('home-section');
-    
-    // Check if we have exactly 7 sections (your original logic)
-    var sectionCount = document.querySelectorAll('section').length;
-    var hasSectionCount = sectionCount === 7;
-    
-    // Check for specific homepage elements that shouldn't exist on other pages
-    var hasHomeElements = document.querySelector('.home-hero') || 
-                         document.querySelector('.homepage-banner') || 
-                         document.querySelector('#home-content');
-    
-    // Check if we're NOT on techpack page specifically
-    var isNotTechpack = !path.includes('techpack') && 
-                       !document.body.classList.contains('techpack-page') &&
-                       !document.querySelector('.techpack-container');
-    
-    console.log('🔍 Homepage check:', {
-      path: path,
-      isRootPath: isRootPath,
-      hasHomeClass: hasHomeClass,
-      sectionCount: sectionCount,
-      hasSectionCount: hasSectionCount,
-      hasHomeElements: !!hasHomeElements,
-      isNotTechpack: isNotTechpack
-    });
-    
-    // Must be root path AND have home class AND have 7 sections AND not be techpack
-    return isRootPath && hasHomeClass && hasSectionCount && isNotTechpack;
-  }
-  
-  if (!isHomepage()) {
+  var isHomepage = document.body.classList.contains('home-section');
+  if (!isHomepage) {
     console.log('❌ Not homepage, skipping scroll fix');
     return;
   }
-  
-  console.log('✅ Confirmed homepage - proceeding with scroll fix');
   
   var scrollFixed = false;
   var scrollHandler = null;
@@ -60,13 +22,6 @@
   }
   
   function applyUltimateScrollFix() {
-    // Double-check we're still on homepage before applying
-    if (!isHomepage()) {
-      console.log('❌ No longer on homepage, aborting scroll fix');
-      destroyExistingFix();
-      return;
-    }
-    
     destroyExistingFix();
     
     if (scrollFixed) return;
@@ -96,13 +51,6 @@
     
     // Create scroll handler
     scrollHandler = function() {
-      // Check if we're still on homepage during scroll
-      if (!isHomepage()) {
-        console.log('❌ Left homepage during scroll, removing handler');
-        destroyExistingFix();
-        return;
-      }
-      
       var offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
       offscreenElements.forEach(function(el) {
         var rect = el.getBoundingClientRect();
@@ -141,25 +89,12 @@
     }
   });
   
-  // Override on interval to catch any navigation - but with stricter homepage check
+  // Override on interval to catch any navigation
   setInterval(function() {
-    if (isHomepage() && !scrollFixed) {
+    if (document.body.classList.contains('home-section') && !scrollFixed) {
       console.log('🔄 Interval check - reapplying scroll fix');
       initScrollFix();
-    } else if (!isHomepage() && scrollFixed) {
-      console.log('🔄 Interval check - not on homepage, destroying scroll fix');
-      destroyExistingFix();
     }
   }, 2000);
-  
-  // Listen for navigation events that might indicate page changes
-  window.addEventListener('popstate', function() {
-    setTimeout(function() {
-      if (!isHomepage() && scrollFixed) {
-        console.log('🔄 Navigation detected - destroying scroll fix');
-        destroyExistingFix();
-      }
-    }, 100);
-  });
   
 })();
