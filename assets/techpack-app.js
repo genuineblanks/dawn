@@ -378,8 +378,57 @@
     },
 
     validateVAT(vat) {
-      const regex = /^[A-Z0-9\-]+$/i;
-      return regex.test(vat);
+      if (!vat || !vat.trim()) return false;
+      
+      const cleanVat = vat.trim().replace(/[\s\-]/g, ''); // Remove spaces and hyphens
+      
+      // Basic VAT validation: Must contain numbers and be reasonable length
+      if (cleanVat.length < 8 || cleanVat.length > 15) {
+        return false;
+      }
+      
+      // Must contain at least some numbers
+      if (!/\d/.test(cleanVat)) {
+        return false;
+      }
+      
+      // European VAT patterns
+      const vatPatterns = {
+        // Portugal: PT123456789
+        PT: /^PT\d{9}$/,
+        // Spain: ESA12345674
+        ES: /^ES[A-Z0-9]\d{8}$/,
+        // France: FR12345678901
+        FR: /^FR\d{11}$/,
+        // Germany: DE123456789
+        DE: /^DE\d{9}$/,
+        // Italy: IT12345678901
+        IT: /^IT\d{11}$/,
+        // Netherlands: NL123456789B01
+        NL: /^NL\d{9}B\d{2}$/,
+        // Belgium: BE0123456789
+        BE: /^BE0?\d{9}$/,
+        // Austria: ATU12345678
+        AT: /^ATU\d{8}$/,
+        // Generic pattern for other EU countries
+        GENERIC: /^[A-Z]{2}[A-Z0-9]{8,12}$/
+      };
+      
+      // Check if it starts with a country code
+      const countryCode = cleanVat.substring(0, 2).toUpperCase();
+      
+      if (vatPatterns[countryCode]) {
+        return vatPatterns[countryCode].test(cleanVat.toUpperCase());
+      }
+      
+      // For non-EU countries (EIN format): 12-3456789
+      if (countryCode.match(/^\d{2}$/)) {
+        // US EIN format: XX-XXXXXXX
+        return /^\d{2}\d{7}$/.test(cleanVat) && cleanVat.length === 9;
+      }
+      
+      // Fallback: Generic validation
+      return vatPatterns.GENERIC.test(cleanVat.toUpperCase());
     },
 
     sanitizeInput(input) {
@@ -2295,6 +2344,73 @@
       if (phoneInput) {
         phoneInput.addEventListener('input', (e) => {
           e.target.value = Utils.formatPhoneNumber(e.target.value);
+        });
+      }
+    }
+
+    setupVATFormatting() {
+      const vatInput = document.getElementById('vat-ein');
+      if (vatInput) {
+        vatInput.addEventListener('input', (e) => {
+          let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          
+          // Auto-format common patterns
+          if (value.length >= 2) {
+            const countryCode = value.substring(0, 2);
+            
+            // Portugal: PT123456789
+            if (countryCode === 'PT' && value.length > 2) {
+              value = 'PT' + value.substring(2).replace(/\D/g, '');
+              if (value.length > 11) value = value.substring(0, 11);
+            }
+            // Spain: ES + letter/number + 8 digits
+            else if (countryCode === 'ES' && value.length > 2) {
+              value = 'ES' + value.substring(2);
+              if (value.length > 11) value = value.substring(0, 11);
+            }
+            // Germany: DE + 9 digits
+            else if (countryCode === 'DE' && value.length > 2) {
+              value = 'DE' + value.substring(2).replace(/\D/g, '');
+              if (value.length > 11) value = value.substring(0, 11);
+            }
+            // Add more country-specific formatting as needed
+          }
+          
+          e.target.value = value;
+          
+          // Real-time validation feedback
+          const isValid = Utils.validateVAT(value);
+          e.target.classList.toggle('techpack-form__input--error', value.length > 0 && !isValid);
+          
+          // Show/hide error message
+          const errorDiv = e.target.closest('.techpack-form__group')?.querySelector('.techpack-form__error');
+          if (errorDiv) {
+            if (value.length > 0 && !isValid) {
+              errorDiv.textContent = 'Please enter a valid VAT number (e.g., PT123456789)';
+              errorDiv.style.display = 'block';
+            } else {
+              errorDiv.textContent = '';
+              errorDiv.style.display = 'none';
+            }
+          }
+        });
+        
+        // Add placeholder examples based on country
+        vatInput.addEventListener('focus', (e) => {
+          const countryInput = document.getElementById('country');
+          const country = countryInput?.value;
+          
+          if (country === 'Portugal') {
+            e.target.placeholder = 'e.g., PT123456789';
+          } else if (country === 'Spain') {
+            e.target.placeholder = 'e.g., ESA12345674';
+          } else if (country === 'Germany') {
+            e.target.placeholder = 'e.g., DE123456789';
+          } else if (country === 'United States') {
+            e.target.placeholder = 'e.g., 123456789';
+          } else {
+            e.target.placeholder = 'e.g., PT123456789';
+          }
         });
       }
     }
