@@ -21,7 +21,8 @@
       this.formData = {
         clientInfo: {},
         files: [],
-        garments: []
+        garments: [],
+        requiredGarmentCount: 1
       };
       this.counters = {
         file: 0,
@@ -886,12 +887,28 @@
           this.syncStep2DOM();
           break;
         case 3:
-          this.refreshStep3Interface();
+          this.initializeStep3();
           break;
         case 4:
           this.populateReview();
           break;
       }
+    }
+
+    initializeStep3() {
+      // Create required garments if none exist
+      const currentGarments = document.querySelectorAll('.techpack-garment').length;
+      const requiredGarments = state.formData.requiredGarmentCount || 1;
+      
+      if (currentGarments === 0) {
+        // Create the required number of garments
+        for (let i = 0; i < requiredGarments; i++) {
+          garmentManager.addGarment();
+        }
+        debugSystem.log(`Auto-created ${requiredGarments} garments for step 3`);
+      }
+      
+      this.refreshStep3Interface();
     }
 
     updateProgressIndicators() {
@@ -1959,6 +1976,11 @@
         this.calculateAndUpdateProgress();
       }, 200);
 
+      // Separate debounced validation to prevent interference
+      const debouncedValidation = Utils.debounce(() => {
+        stepManager.validateStep3();
+      }, 500);
+
       document.addEventListener('input', (e) => {
         if (e.target.matches('.techpack-size-grid__input[type="number"]')) {
           // Update individual colorway totals immediately
@@ -1969,6 +1991,9 @@
             this.validateQuantityInputs(colorwayId);
           }
           debouncedCalculate();
+          
+          // Don't trigger step validation immediately on quantity changes
+          // Let printing method validation happen separately
         }
       });
 
