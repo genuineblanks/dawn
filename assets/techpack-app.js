@@ -1599,7 +1599,26 @@
       });
 
       if (nextBtn) nextBtn.disabled = !isValid;
+      
+      // Store the required garment count for step 3
+      if (isValid) {
+        this.calculateRequiredGarments();
+      }
+      
       return isValid;
+    }
+
+    calculateRequiredGarments() {
+      const techPackFiles = state.formData.files.filter(file => 
+        file.type === 'COLLECTION TECH-PACK' || file.type === 'SINGLE GARMENT TECH-PACK'
+      );
+      
+      state.formData.requiredGarmentCount = Math.max(techPackFiles.length, 1);
+      
+      debugSystem.log('Required garments calculated', { 
+        techPackFiles: techPackFiles.length,
+        requiredGarments: state.formData.requiredGarmentCount 
+      });
     }
 
     showError(message) {
