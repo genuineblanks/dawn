@@ -817,22 +817,24 @@
   class StepManager {
     constructor() {
       this.steps = document.querySelectorAll('.techpack-step');
+      // CREATE validator instance here
+      this.validator = new FormValidator();
       this.setupValidationRules();
     }
 
     // In StepManager class, REPLACE setupValidationRules():
     setupValidationRules() {
       // Clear any existing rules first
-      validator.rules.clear();
-      validator.errors.clear();
+      this.validator.rules.clear();  // Changed from validator to this.validator
+      this.validator.errors.clear(); // Changed from validator to this.validator
     
       // Step 1 validation rules ONLY
-      validator.addRule('clientName', value => value && value.trim().length > 0, 'Client name is required');
-      validator.addRule('companyName', value => value && value.trim().length > 0, 'Company name is required');
-      validator.addRule('email', value => value && Utils.validateEmail(value), 'Valid email address is required');
-      validator.addRule('country', value => value && value.trim().length > 0, 'Country selection is required');
-      validator.addRule('phone', value => !value || Utils.validatePhone(value), 'Valid phone number format required');
-      validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
+      this.validator.addRule('clientName', value => value && value.trim().length > 0, 'Client name is required');
+      this.validator.addRule('companyName', value => value && value.trim().length > 0, 'Company name is required');
+      this.validator.addRule('email', value => value && Utils.validateEmail(value), 'Valid email address is required');
+      this.validator.addRule('country', value => value && value.trim().length > 0, 'Country selection is required');
+      this.validator.addRule('phone', value => !value || Utils.validatePhone(value), 'Valid phone number format required');
+      this.validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
     }
 
     // ADD this method to your StepManager class
