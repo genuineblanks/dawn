@@ -907,14 +907,14 @@
 
       // Hide current step with animation
       if (currentStepEl) {
-        await animationManager.fadeOut(currentStepEl);
+        await window.techpackApp.animationManager.fadeOut(currentStepEl);
         currentStepEl.style.display = 'none';
         debugSystem.log('Hidden current step', { currentStep: state.currentStep });
       }
 
       // Show target step with animation
       targetStepEl.style.display = 'block';
-      await animationManager.fadeIn(targetStepEl);
+      await window.techpackApp.animationManager.fadeIn(targetStepEl);
       debugSystem.log('Shown target step', { targetStep: stepNumber });
 
       // Update state
