@@ -3299,47 +3299,47 @@
         });
       }
 
-    setupEditButtons() {
-      // Use event delegation to catch ALL edit button clicks
-      document.addEventListener('click', (e) => {
-        // Check if clicked element is an edit button (be more flexible with selectors)
-        const editButton = e.target.closest('button');
-        
-        if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
-          e.preventDefault();
-          e.stopPropagation();
+      setupEditButtons() {
+        // Use event delegation to catch ALL edit button clicks
+        document.addEventListener('click', (e) => {
+          // Check if clicked element is an edit button (be more flexible with selectors)
+          const editButton = e.target.closest('button');
           
-          // Find which review section this button belongs to
-          const reviewStep1 = editButton.closest('#review-step-1');
-          const reviewStep2 = editButton.closest('#review-step-2');
-          const reviewStep3 = editButton.closest('#review-step-3');
-          
-          let targetStep = 1;
-          
-          if (reviewStep1) {
-            targetStep = 1;
-            debugSystem.log('Edit client info clicked');
-          } else if (reviewStep2) {
-            targetStep = 2;
-            debugSystem.log('Edit files clicked');
-          } else if (reviewStep3) {
-            targetStep = 3;
-            debugSystem.log('Edit garments clicked');
+          if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Find which review section this button belongs to
+            const reviewStep1 = editButton.closest('#review-step-1');
+            const reviewStep2 = editButton.closest('#review-step-2');
+            const reviewStep3 = editButton.closest('#review-step-3');
+            
+            let targetStep = 1;
+            
+            if (reviewStep1) {
+              targetStep = 1;
+              debugSystem.log('Edit client info clicked');
+            } else if (reviewStep2) {
+              targetStep = 2;
+              debugSystem.log('Edit files clicked');
+            } else if (reviewStep3) {
+              targetStep = 3;
+              debugSystem.log('Edit garments clicked');
+            }
+            
+            // Navigate to the target step
+            stepManager.navigateToStep(targetStep);
+            
+            debugSystem.log('Edit button clicked via delegation', { 
+              targetStep,
+              buttonText: editButton.textContent 
+            });
           }
-          
-          // Navigate to the target step
-          stepManager.navigateToStep(targetStep);
-          
-          debugSystem.log('Edit button clicked via delegation', { 
-            targetStep,
-            buttonText: editButton.textContent 
-          });
-        }
-      });
-
-      debugSystem.log('Edit buttons setup complete');
+        });
+  
+        debugSystem.log('Edit buttons setup complete');
+      }
     }
-
     setupFormSubmission() {
       const submitBtn = document.querySelector('#step-4-submit');
       if (submitBtn) {
