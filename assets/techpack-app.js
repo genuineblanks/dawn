@@ -1925,15 +1925,6 @@
         
         debugSystem.log('VAT field hidden for non-European country', { country: country.name });
       }
-
-    updateHighlight(items) {
-      items.forEach((item, i) => {
-        item.classList.toggle('techpack-form__dropdown-item--highlighted', i === this.highlightedIndex);
-      });
-
-      if (this.highlightedIndex >= 0 && items[this.highlightedIndex]) {
-        items[this.highlightedIndex].scrollIntoView({ block: 'nearest' });
-      }
     }
   }
 
