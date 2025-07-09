@@ -2995,7 +2995,7 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-    // NEW: Registration check setup
+    // CORRECTED: Fixed registration logic
     setupRegistrationCheck() {
       const yesBtn = document.querySelector('#registered-client-yes');
       const noBtn = document.querySelector('#registered-client-no');
@@ -3008,6 +3008,7 @@
       });
 
       if (yesBtn && noBtn) {
+        // YES BUTTON = REGISTERED CLIENT = FEWER FIELDS
         yesBtn.addEventListener('click', () => {
           debugSystem.log('YES button clicked - Registered client selected');
           
@@ -3020,8 +3021,14 @@
           // Wait a moment, then proceed
           setTimeout(() => {
             state.formData.isRegisteredClient = true;
-            this.configureStep1ForRegisteredClient();
-            stepManager.navigateToStep(1);
+            this.configureStep1ForRegisteredClient(); // FEWER FIELDS
+            
+            // Try navigation with fallback
+            const navigationSuccess = stepManager.navigateToStep(1);
+            if (!navigationSuccess) {
+              debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+              stepManager.debugTestNavigation(1);
+            }
             
             // Add scroll after navigation
             setTimeout(() => {
@@ -3030,12 +3037,19 @@
           }, 2000); // 2 second delay to show warning
         });
 
+        // NO BUTTON = NEW CLIENT = ALL FIELDS
         noBtn.addEventListener('click', () => {
           debugSystem.log('NO button clicked - New client selected');
           
           state.formData.isRegisteredClient = false;
-          this.configureStep1ForNewClient();
-          stepManager.navigateToStep(1);
+          this.configureStep1ForNewClient(); // ALL FIELDS
+          
+          // Try navigation with fallback
+          const navigationSuccess = stepManager.navigateToStep(1);
+          if (!navigationSuccess) {
+            debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+            stepManager.debugTestNavigation(1);
+          }
           
           // Add scroll after navigation
           setTimeout(() => {
@@ -3049,7 +3063,7 @@
       }
     }
 
-    // NEW: Configure Step 1 for registered clients
+    // CORRECTED: Registered clients get FEWER fields (email + company only)
     configureStep1ForRegisteredClient() {
       // Hide unnecessary fields for registered clients
       const fieldsToHide = [
@@ -3098,10 +3112,10 @@
         `;
       }
 
-      debugSystem.log('Configured Step 1 for registered client');
+      debugSystem.log('Configured Step 1 for registered client - FEWER fields shown');
     }
 
-    // NEW: Configure Step 1 for new clients
+    // CORRECTED: New clients get ALL fields
     configureStep1ForNewClient() {
       // Show all fields for new clients
       const fieldsToShow = [
@@ -3147,7 +3161,7 @@
         subtitle.textContent = 'Tell us about your project requirements';
       }
 
-      debugSystem.log('Configured Step 1 for new client');
+      debugSystem.log('Configured Step 1 for new client - ALL fields shown');
     }
 
     // EXISTING: Keep your exact setupDateConstraints method
