@@ -2995,7 +2995,7 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-    // CORRECTED: Fixed registration logic
+    // UPDATED: Better registration logic with sample order context
     setupRegistrationCheck() {
       const yesBtn = document.querySelector('#registered-client-yes');
       const noBtn = document.querySelector('#registered-client-no');
@@ -3008,9 +3008,9 @@
       });
 
       if (yesBtn && noBtn) {
-        // YES BUTTON = REGISTERED CLIENT = FEWER FIELDS
+        // YES BUTTON = Has ordered samples = Registered = FEWER FIELDS
         yesBtn.addEventListener('click', () => {
-          debugSystem.log('YES button clicked - Registered client selected');
+          debugSystem.log('YES button clicked - Client has ordered samples (registered)');
           
           // Show warning first
           if (warningDiv) {
@@ -3021,6 +3021,7 @@
           // Wait a moment, then proceed
           setTimeout(() => {
             state.formData.isRegisteredClient = true;
+            state.formData.hasOrderedSamples = true;
             this.configureStep1ForRegisteredClient(); // FEWER FIELDS
             
             // Try navigation with fallback
@@ -3037,11 +3038,12 @@
           }, 2000); // 2 second delay to show warning
         });
 
-        // NO BUTTON = NEW CLIENT = ALL FIELDS
+        // NO BUTTON = First time client = Not registered = ALL FIELDS
         noBtn.addEventListener('click', () => {
-          debugSystem.log('NO button clicked - New client selected');
+          debugSystem.log('NO button clicked - First time client (not registered)');
           
           state.formData.isRegisteredClient = false;
+          state.formData.hasOrderedSamples = false;
           this.configureStep1ForNewClient(); // ALL FIELDS
           
           // Try navigation with fallback
@@ -3063,9 +3065,9 @@
       }
     }
 
-    // CORRECTED: Registered clients get FEWER fields (email + company only)
+    // UPDATED: Better messaging for sample order clients
     configureStep1ForRegisteredClient() {
-      // Hide unnecessary fields for registered clients
+      // Hide unnecessary fields for clients who have ordered samples
       const fieldsToHide = [
         '#client-name',
         '#vat-ein-group', 
@@ -3089,35 +3091,40 @@
         }
       });
 
-      // Update the title to indicate registered client
+      // Update the title to indicate sample order client
       const title = document.querySelector('#techpack-step-1 .techpack-title');
       if (title) {
         title.innerHTML = `
           Client Information 
-          <span style="color: #059669; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem;">
-            (Registered Client)
+          <span style="color: #059669; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem; background: rgba(5, 150, 105, 0.1); padding: 0.25rem 0.5rem; border-radius: 6px;">
+            Sample Order Client
           </span>
         `;
       }
 
-      // Add warning about verification
+      // Add verification notice
       const subtitle = document.querySelector('#techpack-step-1 .techpack-subtitle');
       if (subtitle) {
         subtitle.innerHTML = `
-          Confirm your details below 
-          <div style="background: #fef3cd; border: 1px solid #f59e0b; border-radius: 6px; padding: 0.75rem; margin-top: 1rem; font-size: 0.875rem; color: #92400e;">
-            <strong>⚠️ Verification Required:</strong> Your submission will be validated against our client database. 
-            Unregistered submissions will be automatically rejected.
+          Welcome back! Please confirm your details below 
+          <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #10b981; border-radius: 8px; padding: 1rem; margin-top: 1rem; font-size: 0.875rem; color: #065f46;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+              <strong>Sample Order Client Detected</strong>
+            </div>
+            Your information will be verified against our sample order database. If no prior sample order is found, this submission will be rejected.
           </div>
         `;
       }
 
-      debugSystem.log('Configured Step 1 for registered client - FEWER fields shown');
+      debugSystem.log('Configured Step 1 for sample order client - streamlined form');
     }
 
-    // CORRECTED: New clients get ALL fields
+    // UPDATED: Better messaging for first-time clients
     configureStep1ForNewClient() {
-      // Show all fields for new clients
+      // Show all fields for first-time clients
       const fieldsToShow = [
         '#client-name',
         '#vat-ein-group',
@@ -3144,24 +3151,36 @@
         }
       });
 
-      // Update the title to indicate new client
+      // Update the title to indicate first-time client
       const title = document.querySelector('#techpack-step-1 .techpack-title');
       if (title) {
         title.innerHTML = `
           Client Information 
-          <span style="color: #3b82f6; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem;">
-            (New Client)
+          <span style="color: #3b82f6; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem; background: rgba(59, 130, 246, 0.1); padding: 0.25rem 0.5rem; border-radius: 6px;">
+            New Client Registration
           </span>
         `;
       }
 
-      // Standard subtitle for new clients
+      // Standard subtitle for first-time clients
       const subtitle = document.querySelector('#techpack-step-1 .techpack-subtitle');
       if (subtitle) {
-        subtitle.textContent = 'Tell us about your project requirements';
+        subtitle.innerHTML = `
+          Welcome! Please provide your complete information 
+          <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #3b82f6; border-radius: 8px; padding: 1rem; margin-top: 1rem; font-size: 0.875rem; color: #1e40af;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <strong>First-Time Client</strong>
+            </div>
+            Please complete all required fields to establish your account in our system.
+          </div>
+        `;
       }
 
-      debugSystem.log('Configured Step 1 for new client - ALL fields shown');
+      debugSystem.log('Configured Step 1 for first-time client - full registration form');
     }
 
     // EXISTING: Keep your exact setupDateConstraints method
