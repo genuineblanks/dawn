@@ -940,57 +940,22 @@
       }
     }
 
-    // Enhanced scroll function with mobile optimization
+    // Enhanced scroll function - ALWAYS scroll to top
     scrollToTechPackTopEnhanced() {
-      // Multiple selectors to find the TechPack app
-      const selectors = [
-        '.techpack-container',
-        '.techpack-step',
-        '#techpack-app', 
-        '.techpack-form',
-        '[data-techpack-container]',
-        '.techpack-progress'
-      ];
+      // SIMPLE: Always scroll to the very top of the page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
       
-      let techPackContainer = null;
+      debugSystem.log('Scrolled to top of page');
       
-      for (const selector of selectors) {
-        techPackContainer = document.querySelector(selector);
-        if (techPackContainer) break;
-      }
-      
-      if (techPackContainer) {
-        // Calculate scroll position with mobile considerations
-        const rect = techPackContainer.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Mobile-friendly offset (larger on mobile)
-        const isMobile = window.innerWidth <= 768;
-        const offset = isMobile ? 10 : 20;
-        
-        const targetPosition = rect.top + scrollTop - offset;
-        
-        // Use both methods for better browser support
-        if ('scrollBehavior' in document.documentElement.style) {
-          // Modern browsers
-          window.scrollTo({
-            top: Math.max(0, targetPosition),
-            behavior: 'smooth'
-          });
-        } else {
-          // Fallback for older browsers
-          this.smoothScrollPolyfill(Math.max(0, targetPosition));
-        }
-        
-        debugSystem.log('Enhanced scroll to TechPack top', { 
-          targetPosition, 
-          isMobile,
-          containerFound: techPackContainer.className 
-        });
-      } else {
-        // Fallback: scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        debugSystem.log('No TechPack container found, scrolled to page top');
+      // Alternative method for older browsers
+      if (window.pageYOffset > 0) {
+        setTimeout(() => {
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 100);
       }
     }
 
