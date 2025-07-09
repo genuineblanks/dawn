@@ -1,74 +1,4 @@
-setupColorwayEventListeners(colorway, garmentId, colorwayId) {
-      // Remove button
-      const removeBtn = colorway.querySelector('.techpack-colorway__remove');
-      removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
-      
-      // Color picker
-      const colorPicker = colorway.querySelector('.techpack-color-picker__input');
-      const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      
-      colorPicker.addEventListener('change', function() {
-        colorPreview.style.backgroundColor = this.value;
-        const garmentData = state.formData.garments.find(g => g.id === garmentId);
-        if (garmentData) {
-          const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-          if (colorwayData) {
-            colorwayData.color = this.value;
-          }
-        }
-      });
-      colorPreview.style.backgroundColor = colorPicker.value;
-      
-      // Pantone input
-      const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
-      if (pantoneInput) {
-        pantoneInput.addEventListener('input', () => {
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              colorwayData.pantone = pantoneInput.value;
-            }
-          }
-        });
-      }
-
-      // FIXED: Quantity inputs with proper state management
-      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-      qtyInputs.forEach(input => {
-        input.addEventListener('input', () => {
-          // Update state immediately
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              const size = input.name.replace('qty-', '');
-              const value = parseInt(input.value) || 0;
-              colorwayData.quantities[size] = value;
-            }
-          }
-
-          // Update UI
-          quantityCalculator.validateQuantityInputs(colorwayId);
-          quantityCalculator.updateColorwayTotal(colorwayId);
-          quantityCalculator.updateGarmentTotal(garmentId);
-          
-          // Trigger main calculation with debounce
-          clearTimeout(this.calculateTimeout);
-          this.calculateTimeout = setTimeout(() => {
-            quantityCalculator.calculateAndUpdateProgress();
-            stepManager.validateStep3();
-          }, 200);
-        });
-
-        input.addEventListener('change', () => {
-          // Ensure state is updated
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              const size = input.name.replace('qty-', '');
-              (function() {
+(function() {
   'use strict';
 
   // Enhanced Configuration
@@ -2109,19 +2039,52 @@ setupColorwayEventListeners(colorway, garmentId, colorwayId) {
       debugSystem.log('Colorway added', { garmentId, colorwayId });
     }
 
-              const size = input.name.replace('qty-', '');
-              const value = parseInt(input.value) || 0;
-              colorwayData.quantities[size] = value;
+    setupColorwayEventListeners(colorway, garmentId, colorwayId) {
+      // Remove button
+      const removeBtn = colorway.querySelector('.techpack-colorway__remove');
+      removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
+      
+      // Color picker
+      const colorPicker = colorway.querySelector('.techpack-color-picker__input');
+      const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
+      
+      colorPicker.addEventListener('change', function() {
+        colorPreview.style.backgroundColor = this.value;
+        const garmentData = state.formData.garments.find(g => g.id === garmentId);
+        if (garmentData) {
+          const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+          if (colorwayData) {
+            colorwayData.color = this.value;
+          }
+        }
+      });
+      colorPreview.style.backgroundColor = colorPicker.value;
+      
+      // Pantone input
+      const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
+      if (pantoneInput) {
+        pantoneInput.addEventListener('input', () => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (colorwayData) {
+              colorwayData.pantone = pantoneInput.value;
             }
           }
+        });
+      }
 
-          // Final update
+      // Quantity inputs
+      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+      qtyInputs.forEach(input => {
+        const debouncedUpdate = Utils.debounce(() => {
           quantityCalculator.validateQuantityInputs(colorwayId);
           quantityCalculator.updateColorwayTotal(colorwayId);
-          quantityCalculator.updateGarmentTotal(garmentId);
           quantityCalculator.calculateAndUpdateProgress();
-          stepManager.validateStep3();
-        });
+        }, 200);
+
+        input.addEventListener('input', debouncedUpdate);
+        input.addEventListener('change', debouncedUpdate);
       });
     }
 
