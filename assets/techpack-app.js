@@ -661,7 +661,7 @@
       }
     }
 
-    // In StepManager class, REPLACE the validateStep1() method:
+    // In StepManager class, REPLACE validateStep1():
     validateStep1() {
       const form = document.querySelector('#techpack-step-1 form');
       if (!form) return false;
@@ -672,7 +672,7 @@
       let isValid = true;
       const errors = {};
     
-      // Manual validation for Step 1 fields only
+      // Basic required fields
       const requiredFields = [
         { name: 'clientName', label: 'Client name' },
         { name: 'companyName', label: 'Company name' },
@@ -699,10 +699,21 @@
         errors.phone = 'Please enter a valid phone number';
       }
     
-      // VAT validation (conditional)
-      if (data.vatEin && !Utils.validateVAT(data.vatEin)) {
-        isValid = false;
-        errors.vatEin = 'Please enter a valid VAT/EIN number';
+      // CRITICAL: VAT/EIN validation based on country
+      const vatInput = form.querySelector('input[name="vatNumber"], input[name="vatEin"]');
+      if (vatInput) {
+        const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
+        const vatValue = data.vatNumber || data.vatEin || '';
+        
+        if (isVATRequired && (!vatValue || !vatValue.trim())) {
+          isValid = false;
+          errors.vatEin = 'VAT number is required for European countries';
+          errors.vatNumber = 'VAT number is required for European countries';
+        } else if (vatValue && !Utils.validateVAT(vatValue)) {
+          isValid = false;
+          errors.vatEin = 'Please enter a valid VAT/EIN number';
+          errors.vatNumber = 'Please enter a valid VAT/EIN number';
+        }
       }
     
       // Display errors
@@ -714,9 +725,10 @@
       });
     
       // Clear errors for valid fields
-      requiredFields.forEach(field => {
-        if (!errors[field.name]) {
-          const fieldElement = form.querySelector(`[name="${field.name}"]`);
+      const allFieldNames = [...requiredFields.map(f => f.name), 'phone', 'vatEin', 'vatNumber'];
+      allFieldNames.forEach(fieldName => {
+        if (!errors[fieldName]) {
+          const fieldElement = form.querySelector(`[name="${fieldName}"]`);
           if (fieldElement) {
             this.displayFieldError(fieldElement, true, '');
           }
@@ -1476,7 +1488,8 @@
         }
       }, 0);
     }
-
+    
+    // In CountrySelector.selectCountry(), ADD this at the end:
     selectCountry(country) {
       this.input.value = country.name;
       this.closeDropdown();
@@ -1501,17 +1514,23 @@
       // Handle VAT field visibility
       this.handleVATFieldVisibility(country);
       
+      // IMPORTANT: Trigger Step 1 validation after country change
+      setTimeout(() => {
+        stepManager.validateStep1();
+      }, 100);
+      
       // Animation feedback
       animationManager.pulse(this.input);
       
       debugSystem.log('Country selected', { country: country.name });
     }
 
+    // In CountrySelector class, REPLACE handleVATFieldVisibility():
     handleVATFieldVisibility(country) {
       const vatContainer = document.getElementById('vat-ein-group') || 
                           document.querySelector('.techpack-form__group--vat');
       const vatInput = document.getElementById('vat-ein') || 
-                      document.querySelector('input[name="vatNumber"]');
+                      document.querySelector('input[name="vatNumber"], input[name="vatEin"]');
       const vatLabel = document.getElementById('vat-ein-label') || 
                       document.querySelector('.techpack-form__group--vat .techpack-form__label');
       
@@ -1520,9 +1539,11 @@
       const isEuropean = COUNTRY_DATA.isEuropean(country.code);
       
       if (isEuropean) {
+        // Make VAT required for European countries
         vatContainer.style.display = 'block';
         vatContainer.classList.add('techpack-form__group--required');
         vatInput.setAttribute('required', 'required');
+        vatInput.setAttribute('data-required', 'true'); // Add this flag
         
         if (vatLabel) {
           vatLabel.innerHTML = 'VAT Number <span class="techpack-form__required">*</span>';
@@ -1530,9 +1551,11 @@
         
         debugSystem.log('VAT field required for European country', { country: country.name });
       } else {
+        // Make VAT optional for non-European countries
         vatContainer.style.display = 'block';
         vatContainer.classList.remove('techpack-form__group--required');
         vatInput.removeAttribute('required');
+        vatInput.removeAttribute('data-required'); // Remove the flag
         
         if (vatLabel) {
           vatLabel.innerHTML = 'EIN Number <span class="techpack-form__label-status">(optional)</span>';
