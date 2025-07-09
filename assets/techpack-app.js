@@ -3062,10 +3062,15 @@
             state.formData.hasOrderedSamples = true;
             this.configureStep1ForRegisteredClient(); // FEWER FIELDS
             
-            // Try navigation with fallback
-            const navigationSuccess = stepManager.navigateToStep(1);
-            if (!navigationSuccess) {
-              debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+            // Use stepManager directly
+            if (this.stepManager) {
+              const navigationSuccess = this.stepManager.navigateToStep(1);
+              if (!navigationSuccess) {
+                debugSystem.log('Navigation failed, trying global reference', null, 'warn');
+                window.techpackApp.stepManager.navigateToStep(1);
+              }
+            } else {
+              debugSystem.log('stepManager not available, using global reference', null, 'warn');
               window.techpackApp.stepManager.navigateToStep(1);
             }
             
@@ -3084,9 +3089,20 @@
           state.formData.hasOrderedSamples = false;
           this.configureStep1ForNewClient(); // ALL FIELDS
           
+          // Navigate to step 1
+          if (this.stepManager) {
+            this.stepManager.navigateToStep(1);
+          } else {
+            window.techpackApp.stepManager.navigateToStep(1);
+          }
+          
           // Add scroll after navigation
           setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
+            if (this.stepManager) {
+              this.stepManager.scrollToTechPackTopEnhanced();
+            } else {
+              window.techpackApp.stepManager.scrollToTechPackTopEnhanced();
+            }
           }, 600);
         });
 
@@ -3881,7 +3897,10 @@
   const countrySelector = new CountrySelector();
   const quantityCalculator = new QuantityCalculator();
   const garmentManager = new GarmentManager();
-  const formInitializer = new FormInitializer(stepManager); // Pass stepManager
+  const formInitializer = new FormInitializer();
+  
+  // Set the stepManager reference after creation
+  formInitializer.setStepManager(stepManager);
   
 
   // Initialize debug system first
@@ -3938,14 +3957,20 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       if (!state.isInitialized) {
-        formInitializer.init();
-        state.isInitialized = true;
+        // Wait a bit for DOM to fully settle
+        setTimeout(() => {
+          formInitializer.init();
+          state.isInitialized = true;
+        }, 100);
       }
     });
   } else {
     if (!state.isInitialized) {
-      formInitializer.init();
-      state.isInitialized = true;
+      // Wait a bit for DOM to fully settle
+      setTimeout(() => {
+        formInitializer.init();
+        state.isInitialized = true;
+      }, 100);
     }
   }
 
