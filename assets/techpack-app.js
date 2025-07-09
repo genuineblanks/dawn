@@ -2987,18 +2987,16 @@
         
         // Recalculate and validate after DOM is updated
         setTimeout(() => {
-          quantityCalculator.calculateAndUpdateProgress();
-          // Delayed validation to prevent interference
-          setTimeout(() => {
-            stepManager.validateStep3();
-          }, 200);
-        }, 50);
-      });
+          stepManager.validateStep3();
+        }, 200);
+      }, 50);
       
       debugSystem.log('Colorway removed', { garmentId, colorwayId });
     }
+  } // End of GarmentManager class
 
-    class FormInitializer {
+  // Enhanced Form Initialization  
+  class FormInitializer {
       constructor() {
         this.initialized = false;
         this.stepManager = null; // Initialize as null
