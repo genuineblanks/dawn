@@ -877,8 +877,146 @@
       // Handle step-specific logic
       this.handleStepEnter(stepNumber);
 
+      // Scroll to top of TechPack app smoothly (enhanced version)
+      this.scrollToTechPackTopEnhanced();
+
       debugSystem.log(`Successfully navigated to step ${stepNumber}`, null, 'success');
       return true;
+    }
+
+    scrollToTechPackTop() {
+      // Find the TechPack container or main step element
+      const techPackContainer = document.querySelector('.techpack-container, .techpack-step, #techpack-app, .techpack-form');
+      
+      if (techPackContainer) {
+        // Get the container's position
+        const rect = techPackContainer.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop - 20; // 20px offset from top
+        
+        // Smooth scroll to the target position
+        window.scrollTo({
+          top: Math.max(0, targetPosition),
+          behavior: 'smooth'
+        });
+        
+        debugSystem.log('Scrolled to TechPack top', { targetPosition });
+      } else {
+        // Fallback: scroll to top of page
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        debugSystem.log('Fallback: Scrolled to page top');
+      }
+    }
+
+    scrollToTechPackTop() {
+      // Find the TechPack container or main step element
+      const techPackContainer = document.querySelector('.techpack-container, .techpack-step, #techpack-app, .techpack-form');
+      
+      if (techPackContainer) {
+        // Get the container's position
+        const rect = techPackContainer.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop - 20; // 20px offset from top
+        
+        // Smooth scroll to the target position
+        window.scrollTo({
+          top: Math.max(0, targetPosition),
+          behavior: 'smooth'
+        });
+        
+        debugSystem.log('Scrolled to TechPack top', { targetPosition });
+      } else {
+        // Fallback: scroll to top of page
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        debugSystem.log('Fallback: Scrolled to page top');
+      }
+    }
+
+    // Enhanced scroll function with mobile optimization
+    scrollToTechPackTopEnhanced() {
+      // Multiple selectors to find the TechPack app
+      const selectors = [
+        '.techpack-container',
+        '.techpack-step',
+        '#techpack-app', 
+        '.techpack-form',
+        '[data-techpack-container]',
+        '.techpack-progress'
+      ];
+      
+      let techPackContainer = null;
+      
+      for (const selector of selectors) {
+        techPackContainer = document.querySelector(selector);
+        if (techPackContainer) break;
+      }
+      
+      if (techPackContainer) {
+        // Calculate scroll position with mobile considerations
+        const rect = techPackContainer.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Mobile-friendly offset (larger on mobile)
+        const isMobile = window.innerWidth <= 768;
+        const offset = isMobile ? 10 : 20;
+        
+        const targetPosition = rect.top + scrollTop - offset;
+        
+        // Use both methods for better browser support
+        if ('scrollBehavior' in document.documentElement.style) {
+          // Modern browsers
+          window.scrollTo({
+            top: Math.max(0, targetPosition),
+            behavior: 'smooth'
+          });
+        } else {
+          // Fallback for older browsers
+          this.smoothScrollPolyfill(Math.max(0, targetPosition));
+        }
+        
+        debugSystem.log('Enhanced scroll to TechPack top', { 
+          targetPosition, 
+          isMobile,
+          containerFound: techPackContainer.className 
+        });
+      } else {
+        // Fallback: scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        debugSystem.log('No TechPack container found, scrolled to page top');
+      }
+    }
+
+    // Polyfill for smooth scrolling in older browsers
+    smoothScrollPolyfill(targetPosition) {
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 500; // 500ms
+      let start = null;
+
+      function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        // Easing function
+        const ease = progress * (2 - progress);
+        
+        window.scrollTo(0, startPosition + (distance * ease));
+        
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+      
+      requestAnimationFrame(animation);
     }
 
     handleStepEnter(stepNumber) {
@@ -909,6 +1047,51 @@
       }
       
       this.refreshStep3Interface();
+      
+      // CRITICAL: Sync existing garment data with DOM after interface refresh
+      setTimeout(() => {
+        this.syncStep3GarmentData();
+        this.validateStep3();
+      }, 100);
+    }
+
+    // NEW METHOD: Sync garment data with DOM elements
+    syncStep3GarmentData() {
+      const garmentElements = document.querySelectorAll('.techpack-garment');
+      
+      garmentElements.forEach((garmentElement, index) => {
+        const garmentId = garmentElement.dataset.garmentId;
+        const garmentData = state.formData.garments.find(g => g.id === garmentId);
+        
+        if (garmentData) {
+          // Sync garment type
+          const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+          if (garmentTypeSelect && garmentData.type) {
+            garmentTypeSelect.value = garmentData.type;
+          }
+          
+          // Sync fabric type
+          const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+          if (fabricSelect && garmentData.fabric) {
+            fabricSelect.value = garmentData.fabric;
+          }
+          
+          // Sync printing methods
+          if (garmentData.printingMethods && garmentData.printingMethods.length > 0) {
+            const checkboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]');
+            checkboxes.forEach(checkbox => {
+              checkbox.checked = garmentData.printingMethods.includes(checkbox.value);
+            });
+          }
+          
+          debugSystem.log('Synced garment data with DOM', { 
+            garmentId, 
+            type: garmentData.type, 
+            fabric: garmentData.fabric,
+            printingMethods: garmentData.printingMethods 
+          });
+        }
+      });
     }
 
     updateProgressIndicators() {
@@ -1093,6 +1276,12 @@
         } else {
           if (garmentTypeGroup) garmentTypeGroup.classList.remove('techpack-form__group--error');
           if (garmentTypeError) garmentTypeError.textContent = '';
+          
+          // Update state when validation passes
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            garmentData.type = garmentTypeSelect.value;
+          }
         }
     
         // Check fabric type
@@ -1107,6 +1296,12 @@
         } else {
           if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
           if (fabricError) fabricError.textContent = '';
+          
+          // Update state when validation passes
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            garmentData.fabric = fabricSelect.value;
+          }
         }
     
         // Check printing methods
@@ -1121,6 +1316,12 @@
         } else {
           if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
           if (printingError) printingError.textContent = '';
+          
+          // Update state when validation passes
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            garmentData.printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
+          }
         }
     
         // Check colorway quantities
