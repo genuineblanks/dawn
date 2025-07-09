@@ -1,6 +1,86 @@
 {% comment %}
-Tech-Pack Step 1: Client Information Section
+Tech-Pack Pre-Step: Client Registration Check
 {% endcomment %}
+
+<section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
+  <div class="techpack-container">
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 0%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">2</div>
+          <div class="techpack-progress__step-label">File Upload</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Garments</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      <h2 class="techpack-title">Welcome to Tech-Pack Submission</h2>
+      <p class="techpack-subtitle">Let's get started by confirming your client status</p>
+
+      <div class="techpack-registration-check">
+        <div class="techpack-registration-check__card">
+          <div class="techpack-registration-check__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          
+          <h3 class="techpack-registration-check__title">Are you a registered client?</h3>
+          <p class="techpack-registration-check__description">
+            If you've worked with us before, we may already have your information on file, 
+            which will streamline the submission process.
+          </p>
+
+          <div class="techpack-registration-check__buttons">
+            <button type="button" class="techpack-btn techpack-btn--primary" id="registered-client-yes">
+              <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M13.5 3.5l-8 8-3-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Yes, I'm registered
+            </button>
+            
+            <button type="button" class="techpack-btn techpack-btn--secondary" id="registered-client-no">
+              <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              No, I'm new
+            </button>
+          </div>
+
+          <div class="techpack-registration-check__warning" id="registration-warning" style="display: none;">
+            <div class="techpack-registration-check__warning-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="techpack-registration-check__warning-content">
+              <strong>Important Notice:</strong> If you're not actually registered in our client database, 
+              your tech-pack submission will be automatically rejected. Please select "No, I'm new" if you're unsure.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="techpack-step-1" class="techpack-step" data-step="1" style="display: none;">
   <div class="techpack-container">
