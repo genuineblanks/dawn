@@ -841,19 +841,35 @@
       validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
     }
 
+    // FIXED: Updated navigateToStep method to handle step 0 properly
     async navigateToStep(stepNumber) {
       if (stepNumber === state.currentStep) return;
       
       debugSystem.log(`Navigating to step ${stepNumber}`, { from: state.currentStep });
 
-      // Validate current step before proceeding
-      if (stepNumber > state.currentStep && !await this.validateCurrentStep()) {
+      // Skip validation for step 0 (registration check) and when going backwards
+      // ALSO skip validation when coming FROM step 0 (registration)
+      if (stepNumber > state.currentStep && state.currentStep > 0 && !await this.validateCurrentStep()) {
         debugSystem.log('Step validation failed, navigation cancelled', null, 'warn');
         return false;
       }
 
-      const currentStepEl = this.steps[state.currentStep - 1];
-      const targetStepEl = this.steps[stepNumber - 1];
+      // Find current and target step elements
+      let currentStepEl = null;
+      let targetStepEl = null;
+
+      // Handle step 0 specifically
+      if (state.currentStep === 0) {
+        currentStepEl = document.querySelector('#techpack-step-0');
+      } else {
+        currentStepEl = document.querySelector(`[data-step="${state.currentStep}"]`);
+      }
+
+      if (stepNumber === 0) {
+        targetStepEl = document.querySelector('#techpack-step-0');
+      } else {
+        targetStepEl = document.querySelector(`[data-step="${stepNumber}"]`);
+      }
 
       if (!targetStepEl) {
         debugSystem.log('Target step not found', { stepNumber }, 'error');
@@ -864,21 +880,29 @@
       if (currentStepEl) {
         await animationManager.fadeOut(currentStepEl);
         currentStepEl.style.display = 'none';
+        debugSystem.log('Hidden current step', { currentStep: state.currentStep });
       }
 
       // Show target step with animation
       targetStepEl.style.display = 'block';
       await animationManager.fadeIn(targetStepEl);
+      debugSystem.log('Shown target step', { targetStep: stepNumber });
 
       // Update state
       state.currentStep = stepNumber;
-      this.updateProgressIndicators();
+      
+      // Only update progress indicators for steps 1-4 (not step 0)
+      if (stepNumber > 0) {
+        this.updateProgressIndicators();
+      }
 
       // Handle step-specific logic
       this.handleStepEnter(stepNumber);
 
-      // Scroll to top of TechPack app smoothly (enhanced version)
-      this.scrollToTechPackTopEnhanced();
+      // Scroll to top of TechPack app smoothly
+      setTimeout(() => {
+        this.scrollToTechPackTopEnhanced();
+      }, 300);
 
       debugSystem.log(`Successfully navigated to step ${stepNumber}`, null, 'success');
       return true;
