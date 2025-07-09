@@ -2942,7 +2942,7 @@
     }
   }
 
-  // Enhanced Form Initialization
+// Enhanced Form Initialization
   class FormInitializer {
     constructor() {
       this.initialized = false;
@@ -2953,29 +2953,40 @@
       
       debugSystem.log('Initializing TechPack Application');
       
+      // ADDED: Setup registration check FIRST
+      this.setupRegistrationCheck();
+      
+      // EXISTING: Keep all your existing setup methods
       this.setupDateConstraints();
       this.setupPhoneFormatting();
       this.setupProductionTypeListener();
       this.setupNavigationButtons();
       this.setupFormSubmission();
       this.setupVATFormatting();
-      this.setupProductionTypeListener();
       
-      // Initialize first step
-      this.showStep(1);
+      // CHANGED: Initialize with registration check (step 0) instead of step 1
+      this.showStep(0);
       
       this.initialized = true;
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-    // Add this method to your FormInitializer class
+    // NEW: Registration check setup
     setupRegistrationCheck() {
       const yesBtn = document.querySelector('#registered-client-yes');
       const noBtn = document.querySelector('#registered-client-no');
       const warningDiv = document.querySelector('#registration-warning');
 
+      debugSystem.log('Setting up registration check', { 
+        yesBtn: !!yesBtn, 
+        noBtn: !!noBtn, 
+        warningDiv: !!warningDiv 
+      });
+
       if (yesBtn && noBtn) {
         yesBtn.addEventListener('click', () => {
+          debugSystem.log('YES button clicked - Registered client selected');
+          
           // Show warning first
           if (warningDiv) {
             warningDiv.style.display = 'flex';
@@ -2996,6 +3007,8 @@
         });
 
         noBtn.addEventListener('click', () => {
+          debugSystem.log('NO button clicked - New client selected');
+          
           state.formData.isRegisteredClient = false;
           this.configureStep1ForNewClient();
           stepManager.navigateToStep(1);
@@ -3005,9 +3018,14 @@
             stepManager.scrollToTechPackTopEnhanced();
           }, 600);
         });
+
+        debugSystem.log('Registration check event listeners attached successfully');
+      } else {
+        debugSystem.log('Registration check buttons not found - will fallback to step 1', null, 'warn');
       }
     }
 
+    // NEW: Configure Step 1 for registered clients
     configureStep1ForRegisteredClient() {
       // Hide unnecessary fields for registered clients
       const fieldsToHide = [
@@ -3023,6 +3041,12 @@
           const formGroup = field.closest('.techpack-form__group');
           if (formGroup) {
             formGroup.style.display = 'none';
+            // Remove required attributes for hidden fields
+            const inputs = formGroup.querySelectorAll('input, select');
+            inputs.forEach(input => {
+              input.removeAttribute('required');
+              input.removeAttribute('data-validate');
+            });
           }
         }
       });
@@ -3053,6 +3077,7 @@
       debugSystem.log('Configured Step 1 for registered client');
     }
 
+    // NEW: Configure Step 1 for new clients
     configureStep1ForNewClient() {
       // Show all fields for new clients
       const fieldsToShow = [
@@ -3068,6 +3093,15 @@
           const formGroup = field.closest('.techpack-form__group');
           if (formGroup) {
             formGroup.style.display = 'block';
+            // Restore required attributes for required fields
+            const requiredFields = ['clientName', 'country'];
+            const inputs = formGroup.querySelectorAll('input, select');
+            inputs.forEach(input => {
+              if (requiredFields.includes(input.name)) {
+                input.setAttribute('required', 'required');
+                input.setAttribute('data-validate', 'required');
+              }
+            });
           }
         }
       });
@@ -3092,28 +3126,7 @@
       debugSystem.log('Configured Step 1 for new client');
     }
 
-    // Update your init() method to include this
-    init() {
-      if (this.initialized) return;
-      
-      debugSystem.log('Initializing TechPack Application');
-      
-      this.setupRegistrationCheck(); // Add this line
-      this.setupDateConstraints();
-      this.setupPhoneFormatting();
-      this.setupProductionTypeListener();
-      this.setupNavigationButtons();
-      this.setupFormSubmission();
-      this.setupVATFormatting();
-      this.setupProductionTypeListener();
-      
-      // Initialize with registration check (step 0)
-      this.showStep(0);
-      
-      this.initialized = true;
-      debugSystem.log('TechPack Application initialized successfully', null, 'success');
-    }
-
+    // EXISTING: Keep your exact setupDateConstraints method
     setupDateConstraints() {
       const dateInput = document.getElementById('deadline');
       if (!dateInput) return;
@@ -3134,6 +3147,7 @@
       });
     }
 
+    // EXISTING: Keep your exact setupPhoneFormatting method
     setupPhoneFormatting() {
       const phoneInput = document.getElementById('phone');
       if (phoneInput) {
@@ -3143,6 +3157,7 @@
       }
     }
 
+    // EXISTING: Keep your exact setupVATFormatting method
     setupVATFormatting() {
       const vatInput = document.getElementById('vat-ein');
       if (vatInput) {
@@ -3338,6 +3353,7 @@
       }
     }
 
+    // EXISTING: Keep your exact setupProductionTypeListener method
     setupProductionTypeListener() {
       const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
       if (!productionTypeSelect) return;
@@ -3356,6 +3372,7 @@
       });
     }
 
+    // EXISTING: Keep your exact setupNavigationButtons method
     setupNavigationButtons() {
       // Step 1
       const step1Next = document.querySelector('#step-1-next');
@@ -3368,7 +3385,7 @@
           }, 600);
         });
       }
-    
+
       // Step 2
       const step2Prev = document.querySelector('#step-2-prev');
       const step2Next = document.querySelector('#step-2-next');
@@ -3389,7 +3406,7 @@
           }, 600);
         });
       }
-    
+
       // Step 3
       const step3Prev = document.querySelector('#step-3-prev');
       const step3Next = document.querySelector('#step-3-next');
@@ -3410,7 +3427,7 @@
           }, 600);
         });
       }
-    
+
       // Step 4
       const step4Prev = document.querySelector('#step-4-prev');
       if (step4Prev) {
@@ -3421,11 +3438,12 @@
           }, 600);
         });
       }
-    
+
       // EDIT BUTTONS - Review Page
       this.setupEditButtons();
     }
 
+    // EXISTING: Keep your exact setupEditButtons method
     setupEditButtons() {
       // Simple approach: Set up specific event listeners after review is populated
       setTimeout(() => {
@@ -3511,6 +3529,7 @@
       debugSystem.log('Edit buttons setup complete');
     }
 
+    // EXISTING: Keep your exact setupFormSubmission method
     setupFormSubmission() {
       const submitBtn = document.querySelector('#step-4-submit');
       if (submitBtn) {
@@ -3518,6 +3537,7 @@
       }
     }
 
+    // EXISTING: Keep your exact handleSubmit method
     async handleSubmit() {
       const submitBtn = document.querySelector('#step-4-submit');
       if (!submitBtn) return;
@@ -3546,10 +3566,11 @@
       }
     }
 
+    // EXISTING: Keep your exact showThankYou method
     showThankYou() {
       const step4 = document.querySelector('#techpack-step-4');
       if (!step4) return;
-    
+
       const totalQuantity = quantityCalculator.getTotalQuantityFromAllColorways();
       
       step4.innerHTML = `
@@ -3563,11 +3584,11 @@
                 </svg>
               </div>
             </div>
-    
+
             <div class="techpack-success__content">
               <h1 class="techpack-success__title">Submission Received</h1>
               <p class="techpack-success__subtitle">Your tech-pack has been successfully submitted to our production team.</p>
-    
+
               <div class="techpack-success__card">
                 <div class="techpack-success__card-header">
                   <h3>Submission Details</h3>
@@ -3601,7 +3622,7 @@
                   </div>
                 </div>
               </div>
-    
+
               <div class="techpack-success__next-steps">
                 <h4 class="techpack-success__next-title">What happens next?</h4>
                 <div class="techpack-success__steps">
@@ -3630,7 +3651,7 @@
                   </div>
                 </div>
               </div>
-    
+
               <div class="techpack-success__actions">
                 <button type="button" class="techpack-btn techpack-btn--primary" onclick="location.reload()">
                   <span>Submit Another Tech-Pack</span>
@@ -3643,7 +3664,7 @@
           </div>
         </div>
       `;
-    
+
       // IMPORTANT: Wait for DOM to be fully updated, then scroll to the new content
       setTimeout(() => {
         // First try to find the new thank you page elements
@@ -3686,11 +3707,12 @@
         } else {
           // Fallback: use the enhanced scroll function
           debugSystem.log('Using fallback scroll for thank you page');
-          this.scrollToTechPackTopEnhanced();
+          stepManager.scrollToTechPackTopEnhanced();
         }
       }, 800); // Longer delay to ensure DOM is fully updated
     }
 
+    // ENHANCED: Updated showStep method to handle step 0 (registration check)
     showStep(stepNumber) {
       const steps = document.querySelectorAll('.techpack-step');
       
@@ -3698,11 +3720,27 @@
         step.style.display = 'none';
       });
       
+      // Handle step 0 (registration check)
+      if (stepNumber === 0) {
+        const step0 = document.querySelector('#techpack-step-0');
+        if (step0) {
+          step0.style.display = 'block';
+          state.currentStep = 0;
+          debugSystem.log('Showing registration check (step 0)');
+          return;
+        } else {
+          debugSystem.log('Step 0 (registration check) not found, falling back to step 1', null, 'warn');
+          stepNumber = 1; // Fallback to step 1 if step 0 doesn't exist
+        }
+      }
+      
+      // Handle regular steps (1-4)
       const targetStep = document.querySelector(`[data-step="${stepNumber}"]`);
       if (targetStep) {
         targetStep.style.display = 'block';
         state.currentStep = stepNumber;
         
+        // EXISTING: Keep your exact step-specific logic
         if (stepNumber === 2) {
           stepManager.syncStep2DOM();
         } else if (stepNumber === 3) {
@@ -3710,6 +3748,10 @@
         } else if (stepNumber === 4) {
           stepManager.populateReview();
         }
+        
+        debugSystem.log('Showing step', { stepNumber });
+      } else {
+        debugSystem.log('Target step not found', { stepNumber }, 'error');
       }
     }
   }
