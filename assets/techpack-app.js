@@ -3824,10 +3824,6 @@
   const quantityCalculator = new QuantityCalculator();
   const garmentManager = new GarmentManager();
   const formInitializer = new FormInitializer();
-  const stepManager = new StepManager();  
-  // Set the stepManager reference after creation
-  formInitializer.setStepManager(stepManager);
-  
 
   // Initialize debug system first
   debugSystem.init();
