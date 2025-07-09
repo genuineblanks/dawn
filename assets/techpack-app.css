@@ -2032,3 +2032,24 @@ body {
     gap: var(--techpack-space-xs);
   }
 }
+
+.techpack-form__input--error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.techpack-form__input--success {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.techpack-form__error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+.techpack-form__error:not(:empty) {
+  display: block;
+}
