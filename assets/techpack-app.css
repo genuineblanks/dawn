@@ -965,7 +965,7 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* Premium Size Grid - RED Quantities Until Number Entered */
+/* Premium Size Grid - RED Quantities Until Number Entered (JavaScript Controlled) */
 .techpack-size-grid__input {
   width: 100%;
   padding: var(--techpack-space-lg);
@@ -979,18 +979,16 @@ body {
   font-family: var(--techpack-font-family);
 }
 
-/* RED styling for empty/zero quantities */
-.techpack-size-grid__input:placeholder-shown,
-.techpack-size-grid__input[value=""],
-.techpack-size-grid__input[value="0"] {
+/* RED styling for empty/zero quantities - controlled by JavaScript class */
+.techpack-size-grid__input.quantity-empty {
   background: rgba(220, 38, 38, 0.05) !important;
   color: var(--techpack-error) !important;
   border: 1px solid var(--techpack-error) !important;
   font-weight: var(--techpack-font-weight-semibold) !important;
 }
 
-/* Normal styling when number is entered */
-.techpack-size-grid__input:not(:placeholder-shown):not([value=""]):not([value="0"]) {
+/* Normal styling when number is entered - controlled by JavaScript class */
+.techpack-size-grid__input.quantity-filled {
   background: var(--techpack-bg) !important;
   color: var(--techpack-text) !important;
   border: none !important;
@@ -1002,6 +1000,24 @@ body {
   background: var(--techpack-bg-tertiary) !important;
   color: var(--techpack-primary) !important;
   box-shadow: inset 0 0 0 2px var(--techpack-primary) !important;
+}
+
+/* Alternative: Pure CSS approach that might work better */
+.techpack-size-grid__input:invalid,
+.techpack-size-grid__input[value=""],
+.techpack-size-grid__input[value="0"] {
+  background: rgba(220, 38, 38, 0.05) !important;
+  color: var(--techpack-error) !important;
+  border: 1px solid var(--techpack-error) !important;
+  font-weight: var(--techpack-font-weight-semibold) !important;
+}
+
+/* When input has a valid value > 0 */
+.techpack-size-grid__input:valid:not([value=""]):not([value="0"]) {
+  background: var(--techpack-bg) !important;
+  color: var(--techpack-text) !important;
+  border: none !important;
+  font-weight: var(--techpack-font-weight-medium) !important;
 }
 
 .techpack-colorway__total {
