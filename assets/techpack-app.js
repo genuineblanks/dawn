@@ -820,7 +820,7 @@
   const validator = new FormValidator();
 
   // Enhanced Step Manager
-  class stepManager {
+  class StepManager {
     constructor() {
       this.steps = document.querySelectorAll('.techpack-step');
       this.setupValidationRules();
@@ -3953,18 +3953,9 @@
     }
   };
 
-  // Auto-initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!state.isInitialized) {
-        // Wait a bit for DOM to fully settle
-        setTimeout(() => {
-          formInitializer.init();
-          state.isInitialized = true;
-        }, 100);
-      }
-    });
-  } else {
+// Auto-initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
     if (!state.isInitialized) {
       // Wait a bit for DOM to fully settle
       setTimeout(() => {
@@ -3972,7 +3963,16 @@
         state.isInitialized = true;
       }, 100);
     }
+  });
+} else {
+  if (!state.isInitialized) {
+    // Wait a bit for DOM to fully settle
+    setTimeout(() => {
+      formInitializer.init();
+      state.isInitialized = true;
+    }, 100);
   }
+}
 
   // Expose debug system globally for console access
   window.debugSystem = debugSystem;
