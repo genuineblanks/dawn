@@ -2492,11 +2492,10 @@ function showThankYou() {
               </svg>
             </button>
             
-            <button type="button" class="techpack-btn techpack-btn--ghost" onclick="window.print()">
+            <button type="button" class="techpack-btn techpack-btn--ghost" onclick="downloadSubmissionPDF()">
               <span>Save Confirmation</span>
               <svg width="16" height="16" viewBox="0 0 16 16" class="techpack-btn__icon">
-                <path d="M6 1h4M4 5h8a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                <path d="M4 9h8M4 11h5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
@@ -2504,6 +2503,178 @@ function showThankYou() {
       </div>
     </div>
   `;
+}
+
+// Generate and download submission PDF
+function downloadSubmissionPDF() {
+  debug.log('Generating submission PDF');
+  
+  // Create a clean PDF content
+  const pdfContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Tech-Pack Submission Confirmation</title>
+      <style>
+        body {
+          font-family: system-ui, -apple-system, sans-serif;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 40px 20px;
+          color: #111827;
+          line-height: 1.6;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 40px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid #e5e7eb;
+        }
+        .header h1 {
+          font-size: 28px;
+          font-weight: 300;
+          margin: 0 0 10px 0;
+          letter-spacing: -0.025em;
+        }
+        .header p {
+          color: #6b7280;
+          margin: 0;
+          font-size: 14px;
+        }
+        .details-card {
+          background: #fafbfc;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 30px;
+        }
+        .details-header {
+          background: #f1f3f4;
+          padding: 20px;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .details-header h3 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .details-content {
+          padding: 20px;
+        }
+        .detail-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 12px 0;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        .detail-item:last-child {
+          border-bottom: none;
+        }
+        .detail-label {
+          font-size: 13px;
+          color: #6b7280;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+        .detail-value {
+          font-size: 13px;
+          font-weight: 600;
+          font-family: monospace;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 40px;
+          padding-top: 20px;
+          border-top: 1px solid #e5e7eb;
+          color: #6b7280;
+          font-size: 12px;
+        }
+        @media print {
+          body { margin: 0; padding: 20px; }
+          .header h1 { font-size: 24px; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Submission Received</h1>
+        <p>Tech-Pack Submission Confirmation</p>
+      </div>
+      
+      <div class="details-card">
+        <div class="details-header">
+          <h3>Submission Details</h3>
+        </div>
+        <div class="details-content">
+          <div class="detail-item">
+            <span class="detail-label">Reference ID</span>
+            <span class="detail-value">TP-${Date.now().toString().slice(-8)}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Total Quantity</span>
+            <span class="detail-value">${updateTotalQuantity()} units</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Files Uploaded</span>
+            <span class="detail-value">${formData.files.length} ${formData.files.length === 1 ? 'file' : 'files'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Client Name</span>
+            <span class="detail-value">${formData.clientInfo?.clientName || formData.clientInfo?.contactName || 'N/A'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Company</span>
+            <span class="detail-value">${formData.clientInfo?.companyName || formData.clientInfo?.company || 'N/A'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">${formData.clientInfo?.email || formData.clientInfo?.emailAddress || 'N/A'}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Submitted</span>
+            <span class="detail-value">${new Date().toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>This confirmation was generated on ${new Date().toLocaleDateString('en-US', { 
+          weekday: 'long',
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric'
+        })}</p>
+        <p>Please keep this confirmation for your records.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  // Create a new window with the PDF content
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(pdfContent);
+  printWindow.document.close();
+  
+  // Wait for content to load, then trigger save dialog
+  printWindow.onload = function() {
+    setTimeout(() => {
+      printWindow.print();
+      // Close the window after printing
+      setTimeout(() => {
+        printWindow.close();
+      }, 1000);
+    }, 500);
+  };
 }
 
   // Debug toggle function
