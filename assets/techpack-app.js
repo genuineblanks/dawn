@@ -3061,7 +3061,7 @@
             const navigationSuccess = stepManager.navigateToStep(1);
             if (!navigationSuccess) {
               debugSystem.log('Navigation failed, trying direct method', null, 'warn');
-              stepManager.debugTestNavigation(1);
+              stepManager.navigateToStep(1);
             }
             
             // Add scroll after navigation
@@ -3078,13 +3078,6 @@
           state.formData.isRegisteredClient = false;
           state.formData.hasOrderedSamples = false;
           this.configureStep1ForNewClient(); // ALL FIELDS
-          
-          // Try navigation with fallback
-          const navigationSuccess = stepManager.navigateToStep(1);
-          if (!navigationSuccess) {
-            debugSystem.log('Navigation failed, trying direct method', null, 'warn');
-            stepManager.debugTestNavigation(1);
-          }
           
           // Add scroll after navigation
           setTimeout(() => {
