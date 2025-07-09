@@ -1828,21 +1828,6 @@ function setupCountryDropdown() {
     
     qtyInputs.forEach(input => {
       const value = parseInt(input.value) || 0;
-
-      input.addEventListener('input', () => {
-        // NEW: Add quantity-based size validation
-        validateQuantityInputs(colorwayId);
-        
-        // DEBUG: Log the classes being applied
-        setTimeout(() => {
-          const debugInput = document.querySelector(`[data-colorway-id="${colorwayId}"] .techpack-size-grid__input`);
-          if (debugInput) {
-            console.log('Input classes:', debugInput.className);
-            console.log('Input computed style:', window.getComputedStyle(debugInput).backgroundColor);
-          }
-        }, 100);
-        
-        updateColorwayTotal(colorwayId);
       
       // Remove existing classes
       input.classList.remove('quantity-empty', 'quantity-filled', 'quantity-excess');
