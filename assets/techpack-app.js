@@ -813,12 +813,6 @@
     }
   }
 
-  // Global instances
-  const state = new TechPackState();
-  const debugSystem = new DebugSystem();
-  const animationManager = new AnimationManager();
-  const validator = new FormValidator();
-
   // Enhanced Step Manager
   class StepManager {
     constructor() {
@@ -3888,6 +3882,10 @@
     }
 
   // Global instances initialization
+  const state = new TechPackState();
+  const debugSystem = new DebugSystem();
+  const animationManager = new AnimationManager();
+  const validator = new FormValidator();
   const stepManager = new StepManager();
   const fileManager = new FileManager();
   const countrySelector = new CountrySelector();
