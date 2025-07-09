@@ -1814,21 +1814,6 @@ function setupCountryDropdown() {
 
   // NEW: Validate quantity inputs based on size distribution logic
   function validateQuantityInputs(colorwayId) {
-    input.addEventListener('input', () => {
-        // NEW: Add quantity-based size validation
-        validateQuantityInputs(colorwayId);
-        
-        // DEBUG: Log the classes being applied
-        setTimeout(() => {
-          const debugInput = document.querySelector(`[data-colorway-id="${colorwayId}"] .techpack-size-grid__input`);
-          if (debugInput) {
-            console.log('Input classes:', debugInput.className);
-            console.log('Input computed style:', window.getComputedStyle(debugInput).backgroundColor);
-          }
-        }, 100);
-        
-        updateColorwayTotal(colorwayId);
-      
     const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
     if (!colorway) return;
 
