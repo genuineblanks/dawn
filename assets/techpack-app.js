@@ -868,7 +868,7 @@
       }
     }
 
-    // FIXED: Updated navigateToStep method to handle step 0 properly
+// FIXED: Updated navigateToStep method to handle step 0 properly
     async navigateToStep(stepNumber) {
       if (stepNumber === state.currentStep) return;
       
@@ -3018,7 +3018,7 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-    // NEW: Registration check setup
+// UPDATED: Registration setup with better error handling
     setupRegistrationCheck() {
       const yesBtn = document.querySelector('#registered-client-yes');
       const noBtn = document.querySelector('#registered-client-no');
@@ -3044,7 +3044,14 @@
           setTimeout(() => {
             state.formData.isRegisteredClient = true;
             this.configureStep1ForRegisteredClient();
-            stepManager.navigateToStep(1);
+            
+            // Try navigation with fallback
+            const navigationSuccess = stepManager.navigateToStep(1);
+            if (!navigationSuccess) {
+              debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+              // Fallback: direct navigation
+              stepManager.debugTestNavigation(1);
+            }
             
             // Add scroll after navigation
             setTimeout(() => {
@@ -3058,7 +3065,14 @@
           
           state.formData.isRegisteredClient = false;
           this.configureStep1ForNewClient();
-          stepManager.navigateToStep(1);
+          
+          // Try navigation with fallback
+          const navigationSuccess = stepManager.navigateToStep(1);
+          if (!navigationSuccess) {
+            debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+            // Fallback: direct navigation
+            stepManager.debugTestNavigation(1);
+          }
           
           // Add scroll after navigation
           setTimeout(() => {
