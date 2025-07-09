@@ -2997,17 +2997,17 @@
       
       debugSystem.log('Colorway removed', { garmentId, colorwayId });
     }
-  }
 
-// Enhanced Form Initialization
     class FormInitializer {
-      constructor(stepManager) {
+      constructor() {
         this.initialized = false;
-        this.stepManager = stepManager; // Store reference
+        this.stepManager = null; // Initialize as null
       }
       
-      // Then in setupRegistrationCheck, use:
-      // this.stepManager.navigateToStep(1);
+      // Add method to set stepManager reference
+      setStepManager(stepManager) {
+        this.stepManager = stepManager;
+      }
     }
 
     init() {
