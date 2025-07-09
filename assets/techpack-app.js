@@ -1509,9 +1509,6 @@
       container.innerHTML = `
         <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
           <h3 style="margin: 0;">Client Information</h3>
-          <button type="button" class="edit-btn" data-edit="client-information" data-step="1" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
-            Edit
-          </button>
         </div>
         <div class="techpack-review__grid">
           <div class="techpack-review__item">
@@ -1552,10 +1549,7 @@
     
       const headerHtml = `
         <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Uploaded Files</h3>
-          <button type="button" class="edit-btn" data-edit="files" data-step="2" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
-            Edit
-          </button>
+          <h3 style="margin: 0;">Client Information</h3>
         </div>
       `;
     
@@ -1587,10 +1581,7 @@
     
       const headerHtml = `
         <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Garment Specifications</h3>
-          <button type="button" class="edit-btn" data-edit="garments" data-step="3" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
-            Edit
-          </button>
+          <h3 style="margin: 0;">Client Information</h3>
         </div>
       `;
     
@@ -2644,7 +2635,10 @@
       const garment = clone.querySelector('.techpack-garment');
       
       garment.dataset.garmentId = garmentId;
-      garment.querySelector('.techpack-garment__number').textContent = state.counters.garment;
+      
+      // Set the garment number based on current count of garments, not counter
+      const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
+      garment.querySelector('.techpack-garment__number').textContent = currentGarmentCount;
       
       // Setup event listeners
       this.setupGarmentEventListeners(garment, garmentId);
@@ -2774,6 +2768,9 @@
         // CRITICAL: Update state immediately after DOM removal
         state.formData.garments = state.formData.garments.filter(g => g.id !== garmentId);
         
+        // IMPORTANT: Renumber all remaining garments
+        this.renumberGarments();
+        
         // Force immediate recalculation
         quantityCalculator.calculateAndUpdateProgress();
         
@@ -2782,6 +2779,27 @@
         
         debugSystem.log('Garment removed and progress updated', { garmentId });
       });
+    }
+
+    // NEW METHOD: Renumber garments after deletion
+    renumberGarments() {
+      const garments = document.querySelectorAll('.techpack-garment');
+      garments.forEach((garment, index) => {
+        const numberElement = garment.querySelector('.techpack-garment__number');
+        if (numberElement) {
+          numberElement.textContent = index + 1;
+        }
+        
+        // Also update any titles that show garment numbers
+        const titleElement = garment.querySelector('.techpack-garment__title');
+        if (titleElement) {
+          const currentText = titleElement.textContent;
+          // Replace any existing "Garment X" with the new number
+          titleElement.textContent = currentText.replace(/Garment \d+/g, `Garment ${index + 1}`);
+        }
+      });
+      
+      debugSystem.log('Garments renumbered', { total: garments.length });
     }
 
     addColorway(garmentId) {
