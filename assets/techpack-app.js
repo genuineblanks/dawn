@@ -746,6 +746,9 @@
     }
   }
 
+  // Make animationManager globally accessible immediately
+  const animationManager = new AnimationManager();
+
   // Enhanced Form Validator
   class FormValidator {
     constructor() {
@@ -907,14 +910,14 @@
 
       // Hide current step with animation
       if (currentStepEl) {
-        await window.techpackApp.animationManager.fadeOut(currentStepEl);
+        await animationManager.fadeOut(currentStepEl);
         currentStepEl.style.display = 'none';
         debugSystem.log('Hidden current step', { currentStep: state.currentStep });
       }
 
       // Show target step with animation
       targetStepEl.style.display = 'block';
-      await window.techpackApp.animationManager.fadeIn(targetStepEl);
+      await animationManager.fadeIn(targetStepEl);
       debugSystem.log('Shown target step', { targetStep: stepNumber });
 
       // Update state
@@ -3827,7 +3830,6 @@
   const state = new TechPackState();
 
   // Global instances initialization
-  const animationManager = new AnimationManager();
   const stepManager = new StepManager();
   const fileManager = new FileManager();
   const countrySelector = new CountrySelector();
