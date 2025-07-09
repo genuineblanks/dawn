@@ -1584,15 +1584,30 @@
       const isEuropean = COUNTRY_DATA.isEuropean(country.code);
       
       if (isEuropean) {
-        // Make VAT required for European countries
-        vatContainer.style.display = 'block';
-        vatContainer.classList.add('techpack-form__group--required');
-        vatInput.setAttribute('required', 'required');
-        vatInput.setAttribute('data-required', 'true');
-        
-        if (vatLabel) {
-          vatLabel.innerHTML = 'VAT Number <span class="techpack-form__required">*</span>';
-        }
+          // Make VAT required for European countries
+          vatContainer.style.display = 'block';
+          vatContainer.classList.add('techpack-form__group--required');
+          vatInput.setAttribute('required', 'required');
+          vatInput.setAttribute('data-required', 'true');
+          
+          // Set country-specific placeholder
+          const countryCode = country.code;
+          const placeholders = {
+            'PT': 'e.g., PT123456789',
+            'ES': 'e.g., ESA12345674', 
+            'DE': 'e.g., DE123456789',
+            'FR': 'e.g., FR12345678901',
+            'IT': 'e.g., IT12345678901',
+            'NL': 'e.g., NL123456789B01',
+            'BE': 'e.g., BE0123456789',
+            'AT': 'e.g., ATU12345678'
+          };
+          
+          vatInput.placeholder = placeholders[countryCode] || 'e.g., PT123456789';
+          
+          if (vatLabel) {
+            vatLabel.innerHTML = 'VAT Number <span class="techpack-form__required">*</span>';
+          }
         
         debugSystem.log('VAT field required for European country', { country: country.name });
       } else {
@@ -2311,6 +2326,8 @@
       this.setupProductionTypeListener();
       this.setupNavigationButtons();
       this.setupFormSubmission();
+      this.setupVATFormatting();
+      this.setupProductionTypeListener();
       
       // Initialize first step
       this.showStep(1);
