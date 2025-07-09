@@ -2389,38 +2389,122 @@ function setupCountryDropdown() {
     }, 2000);
   }
 
-  function showThankYou() {
-    debug.log('Showing thank you message');
-    
-    const step4 = document.querySelector('#techpack-step-4');
-    if (!step4) return;
+function showThankYou() {
+  debug.log('Showing thank you message');
+  
+  const step4 = document.querySelector('#techpack-step-4');
+  if (!step4) return;
 
-    step4.innerHTML = `
-      <div class="techpack-container">
-        <div class="techpack-thank-you">
-          <div class="techpack-thank-you__icon">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-              <circle cx="32" cy="32" r="30" fill="#6b7280" stroke="#4b5563" stroke-width="2"/>
-              <path d="M20 32l8 8 16-16" stroke="white" stroke-width="3" fill="none"/>
+  step4.innerHTML = `
+    <div class="techpack-container">
+      <div class="techpack-success-page">
+        <!-- Animated Success Icon -->
+        <div class="techpack-success__icon-wrapper">
+          <div class="techpack-success__icon">
+            <svg width="80" height="80" viewBox="0 0 80 80" class="success-checkmark">
+              <circle cx="40" cy="40" r="36" fill="none" stroke="#000000" stroke-width="3" stroke-dasharray="226" stroke-dashoffset="226" class="circle-animation"/>
+              <path d="M25 40l10 10 20-20" stroke="#000000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="50" stroke-dashoffset="50" class="checkmark-animation"/>
             </svg>
           </div>
-          <h2 class="techpack-thank-you__title">Thank You!</h2>
-          <p class="techpack-thank-you__message">
-            Your tech-pack submission has been received successfully. 
-            Our team will review your requirements and get back to you within 24-48 hours.
+        </div>
+
+        <!-- Success Content -->
+        <div class="techpack-success__content">
+          <h1 class="techpack-success__title">
+            Submission Received
+          </h1>
+          
+          <p class="techpack-success__subtitle">
+            Your tech-pack has been successfully submitted to our production team.
           </p>
-          <div class="techpack-thank-you__details">
-            <p><strong>Submission ID:</strong> TP-${Date.now()}</p>
-            <p><strong>Total Quantity:</strong> ${updateTotalQuantity()} units</p>
-            <p><strong>Files Uploaded:</strong> ${formData.files.length}</p>
+
+          <!-- Elegant Details Card -->
+          <div class="techpack-success__card">
+            <div class="techpack-success__card-header">
+              <h3>Submission Details</h3>
+            </div>
+            
+            <div class="techpack-success__details">
+              <div class="techpack-success__detail-item">
+                <span class="techpack-success__detail-label">Reference ID</span>
+                <span class="techpack-success__detail-value">TP-${Date.now().toString().slice(-8)}</span>
+              </div>
+              
+              <div class="techpack-success__detail-item">
+                <span class="techpack-success__detail-label">Total Quantity</span>
+                <span class="techpack-success__detail-value">${updateTotalQuantity()} units</span>
+              </div>
+              
+              <div class="techpack-success__detail-item">
+                <span class="techpack-success__detail-label">Files Uploaded</span>
+                <span class="techpack-success__detail-value">${formData.files.length} ${formData.files.length === 1 ? 'file' : 'files'}</span>
+              </div>
+              
+              <div class="techpack-success__detail-item">
+                <span class="techpack-success__detail-label">Submitted</span>
+                <span class="techpack-success__detail-value">${new Date().toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}</span>
+              </div>
+            </div>
           </div>
-          <button type="button" class="techpack-btn techpack-btn--primary" onclick="location.reload()">
-            Submit Another Tech-Pack
-          </button>
+
+          <!-- Next Steps -->
+          <div class="techpack-success__next-steps">
+            <h4 class="techpack-success__next-title">What happens next?</h4>
+            <div class="techpack-success__steps">
+              <div class="techpack-success__step">
+                <div class="techpack-success__step-number">1</div>
+                <div class="techpack-success__step-content">
+                  <strong>Review Process</strong>
+                  <span>Our team will analyze your requirements and specifications</span>
+                </div>
+              </div>
+              
+              <div class="techpack-success__step">
+                <div class="techpack-success__step-number">2</div>
+                <div class="techpack-success__step-content">
+                  <strong>Quote Preparation</strong>
+                  <span>We'll prepare a detailed quote and timeline for your project</span>
+                </div>
+              </div>
+              
+              <div class="techpack-success__step">
+                <div class="techpack-success__step-number">3</div>
+                <div class="techpack-success__step-content">
+                  <strong>Response</strong>
+                  <span>You'll receive our comprehensive proposal within 24-48 hours</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="techpack-success__actions">
+            <button type="button" class="techpack-btn techpack-btn--primary" onclick="location.reload()">
+              <span>Submit Another Tech-Pack</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" class="techpack-btn__icon">
+                <path d="M8 1l7 7-7 7M15 8H1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            
+            <button type="button" class="techpack-btn techpack-btn--ghost" onclick="window.print()">
+              <span>Save Confirmation</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" class="techpack-btn__icon">
+                <path d="M6 1h4M4 5h8a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M4 9h8M4 11h5" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    `;
-  }
+    </div>
+  `;
+}
 
   // Debug toggle function
   function toggleDebug() {
