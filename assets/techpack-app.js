@@ -1640,7 +1640,7 @@
               ? `⚠️ Need ${remaining} more units (75 minimum for single colorway)`
               : `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
             
-            warningEl.innerHTML = message;
+            warningEl.innerHTML = `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
             warningEl.style.display = 'block';
             warningEl.className = 'colorway-minimum-warning warning';
             
