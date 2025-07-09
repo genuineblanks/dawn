@@ -789,18 +789,40 @@
         errors.phone = 'Please enter a valid phone number';
       }
     
-      // CRITICAL: VAT/EIN validation based on country (matching your HTML name="vatEin")
-      const vatInput = form.querySelector('input[name="vatEin"]'); // This matches your HTML
+      // CRITICAL: VAT/EIN validation based on country
+      const vatInput = form.querySelector('input[name="vatEin"]');
       if (vatInput) {
         const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
-        const vatValue = data.vatEin || ''; // This matches your HTML name
+        const vatValue = data.vatEin || '';
+        const selectedCountry = data.country || '';
+        
+        // Get country code for validation
+        const countryObj = COUNTRY_DATA.findByName(selectedCountry);
+        const countryCode = countryObj ? countryObj.code : null;
         
         if (isVATRequired && (!vatValue || !vatValue.trim())) {
           isValid = false;
           errors.vatEin = 'VAT number is required for European countries';
-        } else if (vatValue && !Utils.validateVAT(vatValue)) {
-          isValid = false;
-          errors.vatEin = 'Please enter a valid VAT/EIN number';
+        } else if (vatValue && vatValue.trim()) {
+          // Validate VAT format
+          if (!Utils.validateVAT(vatValue, countryCode)) {
+            isValid = false;
+            
+            // Country-specific error messages
+            if (countryCode === 'PT') {
+              errors.vatEin = 'Portuguese VAT must be PT + 9 digits (e.g., PT123456789)';
+            } else if (countryCode === 'ES') {
+              errors.vatEin = 'Spanish VAT must be ES + letter/digit + 7 digits + letter/digit (e.g., ESA12345674)';
+            } else if (countryCode === 'DE') {
+              errors.vatEin = 'German VAT must be DE + 9 digits (e.g., DE123456789)';
+            } else if (countryCode === 'FR') {
+              errors.vatEin = 'French VAT must be FR + 2 characters + 9 digits (e.g., FRAA123456789)';
+            } else if (countryCode === 'US') {
+              errors.vatEin = 'US EIN must be 9 digits (e.g., 123456789)';
+            } else {
+              errors.vatEin = `Please enter a valid ${COUNTRY_DATA.isEuropean(countryCode) ? 'VAT' : 'EIN'} number for ${selectedCountry}`;
+            }
+          }
         }
       }
     
@@ -2411,39 +2433,72 @@
         vatInput.addEventListener('input', (e) => {
           let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
           
-          // Auto-format common patterns
+          // Auto-format and limit length based on country patterns
           if (value.length >= 2) {
             const countryCode = value.substring(0, 2);
             
-            // Portugal: PT123456789
-            if (countryCode === 'PT' && value.length > 2) {
-              value = 'PT' + value.substring(2).replace(/\D/g, '');
-              if (value.length > 11) value = value.substring(0, 11);
+            // Apply country-specific formatting and limits
+            switch (countryCode) {
+              case 'PT': // Portugal: PT + 9 digits = 11 total
+                value = 'PT' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'ES': // Spain: ES + char + 7 digits + char = 11 total
+                value = 'ES' + value.substring(2);
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'DE': // Germany: DE + 9 digits = 11 total
+                value = 'DE' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'FR': // France: FR + 2 chars + 9 digits = 13 total
+                value = 'FR' + value.substring(2);
+                if (value.length > 13) value = value.substring(0, 13);
+                break;
+              case 'IT': // Italy: IT + 11 digits = 13 total
+                value = 'IT' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 13) value = value.substring(0, 13);
+                break;
+              case 'NL': // Netherlands: NL + 9 digits + B + 2 digits = 14 total
+                let nlValue = 'NL' + value.substring(2).replace(/[^0-9B]/g, '');
+                if (nlValue.length > 14) nlValue = nlValue.substring(0, 14);
+                value = nlValue;
+                break;
+              default:
+                // Limit to 15 characters max for any VAT
+                if (value.length > 15) value = value.substring(0, 15);
             }
-            // Spain: ES + letter/number + 8 digits
-            else if (countryCode === 'ES' && value.length > 2) {
-              value = 'ES' + value.substring(2);
-              if (value.length > 11) value = value.substring(0, 11);
-            }
-            // Germany: DE + 9 digits
-            else if (countryCode === 'DE' && value.length > 2) {
-              value = 'DE' + value.substring(2).replace(/\D/g, '');
-              if (value.length > 11) value = value.substring(0, 11);
-            }
-            // Add more country-specific formatting as needed
+          } else if (/^\d/.test(value)) {
+            // For EIN (US): only digits, max 9
+            value = value.replace(/\D/g, '');
+            if (value.length > 9) value = value.substring(0, 9);
           }
           
           e.target.value = value;
           
+          // Get selected country for context
+          const countryInput = document.getElementById('country');
+          const selectedCountry = countryInput?.value;
+          const countryObj = COUNTRY_DATA.findByName(selectedCountry);
+          
           // Real-time validation feedback
-          const isValid = Utils.validateVAT(value);
+          const isValid = Utils.validateVAT(value, countryObj?.code);
           e.target.classList.toggle('techpack-form__input--error', value.length > 0 && !isValid);
+          e.target.classList.toggle('techpack-form__input--success', value.length > 0 && isValid);
           
           // Show/hide error message
           const errorDiv = e.target.closest('.techpack-form__group')?.querySelector('.techpack-form__error');
           if (errorDiv) {
             if (value.length > 0 && !isValid) {
-              errorDiv.textContent = 'Please enter a valid VAT number (e.g., PT123456789)';
+              if (countryObj?.code === 'PT') {
+                errorDiv.textContent = 'Portuguese VAT: PT + 9 digits (e.g., PT123456789)';
+              } else if (countryObj?.code === 'ES') {
+                errorDiv.textContent = 'Spanish VAT: ES + letter + 7 digits + letter (e.g., ESA1234567A)';
+              } else if (countryObj?.code === 'US') {
+                errorDiv.textContent = 'US EIN: 9 digits (e.g., 123456789)';
+              } else {
+                errorDiv.textContent = 'Please enter a valid VAT number format';
+              }
               errorDiv.style.display = 'block';
             } else {
               errorDiv.textContent = '';
@@ -2451,26 +2506,6 @@
             }
           }
         });
-        
-        // Add placeholder examples based on country
-        vatInput.addEventListener('focus', (e) => {
-          const countryInput = document.getElementById('country');
-          const country = countryInput?.value;
-          
-          if (country === 'Portugal') {
-            e.target.placeholder = 'e.g., PT123456789';
-          } else if (country === 'Spain') {
-            e.target.placeholder = 'e.g., ESA12345674';
-          } else if (country === 'Germany') {
-            e.target.placeholder = 'e.g., DE123456789';
-          } else if (country === 'United States') {
-            e.target.placeholder = 'e.g., 123456789';
-          } else {
-            e.target.placeholder = 'e.g., PT123456789';
-          }
-        });
-      }
-    }
 
     setupProductionTypeListener() {
       const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
