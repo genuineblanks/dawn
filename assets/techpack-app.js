@@ -1615,6 +1615,7 @@
       }
     }
 
+    // Replace the problematic section around lines 880-920 with:
     updateColorwayValidationMessages() {
       const garments = document.querySelectorAll('.techpack-garment');
       
@@ -1625,8 +1626,6 @@
         colorwaysInGarment.forEach(colorway => {
           const colorwayId = colorway.dataset.colorwayId;
           const colorwayTotal = this.updateColorwayTotal(colorwayId);
-          
-          // FIXED: Determine minimum for THIS specific garment's colorway count
           const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
           
           let warningEl = colorway.querySelector('.colorway-minimum-warning');
@@ -1640,61 +1639,25 @@
               ? `⚠️ Need ${remaining} more units (75 minimum for single colorway)`
               : `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
             
-            warningEl.innerHTML = `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
+            warningEl.innerHTML = message;
             warningEl.style.display = 'block';
             warningEl.className = 'colorway-minimum-warning warning';
             
-            // Add red highlight to colorway total
             const totalEl = colorway.querySelector('.techpack-colorway__total-value');
             if (totalEl) {
-              totalEl.style.cssText = `
-                color: #ef4444 !important;
-                font-weight: bold !important;
-                background: #fef2f2;
-                padding: 0.25rem 0.5rem;
-                border-radius: 0.25rem;
-                border: 1px solid #fecaca;
-              `;
+              totalEl.style.cssText = 'color: #ef4444 !important; font-weight: bold !important; background: #fef2f2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;';
             }
           } else {
             warningEl.style.display = 'block';
             warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${requiredPerColorway})`;
             warningEl.className = 'colorway-minimum-warning success';
             
-            // Remove red styling from colorway total
             const totalEl = colorway.querySelector('.techpack-colorway__total-value');
             if (totalEl) {
               totalEl.style.cssText = '';
             }
           }
         });
-      });
-    }
-            totalEl.style.cssText = `
-              color: #ef4444 !important;
-              font-weight: bold !important;
-              background: #fef2f2;
-              padding: 0.25rem 0.5rem;
-              border-radius: 0.25rem;
-              border: 1px solid #fecaca;
-            `;
-          }
-        } else {
-          warningEl.style.display = 'block';
-          warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${requiredPerColorway})`;
-          warningEl.className = 'colorway-minimum-warning success';
-          
-          // Remove red styling from colorway total
-          const totalEl = colorway.querySelector('.techpack-colorway__total-value');
-          if (totalEl) {
-            totalEl.style.color = '#ef4444';
-            totalEl.style.fontWeight = 'bold';
-            totalEl.style.background = '#fef2f2';
-            totalEl.style.padding = '0.25rem 0.5rem';
-            totalEl.style.borderRadius = '0.25rem';
-            totalEl.style.border = '1px solid #fecaca';
-          }
-        }
       });
     }
 
