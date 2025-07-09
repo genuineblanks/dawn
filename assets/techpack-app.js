@@ -659,31 +659,76 @@
       }
     }
 
+    // In StepManager class, REPLACE the validateStep1() method:
     validateStep1() {
       const form = document.querySelector('#techpack-step-1 form');
       if (!form) return false;
-
+    
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       
-      const result = validator.validateAll(data);
-      
-      // Display errors
-      Object.keys(result.errors).forEach(fieldName => {
-        const field = form.querySelector(`[name="${fieldName}"]`);
-        if (field) {
-          this.displayFieldError(field, false, result.errors[fieldName][0]);
+      let isValid = true;
+      const errors = {};
+    
+      // Manual validation for Step 1 fields only
+      const requiredFields = [
+        { name: 'clientName', label: 'Client name' },
+        { name: 'companyName', label: 'Company name' },
+        { name: 'email', label: 'Email address' },
+        { name: 'country', label: 'Country' }
+      ];
+    
+      requiredFields.forEach(field => {
+        if (!data[field.name] || !data[field.name].trim()) {
+          isValid = false;
+          errors[field.name] = `${field.label} is required`;
         }
       });
-
-      if (result.isValid) {
+    
+      // Email validation
+      if (data.email && !Utils.validateEmail(data.email)) {
+        isValid = false;
+        errors.email = 'Please enter a valid email address';
+      }
+    
+      // Phone validation (optional)
+      if (data.phone && !Utils.validatePhone(data.phone)) {
+        isValid = false;
+        errors.phone = 'Please enter a valid phone number';
+      }
+    
+      // VAT validation (conditional)
+      if (data.vatEin && !Utils.validateVAT(data.vatEin)) {
+        isValid = false;
+        errors.vatEin = 'Please enter a valid VAT/EIN number';
+      }
+    
+      // Display errors
+      Object.keys(errors).forEach(fieldName => {
+        const field = form.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+          this.displayFieldError(field, false, errors[fieldName]);
+        }
+      });
+    
+      // Clear errors for valid fields
+      requiredFields.forEach(field => {
+        if (!errors[field.name]) {
+          const fieldElement = form.querySelector(`[name="${field.name}"]`);
+          if (fieldElement) {
+            this.displayFieldError(fieldElement, true, '');
+          }
+        }
+      });
+    
+      if (isValid) {
         state.formData.clientInfo = data;
         debugSystem.log('Step 1 validation passed', data, 'success');
       } else {
-        debugSystem.log('Step 1 validation failed', result.errors, 'error');
+        debugSystem.log('Step 1 validation failed', errors, 'error');
       }
-
-      return result.isValid;
+    
+      return isValid;
     }
 
     validateStep2() {
