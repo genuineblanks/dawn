@@ -820,7 +820,7 @@
   const validator = new FormValidator();
 
   // Enhanced Step Manager
-  class StepManager {
+  class stepManager {
     constructor() {
       this.steps = document.querySelectorAll('.techpack-step');
       this.setupValidationRules();
