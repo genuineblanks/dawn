@@ -960,40 +960,47 @@
       debugSystem.log('Review populated', null, 'success');
     }
 
+    // In StepManager class, REPLACE populateReviewStep1():
     populateReviewStep1() {
       const container = document.querySelector('#review-step-1');
-      if (!container || !state.formData.clientInfo) return;
-
-      const ci = state.formData.clientInfo;
+      if (!container) return;
+    
+      // Get data from DOM instead of relying on state
+      const form = document.querySelector('#techpack-step-1 form');
+      if (!form) return;
+    
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+    
       container.innerHTML = `
         <div class="techpack-review__grid">
           <div class="techpack-review__item">
             <span class="techpack-review__label">Client Name:</span>
-            <span class="techpack-review__value">${ci.clientName || 'N/A'}</span>
+            <span class="techpack-review__value">${data.clientName || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
             <span class="techpack-review__label">Company Name:</span>
-            <span class="techpack-review__value">${ci.companyName || 'N/A'}</span>
+            <span class="techpack-review__value">${data.companyName || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
             <span class="techpack-review__label">Email Address:</span>
-            <span class="techpack-review__value">${ci.email || 'N/A'}</span>
+            <span class="techpack-review__value">${data.email || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
             <span class="techpack-review__label">Country:</span>
-            <span class="techpack-review__value">${ci.country || 'N/A'}</span>
+            <span class="techpack-review__value">${data.country || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
             <span class="techpack-review__label">Phone Number:</span>
-            <span class="techpack-review__value">${ci.phone || 'N/A'}</span>
+            <span class="techpack-review__value">${data.phone || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
             <span class="techpack-review__label">Project Deadline:</span>
-            <span class="techpack-review__value">${ci.deadline || 'N/A'}</span>
+            <span class="techpack-review__value">${data.deadline || 'N/A'}</span>
           </div>
           <div class="techpack-review__item techpack-review__item--full-width">
             <span class="techpack-review__label">Additional Notes:</span>
-            <span class="techpack-review__value">${ci.notes || 'N/A'}</span>
+            <span class="techpack-review__value">${data.notes || 'N/A'}</span>
           </div>
         </div>
       `;
@@ -1024,65 +1031,100 @@
       container.innerHTML = `<div class="techpack-review__files">${filesHtml}</div>`;
     }
 
+    // In StepManager class, REPLACE populateReviewStep3():
     populateReviewStep3() {
       const container = document.querySelector('#review-step-3');
       if (!container) return;
-
-      if (state.formData.garments.length === 0) {
+    
+      const garmentElements = document.querySelectorAll('.techpack-garment');
+      if (garmentElements.length === 0) {
         container.innerHTML = '<p class="techpack-review__empty">No garments specified</p>';
         return;
       }
-
+    
       let totalQuantity = 0;
-      const garmentsHtml = state.formData.garments.map((garment, index) => {
+      const garmentsHtml = Array.from(garmentElements).map((garmentElement, index) => {
+        const garmentId = garmentElement.dataset.garmentId;
         let garmentTotal = 0;
-       
-        const colorwaysHtml = garment.colorways.map(colorway => {
-          const quantities = Object.entries(colorway.quantities)
-            .filter(([size, qty]) => qty > 0)
-            .map(([size, qty]) => `${size.toUpperCase()}: ${qty}`)
-            .join(', ');
-         
-          const colorwayQty = Object.values(colorway.quantities).reduce((sum, qty) => sum + (qty || 0), 0);
-          garmentTotal += colorwayQty;
-         
+    
+        // Get garment details from DOM
+        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
+        
+        const garmentType = garmentTypeSelect?.value || 'Not specified';
+        const fabricType = fabricSelect?.value || 'Not specified';
+        const printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
+    
+        // Get colorway details from DOM
+        const colorwayElements = garmentElement.querySelectorAll('.techpack-colorway');
+        const colorwaysHtml = Array.from(colorwayElements).map(colorway => {
+          const colorwayId = colorway.dataset.colorwayId;
+          
+          // Get color info
+          const colorPicker = colorway.querySelector('.techpack-color-picker__input');
+          const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
+          const color = colorPicker?.value || '#000000';
+          const pantone = pantoneInput?.value || '';
+    
+          // Get quantities from size grid
+          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+          const quantities = {};
+          let colorwayTotal = 0;
+    
+          qtyInputs.forEach(input => {
+            const size = input.name.replace('qty-', '').toUpperCase();
+            const value = parseInt(input.value) || 0;
+            if (value > 0) {
+              quantities[size] = value;
+              colorwayTotal += value;
+            }
+          });
+    
+          garmentTotal += colorwayTotal;
+    
+          // Format quantities for display
+          const quantitiesText = Object.entries(quantities)
+            .map(([size, qty]) => `${size}: ${qty}`)
+            .join(', ') || 'No quantities specified';
+    
           return `
             <div class="techpack-review__colorway">
               <div class="techpack-review__colorway-header">
-                <div class="techpack-review__color-preview" style="background-color: ${colorway.color}"></div>
+                <div class="techpack-review__color-preview" style="background-color: ${color}"></div>
                 <span class="techpack-review__colorway-info">
-                  ${colorway.pantone ? `PANTONE ${colorway.pantone}` : 'Color: ' + colorway.color}
-                  <small>(${colorwayQty} units)</small>
+                  ${pantone ? `PANTONE ${pantone}` : `Color: ${color}`}
+                  <small>(${colorwayTotal} units)</small>
                 </span>
               </div>
-              <div class="techpack-review__quantities">${quantities || 'No quantities specified'}</div>
+              <div class="techpack-review__quantities">${quantitiesText}</div>
             </div>
           `;
         }).join('');
-
+    
         totalQuantity += garmentTotal;
-
+    
         return `
           <div class="techpack-review__garment">
             <div class="techpack-review__garment-header">
-              <h4 class="techpack-review__garment-title">Garment ${index + 1}: ${garment.type}</h4>
+              <h4 class="techpack-review__garment-title">Garment ${index + 1}: ${garmentType}</h4>
               <span class="techpack-review__garment-total">${garmentTotal} units</span>
             </div>
             <div class="techpack-review__garment-details">
               <div class="techpack-review__detail">
                 <span class="techpack-review__label">Fabric:</span>
-                <span class="techpack-review__value">${garment.fabric}</span>
+                <span class="techpack-review__value">${fabricType}</span>
               </div>
               <div class="techpack-review__detail">
                 <span class="techpack-review__label">Printing Methods:</span>
-                <span class="techpack-review__value">${garment.printingMethods.join(', ')}</span>
+                <span class="techpack-review__value">${printingMethods.length > 0 ? printingMethods.join(', ') : 'None specified'}</span>
               </div>
             </div>
             <div class="techpack-review__colorways">${colorwaysHtml}</div>
           </div>
         `;
       }).join('');
-
+    
       container.innerHTML = `
         <div class="techpack-review__summary">
           <div class="techpack-review__total">
