@@ -3881,10 +3881,13 @@
       }
     }
 
-  // Global instances initialization
+    // Global instances
+  const state = new TechPackState();
   const debugSystem = new DebugSystem();
   const animationManager = new AnimationManager();
   const validator = new FormValidator();
+
+  // Global instances initialization
   const stepManager = new StepManager();
   const fileManager = new FileManager();
   const countrySelector = new CountrySelector();
