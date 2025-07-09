@@ -2594,7 +2594,7 @@
           if (value.length >= 2) {
             const countryCode = value.substring(0, 2);
             
-// Apply country-specific formatting and limits (official EU formats)
+            // Apply country-specific formatting and limits (official EU formats)
             switch (countryCode) {
               case 'AT': // Austria: ATU + 8 digits = 11 total
                 if (value.length > 2) {
