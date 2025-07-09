@@ -2839,6 +2839,17 @@
           quantityCalculator.validateQuantityInputs(colorwayId);
           quantityCalculator.updateColorwayTotal(colorwayId);
           quantityCalculator.calculateAndUpdateProgress();
+          
+          // SMART: Only trigger step validation if quantities are sufficient
+          const colorwayTotal = quantityCalculator.updateColorwayTotal(colorwayId);
+          const garment = colorway.closest('.techpack-garment');
+          const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
+          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+          
+          // Only validate step if we're close to or above minimum to avoid interference
+          if (colorwayTotal >= requiredPerColorway * 0.8) {
+            setTimeout(() => stepManager.validateStep3(), 300);
+          }
         }, 200);
 
         input.addEventListener('input', debouncedUpdate);
@@ -2858,16 +2869,24 @@
         return;
       }
 
-      animationManager.fadeOut(colorway).then(() => {
-        colorway.remove();
-      });
-
+      // CRITICAL: Update state immediately before DOM removal
       const garmentData = state.formData.garments.find(g => g.id === garmentId);
       if (garmentData) {
         garmentData.colorways = garmentData.colorways.filter(c => c.id !== colorwayId);
       }
 
-      setTimeout(() => quantityCalculator.calculateAndUpdateProgress(), 100);
+      animationManager.fadeOut(colorway).then(() => {
+        colorway.remove();
+        
+        // Recalculate and validate after DOM is updated
+        setTimeout(() => {
+          quantityCalculator.calculateAndUpdateProgress();
+          // Delayed validation to prevent interference
+          setTimeout(() => {
+            stepManager.validateStep3();
+          }, 200);
+        }, 50);
+      });
       
       debugSystem.log('Colorway removed', { garmentId, colorwayId });
     }
