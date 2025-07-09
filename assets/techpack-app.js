@@ -2785,7 +2785,14 @@
       // Animate in
       animationManager.slideIn(colorway, 'down');
       
-      setTimeout(() => quantityCalculator.calculateAndUpdateProgress(), 100);
+      // CRITICAL: Don't trigger validation immediately, let it settle first
+      setTimeout(() => {
+        quantityCalculator.calculateAndUpdateProgress();
+        // Use a longer delay for validation to prevent interference
+        setTimeout(() => {
+          stepManager.validateStep3();
+        }, 200);
+      }, 100);
       
       debugSystem.log('Colorway added', { garmentId, colorwayId });
     }
