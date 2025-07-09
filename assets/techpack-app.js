@@ -3177,7 +3177,13 @@
       // Step 1
       const step1Next = document.querySelector('#step-1-next');
       if (step1Next) {
-        step1Next.addEventListener('click', () => stepManager.navigateToStep(2));
+        step1Next.addEventListener('click', () => {
+          stepManager.navigateToStep(2);
+          // Force scroll to top
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
 
       // Step 2
@@ -3185,10 +3191,20 @@
       const step2Next = document.querySelector('#step-2-next');
       
       if (step2Prev) {
-        step2Prev.addEventListener('click', () => stepManager.navigateToStep(1));
+        step2Prev.addEventListener('click', () => {
+          stepManager.navigateToStep(1);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
       if (step2Next) {
-        step2Next.addEventListener('click', () => stepManager.navigateToStep(3));
+        step2Next.addEventListener('click', () => {
+          stepManager.navigateToStep(3);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
 
       // Step 3
@@ -3196,16 +3212,31 @@
       const step3Next = document.querySelector('#step-3-next');
       
       if (step3Prev) {
-        step3Prev.addEventListener('click', () => stepManager.navigateToStep(2));
+        step3Prev.addEventListener('click', () => {
+          stepManager.navigateToStep(2);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
       if (step3Next) {
-        step3Next.addEventListener('click', () => stepManager.navigateToStep(4));
+        step3Next.addEventListener('click', () => {
+          stepManager.navigateToStep(4);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
 
       // Step 4
       const step4Prev = document.querySelector('#step-4-prev');
       if (step4Prev) {
-        step4Prev.addEventListener('click', () => stepManager.navigateToStep(3));
+        step4Prev.addEventListener('click', () => {
+          stepManager.navigateToStep(3);
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 300);
+        });
       }
 
       // EDIT BUTTONS - Review Page
