@@ -2491,14 +2491,6 @@ function showThankYou() {
                 <path d="M8 1l7 7-7 7M15 8H1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            
-            <button type="button" class="techpack-btn techpack-btn--ghost" onclick="window.print()">
-              <span>Save Confirmation</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" class="techpack-btn__icon">
-                <path d="M6 1h4M4 5h8a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                <path d="M4 9h8M4 11h5" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-            </button>
           </div>
         </div>
       </div>
