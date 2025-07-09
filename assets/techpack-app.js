@@ -2954,6 +2954,152 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
+    // Add this method to your FormInitializer class
+    setupRegistrationCheck() {
+      const yesBtn = document.querySelector('#registered-client-yes');
+      const noBtn = document.querySelector('#registered-client-no');
+      const warningDiv = document.querySelector('#registration-warning');
+
+      if (yesBtn && noBtn) {
+        yesBtn.addEventListener('click', () => {
+          // Show warning first
+          if (warningDiv) {
+            warningDiv.style.display = 'flex';
+            warningDiv.classList.add('show');
+          }
+
+          // Wait a moment, then proceed
+          setTimeout(() => {
+            state.formData.isRegisteredClient = true;
+            this.configureStep1ForRegisteredClient();
+            stepManager.navigateToStep(1);
+            
+            // Add scroll after navigation
+            setTimeout(() => {
+              stepManager.scrollToTechPackTopEnhanced();
+            }, 600);
+          }, 2000); // 2 second delay to show warning
+        });
+
+        noBtn.addEventListener('click', () => {
+          state.formData.isRegisteredClient = false;
+          this.configureStep1ForNewClient();
+          stepManager.navigateToStep(1);
+          
+          // Add scroll after navigation
+          setTimeout(() => {
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
+        });
+      }
+    }
+
+    configureStep1ForRegisteredClient() {
+      // Hide unnecessary fields for registered clients
+      const fieldsToHide = [
+        '#client-name',
+        '#vat-ein-group', 
+        '#phone',
+        '.techpack-form__country-wrapper'
+      ];
+      
+      fieldsToHide.forEach(selector => {
+        const field = document.querySelector(selector);
+        if (field) {
+          const formGroup = field.closest('.techpack-form__group');
+          if (formGroup) {
+            formGroup.style.display = 'none';
+          }
+        }
+      });
+
+      // Update the title to indicate registered client
+      const title = document.querySelector('#techpack-step-1 .techpack-title');
+      if (title) {
+        title.innerHTML = `
+          Client Information 
+          <span style="color: #059669; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem;">
+            (Registered Client)
+          </span>
+        `;
+      }
+
+      // Add warning about verification
+      const subtitle = document.querySelector('#techpack-step-1 .techpack-subtitle');
+      if (subtitle) {
+        subtitle.innerHTML = `
+          Confirm your details below 
+          <div style="background: #fef3cd; border: 1px solid #f59e0b; border-radius: 6px; padding: 0.75rem; margin-top: 1rem; font-size: 0.875rem; color: #92400e;">
+            <strong>⚠️ Verification Required:</strong> Your submission will be validated against our client database. 
+            Unregistered submissions will be automatically rejected.
+          </div>
+        `;
+      }
+
+      debugSystem.log('Configured Step 1 for registered client');
+    }
+
+    configureStep1ForNewClient() {
+      // Show all fields for new clients
+      const fieldsToShow = [
+        '#client-name',
+        '#vat-ein-group',
+        '#phone', 
+        '.techpack-form__country-wrapper'
+      ];
+      
+      fieldsToShow.forEach(selector => {
+        const field = document.querySelector(selector);
+        if (field) {
+          const formGroup = field.closest('.techpack-form__group');
+          if (formGroup) {
+            formGroup.style.display = 'block';
+          }
+        }
+      });
+
+      // Update the title to indicate new client
+      const title = document.querySelector('#techpack-step-1 .techpack-title');
+      if (title) {
+        title.innerHTML = `
+          Client Information 
+          <span style="color: #3b82f6; font-size: 0.875rem; font-weight: 500; margin-left: 0.5rem;">
+            (New Client)
+          </span>
+        `;
+      }
+
+      // Standard subtitle for new clients
+      const subtitle = document.querySelector('#techpack-step-1 .techpack-subtitle');
+      if (subtitle) {
+        subtitle.textContent = 'Tell us about your project requirements';
+      }
+
+      debugSystem.log('Configured Step 1 for new client');
+    }
+
+    // Update your init() method to include this
+    init() {
+      if (this.initialized) return;
+      
+      debugSystem.log('Initializing TechPack Application');
+      
+      this.setupRegistrationCheck(); // Add this line
+      this.setupDateConstraints();
+      this.setupPhoneFormatting();
+      this.setupProductionTypeListener();
+      this.setupNavigationButtons();
+      this.setupFormSubmission();
+      this.setupVATFormatting();
+      this.setupProductionTypeListener();
+      
+      // Initialize with registration check (step 0)
+      this.showStep(0);
+      
+      this.initialized = true;
+      debugSystem.log('TechPack Application initialized successfully', null, 'success');
+    }
+
     setupDateConstraints() {
       const dateInput = document.getElementById('deadline');
       if (!dateInput) return;
