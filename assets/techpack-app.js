@@ -3258,25 +3258,66 @@
             button.onclick = (e) => {
               e.preventDefault();
               
-              // Determine step by checking the surrounding content
-              const container = button.closest('div');
-              const allText = container ? container.textContent.toLowerCase() : '';
-              
+              // Determine step by checking the surrounding content more broadly
               let targetStep = 1; // Default
               
-              if (allText.includes('client') || allText.includes('company') || allText.includes('email')) {
-                targetStep = 1;
-                debugSystem.log('Edit client info clicked');
-              } else if (allText.includes('file') || allText.includes('upload') || allText.includes('pdf')) {
-                targetStep = 2;
-                debugSystem.log('Edit files clicked');
-              } else if (allText.includes('garment') || allText.includes('fabric') || allText.includes('printing') || allText.includes('colorway')) {
-                targetStep = 3;
-                debugSystem.log('Edit garments clicked');
+              // Check multiple levels up to find the right context
+              let currentElement = button;
+              let found = false;
+              
+              // Walk up the DOM tree to find context
+              for (let i = 0; i < 10 && currentElement && !found; i++) {
+                const allText = currentElement.textContent ? currentElement.textContent.toLowerCase() : '';
+                
+                // More specific checks
+                if (allText.includes('client information') || 
+                    (allText.includes('client') && allText.includes('name')) ||
+                    (allText.includes('company') && allText.includes('name')) ||
+                    allText.includes('email address')) {
+                  targetStep = 1;
+                  found = true;
+                  debugSystem.log('Edit client info clicked');
+                } else if (allText.includes('uploaded files') || 
+                          (allText.includes('file') && (allText.includes('chatgpt') || allText.includes('.png') || allText.includes('.pdf'))) ||
+                          allText.includes('collection') ||
+                          allText.includes('single garment')) {
+                  targetStep = 2;
+                  found = true;
+                  debugSystem.log('Edit files clicked');
+                } else if (allText.includes('garment specifications') || 
+                          allText.includes('total quantity') ||
+                          (allText.includes('garment') && allText.includes(':')) ||
+                          allText.includes('fabric:') ||
+                          allText.includes('printing methods:') ||
+                          allText.includes('units')) {
+                  targetStep = 3;
+                  found = true;
+                  debugSystem.log('Edit garments clicked');
+                }
+                
+                currentElement = currentElement.parentElement;
+              }
+              
+              // Fallback: check by section ID
+              if (!found) {
+                const step1Section = button.closest('#review-step-1, [data-step="1"]');
+                const step2Section = button.closest('#review-step-2, [data-step="2"]');
+                const step3Section = button.closest('#review-step-3, [data-step="3"]');
+                
+                if (step1Section) {
+                  targetStep = 1;
+                  debugSystem.log('Edit client info clicked (fallback)');
+                } else if (step2Section) {
+                  targetStep = 2;
+                  debugSystem.log('Edit files clicked (fallback)');
+                } else if (step3Section) {
+                  targetStep = 3;
+                  debugSystem.log('Edit garments clicked (fallback)');
+                }
               }
               
               stepManager.navigateToStep(targetStep);
-              debugSystem.log('Edit button navigation', { targetStep, content: allText.substring(0, 50) });
+              debugSystem.log('Edit button navigation', { targetStep, found });
             };
           }
         });
