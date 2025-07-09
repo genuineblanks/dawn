@@ -3248,42 +3248,39 @@
     }
 
     setupEditButtons() {
-      // Use event delegation to catch ALL edit button clicks
-      document.addEventListener('click', (e) => {
-        // Check if clicked element is an edit button (be more flexible with selectors)
-        const editButton = e.target.closest('button');
+      // Simple approach: Set up specific event listeners after review is populated
+      setTimeout(() => {
+        // Find all edit buttons and set up click handlers
+        const editButtons = document.querySelectorAll('button');
         
-        if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // Find which review section this button belongs to
-          const reviewStep1 = editButton.closest('#review-step-1');
-          const reviewStep2 = editButton.closest('#review-step-2');
-          const reviewStep3 = editButton.closest('#review-step-3');
-          
-          let targetStep = 1;
-          
-          if (reviewStep1) {
-            targetStep = 1;
-            debugSystem.log('Edit client info clicked');
-          } else if (reviewStep2) {
-            targetStep = 2;
-            debugSystem.log('Edit files clicked');
-          } else if (reviewStep3) {
-            targetStep = 3;
-            debugSystem.log('Edit garments clicked');
+        editButtons.forEach(button => {
+          if (button.textContent.toLowerCase().includes('edit')) {
+            button.onclick = (e) => {
+              e.preventDefault();
+              
+              // Determine step by checking the surrounding content
+              const container = button.closest('div');
+              const allText = container ? container.textContent.toLowerCase() : '';
+              
+              let targetStep = 1; // Default
+              
+              if (allText.includes('client') || allText.includes('company') || allText.includes('email')) {
+                targetStep = 1;
+                debugSystem.log('Edit client info clicked');
+              } else if (allText.includes('file') || allText.includes('upload') || allText.includes('pdf')) {
+                targetStep = 2;
+                debugSystem.log('Edit files clicked');
+              } else if (allText.includes('garment') || allText.includes('fabric') || allText.includes('printing') || allText.includes('colorway')) {
+                targetStep = 3;
+                debugSystem.log('Edit garments clicked');
+              }
+              
+              stepManager.navigateToStep(targetStep);
+              debugSystem.log('Edit button navigation', { targetStep, content: allText.substring(0, 50) });
+            };
           }
-          
-          // Navigate to the target step
-          stepManager.navigateToStep(targetStep);
-          
-          debugSystem.log('Edit button clicked via delegation', { 
-            targetStep,
-            buttonText: editButton.textContent 
-          });
-        }
-      });
+        });
+      }, 200);
 
       debugSystem.log('Edit buttons setup complete');
     }
