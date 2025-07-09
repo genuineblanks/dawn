@@ -3065,7 +3065,7 @@
       }
     }
 
-    // FIXED: Registered client layout with proper 2x2 grid
+    // FIXED: Registered client layout with proper field visibility
     configureStep1ForRegisteredClient() {
       // Hide unnecessary fields for clients who have ordered samples
       const fieldsToHide = [
@@ -3091,8 +3091,23 @@
         }
       });
 
-      // CRITICAL: Reorganize the visible fields into proper 2x2 layout
-      this.reorganizeRegisteredClientFields();
+      // ENSURE visible fields are shown
+      const fieldsToShow = [
+        '#company-name',
+        '#email',
+        '#production-type',
+        '#deadline'
+      ];
+      
+      fieldsToShow.forEach(selector => {
+        const field = document.querySelector(selector);
+        if (field) {
+          const formGroup = field.closest('.techpack-form__group');
+          if (formGroup) {
+            formGroup.style.display = 'block';
+          }
+        }
+      });
 
       // Update the title to indicate sample order client
       const title = document.querySelector('#techpack-step-1 .techpack-title');
@@ -3122,7 +3137,7 @@
         `;
       }
 
-      debugSystem.log('Configured Step 1 for sample order client - streamlined 2x2 layout');
+      debugSystem.log('Configured Step 1 for sample order client - streamlined form');
     }
 
     // NEW: Method to reorganize fields for registered clients
@@ -3189,14 +3204,18 @@
       });
     }
 
-    // FIXED: New client layout - restore original structure
+    // FIXED: New client layout - safer approach
     configureStep1ForNewClient() {
       // Show all fields for first-time clients
       const fieldsToShow = [
         '#client-name',
+        '#company-name',
+        '#email',
         '#vat-ein-group',
         '#phone', 
-        '.techpack-form__country-wrapper'
+        '.techpack-form__country-wrapper',
+        '#production-type',
+        '#deadline'
       ];
       
       fieldsToShow.forEach(selector => {
@@ -3206,7 +3225,7 @@
           if (formGroup) {
             formGroup.style.display = 'block';
             // Restore required attributes for required fields
-            const requiredFields = ['clientName', 'country'];
+            const requiredFields = ['clientName', 'companyName', 'email', 'country', 'productionType'];
             const inputs = formGroup.querySelectorAll('input, select');
             inputs.forEach(input => {
               if (requiredFields.includes(input.name)) {
@@ -3217,9 +3236,6 @@
           }
         }
       });
-
-      // CRITICAL: Restore original field layout for new clients
-      this.restoreOriginalFieldLayout();
 
       // Update the title to indicate first-time client
       const title = document.querySelector('#techpack-step-1 .techpack-title');
@@ -3250,7 +3266,7 @@
         `;
       }
 
-      debugSystem.log('Configured Step 1 for first-time client - full registration form with original layout');
+      debugSystem.log('Configured Step 1 for first-time client - full registration form');
     }
 
     // NEW: Method to restore original field layout for new clients
@@ -3909,7 +3925,7 @@
       }, 800); // Longer delay to ensure DOM is fully updated
     }
 
-    // ENHANCED: Updated showStep method to handle step 0 (registration check)
+    // FIXED: showStep method with proper fallback
     showStep(stepNumber) {
       const steps = document.querySelectorAll('.techpack-step');
       
@@ -3949,9 +3965,18 @@
         debugSystem.log('Showing step', { stepNumber });
       } else {
         debugSystem.log('Target step not found', { stepNumber }, 'error');
+        // Additional fallback - try to show step 1 if target step not found
+        if (stepNumber !== 1) {
+          debugSystem.log('Attempting fallback to step 1');
+          const step1 = document.querySelector('[data-step="1"]');
+          if (step1) {
+            step1.style.display = 'block';
+            state.currentStep = 1;
+            debugSystem.log('Successfully fell back to step 1');
+          }
+        }
       }
     }
-  }
 
   // Global instances initialization
   const stepManager = new StepManager();
