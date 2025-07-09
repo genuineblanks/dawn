@@ -1112,7 +1112,7 @@
       }
     }
 
-    // In StepManager class, REPLACE validateStep1() with this corrected version:
+    // Enhanced version of your existing validateStep1() method
     validateStep1() {
       const form = document.querySelector('#techpack-step-1 form');
       if (!form) return false;
@@ -1122,15 +1122,22 @@
       
       let isValid = true;
       const errors = {};
+      
+      // Check if user is registered client (new functionality)
+      const isRegisteredClient = state.formData.isRegisteredClient || false;
     
-      // Basic required fields
-      const requiredFields = [
-        { name: 'clientName', label: 'Client name' },
+      // Basic required fields - MODIFIED to handle registered vs new clients
+      let requiredFields = [
         { name: 'companyName', label: 'Company name' },
         { name: 'email', label: 'Email address' },
-        { name: 'country', label: 'Country' },
-        { name: 'productionType', label: 'Production type' } // Add this required field
+        { name: 'productionType', label: 'Production type' }
       ];
+
+      // Add additional required fields for NEW clients only
+      if (!isRegisteredClient) {
+        requiredFields.unshift({ name: 'clientName', label: 'Client name' });
+        requiredFields.push({ name: 'country', label: 'Country' });
+      }
     
       requiredFields.forEach(field => {
         if (!data[field.name] || !data[field.name].trim()) {
@@ -1145,51 +1152,53 @@
         errors.email = 'Please enter a valid email address';
       }
     
-      // Phone validation (optional)
+      // Phone validation (optional) - UNCHANGED from your code
       if (data.phone && !Utils.validatePhone(data.phone)) {
         isValid = false;
         errors.phone = 'Please enter a valid phone number';
       }
     
-      // CRITICAL: VAT/EIN validation based on country
-      const vatInput = form.querySelector('input[name="vatEin"]');
-      if (vatInput) {
-        const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
-        const vatValue = data.vatEin || '';
-        const selectedCountry = data.country || '';
-        
-        // Get country code for validation
-        const countryObj = COUNTRY_DATA.findByName(selectedCountry);
-        const countryCode = countryObj ? countryObj.code : null;
-        const requiresVAT = countryCode ? COUNTRY_DATA.requiresVAT(countryCode) : false;
-        
-        if (isVATRequired && requiresVAT && (!vatValue || !vatValue.trim())) {
-          isValid = false;
-          errors.vatEin = 'VAT number is required for EU member countries';
-        } else if (vatValue && vatValue.trim()) {
-          // Validate VAT format
-          if (!Utils.validateVAT(vatValue, countryCode)) {
+      // CRITICAL: VAT/EIN validation based on country - ONLY for NEW clients
+      if (!isRegisteredClient) {
+        const vatInput = form.querySelector('input[name="vatEin"]');
+        if (vatInput) {
+          const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
+          const vatValue = data.vatEin || '';
+          const selectedCountry = data.country || '';
+          
+          // Get country code for validation
+          const countryObj = COUNTRY_DATA.findByName(selectedCountry);
+          const countryCode = countryObj ? countryObj.code : null;
+          const requiresVAT = countryCode ? COUNTRY_DATA.requiresVAT(countryCode) : false;
+          
+          if (isVATRequired && requiresVAT && (!vatValue || !vatValue.trim())) {
             isValid = false;
-            
-            // Country-specific error messages
-            if (countryCode === 'PT') {
-              errors.vatEin = 'Portuguese VAT must be PT + 9 digits (e.g., PT123456789)';
-            } else if (countryCode === 'ES') {
-              errors.vatEin = 'Spanish VAT must be ES + letter/digit + 7 digits + letter/digit (e.g., ESA12345674)';
-            } else if (countryCode === 'DE') {
-              errors.vatEin = 'German VAT must be DE + 9 digits (e.g., DE123456789)';
-            } else if (countryCode === 'FR') {
-              errors.vatEin = 'French VAT must be FR + 2 characters + 9 digits (e.g., FRAA123456789)';
-            } else if (countryCode === 'US') {
-              errors.vatEin = 'US EIN must be 9 digits (e.g., 123456789)';
-            } else {
-              errors.vatEin = `Please enter a valid ${COUNTRY_DATA.isEuropean(countryCode) ? 'VAT' : 'EIN'} number for ${selectedCountry}`;
+            errors.vatEin = 'VAT number is required for EU member countries';
+          } else if (vatValue && vatValue.trim()) {
+            // Validate VAT format
+            if (!Utils.validateVAT(vatValue, countryCode)) {
+              isValid = false;
+              
+              // Country-specific error messages - UNCHANGED from your code
+              if (countryCode === 'PT') {
+                errors.vatEin = 'Portuguese VAT must be PT + 9 digits (e.g., PT123456789)';
+              } else if (countryCode === 'ES') {
+                errors.vatEin = 'Spanish VAT must be ES + letter/digit + 7 digits + letter/digit (e.g., ESA12345674)';
+              } else if (countryCode === 'DE') {
+                errors.vatEin = 'German VAT must be DE + 9 digits (e.g., DE123456789)';
+              } else if (countryCode === 'FR') {
+                errors.vatEin = 'French VAT must be FR + 2 characters + 9 digits (e.g., FRAA123456789)';
+              } else if (countryCode === 'US') {
+                errors.vatEin = 'US EIN must be 9 digits (e.g., 123456789)';
+              } else {
+                errors.vatEin = `Please enter a valid ${COUNTRY_DATA.isEuropean(countryCode) ? 'VAT' : 'EIN'} number for ${selectedCountry}`;
+              }
             }
           }
         }
       }
     
-      // Display errors for all fields
+      // Display errors for all fields - UNCHANGED from your code
       Object.keys(errors).forEach(fieldName => {
         const field = form.querySelector(`[name="${fieldName}"]`);
         if (field) {
@@ -1197,8 +1206,8 @@
         }
       });
     
-      // Clear errors for valid fields
-      const allFieldNames = [...requiredFields.map(f => f.name), 'phone', 'vatEin', 'deadline', 'notes'];
+      // Clear errors for valid fields - ENHANCED to handle both client types
+      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'deadline', 'notes'];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -1209,8 +1218,13 @@
       });
     
       if (isValid) {
+        // Add client type info to your existing data structure
+        data.isRegisteredClient = isRegisteredClient;
         state.formData.clientInfo = data;
-        debugSystem.log('Step 1 validation passed', data, 'success');
+        debugSystem.log('Step 1 validation passed', { 
+          data, 
+          clientType: isRegisteredClient ? 'registered' : 'new' 
+        }, 'success');
       } else {
         debugSystem.log('Step 1 validation failed', errors, 'error');
       }
