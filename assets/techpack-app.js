@@ -3819,6 +3819,10 @@
     }
   }
 
+  // Initialize debug system FIRST
+  const debugSystem = new DebugSystem();
+  debugSystem.init();
+  
   // Global instances initialization
   const stepManager = new StepManager();
   const fileManager = new FileManager();
@@ -3826,9 +3830,6 @@
   const quantityCalculator = new QuantityCalculator();
   const garmentManager = new GarmentManager();
   const formInitializer = new FormInitializer();
-
-  // Initialize debug system first
-  debugSystem.init();
 
   // Global API exposure
   window.techpackApp = {
