@@ -3822,7 +3822,10 @@
   // Initialize debug system FIRST
   const debugSystem = new DebugSystem();
   debugSystem.init();
-  
+
+  // CREATE STATE INSTANCE HERE (this line is missing!)
+  const state = new TechPackState();
+
   // Global instances initialization
   const stepManager = new StepManager();
   const fileManager = new FileManager();
