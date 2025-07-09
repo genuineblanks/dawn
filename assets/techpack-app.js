@@ -3248,17 +3248,34 @@
     }
 
     setupEditButtons() {
-      // Client Information Edit Button
-      const editClientBtn = document.querySelector('[data-edit="client"], .edit-client-btn, button[onclick*="client"], button[onclick*="step-1"]');
-      if (editClientBtn) {
-        // Remove any existing onclick handlers
-        editClientBtn.removeAttribute('onclick');
-        editClientBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          stepManager.navigateToStep(1);
-          debugSystem.log('Edit client info clicked');
-        });
-      }
+      // Find existing edit buttons in review sections and make them work
+      const reviewSections = [
+        { selector: '#review-step-1', step: 1, type: 'client' },
+        { selector: '#review-step-2', step: 2, type: 'files' },
+        { selector: '#review-step-3', step: 3, type: 'garments' }
+      ];
+
+      reviewSections.forEach(section => {
+        const container = document.querySelector(section.selector);
+        if (container) {
+          // Find any existing edit button in this section
+          const existingEditBtn = container.querySelector('button, .edit-btn, [data-edit]');
+          if (existingEditBtn) {
+            // Remove any existing onclick handlers
+            existingEditBtn.removeAttribute('onclick');
+            existingEditBtn.onclick = null;
+            
+            // Add our navigation handler
+            existingEditBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              stepManager.navigateToStep(section.step);
+              debugSystem.log(`Edit ${section.type} clicked`);
+            });
+            
+            debugSystem.log(`Setup edit button for ${section.type}`);
+          }
+        }
+      });
 
       // Files Edit Button  
       const editFilesBtn = document.querySelector('[data-edit="files"], .edit-files-btn, button[onclick*="files"], button[onclick*="step-2"]');
