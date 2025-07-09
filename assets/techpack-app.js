@@ -2995,19 +2995,17 @@
     }
   } // End of GarmentManager class
 
-  // Enhanced Form Initialization  
   class FormInitializer {
-      constructor() {
-        this.initialized = false;
-        this.stepManager = null; // Initialize as null
-      }
-      
-      // Add method to set stepManager reference
-      setStepManager(stepManager) {
-        this.stepManager = stepManager;
-      }
+    constructor() {
+      this.initialized = false;
+      this.stepManager = null; // Initialize as null
     }
-
+    
+    // Add method to set stepManager reference
+    setStepManager(stepManager) {
+      this.stepManager = stepManager;
+    }
+  
     init() {
       if (this.initialized) return;
       
