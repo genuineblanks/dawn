@@ -699,51 +699,99 @@
       return isValid;
     }
 
+    // In StepManager class, REPLACE the existing validateStep3() method:
     validateStep3() {
+      const nextBtn = document.querySelector('#step-3-next');
+      
       if (state.formData.garments.length === 0) {
         debugSystem.log('Step 3 validation failed: no garments', null, 'error');
+        if (nextBtn) nextBtn.disabled = true;
         return false;
       }
-
+    
       let isValid = true;
-
-      state.formData.garments.forEach((garment, index) => {
-        if (!garment.type || !garment.fabric || garment.printingMethods.length === 0) {
+      const garmentElements = document.querySelectorAll('.techpack-garment');
+    
+      // Validate each garment in the DOM
+      garmentElements.forEach((garmentElement, index) => {
+        const garmentId = garmentElement.dataset.garmentId;
+        
+        // Check garment type
+        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+        const garmentTypeGroup = garmentTypeSelect?.closest('.techpack-form__group');
+        const garmentTypeError = garmentTypeGroup?.querySelector('.techpack-form__error');
+        
+        if (!garmentTypeSelect?.value) {
           isValid = false;
-          debugSystem.log(`Garment ${index + 1} missing required fields`, garment, 'error');
+          if (garmentTypeGroup) garmentTypeGroup.classList.add('techpack-form__group--error');
+          if (garmentTypeError) garmentTypeError.textContent = 'Please select a garment type';
+        } else {
+          if (garmentTypeGroup) garmentTypeGroup.classList.remove('techpack-form__group--error');
+          if (garmentTypeError) garmentTypeError.textContent = '';
         }
-
-        // FIXED: Validate each garment's colorways individually
-        const garmentElement = document.querySelector(`[data-garment-id="${garment.id}"]`);
-        if (garmentElement) {
-          const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
-          const colorwayCountInGarment = colorwaysInGarment.length;
-          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
-
-          garment.colorways.forEach((colorway, colorwayIndex) => {
-            const total = Object.values(colorway.quantities).reduce((sum, qty) => sum + (qty || 0), 0);
-            if (total < requiredPerColorway) {
-              isValid = false;
-              debugSystem.log(`Garment ${index + 1}, Colorway ${colorwayIndex + 1} below minimum`, { 
-                total, 
-                required: requiredPerColorway,
-                garmentColorways: colorwayCountInGarment
-              }, 'error');
-            }
+    
+        // Check fabric type
+        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
+        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
+        
+        if (!fabricSelect?.value) {
+          isValid = false;
+          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
+          if (fabricError) fabricError.textContent = 'Please select a fabric type';
+        } else {
+          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
+          if (fabricError) fabricError.textContent = '';
+        }
+    
+        // Check printing methods
+        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
+        const printingGroup = garmentElement.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
+        const printingError = printingGroup?.querySelector('.techpack-form__error');
+        
+        if (printingCheckboxes.length === 0) {
+          isValid = false;
+          if (printingGroup) printingGroup.classList.add('techpack-form__group--error');
+          if (printingError) printingError.textContent = 'Please select at least one printing method';
+        } else {
+          if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
+          if (printingError) printingError.textContent = '';
+        }
+    
+        // Check colorway quantities
+        const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
+        const colorwayCountInGarment = colorwaysInGarment.length;
+        const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+    
+        colorwaysInGarment.forEach((colorway) => {
+          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+          let colorwayTotal = 0;
+          
+          qtyInputs.forEach(input => {
+            colorwayTotal += parseInt(input.value) || 0;
           });
-        }
+    
+          if (colorwayTotal < requiredPerColorway) {
+            isValid = false;
+            debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
+              total: colorwayTotal, 
+              required: requiredPerColorway 
+            }, 'error');
+          }
+        });
       });
-
+    
       // Update button state
-      const nextBtn = document.querySelector('#step-3-next');
       if (nextBtn) {
         nextBtn.disabled = !isValid;
       }
-
+    
       if (isValid) {
         debugSystem.log('Step 3 validation passed', null, 'success');
+      } else {
+        debugSystem.log('Step 3 validation failed', null, 'error');
       }
-
+    
       return isValid;
     }
 
@@ -1951,100 +1999,31 @@
       });
     }
 
-    // In StepManager class, REPLACE the existing validateStep3() method:
-    validateStep3() {
-      const nextBtn = document.querySelector('#step-3-next');
-      
-      if (state.formData.garments.length === 0) {
-        debugSystem.log('Step 3 validation failed: no garments', null, 'error');
-        if (nextBtn) nextBtn.disabled = true;
-        return false;
+    removeGarment(garmentId) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) return;
+    
+      const garments = document.querySelectorAll('.techpack-garment');
+      if (garments.length <= 1) {
+        debugSystem.log('Cannot remove last garment', null, 'warn');
+        return;
       }
     
-      let isValid = true;
-      const garmentElements = document.querySelectorAll('.techpack-garment');
-    
-      // Validate each garment in the DOM
-      garmentElements.forEach((garmentElement, index) => {
-        const garmentId = garmentElement.dataset.garmentId;
+      // Remove from DOM with animation
+      animationManager.fadeOut(garment).then(() => {
+        garment.remove();
         
-        // Check garment type
-        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
-        const garmentTypeGroup = garmentTypeSelect?.closest('.techpack-form__group');
-        const garmentTypeError = garmentTypeGroup?.querySelector('.techpack-form__error');
+        // CRITICAL: Update state immediately after DOM removal
+        state.formData.garments = state.formData.garments.filter(g => g.id !== garmentId);
         
-        if (!garmentTypeSelect?.value) {
-          isValid = false;
-          if (garmentTypeGroup) garmentTypeGroup.classList.add('techpack-form__group--error');
-          if (garmentTypeError) garmentTypeError.textContent = 'Please select a garment type';
-        } else {
-          if (garmentTypeGroup) garmentTypeGroup.classList.remove('techpack-form__group--error');
-          if (garmentTypeError) garmentTypeError.textContent = '';
-        }
-    
-        // Check fabric type
-        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
-        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
+        // Force immediate recalculation
+        quantityCalculator.calculateAndUpdateProgress();
         
-        if (!fabricSelect?.value) {
-          isValid = false;
-          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = 'Please select a fabric type';
-        } else {
-          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = '';
-        }
-    
-        // Check printing methods
-        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
-        const printingGroup = garmentElement.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
-        const printingError = printingGroup?.querySelector('.techpack-form__error');
+        // Update step validation
+        stepManager.validateStep3();
         
-        if (printingCheckboxes.length === 0) {
-          isValid = false;
-          if (printingGroup) printingGroup.classList.add('techpack-form__group--error');
-          if (printingError) printingError.textContent = 'Please select at least one printing method';
-        } else {
-          if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
-          if (printingError) printingError.textContent = '';
-        }
-    
-        // Check colorway quantities
-        const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
-        const colorwayCountInGarment = colorwaysInGarment.length;
-        const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
-    
-        colorwaysInGarment.forEach((colorway) => {
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-          let colorwayTotal = 0;
-          
-          qtyInputs.forEach(input => {
-            colorwayTotal += parseInt(input.value) || 0;
-          });
-    
-          if (colorwayTotal < requiredPerColorway) {
-            isValid = false;
-            debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
-              total: colorwayTotal, 
-              required: requiredPerColorway 
-            }, 'error');
-          }
-        });
+        debugSystem.log('Garment removed and progress updated', { garmentId });
       });
-    
-      // Update button state
-      if (nextBtn) {
-        nextBtn.disabled = !isValid;
-      }
-    
-      if (isValid) {
-        debugSystem.log('Step 3 validation passed', null, 'success');
-      } else {
-        debugSystem.log('Step 3 validation failed', null, 'error');
-      }
-    
-      return isValid;
     }
 
     addColorway(garmentId) {
