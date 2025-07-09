@@ -841,6 +841,39 @@
       validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
     }
 
+    // ADD this method to your StepManager class
+    debugTestNavigation(targetStep) {
+      debugSystem.log(`DEBUG: Testing navigation to step ${targetStep}`);
+      
+      // Check if target step exists
+      let targetElement = null;
+      if (targetStep === 0) {
+        targetElement = document.querySelector('#techpack-step-0');
+      } else {
+        targetElement = document.querySelector(`[data-step="${targetStep}"]`);
+      }
+      
+      debugSystem.log('Target element found:', !!targetElement);
+      
+      if (targetElement) {
+        // Hide all steps
+        const allSteps = document.querySelectorAll('.techpack-step');
+        allSteps.forEach(step => {
+          step.style.display = 'none';
+        });
+        
+        // Show target step
+        targetElement.style.display = 'block';
+        state.currentStep = targetStep;
+        
+        debugSystem.log(`DEBUG: Successfully showed step ${targetStep}`);
+        return true;
+      } else {
+        debugSystem.log(`DEBUG: Step ${targetStep} element not found`, null, 'error');
+        return false;
+      }
+    }
+
     // FIXED: Updated navigateToStep method to handle step 0 properly
     async navigateToStep(stepNumber) {
       if (stepNumber === state.currentStep) return;
