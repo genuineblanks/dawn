@@ -382,75 +382,232 @@
       
       const cleanVat = vat.trim().replace(/[\s\-\.]/g, '').toUpperCase();
       
-      // European VAT number patterns (exact formats)
+      // Official European VAT number patterns
       const vatPatterns = {
-        // Austria: ATU + 8 digits
-        AT: { pattern: /^ATU\d{8}$/, length: 11 },
-        // Belgium: BE0 + 9 digits OR BE + 10 digits
-        BE: { pattern: /^BE0?\d{9}$/, length: [10, 12] },
+        // Austria: ATU + 8 digits (9 chars total) - First char always 'U'
+        AT: { 
+          pattern: /^ATU\d{8}$/, 
+          length: 11,
+          description: "ATU + 8 digits"
+        },
+        
+        // Belgium: BE + 9-10 digits (10 chars total) - Prefix with '0' if 9 digits provided
+        BE: { 
+          pattern: /^BE0?\d{9}$/, 
+          length: [10, 12],
+          description: "BE + 10 digits (prefix with 0 if 9 digits)"
+        },
+        
         // Bulgaria: BG + 9 or 10 digits
-        BG: { pattern: /^BG\d{9,10}$/, length: [11, 12] },
+        BG: { 
+          pattern: /^BG\d{9,10}$/, 
+          length: [11, 12],
+          description: "BG + 9 or 10 digits"
+        },
+        
         // Croatia: HR + 11 digits
-        HR: { pattern: /^HR\d{11}$/, length: 13 },
-        // Cyprus: CY + 8 digits + 1 letter
-        CY: { pattern: /^CY\d{8}[A-Z]$/, length: 11 },
-        // Czech Republic: CZ + 8-10 digits
-        CZ: { pattern: /^CZ\d{8,10}$/, length: [10, 11, 12] },
+        HR: { 
+          pattern: /^HR\d{11}$/, 
+          length: 13,
+          description: "HR + 11 digits"
+        },
+        
+        // Cyprus: CY + 8 digits + 1 letter (9 chars total) - Last char must be letter
+        CY: { 
+          pattern: /^CY\d{8}[A-Z]$/, 
+          length: 11,
+          description: "CY + 8 digits + 1 letter"
+        },
+        
+        // Czech Republic: CZ + 8, 9 or 10 digits
+        CZ: { 
+          pattern: /^CZ\d{8,10}$/, 
+          length: [10, 11, 12],
+          description: "CZ + 8, 9 or 10 digits"
+        },
+        
         // Denmark: DK + 8 digits
-        DK: { pattern: /^DK\d{8}$/, length: 10 },
+        DK: { 
+          pattern: /^DK\d{8}$/, 
+          length: 10,
+          description: "DK + 8 digits"
+        },
+        
         // Estonia: EE + 9 digits
-        EE: { pattern: /^EE\d{9}$/, length: 11 },
+        EE: { 
+          pattern: /^EE\d{9}$/, 
+          length: 11,
+          description: "EE + 9 digits"
+        },
+        
         // Finland: FI + 8 digits
-        FI: { pattern: /^FI\d{8}$/, length: 10 },
-        // France: FR + 2 characters + 9 digits
-        FR: { pattern: /^FR[A-HJ-NP-Z0-9]{2}\d{9}$/, length: 13 },
+        FI: { 
+          pattern: /^FI\d{8}$/, 
+          length: 10,
+          description: "FI + 8 digits"
+        },
+        
+        // France: FR + 11 chars total - May include alphabetical chars (any except O or I)
+        FR: { 
+          pattern: /^FR[A-HJ-NP-Z0-9]{2}\d{9}$/, 
+          length: 13,
+          description: "FR + 2 chars + 9 digits (no O or I)"
+        },
+        
         // Germany: DE + 9 digits
-        DE: { pattern: /^DE\d{9}$/, length: 11 },
+        DE: { 
+          pattern: /^DE\d{9}$/, 
+          length: 11,
+          description: "DE + 9 digits"
+        },
+        
         // Greece: EL + 9 digits
-        GR: { pattern: /^EL\d{9}$/, length: 11 },
-        EL: { pattern: /^EL\d{9}$/, length: 11 },
+        GR: { 
+          pattern: /^EL\d{9}$/, 
+          length: 11,
+          description: "EL + 9 digits"
+        },
+        EL: { 
+          pattern: /^EL\d{9}$/, 
+          length: 11,
+          description: "EL + 9 digits"
+        },
+        
         // Hungary: HU + 8 digits
-        HU: { pattern: /^HU\d{8}$/, length: 10 },
-        // Iceland: IS + 5 or 6 digits
-        IS: { pattern: /^IS\d{5,6}$/, length: [7, 8] },
-        // Ireland: IE + 7 digits + 1 letter + optional 1 letter/digit
-        IE: { pattern: /^IE\d{7}[A-Z][A-Z0-9]?$/, length: [10, 11] },
+        HU: { 
+          pattern: /^HU\d{8}$/, 
+          length: 10,
+          description: "HU + 8 digits"
+        },
+        
+        // Ireland: IE + 7 digits + 1-2 letters (8 or 9 chars total)
+        IE: { 
+          pattern: /^IE\d{7}[A-Z]{1,2}$/, 
+          length: [10, 11],
+          description: "IE + 7 digits + 1-2 letters"
+        },
+        
         // Italy: IT + 11 digits
-        IT: { pattern: /^IT\d{11}$/, length: 13 },
+        IT: { 
+          pattern: /^IT\d{11}$/, 
+          length: 13,
+          description: "IT + 11 digits"
+        },
+        
         // Latvia: LV + 11 digits
-        LV: { pattern: /^LV\d{11}$/, length: 13 },
+        LV: { 
+          pattern: /^LV\d{11}$/, 
+          length: 13,
+          description: "LV + 11 digits"
+        },
+        
         // Lithuania: LT + 9 or 12 digits
-        LT: { pattern: /^LT(\d{9}|\d{12})$/, length: [11, 14] },
+        LT: { 
+          pattern: /^LT\d{9}$|^LT\d{12}$/, 
+          length: [11, 14],
+          description: "LT + 9 or 12 digits"
+        },
+        
         // Luxembourg: LU + 8 digits
-        LU: { pattern: /^LU\d{8}$/, length: 10 },
+        LU: { 
+          pattern: /^LU\d{8}$/, 
+          length: 10,
+          description: "LU + 8 digits"
+        },
+        
         // Malta: MT + 8 digits
-        MT: { pattern: /^MT\d{8}$/, length: 10 },
-        // Netherlands: NL + 9 digits + B + 2 digits
-        NL: { pattern: /^NL\d{9}B\d{2}$/, length: 14 },
-        // Norway: NO + 9 digits
-        NO: { pattern: /^NO\d{9}$/, length: 11 },
+        MT: { 
+          pattern: /^MT\d{8}$/, 
+          length: 10,
+          description: "MT + 8 digits"
+        },
+        
+        // Netherlands: NL + 9 digits + B + 2 digits (12 chars total) - 10th char always B
+        NL: { 
+          pattern: /^NL\d{9}B\d{2}$/, 
+          length: 14,
+          description: "NL + 9 digits + B + 2 digits"
+        },
+        
+        // Norway (non-EU): NO + 9 digits + MVA
+        NO: { 
+          pattern: /^NO\d{9}MVA$/, 
+          length: 14,
+          description: "NO + 9 digits + MVA"
+        },
+        
         // Poland: PL + 10 digits
-        PL: { pattern: /^PL\d{10}$/, length: 12 },
+        PL: { 
+          pattern: /^PL\d{10}$/, 
+          length: 12,
+          description: "PL + 10 digits"
+        },
+        
         // Portugal: PT + 9 digits
-        PT: { pattern: /^PT\d{9}$/, length: 11 },
-        // Romania: RO + 2-10 digits
-        RO: { pattern: /^RO\d{2,10}$/, length: [4, 12] },
+        PT: { 
+          pattern: /^PT\d{9}$/, 
+          length: 11,
+          description: "PT + 9 digits"
+        },
+        
+        // Romania: RO + 10 digits
+        RO: { 
+          pattern: /^RO\d{10}$/, 
+          length: 12,
+          description: "RO + 10 digits"
+        },
+        
         // Slovakia: SK + 10 digits
-        SK: { pattern: /^SK\d{10}$/, length: 12 },
+        SK: { 
+          pattern: /^SK\d{10}$/, 
+          length: 12,
+          description: "SK + 10 digits"
+        },
+        
         // Slovenia: SI + 8 digits
-        SI: { pattern: /^SI\d{8}$/, length: 10 },
-        // Spain: ES + 1 character + 7 digits + 1 character
-        ES: { pattern: /^ES[A-Z0-9]\d{7}[A-Z0-9]$/, length: 11 },
+        SI: { 
+          pattern: /^SI\d{8}$/, 
+          length: 10,
+          description: "SI + 8 digits"
+        },
+        
+        // Spain: ES + 9 chars total - Includes 1 or 2 alphabetical chars
+        ES: { 
+          pattern: /^ES[A-Z0-9]\d{7}[A-Z0-9]$/, 
+          length: 11,
+          description: "ES + letter/digit + 7 digits + letter/digit"
+        },
+        
         // Sweden: SE + 12 digits
-        SE: { pattern: /^SE\d{12}$/, length: 14 },
-        // Switzerland: CHE + 9 digits + TVA/MWST/IVA
-        CH: { pattern: /^CHE\d{9}(TVA|MWST|IVA)$/, length: 15 },
-        // United Kingdom: GB + 9 or 12 digits
-        GB: { pattern: /^GB(\d{9}|\d{12})$/, length: [11, 14] }
+        SE: { 
+          pattern: /^SE\d{12}$/, 
+          length: 14,
+          description: "SE + 12 digits"
+        },
+        
+        // Switzerland (non-EU): CHE + 9 digits + MWST/TVA/IVA
+        CH: { 
+          pattern: /^CHE\d{9}(MWST|TVA|IVA)$/, 
+          length: [16, 15, 15],
+          description: "CHE + 9 digits + MWST/TVA/IVA"
+        },
+        
+        // United Kingdom (non-EU): GB + 9 digits
+        GB: { 
+          pattern: /^GB\d{9}$/, 
+          length: 11,
+          description: "GB + 9 digits"
+        }
       };
       
       // Detect country from VAT number
-      const detectedCountry = cleanVat.substring(0, 2);
+      let detectedCountry = cleanVat.substring(0, 2);
+      
+      // Special cases
+      if (cleanVat.startsWith('CHE')) {
+        detectedCountry = 'CH';
+      }
+      
       const vatRule = vatPatterns[detectedCountry];
       
       if (!vatRule) {
@@ -2437,36 +2594,141 @@
           if (value.length >= 2) {
             const countryCode = value.substring(0, 2);
             
-            // Apply country-specific formatting and limits
+// Apply country-specific formatting and limits (official EU formats)
             switch (countryCode) {
-              case 'PT': // Portugal: PT + 9 digits = 11 total
-                value = 'PT' + value.substring(2).replace(/\D/g, '');
+              case 'AT': // Austria: ATU + 8 digits = 11 total
+                if (value.length > 2) {
+                  value = 'ATU' + value.substring(3).replace(/\D/g, '');
+                } else {
+                  value = 'ATU';
+                }
                 if (value.length > 11) value = value.substring(0, 11);
                 break;
-              case 'ES': // Spain: ES + char + 7 digits + char = 11 total
-                value = 'ES' + value.substring(2);
+              case 'BE': // Belgium: BE + 10 digits = 12 total (or BE0 + 9 digits)
+                value = 'BE' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'BG': // Bulgaria: BG + 9-10 digits = 11-12 total
+                value = 'BG' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'HR': // Croatia: HR + 11 digits = 13 total
+                value = 'HR' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 13) value = value.substring(0, 13);
+                break;
+              case 'CY': // Cyprus: CY + 8 digits + 1 letter = 11 total
+                value = 'CY' + value.substring(2);
                 if (value.length > 11) value = value.substring(0, 11);
                 break;
-              case 'DE': // Germany: DE + 9 digits = 11 total
-                value = 'DE' + value.substring(2).replace(/\D/g, '');
+              case 'CZ': // Czech: CZ + 8-10 digits = 10-12 total
+                value = 'CZ' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'DK': // Denmark: DK + 8 digits = 10 total
+                value = 'DK' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                break;
+              case 'EE': // Estonia: EE + 9 digits = 11 total
+                value = 'EE' + value.substring(2).replace(/\D/g, '');
                 if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'FI': // Finland: FI + 8 digits = 10 total
+                value = 'FI' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
                 break;
               case 'FR': // France: FR + 2 chars + 9 digits = 13 total
                 value = 'FR' + value.substring(2);
                 if (value.length > 13) value = value.substring(0, 13);
                 break;
+              case 'DE': // Germany: DE + 9 digits = 11 total
+                value = 'DE' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'EL':
+              case 'GR': // Greece: EL + 9 digits = 11 total
+                value = 'EL' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'HU': // Hungary: HU + 8 digits = 10 total
+                value = 'HU' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                break;
+              case 'IE': // Ireland: IE + 7 digits + 1-2 letters = 10-11 total
+                value = 'IE' + value.substring(2);
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
               case 'IT': // Italy: IT + 11 digits = 13 total
                 value = 'IT' + value.substring(2).replace(/\D/g, '');
                 if (value.length > 13) value = value.substring(0, 13);
+                break;
+              case 'LV': // Latvia: LV + 11 digits = 13 total
+                value = 'LV' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 13) value = value.substring(0, 13);
+                break;
+              case 'LT': // Lithuania: LT + 9 or 12 digits = 11 or 14 total
+                value = 'LT' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 14) value = value.substring(0, 14);
+                break;
+              case 'LU': // Luxembourg: LU + 8 digits = 10 total
+                value = 'LU' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                break;
+              case 'MT': // Malta: MT + 8 digits = 10 total
+                value = 'MT' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
                 break;
               case 'NL': // Netherlands: NL + 9 digits + B + 2 digits = 14 total
                 let nlValue = 'NL' + value.substring(2).replace(/[^0-9B]/g, '');
                 if (nlValue.length > 14) nlValue = nlValue.substring(0, 14);
                 value = nlValue;
                 break;
+              case 'NO': // Norway: NO + 9 digits + MVA = 14 total
+                value = 'NO' + value.substring(2).replace(/[^0-9MVA]/g, '');
+                if (value.length > 14) value = value.substring(0, 14);
+                break;
+              case 'PL': // Poland: PL + 10 digits = 12 total
+                value = 'PL' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'PT': // Portugal: PT + 9 digits = 11 total
+                value = 'PT' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'RO': // Romania: RO + 10 digits = 12 total
+                value = 'RO' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'SK': // Slovakia: SK + 10 digits = 12 total
+                value = 'SK' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 12) value = value.substring(0, 12);
+                break;
+              case 'SI': // Slovenia: SI + 8 digits = 10 total
+                value = 'SI' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                break;
+              case 'ES': // Spain: ES + 9 chars total (letters allowed)
+                value = 'ES' + value.substring(2);
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
+              case 'SE': // Sweden: SE + 12 digits = 14 total
+                value = 'SE' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 14) value = value.substring(0, 14);
+                break;
+              case 'CH': // Switzerland: CHE + 9 digits + MWST/TVA/IVA
+                if (value.startsWith('CHE')) {
+                  value = 'CHE' + value.substring(3).replace(/[^0-9MWSTVAIV]/g, '');
+                } else {
+                  value = 'CHE';
+                }
+                if (value.length > 16) value = value.substring(0, 16);
+                break;
+              case 'GB': // UK: GB + 9 digits = 11 total
+                value = 'GB' + value.substring(2).replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                break;
               default:
-                // Limit to 15 characters max for any VAT
-                if (value.length > 15) value = value.substring(0, 15);
+                // Limit to 16 characters max for any VAT
+                if (value.length > 16) value = value.substring(0, 16);
             }
           } else if (/^\d/.test(value)) {
             // For EIN (US): only digits, max 9
