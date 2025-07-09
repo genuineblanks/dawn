@@ -3882,7 +3882,6 @@
     }
 
   // Global instances initialization
-  const state = new TechPackState();
   const debugSystem = new DebugSystem();
   const animationManager = new AnimationManager();
   const validator = new FormValidator();
