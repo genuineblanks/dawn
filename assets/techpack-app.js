@@ -377,58 +377,98 @@
       return regex.test(phone);
     },
 
-    validateVAT(vat) {
+    validateVAT(vat, countryCode = null) {
       if (!vat || !vat.trim()) return false;
       
-      const cleanVat = vat.trim().replace(/[\s\-]/g, ''); // Remove spaces and hyphens
+      const cleanVat = vat.trim().replace(/[\s\-\.]/g, '').toUpperCase();
       
-      // Basic VAT validation: Must contain numbers and be reasonable length
-      if (cleanVat.length < 8 || cleanVat.length > 15) {
-        return false;
-      }
-      
-      // Must contain at least some numbers
-      if (!/\d/.test(cleanVat)) {
-        return false;
-      }
-      
-      // European VAT patterns
+      // European VAT number patterns (exact formats)
       const vatPatterns = {
-        // Portugal: PT123456789
-        PT: /^PT\d{9}$/,
-        // Spain: ESA12345674
-        ES: /^ES[A-Z0-9]\d{8}$/,
-        // France: FR12345678901
-        FR: /^FR\d{11}$/,
-        // Germany: DE123456789
-        DE: /^DE\d{9}$/,
-        // Italy: IT12345678901
-        IT: /^IT\d{11}$/,
-        // Netherlands: NL123456789B01
-        NL: /^NL\d{9}B\d{2}$/,
-        // Belgium: BE0123456789
-        BE: /^BE0?\d{9}$/,
-        // Austria: ATU12345678
-        AT: /^ATU\d{8}$/,
-        // Generic pattern for other EU countries
-        GENERIC: /^[A-Z]{2}[A-Z0-9]{8,12}$/
+        // Austria: ATU + 8 digits
+        AT: { pattern: /^ATU\d{8}$/, length: 11 },
+        // Belgium: BE0 + 9 digits OR BE + 10 digits
+        BE: { pattern: /^BE0?\d{9}$/, length: [10, 12] },
+        // Bulgaria: BG + 9 or 10 digits
+        BG: { pattern: /^BG\d{9,10}$/, length: [11, 12] },
+        // Croatia: HR + 11 digits
+        HR: { pattern: /^HR\d{11}$/, length: 13 },
+        // Cyprus: CY + 8 digits + 1 letter
+        CY: { pattern: /^CY\d{8}[A-Z]$/, length: 11 },
+        // Czech Republic: CZ + 8-10 digits
+        CZ: { pattern: /^CZ\d{8,10}$/, length: [10, 11, 12] },
+        // Denmark: DK + 8 digits
+        DK: { pattern: /^DK\d{8}$/, length: 10 },
+        // Estonia: EE + 9 digits
+        EE: { pattern: /^EE\d{9}$/, length: 11 },
+        // Finland: FI + 8 digits
+        FI: { pattern: /^FI\d{8}$/, length: 10 },
+        // France: FR + 2 characters + 9 digits
+        FR: { pattern: /^FR[A-HJ-NP-Z0-9]{2}\d{9}$/, length: 13 },
+        // Germany: DE + 9 digits
+        DE: { pattern: /^DE\d{9}$/, length: 11 },
+        // Greece: EL + 9 digits
+        GR: { pattern: /^EL\d{9}$/, length: 11 },
+        EL: { pattern: /^EL\d{9}$/, length: 11 },
+        // Hungary: HU + 8 digits
+        HU: { pattern: /^HU\d{8}$/, length: 10 },
+        // Iceland: IS + 5 or 6 digits
+        IS: { pattern: /^IS\d{5,6}$/, length: [7, 8] },
+        // Ireland: IE + 7 digits + 1 letter + optional 1 letter/digit
+        IE: { pattern: /^IE\d{7}[A-Z][A-Z0-9]?$/, length: [10, 11] },
+        // Italy: IT + 11 digits
+        IT: { pattern: /^IT\d{11}$/, length: 13 },
+        // Latvia: LV + 11 digits
+        LV: { pattern: /^LV\d{11}$/, length: 13 },
+        // Lithuania: LT + 9 or 12 digits
+        LT: { pattern: /^LT(\d{9}|\d{12})$/, length: [11, 14] },
+        // Luxembourg: LU + 8 digits
+        LU: { pattern: /^LU\d{8}$/, length: 10 },
+        // Malta: MT + 8 digits
+        MT: { pattern: /^MT\d{8}$/, length: 10 },
+        // Netherlands: NL + 9 digits + B + 2 digits
+        NL: { pattern: /^NL\d{9}B\d{2}$/, length: 14 },
+        // Norway: NO + 9 digits
+        NO: { pattern: /^NO\d{9}$/, length: 11 },
+        // Poland: PL + 10 digits
+        PL: { pattern: /^PL\d{10}$/, length: 12 },
+        // Portugal: PT + 9 digits
+        PT: { pattern: /^PT\d{9}$/, length: 11 },
+        // Romania: RO + 2-10 digits
+        RO: { pattern: /^RO\d{2,10}$/, length: [4, 12] },
+        // Slovakia: SK + 10 digits
+        SK: { pattern: /^SK\d{10}$/, length: 12 },
+        // Slovenia: SI + 8 digits
+        SI: { pattern: /^SI\d{8}$/, length: 10 },
+        // Spain: ES + 1 character + 7 digits + 1 character
+        ES: { pattern: /^ES[A-Z0-9]\d{7}[A-Z0-9]$/, length: 11 },
+        // Sweden: SE + 12 digits
+        SE: { pattern: /^SE\d{12}$/, length: 14 },
+        // Switzerland: CHE + 9 digits + TVA/MWST/IVA
+        CH: { pattern: /^CHE\d{9}(TVA|MWST|IVA)$/, length: 15 },
+        // United Kingdom: GB + 9 or 12 digits
+        GB: { pattern: /^GB(\d{9}|\d{12})$/, length: [11, 14] }
       };
       
-      // Check if it starts with a country code
-      const countryCode = cleanVat.substring(0, 2).toUpperCase();
+      // Detect country from VAT number
+      const detectedCountry = cleanVat.substring(0, 2);
+      const vatRule = vatPatterns[detectedCountry];
       
-      if (vatPatterns[countryCode]) {
-        return vatPatterns[countryCode].test(cleanVat.toUpperCase());
+      if (!vatRule) {
+        // For non-EU countries, allow EIN format (US): 9 digits
+        if (/^\d{9}$/.test(cleanVat)) {
+          return true; // Valid EIN
+        }
+        return false;
       }
       
-      // For non-EU countries (EIN format): 12-3456789
-      if (countryCode.match(/^\d{2}$/)) {
-        // US EIN format: XX-XXXXXXX
-        return /^\d{2}\d{7}$/.test(cleanVat) && cleanVat.length === 9;
+      // Check length
+      const validLengths = Array.isArray(vatRule.length) ? vatRule.length : [vatRule.length];
+      if (!validLengths.includes(cleanVat.length)) {
+        return false;
       }
       
-      // Fallback: Generic validation
-      return vatPatterns.GENERIC.test(cleanVat.toUpperCase());
+      // Check pattern
+      return vatRule.pattern.test(cleanVat);
     },
 
     sanitizeInput(input) {
