@@ -1260,28 +1260,49 @@
       let isValid = true;
       const garmentElements = document.querySelectorAll('.techpack-garment');
     
-      // Validate each garment in the DOM
+      // CRITICAL: First sync all DOM values to state to preserve selections
+      garmentElements.forEach((garmentElement) => {
+        const garmentId = garmentElement.dataset.garmentId;
+        const garmentData = state.formData.garments.find(g => g.id === garmentId);
+        
+        if (garmentData) {
+          // Preserve garment type selection
+          const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+          if (garmentTypeSelect?.value) {
+            garmentData.type = garmentTypeSelect.value;
+          }
+          
+          // Preserve fabric type selection
+          const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+          if (fabricSelect?.value) {
+            garmentData.fabric = fabricSelect.value;
+          }
+          
+          // Preserve printing methods selection
+          const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
+          if (printingCheckboxes.length > 0) {
+            garmentData.printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
+          }
+        }
+      });
+    
+      // Now validate each garment
       garmentElements.forEach((garmentElement, index) => {
         const garmentId = garmentElement.dataset.garmentId;
+        const garmentData = state.formData.garments.find(g => g.id === garmentId);
         
         // Check garment type
         const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
         const garmentTypeGroup = garmentTypeSelect?.closest('.techpack-form__group');
         const garmentTypeError = garmentTypeGroup?.querySelector('.techpack-form__error');
         
-        if (!garmentTypeSelect?.value) {
+        if (!garmentTypeSelect?.value && (!garmentData?.type)) {
           isValid = false;
           if (garmentTypeGroup) garmentTypeGroup.classList.add('techpack-form__group--error');
           if (garmentTypeError) garmentTypeError.textContent = 'Please select a garment type';
         } else {
           if (garmentTypeGroup) garmentTypeGroup.classList.remove('techpack-form__group--error');
           if (garmentTypeError) garmentTypeError.textContent = '';
-          
-          // Update state when validation passes
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            garmentData.type = garmentTypeSelect.value;
-          }
         }
     
         // Check fabric type
@@ -1289,19 +1310,13 @@
         const fabricGroup = fabricSelect?.closest('.techpack-form__group');
         const fabricError = fabricGroup?.querySelector('.techpack-form__error');
         
-        if (!fabricSelect?.value) {
+        if (!fabricSelect?.value && (!garmentData?.fabric)) {
           isValid = false;
           if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
           if (fabricError) fabricError.textContent = 'Please select a fabric type';
         } else {
           if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
           if (fabricError) fabricError.textContent = '';
-          
-          // Update state when validation passes
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            garmentData.fabric = fabricSelect.value;
-          }
         }
     
         // Check printing methods
@@ -1309,19 +1324,13 @@
         const printingGroup = garmentElement.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
         const printingError = printingGroup?.querySelector('.techpack-form__error');
         
-        if (printingCheckboxes.length === 0) {
+        if (printingCheckboxes.length === 0 && (!garmentData?.printingMethods || garmentData.printingMethods.length === 0)) {
           isValid = false;
           if (printingGroup) printingGroup.classList.add('techpack-form__group--error');
           if (printingError) printingError.textContent = 'Please select at least one printing method';
         } else {
           if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
           if (printingError) printingError.textContent = '';
-          
-          // Update state when validation passes
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            garmentData.printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
-          }
         }
     
         // Check colorway quantities
