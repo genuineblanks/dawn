@@ -1549,7 +1549,7 @@
     
       const headerHtml = `
         <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Client Information</h3>
+          <h3 style="margin: 0;">Uploaded Files</h3>
         </div>
       `;
     
@@ -1581,7 +1581,7 @@
     
       const headerHtml = `
         <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Client Information</h3>
+          <h3 style="margin: 0;">Garment Specifications</h3>
         </div>
       `;
     
@@ -3299,34 +3299,41 @@
         });
       }
 
-      // Alternative approach: Use event delegation for dynamically created edit buttons
+    setupEditButtons() {
+      // Use event delegation to catch ALL edit button clicks
       document.addEventListener('click', (e) => {
-        // Check if clicked element is an edit button
-        if (e.target.matches('.edit-btn, [data-edit], .techpack-edit-btn') || 
-            e.target.closest('.edit-btn, [data-edit], .techpack-edit-btn')) {
-          
-          const button = e.target.matches('.edit-btn, [data-edit], .techpack-edit-btn') ? 
-                        e.target : e.target.closest('.edit-btn, [data-edit], .techpack-edit-btn');
-          
+        // Check if clicked element is an edit button (be more flexible with selectors)
+        const editButton = e.target.closest('button');
+        
+        if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
           e.preventDefault();
+          e.stopPropagation();
           
-          // Determine which step to edit based on button attributes or text
-          const editType = button.dataset.edit || 
-                          button.getAttribute('data-edit') ||
-                          button.textContent.toLowerCase();
+          // Find which review section this button belongs to
+          const reviewStep1 = editButton.closest('#review-step-1');
+          const reviewStep2 = editButton.closest('#review-step-2');
+          const reviewStep3 = editButton.closest('#review-step-3');
           
           let targetStep = 1;
           
-          if (editType.includes('client') || editType.includes('information') || editType.includes('step-1')) {
+          if (reviewStep1) {
             targetStep = 1;
-          } else if (editType.includes('file') || editType.includes('upload') || editType.includes('step-2')) {
+            debugSystem.log('Edit client info clicked');
+          } else if (reviewStep2) {
             targetStep = 2;
-          } else if (editType.includes('garment') || editType.includes('specification') || editType.includes('step-3')) {
+            debugSystem.log('Edit files clicked');
+          } else if (reviewStep3) {
             targetStep = 3;
+            debugSystem.log('Edit garments clicked');
           }
           
+          // Navigate to the target step
           stepManager.navigateToStep(targetStep);
-          debugSystem.log('Edit button clicked via delegation', { editType, targetStep });
+          
+          debugSystem.log('Edit button clicked via delegation', { 
+            targetStep,
+            buttonText: editButton.textContent 
+          });
         }
       });
 
