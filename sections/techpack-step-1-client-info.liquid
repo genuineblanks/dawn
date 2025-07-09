@@ -1,5 +1,5 @@
 {% comment %}
-Tech-Pack Pre-Step: Client Registration Check
+Tech-Pack Pre-Step: Client Registration Check - Premium Design
 {% endcomment %}
 
 <section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
@@ -29,81 +29,103 @@ Tech-Pack Pre-Step: Client Registration Check
     </div>
 
     <div class="techpack-content">
-      <div class="techpack-registration-welcome">
-        <div class="techpack-registration-welcome__icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </div>
-        
-        <h2 class="techpack-title">Welcome to Tech-Pack Submission</h2>
-        <p class="techpack-subtitle">Let's get started by confirming your client status</p>
-      </div>
-
-      <div class="techpack-registration-check">
-        <div class="techpack-registration-check__card">
-          <h3 class="techpack-registration-check__question">Are you a registered client?</h3>
-          
-          <div class="techpack-registration-check__options">
-            <div class="techpack-registration-check__option">
-              <div class="techpack-registration-check__option-icon techpack-registration-check__option-icon--yes">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-              </div>
-              <div class="techpack-registration-check__option-content">
-                <h4>Yes, I'm registered</h4>
-                <p>I've worked with you before and you have my information on file</p>
-                <button type="button" class="techpack-btn techpack-btn--primary" id="registered-client-yes">
-                  Continue as Registered Client
-                  <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
-                    <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            <div class="techpack-registration-check__divider">
-              <span>or</span>
-            </div>
-            
-            <div class="techpack-registration-check__option">
-              <div class="techpack-registration-check__option-icon techpack-registration-check__option-icon--no">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                  <path d="M12 12v4"/>
-                  <path d="M12 8h.01"/>
-                </svg>
-              </div>
-              <div class="techpack-registration-check__option-content">
-                <h4>No, I'm new</h4>
-                <p>This is my first time working with you</p>
-                <button type="button" class="techpack-btn techpack-btn--secondary" id="registered-client-no">
-                  Continue as New Client
-                  <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
-                    <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
+      <div class="techpack-premium-welcome">
+        <div class="techpack-premium-welcome__header">
+          <div class="techpack-premium-welcome__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
+            </svg>
           </div>
+          <h2 class="techpack-title">Welcome to Tech-Pack Submission</h2>
+          <p class="techpack-subtitle">Before we begin, let's confirm your account status</p>
+        </div>
 
-          <div class="techpack-registration-check__warning" id="registration-warning" style="display: none;">
-            <div class="techpack-registration-check__warning-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
-              </svg>
+        <div class="techpack-premium-check">
+          <div class="techpack-premium-check__card">
+            <div class="techpack-premium-check__header">
+              <h3>Account Verification</h3>
+              <p>Have you previously ordered samples from us?</p>
             </div>
-            <div class="techpack-registration-check__warning-content">
-              <strong>Important Notice:</strong> If you're not actually registered in our client database, 
-              your tech-pack submission will be automatically rejected. Please select "No, I'm new" if you're unsure.
+
+            <div class="techpack-premium-check__content">
+              <div class="techpack-premium-check__info">
+                <div class="techpack-premium-check__info-item">
+                  <div class="techpack-premium-check__info-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                  </div>
+                  <span>Sample orders include email registration</span>
+                </div>
+                <div class="techpack-premium-check__info-item">
+                  <div class="techpack-premium-check__info-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                  </div>
+                  <span>Company details already on file</span>
+                </div>
+                <div class="techpack-premium-check__info-item">
+                  <div class="techpack-premium-check__info-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                  </div>
+                  <span>Streamlined submission process</span>
+                </div>
+              </div>
+
+              <div class="techpack-premium-check__actions">
+                <button type="button" class="techpack-premium-btn techpack-premium-btn--primary" id="registered-client-yes">
+                  <div class="techpack-premium-btn__content">
+                    <div class="techpack-premium-btn__icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                    </div>
+                    <div class="techpack-premium-btn__text">
+                      <span class="techpack-premium-btn__title">Yes, I've ordered samples</span>
+                      <span class="techpack-premium-btn__subtitle">Continue with registered account</span>
+                    </div>
+                  </div>
+                </button>
+
+                <div class="techpack-premium-check__divider">
+                  <span>or</span>
+                </div>
+
+                <button type="button" class="techpack-premium-btn techpack-premium-btn--secondary" id="registered-client-no">
+                  <div class="techpack-premium-btn__content">
+                    <div class="techpack-premium-btn__icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </div>
+                    <div class="techpack-premium-btn__text">
+                      <span class="techpack-premium-btn__title">No, this is my first order</span>
+                      <span class="techpack-premium-btn__subtitle">Complete full registration</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              <div class="techpack-premium-check__warning" id="registration-warning" style="display: none;">
+                <div class="techpack-premium-check__warning-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </div>
+                <div class="techpack-premium-check__warning-content">
+                  <strong>Verification Notice:</strong> Your submission will be cross-referenced with our sample order database. 
+                  If no prior sample order is found, your tech-pack will be rejected. Please select "No, this is my first order" if unsure.
+                </div>
+              </div>
             </div>
           </div>
         </div>
