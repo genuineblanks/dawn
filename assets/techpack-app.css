@@ -936,109 +936,13 @@ body {
   border-color: var(--techpack-error);
 }
 
-/* Premium Size Grid */
+/* Premium Size Grid - FINAL WORKING VERSION */
 .techpack-size-grid {
   margin-bottom: var(--techpack-space-xl);
   background: var(--techpack-bg-secondary);
   border-radius: var(--techpack-radius-lg);
   overflow: hidden;
   border: 1px solid var(--techpack-border-light);
-}/* Premium Size Grid - Enhanced with Quantity-Based Validation */
-.techpack-size-grid__input {
-  width: 100%;
-  padding: var(--techpack-space-lg);
-  border: none;
-  background: var(--techpack-bg);
-  text-align: center;
-  font-size: 0.875rem;
-  font-weight: var(--techpack-font-weight-medium);
-  color: var(--techpack-text);
-  transition: var(--techpack-transition);
-  font-family: var(--techpack-font-family);
-}
-
-/* Default neutral styling - no color until validation kicks in */
-.techpack-size-grid__input {
-  background: var(--techpack-bg) !important;
-  color: var(--techpack-text) !important;
-  border: 1px solid var(--techpack-border) !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
-}
-
-/* RED styling for empty fields when under minimum */
-.techpack-size-grid__input.quantity-empty {
-  background: rgba(220, 38, 38, 0.08) !important;
-  color: #dc2626 !important;
-  border: 1px solid #dc2626 !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
-}
-
-/* ORANGE styling for progress towards minimum */
-.techpack-size-grid__input.quantity-progress {
-  background: rgba(249, 115, 22, 0.08) !important;
-  color: #ea580c !important;
-  border: 1px solid #ea580c !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
-}
-
-/* GREEN styling when minimum is reached */
-.techpack-size-grid__input.quantity-filled {
-  background: rgba(34, 197, 94, 0.08) !important;
-  color: #16a34a !important;
-  border: 1px solid #16a34a !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
-}
-
-/* PURPLE styling for excess sizes */
-.techpack-size-grid__input.quantity-excess {
-  background: rgba(147, 51, 234, 0.08) !important;
-  color: #7c3aed !important;
-  border: 1px solid #7c3aed !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
-  animation: excessPulse 2s infinite;
-}
-
-@keyframes excessPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* Focus styling - highest priority */
-.techpack-size-grid__input:focus {
-  outline: none !important;
-  background: var(--techpack-bg-tertiary) !important;
-  color: var(--techpack-primary) !important;
-  box-shadow: inset 0 0 0 2px var(--techpack-primary) !important;
-  border: 1px solid var(--techpack-primary) !important;
-}
-
-/* Size distribution warning messages */
-.size-distribution-warning {
-  display: none;
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-top: 0.75rem;
-  transition: all 0.3s ease;
-}
-
-.size-distribution-warning.warning {
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fbbf24;
-}
-
-.size-distribution-warning.info {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #3b82f6;
-}
-
-.size-distribution-warning.success {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #10b981;
 }
 
 .techpack-size-grid__header,
@@ -1061,30 +965,23 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* Premium Size Grid - Enhanced with Quantity-Based Validation */
-.techpack-size-grid__input {
+/* DEFAULT: All quantity inputs start with RED styling */
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input {
   width: 100%;
   padding: var(--techpack-space-lg);
   border: none;
-  background: var(--techpack-bg);
+  background: rgba(220, 38, 38, 0.08) !important;
+  color: #dc2626 !important;
+  border: 1px solid #dc2626 !important;
   text-align: center;
   font-size: 0.875rem;
-  font-weight: var(--techpack-font-weight-medium);
-  color: var(--techpack-text);
+  font-weight: var(--techpack-font-weight-semibold) !important;
   transition: var(--techpack-transition);
   font-family: var(--techpack-font-family);
 }
 
-/* RED styling for empty fields when under minimum */
-.techpack-size-grid__input.quantity-empty {
-  background: rgba(220, 38, 38, 0.08) !important;
-  color: var(--techpack-error) !important;
-  border: 1px solid var(--techpack-error) !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
-}
-
 /* ORANGE styling for progress towards minimum */
-.techpack-size-grid__input.quantity-progress {
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-progress {
   background: rgba(249, 115, 22, 0.08) !important;
   color: #ea580c !important;
   border: 1px solid #ea580c !important;
@@ -1092,15 +989,15 @@ body {
 }
 
 /* GREEN styling when minimum is reached */
-.techpack-size-grid__input.quantity-filled {
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-filled {
   background: rgba(34, 197, 94, 0.08) !important;
-  color: var(--techpack-success) !important;
-  border: 1px solid var(--techpack-success) !important;
+  color: #16a34a !important;
+  border: 1px solid #16a34a !important;
   font-weight: var(--techpack-font-weight-medium) !important;
 }
 
 /* PURPLE styling for excess sizes */
-.techpack-size-grid__input.quantity-excess {
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-excess {
   background: rgba(147, 51, 234, 0.08) !important;
   color: #7c3aed !important;
   border: 1px solid #7c3aed !important;
@@ -1113,9 +1010,9 @@ body {
   50% { opacity: 0.7; }
 }
 
-/* Focus styling */
-.techpack-size-grid__input:focus {
-  outline: none;
+/* Focus styling - HIGHEST PRIORITY */
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input:focus {
+  outline: none !important;
   background: var(--techpack-bg-tertiary) !important;
   color: var(--techpack-primary) !important;
   box-shadow: inset 0 0 0 2px var(--techpack-primary) !important;
