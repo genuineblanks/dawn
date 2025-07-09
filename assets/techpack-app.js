@@ -3248,98 +3248,46 @@
     }
 
     setupEditButtons() {
-      // Find existing edit buttons in review sections and make them work
-      const reviewSections = [
-        { selector: '#review-step-1', step: 1, type: 'client' },
-        { selector: '#review-step-2', step: 2, type: 'files' },
-        { selector: '#review-step-3', step: 3, type: 'garments' }
-      ];
-
-      reviewSections.forEach(section => {
-        const container = document.querySelector(section.selector);
-        if (container) {
-          // Find any existing edit button in this section
-          const existingEditBtn = container.querySelector('button, .edit-btn, [data-edit]');
-          if (existingEditBtn) {
-            // Remove any existing onclick handlers
-            existingEditBtn.removeAttribute('onclick');
-            existingEditBtn.onclick = null;
-            
-            // Add our navigation handler
-            existingEditBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              stepManager.navigateToStep(section.step);
-              debugSystem.log(`Edit ${section.type} clicked`);
-            });
-            
-            debugSystem.log(`Setup edit button for ${section.type}`);
+      // Use event delegation to catch ALL edit button clicks
+      document.addEventListener('click', (e) => {
+        // Check if clicked element is an edit button (be more flexible with selectors)
+        const editButton = e.target.closest('button');
+        
+        if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Find which review section this button belongs to
+          const reviewStep1 = editButton.closest('#review-step-1');
+          const reviewStep2 = editButton.closest('#review-step-2');
+          const reviewStep3 = editButton.closest('#review-step-3');
+          
+          let targetStep = 1;
+          
+          if (reviewStep1) {
+            targetStep = 1;
+            debugSystem.log('Edit client info clicked');
+          } else if (reviewStep2) {
+            targetStep = 2;
+            debugSystem.log('Edit files clicked');
+          } else if (reviewStep3) {
+            targetStep = 3;
+            debugSystem.log('Edit garments clicked');
           }
+          
+          // Navigate to the target step
+          stepManager.navigateToStep(targetStep);
+          
+          debugSystem.log('Edit button clicked via delegation', { 
+            targetStep,
+            buttonText: editButton.textContent 
+          });
         }
       });
 
-      // Files Edit Button  
-      const editFilesBtn = document.querySelector('[data-edit="files"], .edit-files-btn, button[onclick*="files"], button[onclick*="step-2"]');
-      if (editFilesBtn) {
-        editFilesBtn.removeAttribute('onclick');
-        editFilesBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          stepManager.navigateToStep(2);
-          debugSystem.log('Edit files clicked');
-        });
-      }
-
-      // Garments Edit Button
-      const editGarmentsBtn = document.querySelector('[data-edit="garments"], .edit-garments-btn, button[onclick*="garments"], button[onclick*="step-3"]');
-      if (editGarmentsBtn) {
-        editGarmentsBtn.removeAttribute('onclick');
-        editGarmentsBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          stepManager.navigateToStep(3);
-          debugSystem.log('Edit garments clicked');
-        });
-      }
-
-      setupEditButtons() {
-        // Use event delegation to catch ALL edit button clicks
-        document.addEventListener('click', (e) => {
-          // Check if clicked element is an edit button (be more flexible with selectors)
-          const editButton = e.target.closest('button');
-          
-          if (editButton && editButton.textContent.toLowerCase().includes('edit')) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Find which review section this button belongs to
-            const reviewStep1 = editButton.closest('#review-step-1');
-            const reviewStep2 = editButton.closest('#review-step-2');
-            const reviewStep3 = editButton.closest('#review-step-3');
-            
-            let targetStep = 1;
-            
-            if (reviewStep1) {
-              targetStep = 1;
-              debugSystem.log('Edit client info clicked');
-            } else if (reviewStep2) {
-              targetStep = 2;
-              debugSystem.log('Edit files clicked');
-            } else if (reviewStep3) {
-              targetStep = 3;
-              debugSystem.log('Edit garments clicked');
-            }
-            
-            // Navigate to the target step
-            stepManager.navigateToStep(targetStep);
-            
-            debugSystem.log('Edit button clicked via delegation', { 
-              targetStep,
-              buttonText: editButton.textContent 
-            });
-          }
-        });
-  
-        debugSystem.log('Edit buttons setup complete');
-      }
+      debugSystem.log('Edit buttons setup complete');
     }
+
     setupFormSubmission() {
       const submitBtn = document.querySelector('#step-4-submit');
       if (submitBtn) {
