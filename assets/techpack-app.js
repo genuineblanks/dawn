@@ -3827,6 +3827,7 @@
   const state = new TechPackState();
 
   // Global instances initialization
+  const animationManager = new AnimationManager();
   const stepManager = new StepManager();
   const fileManager = new FileManager();
   const countrySelector = new CountrySelector();
