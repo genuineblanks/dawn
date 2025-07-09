@@ -3480,10 +3480,51 @@
         </div>
       `;
     
-      // IMPORTANT: Scroll to center the thank you page after it's rendered
+      // IMPORTANT: Wait for DOM to be fully updated, then scroll to the new content
       setTimeout(() => {
-        this.scrollToTechPackTopEnhanced();
-      }, 500);
+        // First try to find the new thank you page elements
+        const thankYouContainer = document.querySelector('.techpack-success-page');
+        const thankYouTitle = document.querySelector('.techpack-success__title');
+        const techPackStep4 = document.querySelector('#techpack-step-4');
+        
+        let targetElement = null;
+        
+        // Try to find the best element to scroll to
+        if (thankYouContainer) {
+          targetElement = thankYouContainer;
+          debugSystem.log('Found thank you container for scroll');
+        } else if (thankYouTitle) {
+          targetElement = thankYouTitle;
+          debugSystem.log('Found thank you title for scroll');
+        } else if (techPackStep4) {
+          targetElement = techPackStep4;
+          debugSystem.log('Found step 4 container for scroll');
+        }
+        
+        if (targetElement) {
+          // Scroll directly to the thank you page
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+          
+          // Add small offset
+          setTimeout(() => {
+            const currentScroll = window.pageYOffset;
+            window.scrollTo({
+              top: currentScroll - 60,
+              behavior: 'smooth'
+            });
+          }, 500);
+          
+          debugSystem.log('Scrolled to thank you page');
+        } else {
+          // Fallback: use the enhanced scroll function
+          debugSystem.log('Using fallback scroll for thank you page');
+          this.scrollToTechPackTopEnhanced();
+        }
+      }, 800); // Longer delay to ensure DOM is fully updated
     }
 
     showStep(stepNumber) {
