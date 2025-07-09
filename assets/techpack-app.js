@@ -2381,7 +2381,6 @@
       }
     }
 
-    // Replace the problematic section around lines 880-920 with:
     updateColorwayValidationMessages() {
       const garments = document.querySelectorAll('.techpack-garment');
       
@@ -2401,9 +2400,13 @@
           
           if (colorwayTotal < requiredPerColorway) {
             const remaining = requiredPerColorway - colorwayTotal;
-            const message = colorwayCountInGarment === 1 
-              ? `⚠️ Need ${remaining} more units (75 minimum for single colorway)`
-              : `⚠️ Need ${remaining} more units (50 minimum per colorway)`;
+            let message;
+            
+            if (colorwayCountInGarment === 1) {
+              message = `⚠️ Need ${remaining} more units (75 minimum for single colorway)`;
+            } else {
+              message = `⚠️ Need ${remaining} more units (50 minimum per colorway when multiple colorways)`;
+            }
             
             warningEl.innerHTML = message;
             warningEl.style.display = 'block';
@@ -2414,8 +2417,9 @@
               totalEl.style.cssText = 'color: #ef4444 !important; font-weight: bold !important; background: #fef2f2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;';
             }
           } else {
+            const minimumText = colorwayCountInGarment === 1 ? '75' : '50';
             warningEl.style.display = 'block';
-            warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${requiredPerColorway})`;
+            warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${minimumText} ${colorwayCountInGarment === 1 ? 'for single colorway' : 'per colorway'})`;
             warningEl.className = 'colorway-minimum-warning success';
             
             const totalEl = colorway.querySelector('.techpack-colorway__total-value');
