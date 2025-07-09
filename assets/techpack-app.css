@@ -1005,6 +1005,14 @@ body {
   animation: excessPulse 2s infinite;
 }
 
+/* GRAY/NEUTRAL styling for empty fields when minimum is already reached */
+.techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-neutral {
+  background: var(--techpack-bg-secondary) !important;
+  color: var(--techpack-text-muted) !important;
+  border: 1px solid var(--techpack-border) !important;
+  font-weight: var(--techpack-font-weight-normal) !important;
+}
+
 @keyframes excessPulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
