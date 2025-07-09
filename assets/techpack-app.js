@@ -2995,7 +2995,7 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-    // SAFE: Registration setup with stepManager availability check
+    // UPDATED: Better registration logic with sample order context
     setupRegistrationCheck() {
       const yesBtn = document.querySelector('#registered-client-yes');
       const noBtn = document.querySelector('#registered-client-no');
@@ -3004,8 +3004,7 @@
       debugSystem.log('Setting up registration check', { 
         yesBtn: !!yesBtn, 
         noBtn: !!noBtn, 
-        warningDiv: !!warningDiv,
-        stepManagerAvailable: typeof stepManager !== 'undefined'
+        warningDiv: !!warningDiv 
       });
 
       if (yesBtn && noBtn) {
@@ -3025,8 +3024,17 @@
             state.formData.hasOrderedSamples = true;
             this.configureStep1ForRegisteredClient(); // FEWER FIELDS
             
-            // SAFE navigation with fallback
-            this.safeNavigateToStep(1);
+            // Try navigation with fallback
+            const navigationSuccess = stepManager.navigateToStep(1);
+            if (!navigationSuccess) {
+              debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+              stepManager.debugTestNavigation(1);
+            }
+            
+            // Add scroll after navigation
+            setTimeout(() => {
+              stepManager.scrollToTechPackTopEnhanced();
+            }, 600);
           }, 2000); // 2 second delay to show warning
         });
 
@@ -3038,66 +3046,22 @@
           state.formData.hasOrderedSamples = false;
           this.configureStep1ForNewClient(); // ALL FIELDS
           
-          // SAFE navigation with fallback
-          this.safeNavigateToStep(1);
+          // Try navigation with fallback
+          const navigationSuccess = stepManager.navigateToStep(1);
+          if (!navigationSuccess) {
+            debugSystem.log('Navigation failed, trying direct method', null, 'warn');
+            stepManager.debugTestNavigation(1);
+          }
+          
+          // Add scroll after navigation
+          setTimeout(() => {
+            stepManager.scrollToTechPackTopEnhanced();
+          }, 600);
         });
 
         debugSystem.log('Registration check event listeners attached successfully');
       } else {
         debugSystem.log('Registration check buttons not found - will fallback to step 1', null, 'warn');
-      }
-    }
-
-    // NEW: Safe navigation method
-    safeNavigateToStep(targetStep) {
-      // Check if stepManager exists
-      if (typeof stepManager !== 'undefined' && stepManager.navigateToStep) {
-        debugSystem.log('Using stepManager for navigation');
-        const navigationSuccess = stepManager.navigateToStep(targetStep);
-        if (!navigationSuccess) {
-          debugSystem.log('StepManager navigation failed, trying direct method', null, 'warn');
-          this.directNavigateToStep(targetStep);
-        }
-      } else {
-        debugSystem.log('StepManager not available, using direct navigation', null, 'warn');
-        this.directNavigateToStep(targetStep);
-      }
-      
-      // Add scroll after navigation
-      setTimeout(() => {
-        if (typeof stepManager !== 'undefined' && stepManager.scrollToTechPackTopEnhanced) {
-          stepManager.scrollToTechPackTopEnhanced();
-        } else {
-          // Fallback scroll
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 600);
-    }
-
-    // NEW: Direct navigation fallback
-    directNavigateToStep(targetStep) {
-      debugSystem.log(`Direct navigation to step ${targetStep}`);
-      
-      // Hide all steps
-      const allSteps = document.querySelectorAll('.techpack-step');
-      allSteps.forEach(step => {
-        step.style.display = 'none';
-      });
-      
-      // Show target step
-      let targetElement = null;
-      if (targetStep === 0) {
-        targetElement = document.querySelector('#techpack-step-0');
-      } else {
-        targetElement = document.querySelector(`[data-step="${targetStep}"]`);
-      }
-      
-      if (targetElement) {
-        targetElement.style.display = 'block';
-        state.currentStep = targetStep;
-        debugSystem.log(`Successfully showed step ${targetStep} directly`);
-      } else {
-        debugSystem.log(`Could not find step ${targetStep} element`, null, 'error');
       }
     }
 
