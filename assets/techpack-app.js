@@ -3000,9 +3000,14 @@
   }
 
 // Enhanced Form Initialization
-  class FormInitializer {
-    constructor() {
-      this.initialized = false;
+    class FormInitializer {
+      constructor(stepManager) {
+        this.initialized = false;
+        this.stepManager = stepManager; // Store reference
+      }
+      
+      // Then in setupRegistrationCheck, use:
+      // this.stepManager.navigateToStep(1);
     }
 
     init() {
@@ -3061,7 +3066,7 @@
             const navigationSuccess = stepManager.navigateToStep(1);
             if (!navigationSuccess) {
               debugSystem.log('Navigation failed, trying direct method', null, 'warn');
-              stepManager.navigateToStep(1);
+              window.techpackApp.stepManager.navigateToStep(1);
             }
             
             // Add scroll after navigation
@@ -3876,7 +3881,8 @@
   const countrySelector = new CountrySelector();
   const quantityCalculator = new QuantityCalculator();
   const garmentManager = new GarmentManager();
-  const formInitializer = new FormInitializer();
+  const formInitializer = new FormInitializer(stepManager); // Pass stepManager
+  
 
   // Initialize debug system first
   debugSystem.init();
