@@ -13,92 +13,6 @@
     MIN_DELIVERY_WEEKS: 6
   };
 
-  // PANTONE TCX Color Database (sample - you can expand this)
-  const PANTONE_TCX_COLORS = {
-    '11-0601 TPG': { name: 'Bright White', hex: '#F4F4F4', cmyk: [0, 0, 0, 4] },
-    '12-0304 TPG': { name: 'Cream', hex: '#F5F3E7', cmyk: [2, 2, 8, 4] },
-    '13-0859 TPG': { name: 'Lemon Zest', hex: '#FFE66D', cmyk: [0, 8, 60, 0] },
-    '14-4318 TPG': { name: 'Blue Turquoise', hex: '#00B4D8', cmyk: [70, 0, 20, 0] },
-    '15-3919 TPG': { name: 'Purple', hex: '#7209B7', cmyk: [60, 90, 0, 0] },
-    '16-1546 TPG': { name: 'Coral', hex: '#FF6B6B', cmyk: [0, 60, 40, 0] },
-    '17-1463 TPG': { name: 'Fiery Red', hex: '#E63946', cmyk: [0, 80, 70, 10] },
-    '18-1664 TPG': { name: 'Chili Pepper', hex: '#C1121F', cmyk: [20, 95, 90, 10] },
-    '19-1557 TPG': { name: 'Rhubarb', hex: '#A4161A', cmyk: [30, 95, 85, 25] },
-    '19-3832 TPG': { name: 'Navy Blue', hex: '#003566', cmyk: [100, 70, 0, 60] },
-    // Add more colors as needed
-  };
-
-  // Color utility functions
-  const ColorUtils = {
-    // Convert hex to RGB
-    hexToRgb(hex) {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    },
-
-    // Calculate color difference using Delta E formula
-    calculateColorDifference(color1, color2) {
-      const rgb1 = this.hexToRgb(color1);
-      const rgb2 = this.hexToRgb(color2);
-      
-      if (!rgb1 || !rgb2) return Infinity;
-      
-      const rDiff = rgb1.r - rgb2.r;
-      const gDiff = rgb1.g - rgb2.g;
-      const bDiff = rgb1.b - rgb2.b;
-      
-      return Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
-    },
-
-    // Find closest PANTONE color
-    findClosestPantone(hexColor) {
-      let closestColor = null;
-      let minDifference = Infinity;
-      
-      Object.entries(PANTONE_TCX_COLORS).forEach(([code, colorData]) => {
-        const difference = this.calculateColorDifference(hexColor, colorData.hex);
-        if (difference < minDifference) {
-          minDifference = difference;
-          closestColor = { code, ...colorData };
-        }
-      });
-      
-      return closestColor;
-    },
-
-    // Search PANTONE by code
-    findPantoneByCode(code) {
-      const normalizedCode = code.trim().toUpperCase();
-      
-      // Try exact match first
-      const exactMatch = Object.entries(PANTONE_TCX_COLORS).find(([pantoneCode]) => 
-        pantoneCode.toUpperCase() === normalizedCode
-      );
-      
-      if (exactMatch) {
-        return { code: exactMatch[0], ...exactMatch[1] };
-      }
-      
-      // Try partial match
-      const partialMatch = Object.entries(PANTONE_TCX_COLORS).find(([pantoneCode]) => 
-        pantoneCode.toUpperCase().includes(normalizedCode) || 
-        normalizedCode.includes(pantoneCode.toUpperCase())
-      );
-      
-      if (partialMatch) {
-        return { code: partialMatch[0], ...partialMatch[1] };
-      }
-      
-      return null;
-    }
-  };
-
-  // Enhanced Application State
-
   // Enhanced Application State
   class TechPackState {
     constructor() {
@@ -914,31 +828,13 @@
           qtyInputs.forEach(input => {
             colorwayTotal += parseInt(input.value) || 0;
           });
-
+    
           if (colorwayTotal < requiredPerColorway) {
             isValid = false;
             debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
               total: colorwayTotal, 
               required: requiredPerColorway 
             }, 'error');
-          }
-          
-          // Check PANTONE requirement
-          const pantoneInput = colorway.querySelector('.pantone-input');
-          const pantoneGroup = pantoneInput?.closest('.techpack-colorway__pantone');
-          const pantoneError = pantoneGroup?.querySelector('.techpack-form__error');
-          
-          if (!pantoneInput?.value?.trim()) {
-            isValid = false;
-            if (pantoneError) {
-              pantoneError.textContent = 'PANTONE TCX is required';
-              pantoneError.style.display = 'block';
-            }
-          } else {
-            if (pantoneError) {
-              pantoneError.textContent = '';
-              pantoneError.style.display = 'none';
-            }
           }
         });
       });
@@ -2279,161 +2175,33 @@
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
       removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
       
-      // Enhanced Color picker with PANTONE matching
+      // Color picker
       const colorPicker = colorway.querySelector('.techpack-color-picker__input');
       const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      const hexDisplay = colorway.querySelector('.color-hex-display');
-      const pantoneInput = colorway.querySelector('.pantone-input');
-      const pantoneRecommendation = colorway.querySelector('.pantone-recommendation');
-      const pantoneWarning = colorway.querySelector('.pantone-warning');
       
-      // Color picker change handler
       colorPicker.addEventListener('change', function() {
-        const hexColor = this.value;
-        colorPreview.style.backgroundColor = hexColor;
-        
-        // Update hex display if it exists
-        if (hexDisplay) {
-          hexDisplay.textContent = hexColor.toUpperCase();
-        }
-        
-        // Find closest PANTONE color
-        console.log('🎨 Looking for PANTONE match for:', hexColor);
-        const closestPantone = ColorUtils.findClosestPantone(hexColor);
-        console.log('🔍 Found closest PANTONE:', closestPantone);
-        
-        if (closestPantone && pantoneRecommendation) {
-          pantoneRecommendation.innerHTML = `
-            <div class="pantone-suggestion">
-              <span class="pantone-label">Recommended:</span>
-              <strong>${closestPantone.code}</strong> - ${closestPantone.name}
-              <button type="button" class="pantone-accept-btn" data-pantone="${closestPantone.code}">
-                Use This Color
-              </button>
-            </div>
-          `;
-          
-          console.log('✅ Recommendation HTML updated');
-          
-          // Show warning if no PANTONE selected
-          if (pantoneInput && !pantoneInput.value && pantoneWarning) {
-            pantoneWarning.style.display = 'block';
-            pantoneWarning.innerHTML = '⚠️ Please select a PANTONE color to proceed';
-            pantoneWarning.className = 'pantone-warning warning-active';
-          }
-        } else {
-          console.log('❌ No recommendation element found or no PANTONE match');
-        }
-
-        // DEBUG: Log to console
-        console.log('🎨 Color picker changed:', hexColor);
-        console.log('🔍 Closest PANTONE found:', closestPantone);
-        console.log('📍 Recommendation element:', pantoneRecommendation);
-        console.log('⚠️ Warning element:', pantoneWarning);
-        
-        if (closestPantone) {
-          pantoneRecommendation.innerHTML = `
-            <div class="pantone-suggestion">
-              <span class="pantone-label">Recommended:</span>
-              <strong>${closestPantone.code}</strong> - ${closestPantone.name}
-              <button type="button" class="pantone-accept-btn" data-pantone="${closestPantone.code}">
-                Use This Color
-              </button>
-            </div>
-          `;
-          
-          // Show warning if no PANTONE selected
-          if (!pantoneInput.value) {
-            pantoneWarning.style.display = 'block';
-            pantoneWarning.innerHTML = '⚠️ Please select a PANTONE color to proceed';
-            pantoneWarning.className = 'pantone-warning warning-active';
-          }
-        }
-        
-        // Update state
+        colorPreview.style.backgroundColor = this.value;
         const garmentData = state.formData.garments.find(g => g.id === garmentId);
         if (garmentData) {
           const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
           if (colorwayData) {
-            colorwayData.color = hexColor;
+            colorwayData.color = this.value;
           }
         }
-        
-        // Validate step
-        stepManager.validateStep3();
       });
-      
-      // Accept PANTONE recommendation
-      pantoneRecommendation.addEventListener('click', function(e) {
-        if (e.target.classList.contains('pantone-accept-btn')) {
-          const pantoneCode = e.target.getAttribute('data-pantone');
-          pantoneInput.value = pantoneCode;
-          pantoneWarning.style.display = 'none';
-          
-          // Update state
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              colorwayData.pantone = pantoneCode;
-            }
-          }
-          
-          stepManager.validateStep3();
-        }
-      });
-      
-      // Set initial values
       colorPreview.style.backgroundColor = colorPicker.value;
-      hexDisplay.textContent = colorPicker.value.toUpperCase();
       
-      // Enhanced Pantone input
+      // Pantone input
+      const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
       if (pantoneInput) {
-        pantoneInput.addEventListener('input', function() {
-          const pantoneCode = this.value.trim();
-          
-          if (pantoneCode) {
-            const pantoneColor = ColorUtils.findPantoneByCode(pantoneCode);
-            
-            if (pantoneColor) {
-              // Update color picker to match PANTONE
-              colorPicker.value = pantoneColor.hex;
-              colorPreview.style.backgroundColor = pantoneColor.hex;
-              hexDisplay.textContent = pantoneColor.hex.toUpperCase();
-              
-              // Hide warning
-              pantoneWarning.style.display = 'none';
-              
-              // Show success
-              pantoneRecommendation.innerHTML = `
-                <div class="pantone-match">
-                  <span class="pantone-label">✅ Match found:</span>
-                  <strong>${pantoneColor.code}</strong> - ${pantoneColor.name}
-                </div>
-              `;
-            } else {
-              // Show warning for invalid PANTONE
-              pantoneWarning.style.display = 'block';
-              pantoneWarning.innerHTML = '⚠️ PANTONE color not found. Please check the code.';
-              pantoneWarning.className = 'pantone-warning warning-active';
-            }
-          } else {
-            // Show warning if empty
-            pantoneWarning.style.display = 'block';
-            pantoneWarning.innerHTML = '⚠️ PANTONE TCX is required';
-            pantoneWarning.className = 'pantone-warning warning-active';
-          }
-          
-          // Update state
+        pantoneInput.addEventListener('input', () => {
           const garmentData = state.formData.garments.find(g => g.id === garmentId);
           if (garmentData) {
             const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
             if (colorwayData) {
-              colorwayData.pantone = pantoneCode;
+              colorwayData.pantone = pantoneInput.value;
             }
           }
-          
-          stepManager.validateStep3();
         });
       }
 
