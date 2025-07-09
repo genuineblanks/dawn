@@ -1013,11 +1013,15 @@ function setupCountryDropdown() {
     // Separately validate country field (only show error if user has interacted or tried to submit)
     const countryInput = form.querySelector('.techpack-form__country-input, input[name="country"]');
     if (countryInput && countryInput.hasAttribute('required')) {
+      const countryGroup = countryInput.closest('.techpack-form__group');
+      
       if (!countryInput.value.trim()) {
         // Only show error if field has been touched or form is being submitted
         const hasBeenTouched = countryInput.dataset.touched === 'true' || document.activeElement === countryInput;
         if (hasBeenTouched) {
           displayFieldError(countryInput, false, 'Please select a country');
+          if (countryGroup) countryGroup.classList.add('techpack-form__group--error');
+          countryInput.classList.add('field-error');
           isValid = false;
           errorCount++;
         } else {
@@ -1026,6 +1030,11 @@ function setupCountryDropdown() {
         }
       } else {
         displayFieldError(countryInput, true, '');
+        if (countryGroup) {
+          countryGroup.classList.remove('techpack-form__group--error');
+          countryGroup.classList.add('techpack-form__group--success');
+        }
+        countryInput.classList.remove('field-error');
       }
     }
 
@@ -2050,7 +2059,7 @@ function setupCountryDropdown() {
         garmentData.fabric = fabricSelect.value;
       }
   
-      // Validate printing methods
+    // Validate printing methods
       const printingCheckboxes = garment.querySelectorAll('input[name="printingMethods[]"]:checked');
       const printingGroup = garment.querySelector('.techpack-form__checkboxes').closest('.techpack-form__group');
       const printingError = printingGroup ? printingGroup.querySelector('.techpack-form__error') : null;
