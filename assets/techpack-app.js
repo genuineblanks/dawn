@@ -3882,13 +3882,12 @@
     }
 
   // Global instances initialization
-  const stepManager = new StepManager();
   const fileManager = new FileManager();
   const countrySelector = new CountrySelector();
   const quantityCalculator = new QuantityCalculator();
   const garmentManager = new GarmentManager();
   const formInitializer = new FormInitializer();
-  
+  const stepManager = new StepManager();  
   // Set the stepManager reference after creation
   formInitializer.setStepManager(stepManager);
   
