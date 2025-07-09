@@ -1485,6 +1485,12 @@
       this.populateReviewStep1();
       this.populateReviewStep2();
       this.populateReviewStep3();
+      
+      // Ensure edit buttons are working after review is populated
+      setTimeout(() => {
+        formInitializer.setupEditButtons();
+      }, 100);
+      
       debugSystem.log('Review populated', null, 'success');
     }
 
@@ -1501,6 +1507,12 @@
       const data = Object.fromEntries(formData.entries());
     
       container.innerHTML = `
+        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="margin: 0;">Client Information</h3>
+          <button type="button" class="edit-btn" data-edit="client-information" data-step="1" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
+            Edit
+          </button>
+        </div>
         <div class="techpack-review__grid">
           <div class="techpack-review__item">
             <span class="techpack-review__label">Client Name:</span>
@@ -1537,12 +1549,21 @@
     populateReviewStep2() {
       const container = document.querySelector('#review-step-2');
       if (!container) return;
-
+    
+      const headerHtml = `
+        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="margin: 0;">Uploaded Files</h3>
+          <button type="button" class="edit-btn" data-edit="files" data-step="2" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
+            Edit
+          </button>
+        </div>
+      `;
+    
       if (state.formData.files.length === 0) {
-        container.innerHTML = '<p class="techpack-review__empty">No files uploaded</p>';
+        container.innerHTML = headerHtml + '<p class="techpack-review__empty">No files uploaded</p>';
         return;
       }
-
+    
       const filesHtml = state.formData.files.map(fileData => `
         <div class="techpack-review__file">
           <div class="techpack-review__file-info">
@@ -1555,8 +1576,8 @@
           <span class="techpack-review__file-type">${fileData.type}</span>
         </div>
       `).join('');
-
-      container.innerHTML = `<div class="techpack-review__files">${filesHtml}</div>`;
+    
+      container.innerHTML = headerHtml + `<div class="techpack-review__files">${filesHtml}</div>`;
     }
 
     // In StepManager class, REPLACE populateReviewStep3():
@@ -1564,9 +1585,18 @@
       const container = document.querySelector('#review-step-3');
       if (!container) return;
     
+      const headerHtml = `
+        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="margin: 0;">Garment Specifications</h3>
+          <button type="button" class="edit-btn" data-edit="garments" data-step="3" style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
+            Edit
+          </button>
+        </div>
+      `;
+    
       const garmentElements = document.querySelectorAll('.techpack-garment');
       if (garmentElements.length === 0) {
-        container.innerHTML = '<p class="techpack-review__empty">No garments specified</p>';
+        container.innerHTML = headerHtml + '<p class="techpack-review__empty">No garments specified</p>';
         return;
       }
     
@@ -1653,7 +1683,7 @@
         `;
       }).join('');
     
-      container.innerHTML = `
+      container.innerHTML = headerHtml + `
         <div class="techpack-review__summary">
           <div class="techpack-review__total">
             <span class="techpack-review__total-label">Total Quantity:</span>
@@ -3194,6 +3224,78 @@
       if (step4Prev) {
         step4Prev.addEventListener('click', () => stepManager.navigateToStep(3));
       }
+
+      // EDIT BUTTONS - Review Page
+      this.setupEditButtons();
+    }
+
+    setupEditButtons() {
+      // Client Information Edit Button
+      const editClientBtn = document.querySelector('[data-edit="client"], .edit-client-btn, button[onclick*="client"], button[onclick*="step-1"]');
+      if (editClientBtn) {
+        // Remove any existing onclick handlers
+        editClientBtn.removeAttribute('onclick');
+        editClientBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          stepManager.navigateToStep(1);
+          debugSystem.log('Edit client info clicked');
+        });
+      }
+
+      // Files Edit Button  
+      const editFilesBtn = document.querySelector('[data-edit="files"], .edit-files-btn, button[onclick*="files"], button[onclick*="step-2"]');
+      if (editFilesBtn) {
+        editFilesBtn.removeAttribute('onclick');
+        editFilesBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          stepManager.navigateToStep(2);
+          debugSystem.log('Edit files clicked');
+        });
+      }
+
+      // Garments Edit Button
+      const editGarmentsBtn = document.querySelector('[data-edit="garments"], .edit-garments-btn, button[onclick*="garments"], button[onclick*="step-3"]');
+      if (editGarmentsBtn) {
+        editGarmentsBtn.removeAttribute('onclick');
+        editGarmentsBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          stepManager.navigateToStep(3);
+          debugSystem.log('Edit garments clicked');
+        });
+      }
+
+      // Alternative approach: Use event delegation for dynamically created edit buttons
+      document.addEventListener('click', (e) => {
+        // Check if clicked element is an edit button
+        if (e.target.matches('.edit-btn, [data-edit], .techpack-edit-btn') || 
+            e.target.closest('.edit-btn, [data-edit], .techpack-edit-btn')) {
+          
+          const button = e.target.matches('.edit-btn, [data-edit], .techpack-edit-btn') ? 
+                        e.target : e.target.closest('.edit-btn, [data-edit], .techpack-edit-btn');
+          
+          e.preventDefault();
+          
+          // Determine which step to edit based on button attributes or text
+          const editType = button.dataset.edit || 
+                          button.getAttribute('data-edit') ||
+                          button.textContent.toLowerCase();
+          
+          let targetStep = 1;
+          
+          if (editType.includes('client') || editType.includes('information') || editType.includes('step-1')) {
+            targetStep = 1;
+          } else if (editType.includes('file') || editType.includes('upload') || editType.includes('step-2')) {
+            targetStep = 2;
+          } else if (editType.includes('garment') || editType.includes('specification') || editType.includes('step-3')) {
+            targetStep = 3;
+          }
+          
+          stepManager.navigateToStep(targetStep);
+          debugSystem.log('Edit button clicked via delegation', { editType, targetStep });
+        }
+      });
+
+      debugSystem.log('Edit buttons setup complete');
     }
 
     setupFormSubmission() {
