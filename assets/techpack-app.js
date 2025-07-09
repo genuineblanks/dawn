@@ -1830,20 +1830,23 @@ function setupCountryDropdown() {
       const value = parseInt(input.value) || 0;
       
       // Remove existing classes
-      input.classList.remove('quantity-empty', 'quantity-filled', 'quantity-excess');
+      input.classList.remove('quantity-empty', 'quantity-filled', 'quantity-progress', 'quantity-excess');
       
       if (value > 0) {
         if (colorwayTotal < requiredPerColorway) {
-          // Still need more quantity - show orange/yellow
+          // Still need more quantity - show orange
           input.classList.add('quantity-progress');
         } else {
-          // Minimum reached - show green
+          // Minimum reached - show green for ALL inputs with values
           input.classList.add('quantity-filled');
         }
       } else {
-        // Empty field - show red only if we're under minimum
+        // Empty field - show red if we're under minimum, or neutral gray if minimum is reached
         if (colorwayTotal < requiredPerColorway) {
           input.classList.add('quantity-empty');
+        } else {
+          // Minimum reached but this field is empty - show neutral gray
+          input.classList.add('quantity-neutral');
         }
       }
       
