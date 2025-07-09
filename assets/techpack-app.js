@@ -1687,7 +1687,12 @@
           // Remove red styling from colorway total
           const totalEl = colorway.querySelector('.techpack-colorway__total-value');
           if (totalEl) {
-            totalEl.style.cssText = 'color: #ef4444 !important; font-weight: bold !important; background: #fef2f2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;';
+            totalEl.style.color = '#ef4444';
+            totalEl.style.fontWeight = 'bold';
+            totalEl.style.background = '#fef2f2';
+            totalEl.style.padding = '0.25rem 0.5rem';
+            totalEl.style.borderRadius = '0.25rem';
+            totalEl.style.border = '1px solid #fecaca';
           }
         }
       });
