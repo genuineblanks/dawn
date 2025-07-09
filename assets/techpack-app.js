@@ -661,7 +661,7 @@
       }
     }
 
-    // In StepManager class, REPLACE validateStep1():
+    // In StepManager class, REPLACE validateStep1() with this corrected version:
     validateStep1() {
       const form = document.querySelector('#techpack-step-1 form');
       if (!form) return false;
@@ -677,7 +677,8 @@
         { name: 'clientName', label: 'Client name' },
         { name: 'companyName', label: 'Company name' },
         { name: 'email', label: 'Email address' },
-        { name: 'country', label: 'Country' }
+        { name: 'country', label: 'Country' },
+        { name: 'productionType', label: 'Production type' } // Add this required field
       ];
     
       requiredFields.forEach(field => {
@@ -699,24 +700,22 @@
         errors.phone = 'Please enter a valid phone number';
       }
     
-      // CRITICAL: VAT/EIN validation based on country
-      const vatInput = form.querySelector('input[name="vatNumber"], input[name="vatEin"]');
+      // CRITICAL: VAT/EIN validation based on country (matching your HTML name="vatEin")
+      const vatInput = form.querySelector('input[name="vatEin"]'); // This matches your HTML
       if (vatInput) {
         const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
-        const vatValue = data.vatNumber || data.vatEin || '';
+        const vatValue = data.vatEin || ''; // This matches your HTML name
         
         if (isVATRequired && (!vatValue || !vatValue.trim())) {
           isValid = false;
           errors.vatEin = 'VAT number is required for European countries';
-          errors.vatNumber = 'VAT number is required for European countries';
         } else if (vatValue && !Utils.validateVAT(vatValue)) {
           isValid = false;
           errors.vatEin = 'Please enter a valid VAT/EIN number';
-          errors.vatNumber = 'Please enter a valid VAT/EIN number';
         }
       }
     
-      // Display errors
+      // Display errors for all fields
       Object.keys(errors).forEach(fieldName => {
         const field = form.querySelector(`[name="${fieldName}"]`);
         if (field) {
@@ -725,7 +724,7 @@
       });
     
       // Clear errors for valid fields
-      const allFieldNames = [...requiredFields.map(f => f.name), 'phone', 'vatEin', 'vatNumber'];
+      const allFieldNames = [...requiredFields.map(f => f.name), 'phone', 'vatEin', 'deadline', 'notes'];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -1527,12 +1526,9 @@
 
     // In CountrySelector class, REPLACE handleVATFieldVisibility():
     handleVATFieldVisibility(country) {
-      const vatContainer = document.getElementById('vat-ein-group') || 
-                          document.querySelector('.techpack-form__group--vat');
-      const vatInput = document.getElementById('vat-ein') || 
-                      document.querySelector('input[name="vatNumber"], input[name="vatEin"]');
-      const vatLabel = document.getElementById('vat-ein-label') || 
-                      document.querySelector('.techpack-form__group--vat .techpack-form__label');
+      const vatContainer = document.getElementById('vat-ein-group');
+      const vatInput = document.getElementById('vat-ein'); // This matches your HTML
+      const vatLabel = document.getElementById('vat-ein-label');
       
       if (!vatContainer || !vatInput) return;
       
@@ -1543,7 +1539,7 @@
         vatContainer.style.display = 'block';
         vatContainer.classList.add('techpack-form__group--required');
         vatInput.setAttribute('required', 'required');
-        vatInput.setAttribute('data-required', 'true'); // Add this flag
+        vatInput.setAttribute('data-required', 'true');
         
         if (vatLabel) {
           vatLabel.innerHTML = 'VAT Number <span class="techpack-form__required">*</span>';
@@ -1555,7 +1551,7 @@
         vatContainer.style.display = 'block';
         vatContainer.classList.remove('techpack-form__group--required');
         vatInput.removeAttribute('required');
-        vatInput.removeAttribute('data-required'); // Remove the flag
+        vatInput.removeAttribute('data-required');
         
         if (vatLabel) {
           vatLabel.innerHTML = 'EIN Number <span class="techpack-form__label-status">(optional)</span>';
