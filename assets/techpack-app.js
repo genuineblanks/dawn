@@ -558,17 +558,19 @@
       this.setupValidationRules();
     }
 
+    // In StepManager class, REPLACE setupValidationRules():
     setupValidationRules() {
-      // Step 1 validation rules
-      validator.addRule('clientName', value => value.trim().length > 0, 'Client name is required');
-      validator.addRule('companyName', value => value.trim().length > 0, 'Company name is required');
-      validator.addRule('email', value => Utils.validateEmail(value), 'Valid email address is required');
-      validator.addRule('country', value => value.trim().length > 0, 'Country selection is required');
+      // Clear any existing rules first
+      validator.rules.clear();
+      validator.errors.clear();
+    
+      // Step 1 validation rules ONLY
+      validator.addRule('clientName', value => value && value.trim().length > 0, 'Client name is required');
+      validator.addRule('companyName', value => value && value.trim().length > 0, 'Company name is required');
+      validator.addRule('email', value => value && Utils.validateEmail(value), 'Valid email address is required');
+      validator.addRule('country', value => value && value.trim().length > 0, 'Country selection is required');
       validator.addRule('phone', value => !value || Utils.validatePhone(value), 'Valid phone number format required');
       validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
-      validator.addRule('garmentType', value => value.trim().length > 0, 'Garment type is required');
-      validator.addRule('fabricType', value => value.trim().length > 0, 'Fabric type is required');
-      validator.addRule('printingMethods', value => Array.isArray(value) && value.length > 0, 'At least one printing method is required');
     }
 
     async navigateToStep(stepNumber) {
