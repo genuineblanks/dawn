@@ -884,62 +884,6 @@
       return true;
     }
 
-    scrollToTechPackTop() {
-      // Find the TechPack container or main step element
-      const techPackContainer = document.querySelector('.techpack-container, .techpack-step, #techpack-app, .techpack-form');
-      
-      if (techPackContainer) {
-        // Get the container's position
-        const rect = techPackContainer.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetPosition = rect.top + scrollTop - 20; // 20px offset from top
-        
-        // Smooth scroll to the target position
-        window.scrollTo({
-          top: Math.max(0, targetPosition),
-          behavior: 'smooth'
-        });
-        
-        debugSystem.log('Scrolled to TechPack top', { targetPosition });
-      } else {
-        // Fallback: scroll to top of page
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        
-        debugSystem.log('Fallback: Scrolled to page top');
-      }
-    }
-
-    scrollToTechPackTop() {
-      // Find the TechPack container or main step element
-      const techPackContainer = document.querySelector('.techpack-container, .techpack-step, #techpack-app, .techpack-form');
-      
-      if (techPackContainer) {
-        // Get the container's position
-        const rect = techPackContainer.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetPosition = rect.top + scrollTop - 20; // 20px offset from top
-        
-        // Smooth scroll to the target position
-        window.scrollTo({
-          top: Math.max(0, targetPosition),
-          behavior: 'smooth'
-        });
-        
-        debugSystem.log('Scrolled to TechPack top', { targetPosition });
-      } else {
-        // Fallback: scroll to top of page
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        
-        debugSystem.log('Fallback: Scrolled to page top');
-      }
-    }
-
     scrollToTechPackTopEnhanced() {
       // Look for the TechPack app starting point
       const selectors = [
