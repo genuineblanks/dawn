@@ -930,11 +930,29 @@ function applyUltimateScrollFix() {
 }
 
 // ===============================================
+// CUSTOM JQUERY EASING FUNCTIONS
+// ===============================================
+function initializeCustomEasing() {
+  if (typeof $ !== 'undefined' && $ && $.easing) {
+    // Define custom easeInOutCubic function
+    $.easing.easeInOutCubic = function(x) {
+      return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    };
+    
+    console.log('✅ Custom easing functions registered:', Object.keys($.easing));
+  } else {
+    console.log('⚠️ jQuery or jQuery.easing not available for custom easing');
+  }
+}
+
+// ===============================================
 // JQUERY WAIT UTILITY
 // ===============================================
 function waitForJQuery(callback) {
   if (typeof $ !== 'undefined' && $ && $.fn) {
     console.log('✅ jQuery is ready');
+    // Initialize custom easing when jQuery is ready
+    initializeCustomEasing();
     callback();
   } else {
     console.log('⏳ Waiting for jQuery...');
@@ -1230,11 +1248,19 @@ function goToSection(sectionIndex) {
   // Use the same reliable jQuery animation system for both desktop and mobile
   console.log('🎯 Using UNIFIED JQUERY animation for', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP');
   
+  // ENHANCED: Safe easing with fallback
+  let safeEasing = scrollSystem.easingFunction;
+  if (!$.easing || !$.easing[scrollSystem.easingFunction]) {
+    console.log('⚠️ Custom easing not available, falling back to swing');
+    safeEasing = 'swing'; // jQuery default smooth easing
+  }
+  console.log('🎯 Using easing function:', safeEasing);
+  
   $('html, body').animate({
     scrollTop: targetScroll
   }, {
     duration: scrollSystem.durationOneScroll,
-    easing: scrollSystem.easingFunction, // ENHANCED: Smooth cubic easing
+    easing: safeEasing, // ENHANCED: Safe easing with fallback
     progress: function(animation, progress, remainingMs) {
       const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
       console.log(`📈 ${deviceType} Animation progress:`, {
