@@ -1,25 +1,25 @@
 /* ===============================================
-   SCROLL TO TOP BUTTON - PREMIUM STYLING
+   SCROLL TO TOP BUTTON - REFINED STYLING
    =============================================== */
 
 .scroll-to-top {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 50px;
-  height: 50px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 999;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   visibility: hidden;
   transform: translateY(20px) scale(0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,16 +32,14 @@
 }
 
 .scroll-to-top:hover {
-  background: rgba(0, 0, 0, 0.95);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.4),
-    0 4px 16px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .scroll-to-top:active {
-  transform: translateY(-1px) scale(1);
+  transform: translateY(0) scale(1);
   transition: all 0.1s ease;
 }
 
@@ -50,42 +48,20 @@
   content: '';
   width: 0;
   height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 12px solid #ffffff;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid rgba(0, 0, 0, 0.7);
   transition: all 0.3s ease;
 }
 
 .scroll-to-top:hover::before {
-  border-bottom-color: #ffffff;
-  transform: translateY(-2px);
+  border-bottom-color: rgba(0, 0, 0, 0.9);
+  transform: translateY(-1px);
 }
 
 /* ===============================================
-   SECTION DOT NAVIGATION - PREMIUM STYLING - FIXED VISIBILITY
+   DOT NAVIGATION - MINIMAL CSS (JS HANDLES POSITIONING)
    =============================================== */
-
-.section-dot-navigation {
-  position: fixed !important;
-  right: 25px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  z-index: 9999 !important; /* Higher z-index */
-  gap: 12px;
-  padding: 20px 8px;
-  background: rgba(0, 0, 0, 0.8) !important; /* More visible background */
-  border-radius: 25px;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 2px solid rgba(255, 255, 255, 0.3) !important; /* More visible border */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  min-height: 200px; /* Ensure minimum height */
-  opacity: 1 !important;
-  visibility: visible !important;
-}
 
 /* Show only on homepage */
 body:not(.home-section) .section-dot-navigation {
@@ -96,94 +72,28 @@ body.home-section .section-dot-navigation {
   display: flex !important;
 }
 
+/* Let JavaScript handle all positioning and styling */
+.section-dot-navigation {
+  /* Only essential properties that won't conflict with JS */
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
 .section-dot {
-  width: 14px !important;
-  height: 14px !important;
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.6) !important; /* More visible default state */
-  cursor: pointer !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border: 2px solid transparent !important;
-  position: relative !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  /* Only essential properties that won't conflict with JS */
+  pointer-events: auto !important;
+  user-select: none !important;
 }
 
-.section-dot:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
-  transform: scale(1.3) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.section-dot.active {
-  background: #ffffff !important;
-  border: 2px solid #000000 !important;
-  transform: scale(1.5) !important;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Ripple effect on click */
-.section-dot::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.section-dot:active::before {
-  width: 24px;
-  height: 24px;
-  opacity: 0;
-}
-
-/* Debug styling - temporary red background to see if container exists */
-.section-dot-navigation.debug {
-  background: rgba(255, 0, 0, 0.8) !important;
-  border: 3px solid yellow !important;
-}
-
-.section-dot.debug {
-  background: lime !important;
-  width: 20px !important;
-  height: 20px !important;
-}
-
-/* Mobile Responsive */
-@media screen and (max-width: 768px) {
-  .scroll-to-top {
-    bottom: 20px;
-    right: 20px;
-    width: 45px;
-    height: 45px;
-  }
-  
-  .scroll-to-top::before {
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 10px solid #ffffff;
-  }
-  
-  .section-dot-navigation {
-    right: 15px;
-    padding: 15px 6px;
-    gap: 15px; /* Increased gap for easier touch */
-    transform: translateY(-50%);
-  }
-  
+/* Enhanced mobile touch improvements - only touch-specific styles */
+@media (hover: none) and (pointer: coarse) {
   .section-dot {
-    width: 14px; /* Larger for easier touch */
-    height: 14px;
-    /* Add touch-friendly minimum tap target */
-    position: relative;
+    /* Ensure minimum touch target without overriding JS positioning */
+    min-width: 12px !important;
+    min-height: 12px !important;
   }
   
+  /* Create invisible larger touch area */
   .section-dot::after {
     content: '';
     position: absolute;
@@ -191,8 +101,25 @@ body.home-section .section-dot-navigation {
     left: -8px;
     right: -8px;
     bottom: -8px;
-    /* Invisible larger touch area */
     background: transparent;
+    border-radius: 50%;
+    pointer-events: auto;
+  }
+}
+
+/* Mobile Responsive for scroll button only */
+@media screen and (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .scroll-to-top::before {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
   }
 }
 
@@ -205,125 +132,37 @@ body.home-section .section-dot-navigation {
   }
   
   .scroll-to-top::before {
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 9px solid #ffffff;
-  }
-  
-  .section-dot-navigation {
-    right: 10px;
-    padding: 12px 5px;
-    gap: 12px; /* Good spacing for mobile */
-  }
-  
-  .section-dot {
-    width: 12px;
-    height: 12px;
-  }
-  
-  .section-dot::after {
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    /* Even larger touch area on small screens */
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 7px solid rgba(0, 0, 0, 0.7);
   }
 }
 
-/* Mobile touch improvements */
-@media (hover: none) and (pointer: coarse) {
-  .section-dot {
-    /* Ensure dots are easily tappable on touch devices */
-    min-width: 16px;
-    min-height: 16px;
-    /* Add slight background for better visibility */
-    background: rgba(0, 0, 0, 0.5);
-  }
-  
-  .section-dot:active {
-    /* Immediate feedback on touch */
-    transform: scale(1.1);
+/* Dark theme variant (optional) */
+@media (prefers-color-scheme: dark) {
+  .scroll-to-top {
     background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  .section-dot.active {
-    background: #000;
-    transform: scale(1.4);
+  .scroll-to-top:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
   }
   
-  .section-dot-navigation {
-    /* Slightly more visible background on touch devices */
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+  .scroll-to-top::before {
+    border-bottom-color: rgba(255, 255, 255, 0.8);
   }
-}
-
-/* Animation for scroll progress (optional enhancement) */
-.scroll-to-top.with-progress {
-  background: conic-gradient(
-    from 0deg,
-    rgba(255, 255, 255, 0.3) 0deg,
-    rgba(255, 255, 255, 0.3) var(--scroll-progress, 0deg),
-    rgba(0, 0, 0, 0.8) var(--scroll-progress, 0deg),
-    rgba(0, 0, 0, 0.8) 360deg
-  );
-}
-
-.scroll-to-top.with-progress::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
-  background: rgba(0, 0, 0, 0.9);
-  border-radius: 50%;
-  z-index: -1;
-}
-
-/* Hide on very small screens if needed */
-@media screen and (max-width: 320px) {
-  .section-dot-navigation {
-    display: none;
+  
+  .scroll-to-top:hover::before {
+    border-bottom-color: rgba(255, 255, 255, 1);
   }
-}
-
-/* Premium glass morphism variant (alternative style) */
-.scroll-to-top.glass {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.scroll-to-top.glass:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.scroll-to-top.glass::before {
-  border-bottom-color: rgba(0, 0, 0, 0.8);
-}
-
-/* Dark theme variant */
-.scroll-to-top.dark {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.scroll-to-top.dark:hover {
-  background: rgba(255, 255, 255, 1);
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-.scroll-to-top.dark::before {
-  border-bottom-color: #000000;
 }
 
 /* Accessibility improvements */
 .scroll-to-top:focus,
 .section-dot:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline: 2px solid rgba(0, 0, 0, 0.3);
   outline-offset: 2px;
 }
 
@@ -332,15 +171,17 @@ body.home-section .section-dot-navigation {
   outline: none;
 }
 
+/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .scroll-to-top,
-  .section-dot {
-    transition: opacity 0.2s ease;
+  .section-dot,
+  .section-dot-navigation {
+    transition: opacity 0.2s ease !important;
   }
   
   .scroll-to-top:hover,
   .section-dot:hover {
-    transform: none;
+    transform: none !important;
   }
   
   .scroll-to-top::before {
@@ -349,5 +190,136 @@ body.home-section .section-dot-navigation {
   
   .scroll-to-top:hover::before {
     transform: none;
+  }
+}
+
+/* ===============================================
+   SCROLL PROGRESS BAR (HORIZONTAL AT BOTTOM)
+   =============================================== */
+
+.scroll-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+  z-index: 1001;
+  transition: width 0.1s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .scroll-progress {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+  }
+}
+
+/* ===============================================
+   FLOATING ELEMENTS (SUBTLE BACKGROUND EFFECTS)
+   =============================================== */
+
+.floating-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.floating-shape {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  animation: float 20s infinite linear;
+}
+
+.floating-shape:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+
+.floating-shape:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation-delay: 5s;
+  animation-duration: 30s;
+}
+
+.floating-shape:nth-child(3) {
+  top: 80%;
+  left: 20%;
+  animation-delay: 10s;
+  animation-duration: 20s;
+}
+
+.floating-shape:nth-child(4) {
+  top: 40%;
+  left: 70%;
+  animation-delay: 15s;
+  animation-duration: 35s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-elements {
+    display: none;
+  }
+}
+
+/* ===============================================
+   LOADING SKELETONS
+   =============================================== */
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.skeleton-product {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: #f0f0f0;
   }
 }
