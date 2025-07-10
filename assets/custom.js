@@ -66,6 +66,14 @@ let scrollSystem = {
   dotNavigation: null
 };
 
+// Animation tracking variables for debugging
+let animationStartTime = 0;
+let animationTarget = null;
+let touchEventsDuringAnimation = [];
+let conflictingEvents = [];
+let disabledListeners = [];
+let originalListeners = {};
+
 // ===============================================
 // MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN FOR RELIABILITY
 // ===============================================
@@ -379,17 +387,36 @@ function addMobileTouchFailsafe() {
     }, 50);
   }, { passive: true });
   
-  // Scroll event monitoring for stuck states
+  // Enhanced scroll event monitoring for animation debugging
   let scrollMonitorTimeout;
+  let lastScrollTime = 0;
+  
   window.addEventListener('scroll', () => {
     if (!isHomepage() || !scrollSystem.isEnabled) return;
     
+    const currentTime = Date.now();
+    const scrollPos = window.pageYOffset;
+    
+    // CRITICAL: Log scroll events during animation
+    if (scrollSystem.inScroll) {
+      console.log('🔄 ⚠️ SCROLL EVENT DURING ANIMATION:', {
+        time: currentTime - (animationStartTime || 0) + 'ms since start',
+        scrollPos: scrollPos,
+        target: animationTarget,
+        diff: animationTarget ? Math.abs(scrollPos - animationTarget) : 'unknown',
+        timeSinceLastScroll: currentTime - lastScrollTime + 'ms'
+      });
+    }
+    
+    lastScrollTime = currentTime;
     clearTimeout(scrollMonitorTimeout);
     
     scrollMonitorTimeout = setTimeout(() => {
       if (scrollSystem.inScroll) {
         console.log('📱 ⚠️ Scroll stuck detected - resetting inScroll flag');
         scrollSystem.inScroll = false;
+        animationStartTime = 0;
+        animationTarget = null;
       }
     }, 1000);
   }, { passive: true });
@@ -413,6 +440,196 @@ function addMobileTouchFailsafe() {
     }
   }, 2000);
 }
+
+// ===============================================
+// MOBILE CONFLICT DETECTION SYSTEM
+// ===============================================
+function addMobileConflictDetection() {
+  if (!isMobileDevice() || !isHomepage()) return;
+  
+  console.log('🔍 Setting up mobile conflict detection...');
+  
+  // Monitor touch events during animation
+  const touchEventTypes = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
+  
+  touchEventTypes.forEach(eventType => {
+    document.addEventListener(eventType, (e) => {
+      if (scrollSystem.inScroll) {
+        const touchInfo = {
+          type: eventType,
+          time: Date.now() - animationStartTime,
+          touches: e.touches ? e.touches.length : 0,
+          target: e.target.tagName || 'unknown'
+        };
+        
+        touchEventsDuringAnimation.push(touchInfo);
+        
+        console.log('🚨 TOUCH EVENT DURING ANIMATION:', touchInfo);
+        
+        // Check for problematic touch events
+        if (eventType === 'touchstart' && e.touches && e.touches.length > 1) {
+          console.log('⚠️ MULTI-TOUCH DETECTED during animation - potential conflict!');
+          conflictingEvents.push({
+            type: 'multi-touch',
+            time: touchInfo.time,
+            details: 'Multiple fingers detected during scroll animation'
+          });
+        }
+      }
+    }, { passive: true });
+  });
+  
+  // Monitor CSS conflicts during animation
+  const checkCSSConflicts = () => {
+    if (scrollSystem.inScroll) {
+      const body = document.body;
+      const html = document.documentElement;
+      
+      // Check for CSS conflicts that might interrupt animation
+      const conflicts = [];
+      
+      // Check scroll-behavior
+      const scrollBehavior = window.getComputedStyle(html).scrollBehavior;
+      if (scrollBehavior === 'smooth') {
+        conflicts.push({
+          type: 'css-scroll-behavior',
+          value: scrollBehavior,
+          element: 'html'
+        });
+      }
+      
+      // Check for CSS overscroll-behavior
+      const overscrollBehavior = window.getComputedStyle(body).overscrollBehavior;
+      if (overscrollBehavior !== 'none') {
+        conflicts.push({
+          type: 'css-overscroll-behavior',
+          value: overscrollBehavior,
+          element: 'body'
+        });
+      }
+      
+      // Check for CSS touch-action
+      const touchAction = window.getComputedStyle(body).touchAction;
+      if (touchAction !== 'pan-y') {
+        conflicts.push({
+          type: 'css-touch-action',
+          value: touchAction,
+          element: 'body'
+        });
+      }
+      
+      if (conflicts.length > 0) {
+        console.log('🔴 CSS CONFLICTS DETECTED during animation:', conflicts);
+        conflictingEvents.push(...conflicts.map(c => ({
+          ...c,
+          time: Date.now() - animationStartTime
+        })));
+      }
+    }
+  };
+  
+  // Check for CSS conflicts every 100ms during animation
+  setInterval(checkCSSConflicts, 100);
+  
+  // Monitor viewport changes that might affect animation
+  window.addEventListener('resize', () => {
+    if (scrollSystem.inScroll) {
+      console.log('📱 ⚠️ VIEWPORT RESIZE during animation - potential conflict!');
+      conflictingEvents.push({
+        type: 'viewport-resize',
+        time: Date.now() - animationStartTime,
+        details: 'Viewport size changed during scroll animation'
+      });
+    }
+  });
+  
+  // Monitor orientation changes
+  window.addEventListener('orientationchange', () => {
+    if (scrollSystem.inScroll) {
+      console.log('📱 ⚠️ ORIENTATION CHANGE during animation - potential conflict!');
+      conflictingEvents.push({
+        type: 'orientation-change',
+        time: Date.now() - animationStartTime,
+        details: 'Device orientation changed during scroll animation'
+      });
+    }
+  });
+  
+  console.log('✅ Mobile conflict detection system activated');
+}
+
+// ===============================================
+// ANIMATION ISOLATION SYSTEM
+// ===============================================
+function disableConflictingListeners() {
+  if (!isMobileDevice()) return;
+  
+  console.log('🔒 Disabling conflicting listeners during animation...');
+  
+  // List of events that might interfere with scroll animation
+  const conflictingEvents = [
+    'wheel',
+    'mousewheel', 
+    'DOMMouseScroll',
+    'keydown',
+    'keyup'
+  ];
+  
+  // Disable these events on document level
+  conflictingEvents.forEach(eventType => {
+    const originalHandler = document[`on${eventType}`];
+    if (originalHandler) {
+      originalListeners[eventType] = originalHandler;
+      document[`on${eventType}`] = null;
+    }
+  });
+  
+  // Temporarily disable CSS scroll-behavior to prevent conflicts
+  const html = document.documentElement;
+  const body = document.body;
+  
+  originalListeners.htmlScrollBehavior = html.style.scrollBehavior;
+  originalListeners.bodyScrollBehavior = body.style.scrollBehavior;
+  
+  html.style.scrollBehavior = 'auto';
+  body.style.scrollBehavior = 'auto';
+  
+  // Disable CSS smooth scrolling temporarily
+  html.style.setProperty('scroll-behavior', 'auto', 'important');
+  body.style.setProperty('scroll-behavior', 'auto', 'important');
+  
+  console.log('🔒 Conflicting listeners disabled');
+}
+
+function restoreConflictingListeners() {
+  if (!isMobileDevice()) return;
+  
+  console.log('🔓 Restoring conflicting listeners after animation...');
+  
+  // Restore original event handlers
+  Object.keys(originalListeners).forEach(eventType => {
+    if (eventType.includes('ScrollBehavior')) {
+      // Handle CSS properties
+      const element = eventType.includes('html') ? document.documentElement : document.body;
+      if (originalListeners[eventType]) {
+        element.style.scrollBehavior = originalListeners[eventType];
+      } else {
+        element.style.removeProperty('scroll-behavior');
+      }
+    } else {
+      // Handle event listeners
+      if (originalListeners[eventType]) {
+        document[`on${eventType}`] = originalListeners[eventType];
+      }
+    }
+  });
+  
+  // Clear the stored listeners
+  originalListeners = {};
+  
+  console.log('🔓 Conflicting listeners restored');
+}
+
 function reinitializeScrollAnimations() {
   if (!isHomepage()) return;
   
@@ -720,22 +937,120 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
-  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) return;
+  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
+    console.log('🚫 goToSection blocked:', {
+      inScroll: scrollSystem.inScroll,
+      sectionIndex: sectionIndex,
+      arrLength: scrollSystem.arrSections.length,
+      isHomepage: isHomepage()
+    });
+    return;
+  }
   
-  console.log('🎯 Going to section:', sectionIndex);
+  console.log('🎯 🚀 STARTING goToSection:', {
+    from: scrollSystem.currentSection,
+    to: sectionIndex,
+    targetPosition: scrollSystem.arrSections[sectionIndex],
+    currentScroll: window.pageYOffset,
+    duration: scrollSystem.durationOneScroll
+  });
   
   scrollSystem.inScroll = true;
+  const oldSection = scrollSystem.currentSection;
   scrollSystem.currentSection = sectionIndex;
+  
+  // Set animation tracking variables for scroll monitoring
+  animationStartTime = Date.now();
+  animationTarget = scrollSystem.arrSections[sectionIndex];
+  
+  // Reset conflict tracking arrays
+  touchEventsDuringAnimation = [];
+  conflictingEvents = [];
+  
+  // Disable conflicting listeners during animation (mobile only)
+  disableConflictingListeners();
   
   updateDotNavigation();
   
+  // Stop any existing animations first
+  $('html, body').stop(true, false);
+  
+  const startTime = Date.now();
+  const startScroll = window.pageYOffset;
+  const targetScroll = scrollSystem.arrSections[sectionIndex];
+  
   $('html, body').animate({
-    scrollTop: scrollSystem.arrSections[sectionIndex]
+    scrollTop: targetScroll
   }, {
     duration: scrollSystem.durationOneScroll,
+    progress: function(animation, progress, remainingMs) {
+      console.log('📈 Animation progress:', {
+        progress: Math.round(progress * 100) + '%',
+        currentScroll: window.pageYOffset,
+        targetScroll: targetScroll,
+        remainingMs: remainingMs,
+        inScroll: scrollSystem.inScroll
+      });
+    },
     complete: function() {
+      const endTime = Date.now();
+      const finalScroll = window.pageYOffset;
       scrollSystem.inScroll = false;
-      console.log('✅ Navigation to section', sectionIndex, 'complete');
+      
+      console.log('✅ ✅ Animation COMPLETE:', {
+        section: sectionIndex,
+        duration: endTime - startTime + 'ms',
+        startScroll: startScroll,
+        targetScroll: targetScroll,
+        finalScroll: finalScroll,
+        reached: Math.abs(finalScroll - targetScroll) < 50,
+        inScroll: scrollSystem.inScroll,
+        touchEventsDetected: touchEventsDuringAnimation.length,
+        conflictsDetected: conflictingEvents.length
+      });
+      
+      // Report conflicts if any were detected
+      if (conflictingEvents.length > 0) {
+        console.log('🔴 CONFLICTS DETECTED during animation:', conflictingEvents);
+      }
+      
+      if (touchEventsDuringAnimation.length > 0) {
+        console.log('👆 TOUCH EVENTS during animation:', touchEventsDuringAnimation);
+      }
+      
+      // Reset animation tracking
+      animationStartTime = 0;
+      animationTarget = null;
+      
+      // Restore conflicting listeners
+      restoreConflictingListeners();
+    },
+    fail: function() {
+      console.log('❌ ❌ Animation FAILED/INTERRUPTED:', {
+        section: sectionIndex,
+        currentScroll: window.pageYOffset,
+        targetScroll: targetScroll,
+        timeSinceStart: Date.now() - startTime + 'ms',
+        touchEventsDetected: touchEventsDuringAnimation.length,
+        conflictsDetected: conflictingEvents.length
+      });
+      scrollSystem.inScroll = false;
+      
+      // CRITICAL: Report why animation failed
+      if (conflictingEvents.length > 0) {
+        console.log('🔴 FAILURE REASON - CONFLICTS DETECTED:', conflictingEvents);
+      }
+      
+      if (touchEventsDuringAnimation.length > 0) {
+        console.log('👆 FAILURE REASON - TOUCH EVENTS:', touchEventsDuringAnimation);
+      }
+      
+      // Reset animation tracking
+      animationStartTime = 0;
+      animationTarget = null;
+      
+      // Restore conflicting listeners
+      restoreConflictingListeners();
     }
   });
 }
@@ -773,10 +1088,23 @@ function updateCurrentSectionFromScrollPosition() {
   });
   
   const oldSection = scrollSystem.currentSection;
+  
+  // CRITICAL DEBUG: Log when this runs during animation
+  if (scrollSystem.inScroll) {
+    console.log('⚠️ ⚠️ updateCurrentSectionFromScrollPosition called DURING ANIMATION:', {
+      inScroll: scrollSystem.inScroll,
+      currentScrollPos: currentScrollPos,
+      oldSection: oldSection,
+      detectedSection: closestSection,
+      willUpdate: oldSection !== closestSection
+    });
+  }
+  
   scrollSystem.currentSection = closestSection;
   
   if (oldSection !== closestSection) {
-    console.log('📍 Current section updated from', oldSection, 'to', closestSection);
+    console.log('📍 Current section updated from', oldSection, 'to', closestSection, 
+               scrollSystem.inScroll ? '(DURING ANIMATION!)' : '(normal)');
     updateDotNavigation();
   }
 }
@@ -997,6 +1325,7 @@ function initializeAllFeatures() {
   
   setTimeout(initializeScrollSystem, 500);
   setTimeout(applyUltimateScrollFix, 600);
+  setTimeout(addMobileConflictDetection, 700);
   
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
@@ -1035,7 +1364,19 @@ function initializeAllFeatures() {
    });
    
    $(window).on('scroll.dotNavigation', function() {
+     // CRITICAL DEBUG: Log all scroll events
+     const currentScroll = window.pageYOffset;
+     
+     if (scrollSystem.inScroll) {
+       console.log('🔄 🔄 Scroll event fired DURING ANIMATION:', {
+         currentScroll: currentScroll,
+         inScroll: scrollSystem.inScroll,
+         willUpdate: false
+       });
+     }
+     
      if (scrollSystem.initialized && !scrollSystem.inScroll) {
+       console.log('🔄 Normal scroll event processing:', currentScroll);
        updateCurrentSectionFromScrollPosition();
      }
    });
@@ -1127,6 +1468,7 @@ waitForJQuery(function() {
     console.log('🏠 Homepage detected - initializing scroll system NOW');
     setTimeout(initializeScrollSystem, 50); // Very short delay
     setTimeout(initializeScrollToTopButton, 100);
+    setTimeout(addMobileConflictDetection, 150);
   }
   
   $(document).ready(function() {
