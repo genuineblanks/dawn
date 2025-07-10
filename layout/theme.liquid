@@ -625,26 +625,28 @@
       }
       
       // ===============================================
-      // INITIALIZE ALL EFFECTS - MOBILE BYPASS
+      // INITIALIZE ALL EFFECTS - MOBILE DETECTION
       // ===============================================
       function initAllEffects() {
-        // NUCLEAR FIX: Skip all effects on mobile
-        if (window.isMobileDevice && window.isMobileDevice()) {
-          console.log('📱 NUCLEAR FIX: Skipping ALL scroll effects on mobile');
-          return;
-        }
+        // Skip some effects on mobile but allow basic ones
+        const isMobile = window.isMobileDevice && window.isMobileDevice();
         
         // Check if user prefers reduced motion
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         
         if (!prefersReducedMotion) {
-          createScrollProgress();
-          createScrollIndicators();
+          // Only skip scroll-interfering effects on mobile
+          if (!isMobile) {
+            createScrollProgress();
+            createScrollIndicators();
+            initParallax();
+            enhancePageTransitions();
+          }
+          
+          // Allow these on both mobile and desktop
           createFloatingElements();
           animateProductGrids();
           animateSections();
-          initParallax();
-          enhancePageTransitions();
           createLoadingSkeletons();
         }
       }
@@ -926,26 +928,16 @@
       <div id="section-dots" class="section-dot-navigation"></div>
     {% endif %}
 
-    <!-- OPTIMIZED: Load scroll scripts in proper order for homepage -->
+    <!-- FIXED: Sequential loading for proper initialization -->
     {% if template contains 'index' %}
-      <!-- Load custom.js FIRST for primary scroll handling -->
-      <script src="{{ 'custom.js' | asset_url }}" async></script>
+      <!-- Load custom.js synchronously to ensure proper timing -->
+      <script src="{{ 'custom.js' | asset_url }}"></script>
       
-      <!-- Then load scroll-fix.js for animation fixes only -->
-      <script>
-        // Load scroll-fix.js after custom.js is ready
-        document.addEventListener('DOMContentLoaded', function() {
-          setTimeout(function() {
-            var script = document.createElement('script');
-            script.src = '{{ 'scroll-fix.js' | asset_url }}';
-            script.async = true;
-            document.head.appendChild(script);
-          }, 500);
-        });
-      </script>
+      <!-- Then load scroll-fix.js for animation fixes -->
+      <script src="{{ 'scroll-fix.js' | asset_url }}"></script>
     {% else %}
-      <!-- For non-homepage, only load custom.js -->
-      <script src="{{ 'custom.js' | asset_url }}" async></script>
+      <!-- For non-homepage, load custom.js normally -->
+      <script src="{{ 'custom.js' | asset_url }}"></script>
     {% endif %}
     
     <!-- Mobile-specific scroll optimization -->
