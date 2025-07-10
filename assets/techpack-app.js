@@ -3235,7 +3235,6 @@
         debugSystem.log('Target step not found', { stepNumber }, 'error');
       }
     }
-        };
 
         const hideStatus = () => {
           try {
