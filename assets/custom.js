@@ -88,6 +88,11 @@ let hasMoved = false;
 let touchTarget = null;
 let lastTouchTime = 0;
 
+// SECTION LOCKING MECHANISM - Prevents multi-section jumping
+let lastSwipeTime = 0;
+let swipeCooldownPeriod = 300; // 300ms cooldown between swipes
+let isSwipeInProgress = false;
+
 // DESKTOP ONLY - Mobile device detection (redundant but kept for compatibility)
 function isMobileDeviceCheck() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
@@ -147,6 +152,15 @@ function handleTouchMove(e) {
 function handleTouchEnd(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
+  // SECTION LOCKING: Check cooldown period
+  const currentTime = Date.now();
+  if (currentTime - lastSwipeTime < swipeCooldownPeriod) {
+    console.log('📱 🔒 SWIPE BLOCKED - Cooldown period active:', currentTime - lastSwipeTime, 'ms since last swipe');
+    hasMoved = false;
+    touchTarget = null;
+    return;
+  }
+  
   // SIMPLIFIED: If touching dot navigation, let it handle everything
   if (touchTarget && (
     touchTarget.classList.contains('section-dot') || 
@@ -174,20 +188,20 @@ function handleTouchEnd(e) {
     moved: hasMoved,
     mobile: isMobileDevice(),
     startY: touchStartY,
-    endY: touchEndY
+    endY: touchEndY,
+    timeSinceLastSwipe: currentTime - lastSwipeTime
   });
   
-  // SMART SWIPE DETECTION - Only for deliberate section navigation
+  // IMPROVED SWIPE DETECTION - Much more sensitive for natural mobile gestures
   const isMobile = isMobileDevice();
-  const minDistance = isMobile ? 80 : 40;      // Much higher threshold for mobile to avoid conflicts
-  const maxDuration = isMobile ? 800 : 1200;   // Faster swipes for deliberate navigation
-  const ratioThreshold = isMobile ? 2.0 : 1.2; // Much more vertical-focused for mobile
+  const minDistance = isMobile ? 25 : 40;      // REDUCED: Much more sensitive for mobile
+  const maxDuration = isMobile ? 1000 : 1200;  // More generous timing for mobile
+  const ratioThreshold = isMobile ? 1.5 : 1.2; // More forgiving ratio for mobile
   
-  // Only trigger section navigation for very deliberate, fast, vertical swipes
+  // SIMPLIFIED validation - remove the redundant 80px check
   const isValidSwipe = touchDuration < maxDuration && 
                       totalVerticalDistance > minDistance && 
                       totalVerticalDistance > horizontalDistance * ratioThreshold &&
-                      totalVerticalDistance > 80 && // Minimum 80px for mobile section nav
                       hasMoved;
   
   console.log('📱 Swipe validation:', {
@@ -196,23 +210,27 @@ function handleTouchEnd(e) {
     distanceOK: totalVerticalDistance > minDistance,
     ratioOK: totalVerticalDistance > horizontalDistance * ratioThreshold,
     movedOK: hasMoved,
-    thresholds: { minDistance, maxDuration, ratioThreshold }
+    thresholds: { minDistance, maxDuration, ratioThreshold },
+    cooldownOK: currentTime - lastSwipeTime >= swipeCooldownPeriod
   });
   
   if (isValidSwipe) {
-    // FIXED: No preventDefault in passive events - just trigger section change
+    // SECTION LOCKING: Set swipe in progress
+    isSwipeInProgress = true;
+    lastSwipeTime = currentTime;
+    
     console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
-    console.log('📱 🎯 Touch handler will call goToSection (no premature inScroll setting)');
+    console.log('📱 🔒 Section locking active - cooldown period started');
     
     let targetSection = scrollSystem.currentSection;
-    const swipeThreshold = isMobile ? 50 : 25; // Higher threshold for mobile to avoid accidental triggers
+    const swipeThreshold = isMobile ? 15 : 25; // REDUCED: More sensitive threshold
     
     if (verticalDistance > swipeThreshold) {
-      // Swipe up = next section
+      // Swipe up = next section (EXACTLY ONE SECTION)
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
       console.log('📱 🔥 SWIPE UP detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
     } else if (verticalDistance < -swipeThreshold) {
-      // Swipe down = previous section
+      // Swipe down = previous section (EXACTLY ONE SECTION)
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
       console.log('📱 🔥 SWIPE DOWN detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
     }
@@ -220,14 +238,21 @@ function handleTouchEnd(e) {
     if (targetSection !== scrollSystem.currentSection) {
       console.log('📱 🚀 EXECUTING SECTION NAVIGATION:', scrollSystem.currentSection, '->', targetSection);
       console.log('📱 🎯 Target position:', scrollSystem.arrSections[targetSection]);
+      console.log('📱 🔒 Section locked - next swipe blocked for', swipeCooldownPeriod, 'ms');
       goToSection(targetSection);
     } else {
       console.log('📱 ❌ No section change - same section');
+      isSwipeInProgress = false;
       scrollSystem.inScroll = false;
     }
   } else {
     console.log('📱 ❌ Invalid swipe - conditions not met');
-    console.log('📱 💡 Try: Swipe more vertically, faster, or with more distance');
+    console.log('📱 💡 Swipe detected but too small/horizontal/slow:', {
+      distance: totalVerticalDistance,
+      needed: minDistance,
+      duration: touchDuration,
+      maxDuration: maxDuration
+    });
   }
   
   // Reset all touch tracking
@@ -1099,6 +1124,11 @@ function goToSection(sectionIndex) {
     console.log('🟠 SETTING inScroll = false via global timeout');
     scrollSystem.inScroll = false;
     console.log('🟠 inScroll flag after timeout reset:', scrollSystem.inScroll);
+    
+    // SECTION LOCKING: Reset swipe progress on timeout too
+    isSwipeInProgress = false;
+    console.log('🔓 Section unlocked after global timeout');
+    
     animationStartTime = 0;
     animationTarget = null;
     restoreConflictingListeners();
@@ -1138,6 +1168,10 @@ function goToSection(sectionIndex) {
       console.log('🟢 SETTING inScroll = false in jQuery complete');
       scrollSystem.inScroll = false;
       console.log('🟢 inScroll flag after jQuery completion:', scrollSystem.inScroll);
+      
+      // SECTION LOCKING: Reset swipe progress when animation completes
+      isSwipeInProgress = false;
+      console.log('🔓 Section unlocked - swipe can proceed after cooldown');
       
       // Clear global timeout
       clearTimeout(globalAnimationTimeout);
@@ -1181,6 +1215,10 @@ function goToSection(sectionIndex) {
         conflictsDetected: conflictingEvents.length
       });
       scrollSystem.inScroll = false;
+      
+      // SECTION LOCKING: Reset swipe progress on failure too
+      isSwipeInProgress = false;
+      console.log('🔓 Section unlocked after animation failure');
       
       // Report failure reasons for debugging
       if (conflictingEvents.length > 0) {
