@@ -1,3 +1,5 @@
+/* MOBILE SCROLL FIX APPLIED - VERSION 2024-07-10-FIXED */
+
 @font-face {
     font-family: 'Arial Narrow';
     src: url('https://cdn.shopify.com/s/files/1/0686/0809/8520/files/ArialNarrow.woff2') format('woff2'),
@@ -32,8 +34,18 @@ dynamic-checkout {
 summary svg.icon.icon-plus, summary svg.icon.icon-minus {
     width: 15px;
 }
-#autoplay-video {
-  scroll-behavior: smooth;
+/* FIXED: Make scroll-behavior specific to video element only on desktop */
+@media screen and (min-width: 750px) {
+  #autoplay-video {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Ensure autoplay-video doesn't interfere with mobile scroll system */
+@media screen and (max-width: 749px) {
+  #autoplay-video {
+    scroll-behavior: auto;
+  }
 }
 
 .collection-btn {
@@ -1000,7 +1012,7 @@ footer .grid--4-col-desktop .grid__item {
 .newsletter_Klaviyo form.klaviyo-form > .needsclick > .needsclick:first-child input {
     padding: 1rem  !important;
     border: 1px solid #ddd !important;
-    background-color: #fff !important;A
+    background-color: #fff !important;
     border-radius: 0.3rem  !important;
     transition: .3s;
 }
