@@ -31,7 +31,7 @@
     <!-- CRITICAL: Load jQuery FIRST - Required for scroll system -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
-    <!-- Mobile detection script -->
+    <!-- NUCLEAR MOBILE DETECTION SCRIPT -->
     <script>
       window.isMobileDevice = function() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
@@ -43,12 +43,17 @@
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       };
       
-      // Add mobile class to body for CSS targeting
+      // NUCLEAR FIX: Add mobile class and force native scrolling
       if (window.isMobileDevice()) {
+        console.log('📱 NUCLEAR MOBILE FIX: Mobile device detected in theme.liquid');
         document.documentElement.classList.add('mobile-device');
         if (window.isIOS()) {
           document.documentElement.classList.add('ios-device');
         }
+        
+        // Force native scrolling immediately
+        document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
+        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important;';
       }
     </script>
     
@@ -406,9 +411,15 @@
     document.addEventListener('DOMContentLoaded', function() {
       
       // ===============================================
-      // SCROLL PROGRESS BAR
+      // SCROLL PROGRESS BAR - DISABLED ON MOBILE
       // ===============================================
       function createScrollProgress() {
+        // NUCLEAR FIX: Skip on mobile devices
+        if (window.isMobileDevice && window.isMobileDevice()) {
+          console.log('📱 Skipping scroll progress on mobile');
+          return;
+        }
+        
         const progressBar = document.createElement('div');
         progressBar.className = 'scroll-progress';
         document.body.appendChild(progressBar);
@@ -423,9 +434,15 @@
       }
       
       // ===============================================
-      // SCROLL INDICATORS (DOT NAVIGATION)
+      // SCROLL INDICATORS (DOT NAVIGATION) - DISABLED ON MOBILE
       // ===============================================
       function createScrollIndicators() {
+        // NUCLEAR FIX: Skip on mobile devices
+        if (window.isMobileDevice && window.isMobileDevice()) {
+          console.log('📱 Skipping scroll indicators on mobile');
+          return;
+        }
+        
         const sections = document.querySelectorAll('.section, .shopify-section');
         if (sections.length <= 1) return;
         
@@ -446,7 +463,7 @@
         
         document.body.appendChild(indicators);
         
-        // Update active indicator on scroll
+        // Update active indicator on scroll - DESKTOP ONLY
         function updateActiveIndicator() {
           const scrollPosition = window.pageYOffset + window.innerHeight / 2;
           
@@ -533,9 +550,15 @@
       }
       
       // ===============================================
-      // PARALLAX EFFECT FOR HERO SECTIONS
+      // PARALLAX EFFECT FOR HERO SECTIONS - DISABLED ON MOBILE
       // ===============================================
       function initParallax() {
+        // NUCLEAR FIX: Skip on mobile devices
+        if (window.isMobileDevice && window.isMobileDevice()) {
+          console.log('📱 Skipping parallax on mobile');
+          return;
+        }
+        
         const heroSections = document.querySelectorAll('.hero-section, .banner-section, [data-section-type="hero"]');
         
         function updateParallax() {
@@ -554,9 +577,15 @@
       }
       
       // ===============================================
-      // ENHANCED PAGE TRANSITIONS
+      // ENHANCED PAGE TRANSITIONS - DISABLED ON MOBILE
       // ===============================================
       function enhancePageTransitions() {
+        // NUCLEAR FIX: Skip on mobile devices
+        if (window.isMobileDevice && window.isMobileDevice()) {
+          console.log('📱 Skipping page transitions on mobile');
+          return;
+        }
+        
         // Work with your existing scroll system
         let isScrolling = false;
         
@@ -596,9 +625,15 @@
       }
       
       // ===============================================
-      // INITIALIZE ALL EFFECTS
+      // INITIALIZE ALL EFFECTS - MOBILE BYPASS
       // ===============================================
       function initAllEffects() {
+        // NUCLEAR FIX: Skip all effects on mobile
+        if (window.isMobileDevice && window.isMobileDevice()) {
+          console.log('📱 NUCLEAR FIX: Skipping ALL scroll effects on mobile');
+          return;
+        }
+        
         // Check if user prefers reduced motion
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         
