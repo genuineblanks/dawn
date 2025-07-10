@@ -798,29 +798,15 @@ function initializeScrollSystem() {
     return;
   }
   
-  // IMPORTANT: Skip custom scroll system on mobile but allow basic functionality
+  // MOBILE: Enable section scrolling for mobile devices too
   if (IS_MOBILE_DEVICE) {
-    console.log('📱 Mobile device detected - using native scrolling');
-    scrollSystem.isEnabled = false;
-    scrollSystem.initialized = true;
-    
-    // Force native scrolling CSS for mobile
-    document.documentElement.style.scrollBehavior = 'auto';
+    console.log('📱 Mobile device detected - enabling mobile section scrolling');
+    // Apply mobile-specific optimizations
     document.body.style.touchAction = 'pan-y';
     document.body.style.webkitOverflowScrolling = 'touch';
-    
-    // Export minimal scroll system for other scripts
-    window.scrollSystem = { 
-      isEnabled: false, 
-      initialized: true, 
-      inScroll: false,
-      currentSection: 0,
-      arrSections: []
-    };
-    return;
   }
   
-  console.log('🚀 Initializing scroll system for desktop...');
+  console.log('🚀 Initializing scroll system for', IS_MOBILE_DEVICE ? 'mobile' : 'desktop', '...');
   
   scrollSystem.$sections = $('section');
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
@@ -838,7 +824,7 @@ function initializeScrollSystem() {
     updateDotNavigation();
     
     // ENHANCED MOBILE TOUCH SUPPORT
-    const isMobile = isMobileDevice();
+    const isMobile = IS_MOBILE_DEVICE;
     console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop', 'iOS:', isIOS());
     
     if (isMobile) {
