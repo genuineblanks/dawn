@@ -57,17 +57,27 @@
   
   section {
     min-height: var(--real-viewport-height);
+    height: var(--real-viewport-height); /* ENHANCED: Force exact viewport height */
+    max-height: var(--real-viewport-height); /* ENHANCED: Prevent oversize */
     /* Ensure sections are touch-scrollable */
     -webkit-overflow-scrolling: touch;
+    /* ANDROID FIX: Better section alignment */
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent content overflow affecting height */
   }
   
   .banner,
   .image-banner {
     min-height: var(--real-viewport-height);
+    height: var(--real-viewport-height); /* ENHANCED: Force exact height */
+    max-height: var(--real-viewport-height); /* ENHANCED: Prevent overflow */
+    box-sizing: border-box;
   }
   
   .banner__media {
     height: var(--real-viewport-height);
+    max-height: var(--real-viewport-height); /* ENHANCED: Prevent overflow */
+    object-fit: cover; /* ENHANCED: Maintain aspect ratio */
   }
   
   /* CRITICAL: Fix touch scrolling for iOS */
