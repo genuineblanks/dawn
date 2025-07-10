@@ -3625,120 +3625,73 @@ details-disclosure > details {
 }
 
 /* ===============================================
-   NUCLEAR MOBILE SCROLL FIX - 100% NATIVE SCROLLING
+   MOBILE SCROLL FIX - TARGETED APPROACH
    =============================================== */
 
-/* Target mobile devices */
-.mobile-device,
 @media screen and (max-width: 749px) {
-  
-  /* NUCLEAR: Force native scrolling on ALL elements */
-  html, body, *, *::before, *::after {
+  /* Force native scrolling behavior on mobile */
+  html {
     scroll-behavior: auto !important;
-    overflow: visible !important;
+    overflow: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: auto !important;
-    touch-action: auto !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
   }
   
-  /* CRITICAL: Remove ALL custom scroll interference */
-  .home-section,
-  .home-section *,
-  .section,
-  .shopify-section {
-    overflow: visible !important;
-    touch-action: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    position: static !important;
-    transform: none !important;
-    transition: none !important;
-  }
-  
-  /* NUCLEAR: Hide/disable all custom scroll elements */
-  .section-dot-navigation,
-  .section-dots,
-  #section-dots,
-  .scroll-indicators,
-  .scroll-progress,
-  .scroll-to-top {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    opacity: 0 !important;
-  }
-  
-  /* Force normal document flow */
   body {
-    height: auto !important;
-    min-height: 100vh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+    overflow: auto !important;
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
   }
   
-  html {
-    height: auto !important;
-    overflow: auto !important;
-    scroll-behavior: auto !important;
-    -webkit-overflow-scrolling: touch !important;
+  /* Show dot navigation on mobile with touch-friendly styling */
+  .mobile-device .section-dot-navigation,
+  .mobile-device .section-dots,
+  .mobile-device #section-dots {
+    display: flex !important;
+    opacity: 0.8 !important;
   }
   
-  /* Remove any fixed/sticky positioning that might interfere */
-  .home-section [style*="position: fixed"],
-  .home-section [style*="position: sticky"] {
-    position: static !important;
+  /* Make dots larger and more touch-friendly on mobile */
+  .mobile-device .section-dot {
+    width: 12px !important;
+    height: 12px !important;
+    margin: 4px 0 !important;
   }
   
-  /* Ensure all sections are normally scrollable */
-  section {
-    height: auto !important;
-    min-height: 100vh;
-    position: static !important;
+  /* Larger touch area for mobile dots */
+  .mobile-device .section-dot::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    cursor: pointer;
+  }
+  
+  /* Ensure sections work with custom scroll system on mobile */
+  .mobile-device section {
     overflow: visible !important;
-    transform: none !important;
+    position: relative !important;
+    min-height: 100vh;
   }
   
-  /* Remove any transforms or animations that block scrolling */
-  [style*="transform"],
-  [style*="transition"],
-  [class*="animate"],
-  [class*="scroll"] {
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* NUCLEAR: Additional mobile-specific overrides */
-@media screen and (max-width: 749px) {
-  /* Remove ALL scroll blocking behaviors */
-  * {
-    touch-action: auto !important;
-    -webkit-touch-callout: default !important;
-    -webkit-user-select: auto !important;
-    user-select: auto !important;
+  /* Allow custom scroll behavior on mobile homepage */
+  .mobile-device.home-section {
+    scroll-behavior: smooth !important;
   }
   
-  /* Force normal scrolling behavior */
-  body, html {
-    overflow: auto !important;
-    scroll-behavior: auto !important;
-    position: static !important;
+  /* Optimize touch scrolling for section navigation */
+  .mobile-device.home-section body {
+    overscroll-behavior: none !important;
+    touch-action: pan-y !important;
   }
   
-  /* Remove any modal/overlay scroll blocking */
-  .modal-open,
-  .modal-open body,
-  .no-scroll,
-  .scroll-disabled {
+  /* Remove scroll blocking from modals on mobile */
+  .mobile-device .modal-open,
+  .mobile-device .modal-open body {
     overflow: auto !important;
     position: static !important;
-    height: auto !important;
   }
 }
 
