@@ -1,13 +1,18 @@
-// ULTIMATE SCROLL FIX - OVERWRITES EVERYTHING
+// SCROLL ANIMATION FIX - WORKS WITH CUSTOM.JS
 (function() {
   'use strict';
   
-  console.log('💪 ULTIMATE SCROLL FIX LOADING...');
+  console.log('💪 SCROLL ANIMATION FIX LOADING...');
   
   var isHomepage = document.body.classList.contains('home-section');
   if (!isHomepage) {
     console.log('❌ Not homepage, skipping scroll fix');
     return;
+  }
+  
+  // IMPORTANT: Check if custom.js scroll system is already running
+  if (window.scrollSystem && window.scrollSystem.initialized) {
+    console.log('ℹ️ Custom scroll system detected - limiting to animation fixes only');
   }
   
   var scrollFixed = false;
@@ -21,13 +26,18 @@
     scrollFixed = false;
   }
   
-  function applyUltimateScrollFix() {
+  function applyScrollAnimationFix() {
     destroyExistingFix();
     
     if (scrollFixed) return;
     scrollFixed = true;
     
-    console.log('🔧 APPLYING ULTIMATE SCROLL FIX...');
+    console.log('🔧 APPLYING SCROLL ANIMATION FIX...');
+    
+    // IMPORTANT: Don't interfere if custom scroll system is active
+    if (window.scrollSystem && window.scrollSystem.isEnabled) {
+      console.log('⚠️ Custom scroll system active - only fixing animations');
+    }
     
     // Reset all elements
     var allTriggers = document.querySelectorAll('.scroll-trigger');
@@ -49,8 +59,13 @@
       el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     });
     
-    // Create scroll handler
+    // FIXED: Create scroll handler only for animations
     scrollHandler = function() {
+      // Don't interfere with custom scroll system navigation
+      if (window.scrollSystem && window.scrollSystem.inScroll) {
+        return;
+      }
+      
       var offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
       offscreenElements.forEach(function(el) {
         var rect = el.getBoundingClientRect();
@@ -67,11 +82,11 @@
     console.log('✅ ULTIMATE SCROLL FIX APPLIED');
   }
   
-  // Apply on every possible event
+  // Apply animation fix with proper timing
   function initScrollFix() {
-    setTimeout(applyUltimateScrollFix, 100);
-    setTimeout(applyUltimateScrollFix, 500);
-    setTimeout(applyUltimateScrollFix, 1000);
+    setTimeout(applyScrollAnimationFix, 200);
+    setTimeout(applyScrollAnimationFix, 600);
+    setTimeout(applyScrollAnimationFix, 1200);
   }
   
   // Multiple initialization points
@@ -89,12 +104,15 @@
     }
   });
   
-  // Override on interval to catch any navigation
+  // FIXED: Reduced interval frequency and better checks
   setInterval(function() {
     if (document.body.classList.contains('home-section') && !scrollFixed) {
-      console.log('🔄 Interval check - reapplying scroll fix');
-      initScrollFix();
+      // Only apply if custom scroll system is not handling things
+      if (!window.scrollSystem || !window.scrollSystem.initialized) {
+        console.log('🔄 Interval check - reapplying animation fix');
+        initScrollFix();
+      }
     }
-  }, 2000);
+  }, 5000);
   
 })();
