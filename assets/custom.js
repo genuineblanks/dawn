@@ -40,61 +40,94 @@ let scrollSystem = {
 };
 
 // ===============================================
-// MOBILE TOUCH SUPPORT
+// MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
 let touchStartTime = 0;
-let isTouchScrolling = false;
+let touchStartX = 0;
+let touchEndX = 0;
+let initialTouchY = 0;
+let hasMoved = false;
 
 function handleTouchStart(e) {
-  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
-  touchStartY = e.touches[0].clientY;
+  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  
+  const touch = e.touches[0];
+  touchStartY = touch.clientY;
+  touchStartX = touch.clientX;
+  initialTouchY = touch.clientY;
   touchStartTime = Date.now();
-  isTouchScrolling = false;
-}
-
-function handleTouchEnd(e) {
-  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+  hasMoved = false;
   
-  touchEndY = e.changedTouches[0].clientY;
-  const touchDuration = Date.now() - touchStartTime;
-  const touchDistance = Math.abs(touchStartY - touchEndY);
-  
-  if (touchDuration < 300 && touchDistance > 50 && !isTouchScrolling) {
-    e.preventDefault();
-    
-    scrollSystem.inScroll = true;
-    console.log('📱 Touch swipe detected - current section:', scrollSystem.currentSection);
-    
-    if (touchStartY > touchEndY + 30) {
-      scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
-        ? scrollSystem.arrSections.length - 1
-        : scrollSystem.currentSection + 1;
-    } else if (touchStartY < touchEndY - 30) {
-      scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
-    } else {
-      scrollSystem.inScroll = false;
-      return;
-    }
-    
-    console.log('📱 Touch scrolling to section:', scrollSystem.currentSection);
-    updateDotNavigation();
-    
-    $('html, body').animate({
-      scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
-    }, {
-      duration: scrollSystem.durationOneScroll,
-      complete: function() {
-        scrollSystem.inScroll = false;
-        console.log('✅ Touch scroll complete');
-      }
-    });
-  }
+  console.log('📱 Touch start at:', touchStartY);
 }
 
 function handleTouchMove(e) {
-  isTouchScrolling = true;
+  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  
+  const touch = e.touches[0];
+  const deltaY = Math.abs(touch.clientY - initialTouchY);
+  const deltaX = Math.abs(touch.clientX - touchStartX);
+  
+  // If significant movement, mark as moved
+  if (deltaY > 10 || deltaX > 10) {
+    hasMoved = true;
+  }
+  
+  // If it's a vertical swipe and significant enough, prevent default scrolling
+  if (deltaY > 30 && deltaY > deltaX * 2) {
+    e.preventDefault();
+  }
+}
+
+function handleTouchEnd(e) {
+  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  
+  const touch = e.changedTouches[0];
+  touchEndY = touch.clientY;
+  touchEndX = touch.clientX;
+  
+  const touchDuration = Date.now() - touchStartTime;
+  const verticalDistance = touchStartY - touchEndY; // Positive = swipe up
+  const horizontalDistance = Math.abs(touchEndX - touchStartX);
+  const totalDistance = Math.abs(verticalDistance);
+  
+  console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Horizontal:', horizontalDistance, 'Moved:', hasMoved);
+  
+  // Check if it's a valid swipe: quick, mostly vertical, significant distance
+  const isValidSwipe = touchDuration < 800 && 
+                      totalDistance > 50 && 
+                      totalDistance > horizontalDistance * 2 &&
+                      hasMoved;
+  
+  if (isValidSwipe) {
+    e.preventDefault();
+    
+    console.log('📱 Valid swipe detected');
+    scrollSystem.inScroll = true;
+    
+    let targetSection = scrollSystem.currentSection;
+    
+    if (verticalDistance > 30) {
+      // Swipe up = next section
+      targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
+      console.log('📱 Swipe UP to section:', targetSection);
+    } else if (verticalDistance < -30) {
+      // Swipe down = previous section
+      targetSection = Math.max(scrollSystem.currentSection - 1, 0);
+      console.log('📱 Swipe DOWN to section:', targetSection);
+    }
+    
+    if (targetSection !== scrollSystem.currentSection) {
+      goToSection(targetSection);
+    } else {
+      scrollSystem.inScroll = false;
+    }
+  }
+  
+  // Reset
+  hasMoved = false;
 }
 
 // ===============================================
@@ -172,29 +205,55 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM
+// DOT NAVIGATION SYSTEM - AGGRESSIVE DEBUG VERSION
 // ===============================================
 function createDotNavigation() {
-  if (!isHomepage()) return;
+  console.log('🎯 AGGRESSIVE DEBUG: Creating dot navigation...');
   
-  console.log('🎯 Creating dot navigation...');
+  // Force remove any existing containers first
+  const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
+  existingContainers.forEach(container => container.remove());
+  console.log('🗑️ Removed existing containers:', existingContainers.length);
   
-  let dotContainer = $('#section-dots');
-  if (!dotContainer.length) {
-    dotContainer = document.getElementById('section-dots');
-    if (dotContainer) {
-      dotContainer = $(dotContainer);
-    }
-  }
+  // Always create a fresh container
+  const dotContainer = document.createElement('div');
+  dotContainer.id = 'section-dots';
+  dotContainer.className = 'section-dot-navigation';
   
-  if (!dotContainer || !dotContainer.length) {
-    console.log('❌ Dot container not found');
-    return;
-  }
+  // Force inline styles to override any CSS conflicts
+  dotContainer.style.cssText = `
+    position: fixed !important;
+    right: 30px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 999999 !important;
+    background: rgba(255, 0, 0, 0.9) !important;
+    padding: 20px 10px !important;
+    border-radius: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    border: 3px solid yellow !important;
+    min-width: 40px !important;
+    min-height: 200px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  `;
   
-  console.log('✅ Dot container found:', dotContainer);
-  dotContainer.empty();
+  // Append to body
+  document.body.appendChild(dotContainer);
+  console.log('✅ Created and appended new dot container');
   
+  // Set the dotNavigation reference
+  scrollSystem.dotNavigation = dotContainer;
+  
+  // Log container details
+  console.log('📍 Container position:', dotContainer.getBoundingClientRect());
+  console.log('🎨 Container parent:', dotContainer.parentElement);
+  console.log('👁️ Container visible:', dotContainer.offsetWidth > 0 && dotContainer.offsetHeight > 0);
+  
+  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -205,27 +264,98 @@ function createDotNavigation() {
     }
   });
   
+  // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections:', scrollSystem.arrSections);
+  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
   
+  // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    const dot = $('<div></div>');
-    dot.addClass('section-dot');
-    dot.attr('data-section', index);
+    // Create dot element with forced visibility
+    const dot = document.createElement('div');
+    dot.className = 'section-dot';
+    dot.setAttribute('data-section', index);
     
-    dot.on('click', function() {
-      console.log('🎯 Dot clicked:', index);
+    // Force dot styling
+    dot.style.cssText = `
+      width: 16px !important;
+      height: 16px !important;
+      background: lime !important;
+      border-radius: 50% !important;
+      margin: 3px 0 !important;
+      cursor: pointer !important;
+      border: 2px solid black !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+      position: relative !important;
+      flex-shrink: 0 !important;
+    `;
+    
+    // Add click handler
+    dot.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🎯 Dot clicked:', index, 'going to section at position:', scrollSystem.arrSections[index]);
       goToSection(index);
     });
     
-    dotContainer.append(dot);
-    console.log('🎯 Dot', index, 'added to container');
+    // Add touch handler for mobile
+    dot.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('📱 Dot touched:', index);
+      goToSection(index);
+    });
+    
+    // Add hover effect
+    dot.addEventListener('mouseenter', function() {
+      console.log('🐭 Mouse entered dot:', index);
+      dot.style.background = 'white';
+      dot.style.transform = 'scale(1.2)';
+    });
+    
+    dot.addEventListener('mouseleave', function() {
+      dot.style.background = 'lime';
+      dot.style.transform = 'scale(1)';
+    });
+    
+    // Append to container
+    dotContainer.appendChild(dot);
+    console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
   });
   
   console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  console.log('📏 Final container size:', dotContainer.getBoundingClientRect());
+  console.log('👶 Container children count:', dotContainer.children.length);
+  
+  // Test if container is actually visible
+  setTimeout(() => {
+    const rect = dotContainer.getBoundingClientRect();
+    console.log('🔍 Container visibility test:', {
+      width: rect.width,
+      height: rect.height,
+      top: rect.top,
+      right: rect.right,
+      visible: rect.width > 0 && rect.height > 0,
+      inViewport: rect.right > 0 && rect.top >= 0 && rect.bottom <= window.innerHeight
+    });
+  }, 100);
+  
   updateDotNavigation();
+  
+  // Remove debug styling after 10 seconds
+  setTimeout(() => {
+    dotContainer.style.background = 'rgba(0, 0, 0, 0.8)';
+    dotContainer.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+    dotContainer.querySelectorAll('.section-dot').forEach((dot, index) => {
+      if (!dot.classList.contains('active')) {
+        dot.style.background = 'rgba(255, 255, 255, 0.6)';
+      }
+    });
+    console.log('🎨 Debug styling removed - dots should now have normal styling');
+  }, 10000);
 }
 
 function updateDotNavigation() {
@@ -579,15 +709,28 @@ window.isHomepage = isHomepage;
 window.initializeScrollToTopButton = initializeScrollToTopButton;
 
 // ===============================================
-// INITIALIZATION SEQUENCE
+// INITIALIZATION SEQUENCE - FASTER LOADING
 // ===============================================
 waitForJQuery(function() {
+  // IMMEDIATE initialization - don't wait for DOM ready
+  console.log('📱 jQuery ready - IMMEDIATE initialization');
+  
+  // Initialize scroll system immediately if homepage
+  if (isHomepage()) {
+    console.log('🏠 Homepage detected - initializing scroll system NOW');
+    setTimeout(initializeScrollSystem, 50); // Very short delay
+    setTimeout(initializeScrollToTopButton, 100);
+  }
+  
   $(document).ready(function() {
-    console.log('📱 DOM Ready with jQuery - initializing features');
+    console.log('📱 DOM Ready - secondary initialization');
     initializeAllFeatures();
     
-    // Initialize scroll to top button
-    setTimeout(initializeScrollToTopButton, 100);
+    // Re-initialize if not already done
+    if (isHomepage() && !scrollSystem.initialized) {
+      console.log('🔄 Backup initialization');
+      setTimeout(initializeScrollSystem, 100);
+    }
   });
 
   $(window).on('beforeunload', function() {
@@ -597,28 +740,29 @@ waitForJQuery(function() {
   $(window).on('load', function() {
     console.log('🌐 Window loaded - checking scroll system');
     if (!scrollSystem.initialized && isHomepage()) {
-      setTimeout(initializeScrollSystem, 200);
+      setTimeout(initializeScrollSystem, 100);
     } else if (isHomepage()) {
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
         updateDotNavigation();
-      }, 300);
+      }, 200);
     }
   });
   
   // Shopify theme editor support
   document.addEventListener('shopify:section:load', function() {
     if (isHomepage()) {
-      reinitializeScrollAnimations();
-      setTimeout(initializeScrollSystem, 100);
+      setTimeout(function() {
+        resetScrollSystem();
+        initializeScrollSystem();
+      }, 100);
     }
   });
   
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden && isHomepage()) {
       setTimeout(function() {
-        reinitializeScrollAnimations();
         if (!scrollSystem.initialized) {
           initializeScrollSystem();
         }
