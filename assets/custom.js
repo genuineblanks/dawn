@@ -40,94 +40,61 @@ let scrollSystem = {
 };
 
 // ===============================================
-// MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN
+// MOBILE TOUCH SUPPORT
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
 let touchStartTime = 0;
-let touchStartX = 0;
-let touchEndX = 0;
-let initialTouchY = 0;
-let hasMoved = false;
+let isTouchScrolling = false;
 
 function handleTouchStart(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-  
-  const touch = e.touches[0];
-  touchStartY = touch.clientY;
-  touchStartX = touch.clientX;
-  initialTouchY = touch.clientY;
+  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+  touchStartY = e.touches[0].clientY;
   touchStartTime = Date.now();
-  hasMoved = false;
-  
-  console.log('📱 Touch start at:', touchStartY);
-}
-
-function handleTouchMove(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
-  
-  const touch = e.touches[0];
-  const deltaY = Math.abs(touch.clientY - initialTouchY);
-  const deltaX = Math.abs(touch.clientX - touchStartX);
-  
-  // If significant movement, mark as moved
-  if (deltaY > 10 || deltaX > 10) {
-    hasMoved = true;
-  }
-  
-  // If it's a vertical swipe and significant enough, prevent default scrolling
-  if (deltaY > 30 && deltaY > deltaX * 2) {
-    e.preventDefault();
-  }
+  isTouchScrolling = false;
 }
 
 function handleTouchEnd(e) {
-  if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
   
-  const touch = e.changedTouches[0];
-  touchEndY = touch.clientY;
-  touchEndX = touch.clientX;
-  
+  touchEndY = e.changedTouches[0].clientY;
   const touchDuration = Date.now() - touchStartTime;
-  const verticalDistance = touchStartY - touchEndY; // Positive = swipe up
-  const horizontalDistance = Math.abs(touchEndX - touchStartX);
-  const totalDistance = Math.abs(verticalDistance);
+  const touchDistance = Math.abs(touchStartY - touchEndY);
   
-  console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Horizontal:', horizontalDistance, 'Moved:', hasMoved);
-  
-  // Check if it's a valid swipe: quick, mostly vertical, significant distance
-  const isValidSwipe = touchDuration < 800 && 
-                      totalDistance > 50 && 
-                      totalDistance > horizontalDistance * 2 &&
-                      hasMoved;
-  
-  if (isValidSwipe) {
+  if (touchDuration < 300 && touchDistance > 50 && !isTouchScrolling) {
     e.preventDefault();
     
-    console.log('📱 Valid swipe detected');
     scrollSystem.inScroll = true;
+    console.log('📱 Touch swipe detected - current section:', scrollSystem.currentSection);
     
-    let targetSection = scrollSystem.currentSection;
-    
-    if (verticalDistance > 30) {
-      // Swipe up = next section
-      targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-      console.log('📱 Swipe UP to section:', targetSection);
-    } else if (verticalDistance < -30) {
-      // Swipe down = previous section
-      targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-      console.log('📱 Swipe DOWN to section:', targetSection);
-    }
-    
-    if (targetSection !== scrollSystem.currentSection) {
-      goToSection(targetSection);
+    if (touchStartY > touchEndY + 30) {
+      scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
+        ? scrollSystem.arrSections.length - 1
+        : scrollSystem.currentSection + 1;
+    } else if (touchStartY < touchEndY - 30) {
+      scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
     } else {
       scrollSystem.inScroll = false;
+      return;
     }
+    
+    console.log('📱 Touch scrolling to section:', scrollSystem.currentSection);
+    updateDotNavigation();
+    
+    $('html, body').animate({
+      scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
+    }, {
+      duration: scrollSystem.durationOneScroll,
+      complete: function() {
+        scrollSystem.inScroll = false;
+        console.log('✅ Touch scroll complete');
+      }
+    });
   }
-  
-  // Reset
-  hasMoved = false;
+}
+
+function handleTouchMove(e) {
+  isTouchScrolling = true;
 }
 
 // ===============================================
@@ -205,28 +172,29 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM - ELEGANT MINIMAL VERSION
+// DOT NAVIGATION SYSTEM
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 Creating elegant dot navigation...');
+  if (!isHomepage()) return;
   
-  // Force remove any existing containers first
-  const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
-  existingContainers.forEach(container => container.remove());
+  console.log('🎯 Creating dot navigation...');
   
-  // Always create a fresh container
-  const dotContainer = document.createElement('div');
-  dotContainer.id = 'section-dots';
-  dotContainer.className = 'section-dot-navigation';
+  let dotContainer = $('#section-dots');
+  if (!dotContainer.length) {
+    dotContainer = document.getElementById('section-dots');
+    if (dotContainer) {
+      dotContainer = $(dotContainer);
+    }
+  }
   
-  // Append to body
-  document.body.appendChild(dotContainer);
-  console.log('✅ Created elegant dot container');
+  if (!dotContainer || !dotContainer.length) {
+    console.log('❌ Dot container not found');
+    return;
+  }
   
-  // Set the dotNavigation reference
-  scrollSystem.dotNavigation = dotContainer;
+  console.log('✅ Dot container found:', dotContainer);
+  dotContainer.empty();
   
-  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -237,40 +205,26 @@ function createDotNavigation() {
     }
   });
   
-  // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+  console.log('🎯 Clean sections:', scrollSystem.arrSections);
   
-  // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    console.log('🎯 Creating elegant dot', index, 'for section at position', sectionPos);
+    console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Create dot element
-    const dot = document.createElement('div');
-    dot.className = 'section-dot';
-    dot.setAttribute('data-section', index);
+    const dot = $('<div></div>');
+    dot.addClass('section-dot');
+    dot.attr('data-section', index);
     
-    // Add click handler
-    dot.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('🎯 Dot clicked:', index, 'going to section at position:', scrollSystem.arrSections[index]);
+    dot.on('click', function() {
+      console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    // Add touch handler for mobile
-    dot.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('📱 Dot touched:', index);
-      goToSection(index);
-    });
-    
-    // Append to container
-    dotContainer.appendChild(dot);
+    dotContainer.append(dot);
+    console.log('🎯 Dot', index, 'added to container');
   });
   
-  console.log('✅ Elegant dot navigation created with', scrollSystem.arrSections.length, 'dots');
+  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
   updateDotNavigation();
 }
 
@@ -625,28 +579,15 @@ window.isHomepage = isHomepage;
 window.initializeScrollToTopButton = initializeScrollToTopButton;
 
 // ===============================================
-// INITIALIZATION SEQUENCE - FASTER LOADING
+// INITIALIZATION SEQUENCE
 // ===============================================
 waitForJQuery(function() {
-  // IMMEDIATE initialization - don't wait for DOM ready
-  console.log('📱 jQuery ready - IMMEDIATE initialization');
-  
-  // Initialize scroll system immediately if homepage
-  if (isHomepage()) {
-    console.log('🏠 Homepage detected - initializing scroll system NOW');
-    setTimeout(initializeScrollSystem, 50); // Very short delay
-    setTimeout(initializeScrollToTopButton, 100);
-  }
-  
   $(document).ready(function() {
-    console.log('📱 DOM Ready - secondary initialization');
+    console.log('📱 DOM Ready with jQuery - initializing features');
     initializeAllFeatures();
     
-    // Re-initialize if not already done
-    if (isHomepage() && !scrollSystem.initialized) {
-      console.log('🔄 Backup initialization');
-      setTimeout(initializeScrollSystem, 100);
-    }
+    // Initialize scroll to top button
+    setTimeout(initializeScrollToTopButton, 100);
   });
 
   $(window).on('beforeunload', function() {
@@ -656,29 +597,28 @@ waitForJQuery(function() {
   $(window).on('load', function() {
     console.log('🌐 Window loaded - checking scroll system');
     if (!scrollSystem.initialized && isHomepage()) {
-      setTimeout(initializeScrollSystem, 100);
+      setTimeout(initializeScrollSystem, 200);
     } else if (isHomepage()) {
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
         updateDotNavigation();
-      }, 200);
+      }, 300);
     }
   });
   
   // Shopify theme editor support
   document.addEventListener('shopify:section:load', function() {
     if (isHomepage()) {
-      setTimeout(function() {
-        resetScrollSystem();
-        initializeScrollSystem();
-      }, 100);
+      reinitializeScrollAnimations();
+      setTimeout(initializeScrollSystem, 100);
     }
   });
   
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden && isHomepage()) {
       setTimeout(function() {
+        reinitializeScrollAnimations();
         if (!scrollSystem.initialized) {
           initializeScrollSystem();
         }
