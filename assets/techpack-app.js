@@ -873,71 +873,125 @@
       }
     }
 
-// FIXED: Updated navigateToStep method to handle step 0 properly
+// ENHANCED: Robust navigation with comprehensive error handling
     async navigateToStep(stepNumber) {
-      if (stepNumber === state.currentStep) return;
-      
-      debugSystem.log(`Navigating to step ${stepNumber}`, { from: state.currentStep });
+      try {
+        if (stepNumber === state.currentStep) {
+          debugSystem.log('Already on target step, skipping navigation', { stepNumber });
+          return true;
+        }
+        
+        debugSystem.log(`🧭 Starting navigation to step ${stepNumber}`, { 
+          from: state.currentStep,
+          timestamp: Date.now()
+        });
 
-      // Skip validation for step 0 (registration check) and when going backwards
-      // ALSO skip validation when coming FROM step 0 (registration)
-      if (stepNumber > state.currentStep && state.currentStep > 0 && !await this.validateCurrentStep()) {
-        debugSystem.log('Step validation failed, navigation cancelled', null, 'warn');
+        // Enhanced validation with error handling
+        try {
+          // Skip validation for step 0 (registration check) and when going backwards
+          // ALSO skip validation when coming FROM step 0 (registration)
+          if (stepNumber > state.currentStep && state.currentStep > 0) {
+            const validationResult = await this.validateCurrentStep();
+            if (!validationResult) {
+              debugSystem.log('❌ Step validation failed, navigation cancelled', { 
+                currentStep: state.currentStep,
+                targetStep: stepNumber 
+              }, 'warn');
+              return false;
+            }
+          }
+        } catch (validationError) {
+          debugSystem.log('❌ Validation error, proceeding anyway:', validationError, 'warn');
+          // Continue with navigation even if validation fails
+        }
+
+        // Enhanced element detection with error handling
+        let currentStepEl = null;
+        let targetStepEl = null;
+
+        try {
+          // Handle step 0 specifically
+          if (state.currentStep === 0) {
+            currentStepEl = document.querySelector('#techpack-step-0');
+          } else {
+            currentStepEl = document.querySelector(`[data-step="${state.currentStep}"]`);
+          }
+
+          if (stepNumber === 0) {
+            targetStepEl = document.querySelector('#techpack-step-0');
+          } else {
+            targetStepEl = document.querySelector(`[data-step="${stepNumber}"]`);
+          }
+
+          debugSystem.log('🔍 Element detection results:', {
+            currentStepEl: !!currentStepEl,
+            targetStepEl: !!targetStepEl,
+            currentStepId: currentStepEl?.id || 'unknown',
+            targetStepId: targetStepEl?.id || 'unknown'
+          });
+
+          if (!targetStepEl) {
+            debugSystem.log('❌ Target step element not found', { 
+              stepNumber,
+              expectedSelector: stepNumber === 0 ? '#techpack-step-0' : `[data-step="${stepNumber}"]`,
+              availableSteps: document.querySelectorAll('[data-step], #techpack-step-0').length
+            }, 'error');
+            return false;
+          }
+
+        } catch (elementError) {
+          debugSystem.log('❌ Element detection failed:', elementError, 'error');
+          return false;
+        }
+
+        // Enhanced animation handling with error recovery
+        try {
+          // Hide current step with animation
+          if (currentStepEl) {
+            try {
+              await animationManager.fadeOut(currentStepEl);
+              currentStepEl.style.display = 'none';
+              debugSystem.log('✅ Hidden current step successfully', { currentStep: state.currentStep });
+            } catch (fadeError) {
+              debugSystem.log('⚠️ Fade out animation failed, using direct hide:', fadeError, 'warn');
+              currentStepEl.style.display = 'none';
+            }
+          }
+
+          // Show target step with animation
+          targetStepEl.style.display = 'block';
+          
+          try {
+            await animationManager.fadeIn(targetStepEl);
+            debugSystem.log('✅ Shown target step successfully', { targetStep: stepNumber });
+          } catch (fadeInError) {
+            debugSystem.log('⚠️ Fade in animation failed, step is visible anyway:', fadeInError, 'warn');
+          }
+
+        } catch (animationError) {
+          debugSystem.log('❌ Animation sequence failed:', animationError, 'error');
+          // Ensure target step is visible even if animations fail
+          if (targetStepEl) {
+            targetStepEl.style.display = 'block';
+          }
+        }
+
+        // Update state and complete navigation
+        const previousStep = state.currentStep;
+        state.currentStep = stepNumber;
+        
+        debugSystem.log('✅ Navigation completed successfully', {
+          from: previousStep,
+          to: stepNumber,
+          duration: Date.now() - (this.navigationStartTime || Date.now())
+        });
+
+        return true;
+
+      } catch (navigationError) {
+        debugSystem.log('❌ Navigation failed completely:', navigationError, 'error');
         return false;
       }
-
-      // Find current and target step elements
-      let currentStepEl = null;
-      let targetStepEl = null;
-
-      // Handle step 0 specifically
-      if (state.currentStep === 0) {
-        currentStepEl = document.querySelector('#techpack-step-0');
-      } else {
-        currentStepEl = document.querySelector(`[data-step="${state.currentStep}"]`);
-      }
-
-      if (stepNumber === 0) {
-        targetStepEl = document.querySelector('#techpack-step-0');
-      } else {
-        targetStepEl = document.querySelector(`[data-step="${stepNumber}"]`);
-      }
-
-      if (!targetStepEl) {
-        debugSystem.log('Target step not found', { stepNumber }, 'error');
-        return false;
-      }
-
-      // Hide current step with animation
-      if (currentStepEl) {
-        await animationManager.fadeOut(currentStepEl);
-        currentStepEl.style.display = 'none';
-        debugSystem.log('Hidden current step', { currentStep: state.currentStep });
-      }
-
-      // Show target step with animation
-      targetStepEl.style.display = 'block';
-      await animationManager.fadeIn(targetStepEl);
-      debugSystem.log('Shown target step', { targetStep: stepNumber });
-
-      // Update state
-      state.currentStep = stepNumber;
-      
-      // Only update progress indicators for steps 1-4 (not step 0)
-      if (stepNumber > 0) {
-        this.updateProgressIndicators();
-      }
-
-      // Handle step-specific logic
-      this.handleStepEnter(stepNumber);
-
-      // Scroll to top of TechPack app smoothly
-      setTimeout(() => {
-        this.scrollToTechPackTopEnhanced();
-      }, 300);
-
-      debugSystem.log(`Successfully navigated to step ${stepNumber}`, null, 'success');
-      return true;
     }
 
     scrollToTechPackTopEnhanced() {
@@ -3023,72 +3077,261 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
-// UPDATED: Registration setup with better error handling
+// ENHANCED: Registration setup with comprehensive error handling and user feedback
     setupRegistrationCheck() {
-      const yesBtn = document.querySelector('#registered-client-yes');
-      const noBtn = document.querySelector('#registered-client-no');
-      const warningDiv = document.querySelector('#registration-warning');
+      debugSystem.log('🔧 Initializing registration check system...');
+      
+      // Enhanced DOM element detection with retry mechanism
+      const findElements = () => {
+        const elements = {
+          yesBtn: document.querySelector('#registered-client-yes'),
+          noBtn: document.querySelector('#registered-client-no'),
+          warningDiv: document.querySelector('#registration-warning')
+        };
+        
+        debugSystem.log('🔍 DOM element search results:', {
+          yesBtn: !!elements.yesBtn,
+          noBtn: !!elements.noBtn,
+          warningDiv: !!elements.warningDiv,
+          totalButtons: document.querySelectorAll('[id*="registered-client"]').length,
+          pageReadyState: document.readyState
+        });
+        
+        return elements;
+      };
 
-      debugSystem.log('Setting up registration check', { 
-        yesBtn: !!yesBtn, 
-        noBtn: !!noBtn, 
-        warningDiv: !!warningDiv 
-      });
+      const setupButtonHandlers = (elements) => {
+        const { yesBtn, noBtn, warningDiv } = elements;
+        const statusDiv = document.querySelector('#registration-status');
+        
+        if (!yesBtn || !noBtn) {
+          debugSystem.log('❌ Critical buttons missing, will retry...', null, 'error');
+          return false;
+        }
 
-      if (yesBtn && noBtn) {
-        yesBtn.addEventListener('click', () => {
-          debugSystem.log('YES button clicked - Registered client selected');
-          
-          // Show warning first
-          if (warningDiv) {
-            warningDiv.style.display = 'flex';
-            warningDiv.classList.add('show');
+        // Enhanced visual feedback helper
+        const setButtonState = (button, state) => {
+          try {
+            button.style.pointerEvents = state === 'loading' ? 'none' : 'auto';
+            button.style.opacity = state === 'loading' ? '0.6' : '1';
+            if (state === 'loading') {
+              button.setAttribute('data-loading', 'true');
+            } else {
+              button.removeAttribute('data-loading');
+            }
+          } catch (error) {
+            debugSystem.log('⚠️ Button state update failed:', error, 'warn');
           }
+        };
 
-          // Wait a moment, then proceed
-          setTimeout(() => {
-            state.formData.isRegisteredClient = true;
-            this.configureStep1ForRegisteredClient();
+        // Enhanced status display helper
+        const showStatus = (message, type = 'info') => {
+          try {
+            if (statusDiv) {
+              const statusText = statusDiv.querySelector('.techpack-premium-check__status-text');
+              if (statusText) {
+                statusText.textContent = message;
+              }
+              statusDiv.style.display = 'flex';
+              statusDiv.className = `techpack-premium-check__status techpack-premium-check__status--${type}`;
+            }
+          } catch (error) {
+            debugSystem.log('⚠️ Status display failed:', error, 'warn');
+          }
+        };
+
+        const hideStatus = () => {
+          try {
+            if (statusDiv) {
+              statusDiv.style.display = 'none';
+            }
+          } catch (error) {
+            debugSystem.log('⚠️ Status hide failed:', error, 'warn');
+          }
+        };
+
+        // Enhanced YES button handler
+        yesBtn.addEventListener('click', async (event) => {
+          try {
+            debugSystem.log('✅ YES button clicked - Registered client selected');
+            event.preventDefault();
+            event.stopPropagation();
             
-            // Try navigation with fallback
-            const navigationSuccess = stepManager.navigateToStep(1);
-            if (!navigationSuccess) {
-              debugSystem.log('Navigation failed, trying direct method', null, 'warn');
-              // Fallback: direct navigation
-              stepManager.debugTestNavigation(1);
+            // Provide immediate visual feedback
+            setButtonState(yesBtn, 'loading');
+            setButtonState(noBtn, 'loading');
+            showStatus('Verifying registration status...', 'info');
+            
+            // Show warning first
+            if (warningDiv) {
+              warningDiv.style.display = 'flex';
+              warningDiv.classList.add('show');
+              debugSystem.log('⚠️ Registration warning displayed');
+            }
+
+            // Wait a moment, then proceed
+            setTimeout(async () => {
+              try {
+                debugSystem.log('🔄 Processing registered client navigation...');
+                state.formData.isRegisteredClient = true;
+                this.configureStep1ForRegisteredClient();
+                
+                // Enhanced navigation with better error handling
+                let navigationSuccess = false;
+                try {
+                  navigationSuccess = await stepManager.navigateToStep(1);
+                } catch (navError) {
+                  debugSystem.log('❌ Navigation error:', navError, 'error');
+                  navigationSuccess = false;
+                }
+                
+                if (!navigationSuccess) {
+                  debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
+                  try {
+                    stepManager.debugTestNavigation(1);
+                    navigationSuccess = true;
+                  } catch (fallbackError) {
+                    debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
+                    throw new Error('All navigation methods failed');
+                  }
+                }
+                
+                if (navigationSuccess) {
+                  debugSystem.log('✅ Registration navigation successful');
+                  showStatus('Registration verified! Proceeding to form...', 'success');
+                  // Add scroll after navigation
+                  setTimeout(() => {
+                    stepManager.scrollToTechPackTopEnhanced();
+                    hideStatus();
+                  }, 600);
+                } else {
+                  throw new Error('Navigation failed completely');
+                }
+                
+              } catch (processingError) {
+                debugSystem.log('❌ Registration processing failed:', processingError, 'error');
+                // Reset button states on error
+                setButtonState(yesBtn, 'normal');
+                setButtonState(noBtn, 'normal');
+                showStatus('Technical issue occurred. Please try again.', 'error');
+                setTimeout(() => hideStatus(), 3000);
+              }
+            }, 2000); // 2 second delay to show warning
+            
+          } catch (error) {
+            debugSystem.log('❌ YES button handler failed:', error, 'error');
+            setButtonState(yesBtn, 'normal');
+            setButtonState(noBtn, 'normal');
+            showStatus('Unexpected error occurred. Please refresh the page.', 'error');
+            setTimeout(() => hideStatus(), 5000);
+          }
+        });
+
+        // Enhanced NO button handler
+        noBtn.addEventListener('click', async (event) => {
+          try {
+            debugSystem.log('✅ NO button clicked - New client selected');
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Provide immediate visual feedback
+            setButtonState(yesBtn, 'loading');
+            setButtonState(noBtn, 'loading');
+            showStatus('Processing new client registration...', 'info');
+            
+            try {
+              debugSystem.log('🔄 Processing new client navigation...');
+              state.formData.isRegisteredClient = false;
+              this.configureStep1ForNewClient();
+              
+              // Enhanced navigation with better error handling
+              let navigationSuccess = false;
+              try {
+                navigationSuccess = await stepManager.navigateToStep(1);
+              } catch (navError) {
+                debugSystem.log('❌ Navigation error:', navError, 'error');
+                navigationSuccess = false;
+              }
+              
+              if (!navigationSuccess) {
+                debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
+                try {
+                  stepManager.debugTestNavigation(1);
+                  navigationSuccess = true;
+                } catch (fallbackError) {
+                  debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
+                  throw new Error('All navigation methods failed');
+                }
+              }
+              
+              if (navigationSuccess) {
+                debugSystem.log('✅ New client navigation successful');
+                showStatus('Registration complete! Proceeding to form...', 'success');
+                // Add scroll after navigation
+                setTimeout(() => {
+                  stepManager.scrollToTechPackTopEnhanced();
+                  hideStatus();
+                }, 600);
+              } else {
+                throw new Error('Navigation failed completely');
+              }
+              
+            } catch (processingError) {
+              debugSystem.log('❌ New client processing failed:', processingError, 'error');
+              // Reset button states on error
+              setButtonState(yesBtn, 'normal');
+              setButtonState(noBtn, 'normal');
+              showStatus('Technical issue occurred. Please try again.', 'error');
+              setTimeout(() => hideStatus(), 3000);
             }
             
-            // Add scroll after navigation
-            setTimeout(() => {
-              stepManager.scrollToTechPackTopEnhanced();
-            }, 600);
-          }, 2000); // 2 second delay to show warning
-        });
-
-        noBtn.addEventListener('click', () => {
-          debugSystem.log('NO button clicked - New client selected');
-          
-          state.formData.isRegisteredClient = false;
-          this.configureStep1ForNewClient();
-          
-          // Try navigation with fallback
-          const navigationSuccess = stepManager.navigateToStep(1);
-          if (!navigationSuccess) {
-            debugSystem.log('Navigation failed, trying direct method', null, 'warn');
-            // Fallback: direct navigation
-            stepManager.debugTestNavigation(1);
+          } catch (error) {
+            debugSystem.log('❌ NO button handler failed:', error, 'error');
+            setButtonState(yesBtn, 'normal');
+            setButtonState(noBtn, 'normal');
+            showStatus('Unexpected error occurred. Please refresh the page.', 'error');
+            setTimeout(() => hideStatus(), 5000);
           }
-          
-          // Add scroll after navigation
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
 
-        debugSystem.log('Registration check event listeners attached successfully');
-      } else {
-        debugSystem.log('Registration check buttons not found - will fallback to step 1', null, 'warn');
+        debugSystem.log('✅ Registration check event listeners attached successfully');
+        return true;
+      };
+
+      // Try immediate setup first
+      const elements = findElements();
+      if (setupButtonHandlers(elements)) {
+        return;
       }
+
+      // Retry mechanism with progressive delays
+      let retryCount = 0;
+      const maxRetries = 5;
+      const retryDelays = [100, 250, 500, 1000, 2000];
+
+      const retrySetup = () => {
+        if (retryCount >= maxRetries) {
+          debugSystem.log('❌ Registration button setup failed after all retries - continuing without registration check', null, 'error');
+          // Force navigation to step 1 as fallback
+          setTimeout(() => {
+            stepManager.navigateToStep(1);
+          }, 500);
+          return;
+        }
+
+        setTimeout(() => {
+          debugSystem.log(`🔄 Retry attempt ${retryCount + 1}/${maxRetries} for registration setup`);
+          const retryElements = findElements();
+          if (setupButtonHandlers(retryElements)) {
+            debugSystem.log('✅ Registration setup successful after retry');
+            return;
+          }
+          retryCount++;
+          retrySetup();
+        }, retryDelays[retryCount]);
+      };
+
+      retrySetup();
     }
 
     // NEW: Configure Step 1 for registered clients
@@ -3884,26 +4127,88 @@
     }
   };
 
-// Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!state.isInitialized) {
-      // Wait a bit for DOM to fully settle
-      setTimeout(() => {
+// ENHANCED: Robust initialization with multiple readiness checks and error handling
+const initializeTechPackApp = () => {
+  if (state.isInitialized) {
+    debugSystem.log('⚠️ TechPack app already initialized, skipping...', null, 'warn');
+    return;
+  }
+
+  debugSystem.log('🚀 Starting TechPack app initialization...');
+  debugSystem.log('📋 Initialization context:', {
+    readyState: document.readyState,
+    hasBody: !!document.body,
+    techpackElements: document.querySelectorAll('[id*="techpack"]').length,
+    registrationButtons: document.querySelectorAll('[id*="registered-client"]').length,
+    timestamp: new Date().toISOString()
+  });
+
+  try {
+    formInitializer.init();
+    state.isInitialized = true;
+    debugSystem.log('✅ TechPack app initialization completed successfully', null, 'success');
+  } catch (error) {
+    debugSystem.log('❌ TechPack app initialization failed:', error, 'error');
+    // Retry after a longer delay
+    setTimeout(() => {
+      debugSystem.log('🔄 Retrying TechPack app initialization...');
+      try {
         formInitializer.init();
         state.isInitialized = true;
-      }, 100);
-    }
-  });
-} else {
-  if (!state.isInitialized) {
-    // Wait a bit for DOM to fully settle
-    setTimeout(() => {
-      formInitializer.init();
-      state.isInitialized = true;
-    }, 100);
+        debugSystem.log('✅ TechPack app initialization succeeded on retry', null, 'success');
+      } catch (retryError) {
+        debugSystem.log('❌ TechPack app initialization failed on retry:', retryError, 'error');
+      }
+    }, 1000);
   }
-}
+};
+
+// Enhanced multi-stage initialization with comprehensive DOM readiness checks
+const setupInitialization = () => {
+  debugSystem.log('🔧 Setting up TechPack app initialization...');
+  
+  // Stage 1: Immediate check if DOM is already ready
+  if (document.readyState === 'complete') {
+    debugSystem.log('📋 DOM already complete, initializing immediately');
+    setTimeout(initializeTechPackApp, 50);
+    return;
+  }
+  
+  // Stage 2: DOM loaded but resources might still be loading
+  if (document.readyState === 'interactive') {
+    debugSystem.log('📋 DOM interactive, initializing with short delay');
+    setTimeout(initializeTechPackApp, 100);
+    return;
+  }
+  
+  // Stage 3: DOM still loading, wait for DOMContentLoaded
+  if (document.readyState === 'loading') {
+    debugSystem.log('📋 DOM still loading, waiting for DOMContentLoaded event');
+    document.addEventListener('DOMContentLoaded', () => {
+      debugSystem.log('📋 DOMContentLoaded fired, initializing...');
+      setTimeout(initializeTechPackApp, 100);
+    });
+    
+    // Additional safety net - wait for window load as well
+    window.addEventListener('load', () => {
+      if (!state.isInitialized) {
+        debugSystem.log('📋 Window load fired and app not initialized, initializing now...');
+        setTimeout(initializeTechPackApp, 50);
+      }
+    });
+    
+    // Ultimate fallback - force initialization after reasonable time
+    setTimeout(() => {
+      if (!state.isInitialized) {
+        debugSystem.log('⏰ Timeout reached, forcing initialization...', null, 'warn');
+        initializeTechPackApp();
+      }
+    }, 3000);
+  }
+};
+
+// Immediate setup
+setupInitialization();
 
   // Expose debug system globally for console access
   window.debugSystem = debugSystem;
