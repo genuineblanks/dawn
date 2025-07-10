@@ -5,7 +5,7 @@
 (function() {
   'use strict';
   
-  console.log('🚀 Enhanced Scroll System Loading...');
+  console.log('🚀 Enhanced Scroll System Loading... VERSION 2024-07-10-FIXED');
 
 // ===============================================
 // MOBILE DETECTION UTILITIES
@@ -562,6 +562,48 @@ function addMobileConflictDetection() {
 }
 
 // ===============================================
+// MOBILE SCROLL CAPABILITY TEST
+// ===============================================
+function testMobileScrollCapabilities() {
+  if (!isMobileDevice()) return;
+  
+  console.log('🧪 Testing mobile scroll capabilities...');
+  
+  const testResults = {
+    smoothScrollSupport: 'scrollBehavior' in document.documentElement.style,
+    currentScroll: window.pageYOffset,
+    documentHeight: document.documentElement.scrollHeight,
+    windowHeight: window.innerHeight,
+    canScroll: document.documentElement.scrollHeight > window.innerHeight
+  };
+  
+  console.log('🧪 Mobile scroll test results:', testResults);
+  
+  // Test if we can scroll at all
+  if (testResults.canScroll && testResults.currentScroll < 100) {
+    console.log('🧪 Testing basic scroll functionality...');
+    const originalPosition = window.pageYOffset;
+    
+    // Try to scroll down a little
+    window.scrollTo(0, originalPosition + 50);
+    
+    setTimeout(() => {
+      const newPosition = window.pageYOffset;
+      const scrollWorked = Math.abs(newPosition - (originalPosition + 50)) < 10;
+      console.log('🧪 Basic scroll test:', {
+        originalPosition: originalPosition,
+        targetPosition: originalPosition + 50,
+        actualPosition: newPosition,
+        scrollWorked: scrollWorked
+      });
+      
+      // Restore original position
+      window.scrollTo(0, originalPosition);
+    }, 200);
+  }
+}
+
+// ===============================================
 // ANIMATION ISOLATION SYSTEM
 // ===============================================
 function disableConflictingListeners() {
@@ -970,6 +1012,8 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
+  console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED');
+  
   if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
     console.log('🚫 goToSection blocked:', {
       inScroll: scrollSystem.inScroll,
@@ -1026,11 +1070,47 @@ function goToSection(sectionIndex) {
   if (IS_MOBILE_DEVICE) {
     console.log('📱 Using NATIVE scrollTo for mobile...');
     
+    // Test if browser supports smooth scrolling
+    const supportsSmooth = 'scrollBehavior' in document.documentElement.style;
+    console.log('📱 Browser supports smooth scrolling:', supportsSmooth);
+    
+    // Store initial scroll position to detect if scrollTo works
+    const initialScroll = window.pageYOffset;
+    
     // Native scroll with smooth behavior
     window.scrollTo({
       top: targetScroll,
       behavior: 'smooth'
     });
+    
+    // Immediately check if scroll started
+    setTimeout(() => {
+      const currentScroll = window.pageYOffset;
+      const scrollStarted = Math.abs(currentScroll - initialScroll) > 5;
+      console.log('📱 ScrollTo immediate check:', {
+        initialScroll: initialScroll,
+        currentScroll: currentScroll,
+        targetScroll: targetScroll,
+        scrollStarted: scrollStarted,
+        scrollDifference: Math.abs(currentScroll - initialScroll)
+      });
+      
+      if (!scrollStarted) {
+        console.log('⚠️ Native scrollTo appears to be blocked! Trying instant scroll fallback...');
+        // Fallback: instant scroll without smooth behavior
+        window.scrollTo(0, targetScroll);
+        
+        // Check if instant scroll worked
+        setTimeout(() => {
+          const afterInstantScroll = window.pageYOffset;
+          console.log('📱 Instant scroll result:', {
+            targetScroll: targetScroll,
+            actualScroll: afterInstantScroll,
+            success: Math.abs(afterInstantScroll - targetScroll) < 50
+          });
+        }, 100);
+      }
+    }, 100);
     
     // Manual animation completion detection for mobile
     let animationCheckInterval;
@@ -1472,6 +1552,7 @@ function initializeAllFeatures() {
   setTimeout(initializeScrollSystem, 500);
   setTimeout(applyUltimateScrollFix, 600);
   setTimeout(addMobileConflictDetection, 700);
+  setTimeout(testMobileScrollCapabilities, 800);
   
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
@@ -1615,6 +1696,7 @@ waitForJQuery(function() {
     setTimeout(initializeScrollSystem, 50); // Very short delay
     setTimeout(initializeScrollToTopButton, 100);
     setTimeout(addMobileConflictDetection, 150);
+    setTimeout(testMobileScrollCapabilities, 200);
   }
   
   $(document).ready(function() {
