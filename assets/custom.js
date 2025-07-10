@@ -494,6 +494,65 @@ function initializeAllFeatures() {
 }
 
 // ===============================================
+// SCROLL TO TOP BUTTON FUNCTIONALITY
+// ===============================================
+function initializeScrollToTopButton() {
+  console.log('🔝 Initializing scroll to top button...');
+  
+  const scrollButton = document.querySelector('.scroll-to-top');
+  if (!scrollButton) {
+    console.log('❌ Scroll button not found');
+    return;
+  }
+  
+  // Show/hide button based on scroll position
+  function toggleScrollButton() {
+    const scrollPosition = window.pageYOffset;
+    const windowHeight = window.innerHeight;
+    
+    if (scrollPosition > windowHeight * 0.3) {
+      scrollButton.classList.add('visible');
+    } else {
+      scrollButton.classList.remove('visible');
+    }
+    
+    // Optional: Update progress indicator
+    if (scrollButton.classList.contains('with-progress')) {
+      const scrollPercent = (scrollPosition / (document.documentElement.scrollHeight - windowHeight)) * 100;
+      const progressDeg = (scrollPercent / 100) * 360;
+      scrollButton.style.setProperty('--scroll-progress', `${progressDeg}deg`);
+    }
+  }
+  
+  // Smooth scroll to top
+  function scrollToTop(e) {
+    e.preventDefault();
+    
+    // If on homepage with scroll system, go to first section
+    if (isHomepage() && scrollSystem.initialized && scrollSystem.arrSections.length > 0) {
+      console.log('🏠 Homepage detected - using scroll system');
+      goToSection(0);
+    } else {
+      // Regular scroll to top for other pages
+      console.log('📄 Regular page - scrolling to top');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
+  
+  // Add event listeners
+  scrollButton.addEventListener('click', scrollToTop);
+  window.addEventListener('scroll', toggleScrollButton, { passive: true });
+  
+  // Initial check
+  toggleScrollButton();
+  
+  console.log('✅ Scroll to top button initialized');
+}
+
+// ===============================================
 // GLOBAL EXPORTS
 // ===============================================
 window.scrollSystem = scrollSystem;
@@ -502,6 +561,7 @@ window.initializeScrollSystem = initializeScrollSystem;
 window.calculateSectionPositions = calculateSectionPositions;
 window.goToSection = goToSection;
 window.isHomepage = isHomepage;
+window.initializeScrollToTopButton = initializeScrollToTopButton;
 
 // ===============================================
 // INITIALIZATION SEQUENCE
@@ -510,6 +570,9 @@ waitForJQuery(function() {
   $(document).ready(function() {
     console.log('📱 DOM Ready with jQuery - initializing features');
     initializeAllFeatures();
+    
+    // Initialize scroll to top button
+    setTimeout(initializeScrollToTopButton, 100);
   });
 
   $(window).on('beforeunload', function() {
