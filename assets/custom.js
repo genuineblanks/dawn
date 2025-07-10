@@ -498,23 +498,25 @@ function addMobileConflictDetection() {
         });
       }
       
-      // Check for CSS overscroll-behavior
+      // Check for CSS overscroll-behavior - 'auto' allows native scroll interference
       const overscrollBehavior = window.getComputedStyle(body).overscrollBehavior;
-      if (overscrollBehavior !== 'none') {
+      if (overscrollBehavior === 'auto') {
         conflicts.push({
           type: 'css-overscroll-behavior',
           value: overscrollBehavior,
-          element: 'body'
+          element: 'body',
+          issue: 'allows native scroll interference'
         });
       }
       
-      // Check for CSS touch-action
+      // Check for CSS touch-action - 'auto' allows all touch gestures to interfere
       const touchAction = window.getComputedStyle(body).touchAction;
-      if (touchAction !== 'pan-y') {
+      if (touchAction === 'auto') {
         conflicts.push({
           type: 'css-touch-action',
           value: touchAction,
-          element: 'body'
+          element: 'body',
+          issue: 'allows all touch gestures to interfere'
         });
       }
       
@@ -584,19 +586,29 @@ function disableConflictingListeners() {
     }
   });
   
-  // Temporarily disable CSS scroll-behavior to prevent conflicts
+  // Temporarily disable CSS conflicts that interfere with animation
   const html = document.documentElement;
   const body = document.body;
   
+  // Store original CSS values
   originalListeners.htmlScrollBehavior = html.style.scrollBehavior;
   originalListeners.bodyScrollBehavior = body.style.scrollBehavior;
+  originalListeners.bodyOverscrollBehavior = body.style.overscrollBehavior;
+  originalListeners.bodyTouchAction = body.style.touchAction;
   
-  html.style.scrollBehavior = 'auto';
-  body.style.scrollBehavior = 'auto';
-  
-  // Disable CSS smooth scrolling temporarily
+  // Set optimal CSS values for animation
   html.style.setProperty('scroll-behavior', 'auto', 'important');
   body.style.setProperty('scroll-behavior', 'auto', 'important');
+  
+  // CRITICAL: Fix the CSS conflicts detected
+  body.style.setProperty('overscroll-behavior', 'none', 'important'); // Prevent native scroll interference
+  body.style.setProperty('touch-action', 'pan-y', 'important'); // Restrict to vertical scrolling only
+  
+  console.log('🔒 CSS conflicts fixed:', {
+    'overscroll-behavior': 'none (prevents native scroll interference)',
+    'touch-action': 'pan-y (restricts to vertical scrolling)',
+    'scroll-behavior': 'auto (prevents CSS smooth scrolling conflicts)'
+  });
   
   console.log('🔒 Conflicting listeners disabled');
 }
@@ -606,15 +618,29 @@ function restoreConflictingListeners() {
   
   console.log('🔓 Restoring conflicting listeners after animation...');
   
-  // Restore original event handlers
+  // Restore original event handlers and CSS properties
   Object.keys(originalListeners).forEach(eventType => {
     if (eventType.includes('ScrollBehavior')) {
-      // Handle CSS properties
+      // Handle scroll-behavior CSS properties
       const element = eventType.includes('html') ? document.documentElement : document.body;
       if (originalListeners[eventType]) {
         element.style.scrollBehavior = originalListeners[eventType];
       } else {
         element.style.removeProperty('scroll-behavior');
+      }
+    } else if (eventType === 'bodyOverscrollBehavior') {
+      // Handle overscroll-behavior CSS property
+      if (originalListeners[eventType]) {
+        document.body.style.overscrollBehavior = originalListeners[eventType];
+      } else {
+        document.body.style.removeProperty('overscroll-behavior');
+      }
+    } else if (eventType === 'bodyTouchAction') {
+      // Handle touch-action CSS property
+      if (originalListeners[eventType]) {
+        document.body.style.touchAction = originalListeners[eventType];
+      } else {
+        document.body.style.removeProperty('touch-action');
       }
     } else {
       // Handle event listeners
@@ -622,6 +648,12 @@ function restoreConflictingListeners() {
         document[`on${eventType}`] = originalListeners[eventType];
       }
     }
+  });
+  
+  console.log('🔓 CSS properties restored:', {
+    'overscroll-behavior': 'restored to original value',
+    'touch-action': 'restored to original value',
+    'scroll-behavior': 'restored to original value'
   });
   
   // Clear the stored listeners
