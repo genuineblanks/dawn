@@ -146,12 +146,26 @@
   .section-dot-navigation {
     right: 15px;
     padding: 15px 6px;
-    gap: 10px;
+    gap: 15px; /* Increased gap for easier touch */
+    transform: translateY(-50%);
   }
   
   .section-dot {
-    width: 10px;
-    height: 10px;
+    width: 14px; /* Larger for easier touch */
+    height: 14px;
+    /* Add touch-friendly minimum tap target */
+    position: relative;
+  }
+  
+  .section-dot::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    /* Invisible larger touch area */
+    background: transparent;
   }
 }
 
@@ -172,12 +186,48 @@
   .section-dot-navigation {
     right: 10px;
     padding: 12px 5px;
-    gap: 8px;
+    gap: 12px; /* Good spacing for mobile */
   }
   
   .section-dot {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
+  }
+  
+  .section-dot::after {
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    /* Even larger touch area on small screens */
+  }
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .section-dot {
+    /* Ensure dots are easily tappable on touch devices */
+    min-width: 16px;
+    min-height: 16px;
+    /* Add slight background for better visibility */
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .section-dot:active {
+    /* Immediate feedback on touch */
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .section-dot.active {
+    background: #000;
+    transform: scale(1.4);
+  }
+  
+  .section-dot-navigation {
+    /* Slightly more visible background on touch devices */
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 }
 
