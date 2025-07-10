@@ -3625,59 +3625,120 @@ details-disclosure > details {
 }
 
 /* ===============================================
-   MOBILE SCROLL FIXES - CRITICAL FOR TOUCH DEVICES
+   NUCLEAR MOBILE SCROLL FIX - 100% NATIVE SCROLLING
    =============================================== */
 
+/* Target mobile devices */
+.mobile-device,
 @media screen and (max-width: 749px) {
-  /* CRITICAL: Prevent scroll blocking on mobile */
-  html, body {
-    touch-action: pan-y !important;
-    overscroll-behavior-y: none !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
   
-  /* Ensure touch events work properly */
-  .home-section {
-    touch-action: pan-y !important;
-  }
-  
-  /* Fix iOS momentum scrolling */
-  .home-section section {
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: none !important;
-  }
-  
-  /* Prevent text selection interference with touch scrolling */
-  .home-section * {
-    -webkit-user-select: none !important;
-    user-select: none !important;
-  }
-  
-  /* But allow selection on text content */
-  .home-section p, 
-  .home-section h1, 
-  .home-section h2, 
-  .home-section h3, 
-  .home-section h4, 
-  .home-section h5, 
-  .home-section h6,
-  .home-section input,
-  .home-section textarea {
-    -webkit-user-select: text !important;
-    user-select: text !important;
-  }
-  
-  /* Critical: Allow native scrolling behavior */
-  .section-dot-navigation {
-    pointer-events: auto !important;
-    touch-action: none !important;
-  }
-  
-  /* Fix any potential scroll locking from modals */
-  .modal-open, 
-  .modal-open body {
+  /* NUCLEAR: Force native scrolling on ALL elements */
+  html, body, *, *::before, *::after {
+    scroll-behavior: auto !important;
     overflow: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: auto !important;
+    touch-action: auto !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* CRITICAL: Remove ALL custom scroll interference */
+  .home-section,
+  .home-section *,
+  .section,
+  .shopify-section {
+    overflow: visible !important;
+    touch-action: auto !important;
+    -webkit-overflow-scrolling: touch !important;
     position: static !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  /* NUCLEAR: Hide/disable all custom scroll elements */
+  .section-dot-navigation,
+  .section-dots,
+  #section-dots,
+  .scroll-indicators,
+  .scroll-progress,
+  .scroll-to-top {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+  
+  /* Force normal document flow */
+  body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: auto !important;
+  }
+  
+  html {
+    height: auto !important;
+    overflow: auto !important;
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Remove any fixed/sticky positioning that might interfere */
+  .home-section [style*="position: fixed"],
+  .home-section [style*="position: sticky"] {
+    position: static !important;
+  }
+  
+  /* Ensure all sections are normally scrollable */
+  section {
+    height: auto !important;
+    min-height: 100vh;
+    position: static !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+  
+  /* Remove any transforms or animations that block scrolling */
+  [style*="transform"],
+  [style*="transition"],
+  [class*="animate"],
+  [class*="scroll"] {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* NUCLEAR: Additional mobile-specific overrides */
+@media screen and (max-width: 749px) {
+  /* Remove ALL scroll blocking behaviors */
+  * {
+    touch-action: auto !important;
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: auto !important;
+    user-select: auto !important;
+  }
+  
+  /* Force normal scrolling behavior */
+  body, html {
+    overflow: auto !important;
+    scroll-behavior: auto !important;
+    position: static !important;
+  }
+  
+  /* Remove any modal/overlay scroll blocking */
+  .modal-open,
+  .modal-open body,
+  .no-scroll,
+  .scroll-disabled {
+    overflow: auto !important;
+    position: static !important;
+    height: auto !important;
   }
 }
 
