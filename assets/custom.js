@@ -205,53 +205,26 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM - AGGRESSIVE DEBUG VERSION
+// DOT NAVIGATION SYSTEM - ELEGANT MINIMAL VERSION
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 AGGRESSIVE DEBUG: Creating dot navigation...');
+  console.log('🎯 Creating elegant dot navigation...');
   
   // Force remove any existing containers first
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
   existingContainers.forEach(container => container.remove());
-  console.log('🗑️ Removed existing containers:', existingContainers.length);
   
   // Always create a fresh container
   const dotContainer = document.createElement('div');
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
   
-  // Force inline styles to override any CSS conflicts
-  dotContainer.style.cssText = `
-    position: fixed !important;
-    right: 30px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 999999 !important;
-    background: rgba(255, 0, 0, 0.9) !important;
-    padding: 20px 10px !important;
-    border-radius: 15px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    border: 3px solid yellow !important;
-    min-width: 40px !important;
-    min-height: 200px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-  `;
-  
   // Append to body
   document.body.appendChild(dotContainer);
-  console.log('✅ Created and appended new dot container');
+  console.log('✅ Created elegant dot container');
   
   // Set the dotNavigation reference
   scrollSystem.dotNavigation = dotContainer;
-  
-  // Log container details
-  console.log('📍 Container position:', dotContainer.getBoundingClientRect());
-  console.log('🎨 Container parent:', dotContainer.parentElement);
-  console.log('👁️ Container visible:', dotContainer.offsetWidth > 0 && dotContainer.offsetHeight > 0);
   
   // Filter out duplicate positions and create clean section array
   const cleanSections = [];
@@ -270,28 +243,12 @@ function createDotNavigation() {
   
   // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
+    console.log('🎯 Creating elegant dot', index, 'for section at position', sectionPos);
     
-    // Create dot element with forced visibility
+    // Create dot element
     const dot = document.createElement('div');
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
-    
-    // Force dot styling
-    dot.style.cssText = `
-      width: 16px !important;
-      height: 16px !important;
-      background: lime !important;
-      border-radius: 50% !important;
-      margin: 3px 0 !important;
-      cursor: pointer !important;
-      border: 2px solid black !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-      position: relative !important;
-      flex-shrink: 0 !important;
-    `;
     
     // Add click handler
     dot.addEventListener('click', function(e) {
@@ -309,53 +266,12 @@ function createDotNavigation() {
       goToSection(index);
     });
     
-    // Add hover effect
-    dot.addEventListener('mouseenter', function() {
-      console.log('🐭 Mouse entered dot:', index);
-      dot.style.background = 'white';
-      dot.style.transform = 'scale(1.2)';
-    });
-    
-    dot.addEventListener('mouseleave', function() {
-      dot.style.background = 'lime';
-      dot.style.transform = 'scale(1)';
-    });
-    
     // Append to container
     dotContainer.appendChild(dot);
-    console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
   });
   
-  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
-  console.log('📏 Final container size:', dotContainer.getBoundingClientRect());
-  console.log('👶 Container children count:', dotContainer.children.length);
-  
-  // Test if container is actually visible
-  setTimeout(() => {
-    const rect = dotContainer.getBoundingClientRect();
-    console.log('🔍 Container visibility test:', {
-      width: rect.width,
-      height: rect.height,
-      top: rect.top,
-      right: rect.right,
-      visible: rect.width > 0 && rect.height > 0,
-      inViewport: rect.right > 0 && rect.top >= 0 && rect.bottom <= window.innerHeight
-    });
-  }, 100);
-  
+  console.log('✅ Elegant dot navigation created with', scrollSystem.arrSections.length, 'dots');
   updateDotNavigation();
-  
-  // Remove debug styling after 10 seconds
-  setTimeout(() => {
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.8)';
-    dotContainer.style.border = '2px solid rgba(255, 255, 255, 0.3)';
-    dotContainer.querySelectorAll('.section-dot').forEach((dot, index) => {
-      if (!dot.classList.contains('active')) {
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
-      }
-    });
-    console.log('🎨 Debug styling removed - dots should now have normal styling');
-  }, 10000);
 }
 
 function updateDotNavigation() {

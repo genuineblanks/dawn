@@ -62,27 +62,27 @@
 }
 
 /* ===============================================
-   SECTION DOT NAVIGATION - PREMIUM STYLING - FIXED VISIBILITY
+   SECTION DOT NAVIGATION - ELEGANT MINIMAL DESIGN
    =============================================== */
 
 .section-dot-navigation {
   position: fixed !important;
-  right: 25px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+  right: 50% !important;
+  bottom: 30px !important;
+  transform: translateX(50%) !important;
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
-  z-index: 9999 !important; /* Higher z-index */
+  justify-content: center !important;
+  z-index: 999 !important;
   gap: 12px;
-  padding: 20px 8px;
-  background: rgba(0, 0, 0, 0.8) !important; /* More visible background */
-  border-radius: 25px;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 2px solid rgba(255, 255, 255, 0.3) !important; /* More visible border */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  min-height: 200px; /* Ensure minimum height */
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -97,32 +97,30 @@ body.home-section .section-dot-navigation {
 }
 
 .section-dot {
-  width: 14px !important;
-  height: 14px !important;
+  width: 6px !important;
+  height: 6px !important;
   border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.6) !important; /* More visible default state */
+  background: rgba(0, 0, 0, 0.3) !important;
   cursor: pointer !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border: 2px solid transparent !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
   position: relative !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 .section-dot:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
-  transform: scale(1.3) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  transform: scale(1.5) !important;
 }
 
 .section-dot.active {
-  background: #ffffff !important;
-  border: 2px solid #000000 !important;
-  transform: scale(1.5) !important;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3) !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.8) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Ripple effect on click */
+/* Subtle ripple effect on click */
 .section-dot::before {
   content: '';
   position: absolute;
@@ -131,28 +129,80 @@ body.home-section .section-dot-navigation {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.2);
   transform: translate(-50%, -50%);
   transition: all 0.3s ease;
   pointer-events: none;
 }
 
 .section-dot:active::before {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   opacity: 0;
 }
 
-/* Debug styling - temporary red background to see if container exists */
-.section-dot-navigation.debug {
-  background: rgba(255, 0, 0, 0.8) !important;
-  border: 3px solid yellow !important;
+/* Mobile Responsive - Keep bottom centered */
+@media screen and (max-width: 768px) {
+  .section-dot-navigation {
+    bottom: 20px !important;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  
+  .section-dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+  
+  .section-dot:hover {
+    transform: scale(1.6) !important;
+  }
+  
+  .section-dot.active {
+    transform: scale(2) !important;
+  }
 }
 
-.section-dot.debug {
-  background: lime !important;
-  width: 20px !important;
-  height: 20px !important;
+@media screen and (max-width: 480px) {
+  .section-dot-navigation {
+    bottom: 15px !important;
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  
+  .section-dot {
+    width: 4px !important;
+    height: 4px !important;
+  }
+}
+
+/* Mobile touch improvements - ensure good tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .section-dot {
+    /* Invisible larger touch area */
+    position: relative;
+  }
+  
+  .section-dot::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: transparent;
+  }
+  
+  .section-dot:active {
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+}
+
+/* Hide on very small screens if needed */
+@media screen and (max-width: 320px) {
+  .section-dot-navigation {
+    display: none !important;
+  }
 }
 
 /* Mobile Responsive */
