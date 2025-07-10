@@ -1113,153 +1113,48 @@ function goToSection(sectionIndex) {
   const startScroll = window.pageYOffset;
   const targetScroll = scrollSystem.arrSections[sectionIndex];
   
-  // Use native scrollTo for mobile, jQuery for desktop
-  if (IS_MOBILE_DEVICE) {
-    console.log('📱 Using NATIVE scrollTo for mobile...');
-    
-    // Test if browser supports smooth scrolling
-    const supportsSmooth = 'scrollBehavior' in document.documentElement.style;
-    console.log('📱 Browser supports smooth scrolling:', supportsSmooth);
-    
-    // Store initial scroll position to detect if scrollTo works
-    const initialScroll = window.pageYOffset;
-    
-    // Native scroll with smooth behavior
-    window.scrollTo({
-      top: targetScroll,
-      behavior: 'smooth'
-    });
-    
-    // Immediately check if scroll started
-    setTimeout(() => {
-      const currentScroll = window.pageYOffset;
-      const scrollStarted = Math.abs(currentScroll - initialScroll) > 5;
-      console.log('📱 ScrollTo immediate check:', {
-        initialScroll: initialScroll,
-        currentScroll: currentScroll,
+  // Use the same reliable jQuery animation system for both desktop and mobile
+  console.log('🎯 Using UNIFIED JQUERY animation for', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP');
+  
+  $('html, body').animate({
+    scrollTop: targetScroll
+  }, {
+    duration: scrollSystem.durationOneScroll,
+    progress: function(animation, progress, remainingMs) {
+      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
+      console.log(`📈 ${deviceType} Animation progress:`, {
+        progress: Math.round(progress * 100) + '%',
+        currentScroll: window.pageYOffset,
         targetScroll: targetScroll,
-        scrollStarted: scrollStarted,
-        scrollDifference: Math.abs(currentScroll - initialScroll)
+        remainingMs: remainingMs,
+        inScroll: scrollSystem.inScroll
       });
-      
-      if (!scrollStarted) {
-        console.log('⚠️ Native scrollTo appears to be blocked! Trying instant scroll fallback...');
-        // Fallback: instant scroll without smooth behavior
-        window.scrollTo(0, targetScroll);
-        
-        // Check if instant scroll worked
-        setTimeout(() => {
-          const afterInstantScroll = window.pageYOffset;
-          console.log('📱 Instant scroll result:', {
-            targetScroll: targetScroll,
-            actualScroll: afterInstantScroll,
-            success: Math.abs(afterInstantScroll - targetScroll) < 50
-          });
-        }, 100);
-      }
-    }, 100);
-    
-    // Manual animation completion detection for mobile
-    let animationCheckInterval;
-    let lastScrollPosition = startScroll;
-    let stableScrollCount = 0;
-    let animationCompleted = false; // Prevent multiple completion triggers
-    const maxDuration = scrollSystem.durationOneScroll + 1000; // Add buffer
-    
-    const checkAnimationComplete = () => {
-      const currentScroll = window.pageYOffset;
-      const distanceToTarget = Math.abs(currentScroll - targetScroll);
-      const timeSinceStart = Date.now() - startTime;
-      
-      console.log('📱 Native scroll progress:', {
-        currentScroll: currentScroll,
-        targetScroll: targetScroll,
-        distanceToTarget: distanceToTarget,
-        timeSinceStart: timeSinceStart + 'ms'
-      });
-      
-      // Prevent multiple completion triggers
-      if (animationCompleted) {
-        clearInterval(animationCheckInterval);
-        return;
-      }
-      
-      // Check if we've reached the target (within 50px tolerance)
-      if (distanceToTarget < 50) {
-        stableScrollCount++;
-        if (stableScrollCount >= 3) { // Wait for 3 stable readings
-          animationCompleted = true;
-          clearInterval(animationCheckInterval);
-          completeAnimation(true);
-          return;
-        }
-      } else {
-        stableScrollCount = 0;
-      }
-      
-      // Check if scroll position hasn't changed (stuck)
-      if (Math.abs(currentScroll - lastScrollPosition) < 5) {
-        stableScrollCount++;
-        if (stableScrollCount >= 5) { // 5 readings without movement = stuck
-          animationCompleted = true;
-          clearInterval(animationCheckInterval);
-          completeAnimation(false);
-          return;
-        }
-      } else {
-        stableScrollCount = 0;
-      }
-      
-      lastScrollPosition = currentScroll;
-      
-      // Timeout fallback
-      if (timeSinceStart > maxDuration) {
-        animationCompleted = true;
-        clearInterval(animationCheckInterval);
-        completeAnimation(false);
-        return;
-      }
-    };
-    
-    // Check animation progress every 50ms
-    animationCheckInterval = setInterval(checkAnimationComplete, 50);
-    
-    function completeAnimation(success) {
+    },
+    complete: function() {
       const endTime = Date.now();
       const finalScroll = window.pageYOffset;
+      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
       
-      console.log('🟢 SETTING inScroll = false in completeAnimation, success:', success);
+      console.log('🟢 SETTING inScroll = false in jQuery complete');
       scrollSystem.inScroll = false;
-      console.log('🟢 inScroll flag after setting to false:', scrollSystem.inScroll);
+      console.log('🟢 inScroll flag after jQuery completion:', scrollSystem.inScroll);
       
       // Clear global timeout
       clearTimeout(globalAnimationTimeout);
       
-      if (success) {
-        console.log('✅ ✅ NATIVE Animation COMPLETE:', {
-          section: sectionIndex,
-          duration: endTime - startTime + 'ms',
-          startScroll: startScroll,
-          targetScroll: targetScroll,
-          finalScroll: finalScroll,
-          reached: Math.abs(finalScroll - targetScroll) < 50,
-          touchEventsDetected: touchEventsDuringAnimation.length,
-          conflictsDetected: conflictingEvents.length
-        });
-      } else {
-        console.log('❌ ❌ NATIVE Animation TIMEOUT/STUCK:', {
-          section: sectionIndex,
-          duration: endTime - startTime + 'ms',
-          startScroll: startScroll,
-          targetScroll: targetScroll,
-          finalScroll: finalScroll,
-          distanceToTarget: Math.abs(finalScroll - targetScroll),
-          touchEventsDetected: touchEventsDuringAnimation.length,
-          conflictsDetected: conflictingEvents.length
-        });
-      }
+      console.log(`✅ ✅ ${deviceType} Animation COMPLETE:`, {
+        section: sectionIndex,
+        duration: endTime - startTime + 'ms',
+        startScroll: startScroll,
+        targetScroll: targetScroll,
+        finalScroll: finalScroll,
+        reached: Math.abs(finalScroll - targetScroll) < 50,
+        inScroll: scrollSystem.inScroll,
+        touchEventsDetected: touchEventsDuringAnimation.length,
+        conflictsDetected: conflictingEvents.length
+      });
       
-      // Report conflicts if any were detected
+      // Report conflicts if any were detected (mainly for mobile debugging)
       if (conflictingEvents.length > 0) {
         console.log('🔴 CONFLICTS DETECTED during animation:', conflictingEvents);
       }
@@ -1274,74 +1169,39 @@ function goToSection(sectionIndex) {
       
       // Restore conflicting listeners
       restoreConflictingListeners();
-    }
-    
-  } else {
-    console.log('💻 Using JQUERY animate for desktop...');
-    
-    // Use jQuery for desktop (works reliably there)
-    $('html, body').animate({
-      scrollTop: targetScroll
-    }, {
-      duration: scrollSystem.durationOneScroll,
-      progress: function(animation, progress, remainingMs) {
-        console.log('📈 jQuery Animation progress:', {
-          progress: Math.round(progress * 100) + '%',
-          currentScroll: window.pageYOffset,
-          targetScroll: targetScroll,
-          remainingMs: remainingMs,
-          inScroll: scrollSystem.inScroll
-        });
-      },
-      complete: function() {
-        const endTime = Date.now();
-        const finalScroll = window.pageYOffset;
-        
-        console.log('🟢 SETTING inScroll = false in jQuery complete');
-        scrollSystem.inScroll = false;
-        console.log('🟢 inScroll flag after jQuery completion:', scrollSystem.inScroll);
-        
-        // Clear global timeout
-        clearTimeout(globalAnimationTimeout);
-        
-        console.log('✅ ✅ jQuery Animation COMPLETE:', {
-          section: sectionIndex,
-          duration: endTime - startTime + 'ms',
-          startScroll: startScroll,
-          targetScroll: targetScroll,
-          finalScroll: finalScroll,
-          reached: Math.abs(finalScroll - targetScroll) < 50,
-          inScroll: scrollSystem.inScroll
-        });
-        
-        // Reset animation tracking
-        animationStartTime = 0;
-        animationTarget = null;
-        
-        // Restore conflicting listeners
-        restoreConflictingListeners();
-      },
-      fail: function() {
-        console.log('❌ ❌ jQuery Animation FAILED:', {
-          section: sectionIndex,
-          currentScroll: window.pageYOffset,
-          targetScroll: targetScroll,
-          timeSinceStart: Date.now() - startTime + 'ms'
-        });
-        scrollSystem.inScroll = false;
-        
-        // Clear global timeout
-        clearTimeout(globalAnimationTimeout);
-        
-        // Reset animation tracking
-        animationStartTime = 0;
-        animationTarget = null;
-        
-        // Restore conflicting listeners
-        restoreConflictingListeners();
+    },
+    fail: function() {
+      const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
+      console.log(`❌ ❌ ${deviceType} Animation FAILED:`, {
+        section: sectionIndex,
+        currentScroll: window.pageYOffset,
+        targetScroll: targetScroll,
+        timeSinceStart: Date.now() - startTime + 'ms',
+        touchEventsDetected: touchEventsDuringAnimation.length,
+        conflictsDetected: conflictingEvents.length
+      });
+      scrollSystem.inScroll = false;
+      
+      // Report failure reasons for debugging
+      if (conflictingEvents.length > 0) {
+        console.log('🔴 FAILURE REASON - CONFLICTS DETECTED:', conflictingEvents);
       }
-    });
-  }
+      
+      if (touchEventsDuringAnimation.length > 0) {
+        console.log('👆 FAILURE REASON - TOUCH EVENTS:', touchEventsDuringAnimation);
+      }
+      
+      // Clear global timeout
+      clearTimeout(globalAnimationTimeout);
+      
+      // Reset animation tracking
+      animationStartTime = 0;
+      animationTarget = null;
+      
+      // Restore conflicting listeners
+      restoreConflictingListeners();
+    }
+  });
 }
 
 // ===============================================
