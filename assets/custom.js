@@ -222,7 +222,7 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// ELEGANT DOT NAVIGATION SYSTEM - REDESIGNED
+// ELEGANT DOT NAVIGATION SYSTEM - FIXED POSITIONING
 // ===============================================
 function createDotNavigation() {
   console.log('🎯 Creating elegant dot navigation...');
@@ -231,7 +231,7 @@ function createDotNavigation() {
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
   existingContainers.forEach(container => container.remove());
   
-  // Create centered container
+  // Create RIGHT-SIDE container (NOT CENTER)
   const dotContainer = document.createElement('div');
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
@@ -252,31 +252,29 @@ function createDotNavigation() {
   
   // Calculate even spacing for dots
   const dotCount = scrollSystem.arrSections.length;
-  const containerHeight = Math.max(200, dotCount * 25); // Minimum height with even spacing
+  const containerHeight = Math.max(180, dotCount * 20); // Evenly spaced
   
-  // Apply subtle, centered styling
+  // CORRECT positioning - RIGHT SIDE, not center!
   dotContainer.style.cssText = `
     position: fixed !important;
-    right: 50% !important;
+    right: 25px !important;
     top: 50% !important;
-    transform: translate(50%, -50%) !important;
-    bottom: auto !important;
-    left: auto !important;
+    transform: translateY(-50%) !important;
     z-index: 1000 !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    padding: 20px 8px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    padding: 16px 6px !important;
     border-radius: 20px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-evenly !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
     min-height: ${containerHeight}px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    opacity: 0.7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
+    opacity: 0.6 !important;
     transition: opacity 0.3s ease !important;
   `;
   
@@ -292,16 +290,29 @@ function createDotNavigation() {
     
     // Subtle, elegant dot styling
     dot.style.cssText = `
-      width: 8px !important;
-      height: 8px !important;
-      background: rgba(0, 0, 0, 0.3) !important;
+      width: 6px !important;
+      height: 6px !important;
+      background: rgba(0, 0, 0, 0.25) !important;
       border-radius: 50% !important;
       cursor: pointer !important;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
       border: 1px solid transparent !important;
       opacity: 0.6 !important;
       flex-shrink: 0 !important;
+      position: relative !important;
     `;
+    
+    // Add larger touch target for mobile
+    dot.style.setProperty('--touch-target', '16px');
+    dot.addEventListener('touchstart', function() {
+      // Add temporary larger touch area
+      this.style.setProperty('padding', '8px');
+    });
+    
+    dot.addEventListener('touchend', function() {
+      // Remove temporary padding
+      this.style.setProperty('padding', '0');
+    });
     
     // Click handler
     dot.addEventListener('click', function(e) {
@@ -322,15 +333,15 @@ function createDotNavigation() {
     // Subtle hover effect
     dot.addEventListener('mouseenter', function() {
       if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(0, 0, 0, 0.5)';
-        dot.style.transform = 'scale(1.2)';
+        dot.style.background = 'rgba(0, 0, 0, 0.4)';
+        dot.style.transform = 'scale(1.3)';
         dot.style.opacity = '0.8';
       }
     });
     
     dot.addEventListener('mouseleave', function() {
       if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(0, 0, 0, 0.3)';
+        dot.style.background = 'rgba(0, 0, 0, 0.25)';
         dot.style.transform = 'scale(1)';
         dot.style.opacity = '0.6';
       }
@@ -341,14 +352,14 @@ function createDotNavigation() {
   
   // Hover effect for container
   dotContainer.addEventListener('mouseenter', function() {
-    dotContainer.style.opacity = '1';
+    dotContainer.style.opacity = '0.9';
   });
   
   dotContainer.addEventListener('mouseleave', function() {
-    dotContainer.style.opacity = '0.7';
+    dotContainer.style.opacity = '0.6';
   });
   
-  console.log('✅ Elegant dot navigation created');
+  console.log('✅ Elegant dot navigation created on RIGHT SIDE');
   updateDotNavigation();
 }
 
@@ -365,14 +376,14 @@ function updateDotNavigation() {
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
       // Active dot - subtle but noticeable
-      dots[i].style.background = 'rgba(0, 0, 0, 0.8)';
-      dots[i].style.transform = 'scale(1.4)';
+      dots[i].style.background = 'rgba(0, 0, 0, 0.7)';
+      dots[i].style.transform = 'scale(1.6)';
       dots[i].style.opacity = '1';
-      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.5)';
+      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.3)';
       dots[i].classList.add('active');
     } else {
       // Inactive dots - very subtle
-      dots[i].style.background = 'rgba(0, 0, 0, 0.3)';
+      dots[i].style.background = 'rgba(0, 0, 0, 0.25)';
       dots[i].style.transform = 'scale(1)';
       dots[i].style.opacity = '0.6';
       dots[i].style.border = '1px solid transparent';
