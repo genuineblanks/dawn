@@ -246,6 +246,10 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {{ 'responsive.css' | asset_url | stylesheet_tag }}
+    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-button.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
@@ -312,6 +316,7 @@
         cart_url: '{{ routes.cart_url }}',
         predictive_search_url: '{{ routes.predictive_search_url }}'
       };
+
       window.cartStrings = {
         error: `{{ 'sections.cart.cart_error' | t }}`,
         quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
@@ -360,11 +365,10 @@
     </script>
     <!-- END CLICKABLE CARDS SCRIPT -->
 
-    {% if template contains 'index' %}
-    <!-- PREMIUM SCROLL EFFECTS SCRIPT - HOMEPAGE ONLY -->
+    <!-- PREMIUM SCROLL EFFECTS SCRIPT -->
     <script>
     // ===============================================
-    // PREMIUM SCROLL EFFECTS JAVASCRIPT - HOMEPAGE ONLY
+    // PREMIUM SCROLL EFFECTS JAVASCRIPT
     // Works with existing scroll-to-section system
     // ===============================================
     
@@ -579,13 +583,51 @@
         }
       }
       
-      // Only initialize on homepage
-      if (document.body.classList.contains('home-section')) {
-        initAllEffects();
+      // Initialize all effects
+      initAllEffects();
+    });
+    </script>
+
+    <script>
+    // Fix scroll animations after navigation/refresh
+    function reinitializeScrollAnimations() {
+      // Re-run the scroll animation initialization
+      if (typeof initializeScrollAnimationTrigger === 'function') {
+        initializeScrollAnimationTrigger();
+      }
+      
+      // Re-run zoom animations
+      if (typeof initializeScrollZoomAnimationTrigger === 'function') {
+        initializeScrollZoomAnimationTrigger();
+      }
+      
+      // Reset any offscreen elements
+      const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+      offscreenElements.forEach(element => {
+        if (element.getBoundingClientRect().top < window.innerHeight) {
+          element.classList.remove('scroll-trigger--offscreen');
+        }
+      });
+    }
+    
+    // Reinitialize on page navigation
+    document.addEventListener('shopify:section:load', reinitializeScrollAnimations);
+    document.addEventListener('DOMContentLoaded', reinitializeScrollAnimations);
+    
+    // Fix for theme editor and navigation
+    if (Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:section:load', () => {
+        setTimeout(reinitializeScrollAnimations, 100);
+      });
+    }
+    
+    // Additional fix for page visibility changes
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        setTimeout(reinitializeScrollAnimations, 100);
       }
     });
     </script>
-    {% endif %}
 
     <script>
     // Enhanced Scroll Restoration and Navigation
@@ -661,7 +703,7 @@
           isNavigating = false;
           restoreScrollPosition();
           
-          // Re-initialize scroll system if on homepage
+          // Re-initialize scroll system
           setTimeout(function() {
             if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
               window.resetScrollSystem();
@@ -727,8 +769,16 @@
       };
     }
     </script>
-    <!-- OPTIMIZED: Load custom.js once after everything else -->
-     <!-- This replaces the old scroll-fix.js and consolidates all scroll functionality -->
+
+    <!-- Scroll To Top Button -->
+    {% render 'scroll-button' %}
+
+    <!-- Section Dots Container for Homepage Scroll -->
+    {% if template contains 'index' %}
+      <div id="section-dots" class="section-dot-navigation"></div>
+    {% endif %}
+
+     <!-- Load custom.js after everything else -->
     <script src="{{ 'custom.js' | asset_url }}"></script>
     
   </body>
