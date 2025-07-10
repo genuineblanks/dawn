@@ -1,11 +1,14 @@
 // ===============================================
-// NUCLEAR MOBILE FIX - BYPASS CUSTOM SCROLL ON MOBILE
+// ENHANCED SCROLL SYSTEM - MOBILE & DESKTOP
 // ===============================================
 
-console.log('🚀 Enhanced Scroll System Loading...');
+(function() {
+  'use strict';
+  
+  console.log('🚀 Enhanced Scroll System Loading...');
 
 // ===============================================
-// MOBILE DETECTION - NUCLEAR BYPASS
+// MOBILE DETECTION UTILITIES
 // ===============================================
 function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
@@ -17,41 +20,17 @@ function isIOS() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
 
-// NUCLEAR FIX: Complete mobile bypass
+// MOBILE DETECTION - PRESERVE DESKTOP FUNCTIONALITY
 const IS_MOBILE_DEVICE = isMobileDevice();
 const IS_HOMEPAGE = document.body.classList.contains('home-section') || 
                     document.body.classList.contains('template-index') || 
                     window.location.pathname === '/';
 
-console.log('📱 NUCLEAR MOBILE FIX - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP', 'Homepage:', IS_HOMEPAGE);
+console.log('📱 Device Detection - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP', 'Homepage:', IS_HOMEPAGE);
 
-if (IS_MOBILE_DEVICE) {
-  console.log('📱 🚫 MOBILE DETECTED - BYPASSING ALL CUSTOM SCROLL FUNCTIONALITY');
-  console.log('📱 ✅ USING 100% NATIVE MOBILE SCROLLING');
-  
-  // Force native scrolling CSS
-  document.documentElement.style.cssText += `
-    scroll-behavior: auto !important;
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: auto !important;
-  `;
-  
-  document.body.style.cssText += `
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: auto !important;
-    touch-action: pan-y !important;
-  `;
-  
-  // Export mobile detection for other scripts
-  window.isMobileDevice = function() { return true; };
-  window.isIOS = isIOS;
-  window.scrollSystem = { isEnabled: false, initialized: false, inScroll: false };
-  
-  // Stop all execution of custom scroll system
-  return;
-}
+// Export functions for other scripts
+window.isMobileDevice = isMobileDevice;
+window.isIOS = isIOS;
 
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
@@ -819,7 +798,29 @@ function initializeScrollSystem() {
     return;
   }
   
-  console.log('🚀 Initializing scroll system...');
+  // IMPORTANT: Skip custom scroll system on mobile but allow basic functionality
+  if (IS_MOBILE_DEVICE) {
+    console.log('📱 Mobile device detected - using native scrolling');
+    scrollSystem.isEnabled = false;
+    scrollSystem.initialized = true;
+    
+    // Force native scrolling CSS for mobile
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.touchAction = 'pan-y';
+    document.body.style.webkitOverflowScrolling = 'touch';
+    
+    // Export minimal scroll system for other scripts
+    window.scrollSystem = { 
+      isEnabled: false, 
+      initialized: true, 
+      inScroll: false,
+      currentSection: 0,
+      arrSections: []
+    };
+    return;
+  }
+  
+  console.log('🚀 Initializing scroll system for desktop...');
   
   scrollSystem.$sections = $('section');
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
@@ -1202,3 +1203,5 @@ setTimeout(function() {
     }
   }
 }, 2000);
+
+})(); // End of IIFE wrapper
