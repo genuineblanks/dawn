@@ -1123,16 +1123,35 @@
     }
 
     initializeStep3() {
-      // Create required garments if none exist
+      // Create required garments based on file count
       const currentGarments = document.querySelectorAll('.techpack-garment').length;
       const requiredGarments = state.formData.requiredGarmentCount || 1;
       
-      if (currentGarments === 0) {
-        // Create the required number of garments
-        for (let i = 0; i < requiredGarments; i++) {
+      debugSystem.log('Step 3 initialization', { 
+        currentGarments, 
+        requiredGarments, 
+        fileCount: state.formData.files.length 
+      });
+      
+      if (currentGarments < requiredGarments) {
+        // Create additional garments if needed
+        const garmentsToCreate = requiredGarments - currentGarments;
+        for (let i = 0; i < garmentsToCreate; i++) {
           garmentManager.addGarment();
         }
-        debugSystem.log(`Auto-created ${requiredGarments} garments for step 3`);
+        debugSystem.log(`Auto-created ${garmentsToCreate} additional garments (${currentGarments} → ${requiredGarments})`);
+      } else if (currentGarments > requiredGarments) {
+        // Remove excess garments if files were deleted
+        const garmentsToRemove = currentGarments - requiredGarments;
+        const garmentElements = document.querySelectorAll('.techpack-garment');
+        for (let i = 0; i < garmentsToRemove; i++) {
+          const lastGarment = garmentElements[garmentElements.length - 1 - i];
+          if (lastGarment) {
+            const garmentId = lastGarment.dataset.garmentId;
+            garmentManager.removeGarment(garmentId);
+          }
+        }
+        debugSystem.log(`Removed ${garmentsToRemove} excess garments (${currentGarments} → ${requiredGarments})`);
       }
       
       this.refreshStep3Interface();
@@ -1141,6 +1160,11 @@
       setTimeout(() => {
         this.syncStep3GarmentData();
         this.validateStep3();
+        
+        // Initialize progress bar calculation
+        if (window.quantityCalculator) {
+          quantityCalculator.calculateAndUpdateProgress();
+        }
         
         // ADD: Scroll to center TechPack after garments load
         setTimeout(() => {
@@ -3061,8 +3085,8 @@
       
       debugSystem.log('Initializing TechPack Application');
       
-      // ADDED: Setup registration check FIRST
-      this.setupRegistrationCheck();
+      // Setup client verification modal
+      this.setupClientModal();
       
       // EXISTING: Keep all your existing setup methods
       this.setupDateConstraints();
@@ -3080,66 +3104,137 @@
     }
 
 // ENHANCED: Registration setup with comprehensive error handling and user feedback
-    setupRegistrationCheck() {
-      debugSystem.log('🔧 Initializing registration check system...');
+    setupClientModal() {
+      debugSystem.log('🔧 Setting up client verification modal...');
       
-      // Enhanced DOM element detection with retry mechanism
-      const findElements = () => {
-        const elements = {
-          yesBtn: document.querySelector('#registered-client-yes'),
-          noBtn: document.querySelector('#registered-client-no'),
-          warningDiv: document.querySelector('#registration-warning')
-        };
-        
-        debugSystem.log('🔍 DOM element search results:', {
-          yesBtn: !!elements.yesBtn,
-          noBtn: !!elements.noBtn,
-          warningDiv: !!elements.warningDiv,
-          totalButtons: document.querySelectorAll('[id*="registered-client"]').length,
-          pageReadyState: document.readyState
-        });
-        
-        return elements;
+      const modal = document.querySelector('#client-verification-modal');
+      const openBtn = document.querySelector('#open-client-modal');
+      const closeBtn = document.querySelector('#close-client-modal');
+      const backdrop = document.querySelector('.techpack-modal__backdrop');
+      const existingClientBtn = document.querySelector('[data-client-type="existing"]');
+      const newClientBtn = document.querySelector('[data-client-type="new"]');
+      
+      if (!modal || !openBtn) {
+        debugSystem.log('❌ Modal elements not found, skipping modal setup', null, 'error');
+        this.showStep(1); // Fallback to step 1
+        return;
+      }
+      
+      // Open modal
+      openBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+        debugSystem.log('✅ Client verification modal opened');
+      });
+      
+      // Close modal functions
+      const closeModal = () => {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+        debugSystem.log('Modal closed');
       };
+      
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (backdrop) backdrop.addEventListener('click', closeModal);
+      
+      // Client type selection
+      if (existingClientBtn) {
+        existingClientBtn.addEventListener('click', () => {
+          debugSystem.log('✅ Existing client selected');
+          closeModal();
+          setTimeout(() => this.showStep(1), 300);
+        });
+      }
+      
+      if (newClientBtn) {
+        newClientBtn.addEventListener('click', () => {
+          debugSystem.log('🆕 New client selected');
+          closeModal();
+          setTimeout(() => this.showStep(1), 300);
+        });
+      }
+      
+      debugSystem.log('✅ Client modal setup complete');
+    }
 
-      const setupButtonHandlers = (elements) => {
-        const { yesBtn, noBtn, warningDiv } = elements;
-        const statusDiv = document.querySelector('#registration-status');
-        
-        if (!yesBtn || !noBtn) {
-          debugSystem.log('❌ Critical buttons missing, will retry...', null, 'error');
-          return false;
+    setupDateConstraints() {
+      const dateInput = document.getElementById('deadline');
+      if (!dateInput) return;
+
+      const today = new Date();
+      const minDate = new Date();
+      minDate.setDate(today.getDate() + (CONFIG.MIN_DELIVERY_WEEKS * 7));
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+
+      dateInput.min = minDate.toISOString().split('T')[0];
+      dateInput.max = maxDate.toISOString().split('T')[0];
+
+      debugSystem.log('Date constraints applied', {
+        min: dateInput.min,
+        max: dateInput.max
+      });
+    }
+
+    setupPhoneFormatting() {
+      const phoneInput = document.getElementById('phone');
+      if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+          e.target.value = Utils.formatPhoneNumber(e.target.value);
+        });
+      }
+    }
+
+    setupVATFormatting() {
+      const vatInput = document.getElementById('vat-ein');
+      if (vatInput) {
+        vatInput.addEventListener('input', (e) => {
+          e.target.value = Utils.formatVATNumber(e.target.value);
+        });
+      }
+    }
+
+    showStep(stepNumber) {
+      const steps = document.querySelectorAll('.techpack-step');
+      
+      steps.forEach(step => {
+        step.style.display = 'none';
+      });
+      
+      // Handle step 0 (registration check)
+      if (stepNumber === 0) {
+        const step0 = document.querySelector('#techpack-step-0');
+        if (step0) {
+          step0.style.display = 'block';
+          state.currentStep = 0;
+          debugSystem.log('Showing registration check (step 0)');
+          return;
+        } else {
+          debugSystem.log('Step 0 (registration check) not found, falling back to step 1', null, 'warn');
+          stepNumber = 1; // Fallback to step 1 if step 0 doesn't exist
         }
-
-        // Enhanced visual feedback helper
-        const setButtonState = (button, state) => {
-          try {
-            button.style.pointerEvents = state === 'loading' ? 'none' : 'auto';
-            button.style.opacity = state === 'loading' ? '0.6' : '1';
-            if (state === 'loading') {
-              button.setAttribute('data-loading', 'true');
-            } else {
-              button.removeAttribute('data-loading');
-            }
-          } catch (error) {
-            debugSystem.log('⚠️ Button state update failed:', error, 'warn');
-          }
-        };
-
-        // Enhanced status display helper
-        const showStatus = (message, type = 'info') => {
-          try {
-            if (statusDiv) {
-              const statusText = statusDiv.querySelector('.techpack-premium-check__status-text');
-              if (statusText) {
-                statusText.textContent = message;
-              }
-              statusDiv.style.display = 'flex';
-              statusDiv.className = `techpack-premium-check__status techpack-premium-check__status--${type}`;
-            }
-          } catch (error) {
-            debugSystem.log('⚠️ Status display failed:', error, 'warn');
-          }
+      }
+      
+      // Handle regular steps (1-4)
+      const targetStep = document.querySelector(`[data-step="${stepNumber}"]`);
+      if (targetStep) {
+        targetStep.style.display = 'block';
+        state.currentStep = stepNumber;
+        
+        // EXISTING: Keep your exact step-specific logic
+        if (stepNumber === 2) {
+          stepManager.syncStep2DOM();
+        } else if (stepNumber === 3) {
+          stepManager.refreshStep3Interface();
+        } else if (stepNumber === 4) {
+          stepManager.populateReview();
+        }
+        
+        debugSystem.log('Showing step', { stepNumber });
+      } else {
+        debugSystem.log('Target step not found', { stepNumber }, 'error');
+      }
+    }
         };
 
         const hideStatus = () => {
