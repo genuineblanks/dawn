@@ -1,17 +1,166 @@
-// Section Scroll JS - Enhanced with Fixed Dot Navigation
+// ===============================================
+// ENHANCED SCROLL SYSTEM - HOMEPAGE ONLY
+// Consolidates custom.js + scroll-fix.js functionality
+// ===============================================
 
+console.log('🚀 Enhanced Scroll System Loading...');
+
+// ===============================================
+// HOMEPAGE DETECTION UTILITY
+// ===============================================
+function isHomepage() {
+  const bodyHasHomeClass = document.body.classList.contains('home-section');
+  const templateIsIndex = document.body.classList.contains('template-index') || 
+                          window.location.pathname === '/' || 
+                          window.location.pathname === '/index' ||
+                          (typeof template !== 'undefined' && template.includes('index'));
+  
+  const isRootPath = window.location.pathname === '/' || 
+                     window.location.pathname === '/index.html' ||
+                     window.location.pathname.endsWith('/index');
+  
+  const result = bodyHasHomeClass || templateIsIndex || isRootPath;
+  console.log('🏠 Homepage check:', result);
+  return result;
+}
+
+// ===============================================
+// SCROLL SYSTEM CORE
+// ===============================================
 let scrollSystem = {
   $sections: null,
   inScroll: false,
   durationOneScroll: 600,
   currentSection: 0,
   arrSections: [],
-  isEnabled: true,
+  isEnabled: false,
   initialized: false,
   resizeTimeout: null,
   dotNavigation: null
 };
 
+// ===============================================
+// MOBILE TOUCH SUPPORT
+// ===============================================
+let touchStartY = 0;
+let touchEndY = 0;
+let touchStartTime = 0;
+let isTouchScrolling = false;
+
+function handleTouchStart(e) {
+  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+  touchStartY = e.touches[0].clientY;
+  touchStartTime = Date.now();
+  isTouchScrolling = false;
+}
+
+function handleTouchEnd(e) {
+  if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
+  
+  touchEndY = e.changedTouches[0].clientY;
+  const touchDuration = Date.now() - touchStartTime;
+  const touchDistance = Math.abs(touchStartY - touchEndY);
+  
+  if (touchDuration < 300 && touchDistance > 50 && !isTouchScrolling) {
+    e.preventDefault();
+    
+    scrollSystem.inScroll = true;
+    console.log('📱 Touch swipe detected - current section:', scrollSystem.currentSection);
+    
+    if (touchStartY > touchEndY + 30) {
+      scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
+        ? scrollSystem.arrSections.length - 1
+        : scrollSystem.currentSection + 1;
+    } else if (touchStartY < touchEndY - 30) {
+      scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
+    } else {
+      scrollSystem.inScroll = false;
+      return;
+    }
+    
+    console.log('📱 Touch scrolling to section:', scrollSystem.currentSection);
+    updateDotNavigation();
+    
+    $('html, body').animate({
+      scrollTop: scrollSystem.arrSections[scrollSystem.currentSection]
+    }, {
+      duration: scrollSystem.durationOneScroll,
+      complete: function() {
+        scrollSystem.inScroll = false;
+        console.log('✅ Touch scroll complete');
+      }
+    });
+  }
+}
+
+function handleTouchMove(e) {
+  isTouchScrolling = true;
+}
+
+// ===============================================
+// SCROLL ANIMATION FIX (from scroll-fix.js)
+// ===============================================
+function reinitializeScrollAnimations() {
+  if (!isHomepage()) return;
+  
+  console.log('🔧 Reinitializing scroll animations...');
+  
+  if (typeof initializeScrollAnimationTrigger === 'function') {
+    initializeScrollAnimationTrigger();
+  }
+  
+  if (typeof initializeScrollZoomAnimationTrigger === 'function') {
+    initializeScrollZoomAnimationTrigger();
+  }
+  
+  const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+  offscreenElements.forEach(element => {
+    if (element.getBoundingClientRect().top < window.innerHeight) {
+      element.classList.remove('scroll-trigger--offscreen');
+    }
+  });
+}
+
+function applyUltimateScrollFix() {
+  if (!isHomepage()) return;
+  
+  console.log('🔧 Applying ultimate scroll fix...');
+  
+  const allTriggers = document.querySelectorAll('.scroll-trigger');
+  allTriggers.forEach(function(el) {
+    const rect = el.getBoundingClientRect();
+    
+    if (rect.top < window.innerHeight * 0.25) {
+      el.classList.remove('scroll-trigger--offscreen');
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    } else {
+      el.classList.add('scroll-trigger--offscreen');
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+    }
+    
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  });
+  
+  const scrollHandler = function() {
+    const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+    offscreenElements.forEach(function(el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 50) {
+        el.classList.remove('scroll-trigger--offscreen');
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }
+    });
+  };
+  
+  window.addEventListener('scroll', scrollHandler, { passive: true });
+}
+
+// ===============================================
+// JQUERY WAIT UTILITY
+// ===============================================
 function waitForJQuery(callback) {
   if (typeof $ !== 'undefined' && $ && $.fn) {
     console.log('✅ jQuery is ready');
@@ -22,10 +171,14 @@ function waitForJQuery(callback) {
   }
 }
 
+// ===============================================
+// DOT NAVIGATION SYSTEM
+// ===============================================
 function createDotNavigation() {
+  if (!isHomepage()) return;
+  
   console.log('🎯 Creating dot navigation...');
   
-  // Try multiple ways to find the container
   let dotContainer = $('#section-dots');
   if (!dotContainer.length) {
     dotContainer = document.getElementById('section-dots');
@@ -40,11 +193,8 @@ function createDotNavigation() {
   }
   
   console.log('✅ Dot container found:', dotContainer);
-  
-  // Clear existing dots
   dotContainer.empty();
   
-  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -55,26 +205,21 @@ function createDotNavigation() {
     }
   });
   
-  // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+  console.log('🎯 Clean sections:', scrollSystem.arrSections);
   
-  // Create dots for each unique section
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Create dot element
     const dot = $('<div></div>');
     dot.addClass('section-dot');
     dot.attr('data-section', index);
     
-    // Add click handler
     dot.on('click', function() {
       console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    // Append to container
     dotContainer.append(dot);
     console.log('🎯 Dot', index, 'added to container');
   });
@@ -106,14 +251,13 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
-  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length) return;
+  if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) return;
   
   console.log('🎯 Going to section:', sectionIndex);
   
   scrollSystem.inScroll = true;
   scrollSystem.currentSection = sectionIndex;
   
-  // Update dots immediately
   updateDotNavigation();
   
   $('html, body').animate({
@@ -127,8 +271,11 @@ function goToSection(sectionIndex) {
   });
 }
 
+// ===============================================
+// SECTION POSITION CALCULATIONS
+// ===============================================
 function calculateSectionPositions() {
-  if (!scrollSystem.$sections || scrollSystem.$sections.length === 0) return;
+  if (!scrollSystem.$sections || scrollSystem.$sections.length === 0 || !isHomepage()) return;
   
   const oldPositions = [...scrollSystem.arrSections];
   scrollSystem.arrSections = scrollSystem.$sections.map(function() {
@@ -136,14 +283,14 @@ function calculateSectionPositions() {
   }).get();
   
   console.log('📍 Raw section positions:', scrollSystem.arrSections);
-  
-  // Update current section based on current scroll position
   updateCurrentSectionFromScrollPosition();
   
   return oldPositions;
 }
 
 function updateCurrentSectionFromScrollPosition() {
+  if (!isHomepage()) return;
+  
   const currentScrollPos = window.pageYOffset;
   let closestSection = 0;
   let minDistance = Infinity;
@@ -165,8 +312,16 @@ function updateCurrentSectionFromScrollPosition() {
   }
 }
 
+// ===============================================
+// SCROLL SYSTEM INITIALIZATION
+// ===============================================
 function initializeScrollSystem() {
   if (scrollSystem.initialized) return;
+  
+  if (!isHomepage()) {
+    console.log('❌ Not on homepage - scroll system disabled');
+    return;
+  }
   
   console.log('🚀 Initializing scroll system...');
   
@@ -174,10 +329,8 @@ function initializeScrollSystem() {
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
   
   calculateSectionPositions();
-  
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
-  // Enable scroll system only if we have multiple sections
   scrollSystem.isEnabled = scrollSystem.arrSections.length > 6;
   scrollSystem.initialized = true;
   
@@ -186,34 +339,40 @@ function initializeScrollSystem() {
     createDotNavigation();
     bindScrollEvents();
     updateDotNavigation();
+    
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+    console.log('📱 Mobile touch support enabled');
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
   }
 }
 
+// ===============================================
+// EVENT BINDING
+// ===============================================
 function bindScrollEvents() {
-  // Remove any existing wheel event listeners
+  if (!isHomepage()) return;
+  
   $(document).off('wheel.scrollSystem');
   
   $(document).on('wheel.scrollSystem', function(event) {
-    if (!scrollSystem.isEnabled || scrollSystem.inScroll) return;
+    if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
     
     scrollSystem.inScroll = true;
     console.log('🎯 Wheel event - current section:', scrollSystem.currentSection);
 
-    // move down
     if (event.originalEvent.deltaY > 0) {
       scrollSystem.currentSection = scrollSystem.currentSection >= scrollSystem.arrSections.length - 1
         ? scrollSystem.arrSections.length - 1
         : scrollSystem.currentSection + 1;
     } else {
-      // move up
       scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
     }
 
     console.log('📍 Scrolling to section:', scrollSystem.currentSection, 'at position:', scrollSystem.arrSections[scrollSystem.currentSection]);
 
-    // Update dots immediately
     updateDotNavigation();
 
     $('html, body').animate({
@@ -228,19 +387,22 @@ function bindScrollEvents() {
   });
 }
 
+// ===============================================
+// RESIZE HANDLING
+// ===============================================
 function handleWindowResize() {
+  if (!isHomepage()) return;
+  
   console.log('📐 Window resized - recalculating sections...');
   
-  // Clear existing timeout
   if (scrollSystem.resizeTimeout) {
     clearTimeout(scrollSystem.resizeTimeout);
   }
   
-  // Wait for resize to complete before recalculating
   scrollSystem.resizeTimeout = setTimeout(function() {
     if (scrollSystem.initialized) {
       const oldPositions = calculateSectionPositions();
-      createDotNavigation(); // Recreate dots with clean positions
+      createDotNavigation();
       updateDotNavigation();
     }
     
@@ -248,6 +410,9 @@ function handleWindowResize() {
   }, 250);
 }
 
+// ===============================================
+// SYSTEM RESET
+// ===============================================
 function resetScrollSystem() {
   console.log('🔄 Resetting scroll system...');
   scrollSystem.initialized = false;
@@ -271,13 +436,20 @@ function resetScrollSystem() {
   }
 }
 
+// ===============================================
+// FEATURE INITIALIZATION
+// ===============================================
 function initializeAllFeatures() {
   console.log('📱 Initializing all features...');
   
-  // Wait a bit for all content to load
-  setTimeout(initializeScrollSystem, 500);
+  if (!isHomepage()) {
+    console.log('❌ Not on homepage - skipping scroll features');
+    return;
+  }
   
-  // Handle section switching
+  setTimeout(initializeScrollSystem, 500);
+  setTimeout(applyUltimateScrollFix, 600);
+  
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
@@ -288,7 +460,6 @@ function initializeAllFeatures() {
        $('.luxury-collection').show();
     }
     
-    // Re-calculate sections after showing/hiding
     setTimeout(function() {
       calculateSectionPositions();
       createDotNavigation();
@@ -296,7 +467,6 @@ function initializeAllFeatures() {
     }, 150);
   });
 
-  // Handle smooth scroll links
   $(".click-to-scroll a").on('click', function(event) {
      if (this.hash !== "") {
       event.preventDefault();
@@ -309,17 +479,13 @@ function initializeAllFeatures() {
      }
    });
    
-   // Handle window resize
    $(window).on('resize.scrollSystem', handleWindowResize);
-   
-   // Also recalculate on orientation change (for tablets)
    $(window).on('orientationchange.scrollSystem', function() {
      setTimeout(function() {
        handleWindowResize();
      }, 500);
    });
    
-   // Monitor scroll position for dot navigation updates
    $(window).on('scroll.dotNavigation', function() {
      if (scrollSystem.initialized && !scrollSystem.inScroll) {
        updateCurrentSectionFromScrollPosition();
@@ -327,32 +493,34 @@ function initializeAllFeatures() {
    });
 }
 
-// Make functions globally accessible for debugging
+// ===============================================
+// GLOBAL EXPORTS
+// ===============================================
 window.scrollSystem = scrollSystem;
 window.resetScrollSystem = resetScrollSystem;
 window.initializeScrollSystem = initializeScrollSystem;
 window.calculateSectionPositions = calculateSectionPositions;
 window.goToSection = goToSection;
+window.isHomepage = isHomepage;
 
-// Wait for jQuery and then initialize
+// ===============================================
+// INITIALIZATION SEQUENCE
+// ===============================================
 waitForJQuery(function() {
-  // Initialize when DOM is ready
   $(document).ready(function() {
     console.log('📱 DOM Ready with jQuery - initializing features');
     initializeAllFeatures();
   });
 
-  // Re-initialize on page navigation
   $(window).on('beforeunload', function() {
     resetScrollSystem();
   });
 
   $(window).on('load', function() {
     console.log('🌐 Window loaded - checking scroll system');
-    if (!scrollSystem.initialized) {
+    if (!scrollSystem.initialized && isHomepage()) {
       setTimeout(initializeScrollSystem, 200);
-    } else {
-      // Recalculate once everything is fully loaded
+    } else if (isHomepage()) {
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
@@ -360,18 +528,38 @@ waitForJQuery(function() {
       }, 300);
     }
   });
+  
+  // Shopify theme editor support
+  document.addEventListener('shopify:section:load', function() {
+    if (isHomepage()) {
+      reinitializeScrollAnimations();
+      setTimeout(initializeScrollSystem, 100);
+    }
+  });
+  
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && isHomepage()) {
+      setTimeout(function() {
+        reinitializeScrollAnimations();
+        if (!scrollSystem.initialized) {
+          initializeScrollSystem();
+        }
+      }, 100);
+    }
+  });
 });
 
-// Debug: Log when script loads
-console.log('📜 Custom.js script loaded - waiting for jQuery...');
+console.log('📜 Enhanced Custom.js script loaded - waiting for jQuery...');
 
-// Fallback initialization if the main one fails
+// Fallback initialization
 setTimeout(function() {
-  const container = document.getElementById('section-dots');
-  if (container && container.children.length === 0) {
-    console.log('🔄 Fallback: Creating dots manually...');
-    if (typeof scrollSystem !== 'undefined' && scrollSystem.arrSections && scrollSystem.arrSections.length > 0) {
-      createDotNavigation();
+  if (isHomepage()) {
+    const container = document.getElementById('section-dots');
+    if (container && container.children.length === 0) {
+      console.log('🔄 Fallback: Creating dots manually...');
+      if (typeof scrollSystem !== 'undefined' && scrollSystem.arrSections && scrollSystem.arrSections.length > 0) {
+        createDotNavigation();
+      }
     }
   }
 }, 2000);
