@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="{{ request.locale.iso_code }}">
+<html class="no-js{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,8 +17,8 @@
 
     <title>
       {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- if current_tags %} &ndash; {{ 'blogs.article.tagged' | t }}{% for tag in current_tags %} {{ tag }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.page' | t: page: current_page }}{% endif -%}
       {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
@@ -28,17 +28,7 @@
 
     {% render 'meta-tags' %}
 
-    <!-- Load jQuery FIRST -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    
-    <!-- Then load Shopify scripts -->
-    <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
-    {%- if settings.animations_reveal_on_scroll -%}
-      <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
-    
     {{ content_for_header }}
 
     {%- liquid
@@ -90,7 +80,7 @@
         --color-badge-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
         --color-badge-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
         --color-badge-border: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
-        --payment-terms-background-color: rgb({{ scheme.settings.background.rgb }});
+        --payment-terms-background-color: {{ scheme.settings.background | color_modify: 'alpha', 0.1 }};
       }
       {% endfor %}
 
@@ -194,7 +184,7 @@
 
         --buttons-radius: {{ settings.buttons_radius }}px;
         --buttons-radius-outset: {% if settings.buttons_radius > 0 %}{{ settings.buttons_radius | plus: settings.buttons_border_thickness }}{% else %}0{% endif %}px;
-        --buttons-border-width: {% if settings.buttons_border_opacity > 0 %}{{ settings.buttons_border_thickness }}{% else %}0{% endif %}px;
+        --buttons-border-width: {{ settings.buttons_border_thickness }}px;
         --buttons-border-opacity: {{ settings.buttons_border_opacity | divided_by: 100.0 }};
         --buttons-shadow-opacity: {{ settings.buttons_shadow_opacity | divided_by: 100.0 }};
         --buttons-shadow-visible: {% if settings.buttons_shadow_opacity > 0 %}1{% else %}0{% endif %};
@@ -256,9 +246,6 @@
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'custom.css' | asset_url | stylesheet_tag }}
-    {{ 'responsive.css' | asset_url | stylesheet_tag }}
-    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
@@ -323,57 +310,39 @@
         cart_change_url: '{{ routes.cart_change_url }}',
         cart_update_url: '{{ routes.cart_update_url }}',
         cart_url: '{{ routes.cart_url }}',
-        predictive_search_url: '{{ routes.predictive_search_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}'
       };
-
       window.cartStrings = {
         error: `{{ 'sections.cart.cart_error' | t }}`,
-        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
-      };
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+      }
 
       window.variantStrings = {
         addToCart: `{{ 'products.product.add_to_cart' | t }}`,
         soldOut: `{{ 'products.product.sold_out' | t }}`,
         unavailable: `{{ 'products.product.unavailable' | t }}`,
         unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
-      };
-
-      window.quickOrderListStrings = {
-        itemsAdded: `{{ 'sections.quick_order_list.items_added.other' | t: quantity: '[quantity]' }}`,
-        itemAdded: `{{ 'sections.quick_order_list.items_added.one' | t: quantity: '[quantity]' }}`,
-        itemsRemoved: `{{ 'sections.quick_order_list.items_removed.other' | t: quantity: '[quantity]' }}`,
-        itemRemoved: `{{ 'sections.quick_order_list.items_removed.one' | t: quantity: '[quantity]' }}`,
-        viewCart: `{{- 'sections.quick_order_list.view_cart' | t -}}`,
-        each: `{{- 'sections.quick_order_list.each' | t: money: '[money]' }}`,
-      };
+      }
 
       window.accessibilityStrings = {
         imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
         shareSuccess: `{{ 'general.share.success_message' | t }}`,
         pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
         playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
-        recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
-        recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
-        countrySelectorSearchCount: `{{ 'localization.country_results_count' | t: count: '[count]' }}`,
-      };
+      }
     </script>
 
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    {% if template contains 'index' %}
-      <script src="{{ 'custom.js' | asset_url }}"></script>
-    {% elsif template contains 'product' %}
-      <script src="{{ 'custom-product-page.js' | asset_url }}" async></script>
-    {% endif %}
 
-    <!-- ADD THE CLICKABLE CARDS SCRIPT HERE -->
+    <!-- CLICKABLE CARDS SCRIPT -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Make entire product cards clickable
-      const productCards = document.querySelectorAll('.product-card-wrapper, .card-wrapper');
+      const productCards = document.querySelectorAll('.card-wrapper, .product-card-wrapper');
       
-      productCards.forEach(card => {
+      productCards.forEach(function(card) {
         const link = card.querySelector('.card__heading a, .full-unstyled-link');
         
         if (link) {
@@ -391,10 +360,11 @@
     </script>
     <!-- END CLICKABLE CARDS SCRIPT -->
 
-    <!-- PREMIUM SCROLL EFFECTS SCRIPT -->
+    {% if template contains 'index' %}
+    <!-- PREMIUM SCROLL EFFECTS SCRIPT - HOMEPAGE ONLY -->
     <script>
     // ===============================================
-    // PREMIUM SCROLL EFFECTS JAVASCRIPT
+    // PREMIUM SCROLL EFFECTS JAVASCRIPT - HOMEPAGE ONLY
     // Works with existing scroll-to-section system
     // ===============================================
     
@@ -516,75 +486,15 @@
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              entry.target.classList.add('section-entering');
+              entry.target.classList.add('animate-in');
             }
           });
         }, {
-          threshold: 0.2,
-          rootMargin: '100px'
+          threshold: 0.1,
+          rootMargin: '50px'
         });
         
         sections.forEach(section => observer.observe(section));
-      }
-      
-      // ===============================================
-      // CUSTOM CURSOR (Desktop only)
-      // ===============================================
-      function createCustomCursor() {
-        if (window.innerWidth <= 768) return; // Skip on mobile
-        
-        const cursor = document.createElement('div');
-        cursor.className = 'custom-cursor';
-        
-        const follower = document.createElement('div');
-        follower.className = 'custom-cursor-follower';
-        
-        document.body.appendChild(cursor);
-        document.body.appendChild(follower);
-        
-        let mouseX = 0, mouseY = 0;
-        let followerX = 0, followerY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          
-          cursor.style.left = mouseX + 'px';
-          cursor.style.top = mouseY + 'px';
-        });
-        
-        // Smooth follower animation
-        function animateFollower() {
-          followerX += (mouseX - followerX) * 0.1;
-          followerY += (mouseY - followerY) * 0.1;
-          
-          follower.style.left = followerX + 'px';
-          follower.style.top = followerY + 'px';
-          
-          requestAnimationFrame(animateFollower);
-        }
-        animateFollower();
-        
-        // Cursor hover effects
-        const hoverElements = document.querySelectorAll('a, button, .button, .card-wrapper, .product-card-wrapper');
-        
-        hoverElements.forEach(element => {
-          element.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-          });
-          
-          element.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-          });
-          
-          element.addEventListener('mousedown', () => {
-            cursor.classList.add('click');
-          });
-          
-          element.addEventListener('mouseup', () => {
-            cursor.classList.remove('click');
-          });
-        });
       }
       
       // ===============================================
@@ -663,381 +573,72 @@
           createFloatingElements();
           animateProductGrids();
           animateSections();
-          createCustomCursor();
           initParallax();
           enhancePageTransitions();
-        }
-        
-        // Always run these (they have reduced motion fallbacks)
-        createLoadingSkeletons();
-      }
-      
-      // Start everything
-      initAllEffects();
-      
-      // ===============================================
-      // COMPATIBILITY WITH EXISTING SCROLL SYSTEM
-      // ===============================================
-      
-      // Listen for your existing scroll events and enhance them
-      window.addEventListener('wheel', (e) => {
-        // Add smooth transition during your page-to-page scroll
-        document.body.classList.add('page-transitioning');
-        
-        setTimeout(() => {
-          document.body.classList.remove('page-transitioning');
-        }, 1000);
-      });
-      
-      // Enhance existing scroll animations
-      const existingScrollElements = document.querySelectorAll('[data-scroll]');
-      existingScrollElements.forEach(element => {
-        element.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      });
-      
-    });
-    </script>
-    <!-- END PREMIUM SCROLL EFFECTS SCRIPT -->
-
-    {% render 'wholesale-modal' %}
-    <script src="{{ 'wholesale.js'  | asset_url }}" defer></script>
-    <script src="{{ 'techpack-app.js' | asset_url }}" defer></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      
-      // ===============================================
-      // MAKE PRODUCT CARDS CLICKABLE
-      // ===============================================
-      
-      function makeCardsClickable() {
-        console.log('🎯 Making product cards clickable...');
-        
-        const productCards = document.querySelectorAll(
-          '.product-card-wrapper, .card-wrapper, .product-recommendations .card-wrapper, .you-may-also-like .card-wrapper, .card, .collection .card-wrapper'
-        );
-        
-        productCards.forEach(card => {
-          // Skip if already processed
-          if (card.hasAttribute('data-clickable-processed')) return;
-          
-          // Find the main product link
-          const productLink = card.querySelector(
-            '.card__heading a, .card__information a, .card__media a, a[href*="/products/"]'
-          );
-          
-          if (productLink && productLink.href) {
-            const productUrl = productLink.href;
-            
-            // Mark as processed
-            card.setAttribute('data-clickable-processed', 'true');
-            card.style.cursor = 'pointer';
-            
-            // Add click handler
-            card.addEventListener('click', function(e) {
-              // Don't trigger if clicking on interactive elements
-              if (e.target.closest('button, .btn, input, select, .swatch, .quantity, .product-form__buttons, [role="button"], .shopify-payment-button')) {
-                return;
-              }
-              
-              // Don't trigger if clicking on another link
-              if (e.target.closest('a') && e.target.closest('a') !== productLink) {
-                return;
-              }
-              
-              // Navigate to product page
-              if (e.ctrlKey || e.metaKey) {
-                // Open in new tab if Ctrl/Cmd+click
-                window.open(productUrl, '_blank');
-              } else {
-                window.location.href = productUrl;
-              }
-            });
-            
-            // Add keyboard support
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'link');
-            card.setAttribute('aria-label', 'View product: ' + (productLink.textContent || 'Product'));
-            
-            card.addEventListener('keydown', function(e) {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = productUrl;
-              }
-            });
-            
-            console.log('✅ Made card clickable:', productUrl);
-          } else {
-            console.log('❌ No product link found in card:', card);
-          }
-        });
-        
-        console.log(`🎯 Processed ${productCards.length} product cards`);
-      }
-      
-      // ===============================================
-      // ENHANCED DAWN GALLERY FUNCTIONALITY
-      // ===============================================
-      
-      function enhanceDawnGallery() {
-        console.log('🖼️ Enhancing Dawn gallery...');
-        
-        // Find the main product image
-        const mainImage = document.querySelector('.product__media img, .product-media img, .media img, img[src*="product"]');
-        
-        // Find thumbnail containers
-        const thumbnails = document.querySelectorAll('.product__media-toggle, .thumbnail-list button, .slider-counter__link, [data-media-id], .thumbnail.global-media-settings');
-        
-        console.log(`🎯 Main image found:`, !!mainImage);
-        console.log(`🎯 Thumbnails found:`, thumbnails.length);
-        
-        if (mainImage && thumbnails.length > 0) {
-          console.log('✅ Setting up enhanced gallery functionality...');
-          
-          // Add click handlers to thumbnails
-          thumbnails.forEach((thumbnail, index) => {
-            // Skip if already processed
-            if (thumbnail.hasAttribute('data-gallery-processed')) return;
-            thumbnail.setAttribute('data-gallery-processed', 'true');
-            
-            thumbnail.addEventListener('click', function(e) {
-              e.preventDefault();
-              
-              // Find the image source
-              const img = this.querySelector('img');
-              const newSrc = img?.src || this.href || this.dataset.src;
-              
-              if (newSrc && mainImage) {
-                console.log(`🔄 Switching to image: ${newSrc}`);
-                
-                // Smooth transition
-                mainImage.style.opacity = '0.7';
-                mainImage.style.transform = 'scale(0.98)';
-                
-                setTimeout(() => {
-                  mainImage.src = newSrc;
-                  mainImage.style.opacity = '1';
-                  mainImage.style.transform = 'scale(1)';
-                }, 200);
-                
-                // Update active states
-                thumbnails.forEach(t => {
-                  t.classList.remove('active');
-                  t.removeAttribute('aria-current');
-                });
-                this.classList.add('active');
-                this.setAttribute('aria-current', 'true');
-              }
-            });
-            
-            // Add keyboard support
-            if (!thumbnail.hasAttribute('tabindex')) {
-              thumbnail.setAttribute('tabindex', '0');
-            }
-            thumbnail.addEventListener('keydown', function(e) {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
-              }
-            });
-          });
-          
-          // Add zoom functionality to main image
-          if (mainImage && !mainImage.hasAttribute('data-zoom-processed')) {
-            mainImage.setAttribute('data-zoom-processed', 'true');
-            let isZoomed = false;
-            
-            mainImage.addEventListener('click', function() {
-              isZoomed = !isZoomed;
-              const container = this.closest('.product__media, .product-media, .media');
-              
-              if (container) {
-                container.style.overflow = isZoomed ? 'hidden' : 'visible';
-                this.style.transform = isZoomed ? 'scale(2)' : 'scale(1)';
-                this.style.cursor = isZoomed ? 'zoom-out' : 'zoom-in';
-                this.style.transition = 'transform 0.3s ease';
-              }
-            });
-            
-            mainImage.addEventListener('mousemove', function(e) {
-              if (isZoomed) {
-                const rect = this.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                this.style.transformOrigin = `${x}% ${y}%`;
-              }
-            });
-          }
-          
-          console.log('✅ Enhanced gallery functionality activated!');
-        } else {
-          console.log('❌ Could not find required gallery elements');
+          createLoadingSkeletons();
         }
       }
       
-      // ===============================================
-      // INITIALIZATION AND MONITORING
-      // ===============================================
-      
-      // Run functions initially
-      makeCardsClickable();
-      setTimeout(enhanceDawnGallery, 500);
-      
-      // Monitor for dynamically loaded content
-      const observer = new MutationObserver(function(mutations) {
-        let shouldReprocess = false;
-        
-        mutations.forEach(function(mutation) {
-          if (mutation.addedNodes.length > 0) {
-            // Check if new product cards or images were added
-            const hasNewContent = Array.from(mutation.addedNodes).some(node => 
-              node.nodeType === Node.ELEMENT_NODE && 
-              (node.matches('.product-card-wrapper, .card-wrapper, .card, img') || 
-               node.querySelector('.product-card-wrapper, .card-wrapper, .card, img'))
-            );
-            
-            if (hasNewContent) {
-              shouldReprocess = true;
-            }
-          }
-        });
-        
-        if (shouldReprocess) {
-          console.log('🔄 New content detected, re-processing...');
-          setTimeout(() => {
-            makeCardsClickable();
-            enhanceDawnGallery();
-          }, 100);
-        }
-      });
-      
-      // Start observing
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-      
-      // Handle Shopify section loading
-      document.addEventListener('shopify:section:load', function() {
-        console.log('🔄 Shopify section loaded, re-processing...');
-        setTimeout(() => {
-          makeCardsClickable();
-          enhanceDawnGallery();
-        }, 200);
-      });
-      
-      // Handle AJAX loading for recommendations
-      document.addEventListener('DOMContentLoaded', function() {
-        // Look for recommendation sections that might load via AJAX
-        const recommendationSections = document.querySelectorAll('.product-recommendations, .you-may-also-like, [data-recommendations]');
-        
-        recommendationSections.forEach(section => {
-          // Set up observer for this specific section
-          const sectionObserver = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              if (mutation.addedNodes.length > 0) {
-                console.log('🔄 Recommendation section updated, re-processing...');
-                setTimeout(makeCardsClickable, 100);
-              }
-            });
-          });
-          
-          sectionObserver.observe(section, {
-            childList: true,
-            subtree: true
-          });
-        });
-      });
-      
-      console.log('🚀 Product card enhancement complete!');
-    });
-    </script>
-
-    <script>
-    // Fix scroll animations after navigation/refresh
-    function reinitializeScrollAnimations() {
-      // Re-run the scroll animation initialization
-      if (typeof initializeScrollAnimationTrigger === 'function') {
-        initializeScrollAnimationTrigger();
-      }
-      
-      // Re-run zoom animations
-      if (typeof initializeScrollZoomAnimationTrigger === 'function') {
-        initializeScrollZoomAnimationTrigger();
-      }
-      
-      // Reset any offscreen elements
-      const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
-      offscreenElements.forEach(element => {
-        if (element.getBoundingClientRect().top < window.innerHeight) {
-          element.classList.remove('scroll-trigger--offscreen');
-        }
-      });
-    }
-    
-    // Reinitialize on page navigation
-    document.addEventListener('shopify:section:load', reinitializeScrollAnimations);
-    document.addEventListener('DOMContentLoaded', reinitializeScrollAnimations);
-    
-    // Fix for theme editor and navigation
-    if (Shopify && Shopify.designMode) {
-      document.addEventListener('shopify:section:load', () => {
-        setTimeout(reinitializeScrollAnimations, 100);
-      });
-    }
-    
-    // Additional fix for page visibility changes
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        setTimeout(reinitializeScrollAnimations, 100);
+      // Only initialize on homepage
+      if (document.body.classList.contains('home-section')) {
+        initAllEffects();
       }
     });
     </script>
+    {% endif %}
 
     <script>
-    // Enhanced Scroll Restoration and Navigation Handler
+    // Enhanced Scroll Restoration and Navigation
     (function() {
-      console.log('🔧 Scroll restoration script loading...');
+      'use strict';
       
-      // Detect if we're on live site (not preview)
-      const isLiveSite = !window.location.hostname.includes('myshopify.com') || window.location.hostname.includes('.myshopify.com');
+      console.log('🔧 Enhanced scroll restoration loading...');
       
-      // Always disable browser scroll restoration
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-        console.log('🚫 Browser scroll restoration disabled');
-      }
+      var isNavigating = false;
       
-      let scrollPositions = {};
-      let isNavigating = false;
-      
+      // Save scroll position for current page
       function saveScrollPosition() {
-        const key = window.location.pathname;
-        scrollPositions[key] = window.pageYOffset;
-        console.log('💾 Saved scroll position:', scrollPositions[key], 'for:', key);
+        const currentPath = window.location.pathname;
+        const scrollPos = window.pageYOffset;
         
         try {
+          let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
+          scrollPositions[currentPath] = scrollPos;
           sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+          console.log('💾 Saved scroll position:', scrollPos, 'for path:', currentPath);
         } catch(e) {
-          console.log('❌ Could not save scroll position to storage');
+          console.log('❌ Could not save scroll position');
         }
       }
       
+      // Restore scroll position for current page
       function restoreScrollPosition() {
-        const key = window.location.pathname;
+        const currentPath = window.location.pathname;
         
         try {
-          const saved = sessionStorage.getItem('shopifyScrollPositions');
-          if (saved) {
-            scrollPositions = JSON.parse(saved);
-            if (scrollPositions[key] && scrollPositions[key] > 0) {
-              console.log('📍 Restoring scroll position:', scrollPositions[key], 'for:', key);
+          const scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
+          const savedPosition = scrollPositions[currentPath];
+          
+          if (savedPosition && savedPosition > 0) {
+            console.log('📍 Restoring scroll position:', savedPosition, 'for path:', currentPath);
+            
+            // Use requestAnimationFrame for smoother restoration
+            requestAnimationFrame(function() {
+              window.scrollTo({
+                top: savedPosition,
+                behavior: 'instant'
+              });
               
-              setTimeout(() => {
-                window.scrollTo(0, scrollPositions[key]);
-                delete scrollPositions[key];
-                sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+              // Clean up old positions after successful restore
+              setTimeout(function() {
+                const key = Object.keys(scrollPositions).find(k => k !== currentPath && Math.abs(scrollPositions[k] - savedPosition) < 50);
+                if (key && scrollPositions[key]) {
+                  console.log('🧹 Cleaning up old position for:', key);
+                  delete scrollPositions[key];
+                  sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+                }
               }, 300);
-            }
+            });
           }
         } catch(e) {
           console.log('❌ Could not restore scroll position');
@@ -1060,7 +661,7 @@
           isNavigating = false;
           restoreScrollPosition();
           
-          // Re-initialize scroll system
+          // Re-initialize scroll system if on homepage
           setTimeout(function() {
             if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
               window.resetScrollSystem();
@@ -1126,8 +727,8 @@
       };
     }
     </script>
-
-     <!-- Load custom.js after everything else -->
+    <!-- OPTIMIZED: Load custom.js once after everything else -->
+     <!-- This replaces the old scroll-fix.js and consolidates all scroll functionality -->
     <script src="{{ 'custom.js' | asset_url }}"></script>
     
   </body>
