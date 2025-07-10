@@ -3638,9 +3638,9 @@ details-disclosure > details {
   
   body {
     overflow: auto !important;
-    touch-action: pan-y !important;
+    touch-action: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior-y: auto !important;
+    overscroll-behavior: auto !important;
   }
   
   /* Show dot navigation on mobile with touch-friendly styling */
@@ -3681,10 +3681,10 @@ details-disclosure > details {
     scroll-behavior: smooth !important;
   }
   
-  /* Optimize touch scrolling for section navigation */
+  /* Allow native mobile behaviors */
   .mobile-device.home-section body {
-    overscroll-behavior: none !important;
-    touch-action: pan-y !important;
+    overscroll-behavior: auto !important;
+    touch-action: auto !important;
   }
   
   /* Remove scroll blocking from modals on mobile */
