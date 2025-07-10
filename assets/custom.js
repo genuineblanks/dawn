@@ -1,12 +1,60 @@
 // ===============================================
-// ENHANCED SCROLL SYSTEM - HOMEPAGE ONLY
-// Based on WORKING debug version with refinements
+// NUCLEAR MOBILE FIX - BYPASS CUSTOM SCROLL ON MOBILE
 // ===============================================
 
 console.log('🚀 Enhanced Scroll System Loading...');
 
 // ===============================================
-// HOMEPAGE DETECTION UTILITY
+// MOBILE DETECTION - NUCLEAR BYPASS
+// ===============================================
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+         (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ||
+         window.innerWidth <= 768;
+}
+
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+// NUCLEAR FIX: Complete mobile bypass
+const IS_MOBILE_DEVICE = isMobileDevice();
+const IS_HOMEPAGE = document.body.classList.contains('home-section') || 
+                    document.body.classList.contains('template-index') || 
+                    window.location.pathname === '/';
+
+console.log('📱 NUCLEAR MOBILE FIX - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP', 'Homepage:', IS_HOMEPAGE);
+
+if (IS_MOBILE_DEVICE) {
+  console.log('📱 🚫 MOBILE DETECTED - BYPASSING ALL CUSTOM SCROLL FUNCTIONALITY');
+  console.log('📱 ✅ USING 100% NATIVE MOBILE SCROLLING');
+  
+  // Force native scrolling CSS
+  document.documentElement.style.cssText += `
+    scroll-behavior: auto !important;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: auto !important;
+  `;
+  
+  document.body.style.cssText += `
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: auto !important;
+    touch-action: pan-y !important;
+  `;
+  
+  // Export mobile detection for other scripts
+  window.isMobileDevice = function() { return true; };
+  window.isIOS = isIOS;
+  window.scrollSystem = { isEnabled: false, initialized: false, inScroll: false };
+  
+  // Stop all execution of custom scroll system
+  return;
+}
+
+// ===============================================
+// DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
 // ===============================================
 function isHomepage() {
   const bodyHasHomeClass = document.body.classList.contains('home-section');
@@ -52,15 +100,15 @@ let hasMoved = false;
 let touchTarget = null;
 let lastTouchTime = 0;
 
-// Mobile device detection
-function isMobileDevice() {
+// DESKTOP ONLY - Mobile device detection (redundant but kept for compatibility)
+function isMobileDeviceCheck() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
          (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ||
          window.innerWidth <= 768;
 }
 
-// iOS specific detection
-function isIOS() {
+// DESKTOP ONLY - iOS specific detection (redundant but kept for compatibility) 
+function isIOSCheck() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
 
@@ -75,9 +123,13 @@ function handleTouchStart(e) {
   hasMoved = false;
   touchTarget = e.target;
   
-  // Prevent double-tap zoom on iOS
-  if (isIOS() && Date.now() - lastTouchTime < 300) {
-    e.preventDefault();
+  // FIXED: Only prevent double-tap zoom on iOS for very quick taps
+  if (isIOS() && Date.now() - lastTouchTime < 200) {
+    // Only prevent if touching the same spot
+    const sameTouchArea = Math.abs(touch.clientY - initialTouchY) < 10 && Math.abs(touch.clientX - touchStartX) < 10;
+    if (sameTouchArea) {
+      e.preventDefault();
+    }
   }
   lastTouchTime = Date.now();
   
@@ -104,10 +156,10 @@ function handleTouchMove(e) {
     hasMoved = true;
   }
   
-  // AGGRESSIVE: If it's clearly vertical movement, prevent default immediately
-  if (deltaY > 15 && deltaY > deltaX) {
+  // FIXED: Only prevent default for very large vertical movements to avoid blocking normal scrolling
+  if (deltaY > 50 && deltaY > deltaX * 2) {
     e.preventDefault();
-    console.log('📱 Preventing default - vertical swipe detected, deltaY:', deltaY, 'deltaX:', deltaX);
+    console.log('📱 Preventing default - large vertical swipe detected, deltaY:', deltaY, 'deltaX:', deltaX);
   }
 }
 
@@ -144,15 +196,15 @@ function handleTouchEnd(e) {
     endY: touchEndY
   });
   
-  // ENHANCED SWIPE DETECTION - Much more aggressive for mobile
+  // ENHANCED SWIPE DETECTION - Balanced thresholds for mobile
   const isMobile = isMobileDevice();
-  const minDistance = isMobile ? 20 : 40;      // LOWER threshold for mobile
-  const maxDuration = isMobile ? 2000 : 1200;  // MORE time for mobile
-  const ratioThreshold = isMobile ? 1.0 : 1.2; // EASIER ratio for mobile
+  const minDistance = isMobile ? 30 : 40;      // Reasonable threshold for mobile
+  const maxDuration = isMobile ? 1500 : 1200;  // Reasonable time for mobile
+  const ratioThreshold = isMobile ? 1.5 : 1.2; // Balanced ratio for mobile
   
   const isValidSwipe = touchDuration < maxDuration && 
                       totalVerticalDistance > minDistance && 
-                      (totalVerticalDistance > horizontalDistance * ratioThreshold || totalVerticalDistance > 30) &&
+                      (totalVerticalDistance > horizontalDistance * ratioThreshold || totalVerticalDistance > 40) &&
                       hasMoved;
   
   console.log('📱 Swipe validation:', {
@@ -171,7 +223,7 @@ function handleTouchEnd(e) {
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
-    const swipeThreshold = isMobile ? 15 : 25; // LOWER threshold for direction
+    const swipeThreshold = isMobile ? 20 : 25; // Reasonable threshold for direction
     
     if (verticalDistance > swipeThreshold) {
       // Swipe up = next section
@@ -291,17 +343,17 @@ function addMobileTouchFailsafe() {
           moved: pointerMoved
         });
         
-        if (Math.abs(pointerDistance) > 25 && pointerDuration < 1500) {
+        if (Math.abs(pointerDistance) > 35 && pointerDuration < 1200) {
           console.log('📱 🔥 Pointer failsafe TRIGGERED:', pointerDistance);
           swipeAttempts++;
           
-          if (Date.now() - lastSwipeTime > 300) { // Reduced debounce
+          if (Date.now() - lastSwipeTime > 500) { // Reasonable debounce
             let targetSection = scrollSystem.currentSection;
             
-            if (pointerDistance > 25) {
+            if (pointerDistance > 35) {
               targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
               console.log('📱 🚀 POINTER UP - Next section:', targetSection);
-            } else if (pointerDistance < -25) {
+            } else if (pointerDistance < -35) {
               targetSection = Math.max(scrollSystem.currentSection - 1, 0);
               console.log('📱 🚀 POINTER DOWN - Previous section:', targetSection);
             }
@@ -802,8 +854,15 @@ function initializeScrollSystem() {
         document.documentElement.style.webkitOverflowScrolling = 'touch';
       }
       
-      // Enhanced touch event options for mobile
+      // FIXED: Enhanced touch event options for mobile - allow passive where possible
       const touchOptions = { 
+        passive: true, 
+        capture: false,
+        once: false
+      };
+      
+      // Non-passive options only for touchmove to allow preventDefault when needed
+      const touchMoveOptions = { 
         passive: false, 
         capture: false,
         once: false
@@ -814,9 +873,9 @@ function initializeScrollSystem() {
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
       
-      // Add touch listeners with proper options
+      // FIXED: Add touch listeners with proper options
       document.addEventListener('touchstart', handleTouchStart, touchOptions);
-      document.addEventListener('touchmove', handleTouchMove, touchOptions);
+      document.addEventListener('touchmove', handleTouchMove, touchMoveOptions);
       document.addEventListener('touchend', handleTouchEnd, touchOptions);
       
       console.log('📱 Mobile touch events bound successfully');
