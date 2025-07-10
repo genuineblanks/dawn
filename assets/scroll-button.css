@@ -1,0 +1,198 @@
+/* ===============================================
+   SCROLL TO TOP BUTTON - PREMIUM STYLING
+   =============================================== */
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.scroll-to-top:hover {
+  background: rgba(0, 0, 0, 0.95);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-to-top:active {
+  transform: translateY(-1px) scale(1);
+  transition: all 0.1s ease;
+}
+
+/* Arrow Icon */
+.scroll-to-top::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid #ffffff;
+  transition: all 0.3s ease;
+}
+
+.scroll-to-top:hover::before {
+  border-bottom-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Alternative SVG Arrow (uncomment if preferred) */
+/*
+.scroll-to-top-icon {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.scroll-to-top:hover .scroll-to-top-icon {
+  fill: #ffffff;
+  transform: translateY(-2px);
+}
+*/
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .scroll-to-top::before {
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid #ffffff;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .scroll-to-top {
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .scroll-to-top::before {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 9px solid #ffffff;
+  }
+}
+
+/* Animation for scroll progress (optional enhancement) */
+.scroll-to-top.with-progress {
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.3) 0deg,
+    rgba(255, 255, 255, 0.3) var(--scroll-progress, 0deg),
+    rgba(0, 0, 0, 0.8) var(--scroll-progress, 0deg),
+    rgba(0, 0, 0, 0.8) 360deg
+  );
+}
+
+.scroll-to-top.with-progress::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Hide on very small screens if needed */
+@media screen and (max-width: 320px) {
+  .scroll-to-top {
+    display: none;
+  }
+}
+
+/* Premium glass morphism variant (alternative style) */
+.scroll-to-top.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.scroll-to-top.glass:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.scroll-to-top.glass::before {
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Dark theme variant */
+.scroll-to-top.dark {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.scroll-to-top.dark:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.scroll-to-top.dark::before {
+  border-bottom-color: #000000;
+}
+
+/* Accessibility improvements */
+.scroll-to-top:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.scroll-to-top:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-to-top {
+    transition: opacity 0.2s ease;
+  }
+  
+  .scroll-to-top:hover {
+    transform: none;
+  }
+  
+  .scroll-to-top::before {
+    transition: none;
+  }
+  
+  .scroll-to-top:hover::before {
+    transform: none;
+  }
+}
