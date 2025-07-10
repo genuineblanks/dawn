@@ -98,10 +98,68 @@ body {
 
 .techpack-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: var(--techpack-space-3xl) auto;
   padding: var(--techpack-space-2xl);
-  min-height: 100vh;
   background: var(--techpack-bg);
+  position: relative;
+}
+
+/* Tech pack app wrapper for proper spacing with other sections */
+.techpack-app-wrapper {
+  padding: var(--techpack-space-3xl) 0;
+  min-height: auto;
+}
+
+/* Ensure proper spacing on small screens */
+@media (max-width: 768px) {
+  .techpack-container {
+    margin: var(--techpack-space-xl) auto;
+    padding: var(--techpack-space-lg);
+  }
+  
+  .techpack-app-wrapper {
+    padding: var(--techpack-space-xl) 0;
+  }
+}
+
+/* Adaptive container that responds to content size */
+.techpack-adaptive-container {
+  width: 100%;
+  min-height: fit-content;
+  max-height: none;
+  overflow: visible;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Better integration with other page sections */
+.section + .techpack-app-wrapper,
+.techpack-app-wrapper + .section {
+  margin-top: var(--techpack-space-3xl);
+}
+
+/* Responsive text sizing for better mobile adaptation */
+@media (max-width: 480px) {
+  .techpack-container {
+    margin: var(--techpack-space-lg) auto;
+    padding: var(--techpack-space-md);
+  }
+  
+  .techpack-app-wrapper {
+    padding: var(--techpack-space-lg) 0;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1400px) {
+  .techpack-container {
+    max-width: 1400px;
+    padding: var(--techpack-space-3xl);
+  }
+  
+  .techpack-app-wrapper {
+    padding: var(--techpack-space-4xl) 0;
+  }
 }
 
 /* Premium Progress Bar - Minimal & Elegant */
