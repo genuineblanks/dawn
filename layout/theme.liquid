@@ -28,7 +28,17 @@
 
     {% render 'meta-tags' %}
 
+    <!-- Load jQuery FIRST - CRITICAL for scroll system -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <!-- Then load Shopify scripts -->
+    <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    {%- if settings.animations_reveal_on_scroll -%}
+      <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    
     {{ content_for_header }}
 
     {%- liquid
@@ -778,7 +788,12 @@
       <div id="section-dots" class="section-dot-navigation"></div>
     {% endif %}
 
-     <!-- Load custom.js after everything else -->
+    <!-- Load scroll-fix.js FIRST for homepage -->
+    {% if template contains 'index' %}
+      <script src="{{ 'scroll-fix.js' | asset_url }}"></script>
+    {% endif %}
+
+    <!-- Load custom.js after everything else -->
     <script src="{{ 'custom.js' | asset_url }}"></script>
     
   </body>
