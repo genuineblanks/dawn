@@ -49,6 +49,8 @@ let touchStartX = 0;
 let touchEndX = 0;
 let initialTouchY = 0;
 let hasMoved = false;
+let touchDistance = 0;
+let isVerticalSwipe = false;
 
 function handleTouchStart(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
@@ -59,6 +61,8 @@ function handleTouchStart(e) {
   initialTouchY = touch.clientY;
   touchStartTime = Date.now();
   hasMoved = false;
+  touchDistance = 0;
+  isVerticalSwipe = false;
   
   console.log('📱 Touch start at:', touchStartY);
 }
@@ -70,14 +74,21 @@ function handleTouchMove(e) {
   const deltaY = Math.abs(touch.clientY - initialTouchY);
   const deltaX = Math.abs(touch.clientX - touchStartX);
   
+  touchDistance = deltaY;
+  
+  // Determine if this is a vertical swipe
+  if (deltaY > 15 && deltaY > deltaX * 1.5) {
+    isVerticalSwipe = true;
+    hasMoved = true;
+    
+    // Prevent default scrolling on vertical swipes
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
   // If significant movement, mark as moved
   if (deltaY > 10 || deltaX > 10) {
     hasMoved = true;
-  }
-  
-  // If it's a vertical swipe and significant enough, prevent default scrolling
-  if (deltaY > 30 && deltaY > deltaX * 2) {
-    e.preventDefault();
   }
 }
 
@@ -93,27 +104,28 @@ function handleTouchEnd(e) {
   const horizontalDistance = Math.abs(touchEndX - touchStartX);
   const totalDistance = Math.abs(verticalDistance);
   
-  console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Horizontal:', horizontalDistance, 'Moved:', hasMoved);
+  console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Total:', totalDistance, 'IsVertical:', isVerticalSwipe);
   
-  // Check if it's a valid swipe: quick, mostly vertical, significant distance
-  const isValidSwipe = touchDuration < 800 && 
-                      totalDistance > 50 && 
-                      totalDistance > horizontalDistance * 2 &&
+  // More lenient swipe detection for mobile
+  const isValidSwipe = touchDuration < 1000 && 
+                      totalDistance > 30 && 
+                      isVerticalSwipe &&
                       hasMoved;
   
   if (isValidSwipe) {
     e.preventDefault();
+    e.stopPropagation();
     
     console.log('📱 Valid swipe detected');
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
     
-    if (verticalDistance > 30) {
+    if (verticalDistance > 20) {
       // Swipe up = next section
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
       console.log('📱 Swipe UP to section:', targetSection);
-    } else if (verticalDistance < -30) {
+    } else if (verticalDistance < -20) {
       // Swipe down = previous section
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
       console.log('📱 Swipe DOWN to section:', targetSection);
@@ -124,10 +136,15 @@ function handleTouchEnd(e) {
     } else {
       scrollSystem.inScroll = false;
     }
+  } else {
+    // Reset scroll lock for failed swipes
+    scrollSystem.inScroll = false;
   }
   
-  // Reset
+  // Reset touch tracking
   hasMoved = false;
+  isVerticalSwipe = false;
+  touchDistance = 0;
 }
 
 // ===============================================
@@ -205,55 +222,21 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM - AGGRESSIVE DEBUG VERSION
+// ELEGANT DOT NAVIGATION SYSTEM - REDESIGNED
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 AGGRESSIVE DEBUG: Creating dot navigation...');
+  console.log('🎯 Creating elegant dot navigation...');
   
-  // Force remove any existing containers first
+  // Remove any existing containers
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
   existingContainers.forEach(container => container.remove());
-  console.log('🗑️ Removed existing containers:', existingContainers.length);
   
-  // Always create a fresh container
+  // Create centered container
   const dotContainer = document.createElement('div');
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
   
-  // Force inline styles to override any CSS conflicts
-  dotContainer.style.cssText = `
-    position: fixed !important;
-    right: 30px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 999999 !important;
-    background: rgba(255, 0, 0, 0.9) !important;
-    padding: 20px 10px !important;
-    border-radius: 15px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    border: 3px solid yellow !important;
-    min-width: 40px !important;
-    min-height: 200px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-  `;
-  
-  // Append to body
-  document.body.appendChild(dotContainer);
-  console.log('✅ Created and appended new dot container');
-  
-  // Set the dotNavigation reference
-  scrollSystem.dotNavigation = dotContainer;
-  
-  // Log container details
-  console.log('📍 Container position:', dotContainer.getBoundingClientRect());
-  console.log('🎨 Container parent:', dotContainer.parentElement);
-  console.log('👁️ Container visible:', dotContainer.offsetWidth > 0 && dotContainer.offsetHeight > 0);
-  
-  // Filter out duplicate positions and create clean section array
+  // Clean section positions (remove duplicates)
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -264,44 +247,71 @@ function createDotNavigation() {
     }
   });
   
-  // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
+  console.log('🎯 Clean sections:', scrollSystem.arrSections.length);
   
-  // Create dots for each unique section
+  // Calculate even spacing for dots
+  const dotCount = scrollSystem.arrSections.length;
+  const containerHeight = Math.max(200, dotCount * 25); // Minimum height with even spacing
+  
+  // Apply subtle, centered styling
+  dotContainer.style.cssText = `
+    position: fixed !important;
+    right: 50% !important;
+    top: 50% !important;
+    transform: translate(50%, -50%) !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 20px 8px !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-evenly !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-height: ${containerHeight}px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+  `;
+  
+  // Append to body
+  document.body.appendChild(dotContainer);
+  scrollSystem.dotNavigation = dotContainer;
+  
+  // Create evenly spaced dots
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
-    
-    // Create dot element with forced visibility
     const dot = document.createElement('div');
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
     
-    // Force dot styling
+    // Subtle, elegant dot styling
     dot.style.cssText = `
-      width: 16px !important;
-      height: 16px !important;
-      background: lime !important;
+      width: 8px !important;
+      height: 8px !important;
+      background: rgba(0, 0, 0, 0.3) !important;
       border-radius: 50% !important;
-      margin: 3px 0 !important;
       cursor: pointer !important;
-      border: 2px solid black !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-      position: relative !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      border: 1px solid transparent !important;
+      opacity: 0.6 !important;
       flex-shrink: 0 !important;
     `;
     
-    // Add click handler
+    // Click handler
     dot.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      console.log('🎯 Dot clicked:', index, 'going to section at position:', scrollSystem.arrSections[index]);
+      console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    // Add touch handler for mobile
+    // Touch handler for mobile
     dot.addEventListener('touchend', function(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -309,80 +319,63 @@ function createDotNavigation() {
       goToSection(index);
     });
     
-    // Add hover effect
+    // Subtle hover effect
     dot.addEventListener('mouseenter', function() {
-      console.log('🐭 Mouse entered dot:', index);
-      dot.style.background = 'white';
-      dot.style.transform = 'scale(1.2)';
+      if (index !== scrollSystem.currentSection) {
+        dot.style.background = 'rgba(0, 0, 0, 0.5)';
+        dot.style.transform = 'scale(1.2)';
+        dot.style.opacity = '0.8';
+      }
     });
     
     dot.addEventListener('mouseleave', function() {
-      dot.style.background = 'lime';
-      dot.style.transform = 'scale(1)';
-    });
-    
-    // Append to container
-    dotContainer.appendChild(dot);
-    console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
-  });
-  
-  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
-  console.log('📏 Final container size:', dotContainer.getBoundingClientRect());
-  console.log('👶 Container children count:', dotContainer.children.length);
-  
-  // Test if container is actually visible
-  setTimeout(() => {
-    const rect = dotContainer.getBoundingClientRect();
-    console.log('🔍 Container visibility test:', {
-      width: rect.width,
-      height: rect.height,
-      top: rect.top,
-      right: rect.right,
-      visible: rect.width > 0 && rect.height > 0,
-      inViewport: rect.right > 0 && rect.top >= 0 && rect.bottom <= window.innerHeight
-    });
-  }, 100);
-  
-  updateDotNavigation();
-  
-  // Remove debug styling after 10 seconds
-  setTimeout(() => {
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.8)';
-    dotContainer.style.border = '2px solid rgba(255, 255, 255, 0.3)';
-    dotContainer.querySelectorAll('.section-dot').forEach((dot, index) => {
-      if (!dot.classList.contains('active')) {
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
+      if (index !== scrollSystem.currentSection) {
+        dot.style.background = 'rgba(0, 0, 0, 0.3)';
+        dot.style.transform = 'scale(1)';
+        dot.style.opacity = '0.6';
       }
     });
-    console.log('🎨 Debug styling removed - dots should now have normal styling');
-  }, 10000);
+    
+    dotContainer.appendChild(dot);
+  });
+  
+  // Hover effect for container
+  dotContainer.addEventListener('mouseenter', function() {
+    dotContainer.style.opacity = '1';
+  });
+  
+  dotContainer.addEventListener('mouseleave', function() {
+    dotContainer.style.opacity = '0.7';
+  });
+  
+  console.log('✅ Elegant dot navigation created');
+  updateDotNavigation();
 }
 
 function updateDotNavigation() {
-  // Try to find the container if not set
   if (!scrollSystem.dotNavigation) {
     scrollSystem.dotNavigation = document.getElementById('section-dots');
   }
   
-  if (!scrollSystem.dotNavigation) {
-    console.log('❌ Dot navigation container still not found');
-    return;
-  }
+  if (!scrollSystem.dotNavigation) return;
   
   const dots = scrollSystem.dotNavigation.children;
-  console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
+  console.log('🎯 Updating dots - current section:', scrollSystem.currentSection);
   
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
-      dots[i].style.background = '#000';
-      dots[i].style.border = '2px solid #fff';
-      dots[i].style.transform = 'scale(1.3)';
+      // Active dot - subtle but noticeable
+      dots[i].style.background = 'rgba(0, 0, 0, 0.8)';
+      dots[i].style.transform = 'scale(1.4)';
+      dots[i].style.opacity = '1';
+      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.5)';
       dots[i].classList.add('active');
-      console.log('🎯 Activated dot', i);
     } else {
-      dots[i].style.background = 'rgba(0,0,0,0.4)';
-      dots[i].style.border = '2px solid transparent';
+      // Inactive dots - very subtle
+      dots[i].style.background = 'rgba(0, 0, 0, 0.3)';
       dots[i].style.transform = 'scale(1)';
+      dots[i].style.opacity = '0.6';
+      dots[i].style.border = '1px solid transparent';
       dots[i].classList.remove('active');
     }
   }
@@ -478,16 +471,18 @@ function initializeScrollSystem() {
     bindScrollEvents();
     updateDotNavigation();
     
-    // Add mobile touch support with immediate binding
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    // Enhanced mobile touch support
+    const touchOptions = { passive: false, capture: true };
+    document.addEventListener('touchstart', handleTouchStart, touchOptions);
+    document.addEventListener('touchmove', handleTouchMove, touchOptions);
+    document.addEventListener('touchend', handleTouchEnd, touchOptions);
     
-    console.log('📱 Mobile touch support enabled');
+    console.log('📱 Enhanced mobile touch support enabled');
     
-    // Disable normal scroll behavior on mobile for homepage
+    // Prevent overscroll behavior on mobile
     document.body.style.overscrollBehavior = 'none';
     document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.touchAction = 'pan-x pan-y';
     
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
@@ -505,6 +500,7 @@ function bindScrollEvents() {
   $(document).on('wheel.scrollSystem', function(event) {
     if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
     
+    event.preventDefault();
     scrollSystem.inScroll = true;
     console.log('🎯 Wheel event - current section:', scrollSystem.currentSection);
 
@@ -516,7 +512,7 @@ function bindScrollEvents() {
       scrollSystem.currentSection = scrollSystem.currentSection === 0 ? 0 : scrollSystem.currentSection - 1;
     }
 
-    console.log('📍 Scrolling to section:', scrollSystem.currentSection, 'at position:', scrollSystem.arrSections[scrollSystem.currentSection]);
+    console.log('📍 Scrolling to section:', scrollSystem.currentSection);
 
     updateDotNavigation();
 
@@ -546,11 +542,10 @@ function handleWindowResize() {
   
   scrollSystem.resizeTimeout = setTimeout(function() {
     if (scrollSystem.initialized) {
-      const oldPositions = calculateSectionPositions();
+      calculateSectionPositions();
       createDotNavigation();
       updateDotNavigation();
     }
-    
     scrollSystem.resizeTimeout = null;
   }, 250);
 }
@@ -579,6 +574,11 @@ function resetScrollSystem() {
     $(window).off('resize.scrollSystem');
     $(window).off('scroll.dotNavigation');
   }
+  
+  // Remove touch event listeners
+  document.removeEventListener('touchstart', handleTouchStart);
+  document.removeEventListener('touchmove', handleTouchMove);
+  document.removeEventListener('touchend', handleTouchEnd);
 }
 
 // ===============================================
@@ -626,9 +626,7 @@ function initializeAllFeatures() {
    
    $(window).on('resize.scrollSystem', handleWindowResize);
    $(window).on('orientationchange.scrollSystem', function() {
-     setTimeout(function() {
-       handleWindowResize();
-     }, 500);
+     setTimeout(handleWindowResize, 500);
    });
    
    $(window).on('scroll.dotNavigation', function() {
@@ -650,7 +648,6 @@ function initializeScrollToTopButton() {
     return;
   }
   
-  // Show/hide button based on scroll position
   function toggleScrollButton() {
     const scrollPosition = window.pageYOffset;
     const windowHeight = window.innerHeight;
@@ -669,16 +666,13 @@ function initializeScrollToTopButton() {
     }
   }
   
-  // Smooth scroll to top
   function scrollToTop(e) {
     e.preventDefault();
     
-    // If on homepage with scroll system, go to first section
     if (isHomepage() && scrollSystem.initialized && scrollSystem.arrSections.length > 0) {
       console.log('🏠 Homepage detected - using scroll system');
       goToSection(0);
     } else {
-      // Regular scroll to top for other pages
       console.log('📄 Regular page - scrolling to top');
       window.scrollTo({
         top: 0,
@@ -687,14 +681,190 @@ function initializeScrollToTopButton() {
     }
   }
   
-  // Add event listeners
   scrollButton.addEventListener('click', scrollToTop);
   window.addEventListener('scroll', toggleScrollButton, { passive: true });
   
-  // Initial check
   toggleScrollButton();
-  
   console.log('✅ Scroll to top button initialized');
+}
+
+// ===============================================
+// PREMIUM SCROLL EFFECTS (from theme.liquid)
+// ===============================================
+function createScrollProgress() {
+  const progressBar = document.createElement('div');
+  progressBar.className = 'scroll-progress';
+  document.body.appendChild(progressBar);
+  
+  function updateProgress() {
+    const scrolled = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    progressBar.style.width = scrolled + '%';
+  }
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+}
+
+function createScrollIndicators() {
+  const sections = document.querySelectorAll('.section, .shopify-section');
+  if (sections.length <= 1) return;
+  
+  const indicators = document.createElement('div');
+  indicators.className = 'scroll-indicators';
+  
+  sections.forEach((section, index) => {
+    const indicator = document.createElement('div');
+    indicator.className = 'scroll-indicator';
+    indicator.setAttribute('data-section', index);
+    
+    indicator.addEventListener('click', () => {
+      section.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    indicators.appendChild(indicator);
+  });
+  
+  document.body.appendChild(indicators);
+  
+  function updateActiveIndicator() {
+    const scrollPosition = window.pageYOffset + window.innerHeight / 2;
+    
+    sections.forEach((section, index) => {
+      const sectionTop = section.offsetTop;
+      const sectionBottom = sectionTop + section.offsetHeight;
+      const indicator = indicators.children[index];
+      
+      if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+        indicator.classList.add('active');
+      } else {
+        indicator.classList.remove('active');
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', updateActiveIndicator, { passive: true });
+  updateActiveIndicator();
+}
+
+function createFloatingElements() {
+  const container = document.createElement('div');
+  container.className = 'floating-elements';
+  
+  for (let i = 0; i < 4; i++) {
+    const shape = document.createElement('div');
+    shape.className = 'floating-shape';
+    container.appendChild(shape);
+  }
+  
+  document.body.appendChild(container);
+}
+
+function animateProductGrids() {
+  const productGrids = document.querySelectorAll('.product-grid, .collection-grid');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+        
+        const items = entry.target.querySelectorAll('.grid__item');
+        items.forEach((item, index) => {
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+          }, index * 100);
+        });
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '50px'
+  });
+  
+  productGrids.forEach(grid => observer.observe(grid));
+}
+
+function animateSections() {
+  const sections = document.querySelectorAll('.section, .shopify-section');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '50px'
+  });
+  
+  sections.forEach(section => observer.observe(section));
+}
+
+function initParallax() {
+  const heroSections = document.querySelectorAll('.hero-section, .banner-section, [data-section-type="hero"]');
+  
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    
+    heroSections.forEach(section => {
+      const rate = scrolled * -0.5;
+      const bg = section.querySelector('::before') || section;
+      if (bg.style) {
+        bg.style.transform = `translateY(${rate}px)`;
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', updateParallax, { passive: true });
+}
+
+function enhancePageTransitions() {
+  let isScrolling = false;
+  
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      isScrolling = true;
+      document.body.classList.add('scrolling');
+      
+      setTimeout(() => {
+        isScrolling = false;
+        document.body.classList.remove('scrolling');
+      }, 150);
+    }
+  }, { passive: true });
+}
+
+function createLoadingSkeletons() {
+  const productCards = document.querySelectorAll('.product-card-wrapper, .card-wrapper');
+  
+  productCards.forEach(card => {
+    const img = card.querySelector('img');
+    if (img && !img.complete) {
+      const skeleton = document.createElement('div');
+      skeleton.className = 'skeleton skeleton-product';
+      img.parentNode.insertBefore(skeleton, img);
+      
+      img.addEventListener('load', () => {
+        skeleton.remove();
+      });
+    }
+  });
+}
+
+function initAllPremiumEffects() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  if (!prefersReducedMotion) {
+    createScrollProgress();
+    createScrollIndicators();
+    createFloatingElements();
+    animateProductGrids();
+    animateSections();
+    initParallax();
+    enhancePageTransitions();
+    createLoadingSkeletons();
+  }
 }
 
 // ===============================================
@@ -707,6 +877,10 @@ window.calculateSectionPositions = calculateSectionPositions;
 window.goToSection = goToSection;
 window.isHomepage = isHomepage;
 window.initializeScrollToTopButton = initializeScrollToTopButton;
+window.updateCurrentSectionFromScrollPosition = updateCurrentSectionFromScrollPosition;
+window.updateDotNavigation = updateDotNavigation;
+window.reinitializeScrollAnimations = reinitializeScrollAnimations;
+window.applyUltimateScrollFix = applyUltimateScrollFix;
 
 // ===============================================
 // INITIALIZATION SEQUENCE - FASTER LOADING
@@ -725,6 +899,7 @@ waitForJQuery(function() {
   $(document).ready(function() {
     console.log('📱 DOM Ready - secondary initialization');
     initializeAllFeatures();
+    initAllPremiumEffects();
     
     // Re-initialize if not already done
     if (isHomepage() && !scrollSystem.initialized) {
