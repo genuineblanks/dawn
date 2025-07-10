@@ -7,7 +7,6 @@
   - show_progress: true/false (default: false)
   - position: 'bottom-right', 'bottom-left' (default: 'bottom-right')
 {% endcomment %}
-
 {%- liquid
   assign button_style = style | default: 'default'
   assign show_progress = show_progress | default: false
@@ -30,6 +29,8 @@
   endif
 -%}
 
+{% comment %} Only show on pages other than homepage {% endcomment %}
+{% unless template contains 'index' %}
 <button 
   class="{{ button_classes }}"
   aria-label="{{ 'general.accessibility.scroll_to_top' | t | default: 'Scroll to top' }}"
@@ -43,6 +44,19 @@
   </svg>
   {% endcomment %}
 </button>
+{% endunless %}
+
+{% comment %} Alternative scroll button for homepage that integrates with section scroll {% endcomment %}
+{% if template contains 'index' %}
+<button 
+  class="{{ button_classes }} homepage-scroll-button"
+  aria-label="{{ 'general.accessibility.scroll_to_top' | t | default: 'Scroll to top' }}"
+  title="{{ 'general.accessibility.scroll_to_top' | t | default: 'Scroll to top' }}"
+  type="button"
+  onclick="if(window.scrollSystem && window.scrollSystem.initialized) { window.goToSection(0); } else { window.scrollTo({top: 0, behavior: 'smooth'}); }"
+>
+</button>
+{% endif %}
 
 <style>
   {% if button_position == 'bottom-left' %}
@@ -60,6 +74,22 @@
   @media screen and (max-width: 480px) {
     .scroll-to-top.bottom-left {
       left: 15px;
+    }
+  }
+  {% endif %}
+  
+  {% comment %} Ensure homepage scroll button doesn't conflict with dot navigation {% endcomment %}
+  {% if template contains 'index' %}
+  .homepage-scroll-button {
+    bottom: 30px !important;
+    right: 30px !important;
+    z-index: 998 !important; /* Lower than dot navigation */
+  }
+  
+  @media screen and (max-width: 768px) {
+    .homepage-scroll-button {
+      bottom: 80px !important; /* Move up to avoid dot navigation */
+      right: 20px !important;
     }
   }
   {% endif %}
