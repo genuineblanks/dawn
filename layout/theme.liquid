@@ -51,9 +51,9 @@
           document.documentElement.classList.add('ios-device');
         }
         
-        // Force native scrolling immediately
+        // Force optimal mobile scrolling settings
         document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
-        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important;';
+        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
       }
     </script>
     
