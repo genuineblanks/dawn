@@ -1,6 +1,7 @@
 // ===============================================
 // ENHANCED SCROLL SYSTEM - HOMEPAGE ONLY
 // Consolidates custom.js + scroll-fix.js functionality
+// USING ORIGINAL WORKING DOT CREATION METHOD
 // ===============================================
 
 console.log('🚀 Enhanced Scroll System Loading...');
@@ -222,21 +223,34 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// ELEGANT DOT NAVIGATION SYSTEM - FIXED POSITIONING
+// DOT NAVIGATION SYSTEM - ORIGINAL WORKING METHOD
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 Creating elegant dot navigation...');
+  console.log('🎯 Creating dot navigation...');
   
-  // Remove any existing containers
-  const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
-  existingContainers.forEach(container => container.remove());
+  // ORIGINAL WORKING METHOD: Try multiple ways to find the container
+  let dotContainer = $('#section-dots');
+  if (!dotContainer.length) {
+    dotContainer = document.getElementById('section-dots');
+    if (dotContainer) {
+      dotContainer = $(dotContainer);
+    }
+  }
   
-  // Create RIGHT-SIDE container (NOT CENTER)
-  const dotContainer = document.createElement('div');
-  dotContainer.id = 'section-dots';
-  dotContainer.className = 'section-dot-navigation';
+  if (!dotContainer || !dotContainer.length) {
+    console.log('❌ Dot container not found');
+    return;
+  }
   
-  // Clean section positions (remove duplicates)
+  console.log('✅ Dot container found:', dotContainer);
+  
+  // Clear existing dots
+  dotContainer.empty();
+  
+  // Set dotNavigation reference FIRST
+  scrollSystem.dotNavigation = dotContainer[0]; // Convert jQuery to DOM element for reference
+  
+  // Filter out duplicate positions and create clean section array
   const cleanSections = [];
   const usedPositions = new Set();
   
@@ -247,147 +261,126 @@ function createDotNavigation() {
     }
   });
   
+  // Update the clean sections array
   scrollSystem.arrSections = cleanSections;
-  console.log('🎯 Clean sections:', scrollSystem.arrSections.length);
+  console.log('🎯 Clean sections after removing duplicates:', scrollSystem.arrSections);
   
-  // Calculate even spacing for dots
-  const dotCount = scrollSystem.arrSections.length;
-  const containerHeight = Math.max(180, dotCount * 20); // Evenly spaced
+  // CRITICAL: Apply container styling using jQuery css() method
+  dotContainer.css({
+    'position': 'fixed',
+    'right': '25px',
+    'top': '50%',
+    'transform': 'translateY(-50%)',
+    'z-index': '1000',
+    'background': 'rgba(255, 255, 255, 0.1)',
+    'backdrop-filter': 'blur(12px)',
+    '-webkit-backdrop-filter': 'blur(12px)',
+    'padding': '16px 6px',
+    'border-radius': '20px',
+    'display': 'flex',
+    'flex-direction': 'column',
+    'justify-content': 'space-evenly',
+    'align-items': 'center',
+    'gap': '6px',
+    'min-height': '180px',
+    'border': '1px solid rgba(255, 255, 255, 0.15)',
+    'box-shadow': '0 4px 24px rgba(0, 0, 0, 0.08)',
+    'opacity': '0.7',
+    'transition': 'opacity 0.3s ease'
+  });
   
-  // CORRECT positioning - RIGHT SIDE, not center!
-  dotContainer.style.cssText = `
-    position: fixed !important;
-    right: 25px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 1000 !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    padding: 16px 6px !important;
-    border-radius: 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-evenly !important;
-    align-items: center !important;
-    gap: 6px !important;
-    min-height: ${containerHeight}px !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
-    opacity: 0.6 !important;
-    transition: opacity 0.3s ease !important;
-  `;
-  
-  // Append to body
-  document.body.appendChild(dotContainer);
-  scrollSystem.dotNavigation = dotContainer;
-  
-  // Create evenly spaced dots
+  // Create dots for each unique section using ORIGINAL WORKING METHOD
   scrollSystem.arrSections.forEach((sectionPos, index) => {
-    const dot = document.createElement('div');
-    dot.className = 'section-dot';
-    dot.setAttribute('data-section', index);
+    console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Subtle, elegant dot styling
-    dot.style.cssText = `
-      width: 6px !important;
-      height: 6px !important;
-      background: rgba(0, 0, 0, 0.25) !important;
-      border-radius: 50% !important;
-      cursor: pointer !important;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      border: 1px solid transparent !important;
-      opacity: 0.6 !important;
-      flex-shrink: 0 !important;
-      position: relative !important;
-    `;
+    // ORIGINAL WORKING METHOD: Create dot element using jQuery
+    const dot = $('<div></div>');
+    dot.addClass('section-dot');
+    dot.attr('data-section', index);
     
-    // Add larger touch target for mobile
-    dot.style.setProperty('--touch-target', '16px');
-    dot.addEventListener('touchstart', function() {
-      // Add temporary larger touch area
-      this.style.setProperty('padding', '8px');
+    // CRITICAL: Apply dot styling using jQuery css() method
+    dot.css({
+      'width': '6px',
+      'height': '6px',
+      'background': 'rgba(0, 0, 0, 0.25)',
+      'border-radius': '50%',
+      'cursor': 'pointer',
+      'transition': 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      'border': '1px solid transparent',
+      'opacity': '0.6',
+      'flex-shrink': '0',
+      'position': 'relative'
     });
     
-    dot.addEventListener('touchend', function() {
-      // Remove temporary padding
-      this.style.setProperty('padding', '0');
-    });
-    
-    // Click handler
-    dot.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+    // Add click handler using ORIGINAL WORKING METHOD
+    dot.on('click', function() {
       console.log('🎯 Dot clicked:', index);
       goToSection(index);
     });
     
-    // Touch handler for mobile
-    dot.addEventListener('touchend', function(e) {
+    // Add touch handler for mobile
+    dot.on('touchend', function(e) {
       e.preventDefault();
       e.stopPropagation();
       console.log('📱 Dot touched:', index);
       goToSection(index);
     });
     
-    // Subtle hover effect
-    dot.addEventListener('mouseenter', function() {
-      if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(0, 0, 0, 0.4)';
-        dot.style.transform = 'scale(1.3)';
-        dot.style.opacity = '0.8';
-      }
-    });
-    
-    dot.addEventListener('mouseleave', function() {
-      if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(0, 0, 0, 0.25)';
-        dot.style.transform = 'scale(1)';
-        dot.style.opacity = '0.6';
-      }
-    });
-    
-    dotContainer.appendChild(dot);
+    // ORIGINAL WORKING METHOD: Append to container using jQuery
+    dotContainer.append(dot);
+    console.log('🎯 Dot', index, 'added to container');
   });
   
-  // Hover effect for container
-  dotContainer.addEventListener('mouseenter', function() {
-    dotContainer.style.opacity = '0.9';
-  });
+  // Add hover effects to container using jQuery
+  dotContainer.hover(
+    function() {
+      $(this).css('opacity', '0.9');
+    },
+    function() {
+      $(this).css('opacity', '0.7');
+    }
+  );
   
-  dotContainer.addEventListener('mouseleave', function() {
-    dotContainer.style.opacity = '0.6';
-  });
-  
-  console.log('✅ Elegant dot navigation created on RIGHT SIDE');
+  console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
   updateDotNavigation();
 }
 
 function updateDotNavigation() {
   if (!scrollSystem.dotNavigation) {
-    scrollSystem.dotNavigation = document.getElementById('section-dots');
+    // Try to find it again
+    const container = document.getElementById('section-dots');
+    if (container) {
+      scrollSystem.dotNavigation = container;
+    } else {
+      return;
+    }
   }
   
-  if (!scrollSystem.dotNavigation) return;
-  
   const dots = scrollSystem.dotNavigation.children;
-  console.log('🎯 Updating dots - current section:', scrollSystem.currentSection);
+  console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
   
   for (let i = 0; i < dots.length; i++) {
+    const $dot = $(dots[i]); // Convert to jQuery for easier styling
+    
     if (i === scrollSystem.currentSection) {
-      // Active dot - subtle but noticeable
-      dots[i].style.background = 'rgba(0, 0, 0, 0.7)';
-      dots[i].style.transform = 'scale(1.6)';
-      dots[i].style.opacity = '1';
-      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.3)';
-      dots[i].classList.add('active');
+      // Active dot - use jQuery css() method
+      $dot.css({
+        'background': 'rgba(0, 0, 0, 0.7)',
+        'transform': 'scale(1.6)',
+        'opacity': '1',
+        'border': '1px solid rgba(255, 255, 255, 0.3)'
+      });
+      $dot.addClass('active');
+      console.log('🎯 Activated dot', i);
     } else {
-      // Inactive dots - very subtle
-      dots[i].style.background = 'rgba(0, 0, 0, 0.25)';
-      dots[i].style.transform = 'scale(1)';
-      dots[i].style.opacity = '0.6';
-      dots[i].style.border = '1px solid transparent';
-      dots[i].classList.remove('active');
+      // Inactive dots - use jQuery css() method
+      $dot.css({
+        'background': 'rgba(0, 0, 0, 0.25)',
+        'transform': 'scale(1)',
+        'opacity': '0.6',
+        'border': '1px solid transparent'
+      });
+      $dot.removeClass('active');
     }
   }
 }
@@ -576,7 +569,7 @@ function resetScrollSystem() {
   }
   
   if (scrollSystem.dotNavigation) {
-    scrollSystem.dotNavigation.remove();
+    $(scrollSystem.dotNavigation).remove(); // Use jQuery to remove
     scrollSystem.dotNavigation = null;
   }
   
@@ -894,31 +887,17 @@ window.reinitializeScrollAnimations = reinitializeScrollAnimations;
 window.applyUltimateScrollFix = applyUltimateScrollFix;
 
 // ===============================================
-// INITIALIZATION SEQUENCE - FASTER LOADING
+// INITIALIZATION SEQUENCE - ORIGINAL WORKING METHOD
 // ===============================================
 waitForJQuery(function() {
-  // IMMEDIATE initialization - don't wait for DOM ready
-  console.log('📱 jQuery ready - IMMEDIATE initialization');
-  
-  // Initialize scroll system immediately if homepage
-  if (isHomepage()) {
-    console.log('🏠 Homepage detected - initializing scroll system NOW');
-    setTimeout(initializeScrollSystem, 50); // Very short delay
-    setTimeout(initializeScrollToTopButton, 100);
-  }
-  
+  // Initialize when DOM is ready - ORIGINAL WORKING METHOD
   $(document).ready(function() {
-    console.log('📱 DOM Ready - secondary initialization');
+    console.log('📱 DOM Ready with jQuery - initializing features');
     initializeAllFeatures();
     initAllPremiumEffects();
-    
-    // Re-initialize if not already done
-    if (isHomepage() && !scrollSystem.initialized) {
-      console.log('🔄 Backup initialization');
-      setTimeout(initializeScrollSystem, 100);
-    }
   });
 
+  // Re-initialize on page navigation
   $(window).on('beforeunload', function() {
     resetScrollSystem();
   });
@@ -926,13 +905,14 @@ waitForJQuery(function() {
   $(window).on('load', function() {
     console.log('🌐 Window loaded - checking scroll system');
     if (!scrollSystem.initialized && isHomepage()) {
-      setTimeout(initializeScrollSystem, 100);
+      setTimeout(initializeScrollSystem, 200);
     } else if (isHomepage()) {
+      // Recalculate once everything is fully loaded
       setTimeout(function() {
         calculateSectionPositions();
         createDotNavigation();
         updateDotNavigation();
-      }, 200);
+      }, 300);
     }
   });
   
@@ -959,7 +939,7 @@ waitForJQuery(function() {
 
 console.log('📜 Enhanced Custom.js script loaded - waiting for jQuery...');
 
-// Fallback initialization
+// Fallback initialization if the main one fails - ORIGINAL WORKING METHOD
 setTimeout(function() {
   if (isHomepage()) {
     const container = document.getElementById('section-dots');
