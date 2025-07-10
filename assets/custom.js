@@ -102,14 +102,7 @@ function handleTouchStart(e) {
   hasMoved = false;
   touchTarget = e.target;
   
-  // FIXED: Only prevent double-tap zoom on iOS for very quick taps
-  if (isIOS() && Date.now() - lastTouchTime < 200) {
-    // Only prevent if touching the same spot
-    const sameTouchArea = Math.abs(touch.clientY - initialTouchY) < 10 && Math.abs(touch.clientX - touchStartX) < 10;
-    if (sameTouchArea) {
-      e.preventDefault();
-    }
-  }
+  // FIXED: No preventDefault in passive events - allow all native iOS behavior
   lastTouchTime = Date.now();
   
   console.log('📱 Touch start at:', touchStartY, 'Device:', isMobileDevice() ? 'Mobile' : 'Desktop');
@@ -135,10 +128,10 @@ function handleTouchMove(e) {
     hasMoved = true;
   }
   
-  // FIXED: Only prevent default for very large vertical movements to avoid blocking normal scrolling
+  // FIXED: No preventDefault needed - passive events allow native scrolling
+  // Just track movement for section navigation detection
   if (deltaY > 50 && deltaY > deltaX * 2) {
-    e.preventDefault();
-    console.log('📱 Preventing default - large vertical swipe detected, deltaY:', deltaY, 'deltaX:', deltaX);
+    console.log('📱 Large vertical movement detected for section nav, deltaY:', deltaY, 'deltaX:', deltaX);
   }
 }
 
@@ -175,15 +168,17 @@ function handleTouchEnd(e) {
     endY: touchEndY
   });
   
-  // ENHANCED SWIPE DETECTION - Balanced thresholds for mobile
+  // SMART SWIPE DETECTION - Only for deliberate section navigation
   const isMobile = isMobileDevice();
-  const minDistance = isMobile ? 30 : 40;      // Reasonable threshold for mobile
-  const maxDuration = isMobile ? 1500 : 1200;  // Reasonable time for mobile
-  const ratioThreshold = isMobile ? 1.5 : 1.2; // Balanced ratio for mobile
+  const minDistance = isMobile ? 80 : 40;      // Much higher threshold for mobile to avoid conflicts
+  const maxDuration = isMobile ? 800 : 1200;   // Faster swipes for deliberate navigation
+  const ratioThreshold = isMobile ? 2.0 : 1.2; // Much more vertical-focused for mobile
   
+  // Only trigger section navigation for very deliberate, fast, vertical swipes
   const isValidSwipe = touchDuration < maxDuration && 
                       totalVerticalDistance > minDistance && 
-                      (totalVerticalDistance > horizontalDistance * ratioThreshold || totalVerticalDistance > 40) &&
+                      totalVerticalDistance > horizontalDistance * ratioThreshold &&
+                      totalVerticalDistance > 80 && // Minimum 80px for mobile section nav
                       hasMoved;
   
   console.log('📱 Swipe validation:', {
@@ -196,13 +191,12 @@ function handleTouchEnd(e) {
   });
   
   if (isValidSwipe) {
-    e.preventDefault();
-    
+    // FIXED: No preventDefault in passive events - just trigger section change
     console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
-    const swipeThreshold = isMobile ? 20 : 25; // Reasonable threshold for direction
+    const swipeThreshold = isMobile ? 50 : 25; // Higher threshold for mobile to avoid accidental triggers
     
     if (verticalDistance > swipeThreshold) {
       // Swipe up = next section
@@ -831,9 +825,9 @@ function initializeScrollSystem() {
       // Mobile-specific optimizations
       console.log('📱 Applying mobile optimizations...');
       
-      // Disable overscroll behavior
-      document.body.style.overscrollBehavior = 'none';
-      document.documentElement.style.overscrollBehavior = 'none';
+      // FIXED: Allow native overscroll behavior (pull-to-refresh, etc.)
+      document.body.style.overscrollBehavior = 'auto';
+      document.documentElement.style.overscrollBehavior = 'auto';
       
       // iOS specific fixes
       if (isIOS()) {
@@ -841,16 +835,16 @@ function initializeScrollSystem() {
         document.documentElement.style.webkitOverflowScrolling = 'touch';
       }
       
-      // FIXED: Enhanced touch event options for mobile - allow passive where possible
+      // FIXED: Completely passive touch events - no interference with native scrolling
       const touchOptions = { 
         passive: true, 
         capture: false,
         once: false
       };
       
-      // Non-passive options only for touchmove to allow preventDefault when needed
+      // CRITICAL: Make touchmove passive too to avoid blocking scrolling
       const touchMoveOptions = { 
-        passive: false, 
+        passive: true, 
         capture: false,
         once: false
       };
