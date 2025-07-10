@@ -1,6 +1,6 @@
 // ===============================================
 // ENHANCED SCROLL SYSTEM - HOMEPAGE ONLY
-// Consolidates custom.js + scroll-fix.js functionality
+// Based on WORKING debug version with refinements
 // ===============================================
 
 console.log('🚀 Enhanced Scroll System Loading...');
@@ -40,7 +40,7 @@ let scrollSystem = {
 };
 
 // ===============================================
-// MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN
+// MOBILE TOUCH SUPPORT - SIMPLIFIED WORKING VERSION
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
@@ -205,10 +205,10 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM - AGGRESSIVE DEBUG VERSION
+// DOT NAVIGATION SYSTEM - WORKING VERSION WITH SUBTLE FINAL STYLING
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 AGGRESSIVE DEBUG: Creating dot navigation...');
+  console.log('🎯 Creating dot navigation...');
   
   // Force remove any existing containers first
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
@@ -220,25 +220,30 @@ function createDotNavigation() {
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
   
-  // Force inline styles to override any CSS conflicts
+  // INITIAL VISIBLE STYLING - so you can see it's working
   dotContainer.style.cssText = `
     position: fixed !important;
-    right: 30px !important;
+    right: 25px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     z-index: 999999 !important;
-    background: rgba(255, 0, 0, 0.9) !important;
-    padding: 20px 10px !important;
-    border-radius: 15px !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    padding: 16px 6px !important;
+    border-radius: 20px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 10px !important;
-    border: 3px solid yellow !important;
-    min-width: 40px !important;
-    min-height: 200px !important;
-    opacity: 1 !important;
+    justify-content: space-evenly !important;
+    align-items: center !important;
+    gap: 6px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    min-width: 30px !important;
+    min-height: 180px !important;
+    opacity: 0.8 !important;
     visibility: visible !important;
     pointer-events: auto !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
   `;
   
   // Append to body
@@ -272,25 +277,26 @@ function createDotNavigation() {
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Create dot element with forced visibility
+    // Create dot element with visible styling
     const dot = document.createElement('div');
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
     
-    // Force dot styling
+    // SUBTLE BUT VISIBLE DOT STYLING
     dot.style.cssText = `
-      width: 16px !important;
-      height: 16px !important;
-      background: lime !important;
+      width: 8px !important;
+      height: 8px !important;
+      background: rgba(255, 255, 255, 0.6) !important;
       border-radius: 50% !important;
-      margin: 3px 0 !important;
+      margin: 2px 0 !important;
       cursor: pointer !important;
-      border: 2px solid black !important;
+      border: 1px solid transparent !important;
       opacity: 1 !important;
       visibility: visible !important;
       display: block !important;
       position: relative !important;
       flex-shrink: 0 !important;
+      transition: all 0.3s ease !important;
     `;
     
     // Add click handler
@@ -311,19 +317,31 @@ function createDotNavigation() {
     
     // Add hover effect
     dot.addEventListener('mouseenter', function() {
-      console.log('🐭 Mouse entered dot:', index);
-      dot.style.background = 'white';
-      dot.style.transform = 'scale(1.2)';
+      if (index !== scrollSystem.currentSection) {
+        dot.style.background = 'rgba(255, 255, 255, 0.8)';
+        dot.style.transform = 'scale(1.2)';
+      }
     });
     
     dot.addEventListener('mouseleave', function() {
-      dot.style.background = 'lime';
-      dot.style.transform = 'scale(1)';
+      if (index !== scrollSystem.currentSection) {
+        dot.style.background = 'rgba(255, 255, 255, 0.6)';
+        dot.style.transform = 'scale(1)';
+      }
     });
     
     // Append to container
     dotContainer.appendChild(dot);
     console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
+  });
+  
+  // Add hover effects to container
+  dotContainer.addEventListener('mouseenter', function() {
+    dotContainer.style.opacity = '1';
+  });
+  
+  dotContainer.addEventListener('mouseleave', function() {
+    dotContainer.style.opacity = '0.8';
   });
   
   console.log('✅ Dot navigation created with', scrollSystem.arrSections.length, 'dots');
@@ -344,18 +362,6 @@ function createDotNavigation() {
   }, 100);
   
   updateDotNavigation();
-  
-  // Remove debug styling after 10 seconds
-  setTimeout(() => {
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.8)';
-    dotContainer.style.border = '2px solid rgba(255, 255, 255, 0.3)';
-    dotContainer.querySelectorAll('.section-dot').forEach((dot, index) => {
-      if (!dot.classList.contains('active')) {
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
-      }
-    });
-    console.log('🎨 Debug styling removed - dots should now have normal styling');
-  }, 10000);
 }
 
 function updateDotNavigation() {
@@ -374,14 +380,14 @@ function updateDotNavigation() {
   
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
-      dots[i].style.background = '#000';
-      dots[i].style.border = '2px solid #fff';
-      dots[i].style.transform = 'scale(1.3)';
+      dots[i].style.background = 'rgba(255, 255, 255, 1)';
+      dots[i].style.border = '1px solid rgba(0, 0, 0, 0.3)';
+      dots[i].style.transform = 'scale(1.4)';
       dots[i].classList.add('active');
       console.log('🎯 Activated dot', i);
     } else {
-      dots[i].style.background = 'rgba(0,0,0,0.4)';
-      dots[i].style.border = '2px solid transparent';
+      dots[i].style.background = 'rgba(255, 255, 255, 0.6)';
+      dots[i].style.border = '1px solid transparent';
       dots[i].style.transform = 'scale(1)';
       dots[i].classList.remove('active');
     }
@@ -707,6 +713,10 @@ window.calculateSectionPositions = calculateSectionPositions;
 window.goToSection = goToSection;
 window.isHomepage = isHomepage;
 window.initializeScrollToTopButton = initializeScrollToTopButton;
+window.updateCurrentSectionFromScrollPosition = updateCurrentSectionFromScrollPosition;
+window.updateDotNavigation = updateDotNavigation;
+window.reinitializeScrollAnimations = reinitializeScrollAnimations;
+window.applyUltimateScrollFix = applyUltimateScrollFix;
 
 // ===============================================
 // INITIALIZATION SEQUENCE - FASTER LOADING
