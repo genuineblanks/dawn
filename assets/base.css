@@ -3642,19 +3642,7 @@ details-disclosure > details {
    =============================================== */
 
 @media screen and (max-width: 749px) {
-  /* Force native scrolling behavior on mobile */
-  html {
-    scroll-behavior: auto !important;
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  
-  body {
-    overflow: auto !important;
-    touch-action: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: auto !important;
-  }
+  /* Removed conflicting scroll CSS - using earlier mobile rules instead */
   
   /* Show dot navigation on mobile with touch-friendly styling */
   .mobile-device .section-dot-navigation,
@@ -3689,16 +3677,7 @@ details-disclosure > details {
     min-height: 100vh;
   }
   
-  /* Allow custom scroll behavior on mobile homepage */
-  .mobile-device.home-section {
-    scroll-behavior: smooth !important;
-  }
-  
-  /* Allow native mobile behaviors */
-  .mobile-device.home-section body {
-    overscroll-behavior: auto !important;
-    touch-action: auto !important;
-  }
+  /* Removed conflicting scroll rules - these were overriding our good mobile settings */
   
   /* Remove scroll blocking from modals on mobile */
   .mobile-device .modal-open,
