@@ -202,6 +202,7 @@ function handleTouchEnd(e) {
   if (isValidSwipe) {
     // FIXED: No preventDefault in passive events - just trigger section change
     console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
+    console.log('🔵 TOUCH SWIPE setting inScroll = true');
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
@@ -381,6 +382,7 @@ function addMobileTouchFailsafe() {
         
         if (targetSection !== scrollSystem.currentSection) {
           console.log('📱 ✅ WHEEL FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+          console.log('🔵 WHEEL FAILSAFE setting inScroll = true');
           scrollSystem.inScroll = true;
           goToSection(targetSection);
         }
@@ -559,6 +561,45 @@ function addMobileConflictDetection() {
   });
   
   console.log('✅ Mobile conflict detection system activated');
+}
+
+// ===============================================
+// FORCED RESET MECHANISM FOR STUCK INSCROLL STATE
+// ===============================================
+function startInScrollWatchdog() {
+  if (!isMobileDevice()) return;
+  
+  console.log('🛡️ Starting inScroll watchdog for mobile...');
+  
+  let lastInScrollCheck = false;
+  let stuckCount = 0;
+  
+  setInterval(() => {
+    if (scrollSystem.inScroll) {
+      stuckCount++;
+      console.log('🛡️ inScroll watchdog check:', {
+        inScroll: scrollSystem.inScroll,
+        stuckCount: stuckCount,
+        animationStartTime: animationStartTime,
+        timeSinceStart: animationStartTime ? Date.now() - animationStartTime : 0
+      });
+      
+      // If inScroll has been true for more than 5 seconds, force reset
+      if (stuckCount >= 10) { // 10 checks * 500ms = 5 seconds
+        console.log('🚨 WATCHDOG: Forcing inScroll reset - system appears stuck!');
+        scrollSystem.inScroll = false;
+        animationStartTime = 0;
+        animationTarget = null;
+        restoreConflictingListeners();
+        clearTimeout(globalAnimationTimeout);
+        stuckCount = 0;
+      }
+    } else {
+      stuckCount = 0;
+    }
+    
+    lastInScrollCheck = scrollSystem.inScroll;
+  }, 500); // Check every 500ms
 }
 
 // ===============================================
@@ -1032,7 +1073,10 @@ function goToSection(sectionIndex) {
     duration: scrollSystem.durationOneScroll
   });
   
+  console.log('🔴 SETTING inScroll = true at start of goToSection');
   scrollSystem.inScroll = true;
+  console.log('🔴 inScroll flag status:', scrollSystem.inScroll);
+  
   const oldSection = scrollSystem.currentSection;
   scrollSystem.currentSection = sectionIndex;
   
@@ -1051,7 +1095,9 @@ function goToSection(sectionIndex) {
   clearTimeout(globalAnimationTimeout);
   globalAnimationTimeout = setTimeout(() => {
     console.log('🚨 GLOBAL TIMEOUT: Animation took too long, forcing reset!');
+    console.log('🟠 SETTING inScroll = false via global timeout');
     scrollSystem.inScroll = false;
+    console.log('🟠 inScroll flag after timeout reset:', scrollSystem.inScroll);
     animationStartTime = 0;
     animationTarget = null;
     restoreConflictingListeners();
@@ -1116,6 +1162,7 @@ function goToSection(sectionIndex) {
     let animationCheckInterval;
     let lastScrollPosition = startScroll;
     let stableScrollCount = 0;
+    let animationCompleted = false; // Prevent multiple completion triggers
     const maxDuration = scrollSystem.durationOneScroll + 1000; // Add buffer
     
     const checkAnimationComplete = () => {
@@ -1130,10 +1177,17 @@ function goToSection(sectionIndex) {
         timeSinceStart: timeSinceStart + 'ms'
       });
       
+      // Prevent multiple completion triggers
+      if (animationCompleted) {
+        clearInterval(animationCheckInterval);
+        return;
+      }
+      
       // Check if we've reached the target (within 50px tolerance)
       if (distanceToTarget < 50) {
         stableScrollCount++;
         if (stableScrollCount >= 3) { // Wait for 3 stable readings
+          animationCompleted = true;
           clearInterval(animationCheckInterval);
           completeAnimation(true);
           return;
@@ -1146,6 +1200,7 @@ function goToSection(sectionIndex) {
       if (Math.abs(currentScroll - lastScrollPosition) < 5) {
         stableScrollCount++;
         if (stableScrollCount >= 5) { // 5 readings without movement = stuck
+          animationCompleted = true;
           clearInterval(animationCheckInterval);
           completeAnimation(false);
           return;
@@ -1158,6 +1213,7 @@ function goToSection(sectionIndex) {
       
       // Timeout fallback
       if (timeSinceStart > maxDuration) {
+        animationCompleted = true;
         clearInterval(animationCheckInterval);
         completeAnimation(false);
         return;
@@ -1170,7 +1226,10 @@ function goToSection(sectionIndex) {
     function completeAnimation(success) {
       const endTime = Date.now();
       const finalScroll = window.pageYOffset;
+      
+      console.log('🟢 SETTING inScroll = false in completeAnimation, success:', success);
       scrollSystem.inScroll = false;
+      console.log('🟢 inScroll flag after setting to false:', scrollSystem.inScroll);
       
       // Clear global timeout
       clearTimeout(globalAnimationTimeout);
@@ -1236,7 +1295,10 @@ function goToSection(sectionIndex) {
       complete: function() {
         const endTime = Date.now();
         const finalScroll = window.pageYOffset;
+        
+        console.log('🟢 SETTING inScroll = false in jQuery complete');
         scrollSystem.inScroll = false;
+        console.log('🟢 inScroll flag after jQuery completion:', scrollSystem.inScroll);
         
         // Clear global timeout
         clearTimeout(globalAnimationTimeout);
@@ -1462,6 +1524,7 @@ function bindScrollEvents() {
   $(document).on('wheel.scrollSystem', function(event) {
     if (!scrollSystem.isEnabled || scrollSystem.inScroll || !isHomepage()) return;
     
+    console.log('🔵 DESKTOP WHEEL setting inScroll = true');
     scrollSystem.inScroll = true;
     console.log('🎯 Wheel event - current section:', scrollSystem.currentSection);
 
@@ -1553,6 +1616,7 @@ function initializeAllFeatures() {
   setTimeout(applyUltimateScrollFix, 600);
   setTimeout(addMobileConflictDetection, 700);
   setTimeout(testMobileScrollCapabilities, 800);
+  setTimeout(startInScrollWatchdog, 900);
   
   $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
@@ -1697,6 +1761,7 @@ waitForJQuery(function() {
     setTimeout(initializeScrollToTopButton, 100);
     setTimeout(addMobileConflictDetection, 150);
     setTimeout(testMobileScrollCapabilities, 200);
+    setTimeout(startInScrollWatchdog, 250);
   }
   
   $(document).ready(function() {
