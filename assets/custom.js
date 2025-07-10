@@ -57,13 +57,14 @@ function isHomepage() {
 let scrollSystem = {
   $sections: null,
   inScroll: false,
-  durationOneScroll: 600,
+  durationOneScroll: 800, // ENHANCED: Increased for smoother animation
   currentSection: 0,
   arrSections: [],
   isEnabled: false,
   initialized: false,
   resizeTimeout: null,
-  dotNavigation: null
+  dotNavigation: null,
+  easingFunction: 'easeInOutCubic' // ENHANCED: Smoother easing
 };
 
 // Animation tracking variables for debugging
@@ -92,6 +93,12 @@ let lastTouchTime = 0;
 let lastSwipeTime = 0;
 let swipeCooldownPeriod = 300; // 300ms cooldown between swipes
 let isSwipeInProgress = false;
+
+// ENHANCED OVERSCROLL PROTECTION
+let overscrollDetected = false;
+let lastValidScrollPosition = 0;
+let scrollBoundaryTimeout = null;
+let overscrollRecoveryActive = false;
 
 // DESKTOP ONLY - Mobile device detection (redundant but kept for compatibility)
 function isMobileDeviceCheck() {
@@ -465,6 +472,101 @@ function addMobileTouchFailsafe() {
       }, 1500);
     }
   }, 2000);
+}
+
+// ===============================================
+// ENHANCED OVERSCROLL PROTECTION AND RECOVERY
+// ===============================================
+function initializeOverscrollProtection() {
+  if (!isMobileDevice() || !isHomepage()) return;
+  
+  console.log('🛡️ Initializing enhanced overscroll protection...');
+  
+  // Monitor scroll boundaries and detect overscroll
+  let boundaryCheckInterval = setInterval(() => {
+    if (!scrollSystem.isEnabled) return;
+    
+    const currentScroll = window.pageYOffset;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const minScroll = 0;
+    
+    // Check if we're outside valid boundaries
+    if (currentScroll < minScroll - 50 || currentScroll > maxScroll + 50) {
+      if (!overscrollDetected) {
+        console.log('🚨 OVERSCROLL DETECTED:', {
+          currentScroll: currentScroll,
+          minScroll: minScroll,
+          maxScroll: maxScroll,
+          deviation: currentScroll < minScroll ? currentScroll - minScroll : currentScroll - maxScroll
+        });
+        
+        overscrollDetected = true;
+        handleOverscrollRecovery(currentScroll, minScroll, maxScroll);
+      }
+    } else {
+      if (overscrollDetected) {
+        console.log('✅ Scroll returned to valid boundaries');
+        overscrollDetected = false;
+        overscrollRecoveryActive = false;
+      }
+      lastValidScrollPosition = currentScroll;
+    }
+  }, 100);
+  
+  // Enhanced overscroll prevention
+  document.addEventListener('touchmove', function(e) {
+    if (!scrollSystem.isEnabled || scrollSystem.inScroll) return;
+    
+    const currentScroll = window.pageYOffset;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    
+    // Prevent further scrolling at boundaries
+    if ((currentScroll <= 0 && e.touches[0].clientY > initialTouchY) ||
+        (currentScroll >= maxScroll && e.touches[0].clientY < initialTouchY)) {
+      console.log('🛡️ Preventing overscroll at boundary');
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  console.log('🛡️ Enhanced overscroll protection active');
+}
+
+function handleOverscrollRecovery(currentScroll, minScroll, maxScroll) {
+  if (overscrollRecoveryActive) return;
+  
+  overscrollRecoveryActive = true;
+  console.log('🔧 Initiating overscroll recovery...');
+  
+  // Determine recovery target
+  let recoveryTarget;
+  if (currentScroll < minScroll) {
+    recoveryTarget = 0; // Snap to top
+  } else if (currentScroll > maxScroll) {
+    recoveryTarget = maxScroll; // Snap to bottom
+  } else {
+    recoveryTarget = lastValidScrollPosition; // Return to last valid position
+  }
+  
+  // Find closest section to recovery target
+  let closestSection = 0;
+  let minDistance = Infinity;
+  scrollSystem.arrSections.forEach((sectionPos, index) => {
+    const distance = Math.abs(recoveryTarget - sectionPos);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestSection = index;
+    }
+  });
+  
+  console.log('🎯 Overscroll recovery - snapping to section:', closestSection, 'at position:', scrollSystem.arrSections[closestSection]);
+  
+  // Perform recovery scroll
+  setTimeout(() => {
+    if (!scrollSystem.inScroll) {
+      scrollSystem.currentSection = closestSection;
+      goToSection(closestSection);
+    }
+  }, 200); // Small delay to avoid conflicts
 }
 
 // ===============================================
@@ -856,29 +958,29 @@ function createDotNavigation() {
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
   
-  // FUNCTIONAL ELEGANT RIGHT-SIDE STYLING
+  // CLEAN MODERN STYLING - NO BACKGROUND BOX
   dotContainer.style.cssText = `
     position: fixed !important;
-    right: 20px !important;
+    right: 25px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     z-index: 999999 !important;
-    background: rgba(0, 0, 0, 0.4) !important;
-    padding: 12px 8px !important;
-    border-radius: 18px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-evenly !important;
+    justify-content: center !important;
     align-items: center !important;
-    gap: 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    min-height: 160px !important;
-    opacity: 0.6 !important;
+    gap: 12px !important;
+    border: none !important;
+    min-height: auto !important;
+    opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
     transition: all 0.3s ease !important;
   `;
   
@@ -918,31 +1020,32 @@ function createDotNavigation() {
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
     
-    // FUNCTIONAL ELEGANT DOT STYLING
+    // MODERN CLEAN DOT STYLING
     dot.style.cssText = `
-      width: 8px !important;
-      height: 8px !important;
-      background: rgba(255, 255, 255, 0.6) !important;
+      width: 10px !important;
+      height: 10px !important;
+      background: rgba(255, 255, 255, 0.4) !important;
       border-radius: 50% !important;
       cursor: pointer !important;
-      border: 1px solid transparent !important;
+      border: 2px solid rgba(255, 255, 255, 0.6) !important;
       opacity: 1 !important;
       visibility: visible !important;
       display: block !important;
       position: relative !important;
       flex-shrink: 0 !important;
-      transition: all 0.3s ease !important;
-      margin: 2px 0 !important;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+      margin: 0 !important;
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0) !important;
     `;
     
     // Add larger touch area for mobile
     const touchArea = document.createElement('div');
     touchArea.style.cssText = `
       position: absolute !important;
-      top: -12px !important;
-      left: -12px !important;
-      right: -12px !important;
-      bottom: -12px !important;
+      top: -15px !important;
+      left: -15px !important;
+      right: -15px !important;
+      bottom: -15px !important;
       cursor: pointer !important;
       z-index: 1 !important;
     `;
@@ -971,18 +1074,22 @@ function createDotNavigation() {
     dot.addEventListener('touchend', touchHandler);
     touchArea.addEventListener('touchend', touchHandler);
     
-    // Elegant hover effect
+    // Modern hover effect with glow
     dot.addEventListener('mouseenter', function() {
       if (index !== scrollSystem.currentSection) {
         dot.style.background = 'rgba(255, 255, 255, 0.8)';
-        dot.style.transform = 'scale(1.3)';
+        dot.style.border = '2px solid rgba(255, 255, 255, 0.9)';
+        dot.style.transform = 'scale(1.2)';
+        dot.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.3)';
       }
     });
     
     dot.addEventListener('mouseleave', function() {
       if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
+        dot.style.background = 'rgba(255, 255, 255, 0.4)';
+        dot.style.border = '2px solid rgba(255, 255, 255, 0.6)';
         dot.style.transform = 'scale(1)';
+        dot.style.boxShadow = '0 0 0 0 rgba(255, 255, 255, 0)';
       }
     });
     
@@ -991,35 +1098,8 @@ function createDotNavigation() {
     console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
   });
   
-  // Elegant hover effects for container
-  dotContainer.addEventListener('mouseenter', function() {
-    dotContainer.style.opacity = '0.9';
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.6)';
-    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-  });
-  
-  dotContainer.addEventListener('mouseleave', function() {
-    dotContainer.style.opacity = '0.6';
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.4)';
-    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-  });
-  
-  // FUNCTIONAL FEATURE: Increase opacity during scroll
-  let scrollTimeout;
-  const handleScroll = () => {
-    dotContainer.style.opacity = '0.8';
-    dotContainer.style.background = 'rgba(0, 0, 0, 0.5)';
-    
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      if (!dotContainer.matches(':hover')) {
-        dotContainer.style.opacity = '0.6';
-        dotContainer.style.background = 'rgba(0, 0, 0, 0.4)';
-      }
-    }, 1500);
-  };
-  
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  // REMOVED: Container hover effects since we have no background
+  // Clean design with transparent background
   
   console.log('✅ Functional elegant dot navigation created on right side');
   console.log('📏 Final container size:', dotContainer.getBoundingClientRect());
@@ -1057,19 +1137,23 @@ function updateDotNavigation() {
   
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
-      // Active dot - clearly visible but elegant
+      // Active dot - SIGNIFICANTLY BIGGER and more prominent
       dots[i].style.background = 'rgba(255, 255, 255, 1)';
-      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.8)';
-      dots[i].style.transform = 'scale(1.6)';
-      dots[i].style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.4)';
+      dots[i].style.border = '3px solid rgba(255, 255, 255, 1)';
+      dots[i].style.transform = 'scale(2.0)'; // MUCH BIGGER when active
+      dots[i].style.boxShadow = '0 0 12px rgba(255, 255, 255, 0.6)';
+      dots[i].style.width = '12px';
+      dots[i].style.height = '12px';
       dots[i].classList.add('active');
-      console.log('🎯 Activated dot', i);
+      console.log('🎯 Activated dot', i, 'with enhanced size and glow');
     } else {
-      // Inactive dots - visible but subdued
-      dots[i].style.background = 'rgba(255, 255, 255, 0.6)';
-      dots[i].style.border = '1px solid transparent';
+      // Inactive dots - smaller and more subtle
+      dots[i].style.background = 'rgba(255, 255, 255, 0.4)';
+      dots[i].style.border = '2px solid rgba(255, 255, 255, 0.6)';
       dots[i].style.transform = 'scale(1)';
-      dots[i].style.boxShadow = 'none';
+      dots[i].style.boxShadow = '0 0 0 0 rgba(255, 255, 255, 0)';
+      dots[i].style.width = '10px';
+      dots[i].style.height = '10px';
       dots[i].classList.remove('active');
     }
   }
@@ -1150,6 +1234,7 @@ function goToSection(sectionIndex) {
     scrollTop: targetScroll
   }, {
     duration: scrollSystem.durationOneScroll,
+    easing: scrollSystem.easingFunction, // ENHANCED: Smooth cubic easing
     progress: function(animation, progress, remainingMs) {
       const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
       console.log(`📈 ${deviceType} Animation progress:`, {
@@ -1157,7 +1242,8 @@ function goToSection(sectionIndex) {
         currentScroll: window.pageYOffset,
         targetScroll: targetScroll,
         remainingMs: remainingMs,
-        inScroll: scrollSystem.inScroll
+        inScroll: scrollSystem.inScroll,
+        smoothness: 'Enhanced with ' + scrollSystem.easingFunction
       });
     },
     complete: function() {
@@ -1249,11 +1335,34 @@ function calculateSectionPositions() {
   if (!scrollSystem.$sections || scrollSystem.$sections.length === 0 || !isHomepage()) return;
   
   const oldPositions = [...scrollSystem.arrSections];
-  scrollSystem.arrSections = scrollSystem.$sections.map(function() {
-    return $(this).offset().top;
+  
+  // ENHANCED: Better mobile section position calculation
+  scrollSystem.arrSections = scrollSystem.$sections.map(function(index) {
+    const section = $(this);
+    let sectionTop = section.offset().top;
+    
+    // ANDROID FIX: Ensure sections align to viewport boundaries
+    if (isMobileDevice()) {
+      const viewportHeight = window.innerHeight;
+      const expectedPosition = index * viewportHeight;
+      
+      // If section is close to expected viewport position, snap it
+      if (Math.abs(sectionTop - expectedPosition) < 100) {
+        console.log('📱 Android fix - snapping section', index, 'from', sectionTop, 'to', expectedPosition);
+        sectionTop = expectedPosition;
+      }
+      
+      // Ensure section height fills viewport
+      const sectionHeight = section.outerHeight();
+      if (Math.abs(sectionHeight - viewportHeight) > 50) {
+        console.log('📱 Android fix - section', index, 'height mismatch:', sectionHeight, 'vs viewport:', viewportHeight);
+      }
+    }
+    
+    return sectionTop;
   }).get();
   
-  console.log('📍 Raw section positions:', scrollSystem.arrSections);
+  console.log('📍 Enhanced section positions (Android optimized):', scrollSystem.arrSections);
   updateCurrentSectionFromScrollPosition();
   
   return oldPositions;
@@ -1266,8 +1375,29 @@ function updateCurrentSectionFromScrollPosition() {
   let closestSection = 0;
   let minDistance = Infinity;
   
+  // ENHANCED: Better section detection with tolerance for mobile
+  const detectionTolerance = isMobileDevice() ? 75 : 50; // More forgiving for mobile
+  
   scrollSystem.arrSections.forEach((sectionTop, index) => {
     const distance = Math.abs(currentScrollPos - sectionTop);
+    
+    // ANDROID FIX: If we're within tolerance, prefer viewport-aligned positions
+    if (isMobileDevice() && distance <= detectionTolerance) {
+      const viewportHeight = window.innerHeight;
+      const expectedPosition = index * viewportHeight;
+      const viewportAlignedDistance = Math.abs(currentScrollPos - expectedPosition);
+      
+      // If viewport-aligned position is closer, use that for comparison
+      if (viewportAlignedDistance < distance) {
+        console.log('📱 Using viewport-aligned detection for section', index);
+        if (viewportAlignedDistance < minDistance) {
+          minDistance = viewportAlignedDistance;
+          closestSection = index;
+        }
+        return;
+      }
+    }
+    
     if (distance < minDistance) {
       minDistance = distance;
       closestSection = index;
@@ -1658,6 +1788,7 @@ waitForJQuery(function() {
     console.log('🏠 Homepage detected - initializing scroll system NOW');
     setTimeout(initializeScrollSystem, 50); // Very short delay
     setTimeout(initializeScrollToTopButton, 100);
+    setTimeout(initializeOverscrollProtection, 120); // ENHANCED: Add overscroll protection
     setTimeout(addMobileConflictDetection, 150);
     setTimeout(testMobileScrollCapabilities, 200);
     setTimeout(startInScrollWatchdog, 250);
