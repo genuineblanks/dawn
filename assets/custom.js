@@ -348,10 +348,23 @@ function initializeScrollSystem() {
     bindScrollEvents();
     updateDotNavigation();
     
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    console.log('📱 Mobile touch support enabled');
+    // Add mobile touch support with better event handling
+    const touchOptions = { passive: false };
+    document.addEventListener('touchstart', handleTouchStart, touchOptions);
+    document.addEventListener('touchmove', handleTouchMove, touchOptions);
+    document.addEventListener('touchend', handleTouchEnd, touchOptions);
+    
+    // Prevent default touch behaviors that might interfere
+    document.addEventListener('touchstart', function(e) {
+      if (isHomepage() && scrollSystem.isEnabled) {
+        // Allow normal scrolling but prevent certain gestures
+        if (e.touches.length > 1) {
+          e.preventDefault(); // Prevent pinch zoom during scroll navigation
+        }
+      }
+    }, touchOptions);
+    
+    console.log('📱 Enhanced mobile touch support enabled');
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
   }
