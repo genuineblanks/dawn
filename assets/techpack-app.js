@@ -3095,6 +3095,7 @@
       this.setupNavigationButtons();
       this.setupFormSubmission();
       this.setupVATFormatting();
+      this.setupRegistrationCheck();
       
       // CHANGED: Initialize with registration check (step 0) instead of step 1
       this.showStep(0);
@@ -3194,68 +3195,103 @@
       }
     }
 
-    showStep(stepNumber) {
-      const steps = document.querySelectorAll('.techpack-step');
+    setupRegistrationCheck() {
+      debugSystem.log('🔧 Setting up registration check functionality...');
       
-      steps.forEach(step => {
-        step.style.display = 'none';
-      });
-      
-      // Handle step 0 (registration check)
-      if (stepNumber === 0) {
-        const step0 = document.querySelector('#techpack-step-0');
-        if (step0) {
-          step0.style.display = 'block';
-          state.currentStep = 0;
-          debugSystem.log('Showing registration check (step 0)');
-          return;
-        } else {
-          debugSystem.log('Step 0 (registration check) not found, falling back to step 1', null, 'warn');
-          stepNumber = 1; // Fallback to step 1 if step 0 doesn't exist
-        }
-      }
-      
-      // Handle regular steps (1-4)
-      const targetStep = document.querySelector(`[data-step="${stepNumber}"]`);
-      if (targetStep) {
-        targetStep.style.display = 'block';
-        state.currentStep = stepNumber;
+      // Helper function to set button states
+      const setButtonState = (button, state) => {
+        if (!button) return;
         
-        // EXISTING: Keep your exact step-specific logic
-        if (stepNumber === 2) {
-          stepManager.syncStep2DOM();
-        } else if (stepNumber === 3) {
-          stepManager.refreshStep3Interface();
-        } else if (stepNumber === 4) {
-          stepManager.populateReview();
-        }
+        button.disabled = state === 'loading';
         
-        debugSystem.log('Showing step', { stepNumber });
-      } else {
-        debugSystem.log('Target step not found', { stepNumber }, 'error');
-      }
-    }
-
-        const hideStatus = () => {
-          try {
-            if (statusDiv) {
-              statusDiv.style.display = 'none';
-            }
-          } catch (error) {
-            debugSystem.log('⚠️ Status hide failed:', error, 'warn');
+        // Remove existing state classes
+        button.classList.remove('loading', 'normal', 'success', 'error');
+        
+        // Add new state class
+        button.classList.add(state);
+        
+        // Update button text based on state
+        if (state === 'loading') {
+          button.textContent = 'Processing...';
+        } else if (state === 'normal') {
+          // Restore original text
+          const originalText = button.getAttribute('data-original-text');
+          if (originalText) {
+            button.textContent = originalText;
           }
+        }
+      };
+      
+      // Helper function to show status messages
+      const showStatus = (message, type = 'info') => {
+        const statusDiv = document.querySelector('.techpack-status-message') || this.createStatusDiv();
+        
+        if (statusDiv) {
+          statusDiv.textContent = message;
+          statusDiv.className = `techpack-status-message ${type}`;
+          statusDiv.style.display = 'block';
+          
+          // Auto-hide after 5 seconds for success messages
+          if (type === 'success') {
+            setTimeout(() => {
+              statusDiv.style.display = 'none';
+            }, 5000);
+          }
+        }
+      };
+      
+      // Helper function to hide status messages
+      const hideStatus = () => {
+        try {
+          const statusDiv = document.querySelector('.techpack-status-message');
+          if (statusDiv) {
+            statusDiv.style.display = 'none';
+          }
+        } catch (error) {
+          debugSystem.log('⚠️ Status hide failed:', error, 'warn');
+        }
+      };
+      
+      // Helper function to find required DOM elements
+      const findElements = () => {
+        return {
+          yesBtn: document.querySelector('#registration-yes-btn, .registration-yes-btn, [data-registration="yes"]'),
+          noBtn: document.querySelector('#registration-no-btn, .registration-no-btn, [data-registration="no"]'),
+          warningDiv: document.querySelector('.registration-warning, .techpack-warning')
         };
-
+      };
+      
+      // Helper function to setup button handlers
+      const setupButtonHandlers = (elements) => {
+        const { yesBtn, noBtn, warningDiv } = elements;
+        
+        if (!yesBtn || !noBtn) {
+          debugSystem.log('❌ Registration buttons not found', { yesBtn: !!yesBtn, noBtn: !!noBtn }, 'error');
+          return false;
+        }
+        
+        // Store original button text
+        yesBtn.setAttribute('data-original-text', yesBtn.textContent);
+        noBtn.setAttribute('data-original-text', noBtn.textContent);
+        
+        // Clear any existing event listeners
+        yesBtn.replaceWith(yesBtn.cloneNode(true));
+        noBtn.replaceWith(noBtn.cloneNode(true));
+        
+        // Get fresh references after cloning
+        const freshYesBtn = document.querySelector('#registration-yes-btn, .registration-yes-btn, [data-registration="yes"]');
+        const freshNoBtn = document.querySelector('#registration-no-btn, .registration-no-btn, [data-registration="no"]');
+        
         // Enhanced YES button handler
-        yesBtn.addEventListener('click', async (event) => {
+        freshYesBtn.addEventListener('click', async (event) => {
           try {
             debugSystem.log('✅ YES button clicked - Registered client selected');
             event.preventDefault();
             event.stopPropagation();
             
             // Provide immediate visual feedback
-            setButtonState(yesBtn, 'loading');
-            setButtonState(noBtn, 'loading');
+            setButtonState(freshYesBtn, 'loading');
+            setButtonState(freshNoBtn, 'loading');
             showStatus('Verifying registration status...', 'info');
             
             // Show warning first
@@ -3307,8 +3343,8 @@
               } catch (processingError) {
                 debugSystem.log('❌ Registration processing failed:', processingError, 'error');
                 // Reset button states on error
-                setButtonState(yesBtn, 'normal');
-                setButtonState(noBtn, 'normal');
+                setButtonState(freshYesBtn, 'normal');
+                setButtonState(freshNoBtn, 'normal');
                 showStatus('Technical issue occurred. Please try again.', 'error');
                 setTimeout(() => hideStatus(), 3000);
               }
@@ -3316,23 +3352,23 @@
             
           } catch (error) {
             debugSystem.log('❌ YES button handler failed:', error, 'error');
-            setButtonState(yesBtn, 'normal');
-            setButtonState(noBtn, 'normal');
+            setButtonState(freshYesBtn, 'normal');
+            setButtonState(freshNoBtn, 'normal');
             showStatus('Unexpected error occurred. Please refresh the page.', 'error');
             setTimeout(() => hideStatus(), 5000);
           }
         });
 
         // Enhanced NO button handler
-        noBtn.addEventListener('click', async (event) => {
+        freshNoBtn.addEventListener('click', async (event) => {
           try {
             debugSystem.log('✅ NO button clicked - New client selected');
             event.preventDefault();
             event.stopPropagation();
             
             // Provide immediate visual feedback
-            setButtonState(yesBtn, 'loading');
-            setButtonState(noBtn, 'loading');
+            setButtonState(freshYesBtn, 'loading');
+            setButtonState(freshNoBtn, 'loading');
             showStatus('Processing new client registration...', 'info');
             
             try {
@@ -3375,16 +3411,16 @@
             } catch (processingError) {
               debugSystem.log('❌ New client processing failed:', processingError, 'error');
               // Reset button states on error
-              setButtonState(yesBtn, 'normal');
-              setButtonState(noBtn, 'normal');
+              setButtonState(freshYesBtn, 'normal');
+              setButtonState(freshNoBtn, 'normal');
               showStatus('Technical issue occurred. Please try again.', 'error');
               setTimeout(() => hideStatus(), 3000);
             }
             
           } catch (error) {
             debugSystem.log('❌ NO button handler failed:', error, 'error');
-            setButtonState(yesBtn, 'normal');
-            setButtonState(noBtn, 'normal');
+            setButtonState(freshYesBtn, 'normal');
+            setButtonState(freshNoBtn, 'normal');
             showStatus('Unexpected error occurred. Please refresh the page.', 'error');
             setTimeout(() => hideStatus(), 5000);
           }
@@ -3428,6 +3464,69 @@
       };
 
       retrySetup();
+    }
+    
+    createStatusDiv() {
+      const statusDiv = document.createElement('div');
+      statusDiv.className = 'techpack-status-message';
+      statusDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        border-radius: 4px;
+        font-weight: 500;
+        z-index: 10000;
+        display: none;
+        max-width: 300px;
+        word-wrap: break-word;
+      `;
+      
+      // Add to body
+      document.body.appendChild(statusDiv);
+      return statusDiv;
+    }
+
+    showStep(stepNumber) {
+      const steps = document.querySelectorAll('.techpack-step');
+      
+      steps.forEach(step => {
+        step.style.display = 'none';
+      });
+      
+      // Handle step 0 (registration check)
+      if (stepNumber === 0) {
+        const step0 = document.querySelector('#techpack-step-0');
+        if (step0) {
+          step0.style.display = 'block';
+          state.currentStep = 0;
+          debugSystem.log('Showing registration check (step 0)');
+          return;
+        } else {
+          debugSystem.log('Step 0 (registration check) not found, falling back to step 1', null, 'warn');
+          stepNumber = 1; // Fallback to step 1 if step 0 doesn't exist
+        }
+      }
+      
+      // Handle regular steps (1-4)
+      const targetStep = document.querySelector(`[data-step="${stepNumber}"]`);
+      if (targetStep) {
+        targetStep.style.display = 'block';
+        state.currentStep = stepNumber;
+        
+        // EXISTING: Keep your exact step-specific logic
+        if (stepNumber === 2) {
+          stepManager.syncStep2DOM();
+        } else if (stepNumber === 3) {
+          stepManager.refreshStep3Interface();
+        } else if (stepNumber === 4) {
+          stepManager.populateReview();
+        }
+        
+        debugSystem.log('Showing step', { stepNumber });
+      } else {
+        debugSystem.log('Target step not found', { stepNumber }, 'error');
+      }
     }
 
     // NEW: Configure Step 1 for registered clients
