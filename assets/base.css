@@ -7,7 +7,7 @@
   --real-viewport-height: 100vh;
 }
 
-/* Dynamic viewport height for mobile browsers */
+/* FIXED: Dynamic viewport height for mobile browsers with better support */
 @supports (height: 100dvh) {
   :root {
     --viewport-height: 100dvh;
@@ -15,20 +15,48 @@
   }
 }
 
-/* Fallback for older browsers */
+/* FIXED: Enhanced fallback for mobile devices */
 @supports not (height: 100dvh) {
   @media screen and (max-width: 749px) {
     :root {
       --viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
       --real-viewport-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     }
+    
+    /* iOS specific viewport fixes */
+    @supports (-webkit-touch-callout: none) {
+      :root {
+        --viewport-height: -webkit-fill-available;
+        --real-viewport-height: -webkit-fill-available;
+      }
+    }
   }
 }
 
-/* Mobile sections should use real viewport height */
+/* FIXED: Mobile sections with proper touch scrolling support */
 @media screen and (max-width: 749px) {
+  html {
+    /* Enable smooth scrolling on mobile */
+    scroll-behavior: smooth;
+    /* Fix iOS bounce scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent overscroll */
+    overscroll-behavior: none;
+  }
+  
+  body {
+    /* Ensure proper touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent momentum scrolling issues */
+    overscroll-behavior: none;
+    /* Fix iOS viewport issues */
+    min-height: var(--real-viewport-height);
+  }
+  
   section {
     min-height: var(--real-viewport-height);
+    /* Ensure sections are touch-scrollable */
+    -webkit-overflow-scrolling: touch;
   }
   
   .banner,
@@ -38,6 +66,16 @@
   
   .banner__media {
     height: var(--real-viewport-height);
+  }
+  
+  /* CRITICAL: Fix touch scrolling for iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent touch delay */
+  a, button, input, select, textarea {
+    touch-action: manipulation;
   }
 }
 
@@ -3584,4 +3622,74 @@ details-disclosure > details {
 /* Alternative approach - force aspect ratio directly on media */
 .card__media .media {
   aspect-ratio: 1 / 1 !important;
+}
+
+/* ===============================================
+   MOBILE SCROLL FIXES - CRITICAL FOR TOUCH DEVICES
+   =============================================== */
+
+@media screen and (max-width: 749px) {
+  /* CRITICAL: Prevent scroll blocking on mobile */
+  html, body {
+    touch-action: pan-y !important;
+    overscroll-behavior-y: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Ensure touch events work properly */
+  .home-section {
+    touch-action: pan-y !important;
+  }
+  
+  /* Fix iOS momentum scrolling */
+  .home-section section {
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: none !important;
+  }
+  
+  /* Prevent text selection interference with touch scrolling */
+  .home-section * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+  
+  /* But allow selection on text content */
+  .home-section p, 
+  .home-section h1, 
+  .home-section h2, 
+  .home-section h3, 
+  .home-section h4, 
+  .home-section h5, 
+  .home-section h6,
+  .home-section input,
+  .home-section textarea {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+  
+  /* Critical: Allow native scrolling behavior */
+  .section-dot-navigation {
+    pointer-events: auto !important;
+    touch-action: none !important;
+  }
+  
+  /* Fix any potential scroll locking from modals */
+  .modal-open, 
+  .modal-open body {
+    overflow: visible !important;
+    position: static !important;
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  @media screen and (max-width: 749px) {
+    html {
+      height: -webkit-fill-available !important;
+    }
+    
+    body {
+      min-height: -webkit-fill-available !important;
+    }
+  }
 }
