@@ -269,12 +269,48 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
     </div>
     <div class="techpack-modal__body">
       <div class="techpack-client-verification">
+        <div class="techpack-client-verification__how-it-works">
+          <h4 class="techpack-client-verification__how-it-works-title">How Genuine Blanks Works</h4>
+          <div class="techpack-client-verification__steps">
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">1</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Submit Your Tech Pack</strong>
+                <p>Upload your design files and provide garment specifications through our streamlined process</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">2</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Quote & Approval</strong>
+                <p>We review your requirements and provide a detailed quote within 24-48 hours</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">3</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Sample Production</strong>
+                <p>We create samples for your approval before proceeding to full production</p>
+              </div>
+            </div>
+            <div class="techpack-client-verification__step">
+              <div class="techpack-client-verification__step-number">4</div>
+              <div class="techpack-client-verification__step-content">
+                <strong>Manufacturing & Delivery</strong>
+                <p>Once approved, we manufacture your garments and deliver them to your specifications</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="techpack-client-verification__divider"></div>
+        
         <p class="techpack-client-verification__description">
           Please select your client status to continue with the tech-pack submission process.
         </p>
         
         <div class="techpack-client-verification__options">
-          <button type="button" class="techpack-client-verification__option" data-client-type="existing">
+          <button type="button" class="techpack-client-verification__option" id="registration-yes-btn" data-registration="yes">
             <div class="techpack-client-verification__option-icon">
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <circle cx="12" cy="8" r="3" fill="currentColor"/>
@@ -282,14 +318,14 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
               </svg>
             </div>
             <div class="techpack-client-verification__option-content">
-              <h4 class="techpack-client-verification__option-title">Existing Client</h4>
+              <h4 class="techpack-client-verification__option-title">Yes, I'm a Registered Client</h4>
               <p class="techpack-client-verification__option-description">
-                I have worked with Genuine Blanks before
+                I have worked with Genuine Blanks before and am registered in your system
               </p>
             </div>
           </button>
           
-          <button type="button" class="techpack-client-verification__option" data-client-type="new">
+          <button type="button" class="techpack-client-verification__option" id="registration-no-btn" data-registration="no">
             <div class="techpack-client-verification__option-icon">
               <svg width="24" height="24" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -297,12 +333,28 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
               </svg>
             </div>
             <div class="techpack-client-verification__option-content">
-              <h4 class="techpack-client-verification__option-title">New Client</h4>
+              <h4 class="techpack-client-verification__option-title">No, I'm a New Client</h4>
               <p class="techpack-client-verification__option-description">
                 This is my first time working with Genuine Blanks
               </p>
             </div>
           </button>
+        </div>
+        
+        <!-- Registration Warning (initially hidden) -->
+        <div class="techpack-warning registration-warning" id="registration-warning" style="display: none;">
+          <div class="techpack-warning__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="techpack-warning__content">
+            <h5 class="techpack-warning__title">Registration Verification Required</h5>
+            <p class="techpack-warning__message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.
+            </p>
+          </div>
         </div>
         
         <div class="techpack-client-verification__note">
