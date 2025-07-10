@@ -100,14 +100,14 @@ function handleTouchMove(e) {
   const deltaX = Math.abs(touch.clientX - touchStartX);
   
   // Mark as moved with lower threshold for mobile
-  if (deltaY > 5 || deltaX > 5) {
+  if (deltaY > 3 || deltaX > 3) {
     hasMoved = true;
   }
   
-  // SIMPLIFIED: If it's clearly vertical movement, prevent default
-  if (deltaY > 25 && deltaY > deltaX * 1.5) {
+  // AGGRESSIVE: If it's clearly vertical movement, prevent default immediately
+  if (deltaY > 15 && deltaY > deltaX) {
     e.preventDefault();
-    console.log('📱 Preventing default - vertical swipe detected');
+    console.log('📱 Preventing default - vertical swipe detected, deltaY:', deltaY, 'deltaX:', deltaX);
   }
 }
 
@@ -133,53 +133,67 @@ function handleTouchEnd(e) {
   const horizontalDistance = Math.abs(touchEndX - touchStartX);
   const totalVerticalDistance = Math.abs(verticalDistance);
   
-  console.log('📱 Touch end:', {
+  console.log('📱 Touch end analysis:', {
     duration: touchDuration,
-    vertical: verticalDistance,
-    horizontal: horizontalDistance,
+    verticalDistance: verticalDistance,
+    horizontalDistance: horizontalDistance,
+    totalVertical: totalVerticalDistance,
     moved: hasMoved,
-    mobile: isMobileDevice()
+    mobile: isMobileDevice(),
+    startY: touchStartY,
+    endY: touchEndY
   });
   
-  // SIMPLIFIED SWIPE DETECTION - More lenient for mobile
+  // ENHANCED SWIPE DETECTION - Much more aggressive for mobile
   const isMobile = isMobileDevice();
-  const minDistance = isMobile ? 30 : 50;
-  const maxDuration = isMobile ? 1500 : 1000;
-  const ratioThreshold = isMobile ? 1.2 : 1.5;
+  const minDistance = isMobile ? 20 : 40;      // LOWER threshold for mobile
+  const maxDuration = isMobile ? 2000 : 1200;  // MORE time for mobile
+  const ratioThreshold = isMobile ? 1.0 : 1.2; // EASIER ratio for mobile
   
   const isValidSwipe = touchDuration < maxDuration && 
                       totalVerticalDistance > minDistance && 
-                      totalVerticalDistance > horizontalDistance * ratioThreshold &&
+                      (totalVerticalDistance > horizontalDistance * ratioThreshold || totalVerticalDistance > 30) &&
                       hasMoved;
+  
+  console.log('📱 Swipe validation:', {
+    isValid: isValidSwipe,
+    durationOK: touchDuration < maxDuration,
+    distanceOK: totalVerticalDistance > minDistance,
+    ratioOK: totalVerticalDistance > horizontalDistance * ratioThreshold,
+    movedOK: hasMoved,
+    thresholds: { minDistance, maxDuration, ratioThreshold }
+  });
   
   if (isValidSwipe) {
     e.preventDefault();
     
-    console.log('📱 VALID SWIPE DETECTED - Processing...');
+    console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
-    const swipeThreshold = isMobile ? 20 : 30;
+    const swipeThreshold = isMobile ? 15 : 25; // LOWER threshold for direction
     
     if (verticalDistance > swipeThreshold) {
       // Swipe up = next section
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-      console.log('📱 SWIPE UP to section:', targetSection);
+      console.log('📱 🔥 SWIPE UP detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
     } else if (verticalDistance < -swipeThreshold) {
       // Swipe down = previous section
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-      console.log('📱 SWIPE DOWN to section:', targetSection);
+      console.log('📱 🔥 SWIPE DOWN detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
     }
     
     if (targetSection !== scrollSystem.currentSection) {
-      console.log('📱 EXECUTING SECTION CHANGE:', scrollSystem.currentSection, '->', targetSection);
+      console.log('📱 🚀 EXECUTING SECTION NAVIGATION:', scrollSystem.currentSection, '->', targetSection);
+      console.log('📱 🎯 Target position:', scrollSystem.arrSections[targetSection]);
       goToSection(targetSection);
     } else {
+      console.log('📱 ❌ No section change - same section');
       scrollSystem.inScroll = false;
-      console.log('📱 No section change needed');
     }
   } else {
-    console.log('📱 Invalid swipe - not processing');
+    console.log('📱 ❌ Invalid swipe - conditions not met');
+    console.log('📱 💡 Try: Swipe more vertically, faster, or with more distance');
   }
   
   // Reset all touch tracking
@@ -232,7 +246,7 @@ function createMobileDebugPanel() {
 }
 
 // ===============================================
-// MOBILE TOUCH FAILSAFE SYSTEM
+// MOBILE TOUCH FAILSAFE SYSTEM - ENHANCED
 // ===============================================
 function addMobileTouchFailsafe() {
   if (!isMobileDevice() || !isHomepage()) return;
@@ -242,88 +256,137 @@ function addMobileTouchFailsafe() {
   
   // Alternative touch detection using pointer events
   if (window.PointerEvent) {
-    console.log('📱 Adding pointer event failsafe');
+    console.log('📱 Adding aggressive pointer event failsafe');
     
     let pointerStartY = 0;
     let pointerStartTime = 0;
+    let pointerMoved = false;
     
     document.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled) {
         pointerStartY = e.clientY;
         pointerStartTime = Date.now();
+        pointerMoved = false;
+        console.log('📱 Pointer down at:', pointerStartY);
+      }
+    });
+    
+    document.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch' && pointerStartY > 0) {
+        const deltaY = Math.abs(e.clientY - pointerStartY);
+        if (deltaY > 5) {
+          pointerMoved = true;
+        }
       }
     });
     
     document.addEventListener('pointerup', (e) => {
-      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll) {
+      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll && pointerMoved) {
         const pointerDistance = pointerStartY - e.clientY;
         const pointerDuration = Date.now() - pointerStartTime;
         
-        if (Math.abs(pointerDistance) > 40 && pointerDuration < 1000) {
-          console.log('📱 Pointer failsafe triggered:', pointerDistance);
+        console.log('📱 Pointer up analysis:', {
+          distance: pointerDistance,
+          duration: pointerDuration,
+          moved: pointerMoved
+        });
+        
+        if (Math.abs(pointerDistance) > 25 && pointerDuration < 1500) {
+          console.log('📱 🔥 Pointer failsafe TRIGGERED:', pointerDistance);
           swipeAttempts++;
           
-          if (Date.now() - lastSwipeTime > 500) { // Debounce
+          if (Date.now() - lastSwipeTime > 300) { // Reduced debounce
             let targetSection = scrollSystem.currentSection;
             
-            if (pointerDistance > 40) {
+            if (pointerDistance > 25) {
               targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-            } else if (pointerDistance < -40) {
+              console.log('📱 🚀 POINTER UP - Next section:', targetSection);
+            } else if (pointerDistance < -25) {
               targetSection = Math.max(scrollSystem.currentSection - 1, 0);
+              console.log('📱 🚀 POINTER DOWN - Previous section:', targetSection);
             }
             
             if (targetSection !== scrollSystem.currentSection) {
-              console.log('📱 POINTER FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+              console.log('📱 ✅ POINTER FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
               goToSection(targetSection);
               lastSwipeTime = Date.now();
             }
           }
         }
       }
+      // Reset pointer tracking
+      pointerStartY = 0;
+      pointerMoved = false;
     });
   }
   
-  // Touch gesture fallback detection
-  let gestureStartY = 0;
-  let gestureStartTime = 0;
-  let gestureInProgress = false;
-  
-  document.addEventListener('gesturestart', (e) => {
-    if (isHomepage() && scrollSystem.isEnabled) {
-      gestureStartY = e.clientY || 0;
-      gestureStartTime = Date.now();
-      gestureInProgress = true;
-      console.log('📱 Gesture start detected');
-    }
-  });
-  
-  document.addEventListener('gestureend', (e) => {
-    if (gestureInProgress && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll) {
-      const gestureDistance = gestureStartY - (e.clientY || 0);
-      const gestureDuration = Date.now() - gestureStartTime;
+  // Wheel event failsafe for devices that support it
+  let wheelTimeout;
+  document.addEventListener('wheel', (e) => {
+    if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+    
+    // Clear previous timeout
+    clearTimeout(wheelTimeout);
+    
+    // Set timeout to process wheel event
+    wheelTimeout = setTimeout(() => {
+      const deltaY = e.deltaY;
       
-      if (Math.abs(gestureDistance) > 30 && gestureDuration < 800) {
-        console.log('📱 Gesture failsafe triggered:', gestureDistance);
+      if (Math.abs(deltaY) > 50) {
+        console.log('📱 🔥 Wheel failsafe triggered:', deltaY);
         
         let targetSection = scrollSystem.currentSection;
         
-        if (gestureDistance > 30) {
+        if (deltaY > 50) {
           targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-        } else if (gestureDistance < -30) {
+          console.log('📱 🚀 WHEEL DOWN - Next section:', targetSection);
+        } else if (deltaY < -50) {
           targetSection = Math.max(scrollSystem.currentSection - 1, 0);
+          console.log('📱 🚀 WHEEL UP - Previous section:', targetSection);
         }
         
         if (targetSection !== scrollSystem.currentSection) {
-          console.log('📱 GESTURE FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+          console.log('📱 ✅ WHEEL FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+          scrollSystem.inScroll = true;
           goToSection(targetSection);
         }
       }
-      
-      gestureInProgress = false;
-    }
-  });
+    }, 50);
+  }, { passive: true });
   
-  console.log('📱 Mobile touch failsafe systems activated');
+  // Scroll event monitoring for stuck states
+  let scrollMonitorTimeout;
+  window.addEventListener('scroll', () => {
+    if (!isHomepage() || !scrollSystem.isEnabled) return;
+    
+    clearTimeout(scrollMonitorTimeout);
+    
+    scrollMonitorTimeout = setTimeout(() => {
+      if (scrollSystem.inScroll) {
+        console.log('📱 ⚠️ Scroll stuck detected - resetting inScroll flag');
+        scrollSystem.inScroll = false;
+      }
+    }, 1000);
+  }, { passive: true });
+  
+  console.log('📱 ✅ Enhanced mobile touch failsafe systems activated');
+  
+  // Add visual indicator for mobile users
+  setTimeout(() => {
+    if (scrollSystem.dotNavigation && isMobileDevice()) {
+      // Brief flash to show swipe is available
+      const originalOpacity = scrollSystem.dotNavigation.style.opacity;
+      scrollSystem.dotNavigation.style.opacity = '1';
+      scrollSystem.dotNavigation.style.transform = 'translateY(-50%) scale(1.1)';
+      
+      setTimeout(() => {
+        if (scrollSystem.dotNavigation) {
+          scrollSystem.dotNavigation.style.opacity = originalOpacity;
+          scrollSystem.dotNavigation.style.transform = 'translateY(-50%) scale(1)';
+        }
+      }, 1500);
+    }
+  }, 2000);
 }
 function reinitializeScrollAnimations() {
   if (!isHomepage()) return;
