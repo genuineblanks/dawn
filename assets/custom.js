@@ -202,8 +202,7 @@ function handleTouchEnd(e) {
   if (isValidSwipe) {
     // FIXED: No preventDefault in passive events - just trigger section change
     console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
-    console.log('🔵 TOUCH SWIPE setting inScroll = true');
-    scrollSystem.inScroll = true;
+    console.log('📱 🎯 Touch handler will call goToSection (no premature inScroll setting)');
     
     let targetSection = scrollSystem.currentSection;
     const swipeThreshold = isMobile ? 50 : 25; // Higher threshold for mobile to avoid accidental triggers
@@ -382,8 +381,7 @@ function addMobileTouchFailsafe() {
         
         if (targetSection !== scrollSystem.currentSection) {
           console.log('📱 ✅ WHEEL FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
-          console.log('🔵 WHEEL FAILSAFE setting inScroll = true');
-          scrollSystem.inScroll = true;
+          console.log('📱 🎯 Wheel failsafe will call goToSection (no premature inScroll setting)');
           goToSection(targetSection);
         }
       }
@@ -1053,7 +1051,8 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
-  console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED');
+  console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED for section:', sectionIndex);
+  console.log('🔍 Pre-check: inScroll =', scrollSystem.inScroll, 'should be false to proceed');
   
   if (scrollSystem.inScroll || sectionIndex < 0 || sectionIndex >= scrollSystem.arrSections.length || !isHomepage()) {
     console.log('🚫 goToSection blocked:', {
@@ -1064,6 +1063,8 @@ function goToSection(sectionIndex) {
     });
     return;
   }
+  
+  console.log('✅ goToSection proceeding - all checks passed');
   
   console.log('🎯 🚀 STARTING goToSection:', {
     from: scrollSystem.currentSection,
