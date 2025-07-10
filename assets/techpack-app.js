@@ -1352,6 +1352,8 @@
         debugSystem.log('Step 2 validation passed', { fileCount: state.formData.files.length }, 'success');
       }
 
+      fileUploader.calculateRequiredGarments();
+
       return isValid;
     }
 
@@ -1590,16 +1592,18 @@
     }
 
     populateReview() {
-      this.populateReviewStep1();
-      this.populateReviewStep2();
-      this.populateReviewStep3();
-      
-      // Ensure edit buttons are working after review is populated
       setTimeout(() => {
-        formInitializer.setupEditButtons();
-      }, 100);
-      
-      debugSystem.log('Review populated', null, 'success');
+        this.populateReviewStep1();
+        this.populateReviewStep2();
+        this.populateReviewStep3();
+        
+        debugSystem.log('Review populated', null, 'success');
+        
+        // Ensure edit buttons are working after review is populated
+        setTimeout(() => {
+          formInitializer.setupEditButtons();
+        }, 100);
+      }, 50);
     }
 
     // In StepManager class, REPLACE populateReviewStep1():
@@ -1965,14 +1969,12 @@
     }
 
     calculateRequiredGarments() {
-      const techPackFiles = state.formData.files.filter(file => 
-        file.type === 'COLLECTION TECH-PACK' || file.type === 'SINGLE GARMENT TECH-PACK'
-      );
+      const totalFiles = state.formData.files.length;
       
-      state.formData.requiredGarmentCount = Math.max(techPackFiles.length, 1);
+      state.formData.requiredGarmentCount = Math.max(totalFiles, 1);
       
       debugSystem.log('Required garments calculated', { 
-        techPackFiles: techPackFiles.length,
+        totalFiles: totalFiles,
         requiredGarments: state.formData.requiredGarmentCount 
       });
     }
