@@ -640,13 +640,14 @@
     </script>
 
     <script>
-    // Enhanced Scroll Restoration and Navigation
+    // Enhanced Scroll Restoration and Navigation - HOMEPAGE SPECIFIC
     (function() {
       'use strict';
       
       console.log('🔧 Enhanced scroll restoration loading...');
       
       var isNavigating = false;
+      var isHomepage = document.body.classList.contains('home-section');
       
       // Save scroll position for current page
       function saveScrollPosition() {
@@ -655,9 +656,20 @@
         
         try {
           let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
-          scrollPositions[currentPath] = scrollPos;
-          sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-          console.log('💾 Saved scroll position:', scrollPos, 'for path:', currentPath);
+          
+          // Only save homepage scroll positions
+          if (isHomepage) {
+            scrollPositions[currentPath] = scrollPos;
+            sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+            console.log('💾 Saved homepage scroll position:', scrollPos, 'for path:', currentPath);
+          } else {
+            // For non-homepage, always clear saved position
+            if (scrollPositions[currentPath]) {
+              delete scrollPositions[currentPath];
+              sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+              console.log('🗑️ Cleared scroll position for non-homepage:', currentPath);
+            }
+          }
         } catch(e) {
           console.log('❌ Could not save scroll position');
         }
@@ -671,8 +683,8 @@
           const scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
           const savedPosition = scrollPositions[currentPath];
           
-          if (savedPosition && savedPosition > 0) {
-            console.log('📍 Restoring scroll position:', savedPosition, 'for path:', currentPath);
+          if (isHomepage && savedPosition && savedPosition > 0) {
+            console.log('📍 Restoring homepage scroll position:', savedPosition, 'for path:', currentPath);
             
             // Use requestAnimationFrame for smoother restoration
             requestAnimationFrame(function() {
@@ -680,6 +692,16 @@
                 top: savedPosition,
                 behavior: 'instant'
               });
+              
+              // Update scroll system to match restored position
+              setTimeout(function() {
+                if (window.scrollSystem && window.scrollSystem.initialized) {
+                  window.updateCurrentSectionFromScrollPosition();
+                  if (typeof window.updateDotNavigation === 'function') {
+                    window.updateDotNavigation();
+                  }
+                }
+              }, 100);
               
               // Clean up old positions after successful restore
               setTimeout(function() {
@@ -691,9 +713,33 @@
                 }
               }, 300);
             });
+          } else if (!isHomepage) {
+            // For non-homepage, always scroll to top
+            console.log('📄 Non-homepage detected - scrolling to top');
+            window.scrollTo({
+              top: 0,
+              behavior: 'instant'
+            });
           }
         } catch(e) {
           console.log('❌ Could not restore scroll position');
+        }
+      }
+      
+      // Force scroll to top on page refresh for non-homepage
+      function handlePageRefresh() {
+        if (!isHomepage) {
+          console.log('🔄 Page refresh on non-homepage - forcing scroll to top');
+          window.scrollTo(0, 0);
+          // Also clear any saved position for this page
+          try {
+            let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
+            const currentPath = window.location.pathname;
+            if (scrollPositions[currentPath]) {
+              delete scrollPositions[currentPath];
+              sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+            }
+          } catch(e) {}
         }
       }
       
@@ -706,27 +752,46 @@
       
       // Handle page navigation
       window.addEventListener('pageshow', function(event) {
-        console.log('📄 Page show event - persisted:', event.persisted);
+        console.log('📄 Page show event - persisted:', event.persisted, 'isHomepage:', isHomepage);
         
         if (event.persisted) {
           // This is back button navigation
           isNavigating = false;
           restoreScrollPosition();
           
-          // Re-initialize scroll system
-          setTimeout(function() {
-            if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
-              window.resetScrollSystem();
-              window.initializeScrollSystem();
-            }
-          }, 500);
+          // Re-initialize scroll system for homepage
+          if (isHomepage) {
+            setTimeout(function() {
+              if (window.scrollSystem && typeof window.resetScrollSystem === 'function') {
+                window.resetScrollSystem();
+                window.initializeScrollSystem();
+              }
+            }, 500);
+          }
+        } else {
+          // Fresh page load
+          handlePageRefresh();
         }
       });
       
       // Handle initial page load
       function handleInitialLoad() {
-        console.log('🏠 Initial page load handling');
-        restoreScrollPosition();
+        console.log('🏠 Initial page load handling - isHomepage:', isHomepage);
+        
+        if (isHomepage) {
+          // For homepage, try to restore position
+          restoreScrollPosition();
+        } else {
+          // For other pages, always start at top
+          window.scrollTo(0, 0);
+        }
+      }
+      
+      // Check if page was refreshed (not back/forward navigation)
+      const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
+      if (wasRefreshed && !isHomepage) {
+        console.log('🔄 Detected page refresh on non-homepage');
+        window.scrollTo(0, 0);
       }
       
       if (document.readyState === 'loading') {
@@ -741,6 +806,23 @@
         if (link && link.href && link.href.includes(window.location.hostname)) {
           isNavigating = true;
           console.log('🔗 Internal navigation detected');
+          
+          // If navigating away from homepage, save current position
+          if (isHomepage) {
+            saveScrollPosition();
+          }
+        }
+      });
+      
+      // Additional safety: Force non-homepage pages to top on window focus
+      window.addEventListener('focus', function() {
+        if (!isHomepage && !isNavigating) {
+          setTimeout(function() {
+            if (window.pageYOffset > 100) {
+              console.log('🎯 Window focus - forcing non-homepage to top');
+              window.scrollTo(0, 0);
+            }
+          }, 100);
         }
       });
       
