@@ -40,7 +40,7 @@ let scrollSystem = {
 };
 
 // ===============================================
-// MOBILE TOUCH SUPPORT - SAFE FOR DOT NAVIGATION
+// MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN FOR RELIABILITY
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
@@ -49,8 +49,20 @@ let touchStartX = 0;
 let touchEndX = 0;
 let initialTouchY = 0;
 let hasMoved = false;
-let isScrolling = false;
 let touchTarget = null;
+let lastTouchTime = 0;
+
+// Mobile device detection
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+         (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ||
+         window.innerWidth <= 768;
+}
+
+// iOS specific detection
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
 
 function handleTouchStart(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
@@ -61,56 +73,53 @@ function handleTouchStart(e) {
   initialTouchY = touch.clientY;
   touchStartTime = Date.now();
   hasMoved = false;
-  isScrolling = false;
   touchTarget = e.target;
   
-  console.log('📱 Touch start at:', touchStartY);
+  // Prevent double-tap zoom on iOS
+  if (isIOS() && Date.now() - lastTouchTime < 300) {
+    e.preventDefault();
+  }
+  lastTouchTime = Date.now();
+  
+  console.log('📱 Touch start at:', touchStartY, 'Device:', isMobileDevice() ? 'Mobile' : 'Desktop');
 }
 
 function handleTouchMove(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
-  // Don't interfere with dot navigation touches
+  // SIMPLIFIED: If touching dot navigation, let it handle everything
   if (touchTarget && (
     touchTarget.classList.contains('section-dot') || 
-    touchTarget.closest('.section-dot-navigation') ||
-    touchTarget.closest('.section-dot')
+    touchTarget.closest('.section-dot-navigation')
   )) {
-    console.log('📱 Touch on dot navigation - allowing normal behavior');
-    return;
+    return; // Let dots work normally
   }
   
   const touch = e.touches[0];
   const deltaY = Math.abs(touch.clientY - initialTouchY);
   const deltaX = Math.abs(touch.clientX - touchStartX);
   
-  // Enhanced movement detection
-  if (deltaY > 8 || deltaX > 8) {
+  // Mark as moved with lower threshold for mobile
+  if (deltaY > 5 || deltaX > 5) {
     hasMoved = true;
   }
   
-  // Determine if this is primarily a vertical scroll
-  if (deltaY > 20 && deltaY > deltaX * 1.3) {
-    isScrolling = true;
-    // Only prevent default for clear vertical swipes, not near edges
-    const isNearRightEdge = touch.clientX > window.innerWidth - 80;
-    if (!isNearRightEdge) {
-      e.preventDefault();
-      console.log('📱 Preventing default scroll - vertical swipe detected');
-    }
+  // SIMPLIFIED: If it's clearly vertical movement, prevent default
+  if (deltaY > 25 && deltaY > deltaX * 1.5) {
+    e.preventDefault();
+    console.log('📱 Preventing default - vertical swipe detected');
   }
 }
 
 function handleTouchEnd(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
-  // Don't interfere with dot navigation touches
+  // SIMPLIFIED: If touching dot navigation, let it handle everything
   if (touchTarget && (
     touchTarget.classList.contains('section-dot') || 
-    touchTarget.closest('.section-dot-navigation') ||
-    touchTarget.closest('.section-dot')
+    touchTarget.closest('.section-dot-navigation')
   )) {
-    console.log('📱 Touch end on dot navigation - allowing normal behavior');
+    console.log('📱 Touch on dot navigation - allowing normal behavior');
     touchTarget = null;
     return;
   }
@@ -122,52 +131,200 @@ function handleTouchEnd(e) {
   const touchDuration = Date.now() - touchStartTime;
   const verticalDistance = touchStartY - touchEndY; // Positive = swipe up
   const horizontalDistance = Math.abs(touchEndX - touchStartX);
-  const totalDistance = Math.abs(verticalDistance);
+  const totalVerticalDistance = Math.abs(verticalDistance);
   
-  console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Horizontal:', horizontalDistance, 'Moved:', hasMoved, 'IsScrolling:', isScrolling);
+  console.log('📱 Touch end:', {
+    duration: touchDuration,
+    vertical: verticalDistance,
+    horizontal: horizontalDistance,
+    moved: hasMoved,
+    mobile: isMobileDevice()
+  });
   
-  // More sensitive swipe detection for mobile, but avoid edge conflicts
-  const isNearRightEdge = touchStartX > window.innerWidth - 80 || touchEndX > window.innerWidth - 80;
-  const isValidSwipe = touchDuration < 1200 && 
-                      totalDistance > 40 && 
-                      (isScrolling || totalDistance > horizontalDistance * 1.2) &&
-                      hasMoved &&
-                      !isNearRightEdge;
+  // SIMPLIFIED SWIPE DETECTION - More lenient for mobile
+  const isMobile = isMobileDevice();
+  const minDistance = isMobile ? 30 : 50;
+  const maxDuration = isMobile ? 1500 : 1000;
+  const ratioThreshold = isMobile ? 1.2 : 1.5;
+  
+  const isValidSwipe = touchDuration < maxDuration && 
+                      totalVerticalDistance > minDistance && 
+                      totalVerticalDistance > horizontalDistance * ratioThreshold &&
+                      hasMoved;
   
   if (isValidSwipe) {
     e.preventDefault();
     
-    console.log('📱 Valid swipe detected');
+    console.log('📱 VALID SWIPE DETECTED - Processing...');
     scrollSystem.inScroll = true;
     
     let targetSection = scrollSystem.currentSection;
+    const swipeThreshold = isMobile ? 20 : 30;
     
-    if (verticalDistance > 25) {
+    if (verticalDistance > swipeThreshold) {
       // Swipe up = next section
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-      console.log('📱 Swipe UP to section:', targetSection);
-    } else if (verticalDistance < -25) {
+      console.log('📱 SWIPE UP to section:', targetSection);
+    } else if (verticalDistance < -swipeThreshold) {
       // Swipe down = previous section
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-      console.log('📱 Swipe DOWN to section:', targetSection);
+      console.log('📱 SWIPE DOWN to section:', targetSection);
     }
     
     if (targetSection !== scrollSystem.currentSection) {
+      console.log('📱 EXECUTING SECTION CHANGE:', scrollSystem.currentSection, '->', targetSection);
       goToSection(targetSection);
     } else {
       scrollSystem.inScroll = false;
+      console.log('📱 No section change needed');
     }
+  } else {
+    console.log('📱 Invalid swipe - not processing');
   }
   
   // Reset all touch tracking
   hasMoved = false;
-  isScrolling = false;
   touchTarget = null;
 }
 
 // ===============================================
-// SCROLL ANIMATION FIX (from scroll-fix.js)
+// MOBILE DEBUG AND FAILSAFE SYSTEM
 // ===============================================
+function createMobileDebugPanel() {
+  if (!isMobileDevice() || !isHomepage()) return;
+  
+  // Only show debug on mobile with ?debug=mobile in URL
+  if (!window.location.search.includes('debug=mobile')) return;
+  
+  const debugPanel = document.createElement('div');
+  debugPanel.id = 'mobile-debug-panel';
+  debugPanel.style.cssText = `
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 11px;
+    z-index: 99999;
+    border-radius: 5px;
+    max-width: 200px;
+    max-height: 150px;
+    overflow-y: auto;
+  `;
+  
+  debugPanel.innerHTML = '<div id="mobile-debug-content">Mobile Debug Active...</div>';
+  document.body.appendChild(debugPanel);
+  
+  // Override console.log for mobile debugging
+  const originalLog = console.log;
+  console.log = function(...args) {
+    originalLog.apply(console, args);
+    const debugContent = document.getElementById('mobile-debug-content');
+    if (debugContent && args[0] && args[0].includes('📱')) {
+      debugContent.innerHTML += '<br>' + args.join(' ');
+      debugContent.scrollTop = debugContent.scrollHeight;
+    }
+  };
+  
+  console.log('📱 Mobile debug panel created');
+}
+
+// ===============================================
+// MOBILE TOUCH FAILSAFE SYSTEM
+// ===============================================
+function addMobileTouchFailsafe() {
+  if (!isMobileDevice() || !isHomepage()) return;
+  
+  let swipeAttempts = 0;
+  let lastSwipeTime = 0;
+  
+  // Alternative touch detection using pointer events
+  if (window.PointerEvent) {
+    console.log('📱 Adding pointer event failsafe');
+    
+    let pointerStartY = 0;
+    let pointerStartTime = 0;
+    
+    document.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled) {
+        pointerStartY = e.clientY;
+        pointerStartTime = Date.now();
+      }
+    });
+    
+    document.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch' && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll) {
+        const pointerDistance = pointerStartY - e.clientY;
+        const pointerDuration = Date.now() - pointerStartTime;
+        
+        if (Math.abs(pointerDistance) > 40 && pointerDuration < 1000) {
+          console.log('📱 Pointer failsafe triggered:', pointerDistance);
+          swipeAttempts++;
+          
+          if (Date.now() - lastSwipeTime > 500) { // Debounce
+            let targetSection = scrollSystem.currentSection;
+            
+            if (pointerDistance > 40) {
+              targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
+            } else if (pointerDistance < -40) {
+              targetSection = Math.max(scrollSystem.currentSection - 1, 0);
+            }
+            
+            if (targetSection !== scrollSystem.currentSection) {
+              console.log('📱 POINTER FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+              goToSection(targetSection);
+              lastSwipeTime = Date.now();
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  // Touch gesture fallback detection
+  let gestureStartY = 0;
+  let gestureStartTime = 0;
+  let gestureInProgress = false;
+  
+  document.addEventListener('gesturestart', (e) => {
+    if (isHomepage() && scrollSystem.isEnabled) {
+      gestureStartY = e.clientY || 0;
+      gestureStartTime = Date.now();
+      gestureInProgress = true;
+      console.log('📱 Gesture start detected');
+    }
+  });
+  
+  document.addEventListener('gestureend', (e) => {
+    if (gestureInProgress && isHomepage() && scrollSystem.isEnabled && !scrollSystem.inScroll) {
+      const gestureDistance = gestureStartY - (e.clientY || 0);
+      const gestureDuration = Date.now() - gestureStartTime;
+      
+      if (Math.abs(gestureDistance) > 30 && gestureDuration < 800) {
+        console.log('📱 Gesture failsafe triggered:', gestureDistance);
+        
+        let targetSection = scrollSystem.currentSection;
+        
+        if (gestureDistance > 30) {
+          targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
+        } else if (gestureDistance < -30) {
+          targetSection = Math.max(scrollSystem.currentSection - 1, 0);
+        }
+        
+        if (targetSection !== scrollSystem.currentSection) {
+          console.log('📱 GESTURE FAILSAFE EXECUTING:', scrollSystem.currentSection, '->', targetSection);
+          goToSection(targetSection);
+        }
+      }
+      
+      gestureInProgress = false;
+    }
+  });
+  
+  console.log('📱 Mobile touch failsafe systems activated');
+}
 function reinitializeScrollAnimations() {
   if (!isHomepage()) return;
   
@@ -564,16 +721,64 @@ function initializeScrollSystem() {
     bindScrollEvents();
     updateDotNavigation();
     
-    // Add mobile touch support with immediate binding
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    // ENHANCED MOBILE TOUCH SUPPORT
+    const isMobile = isMobileDevice();
+    console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop', 'iOS:', isIOS());
     
-    console.log('📱 Mobile touch support enabled');
-    
-    // Disable normal scroll behavior on mobile for homepage
-    document.body.style.overscrollBehavior = 'none';
-    document.documentElement.style.overscrollBehavior = 'none';
+    if (isMobile) {
+      // Mobile-specific optimizations
+      console.log('📱 Applying mobile optimizations...');
+      
+      // Disable overscroll behavior
+      document.body.style.overscrollBehavior = 'none';
+      document.documentElement.style.overscrollBehavior = 'none';
+      
+      // iOS specific fixes
+      if (isIOS()) {
+        document.body.style.webkitOverflowScrolling = 'touch';
+        document.documentElement.style.webkitOverflowScrolling = 'touch';
+      }
+      
+      // Enhanced touch event options for mobile
+      const touchOptions = { 
+        passive: false, 
+        capture: false,
+        once: false
+      };
+      
+      // Remove any existing touch listeners first
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+      
+      // Add touch listeners with proper options
+      document.addEventListener('touchstart', handleTouchStart, touchOptions);
+      document.addEventListener('touchmove', handleTouchMove, touchOptions);
+      document.addEventListener('touchend', handleTouchEnd, touchOptions);
+      
+      console.log('📱 Mobile touch events bound successfully');
+      
+      // Add visual feedback for mobile users
+      setTimeout(() => {
+        if (scrollSystem.dotNavigation) {
+          scrollSystem.dotNavigation.style.opacity = '0.8';
+          setTimeout(() => {
+            if (scrollSystem.dotNavigation) {
+              scrollSystem.dotNavigation.style.opacity = '0.6';
+            }
+          }, 2000);
+        }
+      }, 1000);
+      
+    } else {
+      // Desktop touch support (for touch laptops)
+      const touchOptions = { passive: false, capture: true };
+      document.addEventListener('touchstart', handleTouchStart, touchOptions);
+      document.addEventListener('touchmove', handleTouchMove, touchOptions);
+      document.addEventListener('touchend', handleTouchEnd, touchOptions);
+      
+      console.log('📱 Desktop touch support enabled');
+    }
     
   } else {
     console.log('❌ Scroll system disabled - not enough sections');
