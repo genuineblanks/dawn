@@ -1,0 +1,66 @@
+{% comment %}
+  Scroll To Top Button Component
+  Usage: {% render 'scroll-button' %}
+  
+  Optional parameters:
+  - style: 'default', 'glass', 'dark' (default: 'default')
+  - show_progress: true/false (default: false)
+  - position: 'bottom-right', 'bottom-left' (default: 'bottom-right')
+{% endcomment %}
+
+{%- liquid
+  assign button_style = style | default: 'default'
+  assign show_progress = show_progress | default: false
+  assign button_position = position | default: 'bottom-right'
+  
+  assign button_classes = 'scroll-to-top'
+  
+  if button_style == 'glass'
+    assign button_classes = button_classes | append: ' glass'
+  elsif button_style == 'dark'
+    assign button_classes = button_classes | append: ' dark'
+  endif
+  
+  if show_progress
+    assign button_classes = button_classes | append: ' with-progress'
+  endif
+  
+  if button_position == 'bottom-left'
+    assign button_classes = button_classes | append: ' bottom-left'
+  endif
+-%}
+
+<button 
+  class="{{ button_classes }}"
+  aria-label="{{ 'general.accessibility.scroll_to_top' | t | default: 'Scroll to top' }}"
+  title="{{ 'general.accessibility.scroll_to_top' | t | default: 'Scroll to top' }}"
+  type="button"
+>
+  {% comment %} Using CSS arrow by default - uncomment SVG if preferred {% endcomment %}
+  {% comment %}
+  <svg class="scroll-to-top-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 19V6M5 12L12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  {% endcomment %}
+</button>
+
+<style>
+  {% if button_position == 'bottom-left' %}
+  .scroll-to-top.bottom-left {
+    left: 30px;
+    right: auto;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .scroll-to-top.bottom-left {
+      left: 20px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .scroll-to-top.bottom-left {
+      left: 15px;
+    }
+  }
+  {% endif %}
+</style>
