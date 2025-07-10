@@ -40,7 +40,7 @@ let scrollSystem = {
 };
 
 // ===============================================
-// MOBILE TOUCH SUPPORT - ENHANCED FOR BETTER DETECTION
+// MOBILE TOUCH SUPPORT - SAFE FOR DOT NAVIGATION
 // ===============================================
 let touchStartY = 0;
 let touchEndY = 0;
@@ -50,6 +50,7 @@ let touchEndX = 0;
 let initialTouchY = 0;
 let hasMoved = false;
 let isScrolling = false;
+let touchTarget = null;
 
 function handleTouchStart(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
@@ -61,6 +62,7 @@ function handleTouchStart(e) {
   touchStartTime = Date.now();
   hasMoved = false;
   isScrolling = false;
+  touchTarget = e.target;
   
   console.log('📱 Touch start at:', touchStartY);
 }
@@ -68,26 +70,50 @@ function handleTouchStart(e) {
 function handleTouchMove(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
+  // Don't interfere with dot navigation touches
+  if (touchTarget && (
+    touchTarget.classList.contains('section-dot') || 
+    touchTarget.closest('.section-dot-navigation') ||
+    touchTarget.closest('.section-dot')
+  )) {
+    console.log('📱 Touch on dot navigation - allowing normal behavior');
+    return;
+  }
+  
   const touch = e.touches[0];
   const deltaY = Math.abs(touch.clientY - initialTouchY);
   const deltaX = Math.abs(touch.clientX - touchStartX);
   
   // Enhanced movement detection
-  if (deltaY > 5 || deltaX > 5) {
+  if (deltaY > 8 || deltaX > 8) {
     hasMoved = true;
   }
   
   // Determine if this is primarily a vertical scroll
-  if (deltaY > 15 && deltaY > deltaX * 1.2) {
+  if (deltaY > 20 && deltaY > deltaX * 1.3) {
     isScrolling = true;
-    // Prevent default scrolling for section navigation
-    e.preventDefault();
-    console.log('📱 Preventing default scroll - vertical swipe detected');
+    // Only prevent default for clear vertical swipes, not near edges
+    const isNearRightEdge = touch.clientX > window.innerWidth - 80;
+    if (!isNearRightEdge) {
+      e.preventDefault();
+      console.log('📱 Preventing default scroll - vertical swipe detected');
+    }
   }
 }
 
 function handleTouchEnd(e) {
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
+  
+  // Don't interfere with dot navigation touches
+  if (touchTarget && (
+    touchTarget.classList.contains('section-dot') || 
+    touchTarget.closest('.section-dot-navigation') ||
+    touchTarget.closest('.section-dot')
+  )) {
+    console.log('📱 Touch end on dot navigation - allowing normal behavior');
+    touchTarget = null;
+    return;
+  }
   
   const touch = e.changedTouches[0];
   touchEndY = touch.clientY;
@@ -100,11 +126,13 @@ function handleTouchEnd(e) {
   
   console.log('📱 Touch end - Duration:', touchDuration, 'Vertical:', verticalDistance, 'Horizontal:', horizontalDistance, 'Moved:', hasMoved, 'IsScrolling:', isScrolling);
   
-  // More sensitive swipe detection for mobile
-  const isValidSwipe = touchDuration < 1000 && 
-                      totalDistance > 30 && 
-                      (isScrolling || totalDistance > horizontalDistance * 1.5) &&
-                      hasMoved;
+  // More sensitive swipe detection for mobile, but avoid edge conflicts
+  const isNearRightEdge = touchStartX > window.innerWidth - 80 || touchEndX > window.innerWidth - 80;
+  const isValidSwipe = touchDuration < 1200 && 
+                      totalDistance > 40 && 
+                      (isScrolling || totalDistance > horizontalDistance * 1.2) &&
+                      hasMoved &&
+                      !isNearRightEdge;
   
   if (isValidSwipe) {
     e.preventDefault();
@@ -114,11 +142,11 @@ function handleTouchEnd(e) {
     
     let targetSection = scrollSystem.currentSection;
     
-    if (verticalDistance > 20) {
+    if (verticalDistance > 25) {
       // Swipe up = next section
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
       console.log('📱 Swipe UP to section:', targetSection);
-    } else if (verticalDistance < -20) {
+    } else if (verticalDistance < -25) {
       // Swipe down = previous section
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
       console.log('📱 Swipe DOWN to section:', targetSection);
@@ -134,6 +162,7 @@ function handleTouchEnd(e) {
   // Reset all touch tracking
   hasMoved = false;
   isScrolling = false;
+  touchTarget = null;
 }
 
 // ===============================================
@@ -211,10 +240,10 @@ function waitForJQuery(callback) {
 }
 
 // ===============================================
-// DOT NAVIGATION SYSTEM - PREMIUM INVISIBLE BOTTOM-CENTER
+// DOT NAVIGATION SYSTEM - FUNCTIONAL ELEGANT RIGHT-SIDE
 // ===============================================
 function createDotNavigation() {
-  console.log('🎯 Creating premium invisible dot navigation...');
+  console.log('🎯 Creating functional elegant dot navigation...');
   
   // Force remove any existing containers first
   const existingContainers = document.querySelectorAll('#section-dots, .section-dot-navigation');
@@ -226,30 +255,30 @@ function createDotNavigation() {
   dotContainer.id = 'section-dots';
   dotContainer.className = 'section-dot-navigation';
   
-  // PREMIUM INVISIBLE BOTTOM-CENTER STYLING
+  // FUNCTIONAL ELEGANT RIGHT-SIDE STYLING
   dotContainer.style.cssText = `
     position: fixed !important;
-    bottom: 30px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+    right: 20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
     z-index: 999999 !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    padding: 8px 20px !important;
-    border-radius: 25px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    padding: 12px 8px !important;
+    border-radius: 18px !important;
     display: flex !important;
-    flex-direction: row !important;
-    justify-content: center !important;
+    flex-direction: column !important;
+    justify-content: space-evenly !important;
     align-items: center !important;
-    gap: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    min-height: 44px !important;
-    opacity: 0.2 !important;
+    gap: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    min-height: 160px !important;
+    opacity: 0.6 !important;
     visibility: visible !important;
     pointer-events: auto !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease !important;
   `;
   
   // Append to body
@@ -283,16 +312,16 @@ function createDotNavigation() {
   scrollSystem.arrSections.forEach((sectionPos, index) => {
     console.log('🎯 Creating dot', index, 'for section at position', sectionPos);
     
-    // Create dot element with premium invisible styling
+    // Create dot element with functional styling
     const dot = document.createElement('div');
     dot.className = 'section-dot';
     dot.setAttribute('data-section', index);
     
-    // PREMIUM INVISIBLE DOT STYLING
+    // FUNCTIONAL ELEGANT DOT STYLING
     dot.style.cssText = `
-      width: 6px !important;
-      height: 6px !important;
-      background: rgba(255, 255, 255, 0.3) !important;
+      width: 8px !important;
+      height: 8px !important;
+      background: rgba(255, 255, 255, 0.6) !important;
       border-radius: 50% !important;
       cursor: pointer !important;
       border: 1px solid transparent !important;
@@ -301,36 +330,57 @@ function createDotNavigation() {
       display: block !important;
       position: relative !important;
       flex-shrink: 0 !important;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transition: all 0.3s ease !important;
+      margin: 2px 0 !important;
     `;
     
-    // Add click handler
-    dot.addEventListener('click', function(e) {
+    // Add larger touch area for mobile
+    const touchArea = document.createElement('div');
+    touchArea.style.cssText = `
+      position: absolute !important;
+      top: -12px !important;
+      left: -12px !important;
+      right: -12px !important;
+      bottom: -12px !important;
+      cursor: pointer !important;
+      z-index: 1 !important;
+    `;
+    
+    dot.appendChild(touchArea);
+    
+    // Add click handler to both dot and touch area
+    const clickHandler = function(e) {
       e.preventDefault();
       e.stopPropagation();
       console.log('🎯 Dot clicked:', index, 'going to section at position:', scrollSystem.arrSections[index]);
       goToSection(index);
-    });
+    };
     
-    // Add touch handler for mobile
-    dot.addEventListener('touchend', function(e) {
+    dot.addEventListener('click', clickHandler);
+    touchArea.addEventListener('click', clickHandler);
+    
+    // Add touch handler for mobile - on both elements
+    const touchHandler = function(e) {
       e.preventDefault();
       e.stopPropagation();
       console.log('📱 Dot touched:', index);
       goToSection(index);
-    });
+    };
     
-    // Premium hover effect - very subtle
+    dot.addEventListener('touchend', touchHandler);
+    touchArea.addEventListener('touchend', touchHandler);
+    
+    // Elegant hover effect
     dot.addEventListener('mouseenter', function() {
       if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
-        dot.style.transform = 'scale(1.5)';
+        dot.style.background = 'rgba(255, 255, 255, 0.8)';
+        dot.style.transform = 'scale(1.3)';
       }
     });
     
     dot.addEventListener('mouseleave', function() {
       if (index !== scrollSystem.currentSection) {
-        dot.style.background = 'rgba(255, 255, 255, 0.3)';
+        dot.style.background = 'rgba(255, 255, 255, 0.6)';
         dot.style.transform = 'scale(1)';
       }
     });
@@ -340,37 +390,37 @@ function createDotNavigation() {
     console.log('🎯 Dot', index, 'added to container. Dot size:', dot.getBoundingClientRect());
   });
   
-  // Premium hover effects for container - becomes more visible
+  // Elegant hover effects for container
   dotContainer.addEventListener('mouseenter', function() {
-    dotContainer.style.opacity = '0.8';
-    dotContainer.style.background = 'rgba(255, 255, 255, 0.08)';
-    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+    dotContainer.style.opacity = '0.9';
+    dotContainer.style.background = 'rgba(0, 0, 0, 0.6)';
+    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.3)';
   });
   
   dotContainer.addEventListener('mouseleave', function() {
-    dotContainer.style.opacity = '0.2';
-    dotContainer.style.background = 'rgba(255, 255, 255, 0.03)';
-    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.08)';
+    dotContainer.style.opacity = '0.6';
+    dotContainer.style.background = 'rgba(0, 0, 0, 0.4)';
+    dotContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
   });
   
-  // PREMIUM FEATURE: Increase opacity during scroll
+  // FUNCTIONAL FEATURE: Increase opacity during scroll
   let scrollTimeout;
   const handleScroll = () => {
-    dotContainer.style.opacity = '0.6';
-    dotContainer.style.background = 'rgba(255, 255, 255, 0.06)';
+    dotContainer.style.opacity = '0.8';
+    dotContainer.style.background = 'rgba(0, 0, 0, 0.5)';
     
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
       if (!dotContainer.matches(':hover')) {
-        dotContainer.style.opacity = '0.2';
-        dotContainer.style.background = 'rgba(255, 255, 255, 0.03)';
+        dotContainer.style.opacity = '0.6';
+        dotContainer.style.background = 'rgba(0, 0, 0, 0.4)';
       }
-    }, 1000);
+    }, 1500);
   };
   
   window.addEventListener('scroll', handleScroll, { passive: true });
   
-  console.log('✅ Premium invisible dot navigation created at bottom-center');
+  console.log('✅ Functional elegant dot navigation created on right side');
   console.log('📏 Final container size:', dotContainer.getBoundingClientRect());
   console.log('👶 Container children count:', dotContainer.children.length);
   
@@ -380,10 +430,10 @@ function createDotNavigation() {
     console.log('🔍 Container visibility test:', {
       width: rect.width,
       height: rect.height,
-      bottom: window.innerHeight - rect.bottom,
-      left: rect.left,
+      top: rect.top,
+      right: window.innerWidth - rect.right,
       visible: rect.width > 0 && rect.height > 0,
-      centered: Math.abs(rect.left + rect.width/2 - window.innerWidth/2) < 10
+      rightSide: rect.right > window.innerWidth - 50
     });
   }, 100);
   
@@ -406,16 +456,16 @@ function updateDotNavigation() {
   
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
-      // Active dot - premium white with subtle glow
-      dots[i].style.background = 'rgba(255, 255, 255, 0.9)';
-      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.6)';
-      dots[i].style.transform = 'scale(1.8)';
-      dots[i].style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.3)';
+      // Active dot - clearly visible but elegant
+      dots[i].style.background = 'rgba(255, 255, 255, 1)';
+      dots[i].style.border = '1px solid rgba(255, 255, 255, 0.8)';
+      dots[i].style.transform = 'scale(1.6)';
+      dots[i].style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.4)';
       dots[i].classList.add('active');
       console.log('🎯 Activated dot', i);
     } else {
-      // Inactive dots - very subtle
-      dots[i].style.background = 'rgba(255, 255, 255, 0.3)';
+      // Inactive dots - visible but subdued
+      dots[i].style.background = 'rgba(255, 255, 255, 0.6)';
       dots[i].style.border = '1px solid transparent';
       dots[i].style.transform = 'scale(1)';
       dots[i].style.boxShadow = 'none';
