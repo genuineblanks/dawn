@@ -229,22 +229,30 @@ function createDotNavigation() {
 }
 
 function updateDotNavigation() {
-  if (!scrollSystem.dotNavigation) return;
+  // Try to find the container if not set
+  if (!scrollSystem.dotNavigation) {
+    scrollSystem.dotNavigation = document.getElementById('section-dots');
+  }
+  
+  if (!scrollSystem.dotNavigation) {
+    console.log('❌ Dot navigation container still not found');
+    return;
+  }
   
   const dots = scrollSystem.dotNavigation.children;
   console.log('🎯 Updating dots - current section:', scrollSystem.currentSection, 'total dots:', dots.length);
   
   for (let i = 0; i < dots.length; i++) {
     if (i === scrollSystem.currentSection) {
-      dots[i].style.background = '#000 !important';
-      dots[i].style.border = '2px solid #fff !important';
-      dots[i].style.transform = 'scale(1.3) !important';
+      dots[i].style.background = '#000';
+      dots[i].style.border = '2px solid #fff';
+      dots[i].style.transform = 'scale(1.3)';
       dots[i].classList.add('active');
       console.log('🎯 Activated dot', i);
     } else {
-      dots[i].style.background = 'rgba(0,0,0,0.4) !important';
-      dots[i].style.border = '2px solid transparent !important';
-      dots[i].style.transform = 'scale(1) !important';
+      dots[i].style.background = 'rgba(0,0,0,0.4)';
+      dots[i].style.border = '2px solid transparent';
+      dots[i].style.transform = 'scale(1)';
       dots[i].classList.remove('active');
     }
   }
