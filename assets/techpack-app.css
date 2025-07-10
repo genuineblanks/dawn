@@ -4144,3 +4144,226 @@ body {
     padding: var(--techpack-space-2xl) var(--techpack-space-lg);
   }
 }
+
+/* ============================================
+   NEW: Enhanced Client Verification Styles
+   ============================================ */
+
+/* How It Works Section */
+.techpack-client-verification__how-it-works {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--techpack-bg-secondary);
+  border-radius: var(--techpack-radius-md);
+  border: 1px solid var(--techpack-border-light);
+}
+
+.techpack-client-verification__how-it-works-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.techpack-client-verification__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-client-verification__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--techpack-bg);
+  border-radius: var(--techpack-radius-sm);
+  border: 1px solid var(--techpack-border);
+}
+
+.techpack-client-verification__step-number {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--techpack-primary);
+  color: var(--techpack-text-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.125rem;
+}
+
+.techpack-client-verification__step-content {
+  flex: 1;
+}
+
+.techpack-client-verification__step-content strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin-bottom: 0.25rem;
+}
+
+.techpack-client-verification__step-content p {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--techpack-text-secondary);
+  margin: 0;
+}
+
+.techpack-client-verification__divider {
+  height: 1px;
+  background: var(--techpack-border);
+  margin: 1.5rem 0;
+}
+
+/* Registration Warning System */
+.techpack-warning {
+  display: none;
+  padding: 1rem;
+  border-radius: var(--techpack-radius-md);
+  margin-top: 1rem;
+  background: #fef3cd;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  animation: fadeIn 0.3s ease;
+}
+
+.techpack-warning.show {
+  display: flex;
+}
+
+.techpack-warning__icon {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  color: #d97706;
+}
+
+.techpack-warning__content {
+  flex: 1;
+}
+
+.techpack-warning__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #78350f;
+  margin: 0 0 0.5rem 0;
+}
+
+.techpack-warning__message {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #92400e;
+  margin: 0;
+}
+
+/* Status Message System */
+.techpack-status-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: 500;
+  z-index: 10000;
+  display: none;
+  max-width: 300px;
+  word-wrap: break-word;
+  box-shadow: var(--techpack-shadow-lg);
+  animation: slideIn 0.3s ease;
+}
+
+.techpack-status-message.info {
+  background: #dbeafe;
+  border: 1px solid #3b82f6;
+  color: #1e40af;
+}
+
+.techpack-status-message.success {
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  color: #065f46;
+}
+
+.techpack-status-message.error {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #dc2626;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Button State Styles */
+.techpack-client-verification__option.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.techpack-client-verification__option.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--techpack-border);
+  border-top: 2px solid var(--techpack-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .techpack-client-verification__steps {
+    gap: 0.75rem;
+  }
+  
+  .techpack-client-verification__step {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .techpack-client-verification__step-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6875rem;
+  }
+  
+  .techpack-status-message {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}
