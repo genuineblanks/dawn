@@ -808,8 +808,17 @@ function initializeScrollSystem() {
   calculateSectionPositions();
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
-  scrollSystem.isEnabled = scrollSystem.arrSections.length > 6;
+  // FIXED: Enable for mobile even with fewer sections, but stricter for desktop
+  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 6;
+  scrollSystem.isEnabled = scrollSystem.arrSections.length > minSectionsRequired;
   scrollSystem.initialized = true;
+  
+  console.log('📊 Section analysis:', {
+    sectionsFound: scrollSystem.arrSections.length,
+    minRequired: minSectionsRequired,
+    isEnabled: scrollSystem.isEnabled,
+    isMobile: IS_MOBILE_DEVICE
+  });
   
   if (scrollSystem.isEnabled) {
     console.log('✅ Scroll system enabled');
