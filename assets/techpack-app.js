@@ -3426,7 +3426,7 @@
           retryCount++;
           retrySetup();
         }, retryDelays[retryCount]);
-      }
+      };
 
       retrySetup();
     }
