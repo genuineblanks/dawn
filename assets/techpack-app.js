@@ -4178,17 +4178,7 @@
       
       
       const lockBodyScroll = () => {
-        if (isMobile()) {
-          // Preserve original overscroll-behavior to prevent conflicts
-          originalOverscrollBehavior = document.body.style.overscrollBehavior || window.getComputedStyle(document.body).overscrollBehavior;
-          
-          document.body.style.overflow = 'hidden';
-          document.body.style.position = 'fixed';
-          document.body.style.width = '100%';
-          document.body.style.top = `-${window.scrollY}px`;
-          // Maintain overscroll-behavior for consistency
-          document.body.style.overscrollBehavior = 'none';
-        }
+        // Do nothing - no body scroll locking
       };
       
       const unlockBodyScroll = () => {
