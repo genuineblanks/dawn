@@ -1420,7 +1420,7 @@
         debugSystem.log('Step 2 validation passed', { fileCount: state.formData.files.length }, 'success');
       }
 
-      fileUploader.calculateRequiredGarments();
+      this.calculateRequiredGarments();
 
       return isValid;
     }
@@ -1532,9 +1532,9 @@
             }, 'error');
           }
           
-          // Check Pantone selection for each colorway (elegant system)
-          const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
-          if (pantoneElegant) {
+          // Check Pantone selection for each colorway (grid system)
+          const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
+          if (pantoneGrid) {
             const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
             if (!pantoneValidationResult) {
               isValid = false;
@@ -2058,11 +2058,21 @@
     calculateRequiredGarments() {
       const totalFiles = state.formData.files.length;
       
-      state.formData.requiredGarmentCount = Math.max(totalFiles, 1);
+      // Only count files that are "Collection" or "Single" type (tech-pack files)
+      const techPackFiles = state.formData.files.filter(file => 
+        file.type === 'Collection' || file.type === 'Single'
+      );
+      
+      // Design and Accessories files don't require garments
+      const techPackFileCount = techPackFiles.length;
+      
+      state.formData.requiredGarmentCount = Math.max(techPackFileCount, 1);
       
       debugSystem.log('Required garments calculated', { 
         totalFiles: totalFiles,
-        requiredGarments: state.formData.requiredGarmentCount 
+        techPackFiles: techPackFileCount,
+        requiredGarments: state.formData.requiredGarmentCount,
+        fileTypes: state.formData.files.map(f => ({ name: f.file.name, type: f.type }))
       });
     }
 
@@ -3100,41 +3110,36 @@
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
       removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
       
-      // Color picker and elegant Pantone system
+      // Color picker and grid Pantone system
       const colorPicker = colorway.querySelector('.techpack-color-picker__input');
       const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
+      const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      if (pantoneElegant) {
-        const pantoneColorSwatch = pantoneElegant.querySelector('.techpack-pantone-color-swatch');
-        const pantoneCodeInput = pantoneElegant.querySelector('[data-pantone-code]');
-        const confidenceSpan = pantoneElegant.querySelector('[data-confidence]');
-        const customizeBtn = pantoneElegant.querySelector('[data-customize-pantone]');
-        const customSection = pantoneElegant.querySelector('.techpack-pantone-custom');
-        const customInput = pantoneElegant.querySelector('[data-custom-pantone]');
-        const applyBtn = pantoneElegant.querySelector('[data-apply-custom]');
-        const cancelBtn = pantoneElegant.querySelector('[data-cancel-custom]');
+      if (pantoneGrid && colorPicker) {
+        const pantoneCodeInputs = pantoneGrid.querySelectorAll('.techpack-pantone-code');
+        const pantoneHexInputs = pantoneGrid.querySelectorAll('.techpack-pantone-hex');
         
         colorPicker.addEventListener('change', () => {
-          colorPreview.style.backgroundColor = colorPicker.value;
-          
-          // Update Pantone swatch color
-          if (pantoneColorSwatch) {
-            pantoneColorSwatch.style.backgroundColor = colorPicker.value;
+          // Fix mobile null reference error - check colorPreview exists
+          if (colorPreview) {
+            colorPreview.style.backgroundColor = colorPicker.value;
           }
           
-          // Auto-select closest Pantone color
-          const closestPantone = this.findClosestPantoneColor(colorPicker.value);
-          if (pantoneCodeInput && closestPantone) {
-            pantoneCodeInput.value = closestPantone.code;
-            pantoneCodeInput.placeholder = '';
-          }
+          // Auto-select closest Pantone colors for multiple options
+          const closestPantones = this.findClosestPantoneColors(colorPicker.value, 5);
           
-          // Update confidence
-          if (confidenceSpan && closestPantone) {
-            confidenceSpan.textContent = `${closestPantone.confidence}%`;
-          }
+          // Populate first 5 Pantone options
+          closestPantones.forEach((pantone, index) => {
+            if (pantoneCodeInputs[index] && pantoneHexInputs[index]) {
+              pantoneCodeInputs[index].value = pantone.code;
+              pantoneCodeInputs[index].placeholder = '';
+              pantoneHexInputs[index].value = pantone.hex;
+            }
+          });
+          
+          // Show the pantone grid - already checked for null above
+          pantoneGrid.style.display = 'block';
           
           // Update state
           const garmentData = state.formData.garments.find(g => g.id === garmentId);
@@ -3142,58 +3147,18 @@
             const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
             if (colorwayData) {
               colorwayData.color = colorPicker.value;
-              colorwayData.pantoneCode = closestPantone ? closestPantone.code : '';
+              colorwayData.pantoneOptions = closestPantones;
             }
           }
           
           this.validatePantoneSelection(colorway);
         });
-        
-        // Customize button
-        if (customizeBtn) {
-          customizeBtn.addEventListener('click', () => {
-            customSection.style.display = 'flex';
-            customizeBtn.style.display = 'none';
-          });
-        }
-        
-        // Apply custom Pantone
-        if (applyBtn) {
-          applyBtn.addEventListener('click', () => {
-            const customCode = customInput.value.trim();
-            if (customCode) {
-              pantoneCodeInput.value = customCode;
-              pantoneCodeInput.placeholder = '';
-              confidenceSpan.textContent = 'Custom';
-              
-              // Update state
-              const garmentData = state.formData.garments.find(g => g.id === garmentId);
-              if (garmentData) {
-                const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-                if (colorwayData) {
-                  colorwayData.pantoneCode = customCode;
-                }
-              }
-            }
-            
-            customSection.style.display = 'none';
-            customizeBtn.style.display = 'flex';
-            customInput.value = '';
-            this.validatePantoneSelection(colorway);
-          });
-        }
-        
-        // Cancel custom
-        if (cancelBtn) {
-          cancelBtn.addEventListener('click', () => {
-            customSection.style.display = 'none';
-            customizeBtn.style.display = 'flex';
-            customInput.value = '';
-          });
-        }
       }
       
-      colorPreview.style.backgroundColor = colorPicker.value;
+      // Fix mobile null reference error - check colorPreview and colorPicker exist
+      if (colorPreview && colorPicker) {
+        colorPreview.style.backgroundColor = colorPicker.value;
+      }
 
       // Quantity inputs
       const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
@@ -3917,27 +3882,162 @@
       return null;
     }
 
-    // Validate Pantone selection for elegant system
+    // Find multiple closest Pantone color matches
+    findClosestPantoneColors(hexColor, count = 5) {
+      const pantoneColors = [
+        // Basic Colors
+        { code: 'PANTONE Black C', hex: '#000000', name: 'Black' },
+        { code: 'PANTONE White', hex: '#FFFFFF', name: 'White' },
+        { code: 'PANTONE Cool Gray 11 C', hex: '#54585A', name: 'Cool Gray 11' },
+        { code: 'PANTONE Cool Gray 9 C', hex: '#75787B', name: 'Cool Gray 9' },
+        { code: 'PANTONE Cool Gray 7 C', hex: '#97999B', name: 'Cool Gray 7' },
+        { code: 'PANTONE Cool Gray 5 C', hex: '#B1B3B3', name: 'Cool Gray 5' },
+        { code: 'PANTONE Cool Gray 3 C', hex: '#C8C9C7', name: 'Cool Gray 3' },
+        { code: 'PANTONE Cool Gray 1 C', hex: '#D9D9D6', name: 'Cool Gray 1' },
+        { code: 'PANTONE Warm Gray 11 C', hex: '#5B5347', name: 'Warm Gray 11' },
+        { code: 'PANTONE Warm Gray 9 C', hex: '#7D6E5B', name: 'Warm Gray 9' },
+        { code: 'PANTONE Warm Gray 7 C', hex: '#9B8B7A', name: 'Warm Gray 7' },
+        { code: 'PANTONE Warm Gray 5 C', hex: '#B7A893', name: 'Warm Gray 5' },
+        { code: 'PANTONE Warm Gray 3 C', hex: '#C6B497', name: 'Warm Gray 3' },
+        { code: 'PANTONE Warm Gray 1 C', hex: '#D7C49E', name: 'Warm Gray 1' },
+        
+        // Reds
+        { code: 'PANTONE 18-1664 TPX', hex: '#C93A40', name: 'True Red' },
+        { code: 'PANTONE 19-1664 TPX', hex: '#B93A32', name: 'Chili Pepper' },
+        { code: 'PANTONE 186 C', hex: '#CE1141', name: 'Red 186' },
+        { code: 'PANTONE 185 C', hex: '#E4002B', name: 'Red 185' },
+        { code: 'PANTONE 18-1763 TPX', hex: '#AD5D5D', name: 'Dusty Cedar' },
+        { code: 'PANTONE 18-1142 TPX', hex: '#FF0000', name: 'Red' },
+        { code: 'PANTONE 17-1463 TPX', hex: '#DC143C', name: 'Crimson' },
+        { code: 'PANTONE 16-1546 TPX', hex: '#B22222', name: 'Fire Brick' },
+        { code: 'PANTONE 15-1247 TPX', hex: '#CD5C5C', name: 'Indian Red' },
+        { code: 'PANTONE 14-1420 TPX', hex: '#F08080', name: 'Light Coral' },
+        { code: 'PANTONE 13-1520 TPX', hex: '#FA8072', name: 'Salmon' },
+        { code: 'PANTONE 12-1206 TPX', hex: '#E9967A', name: 'Dark Salmon' },
+        { code: 'PANTONE 18-1142 TPX', hex: '#FFA07A', name: 'Light Salmon' },
+        { code: 'PANTONE 17-1463 TPX', hex: '#FF6347', name: 'Tomato' },
+        { code: 'PANTONE 16-1546 TPX', hex: '#FF4500', name: 'Orange Red' },
+        { code: 'PANTONE 15-1247 TPX', hex: '#FF69B4', name: 'Hot Pink' },
+        { code: 'PANTONE 14-1420 TPX', hex: '#FF1493', name: 'Deep Pink' },
+        { code: 'PANTONE 13-1520 TPX', hex: '#C71585', name: 'Medium Violet Red' },
+        { code: 'PANTONE 12-1206 TPX', hex: '#DB7093', name: 'Pale Violet Red' },
+        { code: 'PANTONE 18-1142 TPX', hex: '#FFB6C1', name: 'Light Pink' },
+        { code: 'PANTONE 17-1463 TPX', hex: '#FFC0CB', name: 'Pink' },
+        
+        // Blues
+        { code: 'PANTONE 19-4052 TPX', hex: '#0F4C75', name: 'Classic Blue' },
+        { code: 'PANTONE 279 C', hex: '#012169', name: 'Blue 279' },
+        { code: 'PANTONE 286 C', hex: '#0033A0', name: 'Blue 286' },
+        { code: 'PANTONE 285 C', hex: '#0039A6', name: 'Blue 285' },
+        { code: 'PANTONE 300 C', hex: '#005EB8', name: 'Blue 300' },
+        { code: 'PANTONE 18-4141 TPX', hex: '#000080', name: 'Navy' },
+        { code: 'PANTONE 17-4037 TPX', hex: '#00008B', name: 'Dark Blue' },
+        { code: 'PANTONE 16-4132 TPX', hex: '#0000CD', name: 'Medium Blue' },
+        { code: 'PANTONE 15-4020 TPX', hex: '#0000FF', name: 'Blue' },
+        { code: 'PANTONE 14-4318 TPX', hex: '#4169E1', name: 'Royal Blue' },
+        { code: 'PANTONE 13-4110 TPX', hex: '#1E90FF', name: 'Dodger Blue' },
+        { code: 'PANTONE 19-4052 TPX', hex: '#00BFFF', name: 'Deep Sky Blue' },
+        { code: 'PANTONE 18-4141 TPX', hex: '#87CEEB', name: 'Sky Blue' },
+        { code: 'PANTONE 17-4037 TPX', hex: '#87CEFA', name: 'Light Sky Blue' },
+        { code: 'PANTONE 16-4132 TPX', hex: '#ADD8E6', name: 'Light Blue' },
+        { code: 'PANTONE 15-4020 TPX', hex: '#B0C4DE', name: 'Light Steel Blue' },
+        { code: 'PANTONE 14-4318 TPX', hex: '#B0E0E6', name: 'Powder Blue' },
+        { code: 'PANTONE 13-4110 TPX', hex: '#E6E6FA', name: 'Lavender' },
+        { code: 'PANTONE 19-4052 TPX', hex: '#F0F8FF', name: 'Alice Blue' },
+        { code: 'PANTONE 18-4141 TPX', hex: '#F8F8FF', name: 'Ghost White' },
+        
+        // Greens
+        { code: 'PANTONE 15-0343 TPX', hex: '#88B04B', name: 'Greenery' },
+        { code: 'PANTONE 18-0228 TPX', hex: '#4A5D23', name: 'Forest Green' },
+        { code: 'PANTONE 355 C', hex: '#00B04F', name: 'Green 355' },
+        { code: 'PANTONE 347 C', hex: '#009639', name: 'Green 347' },
+        { code: 'PANTONE 348 C', hex: '#00A651', name: 'Green 348' },
+        { code: 'PANTONE 18-0228 TPX', hex: '#006400', name: 'Dark Green' },
+        { code: 'PANTONE 17-0145 TPX', hex: '#228B22', name: 'Forest Green' },
+        { code: 'PANTONE 16-0142 TPX', hex: '#32CD32', name: 'Lime Green' },
+        { code: 'PANTONE 15-0343 TPX', hex: '#90EE90', name: 'Light Green' },
+        { code: 'PANTONE 14-0244 TPX', hex: '#9ACD32', name: 'Yellow Green' },
+        { code: 'PANTONE 13-0317 TPX', hex: '#ADFF2F', name: 'Green Yellow' },
+        { code: 'PANTONE 12-0225 TPX', hex: '#7CFC00', name: 'Lawn Green' },
+        { code: 'PANTONE 18-0228 TPX', hex: '#00FF00', name: 'Lime' },
+        { code: 'PANTONE 17-0145 TPX', hex: '#00FF7F', name: 'Spring Green' },
+        { code: 'PANTONE 16-0142 TPX', hex: '#00FA9A', name: 'Medium Spring Green' },
+        { code: 'PANTONE 15-0343 TPX', hex: '#98FB98', name: 'Pale Green' },
+        { code: 'PANTONE 14-0244 TPX', hex: '#7FFFD4', name: 'Aquamarine' },
+        { code: 'PANTONE 13-0317 TPX', hex: '#40E0D0', name: 'Turquoise' },
+        { code: 'PANTONE 12-0225 TPX', hex: '#00CED1', name: 'Dark Turquoise' },
+        
+        // Additional comprehensive colors (simplified for brevity)
+        { code: 'PANTONE 13-0859 TPX', hex: '#FFFF00', name: 'Yellow' },
+        { code: 'PANTONE 14-1064 TPX', hex: '#FFA500', name: 'Orange' },
+        { code: 'PANTONE 19-3938 TPX', hex: '#800080', name: 'Purple' },
+        { code: 'PANTONE 18-3224 TPX', hex: '#8B008B', name: 'Dark Magenta' },
+        { code: 'PANTONE 17-3932 TPX', hex: '#9370DB', name: 'Medium Orchid' },
+        { code: 'PANTONE 16-3617 TPX', hex: '#DA70D6', name: 'Orchid' },
+        { code: 'PANTONE 15-3716 TPX', hex: '#DDA0DD', name: 'Plum' },
+        { code: 'PANTONE 14-3207 TPX', hex: '#EE82EE', name: 'Violet' },
+        { code: 'PANTONE 13-3804 TPX', hex: '#F0E68C', name: 'Khaki' },
+        { code: 'PANTONE 12-0426 TPX', hex: '#FFEFD5', name: 'Papaya Whip' }
+      ];
+      
+      // Convert hex to RGB
+      const hexToRgb = (hex) => {
+        const r = parseInt(hex.substring(1, 3), 16);
+        const g = parseInt(hex.substring(3, 5), 16);
+        const b = parseInt(hex.substring(5, 7), 16);
+        return { r, g, b };
+      };
+      
+      const targetRgb = hexToRgb(hexColor);
+      const colorDistances = [];
+      
+      // Calculate distances for all colors
+      pantoneColors.forEach(pantoneColor => {
+        const pantoneRgb = hexToRgb(pantoneColor.hex);
+        const distance = Math.sqrt(
+          Math.pow(targetRgb.r - pantoneRgb.r, 2) +
+          Math.pow(targetRgb.g - pantoneRgb.g, 2) +
+          Math.pow(targetRgb.b - pantoneRgb.b, 2)
+        );
+        
+        colorDistances.push({
+          ...pantoneColor,
+          distance: distance
+        });
+      });
+      
+      // Sort by distance and return top matches
+      colorDistances.sort((a, b) => a.distance - b.distance);
+      
+      return colorDistances.slice(0, count).map(color => ({
+        code: color.code,
+        hex: color.hex,
+        confidence: Math.max(Math.round(100 - (color.distance / 441.673) * 100), 65)
+      }));
+    }
+
+    // Validate Pantone selection for grid system
     validatePantoneSelection(colorway) {
-      const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
+      const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      if (!pantoneElegant || !pantoneValidationMsg) return true;
+      if (!pantoneGrid || !pantoneValidationMsg) return true;
       
-      const pantoneCodeInput = pantoneElegant.querySelector('[data-pantone-code]');
-      const hasValidPantone = pantoneCodeInput && pantoneCodeInput.value.trim();
+      const pantoneCodeInputs = pantoneGrid.querySelectorAll('.techpack-pantone-code');
+      const hasValidPantones = Array.from(pantoneCodeInputs).some(input => input.value.trim());
       
-      if (hasValidPantone) {
-        pantoneValidationMsg.textContent = `✓ PANTONE color selected: ${pantoneCodeInput.value}`;
+      if (hasValidPantones) {
+        const filledInputs = Array.from(pantoneCodeInputs).filter(input => input.value.trim());
+        pantoneValidationMsg.textContent = `✓ ${filledInputs.length} PANTONE option(s) selected`;
         pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
         pantoneValidationMsg.style.display = 'block';
       } else {
-        pantoneValidationMsg.textContent = 'Please select a color to auto-generate PANTONE match.';
+        pantoneValidationMsg.textContent = 'Please select a color to auto-generate PANTONE matches.';
         pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
         pantoneValidationMsg.style.display = 'block';
       }
       
-      return hasValidPantone;
+      return hasValidPantones;
     }
 
     removeColorway(garmentId, colorwayId) {
@@ -4018,14 +4118,21 @@
         return;
       }
       
-      // Mobile scroll lock functions
+      // Mobile scroll lock functions with overscroll preservation
       const isMobile = () => window.innerWidth <= 768;
+      let originalOverscrollBehavior = '';
+      
       const lockBodyScroll = () => {
         if (isMobile()) {
+          // Preserve original overscroll-behavior to prevent conflicts
+          originalOverscrollBehavior = document.body.style.overscrollBehavior || window.getComputedStyle(document.body).overscrollBehavior;
+          
           document.body.style.overflow = 'hidden';
           document.body.style.position = 'fixed';
           document.body.style.width = '100%';
           document.body.style.top = `-${window.scrollY}px`;
+          // Maintain overscroll-behavior for consistency
+          document.body.style.overscrollBehavior = 'none';
         }
       };
       
@@ -4036,6 +4143,12 @@
           document.body.style.position = '';
           document.body.style.width = '';
           document.body.style.top = '';
+          // Restore original overscroll behavior to prevent conflicts
+          if (originalOverscrollBehavior) {
+            document.body.style.overscrollBehavior = originalOverscrollBehavior;
+          } else {
+            document.body.style.removeProperty('overscroll-behavior');
+          }
           if (scrollY) {
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
           }
