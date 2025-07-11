@@ -4241,28 +4241,18 @@
       };
       
       const unlockBodyScroll = () => {
+        // FORCE unlock body scroll - simple and immediate
+        document.body.style.overflow = 'auto';
+        document.body.style.position = 'static';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        document.body.style.removeProperty('overscroll-behavior');
+        
         if (isMobile()) {
           const scrollY = document.body.style.top;
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
-          // Restore original overscroll behavior to prevent conflicts
-          if (originalOverscrollBehavior) {
-            document.body.style.overscrollBehavior = originalOverscrollBehavior;
-          } else {
-            document.body.style.removeProperty('overscroll-behavior');
-          }
           if (scrollY) {
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
           }
-        } else {
-          // Desktop: Ensure proper scroll behavior is restored
-          document.body.style.overscrollBehavior = 'auto';
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
         }
       };
       
