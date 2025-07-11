@@ -61,6 +61,26 @@
     box-sizing: border-box;
     overflow: hidden; /* Prevent content overflow affecting height */
   }
+
+  /* TechPack specific overrides - Fix mobile white space */
+  .tech-pack-section,
+  [id^="TechPack-"] {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+
+  /* Mobile specific overrides for TechPack */
+  @media (max-width: 768px) {
+    .tech-pack-section,
+    [id^="TechPack-"] {
+      height: auto !important;
+      min-height: 100vh !important;
+      max-height: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
   
   .banner,
   .image-banner {
