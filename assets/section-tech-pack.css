@@ -233,11 +233,14 @@
   50% { opacity: 0.8; }
 }
 
-/* Mobile responsiveness */
+/* Mobile responsiveness with white space fix */
 @media (max-width: 768px) {
   .tech-pack-section {
     height: 90vh;
     min-height: 500px;
+    /* Fix mobile white space issues */
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .tech-pack-section .content-wrapper {
