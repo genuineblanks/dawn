@@ -1,2146 +1,4 @@
-(function() {
-  'use strict';
-
-  // Enhanced Configuration
-  const CONFIG = {
-    MIN_ORDER_QUANTITY: 75,
-    MIN_COLORWAY_QUANTITY: 50,
-    MAX_FILES: 10,
-    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
-    ANIMATION_DURATION: 400,
-    DEBOUNCE_DELAY: 300,
-    MIN_DELIVERY_WEEKS: 6
-  };
-
-  // Enhanced Application State
-  class TechPackState {
-    constructor() {
-      this.currentStep = 1;
-      this.isInitialized = false;
-      this.formData = {
-        clientInfo: {},
-        files: [],
-        garments: [],
-        requiredGarmentCount: 1
-      };
-      this.counters = {
-        file: 0,
-        garment: 0,
-        colorway: 0
-      };
-      this.ui = {
-        animations: new Map(),
-        validators: new Map(),
-        observers: new Set()
-      };
-    }
-
-    reset() {
-      this.currentStep = 1;
-      this.formData = { clientInfo: {}, files: [], garments: [] };
-      this.counters = { file: 0, garment: 0, colorway: 0 };
-      this.ui.animations.clear();
-      this.ui.validators.clear();
-    }
-
-    // Deep clone for immutability
-    getState() {
-      return JSON.parse(JSON.stringify({
-        currentStep: this.currentStep,
-        formData: this.formData,
-        counters: this.counters
-      }));
-    }
-
-    setState(newState) {
-      Object.assign(this, newState);
-      this.notifyObservers();
-    }
-
-    subscribe(callback) {
-      this.ui.observers.add(callback);
-      return () => this.ui.observers.delete(callback);
-    }
-
-    notifyObservers() {
-      this.ui.observers.forEach(callback => callback(this.getState()));
-    }
-  }
-
-  // Enhanced Debug System
-  class DebugSystem {
-    constructor() {
-      this.enabled = false;
-      this.panel = null;
-      this.content = null;
-      this.logs = [];
-      this.maxLogs = 100;
-    }
-
-    init() {
-      this.createPanel();
-      this.setupKeyboardShortcuts();
-    }
-
-    createPanel() {
-      this.panel = document.createElement('div');
-      this.panel.id = 'debug-panel';
-      this.panel.className = 'debug-panel';
-      this.panel.style.cssText = `
-        position: fixed; top: 20px; right: 20px; width: 350px; max-height: 400px;
-        background: rgba(0,0,0,0.9); color: #fff; border-radius: 8px; padding: 15px;
-        font-family: 'Courier New', monospace; font-size: 11px; z-index: 10000;
-        display: none; overflow-y: auto; backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.1);
-      `;
-
-      this.content = document.createElement('div');
-      this.content.id = 'debug-content';
-      this.panel.appendChild(this.content);
-
-      const controls = document.createElement('div');
-      controls.style.cssText = 'position: sticky; top: 0; background: inherit; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);';
-      controls.innerHTML = `
-        <button onclick="debugSystem.clear()" style="background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; margin-right: 5px; cursor: pointer;">Clear</button>
-        <button onclick="debugSystem.exportLogs()" style="background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Export</button>
-      `;
-      this.panel.insertBefore(controls, this.content);
-
-      document.body.appendChild(this.panel);
-    }
-
-    setupKeyboardShortcuts() {
-      document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
-          e.preventDefault();
-          this.toggle();
-        }
-      });
-    }
-
-    log(message, data = null, level = 'info') {
-      const timestamp = new Date().toLocaleTimeString();
-      const logEntry = {
-        timestamp,
-        message,
-        data,
-        level,
-        id: Date.now() + Math.random()
-      };
-
-      this.logs.push(logEntry);
-      if (this.logs.length > this.maxLogs) {
-        this.logs.shift();
-      }
-
-      if (this.enabled && this.content) {
-        this.renderLog(logEntry);
-      }
-
-      // Console output with styling
-      const style = {
-        info: 'color: #3b82f6',
-        warn: 'color: #f59e0b',
-        error: 'color: #ef4444',
-        success: 'color: #10b981'
-      };
-      console.log(`%c[${timestamp}] ${message}`, style[level] || style.info, data || '');
-    }
-
-    renderLog(logEntry) {
-      const logElement = document.createElement('div');
-      logElement.style.cssText = `
-        margin-bottom: 5px; padding: 5px; border-radius: 3px;
-        background: ${this.getLogColor(logEntry.level)};
-        border-left: 3px solid ${this.getLogBorderColor(logEntry.level)};
-      `;
-      
-      logElement.innerHTML = `
-        <div style="font-weight: bold;">[${logEntry.timestamp}] ${logEntry.message}</div>
-        ${logEntry.data ? `<div style="margin-top: 3px; opacity: 0.8;">${JSON.stringify(logEntry.data, null, 2)}</div>` : ''}
-      `;
-      
-      this.content.appendChild(logElement);
-      this.content.scrollTop = this.content.scrollHeight;
-    }
-
-    getLogColor(level) {
-      const colors = {
-        info: 'rgba(59, 130, 246, 0.1)',
-        warn: 'rgba(245, 158, 11, 0.1)',
-        error: 'rgba(239, 68, 68, 0.1)',
-        success: 'rgba(16, 185, 129, 0.1)'
-      };
-      return colors[level] || colors.info;
-    }
-
-    getLogBorderColor(level) {
-      const colors = {
-        info: '#3b82f6',
-        warn: '#f59e0b',
-        error: '#ef4444',
-        success: '#10b981'
-      };
-      return colors[level] || colors.info;
-    }
-
-    toggle() {
-      this.enabled = !this.enabled;
-      this.panel.style.display = this.enabled ? 'block' : 'none';
-      
-      if (this.enabled) {
-        this.refreshLogs();
-        this.log('Debug mode enabled', null, 'success');
-      }
-    }
-
-    refreshLogs() {
-      if (!this.content) return;
-      this.content.innerHTML = '';
-      this.logs.forEach(log => this.renderLog(log));
-    }
-
-    clear() {
-      this.logs = [];
-      if (this.content) {
-        this.content.innerHTML = '';
-      }
-      this.log('Debug logs cleared', null, 'info');
-    }
-
-    exportLogs() {
-      const data = JSON.stringify(this.logs, null, 2);
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `techpack-debug-${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  }
-
-  // Enhanced Country Data with Enhanced Features
-  const COUNTRY_DATA = {
-    priority: [
-      { name: "United States", code: "US", flag: "🇺🇸", region: "North America" },
-      { name: "United Kingdom", code: "GB", flag: "🇬🇧", region: "Non-EU Europe" },
-      { name: "Portugal", code: "PT", flag: "🇵🇹", region: "Europe" }
-    ],
-    european: [
-      { name: "Austria", code: "AT", flag: "🇦🇹", region: "Europe" },
-      { name: "Belgium", code: "BE", flag: "🇧🇪", region: "Europe" },
-      { name: "Bulgaria", code: "BG", flag: "🇧🇬", region: "Europe" },
-      { name: "Croatia", code: "HR", flag: "🇭🇷", region: "Europe" },
-      { name: "Cyprus", code: "CY", flag: "🇨🇾", region: "Europe" },
-      { name: "Czech Republic", code: "CZ", flag: "🇨🇿", region: "Europe" },
-      { name: "Denmark", code: "DK", flag: "🇩🇰", region: "Europe" },
-      { name: "Estonia", code: "EE", flag: "🇪🇪", region: "Europe" },
-      { name: "Finland", code: "FI", flag: "🇫🇮", region: "Europe" },
-      { name: "France", code: "FR", flag: "🇫🇷", region: "Europe" },
-      { name: "Germany", code: "DE", flag: "🇩🇪", region: "Europe" },
-      { name: "Greece", code: "GR", flag: "🇬🇷", region: "Europe" },
-      { name: "Hungary", code: "HU", flag: "🇭🇺", region: "Europe" },
-      { name: "Iceland", code: "IS", flag: "🇮🇸", region: "Europe" },
-      { name: "Ireland", code: "IE", flag: "🇮🇪", region: "Europe" },
-      { name: "Italy", code: "IT", flag: "🇮🇹", region: "Europe" },
-      { name: "Latvia", code: "LV", flag: "🇱🇻", region: "Europe" },
-      { name: "Lithuania", code: "LT", flag: "🇱🇹", region: "Europe" },
-      { name: "Luxembourg", code: "LU", flag: "🇱🇺", region: "Europe" },
-      { name: "Malta", code: "MT", flag: "🇲🇹", region: "Europe" },
-      { name: "Netherlands", code: "NL", flag: "🇳🇱", region: "Europe" },
-      { name: "Norway", code: "NO", flag: "🇳🇴", region: "Europe" },
-      { name: "Poland", code: "PL", flag: "🇵🇱", region: "Europe" },
-      { name: "Romania", code: "RO", flag: "🇷🇴", region: "Europe" },
-      { name: "Slovakia", code: "SK", flag: "🇸🇰", region: "Europe" },
-      { name: "Slovenia", code: "SI", flag: "🇸🇮", region: "Europe" },
-      { name: "Spain", code: "ES", flag: "🇪🇸", region: "Europe" },
-      { name: "Sweden", code: "SE", flag: "🇸🇪", region: "Europe" },
-      { name: "Switzerland", code: "CH", flag: "🇨🇭", region: "Europe" }
-    ],
-    getAllCountries() {
-      return [...this.priority, ...this.european];
-    },
-    // EU Member Countries that require VAT numbers
-    euMembers: [
-      'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 
-      'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'
-    ],
-    
-    // Non-EU European countries (do NOT require VAT)
-    nonEuEuropean: [
-      'GB', 'UK', 'CH', 'NO', 'IS', 'LI', 'AD', 'MC', 'SM', 'VA', 'AL', 'BA', 'XK', 'ME', 'MK', 'RS'
-    ],
-    
-    isEuropean(countryCode) {
-      return this.european.some(country => country.code === countryCode) || 
-             this.priority.some(country => country.code === countryCode && country.region === "Europe");
-    },
-    
-    // NEW: Check if country requires VAT (EU members only)
-    requiresVAT(countryCode) {
-      return this.euMembers.includes(countryCode);
-    },
-    
-    // NEW: Check if country is non-EU European
-    isNonEuEuropean(countryCode) {
-      return this.nonEuEuropean.includes(countryCode);
-    },
-    findByName(name) {
-      return this.getAllCountries().find(country => 
-        country.name.toLowerCase() === name.toLowerCase()
-      );
-    },
-    searchByName(query) {
-      const normalizedQuery = query.toLowerCase();
-      return this.getAllCountries().filter(country =>
-        country.name.toLowerCase().includes(normalizedQuery)
-      );
-    }
-  };
-
-  // Enhanced Utility Functions
-  const Utils = {
-    debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    },
-
-    throttle(func, limit) {
-      let inThrottle;
-      return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-          func.apply(context, args);
-          inThrottle = true;
-          setTimeout(() => inThrottle = false, limit);
-        }
-      };
-    },
-
-    formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    },
-
-    formatPhoneNumber(value) {
-      const cleaned = value.replace(/\D/g, '');
-      let formatted = '';
-
-      if (cleaned.length > 0) {
-        if (cleaned.startsWith('1') && cleaned.length > 1) {
-          formatted = '+1 ';
-          const remaining = cleaned.substring(1);
-          if (remaining.length >= 3) {
-            formatted += remaining.substring(0, 3);
-            if (remaining.length >= 6) {
-              formatted += ' ' + remaining.substring(3, 6);
-              if (remaining.length > 6) {
-                formatted += ' ' + remaining.substring(6, 10);
-              }
-            } else if (remaining.length > 3) {
-              formatted += ' ' + remaining.substring(3);
-            }
-          } else {
-            formatted += remaining;
-          }
-        } else {
-          if (cleaned.length <= 15) {
-            formatted = '+' + cleaned;
-          }
-        }
-      }
-
-      return formatted;
-    },
-
-    animateNumber(start, end, element, suffix = '', duration = 500) {
-      const startTime = Date.now();
-      
-      function update() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(start + (end - start) * easeOut);
-        
-        element.textContent = `${current}${suffix}`;
-        
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        }
-      }
-      
-      requestAnimationFrame(update);
-    },
-
-    createUniqueId() {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    },
-
-    validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    },
-
-    validatePhone(phone) {
-      const regex = /^[\+]?[\d\s\-\(\)]+$/;
-      return regex.test(phone);
-    },
-
-    validateVAT(vat, countryCode = null) {
-      if (!vat || !vat.trim()) return false;
-      
-      const cleanVat = vat.trim().replace(/[\s\-\.]/g, '').toUpperCase();
-      
-      // Official European VAT number patterns
-      const vatPatterns = {
-        // Austria: ATU + 8 digits (9 chars total) - First char always 'U'
-        AT: { 
-          pattern: /^ATU\d{8}$/, 
-          length: 11,
-          description: "ATU + 8 digits"
-        },
-        
-        // Belgium: BE + 9-10 digits (10 chars total) - Prefix with '0' if 9 digits provided
-        BE: { 
-          pattern: /^BE0?\d{9}$/, 
-          length: [10, 12],
-          description: "BE + 10 digits (prefix with 0 if 9 digits)"
-        },
-        
-        // Bulgaria: BG + 9 or 10 digits
-        BG: { 
-          pattern: /^BG\d{9,10}$/, 
-          length: [11, 12],
-          description: "BG + 9 or 10 digits"
-        },
-        
-        // Croatia: HR + 11 digits
-        HR: { 
-          pattern: /^HR\d{11}$/, 
-          length: 13,
-          description: "HR + 11 digits"
-        },
-        
-        // Cyprus: CY + 8 digits + 1 letter (9 chars total) - Last char must be letter
-        CY: { 
-          pattern: /^CY\d{8}[A-Z]$/, 
-          length: 11,
-          description: "CY + 8 digits + 1 letter"
-        },
-        
-        // Czech Republic: CZ + 8, 9 or 10 digits
-        CZ: { 
-          pattern: /^CZ\d{8,10}$/, 
-          length: [10, 11, 12],
-          description: "CZ + 8, 9 or 10 digits"
-        },
-        
-        // Denmark: DK + 8 digits
-        DK: { 
-          pattern: /^DK\d{8}$/, 
-          length: 10,
-          description: "DK + 8 digits"
-        },
-        
-        // Estonia: EE + 9 digits
-        EE: { 
-          pattern: /^EE\d{9}$/, 
-          length: 11,
-          description: "EE + 9 digits"
-        },
-        
-        // Finland: FI + 8 digits
-        FI: { 
-          pattern: /^FI\d{8}$/, 
-          length: 10,
-          description: "FI + 8 digits"
-        },
-        
-        // France: FR + 11 chars total - May include alphabetical chars (any except O or I)
-        FR: { 
-          pattern: /^FR[A-HJ-NP-Z0-9]{2}\d{9}$/, 
-          length: 13,
-          description: "FR + 2 chars + 9 digits (no O or I)"
-        },
-        
-        // Germany: DE + 9 digits
-        DE: { 
-          pattern: /^DE\d{9}$/, 
-          length: 11,
-          description: "DE + 9 digits"
-        },
-        
-        // Greece: EL + 9 digits
-        GR: { 
-          pattern: /^EL\d{9}$/, 
-          length: 11,
-          description: "EL + 9 digits"
-        },
-        EL: { 
-          pattern: /^EL\d{9}$/, 
-          length: 11,
-          description: "EL + 9 digits"
-        },
-        
-        // Hungary: HU + 8 digits
-        HU: { 
-          pattern: /^HU\d{8}$/, 
-          length: 10,
-          description: "HU + 8 digits"
-        },
-        
-        // Ireland: IE + 7 digits + 1-2 letters (8 or 9 chars total)
-        IE: { 
-          pattern: /^IE\d{7}[A-Z]{1,2}$/, 
-          length: [10, 11],
-          description: "IE + 7 digits + 1-2 letters"
-        },
-        
-        // Italy: IT + 11 digits
-        IT: { 
-          pattern: /^IT\d{11}$/, 
-          length: 13,
-          description: "IT + 11 digits"
-        },
-        
-        // Latvia: LV + 11 digits
-        LV: { 
-          pattern: /^LV\d{11}$/, 
-          length: 13,
-          description: "LV + 11 digits"
-        },
-        
-        // Lithuania: LT + 9 or 12 digits
-        LT: { 
-          pattern: /^LT\d{9}$|^LT\d{12}$/, 
-          length: [11, 14],
-          description: "LT + 9 or 12 digits"
-        },
-        
-        // Luxembourg: LU + 8 digits
-        LU: { 
-          pattern: /^LU\d{8}$/, 
-          length: 10,
-          description: "LU + 8 digits"
-        },
-        
-        // Malta: MT + 8 digits
-        MT: { 
-          pattern: /^MT\d{8}$/, 
-          length: 10,
-          description: "MT + 8 digits"
-        },
-        
-        // Netherlands: NL + 9 digits + B + 2 digits (12 chars total) - 10th char always B
-        NL: { 
-          pattern: /^NL\d{9}B\d{2}$/, 
-          length: 14,
-          description: "NL + 9 digits + B + 2 digits"
-        },
-        
-        // Norway (non-EU): NO + 9 digits + MVA
-        NO: { 
-          pattern: /^NO\d{9}MVA$/, 
-          length: 14,
-          description: "NO + 9 digits + MVA"
-        },
-        
-        // Poland: PL + 10 digits
-        PL: { 
-          pattern: /^PL\d{10}$/, 
-          length: 12,
-          description: "PL + 10 digits"
-        },
-        
-        // Portugal: PT + 9 digits
-        PT: { 
-          pattern: /^PT\d{9}$/, 
-          length: 11,
-          description: "PT + 9 digits"
-        },
-        
-        // Romania: RO + 10 digits
-        RO: { 
-          pattern: /^RO\d{10}$/, 
-          length: 12,
-          description: "RO + 10 digits"
-        },
-        
-        // Slovakia: SK + 10 digits
-        SK: { 
-          pattern: /^SK\d{10}$/, 
-          length: 12,
-          description: "SK + 10 digits"
-        },
-        
-        // Slovenia: SI + 8 digits
-        SI: { 
-          pattern: /^SI\d{8}$/, 
-          length: 10,
-          description: "SI + 8 digits"
-        },
-        
-        // Spain: ES + 9 chars total - Includes 1 or 2 alphabetical chars
-        ES: { 
-          pattern: /^ES[A-Z0-9]\d{7}[A-Z0-9]$/, 
-          length: 11,
-          description: "ES + letter/digit + 7 digits + letter/digit"
-        },
-        
-        // Sweden: SE + 12 digits
-        SE: { 
-          pattern: /^SE\d{12}$/, 
-          length: 14,
-          description: "SE + 12 digits"
-        },
-        
-        // Switzerland (non-EU): CHE + 9 digits + MWST/TVA/IVA
-        CH: { 
-          pattern: /^CHE\d{9}(MWST|TVA|IVA)$/, 
-          length: [16, 15, 15],
-          description: "CHE + 9 digits + MWST/TVA/IVA"
-        },
-        
-        // United Kingdom (non-EU): GB + 9 digits
-        GB: { 
-          pattern: /^GB\d{9}$/, 
-          length: 11,
-          description: "GB + 9 digits"
-        }
-      };
-      
-      // Detect country from VAT number
-      let detectedCountry = cleanVat.substring(0, 2);
-      
-      // Special cases
-      if (cleanVat.startsWith('CHE')) {
-        detectedCountry = 'CH';
-      }
-      
-      const vatRule = vatPatterns[detectedCountry];
-      
-      if (!vatRule) {
-        // For non-EU countries, allow EIN format (US): 9 digits
-        if (/^\d{9}$/.test(cleanVat)) {
-          return true; // Valid EIN
-        }
-        return false;
-      }
-      
-      // Check length
-      const validLengths = Array.isArray(vatRule.length) ? vatRule.length : [vatRule.length];
-      if (!validLengths.includes(cleanVat.length)) {
-        return false;
-      }
-      
-      // Check pattern
-      return vatRule.pattern.test(cleanVat);
-    },
-
-    sanitizeInput(input) {
-      return input.trim().replace(/[<>]/g, '');
-    }
-  };
-
-  // Enhanced Animation System
-  class AnimationManager {
-    constructor() {
-      this.activeAnimations = new Map();
-    }
-
-    fadeIn(element, duration = CONFIG.ANIMATION_DURATION) {
-      return new Promise(resolve => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
-        
-        requestAnimationFrame(() => {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
-          
-          setTimeout(() => {
-            element.style.transition = '';
-            resolve();
-          }, duration);
-        });
-      });
-    }
-
-    fadeOut(element, duration = CONFIG.ANIMATION_DURATION) {
-      return new Promise(resolve => {
-        element.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(-20px)';
-        
-        setTimeout(() => {
-          element.style.transition = '';
-          resolve();
-        }, duration);
-      });
-    }
-
-    slideIn(element, direction = 'right', duration = CONFIG.ANIMATION_DURATION) {
-      const transforms = {
-        right: 'translateX(20px)',
-        left: 'translateX(-20px)',
-        up: 'translateY(-20px)',
-        down: 'translateY(20px)'
-      };
-
-      return new Promise(resolve => {
-        element.style.opacity = '0';
-        element.style.transform = transforms[direction];
-        element.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
-        
-        requestAnimationFrame(() => {
-          element.style.opacity = '1';
-          element.style.transform = 'translateX(0) translateY(0)';
-          
-          setTimeout(() => {
-            element.style.transition = '';
-            resolve();
-          }, duration);
-        });
-      });
-    }
-
-    pulse(element, scale = 1.05, duration = 200) {
-      element.style.transition = `transform ${duration}ms ease`;
-      element.style.transform = `scale(${scale})`;
-      
-      setTimeout(() => {
-        element.style.transform = 'scale(1)';
-        setTimeout(() => {
-          element.style.transition = '';
-        }, duration);
-      }, duration);
-    }
-
-    shake(element, distance = 5, duration = 400) {
-      const keyframes = [
-        { transform: 'translateX(0)' },
-        { transform: `translateX(-${distance}px)` },
-        { transform: `translateX(${distance}px)` },
-        { transform: `translateX(-${distance}px)` },
-        { transform: `translateX(${distance}px)` },
-        { transform: 'translateX(0)' }
-      ];
-
-      element.animate(keyframes, {
-        duration,
-        easing: 'ease-in-out'
-      });
-    }
-  }
-
-  // Make animationManager globally accessible immediately
-  const animationManager = new AnimationManager();
-
-  // Enhanced Form Validator
-  class FormValidator {
-    constructor() {
-      this.rules = new Map();
-      this.errors = new Map();
-    }
-
-    addRule(fieldName, validator, errorMessage) {
-      if (!this.rules.has(fieldName)) {
-        this.rules.set(fieldName, []);
-      }
-      this.rules.get(fieldName).push({ validator, errorMessage });
-    }
-
-    validate(fieldName, value) {
-      const fieldRules = this.rules.get(fieldName);
-      if (!fieldRules) return { isValid: true, errors: [] };
-
-      const errors = [];
-      for (const rule of fieldRules) {
-        if (!rule.validator(value)) {
-          errors.push(rule.errorMessage);
-        }
-      }
-
-      const isValid = errors.length === 0;
-      if (isValid) {
-        this.errors.delete(fieldName);
-      } else {
-        this.errors.set(fieldName, errors);
-      }
-
-      return { isValid, errors };
-    }
-
-    validateAll(formData) {
-      let isValid = true;
-      const allErrors = {};
-
-      for (const [fieldName] of this.rules) {
-        const value = formData[fieldName] || '';
-        const result = this.validate(fieldName, value);
-        if (!result.isValid) {
-          isValid = false;
-          allErrors[fieldName] = result.errors;
-        }
-      }
-
-      return { isValid, errors: allErrors };
-    }
-
-    getErrors(fieldName = null) {
-      if (fieldName) {
-        return this.errors.get(fieldName) || [];
-      }
-      return Object.fromEntries(this.errors);
-    }
-
-    clearErrors(fieldName = null) {
-      if (fieldName) {
-        this.errors.delete(fieldName);
-      } else {
-        this.errors.clear();
-      }
-    }
-  }
-
-  // Enhanced Step Manager
-  class StepManager {
-    constructor() {
-      this.steps = document.querySelectorAll('.techpack-step');
-      // CREATE validator instance here
-      this.validator = new FormValidator();
-      this.setupValidationRules();
-    }
-
-    // In StepManager class, REPLACE setupValidationRules():
-    setupValidationRules() {
-      // Clear any existing rules first
-      this.validator.rules.clear();  // Changed from validator to this.validator
-      this.validator.errors.clear(); // Changed from validator to this.validator
-    
-      // Step 1 validation rules ONLY
-      this.validator.addRule('clientName', value => value && value.trim().length > 0, 'Client name is required');
-      this.validator.addRule('companyName', value => value && value.trim().length > 0, 'Company name is required');
-      this.validator.addRule('email', value => value && Utils.validateEmail(value), 'Valid email address is required');
-      this.validator.addRule('country', value => value && value.trim().length > 0, 'Country selection is required');
-      this.validator.addRule('phone', value => !value || Utils.validatePhone(value), 'Valid phone number format required');
-      this.validator.addRule('vatEin', value => !value || Utils.validateVAT(value), 'Valid VAT/EIN format required');
-    }
-
-    // ADD this method to your StepManager class
-    debugTestNavigation(targetStep) {
-      debugSystem.log(`DEBUG: Testing navigation to step ${targetStep}`);
-      
-      // Check if target step exists
-      let targetElement = null;
-      if (targetStep === 0) {
-        targetElement = document.querySelector('#techpack-step-0');
-      } else {
-        targetElement = document.querySelector(`[data-step="${targetStep}"]`);
-      }
-      
-      debugSystem.log('Target element found:', !!targetElement);
-      
-      if (targetElement) {
-        // Hide all steps
-        const allSteps = document.querySelectorAll('.techpack-step');
-        allSteps.forEach(step => {
-          step.style.display = 'none';
-        });
-        
-        // Show target step
-        targetElement.style.display = 'block';
-        state.currentStep = targetStep;
-        
-        debugSystem.log(`DEBUG: Successfully showed step ${targetStep}`);
-        return true;
-      } else {
-        debugSystem.log(`DEBUG: Step ${targetStep} element not found`, null, 'error');
-        return false;
-      }
-    }
-
-// ENHANCED: Robust navigation with comprehensive error handling
-    async navigateToStep(stepNumber) {
-      try {
-        if (stepNumber === state.currentStep) {
-          debugSystem.log('Already on target step, skipping navigation', { stepNumber });
-          return true;
-        }
-        
-        debugSystem.log(`🧭 Starting navigation to step ${stepNumber}`, { 
-          from: state.currentStep,
-          timestamp: Date.now()
-        });
-
-        // Enhanced validation with error handling
-        try {
-          // Skip validation for step 0 (registration check) and when going backwards
-          // ALSO skip validation when coming FROM step 0 (registration)
-          if (stepNumber > state.currentStep && state.currentStep > 0) {
-            const validationResult = await this.validateCurrentStep();
-            if (!validationResult) {
-              debugSystem.log('❌ Step validation failed, navigation cancelled', { 
-                currentStep: state.currentStep,
-                targetStep: stepNumber 
-              }, 'warn');
-              return false;
-            }
-          }
-        } catch (validationError) {
-          debugSystem.log('❌ Validation error, proceeding anyway:', validationError, 'warn');
-          // Continue with navigation even if validation fails
-        }
-
-        // Enhanced element detection with error handling
-        let currentStepEl = null;
-        let targetStepEl = null;
-
-        try {
-          // Handle step 0 specifically
-          if (state.currentStep === 0) {
-            currentStepEl = document.querySelector('#techpack-step-0');
-          } else {
-            currentStepEl = document.querySelector(`[data-step="${state.currentStep}"]`);
-          }
-
-          if (stepNumber === 0) {
-            targetStepEl = document.querySelector('#techpack-step-0');
-          } else {
-            targetStepEl = document.querySelector(`[data-step="${stepNumber}"]`);
-          }
-
-          debugSystem.log('🔍 Element detection results:', {
-            currentStepEl: !!currentStepEl,
-            targetStepEl: !!targetStepEl,
-            currentStepId: currentStepEl?.id || 'unknown',
-            targetStepId: targetStepEl?.id || 'unknown'
-          });
-
-          if (!targetStepEl) {
-            debugSystem.log('❌ Target step element not found', { 
-              stepNumber,
-              expectedSelector: stepNumber === 0 ? '#techpack-step-0' : `[data-step="${stepNumber}"]`,
-              availableSteps: document.querySelectorAll('[data-step], #techpack-step-0').length
-            }, 'error');
-            return false;
-          }
-
-        } catch (elementError) {
-          debugSystem.log('❌ Element detection failed:', elementError, 'error');
-          return false;
-        }
-
-        // Enhanced animation handling with error recovery
-        try {
-          // Hide current step with animation
-          if (currentStepEl) {
-            try {
-              await animationManager.fadeOut(currentStepEl);
-              currentStepEl.style.display = 'none';
-              debugSystem.log('✅ Hidden current step successfully', { currentStep: state.currentStep });
-            } catch (fadeError) {
-              debugSystem.log('⚠️ Fade out animation failed, using direct hide:', fadeError, 'warn');
-              currentStepEl.style.display = 'none';
-            }
-          }
-
-          // Show target step with animation
-          targetStepEl.style.display = 'block';
-          
-          try {
-            await animationManager.fadeIn(targetStepEl);
-            debugSystem.log('✅ Shown target step successfully', { targetStep: stepNumber });
-          } catch (fadeInError) {
-            debugSystem.log('⚠️ Fade in animation failed, step is visible anyway:', fadeInError, 'warn');
-          }
-
-        } catch (animationError) {
-          debugSystem.log('❌ Animation sequence failed:', animationError, 'error');
-          // Ensure target step is visible even if animations fail
-          if (targetStepEl) {
-            targetStepEl.style.display = 'block';
-          }
-        }
-
-        // Update state and complete navigation
-        const previousStep = state.currentStep;
-        state.currentStep = stepNumber;
-        
-        debugSystem.log('✅ Navigation completed successfully', {
-          from: previousStep,
-          to: stepNumber,
-          duration: Date.now() - (this.navigationStartTime || Date.now())
-        });
-
-        return true;
-
-      } catch (navigationError) {
-        debugSystem.log('❌ Navigation failed completely:', navigationError, 'error');
-        return false;
-      }
-    }
-
-    scrollToTechPackTopEnhanced() {
-      // More aggressive search for TechPack elements
-      const selectors = [
-        'section[id*="techpack"]',     // Any section with techpack in ID
-        'div[class*="techpack"]',      // Any div with techpack in class
-        '.techpack-progress',          // Progress bar specifically
-        '[data-step]',                 // Any element with data-step
-        'h2.techpack-title',           // The "Client Information" title
-        'h1.techpack-success__title',  // Thank you page title
-        '.techpack-success-page',      // Thank you page container
-        '*[id*="step"]'                // Any element with "step" in ID
-      ];
-      
-      let techPackElement = null;
-      
-      // Try each selector until we find something
-      for (const selector of selectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length > 0) {
-          // Take the first visible element
-          for (const element of elements) {
-            const rect = element.getBoundingClientRect();
-            if (rect.height > 0 && rect.width > 0) { // Element is visible
-              techPackElement = element;
-              debugSystem.log('Found TechPack element', { 
-                selector, 
-                elementId: element.id,
-                elementClass: element.className 
-              });
-              break;
-            }
-          }
-          if (techPackElement) break;
-        }
-      }
-      
-      if (techPackElement) {
-        // Use scrollIntoView for more reliable positioning
-        techPackElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',    // Align to top of viewport
-          inline: 'nearest'
-        });
-        
-        // Add a small offset after scrolling
-        setTimeout(() => {
-          const currentScroll = window.pageYOffset;
-          window.scrollTo({
-            top: currentScroll - 60, // 60px offset from top
-            behavior: 'smooth'
-          });
-        }, 500);
-        
-        debugSystem.log('Scrolled to TechPack element successfully');
-      } else {
-        // Ultimate fallback - look for ANY text containing "techpack" or "client"
-        const allElements = document.querySelectorAll('*');
-        let foundByText = null;
-        
-        for (const element of allElements) {
-          const text = element.textContent || '';
-          const id = element.id || '';
-          const className = element.className || '';
-          
-          if ((text.toLowerCase().includes('client information') ||
-               text.toLowerCase().includes('tech pack') ||
-               text.toLowerCase().includes('submission received') ||
-               text.toLowerCase().includes('thank you') ||
-               id.toLowerCase().includes('techpack') ||
-               className.toLowerCase().includes('techpack')) &&
-              element.getBoundingClientRect().height > 50) { // Must be substantial element
-            foundByText = element;
-            break;
-          }
-        }
-        
-        if (foundByText) {
-          foundByText.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-          debugSystem.log('Found TechPack by text content');
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          debugSystem.log('Complete fallback to page top');
-        }
-      }
-    }
-
-    // Polyfill for smooth scrolling in older browsers
-    smoothScrollPolyfill(targetPosition) {
-      const startPosition = window.pageYOffset;
-      const distance = targetPosition - startPosition;
-      const duration = 500; // 500ms
-      let start = null;
-
-      function animation(currentTime) {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        // Easing function
-        const ease = progress * (2 - progress);
-        
-        window.scrollTo(0, startPosition + (distance * ease));
-        
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
-        }
-      }
-      
-      requestAnimationFrame(animation);
-    }
-
-    handleStepEnter(stepNumber) {
-      switch (stepNumber) {
-        case 2:
-          this.syncStep2DOM();
-          break;
-        case 3:
-          this.initializeStep3();
-          break;
-        case 4:
-          this.populateReview();
-          break;
-      }
-    }
-
-    initializeStep3() {
-      // Create required garments based on file count
-      const currentGarments = document.querySelectorAll('.techpack-garment').length;
-      const requiredGarments = state.formData.requiredGarmentCount || 1;
-      
-      debugSystem.log('Step 3 initialization', { 
-        currentGarments, 
-        requiredGarments, 
-        fileCount: state.formData.files.length 
-      });
-      
-      if (currentGarments < requiredGarments) {
-        // Create additional garments if needed
-        const garmentsToCreate = requiredGarments - currentGarments;
-        for (let i = 0; i < garmentsToCreate; i++) {
-          garmentManager.addGarment();
-        }
-        debugSystem.log(`Auto-created ${garmentsToCreate} additional garments (${currentGarments} → ${requiredGarments})`);
-      } else if (currentGarments > requiredGarments) {
-        // Remove excess garments if files were deleted
-        const garmentsToRemove = currentGarments - requiredGarments;
-        const garmentElements = document.querySelectorAll('.techpack-garment');
-        for (let i = 0; i < garmentsToRemove; i++) {
-          const lastGarment = garmentElements[garmentElements.length - 1 - i];
-          if (lastGarment) {
-            const garmentId = lastGarment.dataset.garmentId;
-            garmentManager.removeGarment(garmentId);
-          }
-        }
-        debugSystem.log(`Removed ${garmentsToRemove} excess garments (${currentGarments} → ${requiredGarments})`);
-      }
-      
-      this.refreshStep3Interface();
-      
-      // CRITICAL: Sync existing garment data with DOM after interface refresh
-      setTimeout(() => {
-        this.syncStep3GarmentData();
-        this.validateStep3();
-        
-        // Initialize progress bar calculation
-        if (window.quantityCalculator) {
-          quantityCalculator.calculateAndUpdateProgress();
-        }
-        
-        // ADD: Scroll to center TechPack after garments load
-        setTimeout(() => {
-          this.scrollToTechPackTopEnhanced();
-        }, 300);
-      }, 100);
-    }
-
-    // NEW METHOD: Sync garment data with DOM elements
-    syncStep3GarmentData() {
-      const garmentElements = document.querySelectorAll('.techpack-garment');
-      
-      garmentElements.forEach((garmentElement, index) => {
-        const garmentId = garmentElement.dataset.garmentId;
-        const garmentData = state.formData.garments.find(g => g.id === garmentId);
-        
-        if (garmentData) {
-          // Sync garment type
-          const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
-          if (garmentTypeSelect && garmentData.type) {
-            garmentTypeSelect.value = garmentData.type;
-          }
-          
-          // Sync fabric type
-          const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-          if (fabricSelect && garmentData.fabric) {
-            fabricSelect.value = garmentData.fabric;
-          }
-          
-          // Sync printing methods
-          if (garmentData.printingMethods && garmentData.printingMethods.length > 0) {
-            const checkboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]');
-            checkboxes.forEach(checkbox => {
-              checkbox.checked = garmentData.printingMethods.includes(checkbox.value);
-            });
-          }
-          
-          debugSystem.log('Synced garment data with DOM', { 
-            garmentId, 
-            type: garmentData.type, 
-            fabric: garmentData.fabric,
-            printingMethods: garmentData.printingMethods 
-          });
-        }
-      });
-    }
-
-    updateProgressIndicators() {
-      this.steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        const progressFill = step.querySelector('.techpack-progress__fill');
-        const progressSteps = step.querySelectorAll('.techpack-progress__step');
-        
-        if (progressFill) {
-          const percentage = stepNum <= 1 ? 0 : ((stepNum - 1) / (progressSteps.length - 1)) * 100;
-          progressFill.style.width = `${Math.min(percentage, 100)}%`;
-        }
-
-        progressSteps.forEach((progressStep, progressIndex) => {
-          const isCompleted = progressIndex < state.currentStep - 1;
-          const isActive = progressIndex === state.currentStep - 1;
-          
-          progressStep.classList.toggle('techpack-progress__step--completed', isCompleted);
-          progressStep.classList.toggle('techpack-progress__step--active', isActive);
-        });
-      });
-    }
-
-    async validateCurrentStep() {
-      switch (state.currentStep) {
-        case 1:
-          return this.validateStep1();
-        case 2:
-          return this.validateStep2();
-        case 3:
-          return this.validateStep3();
-        default:
-          return true;
-      }
-    }
-
-    // Enhanced version of your existing validateStep1() method
-    validateStep1() {
-      const form = document.querySelector('#techpack-step-1 form');
-      if (!form) return false;
-    
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      
-      let isValid = true;
-      const errors = {};
-      
-      // Check if user is registered client (new functionality)
-      const isRegisteredClient = state.formData.isRegisteredClient || false;
-    
-      // Basic required fields - MODIFIED to handle registered vs new clients
-      let requiredFields = [
-        { name: 'companyName', label: 'Company name' },
-        { name: 'email', label: 'Email address' },
-        { name: 'productionType', label: 'Production type' }
-      ];
-
-      // Add additional required fields for NEW clients only
-      if (!isRegisteredClient) {
-        requiredFields.unshift({ name: 'clientName', label: 'Client name' });
-        requiredFields.push({ name: 'country', label: 'Country' });
-      }
-    
-      requiredFields.forEach(field => {
-        if (!data[field.name] || !data[field.name].trim()) {
-          isValid = false;
-          errors[field.name] = `${field.label} is required`;
-        }
-      });
-    
-      // Email validation
-      if (data.email && !Utils.validateEmail(data.email)) {
-        isValid = false;
-        errors.email = 'Please enter a valid email address';
-      }
-    
-      // Phone validation (optional) - UNCHANGED from your code
-      if (data.phone && !Utils.validatePhone(data.phone)) {
-        isValid = false;
-        errors.phone = 'Please enter a valid phone number';
-      }
-    
-      // CRITICAL: VAT/EIN validation based on country - ONLY for NEW clients
-      if (!isRegisteredClient) {
-        const vatInput = form.querySelector('input[name="vatEin"]');
-        if (vatInput) {
-          const isVATRequired = vatInput.hasAttribute('data-required') || vatInput.hasAttribute('required');
-          const vatValue = data.vatEin || '';
-          const selectedCountry = data.country || '';
-          
-          // Get country code for validation
-          const countryObj = COUNTRY_DATA.findByName(selectedCountry);
-          const countryCode = countryObj ? countryObj.code : null;
-          const requiresVAT = countryCode ? COUNTRY_DATA.requiresVAT(countryCode) : false;
-          
-          if (isVATRequired && requiresVAT && (!vatValue || !vatValue.trim())) {
-            isValid = false;
-            errors.vatEin = 'VAT number is required for EU member countries';
-          } else if (vatValue && vatValue.trim()) {
-            // Validate VAT format
-            if (!Utils.validateVAT(vatValue, countryCode)) {
-              isValid = false;
-              
-              // Country-specific error messages - UNCHANGED from your code
-              if (countryCode === 'PT') {
-                errors.vatEin = 'Portuguese VAT must be PT + 9 digits (e.g., PT123456789)';
-              } else if (countryCode === 'ES') {
-                errors.vatEin = 'Spanish VAT must be ES + letter/digit + 7 digits + letter/digit (e.g., ESA12345674)';
-              } else if (countryCode === 'DE') {
-                errors.vatEin = 'German VAT must be DE + 9 digits (e.g., DE123456789)';
-              } else if (countryCode === 'FR') {
-                errors.vatEin = 'French VAT must be FR + 2 characters + 9 digits (e.g., FRAA123456789)';
-              } else if (countryCode === 'US') {
-                errors.vatEin = 'US EIN must be 9 digits (e.g., 123456789)';
-              } else {
-                errors.vatEin = `Please enter a valid ${COUNTRY_DATA.isEuropean(countryCode) ? 'VAT' : 'EIN'} number for ${selectedCountry}`;
-              }
-            }
-          }
-        }
-      }
-    
-      // Display errors for all fields - UNCHANGED from your code
-      Object.keys(errors).forEach(fieldName => {
-        const field = form.querySelector(`[name="${fieldName}"]`);
-        if (field) {
-          this.displayFieldError(field, false, errors[fieldName]);
-        }
-      });
-    
-      // Clear errors for valid fields - ENHANCED to handle both client types
-      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'deadline', 'notes'];
-      allFieldNames.forEach(fieldName => {
-        if (!errors[fieldName]) {
-          const fieldElement = form.querySelector(`[name="${fieldName}"]`);
-          if (fieldElement) {
-            this.displayFieldError(fieldElement, true, '');
-          }
-        }
-      });
-    
-      if (isValid) {
-        // Add client type info to your existing data structure
-        data.isRegisteredClient = isRegisteredClient;
-        state.formData.clientInfo = data;
-        debugSystem.log('Step 1 validation passed', { 
-          data, 
-          clientType: isRegisteredClient ? 'registered' : 'new' 
-        }, 'success');
-      } else {
-        debugSystem.log('Step 1 validation failed', errors, 'error');
-      }
-    
-      return isValid;
-    }
-
-    validateStep2() {
-      const isValid = state.formData.files.length > 0 && 
-                     state.formData.files.every(f => f.type && f.type.trim() !== '');
-
-      if (!isValid) {
-        debugSystem.log('Step 2 validation failed: missing files or file types', null, 'error');
-      } else {
-        debugSystem.log('Step 2 validation passed', { fileCount: state.formData.files.length }, 'success');
-      }
-
-      fileUploader.calculateRequiredGarments();
-
-      return isValid;
-    }
-
-    // In StepManager class, REPLACE the existing validateStep3() method:
-    validateStep3() {
-      const nextBtn = document.querySelector('#step-3-next');
-      
-      if (state.formData.garments.length === 0) {
-        debugSystem.log('Step 3 validation failed: no garments', null, 'error');
-        if (nextBtn) nextBtn.disabled = true;
-        return false;
-      }
-    
-      let isValid = true;
-      const garmentElements = document.querySelectorAll('.techpack-garment');
-    
-      // CRITICAL: First sync all DOM values to state to preserve selections
-      garmentElements.forEach((garmentElement) => {
-        const garmentId = garmentElement.dataset.garmentId;
-        const garmentData = state.formData.garments.find(g => g.id === garmentId);
-        
-        if (garmentData) {
-          // Preserve garment type selection
-          const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
-          if (garmentTypeSelect?.value) {
-            garmentData.type = garmentTypeSelect.value;
-          }
-          
-          // Preserve fabric type selection
-          const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-          if (fabricSelect?.value) {
-            garmentData.fabric = fabricSelect.value;
-          }
-          
-          // Preserve printing methods selection
-          const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
-          if (printingCheckboxes.length > 0) {
-            garmentData.printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
-          }
-        }
-      });
-    
-      // Now validate each garment
-      garmentElements.forEach((garmentElement, index) => {
-        const garmentId = garmentElement.dataset.garmentId;
-        const garmentData = state.formData.garments.find(g => g.id === garmentId);
-        
-        // Check garment type
-        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
-        const garmentTypeGroup = garmentTypeSelect?.closest('.techpack-form__group');
-        const garmentTypeError = garmentTypeGroup?.querySelector('.techpack-form__error');
-        
-        if (!garmentTypeSelect?.value && (!garmentData?.type)) {
-          isValid = false;
-          if (garmentTypeGroup) garmentTypeGroup.classList.add('techpack-form__group--error');
-          if (garmentTypeError) garmentTypeError.textContent = 'Please select a garment type';
-        } else {
-          if (garmentTypeGroup) garmentTypeGroup.classList.remove('techpack-form__group--error');
-          if (garmentTypeError) garmentTypeError.textContent = '';
-        }
-    
-        // Check fabric type
-        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
-        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
-        
-        if (!fabricSelect?.value && (!garmentData?.fabric)) {
-          isValid = false;
-          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = 'Please select a fabric type';
-        } else {
-          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = '';
-        }
-    
-        // Check printing methods
-        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
-        const printingGroup = garmentElement.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
-        const printingError = printingGroup?.querySelector('.techpack-form__error');
-        
-        if (printingCheckboxes.length === 0 && (!garmentData?.printingMethods || garmentData.printingMethods.length === 0)) {
-          isValid = false;
-          if (printingGroup) printingGroup.classList.add('techpack-form__group--error');
-          if (printingError) printingError.textContent = 'Please select at least one printing method';
-        } else {
-          if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
-          if (printingError) printingError.textContent = '';
-        }
-    
-        // Check colorway quantities
-        const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
-        const colorwayCountInGarment = colorwaysInGarment.length;
-        const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
-    
-        colorwaysInGarment.forEach((colorway) => {
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-          let colorwayTotal = 0;
-          
-          qtyInputs.forEach(input => {
-            colorwayTotal += parseInt(input.value) || 0;
-          });
-    
-          if (colorwayTotal < requiredPerColorway) {
-            isValid = false;
-            debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
-              total: colorwayTotal, 
-              required: requiredPerColorway 
-            }, 'error');
-          }
-        });
-      });
-    
-      // Update button state
-      if (nextBtn) {
-        nextBtn.disabled = !isValid;
-      }
-    
-      if (isValid) {
-        debugSystem.log('Step 3 validation passed', null, 'success');
-      } else {
-        debugSystem.log('Step 3 validation failed', null, 'error');
-      }
-    
-      return isValid;
-    }
-
-    displayFieldError(field, isValid, errorMessage) {
-      field.classList.toggle('techpack-form__input--error', !isValid);
-      
-      let errorElement = field.parentNode.querySelector('.techpack-form__error');
-      if (!errorElement) {
-        errorElement = document.createElement('div');
-        errorElement.className = 'techpack-form__error';
-        field.parentNode.appendChild(errorElement);
-      }
-
-      if (!isValid) {
-        errorElement.textContent = errorMessage;
-        errorElement.style.display = 'block';
-        animationManager.shake(field);
-      } else {
-        errorElement.style.display = 'none';
-        errorElement.textContent = '';
-      }
-    }
-
-    syncStep2DOM() {
-      const fileItems = document.querySelectorAll('.techpack-file');
-      fileItems.forEach(item => {
-        const fileId = item.dataset.fileId;
-        const select = item.querySelector('.techpack-file__tag-select');
-        const fileObj = state.formData.files.find(f => f.id === fileId);
-        
-        if (fileObj && fileObj.type && select) {
-          select.value = fileObj.type;
-        }
-      });
-    }
-
-    refreshStep3Interface() {
-      const productionType = state.formData.clientInfo.productionType || 'custom-production';
-      const garments = document.querySelectorAll('.techpack-garment');
-      
-      garments.forEach(garment => {
-        this.updateGarmentInterface(garment, productionType);
-      });
-      
-      debugSystem.log('Step 3 interface refreshed', { productionType });
-    }
-
-    updateGarmentInterface(garment, productionType) {
-      const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
-      const fabricTypeSelect = garment.querySelector('select[name="fabricType"]');
-      const fabricLabel = garment.querySelector('select[name="fabricType"]').closest('.techpack-form__group').querySelector('.techpack-form__label');
-
-      if (!garmentTypeSelect || !fabricTypeSelect || !fabricLabel) return;
-
-      if (productionType === 'our-blanks') {
-        garmentTypeSelect.innerHTML = `
-          <option value="">Select garment type...</option>
-          <option value="Jacket">Jacket</option>
-          <option value="Hoodie">Hoodie</option>
-          <option value="Sweatshirt">Sweatshirt</option>
-          <option value="T-Shirt">T-Shirt</option>
-          <option value="Sweatpants">Sweatpants</option>
-        `;
-        
-        fabricLabel.textContent = 'Collection Type';
-        fabricTypeSelect.innerHTML = `
-          <option value="">Select collection type...</option>
-          <option value="Oversized Luxury Collection">Oversized Luxury Collection</option>
-          <option value="Relaxed High-End Collection">Relaxed High-End Collection</option>
-        `;
-      } else {
-        garmentTypeSelect.innerHTML = `
-          <option value="">Select garment type...</option>
-          <option value="Zip-Up Hoodie">Zip-Up Hoodie</option>
-          <option value="Hoodie">Hoodie</option>
-          <option value="T-Shirt">T-Shirt</option>
-          <option value="Crewneck Sweatshirt">Crewneck Sweatshirt</option>
-          <option value="Sweatpants">Sweatpants</option>
-          <option value="Shorts">Shorts</option>
-          <option value="Long Sleeve T-Shirt">Long Sleeve T-Shirt</option>
-          <option value="Polo Shirt">Polo Shirt</option>
-          <option value="Tank Top">Tank Top</option>
-          <option value="Hat/Cap">Hat/Cap</option>
-          <option value="Beanie">Beanie</option>
-          <option value="Other">Other (Specify in Notes)</option>
-        `;
-        
-        fabricLabel.textContent = 'Fabric Type';
-        fabricTypeSelect.innerHTML = `
-          <option value="">Select fabric type...</option>
-          <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
-          <option value="French Terry 100% Organic Cotton">French Terry 100% Organic Cotton</option>
-          <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
-          <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
-          <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
-          <option value="100% Polyester">100% Polyester</option>
-          <option value="100% Linen">100% Linen</option>
-          <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
-          <option value="Jersey Knit">Jersey Knit</option>
-          <option value="Pique">Pique</option>
-          <option value="Canvas">Canvas</option>
-          <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
-        `;
-      }
-
-      garmentTypeSelect.value = '';
-      fabricTypeSelect.value = '';
-    }
-
-    getColorwayCount() {
-      const colorways = document.querySelectorAll('.techpack-colorway[data-colorway-id]');
-      return Math.max(colorways.length, 1);
-    }
-
-    populateReview() {
-      setTimeout(() => {
-        this.populateReviewStep1();
-        this.populateReviewStep2();
-        this.populateReviewStep3();
-        
-        debugSystem.log('Review populated', null, 'success');
-        
-        // Ensure edit buttons are working after review is populated
-        setTimeout(() => {
-          formInitializer.setupEditButtons();
-        }, 100);
-      }, 50);
-    }
-
-    // In StepManager class, REPLACE populateReviewStep1():
-    populateReviewStep1() {
-      const container = document.querySelector('#review-step-1');
-      if (!container) return;
-    
-      // Get data from DOM instead of relying on state
-      const form = document.querySelector('#techpack-step-1 form');
-      if (!form) return;
-    
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-    
-      container.innerHTML = `
-        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Client Information</h3>
-        </div>
-        <div class="techpack-review__grid">
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Client Name:</span>
-            <span class="techpack-review__value">${data.clientName || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Company Name:</span>
-            <span class="techpack-review__value">${data.companyName || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Email Address:</span>
-            <span class="techpack-review__value">${data.email || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Country:</span>
-            <span class="techpack-review__value">${data.country || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Phone Number:</span>
-            <span class="techpack-review__value">${data.phone || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item">
-            <span class="techpack-review__label">Project Deadline:</span>
-            <span class="techpack-review__value">${data.deadline || 'N/A'}</span>
-          </div>
-          <div class="techpack-review__item techpack-review__item--full-width">
-            <span class="techpack-review__label">Additional Notes:</span>
-            <span class="techpack-review__value">${data.notes || 'N/A'}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    populateReviewStep2() {
-      const container = document.querySelector('#review-step-2');
-      if (!container) return;
-    
-      const headerHtml = `
-        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Uploaded Files</h3>
-        </div>
-      `;
-    
-      if (state.formData.files.length === 0) {
-        container.innerHTML = headerHtml + '<p class="techpack-review__empty">No files uploaded</p>';
-        return;
-      }
-    
-      const filesHtml = state.formData.files.map(fileData => `
-        <div class="techpack-review__file">
-          <div class="techpack-review__file-info">
-            <svg class="techpack-review__file-icon" width="16" height="16" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="2" fill="none"/>
-              <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-            <span class="techpack-review__file-name">${fileData.file.name}</span>
-          </div>
-          <span class="techpack-review__file-type">${fileData.type}</span>
-        </div>
-      `).join('');
-    
-      container.innerHTML = headerHtml + `<div class="techpack-review__files">${filesHtml}</div>`;
-    }
-
-    // In StepManager class, REPLACE populateReviewStep3():
-    populateReviewStep3() {
-      const container = document.querySelector('#review-step-3');
-      if (!container) return;
-    
-      const headerHtml = `
-        <div class="techpack-review__header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="margin: 0;">Garment Specifications</h3>
-        </div>
-      `;
-    
-      const garmentElements = document.querySelectorAll('.techpack-garment');
-      if (garmentElements.length === 0) {
-        container.innerHTML = headerHtml + '<p class="techpack-review__empty">No garments specified</p>';
-        return;
-      }
-    
-      let totalQuantity = 0;
-      const garmentsHtml = Array.from(garmentElements).map((garmentElement, index) => {
-        const garmentId = garmentElement.dataset.garmentId;
-        let garmentTotal = 0;
-    
-        // Get garment details from DOM
-        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
-        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
-        
-        const garmentType = garmentTypeSelect?.value || 'Not specified';
-        const fabricType = fabricSelect?.value || 'Not specified';
-        const printingMethods = Array.from(printingCheckboxes).map(cb => cb.value);
-    
-        // Get colorway details from DOM
-        const colorwayElements = garmentElement.querySelectorAll('.techpack-colorway');
-        const colorwaysHtml = Array.from(colorwayElements).map(colorway => {
-          const colorwayId = colorway.dataset.colorwayId;
-          
-          // Get color info
-          const colorPicker = colorway.querySelector('.techpack-color-picker__input');
-          const pantoneInput = colorway.querySelector('input[placeholder*="PANTONE"]');
-          const color = colorPicker?.value || '#000000';
-          const pantone = pantoneInput?.value || '';
-    
-          // Get quantities from size grid
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-          const quantities = {};
-          let colorwayTotal = 0;
-    
-          qtyInputs.forEach(input => {
-            const size = input.name.replace('qty-', '').toUpperCase();
-            const value = parseInt(input.value) || 0;
-            if (value > 0) {
-              quantities[size] = value;
-              colorwayTotal += value;
-            }
-          });
-    
-          garmentTotal += colorwayTotal;
-    
-          // Format quantities for display
-          const quantitiesText = Object.entries(quantities)
-            .map(([size, qty]) => `${size}: ${qty}`)
-            .join(', ') || 'No quantities specified';
-    
-          return `
-            <div class="techpack-review__colorway">
-              <div class="techpack-review__colorway-header">
-                <div class="techpack-review__color-preview" style="background-color: ${color}"></div>
-                <span class="techpack-review__colorway-info">
-                  ${pantone ? `PANTONE ${pantone}` : `Color: ${color}`}
-                  <small>(${colorwayTotal} units)</small>
-                </span>
-              </div>
-              <div class="techpack-review__quantities">${quantitiesText}</div>
-            </div>
-          `;
-        }).join('');
-    
-        totalQuantity += garmentTotal;
-    
-        return `
-          <div class="techpack-review__garment">
-            <div class="techpack-review__garment-header">
-              <h4 class="techpack-review__garment-title">Garment ${index + 1}: ${garmentType}</h4>
-              <span class="techpack-review__garment-total">${garmentTotal} units</span>
-            </div>
-            <div class="techpack-review__garment-details">
-              <div class="techpack-review__detail">
-                <span class="techpack-review__label">Fabric:</span>
-                <span class="techpack-review__value">${fabricType}</span>
-              </div>
-              <div class="techpack-review__detail">
-                <span class="techpack-review__label">Printing Methods:</span>
-                <span class="techpack-review__value">${printingMethods.length > 0 ? printingMethods.join(', ') : 'None specified'}</span>
-              </div>
-            </div>
-            <div class="techpack-review__colorways">${colorwaysHtml}</div>
-          </div>
-        `;
-      }).join('');
-    
-      container.innerHTML = headerHtml + `
-        <div class="techpack-review__summary">
-          <div class="techpack-review__total">
-            <span class="techpack-review__total-label">Total Quantity:</span>
-            <span class="techpack-review__total-value">${totalQuantity}</span>
-          </div>
-        </div>
-        <div class="techpack-review__garments">${garmentsHtml}</div>
-      `;
-    }
-  }
-
-  // Enhanced File Manager
-  class FileManager {
-    constructor() {
-      this.setupEventListeners();
-    }
-
-    setupEventListeners() {
-      const uploadZone = document.querySelector('#upload-zone');
-      const fileInput = document.querySelector('#file-input');
-      const addMoreBtn = document.querySelector('#add-more-files');
-
-      if (uploadZone && fileInput) {
-        uploadZone.addEventListener('dragover', this.handleDragOver.bind(this));
-        uploadZone.addEventListener('dragleave', this.handleDragLeave.bind(this));
-        uploadZone.addEventListener('drop', this.handleDrop.bind(this));
-        uploadZone.addEventListener('click', () => fileInput.click());
-
-        fileInput.addEventListener('change', this.handleFileSelect.bind(this));
-      }
-
-      if (addMoreBtn) {
-        addMoreBtn.addEventListener('click', () => fileInput?.click());
-      }
-    }
-
-    handleDragOver(e) {
-      e.preventDefault();
-      e.currentTarget.classList.add('techpack-upload__zone--dragover');
-    }
-
-    handleDragLeave(e) {
-      e.preventDefault();
-      e.currentTarget.classList.remove('techpack-upload__zone--dragover');
-    }
-
-    handleDrop(e) {
-      e.preventDefault();
-      e.currentTarget.classList.remove('techpack-upload__zone--dragover');
-      
-      const files = Array.from(e.dataTransfer.files);
-      this.processFiles(files);
-    }
-
-    handleFileSelect(e) {
-      const files = Array.from(e.target.files);
-      this.processFiles(files);
-      e.target.value = '';
-    }
-
-    processFiles(files) {
-      debugSystem.log('Processing files', { count: files.length });
-      
-      files.forEach(file => {
-        if (state.formData.files.length >= CONFIG.MAX_FILES) {
-          this.showError(`Maximum ${CONFIG.MAX_FILES} files allowed`);
-          return;
-        }
-
-        if (!this.validateFile(file)) {
-          return;
-        }
-
-        this.addFileToList(file);
-      });
-    }
-
-    validateFile(file) {
-      const fileExt = '.' + file.name.split('.').pop().toLowerCase();
-      
-      if (!CONFIG.VALID_FILE_TYPES.includes(fileExt)) {
-        this.showError(`Invalid file type: ${file.name}`);
-        return false;
-      }
-
-      if (file.size > CONFIG.MAX_FILE_SIZE) {
-        this.showError(`File too large: ${file.name} (max ${Utils.formatFileSize(CONFIG.MAX_FILE_SIZE)})`);
-        return false;
-      }
-
-      return true;
-    }
-
-    addFileToList(file) {
-      const template = document.querySelector('#file-item-template');
-      const uploadedFiles = document.querySelector('#uploaded-files');
-      
-      if (!template || !uploadedFiles) return;
-
-      const fileId = `file-${++state.counters.file}`;
-      const clone = template.content.cloneNode(true);
-      const fileItem = clone.querySelector('.techpack-file');
-
-      fileItem.dataset.fileId = fileId;
-      fileItem.querySelector('.techpack-file__name').textContent = file.name;
-      fileItem.querySelector('.techpack-file__size').textContent = Utils.formatFileSize(file.size);
-
-      // Remove button
-      fileItem.querySelector('.techpack-file__remove')
-              .addEventListener('click', () => this.removeFile(fileId));
-
-      // Tag selector
-      const select = fileItem.querySelector('.techpack-file__tag-select');
-      select.addEventListener('change', e => {
-        const fileObj = state.formData.files.find(f => f.id === fileId);
-        if (fileObj) {
-          fileObj.type = e.target.value;
-          this.validateStep2();
-        }
-      });
-
-      uploadedFiles.appendChild(fileItem);
-
-      // Store file with empty tag
-      state.formData.files.push({
-        id: fileId,
-        file: file,
-        type: ''
-      });
-
-      // Animate in
-      animationManager.slideIn(fileItem, 'right');
-
-      debugSystem.log('File added', { fileId, fileName: file.name });
-      this.validateStep2();
-    }
-
-    removeFile(fileId) {
-      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
-      if (fileItem) {
-        animationManager.fadeOut(fileItem, 200).then(() => {
-          fileItem.remove();
-        });
-      }
-      
-      state.formData.files = state.formData.files.filter(f => f.id !== fileId);
-      debugSystem.log('File removed', { fileId });
-      this.validateStep2();
-    }
-
-    validateStep2() {
-      const nextBtn = document.getElementById('step-2-next');
-      const fileItems = document.querySelectorAll('.techpack-file');
-
-      let isValid = state.formData.files.length > 0;
-
-      fileItems.forEach(item => {
-        const fileId = item.dataset.fileId;
-        const select = item.querySelector('.techpack-file__tag-select');
-        const error = item.querySelector('.techpack-form__error');
-        const fileObj = state.formData.files.find(f => f.id === fileId);
-
-        if (!select?.value || !fileObj?.type) {
-          isValid = false;
-          if (error) error.textContent = 'Please select a file type';
-        } else {
-          if (error) error.textContent = '';
-          if (fileObj) fileObj.type = select.value;
-        }
-      });
-
-      if (nextBtn) nextBtn.disabled = !isValid;
-      
-      // Store the required garment count for step 3
-      if (isValid) {
-        this.calculateRequiredGarments();
-      }
-      
-      return isValid;
-    }
-
-    calculateRequiredGarments() {
-      const totalFiles = state.formData.files.length;
-      
-      state.formData.requiredGarmentCount = Math.max(totalFiles, 1);
-      
-      debugSystem.log('Required garments calculated', { 
-        totalFiles: totalFiles,
-        requiredGarments: state.formData.requiredGarmentCount 
-      });
-    }
-
-    showError(message) {
-      debugSystem.log('File error', message, 'error');
-      // You could implement a toast notification system here
-      console.error(message);
-    }
-  }
-
-  // Enhanced Country Selector
-  class CountrySelector {
-    constructor() {
-      this.input = null;
-      this.dropdown = null;
-      this.toggle = null;
-      this.isOpen = false;
-      this.highlightedIndex = -1;
-      this.init();
-    }
-
-    init() {
-      const countryWrapper = document.querySelector('.techpack-form__country-wrapper');
-      if (!countryWrapper) return;
-
-      this.input = countryWrapper.querySelector('.techpack-form__country-input');
-      this.dropdown = countryWrapper.querySelector('.techpack-form__dropdown');
-      this.toggle = countryWrapper.querySelector('.techpack-form__country-toggle');
-
-      this.setupEventListeners();
-      debugSystem.log('Country selector initialized');
-    }
-
-    setupEventListeners() {
-      if (!this.input) return;
-
-      this.input.addEventListener('focus', () => {
-        this.input.dataset.touched = 'true';
-      });
-
-      this.input.addEventListener('click', () => {
-        this.input.dataset.touched = 'true';
-        this.openDropdown();
-      });
-
-      this.input.addEventListener('keydown', this.handleKeydown.bind(this));
-
-      document.addEventListener('click', (e) => {
-        if (!this.input.closest('.techpack-form__country-wrapper').contains(e.target)) {
-          this.closeDropdown();
-        }
-      });
-    }
-
-    handleKeydown(e) {
-      if (e.key === 'Enter' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        this.openDropdown();
-      } else if (e.key === 'Escape') {
-        this.closeDropdown();
-      } else if (this.isOpen) {
-        this.handleDropdownNavigation(e);
-      }
-    }
-
-    handleDropdownNavigation(e) {
-      const items = this.dropdown.querySelectorAll('.techpack-form__dropdown-item');
-      
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          this.highlightedIndex = Math.min(this.highlightedIndex + 1, items.length - 1);
-          this.updateHighlight(items);
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          this.highlightedIndex = Math.max(this.highlightedIndex - 1, -1);
-          this.updateHighlight(items);
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (this.highlightedIndex >= 0 && items[this.highlightedIndex]) {
-            items[this.highlightedIndex].click();
-          }
-          break;
-      }
-    }
-
-    openDropdown() {
-      if (this.isOpen) return;
-      
-      this.isOpen = true;
-      this.populateDropdown();
-      this.dropdown.classList.add('techpack-form__dropdown--active');
-      this.toggle.classList.add('techpack-form__country-toggle--open');
-      
-      setTimeout(() => {
-        const searchInput = this.dropdown.querySelector('.techpack-form__dropdown-search');
-        if (searchInput) searchInput.focus();
-      }, 100);
-    }
-
-    closeDropdown() {
-      this.isOpen = false;
-      this.dropdown.classList.remove('techpack-form__dropdown--active');
-      this.toggle.classList.remove('techpack-form__country-toggle--open');
-      this.highlightedIndex = -1;
-    }
-
-    populateDropdown(searchTerm = '') {
-      this.dropdown.innerHTML = '';
-      
-      // Add search input
-      const searchInput = document.createElement('input');
-      searchInput.className = 'techpack-form__dropdown-search';
-      searchInput.placeholder = 'Search countries...';
-      searchInput.type = 'text';
-      searchInput.value = searchTerm;
-      this.dropdown.appendChild(searchInput);
-
-      // Filter countries
-      let displayCountries;
-      if (searchTerm) {
-        displayCountries = COUNTRY_DATA.searchByName(searchTerm);
-      } else {
-        displayCountries = [...COUNTRY_DATA.priority, { separator: true }, ...COUNTRY_DATA.european];
-      }
-
-      if (searchTerm && displayCountries.length === 0) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'techpack-form__dropdown-empty';
-        emptyDiv.textContent = 'No countries found';
-        this.dropdown.appendChild(emptyDiv);
-      } else {
-        this.renderCountries(displayCountries);
-      }
-
-      this.setupSearchListener(searchInput);
-    }
-
-    renderCountries(countries) {
+ {
       countries.forEach((country) => {
         if (country.separator) {
           const separator = document.createElement('div');
@@ -2381,7 +239,7 @@
       return Math.max(colorways.length, 1);
     }
 
-    // FIXED: Calculate minimum based on EACH GARMENT individually
+    // FIXED: Calculate minimum based on EACH GARMENT individually with Our Blanks minimums
     calculateMinimumRequired() {
       let totalMinimum = 0;
       
@@ -2391,17 +249,20 @@
       garments.forEach(garment => {
         const colorwaysInGarment = garment.querySelectorAll('.techpack-colorway');
         const colorwayCount = colorwaysInGarment.length;
+        const minimumPerColorway = getMinimumQuantity(colorwayCount);
         
         if (colorwayCount === 1) {
-          // Single colorway = 75 units minimum
-          totalMinimum += CONFIG.MIN_ORDER_QUANTITY;
+          // Single colorway minimum (30 for Our Blanks, 75 for Custom)
+          totalMinimum += minimumPerColorway;
         } else {
-          // Multiple colorways = 50 units per colorway
-          totalMinimum += colorwayCount * CONFIG.MIN_COLORWAY_QUANTITY;
+          // Multiple colorways minimum per colorway (20 for Our Blanks, 50 for Custom)
+          totalMinimum += colorwayCount * minimumPerColorway;
         }
       });
       
-      return Math.max(totalMinimum, CONFIG.MIN_ORDER_QUANTITY); // At least 75 total
+      // Ensure at least the single colorway minimum for the production type
+      const fallbackMinimum = getMinimumQuantity(1);
+      return Math.max(totalMinimum, fallbackMinimum);
     }
 
     getTotalQuantityFromAllColorways() {
@@ -2492,7 +353,8 @@
       
       const minTextElement = document.querySelector('#min-text, .total-quantity-text, [data-quantity-text]');
       if (minTextElement) {
-        const newText = colorwayCount === 1 ? '/ 75 minimum' : `/ ${minimumRequired} minimum`;
+        const singleMinimum = getMinimumQuantity(1);
+        const newText = colorwayCount === 1 ? `/ ${singleMinimum} minimum` : `/ ${minimumRequired} minimum`;
         
         if (minTextElement.textContent !== newText) {
           minTextElement.style.opacity = '0.5';
@@ -2524,9 +386,11 @@
         const remaining = minimumRequired - totalQuantity;
         
         if (colorwayCount === 1) {
-          messageElement.textContent = `Need ${remaining} more units (75 minimum for single colorway)`;
+          const singleMinimum = getMinimumQuantity(1);
+          messageElement.textContent = `Need ${remaining} more units (${singleMinimum} minimum for single colorway)`;
         } else {
-          messageElement.textContent = `Need ${remaining} more units (${colorwayCount} colorways × 50 each)`;
+          const multipleMinimum = getMinimumQuantity(2);
+          messageElement.textContent = `Need ${remaining} more units (${colorwayCount} colorways × ${multipleMinimum} each)`;
         }
       }
     }
@@ -2541,7 +405,7 @@
         colorwaysInGarment.forEach(colorway => {
           const colorwayId = colorway.dataset.colorwayId;
           const colorwayTotal = this.updateColorwayTotal(colorwayId);
-          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
           
           let warningEl = colorway.querySelector('.colorway-minimum-warning');
           if (!warningEl) {
@@ -2553,9 +417,11 @@
             let message;
             
             if (colorwayCountInGarment === 1) {
-              message = `⚠️ Need ${remaining} more units (75 minimum for single colorway)`;
+              const singleMinimum = getMinimumQuantity(1);
+              message = `⚠️ Need ${remaining} more units (${singleMinimum} minimum for single colorway)`;
             } else {
-              message = `⚠️ Need ${remaining} more units (50 minimum per colorway when multiple colorways)`;
+              const multipleMinimum = getMinimumQuantity(2);
+              message = `⚠️ Need ${remaining} more units (${multipleMinimum} minimum per colorway when multiple colorways)`;
             }
             
             warningEl.innerHTML = message;
@@ -2567,7 +433,7 @@
               totalEl.style.cssText = 'color: #ef4444 !important; font-weight: bold !important; background: #fef2f2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;';
             }
           } else {
-            const minimumText = colorwayCountInGarment === 1 ? '75' : '50';
+            const minimumText = getMinimumQuantity(colorwayCountInGarment);
             warningEl.style.display = 'block';
             warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${minimumText} ${colorwayCountInGarment === 1 ? 'for single colorway' : 'per colorway'})`;
             warningEl.className = 'colorway-minimum-warning success';
@@ -2602,34 +468,56 @@
     }
 
     updateQuantityProgressBar(percentage) {
-      const quantityProgressBar = document.getElementById('quantity-progress');
-      
-      if (quantityProgressBar) {
-        quantityProgressBar.style.transition = 'width 0.5s ease-out, background-color 0.3s ease';
-        quantityProgressBar.style.width = `${percentage}%`;
+      try {
+        const quantityProgressBar = document.getElementById('quantity-progress');
         
-        if (percentage >= 100) {
-          quantityProgressBar.classList.add('quantity-complete');
-          quantityProgressBar.style.animationPlayState = 'running';
+        if (quantityProgressBar) {
+          try {
+            quantityProgressBar.style.transition = 'width 0.5s ease-out, background-color 0.3s ease';
+            quantityProgressBar.style.width = `${percentage}%`;
+            
+            if (percentage >= 100) {
+              quantityProgressBar.classList.add('quantity-complete');
+              quantityProgressBar.style.animationPlayState = 'running';
+            } else {
+              quantityProgressBar.classList.remove('quantity-complete');
+              quantityProgressBar.style.animationPlayState = 'paused';
+            }
+          } catch (styleError) {
+            debugSystem.log('❌ Error applying progress bar styles:', styleError, 'error');
+          }
         } else {
-          quantityProgressBar.classList.remove('quantity-complete');
-          quantityProgressBar.style.animationPlayState = 'paused';
+          debugSystem.log('⚠️ Quantity progress bar element not found', null, 'warn');
         }
-      }
 
-      const tracker = document.querySelector('.techpack-quantity-tracker');
-      if (tracker) {
-        const isComplete = percentage >= 100;
-        tracker.classList.toggle('techpack-quantity-tracker--complete', isComplete);
-        
-        if (isComplete && !tracker.hasAttribute('data-achieved')) {
-          tracker.setAttribute('data-achieved', 'true');
-          tracker.classList.add('achievement-unlocked');
-          setTimeout(() => {
-            tracker.classList.remove('achievement-unlocked');
-          }, 1000);
-        } else if (!isComplete) {
-          tracker.removeAttribute('data-achieved');
+        const tracker = document.querySelector('.techpack-quantity-tracker');
+        if (tracker) {
+          try {
+            const isComplete = percentage >= 100;
+            tracker.classList.toggle('techpack-quantity-tracker--complete', isComplete);
+            
+            if (isComplete && !tracker.hasAttribute('data-achieved')) {
+              tracker.setAttribute('data-achieved', 'true');
+              tracker.classList.add('achievement-unlocked');
+              setTimeout(() => {
+                tracker.classList.remove('achievement-unlocked');
+              }, 1000);
+            } else if (!isComplete) {
+              tracker.removeAttribute('data-achieved');
+            }
+          } catch (trackerError) {
+            debugSystem.log('❌ Error updating quantity tracker:', trackerError, 'error');
+          }
+        }
+      } catch (error) {
+        debugSystem.log('❌ Critical error in updateQuantityProgressBar:', error, 'error');
+        // Store error for next load
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('techpack_quantity_progress_error', JSON.stringify({
+            error: error.message,
+            timestamp: new Date().toISOString(),
+            percentage: percentage
+          }));
         }
       }
     }
@@ -2659,8 +547,8 @@
       if (quantity >= 150) return 6;
       if (quantity >= 75) return 5;
       if (quantity >= 50) return 4;
-      if (quantity >= 25) return 3;
-      if (quantity >= 15) return 2;
+      if (quantity >= 30) return 3; // Updated for Our Blanks single colorway minimum
+      if (quantity >= 20) return 2; // Updated for Our Blanks multiple colorway minimum
       if (quantity >= 1) return 1;
       return 0;
     }
@@ -3030,7 +918,7 @@
           const colorwayTotal = quantityCalculator.updateColorwayTotal(colorwayId);
           const garment = colorway.closest('.techpack-garment');
           const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
-          const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
           
           // Only validate step if we're close to or above minimum to avoid interference
           if (colorwayTotal >= requiredPerColorway * 0.8) {
@@ -3289,24 +1177,24 @@
             event.preventDefault();
             event.stopPropagation();
             
-            // Provide immediate visual feedback
-            setButtonState(freshYesBtn, 'loading');
-            setButtonState(freshNoBtn, 'loading');
-            showStatus('Verifying registration status...', 'info');
+            // Close modal immediately
+            this.closeClientModal();
             
-            // Show warning first
-            if (warningDiv) {
-              warningDiv.style.display = 'flex';
-              warningDiv.classList.add('show');
-              debugSystem.log('⚠️ Registration warning displayed');
-            }
-
-            // Wait a moment, then proceed
+            // Show warning popup
+            this.showWarningPopup(
+              'Registration Verification Required',
+              'We will verify your registration status during processing. If you\'re not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.',
+              'warning'
+            );
+            
+            // Configure for registered client
+            state.formData.isRegisteredClient = true;
+            this.configureStep1ForRegisteredClient();
+            
+            // Navigate to step 1
             setTimeout(async () => {
               try {
                 debugSystem.log('🔄 Processing registered client navigation...');
-                state.formData.isRegisteredClient = true;
-                this.configureStep1ForRegisteredClient();
                 
                 // Enhanced navigation with better error handling
                 let navigationSuccess = false;
@@ -3330,11 +1218,9 @@
                 
                 if (navigationSuccess) {
                   debugSystem.log('✅ Registration navigation successful');
-                  showStatus('Registration verified! Proceeding to form...', 'success');
                   // Add scroll after navigation
                   setTimeout(() => {
                     stepManager.scrollToTechPackTopEnhanced();
-                    hideStatus();
                   }, 600);
                 } else {
                   throw new Error('Navigation failed completely');
@@ -3342,20 +1228,13 @@
                 
               } catch (processingError) {
                 debugSystem.log('❌ Registration processing failed:', processingError, 'error');
-                // Reset button states on error
-                setButtonState(freshYesBtn, 'normal');
-                setButtonState(freshNoBtn, 'normal');
-                showStatus('Technical issue occurred. Please try again.', 'error');
-                setTimeout(() => hideStatus(), 3000);
+                this.showWarningPopup('Error', 'Technical issue occurred. Please try again.', 'error');
               }
-            }, 2000); // 2 second delay to show warning
+            }, 1000); // 1 second delay
             
           } catch (error) {
             debugSystem.log('❌ YES button handler failed:', error, 'error');
-            setButtonState(freshYesBtn, 'normal');
-            setButtonState(freshNoBtn, 'normal');
-            showStatus('Unexpected error occurred. Please refresh the page.', 'error');
-            setTimeout(() => hideStatus(), 5000);
+            this.showWarningPopup('Error', 'Unexpected error occurred. Please refresh the page.', 'error');
           }
         });
 
@@ -3366,63 +1245,57 @@
             event.preventDefault();
             event.stopPropagation();
             
-            // Provide immediate visual feedback
-            setButtonState(freshYesBtn, 'loading');
-            setButtonState(freshNoBtn, 'loading');
-            showStatus('Processing new client registration...', 'info');
+            // Close modal immediately
+            this.closeClientModal();
             
-            try {
-              debugSystem.log('🔄 Processing new client navigation...');
-              state.formData.isRegisteredClient = false;
-              this.configureStep1ForNewClient();
-              
-              // Enhanced navigation with better error handling
-              let navigationSuccess = false;
+            // Configure for new client
+            state.formData.isRegisteredClient = false;
+            this.configureStep1ForNewClient();
+            
+            // Navigate to step 1
+            setTimeout(async () => {
               try {
-                navigationSuccess = await stepManager.navigateToStep(1);
-              } catch (navError) {
-                debugSystem.log('❌ Navigation error:', navError, 'error');
-                navigationSuccess = false;
-              }
-              
-              if (!navigationSuccess) {
-                debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
+                debugSystem.log('🔄 Processing new client navigation...');
+                
+                // Enhanced navigation with better error handling
+                let navigationSuccess = false;
                 try {
-                  stepManager.debugTestNavigation(1);
-                  navigationSuccess = true;
-                } catch (fallbackError) {
-                  debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
-                  throw new Error('All navigation methods failed');
+                  navigationSuccess = await stepManager.navigateToStep(1);
+                } catch (navError) {
+                  debugSystem.log('❌ Navigation error:', navError, 'error');
+                  navigationSuccess = false;
                 }
+                
+                if (!navigationSuccess) {
+                  debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
+                  try {
+                    stepManager.debugTestNavigation(1);
+                    navigationSuccess = true;
+                  } catch (fallbackError) {
+                    debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
+                    throw new Error('All navigation methods failed');
+                  }
+                }
+                
+                if (navigationSuccess) {
+                  debugSystem.log('✅ New client navigation successful');
+                  // Add scroll after navigation
+                  setTimeout(() => {
+                    stepManager.scrollToTechPackTopEnhanced();
+                  }, 600);
+                } else {
+                  throw new Error('Navigation failed completely');
+                }
+                
+              } catch (processingError) {
+                debugSystem.log('❌ New client processing failed:', processingError, 'error');
+                this.showWarningPopup('Error', 'Technical issue occurred. Please try again.', 'error');
               }
-              
-              if (navigationSuccess) {
-                debugSystem.log('✅ New client navigation successful');
-                showStatus('Registration complete! Proceeding to form...', 'success');
-                // Add scroll after navigation
-                setTimeout(() => {
-                  stepManager.scrollToTechPackTopEnhanced();
-                  hideStatus();
-                }, 600);
-              } else {
-                throw new Error('Navigation failed completely');
-              }
-              
-            } catch (processingError) {
-              debugSystem.log('❌ New client processing failed:', processingError, 'error');
-              // Reset button states on error
-              setButtonState(freshYesBtn, 'normal');
-              setButtonState(freshNoBtn, 'normal');
-              showStatus('Technical issue occurred. Please try again.', 'error');
-              setTimeout(() => hideStatus(), 3000);
-            }
+            }, 500); // Shorter delay for new clients
             
           } catch (error) {
             debugSystem.log('❌ NO button handler failed:', error, 'error');
-            setButtonState(freshYesBtn, 'normal');
-            setButtonState(freshNoBtn, 'normal');
-            showStatus('Unexpected error occurred. Please refresh the page.', 'error');
-            setTimeout(() => hideStatus(), 5000);
+            this.showWarningPopup('Error', 'Unexpected error occurred. Please refresh the page.', 'error');
           }
         });
 
@@ -3485,6 +1358,88 @@
       // Add to body
       document.body.appendChild(statusDiv);
       return statusDiv;
+    }
+    
+    closeClientModal() {
+      const modal = document.querySelector('#client-verification-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+        debugSystem.log('Client verification modal closed');
+      }
+    }
+    
+    showWarningPopup(title, message, type = 'warning') {
+      // Remove any existing warning popup
+      this.hideWarningPopup();
+      
+      // Create warning popup element
+      const popup = document.createElement('div');
+      popup.className = `techpack-warning-popup techpack-warning-popup--${type}`;
+      popup.innerHTML = `
+        <div class="techpack-warning-popup__backdrop"></div>
+        <div class="techpack-warning-popup__content">
+          <div class="techpack-warning-popup__header">
+            <div class="techpack-warning-popup__icon">
+              ${type === 'warning' ? `
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M12 2L2 20h20L12 2zm0 6v6m0 2v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                </svg>
+              ` : type === 'error' ? `
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
+                  <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              ` : `
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="9 12l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              `}
+            </div>
+            <h3 class="techpack-warning-popup__title">${title}</h3>
+            <button type="button" class="techpack-warning-popup__close" onclick="this.closest('.techpack-warning-popup').remove()">
+              <svg width="20" height="20" viewBox="0 0 20 20">
+                <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="techpack-warning-popup__body">
+            <p class="techpack-warning-popup__message">${message}</p>
+          </div>
+        </div>
+      `;
+      
+      // Add to body
+      document.body.appendChild(popup);
+      
+      // Show with animation
+      setTimeout(() => popup.classList.add('show'), 10);
+      
+      // Auto-close after 5 seconds
+      setTimeout(() => {
+        if (popup.parentNode) {
+          popup.classList.remove('show');
+          setTimeout(() => popup.remove(), 300);
+        }
+      }, 5000);
+      
+      // Close on backdrop click
+      popup.querySelector('.techpack-warning-popup__backdrop').addEventListener('click', () => {
+        popup.classList.remove('show');
+        setTimeout(() => popup.remove(), 300);
+      });
+      
+      debugSystem.log(`Warning popup shown: ${title}`, { type, message });
+    }
+    
+    hideWarningPopup() {
+      const existingPopup = document.querySelector('.techpack-warning-popup');
+      if (existingPopup) {
+        existingPopup.classList.remove('show');
+        setTimeout(() => existingPopup.remove(), 300);
+      }
     }
 
     showStep(stepNumber) {
@@ -3554,6 +1509,26 @@
           }
         }
       });
+
+      // Move email field to row 1 to be side by side with company name
+      const emailGroup = document.querySelector('#email').closest('.techpack-form__group');
+      const companyGroup = document.querySelector('#company-name').closest('.techpack-form__group');
+      
+      if (emailGroup && companyGroup) {
+        const row1 = companyGroup.closest('.techpack-form__row');
+        const row2 = emailGroup.closest('.techpack-form__row');
+        
+        if (row1 && row2) {
+          // Move email group to row 1
+          row1.appendChild(emailGroup);
+          
+          // Hide row 2 if it's empty (after removing email and VAT/EIN)
+          const remainingFieldsInRow2 = row2.querySelectorAll('.techpack-form__group:not([style*="display: none"])');
+          if (remainingFieldsInRow2.length === 0) {
+            row2.style.display = 'none';
+          }
+        }
+      }
 
       // Update the title to indicate registered client
       const title = document.querySelector('#techpack-step-1 .techpack-title');
