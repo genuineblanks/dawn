@@ -4173,6 +4173,22 @@
       const isMobile = () => window.innerWidth <= 768;
       let originalOverscrollBehavior = '';
       
+      // GLOBAL FAILSAFE: Force unlock body scroll (can be called from anywhere)
+      window.forceUnlockBodyScroll = () => {
+        debugSystem.log('🚨 FORCE UNLOCK: Resetting all body scroll locks');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        document.body.style.removeProperty('overscroll-behavior');
+        // Also trigger a scroll position reset if needed
+        if (document.body.style.top) {
+          const scrollY = parseInt(document.body.style.top.replace('px', '')) * -1;
+          window.scrollTo(0, scrollY);
+        }
+        debugSystem.log('✅ Body scroll forcefully unlocked');
+      };
+      
       const lockBodyScroll = () => {
         if (isMobile()) {
           // Preserve original overscroll-behavior to prevent conflicts
@@ -4219,6 +4235,14 @@
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
         debugSystem.log('✅ Client verification modal opened');
+        
+        // TIMEOUT FAILSAFE: Auto-unlock scroll after 30 seconds if something goes wrong
+        setTimeout(() => {
+          if (modal.style.display !== 'none') {
+            debugSystem.log('⏰ Timeout failsafe: Auto-unlocking body scroll after 30s');
+            unlockBodyScroll();
+          }
+        }, 30000);
       });
       
       // Close modal functions
@@ -4239,6 +4263,13 @@
         existingClientBtn.addEventListener('click', () => {
           debugSystem.log('✅ Existing client selected');
           closeModal();
+          
+          // FAILSAFE: Ensure body scroll is unlocked on mobile
+          setTimeout(() => {
+            unlockBodyScroll();
+            debugSystem.log('📱 Failsafe body scroll unlock after existing client selection');
+          }, 100);
+          
           setTimeout(() => this.showStep(1), 300);
         });
       }
@@ -4247,9 +4278,24 @@
         newClientBtn.addEventListener('click', () => {
           debugSystem.log('🆕 New client selected');
           closeModal();
+          
+          // FAILSAFE: Ensure body scroll is unlocked on mobile  
+          setTimeout(() => {
+            unlockBodyScroll();
+            debugSystem.log('📱 Failsafe body scroll unlock after new client selection');
+          }, 100);
+          
           setTimeout(() => this.showStep(1), 300);
         });
       }
+      
+      // IMMEDIATE FAILSAFE: Clear any stuck scroll states on page load
+      setTimeout(() => {
+        if (isMobile() && (document.body.style.position === 'fixed' || document.body.style.overflow === 'hidden')) {
+          debugSystem.log('🔧 Page load failsafe: Clearing stuck scroll state');
+          window.forceUnlockBodyScroll();
+        }
+      }, 1000);
       
       debugSystem.log('✅ Client modal setup complete');
     }
