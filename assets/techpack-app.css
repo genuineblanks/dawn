@@ -5078,24 +5078,26 @@ body {
    TECHPACK OVERSCROLL BEHAVIOR FIX
    =============================================== */
 
-/* Mobile-only overscroll-behavior rule for techpack pages - Fixed desktop scrolling */
+/* Mobile overscroll behavior - FIXED: Allow native scrolling */
 @media (max-width: 768px) {
+  /* Remove aggressive overscroll blocking that prevents normal scrolling */
   .techpack-app-wrapper,
   .techpack-step,
   .techpack-container {
-    overscroll-behavior: none;
+    /* overscroll-behavior: none; <- REMOVED: This was blocking mobile scroll */
+    /* Allow native mobile scroll behavior */
+    overscroll-behavior: auto;
   }
 }
 
-/* Mobile-specific overscroll behavior for techpack modals */
+/* Keep overscroll prevention ONLY for actual modals when they're open */
 @media (max-width: 768px) {
   .techpack-modal[style*="block"] {
-    overscroll-behavior: none;
+    overscroll-behavior: none; /* Keep this for modal content */
   }
   
-  .techpack-modal[style*="block"] body {
-    overscroll-behavior: none;
-  }
+  /* Remove body overscroll rule that was too aggressive */
+  /* .techpack-modal[style*="block"] body { overscroll-behavior: none; } <- REMOVED */
 }
 
 /* Mobile responsive */
