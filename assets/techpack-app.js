@@ -4176,55 +4176,6 @@
       const isMobile = () => window.innerWidth <= 768;
       let originalOverscrollBehavior = '';
       
-      // GLOBAL FAILSAFE: Force unlock body scroll (can be called from anywhere)
-      window.forceUnlockBodyScroll = () => {
-        debugSystem.log('🚨 FORCE UNLOCK: Resetting all body scroll locks');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-        document.body.style.removeProperty('overscroll-behavior');
-        // Also trigger a scroll position reset if needed
-        if (document.body.style.top) {
-          const scrollY = parseInt(document.body.style.top.replace('px', '')) * -1;
-          window.scrollTo(0, scrollY);
-        }
-        debugSystem.log('✅ Body scroll forcefully unlocked');
-      };
-      
-      // GLOBAL EMERGENCY: Force close any stuck modals (can be called from anywhere)
-      window.forceCloseAllModals = () => {
-        debugSystem.log('🆘 EMERGENCY: Force closing all stuck modals');
-        
-        // Find all modals on the page
-        const allModals = document.querySelectorAll('.techpack-modal');
-        let closedCount = 0;
-        
-        allModals.forEach(modal => {
-          if (modal.style.display !== 'none') {
-            // Force hide the modal
-            modal.style.display = 'none';
-            modal.classList.remove('active');
-            
-            // Disable all backdrops
-            const backdrop = modal.querySelector('.techpack-modal__backdrop');
-            if (backdrop) {
-              backdrop.style.pointerEvents = 'none';
-              backdrop.style.visibility = 'hidden';
-              backdrop.style.display = 'none';
-            }
-            
-            closedCount++;
-            debugSystem.log(`🔧 Force closed modal: ${modal.id || 'unnamed'}`);
-          }
-        });
-        
-        // Also force unlock body scroll
-        window.forceUnlockBodyScroll();
-        
-        debugSystem.log(`✅ Emergency cleanup complete - closed ${closedCount} modals`);
-        return closedCount;
-      };
       
       const lockBodyScroll = () => {
         if (isMobile()) {
@@ -4263,95 +4214,32 @@
         setTimeout(() => modal.classList.add('active'), 10);
         debugSystem.log('✅ Client verification modal opened');
         
-        // TIMEOUT FAILSAFE: Auto-unlock scroll after 30 seconds if something goes wrong
-        setTimeout(() => {
-          if (modal.style.display !== 'none') {
-            debugSystem.log('⏰ Timeout failsafe: Auto-unlocking body scroll after 30s');
-            unlockBodyScroll();
-          }
-        }, 30000);
       });
       
-      // Close modal functions - FIXED: Immediate close to prevent mobile blocking
       const closeModal = () => {
-        debugSystem.log('🚨 IMMEDIATE MODAL CLOSE: Removing blocking elements');
-        
-        // IMMEDIATE: Remove active class and hide modal right away
         modal.classList.remove('active');
-        modal.style.display = 'none';  // ← NO DELAY! Immediate hiding
-        
-        // IMMEDIATE: Unlock body scroll right away
+        modal.style.display = 'none';
         unlockBodyScroll();
-        
-        // FAILSAFE: Ensure backdrop is completely disabled
-        const backdrop = modal.querySelector('.techpack-modal__backdrop');
-        if (backdrop) {
-          backdrop.style.pointerEvents = 'none';
-          backdrop.style.visibility = 'hidden';
-          debugSystem.log('🛡️ Backdrop explicitly disabled');
-        }
-        
-        debugSystem.log('✅ Modal closed immediately - no delay');
       };
       
       if (closeBtn) closeBtn.addEventListener('click', closeModal);
       if (backdrop) backdrop.addEventListener('click', closeModal);
       
-      // Client type selection
       if (existingClientBtn) {
         existingClientBtn.addEventListener('click', () => {
-          debugSystem.log('✅ Existing client selected');
           closeModal();
-          
-          // FAILSAFE: Ensure body scroll is unlocked on mobile
-          setTimeout(() => {
-            unlockBodyScroll();
-            debugSystem.log('📱 Failsafe body scroll unlock after existing client selection');
-          }, 100);
-          
-          setTimeout(() => this.showStep(1), 300);
+          this.showStep(1);
         });
       }
       
       if (newClientBtn) {
         newClientBtn.addEventListener('click', () => {
-          debugSystem.log('🆕 New client selected');
           closeModal();
-          
-          // FAILSAFE: Ensure body scroll is unlocked on mobile  
-          setTimeout(() => {
-            unlockBodyScroll();
-            debugSystem.log('📱 Failsafe body scroll unlock after new client selection');
-          }, 100);
-          
-          setTimeout(() => this.showStep(1), 300);
+          this.showStep(1);
         });
       }
       
-      // IMMEDIATE FAILSAFE: Clear any stuck scroll states on page load
-      setTimeout(() => {
-        if (isMobile() && (document.body.style.position === 'fixed' || document.body.style.overflow === 'hidden')) {
-          debugSystem.log('🔧 Page load failsafe: Clearing stuck scroll state');
-          window.forceUnlockBodyScroll();
-        }
-      }, 1000);
       
-      // AUTOMATIC CLEANUP: Listen for touch/click events to clean stuck modals
-      const autoCleanupHandler = () => {
-        // Check if any modals are stuck (visible but shouldn't be)
-        const stuckModals = document.querySelectorAll('.techpack-modal:not([style*="display: none"])');
-        if (stuckModals.length > 0 && !modal.classList.contains('active')) {
-          debugSystem.log('🧹 Auto-cleanup: Found stuck modals during user interaction');
-          window.forceCloseAllModals();
-        }
-      };
-      
-      // Add auto-cleanup listeners for mobile touch events
-      if (isMobile()) {
-        document.addEventListener('touchstart', autoCleanupHandler, { passive: true, once: false });
-        document.addEventListener('click', autoCleanupHandler, { passive: true, once: false });
-        debugSystem.log('📱 Auto-cleanup listeners added for mobile');
-      }
       
       debugSystem.log('✅ Client modal setup complete');
     }
