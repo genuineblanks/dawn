@@ -3091,79 +3091,105 @@
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
       removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
       
-      // Color picker and visual Pantone system
+      // Color picker and elegant Pantone system
       const colorPicker = colorway.querySelector('.techpack-color-picker__input');
       const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      const pantoneVisual = colorway.querySelector('.techpack-colorway__pantone-visual');
+      const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      if (pantoneVisual) {
-        const pantoneColorInput = pantoneVisual.querySelector('.pantone-color-input');
-        const selectedHex = pantoneVisual.querySelector('[data-selected-hex]');
-        const matchCards = pantoneVisual.querySelectorAll('[data-pantone-selector]');
-        const selectedPantoneDisplay = pantoneVisual.querySelector('.selected-pantone-display');
-        const selectedPantoneSwatch = pantoneVisual.querySelector('.selected-pantone-swatch');
-        const selectedPantoneCode = pantoneVisual.querySelector('[data-final-pantone]');
-        const pantoneInput = pantoneVisual.querySelector('[data-pantone-input]');
+      if (pantoneElegant) {
+        const pantoneColorSwatch = pantoneElegant.querySelector('.techpack-pantone-color-swatch');
+        const pantoneCodeInput = pantoneElegant.querySelector('[data-pantone-code]');
+        const confidenceSpan = pantoneElegant.querySelector('[data-confidence]');
+        const customizeBtn = pantoneElegant.querySelector('[data-customize-pantone]');
+        const customSection = pantoneElegant.querySelector('.techpack-pantone-custom');
+        const customInput = pantoneElegant.querySelector('[data-custom-pantone]');
+        const applyBtn = pantoneElegant.querySelector('[data-apply-custom]');
+        const cancelBtn = pantoneElegant.querySelector('[data-cancel-custom]');
         
-        // Initialize visual Pantone system
-        this.initializeVisualPantoneSystem(pantoneVisual, garmentId, colorwayId);
-        
-        // Handle main color picker changes
-        if (colorPicker) {
-          colorPicker.addEventListener('change', () => {
-            colorPreview.style.backgroundColor = colorPicker.value;
-            
-            // Update the visual pantone picker
-            if (pantoneColorInput) {
-              pantoneColorInput.value = colorPicker.value;
-              this.updatePantoneMatches(pantoneVisual, colorPicker.value, garmentId, colorwayId);
+        colorPicker.addEventListener('change', () => {
+          colorPreview.style.backgroundColor = colorPicker.value;
+          
+          // Update Pantone swatch color
+          if (pantoneColorSwatch) {
+            pantoneColorSwatch.style.backgroundColor = colorPicker.value;
+          }
+          
+          // Auto-select closest Pantone color
+          const closestPantone = this.findClosestPantoneColor(colorPicker.value);
+          if (pantoneCodeInput && closestPantone) {
+            pantoneCodeInput.value = closestPantone.code;
+            pantoneCodeInput.placeholder = '';
+          }
+          
+          // Update confidence
+          if (confidenceSpan && closestPantone) {
+            confidenceSpan.textContent = `${closestPantone.confidence}%`;
+          }
+          
+          // Update state
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (colorwayData) {
+              colorwayData.color = colorPicker.value;
+              colorwayData.pantoneCode = closestPantone ? closestPantone.code : '';
             }
-          });
-        }
-        
-        // Handle pantone color picker changes
-        if (pantoneColorInput) {
-          pantoneColorInput.addEventListener('change', () => {
-            selectedHex.textContent = pantoneColorInput.value;
-            this.updatePantoneMatches(pantoneVisual, pantoneColorInput.value, garmentId, colorwayId);
-            
-            // Sync with main color picker
-            if (colorPicker) {
-              colorPicker.value = pantoneColorInput.value;
-              colorPreview.style.backgroundColor = pantoneColorInput.value;
-            }
-          });
-        }
-        
-        // Handle Pantone match selections
-        matchCards.forEach(card => {
-          card.addEventListener('click', () => {
-            this.selectPantoneMatch(pantoneVisual, card, garmentId, colorwayId);
-          });
+          }
+          
+          this.validatePantoneSelection(colorway);
         });
+        
+        // Customize button
+        if (customizeBtn) {
+          customizeBtn.addEventListener('click', () => {
+            customSection.style.display = 'flex';
+            customizeBtn.style.display = 'none';
+          });
+        }
+        
+        // Apply custom Pantone
+        if (applyBtn) {
+          applyBtn.addEventListener('click', () => {
+            const customCode = customInput.value.trim();
+            if (customCode) {
+              pantoneCodeInput.value = customCode;
+              pantoneCodeInput.placeholder = '';
+              confidenceSpan.textContent = 'Custom';
+              
+              // Update state
+              const garmentData = state.formData.garments.find(g => g.id === garmentId);
+              if (garmentData) {
+                const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+                if (colorwayData) {
+                  colorwayData.pantoneCode = customCode;
+                }
+              }
+            }
+            
+            customSection.style.display = 'none';
+            customizeBtn.style.display = 'flex';
+            customInput.value = '';
+            this.validatePantoneSelection(colorway);
+          });
+        }
+        
+        // Cancel custom
+        if (cancelBtn) {
+          cancelBtn.addEventListener('click', () => {
+            customSection.style.display = 'none';
+            customizeBtn.style.display = 'flex';
+            customInput.value = '';
+          });
+        }
       }
       
       colorPreview.style.backgroundColor = colorPicker.value;
 
-      // Enhanced size quantity inputs
-      const qtyInputs = colorway.querySelectorAll('[data-size-input]');
-      const sizeGridEnhanced = colorway.querySelector('.techpack-size-grid-enhanced');
-      
-      // Initialize visual size system
-      if (sizeGridEnhanced) {
-        this.initializeVisualSizeSystem(sizeGridEnhanced, colorwayId);
-      }
-      
+      // Quantity inputs
+      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
       qtyInputs.forEach(input => {
         const debouncedUpdate = Utils.debounce(() => {
-          // Update visual states
-          this.updateSizeInputVisualState(input, colorwayId);
-          
-          // Update distribution chart
-          this.updateSizeDistributionChart(sizeGridEnhanced);
-          
-          // Existing calculations
           quantityCalculator.validateQuantityInputs(colorwayId);
           quantityCalculator.updateColorwayTotal(colorwayId);
           quantityCalculator.calculateAndUpdateProgress();
@@ -3182,27 +3208,12 @@
 
         input.addEventListener('input', debouncedUpdate);
         input.addEventListener('change', debouncedUpdate);
-        
-        // Add focus effects
-        input.addEventListener('focus', () => {
-          const sizeEnhanced = input.closest('.size-input-enhanced');
-          if (sizeEnhanced) {
-            sizeEnhanced.classList.add('focused');
-          }
-        });
-        
-        input.addEventListener('blur', () => {
-          const sizeEnhanced = input.closest('.size-input-enhanced');
-          if (sizeEnhanced) {
-            sizeEnhanced.classList.remove('focused');
-          }
-        });
       });
     }
 
-    // Find top 3 closest Pantone color matches
-    findTopPantoneMatches(hexColor, count = 3) {
-      // Enhanced Pantone color database
+    // Find closest Pantone color match
+    findClosestPantoneColor(hexColor) {
+      // Sample Pantone color database (simplified for demo)
       const pantoneColors = [
         { code: 'PANTONE 18-1664 TPX', hex: '#C5282F', name: 'True Red' },
         { code: 'PANTONE 19-4052 TPX', hex: '#0F4C75', name: 'Classic Blue' },
@@ -3218,17 +3229,7 @@
         { code: 'PANTONE 17-5641 TPX', hex: '#34558B', name: 'Navy' },
         { code: 'PANTONE 18-0228 TPX', hex: '#4A5D23', name: 'Forest Green' },
         { code: 'PANTONE 18-1142 TPX', hex: '#B83A4B', name: 'Burgundy' },
-        { code: 'PANTONE 14-4318 TPX', hex: '#92A8D1', name: 'Serenity' },
-        { code: 'PANTONE 17-1456 TPX', hex: '#D2691E', name: 'Chocolate' },
-        { code: 'PANTONE 19-3832 TPX', hex: '#663399', name: 'Purple' },
-        { code: 'PANTONE 17-1462 TPX', hex: '#CD853F', name: 'Peru' },
-        { code: 'PANTONE 18-1763 TPX', hex: '#800000', name: 'Maroon' },
-        { code: 'PANTONE 19-4007 TPX', hex: '#2F4F4F', name: 'Dark Slate Gray' },
-        { code: 'PANTONE 14-0756 TPX', hex: '#ADFF2F', name: 'Green Yellow' },
-        { code: 'PANTONE 16-1546 TPX', hex: '#FF4500', name: 'Orange Red' },
-        { code: 'PANTONE 18-2120 TPX', hex: '#DC143C', name: 'Crimson' },
-        { code: 'PANTONE 19-3953 TPX', hex: '#4B0082', name: 'Indigo' },
-        { code: 'PANTONE 15-4020 TPX', hex: '#40E0D0', name: 'Turquoise' }
+        { code: 'PANTONE 14-4318 TPX', hex: '#92A8D1', name: 'Serenity' }
       ];
       
       // Convert hex to RGB for comparison
@@ -3240,7 +3241,8 @@
       };
       
       const targetRgb = hexToRgb(hexColor);
-      const matches = [];
+      let closestColor = null;
+      let minDistance = Infinity;
       
       pantoneColors.forEach(pantone => {
         const pantoneRgb = hexToRgb(pantone.hex);
@@ -3252,278 +3254,47 @@
           Math.pow(targetRgb.b - pantoneRgb.b, 2)
         );
         
-        matches.push({
-          ...pantone,
-          distance: distance
-        });
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestColor = pantone;
+        }
       });
       
-      // Sort by distance and take top matches
-      const topMatches = matches
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, count);
-      
-      // Calculate confidence for each match
-      const maxDistance = Math.sqrt(3 * Math.pow(255, 2));
-      
-      return topMatches.map((match, index) => {
-        const confidence = Math.round((1 - (match.distance / maxDistance)) * 100);
+      if (closestColor) {
+        // Calculate confidence (inverted distance, scaled to percentage)
+        const maxDistance = Math.sqrt(3 * Math.pow(255, 2)); // Maximum possible distance
+        const confidence = Math.round((1 - (minDistance / maxDistance)) * 100);
+        
         return {
-          code: match.code,
-          hex: match.hex,
-          name: match.name,
-          confidence: Math.max(confidence, 60 - (index * 5)), // Decrease confidence for lower matches
-          rank: index + 1,
-          distance: match.distance
+          code: closestColor.code,
+          confidence: Math.max(confidence, 65) // Minimum 65% confidence for UX
         };
-      });
-    }
-    
-    // Legacy function for backwards compatibility
-    findClosestPantoneColor(hexColor) {
-      const matches = this.findTopPantoneMatches(hexColor, 1);
-      return matches.length > 0 ? matches[0] : null;
+      }
+      
+      return null;
     }
 
-    // Initialize Visual Pantone System
-    initializeVisualPantoneSystem(pantoneVisual, garmentId, colorwayId) {
-      const pantoneColorInput = pantoneVisual.querySelector('.pantone-color-input');
-      const selectedHex = pantoneVisual.querySelector('[data-selected-hex]');
+    // Validate Pantone selection for elegant system
+    validatePantoneSelection(colorway) {
+      const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
+      const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      // Initialize with default color
-      const defaultColor = '#000000';
-      if (pantoneColorInput) {
-        pantoneColorInput.value = defaultColor;
-      }
-      if (selectedHex) {
-        selectedHex.textContent = defaultColor;
-      }
+      if (!pantoneElegant || !pantoneValidationMsg) return true;
       
-      // Initialize with default matches
-      this.updatePantoneMatches(pantoneVisual, defaultColor, garmentId, colorwayId);
-    }
-    
-    // Update Pantone Matches Display
-    updatePantoneMatches(pantoneVisual, hexColor, garmentId, colorwayId) {
-      const matches = this.findTopPantoneMatches(hexColor, 3);
-      const matchCards = pantoneVisual.querySelectorAll('[data-pantone-selector]');
-      
-      matchCards.forEach((card, index) => {
-        if (index < matches.length) {
-          const match = matches[index];
-          const swatch = card.querySelector('.match-swatch');
-          const pantoneCode = card.querySelector('[data-pantone-code]');
-          
-          // Update visual appearance
-          if (swatch) {
-            swatch.style.backgroundColor = match.hex;
-          }
-          if (pantoneCode) {
-            pantoneCode.textContent = match.code;
-          }
-          
-          // Store match data for selection
-          card.dataset.pantoneCode = match.code;
-          card.dataset.pantoneHex = match.hex;
-          card.dataset.pantoneName = match.name;
-          
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-    
-    // Select Pantone Match
-    selectPantoneMatch(pantoneVisual, selectedCard, garmentId, colorwayId) {
-      const matchCards = pantoneVisual.querySelectorAll('[data-pantone-selector]');
-      const selectedPantoneDisplay = pantoneVisual.querySelector('.selected-pantone-display');
-      const selectedPantoneSwatch = pantoneVisual.querySelector('.selected-pantone-swatch');
-      const selectedPantoneCode = pantoneVisual.querySelector('[data-final-pantone]');
-      const pantoneInput = pantoneVisual.querySelector('[data-pantone-input]');
-      
-      // Remove previous selections
-      matchCards.forEach(card => card.classList.remove('selected'));
-      
-      // Add selection to clicked card
-      selectedCard.classList.add('selected');
-      
-      // Get selected Pantone data
-      const pantoneCode = selectedCard.dataset.pantoneCode;
-      const pantoneHex = selectedCard.dataset.pantoneHex;
-      const pantoneName = selectedCard.dataset.pantoneName;
-      
-      // Update selected display
-      if (selectedPantoneSwatch) {
-        selectedPantoneSwatch.style.backgroundColor = pantoneHex;
-      }
-      if (selectedPantoneCode) {
-        selectedPantoneCode.textContent = pantoneCode;
-      }
-      if (selectedPantoneDisplay) {
-        selectedPantoneDisplay.classList.add('has-selection');
-      }
-      if (pantoneInput) {
-        pantoneInput.value = pantoneCode;
-      }
-      
-      // Update state
-      const state = TechPackState.getInstance();
-      const garmentData = state.formData.garments.find(g => g.id === garmentId);
-      if (garmentData) {
-        const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-        if (colorwayData) {
-          colorwayData.pantoneCode = pantoneCode;
-          colorwayData.pantoneHex = pantoneHex;
-          colorwayData.pantoneName = pantoneName;
-        }
-      }
-      
-      // Validate selection
-      this.validateVisualPantoneSelection(pantoneVisual);
-    }
-    
-    // Initialize Visual Size System
-    initializeVisualSizeSystem(sizeGridEnhanced, colorwayId) {
-      const sizeInputs = sizeGridEnhanced.querySelectorAll('[data-size-input]');
-      
-      sizeInputs.forEach(input => {
-        // Initialize visual state
-        this.updateSizeInputVisualState(input, colorwayId);
-      });
-      
-      // Initialize distribution chart
-      this.updateSizeDistributionChart(sizeGridEnhanced);
-    }
-    
-    // Update Size Input Visual State
-    updateSizeInputVisualState(input, colorwayId) {
-      const sizeEnhanced = input.closest('.size-input-enhanced');
-      const progressRingFill = sizeEnhanced.querySelector('.progress-ring-fill');
-      const value = parseInt(input.value) || 0;
-      
-      // Determine state based on value
-      let state = 'empty';
-      let percentage = 0;
-      
-      if (value > 0) {
-        const minimum = 10; // Minimum per size
-        const maximum = 25; // Reasonable maximum per size
-        
-        if (value < minimum) {
-          state = 'partial';
-          percentage = (value / minimum) * 100;
-        } else if (value <= maximum) {
-          state = 'complete';
-          percentage = 100;
-        } else {
-          state = 'excess';
-          percentage = 100;
-        }
-      }
-      
-      // Update visual classes
-      sizeEnhanced.className = `size-input-enhanced ${state}`;
-      
-      // Update progress ring
-      if (progressRingFill) {
-        const circumference = 2 * Math.PI * 15.915;
-        const offset = circumference - (percentage / 100) * circumference;
-        progressRingFill.style.strokeDashoffset = offset;
-      }
-    }
-    
-    // Update Size Distribution Chart
-    updateSizeDistributionChart(sizeGridEnhanced) {
-      const sizeInputs = sizeGridEnhanced.querySelectorAll('[data-size-input]');
-      const distributionBars = sizeGridEnhanced.querySelectorAll('.distribution-bar');
-      
-      // Calculate total and individual percentages
-      let total = 0;
-      const values = [];
-      
-      sizeInputs.forEach(input => {
-        const value = parseInt(input.value) || 0;
-        values.push(value);
-        total += value;
-      });
-      
-      // Update bars
-      distributionBars.forEach((bar, index) => {
-        const barFill = bar.querySelector('.bar-fill');
-        if (barFill && index < values.length) {
-          const percentage = total > 0 ? (values[index] / total) * 100 : 0;
-          barFill.style.height = `${Math.max(percentage, 5)}%`; // Minimum 5% for visibility
-          
-          // Update color based on quantity
-          const value = values[index];
-          if (value === 0) {
-            barFill.style.background = 'linear-gradient(to top, #e5e7eb, #d1d5db)';
-          } else if (value < 10) {
-            barFill.style.background = 'linear-gradient(to top, #f59e0b, #fbbf24)';
-          } else if (value <= 25) {
-            barFill.style.background = 'linear-gradient(to top, #10b981, #34d399)';
-          } else {
-            barFill.style.background = 'linear-gradient(to top, #8b5cf6, #a78bfa)';
-          }
-        }
-      });
-    }
-    
-    // Validate Visual Pantone Selection
-    validateVisualPantoneSelection(pantoneVisual) {
-      const pantoneInput = pantoneVisual.querySelector('[data-pantone-input]');
-      const pantoneValidationMsg = pantoneVisual.querySelector('.techpack-pantone-validation-message');
-      
-      const hasValidPantone = pantoneInput && pantoneInput.value.trim();
+      const pantoneCodeInput = pantoneElegant.querySelector('[data-pantone-code]');
+      const hasValidPantone = pantoneCodeInput && pantoneCodeInput.value.trim();
       
       if (hasValidPantone) {
-        if (pantoneValidationMsg) {
-          pantoneValidationMsg.textContent = `✓ PANTONE color selected: ${pantoneInput.value}`;
-          pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
-          pantoneValidationMsg.style.display = 'block';
-        }
-        return true;
+        pantoneValidationMsg.textContent = `✓ PANTONE color selected: ${pantoneCodeInput.value}`;
+        pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
+        pantoneValidationMsg.style.display = 'block';
       } else {
-        if (pantoneValidationMsg) {
-          pantoneValidationMsg.textContent = 'Please select a PANTONE color from the matches above.';
-          pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
-          pantoneValidationMsg.style.display = 'block';
-        }
-        return false;
-      }
-    }
-
-    // Validate Pantone selection (supports both old and new visual systems)
-    validatePantoneSelection(colorway) {
-      const pantoneVisual = colorway.querySelector('.techpack-colorway__pantone-visual');
-      const pantoneElegant = colorway.querySelector('.techpack-pantone-elegant');
-      
-      // Use new visual system if available, otherwise fall back to old system
-      if (pantoneVisual) {
-        return this.validateVisualPantoneSelection(pantoneVisual);
-      } else if (pantoneElegant) {
-        // Legacy validation for old system
-        const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
-        if (!pantoneValidationMsg) return true;
-        
-        const pantoneCodeInput = pantoneElegant.querySelector('[data-pantone-code]');
-        const hasValidPantone = pantoneCodeInput && pantoneCodeInput.value.trim();
-        
-        if (hasValidPantone) {
-          pantoneValidationMsg.textContent = `✓ PANTONE color selected: ${pantoneCodeInput.value}`;
-          pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
-          pantoneValidationMsg.style.display = 'block';
-        } else {
-          pantoneValidationMsg.textContent = 'Please select a color to auto-generate PANTONE match.';
-          pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
-          pantoneValidationMsg.style.display = 'block';
-        }
-        
-        return hasValidPantone;
+        pantoneValidationMsg.textContent = 'Please select a color to auto-generate PANTONE match.';
+        pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
+        pantoneValidationMsg.style.display = 'block';
       }
       
-      return true;
+      return hasValidPantone;
     }
 
     removeColorway(garmentId, colorwayId) {
