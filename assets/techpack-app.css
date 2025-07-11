@@ -115,10 +115,27 @@ body {
   .techpack-container {
     margin: var(--techpack-space-xl) auto;
     padding: var(--techpack-space-lg);
+    min-height: auto;
+    height: auto;
   }
   
   .techpack-app-wrapper {
     padding: var(--techpack-space-xl) 0;
+    min-height: auto;
+    height: auto;
+  }
+  
+  /* Fix white space issues on mobile */
+  .techpack-step {
+    min-height: auto;
+    height: auto;
+    padding-bottom: 80px; /* Account for sticky buttons */
+  }
+  
+  .techpack-content {
+    min-height: auto;
+    height: auto;
+    padding-bottom: 2rem;
   }
 }
 
@@ -1903,13 +1920,20 @@ body {
     resize: vertical;
   }
   
-  /* ENHANCED: Mobile navigation buttons */
+  /* ENHANCED: Mobile navigation buttons with sticky positioning */
   .techpack-form__actions {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--techpack-bg);
+    border-top: 1px solid var(--techpack-border-light);
+    padding: 1rem;
+    margin-top: 2rem;
+    z-index: 10;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     flex-direction: column;
     gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--techpack-border-light);
   }
   
   .techpack-btn {
@@ -3490,6 +3514,49 @@ body {
   .techpack-btn {
     min-height: 52px;
     font-size: 0.95rem;
+  }
+  
+  /* Fix X button positioning on mobile */
+  .techpack-colorway__remove,
+  .techpack-garment__remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--techpack-border);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5;
+    transition: var(--techpack-transition);
+  }
+  
+  .techpack-colorway__remove:hover,
+  .techpack-garment__remove:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--techpack-error);
+    color: var(--techpack-error);
+  }
+  
+  .techpack-colorway__remove svg,
+  .techpack-garment__remove svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Fix colorway header positioning */
+  .techpack-colorway__header {
+    position: relative;
+    padding-right: 40px; /* Space for X button */
+  }
+  
+  .techpack-garment__header {
+    position: relative;
+    padding-right: 40px; /* Space for X button */
   }
 }
 
