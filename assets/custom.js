@@ -626,16 +626,7 @@ function addMobileConflictDetection() {
         });
       }
       
-      // Check for CSS overscroll-behavior - 'auto' allows native scroll interference
-      const overscrollBehavior = window.getComputedStyle(body).overscrollBehavior;
-      if (overscrollBehavior === 'auto') {
-        conflicts.push({
-          type: 'css-overscroll-behavior',
-          value: overscrollBehavior,
-          element: 'body',
-          issue: 'allows native scroll interference'
-        });
-      }
+      // Removed overscroll-behavior conflict detection to prevent animation issues
       
       // Check for CSS touch-action - 'auto' allows all touch gestures to interfere
       const touchAction = window.getComputedStyle(body).touchAction;
@@ -809,12 +800,10 @@ function disableConflictingListeners() {
   html.style.setProperty('scroll-behavior', 'auto', 'important');
   body.style.setProperty('scroll-behavior', 'auto', 'important');
   
-  // CRITICAL: Fix the CSS conflicts detected
-  body.style.setProperty('overscroll-behavior', 'none', 'important'); // Prevent native scroll interference
+  // CRITICAL: Fix the CSS conflicts detected  
   body.style.setProperty('touch-action', 'pan-y', 'important'); // Restrict to vertical scrolling only
   
   console.log('🔒 CSS conflicts fixed:', {
-    'overscroll-behavior': 'none (prevents native scroll interference)',
     'touch-action': 'pan-y (restricts to vertical scrolling)',
     'scroll-behavior': 'auto (prevents CSS smooth scrolling conflicts)'
   });
@@ -860,7 +849,6 @@ function restoreConflictingListeners() {
   });
   
   console.log('🔓 CSS properties restored:', {
-    'overscroll-behavior': 'restored to original value',
     'touch-action': 'restored to original value',
     'scroll-behavior': 'restored to original value'
   });
@@ -1480,7 +1468,7 @@ function initializeScrollSystem() {
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
   // FIXED: Enable for mobile even with fewer sections, but stricter for desktop
-  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 4;
+  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 6;
   scrollSystem.isEnabled = scrollSystem.arrSections.length > minSectionsRequired;
   scrollSystem.initialized = true;
   
@@ -1504,10 +1492,6 @@ function initializeScrollSystem() {
     if (isMobile) {
       // Mobile-specific optimizations
       console.log('📱 Applying mobile optimizations...');
-      
-      // FIXED: Allow native overscroll behavior (pull-to-refresh, etc.)
-      document.body.style.overscrollBehavior = 'auto';
-      document.documentElement.style.overscrollBehavior = 'auto';
       
       // iOS specific fixes
       if (isIOS()) {
