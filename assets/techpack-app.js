@@ -4189,46 +4189,6 @@
         debugSystem.log('✅ Body scroll forcefully unlocked');
       };
       
-      const lockBodyScroll = () => {
-        if (isMobile()) {
-          // Preserve original overscroll-behavior to prevent conflicts
-          originalOverscrollBehavior = document.body.style.overscrollBehavior || window.getComputedStyle(document.body).overscrollBehavior;
-          
-          document.body.style.overflow = 'hidden';
-          document.body.style.position = 'fixed';
-          document.body.style.width = '100%';
-          document.body.style.top = `-${window.scrollY}px`;
-          // Maintain overscroll-behavior for consistency
-          document.body.style.overscrollBehavior = 'none';
-        }
-      };
-      
-      const unlockBodyScroll = () => {
-        if (isMobile()) {
-          const scrollY = document.body.style.top;
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
-          // Restore original overscroll behavior to prevent conflicts
-          if (originalOverscrollBehavior) {
-            document.body.style.overscrollBehavior = originalOverscrollBehavior;
-          } else {
-            document.body.style.removeProperty('overscroll-behavior');
-          }
-          if (scrollY) {
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-          }
-        } else {
-          // Desktop: Ensure proper scroll behavior is restored
-          document.body.style.overscrollBehavior = 'auto';
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          document.body.style.top = '';
-        }
-      };
-      
       // Open modal
       openBtn.addEventListener('click', () => {
         lockBodyScroll();
