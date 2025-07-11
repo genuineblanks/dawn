@@ -42,7 +42,6 @@
         "text_NQiVYE",
         "button_MCGFa7"
       ],
-      "disabled": true,
       "custom_css": [],
       "name": "t:sections.rich-text.presets.name",
       "settings": {
@@ -131,7 +130,6 @@
         "collapsible_row_QHkFGn",
         "collapsible_row_xenLLx"
       ],
-      "disabled": true,
       "settings": {
         "dynamic-class": "whatYouNeed",
         "caption": "",
