@@ -10,16 +10,16 @@ Tech-Pack Step 3: Garment Specifications Section
       </div>
       <div class="techpack-progress__steps">
         <div class="techpack-progress__step techpack-progress__step--completed">
-          <div class="techpack-progress__step-circle techpack-progress__step--completed">1</div>
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
           <div class="techpack-progress__step-label">Client Info</div>
         </div>
         <div class="techpack-progress__step techpack-progress__step--completed">
-          <div class="techpack-progress__step-circle techpack-progress__step--completed">2</div>
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
           <div class="techpack-progress__step-label">File Upload</div>
         </div>
         <div class="techpack-progress__step techpack-progress__step--active">
           <div class="techpack-progress__step-circle techpack-progress__step-circle--active">3</div>
-          <div class="techpack-progress__step-label">Garments</div>
+          <div class="techpack-progress__step-label">Garment Details</div>
         </div>
         <div class="techpack-progress__step">
           <div class="techpack-progress__step-circle">4</div>
@@ -191,13 +191,88 @@ Tech-Pack Step 3: Garment Specifications Section
       <div class="techpack-colorway__color">
         <label class="techpack-form__label">Color</label>
         <div class="techpack-color-picker">
-          <input type="color" class="techpack-color-picker__input" value="#000000">
+          <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
           <div class="techpack-color-picker__preview"></div>
         </div>
       </div>
       <div class="techpack-colorway__pantone">
-        <label class="techpack-form__label">PANTONE TCX</label>
-        <input type="text" class="techpack-form__input" placeholder="e.g., 18-1664 TPX">
+        <label class="techpack-form__label">
+          PANTONE Color Options <span class="techpack-form__required">*</span>
+          <span class="techpack-form__help-text">Select at least one Pantone color that matches your selection</span>
+        </label>
+        <div class="techpack-pantone-grid" style="display: none;">
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 1</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone 18-1664 U" data-pantone-index="0">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="0">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 2</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="1">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="1">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 3</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="2">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="2">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 4</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="3">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="3">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 5</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="4">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="4">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 6</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="5">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="5">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 7</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="6">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="6">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 8</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="7">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="7">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 9</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="8">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="8">
+            </div>
+          </div>
+          <div class="techpack-pantone-item">
+            <label class="techpack-form__label">Option 10</label>
+            <div class="techpack-pantone-input-group">
+              <input type="text" class="techpack-form__input techpack-pantone-code" placeholder="Pantone _____ U" data-pantone-index="9">
+              <input type="color" class="techpack-form__input techpack-pantone-hex" value="#000000" data-pantone-hex="9">
+            </div>
+          </div>
+        </div>
+        <div class="techpack-pantone-validation-message" style="display: none;"></div>
       </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
         <svg width="16" height="16" viewBox="0 0 16 16">
