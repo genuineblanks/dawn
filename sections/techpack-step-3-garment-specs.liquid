@@ -195,41 +195,93 @@ Tech-Pack Step 3: Garment Specifications Section
           <div class="techpack-color-picker__preview"></div>
         </div>
       </div>
-      <div class="techpack-colorway__pantone">
+      <div class="techpack-colorway__pantone-visual">
         <label class="techpack-form__label">
           PANTONE Color Match <span class="techpack-form__required">*</span>
-          <span class="techpack-form__help-text">Closest PANTONE color will be auto-selected based on your color choice</span>
+          <span class="techpack-form__help-text">Select your color and choose from the 3 closest PANTONE matches</span>
         </label>
-        <div class="techpack-pantone-elegant">
-          <div class="techpack-pantone-auto-display">
-            <div class="techpack-pantone-preview">
-              <div class="techpack-pantone-color-swatch" style="background-color: #000000;"></div>
-              <div class="techpack-pantone-info">
-                <input type="text" 
-                       class="techpack-pantone-code-input" 
-                       placeholder="Auto-selected PANTONE will appear here"
-                       readonly
-                       data-pantone-code>
-                <span class="techpack-pantone-confidence">Match confidence: <span data-confidence="0">0%</span></span>
+        
+        <!-- Visual Pantone Picker Interface -->
+        <div class="pantone-visual-picker">
+          <!-- Large Color Picker Section -->
+          <div class="pantone-picker-section">
+            <div class="color-picker-large">
+              <input type="color" 
+                     class="pantone-color-input" 
+                     value="#000000"
+                     data-color-picker>
+              <div class="picker-ring"></div>
+              <div class="picker-glow"></div>
+            </div>
+            <div class="selected-color-info">
+              <span class="selected-hex" data-selected-hex>#000000</span>
+              <span class="color-label">Selected Color</span>
+            </div>
+          </div>
+          
+          <!-- 3 Closest Pantone Matches -->
+          <div class="pantone-matches-section">
+            <div class="matches-header">
+              <span class="matches-title">Closest PANTONE Matches</span>
+            </div>
+            <div class="matches-grid">
+              <!-- Match 1 -->
+              <div class="pantone-match-card" data-match="1" data-pantone-selector>
+                <div class="match-swatch" style="background-color: #000000;"></div>
+                <div class="match-overlay">
+                  <svg class="checkmark-icon" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="match-rank">1</div>
+                <div class="match-info">
+                  <span class="pantone-code" data-pantone-code>---</span>
+                </div>
+              </div>
+              
+              <!-- Match 2 -->
+              <div class="pantone-match-card" data-match="2" data-pantone-selector>
+                <div class="match-swatch" style="background-color: #000000;"></div>
+                <div class="match-overlay">
+                  <svg class="checkmark-icon" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="match-rank">2</div>
+                <div class="match-info">
+                  <span class="pantone-code" data-pantone-code>---</span>
+                </div>
+              </div>
+              
+              <!-- Match 3 -->
+              <div class="pantone-match-card" data-match="3" data-pantone-selector>
+                <div class="match-swatch" style="background-color: #000000;"></div>
+                <div class="match-overlay">
+                  <svg class="checkmark-icon" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="match-rank">3</div>
+                <div class="match-info">
+                  <span class="pantone-code" data-pantone-code>---</span>
+                </div>
               </div>
             </div>
-            <button type="button" class="techpack-pantone-customize-btn" data-customize-pantone>
-              <svg width="16" height="16" viewBox="0 0 16 16">
-                <path d="M2 6a2 2 0 012-2h5l2 2h3a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                <path d="M6 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              </svg>
-              Customize
-            </button>
-          </div>
-          <div class="techpack-pantone-custom" style="display: none;">
-            <input type="text" 
-                   class="techpack-form__input techpack-pantone-custom-input" 
-                   placeholder="Enter custom PANTONE code (e.g., 18-1664 TPX)"
-                   data-custom-pantone>
-            <button type="button" class="techpack-pantone-apply-btn" data-apply-custom>Apply</button>
-            <button type="button" class="techpack-pantone-cancel-btn" data-cancel-custom>Cancel</button>
           </div>
         </div>
+        
+        <!-- Selected Pantone Display -->
+        <div class="selected-pantone-display">
+          <div class="selected-pantone-swatch" style="background-color: #000000;"></div>
+          <div class="selected-pantone-info">
+            <span class="selected-pantone-label">Selected PANTONE</span>
+            <span class="selected-pantone-code" data-final-pantone>Click a match above</span>
+          </div>
+        </div>
+        
+        <!-- Hidden input for form submission -->
+        <input type="hidden" name="pantone_code" data-pantone-input>
+        
         <div class="techpack-pantone-validation-message" style="display: none;"></div>
       </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
@@ -239,26 +291,189 @@ Tech-Pack Step 3: Garment Specifications Section
       </button>
     </div>
 
-    <div class="techpack-size-grid">
-      <div class="techpack-size-grid__header">
-        <span class="techpack-size-grid__label">Size</span>
-        <span class="techpack-size-grid__label">XXS</span>
-        <span class="techpack-size-grid__label">XS</span>
-        <span class="techpack-size-grid__label">S</span>
-        <span class="techpack-size-grid__label">M</span>
-        <span class="techpack-size-grid__label">L</span>
-        <span class="techpack-size-grid__label">XL</span>
-        <span class="techpack-size-grid__label">XXL</span>
+    <div class="techpack-size-grid-enhanced">
+      <div class="size-grid-header">
+        <span class="size-grid-title">Size Quantities</span>
+        <span class="size-grid-subtitle">Enter quantity for each size</span>
       </div>
-      <div class="techpack-size-grid__row">
-        <span class="techpack-size-grid__label">Qty</span>
-        <input type="number" class="techpack-size-grid__input" name="qty-xxs" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-xs" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-s" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-m" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-l" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-xl" min="0" value="0">
-        <input type="number" class="techpack-size-grid__input" name="qty-xxl" min="0" value="0">
+      
+      <div class="size-inputs-grid">
+        <!-- XXS Size Input -->
+        <div class="size-input-enhanced" data-size="xxs">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-xxs" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">XXS</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- XS Size Input -->
+        <div class="size-input-enhanced" data-size="xs">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-xs" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">XS</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- S Size Input -->
+        <div class="size-input-enhanced" data-size="s">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-s" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">S</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- M Size Input -->
+        <div class="size-input-enhanced" data-size="m">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-m" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">M</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- L Size Input -->
+        <div class="size-input-enhanced" data-size="l">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-l" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">L</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- XL Size Input -->
+        <div class="size-input-enhanced" data-size="xl">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-xl" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">XL</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        
+        <!-- XXL Size Input -->
+        <div class="size-input-enhanced" data-size="xxl">
+          <div class="size-progress-ring">
+            <svg class="progress-ring-svg" viewBox="0 0 36 36">
+              <circle class="progress-ring-background" cx="18" cy="18" r="15.915"></circle>
+              <circle class="progress-ring-fill" cx="18" cy="18" r="15.915"></circle>
+            </svg>
+            <input type="number" 
+                   class="size-input-field" 
+                   name="qty-xxl" 
+                   min="0" 
+                   value="0"
+                   data-size-input>
+          </div>
+          <div class="size-label">XXL</div>
+          <div class="size-status-indicator">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Size Distribution Visualization -->
+      <div class="size-distribution-chart">
+        <div class="distribution-header">
+          <span class="distribution-title">Size Distribution</span>
+        </div>
+        <div class="distribution-bars">
+          <div class="distribution-bar" data-size="xxs">
+            <div class="bar-fill"></div>
+            <span class="bar-label">XXS</span>
+          </div>
+          <div class="distribution-bar" data-size="xs">
+            <div class="bar-fill"></div>
+            <span class="bar-label">XS</span>
+          </div>
+          <div class="distribution-bar" data-size="s">
+            <div class="bar-fill"></div>
+            <span class="bar-label">S</span>
+          </div>
+          <div class="distribution-bar" data-size="m">
+            <div class="bar-fill"></div>
+            <span class="bar-label">M</span>
+          </div>
+          <div class="distribution-bar" data-size="l">
+            <div class="bar-fill"></div>
+            <span class="bar-label">L</span>
+          </div>
+          <div class="distribution-bar" data-size="xl">
+            <div class="bar-fill"></div>
+            <span class="bar-label">XL</span>
+          </div>
+          <div class="distribution-bar" data-size="xxl">
+            <div class="bar-fill"></div>
+            <span class="bar-label">XXL</span>
+          </div>
+        </div>
       </div>
     </div>
 
