@@ -2756,10 +2756,10 @@
       const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
       const colorwayTotal = this.updateColorwayTotal(colorwayId);
       
-      // FIXED: Get colorway count for THIS garment only
+      // FIXED: Get colorway count for THIS garment only and use correct minimums
       const garment = colorway.closest('.techpack-garment');
       const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
-      const requiredPerColorway = colorwayCountInGarment === 1 ? CONFIG.MIN_ORDER_QUANTITY : CONFIG.MIN_COLORWAY_QUANTITY;
+      const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
       
       const activeSizes = Array.from(qtyInputs).filter(input => parseInt(input.value) || 0 > 0).length;
       const maxAllowedSizes = this.getMaxAllowedSizes(colorwayTotal);
@@ -2803,11 +2803,15 @@
         warningEl.className = 'size-distribution-warning warning';
       } else if (colorwayTotal < requiredPerColorway) {
         warningEl.style.display = 'block';
-        warningEl.innerHTML = `📊 Need ${requiredPerColorway - colorwayTotal} more units. Current: ${activeSizes} sizes, Max allowed: ${maxAllowedSizes} sizes.`;
+        const productionType = state.formData.clientInfo.productionType || 'custom-production';
+        const productionLabel = productionType === 'our-blanks' ? 'Our Blanks' : 'Custom Production';
+        warningEl.innerHTML = `📊 Need ${requiredPerColorway - colorwayTotal} more units (${requiredPerColorway} minimum for ${productionLabel}). Current: ${activeSizes} sizes, Max allowed: ${maxAllowedSizes} sizes.`;
         warningEl.className = 'size-distribution-warning info';
       } else {
         warningEl.style.display = 'block';
-        warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units across ${activeSizes} sizes (Max: ${maxAllowedSizes}).`;
+        const productionType = state.formData.clientInfo.productionType || 'custom-production';
+        const productionLabel = productionType === 'our-blanks' ? 'Our Blanks' : 'Custom Production';
+        warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units across ${activeSizes} sizes (Min: ${requiredPerColorway} for ${productionLabel}, Max sizes: ${maxAllowedSizes}).`;
         warningEl.className = 'size-distribution-warning success';
       }
     }
@@ -3287,8 +3291,33 @@
         return;
       }
       
+      // Mobile scroll lock functions
+      const isMobile = () => window.innerWidth <= 768;
+      const lockBodyScroll = () => {
+        if (isMobile()) {
+          document.body.style.overflow = 'hidden';
+          document.body.style.position = 'fixed';
+          document.body.style.width = '100%';
+          document.body.style.top = `-${window.scrollY}px`;
+        }
+      };
+      
+      const unlockBodyScroll = () => {
+        if (isMobile()) {
+          const scrollY = document.body.style.top;
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
+          if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+          }
+        }
+      };
+      
       // Open modal
       openBtn.addEventListener('click', () => {
+        lockBodyScroll();
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
         debugSystem.log('✅ Client verification modal opened');
@@ -3297,7 +3326,10 @@
       // Close modal functions
       const closeModal = () => {
         modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300);
+        setTimeout(() => {
+          modal.style.display = 'none';
+          unlockBodyScroll();
+        }, 300);
         debugSystem.log('Modal closed');
       };
       
