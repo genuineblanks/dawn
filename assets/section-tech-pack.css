@@ -301,6 +301,29 @@
   background-repeat: no-repeat !important;
 }
 
+/* Additional mobile white space fixes - prevent section inheritance issues */
+@media (max-width: 768px) {
+  /* Force techpack sections to ignore above/below spacing */
+  .tech-pack-section {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Prevent any section wrapper from adding space */
+  .tech-pack-section + *,
+  * + .tech-pack-section {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Override any Shopify theme section spacing */
+  .shopify-section:has(.tech-pack-section),
+  .shopify-section .tech-pack-section {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
 /* Additional fixes for full coverage */
 .tech-pack-section,
 [id^="TechPack-"] {
