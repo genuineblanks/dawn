@@ -1475,7 +1475,7 @@ function initializeScrollSystem() {
   console.log('📍 Found sections at positions:', scrollSystem.arrSections);
   
   // FIXED: Enable for mobile even with fewer sections, but stricter for desktop
-  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 6;
+  const minSectionsRequired = IS_MOBILE_DEVICE ? 2 : 4;
   scrollSystem.isEnabled = scrollSystem.arrSections.length > minSectionsRequired;
   scrollSystem.initialized = true;
   
