@@ -44,7 +44,10 @@
       {% endif %}
       background-size: cover !important;
       background-position: center center !important;
-      /* Fix mobile white space issues */
+      /* Fix mobile white space issues - Override global section rules */
+      height: auto !important;
+      min-height: 100vh !important;
+      max-height: none !important;
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
@@ -58,7 +61,10 @@
       {% endif %}
       background-size: cover !important;
       background-position: center center !important;
-      /* Fix mobile white space issues */
+      /* Fix mobile white space issues - Override global section rules */
+      height: auto !important;
+      min-height: 100vh !important;
+      max-height: none !important;
       margin: 0 !important;
       padding: 0 !important;
       width: 100% !important;
@@ -121,6 +127,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Add techpack-page class to body for better CSS targeting
+    document.body.classList.add('techpack-page');
+    
     const section = document.querySelector('#TechPack-{{ section.id }}');
     
     // Ensure background image covers full section
