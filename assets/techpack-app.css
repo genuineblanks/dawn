@@ -4874,6 +4874,64 @@ body {
    Pantone Color Picker Enhancement
    ============================================ */
 
+/* Enhanced Pantone button system */
+.techpack-pantone-buttons {
+  display: none;
+  margin-top: var(--techpack-space-md);
+}
+
+.techpack-pantone-button-group {
+  display: flex;
+  gap: var(--techpack-space-md);
+  flex-wrap: wrap;
+}
+
+.techpack-pantone-button {
+  display: flex;
+  align-items: center;
+  gap: var(--techpack-space-sm);
+  padding: var(--techpack-space-sm) var(--techpack-space-md);
+  border: 1px solid var(--techpack-border);
+  border-radius: var(--techpack-radius-md);
+  background: var(--techpack-bg);
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  flex: 1;
+  min-width: 200px;
+}
+
+.techpack-pantone-button:hover {
+  border-color: var(--techpack-primary);
+  background: var(--techpack-bg-secondary);
+}
+
+.techpack-pantone-button.selected {
+  border-color: var(--techpack-primary);
+  background: var(--techpack-primary-light);
+  box-shadow: var(--techpack-shadow-sm);
+}
+
+.techpack-pantone-button__swatch {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--techpack-border);
+  border-radius: var(--techpack-radius-sm);
+  background: #000000;
+  flex-shrink: 0;
+}
+
+.techpack-pantone-button__label {
+  flex: 1;
+  text-align: left;
+}
+
+.techpack-pantone-button__code {
+  font-size: 0.875rem;
+  font-weight: var(--techpack-font-weight-medium);
+  color: var(--techpack-text);
+  line-height: 1.2;
+}
+
 .techpack-pantone-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -4977,11 +5035,13 @@ body {
    TECHPACK OVERSCROLL BEHAVIOR FIX
    =============================================== */
 
-/* Unified overscroll-behavior rule for techpack pages only */
-.techpack-app-wrapper,
-.techpack-step,
-.techpack-container {
-  overscroll-behavior: none;
+/* Mobile-only overscroll-behavior rule for techpack pages - Fixed desktop scrolling */
+@media (max-width: 768px) {
+  .techpack-app-wrapper,
+  .techpack-step,
+  .techpack-container {
+    overscroll-behavior: none;
+  }
 }
 
 /* Mobile-specific overscroll behavior for techpack modals */
@@ -4997,6 +5057,15 @@ body {
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+  .techpack-pantone-button-group {
+    flex-direction: column;
+  }
+  
+  .techpack-pantone-button {
+    min-width: auto;
+    width: 100%;
+  }
+
   .techpack-pantone-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
