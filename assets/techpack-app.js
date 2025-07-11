@@ -3110,15 +3110,14 @@
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
       removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
       
-      // Color picker and grid Pantone system
+      // Color picker and button Pantone system
       const colorPicker = colorway.querySelector('.techpack-color-picker__input');
       const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
-      const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
+      const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      if (pantoneGrid && colorPicker) {
-        const pantoneCodeInputs = pantoneGrid.querySelectorAll('.techpack-pantone-code');
-        const pantoneHexInputs = pantoneGrid.querySelectorAll('.techpack-pantone-hex');
+      if (pantoneButtons && colorPicker) {
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('.techpack-pantone-button');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3126,20 +3125,27 @@
             colorPreview.style.backgroundColor = colorPicker.value;
           }
           
-          // Auto-select closest Pantone colors for multiple options
-          const closestPantones = this.findClosestPantoneColors(colorPicker.value, 5);
+          // Auto-select closest 2 Pantone colors for buttons
+          const closestPantones = this.findClosestPantoneColors(colorPicker.value, 2);
           
-          // Populate first 5 Pantone options
+          // Populate the 2 Pantone buttons
           closestPantones.forEach((pantone, index) => {
-            if (pantoneCodeInputs[index] && pantoneHexInputs[index]) {
-              pantoneCodeInputs[index].value = pantone.code;
-              pantoneCodeInputs[index].placeholder = '';
-              pantoneHexInputs[index].value = pantone.hex;
+            if (pantoneButtonElements[index]) {
+              const button = pantoneButtonElements[index];
+              const swatch = button.querySelector('.techpack-pantone-button__swatch');
+              const codeLabel = button.querySelector('.techpack-pantone-button__code');
+              
+              if (swatch && codeLabel) {
+                swatch.style.backgroundColor = pantone.hex;
+                codeLabel.textContent = pantone.code;
+                button.dataset.pantoneCode = pantone.code;
+                button.dataset.pantoneHex = pantone.hex;
+              }
             }
           });
           
-          // Show the pantone grid - already checked for null above
-          pantoneGrid.style.display = 'block';
+          // Show the pantone buttons - already checked for null above
+          pantoneButtons.style.display = 'block';
           
           // Update state
           const garmentData = state.formData.garments.find(g => g.id === garmentId);
@@ -3152,6 +3158,28 @@
           }
           
           this.validatePantoneSelection(colorway);
+        });
+        
+        // Add click handlers for Pantone buttons
+        pantoneButtonElements.forEach((button, index) => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Toggle selection
+            const isSelected = button.classList.contains('selected');
+            
+            if (isSelected) {
+              button.classList.remove('selected');
+            } else {
+              button.classList.add('selected');
+            }
+            
+            // Update colorway data
+            this.updateColorwayPantoneData(garmentId, colorwayId);
+            
+            // Validate selection
+            this.validatePantoneSelection(colorway);
+          });
         });
       }
       
@@ -4018,17 +4046,16 @@
 
     // Validate Pantone selection for grid system
     validatePantoneSelection(colorway) {
-      const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
+      const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
-      if (!pantoneGrid || !pantoneValidationMsg) return true;
+      if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const pantoneCodeInputs = pantoneGrid.querySelectorAll('.techpack-pantone-code');
-      const hasValidPantones = Array.from(pantoneCodeInputs).some(input => input.value.trim());
+      const selectedButtons = pantoneButtons.querySelectorAll('.techpack-pantone-button.selected');
+      const hasValidPantones = selectedButtons.length > 0;
       
       if (hasValidPantones) {
-        const filledInputs = Array.from(pantoneCodeInputs).filter(input => input.value.trim());
-        pantoneValidationMsg.textContent = `✓ ${filledInputs.length} PANTONE option(s) selected`;
+        pantoneValidationMsg.textContent = `✓ ${selectedButtons.length} PANTONE option(s) selected`;
         pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
         pantoneValidationMsg.style.display = 'block';
       } else {
@@ -4038,6 +4065,28 @@
       }
       
       return hasValidPantones;
+    }
+
+    updateColorwayPantoneData(garmentId, colorwayId) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
+      
+      if (!pantoneButtons) return;
+      
+      const selectedButtons = pantoneButtons.querySelectorAll('.techpack-pantone-button.selected');
+      const selectedPantones = Array.from(selectedButtons).map(button => ({
+        code: button.dataset.pantoneCode,
+        hex: button.dataset.pantoneHex
+      }));
+      
+      // Update state
+      const garmentData = state.formData.garments.find(g => g.id === garmentId);
+      if (garmentData) {
+        const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+        if (colorwayData) {
+          colorwayData.selectedPantones = selectedPantones;
+        }
+      }
     }
 
     removeColorway(garmentId, colorwayId) {
@@ -4152,6 +4201,13 @@
           if (scrollY) {
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
           }
+        } else {
+          // Desktop: Ensure proper scroll behavior is restored
+          document.body.style.overscrollBehavior = 'auto';
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
         }
       };
       
