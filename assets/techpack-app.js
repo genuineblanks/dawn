@@ -4136,6 +4136,9 @@
       // Setup client verification modal
       this.setupClientModal();
       
+      // Setup mobile interaction debugger
+      this.setupInteractionDebugger();
+      
       // EXISTING: Keep all your existing setup methods
       this.setupDateConstraints();
       this.setupPhoneFormatting();
@@ -4361,6 +4364,211 @@
       }
       
       debugSystem.log('✅ Client modal setup complete');
+    }
+
+    // 🔍 COMPREHENSIVE TOUCH/CLICK DEBUG SYSTEM
+    setupInteractionDebugger() {
+      const isMobile = () => window.innerWidth <= 768;
+      
+      if (!isMobile()) {
+        debugSystem.log('🖥️ Desktop detected - interaction debugger not needed');
+        return;
+      }
+      
+      debugSystem.log('🔍 MOBILE INTERACTION DEBUGGER ACTIVATED');
+      
+      // Function to get element info
+      const getElementInfo = (element) => {
+        if (!element) return 'null';
+        
+        const rect = element.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(element);
+        
+        return {
+          tagName: element.tagName,
+          id: element.id || 'no-id',
+          classes: element.className || 'no-classes',
+          pointerEvents: computedStyle.pointerEvents,
+          position: computedStyle.position,
+          zIndex: computedStyle.zIndex,
+          display: computedStyle.display,
+          visibility: computedStyle.visibility,
+          overflow: computedStyle.overflow,
+          transform: computedStyle.transform,
+          dimensions: {
+            x: Math.round(rect.x),
+            y: Math.round(rect.y),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height)
+          }
+        };
+      };
+      
+      // Function to check for blocking elements
+      const checkForBlockingElements = (x, y) => {
+        const elementAtPoint = document.elementFromPoint(x, y);
+        const allElementsAtPoint = document.elementsFromPoint(x, y);
+        
+        debugSystem.log('🎯 ELEMENTS AT TOUCH POINT:', {
+          coordinates: { x: Math.round(x), y: Math.round(y) },
+          topElement: getElementInfo(elementAtPoint),
+          allElements: allElementsAtPoint.slice(0, 5).map(el => getElementInfo(el))
+        });
+        
+        // Check for specific blocking patterns
+        const blockingIssues = [];
+        
+        allElementsAtPoint.forEach((element, index) => {
+          const style = window.getComputedStyle(element);
+          
+          // Check for common blocking patterns
+          if (style.pointerEvents === 'none' && index === 0) {
+            blockingIssues.push(`TOP element has pointer-events: none - ${element.tagName}#${element.id}`);
+          }
+          
+          if (element.classList.contains('techpack-modal__backdrop')) {
+            blockingIssues.push(`MODAL BACKDROP DETECTED - should be hidden!`);
+          }
+          
+          if (style.position === 'fixed' && style.zIndex > 1000 && element.tagName !== 'BUTTON') {
+            blockingIssues.push(`HIGH Z-INDEX OVERLAY - ${element.tagName}#${element.id} z-index:${style.zIndex}`);
+          }
+          
+          if (style.overflow === 'hidden' && element === document.body) {
+            blockingIssues.push(`BODY OVERFLOW HIDDEN - scroll may be locked`);
+          }
+        });
+        
+        if (blockingIssues.length > 0) {
+          debugSystem.log('🚨 BLOCKING ISSUES DETECTED:', blockingIssues);
+        } else {
+          debugSystem.log('✅ No obvious blocking issues found');
+        }
+        
+        return { elementAtPoint, allElementsAtPoint, blockingIssues };
+      };
+      
+      // Touch start debugging
+      document.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        debugSystem.log('👆 TOUCH START EVENT:', {
+          timestamp: Date.now(),
+          coordinates: { x: Math.round(touch.clientX), y: Math.round(touch.clientY) },
+          target: getElementInfo(e.target),
+          prevented: e.defaultPrevented,
+          bubbles: e.bubbles,
+          cancelable: e.cancelable
+        });
+        
+        checkForBlockingElements(touch.clientX, touch.clientY);
+      }, { passive: true });
+      
+      // Touch end debugging
+      document.addEventListener('touchend', (e) => {
+        debugSystem.log('🖐️ TOUCH END EVENT:', {
+          timestamp: Date.now(),
+          target: getElementInfo(e.target),
+          prevented: e.defaultPrevented,
+          changedTouches: e.changedTouches.length
+        });
+      }, { passive: true });
+      
+      // Click debugging
+      document.addEventListener('click', (e) => {
+        debugSystem.log('🖱️ CLICK EVENT:', {
+          timestamp: Date.now(),
+          coordinates: { x: Math.round(e.clientX), y: Math.round(e.clientY) },
+          target: getElementInfo(e.target),
+          prevented: e.defaultPrevented,
+          bubbles: e.bubbles,
+          isTrusted: e.isTrusted
+        });
+        
+        checkForBlockingElements(e.clientX, e.clientY);
+      }, true); // Use capture phase
+      
+      // Scroll debugging
+      document.addEventListener('scroll', (e) => {
+        debugSystem.log('📜 SCROLL EVENT:', {
+          timestamp: Date.now(),
+          scrollY: Math.round(window.scrollY),
+          target: e.target.tagName || 'window',
+          prevented: e.defaultPrevented
+        });
+      }, { passive: true });
+      
+      // Add a manual debug function
+      window.debugTouchPoint = (x, y) => {
+        debugSystem.log('🔍 MANUAL DEBUG AT POINT:', { x, y });
+        return checkForBlockingElements(x, y);
+      };
+      
+      // Body state monitor
+      setInterval(() => {
+        const bodyStyle = window.getComputedStyle(document.body);
+        const hasScrollIssues = bodyStyle.overflow === 'hidden' || bodyStyle.position === 'fixed';
+        const hasModalIssues = document.querySelector('.techpack-modal:not([style*="display: none"])');
+        
+        if (hasScrollIssues || hasModalIssues) {
+          debugSystem.log('⚠️ POTENTIAL ISSUES DETECTED:', {
+            bodyOverflow: bodyStyle.overflow,
+            bodyPosition: bodyStyle.position,
+            visibleModals: hasModalIssues ? 'YES' : 'NO',
+            bodyTop: bodyStyle.top
+          });
+        }
+      }, 5000); // Check every 5 seconds
+      
+      // Add a visible debug button for easy testing
+      const createDebugButton = () => {
+        const debugBtn = document.createElement('button');
+        debugBtn.innerHTML = '🔍 DEBUG';
+        debugBtn.style.cssText = `
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          z-index: 99999;
+          background: #ff0000;
+          color: white;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: bold;
+          cursor: pointer;
+        `;
+        
+        debugBtn.addEventListener('click', () => {
+          debugSystem.log('🔬 MANUAL DEBUG TRIGGER ACTIVATED');
+          
+          // Force show debug system
+          if (debugSystem.panel) {
+            debugSystem.show();
+          }
+          
+          // Log current state
+          debugSystem.log('📊 CURRENT STATE CHECK:', {
+            bodyOverflow: document.body.style.overflow,
+            bodyPosition: document.body.style.position,
+            visibleModals: document.querySelectorAll('.techpack-modal:not([style*="display: none"])').length,
+            windowSize: { width: window.innerWidth, height: window.innerHeight },
+            scrollPosition: { x: window.scrollX, y: window.scrollY }
+          });
+          
+          // Test center point
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          window.debugTouchPoint(centerX, centerY);
+        });
+        
+        document.body.appendChild(debugBtn);
+        debugSystem.log('🔴 DEBUG BUTTON added to top-right corner');
+      };
+      
+      // Add debug button after a short delay
+      setTimeout(createDebugButton, 1000);
+      
+      debugSystem.log('✅ Mobile interaction debugger ready - check console during touch events');
     }
 
     setupDateConstraints() {
