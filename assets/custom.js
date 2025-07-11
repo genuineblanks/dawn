@@ -1457,6 +1457,13 @@ function initializeScrollSystem() {
     // Apply mobile-specific optimizations
     document.body.style.touchAction = 'pan-y';
     document.body.style.webkitOverflowScrolling = 'touch';
+    // Mobile gets overscroll behavior none only when needed
+    document.body.style.overscrollBehavior = 'none';
+  } else {
+    console.log('🖥️ Desktop device detected - enabling desktop section scrolling');
+    // Desktop optimizations - Allow normal scrolling
+    document.body.style.overscrollBehavior = 'auto';
+    document.body.style.touchAction = 'auto';
   }
   
   console.log('🚀 Initializing scroll system for', IS_MOBILE_DEVICE ? 'mobile' : 'desktop', '...');
