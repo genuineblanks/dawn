@@ -1008,21 +1008,14 @@ body {
   display: none;
 }
 
-/* Validation styling for checkbox groups */
+/* Validation styling for checkbox groups - overlay removed per user request */
 .techpack-form__group--error .techpack-form__checkboxes {
-  border: 2px solid #6b7280;
-  border-radius: var(--techpack-radius);
-  padding: var(--techpack-space-md);
-  background: rgba(107, 114, 128, 0.05);
-  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.08);
+  /* Background overlay and border removed to prevent black appearance */
 }
 
-/* Individual checkbox styling when group has error */
+/* Individual checkbox styling when group has error - overlay removed */
 .techpack-form__group--error .techpack-form__checkbox {
-  border-color: #6b7280;
-  background: rgba(107, 114, 128, 0.08);
-  color: #374151;
-  animation: pulseGrey 2s infinite;
+  /* Background overlay removed to prevent black appearance */
 }
 
 /* Remove error styling when checkboxes are selected */
@@ -4912,7 +4905,7 @@ body {
    Pantone Color Picker Enhancement
    ============================================ */
 
-/* Enhanced Pantone button system */
+/* Modern Pantone button system with circular color swatches */
 .techpack-pantone-buttons {
   display: none;
   margin-top: var(--techpack-space-md);
@@ -4924,51 +4917,63 @@ body {
   flex-wrap: wrap;
 }
 
-.techpack-pantone-button {
-  display: flex;
-  align-items: center;
-  gap: var(--techpack-space-sm);
-  padding: var(--techpack-space-sm) var(--techpack-space-md);
-  border: 1px solid var(--techpack-border);
-  border-radius: var(--techpack-radius-md);
-  background: var(--techpack-bg);
-  cursor: pointer;
-  transition: var(--techpack-transition);
-  flex: 1;
+/* New modern button design with Tailwind-style classes */
+.techpack-pantone-button-group button.group {
   min-width: 200px;
-}
-
-.techpack-pantone-button:hover {
-  border-color: var(--techpack-primary);
-  background: var(--techpack-bg-secondary);
-}
-
-.techpack-pantone-button.selected {
-  border-color: var(--techpack-primary);
-  background: var(--techpack-primary-light);
-  box-shadow: var(--techpack-shadow-sm);
-}
-
-.techpack-pantone-button__swatch {
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--techpack-border);
-  border-radius: var(--techpack-radius-sm);
-  background: #000000;
-  flex-shrink: 0;
-}
-
-.techpack-pantone-button__label {
-  flex: 1;
+  cursor: pointer;
+  border: none;
+  background: transparent;
   text-align: left;
 }
 
-.techpack-pantone-button__code {
-  font-size: 0.875rem;
-  font-weight: var(--techpack-font-weight-medium);
-  color: var(--techpack-text);
-  line-height: 1.2;
+.techpack-pantone-button-group button.group:hover {
+  background-color: #f3f4f6;
 }
+
+.techpack-pantone-button-group button.group.selected {
+  background-color: #e5e7eb;
+  box-shadow: 0 0 0 2px var(--techpack-primary);
+  border-radius: 0.5rem;
+}
+
+/* Ensure CSS custom property for color swatch works */
+.techpack-pantone-button-group button .bg-\[--dye-color\] {
+  background-color: var(--dye-color, #000000);
+}
+
+/* Support for ring animations */
+.techpack-pantone-button-group button.group:hover .ring-transparent {
+  --tw-ring-offset-width: 2px;
+  --tw-ring-offset-color: #f3f4f6;
+}
+
+/* Utility classes if Tailwind is not fully loaded */
+.items-center { align-items: center; }
+.flex { display: flex; }
+.gap-3 { gap: 0.75rem; }
+.overflow-hidden { overflow: hidden; }
+.rounded-lg { border-radius: 0.5rem; }
+.p-1 { padding: 0.25rem; }
+.bg-transparent { background-color: transparent; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-gray-600 { color: #4b5563; }
+.hover\:text-black:hover { color: #000000; }
+.transition-colors { transition-property: color, background-color, border-color; transition-duration: 150ms; }
+.shrink-0 { flex-shrink: 0; }
+.aspect-square { aspect-ratio: 1 / 1; }
+.w-8 { width: 2rem; }
+.h-8 { height: 2rem; }
+.rounded-full { border-radius: 9999px; }
+.ring-2 { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+.ring-transparent { --tw-ring-color: transparent; }
+.text-ellipsis { text-overflow: ellipsis; }
+.whitespace-nowrap { white-space: nowrap; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.ring-1 { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+.ring-inset { --tw-ring-inset: inset; }
+.ring-black\/10 { --tw-ring-color: rgb(0 0 0 / 0.1); }
 
 .techpack-pantone-grid {
   display: grid;
@@ -5099,7 +5104,7 @@ body {
     flex-direction: column;
   }
   
-  .techpack-pantone-button {
+  .techpack-pantone-button-group button.group {
     min-width: auto;
     width: 100%;
   }
