@@ -40,15 +40,11 @@
     scroll-behavior: auto !important;
     /* Fix iOS bounce scrolling */
     -webkit-overflow-scrolling: touch;
-    /* Prevent overscroll */
-    overscroll-behavior: none !important;
   }
   
   body {
     /* Ensure proper touch scrolling */
     -webkit-overflow-scrolling: touch;
-    /* Prevent momentum scrolling issues */
-    overscroll-behavior: none !important;
     /* CRITICAL: Restrict touch gestures to vertical scrolling only */
     touch-action: pan-y !important;
     /* Fix iOS viewport issues */
@@ -92,13 +88,11 @@
   
   /* CRITICAL: Highest specificity for mobile devices */
   .mobile-device body {
-    overscroll-behavior: none !important;
     touch-action: pan-y !important;
   }
   
   .mobile-device html {
     scroll-behavior: auto !important;
-    overscroll-behavior: none !important;
   }
 }
 
