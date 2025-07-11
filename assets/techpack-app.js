@@ -3117,7 +3117,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('.techpack-pantone-button');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.group');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3132,12 +3132,14 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const swatch = button.querySelector('.techpack-pantone-button__swatch');
-              const codeLabel = button.querySelector('.techpack-pantone-button__code');
+              const colorSpan = button.querySelector('span');
               
-              if (swatch && codeLabel) {
-                swatch.style.backgroundColor = pantone.hex;
-                codeLabel.textContent = pantone.code;
+              if (colorSpan) {
+                // Set the color using CSS custom property
+                button.style.setProperty('--dye-color', pantone.hex);
+                // Update the text content
+                colorSpan.textContent = pantone.code;
+                // Update data attributes
                 button.dataset.pantoneCode = pantone.code;
                 button.dataset.pantoneHex = pantone.hex;
               }
@@ -4051,7 +4053,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('.techpack-pantone-button.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.group.selected');
       const hasValidPantones = selectedButtons.length > 0;
       
       if (hasValidPantones) {
@@ -4073,7 +4075,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('.techpack-pantone-button.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.group.selected');
       const selectedPantones = Array.from(selectedButtons).map(button => ({
         code: button.dataset.pantoneCode,
         hex: button.dataset.pantoneHex
