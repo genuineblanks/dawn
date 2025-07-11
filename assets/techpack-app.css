@@ -4605,6 +4605,30 @@ body {
 
 /* Improved mobile app positioning and sizing with white space fix */
 @media (max-width: 768px) {
+  /* Force body and html to eliminate white space */
+  body.techpack-page,
+  html.techpack-page {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    background: var(--techpack-bg) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+  
+  /* Remove any default Shopify section spacing */
+  .shopify-section {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Fix main content wrapper */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--techpack-bg) !important;
+  }
+
   .techpack-app-wrapper {
     position: relative;
     width: 100%;
@@ -4639,6 +4663,20 @@ body {
   /* Override section spacing for techpack pages */
   .techpack-step + .techpack-step {
     margin-top: 0 !important;
+  }
+  
+  /* Ensure no section margins/padding leak through */
+  .techpack-app section,
+  .techpack-app div[class*="section"],
+  .techpack-app .section {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Fix any potential above/below section spacing issues */
+  .techpack-app::before,
+  .techpack-app::after {
+    display: none !important;
   }
   
   /* Fix dynamic height calculation to prevent white space gaps */
