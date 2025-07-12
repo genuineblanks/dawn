@@ -1,6 +1,290 @@
-{% schema %}
-  {
-    "name": "Section name",
-    "settings": []
+{{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
+
+<div class="tech-pack-app" data-section-id="{{ section.id }}">
+  <!-- Header -->
+  <div class="app-header">
+    <div class="container">
+      <h1 class="app-title">{{ section.settings.title | default: 'Tech Pack Submission' }}</h1>
+      <p class="app-subtitle">{{ section.settings.subtitle | default: 'Professional garment development made simple' }}</p>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-container">
+    <div class="container">
+      <div class="progress-wrapper">
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="progress-steps">
+          <span class="progress-step active">Client Info</span>
+          <span class="progress-step">File Upload</span>
+          <span class="progress-step">Garment Specs</span>
+          <span class="progress-step">Review & Submit</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Client Info -->
+  <div class="step active" data-step="1">
+    <div class="container">
+      <div class="step-header">
+        <h2 class="step-title">Client Information</h2>
+        <p class="step-description">Tell us about your business and project requirements</p>
+      </div>
+
+      <form class="tech-pack-form" autocomplete="off">
+        <!-- Client Name & Company -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="client-name" class="form-label">Contact Name *</label>
+            <input
+              type="text"
+              id="client-name"
+              name="clientName"
+              class="form-input"
+              placeholder="Your full name"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="company-name" class="form-label">Business/Brand Name *</label>
+            <input
+              type="text"
+              id="company-name"
+              name="companyName"
+              class="form-input"
+              placeholder="Your business or brand name"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Email & VAT/EIN -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email" class="form-label">Business Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="contact@yourbusiness.com"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="vat-ein" class="form-label">VAT/EIN Number</label>
+            <input
+              type="text"
+              id="vat-ein"
+              name="vatEin"
+              class="form-input"
+              placeholder="Your tax identification number"
+            >
+          </div>
+        </div>
+
+        <!-- Phone & Country -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone" class="form-label">Business Phone</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="form-input"
+              placeholder="+1 234 567 8901"
+            >
+          </div>
+          <div class="form-group">
+            <label for="country" class="form-label">Business Location *</label>
+            <select id="country" name="country" class="form-input" required>
+              <option value="">Select your country</option>
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="IT">Italy</option>
+              <option value="ES">Spain</option>
+              <option value="NL">Netherlands</option>
+              <option value="BE">Belgium</option>
+              <option value="PT">Portugal</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Production Type & Deadline -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="production-type" class="form-label">Production Type *</label>
+            <select id="production-type" name="productionType" class="form-input" required>
+              <option value="">Select production type</option>
+              <option value="our-blanks">Our Blanks</option>
+              <option value="custom-production">Custom Production</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="deadline" class="form-label">Target Deadline</label>
+            <input
+              type="date"
+              id="deadline"
+              name="deadline"
+              class="form-input"
+              min="{{ 'now' | date: '%Y-%m-%d' }}"
+            >
+          </div>
+        </div>
+
+        <!-- Project Notes -->
+        <div class="form-group">
+          <label for="notes" class="form-label">Project Details</label>
+          <textarea
+            id="notes"
+            name="notes"
+            class="form-input"
+            rows="4"
+            placeholder="Describe your project requirements, quantities, materials, or any other important details..."
+          ></textarea>
+        </div>
+
+        <!-- Navigation -->
+        <div class="step-navigation">
+          <button type="button" class="btn btn-secondary" id="prev-step-btn" disabled>
+            Previous
+          </button>
+          <button type="button" class="btn btn-primary" id="next-step-btn">
+            Next Step
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Step 2: File Upload (placeholder) -->
+  <div class="step" data-step="2">
+    <div class="container">
+      <div class="step-header">
+        <h2 class="step-title">File Upload</h2>
+        <p class="step-description">Upload your design files and references</p>
+      </div>
+
+      <div class="file-upload-area">
+        <input type="file" id="file-input" multiple accept=".pdf,.ai,.png,.jpg,.jpeg,.zip" style="display: none;">
+        <div class="file-upload-text">
+          <strong>Click to upload</strong> or drag and drop<br>
+          PDF, AI, PNG, JPG, ZIP (max 10MB each, 10 files total)
+        </div>
+      </div>
+
+      <div class="file-list"></div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn btn-secondary" id="prev-step-btn">
+          Previous
+        </button>
+        <button type="button" class="btn btn-primary" id="next-step-btn">
+          Next Step
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Garment Specs (placeholder) -->
+  <div class="step" data-step="3">
+    <div class="container">
+      <div class="step-header">
+        <h2 class="step-title">Garment Specifications</h2>
+        <p class="step-description">Define your garment details and quantities</p>
+      </div>
+
+      <div class="garment-controls">
+        <button type="button" class="btn btn-primary" id="add-garment-btn">
+          Add Garment
+        </button>
+      </div>
+
+      <div class="garment-list"></div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn btn-secondary" id="prev-step-btn">
+          Previous
+        </button>
+        <button type="button" class="btn btn-primary" id="next-step-btn">
+          Next Step
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Review & Submit (placeholder) -->
+  <div class="step" data-step="4">
+    <div class="container">
+      <div class="step-header">
+        <h2 class="step-title">Review & Submit</h2>
+        <p class="step-description">Review your submission and send your tech pack</p>
+      </div>
+
+      <div class="review-content">
+        <p>Review all your information and submit your tech pack.</p>
+      </div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn btn-secondary" id="prev-step-btn">
+          Previous
+        </button>
+        <button type="button" class="btn btn-primary" id="next-step-btn">
+          Submit Tech Pack
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'techpack-app-modern.js' | asset_url }}" defer></script>
+
+<style>
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tp-space-md);
+  margin-bottom: var(--tp-space-md);
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--tp-space-sm);
   }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Techpack Modern Step 1",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page Title",
+      "default": "Tech Pack Submission"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Page Subtitle",
+      "default": "Professional garment development made simple"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Techpack Modern Step 1",
+      "category": "Custom"
+    }
+  ]
+}
 {% endschema %}
