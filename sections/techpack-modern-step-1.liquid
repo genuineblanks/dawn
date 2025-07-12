@@ -74,15 +74,18 @@
               required
             >
           </div>
-          <div class="form-group">
-            <label for="vat-ein" class="form-label">VAT/EIN Number</label>
+          <div class="form-group" id="vat-ein-group">
+            <label for="vat-ein" class="form-label">VAT/Tax Number</label>
             <input
               type="text"
               id="vat-ein"
               name="vatEin"
               class="form-input"
-              placeholder="Your tax identification number"
+              placeholder="Optional"
             >
+            <div class="form-help">
+              Required for certain countries (VAT for EU, EIN for US)
+            </div>
           </div>
         </div>
 
@@ -102,18 +105,38 @@
             <label for="country" class="form-label">Business Location *</label>
             <select id="country" name="country" class="form-input" required>
               <option value="">Select your country</option>
-              <option value="US">United States</option>
-              <option value="GB">United Kingdom</option>
-              <option value="CA">Canada</option>
-              <option value="AU">Australia</option>
-              <option value="DE">Germany</option>
-              <option value="FR">France</option>
-              <option value="IT">Italy</option>
-              <option value="ES">Spain</option>
-              <option value="NL">Netherlands</option>
-              <option value="BE">Belgium</option>
-              <option value="PT">Portugal</option>
-              <option value="other">Other</option>
+              <optgroup label="Major Markets">
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="CA">Canada</option>
+                <option value="AU">Australia</option>
+              </optgroup>
+              <optgroup label="European Union">
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="IT">Italy</option>
+                <option value="ES">Spain</option>
+                <option value="NL">Netherlands</option>
+                <option value="BE">Belgium</option>
+                <option value="PT">Portugal</option>
+                <option value="AT">Austria</option>
+                <option value="IE">Ireland</option>
+                <option value="DK">Denmark</option>
+                <option value="SE">Sweden</option>
+                <option value="FI">Finland</option>
+              </optgroup>
+              <optgroup label="Other Countries">
+                <option value="BR">Brazil</option>
+                <option value="MX">Mexico</option>
+                <option value="JP">Japan</option>
+                <option value="KR">South Korea</option>
+                <option value="SG">Singapore</option>
+                <option value="CH">Switzerland</option>
+                <option value="NO">Norway</option>
+                <option value="NZ">New Zealand</option>
+                <option value="ZA">South Africa</option>
+                <option value="other">Other</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -165,23 +188,105 @@
     </div>
   </div>
 
-  <!-- Step 2: File Upload (placeholder) -->
+  <!-- Step 2: File Upload -->
   <div class="step" data-step="2">
     <div class="container">
       <div class="step-header">
         <h2 class="step-title">File Upload</h2>
-        <p class="step-description">Upload your design files and references</p>
+        <p class="step-description">Upload your design files, references, and specifications</p>
       </div>
 
-      <div class="file-upload-area">
-        <input type="file" id="file-input" multiple accept=".pdf,.ai,.png,.jpg,.jpeg,.zip" style="display: none;">
-        <div class="file-upload-text">
-          <strong>Click to upload</strong> or drag and drop<br>
-          PDF, AI, PNG, JPG, ZIP (max 10MB each, 10 files total)
+      <!-- Upload Guidelines -->
+      <div class="upload-guidelines">
+        <div class="upload-guideline">
+          <div class="upload-guideline__icon">📁</div>
+          <div class="upload-guideline__content">
+            <strong>Accepted Files</strong>
+            <span>PDF, AI, PNG, JPG, JPEG, ZIP</span>
+          </div>
+        </div>
+        <div class="upload-guideline">
+          <div class="upload-guideline__icon">📏</div>
+          <div class="upload-guideline__content">
+            <strong>File Size</strong>
+            <span>Maximum 10MB per file</span>
+          </div>
+        </div>
+        <div class="upload-guideline">
+          <div class="upload-guideline__icon">📊</div>
+          <div class="upload-guideline__content">
+            <strong>File Limit</strong>
+            <span>Up to 10 files total</span>
+          </div>
         </div>
       </div>
 
-      <div class="file-list"></div>
+      <!-- Upload Area -->
+      <div class="file-upload-zone" id="file-upload-zone">
+        <input type="file" id="file-input" multiple accept=".pdf,.ai,.png,.jpg,.jpeg,.zip" style="display: none;">
+        
+        <div class="file-upload-content">
+          <div class="file-upload-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <path d="M24 8v24m-8-8l8-8 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 24v12a4 4 0 004 4h24a4 4 0 004-4V24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop your files here
+          </div>
+          
+          <div class="file-upload-hint">
+            Tech packs, designs, references, specifications
+          </div>
+        </div>
+
+        <div class="file-upload-dragover" style="display: none;">
+          <div class="file-upload-dragover__content">
+            <div class="file-upload-dragover__icon">⬇️</div>
+            <strong>Drop your files here</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Categories (Optional) -->
+      <div class="file-categories">
+        <h3 class="file-categories__title">File Categories</h3>
+        <div class="file-categories__list">
+          <button type="button" class="file-category" data-category="designs">
+            <span class="file-category__icon">🎨</span>
+            <span class="file-category__label">Designs</span>
+            <span class="file-category__count">0</span>
+          </button>
+          <button type="button" class="file-category" data-category="references">
+            <span class="file-category__icon">📷</span>
+            <span class="file-category__label">References</span>
+            <span class="file-category__count">0</span>
+          </button>
+          <button type="button" class="file-category" data-category="techpack">
+            <span class="file-category__icon">📋</span>
+            <span class="file-category__label">Tech Pack</span>
+            <span class="file-category__count">0</span>
+          </button>
+          <button type="button" class="file-category" data-category="other">
+            <span class="file-category__icon">📄</span>
+            <span class="file-category__label">Other</span>
+            <span class="file-category__count">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- File List -->
+      <div class="file-list-container">
+        <div class="file-list-header">
+          <h3>Uploaded Files (<span id="file-count">0</span>/10)</h3>
+          <button type="button" class="btn btn-clear" id="clear-all-files" style="display: none;">
+            Clear All
+          </button>
+        </div>
+        <div class="file-list" id="file-list"></div>
+      </div>
 
       <div class="step-navigation">
         <button type="button" class="btn btn-secondary" id="prev-step-btn">
@@ -194,21 +299,53 @@
     </div>
   </div>
 
-  <!-- Step 3: Garment Specs (placeholder) -->
+  <!-- Step 3: Garment Specs -->
   <div class="step" data-step="3">
     <div class="container">
       <div class="step-header">
         <h2 class="step-title">Garment Specifications</h2>
-        <p class="step-description">Define your garment details and quantities</p>
+        <p class="step-description">Define your garment types, colorways, and quantities</p>
       </div>
 
+      <!-- Production Info -->
+      <div class="production-info" id="production-info">
+        <div class="production-info__content">
+          <h3>Production Details</h3>
+          <div class="production-info__details">
+            <span class="production-type-display">Production type will be shown here</span>
+            <span class="minimum-quantity-display">Minimum quantities will be calculated</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garment Controls -->
       <div class="garment-controls">
         <button type="button" class="btn btn-primary" id="add-garment-btn">
-          Add Garment
+          <span class="btn-icon">➕</span>
+          Add Garment Type
         </button>
+        <div class="garment-summary" id="garment-summary">
+          <span class="garment-count">0 garments</span>
+          <span class="total-quantity">0 total pieces</span>
+        </div>
       </div>
 
-      <div class="garment-list"></div>
+      <!-- Garment List -->
+      <div class="garment-list" id="garment-list">
+        <div class="garment-list-empty">
+          <div class="garment-list-empty__icon">👕</div>
+          <p>No garments added yet</p>
+          <p class="garment-list-empty__hint">Click "Add Garment Type" to start defining your products</p>
+        </div>
+      </div>
+
+      <!-- Quantity Validation -->
+      <div class="quantity-validation" id="quantity-validation" style="display: none;">
+        <div class="quantity-validation__content">
+          <div class="quantity-validation__status"></div>
+          <div class="quantity-validation__details"></div>
+        </div>
+      </div>
 
       <div class="step-navigation">
         <button type="button" class="btn btn-secondary" id="prev-step-btn">
@@ -221,28 +358,113 @@
     </div>
   </div>
 
-  <!-- Step 4: Review & Submit (placeholder) -->
+  <!-- Step 4: Review & Submit -->
   <div class="step" data-step="4">
     <div class="container">
       <div class="step-header">
         <h2 class="step-title">Review & Submit</h2>
-        <p class="step-description">Review your submission and send your tech pack</p>
+        <p class="step-description">Review all your information before submitting your tech pack</p>
       </div>
 
-      <div class="review-content">
-        <p>Review all your information and submit your tech pack.</p>
+      <!-- Review Sections -->
+      <div class="review-container">
+        
+        <!-- Client Information Review -->
+        <div class="review-section" id="review-client">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <span class="review-section__icon">👤</span>
+              Client Information
+            </h3>
+            <button type="button" class="review-section__edit" data-edit-step="1">
+              Edit
+            </button>
+          </div>
+          <div class="review-section__content" id="review-client-content">
+            <!-- Content will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Files Review -->
+        <div class="review-section" id="review-files">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <span class="review-section__icon">📁</span>
+              Uploaded Files
+            </h3>
+            <button type="button" class="review-section__edit" data-edit-step="2">
+              Edit
+            </button>
+          </div>
+          <div class="review-section__content" id="review-files-content">
+            <!-- Content will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Garment Specifications Review -->
+        <div class="review-section" id="review-garments">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <span class="review-section__icon">👕</span>
+              Garment Specifications
+            </h3>
+            <button type="button" class="review-section__edit" data-edit-step="3">
+              Edit
+            </button>
+          </div>
+          <div class="review-section__content" id="review-garments-content">
+            <!-- Content will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="review-section review-section--summary" id="review-summary">
+          <div class="review-section__header">
+            <h3 class="review-section__title">
+              <span class="review-section__icon">📊</span>
+              Order Summary
+            </h3>
+          </div>
+          <div class="review-section__content" id="review-summary-content">
+            <!-- Content will be populated by JavaScript -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Submission Notes -->
+      <div class="submission-notes">
+        <h4>What happens next?</h4>
+        <ol>
+          <li>We'll review your tech pack submission within 24-48 hours</li>
+          <li>Our team will contact you with a detailed quote and timeline</li>
+          <li>Once approved, we'll create samples for your review</li>
+          <li>After sample approval, we'll proceed with full production</li>
+        </ol>
+      </div>
+
+      <!-- Final Terms -->
+      <div class="submission-terms">
+        <label class="submission-terms__checkbox">
+          <input type="checkbox" id="terms-agreement" required>
+          <span class="submission-terms__checkmark"></span>
+          I agree to the terms and conditions and confirm that all information provided is accurate
+        </label>
       </div>
 
       <div class="step-navigation">
         <button type="button" class="btn btn-secondary" id="prev-step-btn">
           Previous
         </button>
-        <button type="button" class="btn btn-primary" id="next-step-btn">
+        <button type="button" class="btn btn-primary" id="submit-techpack-btn" disabled>
+          <span class="btn-icon">📤</span>
           Submit Tech Pack
         </button>
       </div>
+
     </div>
   </div>
+</div>
 </div>
 
 <script src="{{ 'techpack-app-modern.js' | asset_url }}" defer></script>
