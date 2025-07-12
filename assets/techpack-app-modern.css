@@ -24,7 +24,17 @@
   /* Layout */
   --tp-container: 1200px;
   --tp-radius: 2px;
-  --tp-transition: all 0.2s ease;
+  
+  /* Enhanced Transitions */
+  --tp-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --tp-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --tp-transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Animation Easings */
+  --tp-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --tp-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --tp-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --tp-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* ===== RESET & BASE ===== */
@@ -1063,6 +1073,264 @@
   color: var(--tp-white);
   font-size: 0.8rem;
   font-weight: 600;
+  animation: checkmark-appear 0.3s var(--tp-bounce);
+}
+
+/* ===== PREMIUM ANIMATIONS & MICRO-INTERACTIONS ===== */
+
+/* Stagger Animation for Progress Steps */
+.tech-pack-app .progress-step {
+  animation: progress-step-enter 0.5s var(--tp-ease-out);
+  animation-fill-mode: backwards;
+}
+
+.tech-pack-app .progress-step:nth-child(1) { animation-delay: 0.1s; }
+.tech-pack-app .progress-step:nth-child(2) { animation-delay: 0.15s; }
+.tech-pack-app .progress-step:nth-child(3) { animation-delay: 0.2s; }
+.tech-pack-app .progress-step:nth-child(4) { animation-delay: 0.25s; }
+
+@keyframes progress-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes checkmark-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Step Transitions */
+.tech-pack-app .step {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s var(--tp-ease-out), transform 0.4s var(--tp-ease-out);
+}
+
+.tech-pack-app .step.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Button Hover Effects */
+.tech-pack-app .btn {
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform var(--tp-transition-fast), box-shadow var(--tp-transition-fast);
+}
+
+.tech-pack-app .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tech-pack-app .btn:active {
+  transform: translateY(0);
+  transition: transform 0.1s var(--tp-ease-in);
+}
+
+/* Ripple Effect for Buttons */
+.tech-pack-app .btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.tech-pack-app .btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Form Input Focus Animation */
+.tech-pack-app .form-input {
+  position: relative;
+  transition: border-color var(--tp-transition), box-shadow var(--tp-transition);
+}
+
+.tech-pack-app .form-input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* File Upload Pulse Animation */
+.tech-pack-app .file-upload-zone.dragover {
+  animation: drag-pulse 1s infinite;
+}
+
+@keyframes drag-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Progress Fill Animation */
+.tech-pack-app .progress-fill {
+  transition: width 0.6s var(--tp-ease-out);
+}
+
+/* Garment Item Enter Animation */
+.tech-pack-app .garment-item {
+  animation: item-enter 0.5s var(--tp-ease-out);
+  animation-fill-mode: backwards;
+}
+
+@keyframes item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* File Item Stagger Animation */
+.tech-pack-app .file-item {
+  animation: file-item-enter 0.4s var(--tp-ease-out);
+  animation-fill-mode: backwards;
+}
+
+.tech-pack-app .file-item:nth-child(1) { animation-delay: 0.05s; }
+.tech-pack-app .file-item:nth-child(2) { animation-delay: 0.1s; }
+.tech-pack-app .file-item:nth-child(3) { animation-delay: 0.15s; }
+.tech-pack-app .file-item:nth-child(4) { animation-delay: 0.2s; }
+.tech-pack-app .file-item:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes file-item-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Quantity Input Focus Animation */
+.tech-pack-app .quantity-input__field:focus {
+  transform: scale(1.05);
+  transition: transform var(--tp-transition-fast);
+}
+
+/* Review Section Expand Animation */
+.tech-pack-app .review-section {
+  animation: review-section-enter 0.5s var(--tp-ease-out);
+  animation-fill-mode: backwards;
+}
+
+.tech-pack-app .review-section:nth-child(1) { animation-delay: 0.1s; }
+.tech-pack-app .review-section:nth-child(2) { animation-delay: 0.2s; }
+.tech-pack-app .review-section:nth-child(3) { animation-delay: 0.3s; }
+.tech-pack-app .review-section:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes review-section-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced Loading Animation */
+.tech-pack-app .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--tp-border);
+  border-top: 2px solid var(--tp-black);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success Animation */
+.tech-pack-app .success-checkmark {
+  animation: success-scale 0.5s var(--tp-bounce);
+}
+
+@keyframes success-scale {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Validation States Animation */
+.tech-pack-app .quantity-validation {
+  animation: validation-enter 0.4s var(--tp-ease-out);
+}
+
+@keyframes validation-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover Effects for Interactive Elements */
+.tech-pack-app .file-category:hover,
+.tech-pack-app .file-item:hover,
+.tech-pack-app .garment-item:hover,
+.tech-pack-app .review-section:hover {
+  transform: translateY(-2px);
+  transition: transform var(--tp-transition-fast);
+}
+
+/* Mobile Touch States */
+@media (hover: none) {
+  .tech-pack-app .btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .tech-pack-app .file-category:hover,
+  .tech-pack-app .file-item:hover,
+  .tech-pack-app .garment-item:hover,
+  .tech-pack-app .review-section:hover {
+    transform: none;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .tech-pack-app * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .tech-pack-app .progress-fill {
+    transition: none;
+  }
 }
 
 /* ===== BUTTONS - MINIMAL ===== */
@@ -1279,4 +1547,336 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* ===== MOBILE EXPERIENCE ENHANCEMENTS ===== */
+
+/* Mobile Touch Interactions */
+@media (max-width: 768px) {
+  /* Enhanced touch targets */
+  .tech-pack-app .btn,
+  .tech-pack-app .form-input,
+  .tech-pack-app .file-category,
+  .tech-pack-app .review-section__edit {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Improved tap highlights */
+  .tech-pack-app .btn,
+  .tech-pack-app .file-category,
+  .tech-pack-app .progress-step {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+  }
+
+  /* Mobile-specific spacing */
+  .tech-pack-app .container {
+    padding: 0 var(--tp-space-sm);
+  }
+
+  .tech-pack-app .step {
+    padding: var(--tp-space-md) 0;
+  }
+
+  .tech-pack-app .step-header {
+    margin-bottom: var(--tp-space-md);
+  }
+
+  .tech-pack-app .step-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .tech-pack-app .step-description {
+    font-size: 1rem;
+    margin-bottom: var(--tp-space-sm);
+  }
+
+  /* Form improvements for mobile */
+  .tech-pack-app .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--tp-space-sm);
+  }
+
+  .tech-pack-app .form-group {
+    margin-bottom: var(--tp-space-md);
+  }
+
+  .tech-pack-app .form-input,
+  .tech-pack-app .form-textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px var(--tp-space-sm);
+  }
+
+  /* Mobile file upload */
+  .tech-pack-app .file-upload-zone {
+    min-height: 200px;
+    padding: var(--tp-space-md);
+  }
+
+  .tech-pack-app .file-upload-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Mobile navigation */
+  .tech-pack-app .step-navigation {
+    position: sticky;
+    bottom: 0;
+    background: var(--tp-white);
+    padding: var(--tp-space-sm);
+    margin: var(--tp-space-md) calc(-1 * var(--tp-space-sm)) 0;
+    border-top: 1px solid var(--tp-border);
+    z-index: 10;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .tech-pack-app .btn {
+    padding: 14px var(--tp-space-md);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* Mobile progress indicator */
+  .tech-pack-app .progress-steps {
+    display: none; /* Hide text labels on mobile */
+  }
+
+  .tech-pack-app .progress-wrapper {
+    max-width: 100%;
+    padding: 0 var(--tp-space-sm);
+  }
+
+  .tech-pack-app .progress-track {
+    height: 4px;
+    margin-bottom: var(--tp-space-sm);
+  }
+
+  /* Mobile review sections */
+  .tech-pack-app .review-section {
+    margin-bottom: var(--tp-space-md);
+  }
+
+  .tech-pack-app .review-section__header {
+    padding: var(--tp-space-sm);
+  }
+
+  .tech-pack-app .review-section__content {
+    padding: var(--tp-space-sm);
+  }
+
+  /* Mobile garment list */
+  .tech-pack-app .garment-item {
+    padding: var(--tp-space-sm);
+  }
+
+  .tech-pack-app .garment-controls {
+    flex-direction: column;
+    gap: var(--tp-space-sm);
+    align-items: stretch;
+  }
+
+  .tech-pack-app .garment-summary {
+    order: -1;
+    text-align: center;
+    padding: var(--tp-space-sm);
+    background: var(--tp-gray-light);
+    border-radius: var(--tp-radius);
+  }
+
+  /* File categories mobile layout */
+  .tech-pack-app .file-categories__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--tp-space-xs);
+  }
+
+  .tech-pack-app .file-category {
+    padding: var(--tp-space-sm);
+  }
+
+  .tech-pack-app .file-category__icon {
+    font-size: 1.2rem;
+  }
+
+  .tech-pack-app .file-category__label {
+    font-size: 0.875rem;
+  }
+}
+
+/* Touch-specific interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover states on touch devices */
+  .tech-pack-app .btn:hover,
+  .tech-pack-app .file-category:hover,
+  .tech-pack-app .review-section__edit:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhanced touch feedback */
+  .tech-pack-app .btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s var(--tp-ease-out);
+  }
+
+  .tech-pack-app .file-category:active {
+    transform: scale(0.95);
+    transition: transform 0.1s var(--tp-ease-out);
+  }
+
+  /* Touch-friendly file upload */
+  .tech-pack-app .file-upload-zone:active {
+    transform: scale(0.99);
+    transition: transform 0.1s var(--tp-ease-out);
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  .tech-pack-app .app-header {
+    padding: var(--tp-space-md) 0;
+  }
+
+  .tech-pack-app .app-title {
+    font-size: 2.5rem;
+  }
+
+  .tech-pack-app .step {
+    padding: var(--tp-space-sm) 0;
+  }
+
+  .tech-pack-app .step-navigation {
+    position: relative;
+    margin: var(--tp-space-sm) 0 0;
+    box-shadow: none;
+  }
+}
+
+/* Small screen optimizations */
+@media (max-width: 480px) {
+  .tech-pack-app .app-title {
+    font-size: 2rem;
+  }
+
+  .tech-pack-app .container {
+    padding: 0 12px;
+  }
+
+  .tech-pack-app .form-input,
+  .tech-pack-app .form-textarea {
+    padding: 10px 12px;
+  }
+
+  .tech-pack-app .btn {
+    padding: 12px var(--tp-space-sm);
+    font-size: 0.9rem;
+  }
+
+  .tech-pack-app .file-upload-zone {
+    min-height: 160px;
+    padding: var(--tp-space-sm);
+  }
+
+  .tech-pack-app .file-categories__list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Compact review sections */
+  .tech-pack-app .review-section__header {
+    padding: 12px;
+  }
+
+  .tech-pack-app .review-section__content {
+    padding: 12px;
+  }
+
+  .tech-pack-app .review-section__title {
+    font-size: 1.1rem;
+  }
+}
+
+/* ===== ENHANCED ACCESSIBILITY ===== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tech-pack-app {
+    --tp-black: #000000;
+    --tp-white: #ffffff;
+    --tp-gray: #4a4a4a;
+    --tp-border: #000000;
+  }
+
+  .tech-pack-app .btn {
+    border: 2px solid;
+  }
+
+  .tech-pack-app .form-input {
+    border: 2px solid var(--tp-black);
+  }
+
+  .tech-pack-app .progress-fill {
+    background: var(--tp-black);
+  }
+}
+
+/* Focus management */
+.tech-pack-app .btn:focus-visible,
+.tech-pack-app .form-input:focus,
+.tech-pack-app .file-category:focus {
+  outline: 2px solid var(--tp-black);
+  outline-offset: 2px;
+}
+
+/* Screen reader improvements */
+.tech-pack-app .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Loading states accessibility */
+.tech-pack-app .btn[aria-busy="true"] {
+  pointer-events: none;
+}
+
+.tech-pack-app .btn[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .tech-pack-app .step-navigation,
+  .tech-pack-app .file-upload-zone,
+  .tech-pack-app .btn {
+    display: none;
+  }
+
+  .tech-pack-app .review-section {
+    break-inside: avoid;
+    margin-bottom: var(--tp-space-md);
+  }
+
+  .tech-pack-app .progress-container {
+    display: none;
+  }
 }
