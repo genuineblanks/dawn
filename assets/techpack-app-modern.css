@@ -1,0 +1,330 @@
+/* Techpack App - Modern Minimal Design */
+/* Inspired by genuineblanks.com aesthetic */
+
+/* ===== MINIMAL CSS CUSTOM PROPERTIES ===== */
+:root {
+  /* Core Colors - Genuineblanks.com Style */
+  --tp-black: #000000;
+  --tp-white: #ffffff;
+  --tp-gray: #666666;
+  --tp-gray-light: #f8f8f8;
+  --tp-border: #e5e5e5;
+  
+  /* Typography - Clean & Modern */
+  --tp-font-primary: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --tp-font-heading: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Spacing - Consistent System */
+  --tp-space-xs: 0.5rem;
+  --tp-space-sm: 1rem;
+  --tp-space-md: 2rem;
+  --tp-space-lg: 3rem;
+  --tp-space-xl: 4rem;
+  
+  /* Layout */
+  --tp-container: 1200px;
+  --tp-radius: 2px;
+  --tp-transition: all 0.2s ease;
+}
+
+/* ===== RESET & BASE ===== */
+.tech-pack-app {
+  font-family: var(--tp-font-primary);
+  color: var(--tp-black);
+  line-height: 1.6;
+}
+
+.tech-pack-app * {
+  box-sizing: border-box;
+}
+
+/* ===== CONTAINER ===== */
+.tech-pack-app .container {
+  max-width: var(--tp-container);
+  margin: 0 auto;
+  padding: 0 var(--tp-space-sm);
+}
+
+/* ===== HEADER - MINIMAL ===== */
+.tech-pack-app .app-header {
+  text-align: center;
+  padding: var(--tp-space-xl) 0;
+}
+
+.tech-pack-app .app-title {
+  font-family: var(--tp-font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: var(--tp-space-sm);
+  letter-spacing: -0.02em;
+}
+
+.tech-pack-app .app-subtitle {
+  font-size: 1.1rem;
+  color: var(--tp-gray);
+  font-weight: 400;
+}
+
+/* ===== PROGRESS - SIMPLE LINE ===== */
+.tech-pack-app .progress-container {
+  border-bottom: 1px solid var(--tp-border);
+  padding: var(--tp-space-md) 0;
+}
+
+.tech-pack-app .progress-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tech-pack-app .progress-track {
+  height: 2px;
+  background: var(--tp-border);
+  border-radius: 1px;
+  position: relative;
+  margin-bottom: var(--tp-space-md);
+}
+
+.tech-pack-app .progress-fill {
+  height: 100%;
+  background: var(--tp-black);
+  border-radius: 1px;
+  transition: var(--tp-transition);
+  width: 25%; /* Will be updated by JS */
+}
+
+.tech-pack-app .progress-steps {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tech-pack-app .progress-step {
+  font-size: 0.9rem;
+  color: var(--tp-gray);
+  font-weight: 500;
+}
+
+.tech-pack-app .progress-step.active {
+  color: var(--tp-black);
+}
+
+/* ===== STEPS - CLEAN LAYOUT ===== */
+.tech-pack-app .step {
+  display: none;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--tp-space-xl) 0;
+}
+
+.tech-pack-app .step.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tech-pack-app .step-header {
+  text-align: center;
+  margin-bottom: var(--tp-space-lg);
+}
+
+.tech-pack-app .step-title {
+  font-family: var(--tp-font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--tp-space-sm);
+}
+
+.tech-pack-app .step-description {
+  color: var(--tp-gray);
+  font-size: 1rem;
+}
+
+/* ===== FORMS - MINIMAL STYLING ===== */
+.tech-pack-app .form-group {
+  margin-bottom: var(--tp-space-md);
+}
+
+.tech-pack-app .form-label {
+  display: block;
+  margin-bottom: var(--tp-space-xs);
+  font-weight: 500;
+  color: var(--tp-black);
+}
+
+.tech-pack-app .form-input {
+  width: 100%;
+  padding: var(--tp-space-sm);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius);
+  font-family: var(--tp-font-primary);
+  font-size: 1rem;
+  transition: var(--tp-transition);
+}
+
+.tech-pack-app .form-input:focus {
+  outline: none;
+  border-color: var(--tp-black);
+}
+
+.tech-pack-app .form-input.error {
+  border-color: #dc2626;
+}
+
+/* ===== FILE UPLOAD - CLEAN DESIGN ===== */
+.tech-pack-app .file-upload-area {
+  border: 2px dashed var(--tp-border);
+  border-radius: var(--tp-radius);
+  padding: var(--tp-space-xl);
+  text-align: center;
+  transition: var(--tp-transition);
+  cursor: pointer;
+}
+
+.tech-pack-app .file-upload-area:hover,
+.tech-pack-app .file-upload-area.dragover {
+  border-color: var(--tp-black);
+  background: var(--tp-gray-light);
+}
+
+.tech-pack-app .file-upload-text {
+  color: var(--tp-gray);
+  font-size: 1rem;
+}
+
+.tech-pack-app .file-list {
+  margin-top: var(--tp-space-md);
+}
+
+.tech-pack-app .file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tp-space-sm);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius);
+  margin-bottom: var(--tp-space-xs);
+}
+
+/* ===== BUTTONS - MINIMAL ===== */
+.tech-pack-app .btn {
+  padding: var(--tp-space-sm) var(--tp-space-md);
+  border: none;
+  border-radius: var(--tp-radius);
+  font-family: var(--tp-font-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--tp-transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tech-pack-app .btn-primary {
+  background: var(--tp-black);
+  color: var(--tp-white);
+}
+
+.tech-pack-app .btn-primary:hover {
+  background: #333;
+}
+
+.tech-pack-app .btn-secondary {
+  background: transparent;
+  color: var(--tp-black);
+  border: 1px solid var(--tp-border);
+}
+
+.tech-pack-app .btn-secondary:hover {
+  border-color: var(--tp-black);
+}
+
+.tech-pack-app .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== NAVIGATION - CLEAN ===== */
+.tech-pack-app .step-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--tp-space-md) 0;
+  border-top: 1px solid var(--tp-border);
+  margin-top: var(--tp-space-lg);
+}
+
+/* ===== GARMENT SPECS - SIMPLIFIED ===== */
+.tech-pack-app .garment-list {
+  display: grid;
+  gap: var(--tp-space-md);
+}
+
+.tech-pack-app .garment-item {
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius);
+  padding: var(--tp-space-md);
+}
+
+.tech-pack-app .garment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--tp-space-sm);
+}
+
+.tech-pack-app .quantity-display {
+  font-weight: 600;
+  color: var(--tp-black);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .tech-pack-app .app-title {
+    font-size: 2.5rem;
+  }
+  
+  .tech-pack-app .step-title {
+    font-size: 1.5rem;
+  }
+  
+  .tech-pack-app .step-navigation {
+    flex-direction: column;
+    gap: var(--tp-space-sm);
+  }
+}
+
+/* ===== ERROR MESSAGES - MINIMAL ===== */
+.tech-pack-app .error-message {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: var(--tp-space-xs);
+}
+
+.tech-pack-app .success-message {
+  color: var(--tp-black);
+  font-size: 0.9rem;
+  margin-top: var(--tp-space-xs);
+}
+
+/* ===== LOADING STATES ===== */
+.tech-pack-app .loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.tech-pack-app .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--tp-border);
+  border-top: 2px solid var(--tp-black);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
