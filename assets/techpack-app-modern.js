@@ -1358,10 +1358,647 @@
     }
   }
 
+  // Enhanced Accessibility and Keyboard Navigation
+  class AccessibilityManager {
+    constructor() {
+      this.currentFocusIndex = 0;
+      this.focusableElements = [];
+      this.trapFocus = false;
+    }
+
+    init() {
+      this.bindKeyboardEvents();
+      this.setupARIAAttributes();
+      this.initReducedMotion();
+      this.initScreenReader();
+    }
+
+    bindKeyboardEvents() {
+      document.addEventListener('keydown', (e) => {
+        // Escape key handling
+        if (e.key === 'Escape') {
+          this.handleEscape();
+        }
+
+        // Tab navigation enhancement
+        if (e.key === 'Tab') {
+          this.handleTabNavigation(e);
+        }
+
+        // Arrow key navigation for form steps
+        if (e.altKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+          e.preventDefault();
+          this.handleStepNavigation(e.key);
+        }
+
+        // Enter/Space for button activation
+        if ((e.key === 'Enter' || e.key === ' ') && this.isButtonElement(e.target)) {
+          e.preventDefault();
+          e.target.click();
+        }
+      });
+    }
+
+    setupARIAAttributes() {
+      // Progress steps
+      const progressSteps = document.querySelectorAll('.progress-step');
+      progressSteps.forEach((step, index) => {
+        step.setAttribute('role', 'tab');
+        step.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+        step.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      });
+
+      // Form steps
+      const steps = document.querySelectorAll('.step');
+      steps.forEach((step, index) => {
+        step.setAttribute('role', 'tabpanel');
+        step.setAttribute('aria-hidden', index === 0 ? 'false' : 'true');
+        step.setAttribute('aria-labelledby', `step-${index + 1}-tab`);
+      });
+
+      // File upload zone
+      const fileUploadZone = document.getElementById('file-upload-zone');
+      if (fileUploadZone) {
+        fileUploadZone.setAttribute('role', 'button');
+        fileUploadZone.setAttribute('aria-label', 'Upload files by clicking or dragging files here');
+        fileUploadZone.setAttribute('tabindex', '0');
+      }
+
+      // Review sections
+      const reviewSections = document.querySelectorAll('.review-section');
+      reviewSections.forEach((section, index) => {
+        section.setAttribute('role', 'region');
+        section.setAttribute('aria-labelledby', `review-section-${index + 1}-title`);
+      });
+
+      // Form inputs with validation
+      const formInputs = document.querySelectorAll('.form-input');
+      formInputs.forEach(input => {
+        if (input.hasAttribute('required')) {
+          input.setAttribute('aria-required', 'true');
+        }
+        
+        const errorElement = input.parentNode.querySelector('.form-error');
+        if (errorElement) {
+          input.setAttribute('aria-describedby', errorElement.id || `error-${input.id}`);
+        }
+      });
+    }
+
+    initReducedMotion() {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.style.setProperty('--tp-transition-fast', '0.01ms');
+        document.documentElement.style.setProperty('--tp-transition', '0.01ms');
+        document.documentElement.style.setProperty('--tp-transition-slow', '0.01ms');
+      }
+    }
+
+    initScreenReader() {
+      // Live region for announcements
+      const liveRegion = document.createElement('div');
+      liveRegion.id = 'aria-live-region';
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.setAttribute('aria-atomic', 'true');
+      liveRegion.className = 'sr-only';
+      document.body.appendChild(liveRegion);
+
+      // Status region for form validation
+      const statusRegion = document.createElement('div');
+      statusRegion.id = 'aria-status-region';
+      statusRegion.setAttribute('role', 'status');
+      statusRegion.setAttribute('aria-live', 'assertive');
+      statusRegion.className = 'sr-only';
+      document.body.appendChild(statusRegion);
+    }
+
+    announceToScreenReader(message, isStatus = false) {
+      const region = document.getElementById(isStatus ? 'aria-status-region' : 'aria-live-region');
+      if (region) {
+        region.textContent = message;
+        
+        // Clear after announcement
+        setTimeout(() => {
+          region.textContent = '';
+        }, 1000);
+      }
+    }
+
+    handleEscape() {
+      // Close any open modals or dropdowns
+      const activeModal = document.querySelector('.modal.active');
+      if (activeModal) {
+        activeModal.classList.remove('active');
+        return;
+      }
+
+      // Return focus to main content
+      const mainContent = document.querySelector('.tech-pack-app');
+      if (mainContent) {
+        mainContent.focus();
+      }
+    }
+
+    handleTabNavigation(e) {
+      const focusableElements = this.getFocusableElements();
+      
+      if (this.trapFocus && focusableElements.length > 0) {
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    }
+
+    handleStepNavigation(direction) {
+      if (!window.techPackApp) return;
+      
+      const currentStep = window.techPackApp.currentStep;
+      const totalSteps = window.techPackApp.totalSteps;
+      
+      if (direction === 'ArrowLeft' && currentStep > 1) {
+        window.techPackApp.prevStep();
+        this.announceToScreenReader(`Moved to step ${currentStep - 1}`);
+      } else if (direction === 'ArrowRight' && currentStep < totalSteps) {
+        window.techPackApp.nextStep();
+        this.announceToScreenReader(`Moved to step ${currentStep + 1}`);
+      }
+    }
+
+    getFocusableElements() {
+      const currentStep = document.querySelector('.step.active');
+      if (!currentStep) return [];
+      
+      return currentStep.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+    }
+
+    isButtonElement(element) {
+      return element.tagName === 'BUTTON' || 
+             element.role === 'button' ||
+             element.classList.contains('btn');
+    }
+
+    updateStepAccessibility(stepNumber) {
+      // Update progress steps
+      const progressSteps = document.querySelectorAll('.progress-step');
+      progressSteps.forEach((step, index) => {
+        const isActive = index + 1 === stepNumber;
+        step.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        step.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+
+      // Update form steps
+      const steps = document.querySelectorAll('.step');
+      steps.forEach((step, index) => {
+        const isActive = index + 1 === stepNumber;
+        step.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
+
+      // Focus management
+      const activeStep = document.querySelector('.step.active');
+      if (activeStep) {
+        const firstFocusable = activeStep.querySelector('input, select, textarea, button');
+        if (firstFocusable) {
+          setTimeout(() => firstFocusable.focus(), 100);
+        }
+      }
+    }
+
+    validateFormAccessibility(stepNumber) {
+      const currentStep = document.querySelector(`[data-step="${stepNumber}"]`);
+      if (!currentStep) return true;
+
+      const requiredFields = currentStep.querySelectorAll('[required]');
+      let hasErrors = false;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          hasErrors = true;
+          field.setAttribute('aria-invalid', 'true');
+          
+          // Set focus to first invalid field
+          if (!document.querySelector('[aria-invalid="true"]:focus')) {
+            field.focus();
+          }
+        } else {
+          field.setAttribute('aria-invalid', 'false');
+        }
+      });
+
+      if (hasErrors) {
+        this.announceToScreenReader('Please correct the errors in the form before continuing', true);
+      }
+
+      return !hasErrors;
+    }
+
+    enhanceFileUpload() {
+      const fileUploadZone = document.getElementById('file-upload-zone');
+      const fileInput = document.getElementById('file-input');
+      
+      if (fileUploadZone && fileInput) {
+        // Keyboard activation
+        fileUploadZone.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            fileInput.click();
+          }
+        });
+
+        // Drag and drop accessibility
+        fileUploadZone.addEventListener('dragenter', () => {
+          this.announceToScreenReader('Files ready to drop');
+        });
+
+        fileUploadZone.addEventListener('drop', () => {
+          this.announceToScreenReader('Files dropped successfully');
+        });
+      }
+
+      // File input change announcement
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          const fileCount = e.target.files.length;
+          if (fileCount > 0) {
+            this.announceToScreenReader(`${fileCount} file${fileCount === 1 ? '' : 's'} selected for upload`);
+          }
+        });
+      }
+    }
+
+    enhanceQuantityInputs() {
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('.quantity-input__field')) {
+          const value = parseInt(e.target.value) || 0;
+          const label = e.target.parentNode.querySelector('.quantity-input__label')?.textContent;
+          
+          if (label) {
+            this.announceToScreenReader(`${label} quantity set to ${value}`);
+          }
+        }
+      });
+    }
+
+    enableFocusTrap(container) {
+      this.trapFocus = true;
+      this.focusableElements = this.getFocusableElements();
+    }
+
+    disableFocusTrap() {
+      this.trapFocus = false;
+      this.focusableElements = [];
+    }
+  }
+
+  // Performance Optimization Manager
+  class PerformanceManager {
+    constructor() {
+      this.observer = null;
+      this.imageObserver = null;
+    }
+
+    init() {
+      this.setupIntersectionObserver();
+      this.setupImageLazyLoading();
+      this.debounceFormValidation();
+      this.optimizeAnimations();
+    }
+
+    setupIntersectionObserver() {
+      if ('IntersectionObserver' in window) {
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-in');
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '50px'
+        });
+
+        // Observe review sections for staggered animations
+        const reviewSections = document.querySelectorAll('.review-section');
+        reviewSections.forEach(section => {
+          this.observer.observe(section);
+        });
+      }
+    }
+
+    setupImageLazyLoading() {
+      if ('IntersectionObserver' in window) {
+        this.imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                this.imageObserver.unobserve(img);
+              }
+            }
+          });
+        });
+
+        // Observe any lazy-loaded images
+        const lazyImages = document.querySelectorAll('img[data-src]');
+        lazyImages.forEach(img => {
+          this.imageObserver.observe(img);
+        });
+      }
+    }
+
+    debounceFormValidation() {
+      const formInputs = document.querySelectorAll('.form-input');
+      
+      formInputs.forEach(input => {
+        let timeoutId;
+        
+        input.addEventListener('input', () => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            this.validateFieldPerformant(input);
+          }, 300);
+        });
+      });
+    }
+
+    validateFieldPerformant(field) {
+      // Use requestAnimationFrame for smooth validation updates
+      requestAnimationFrame(() => {
+        if (window.techPackApp) {
+          window.techPackApp.validateField(field);
+        }
+      });
+    }
+
+    optimizeAnimations() {
+      // Reduce animations on low-powered devices
+      if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) {
+        document.documentElement.style.setProperty('--tp-transition-fast', '0.1s');
+        document.documentElement.style.setProperty('--tp-transition', '0.2s');
+        document.documentElement.style.setProperty('--tp-transition-slow', '0.3s');
+      }
+
+      // Pause animations when page is not visible
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          document.body.style.animationPlayState = 'paused';
+        } else {
+          document.body.style.animationPlayState = 'running';
+        }
+      });
+    }
+
+    cleanup() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+      if (this.imageObserver) {
+        this.imageObserver.disconnect();
+      }
+    }
+  }
+
+  // Enhanced Error Handling Manager
+  class ErrorManager {
+    constructor() {
+      this.errors = [];
+      this.maxErrors = 10;
+    }
+
+    init() {
+      this.setupGlobalErrorHandling();
+      this.setupFormErrorHandling();
+      this.setupNetworkErrorHandling();
+    }
+
+    setupGlobalErrorHandling() {
+      window.addEventListener('error', (e) => {
+        this.logError({
+          type: 'JavaScript Error',
+          message: e.message,
+          source: e.filename,
+          line: e.lineno,
+          timestamp: new Date().toISOString()
+        });
+      });
+
+      window.addEventListener('unhandledrejection', (e) => {
+        this.logError({
+          type: 'Promise Rejection',
+          message: e.reason?.message || 'Unhandled promise rejection',
+          timestamp: new Date().toISOString()
+        });
+      });
+    }
+
+    setupFormErrorHandling() {
+      document.addEventListener('invalid', (e) => {
+        e.preventDefault();
+        this.handleFormValidationError(e.target);
+      }, true);
+    }
+
+    setupNetworkErrorHandling() {
+      // Override fetch to add error handling
+      const originalFetch = window.fetch;
+      window.fetch = async (...args) => {
+        try {
+          const response = await originalFetch(...args);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          return response;
+        } catch (error) {
+          this.logError({
+            type: 'Network Error',
+            message: error.message,
+            url: args[0],
+            timestamp: new Date().toISOString()
+          });
+          throw error;
+        }
+      };
+    }
+
+    logError(error) {
+      this.errors.push(error);
+      
+      // Keep only recent errors
+      if (this.errors.length > this.maxErrors) {
+        this.errors.shift();
+      }
+
+      // Log to console in development
+      if (window.location.hostname === 'localhost' || window.location.search.includes('debug=true')) {
+        console.error('TechPack Error:', error);
+      }
+
+      // Send to analytics in production
+      if (window.gtag) {
+        window.gtag('event', 'exception', {
+          description: error.message,
+          fatal: false
+        });
+      }
+    }
+
+    handleFormValidationError(field) {
+      // Smooth scroll to field
+      field.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+
+      // Focus field
+      setTimeout(() => field.focus(), 100);
+
+      // Show user-friendly error
+      this.showFieldError(field, this.getValidationMessage(field));
+    }
+
+    getValidationMessage(field) {
+      if (field.validity.valueMissing) {
+        return `${this.getFieldLabel(field)} is required`;
+      }
+      if (field.validity.typeMismatch) {
+        return `Please enter a valid ${field.type}`;
+      }
+      if (field.validity.patternMismatch) {
+        return `${this.getFieldLabel(field)} format is invalid`;
+      }
+      return 'Please check this field';
+    }
+
+    getFieldLabel(field) {
+      const label = field.parentNode.querySelector('label');
+      return label ? label.textContent.replace('*', '').trim() : 'This field';
+    }
+
+    showFieldError(field, message) {
+      let errorElement = field.parentNode.querySelector('.form-error');
+      
+      if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.className = 'form-error';
+        errorElement.setAttribute('role', 'alert');
+        field.parentNode.appendChild(errorElement);
+      }
+
+      errorElement.textContent = message;
+      field.setAttribute('aria-describedby', errorElement.id || `error-${field.id}`);
+      field.classList.add('error');
+
+      // Clear error on successful input
+      const clearError = () => {
+        if (field.validity.valid) {
+          errorElement.textContent = '';
+          field.classList.remove('error');
+          field.removeAttribute('aria-describedby');
+          field.removeEventListener('input', clearError);
+        }
+      };
+
+      field.addEventListener('input', clearError);
+    }
+
+    showUserFriendlyError(message) {
+      // Create or update error banner
+      let errorBanner = document.getElementById('error-banner');
+      
+      if (!errorBanner) {
+        errorBanner = document.createElement('div');
+        errorBanner.id = 'error-banner';
+        errorBanner.className = 'error-banner';
+        errorBanner.setAttribute('role', 'alert');
+        document.body.prepend(errorBanner);
+      }
+
+      errorBanner.innerHTML = `
+        <div class="error-banner__content">
+          <div class="error-banner__icon">⚠️</div>
+          <div class="error-banner__message">${message}</div>
+          <button class="error-banner__close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+      `;
+
+      errorBanner.style.display = 'block';
+
+      // Auto-hide after 10 seconds
+      setTimeout(() => {
+        if (errorBanner) {
+          errorBanner.remove();
+        }
+      }, 10000);
+    }
+
+    getErrorReport() {
+      return {
+        errors: this.errors,
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      };
+    }
+  }
+
   // Initialize when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
+    // Initialize core app
     window.techPackApp = new TechPackApp();
     window.techPackApp.init();
+
+    // Initialize enhancement managers
+    window.accessibilityManager = new AccessibilityManager();
+    window.accessibilityManager.init();
+
+    window.performanceManager = new PerformanceManager();
+    window.performanceManager.init();
+
+    window.errorManager = new ErrorManager();
+    window.errorManager.init();
+
+    // Enhanced TechPackApp with accessibility integration
+    const originalNextStep = window.techPackApp.nextStep;
+    const originalPrevStep = window.techPackApp.prevStep;
+    const originalShowStep = window.techPackApp.showStep;
+
+    window.techPackApp.nextStep = function() {
+      if (window.accessibilityManager.validateFormAccessibility(this.currentStep)) {
+        originalNextStep.call(this);
+        window.accessibilityManager.updateStepAccessibility(this.currentStep);
+        window.accessibilityManager.announceToScreenReader(`Step ${this.currentStep} of ${this.totalSteps}`);
+      }
+    };
+
+    window.techPackApp.prevStep = function() {
+      originalPrevStep.call(this);
+      window.accessibilityManager.updateStepAccessibility(this.currentStep);
+      window.accessibilityManager.announceToScreenReader(`Step ${this.currentStep} of ${this.totalSteps}`);
+    };
+
+    window.techPackApp.showStep = function(stepNumber) {
+      originalShowStep.call(this, stepNumber);
+      window.accessibilityManager.updateStepAccessibility(stepNumber);
+    };
+
+    // Enhance specific features
+    window.accessibilityManager.enhanceFileUpload();
+    window.accessibilityManager.enhanceQuantityInputs();
+
+    console.log('TechPack App Modern - Fully Enhanced & Accessible');
   });
 
 })();
