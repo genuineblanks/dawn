@@ -1,0 +1,334 @@
+/* ===== TECHPACK MODERN CSS ===== */
+/* Premium styling inspired by genuineblanks.com aesthetic */
+
+/* CSS Custom Properties for Techpack Modern */
+:root {
+  --techpack-color-primary: #000000;
+  --techpack-color-secondary: #666666;
+  --techpack-color-text: #333333;
+  --techpack-color-text-light: #666666;
+  --techpack-color-background: #ffffff;
+  --techpack-color-background-light: #f8f8f8;
+  --techpack-color-border: #e5e5e5;
+  --techpack-color-accent: #000000;
+  
+  /* Typography - Using system fonts with fallbacks */
+  --techpack-font-primary: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --techpack-font-heading: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --techpack-font-weight-normal: 400;
+  --techpack-font-weight-medium: 500;
+  --techpack-font-weight-bold: 700;
+  
+  /* Spacing System */
+  --techpack-spacing-xs: 0.5rem;
+  --techpack-spacing-sm: 1rem;
+  --techpack-spacing-md: 2rem;
+  --techpack-spacing-lg: 3rem;
+  --techpack-spacing-xl: 4rem;
+  --techpack-spacing-xxl: 6rem;
+  
+  /* Layout */
+  --techpack-container-max-width: 1200px;
+  --techpack-border-radius: 8px;
+  --techpack-transition: all 0.3s ease;
+  --techpack-box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== MAIN CONTAINER ===== */
+.techpack-modern {
+  font-family: var(--techpack-font-primary);
+  color: var(--techpack-color-text);
+  line-height: 1.6;
+  letter-spacing: 0.06rem;
+}
+
+.techpack-modern .container {
+  max-width: var(--techpack-container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--techpack-spacing-sm);
+}
+
+/* ===== HEADER ===== */
+.techpack-modern__header {
+  background-color: var(--techpack-color-background);
+  padding: var(--techpack-spacing-xl) 0 var(--techpack-spacing-lg);
+  text-align: center;
+}
+
+.techpack-modern__title {
+  font-family: var(--techpack-font-heading);
+  font-size: 3rem;
+  font-weight: var(--techpack-font-weight-bold);
+  color: var(--techpack-color-primary);
+  margin-bottom: var(--techpack-spacing-sm);
+}
+
+.techpack-modern__subtitle {
+  font-size: 1.1rem;
+  color: var(--techpack-color-text-light);
+  font-weight: var(--techpack-font-weight-normal);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== PROGRESS INDICATOR ===== */
+.techpack-modern__progress-container {
+  background-color: var(--techpack-color-background-light);
+  padding: var(--techpack-spacing-md) 0;
+  border-bottom: 1px solid var(--techpack-color-border);
+}
+
+.techpack-modern__progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.techpack-modern__progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--techpack-spacing-xs);
+  opacity: 0.5;
+  transition: var(--techpack-transition);
+  flex: 1;
+  position: relative;
+}
+
+.techpack-modern__progress-step--active {
+  opacity: 1;
+}
+
+.techpack-modern__progress-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 20px);
+  width: calc(100% - 40px);
+  height: 2px;
+  background-color: var(--techpack-color-border);
+  z-index: 1;
+}
+
+.techpack-modern__progress-step--active:not(:last-child)::after {
+  background-color: var(--techpack-color-primary);
+}
+
+.techpack-modern__progress-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--techpack-color-border);
+  color: var(--techpack-color-text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--techpack-font-weight-bold);
+  transition: var(--techpack-transition);
+  position: relative;
+  z-index: 2;
+}
+
+.techpack-modern__progress-step--active .techpack-modern__progress-number {
+  background-color: var(--techpack-color-primary);
+  color: white;
+}
+
+.techpack-modern__progress-label {
+  font-size: 0.85rem;
+  font-weight: var(--techpack-font-weight-medium);
+  color: var(--techpack-color-text-light);
+  text-align: center;
+}
+
+.techpack-modern__progress-step--active .techpack-modern__progress-label {
+  color: var(--techpack-color-primary);
+}
+
+/* ===== MAIN CONTENT ===== */
+.techpack-modern__main {
+  padding: var(--techpack-spacing-xl) 0 var(--techpack-spacing-lg);
+  min-height: 60vh;
+}
+
+/* ===== STEPS ===== */
+.techpack-modern__step {
+  display: none;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.techpack-modern__step--active {
+  display: block;
+  animation: techpack-fadeIn 0.3s ease-in-out;
+}
+
+@keyframes techpack-fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.techpack-modern__step-header {
+  text-align: center;
+  margin-bottom: var(--techpack-spacing-lg);
+}
+
+.techpack-modern__step-title {
+  font-family: var(--techpack-font-heading);
+  font-size: 2.5rem;
+  font-weight: var(--techpack-font-weight-bold);
+  color: var(--techpack-color-primary);
+  margin-bottom: var(--techpack-spacing-sm);
+}
+
+.techpack-modern__step-description {
+  font-size: 1.1rem;
+  color: var(--techpack-color-text-light);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.techpack-modern__step-content {
+  background-color: var(--techpack-color-background);
+  padding: var(--techpack-spacing-lg);
+  border-radius: var(--techpack-border-radius);
+  box-shadow: var(--techpack-box-shadow);
+}
+
+/* ===== PLACEHOLDER (TEMPORARY) ===== */
+.techpack-modern__placeholder {
+  text-align: center;
+  color: var(--techpack-color-text-light);
+  font-style: italic;
+  padding: var(--techpack-spacing-xl);
+  background-color: var(--techpack-color-background-light);
+  border-radius: var(--techpack-border-radius);
+  border: 2px dashed var(--techpack-color-border);
+}
+
+/* ===== BUTTONS ===== */
+.techpack-modern__btn {
+  padding: var(--techpack-spacing-sm) var(--techpack-spacing-md);
+  border: none;
+  border-radius: var(--techpack-border-radius);
+  font-family: var(--techpack-font-primary);
+  font-size: 1rem;
+  font-weight: var(--techpack-font-weight-medium);
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  min-width: 120px;
+  letter-spacing: 0.06rem;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.techpack-modern__btn--primary {
+  background-color: var(--techpack-color-primary);
+  color: white;
+}
+
+.techpack-modern__btn--primary:hover {
+  background-color: #333333;
+  transform: translateY(-2px);
+}
+
+.techpack-modern__btn--secondary {
+  background-color: transparent;
+  color: var(--techpack-color-text);
+  border: 1px solid var(--techpack-color-border);
+}
+
+.techpack-modern__btn--secondary:hover {
+  background-color: var(--techpack-color-background-light);
+  border-color: var(--techpack-color-primary);
+}
+
+.techpack-modern__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ===== NAVIGATION ===== */
+.techpack-modern__navigation {
+  background-color: var(--techpack-color-background-light);
+  padding: var(--techpack-spacing-md) 0;
+  border-top: 1px solid var(--techpack-color-border);
+}
+
+.techpack-modern__navigation .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .techpack-modern__title {
+    font-size: 2.5rem;
+  }
+  
+  .techpack-modern__step-title {
+    font-size: 2rem;
+  }
+  
+  .techpack-modern__progress {
+    gap: var(--techpack-spacing-sm);
+  }
+  
+  .techpack-modern__progress-label {
+    font-size: 0.75rem;
+  }
+  
+  .techpack-modern__navigation .container {
+    gap: var(--techpack-spacing-sm);
+  }
+  
+  .techpack-modern__btn {
+    min-width: 100px;
+    font-size: 0.9rem;
+  }
+  
+  .techpack-modern__progress-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .techpack-modern__title {
+    font-size: 2rem;
+  }
+  
+  .techpack-modern__step-title {
+    font-size: 1.75rem;
+  }
+  
+  .techpack-modern__progress-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .techpack-modern__step-content {
+    padding: var(--techpack-spacing-md);
+  }
+  
+  .techpack-modern__progress {
+    flex-wrap: wrap;
+    gap: var(--techpack-spacing-xs);
+  }
+  
+  .techpack-modern__progress-step {
+    flex: 0 0 calc(50% - var(--techpack-spacing-xs));
+    margin-bottom: var(--techpack-spacing-sm);
+  }
+}
