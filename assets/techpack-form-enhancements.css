@@ -1,0 +1,544 @@
+/* TECHPACK FORM ENHANCEMENTS */
+/* Advanced form interactions and keyboard handling */
+
+/* 
+===========================================
+FORM FOCUS & KEYBOARD INTERACTION FIXES
+===========================================
+*/
+
+@media (max-width: 768px) {
+  
+  /* Enhanced form field focus handling */
+  .techpack-form .form-group {
+    position: relative;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .techpack-form .form-group.focused {
+    position: relative;
+    z-index: 60; /* Above fixed navigation */
+    transform: translateY(0);
+  }
+
+  /* Form field improvements */
+  .techpack-form input,
+  .techpack-form textarea,
+  .techpack-form select {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid var(--techpack-border, #e5e7eb);
+    border-radius: 8px;
+    background: var(--techpack-bg, #ffffff);
+    font-size: 16px !important; /* Prevents iOS zoom */
+    font-family: inherit;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+  }
+
+  /* Focus states with enhanced visibility */
+  .techpack-form input:focus,
+  .techpack-form textarea:focus,
+  .techpack-form select:focus {
+    outline: none;
+    border-color: var(--techpack-primary, #000000);
+    box-shadow: 
+      0 0 0 3px rgba(0, 0, 0, 0.1),
+      0 4px 12px rgba(0, 0, 0, 0.05);
+    background: var(--techpack-bg, #ffffff);
+    position: relative;
+    z-index: 65; /* Highest priority when focused */
+  }
+
+  /* Floating label implementation */
+  .techpack-form .form-label {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 16px;
+    color: var(--techpack-text-secondary, #6b7280);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: var(--techpack-bg, #ffffff);
+    padding: 0 4px;
+    z-index: 1;
+  }
+
+  .techpack-form .form-input:focus + .form-label,
+  .techpack-form .form-input:not(:placeholder-shown) + .form-label,
+  .techpack-form .form-textarea:focus + .form-label,
+  .techpack-form .form-textarea:not(:placeholder-shown) + .form-label,
+  .techpack-form .form-select:focus + .form-label,
+  .techpack-form .form-group.has-value .form-label {
+    top: -8px;
+    left: 12px;
+    font-size: 12px;
+    color: var(--techpack-primary, #000000);
+    font-weight: 600;
+    background: var(--techpack-bg, #ffffff);
+  }
+
+  /* Keyboard open adjustments */
+  .keyboard-open .techpack-form .form-group.focused {
+    margin-bottom: 3rem; /* Extra space when keyboard is open */
+  }
+
+  .keyboard-open .techpack-form input:focus,
+  .keyboard-open .techpack-form textarea:focus {
+    box-shadow: 
+      0 0 0 3px rgba(0, 0, 0, 0.15),
+      0 6px 20px rgba(0, 0, 0, 0.1);
+    border-width: 3px;
+  }
+
+  /* 
+  ===========================================
+  VALIDATION STATES & FEEDBACK
+  ===========================================
+  */
+
+  /* Error states */
+  .techpack-form .form-group.error input,
+  .techpack-form .form-group.error textarea,
+  .techpack-form .form-group.error select {
+    border-color: var(--techpack-error, #dc2626);
+    background: rgba(220, 38, 38, 0.05);
+    animation: fieldShake 0.4s ease;
+  }
+
+  .techpack-form .form-group.error .form-label {
+    color: var(--techpack-error, #dc2626);
+  }
+
+  @keyframes fieldShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  /* Success states */
+  .techpack-form .form-group.success input,
+  .techpack-form .form-group.success textarea,
+  .techpack-form .form-group.success select {
+    border-color: var(--techpack-success, #10b981);
+    background: rgba(16, 185, 129, 0.05);
+  }
+
+  .techpack-form .form-group.success::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: var(--techpack-success, #10b981);
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 2;
+  }
+
+  /* Error message styling */
+  .field-error {
+    color: var(--techpack-error, #dc2626);
+    font-size: 14px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid var(--techpack-error, #dc2626);
+    animation: errorSlideIn 0.3s ease;
+  }
+
+  @keyframes errorSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* 
+  ===========================================
+  TEXTAREA ENHANCEMENTS
+  ===========================================
+  */
+
+  .techpack-form textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .techpack-form textarea:focus {
+    min-height: 150px; /* Expand when focused */
+  }
+
+  /* Character counter for textareas */
+  .techpack-form .textarea-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 12px;
+    color: var(--techpack-text-secondary, #6b7280);
+    background: var(--techpack-bg, #ffffff);
+    padding: 2px 6px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* 
+  ===========================================
+  SELECT FIELD IMPROVEMENTS
+  ===========================================
+  */
+
+  .techpack-form select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 16px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 48px;
+  }
+
+  .techpack-form select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23000000' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  }
+
+  /* 
+  ===========================================
+  FILE UPLOAD ENHANCEMENTS
+  ===========================================
+  */
+
+  .techpack-form .file-upload-group {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .techpack-form .file-upload-area {
+    border: 2px dashed var(--techpack-border, #e5e7eb);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .techpack-form .file-upload-area:hover,
+  .techpack-form .file-upload-area.dragover {
+    border-color: var(--techpack-primary, #000000);
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.02);
+  }
+
+  .techpack-form .file-upload-area input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  /* File preview improvements */
+  .techpack-form .file-preview {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--techpack-bg-secondary, #f8f9fa);
+    border: 1px solid var(--techpack-border, #e5e7eb);
+    border-radius: 8px;
+    margin-top: 1rem;
+    animation: fileSlideIn 0.3s ease;
+  }
+
+  @keyframes fileSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* 
+  ===========================================
+  KEYBOARD NAVIGATION SUPPORT
+  ===========================================
+  */
+
+  /* Enhanced focus indicators */
+  .techpack-form input:focus-visible,
+  .techpack-form textarea:focus-visible,
+  .techpack-form select:focus-visible,
+  .techpack-form button:focus-visible {
+    outline: 3px solid var(--techpack-primary, #000000);
+    outline-offset: 2px;
+  }
+
+  /* Skip to content link */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--techpack-primary, #000000);
+    color: var(--techpack-text-light, #ffffff);
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 100;
+    transition: top 0.3s ease;
+  }
+
+  .skip-to-content:focus {
+    top: 6px;
+  }
+
+  /* 
+  ===========================================
+  PROGRESSIVE ENHANCEMENT
+  ===========================================
+  */
+
+  /* Form step indicators */
+  .form-step-indicator {
+    position: sticky;
+    top: 80px; /* Below progress bar */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--techpack-border, #e5e7eb);
+    z-index: 35;
+  }
+
+  .form-step-indicator h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: var(--techpack-text, #111827);
+  }
+
+  .form-step-indicator p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--techpack-text-secondary, #6b7280);
+  }
+
+  /* Form progress within step */
+  .form-field-progress {
+    position: sticky;
+    top: 160px; /* Below step indicator */
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--techpack-text-secondary, #6b7280);
+    z-index: 30;
+    margin-bottom: 1rem;
+  }
+
+  /* 
+  ===========================================
+  TOUCH IMPROVEMENTS
+  ===========================================
+  */
+
+  /* Better touch targets */
+  .techpack-form input,
+  .techpack-form textarea,
+  .techpack-form select,
+  .techpack-form button,
+  .techpack-form label {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Touch feedback */
+  .techpack-form input:active,
+  .techpack-form textarea:active,
+  .techpack-form select:active {
+    transform: scale(0.995);
+  }
+
+  /* Improved checkbox and radio buttons */
+  .techpack-form input[type="checkbox"],
+  .techpack-form input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .techpack-form input[type="radio"] {
+    border-radius: 50%;
+  }
+
+  /* 
+  ===========================================
+  DARK MODE SUPPORT
+  ===========================================
+  */
+
+  @media (prefers-color-scheme: dark) {
+    .techpack-form input,
+    .techpack-form textarea,
+    .techpack-form select {
+      background: #1f2937;
+      border-color: #374151;
+      color: #f9fafb;
+    }
+
+    .techpack-form .form-label {
+      background: #1f2937;
+      color: #9ca3af;
+    }
+
+    .techpack-form input:focus,
+    .techpack-form textarea:focus,
+    .techpack-form select:focus {
+      background: #1f2937;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  /* 
+  ===========================================
+  LANDSCAPE & ORIENTATION HANDLING
+  ===========================================
+  */
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    .techpack-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .techpack-form input,
+    .techpack-form textarea,
+    .techpack-form select {
+      padding: 12px 16px;
+    }
+
+    .form-step-indicator {
+      top: 60px;
+      padding: 0.75rem;
+    }
+
+    .form-field-progress {
+      top: 120px;
+      padding: 0.25rem 0.75rem;
+    }
+  }
+
+  /* 
+  ===========================================
+  ACCESSIBILITY ENHANCEMENTS
+  ===========================================
+  */
+
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .techpack-form input,
+    .techpack-form textarea,
+    .techpack-form select {
+      border-width: 3px;
+    }
+
+    .techpack-form input:focus,
+    .techpack-form textarea:focus,
+    .techpack-form select:focus {
+      border-width: 4px;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .techpack-form input,
+    .techpack-form textarea,
+    .techpack-form select,
+    .techpack-form .form-label,
+    .form-step-indicator {
+      transition: none;
+      animation: none;
+    }
+
+    .techpack-form input:active,
+    .techpack-form textarea:active,
+    .techpack-form select:active {
+      transform: none;
+    }
+  }
+}
+
+/* 
+===========================================
+MESSAGE SYSTEM STYLING
+===========================================
+*/
+
+.techpack-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  z-index: 100;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 300px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-message.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.techpack-message--error {
+  background: #fef2f2;
+  color: #dc2626;
+  border-left: 4px solid #dc2626;
+}
+
+.techpack-message--success {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-left: 4px solid #16a34a;
+}
+
+.techpack-message--info {
+  background: #eff6ff;
+  color: #2563eb;
+  border-left: 4px solid #2563eb;
+}
