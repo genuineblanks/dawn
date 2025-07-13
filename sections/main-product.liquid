@@ -11,6 +11,7 @@
   {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
   {{ 'enhanced-color-picker.css' | asset_url | stylesheet_tag }}
   {{ 'component-interactive-tabs.css' | asset_url | stylesheet_tag }}
+  {{ 'hybrid-purchase.css' | asset_url | stylesheet_tag }}
   {{ 'mobile-product-enhancements.css' | asset_url | stylesheet_tag }}
   {{ 'product-enhancements-integration.css' | asset_url | stylesheet_tag }}
   {% unless product.has_only_default_variant %}
@@ -460,10 +461,6 @@
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
             {%- when 'buy_buttons' -%}
               {%- render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true -%}
-              {% case product.type %}
-                {% when 'Clothing' %}
-                  {% render 'wholesale-button-clothing', product: product %}
-              {% endcase %}
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 {% liquid
