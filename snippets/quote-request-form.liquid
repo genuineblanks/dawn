@@ -1,0 +1,304 @@
+{% comment %}
+  Quote Request Form Component
+  Handles custom specifications and file uploads for custom purchase requests
+  
+  Required parameters:
+  - product: The current product object
+  - custom_variant: The custom variant for this product
+  
+  Usage:
+  {% render 'quote-request-form', product: product, custom_variant: custom_variant %}
+{% endcomment %}
+
+<div class="quote-request-form" data-product-id="{{ product.id }}">
+  <div class="quote-form-header">
+    <h4>{{ 'products.product.custom_request_title' | t | default: 'Tell Us About Your Custom Request' }}</h4>
+    <p>{{ 'products.product.custom_request_subtitle' | t | default: 'Upload your files and specifications. We\'ll provide a detailed quote within 24-48 hours.' }}</p>
+  </div>
+
+  <form class="custom-request-form" id="custom-request-{{ product.id }}">
+    <!-- Hidden product information -->
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="product_title" value="{{ product.title }}">
+    <input type="hidden" name="variant_id" value="{{ custom_variant.id | default: product.selected_or_first_available_variant.id }}">
+    <input type="hidden" name="request_type" value="custom_quote">
+
+    <!-- Customer Contact Information -->
+    <div class="form-section contact-info">
+      <h5>{{ 'products.product.contact_information' | t | default: 'Contact Information' }}</h5>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="customer_name_{{ product.id }}">{{ 'products.product.full_name' | t | default: 'Full Name' }} *</label>
+          <input type="text" 
+                 id="customer_name_{{ product.id }}" 
+                 name="customer_name" 
+                 required>
+        </div>
+        
+        <div class="form-field">
+          <label for="customer_email_{{ product.id }}">{{ 'products.product.email' | t | default: 'Email Address' }} *</label>
+          <input type="email" 
+                 id="customer_email_{{ product.id }}" 
+                 name="customer_email" 
+                 required>
+        </div>
+        
+        <div class="form-field">
+          <label for="customer_phone_{{ product.id }}">{{ 'products.product.phone' | t | default: 'Phone Number' }}</label>
+          <input type="tel" 
+                 id="customer_phone_{{ product.id }}" 
+                 name="customer_phone">
+        </div>
+        
+        <div class="form-field">
+          <label for="company_name_{{ product.id }}">{{ 'products.product.company' | t | default: 'Company Name' }}</label>
+          <input type="text" 
+                 id="company_name_{{ product.id }}" 
+                 name="company_name">
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Specifications -->
+    <div class="form-section project-specs">
+      <h5>{{ 'products.product.project_specifications' | t | default: 'Project Specifications' }}</h5>
+      
+      <div class="form-field">
+        <label for="project_description_{{ product.id }}">{{ 'products.product.project_description' | t | default: 'Describe Your Project' }} *</label>
+        <textarea id="project_description_{{ product.id }}" 
+                  name="project_description" 
+                  rows="4" 
+                  placeholder="{{ 'products.product.project_placeholder' | t | default: 'Tell us about your vision, requirements, and any specific details...' }}" 
+                  required></textarea>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="quantity_needed_{{ product.id }}">{{ 'products.product.quantity_needed' | t | default: 'Quantity Needed' }}</label>
+          <select id="quantity_needed_{{ product.id }}" name="quantity_needed">
+            <option value="">{{ 'products.product.select_quantity' | t | default: 'Select quantity' }}</option>
+            <option value="1-50">1-50</option>
+            <option value="51-100">51-100</option>
+            <option value="101-500">101-500</option>
+            <option value="501-1000">501-1000</option>
+            <option value="1000+">1000+</option>
+            <option value="custom">{{ 'products.product.custom_quantity' | t | default: 'Custom quantity' }}</option>
+          </select>
+        </div>
+        
+        <div class="form-field">
+          <label for="timeline_needed_{{ product.id }}">{{ 'products.product.timeline_needed' | t | default: 'Timeline Needed' }}</label>
+          <select id="timeline_needed_{{ product.id }}" name="timeline_needed">
+            <option value="">{{ 'products.product.select_timeline' | t | default: 'Select timeline' }}</option>
+            <option value="asap">{{ 'products.product.asap' | t | default: 'ASAP (Rush order)' }}</option>
+            <option value="1-2-weeks">{{ 'products.product.weeks_1_2' | t | default: '1-2 weeks' }}</option>
+            <option value="3-4-weeks">{{ 'products.product.weeks_3_4' | t | default: '3-4 weeks' }}</option>
+            <option value="1-2-months">{{ 'products.product.months_1_2' | t | default: '1-2 months' }}</option>
+            <option value="flexible">{{ 'products.product.flexible' | t | default: 'Flexible' }}</option>
+          </select>
+        </div>
+      </div>
+
+      {% if product.type == 'Accessories' or product.tags contains 'accessories' %}
+        <!-- Accessories specific fields -->
+        <div class="accessories-specs">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="material_preference_{{ product.id }}">{{ 'products.product.material_preference' | t | default: 'Material Preference' }}</label>
+              <select id="material_preference_{{ product.id }}" name="material_preference">
+                <option value="">{{ 'products.product.select_material' | t | default: 'Select material' }}</option>
+                <option value="cotton">{{ 'products.product.cotton' | t | default: 'Cotton' }}</option>
+                <option value="polyester">{{ 'products.product.polyester' | t | default: 'Polyester' }}</option>
+                <option value="satin">{{ 'products.product.satin' | t | default: 'Satin' }}</option>
+                <option value="woven">{{ 'products.product.woven' | t | default: 'Woven' }}</option>
+                <option value="printed">{{ 'products.product.printed' | t | default: 'Printed' }}</option>
+                <option value="other">{{ 'products.product.other' | t | default: 'Other (specify in description)' }}</option>
+              </select>
+            </div>
+            
+            <div class="form-field">
+              <label for="size_dimensions_{{ product.id }}">{{ 'products.product.size_dimensions' | t | default: 'Size/Dimensions' }}</label>
+              <input type="text" 
+                     id="size_dimensions_{{ product.id }}" 
+                     name="size_dimensions" 
+                     placeholder="{{ 'products.product.size_placeholder' | t | default: 'e.g., 5cm x 2cm' }}">
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if product.type == 'Design' or product.tags contains 'design' %}
+        <!-- Design services specific fields -->
+        <div class="design-specs">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="design_type_{{ product.id }}">{{ 'products.product.design_type' | t | default: 'Type of Design Service' }}</label>
+              <select id="design_type_{{ product.id }}" name="design_type">
+                <option value="">{{ 'products.product.select_design_type' | t | default: 'Select design type' }}</option>
+                <option value="logo-design">{{ 'products.product.logo_design' | t | default: 'Logo Design' }}</option>
+                <option value="brand-identity">{{ 'products.product.brand_identity' | t | default: 'Brand Identity Package' }}</option>
+                <option value="graphic-design">{{ 'products.product.graphic_design' | t | default: 'Graphic Design' }}</option>
+                <option value="print-ready">{{ 'products.product.print_ready' | t | default: 'Print-Ready Artwork' }}</option>
+                <option value="consultation">{{ 'products.product.consultation' | t | default: 'Design Consultation' }}</option>
+                <option value="other">{{ 'products.product.other' | t | default: 'Other (specify in description)' }}</option>
+              </select>
+            </div>
+            
+            <div class="form-field">
+              <label for="file_formats_{{ product.id }}">{{ 'products.product.file_formats' | t | default: 'Required File Formats' }}</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="ai"> AI
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="eps"> EPS
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="pdf"> PDF
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="png"> PNG
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="jpg"> JPG
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="file_formats" value="svg"> SVG
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- File Upload Section -->
+    <div class="form-section file-upload-section">
+      <h5>{{ 'products.product.upload_files' | t | default: 'Upload Your Files' }}</h5>
+      <p>{{ 'products.product.upload_instructions' | t | default: 'Upload any reference files, logos, design briefs, or inspiration images.' }}</p>
+      
+      {% render 'custom-file-upload', product: product %}
+    </div>
+
+    <!-- Budget Information -->
+    <div class="form-section budget-info">
+      <h5>{{ 'products.product.budget_information' | t | default: 'Budget Information' }}</h5>
+      <div class="form-field">
+        <label for="budget_range_{{ product.id }}">{{ 'products.product.budget_range' | t | default: 'Estimated Budget Range' }}</label>
+        <select id="budget_range_{{ product.id }}" name="budget_range">
+          <option value="">{{ 'products.product.select_budget' | t | default: 'Select budget range' }}</option>
+          <option value="under-100">{{ 'products.product.under_100' | t | default: 'Under €100' }}</option>
+          <option value="100-250">€100 - €250</option>
+          <option value="250-500">€250 - €500</option>
+          <option value="500-1000">€500 - €1,000</option>
+          <option value="1000-2500">€1,000 - €2,500</option>
+          <option value="2500-plus">{{ 'products.product.over_2500' | t | default: 'Over €2,500' }}</option>
+          <option value="discuss">{{ 'products.product.discuss_budget' | t | default: 'Let\'s discuss' }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Additional Notes -->
+    <div class="form-section additional-notes">
+      <div class="form-field">
+        <label for="additional_notes_{{ product.id }}">{{ 'products.product.additional_notes' | t | default: 'Additional Notes or Questions' }}</label>
+        <textarea id="additional_notes_{{ product.id }}" 
+                  name="additional_notes" 
+                  rows="3" 
+                  placeholder="{{ 'products.product.notes_placeholder' | t | default: 'Any special requirements, questions, or additional information...' }}"></textarea>
+      </div>
+    </div>
+
+    <!-- Agreement and Submission -->
+    <div class="form-section submission">
+      <div class="agreement-checkbox">
+        <label class="checkbox-label agreement">
+          <input type="checkbox" name="agreement" required>
+          <span class="checkmark"></span>
+          {{ 'products.product.agreement_text' | t | default: 'I understand this is a custom quote request. I agree to receive a detailed quote via email within 24-48 hours and understand that the final price may differ from the deposit amount.' }}
+        </label>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="quote-submit-btn">
+          {{ 'products.product.request_quote' | t | default: 'Request Custom Quote' }}
+          <span class="btn-subtext">{{ 'products.product.deposit_amount' | t | default: 'Deposit:' }} {{ custom_variant.price | default: product.price | money }}</span>
+        </button>
+        
+        <p class="quote-info">
+          {{ 'products.product.quote_info' | t | default: 'You\'ll only be charged the deposit amount now. Final pricing will be confirmed via email before production begins.' }}
+        </p>
+      </div>
+    </div>
+  </form>
+
+  <!-- Quote Success Message -->
+  <div class="quote-success-message" style="display: none;">
+    <div class="success-content">
+      <h4>{{ 'products.product.quote_submitted' | t | default: 'Quote Request Submitted!' }}</h4>
+      <p>{{ 'products.product.quote_confirmation' | t | default: 'Thank you for your custom request. We\'ll review your specifications and files, then send you a detailed quote within 24-48 hours.' }}</p>
+      <p><strong>{{ 'products.product.next_steps' | t | default: 'Next Steps:' }}</strong></p>
+      <ul>
+        <li>{{ 'products.product.step_1' | t | default: 'Our team reviews your request and files' }}</li>
+        <li>{{ 'products.product.step_2' | t | default: 'You receive a detailed quote via email' }}</li>
+        <li>{{ 'products.product.step_3' | t | default: 'Approve the quote to begin production' }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('custom-request-{{ product.id }}');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.quote-submit-btn');
+    const originalText = submitBtn.innerHTML;
+    
+    // Update button state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '{{ "products.product.processing" | t | default: "Processing..." }}';
+    
+    // Simulate quote submission (replace with actual implementation)
+    setTimeout(() => {
+      // Hide form and show success message
+      form.style.display = 'none';
+      document.querySelector('.quote-success-message').style.display = 'block';
+      
+      // Add to cart with custom variant (deposit)
+      if (formData.get('variant_id')) {
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: formData.get('variant_id'),
+            quantity: 1,
+            properties: {
+              'Custom Request': 'true',
+              'Customer Name': formData.get('customer_name'),
+              'Customer Email': formData.get('customer_email'),
+              'Project Type': '{{ product.title }}',
+              'Quote Status': 'Pending'
+            }
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Trigger cart update
+          document.dispatchEvent(new CustomEvent('cart:added', { detail: data }));
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+        });
+      }
+      
+    }, 2000);
+  });
+});
+</script>
