@@ -52,65 +52,10 @@
           "disabled": true,
           "settings": {}
         },
-        "collapsible_tab_CCygXE": {
-          "type": "collapsible_tab",
+        "interactive_product_info": {
+          "type": "custom_liquid",
           "settings": {
-            "heading": "Signature Logo",
-            "icon": "none",
-            "content": "<p>✎   Logo Concept<br/><strong>⟳</strong>   2 to 3 Revisions<br/><strong>⧉   Formats:</strong> PNG, AI, JPEG  <br/><strong>◧    Color:</strong> Basic Color or B&W<br/></p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_KMnfMn": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Premium Logo",
-            "icon": "none",
-            "content": "<p><strong>✎ </strong>    Up to 3 Logo Concepts  <br/><strong>⟳     </strong>2 to 3 Revisions  <br/><strong>⧉ </strong>   <strong>Formats: </strong>PNG, AI, JPEG, EPS  <br/><strong>◧ </strong>   <strong>Color:</strong> Full Color + Black & White  <br/><strong>📏 Vector Files Included</strong><br/></p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_jVnkJX": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Elite Logo",
-            "icon": "none",
-            "content": "<p>✎   5+ Logo Concepts  <br/>⟳   Unlimited Revisions  <br/>⧉   Formats: PNG, AI, JPEG, EPS, PDF  <br/>◧   Color: Full Color, Black & White, Variations  <br/>📏   Complete Vector Package  <br/>📚   Basic Brand Guidelines Included</p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_xzagHp": {
-          "type": "collapsible_tab",
-          "disabled": true,
-          "settings": {
-            "heading": "Size Guide",
-            "icon": "none",
-            "content": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_RdtRrw": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Need Help?",
-            "icon": "none",
-            "content": "<p>Please check our Help center and if you do not find the answer to your questions, please contact support@genuineblanks.com</p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_CQiEze": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "How to add your design to the garment?",
-            "icon": "none",
-            "content": "",
-            "page": "",
-            "wholesale_user_text": true
+            "custom_liquid": "{% render 'interactive-product-info', product: product %}"
           }
         },
         "share": {
@@ -129,12 +74,7 @@
         "quantity_selector",
         "buy_buttons",
         "description",
-        "collapsible_tab_CCygXE",
-        "collapsible_tab_KMnfMn",
-        "collapsible_tab_jVnkJX",
-        "collapsible_tab_xzagHp",
-        "collapsible_tab_RdtRrw",
-        "collapsible_tab_CQiEze",
+        "interactive_product_info",
         "share"
       ],
       "settings": {
