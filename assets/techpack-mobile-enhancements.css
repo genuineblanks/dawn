@@ -1,0 +1,576 @@
+/* AWESOME MOBILE TECHPACK ENHANCEMENTS */
+/* Next-level mobile UX improvements while preserving your beautiful design */
+
+@media (max-width: 768px) {
+  
+  /* 
+  ===========================================
+  ENHANCED MOBILE NAVIGATION
+  ===========================================
+  */
+
+  /* Floating progress dots for better visual hierarchy */
+  .techpack-progress {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .techpack-progress__steps {
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+
+  .techpack-progress__step {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .techpack-progress__step.active {
+    transform: scale(1.1);
+  }
+
+  .techpack-progress__step.completed::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--techpack-success);
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  /* Smart sticky navigation with contextual actions */
+  .techpack-form__actions {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .techpack-form__actions .btn-group {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .techpack-form__actions .btn-secondary {
+    flex: 1;
+    background: transparent;
+    border: 2px solid var(--techpack-border);
+    color: var(--techpack-text);
+  }
+
+  .techpack-form__actions .btn-primary {
+    flex: 2;
+    background: var(--techpack-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 
+  ===========================================
+  ENHANCED FORM INTERACTIONS
+  ===========================================
+  */
+
+  /* Smart floating labels */
+  .techpack-form .form-group {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .techpack-form .form-input,
+  .techpack-form .form-textarea,
+  .techpack-form .form-select {
+    padding: 16px 16px 8px 16px;
+    border: 2px solid var(--techpack-border);
+    border-radius: 8px;
+    background: var(--techpack-bg);
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .techpack-form .form-label {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 16px;
+    color: var(--techpack-text-secondary);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: var(--techpack-bg);
+    padding: 0 4px;
+  }
+
+  .techpack-form .form-input:focus,
+  .techpack-form .form-input:not(:placeholder-shown),
+  .techpack-form .form-textarea:focus,
+  .techpack-form .form-textarea:not(:placeholder-shown),
+  .techpack-form .form-select:focus {
+    border-color: var(--techpack-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .techpack-form .form-input:focus + .form-label,
+  .techpack-form .form-input:not(:placeholder-shown) + .form-label,
+  .techpack-form .form-textarea:focus + .form-label,
+  .techpack-form .form-textarea:not(:placeholder-shown) + .form-label {
+    top: -8px;
+    font-size: 12px;
+    color: var(--techpack-primary);
+    font-weight: 600;
+  }
+
+  /* Enhanced validation feedback */
+  .techpack-form .form-group.error .form-input,
+  .techpack-form .form-group.error .form-textarea {
+    border-color: var(--techpack-error);
+    animation: shake 0.3s ease;
+  }
+
+  .techpack-form .form-group.success .form-input,
+  .techpack-form .form-group.success .form-textarea {
+    border-color: var(--techpack-success);
+  }
+
+  .techpack-form .form-group.success::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: var(--techpack-success);
+    font-weight: bold;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* 
+  ===========================================
+  NEXT-LEVEL FILE UPLOAD
+  ===========================================
+  */
+
+  /* Beautiful drag & drop area */
+  .techpack-file-upload {
+    border: 2px dashed var(--techpack-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .techpack-file-upload::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .techpack-file-upload:hover::before,
+  .techpack-file-upload.dragover::before {
+    opacity: 1;
+  }
+
+  .techpack-file-upload.dragover {
+    border-color: var(--techpack-primary);
+    background: rgba(0, 0, 0, 0.02);
+    transform: scale(1.02);
+  }
+
+  .techpack-file-upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+  }
+
+  .techpack-file-upload:hover .techpack-file-upload-icon {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* File preview cards */
+  .techpack-uploaded-files {
+    margin-top: 2rem;
+  }
+
+  .techpack-file-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--techpack-bg-secondary);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--techpack-border);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.4s ease;
+  }
+
+  .techpack-file-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .techpack-file-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--techpack-primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .techpack-file-details {
+    flex: 1;
+  }
+
+  .techpack-file-name {
+    font-weight: 600;
+    color: var(--techpack-text);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .techpack-file-size {
+    color: var(--techpack-text-secondary);
+    font-size: 0.8rem;
+  }
+
+  .techpack-file-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--techpack-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+
+  .techpack-file-progress-bar {
+    height: 100%;
+    background: var(--techpack-primary);
+    transition: width 0.3s ease;
+  }
+
+  /* 
+  ===========================================
+  SMART STEP TRANSITIONS
+  ===========================================
+  */
+
+  .techpack-step {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .techpack-step.step-enter {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  .techpack-step.step-exit {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  /* 
+  ===========================================
+  ENHANCED GARMENT CARDS
+  ===========================================
+  */
+
+  .techpack-garment {
+    background: var(--techpack-bg);
+    border: 2px solid var(--techpack-border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .techpack-garment:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+
+  .techpack-garment::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--techpack-primary), var(--techpack-secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .techpack-garment.active::before {
+    opacity: 1;
+  }
+
+  .techpack-garment__header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--techpack-border);
+    background: var(--techpack-bg-secondary);
+  }
+
+  .techpack-garment__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--techpack-text);
+    margin-bottom: 0.5rem;
+  }
+
+  .techpack-garment__subtitle {
+    color: var(--techpack-text-secondary);
+    font-size: 0.9rem;
+  }
+
+  /* 
+  ===========================================
+  PREMIUM SIZE GRID
+  ===========================================
+  */
+
+  .techpack-size-grid {
+    background: var(--techpack-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--techpack-border);
+    margin: 1rem 0;
+  }
+
+  .techpack-size-grid__header {
+    background: var(--techpack-bg-secondary);
+    padding: 1rem;
+    border-bottom: 1px solid var(--techpack-border);
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+  }
+
+  .techpack-size-grid__row {
+    display: flex;
+    border-bottom: 1px solid var(--techpack-border-light);
+  }
+
+  .techpack-size-grid__cell {
+    min-width: 80px;
+    padding: 0.75rem;
+    border-right: 1px solid var(--techpack-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .techpack-size-grid__input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  .techpack-size-grid__input:focus {
+    background: rgba(0, 0, 0, 0.05);
+    outline: none;
+  }
+
+  /* 
+  ===========================================
+  CONTEXTUAL HELP SYSTEM
+  ===========================================
+  */
+
+  .techpack-help-tip {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+
+  .techpack-help-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--techpack-text-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .techpack-help-icon:hover {
+    background: var(--techpack-primary);
+    transform: scale(1.1);
+  }
+
+  .techpack-help-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--techpack-text);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    max-width: 250px;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+    margin-bottom: 0.5rem;
+  }
+
+  .techpack-help-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--techpack-text);
+  }
+
+  .techpack-help-tip:hover .techpack-help-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* 
+  ===========================================
+  ANIMATIONS & MICRO-INTERACTIONS
+  ===========================================
+  */
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .techpack-loading .techpack-form__actions .btn-primary {
+    animation: pulse 1.5s infinite;
+  }
+
+  /* Smart button states */
+  .techpack-form button:disabled {
+    opacity: 0.6;
+    transform: none !important;
+    cursor: not-allowed;
+  }
+
+  .techpack-form button.loading {
+    position: relative;
+    color: transparent;
+  }
+
+  .techpack-form button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  /* 
+  ===========================================
+  ACCESSIBILITY ENHANCEMENTS
+  ===========================================
+  */
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .techpack-form input,
+    .techpack-form textarea,
+    .techpack-garment,
+    .techpack-file-item {
+      border-width: 3px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .techpack-step,
+    .techpack-garment,
+    .techpack-file-item,
+    .techpack-form button {
+      transition: none;
+      animation: none;
+    }
+    
+    .techpack-form button:active {
+      transform: none;
+    }
+  }
+
+  /* Focus indicators for keyboard navigation */
+  .techpack-form *:focus-visible {
+    outline: 3px solid var(--techpack-primary);
+    outline-offset: 2px;
+  }
+}
