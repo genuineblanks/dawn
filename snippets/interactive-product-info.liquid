@@ -1,0 +1,306 @@
+{% comment %}
+  Interactive Product Information Component
+  Renders enhanced product information tabs with service type cards, size guides, and interactive elements
+
+  Accepts:
+  - product: {Object} product object
+  - block: {Object} block settings
+{% endcomment %}
+
+<div class="interactive-product-info">
+  <!-- Service Type Selection Cards -->
+  <div class="service-type-section">
+    <h3 class="service-section-title">Choose Your Service Type</h3>
+    <div class="service-cards-grid">
+      
+      <!-- Signature Logo Card -->
+      <div class="service-card" data-service-type="signature">
+        <div class="service-card-header">
+          <div class="service-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h4 class="service-title">Signature Logo</h4>
+          <span class="service-badge basic">Basic</span>
+        </div>
+        
+        <div class="service-features">
+          <div class="feature-item">
+            <span class="feature-icon">✎</span>
+            <span class="feature-text">Logo Concept</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⟳</span>
+            <span class="feature-text">2 to 3 Revisions</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⧉</span>
+            <span class="feature-text">PNG, AI, JPEG</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">◧</span>
+            <span class="feature-text">Basic Color or B&W</span>
+          </div>
+        </div>
+        
+        <div class="service-footer">
+          <span class="service-time">2-3 Business Days</span>
+        </div>
+      </div>
+
+      <!-- Premium Logo Card -->
+      <div class="service-card featured" data-service-type="premium">
+        <div class="service-card-header">
+          <div class="service-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="service-title">Premium Logo</h4>
+          <span class="service-badge premium">Most Popular</span>
+        </div>
+        
+        <div class="service-features">
+          <div class="feature-item">
+            <span class="feature-icon">✎</span>
+            <span class="feature-text">Up to 3 Logo Concepts</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⟳</span>
+            <span class="feature-text">2 to 3 Revisions</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⧉</span>
+            <span class="feature-text">PNG, AI, JPEG, EPS</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">◧</span>
+            <span class="feature-text">Full Color + Black & White</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📏</span>
+            <span class="feature-text">Vector Files Included</span>
+          </div>
+        </div>
+        
+        <div class="service-footer">
+          <span class="service-time">3-5 Business Days</span>
+        </div>
+      </div>
+
+      <!-- Elite Logo Card -->
+      <div class="service-card" data-service-type="elite">
+        <div class="service-card-header">
+          <div class="service-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <h4 class="service-title">Elite Logo</h4>
+          <span class="service-badge elite">Professional</span>
+        </div>
+        
+        <div class="service-features">
+          <div class="feature-item">
+            <span class="feature-icon">✎</span>
+            <span class="feature-text">5+ Logo Concepts</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⟳</span>
+            <span class="feature-text">Unlimited Revisions</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⧉</span>
+            <span class="feature-text">PNG, AI, JPEG, EPS, PDF</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">◧</span>
+            <span class="feature-text">Full Color, B&W, Variations</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📏</span>
+            <span class="feature-text">Complete Vector Package</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📚</span>
+            <span class="feature-text">Basic Brand Guidelines</span>
+          </div>
+        </div>
+        
+        <div class="service-footer">
+          <span class="service-time">5-7 Business Days</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Information Tabs -->
+  <div class="info-tabs-section">
+    <div class="tabs-nav">
+      <button class="tab-button active" data-tab="size-guide">
+        <span class="tab-icon">📏</span>
+        Size Guide
+      </button>
+      <button class="tab-button" data-tab="shipping">
+        <span class="tab-icon">🚚</span>
+        Shipping & Returns
+      </button>
+      <button class="tab-button" data-tab="design-help">
+        <span class="tab-icon">🎨</span>
+        Design Help
+      </button>
+      <button class="tab-button" data-tab="custom-design">
+        <span class="tab-icon">📤</span>
+        Upload Design
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <!-- Size Guide Tab -->
+      <div class="tab-content active" id="size-guide">
+        <div class="size-guide-container">
+          <h4>Size Chart</h4>
+          <div class="size-chart-interactive">
+            <div class="size-measurement-tool">
+              <label for="height-input">Your Height (cm):</label>
+              <input type="number" id="height-input" placeholder="170" min="140" max="220">
+              
+              <label for="weight-input">Your Weight (kg):</label>
+              <input type="number" id="weight-input" placeholder="70" min="40" max="150">
+              
+              <button type="button" class="size-recommend-btn">Get Size Recommendation</button>
+            </div>
+            
+            <div class="size-recommendation" id="size-recommendation" style="display: none;">
+              <div class="recommendation-result">
+                <span class="recommended-size">Medium</span>
+                <span class="confidence-level">90% match</span>
+              </div>
+            </div>
+            
+            <table class="size-chart-table">
+              <thead>
+                <tr>
+                  <th>Size</th>
+                  <th>Chest (cm)</th>
+                  <th>Length (cm)</th>
+                  <th>Shoulder (cm)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-size="XS">
+                  <td data-label="Size">XS</td>
+                  <td data-label="Chest">86-91</td>
+                  <td data-label="Length">66</td>
+                  <td data-label="Shoulder">41</td>
+                </tr>
+                <tr data-size="S">
+                  <td data-label="Size">S</td>
+                  <td data-label="Chest">91-96</td>
+                  <td data-label="Length">69</td>
+                  <td data-label="Shoulder">43</td>
+                </tr>
+                <tr data-size="M">
+                  <td data-label="Size">M</td>
+                  <td data-label="Chest">96-101</td>
+                  <td data-label="Length">72</td>
+                  <td data-label="Shoulder">45</td>
+                </tr>
+                <tr data-size="L">
+                  <td data-label="Size">L</td>
+                  <td data-label="Chest">101-106</td>
+                  <td data-label="Length">75</td>
+                  <td data-label="Shoulder">47</td>
+                </tr>
+                <tr data-size="XL">
+                  <td data-label="Size">XL</td>
+                  <td data-label="Chest">106-111</td>
+                  <td data-label="Length">78</td>
+                  <td data-label="Shoulder">49</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Tab -->
+      <div class="tab-content" id="shipping">
+        <div class="shipping-info">
+          <h4>Shipping Information</h4>
+          <div class="shipping-methods">
+            <div class="shipping-method">
+              <strong>Standard Shipping (3-7 business days)</strong>
+              <p>Free on orders over $50</p>
+            </div>
+            <div class="shipping-method">
+              <strong>Express Shipping (1-3 business days)</strong>
+              <p>$15 - Available for urgent orders</p>
+            </div>
+          </div>
+          
+          <h4>Returns & Exchanges</h4>
+          <ul>
+            <li>30-day return policy</li>
+            <li>Free returns on defective items</li>
+            <li>Custom designs are final sale</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Design Help Tab -->
+      <div class="tab-content" id="design-help">
+        <div class="design-help-content">
+          <h4>Need Design Help?</h4>
+          <p>Our design team is here to help you create the perfect custom product.</p>
+          
+          <div class="help-options">
+            <div class="help-option">
+              <h5>Design Consultation</h5>
+              <p>Schedule a free 15-minute consultation with our design team</p>
+              <button class="consultation-btn">Book Consultation</button>
+            </div>
+            
+            <div class="help-option">
+              <h5>Design Templates</h5>
+              <p>Browse our library of pre-made design templates</p>
+              <button class="templates-btn">View Templates</button>
+            </div>
+          </div>
+          
+          <div class="contact-support">
+            <p>Have questions? Contact us at <a href="mailto:support@genuineblanks.com">support@genuineblanks.com</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Design Upload Tab -->
+      <div class="tab-content" id="custom-design">
+        <div class="design-upload-area">
+          <h4>Upload Your Design</h4>
+          <div class="upload-dropzone" id="design-dropzone">
+            <div class="upload-content">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p>Drag and drop your design files here, or <span class="upload-link">browse files</span></p>
+              <small>Supported formats: PNG, JPG, AI, EPS, PDF (Max 10MB)</small>
+            </div>
+            <input type="file" id="design-file-input" multiple accept=".png,.jpg,.jpeg,.ai,.eps,.pdf" style="display: none;">
+          </div>
+          
+          <div class="uploaded-files" id="uploaded-files" style="display: none;">
+            <h5>Uploaded Files:</h5>
+            <div class="file-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
