@@ -4598,15 +4598,19 @@ body {
 
 /* Improved mobile app positioning and sizing with white space fix */
 @media (max-width: 768px) {
-  /* Force body and html to eliminate white space */
+  /* MOBILE SCROLLING FIX: Remove problematic fixed viewport heights */
   body.techpack-page,
   html.techpack-page {
     margin: 0 !important;
     padding: 0 !important;
     overflow-x: hidden !important;
     background: var(--techpack-bg) !important;
-    height: 100vh !important;
-    height: 100dvh !important;
+    /* CRITICAL FIX: Remove fixed viewport heights that cut off content */
+    /* height: 100vh !important; */
+    /* height: 100dvh !important; */
+    min-height: 100vh !important; /* Allow content to grow */
+    height: auto !important; /* Allow natural scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth touch scrolling */
   }
   
   /* Remove any default Shopify section spacing */
@@ -4625,10 +4629,13 @@ body {
   .techpack-app-wrapper {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    /* MOBILE FIX: Remove fixed viewport height */
+    min-height: auto;
     padding: 0;
     margin: 0;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
   
   .techpack-container {
@@ -4641,7 +4648,11 @@ body {
   
   .techpack-step {
     width: 100%;
-    min-height: calc(100vh - 4rem);
+    /* MOBILE FIX: Remove fixed viewport height calculation */
+    min-height: auto;
+    /* Add proper spacing for sticky elements */
+    padding-top: 80px; /* Space for sticky progress bar */
+    padding-bottom: 120px; /* Space for fixed navigation */
     position: relative;
     overflow: visible;
   }
@@ -4689,15 +4700,19 @@ body {
     box-sizing: border-box;
   }
   
-  /* Mobile-optimized progress bar */
+  /* MOBILE FIX: Improved progress bar positioning */
   .techpack-progress {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 10;
+    left: 0;
+    right: 0;
+    z-index: 15;
     background: var(--techpack-bg);
     padding: 1rem;
-    margin: -1rem -1rem 1rem -1rem;
     border-bottom: 1px solid var(--techpack-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    /* Safe area support for modern mobiles */
+    padding-top: max(1rem, env(safe-area-inset-top));
   }
   
   .techpack-progress__steps {
@@ -4721,7 +4736,7 @@ body {
     white-space: nowrap;
   }
   
-  /* Better mobile form spacing */
+  /* MOBILE FIX: Better navigation spacing and safe area support */
   .techpack-form__actions {
     position: fixed;
     bottom: 0;
@@ -4731,18 +4746,28 @@ body {
     padding: 1rem;
     border-top: 1px solid var(--techpack-border);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    z-index: 10;
     margin: 0;
+    /* Safe area support for modern mobiles */
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
   }
   
-  /* Add bottom padding to content to prevent overlap with fixed buttons */
+  /* MOBILE FIX: Content spacing handled by parent padding */
   .techpack-content {
-    padding-bottom: 100px;
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+    box-sizing: border-box;
+    /* Spacing handled by .techpack-step padding */
   }
   
-  /* Ensure form has proper spacing from fixed buttons */
+  /* MOBILE FIX: Form spacing handled by parent */
   .techpack-form {
-    margin-bottom: 80px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
   }
   
   /* Mobile garment cards */
