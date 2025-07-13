@@ -1,0 +1,564 @@
+{% comment %}
+  Service Info for Design Services - Hybrid Tabs Component
+  Interactive 4-tab system for design services with hybrid purchase logic
+  
+  Required parameters:
+  - product: The current product object
+  
+  Usage:
+  {% render 'service-info-design', product: product %}
+{% endcomment %}
+
+<div class="service-info-design" data-product-id="{{ product.id }}">
+  <!-- Hybrid Purchase Logic Integration -->
+  {% render 'hybrid-purchase-logic', product: product %}
+
+  <!-- Enhanced Interactive Tabs for Design Services -->
+  <div class="info-tabs-section">
+    <div class="tabs-nav">
+      <button class="tab-button active" data-tab="service-packages">
+        <span class="tab-icon">🎨</span>
+        {{ 'products.product.tab_service_packages' | t | default: 'Service Packages' }}
+      </button>
+      <button class="tab-button" data-tab="portfolio-examples">
+        <span class="tab-icon">📁</span>
+        {{ 'products.product.tab_portfolio' | t | default: 'Portfolio & Examples' }}
+      </button>
+      <button class="tab-button" data-tab="brief-requirements">
+        <span class="tab-icon">📝</span>
+        {{ 'products.product.tab_brief_requirements' | t | default: 'Brief & Requirements' }}
+      </button>
+      <button class="tab-button" data-tab="process-timeline">
+        <span class="tab-icon">⏱️</span>
+        {{ 'products.product.tab_process_timeline' | t | default: 'Process & Timeline' }}
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <!-- Tab 1: Service Packages -->
+      <div class="tab-content active" data-tab-content="service-packages">
+        <div class="service-packages-content">
+          <h4>{{ 'products.product.design_service_options' | t | default: 'Design Service Options' }}</h4>
+          
+          <div class="package-comparison">
+            <div class="package-option standard-package">
+              <div class="package-header">
+                <h5>{{ 'products.product.standard_packages' | t | default: 'Standard Design Packages' }}</h5>
+                <span class="package-badge instant">{{ 'products.product.proven_templates' | t | default: 'Proven Templates' }}</span>
+              </div>
+              
+              <div class="package-details">
+                <p>{{ 'products.product.standard_design_description' | t | default: 'Choose from our collection of professionally crafted design packages. Each package includes tested templates and proven design approaches that deliver results.' }}</p>
+                
+                <div class="package-types">
+                  <h6>{{ 'products.product.available_packages' | t | default: 'Available Packages:' }}</h6>
+                  <div class="package-grid">
+                    <div class="package-type">
+                      <h6>{{ 'products.product.signature_logo' | t | default: 'Signature Logo Package' }}</h6>
+                      <ul>
+                        <li>{{ 'products.product.logo_variations' | t | default: '3 logo variations' }}</li>
+                        <li>{{ 'products.product.color_schemes' | t | default: '2 color schemes' }}</li>
+                        <li>{{ 'products.product.basic_guidelines' | t | default: 'Basic brand guidelines' }}</li>
+                        <li>{{ 'products.product.file_formats_basic' | t | default: 'PNG, JPG, PDF files' }}</li>
+                      </ul>
+                    </div>
+                    
+                    <div class="package-type">
+                      <h6>{{ 'products.product.premium_logo' | t | default: 'Premium Brand Package' }}</h6>
+                      <ul>
+                        <li>{{ 'products.product.premium_logo_variations' | t | default: '5 logo variations' }}</li>
+                        <li>{{ 'products.product.premium_color_schemes' | t | default: '3 color schemes' }}</li>
+                        <li>{{ 'products.product.brand_guidelines' | t | default: 'Comprehensive brand guidelines' }}</li>
+                        <li>{{ 'products.product.premium_file_formats' | t | default: 'All file formats + source files' }}</li>
+                      </ul>
+                    </div>
+                    
+                    <div class="package-type">
+                      <h6>{{ 'products.product.elite_brand' | t | default: 'Elite Brand Identity' }}</h6>
+                      <ul>
+                        <li>{{ 'products.product.elite_logo_variations' | t | default: 'Unlimited logo variations' }}</li>
+                        <li>{{ 'products.product.elite_brand_identity' | t | default: 'Complete brand identity system' }}</li>
+                        <li>{{ 'products.product.marketing_materials' | t | default: 'Marketing material templates' }}</li>
+                        <li>{{ 'products.product.ongoing_support' | t | default: '30 days ongoing support' }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="ideal-for">
+                  <h6>{{ 'products.product.ideal_for' | t | default: 'Ideal For:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.startup_businesses' | t | default: 'Startup businesses' }}</li>
+                    <li>{{ 'products.product.quick_turnaround' | t | default: 'Quick turnaround needs' }}</li>
+                    <li>{{ 'products.product.budget_friendly' | t | default: 'Budget-friendly solutions' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="package-option custom-package">
+              <div class="package-header">
+                <h5>{{ 'products.product.custom_design_services' | t | default: 'Custom Design Services' }}</h5>
+                <span class="package-badge custom">{{ 'products.product.fully_bespoke' | t | default: 'Fully Bespoke' }}</span>
+              </div>
+              
+              <div class="package-details">
+                <p>{{ 'products.product.custom_design_description' | t | default: 'Work directly with our design team to create something completely unique. Upload your brief, inspiration, and requirements for a fully customized design solution.' }}</p>
+                
+                <div class="custom-services">
+                  <h6>{{ 'products.product.custom_services_available' | t | default: 'Custom Services Available:' }}</h6>
+                  <div class="service-grid">
+                    <div class="service-type">
+                      <h6>{{ 'products.product.brand_development' | t | default: 'Brand Development' }}</h6>
+                      <p>{{ 'products.product.brand_development_desc' | t | default: 'Complete brand strategy and visual identity creation' }}</p>
+                    </div>
+                    
+                    <div class="service-type">
+                      <h6>{{ 'products.product.graphic_design' | t | default: 'Graphic Design' }}</h6>
+                      <p>{{ 'products.product.graphic_design_desc' | t | default: 'Custom graphics, illustrations, and visual elements' }}</p>
+                    </div>
+                    
+                    <div class="service-type">
+                      <h6>{{ 'products.product.print_design' | t | default: 'Print Design' }}</h6>
+                      <p>{{ 'products.product.print_design_desc' | t | default: 'Print-ready artwork for apparel and materials' }}</p>
+                    </div>
+                    
+                    <div class="service-type">
+                      <h6>{{ 'products.product.packaging_design' | t | default: 'Packaging Design' }}</h6>
+                      <p>{{ 'products.product.packaging_design_desc' | t | default: 'Custom packaging and label design solutions' }}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="included-custom">
+                  <h6>{{ 'products.product.whats_included' | t | default: 'What\'s Included:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.design_consultation' | t | default: 'One-on-one design consultation' }}</li>
+                    <li>{{ 'products.product.unlimited_revisions' | t | default: 'Unlimited revisions during process' }}</li>
+                    <li>{{ 'products.product.source_files' | t | default: 'All source files and formats' }}</li>
+                    <li>{{ 'products.product.usage_rights' | t | default: 'Full commercial usage rights' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Portfolio & Examples -->
+      <div class="tab-content" data-tab-content="portfolio-examples">
+        <div class="portfolio-content">
+          <h4>{{ 'products.product.our_work' | t | default: 'Our Work & Portfolio' }}</h4>
+          
+          <div class="portfolio-categories">
+            <div class="portfolio-category">
+              <h5>{{ 'products.product.logo_design_portfolio' | t | default: 'Logo Design Portfolio' }}</h5>
+              <div class="portfolio-grid">
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.fashion_brand_logo' | t | default: 'Fashion Brand Logo' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.modern_streetwear' | t | default: 'Modern Streetwear Brand' }}</h6>
+                    <p>{{ 'products.product.clean_minimalist' | t | default: 'Clean, minimalist approach with bold typography' }}</p>
+                  </div>
+                </div>
+                
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.luxury_label' | t | default: 'Luxury Label' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.premium_fashion' | t | default: 'Premium Fashion House' }}</h6>
+                    <p>{{ 'products.product.elegant_sophisticated' | t | default: 'Elegant and sophisticated visual identity' }}</p>
+                  </div>
+                </div>
+                
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.sustainable_brand' | t | default: 'Sustainable Brand' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.eco_conscious' | t | default: 'Eco-Conscious Brand' }}</h6>
+                    <p>{{ 'products.product.organic_natural' | t | default: 'Organic shapes with natural color palette' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="portfolio-category">
+              <h5>{{ 'products.product.print_design_portfolio' | t | default: 'Print Design Portfolio' }}</h5>
+              <div class="portfolio-grid">
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.apparel_graphics' | t | default: 'Apparel Graphics' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.graphic_tees' | t | default: 'Graphic T-Shirt Collection' }}</h6>
+                    <p>{{ 'products.product.artistic_illustrations' | t | default: 'Artistic illustrations with bold color schemes' }}</p>
+                  </div>
+                </div>
+                
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.label_design' | t | default: 'Label Design' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.premium_labels' | t | default: 'Premium Label Collection' }}</h6>
+                    <p>{{ 'products.product.luxury_finishes' | t | default: 'Luxury finishes with detailed craftsmanship' }}</p>
+                  </div>
+                </div>
+                
+                <div class="portfolio-item">
+                  <div class="portfolio-placeholder">
+                    <span>{{ 'products.product.packaging_design' | t | default: 'Packaging Design' }}</span>
+                  </div>
+                  <div class="portfolio-info">
+                    <h6>{{ 'products.product.retail_packaging' | t | default: 'Retail Packaging System' }}</h6>
+                    <p>{{ 'products.product.cohesive_brand_experience' | t | default: 'Cohesive brand experience across touchpoints' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="portfolio-category">
+              <h5>{{ 'products.product.brand_identity_portfolio' | t | default: 'Brand Identity Portfolio' }}</h5>
+              <div class="portfolio-showcase">
+                <div class="showcase-item">
+                  <h6>{{ 'products.product.complete_rebrand' | t | default: 'Complete Brand Transformation' }}</h6>
+                  <p>{{ 'products.product.rebrand_description' | t | default: 'Transformed a traditional textile company into a modern, digital-first brand with complete visual identity system, marketing materials, and brand guidelines.' }}</p>
+                  <div class="showcase-details">
+                    <strong>{{ 'products.product.deliverables' | t | default: 'Deliverables:' }}</strong>
+                    <ul>
+                      <li>{{ 'products.product.logo_system' | t | default: 'Complete logo system' }}</li>
+                      <li>{{ 'products.product.color_typography' | t | default: 'Color palette & typography' }}</li>
+                      <li>{{ 'products.product.marketing_collateral' | t | default: 'Marketing collateral templates' }}</li>
+                      <li>{{ 'products.product.digital_assets' | t | default: 'Digital asset library' }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="portfolio-cta">
+            <h5>{{ 'products.product.see_more_work' | t | default: 'Want to See More of Our Work?' }}</h5>
+            <p>{{ 'products.product.portfolio_request' | t | default: 'Request access to our full portfolio and case studies relevant to your industry.' }}</p>
+            <button class="portfolio-btn">{{ 'products.product.view_full_portfolio' | t | default: 'View Full Portfolio' }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Brief & Requirements -->
+      <div class="tab-content" data-tab-content="brief-requirements">
+        <div class="brief-content">
+          <h4>{{ 'products.product.design_brief_requirements' | t | default: 'Design Brief & Requirements' }}</h4>
+          
+          <div class="brief-sections">
+            <div class="brief-section">
+              <h5>{{ 'products.product.preparing_your_brief' | t | default: 'Preparing Your Design Brief' }}</h5>
+              <p>{{ 'products.product.brief_importance' | t | default: 'A well-prepared brief helps us understand your vision and deliver exactly what you need. Here\'s what to include:' }}</p>
+              
+              <div class="brief-checklist">
+                <div class="checklist-category">
+                  <h6>{{ 'products.product.brand_information' | t | default: 'Brand Information' }}</h6>
+                  <ul class="checklist">
+                    <li>{{ 'products.product.company_overview' | t | default: 'Company overview and values' }}</li>
+                    <li>{{ 'products.product.target_audience' | t | default: 'Target audience description' }}</li>
+                    <li>{{ 'products.product.brand_personality' | t | default: 'Brand personality and tone' }}</li>
+                    <li>{{ 'products.product.unique_selling_points' | t | default: 'Unique selling points' }}</li>
+                  </ul>
+                </div>
+                
+                <div class="checklist-category">
+                  <h6>{{ 'products.product.design_preferences' | t | default: 'Design Preferences' }}</h6>
+                  <ul class="checklist">
+                    <li>{{ 'products.product.style_direction' | t | default: 'Preferred style direction' }}</li>
+                    <li>{{ 'products.product.color_preferences' | t | default: 'Color preferences or restrictions' }}</li>
+                    <li>{{ 'products.product.typography_style' | t | default: 'Typography style preferences' }}</li>
+                    <li>{{ 'products.product.inspiration_references' | t | default: 'Inspiration and reference images' }}</li>
+                  </ul>
+                </div>
+                
+                <div class="checklist-category">
+                  <h6>{{ 'products.product.technical_requirements' | t | default: 'Technical Requirements' }}</h6>
+                  <ul class="checklist">
+                    <li>{{ 'products.product.usage_applications' | t | default: 'Where the design will be used' }}</li>
+                    <li>{{ 'products.product.file_format_needs' | t | default: 'Required file formats' }}</li>
+                    <li>{{ 'products.product.size_specifications' | t | default: 'Size and dimension specifications' }}</li>
+                    <li>{{ 'products.product.print_specifications' | t | default: 'Print or production specifications' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="brief-section">
+              <h5>{{ 'products.product.file_requirements' | t | default: 'File Upload Requirements' }}</h5>
+              <div class="requirements-grid">
+                <div class="requirement-category">
+                  <h6>{{ 'products.product.accepted_file_types' | t | default: 'Accepted File Types' }}</h6>
+                  <div class="file-types">
+                    <div class="file-type">
+                      <strong>{{ 'products.product.design_files' | t | default: 'Design Files:' }}</strong>
+                      <span>AI, EPS, PSD, PDF, SVG</span>
+                    </div>
+                    <div class="file-type">
+                      <strong>{{ 'products.product.image_files' | t | default: 'Image Files:' }}</strong>
+                      <span>PNG, JPG, JPEG, TIFF</span>
+                    </div>
+                    <div class="file-type">
+                      <strong>{{ 'products.product.document_files' | t | default: 'Document Files:' }}</strong>
+                      <span>PDF, DOC, DOCX, TXT</span>
+                    </div>
+                    <div class="file-type">
+                      <strong>{{ 'products.product.archive_files' | t | default: 'Archive Files:' }}</strong>
+                      <span>ZIP, RAR</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="requirement-category">
+                  <h6>{{ 'products.product.file_guidelines' | t | default: 'File Guidelines' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.max_file_size' | t | default: 'Maximum file size: 10MB per file' }}</li>
+                    <li>{{ 'products.product.multiple_files' | t | default: 'Upload multiple files for complex briefs' }}</li>
+                    <li>{{ 'products.product.organize_files' | t | default: 'Organize files in folders when using ZIP' }}</li>
+                    <li>{{ 'products.product.clear_naming' | t | default: 'Use clear, descriptive file names' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="brief-section">
+              <h5>{{ 'products.product.design_process' | t | default: 'Our Design Process' }}</h5>
+              <div class="process-overview">
+                <div class="process-step">
+                  <div class="step-icon">📋</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.brief_review' | t | default: 'Brief Review' }}</h6>
+                    <p>{{ 'products.product.brief_review_desc' | t | default: 'We analyze your brief and conduct research on your industry and competitors.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="process-step">
+                  <div class="step-icon">💡</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.concept_development' | t | default: 'Concept Development' }}</h6>
+                    <p>{{ 'products.product.concept_development_desc' | t | default: 'Initial concepts and direction exploration based on your requirements.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="process-step">
+                  <div class="step-icon">🎨</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.design_execution' | t | default: 'Design Execution' }}</h6>
+                    <p>{{ 'products.product.design_execution_desc' | t | default: 'Detailed design work with regular check-ins and feedback incorporation.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="process-step">
+                  <div class="step-icon">✨</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.refinement_delivery' | t | default: 'Refinement & Delivery' }}</h6>
+                    <p>{{ 'products.product.refinement_delivery_desc' | t | default: 'Final refinements and delivery of all files in required formats.' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Process & Timeline -->
+      <div class="tab-content" data-tab-content="process-timeline">
+        <div class="timeline-content">
+          <h4>{{ 'products.product.process_and_timeline' | t | default: 'Process & Timeline' }}</h4>
+          
+          <div class="timeline-sections">
+            <div class="timeline-section">
+              <h5>{{ 'products.product.standard_package_timeline' | t | default: 'Standard Package Timeline' }}</h5>
+              <div class="timeline-workflow">
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_0' | t | default: 'Day 0' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.order_processing' | t | default: 'Order Processing' }}</h6>
+                    <p>{{ 'products.product.order_processing_desc' | t | default: 'Order confirmation and project initiation within 2 hours.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_1_2' | t | default: 'Day 1-2' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.template_customization' | t | default: 'Template Customization' }}</h6>
+                    <p>{{ 'products.product.template_customization_desc' | t | default: 'Adapt selected template to your brand requirements and preferences.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_3' | t | default: 'Day 3' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.first_draft' | t | default: 'First Draft Delivery' }}</h6>
+                    <p>{{ 'products.product.first_draft_desc' | t | default: 'Initial design presentation for your review and feedback.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_4_5' | t | default: 'Day 4-5' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.revisions_finalization' | t | default: 'Revisions & Finalization' }}</h6>
+                    <p>{{ 'products.product.revisions_finalization_desc' | t | default: 'Incorporate feedback and deliver final files in all required formats.' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-section">
+              <h5>{{ 'products.product.custom_project_timeline' | t | default: 'Custom Project Timeline' }}</h5>
+              <div class="timeline-workflow">
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_0_1' | t | default: 'Day 0-1' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.brief_analysis' | t | default: 'Brief Analysis & Quote' }}</h6>
+                    <p>{{ 'products.product.brief_analysis_desc' | t | default: 'Detailed review of your requirements and delivery of comprehensive quote.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_2_4' | t | default: 'Day 2-4' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.research_concepts' | t | default: 'Research & Concepts' }}</h6>
+                    <p>{{ 'products.product.research_concepts_desc' | t | default: 'Market research, competitor analysis, and initial concept development.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_5_8' | t | default: 'Day 5-8' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.design_development' | t | default: 'Design Development' }}</h6>
+                    <p>{{ 'products.product.design_development_desc' | t | default: 'Detailed design work with multiple concepts and variations.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_9_12' | t | default: 'Day 9-12' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.feedback_refinement' | t | default: 'Feedback & Refinement' }}</h6>
+                    <p>{{ 'products.product.feedback_refinement_desc' | t | default: 'Client feedback incorporation and design refinement cycles.' }}</p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker">
+                    <span class="day">{{ 'products.product.day_13_14' | t | default: 'Day 13-14' }}</span>
+                  </div>
+                  <div class="timeline-content-item">
+                    <h6>{{ 'products.product.final_delivery' | t | default: 'Final Delivery' }}</h6>
+                    <p>{{ 'products.product.final_delivery_desc' | t | default: 'Complete file package delivery with documentation and guidelines.' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-section">
+              <h5>{{ 'products.product.rush_orders' | t | default: 'Rush Orders & Expedited Service' }}</h5>
+              <div class="rush-options">
+                <div class="rush-option">
+                  <h6>{{ 'products.product.express_delivery' | t | default: 'Express Delivery (48-72 hours)' }}</h6>
+                  <p>{{ 'products.product.express_delivery_desc' | t | default: 'Available for standard packages with 50% rush fee. Custom projects require consultation.' }}</p>
+                  <div class="rush-details">
+                    <strong>{{ 'products.product.requirements' | t | default: 'Requirements:' }}</strong>
+                    <ul>
+                      <li>{{ 'products.product.clear_brief' | t | default: 'Clear, detailed brief provided' }}</li>
+                      <li>{{ 'products.product.immediate_feedback' | t | default: 'Immediate feedback commitment' }}</li>
+                      <li>{{ 'products.product.limited_revisions' | t | default: 'Limited to 2 revision rounds' }}</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="rush-option">
+                  <h6>{{ 'products.product.same_day_service' | t | default: 'Same Day Service (8-12 hours)' }}</h6>
+                  <p>{{ 'products.product.same_day_service_desc' | t | default: 'Emergency service for simple modifications and urgent requirements. Subject to availability.' }}</p>
+                  <div class="rush-details">
+                    <strong>{{ 'products.product.limitations' | t | default: 'Limitations:' }}</strong>
+                    <ul>
+                      <li>{{ 'products.product.simple_projects_only' | t | default: 'Simple projects only' }}</li>
+                      <li>{{ 'products.product.no_revisions' | t | default: 'No revision rounds included' }}</li>
+                      <li>{{ 'products.product.premium_pricing' | t | default: '100% rush fee applies' }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="communication-schedule">
+            <h5>{{ 'products.product.communication_schedule' | t | default: 'Communication Schedule' }}</h5>
+            <div class="communication-grid">
+              <div class="communication-item">
+                <div class="communication-icon">📧</div>
+                <h6>{{ 'products.product.daily_updates' | t | default: 'Daily Updates' }}</h6>
+                <p>{{ 'products.product.daily_updates_desc' | t | default: 'Progress updates via email every 24 hours during active project phases.' }}</p>
+              </div>
+              
+              <div class="communication-item">
+                <div class="communication-icon">📞</div>
+                <h6>{{ 'products.product.scheduled_calls' | t | default: 'Scheduled Calls' }}</h6>
+                <p>{{ 'products.product.scheduled_calls_desc' | t | default: 'Optional video calls at key milestones for detailed feedback sessions.' }}</p>
+              </div>
+              
+              <div class="communication-item">
+                <div class="communication-icon">💬</div>
+                <h6>{{ 'products.product.instant_messaging' | t | default: 'Instant Messaging' }}</h6>
+                <p>{{ 'products.product.instant_messaging_desc' | t | default: 'Direct communication channel for urgent questions and quick clarifications.' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.service-info-design[data-product-id="{{ product.id }}"]');
+  if (!container) return;
+
+  const tabButtons = container.querySelectorAll('.tab-button');
+  const tabContents = container.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabId = this.getAttribute('data-tab');
+      
+      // Update active tab button
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Update active tab content
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.getAttribute('data-tab-content') === tabId) {
+          content.classList.add('active');
+        }
+      });
+    });
+  });
+});
+</script>
