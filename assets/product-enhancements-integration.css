@@ -1,0 +1,269 @@
+/* Integration fixes and loading states for enhanced product components */
+
+/* Loading states */
+.color-changing {
+  cursor: wait;
+}
+
+.color-changing * {
+  pointer-events: none;
+}
+
+.enhanced-color-picker.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.enhanced-color-picker.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgba(var(--color-foreground), 0.2);
+  border-top: 2px solid rgb(var(--color-foreground));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 10;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Integration with existing Dawn components */
+.product-form__input--pill + .enhanced-color-picker,
+.product-form__input--swatch + .enhanced-color-picker,
+.product-form__input--dropdown + .enhanced-color-picker {
+  margin-top: 1.5rem;
+}
+
+/* Ensure proper spacing with other product elements */
+.enhanced-color-picker + .product-form__input,
+.enhanced-color-picker + .product-form__buttons {
+  margin-top: 2rem;
+}
+
+.interactive-product-info + .product-form__buttons {
+  margin-top: 2rem;
+}
+
+/* Fix for potential conflicts with existing styles */
+.enhanced-color-picker *,
+.interactive-product-info * {
+  box-sizing: border-box;
+}
+
+/* Ensure buttons don't conflict with existing Dawn styles */
+.color-picker-btn,
+.size-recommend-btn,
+.consultation-btn,
+.templates-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+}
+
+/* Service card animation improvements */
+.service-card {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.service-card.selecting {
+  animation: cardSelect 0.4s ease-out;
+}
+
+@keyframes cardSelect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tab content animation improvements */
+.tab-content {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.tab-content:not(.active) {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+/* File upload animation */
+.upload-dropzone {
+  transition: all 0.3s ease;
+}
+
+.upload-dropzone.uploading {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* Success states */
+.size-recommendation.show {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.file-item {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Error states */
+.enhanced-color-picker.error {
+  border: 2px solid #ef4444;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 0.3rem;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Focus improvements for better accessibility */
+.enhanced-color-picker:focus-within {
+  outline: 2px solid rgba(var(--color-foreground), 0.3);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* Prevent layout shift during loading */
+.service-cards-grid {
+  min-height: 200px; /* Prevents layout shift while loading */
+}
+
+.tabs-content {
+  min-height: 300px; /* Prevents layout shift between tabs */
+}
+
+/* RTL support */
+[dir="rtl"] .feature-icon {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .service-icon {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .tab-icon {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .color-option {
+    border-width: 2px;
+  }
+  
+  .service-card {
+    border-width: 2px;
+  }
+  
+  .tab-button {
+    border: 1px solid rgba(var(--color-foreground), 0.5);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .color-option,
+  .service-card,
+  .tab-content,
+  .upload-dropzone,
+  .size-recommendation,
+  .file-item {
+    animation: none;
+    transition: none;
+  }
+  
+  .color-option:hover,
+  .service-card:hover {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .enhanced-color-picker,
+  .interactive-product-info {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .color-option {
+    border: 1px solid black;
+  }
+  
+  .tabs-nav {
+    display: none;
+  }
+  
+  .tab-content {
+    display: block !important;
+    page-break-inside: avoid;
+  }
+}
