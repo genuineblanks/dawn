@@ -1,0 +1,236 @@
+{% comment %}
+  Hybrid Purchase Logic Component
+  Handles Standard vs Custom purchase workflows for accessories and design services
+  
+  Required parameters:
+  - product: The current product object
+  
+  Usage:
+  {% render 'hybrid-purchase-logic', product: product %}
+{% endcomment %}
+
+{{ 'hybrid-purchase.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign has_custom_option = false
+  assign standard_variant = null
+  assign custom_variant = null
+  assign base_price = 0
+  
+  # Check if product supports custom options
+  if product.tags contains 'custom-available'
+    assign has_custom_option = true
+  endif
+  
+  # Find standard and custom variants
+  for variant in product.variants
+    if variant.title contains 'Standard' or variant.title contains 'standard'
+      assign standard_variant = variant
+    elsif variant.title contains 'Custom' or variant.title contains 'custom'
+      assign custom_variant = variant
+    endif
+  endfor
+  
+  # Fallback to first variant if no specific variants found
+  unless standard_variant
+    assign standard_variant = product.variants.first
+  endunless
+  
+  # Set base price for custom (deposit)
+  if custom_variant
+    assign base_price = custom_variant.price
+  else
+    assign base_price = standard_variant.price | divided_by: 2
+  endif
+-%}
+
+<div class="hybrid-purchase-container" data-product-id="{{ product.id }}">
+  {% if has_custom_option %}
+    <!-- Purchase Mode Selector -->
+    <div class="purchase-mode-selector">
+      <h3 class="purchase-title">{{ 'products.product.purchase_options' | t | default: 'Choose Your Purchase Option' }}</h3>
+      
+      <div class="mode-options">
+        <label class="mode-option standard-mode active" for="mode-standard-{{ product.id }}">
+          <input type="radio" 
+                 id="mode-standard-{{ product.id }}" 
+                 name="purchase-mode-{{ product.id }}" 
+                 value="standard" 
+                 checked>
+          <div class="mode-content">
+            <div class="mode-header">
+              <h4>{{ 'products.product.standard_option' | t | default: 'Standard Purchase' }}</h4>
+              <span class="mode-badge instant">{{ 'products.product.instant' | t | default: 'Instant' }}</span>
+            </div>
+            <div class="mode-price">
+              {% if standard_variant %}
+                <span class="price">{{ standard_variant.price | money }}</span>
+              {% endif %}
+            </div>
+            <ul class="mode-features">
+              <li>{{ 'products.product.fixed_pricing' | t | default: 'Fixed pricing' }}</li>
+              <li>{{ 'products.product.immediate_checkout' | t | default: 'Immediate checkout' }}</li>
+              <li>{{ 'products.product.preset_designs' | t | default: 'Preset designs available' }}</li>
+              <li>{{ 'products.product.fast_production' | t | default: 'Fast production time' }}</li>
+            </ul>
+          </div>
+        </label>
+
+        <label class="mode-option custom-mode" for="mode-custom-{{ product.id }}">
+          <input type="radio" 
+                 id="mode-custom-{{ product.id }}" 
+                 name="purchase-mode-{{ product.id }}" 
+                 value="custom">
+          <div class="mode-content">
+            <div class="mode-header">
+              <h4>{{ 'products.product.custom_option' | t | default: 'Custom Request' }}</h4>
+              <span class="mode-badge custom">{{ 'products.product.custom' | t | default: 'Custom' }}</span>
+            </div>
+            <div class="mode-price">
+              <span class="price-from">{{ 'products.product.starting_at' | t | default: 'Starting at' }}</span>
+              <span class="price">{{ base_price | money }}</span>
+              <small class="price-note">{{ 'products.product.deposit_note' | t | default: '(deposit - final quote via email)' }}</small>
+            </div>
+            <ul class="mode-features">
+              <li>{{ 'products.product.custom_design' | t | default: 'Your custom design' }}</li>
+              <li>{{ 'products.product.file_upload' | t | default: 'File upload included' }}</li>
+              <li>{{ 'products.product.personalized_quote' | t | default: 'Personalized quote' }}</li>
+              <li>{{ 'products.product.expert_consultation' | t | default: 'Expert consultation' }}</li>
+            </ul>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="purchase-comparison">
+      <h4>{{ 'products.product.comparison_title' | t | default: 'What\'s Included?' }}</h4>
+      <div class="comparison-table">
+        <div class="comparison-header">
+          <div class="feature-col">{{ 'products.product.feature' | t | default: 'Feature' }}</div>
+          <div class="standard-col">{{ 'products.product.standard' | t | default: 'Standard' }}</div>
+          <div class="custom-col">{{ 'products.product.custom' | t | default: 'Custom' }}</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="feature">{{ 'products.product.production_time' | t | default: 'Production Time' }}</div>
+          <div class="standard">{{ 'products.product.days_3_5' | t | default: '3-5 days' }}</div>
+          <div class="custom">{{ 'products.product.days_7_14' | t | default: '7-14 days' }}</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="feature">{{ 'products.product.design_options' | t | default: 'Design Options' }}</div>
+          <div class="standard">{{ 'products.product.preset_only' | t | default: 'Preset only' }}</div>
+          <div class="custom">{{ 'products.product.unlimited_custom' | t | default: 'Unlimited custom' }}</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="feature">{{ 'products.product.revisions' | t | default: 'Revisions' }}</div>
+          <div class="standard">{{ 'products.product.no_revisions' | t | default: 'No revisions' }}</div>
+          <div class="custom">{{ 'products.product.unlimited_revisions' | t | default: 'Up to 3 revisions' }}</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="feature">{{ 'products.product.consultation' | t | default: 'Design Consultation' }}</div>
+          <div class="standard">{{ 'products.product.no_consultation' | t | default: 'Not included' }}</div>
+          <div class="custom">{{ 'products.product.included_consultation' | t | default: 'Included' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Content Area -->
+    <div class="purchase-content">
+      <!-- Standard Purchase Content -->
+      <div class="content-section standard-content active">
+        <div class="standard-options">
+          {% if product.has_only_default_variant == false %}
+            <div class="variant-selectors">
+              {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+            </div>
+          {% endif %}
+          
+          <div class="standard-add-to-cart">
+            {% render 'buy-buttons', 
+              block: block, 
+              product: product, 
+              product_form_id: product_form_id, 
+              section_id: section.id, 
+              show_pickup_availability: true %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Purchase Content -->
+      <div class="content-section custom-content">
+        <div class="custom-workflow">
+          {% render 'quote-request-form', product: product, custom_variant: custom_variant %}
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    <!-- Standard product without custom options -->
+    <div class="standard-only-content">
+      {% if product.has_only_default_variant == false %}
+        <div class="variant-selectors">
+          {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+        </div>
+      {% endif %}
+      
+      <div class="standard-add-to-cart">
+        {% render 'buy-buttons', 
+          block: block, 
+          product: product, 
+          product_form_id: product_form_id, 
+          section_id: section.id, 
+          show_pickup_availability: true %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.hybrid-purchase-container[data-product-id="{{ product.id }}"]');
+  if (!container) return;
+
+  const modeInputs = container.querySelectorAll('input[name="purchase-mode-{{ product.id }}"]');
+  const modeOptions = container.querySelectorAll('.mode-option');
+  const contentSections = container.querySelectorAll('.content-section');
+
+  function updatePurchaseMode(selectedMode) {
+    // Update mode option styles
+    modeOptions.forEach(option => {
+      option.classList.toggle('active', option.querySelector('input').value === selectedMode);
+    });
+
+    // Update content visibility
+    contentSections.forEach(section => {
+      const isStandard = section.classList.contains('standard-content');
+      const shouldShow = (selectedMode === 'standard' && isStandard) || 
+                        (selectedMode === 'custom' && !isStandard);
+      section.classList.toggle('active', shouldShow);
+    });
+
+    // Update form variant selection for custom mode
+    if (selectedMode === 'custom') {
+      const variantInput = container.querySelector('input[name="id"]');
+      if (variantInput && {{ custom_variant.id | default: 'null' }}) {
+        variantInput.value = '{{ custom_variant.id }}';
+      }
+    }
+  }
+
+  // Add event listeners
+  modeInputs.forEach(input => {
+    input.addEventListener('change', function() {
+      if (this.checked) {
+        updatePurchaseMode(this.value);
+      }
+    });
+  });
+
+  // Initialize with standard mode
+  updatePurchaseMode('standard');
+});
+</script>
