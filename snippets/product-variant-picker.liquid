@@ -11,22 +11,60 @@
 {% endcomment %}
 {% assign productdata = product.metafields.custom.color_products.value  %}
 {% assign currentcolor = product.metafields.custom.product_color %}
-<ul class="productcolors">
-  <li>
-    <a href="javascript:void(0);" class="prodlink active" style="background:{{ currentcolor }};"></a>
-  </li>
-{% for productmeta in productdata %}
-  {% assign metafieldcolor = productmeta.metafields.custom.product_color %}
-  {% if metafieldcolor != blank %}
-    <li class="productitems">
-     <a href="{{ productmeta.url }}" class="prodlink" style="background:{{ metafieldcolor }};"></a>
+
+<div class="enhanced-color-picker">
+  <h4 class="color-picker-title">{{ 'products.product.color' | t | default: 'Color' }}</h4>
+  
+  {% comment %} Color map for labels {% endcomment %}
+  {% assign color_labels = 'Black,White,Grey Fade-out,Blue,Brown,Purple' | split: ',' %}
+  {% assign color_codes = '#000000,#FFFFFF,#808080,#0066CC,#8B4513,#800080' | split: ',' %}
+  
+  <ul class="productcolors enhanced">
+    <li class="color-option-wrapper">
+      <a href="javascript:void(0);" 
+         class="prodlink active color-option" 
+         style="background:{{ currentcolor }};"
+         data-color-name="{{ product.title | split: ' ' | last }}"
+         title="Current: {{ product.title | split: ' ' | last }}">
+      </a>
+      <span class="color-label active">Current</span>
     </li>
+    
+    {% for productmeta in productdata %}
+      {% assign metafieldcolor = productmeta.metafields.custom.product_color %}
+      {% if metafieldcolor != blank %}
+        {% assign color_name = productmeta.title | split: ' ' | last %}
+        <li class="color-option-wrapper productitems">
+          <a href="{{ productmeta.url }}" 
+             class="prodlink color-option" 
+             style="background:{{ metafieldcolor }};"
+             data-color-name="{{ color_name }}"
+             title="{{ color_name }}">
+          </a>
+          <span class="color-label">{{ color_name }}</span>
+        </li>
+      {% endif %}
+    {% endfor %}
+    
+    <li class="color-option-wrapper custom-wrapper">
+      <a href="" 
+         title="Custom Color" 
+         class="prodlink custom-color color-option">
+        <img src="https://cdn.shopify.com/s/files/1/0686/0809/8520/files/multiColor.png?v=1720504665" 
+             height="35px" 
+             width="35px"
+             alt="Custom Color">
+      </a>
+      <span class="color-label">Custom</span>
+    </li>
+  </ul>
+  
+  {% if productdata.size < 6 %}
+    <div class="color-availability-note">
+      <small>{{ 'products.product.color_availability' | t | default: 'More colors coming soon' }}</small>
+    </div>
   {% endif %}
-{% endfor %}
-   <li>
-    <a href="" title="Custom Color" class="prodlink custom-color"><img src="https://cdn.shopify.com/s/files/1/0686/0809/8520/files/multiColor.png?v=1720504665" height="35px" width="35px"></a>
-  </li>
-</ul>
+</div>
  <div class="select-color hide" >    
     <label for="favcolor">Select your favorite color:</label>
     <input type="color" id="favcolor" name="favcolor" value="#ff0000">
