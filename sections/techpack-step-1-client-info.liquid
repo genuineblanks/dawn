@@ -2,6 +2,9 @@
 Tech-Pack Pre-Step: Client Registration Check - Premium Design
 {% endcomment %}
 
+{{ 'techpack-mobile-scrolling-fixes.css' | asset_url | stylesheet_tag }}
+{{ 'techpack-form-enhancements.css' | asset_url | stylesheet_tag }}
+
 <section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
   <div class="techpack-container">
     <div class="techpack-progress">
@@ -371,3 +374,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 
 <!-- Load Tech Pack Application -->
 <script src="{{ 'techpack-app.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'techpack-mobile-scrolling-fixes.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-navigation-enhanced.js' | asset_url }}" defer></script>
+<script src="{{ 'techpack-system-integration.js' | asset_url }}" defer></script>
