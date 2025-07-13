@@ -1,0 +1,326 @@
+{% comment %}
+  Custom File Upload Component
+  Handles drag & drop file uploads for custom requests with order integration
+  
+  Required parameters:
+  - product: The current product object
+  
+  Usage:
+  {% render 'custom-file-upload', product: product %}
+{% endcomment %}
+
+<div class="custom-file-upload" data-product-id="{{ product.id }}">
+  <!-- File Upload Dropzone -->
+  <div class="upload-dropzone" id="dropzone-{{ product.id }}">
+    <div class="upload-content">
+      <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+      </svg>
+      <p class="upload-primary">
+        {{ 'products.product.drag_drop_files' | t | default: 'Drag and drop your files here' }}
+      </p>
+      <p class="upload-secondary">
+        {{ 'products.product.or_click_browse' | t | default: 'or' }} 
+        <span class="upload-link">{{ 'products.product.browse_files' | t | default: 'browse to upload' }}</span>
+      </p>
+      <small class="upload-note">
+        {{ 'products.product.accepted_formats' | t | default: 'Accepted formats: AI, EPS, PDF, PNG, JPG, PSD, SVG (Max 10MB per file)' }}
+      </small>
+    </div>
+    
+    <input type="file" 
+           id="file-input-{{ product.id }}" 
+           class="file-input" 
+           multiple 
+           accept=".ai,.eps,.pdf,.png,.jpg,.jpeg,.psd,.svg,.zip,.rar"
+           style="display: none;">
+  </div>
+
+  <!-- Upload Progress -->
+  <div class="upload-progress" style="display: none;">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+    <p class="progress-text">{{ 'products.product.uploading' | t | default: 'Uploading files...' }} <span class="progress-percent">0%</span></p>
+  </div>
+
+  <!-- Upload Errors -->
+  <div class="upload-errors" style="display: none;">
+    <div class="error-list"></div>
+  </div>
+
+  <!-- Uploaded Files List -->
+  <div class="uploaded-files" style="display: none;">
+    <h6>{{ 'products.product.uploaded_files' | t | default: 'Uploaded Files' }}</h6>
+    <div class="file-list" id="file-list-{{ product.id }}">
+      <!-- Files will be added here dynamically -->
+    </div>
+    <div class="upload-summary">
+      <p><span class="file-count">0</span> {{ 'products.product.files_uploaded' | t | default: 'files uploaded' }}</p>
+      <button type="button" class="add-more-files">
+        {{ 'products.product.add_more_files' | t | default: 'Add More Files' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- File Upload Storage (hidden inputs for form submission) -->
+  <div class="file-storage" style="display: none;">
+    <!-- File data will be stored here as hidden inputs -->
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadContainer = document.querySelector('.custom-file-upload[data-product-id="{{ product.id }}"]');
+  if (!uploadContainer) return;
+
+  const dropzone = uploadContainer.querySelector('.upload-dropzone');
+  const fileInput = uploadContainer.querySelector('.file-input');
+  const uploadProgress = uploadContainer.querySelector('.upload-progress');
+  const uploadErrors = uploadContainer.querySelector('.upload-errors');
+  const uploadedFiles = uploadContainer.querySelector('.uploaded-files');
+  const fileList = uploadContainer.querySelector('.file-list');
+  const fileStorage = uploadContainer.querySelector('.file-storage');
+  const addMoreBtn = uploadContainer.querySelector('.add-more-files');
+  const uploadLink = uploadContainer.querySelector('.upload-link');
+
+  let uploadedFileData = [];
+  const maxFileSize = 10 * 1024 * 1024; // 10MB
+  const acceptedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml', 'application/pdf', 'application/postscript', 'application/illustrator', 'image/vnd.adobe.photoshop', 'application/zip', 'application/x-rar-compressed'];
+
+  // Drag and drop handlers
+  dropzone.addEventListener('dragover', handleDragOver);
+  dropzone.addEventListener('dragleave', handleDragLeave);
+  dropzone.addEventListener('drop', handleDrop);
+  dropzone.addEventListener('click', () => fileInput.click());
+  uploadLink.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', handleFileSelect);
+  addMoreBtn.addEventListener('click', () => fileInput.click());
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files);
+    processFiles(files);
+  }
+
+  function handleFileSelect(e) {
+    const files = Array.from(e.target.files);
+    processFiles(files);
+  }
+
+  function processFiles(files) {
+    const validFiles = [];
+    const errors = [];
+
+    files.forEach(file => {
+      if (file.size > maxFileSize) {
+        errors.push(`${file.name}: {{ 'products.product.file_too_large' | t | default: 'File too large (max 10MB)' }}`);
+        return;
+      }
+
+      if (!isAcceptedType(file)) {
+        errors.push(`${file.name}: {{ 'products.product.unsupported_format' | t | default: 'Unsupported file format' }}`);
+        return;
+      }
+
+      validFiles.push(file);
+    });
+
+    if (errors.length > 0) {
+      showErrors(errors);
+    }
+
+    if (validFiles.length > 0) {
+      uploadFiles(validFiles);
+    }
+  }
+
+  function isAcceptedType(file) {
+    // Check both MIME type and file extension
+    const extension = file.name.toLowerCase().split('.').pop();
+    const acceptedExtensions = ['ai', 'eps', 'pdf', 'png', 'jpg', 'jpeg', 'psd', 'svg', 'zip', 'rar'];
+    
+    return acceptedTypes.some(type => file.type.startsWith(type.split('/')[0])) || 
+           acceptedExtensions.includes(extension);
+  }
+
+  function uploadFiles(files) {
+    showProgress();
+    
+    let completed = 0;
+    const total = files.length;
+
+    files.forEach((file, index) => {
+      // Simulate file upload (replace with actual upload logic)
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        const fileData = {
+          id: Date.now() + index,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          data: e.target.result,
+          uploadedAt: new Date().toISOString()
+        };
+
+        uploadedFileData.push(fileData);
+        addFileToList(fileData);
+        
+        completed++;
+        updateProgress((completed / total) * 100);
+        
+        if (completed === total) {
+          hideProgress();
+          showUploadedFiles();
+          updateFormData();
+        }
+      };
+
+      reader.onerror = function() {
+        showErrors([`{{ 'products.product.upload_failed' | t | default: 'Failed to upload' }}: ${file.name}`]);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function addFileToList(fileData) {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.setAttribute('data-file-id', fileData.id);
+    
+    fileItem.innerHTML = `
+      <div class="file-info">
+        <div class="file-icon">
+          ${getFileIcon(fileData.type, fileData.name)}
+        </div>
+        <div class="file-details">
+          <h6>${fileData.name}</h6>
+          <p>${formatFileSize(fileData.size)} • ${formatDate(fileData.uploadedAt)}</p>
+        </div>
+      </div>
+      <button type="button" class="file-remove" data-file-id="${fileData.id}">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    `;
+
+    const removeBtn = fileItem.querySelector('.file-remove');
+    removeBtn.addEventListener('click', () => removeFile(fileData.id));
+
+    fileList.appendChild(fileItem);
+  }
+
+  function removeFile(fileId) {
+    uploadedFileData = uploadedFileData.filter(file => file.id !== fileId);
+    const fileItem = fileList.querySelector(`[data-file-id="${fileId}"]`);
+    if (fileItem) {
+      fileItem.remove();
+    }
+    updateFileCount();
+    updateFormData();
+    
+    if (uploadedFileData.length === 0) {
+      uploadedFiles.style.display = 'none';
+    }
+  }
+
+  function updateFormData() {
+    // Clear existing file inputs
+    fileStorage.innerHTML = '';
+    
+    // Add file data as hidden inputs for form submission
+    uploadedFileData.forEach((file, index) => {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'hidden';
+      fileInput.name = `uploaded_files[${index}]`;
+      fileInput.value = JSON.stringify({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        data: file.data
+      });
+      fileStorage.appendChild(fileInput);
+    });
+  }
+
+  function showProgress() {
+    uploadProgress.style.display = 'block';
+    uploadErrors.style.display = 'none';
+  }
+
+  function hideProgress() {
+    uploadProgress.style.display = 'none';
+  }
+
+  function updateProgress(percent) {
+    const progressFill = uploadProgress.querySelector('.progress-fill');
+    const progressPercent = uploadProgress.querySelector('.progress-percent');
+    progressFill.style.width = percent + '%';
+    progressPercent.textContent = Math.round(percent) + '%';
+  }
+
+  function showErrors(errors) {
+    const errorList = uploadErrors.querySelector('.error-list');
+    errorList.innerHTML = errors.map(error => `<div class="error-item">${error}</div>`).join('');
+    uploadErrors.style.display = 'block';
+  }
+
+  function showUploadedFiles() {
+    uploadedFiles.style.display = 'block';
+    updateFileCount();
+  }
+
+  function updateFileCount() {
+    const fileCount = uploadContainer.querySelector('.file-count');
+    fileCount.textContent = uploadedFileData.length;
+  }
+
+  function getFileIcon(type, name) {
+    const extension = name.toLowerCase().split('.').pop();
+    
+    if (type.startsWith('image/') || ['png', 'jpg', 'jpeg', 'svg'].includes(extension)) {
+      return '🖼️';
+    } else if (extension === 'pdf') {
+      return '📄';
+    } else if (['ai', 'eps'].includes(extension)) {
+      return '🎨';
+    } else if (extension === 'psd') {
+      return '🖌️';
+    } else if (['zip', 'rar'].includes(extension)) {
+      return '📦';
+    } else {
+      return '📄';
+    }
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString();
+  }
+});
+</script>
