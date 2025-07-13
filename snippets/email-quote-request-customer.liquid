@@ -1,0 +1,318 @@
+{% comment %}
+  Email Template: Customer Quote Request Confirmation
+  Sent to customers when they submit a custom quote request
+  
+  Required variables:
+  - customer_name: Customer's name
+  - customer_email: Customer's email
+  - product_title: Product title
+  - request_id: Unique request ID
+  - deposit_amount: Deposit amount paid
+  - project_description: Project description
+  - uploaded_files: Array of uploaded files
+  
+  Usage:
+  {% render 'email-quote-request-customer', 
+    customer_name: order.customer.name,
+    customer_email: order.customer.email,
+    product_title: line_item.product.title,
+    request_id: order.order_number,
+    deposit_amount: line_item.price,
+    project_description: line_item.properties['Project Description'],
+    uploaded_files: line_item.properties['Uploaded Files'] %}
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ 'email.quote_request.subject' | t | default: 'Your Custom Quote Request - Genuine Blanks' }}</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #f8f9fa;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      background: white; 
+      border-radius: 8px; 
+      overflow: hidden; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .header { 
+      background: #1f2937; 
+      color: white; 
+      padding: 2rem; 
+      text-align: center; 
+    }
+    .header h1 { 
+      margin: 0; 
+      font-size: 1.8rem; 
+      font-weight: 600; 
+    }
+    .header p { 
+      margin: 0.5rem 0 0 0; 
+      opacity: 0.9; 
+      font-size: 1rem; 
+    }
+    .content { 
+      padding: 2rem; 
+    }
+    .success-banner {
+      background: #d1fae5;
+      border: 1px solid #10b981;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .success-banner h2 {
+      color: #047857;
+      margin: 0 0 0.5rem 0;
+      font-size: 1.4rem;
+    }
+    .success-banner p {
+      color: #065f46;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    .section { 
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem; 
+      border-bottom: 1px solid #e5e7eb; 
+    }
+    .section:last-child { 
+      border-bottom: none; 
+      margin-bottom: 0; 
+    }
+    .section h3 { 
+      color: #1f2937; 
+      font-size: 1.2rem; 
+      font-weight: 600; 
+      margin: 0 0 1rem 0; 
+    }
+    .info-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 1rem; 
+      margin-bottom: 1rem; 
+    }
+    .info-item { 
+      background: #f9fafb; 
+      padding: 1rem; 
+      border-radius: 6px; 
+    }
+    .info-label { 
+      font-weight: 600; 
+      color: #374151; 
+      font-size: 0.9rem; 
+      margin-bottom: 0.25rem; 
+    }
+    .info-value { 
+      color: #1f2937; 
+      font-size: 1rem; 
+    }
+    .timeline { 
+      background: #f0f9ff; 
+      border-left: 4px solid #3b82f6; 
+      padding: 1.5rem; 
+      border-radius: 0 6px 6px 0; 
+    }
+    .timeline h4 { 
+      color: #1e40af; 
+      margin: 0 0 1rem 0; 
+      font-size: 1.1rem; 
+    }
+    .timeline-step { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 0.75rem; 
+    }
+    .timeline-step:last-child { 
+      margin-bottom: 0; 
+    }
+    .step-number { 
+      background: #3b82f6; 
+      color: white; 
+      width: 24px; 
+      height: 24px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      margin-right: 0.75rem; 
+    }
+    .step-text { 
+      font-size: 0.95rem; 
+      color: #1e40af; 
+    }
+    .files-list { 
+      background: #f9fafb; 
+      border-radius: 6px; 
+      padding: 1rem; 
+    }
+    .file-item { 
+      display: flex; 
+      align-items: center; 
+      padding: 0.5rem 0; 
+      border-bottom: 1px solid #e5e7eb; 
+    }
+    .file-item:last-child { 
+      border-bottom: none; 
+    }
+    .file-icon { 
+      margin-right: 0.75rem; 
+      font-size: 1.2rem; 
+    }
+    .file-name { 
+      font-weight: 500; 
+      color: #1f2937; 
+    }
+    .contact-info { 
+      background: #f9fafb; 
+      padding: 1.5rem; 
+      border-radius: 6px; 
+      text-align: center; 
+    }
+    .contact-info h4 { 
+      color: #1f2937; 
+      margin: 0 0 1rem 0; 
+    }
+    .contact-link { 
+      color: #3b82f6; 
+      text-decoration: none; 
+      font-weight: 500; 
+    }
+    .footer { 
+      background: #f3f4f6; 
+      padding: 1.5rem; 
+      text-align: center; 
+      color: #6b7280; 
+      font-size: 0.9rem; 
+    }
+    .footer a { 
+      color: #3b82f6; 
+      text-decoration: none; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{ 'email.quote_request.header' | t | default: 'Custom Quote Request Received' }}</h1>
+      <p>{{ 'email.quote_request.header_subtitle' | t | default: 'Thank you for choosing Genuine Blanks for your custom project' }}</p>
+    </div>
+
+    <div class="content">
+      <div class="success-banner">
+        <h2>✅ {{ 'email.quote_request.success_title' | t | default: 'Request Successfully Submitted' }}</h2>
+        <p>{{ 'email.quote_request.success_message' | t | default: 'We\'ve received your custom request and will provide a detailed quote within 24-48 hours.' }}</p>
+      </div>
+
+      <div class="section">
+        <h3>{{ 'email.quote_request.request_details' | t | default: 'Request Details' }}</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">{{ 'email.quote_request.request_id' | t | default: 'Request ID' }}</div>
+            <div class="info-value">#{{ request_id | default: '12345' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">{{ 'email.quote_request.product' | t | default: 'Product' }}</div>
+            <div class="info-value">{{ product_title | default: 'Custom Product' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">{{ 'email.quote_request.customer' | t | default: 'Customer' }}</div>
+            <div class="info-value">{{ customer_name | default: 'Customer Name' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">{{ 'email.quote_request.deposit_paid' | t | default: 'Deposit Paid' }}</div>
+            <div class="info-value">{{ deposit_amount | money | default: '€50.00' }}</div>
+          </div>
+        </div>
+        
+        {% if project_description and project_description != '' %}
+        <div class="info-item" style="grid-column: 1 / -1;">
+          <div class="info-label">{{ 'email.quote_request.project_description' | t | default: 'Project Description' }}</div>
+          <div class="info-value">{{ project_description }}</div>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if uploaded_files and uploaded_files.size > 0 %}
+      <div class="section">
+        <h3>{{ 'email.quote_request.uploaded_files' | t | default: 'Uploaded Files' }}</h3>
+        <div class="files-list">
+          {% for file in uploaded_files %}
+          <div class="file-item">
+            <span class="file-icon">📄</span>
+            <span class="file-name">{{ file.name | default: 'Design File' }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="section">
+        <h3>{{ 'email.quote_request.next_steps' | t | default: 'What Happens Next?' }}</h3>
+        <div class="timeline">
+          <h4>{{ 'email.quote_request.timeline_title' | t | default: 'Your Custom Project Timeline' }}</h4>
+          <div class="timeline-step">
+            <div class="step-number">1</div>
+            <div class="step-text">{{ 'email.quote_request.step_1' | t | default: 'Our team reviews your request and files (24-48 hours)' }}</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">2</div>
+            <div class="step-text">{{ 'email.quote_request.step_2' | t | default: 'You receive a detailed quote via email' }}</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">3</div>
+            <div class="step-text">{{ 'email.quote_request.step_3' | t | default: 'Approve the quote to begin production' }}</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">4</div>
+            <div class="step-text">{{ 'email.quote_request.step_4' | t | default: 'Receive regular updates during production' }}</div>
+          </div>
+          <div class="timeline-step">
+            <div class="step-number">5</div>
+            <div class="step-text">{{ 'email.quote_request.step_5' | t | default: 'Quality check and delivery of your custom order' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>{{ 'email.quote_request.need_help' | t | default: 'Need Help or Have Questions?' }}</h3>
+        <div class="contact-info">
+          <h4>{{ 'email.quote_request.contact_us' | t | default: 'Contact Our Team' }}</h4>
+          <p>
+            {{ 'email.quote_request.email_label' | t | default: 'Email:' }} 
+            <a href="mailto:support@genuineblanks.com" class="contact-link">support@genuineblanks.com</a>
+          </p>
+          <p>
+            {{ 'email.quote_request.reference_label' | t | default: 'Reference Request ID:' }} 
+            <strong>#{{ request_id | default: '12345' }}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        {{ 'email.footer.thank_you' | t | default: 'Thank you for choosing Genuine Blanks' }}<br>
+        <a href="https://genuineblanks.com">www.genuineblanks.com</a> | 
+        <a href="mailto:support@genuineblanks.com">support@genuineblanks.com</a>
+      </p>
+      <p style="margin-top: 1rem; font-size: 0.8rem;">
+        {{ 'email.footer.unsubscribe' | t | default: 'This email was sent regarding your custom quote request. If you have any questions, please contact our support team.' }}
+      </p>
+    </div>
+  </div>
+</body>
+</html>
