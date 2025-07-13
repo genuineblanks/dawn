@@ -1,142 +1,39 @@
 {% comment %}
   Interactive Product Information Component
-  Renders enhanced product information tabs with service type cards, size guides, and interactive elements
+  Renders enhanced product information tabs with size guides and interactive elements
+  Now supports hybrid purchase logic for accessories and design services
 
   Accepts:
   - product: {Object} product object
-  - block: {Object} block settings
 {% endcomment %}
 
-<div class="interactive-product-info">
-  <!-- Service Type Selection Cards -->
-  <div class="service-type-section">
-    <h3 class="service-section-title">Choose Your Service Type</h3>
-    <div class="service-cards-grid">
-      
-      <!-- Signature Logo Card -->
-      <div class="service-card" data-service-type="signature">
-        <div class="service-card-header">
-          <div class="service-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h4 class="service-title">Signature Logo</h4>
-          <span class="service-badge basic">Basic</span>
-        </div>
-        
-        <div class="service-features">
-          <div class="feature-item">
-            <span class="feature-icon">✎</span>
-            <span class="feature-text">Logo Concept</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⟳</span>
-            <span class="feature-text">2 to 3 Revisions</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⧉</span>
-            <span class="feature-text">PNG, AI, JPEG</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">◧</span>
-            <span class="feature-text">Basic Color or B&W</span>
-          </div>
-        </div>
-        
-        <div class="service-footer">
-          <span class="service-time">2-3 Business Days</span>
-        </div>
-      </div>
+{%- liquid
+  assign is_accessories = false
+  assign is_design = false
+  assign is_regular_product = true
+  
+  # Check if product is accessories
+  if product.type == 'Accessories' or product.tags contains 'accessories' or product.tags contains 'labels' or product.tags contains 'hang-tags' or product.tags contains 'custom-available'
+    assign is_accessories = true
+    assign is_regular_product = false
+  endif
+  
+  # Check if product is design services
+  if product.type == 'Design' or product.tags contains 'design-services' or product.tags contains 'branding' or product.tags contains 'logo-design'
+    assign is_design = true
+    assign is_regular_product = false
+  endif
+-%}
 
-      <!-- Premium Logo Card -->
-      <div class="service-card featured" data-service-type="premium">
-        <div class="service-card-header">
-          <div class="service-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </div>
-          <h4 class="service-title">Premium Logo</h4>
-          <span class="service-badge premium">Most Popular</span>
-        </div>
-        
-        <div class="service-features">
-          <div class="feature-item">
-            <span class="feature-icon">✎</span>
-            <span class="feature-text">Up to 3 Logo Concepts</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⟳</span>
-            <span class="feature-text">2 to 3 Revisions</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⧉</span>
-            <span class="feature-text">PNG, AI, JPEG, EPS</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">◧</span>
-            <span class="feature-text">Full Color + Black & White</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📏</span>
-            <span class="feature-text">Vector Files Included</span>
-          </div>
-        </div>
-        
-        <div class="service-footer">
-          <span class="service-time">3-5 Business Days</span>
-        </div>
-      </div>
-
-      <!-- Elite Logo Card -->
-      <div class="service-card" data-service-type="elite">
-        <div class="service-card-header">
-          <div class="service-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L15.09 8.26L22 9L15.09 9.74L12 16L8.91 9.74L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-              <circle cx="12" cy="12" r="1" fill="currentColor"/>
-            </svg>
-          </div>
-          <h4 class="service-title">Elite Logo</h4>
-          <span class="service-badge elite">Professional</span>
-        </div>
-        
-        <div class="service-features">
-          <div class="feature-item">
-            <span class="feature-icon">✎</span>
-            <span class="feature-text">5+ Logo Concepts</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⟳</span>
-            <span class="feature-text">Unlimited Revisions</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⧉</span>
-            <span class="feature-text">PNG, AI, JPEG, EPS, PDF</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">◧</span>
-            <span class="feature-text">Full Color, B&W, Variations</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📏</span>
-            <span class="feature-text">Complete Vector Package</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📚</span>
-            <span class="feature-text">Basic Brand Guidelines</span>
-          </div>
-        </div>
-        
-        <div class="service-footer">
-          <span class="service-time">5-7 Business Days</span>
-        </div>
-      </div>
-    </div>
-  </div>
+{% if is_accessories %}
+  <!-- Render Accessories Service Info with Hybrid Purchase Logic -->
+  {% render 'service-info-accessories', product: product %}
+{% elsif is_design %}
+  <!-- Render Design Services Info with Hybrid Purchase Logic -->
+  {% render 'service-info-design', product: product %}
+{% else %}
+  <!-- Render Regular Product Interactive Info -->
+  <div class="interactive-product-info">
 
   <!-- Interactive Information Tabs -->
   <div class="info-tabs-section">
@@ -303,4 +200,5 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+{% endif %}
