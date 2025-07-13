@@ -1,0 +1,430 @@
+{% comment %}
+  Service Info for Accessories - Hybrid Tabs Component
+  Interactive 4-tab system for accessories with hybrid purchase logic
+  
+  Required parameters:
+  - product: The current product object
+  
+  Usage:
+  {% render 'service-info-accessories', product: product %}
+{% endcomment %}
+
+<div class="service-info-accessories" data-product-id="{{ product.id }}">
+  <!-- Hybrid Purchase Logic Integration -->
+  {% render 'hybrid-purchase-logic', product: product %}
+
+  <!-- Enhanced Interactive Tabs for Accessories -->
+  <div class="info-tabs-section">
+    <div class="tabs-nav">
+      <button class="tab-button active" data-tab="product-options">
+        <span class="tab-icon">⚡</span>
+        {{ 'products.product.tab_product_options' | t | default: 'Product Options' }}
+      </button>
+      <button class="tab-button" data-tab="customization">
+        <span class="tab-icon">🎨</span>
+        {{ 'products.product.tab_customization' | t | default: 'Customization' }}
+      </button>
+      <button class="tab-button" data-tab="what-you-receive">
+        <span class="tab-icon">📦</span>
+        {{ 'products.product.tab_what_you_receive' | t | default: 'What You\'ll Receive' }}
+      </button>
+      <button class="tab-button" data-tab="support-process">
+        <span class="tab-icon">🛠️</span>
+        {{ 'products.product.tab_support_process' | t | default: 'Support & Process' }}
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <!-- Tab 1: Product Options -->
+      <div class="tab-content active" data-tab-content="product-options">
+        <div class="product-options-content">
+          <h4>{{ 'products.product.choose_your_approach' | t | default: 'Choose Your Approach' }}</h4>
+          
+          <div class="approach-comparison">
+            <div class="approach-option standard-approach">
+              <div class="approach-header">
+                <h5>{{ 'products.product.standard_accessories' | t | default: 'Standard Accessories' }}</h5>
+                <span class="approach-badge instant">{{ 'products.product.ready_to_ship' | t | default: 'Ready to Ship' }}</span>
+              </div>
+              
+              <div class="approach-details">
+                <p>{{ 'products.product.standard_description' | t | default: 'Choose from our collection of high-quality accessories with proven designs and materials. Perfect for quick turnaround projects.' }}</p>
+                
+                <div class="included-items">
+                  <h6>{{ 'products.product.whats_included' | t | default: 'What\'s Included:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.preset_designs' | t | default: 'Preset designs and materials' }}</li>
+                    <li>{{ 'products.product.quality_materials' | t | default: 'Quality tested materials' }}</li>
+                    <li>{{ 'products.product.fast_production' | t | default: '3-5 day production' }}</li>
+                    <li>{{ 'products.product.bulk_pricing' | t | default: 'Bulk pricing available' }}</li>
+                  </ul>
+                </div>
+                
+                <div class="ideal-for">
+                  <h6>{{ 'products.product.ideal_for' | t | default: 'Ideal For:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.quick_launches' | t | default: 'Quick product launches' }}</li>
+                    <li>{{ 'products.product.budget_conscious' | t | default: 'Budget-conscious projects' }}</li>
+                    <li>{{ 'products.product.proven_designs' | t | default: 'Proven design aesthetics' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="approach-option custom-approach">
+              <div class="approach-header">
+                <h5>{{ 'products.product.custom_accessories' | t | default: 'Custom Accessories' }}</h5>
+                <span class="approach-badge custom">{{ 'products.product.fully_customizable' | t | default: 'Fully Customizable' }}</span>
+              </div>
+              
+              <div class="approach-details">
+                <p>{{ 'products.product.custom_description' | t | default: 'Create unique accessories tailored to your brand vision. Upload your designs, specify materials, and work with our experts to bring your ideas to life.' }}</p>
+                
+                <div class="included-items">
+                  <h6>{{ 'products.product.whats_included' | t | default: 'What\'s Included:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.design_consultation' | t | default: 'Design consultation & advice' }}</li>
+                    <li>{{ 'products.product.material_selection' | t | default: 'Custom material selection' }}</li>
+                    <li>{{ 'products.product.revision_rounds' | t | default: 'Up to 3 revision rounds' }}</li>
+                    <li>{{ 'products.product.digital_proofs' | t | default: 'Digital proofs before production' }}</li>
+                  </ul>
+                </div>
+                
+                <div class="ideal-for">
+                  <h6>{{ 'products.product.ideal_for' | t | default: 'Ideal For:' }}</h6>
+                  <ul>
+                    <li>{{ 'products.product.unique_branding' | t | default: 'Unique brand identity' }}</li>
+                    <li>{{ 'products.product.special_materials' | t | default: 'Special material requirements' }}</li>
+                    <li>{{ 'products.product.specific_dimensions' | t | default: 'Specific size dimensions' }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Customization Center -->
+      <div class="tab-content" data-tab-content="customization">
+        <div class="customization-content">
+          <h4>{{ 'products.product.customization_center' | t | default: 'Customization Center' }}</h4>
+          
+          <div class="customization-notice">
+            <p><strong>{{ 'products.product.note' | t | default: 'Note:' }}</strong> {{ 'products.product.custom_only_note' | t | default: 'This section is only available when "Custom Request" is selected above.' }}</p>
+          </div>
+
+          <div class="customization-options">
+            <div class="option-group">
+              <h5>{{ 'products.product.accessory_types' | t | default: 'Accessory Types Available' }}</h5>
+              <div class="accessory-grid">
+                <div class="accessory-type">
+                  <div class="accessory-icon">🏷️</div>
+                  <h6>{{ 'products.product.branding_labels' | t | default: 'Branding Labels' }}</h6>
+                  <p>{{ 'products.product.branding_labels_desc' | t | default: 'Woven, printed, or leather labels with your logo' }}</p>
+                </div>
+                
+                <div class="accessory-type">
+                  <div class="accessory-icon">🔖</div>
+                  <h6>{{ 'products.product.hang_tags' | t | default: 'Hang Tags' }}</h6>
+                  <p>{{ 'products.product.hang_tags_desc' | t | default: 'Custom printed hang tags in various materials' }}</p>
+                </div>
+                
+                <div class="accessory-type">
+                  <div class="accessory-icon">📋</div>
+                  <h6>{{ 'products.product.composition_labels' | t | default: 'Composition Labels' }}</h6>
+                  <p>{{ 'products.product.composition_labels_desc' | t | default: 'Care instructions and fabric composition' }}</p>
+                </div>
+                
+                <div class="accessory-type">
+                  <div class="accessory-icon">📄</div>
+                  <h6>{{ 'products.product.promotional_materials' | t | default: 'Promotional Materials' }}</h6>
+                  <p>{{ 'products.product.promotional_materials_desc' | t | default: 'Flyers, business cards, and brand materials' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <h5>{{ 'products.product.material_options' | t | default: 'Material Options' }}</h5>
+              <div class="material-grid">
+                <div class="material-option">
+                  <strong>{{ 'products.product.cotton_labels' | t | default: 'Cotton Labels' }}</strong>
+                  <p>{{ 'products.product.cotton_labels_desc' | t | default: 'Soft, natural feel with excellent durability' }}</p>
+                </div>
+                
+                <div class="material-option">
+                  <strong>{{ 'products.product.satin_labels' | t | default: 'Satin Labels' }}</strong>
+                  <p>{{ 'products.product.satin_labels_desc' | t | default: 'Luxurious finish with vibrant color reproduction' }}</p>
+                </div>
+                
+                <div class="material-option">
+                  <strong>{{ 'products.product.woven_labels' | t | default: 'Woven Labels' }}</strong>
+                  <p>{{ 'products.product.woven_labels_desc' | t | default: 'Premium quality with intricate detail capability' }}</p>
+                </div>
+                
+                <div class="material-option">
+                  <strong>{{ 'products.product.printed_options' | t | default: 'Printed Options' }}</strong>
+                  <p>{{ 'products.product.printed_options_desc' | t | default: 'Cost-effective with full-color capabilities' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <h5>{{ 'products.product.sizing_guide' | t | default: 'Sizing & Specifications' }}</h5>
+              <div class="sizing-info">
+                <div class="size-category">
+                  <h6>{{ 'products.product.common_label_sizes' | t | default: 'Common Label Sizes' }}</h6>
+                  <ul class="size-list">
+                    <li>{{ 'products.product.size_small' | t | default: 'Small: 2cm x 5cm' }}</li>
+                    <li>{{ 'products.product.size_medium' | t | default: 'Medium: 3cm x 7cm' }}</li>
+                    <li>{{ 'products.product.size_large' | t | default: 'Large: 4cm x 10cm' }}</li>
+                    <li>{{ 'products.product.size_custom' | t | default: 'Custom: Any size up to 15cm x 15cm' }}</li>
+                  </ul>
+                </div>
+                
+                <div class="specification-note">
+                  <p><strong>{{ 'products.product.custom_sizing' | t | default: 'Custom Sizing:' }}</strong> {{ 'products.product.custom_sizing_note' | t | default: 'We can accommodate virtually any size requirement. Specify your exact dimensions in the custom request form.' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: What You'll Receive -->
+      <div class="tab-content" data-tab-content="what-you-receive">
+        <div class="deliverables-content">
+          <h4>{{ 'products.product.what_youll_receive' | t | default: 'What You\'ll Receive' }}</h4>
+          
+          <div class="deliverable-modes">
+            <div class="mode-deliverables standard-deliverables">
+              <h5>{{ 'products.product.standard_deliverables' | t | default: 'Standard Purchase Deliverables' }}</h5>
+              
+              <div class="deliverable-section">
+                <h6>{{ 'products.product.physical_products' | t | default: 'Physical Products' }}</h6>
+                <ul>
+                  <li>{{ 'products.product.finished_accessories' | t | default: 'Finished accessories as ordered' }}</li>
+                  <li>{{ 'products.product.quality_packaging' | t | default: 'Quality packaging for protection' }}</li>
+                  <li>{{ 'products.product.quantity_confirmation' | t | default: 'Quantity confirmation sheet' }}</li>
+                </ul>
+              </div>
+              
+              <div class="deliverable-section">
+                <h6>{{ 'products.product.timeline' | t | default: 'Timeline' }}</h6>
+                <ul>
+                  <li>{{ 'products.product.production_3_5_days' | t | default: 'Production: 3-5 business days' }}</li>
+                  <li>{{ 'products.product.shipping_standard' | t | default: 'Shipping: Standard rates apply' }}</li>
+                  <li>{{ 'products.product.rush_available' | t | default: 'Rush orders: Available for additional fee' }}</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mode-deliverables custom-deliverables">
+              <h5>{{ 'products.product.custom_deliverables' | t | default: 'Custom Request Deliverables' }}</h5>
+              
+              <div class="deliverable-section">
+                <h6>{{ 'products.product.design_process' | t | default: 'Design Process' }}</h6>
+                <ul>
+                  <li>{{ 'products.product.digital_mockups' | t | default: 'Digital mockups for approval' }}</li>
+                  <li>{{ 'products.product.material_samples' | t | default: 'Material samples (if requested)' }}</li>
+                  <li>{{ 'products.product.revision_rounds' | t | default: 'Up to 3 revision rounds included' }}</li>
+                </ul>
+              </div>
+              
+              <div class="deliverable-section">
+                <h6>{{ 'products.product.final_delivery' | t | default: 'Final Delivery' }}</h6>
+                <ul>
+                  <li>{{ 'products.product.custom_accessories' | t | default: 'Custom accessories per specifications' }}</li>
+                  <li>{{ 'products.product.design_files' | t | default: 'Design files for future orders' }}</li>
+                  <li>{{ 'products.product.care_instructions' | t | default: 'Care and handling instructions' }}</li>
+                  <li>{{ 'products.product.reorder_information' | t | default: 'Reorder information and pricing' }}</li>
+                </ul>
+              </div>
+              
+              <div class="deliverable-section">
+                <h6>{{ 'products.product.timeline_custom' | t | default: 'Timeline' }}</h6>
+                <ul>
+                  <li>{{ 'products.product.quote_24_48_hours' | t | default: 'Quote delivery: 24-48 hours' }}</li>
+                  <li>{{ 'products.product.design_approval' | t | default: 'Design approval: 2-5 business days' }}</li>
+                  <li>{{ 'products.product.production_7_14_days' | t | default: 'Production: 7-14 business days' }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="quality-guarantee">
+            <h5>{{ 'products.product.quality_guarantee' | t | default: 'Quality Guarantee' }}</h5>
+            <div class="guarantee-grid">
+              <div class="guarantee-item">
+                <strong>{{ 'products.product.satisfaction_guarantee' | t | default: 'Satisfaction Guarantee' }}</strong>
+                <p>{{ 'products.product.satisfaction_desc' | t | default: 'Not happy with your order? We\'ll work with you to make it right.' }}</p>
+              </div>
+              
+              <div class="guarantee-item">
+                <strong>{{ 'products.product.material_quality' | t | default: 'Material Quality' }}</strong>
+                <p>{{ 'products.product.material_quality_desc' | t | default: 'All materials are tested for durability and colorfastness.' }}</p>
+              </div>
+              
+              <div class="guarantee-item">
+                <strong>{{ 'products.product.production_standards' | t | default: 'Production Standards' }}</strong>
+                <p>{{ 'products.product.production_standards_desc' | t | default: 'Every item is quality checked before shipping.' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Support & Process -->
+      <div class="tab-content" data-tab-content="support-process">
+        <div class="support-content">
+          <h4>{{ 'products.product.support_and_process' | t | default: 'Support & Process' }}</h4>
+          
+          <div class="process-workflows">
+            <div class="workflow standard-workflow">
+              <h5>{{ 'products.product.standard_workflow' | t | default: 'Standard Purchase Workflow' }}</h5>
+              <div class="workflow-steps">
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_select' | t | default: 'Select & Configure' }}</h6>
+                    <p>{{ 'products.product.step_select_desc' | t | default: 'Choose your product options and quantity' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_order' | t | default: 'Place Order' }}</h6>
+                    <p>{{ 'products.product.step_order_desc' | t | default: 'Complete checkout with immediate payment' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_production' | t | default: 'Production' }}</h6>
+                    <p>{{ 'products.product.step_production_desc' | t | default: 'We begin production within 24 hours' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_delivery' | t | default: 'Delivery' }}</h6>
+                    <p>{{ 'products.product.step_delivery_desc' | t | default: 'Your order ships in 3-5 business days' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="workflow custom-workflow">
+              <h5>{{ 'products.product.custom_workflow' | t | default: 'Custom Request Workflow' }}</h5>
+              <div class="workflow-steps">
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_request' | t | default: 'Submit Request' }}</h6>
+                    <p>{{ 'products.product.step_request_desc' | t | default: 'Upload files and fill out specifications' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_deposit' | t | default: 'Deposit Payment' }}</h6>
+                    <p>{{ 'products.product.step_deposit_desc' | t | default: 'Secure your request with a deposit' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_quote' | t | default: 'Receive Quote' }}</h6>
+                    <p>{{ 'products.product.step_quote_desc' | t | default: 'Detailed quote sent within 24-48 hours' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_approve' | t | default: 'Approve & Pay' }}</h6>
+                    <p>{{ 'products.product.step_approve_desc' | t | default: 'Approve quote and complete payment' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">5</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_custom_production' | t | default: 'Custom Production' }}</h6>
+                    <p>{{ 'products.product.step_custom_production_desc' | t | default: 'Production begins with regular updates' }}</p>
+                  </div>
+                </div>
+                
+                <div class="step">
+                  <div class="step-number">6</div>
+                  <div class="step-content">
+                    <h6>{{ 'products.product.step_custom_delivery' | t | default: 'Quality Check & Delivery' }}</h6>
+                    <p>{{ 'products.product.step_custom_delivery_desc' | t | default: 'Final approval and shipping' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="support-options">
+            <h5>{{ 'products.product.get_support' | t | default: 'Get Support' }}</h5>
+            <div class="support-grid">
+              <div class="support-option">
+                <div class="support-icon">💬</div>
+                <h6>{{ 'products.product.live_chat' | t | default: 'Live Chat' }}</h6>
+                <p>{{ 'products.product.live_chat_desc' | t | default: 'Instant help during business hours' }}</p>
+                <button class="support-btn">{{ 'products.product.start_chat' | t | default: 'Start Chat' }}</button>
+              </div>
+              
+              <div class="support-option">
+                <div class="support-icon">📧</div>
+                <h6>{{ 'products.product.email_support' | t | default: 'Email Support' }}</h6>
+                <p>{{ 'products.product.email_support_desc' | t | default: 'Detailed questions and file sharing' }}</p>
+                <a href="mailto:support@genuineblanks.com" class="support-btn">{{ 'products.product.send_email' | t | default: 'Send Email' }}</a>
+              </div>
+              
+              <div class="support-option">
+                <div class="support-icon">📞</div>
+                <h6>{{ 'products.product.phone_consultation' | t | default: 'Phone Consultation' }}</h6>
+                <p>{{ 'products.product.phone_consultation_desc' | t | default: 'Speak directly with our experts' }}</p>
+                <button class="support-btn">{{ 'products.product.schedule_call' | t | default: 'Schedule Call' }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.querySelector('.service-info-accessories[data-product-id="{{ product.id }}"]');
+  if (!container) return;
+
+  const tabButtons = container.querySelectorAll('.tab-button');
+  const tabContents = container.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tabId = this.getAttribute('data-tab');
+      
+      // Update active tab button
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Update active tab content
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.getAttribute('data-tab-content') === tabId) {
+          content.classList.add('active');
+        }
+      });
+    });
+  });
+});
+</script>
