@@ -1,0 +1,593 @@
+/* 
+  ENHANCED COLOR PICKER - FUTURISTIC CIRCULAR SWATCH SYSTEM
+  Complete color picker system with smart visibility and interactions
+  Brand-aligned with GenuineBlanks aesthetic
+*/
+
+/* === COLOR PICKER CONTAINER === */
+.enhanced-color-picker {
+  margin: 1.5rem 0 2rem 0;
+  font-family: var(--font-body-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+/* Color Picker Title */
+.color-picker-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 1rem 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+@media screen and (min-width: 750px) {
+  .color-picker-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* === CIRCULAR COLOR SWATCHES === */
+.productcolors.enhanced {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: flex-start;
+}
+
+@media screen and (min-width: 480px) {
+  .productcolors.enhanced {
+    gap: 1.25rem;
+  }
+}
+
+/* Individual Color Option Wrapper */
+.color-option-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.color-option-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+/* === CIRCULAR COLOR SWATCHES === */
+.color-option {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  background-clip: content-box;
+  box-shadow: 0 2px 8px rgba(var(--color-foreground), 0.15);
+}
+
+@media screen and (min-width: 480px) {
+  .color-option {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .color-option {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Color Option States */
+.color-option:hover {
+  transform: scale(1.1);
+  border-color: rgba(var(--color-foreground), 0.3);
+  box-shadow: 0 4px 15px rgba(var(--color-foreground), 0.25);
+}
+
+.color-option:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 2px rgb(var(--color-background)), 0 0 0 4px rgb(var(--color-foreground));
+}
+
+.color-option.active {
+  transform: scale(1.15);
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 
+    0 0 0 2px rgb(var(--color-background)), 
+    0 0 0 4px rgb(var(--color-foreground)),
+    0 6px 20px rgba(var(--color-foreground), 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.color-option.active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: rgb(var(--color-background));
+  border: 2px solid rgb(var(--color-foreground));
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: checkMarkAppear 0.3s ease forwards;
+}
+
+@keyframes checkMarkAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* === SPECIFIC COLOR DEFINITIONS === */
+
+/* Black Swatch */
+.color-option[style*="#000000"],
+.color-option[style*="#000"] {
+  background: #000000;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.color-option[style*="#000000"]:hover,
+.color-option[style*="#000"]:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.color-option[style*="#000000"].active::after,
+.color-option[style*="#000"].active::after {
+  background: #ffffff;
+  border-color: #000000;
+}
+
+/* White Swatch */
+.color-option[style*="#FFFFFF"],
+.color-option[style*="#ffffff"],
+.color-option[style*="#FFF"],
+.color-option[style*="#fff"] {
+  background: #ffffff;
+  border-color: rgba(var(--color-foreground), 0.2);
+}
+
+.color-option[style*="#FFFFFF"]:hover,
+.color-option[style*="#ffffff"]:hover,
+.color-option[style*="#FFF"]:hover,
+.color-option[style*="#fff"]:hover {
+  border-color: rgba(var(--color-foreground), 0.4);
+}
+
+/* Grey Fade-out Swatch */
+.color-option[style*="#808080"],
+.color-option[style*="grey"],
+.color-option[style*="gray"] {
+  background: linear-gradient(135deg, #808080 0%, #c0c0c0 100%);
+  border-color: rgba(var(--color-foreground), 0.2);
+}
+
+/* Blue Swatch */
+.color-option[style*="#4A90E2"],
+.color-option[style*="blue"] {
+  background: #4A90E2;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Brown Swatch */
+.color-option[style*="#8B4513"],
+.color-option[style*="brown"] {
+  background: #8B4513;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Purple Swatch */
+.color-option[style*="#800080"],
+.color-option[style*="purple"] {
+  background: #800080;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Custom Color Swatch */
+.custom-color {
+  background: linear-gradient(45deg, 
+    #ff0000 0%, #ff8000 16.66%, #ffff00 33.33%, 
+    #80ff00 50%, #00ff80 66.66%, #0080ff 83.33%, #8000ff 100%);
+  border-color: rgba(var(--color-foreground), 0.2);
+  position: relative;
+}
+
+.custom-color img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.custom-color::before {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* === COLOR LABELS === */
+.color-label {
+  font-size: 0.75rem;
+  color: rgba(var(--color-foreground), 0.7);
+  text-align: center;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  min-height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (min-width: 480px) {
+  .color-label {
+    font-size: 0.8rem;
+  }
+}
+
+.color-label.active {
+  color: rgb(var(--color-foreground));
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+/* === CUSTOM COLOR INPUT PANEL === */
+.custom-color-input {
+  background: rgba(var(--color-foreground), 0.03);
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.custom-color-input.show {
+  opacity: 1;
+  transform: translateY(0);
+  background: rgba(var(--color-foreground), 0.05);
+  border-color: rgba(var(--color-foreground), 0.2);
+}
+
+.custom-color-input.hide {
+  display: none;
+}
+
+/* Custom Color Input Label */
+.custom-color-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(var(--color-foreground));
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+/* Custom Color Controls */
+.custom-color-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (min-width: 480px) {
+  .custom-color-controls {
+    flex-wrap: nowrap;
+  }
+}
+
+.custom-color-field {
+  width: 60px;
+  height: 48px;
+  border: 2px solid rgba(var(--color-foreground), 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgb(var(--color-background));
+}
+
+.custom-color-field:hover {
+  border-color: rgba(var(--color-foreground), 0.4);
+  transform: scale(1.05);
+}
+
+.custom-color-field:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 3px rgba(var(--color-foreground), 0.2);
+}
+
+/* Custom Color Buttons */
+.btn-secondary,
+.btn-tertiary {
+  padding: 0.75rem 1.25rem;
+  border: 2px solid rgba(var(--color-foreground), 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.btn-secondary {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+
+.btn-secondary:hover {
+  background: rgba(var(--color-foreground), 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(var(--color-foreground), 0.25);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-tertiary {
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  border-color: rgba(var(--color-foreground), 0.3);
+}
+
+.btn-tertiary:hover {
+  background: rgba(var(--color-foreground), 0.05);
+  border-color: rgba(var(--color-foreground), 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-tertiary:active {
+  transform: translateY(0);
+}
+
+/* === COLOR AVAILABILITY NOTE === */
+.color-availability-note {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(var(--color-foreground), 0.03);
+  border-radius: 8px;
+  border-left: 4px solid rgba(var(--color-foreground), 0.3);
+}
+
+.color-availability-note small {
+  color: rgba(var(--color-foreground), 0.7);
+  font-size: 0.8rem;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* === SMART VISIBILITY STATES === */
+
+/* Hidden state for non-clothing products */
+.enhanced-color-picker.hidden-for-product-type {
+  display: none;
+}
+
+/* Loading state */
+.enhanced-color-picker.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.enhanced-color-picker.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--color-background), 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media screen and (max-width: 479px) {
+  .enhanced-color-picker {
+    margin: 1rem 0 1.5rem 0;
+  }
+  
+  .color-picker-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .productcolors.enhanced {
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  
+  .color-option {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .color-label {
+    font-size: 0.7rem;
+  }
+  
+  .custom-color-input {
+    padding: 1rem;
+  }
+  
+  .custom-color-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .custom-color-field {
+    width: 100%;
+    max-width: 120px;
+    align-self: center;
+  }
+}
+
+/* === ACCESSIBILITY ENHANCEMENTS === */
+@media (prefers-reduced-motion: reduce) {
+  .color-option,
+  .color-option-wrapper,
+  .custom-color-input,
+  .btn-secondary,
+  .btn-tertiary {
+    transition: none;
+  }
+  
+  .color-option.active::after {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .color-option {
+    border-width: 4px;
+  }
+  
+  .color-option:hover,
+  .color-option.active {
+    border-width: 4px;
+  }
+  
+  .custom-color-input {
+    border-width: 2px;
+  }
+  
+  .btn-secondary,
+  .btn-tertiary {
+    border-width: 3px;
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+.color-option:focus-visible {
+  outline: 3px solid rgb(var(--color-foreground));
+  outline-offset: 3px;
+}
+
+.custom-color-field:focus-visible,
+.btn-secondary:focus-visible,
+.btn-tertiary:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 2px;
+}
+
+/* === ANIMATION ENHANCEMENTS === */
+.color-option-wrapper.fade-in {
+  animation: colorSwatchAppear 0.4s ease forwards;
+}
+
+@keyframes colorSwatchAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hover ripple effect */
+.color-option::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(var(--color-foreground), 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.color-option:hover::before {
+  width: 120%;
+  height: 120%;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  .enhanced-color-picker {
+    display: none;
+  }
+}
+
+/* === INTEGRATION WITH THEME VARIABLES === */
+
+/* Ensure compatibility with Dawn theme */
+.enhanced-color-picker {
+  --color-picker-accent: rgb(var(--color-foreground));
+  --color-picker-background: rgb(var(--color-background));
+  --color-picker-border: rgba(var(--color-foreground), 0.15);
+  --color-picker-hover: rgba(var(--color-foreground), 0.05);
+}
+
+/* Dark mode support (if theme supports it) */
+@media (prefers-color-scheme: dark) {
+  .enhanced-color-picker {
+    --color-picker-border: rgba(var(--color-foreground), 0.2);
+    --color-picker-hover: rgba(var(--color-foreground), 0.08);
+  }
+  
+  .color-option {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .color-option:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+  
+  .color-option.active {
+    box-shadow: 
+      0 0 0 2px rgb(var(--color-background)), 
+      0 0 0 4px rgb(var(--color-foreground)),
+      0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
