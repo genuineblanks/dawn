@@ -31,7 +31,7 @@
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
-            "picker_type": "dropdown",
+            "picker_type": "button",
             "swatch_shape": "circle",
             "enable_color_swatch": true
           }
@@ -52,43 +52,6 @@
           "disabled": true,
           "settings": {}
         },
-        "interactive_product_info": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "{% render 'interactive-product-info', product: product %}"
-          }
-        },
-        "collapsible_tab_xzagHp": {
-          "type": "collapsible_tab",
-          "disabled": true,
-          "settings": {
-            "heading": "Size Guide",
-            "icon": "none",
-            "content": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_RdtRrw": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Need Help?",
-            "icon": "none",
-            "content": "<p>Please check our Help center and if you do not find the answer to your questions, please contact support@genuineblanks.com</p>",
-            "page": "",
-            "wholesale_user_text": false
-          }
-        },
-        "collapsible_tab_CQiEze": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "How to add your design to the garment?",
-            "icon": "none",
-            "content": "",
-            "page": "",
-            "wholesale_user_text": true
-          }
-        },
         "share": {
           "type": "share",
           "disabled": true,
@@ -99,32 +62,28 @@
       },
       "block_order": [
         "vendor",
-        "title",
+        "title", 
         "price",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
         "description",
-        "interactive_product_info",
-        "collapsible_tab_xzagHp",
-        "collapsible_tab_RdtRrw",
-        "collapsible_tab_CQiEze",
         "share"
       ],
       "settings": {
         "enable_sticky_info": true,
-        "color_scheme": "scheme-652c96bc-fca1-4591-b568-62d1174dd73d",
-        "media_size": "medium",
+        "color_scheme": "scheme-1",
+        "media_size": "large",
         "constrain_to_viewport": true,
         "media_fit": "cover",
-        "gallery_layout": "thumbnail_slider",
+        "gallery_layout": "stacked",
         "media_position": "left",
-        "image_zoom": "lightbox",
+        "image_zoom": "none",
         "mobile_thumbnails": "hide",
-        "hide_variants": true,
+        "hide_variants": false,
         "enable_video_looping": false,
-        "padding_top": 52,
-        "padding_bottom": 52
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "related-products": {
