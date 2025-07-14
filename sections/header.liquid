@@ -25,11 +25,8 @@
 <noscript>{{ 'component-cart-notification.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}</noscript>
 
-<!-- FUTURISTIC HEADER CSS -->
-{{ 'futuristic-header.css' | asset_url | stylesheet_tag }}
-
 <style>
-  /* ===== FUTURISTIC HEADER SYSTEM ===== */
+  /* ===== MODERN HEADER STYLING ===== */
   :root {
     --header-bg: rgba(255, 255, 255, 0.95);
     --header-text: #000000;
@@ -40,12 +37,7 @@
     --header-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
   }
 
-  .futuristic-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+  .header-wrapper {
     background: var(--header-bg);
     backdrop-filter: var(--header-backdrop);
     -webkit-backdrop-filter: var(--header-backdrop);
@@ -54,47 +46,34 @@
     box-shadow: var(--header-shadow);
   }
 
-  .futuristic-header.scrolled {
+  .header-wrapper.scrolled {
     background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 2px 30px rgba(0, 0, 0, 0.12);
   }
 
-  .futuristic-header-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
+  .header {
+    position: relative;
+    z-index: 10;
   }
 
-  .futuristic-logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--header-text);
-    text-decoration: none;
-    letter-spacing: 0.02em;
+  .header__heading-logo {
     transition: var(--header-transition);
   }
 
-  .futuristic-logo:hover {
+  .header__heading-link:hover {
     opacity: 0.7;
   }
 
-  .futuristic-nav {
-    display: none;
-    align-items: center;
-    gap: 3rem;
+  .header__icon {
+    transition: var(--header-transition);
   }
 
-  @media screen and (min-width: 1024px) {
-    .futuristic-nav {
-      display: flex;
-    }
+  .header__icon:hover {
+    opacity: 0.7;
+    transform: scale(1.1);
   }
 
-  .futuristic-nav-link {
+  .list-menu__item--link {
     position: relative;
     color: var(--header-text);
     text-decoration: none;
@@ -103,10 +82,9 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     transition: var(--header-transition);
-    padding: 1rem 0;
   }
 
-  .futuristic-nav-link::after {
+  .list-menu__item--link::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -117,76 +95,14 @@
     transition: width 0.3s ease;
   }
 
-  .futuristic-nav-link:hover {
+  .list-menu__item--link:hover {
     color: var(--header-accent);
   }
 
-  .futuristic-nav-link:hover::after {
+  .list-menu__item--link:hover::after {
     width: 100%;
   }
 
-  .futuristic-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .futuristic-icon {
-    position: relative;
-    width: 24px;
-    height: 24px;
-    color: var(--header-text);
-    text-decoration: none;
-    transition: var(--header-transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .futuristic-icon:hover {
-    opacity: 0.7;
-    transform: scale(1.1);
-  }
-
-  .cart-count-bubble {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--header-text);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-  }
-
-  .mobile-menu-trigger {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: var(--header-transition);
-  }
-
-  @media screen and (min-width: 1024px) {
-    .mobile-menu-trigger {
-      display: none;
-    }
-  }
-
-  .mobile-menu-trigger:hover {
-    opacity: 0.7;
-  }
-
-  /* Legacy compatibility */
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
@@ -208,11 +124,6 @@
 
   .menu-drawer-container {
     display: flex;
-  }
-
-  /* Add top padding to body to account for fixed header */
-  body {
-    padding-top: 70px;
   }
 </style>
 
@@ -308,87 +219,7 @@
   endfor
 -%}
 
-<!-- ===== FUTURISTIC HEADER ===== -->
-<header class="futuristic-header" id="futuristicHeader">
-  <div class="futuristic-header-container">
-    <!-- Logo -->
-    <div class="futuristic-brand">
-      {%- if request.page_type == 'index' -%}
-        <h1 class="futuristic-logo-wrapper">
-      {%- endif -%}
-          <a href="{{ routes.root_url }}" class="futuristic-logo">
-            {%- if settings.logo != blank -%}
-              {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
-              {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
-              {{ settings.logo | image_url: width: 200 | image_tag:
-                alt: logo_alt,
-                style: 'height: 30px; width: auto;'
-              }}
-            {%- else -%}
-              {{ shop.name }}
-            {%- endif -%}
-          </a>
-      {%- if request.page_type == 'index' -%}
-        </h1>
-      {%- endif -%}
-    </div>
-
-    <!-- Navigation -->
-    <nav class="futuristic-nav">
-      {%- if section.settings.menu != blank -%}
-        {%- for link in linklists[section.settings.menu].links -%}
-          <a href="{{ link.url }}" class="futuristic-nav-link">{{ link.title }}</a>
-        {%- endfor -%}
-      {%- else -%}
-        <!-- Default navigation if no menu is set -->
-        <a href="/collections/jacket" class="futuristic-nav-link">JACKET</a>
-        <a href="/collections/hoodie" class="futuristic-nav-link">HOODIE</a>
-        <a href="/collections/sweatshirt" class="futuristic-nav-link">SWEATSHIRT</a>
-        <a href="/collections/t-shirts" class="futuristic-nav-link">T-SHIRT</a>
-        <a href="/collections/sweatpants" class="futuristic-nav-link">SWEATPANTS</a>
-        <a href="/collections/accessories" class="futuristic-nav-link">ACCESSORIES</a>
-        <a href="/pages/design" class="futuristic-nav-link">DESIGN</a>
-      {%- endif -%}
-    </nav>
-
-    <!-- Actions -->
-    <div class="futuristic-actions">
-      <!-- Search -->
-      {% render 'header-search', input_id: 'Search-In-Modal-Futuristic' %}
-      
-      <!-- Account -->
-      {%- if shop.customer_accounts_enabled -%}
-        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="futuristic-icon">
-          {% render 'icon-account' %}
-        </a>
-      {%- endif -%}
-
-      <!-- Cart -->
-      <a href="{{ routes.cart_url }}" class="futuristic-icon" id="futuristic-cart-icon">
-        {%- if cart == empty -%}
-          {% render 'icon-cart-empty' %}
-        {%- else -%}
-          {% render 'icon-cart' %}
-          <div class="cart-count-bubble">
-            <span aria-hidden="true">{{ cart.item_count }}</span>
-          </div>
-        {%- endif -%}
-      </a>
-
-      <!-- Mobile Menu Trigger -->
-      <button class="mobile-menu-trigger" aria-label="Open menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- ===== LEGACY HEADER (HIDDEN) ===== -->
-<{% if section.settings.sticky_header_type != 'none' %}sticky-header data-sticky-type="{{ section.settings.sticky_header_type }}"{% else %}div{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}" style="display: none;">
+<{% if section.settings.sticky_header_type != 'none' %}sticky-header data-sticky-type="{{ section.settings.sticky_header_type }}"{% else %}div{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
   {%- liquid
     assign social_links = false
     assign localization_forms = false
@@ -707,12 +538,11 @@
 
   customElements.define('sticky-header', StickyHeader);
 
-  // ===== FUTURISTIC HEADER FUNCTIONALITY =====
+  // ===== MODERN HEADER FUNCTIONALITY =====
   document.addEventListener('DOMContentLoaded', function() {
-    const futuristicHeader = document.getElementById('futuristicHeader');
-    const mobileMenuTrigger = document.querySelector('.mobile-menu-trigger');
+    const headerWrapper = document.querySelector('.header-wrapper');
     
-    if (!futuristicHeader) return;
+    if (!headerWrapper) return;
 
     // Scroll effect for header
     let lastScrollTop = 0;
@@ -723,47 +553,13 @@
       
       // Add scrolled class when scrolling down
       if (scrollTop > scrollThreshold) {
-        futuristicHeader.classList.add('scrolled');
+        headerWrapper.classList.add('scrolled');
       } else {
-        futuristicHeader.classList.remove('scrolled');
+        headerWrapper.classList.remove('scrolled');
       }
 
       lastScrollTop = scrollTop;
     });
-
-    // Mobile menu functionality (if you want to add a mobile menu later)
-    if (mobileMenuTrigger) {
-      mobileMenuTrigger.addEventListener('click', function() {
-        // Toggle mobile menu - can be implemented later
-        console.log('Mobile menu clicked');
-      });
-    }
-
-    // Cart icon update functionality
-    const cartIcon = document.getElementById('futuristic-cart-icon');
-    if (cartIcon) {
-      // Listen for cart updates
-      document.addEventListener('cart:updated', function(event) {
-        // Update cart icon when cart is updated
-        const cartCount = event.detail.cart.item_count;
-        const bubble = cartIcon.querySelector('.cart-count-bubble');
-        
-        if (cartCount > 0) {
-          if (!bubble) {
-            const newBubble = document.createElement('div');
-            newBubble.className = 'cart-count-bubble';
-            newBubble.innerHTML = '<span aria-hidden="true">' + cartCount + '</span>';
-            cartIcon.appendChild(newBubble);
-          } else {
-            bubble.querySelector('span').textContent = cartCount;
-          }
-        } else {
-          if (bubble) {
-            bubble.remove();
-          }
-        }
-      });
-    }
   });
 {% endjavascript %}
 
