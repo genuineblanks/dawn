@@ -9,15 +9,44 @@
   Usage:
   {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
 {% endcomment %}
+
+{%- liquid
+  # Smart product type detection for color picker visibility
+  assign show_color_picker = false
+  assign is_clothing_product = false
+  
+  # Check if this is a clothing product that should show color picker
+  if product.type == 'Jacket' or product.type == 'Hoodie' or product.type == 'Sweatshirt' or product.type == 'T-Shirt' or product.type == 'Sweatpants' or product.type == 'Clothing'
+    assign is_clothing_product = true
+    assign show_color_picker = true
+  endif
+  
+  # Also check tags for clothing indicators
+  if product.tags contains 'clothing' or product.tags contains 'apparel' or product.tags contains 'garment'
+    assign is_clothing_product = true
+    assign show_color_picker = true
+  endif
+  
+  # Hide color picker for services and accessories
+  if product.type == 'Design' or product.type == 'Accessories' or product.type == 'Service'
+    assign show_color_picker = false
+  endif
+  
+  if product.tags contains 'design-services' or product.tags contains 'accessories' or product.tags contains 'service'
+    assign show_color_picker = false
+  endif
+-%}
+
+{% if show_color_picker %}
 {% assign productdata = product.metafields.custom.color_products.value  %}
 {% assign currentcolor = product.metafields.custom.product_color %}
 
 <div class="enhanced-color-picker">
-  <h4 class="color-picker-title">{{ 'products.product.color' | t | default: 'Color' }}</h4>
+  <h4 class="color-picker-title">{{ 'products.product.color' | t | default: 'COLORS' }}</h4>
   
-  {% comment %} Color map for labels {% endcomment %}
-  {% assign color_labels = 'Black,White,Grey Fade-out,Blue,Brown,Purple' | split: ',' %}
-  {% assign color_codes = '#000000,#FFFFFF,#808080,#0066CC,#8B4513,#800080' | split: ',' %}
+  {% comment %} Complete color palette for GenuineBlanks {% endcomment %}
+  {% assign color_labels = 'Black,White,Grey Fade-out,Blue,Brown,Purple,Custom' | split: ',' %}
+  {% assign color_codes = '#000000,#FFFFFF,#808080,#4A90E2,#8B4513,#800080,gradient' | split: ',' %}
   
   <ul class="productcolors enhanced">
     <li class="color-option-wrapper">
@@ -65,10 +94,17 @@
     </div>
   {% endif %}
 </div>
- <div class="select-color hide" >    
-    <label for="favcolor">Select your favorite color:</label>
-    <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+  <!-- Custom Color Input Panel -->
+  <div class="custom-color-input hide" id="custom-color-input">    
+    <label for="custom-color-picker" class="custom-color-label">Select your custom color:</label>
+    <div class="custom-color-controls">
+      <input type="color" id="custom-color-picker" name="custom_color" value="#ff0000" class="custom-color-field">
+      <button type="button" class="apply-custom-color btn-secondary">Apply Color</button>
+      <button type="button" class="cancel-custom-color btn-tertiary">Cancel</button>
+    </div>
   </div>
+{% endif %}
+
 {%- unless product.has_only_default_variant -%}
   <variant-selects
     id="variant-selects-{{ section.id }}"
@@ -161,6 +197,82 @@
      
   </variant-selects>
 {%- endunless -%}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Enhanced Color Picker Functionality
+  const customColorButton = document.querySelector('.custom-color');
+  const customColorInput = document.getElementById('custom-color-input');
+  const customColorPicker = document.getElementById('custom-color-picker');
+  const applyButton = document.querySelector('.apply-custom-color');
+  const cancelButton = document.querySelector('.cancel-custom-color');
+
+  // Show custom color input when custom color is clicked
+  if (customColorButton) {
+    customColorButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      customColorInput.classList.remove('hide');
+      customColorInput.classList.add('show');
+    });
+  }
+
+  // Apply custom color
+  if (applyButton) {
+    applyButton.addEventListener('click', function() {
+      const selectedColor = customColorPicker.value;
+      
+      // Update the custom color button background
+      if (customColorButton) {
+        customColorButton.style.background = selectedColor;
+        customColorButton.setAttribute('data-color-name', 'Custom: ' + selectedColor);
+        customColorButton.setAttribute('title', 'Custom: ' + selectedColor);
+      }
+      
+      // Hide the input panel
+      customColorInput.classList.remove('show');
+      customColorInput.classList.add('hide');
+      
+      // Mark custom color as active
+      document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+      document.querySelectorAll('.color-label').forEach(label => label.classList.remove('active'));
+      
+      if (customColorButton) {
+        customColorButton.classList.add('active');
+        const customLabel = customColorButton.parentNode.querySelector('.color-label');
+        if (customLabel) customLabel.classList.add('active');
+      }
+    });
+  }
+
+  // Cancel custom color selection
+  if (cancelButton) {
+    cancelButton.addEventListener('click', function() {
+      customColorInput.classList.remove('show');
+      customColorInput.classList.add('hide');
+    });
+  }
+
+  // Color option selection
+  document.querySelectorAll('.color-option').forEach(colorOption => {
+    colorOption.addEventListener('click', function(e) {
+      // Remove active state from all options
+      document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+      document.querySelectorAll('.color-label').forEach(label => label.classList.remove('active'));
+      
+      // Add active state to clicked option
+      this.classList.add('active');
+      const label = this.parentNode.querySelector('.color-label');
+      if (label) label.classList.add('active');
+      
+      // Hide custom color input if it's open
+      if (customColorInput && !this.classList.contains('custom-color')) {
+        customColorInput.classList.remove('show');
+        customColorInput.classList.add('hide');
+      }
+    });
+  });
+});
+</script>
 
 <noscript class="product-form__noscript-wrapper-{{ section.id }}">
   <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
