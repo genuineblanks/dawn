@@ -56,27 +56,46 @@
 }
 
 /* Enhanced product grid - Compatible with Shopify grid system */
-.related-products .grid {
+.related-products .grid,
+.related-products .product-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 2rem;
   margin-bottom: 2rem;
   padding: 0;
+  width: 100% !important;
+  /* Force grid layout over any flex/column layouts */
+  flex-direction: unset !important;
 }
 
-/* Mobile responsive */
-@media screen and (max-width: 749px) {
-  .related-products .grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem;
+/* Tablet responsive - MUST come before mobile to avoid override */
+@media screen and (min-width: 750px) and (max-width: 990px) {
+  .related-products .grid,
+  .related-products .product-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem;
   }
 }
 
-/* Tablet responsive */
-@media screen and (max-width: 990px) {
-  .related-products .grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 1.5rem;
+/* Mobile responsive - More specific and stronger */
+@media screen and (max-width: 749px) {
+  .related-products .grid,
+  .related-products .product-grid,
+  .related-products .grid--2-col-tablet-down {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+    width: 100% !important;
+    /* Override any vertical/column layouts */
+    flex-direction: unset !important;
+    grid-auto-flow: row !important;
+  }
+  
+  /* Ensure grid items are properly sized */
+  .related-products .grid__item {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: block !important;
   }
 }
 
