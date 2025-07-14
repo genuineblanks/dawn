@@ -140,8 +140,12 @@ function handleTouchMove(e) {
     hasMoved = true;
   }
   
-  // FIXED: No preventDefault needed - passive events allow native scrolling
-  // Just track movement for section navigation detection
+  // CRITICAL: Prevent default scroll for large vertical gestures that should trigger section navigation
+  const minSectionSwipeDistance = 25; // Must match the threshold in handleTouchEnd
+  if (deltaY > minSectionSwipeDistance && deltaY > deltaX * 1.5) {
+    // This looks like a section navigation gesture - prevent browser scroll
+    e.preventDefault();
+  }
 }
 
 function handleTouchEnd(e) {
@@ -202,6 +206,8 @@ function handleTouchEnd(e) {
     }
     
     if (targetSection !== scrollSystem.currentSection) {
+      // CRITICAL: Prevent browser default scroll when executing section navigation
+      e.preventDefault();
       goToSection(targetSection);
     } else {
       isSwipeInProgress = false;
@@ -1115,16 +1121,16 @@ function initializeScrollSystem() {
         document.documentElement.style.webkitOverflowScrolling = 'touch';
       }
       
-      // FIXED: Completely passive touch events - no interference with native scrolling
+      // FIXED: Non-passive touch events to allow preventDefault for section navigation
       const touchOptions = { 
-        passive: true, 
+        passive: false, 
         capture: false,
         once: false
       };
       
-      // CRITICAL: Make touchmove passive too to avoid blocking scrolling
+      // CRITICAL: Non-passive touchmove to prevent default scroll during section navigation
       const touchMoveOptions = { 
-        passive: true, 
+        passive: false, 
         capture: false,
         once: false
       };
