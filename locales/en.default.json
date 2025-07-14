@@ -187,7 +187,16 @@
       "design_service_note": "Final design may vary based on your requirements",
       "view_size_guide": "View Size Guide",
       "color": "Color",
-      "color_availability": "Available colors for this product"
+      "color_availability": "Available colors for this product",
+      "size": "Size",
+      "size_guide": "Size Guide",
+      "size_specifications": "Size and dimension specifications",
+      "size_small": "Small: 2cm x 5cm",
+      "size_medium": "Medium: 3cm x 7cm",
+      "size_large": "Large: 4cm x 10cm",
+      "size_custom": "Custom: Any size up to 15cm x 15cm",
+      "size_dimensions": "Size/Dimensions",
+      "size_placeholder": "e.g., 5cm x 2cm"
     },
     "modal": {
       "label": "Media gallery"
