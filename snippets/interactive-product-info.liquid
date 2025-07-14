@@ -1,75 +1,98 @@
 {% comment %}
-  Interactive Product Information Component
-  Renders enhanced product information tabs with size guides and interactive elements
-  Now supports hybrid purchase logic for accessories and design services
-
+  Interactive Product Information Component - Futuristic Accordion System
+  Replaces tabs with smooth accordion system for DETAILS, SIZE GUIDE, and SHIPPING sections
+  
   Accepts:
   - product: {Object} product object
+  - is_clothing: {Boolean} whether this is a clothing product
+  - is_design_service: {Boolean} whether this is a design service
+  - is_accessories: {Boolean} whether this is an accessories product
+  
+  Usage:
+  {% render 'interactive-product-info', product: product, is_clothing: is_clothing, is_design_service: is_design_service, is_accessories: is_accessories %}
 {% endcomment %}
 
-{%- liquid
-  assign is_accessories = false
-  assign is_design = false
-  assign is_regular_product = true
+<div class="futuristic-product-accordions" data-section-type="product-accordions">
   
-  # Check if product is accessories
-  if product.type == 'Accessories' or product.tags contains 'accessories' or product.tags contains 'labels' or product.tags contains 'hang-tags' or product.tags contains 'custom-available'
-    assign is_accessories = true
-    assign is_regular_product = false
-  endif
-  
-  # Check if product is design services
-  if product.type == 'Design' or product.tags contains 'design-services' or product.tags contains 'branding' or product.tags contains 'logo-design'
-    assign is_design = true
-    assign is_regular_product = false
-  endif
--%}
-
-{% if is_accessories %}
-  <!-- Render Accessories Service Info with Hybrid Purchase Logic -->
-  {% render 'service-info-accessories', product: product %}
-{% elsif is_design %}
-  <!-- Render Design Services Info with Hybrid Purchase Logic -->
-  {% render 'service-info-design', product: product %}
-{% else %}
-  <!-- Render Regular Product Interactive Info -->
-  <div class="interactive-product-info">
-
-  <!-- Interactive Information Tabs -->
-  <div class="info-tabs-section">
-    <div class="tabs-nav">
-      <button class="tab-button active" data-tab="size-guide">
-        <span class="tab-icon">📏</span>
-        Size Guide
-      </button>
-      <button class="tab-button" data-tab="shipping">
-        <span class="tab-icon">🚚</span>
-        Shipping & Returns
-      </button>
-      <button class="tab-button" data-tab="design-help">
-        <span class="tab-icon">🎨</span>
-        Design Help
-      </button>
-      <button class="tab-button" data-tab="custom-design">
-        <span class="tab-icon">📤</span>
-        Upload Design
-      </button>
+  <!-- DETAILS Accordion -->
+  <div class="accordion-item" data-accordion="details">
+    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false" aria-controls="accordion-details-content">
+      <h3 class="accordion-title">
+        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M9 11H15M9 15H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L19.7071 9.70711C19.8946 9.89464 20 10.149 20 10.4142V19C20 20.1046 19.1054 21 18 21H17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        DETAILS
+      </h3>
+      <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
+    <div class="accordion-content" id="accordion-details-content" aria-hidden="true">
+      <div class="accordion-body">
+        {% if product.description != blank %}
+          <div class="product-description">
+            {{ product.description }}
+          </div>
+        {% else %}
+          <div class="product-description">
+            <p>{{ 'products.product.description_placeholder' | t | default: 'Discover the perfect blend of style and comfort with this premium quality product.' }}</p>
+          </div>
+        {% endif %}
+        
+        {% if product.metafields.custom.features.value %}
+          <div class="product-features">
+            <h4>Key Features:</h4>
+            <ul class="features-list">
+              {% for feature in product.metafields.custom.features.value %}
+                <li>{{ feature }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        
+        {% if product.metafields.custom.care_instructions.value %}
+          <div class="care-instructions">
+            <h4>Care Instructions:</h4>
+            <div class="care-content">
+              {{ product.metafields.custom.care_instructions.value }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
-    <div class="tabs-content">
-      <!-- Size Guide Tab -->
-      <div class="tab-content active" id="size-guide">
+  <!-- SIZE GUIDE Accordion (Only for clothing) -->
+  {% if is_clothing %}
+  <div class="accordion-item" data-accordion="size-guide">
+    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false" aria-controls="accordion-size-content">
+      <h3 class="accordion-title">
+        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21L16.514 16.506M18.485 10.485C18.485 15.054 14.727 18.727 10.243 18.727C5.759 18.727 2 15.054 2 10.485C2 5.915 5.759 2.242 10.243 2.242C14.727 2.242 18.485 5.915 18.485 10.485Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        SIZE GUIDE
+      </h3>
+      <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="accordion-content" id="accordion-size-content" aria-hidden="true">
+      <div class="accordion-body">
         <div class="size-guide-container">
-          <h4>Size Chart</h4>
-          <div class="size-chart-interactive">
-            <div class="size-measurement-tool">
-              <label for="height-input">Your Height (cm):</label>
-              <input type="number" id="height-input" placeholder="170" min="140" max="220">
+          <div class="size-measurement-tool">
+            <h4>Find Your Perfect Fit</h4>
+            <div class="measurement-inputs">
+              <div class="input-group">
+                <label for="height-input">Height (cm):</label>
+                <input type="number" id="height-input" placeholder="170" min="140" max="220" class="measurement-input">
+              </div>
               
-              <label for="weight-input">Your Weight (kg):</label>
-              <input type="number" id="weight-input" placeholder="70" min="40" max="150">
+              <div class="input-group">
+                <label for="weight-input">Weight (kg):</label>
+                <input type="number" id="weight-input" placeholder="70" min="40" max="150" class="measurement-input">
+              </div>
               
-              <button type="button" class="size-recommend-btn">Get Size Recommendation</button>
+              <button type="button" class="size-recommend-btn futuristic-btn">Get Size Recommendation</button>
             </div>
             
             <div class="size-recommendation" id="size-recommendation" style="display: none;">
@@ -78,127 +101,294 @@
                 <span class="confidence-level">90% match</span>
               </div>
             </div>
-            
-            <table class="size-chart-table">
-              <thead>
-                <tr>
-                  <th>Size</th>
-                  <th>Chest (cm)</th>
-                  <th>Length (cm)</th>
-                  <th>Shoulder (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr data-size="XS">
-                  <td data-label="Size">XS</td>
-                  <td data-label="Chest">86-91</td>
-                  <td data-label="Length">66</td>
-                  <td data-label="Shoulder">41</td>
-                </tr>
-                <tr data-size="S">
-                  <td data-label="Size">S</td>
-                  <td data-label="Chest">91-96</td>
-                  <td data-label="Length">69</td>
-                  <td data-label="Shoulder">43</td>
-                </tr>
-                <tr data-size="M">
-                  <td data-label="Size">M</td>
-                  <td data-label="Chest">96-101</td>
-                  <td data-label="Length">72</td>
-                  <td data-label="Shoulder">45</td>
-                </tr>
-                <tr data-size="L">
-                  <td data-label="Size">L</td>
-                  <td data-label="Chest">101-106</td>
-                  <td data-label="Length">75</td>
-                  <td data-label="Shoulder">47</td>
-                </tr>
-                <tr data-size="XL">
-                  <td data-label="Size">XL</td>
-                  <td data-label="Chest">106-111</td>
-                  <td data-label="Length">78</td>
-                  <td data-label="Shoulder">49</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Shipping Tab -->
-      <div class="tab-content" id="shipping">
-        <div class="shipping-info">
-          <h4>Shipping Information</h4>
-          <div class="shipping-methods">
-            <div class="shipping-method">
-              <strong>Standard Shipping (3-7 business days)</strong>
-              <p>Free on orders over $50</p>
-            </div>
-            <div class="shipping-method">
-              <strong>Express Shipping (1-3 business days)</strong>
-              <p>$15 - Available for urgent orders</p>
-            </div>
           </div>
           
-          <h4>Returns & Exchanges</h4>
-          <ul>
-            <li>30-day return policy</li>
-            <li>Free returns on defective items</li>
-            <li>Custom designs are final sale</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Design Help Tab -->
-      <div class="tab-content" id="design-help">
-        <div class="design-help-content">
-          <h4>Need Design Help?</h4>
-          <p>Our design team is here to help you create the perfect custom product.</p>
-          
-          <div class="help-options">
-            <div class="help-option">
-              <h5>Design Consultation</h5>
-              <p>Schedule a free 15-minute consultation with our design team</p>
-              <button class="consultation-btn">Book Consultation</button>
+          <div class="size-chart-wrapper">
+            <h4>Size Chart</h4>
+            <div class="size-chart-table-wrapper">
+              <table class="size-chart-table">
+                <thead>
+                  <tr>
+                    <th>Size</th>
+                    <th>Chest (cm)</th>
+                    <th>Length (cm)</th>
+                    <th>Shoulder (cm)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-size="XS">
+                    <td data-label="Size">XS</td>
+                    <td data-label="Chest">86-91</td>
+                    <td data-label="Length">66</td>
+                    <td data-label="Shoulder">41</td>
+                  </tr>
+                  <tr data-size="S">
+                    <td data-label="Size">S</td>
+                    <td data-label="Chest">91-96</td>
+                    <td data-label="Length">69</td>
+                    <td data-label="Shoulder">43</td>
+                  </tr>
+                  <tr data-size="M">
+                    <td data-label="Size">M</td>
+                    <td data-label="Chest">96-101</td>
+                    <td data-label="Length">72</td>
+                    <td data-label="Shoulder">45</td>
+                  </tr>
+                  <tr data-size="L">
+                    <td data-label="Size">L</td>
+                    <td data-label="Chest">101-106</td>
+                    <td data-label="Length">75</td>
+                    <td data-label="Shoulder">47</td>
+                  </tr>
+                  <tr data-size="XL">
+                    <td data-label="Size">XL</td>
+                    <td data-label="Chest">106-111</td>
+                    <td data-label="Length">78</td>
+                    <td data-label="Shoulder">49</td>
+                  </tr>
+                  <tr data-size="XXL">
+                    <td data-label="Size">XXL</td>
+                    <td data-label="Chest">111-116</td>
+                    <td data-label="Length">81</td>
+                    <td data-label="Shoulder">51</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            
-            <div class="help-option">
-              <h5>Design Templates</h5>
-              <p>Browse our library of pre-made design templates</p>
-              <button class="templates-btn">View Templates</button>
-            </div>
-          </div>
-          
-          <div class="contact-support">
-            <p>Have questions? Contact us at <a href="mailto:support@genuineblanks.com">support@genuineblanks.com</a></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Custom Design Upload Tab -->
-      <div class="tab-content" id="custom-design">
-        <div class="design-upload-area">
-          <h4>Upload Your Design</h4>
-          <div class="upload-dropzone" id="design-dropzone">
-            <div class="upload-content">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <p>Drag and drop your design files here, or <span class="upload-link">browse files</span></p>
-              <small>Supported formats: PNG, JPG, AI, EPS, PDF (Max 10MB)</small>
-            </div>
-            <input type="file" id="design-file-input" multiple accept=".png,.jpg,.jpeg,.ai,.eps,.pdf" style="display: none;">
-          </div>
-          
-          <div class="uploaded-files" id="uploaded-files" style="display: none;">
-            <h5>Uploaded Files:</h5>
-            <div class="file-list"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  {% endif %}
+
+  <!-- SHIPPING Accordion -->
+  <div class="accordion-item" data-accordion="shipping">
+    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false" aria-controls="accordion-shipping-content">
+      <h3 class="accordion-title">
+        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M16 3H5C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V16C3 16.5304 3.21071 17.0391 3.58579 17.4142C3.96086 17.7893 4.46957 18 5 18H16M16 3C16.5304 3 17.0391 3.21071 17.4142 3.58579C17.7893 3.96086 18 4.46957 18 5V11M16 3V5H18M18 11H20.5C20.7652 11 21 11.2348 21 11.5V16.5C21 16.7652 20.7652 17 20.5 17H18C18 15.8954 17.1046 15 16 15C14.8954 15 14 15.8954 14 17H9C9 15.8954 8.10457 15 7 15C5.89543 15 5 15.8954 5 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="7" cy="17" r="2" stroke="currentColor" stroke-width="2"/>
+          <circle cx="16" cy="17" r="2" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        SHIPPING
+      </h3>
+      <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="accordion-content" id="accordion-shipping-content" aria-hidden="true">
+      <div class="accordion-body">
+        <div class="shipping-info">
+          <div class="shipping-methods">
+            <div class="shipping-method">
+              <div class="method-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="method-info">
+                  <strong>Standard Shipping</strong>
+                  <span class="delivery-time">3-7 business days</span>
+                </div>
+              </div>
+              <p class="method-description">{{ 'products.product.shipping_standard' | t | default: 'Free on orders over $50' }}</p>
+            </div>
+            
+            <div class="shipping-method">
+              <div class="method-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="method-info">
+                  <strong>Express Shipping</strong>
+                  <span class="delivery-time">1-3 business days</span>
+                </div>
+              </div>
+              <p class="method-description">{{ 'products.product.shipping_express' | t | default: '$15 - Available for urgent orders' }}</p>
+            </div>
+          </div>
+          
+          <div class="returns-policy">
+            <h4>Returns & Exchanges</h4>
+            <ul class="policy-list">
+              <li>{{ 'products.product.return_policy_1' | t | default: '30-day return policy' }}</li>
+              <li>{{ 'products.product.return_policy_2' | t | default: 'Free returns on defective items' }}</li>
+              {% if is_design_service %}
+                <li>{{ 'products.product.return_policy_custom' | t | default: 'Custom designs are final sale' }}</li>
+              {% endif %}
+              <li>{{ 'products.product.return_policy_3' | t | default: 'Items must be in original condition' }}</li>
+            </ul>
+          </div>
+          
+          {% if shop.metafields.custom.international_shipping.value %}
+          <div class="international-shipping">
+            <h4>International Shipping</h4>
+            <p>{{ shop.metafields.custom.international_shipping.value }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
-{% endif %}
+
+  <!-- Design Services Accordion (Only for design services) -->
+  {% if is_design_service %}
+  <div class="accordion-item" data-accordion="design-services">
+    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false" aria-controls="accordion-design-content">
+      <h3 class="accordion-title">
+        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        DESIGN SERVICES
+      </h3>
+      <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="accordion-content" id="accordion-design-content" aria-hidden="true">
+      <div class="accordion-body">
+        <div class="design-services-info">
+          <div class="service-details">
+            <h4>What's Included</h4>
+            <ul class="service-features">
+              <li>Professional design consultation</li>
+              <li>3 design concepts</li>
+              <li>2 rounds of revisions</li>
+              <li>High-resolution final files</li>
+              <li>Vector formats (AI, EPS)</li>
+            </ul>
+          </div>
+          
+          <div class="timeline">
+            <h4>Timeline</h4>
+            <div class="timeline-steps">
+              <div class="timeline-step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                  <strong>Consultation</strong>
+                  <span>24-48 hours</span>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                  <strong>Initial Concepts</strong>
+                  <span>3-5 business days</span>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                  <strong>Revisions & Final</strong>
+                  <span>2-3 business days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Futuristic Accordion System
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+  
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', function() {
+      const accordionItem = this.closest('.accordion-item');
+      const content = accordionItem.querySelector('.accordion-content');
+      const arrow = this.querySelector('.accordion-arrow');
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      
+      // Close all other accordions
+      accordionHeaders.forEach(otherHeader => {
+        if (otherHeader !== this) {
+          const otherItem = otherHeader.closest('.accordion-item');
+          const otherContent = otherItem.querySelector('.accordion-content');
+          const otherArrow = otherHeader.querySelector('.accordion-arrow');
+          
+          otherHeader.setAttribute('aria-expanded', 'false');
+          otherContent.setAttribute('aria-hidden', 'true');
+          otherContent.style.maxHeight = '0';
+          otherItem.classList.remove('active');
+          otherArrow.style.transform = 'rotate(0deg)';
+        }
+      });
+      
+      // Toggle current accordion
+      if (!isExpanded) {
+        this.setAttribute('aria-expanded', 'true');
+        content.setAttribute('aria-hidden', 'false');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        accordionItem.classList.add('active');
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        this.setAttribute('aria-expanded', 'false');
+        content.setAttribute('aria-hidden', 'true');
+        content.style.maxHeight = '0';
+        accordionItem.classList.remove('active');
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    });
+    
+    // Keyboard accessibility
+    header.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+  
+  // Size recommendation functionality
+  const sizeRecommendBtn = document.querySelector('.size-recommend-btn');
+  const heightInput = document.getElementById('height-input');
+  const weightInput = document.getElementById('weight-input');
+  const sizeRecommendation = document.getElementById('size-recommendation');
+  
+  if (sizeRecommendBtn) {
+    sizeRecommendBtn.addEventListener('click', function() {
+      const height = parseInt(heightInput.value);
+      const weight = parseInt(weightInput.value);
+      
+      if (height && weight) {
+        // Simple size recommendation logic
+        let recommendedSize = 'M';
+        let confidence = 85;
+        
+        if (height < 165 || weight < 60) {
+          recommendedSize = 'S';
+          confidence = 90;
+        } else if (height > 180 || weight > 85) {
+          recommendedSize = 'L';
+          confidence = 88;
+        } else if (height > 185 || weight > 95) {
+          recommendedSize = 'XL';
+          confidence = 92;
+        }
+        
+        const sizeSpan = sizeRecommendation.querySelector('.recommended-size');
+        const confidenceSpan = sizeRecommendation.querySelector('.confidence-level');
+        
+        sizeSpan.textContent = recommendedSize;
+        confidenceSpan.textContent = confidence + '% match';
+        
+        sizeRecommendation.style.display = 'block';
+        
+        // Highlight recommended size in table
+        document.querySelectorAll('.size-chart-table tr').forEach(row => {
+          row.classList.remove('recommended');
+        });
+        document.querySelector(`[data-size="${recommendedSize}"]`).classList.add('recommended');
+      }
+    });
+  }
+});
+</script>
