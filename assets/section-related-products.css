@@ -156,19 +156,109 @@
 /* Mobile optimizations */
 @media (max-width: 749px) {
   .related-products {
-    padding: 3rem 0;
+    padding: 2rem 0;
+    margin: 0 -1rem;
   }
   
   .related-products__heading {
-    font-size: 2rem;
+    font-size: 1.75rem;
     letter-spacing: 0.1em;
+    margin: 0 1rem 2rem;
   }
   
   .related-products .grid {
-    gap: 1.5rem;
+    gap: 1rem;
+    padding: 0 1rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .related-products .card-wrapper {
+    border-radius: 8px;
   }
   
   .related-products .card-wrapper:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .related-products .card__content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .related-products .card__heading {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  
+  .related-products .price {
+    font-size: 1rem;
+  }
+}
+
+/* Fix image sizing issues */
+.related-products .card__media {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* Square aspect ratio */
+  overflow: hidden;
+}
+
+.related-products .card__media .media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.related-products .card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure grid layout works properly */
+.related-products .product-grid {
+  display: grid;
+  width: 100%;
+}
+
+.related-products .grid__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Force proper aspect ratio for product images */
+.related-products .card--media .card__inner {
+  aspect-ratio: 1;
+  height: auto;
+}
+
+.related-products .card__media {
+  height: 100%;
+  width: 100%;
+}
+
+/* Mobile-specific grid fixes */
+@media (max-width: 749px) {
+  .related-products .product-grid.grid--2-col-tablet-down {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  /* Prevent layout breaking */
+  .related-products .card-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Fix content overflow on mobile */
+  .related-products .card__content * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
