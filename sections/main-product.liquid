@@ -131,21 +131,70 @@
           {%- endfor -%}
         </div>
 
-        <!-- Product Form -->
+        <!-- Shopify Product Form with Global Components -->
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
         
         {% if show_hybrid_logic %}
           <!-- Hybrid Purchase Logic for Design Services/Custom -->
           {% render 'hybrid-purchase-logic', product: product %}
         {% else %}
-          <!-- Standard Product Form -->
-          {% render 'product-form', 
-            product: product, 
-            product_form_id: product_form_id, 
-            section_id: section.id,
-            is_clothing: is_clothing,
-            is_design_service: is_design_service,
-            is_accessories: is_accessories %}
+          <!-- Standard Product Form with Shopify Global Components -->
+          <product-form class="product-form" data-hide-errors="{{ product.selected_or_first_available_variant.available }}" data-section-id="{{ section.id }}">
+            <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" id="{{ product_form_id }}" class="form" novalidate="novalidate" data-type="add-to-cart-form">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}" class="product-variant-id">
+              
+              <!-- Render Shopify Blocks: variant_picker, quantity_selector, buy_buttons -->
+              {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                  {%- when 'variant_picker' -%}
+                    <div class="product-form__input-wrapper" {{ block.shopify_attributes }}>
+                      {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+                    </div>
+                    
+                  {%- when 'quantity_selector' -%}
+                    <div class="product-form__input-wrapper quantity-section" {{ block.shopify_attributes }}>
+                      <h4 class="quantity-label">{{ 'products.product.quantity.label' | t | default: 'QUANTITY' }}</h4>
+                      <div class="quantity-wrapper futuristic-quantity">
+                        <quantity-input class="quantity cart-quantity">
+                          <button class="quantity__button no-js-hidden quantity-btn quantity-decrease" name="minus" type="button">
+                            <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                          </button>
+                          <input
+                            class="quantity__input futuristic-input"
+                            type="number"
+                            name="quantity"
+                            id="Quantity-{{ section.id }}"
+                            min="1"
+                            value="1"
+                            form="{{ product_form_id }}"
+                          >
+                          <button class="quantity__button no-js-hidden quantity-btn quantity-increase" name="plus" type="button">
+                            <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <line x1="12" y1="5" x2="12" y2="19"></line>
+                              <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                          </button>
+                        </quantity-input>
+                      </div>
+                    </div>
+                    
+                  {%- when 'buy_buttons' -%}
+                    <div class="product-form__buttons" {{ block.shopify_attributes }}>
+                      {% render 'buy-buttons', 
+                        block: block,
+                        product: product,
+                        product_form_id: product_form_id,
+                        section_id: section.id,
+                        show_pickup_availability: true %}
+                    </div>
+                {%- endcase -%}
+              {%- endfor -%}
+            </form>
+          </product-form>
         {% endif %}
 
         <!-- Interactive Information Accordions -->
@@ -157,21 +206,12 @@
             is_accessories: is_accessories %}
         </div>
 
-        <!-- Additional Blocks -->
+        <!-- Additional Blocks (excluding variant_picker, quantity_selector, buy_buttons - already rendered in form) -->
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when '@app' -%}
               <div class="product-app-block" {{ block.shopify_attributes }}>
                 {% render block %}
-              </div>
-            {%- when 'buy_buttons' -%}
-              <div class="product-buy-buttons" {{ block.shopify_attributes }}>
-                {% render 'buy-buttons', 
-                  block: block,
-                  product: product,
-                  product_form_id: product_form_id,
-                  section_id: section.id,
-                  show_pickup_availability: true %}
               </div>
             {%- when 'share' -%}
               {% unless block.settings.disabled %}
