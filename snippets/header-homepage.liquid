@@ -154,13 +154,13 @@
       assign localization_forms = true
     endif
   -%}
-  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
-      if section.settings.menu != blank
-        render 'header-drawer'
+      if menu != blank
+        render 'header-drawer', menu: menu, section: section
       endif
 
-      if section.settings.logo_position == 'top-center' or section.settings.menu == blank
+      if section.settings.logo_position == 'top-center' or menu == blank
         render 'header-search', input_id: 'Search-In-Modal-1'
       endif
     -%}
@@ -196,11 +196,11 @@
     {%- endif -%}
 
     {%- liquid
-      if section.settings.menu != blank
+      if menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
-          render 'header-dropdown-menu'
+          render 'header-dropdown-menu', menu: menu, section: section
         elsif section.settings.menu_type_desktop != 'drawer'
-          render 'header-mega-menu'
+          render 'header-mega-menu', menu: menu, section: section
         endif
       endif
     %}
