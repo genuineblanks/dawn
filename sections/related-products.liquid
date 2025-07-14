@@ -26,25 +26,99 @@
     data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}"
   >
     {% if recommendations.performed and recommendations.products_count > 0 %}
+      {%- liquid
+        # Smart Category Detection
+        assign is_current_clothing = false
+        assign is_current_accessories = false
+        assign is_current_design_service = false
+        
+        if product.type contains 'Clothing' or product.type contains 'Apparel' or product.type contains 'Shirt' or product.type contains 'Hoodie' or product.type contains 'Sweatshirt'
+          assign is_current_clothing = true
+        elsif product.type contains 'Accessories' or product.type contains 'Design' or product.type contains 'Logo' or product.type contains 'Branding'
+          assign is_current_accessories = true
+        elsif product.type contains 'Service' or product.type contains 'Custom' or product.type contains 'Digitizing'
+          assign is_current_design_service = true
+        endif
+        
+        # Filter recommendations by category
+        assign filtered_recommendations = recommendations.products
+        assign category_products = ''
+        assign category_products_array = filtered_recommendations
+        
+        if is_current_clothing or is_current_accessories or is_current_design_service
+          assign category_products_array = ''
+          for rec_product in recommendations.products
+            assign match = false
+            if is_current_clothing and rec_product.type contains 'Clothing' or rec_product.type contains 'Apparel' or rec_product.type contains 'Shirt' or rec_product.type contains 'Hoodie' or rec_product.type contains 'Sweatshirt'
+              assign match = true
+            elsif is_current_accessories and rec_product.type contains 'Accessories' or rec_product.type contains 'Design' or rec_product.type contains 'Logo' or rec_product.type contains 'Branding'
+              assign match = true
+            elsif is_current_design_service and rec_product.type contains 'Service' or rec_product.type contains 'Custom' or rec_product.type contains 'Digitizing'
+              assign match = true
+            endif
+            
+            if match
+              unless category_products_array contains rec_product
+                assign category_products_array = category_products_array | append: rec_product
+              endunless
+            endif
+          endfor
+        endif
+      -%}
+      
       <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
-        {{ section.settings.heading }}
+        {% if is_current_clothing %}
+          Related Clothing & Apparel
+        {% elsif is_current_accessories %}
+          Related Accessories & Designs  
+        {% elsif is_current_design_service %}
+          Related Design Services
+        {% else %}
+          {{ section.settings.heading }}
+        {% endif %}
       </h2>
+      
       <ul
         class="grid product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
         role="list"
       >
-        {% for recommendation in recommendations.products %}
-          <li class="grid__item">
-            {% render 'card-product',
-              card_product: recommendation,
-              media_aspect_ratio: section.settings.image_ratio,
-              image_shape: section.settings.image_shape,
-              show_secondary_image: section.settings.show_secondary_image,
-              show_vendor: section.settings.show_vendor,
-              show_rating: section.settings.show_rating
-            %}
-          </li>
+        {% assign products_shown = 0 %}
+        {% for recommendation in category_products_array limit: section.settings.products_to_show %}
+          {% if products_shown < section.settings.products_to_show %}
+            <li class="grid__item">
+              {% render 'card-product',
+                card_product: recommendation,
+                media_aspect_ratio: section.settings.image_ratio,
+                image_shape: section.settings.image_shape,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_rating: section.settings.show_rating
+              %}
+            </li>
+            {% assign products_shown = products_shown | plus: 1 %}
+          {% endif %}
         {% endfor %}
+        
+        {% comment %} If not enough category-specific products, show general recommendations {% endcomment %}
+        {% if products_shown < section.settings.products_to_show %}
+          {% for recommendation in recommendations.products %}
+            {% if products_shown < section.settings.products_to_show %}
+              {% unless category_products_array contains recommendation %}
+                <li class="grid__item">
+                  {% render 'card-product',
+                    card_product: recommendation,
+                    media_aspect_ratio: section.settings.image_ratio,
+                    image_shape: section.settings.image_shape,
+                    show_secondary_image: section.settings.show_secondary_image,
+                    show_vendor: section.settings.show_vendor,
+                    show_rating: section.settings.show_rating
+                  %}
+                </li>
+                {% assign products_shown = products_shown | plus: 1 %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
       </ul>
     {% endif %}
   </product-recommendations>
