@@ -55,20 +55,27 @@
   background: linear-gradient(90deg, transparent, #000000, transparent);
 }
 
-/* Enhanced product grid - Override base.css flex with proper CSS Grid */
+/* Enhanced product grid - Compatible with Shopify grid system */
 .related-products .grid {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 2rem;
   margin-bottom: 2rem;
   padding: 0;
-  list-style: none;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 749px) {
+  .related-products .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem;
+  }
 }
 
 /* Tablet responsive */
 @media screen and (max-width: 990px) {
   .related-products .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 1.5rem;
   }
 }
@@ -100,10 +107,27 @@
   left: 100%;
 }
 
+/* Reduced hover effects for better performance and mobile compatibility */
 .related-products .card-wrapper:hover {
-  transform: translateY(-15px) scale(1.03);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Disable hover effects on mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .related-products .card-wrapper:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .related-products .card-wrapper:hover .card__media img {
+    transform: none;
+  }
+  
+  .related-products .card-wrapper::before {
+    display: none;
+  }
 }
 
 /* Enhanced image hover effects */
