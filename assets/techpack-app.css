@@ -78,14 +78,12 @@
   --techpack-space-5xl: 6rem;
 }
 
-/* Base Reset & Typography */
-* {
+/* Base Reset & Typography - SCOPED TO TECHPACK PAGES ONLY */
+.techpack-page * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-body {
+.techpack-page body {
   font-family: var(--techpack-font-family);
   font-size: 16px;
   line-height: 1.5;
@@ -95,6 +93,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "kern" 1, "liga" 1;
 }
+
+/* ===============================================
+   TECHPACK APP STYLES - SCOPED TO TECHPACK PAGES ONLY
+   This prevents conflicts with homepage and other pages
+   =============================================== */
+.techpack-page {
 
 .techpack-container {
   max-width: 1200px;
@@ -4599,8 +4603,9 @@ body {
 /* Improved mobile app positioning and sizing with white space fix */
 @media (max-width: 768px) {
   /* MOBILE SCROLLING FIX: Remove problematic fixed viewport heights */
-  body.techpack-page,
-  html.techpack-page {
+  /* FIXED: These are now scoped within .techpack-page wrapper */
+  body,
+  html {
     margin: 0 !important;
     padding: 0 !important;
     overflow-x: hidden !important;
@@ -5168,3 +5173,5 @@ body {
     height: 40px;
   }
 }
+
+} /* END .techpack-page - All techpack styles scoped to techpack pages only */
