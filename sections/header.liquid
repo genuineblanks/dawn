@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-modern-header.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
@@ -24,85 +25,9 @@
 <noscript>{{ 'component-menu-drawer.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-cart-notification.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-modern-header.css' | asset_url | stylesheet_tag }}</noscript>
 
 <style>
-  /* ===== MODERN HEADER STYLING ===== */
-  :root {
-    --header-bg: rgba(255, 255, 255, 0.95);
-    --header-text: #000000;
-    --header-border: rgba(0, 0, 0, 0.1);
-    --header-accent: #666666;
-    --header-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --header-backdrop: blur(20px);
-    --header-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
-  }
-
-  .header-wrapper {
-    background: var(--header-bg);
-    backdrop-filter: var(--header-backdrop);
-    -webkit-backdrop-filter: var(--header-backdrop);
-    border-bottom: 1px solid var(--header-border);
-    transition: var(--header-transition);
-    box-shadow: var(--header-shadow);
-  }
-
-  .header-wrapper.scrolled {
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.12);
-  }
-
-  .header {
-    position: relative;
-    z-index: 10;
-  }
-
-  .header__heading-logo {
-    transition: var(--header-transition);
-  }
-
-  .header__heading-link:hover {
-    opacity: 0.7;
-  }
-
-  .header__icon {
-    transition: var(--header-transition);
-  }
-
-  .header__icon:hover {
-    opacity: 0.7;
-    transform: scale(1.1);
-  }
-
-  .list-menu__item--link {
-    position: relative;
-    color: var(--header-text);
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: var(--header-transition);
-  }
-
-  .list-menu__item--link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--header-text);
-    transition: width 0.3s ease;
-  }
-
-  .list-menu__item--link:hover {
-    color: var(--header-accent);
-  }
-
-  .list-menu__item--link:hover::after {
-    width: 100%;
-  }
-
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
@@ -125,7 +50,6 @@
   .menu-drawer-container {
     display: flex;
   }
-</style>
 
   .list-menu {
     list-style: none;
@@ -537,30 +461,6 @@
   }
 
   customElements.define('sticky-header', StickyHeader);
-
-  // ===== MODERN HEADER FUNCTIONALITY =====
-  document.addEventListener('DOMContentLoaded', function() {
-    const headerWrapper = document.querySelector('.header-wrapper');
-    
-    if (!headerWrapper) return;
-
-    // Scroll effect for header
-    let lastScrollTop = 0;
-    const scrollThreshold = 50;
-
-    window.addEventListener('scroll', function() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Add scrolled class when scrolling down
-      if (scrollTop > scrollThreshold) {
-        headerWrapper.classList.add('scrolled');
-      } else {
-        headerWrapper.classList.remove('scrolled');
-      }
-
-      lastScrollTop = scrollTop;
-    });
-  });
 {% endjavascript %}
 
 <script type="application/ld+json">
