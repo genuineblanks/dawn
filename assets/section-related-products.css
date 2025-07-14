@@ -55,9 +55,22 @@
   background: linear-gradient(90deg, transparent, #000000, transparent);
 }
 
-/* Enhanced product grid */
+/* Enhanced product grid - Override base.css flex with proper CSS Grid */
 .related-products .grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tablet responsive */
+@media screen and (max-width: 990px) {
+  .related-products .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
 }
 
 /* Apply futuristic card effects to product cards */
@@ -169,7 +182,7 @@
   .related-products .grid {
     gap: 1rem;
     padding: 0 1rem;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .related-products .card-wrapper {
