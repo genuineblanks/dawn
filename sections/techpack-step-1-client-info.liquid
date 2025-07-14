@@ -372,6 +372,14 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
   </div>
 </div>
 
+<!-- Add techpack-page class for CSS targeting -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add techpack-page class to body for better CSS targeting
+    document.body.classList.add('techpack-page');
+  });
+</script>
+
 <!-- Load Tech Pack Application -->
 <script src="{{ 'techpack-app.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'techpack-mobile-scrolling-fixes.js' | asset_url }}" defer></script>
