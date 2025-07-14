@@ -104,6 +104,7 @@
     <!-- Left Panel: Image Gallery (Scrollable) -->
     <div class="product-images-panel">
       {% render 'product-media-gallery', 
+        product: product,
         variant_images: variant_images, 
         is_clothing: is_clothing,
         is_design_service: is_design_service,
@@ -775,6 +776,40 @@
       "id": "enable_video_looping",
       "default": false,
       "label": "t:sections.main-product.settings.enable_video_looping.label"
+    },
+    {
+      "type": "header",
+      "content": "Additional Gallery Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "gallery_image_1",
+      "label": "Gallery Image 1",
+      "info": "Additional image to display in the product gallery"
+    },
+    {
+      "type": "image_picker",
+      "id": "gallery_image_2",
+      "label": "Gallery Image 2",
+      "info": "Additional image to display in the product gallery"
+    },
+    {
+      "type": "image_picker",
+      "id": "gallery_image_3",
+      "label": "Gallery Image 3",
+      "info": "Additional image to display in the product gallery"
+    },
+    {
+      "type": "image_picker",
+      "id": "gallery_image_4",
+      "label": "Gallery Image 4",
+      "info": "Additional image to display in the product gallery"
+    },
+    {
+      "type": "image_picker",
+      "id": "gallery_image_5",
+      "label": "Gallery Image 5",
+      "info": "Additional image to display in the product gallery"
     },
     {
       "type": "header",
