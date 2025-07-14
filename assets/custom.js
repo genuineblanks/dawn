@@ -1186,7 +1186,10 @@ function goToSection(sectionIndex) {
     to: sectionIndex,
     targetPosition: scrollSystem.arrSections[sectionIndex],
     currentScroll: window.pageYOffset,
-    duration: scrollSystem.durationOneScroll
+    duration: scrollSystem.durationOneScroll,
+    allSectionPositions: scrollSystem.arrSections,
+    viewportHeight: window.innerHeight,
+    deviceType: isMobileDevice() ? 'MOBILE' : 'DESKTOP'
   });
   
   console.log('🔴 SETTING inScroll = true at start of goToSection');
@@ -1350,27 +1353,46 @@ function calculateSectionPositions() {
   
   const oldPositions = [...scrollSystem.arrSections];
   
-  // ENHANCED: Better mobile section position calculation
+  // ENHANCED: Better mobile section position calculation with debug logging
   scrollSystem.arrSections = scrollSystem.$sections.map(function(index) {
     const section = $(this);
     let sectionTop = section.offset().top;
     
-    // ANDROID FIX: Ensure sections align to viewport boundaries
+    console.log('🔍 DEBUG: Section', index, 'original position:', sectionTop);
+    
+    // MOBILE FIX: Ensure sections align to proper boundaries
     if (isMobileDevice()) {
       const viewportHeight = window.innerHeight;
-      const expectedPosition = index * viewportHeight;
+      const headerHeight = $('.header').outerHeight() || 0;
       
-      // If section is close to expected viewport position, snap it
-      if (Math.abs(sectionTop - expectedPosition) < 100) {
-        console.log('📱 Android fix - snapping section', index, 'from', sectionTop, 'to', expectedPosition);
-        sectionTop = expectedPosition;
+      // Account for header height in positioning
+      const adjustedSectionTop = sectionTop - headerHeight;
+      
+      console.log('📱 DEBUG: Mobile section', index, 'viewport height:', viewportHeight, 'header height:', headerHeight);
+      console.log('📱 DEBUG: Adjusted section top (minus header):', adjustedSectionTop);
+      
+      // For first section, should be 0 (or just after header)
+      if (index === 0) {
+        sectionTop = 0;
+        console.log('📱 FIXED: First section position set to 0');
+      } else {
+        // For subsequent sections, calculate based on viewport height
+        const expectedPosition = index * viewportHeight;
+        
+        // If section is close to expected viewport position, snap it
+        if (Math.abs(adjustedSectionTop - expectedPosition) < 150) {
+          console.log('📱 SNAP: Section', index, 'snapped from', sectionTop, 'to', expectedPosition);
+          sectionTop = expectedPosition;
+        } else {
+          console.log('📱 KEEP: Section', index, 'position kept at', sectionTop, '(expected:', expectedPosition, ')');
+        }
       }
       
-      // Ensure section height fills viewport
+      // Debug section height
       const sectionHeight = section.outerHeight();
-      if (Math.abs(sectionHeight - viewportHeight) > 50) {
-        console.log('📱 Android fix - section', index, 'height mismatch:', sectionHeight, 'vs viewport:', viewportHeight);
-      }
+      console.log('📱 DEBUG: Section', index, 'height:', sectionHeight, 'vs viewport:', viewportHeight);
+    } else {
+      console.log('🖥️ DEBUG: Desktop section', index, 'position:', sectionTop);
     }
     
     return sectionTop;
