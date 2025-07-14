@@ -62,7 +62,7 @@
       },
       "block_order": [
         "vendor",
-        "title", 
+        "title",
         "price",
         "variant_picker",
         "quantity_selector",
