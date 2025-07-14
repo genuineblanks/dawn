@@ -62,9 +62,67 @@
 
     <!-- Quantity Selector -->
     <div class="quantity-section">
-      <h4 class="quantity-label">{{ 'products.product.quantity' | t | default: 'QUANTITY' }}</h4>
-      {% render 'quantity-input', form: form, class: 'quantity', min: 1, product: product %}
+      <h4 class="quantity-label">{{ 'products.product.quantity.label' | t | default: 'QUANTITY' }}</h4>
+      <div class="quantity-wrapper">
+        <button type="button" class="quantity-decrease" aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title }}">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M4.5 9h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <input type="number" 
+               name="quantity" 
+               id="Quantity-{{ section.id }}" 
+               class="quantity-input" 
+               value="1" 
+               min="1"
+               aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title }}">
+        <button type="button" class="quantity-increase" aria-label="{{ 'products.product.quantity.increase' | t: product: product.title }}">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 4.5v9M4.5 9h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
+
+    <!-- Quantity Control JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const quantityInput = document.querySelector('.quantity-input');
+      const decreaseBtn = document.querySelector('.quantity-decrease');
+      const increaseBtn = document.querySelector('.quantity-increase');
+
+      if (quantityInput && decreaseBtn && increaseBtn) {
+        decreaseBtn.addEventListener('click', function() {
+          let currentValue = parseInt(quantityInput.value);
+          if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+            // Add some visual feedback
+            quantityInput.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+              quantityInput.style.transform = 'scale(1)';
+            }, 150);
+          }
+        });
+
+        increaseBtn.addEventListener('click', function() {
+          let currentValue = parseInt(quantityInput.value);
+          quantityInput.value = currentValue + 1;
+          // Add some visual feedback
+          quantityInput.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            quantityInput.style.transform = 'scale(1)';
+          }, 150);
+        });
+
+        // Ensure minimum value is 1
+        quantityInput.addEventListener('change', function() {
+          if (parseInt(quantityInput.value) < 1) {
+            quantityInput.value = 1;
+          }
+        });
+      }
+    });
+    </script>
 
     <!-- Buy Buttons -->
     <div class="buy-buttons-section">
