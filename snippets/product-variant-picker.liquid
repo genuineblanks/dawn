@@ -103,6 +103,40 @@
       <button type="button" class="cancel-custom-color btn-tertiary">Cancel</button>
     </div>
   </div>
+
+  <!-- Custom Color Picker JavaScript -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const customColorLink = document.querySelector('.custom-color');
+    const customColorInput = document.getElementById('custom-color-input');
+    const colorPicker = document.getElementById('custom-color-picker');
+    const applyButton = document.querySelector('.apply-custom-color');
+    const cancelButton = document.querySelector('.cancel-custom-color');
+
+    if (customColorLink && customColorInput) {
+      customColorLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        customColorInput.classList.remove('hide');
+        colorPicker.focus();
+        colorPicker.click(); // Open color picker immediately
+      });
+
+      applyButton.addEventListener('click', function() {
+        const selectedColor = colorPicker.value;
+        customColorLink.style.backgroundColor = selectedColor;
+        customColorInput.classList.add('hide');
+        
+        // Update any hidden inputs or trigger variant change
+        // Add your variant logic here
+        console.log('Custom color selected:', selectedColor);
+      });
+
+      cancelButton.addEventListener('click', function() {
+        customColorInput.classList.add('hide');
+      });
+    }
+  });
+  </script>
 {% endif %}
 
 {%- unless product.has_only_default_variant -%}
