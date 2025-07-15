@@ -43,48 +43,18 @@
         return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       };
       
-      // NUCLEAR FIX: Add mobile class and force native scrolling - WITH DOM SAFETY
+      // NUCLEAR FIX: Add mobile class and force native scrolling
       if (window.isMobileDevice()) {
         console.log('📱 NUCLEAR MOBILE FIX: Mobile device detected in theme.liquid');
-        
-        // CRITICAL: Wait for DOM to be ready before accessing document.body
-        function applyMobileOptimizations() {
-          try {
-            if (document.documentElement) {
-              document.documentElement.classList.add('mobile-device');
-              if (window.isIOS()) {
-                document.documentElement.classList.add('ios-device');
-              }
-            }
-            
-            // SAFETY CHECK: Only apply body styles if body exists
-            if (document.body) {
-              document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important');
-              document.documentElement.style.setProperty('overflow', 'auto', 'important');
-              
-              document.body.style.setProperty('overflow', 'auto', 'important');
-              document.body.style.setProperty('touch-action', 'pan-y', 'important');
-              document.body.style.setProperty('overscroll-behavior', 'none', 'important');
-              console.log('✅ Mobile optimizations applied successfully');
-            } else {
-              console.warn('⚠️ Document body not ready, deferring mobile optimizations');
-              // Retry when DOM is ready
-              if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', applyMobileOptimizations);
-              } else {
-                setTimeout(applyMobileOptimizations, 100);
-              }
-            }
-          } catch (error) {
-            console.warn('Failed to apply mobile scroll optimizations:', error);
-          }
+        document.documentElement.classList.add('mobile-device');
+        if (window.isIOS()) {
+          document.documentElement.classList.add('ios-device');
         }
         
-        // Apply immediately if DOM is ready, otherwise wait
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', applyMobileOptimizations);
-        } else {
-          applyMobileOptimizations();
+        // Force optimal mobile scrolling settings
+        document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
+        if (document.body) {
+          document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
         }
       }
     </script>
@@ -93,13 +63,6 @@
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
-    
-    <!-- Header scripts - centralized to prevent duplicates -->
-    <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
-    
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
@@ -323,7 +286,7 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {{ 'responsive.css' | asset_url | stylesheet_tag }}
-    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
+    {{ 'modern-account-enhancements.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-button.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
@@ -355,12 +318,16 @@
     </script>
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
+    {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
     
-    {%- comment -%} Load techpack CSS for techpack pages {%- endcomment -%}
-    {%- if template.suffix == 'techpack' or template.suffix == 'techpack-modern-complete' or template.suffix == 'techpack-upload' -%}
-      {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
-      {{ 'techpack-mobile-scrolling-fixes.css' | asset_url | stylesheet_tag }}
-      {{ 'techpack-form-enhancements.css' | asset_url | stylesheet_tag }}
+    {%- comment -%} Modern Account System Assets {%- endcomment -%}
+    {%- if customer -%}
+      {{ 'modern-account-enhancements.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    
+    {%- comment -%} TechPack Modern System Assets {%- endcomment -%}
+    {%- if template contains 'techpack-modern' -%}
+      {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
   </head>
 
@@ -973,8 +940,17 @@
       <div id="section-dots" class="section-dot-navigation"></div>
     {% endif %}
 
-    <!-- Load custom.js scroll system -->
-    <script src="{{ 'custom.js' | asset_url }}"></script>
+    <!-- FIXED: Sequential loading for proper initialization -->
+    {% if template contains 'index' %}
+      <!-- Load custom.js synchronously to ensure proper timing -->
+      <script src="{{ 'custom.js' | asset_url }}"></script>
+      
+      <!-- Then load scroll-fix.js for animation fixes -->
+      <script src="{{ 'scroll-fix.js' | asset_url }}"></script>
+    {% else %}
+      <!-- For non-homepage, load custom.js normally -->
+      <script src="{{ 'custom.js' | asset_url }}"></script>
+    {% endif %}
     
     <!-- Mobile-specific scroll optimization -->
     <script>
@@ -998,6 +974,37 @@
         });
       }
     </script>
+    
+    {%- comment -%} Modern Account System Scripts {%- endcomment -%}
+    {%- if customer -%}
+      <script>
+        // Initialize customer data for modern account system
+        window.shopifyCustomer = {
+          id: {{ customer.id | json }},
+          email: {{ customer.email | json }},
+          first_name: {{ customer.first_name | json }},
+          last_name: {{ customer.last_name | json }},
+          company: {{ customer.company | json }},
+          phone: {{ customer.phone | json }},
+          tags: {{ customer.tags | json }},
+          default_address: {{ customer.default_address | json }},
+          orders_count: {{ customer.orders_count | json }}
+        };
+      </script>
+      <script src="{{ 'modern-customer-data-manager.js' | asset_url }}" defer></script>
+      <script src="{{ 'modern-techpack-integration.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    
+    {%- comment -%} Page-specific Scripts {%- endcomment -%}
+    {%- if template.suffix == 'wholesale-portal' -%}
+      <script src="{{ 'modern-wholesale-portal.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    {%- if template.suffix == 'verification' -%}
+      <script src="{{ 'modern-verification-system.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    {%- if template contains 'techpack-modern' -%}
+      <script src="{{ 'techpack-app-modern.js' | asset_url }}" defer></script>
+    {%- endif -%}
     
   </body>
 </html>
