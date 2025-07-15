@@ -88,8 +88,15 @@ summary svg.icon.icon-plus, summary svg.icon.icon-minus {
 }
 
 /* ================ PROFESSIONAL HEADER STYLING ================== */
-/* Homepage Header - White Background */
-body .template-index sticky-header.header-wrapper {
+/* AGGRESSIVE HEADER COLOR OVERRIDES - FORCE COLORS TO WORK */
+
+/* Homepage Header - White Background - Multiple Selector Variations */
+body .template-index sticky-header.header-wrapper,
+body.template-index sticky-header.header-wrapper,
+.template-index sticky-header.header-wrapper,
+body .template-index .header-wrapper,
+body.template-index .header-wrapper,
+.template-index .header-wrapper {
     background: #ffffff !important;
     background-color: #ffffff !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -97,14 +104,25 @@ body .template-index sticky-header.header-wrapper {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-body .template-index sticky-header.header-wrapper.scrolled {
+/* Homepage Header Scrolled State - Multiple Selector Variations */
+body .template-index sticky-header.header-wrapper.scrolled,
+body.template-index sticky-header.header-wrapper.scrolled,
+.template-index sticky-header.header-wrapper.scrolled,
+body .template-index .header-wrapper.scrolled,
+body.template-index .header-wrapper.scrolled,
+.template-index .header-wrapper.scrolled {
     background: #ffffff !important;
     background-color: #ffffff !important;
     box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Global Header - Light Grey Theme (matching footer) */
-body sticky-header.header-wrapper {
+/* Global Header - Light Grey Theme (matching footer) - Multiple Selector Variations */
+body sticky-header.header-wrapper,
+body .header-wrapper,
+sticky-header.header-wrapper,
+.header-wrapper,
+body:not(.template-index) sticky-header.header-wrapper,
+body:not(.template-index) .header-wrapper {
     background: #e8e8e8 !important;
     background-color: #e8e8e8 !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
@@ -112,7 +130,13 @@ body sticky-header.header-wrapper {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-body sticky-header.header-wrapper.scrolled {
+/* Global Header Scrolled State - Multiple Selector Variations */
+body sticky-header.header-wrapper.scrolled,
+body .header-wrapper.scrolled,
+sticky-header.header-wrapper.scrolled,
+.header-wrapper.scrolled,
+body:not(.template-index) sticky-header.header-wrapper.scrolled,
+body:not(.template-index) .header-wrapper.scrolled {
     background: #e8e8e8 !important;
     background-color: #e8e8e8 !important;
     box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15) !important;
@@ -1339,4 +1363,53 @@ ul.productcolors li a.active[style="background: #000;"] {border-color: #ff0;}
     width: 10px;
     height: 10px;
   }
+}
+
+/* ================ ULTRA AGGRESSIVE HEADER COLOR OVERRIDES ================== */
+/* These overrides are more aggressive and target all possible header wrapper combinations */
+
+/* Force Homepage Header White Background - All Possible Selectors */
+html body.template-index sticky-header.header-wrapper,
+html body.template-index .header-wrapper,
+html .template-index sticky-header.header-wrapper,
+html .template-index .header-wrapper,
+body.template-index sticky-header.header-wrapper,
+body.template-index .header-wrapper,
+.template-index sticky-header.header-wrapper,
+.template-index .header-wrapper {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+}
+
+/* Force Global Header Light Grey Background - All Possible Selectors */
+html body:not(.template-index) sticky-header.header-wrapper,
+html body:not(.template-index) .header-wrapper,
+html body sticky-header.header-wrapper,
+html body .header-wrapper,
+html sticky-header.header-wrapper,
+html .header-wrapper,
+body:not(.template-index) sticky-header.header-wrapper,
+body:not(.template-index) .header-wrapper,
+body sticky-header.header-wrapper,
+body .header-wrapper,
+sticky-header.header-wrapper,
+.header-wrapper {
+    background: #e8e8e8 !important;
+    background-color: #e8e8e8 !important;
+    background-image: none !important;
+}
+
+/* Ensure homepage takes priority over global */
+html body.template-index sticky-header.header-wrapper,
+html body.template-index .header-wrapper,
+html .template-index sticky-header.header-wrapper,
+html .template-index .header-wrapper,
+body.template-index sticky-header.header-wrapper,
+body.template-index .header-wrapper,
+.template-index sticky-header.header-wrapper,
+.template-index .header-wrapper {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
 }
