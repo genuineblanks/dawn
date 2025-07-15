@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ 'component-modern-header.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-modern-header.css' | asset_url }}?v={{ 'now' | date: '%s' }}" media="print" onload="this.media='all'" onerror="this.onerror=null;this.rel='stylesheet';this.media='all';console.warn('Failed to load component-modern-header.css');">
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -20,7 +20,7 @@
   {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 
-<noscript>{{ 'component-modern-header.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript><link rel="stylesheet" href="{{ 'component-modern-header.css' | asset_url }}?v={{ 'now' | date: '%s' }}"></noscript>
 <noscript>{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-search.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-menu-drawer.css' | asset_url | stylesheet_tag }}</noscript>
