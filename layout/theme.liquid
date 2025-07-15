@@ -51,9 +51,17 @@
           document.documentElement.classList.add('ios-device');
         }
         
-        // Force optimal mobile scrolling settings
-        document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
-        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
+        // Force optimal mobile scrolling settings (with error handling)
+        try {
+          if (document.documentElement) {
+            document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
+          }
+          if (document.body) {
+            document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
+          }
+        } catch (e) {
+          console.warn('Mobile scrolling settings failed:', e);
+        }
       }
     </script>
     
@@ -316,7 +324,6 @@
     </script>
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
-    {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
   </head>
 
