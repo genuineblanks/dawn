@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'component-modern-header.css' | asset_url }}" media="print" onload="this.media='all'">
+{{ 'component-modern-header.css' | asset_url | stylesheet_tag }}
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
@@ -370,6 +370,12 @@
         this.header.classList.add('shopify-section-header-sticky');
       };
 
+      // MOBILE FIX: Ensure header is visible on mobile page load
+      if (window.innerWidth <= 990) {
+        this.header.classList.remove('shopify-section-header-hidden');
+        this.header.style.top = '';
+      }
+
       this.currentScrollTop = 0;
       this.preventReveal = false;
       this.predictiveSearch = this.querySelector('predictive-search');
@@ -393,9 +399,9 @@
     }
 
     createObserver() {
-      let observer = new IntersectionObserver((entries, observer) => {
+      let observer = new IntersectionObserver((entries) => {
         this.headerBounds = entries[0].intersectionRect;
-        observer.disconnect();
+        // Keep observer active for mobile - don't disconnect
       });
 
       observer.observe(this.header);
