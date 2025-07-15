@@ -1,56 +1,15 @@
 .search__input.field__input {
   padding-right: 9.8rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  color: #121212;
-  font-weight: 500;
-  box-shadow: 0 4px 15px rgba(18, 18, 18, 0.05);
-}
-
-.search__input.field__input:focus {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(51, 79, 180, 0.5);
-  box-shadow: 0 8px 25px rgba(51, 79, 180, 0.15),
-              0 4px 12px rgba(18, 18, 18, 0.1);
-  transform: translateY(-2px);
 }
 
 .search__button {
   right: var(--inputs-border-width);
   top: var(--inputs-border-width);
-  background: linear-gradient(135deg, #334fb4 0%, rgba(51, 79, 180, 0.9) 100%);
-  border-radius: 8px;
-  border: none;
-  color: white;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 4px 15px rgba(51, 79, 180, 0.3);
-}
-
-.search__button:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(51, 79, 180, 0.4);
 }
 
 .reset__button {
   right: calc(var(--inputs-border-width) + 4.4rem);
   top: var(--inputs-border-width);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  color: #121212;
-}
-
-.reset__button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(18, 18, 18, 0.1);
 }
 
 .reset__button:not(:focus-visible)::after {
@@ -91,22 +50,18 @@
 
 .search__button:hover .icon,
 .reset__button:hover .icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.07);
 }
 
 .search__button .icon {
   height: 1.8rem;
   width: 1.8rem;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.3));
 }
 
 .reset__button .icon.icon-close {
   height: 1.8rem;
   width: 1.8rem;
   stroke-width: 0.1rem;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(18, 18, 18, 0.1));
 }
 
 /* Remove extra spacing for search inputs in Safari */

@@ -2,59 +2,28 @@
 /* Proper Shopify theme CSS asset for header enhancements */
 
 :root {
-  --header-bg: rgba(255, 255, 255, 0.85);
-  --header-bg-scrolled: rgba(248, 249, 250, 0.95);
-  --header-text: #121212;
-  --header-accent: #334fb4;
-  --header-border: rgba(18, 18, 18, 0.08);
-  --header-transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --header-backdrop: blur(40px);
-  --header-shadow: 0 8px 40px rgba(18, 18, 18, 0.06);
-  --header-shadow-scrolled: 0 12px 60px rgba(18, 18, 18, 0.1);
-  --header-glow: 0 0 60px rgba(51, 79, 180, 0.1);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --header-text: #000000;
+  --header-border: rgba(0, 0, 0, 0.1);
+  --header-accent: #666666;
+  --header-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --header-backdrop: blur(20px);
+  --header-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Modern header wrapper styling */
 .header-wrapper {
-  background: linear-gradient(135deg, var(--header-bg) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: var(--header-bg);
   backdrop-filter: var(--header-backdrop);
   -webkit-backdrop-filter: var(--header-backdrop);
   border-bottom: 1px solid var(--header-border);
   transition: var(--header-transition);
-  box-shadow: var(--header-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  position: relative;
-  overflow: hidden;
-}
-
-.header-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(51, 79, 180, 0.02) 0%, transparent 30%, rgba(18, 18, 18, 0.01) 70%, transparent 100%);
-  pointer-events: none;
-  animation: headerGlow 12s ease-in-out infinite;
-}
-
-@keyframes headerGlow {
-  0%, 100% { opacity: 1; transform: translateX(0); }
-  25% { opacity: 0.7; transform: translateX(10px); }
-  50% { opacity: 1; transform: translateX(-5px); }
-  75% { opacity: 0.8; transform: translateX(8px); }
+  box-shadow: var(--header-shadow);
 }
 
 .header-wrapper.scrolled {
-  background: linear-gradient(135deg, var(--header-bg-scrolled) 0%, rgba(255, 255, 255, 0.98) 100%);
-  box-shadow: var(--header-shadow-scrolled), 
-              var(--header-glow),
-              inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transform: translateY(-1px);
-}
-
-.header-wrapper.scrolled::before {
-  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.12);
 }
 
 /* Header content styling */
@@ -65,237 +34,62 @@
 
 .header__heading-logo {
   transition: var(--header-transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.header__heading-logo::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(51, 79, 180, 0.1), transparent);
-  transition: left 0.8s ease;
-}
-
-.header__heading-link {
-  display: block;
-  transition: var(--header-transition);
-  position: relative;
-  filter: drop-shadow(0 2px 4px rgba(18, 18, 18, 0.1));
 }
 
 .header__heading-link:hover {
-  transform: translateY(-2px) scale(1.02);
-  filter: drop-shadow(0 4px 8px rgba(51, 79, 180, 0.2));
-}
-
-.header__heading-link:hover .header__heading-logo::before {
-  left: 100%;
+  opacity: 0.7;
 }
 
 .header__icon {
   transition: var(--header-transition);
-  position: relative;
-  color: var(--header-text);
-  border-radius: 12px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 15px rgba(18, 18, 18, 0.05);
 }
 
 .header__icon:hover {
-  transform: translateY(-3px) scale(1.08);
-  background: linear-gradient(135deg, var(--header-accent) 0%, rgba(51, 79, 180, 0.9) 100%);
-  color: white;
-  box-shadow: 0 8px 25px rgba(51, 79, 180, 0.3),
-              0 4px 12px rgba(18, 18, 18, 0.1);
-}
-
-.header__icon:active {
-  transform: translateY(-1px) scale(1.05);
+  opacity: 0.7;
+  transform: scale(1.05);
 }
 
 /* Enhanced navigation styling */
 .list-menu__item--link {
   position: relative;
   transition: var(--header-transition);
-  padding: 12px 20px;
-  border-radius: 8px;
-  color: var(--header-text);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(18, 18, 18, 0.03);
-  overflow: hidden;
-}
-
-.list-menu__item--link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(51, 79, 180, 0.1), transparent);
-  transition: left 0.6s ease;
 }
 
 .list-menu__item--link::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--header-accent), rgba(51, 79, 180, 0.8));
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-
-.list-menu__item--link:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 20px rgba(18, 18, 18, 0.08),
-              0 4px 10px rgba(51, 79, 180, 0.1);
-  color: var(--header-accent);
-}
-
-.list-menu__item--link:hover::before {
-  left: 100%;
+  background: var(--header-text);
+  transition: width 0.3s ease;
 }
 
 .list-menu__item--link:hover::after {
-  width: 80%;
-}
-
-.list-menu__item--link:active {
-  transform: translateY(0);
-}
-
-/* Navigation menu container */
-.list-menu {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.list-menu__item {
-  position: relative;
-}
-
-/* Active navigation state */
-.list-menu__item--active .list-menu__item--link {
-  background: linear-gradient(135deg, var(--header-accent) 0%, rgba(51, 79, 180, 0.9) 100%);
-  color: white;
-  box-shadow: 0 6px 18px rgba(51, 79, 180, 0.3),
-              0 3px 8px rgba(18, 18, 18, 0.1);
-}
-
-.list-menu__item--active .list-menu__item--link::after {
   width: 100%;
-  background: rgba(255, 255, 255, 0.8);
 }
-
-/* Scroll-triggered animations */
-@keyframes slideInFromTop {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.header__heading-logo,
-.header__icon,
-.list-menu__item--link {
-  animation: slideInFromTop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-.header__icon {
-  animation-delay: 0.2s;
-}
-
-.list-menu__item--link {
-  animation-delay: 0.1s;
-}
-
-/* Stagger animation for menu items */
-.list-menu__item:nth-child(1) .list-menu__item--link { animation-delay: 0.1s; }
-.list-menu__item:nth-child(2) .list-menu__item--link { animation-delay: 0.2s; }
-.list-menu__item:nth-child(3) .list-menu__item--link { animation-delay: 0.3s; }
-.list-menu__item:nth-child(4) .list-menu__item--link { animation-delay: 0.4s; }
-.list-menu__item:nth-child(5) .list-menu__item--link { animation-delay: 0.5s; }
 
 /* Mobile optimizations */
 @media screen and (max-width: 749px) {
   .header-wrapper {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-  
-  .header__icon {
-    padding: 10px;
-    border-radius: 10px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
   
   .header__icon:hover {
-    transform: translateY(-2px) scale(1.05);
-  }
-  
-  .list-menu__item--link {
-    padding: 10px 16px;
-    border-radius: 6px;
-  }
-  
-  .header__heading-link:hover {
-    transform: translateY(-1px) scale(1.01);
+    transform: none;
   }
 }
 
 /* Disable hover effects on touch devices */
 @media (hover: none) and (pointer: coarse) {
   .header__icon:hover {
+    opacity: 1;
     transform: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--header-text);
-  }
-  
-  .list-menu__item--link:hover {
-    transform: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--header-text);
   }
   
   .list-menu__item--link:hover::after {
     width: 0;
-  }
-  
-  .header__heading-link:hover {
-    transform: none;
-    filter: drop-shadow(0 2px 4px rgba(18, 18, 18, 0.1));
   }
 }
