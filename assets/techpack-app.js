@@ -4190,7 +4190,8 @@
       };
       
       const lockBodyScroll = () => {
-        if (isMobile()) {
+        // MOBILE SCROLLING FIX: Only lock scroll for modals, not general navigation
+        if (isMobile() && document.querySelector('.techpack-modal.active')) {
           // Preserve original overscroll-behavior to prevent conflicts
           originalOverscrollBehavior = document.body.style.overscrollBehavior || window.getComputedStyle(document.body).overscrollBehavior;
           
