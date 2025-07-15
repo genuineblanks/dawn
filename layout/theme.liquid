@@ -51,9 +51,17 @@
           document.documentElement.classList.add('ios-device');
         }
         
-        // Force optimal mobile scrolling settings
-        document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
-        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
+        // Force optimal mobile scrolling settings - using safer style property setting
+        try {
+          document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important');
+          document.documentElement.style.setProperty('overflow', 'auto', 'important');
+          
+          document.body.style.setProperty('overflow', 'auto', 'important');
+          document.body.style.setProperty('touch-action', 'pan-y', 'important');
+          document.body.style.setProperty('overscroll-behavior', 'none', 'important');
+        } catch (error) {
+          console.warn('Failed to apply mobile scroll optimizations:', error);
+        }
       }
     </script>
     
@@ -317,6 +325,13 @@
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
+    
+    {%- comment -%} Load techpack-app.css for techpack pages {%- endcomment -%}
+    {%- if template.name == 'page' and template.suffix contains 'techpack' -%}
+      {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
+    {%- elsif template.name == 'page' and page.handle contains 'techpack' -%}
+      {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
