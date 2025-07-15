@@ -1,5 +1,4 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
-    {%- comment -%} CSS moved to theme.liquid to prevent duplicates {%- endcomment -%}
     <style>   
         .techpack-container {
             max-width: 900px;
@@ -1352,9 +1351,4 @@
             TechpackForm.init();
         });
     </script>
-    
-    <!-- Enhanced Mobile & System Integration -->
-    <script src="{{ 'techpack-mobile-enhancements.js' | asset_url }}" defer></script>
-    <script src="{{ 'techpack-navigation-enhanced.js' | asset_url }}" defer></script>
-    <script src="{{ 'techpack-system-integration.js' | asset_url }}" defer></script>
 {% endif %}
