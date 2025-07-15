@@ -95,6 +95,21 @@ nav ul {
     padding: 0.3rem;
 }
 
+/* Mobile Tech Pack Button */
+.header-techpack-btn {
+    padding: 0.3rem;
+}
+
+.header-techpack-btn:hover {
+    transform: none;
+    background: transparent;
+}
+
+.header-techpack-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* Mobile Visual Separator */
 nav ul li:nth-child(5)::after {
     display: none;

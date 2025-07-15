@@ -104,8 +104,52 @@ body .header__icon:hover {
 }
 
 .header__icon--techpack:hover {
-  color: #f0f0f0;
-  background: rgba(255, 255, 255, 0.15);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Tech Pack Button Animation & Styling */
+.header-techpack-btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-techpack-btn:hover {
+  transform: translateY(-1px);
+}
+
+.header-techpack-btn svg {
+  transition: all 0.3s ease;
+}
+
+.header-techpack-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Subtle pulse animation */
+@keyframes techpack-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.header-techpack-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  animation: techpack-pulse 2s infinite;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.header-techpack-btn:hover::after {
+  opacity: 1;
+  animation: none;
 }
 
 /* Logo Enhancement */
