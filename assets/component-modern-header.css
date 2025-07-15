@@ -37,7 +37,7 @@
 
 /* Homepage Icon Styling */
 .template-index .header__icon {
-  color: var(--header-text-home);
+  color: #4a4a4a;
 }
 
 .template-index .header__icon:hover {
@@ -48,7 +48,7 @@
 
 /* Global Icon Styling */
 .header__icon {
-  color: var(--header-text-global);
+  color: #ffffff;
 }
 
 .header__icon:hover {
@@ -134,8 +134,8 @@
 }
 
 .header__submenu {
-  background: rgba(33, 33, 33, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(136, 136, 136, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .header__submenu .header__menu-item {
@@ -143,12 +143,22 @@
   padding: 0.8rem 1.2rem;
 }
 
+.template-index .header__submenu .header__menu-item {
+  color: #4a4a4a;
+}
+
 .template-index .header__submenu .header__menu-item:hover {
   background: rgba(0, 0, 0, 0.05);
+  color: #000000;
+}
+
+.header__submenu .header__menu-item {
+  color: #ffffff;
 }
 
 .header__submenu .header__menu-item:hover {
   background: rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
 }
 
 /* Sticky Header Enhancement */
