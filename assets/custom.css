@@ -89,29 +89,33 @@ summary svg.icon.icon-plus, summary svg.icon.icon-minus {
 
 /* ================ PROFESSIONAL HEADER STYLING ================== */
 /* Homepage Header - White Background */
-.template-index sticky-header.header-wrapper {
-    background: #ffffff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+body .template-index sticky-header.header-wrapper {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.template-index sticky-header.header-wrapper.scrolled {
-    background: #ffffff;
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+body .template-index sticky-header.header-wrapper.scrolled {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Global Header - Medium Grey Theme */
-sticky-header.header-wrapper {
-    background: #888888;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Global Header - Light Grey Theme (matching footer) */
+body sticky-header.header-wrapper {
+    background: #e8e8e8 !important;
+    background-color: #e8e8e8 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-sticky-header.header-wrapper.scrolled {
-    background: #888888;
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.3);
+body sticky-header.header-wrapper.scrolled {
+    background: #e8e8e8 !important;
+    background-color: #e8e8e8 !important;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
 header.header.page-width {
@@ -139,22 +143,22 @@ nav ul li a.header__menu-item, nav ul li .list-menu__item {
 }
 
 /* Homepage Navigation Colors - Dark Grey Text */
-.template-index nav ul li a.header__menu-item, 
-.template-index nav ul li .list-menu__item {
-    color: #4a4a4a;
+body .template-index nav ul li a.header__menu-item, 
+body .template-index nav ul li .list-menu__item {
+    color: #4a4a4a !important;
 }
 
-/* Global Navigation Colors - White Text */
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
-    color: #ffffff;
+/* Global Navigation Colors - Dark Text on Light Grey */
+body nav ul li a.header__menu-item, body nav ul li .list-menu__item {
+    color: #333333 !important;
 }
 
 /* Visual Separator for Services */
-nav ul li:nth-child(5)::after {
+body nav ul li:nth-child(5)::after {
     content: '';
     width: 1px;
     height: 20px;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.4) !important;
     position: absolute;
     right: -1rem;
     top: 50%;
@@ -162,8 +166,8 @@ nav ul li:nth-child(5)::after {
 }
 
 /* Homepage separator */
-.template-index nav ul li:nth-child(5)::after {
-    background: rgba(0, 0, 0, 0.3);
+body .template-index nav ul li:nth-child(5)::after {
+    background: rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Professional Underline Effect */
@@ -184,13 +188,13 @@ nav ul li a span::before {
 }
 
 /* Homepage underline */
-.template-index nav ul li a span::before {
-    background: #4a4a4a;
+body .template-index nav ul li a span::before {
+    background: #4a4a4a !important;
 }
 
 /* Global underline */
-nav ul li a span::before {
-    background: #ffffff;
+body nav ul li a span::before {
+    background: #333333 !important;
 }
 
 /* Hover Effects */
@@ -206,13 +210,13 @@ nav ul li a span.header__active-menu-item {
 }
 
 /* Homepage hover */
-.template-index nav ul li a.header__menu-item:hover {
-    color: #000000;
+body .template-index nav ul li a.header__menu-item:hover {
+    color: #000000 !important;
 }
 
 /* Global hover */
-nav ul li a.header__menu-item:hover {
-    color: #f0f0f0;
+body nav ul li a.header__menu-item:hover {
+    color: #000000 !important;
 }
 
 nav ul li a.header__menu-item.list-menu__item--active {
@@ -250,6 +254,47 @@ nav ul li a.header__menu-item.list-menu__item--active {
         -webkit-backdrop-filter: none;
     }
 }
+/* ================ CRITICAL OVERRIDE - FORCE HEADER COLORS ================== */
+/* This overrides the base.css CSS variables */
+body .header-wrapper {
+    background: #e8e8e8 !important;
+    background-color: #e8e8e8 !important;
+}
+
+body .template-index .header-wrapper {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+/* Additional dropdown fixes */
+body details[open] .header__submenu {
+    display: block !important;
+    position: absolute !important;
+    z-index: 999 !important;
+}
+
+body .header__submenu li {
+    display: block !important;
+    width: 100% !important;
+}
+
+body .header__submenu .header__menu-item {
+    display: block !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+
+/* Fix Learn More button specifically */
+body .header__menu-item[href*="learn"],
+body .header__menu-item[href*="more"] {
+    color: #333333 !important;
+}
+
+body .template-index .header__menu-item[href*="learn"],
+body .template-index .header__menu-item[href*="more"] {
+    color: #4a4a4a !important;
+}
+
 /* ================ Header css end here ================== */
 
 /* ================ Banner section css start here ================== */

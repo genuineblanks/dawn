@@ -36,24 +36,24 @@
 }
 
 /* Homepage Icon Styling */
-.template-index .header__icon {
-  color: #4a4a4a;
+body .template-index .header__icon {
+  color: #4a4a4a !important;
 }
 
-.template-index .header__icon:hover {
-  color: #000000;
-  background: rgba(0, 0, 0, 0.05);
+body .template-index .header__icon:hover {
+  color: #000000 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
   transform: scale(1.1);
 }
 
 /* Global Icon Styling */
-.header__icon {
-  color: #ffffff;
+body .header__icon {
+  color: #333333 !important;
 }
 
-.header__icon:hover {
-  color: #f0f0f0;
-  background: rgba(255, 255, 255, 0.1);
+body .header__icon:hover {
+  color: #000000 !important;
+  background: rgba(0, 0, 0, 0.1) !important;
   transform: scale(1.1);
 }
 
@@ -120,45 +120,68 @@
 }
 
 /* Professional Menu Dropdown Enhancement */
-.header__submenu {
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+body .header__submenu {
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  position: absolute !important;
+  z-index: 999 !important;
+  min-width: 200px !important;
+  display: none !important;
 }
 
-.template-index .header__submenu {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+body .template-index .header__submenu {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
-.header__submenu {
-  background: rgba(136, 136, 136, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+body .header__submenu {
+  background: rgba(232, 232, 232, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
-.header__submenu .header__menu-item {
-  transition: var(--header-transition);
-  padding: 0.8rem 1.2rem;
+body .header__submenu .header__menu-item {
+  transition: var(--header-transition) !important;
+  padding: 0.8rem 1.2rem !important;
+  display: block !important;
+  width: 100% !important;
 }
 
-.template-index .header__submenu .header__menu-item {
-  color: #4a4a4a;
+body .template-index .header__submenu .header__menu-item {
+  color: #4a4a4a !important;
 }
 
-.template-index .header__submenu .header__menu-item:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #000000;
+body .template-index .header__submenu .header__menu-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #000000 !important;
 }
 
-.header__submenu .header__menu-item {
-  color: #ffffff;
+body .header__submenu .header__menu-item {
+  color: #333333 !important;
 }
 
-.header__submenu .header__menu-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #f0f0f0;
+body .header__submenu .header__menu-item:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+  color: #000000 !important;
+}
+
+/* Fix dropdown display on hover/focus */
+body header-menu details[open] .header__submenu,
+body header-menu details:hover .header__submenu {
+  display: block !important;
+}
+
+/* Ensure dropdown shows vertically, not horizontally */
+body .header__submenu.list-menu {
+  display: none !important;
+  flex-direction: column !important;
+}
+
+body header-menu details[open] .header__submenu.list-menu {
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 /* Sticky Header Enhancement */
