@@ -355,111 +355,13 @@
     </script>
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
-    {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
     
-    {%- comment -%} 🚨 NUCLEAR TECHPACK CSS LOADING - MULTIPLE FALLBACKS 🚨 {%- endcomment -%}
-    {%- assign is_techpack_page = false -%}
-    
-    {%- comment -%} Method 1: Template suffix detection {%- endcomment -%}
-    {%- if template.name == 'page' and template.suffix contains 'techpack' -%}
-      {%- assign is_techpack_page = true -%}
-    {%- endif -%}
-    
-    {%- comment -%} Method 2: Page handle detection {%- endcomment -%}
-    {%- if template.name == 'page' and page.handle contains 'techpack' -%}
-      {%- assign is_techpack_page = true -%}
-    {%- endif -%}
-    
-    {%- comment -%} Method 3: Template name detection {%- endcomment -%}
-    {%- if template contains 'techpack' -%}
-      {%- assign is_techpack_page = true -%}
-    {%- endif -%}
-    
-    {%- comment -%} Method 4: URL path detection {%- endcomment -%}
-    {%- if request.page_type == 'page' and canonical_url contains 'techpack' -%}
-      {%- assign is_techpack_page = true -%}
-    {%- endif -%}
-    
-    {%- comment -%} Method 5: Page content detection {%- endcomment -%}
-    {%- if page and page.content contains 'techpack' -%}
-      {%- assign is_techpack_page = true -%}
-    {%- endif -%}
-    
-    {%- comment -%} FORCE LOAD CSS if any detection method matches {%- endcomment -%}
-    {%- if is_techpack_page -%}
+    {%- comment -%} Load techpack CSS for techpack pages {%- endcomment -%}
+    {%- if template.suffix == 'techpack' or template.suffix == 'techpack-modern-complete' or template.suffix == 'techpack-upload' -%}
       {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
-      <script>console.log('🎯 TECHPACK CSS LOADED via template detection');</script>
+      {{ 'techpack-mobile-scrolling-fixes.css' | asset_url | stylesheet_tag }}
+      {{ 'techpack-form-enhancements.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
-    
-    {%- comment -%} EMERGENCY FALLBACK: Load CSS based on section presence {%- endcomment -%}
-    <script>
-      // NUCLEAR FALLBACK: Check for techpack content and force CSS loading
-      document.addEventListener('DOMContentLoaded', function() {
-        const hasTechpackContent = document.querySelector('.techpack-step, .techpack-container, #techpack-step-1, #techpack-step-2, #techpack-step-3, #techpack-step-4, [class*="techpack"]');
-        const hasUrlTechpack = window.location.pathname.includes('techpack') || window.location.href.includes('techpack');
-        
-        if ((hasTechpackContent || hasUrlTechpack) && !document.querySelector('link[href*="techpack-app.css"]')) {
-          console.log('🚨 EMERGENCY: Loading techpack CSS via JavaScript fallback');
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = '{{ 'techpack-app.css' | asset_url }}';
-          document.head.appendChild(link);
-          
-          // Add techpack body class for styling
-          document.body.classList.add('techpack-page');
-        }
-        
-        // ULTIMATE FALLBACK: Apply critical inline styles if CSS still fails to load
-        setTimeout(function() {
-          if (hasTechpackContent && !document.querySelector('link[href*="techpack-app.css"]')?.sheet) {
-            console.log('🆘 ULTIMATE FALLBACK: Applying emergency inline CSS');
-            const emergencyStyles = document.createElement('style');
-            emergencyStyles.innerHTML = `
-              .techpack-page { font-family: system-ui, -apple-system, sans-serif; }
-              .techpack-container { max-width: 800px; margin: 0 auto; padding: 20px; }
-              .techpack-step { margin: 20px 0; }
-              .techpack-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
-              .techpack-subtitle { color: #666; margin-bottom: 30px; }
-              .techpack-form__group { margin-bottom: 20px; }
-              .techpack-form__label { display: block; font-weight: 600; margin-bottom: 8px; }
-              .techpack-form__input, .techpack-form__select, .techpack-form__textarea { 
-                width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; 
-                font-size: 16px; background: white;
-              }
-              .techpack-btn { 
-                background: #000; color: white; padding: 12px 24px; border: none; 
-                border-radius: 6px; cursor: pointer; font-size: 16px; margin: 10px 5px;
-              }
-              .techpack-btn:hover { background: #333; }
-              .techpack-btn--ghost { background: transparent; color: #000; border: 1px solid #ddd; }
-              .techpack-progress { margin-bottom: 30px; }
-              .techpack-progress__bar { height: 4px; background: #eee; border-radius: 2px; margin-bottom: 15px; }
-              .techpack-progress__fill { height: 100%; background: #000; border-radius: 2px; }
-              .techpack-progress__steps { display: flex; justify-content: space-between; }
-              .techpack-progress__step { text-align: center; }
-              .techpack-progress__step-circle { 
-                width: 40px; height: 40px; border-radius: 50%; background: #eee; 
-                display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
-              }
-              .techpack-progress__step--active .techpack-progress__step-circle { background: #000; color: white; }
-              .techpack-garment, .techpack-colorway { 
-                border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; 
-              }
-              .techpack-form__actions { 
-                display: flex; justify-content: space-between; align-items: center; margin-top: 30px; 
-              }
-              @media (max-width: 768px) {
-                .techpack-container { padding: 15px; }
-                .techpack-progress__steps { font-size: 14px; }
-                .techpack-form__actions { flex-direction: column; gap: 15px; }
-              }
-            `;
-            document.head.appendChild(emergencyStyles);
-            document.body.classList.add('techpack-emergency-css');
-          }
-        }, 2000);
-      });
-    </script>
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
