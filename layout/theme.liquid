@@ -286,7 +286,6 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {{ 'responsive.css' | asset_url | stylesheet_tag }}
-    {{ 'modern-account-enhancements.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-button.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
@@ -321,9 +320,7 @@
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
     
     {%- comment -%} Modern Account System Assets {%- endcomment -%}
-    {%- if customer -%}
-      {{ 'modern-account-enhancements.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
+    {%- comment -%} Removed missing modern-account-enhancements.css file {%- endcomment -%}
     
     {%- comment -%} TechPack Modern System Assets {%- endcomment -%}
     {%- if template contains 'techpack-modern' -%}
