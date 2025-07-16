@@ -297,17 +297,7 @@ function createMobileDebugPanel() {
   debugPanel.innerHTML = '<div id="mobile-debug-content">Mobile Debug Active...</div>';
   document.body.appendChild(debugPanel);
   
-  // Override console.log for mobile debugging
-  const originalLog = console.log;
-  console.log = function(...args) {
-    originalLog.apply(console, args);
-    const debugContent = document.getElementById('mobile-debug-content');
-    if (debugContent && args[0] && args[0].includes('📱')) {
-      debugContent.innerHTML += '<br>' + args.join(' ');
-      debugContent.scrollTop = debugContent.scrollHeight;
-    }
-  };
-  
+  // Mobile debug panel created (console.log override removed for normal debugging)
   console.log('📱 Mobile debug panel created');
 }
 
