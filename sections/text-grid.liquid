@@ -24,6 +24,9 @@
     {% endfor %}
 </div>
 
+{% if section.settings.enable_footer == true and template contains 'index' %}
+  {% include 'footer-homepage' %}
+{% endif %}
 
 {% schema %}
   {
