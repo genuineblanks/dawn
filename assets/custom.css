@@ -1029,10 +1029,12 @@ body .available-retail + .available-retail {
     font-size: 14px;
 }
 .related-products .related-products__heading {
-    text-align: center;
-    font-family: Impact;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    text-align: center !important;
+    font-family: var(--font-heading-family) !important;
+    letter-spacing: 0.15em !important;
+    text-transform: uppercase !important;
+    font-weight: 500 !important;
+    font-size: 1.8rem !important;
 }
 .accordion__title {
     letter-spacing: 0;
@@ -1104,11 +1106,16 @@ body .available-retail + .available-retail {
     object-fit: contain;
 }
 .related-products .card .card__media .media img {
-    object-fit: contain;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 .related-products .card .card__heading {
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 1.6rem !important;
+    font-weight: 500 !important;
+    font-family: var(--font-heading-family) !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
 }
 .collection-hero {
     margin-top: 2rem;
@@ -1363,6 +1370,58 @@ ul.productcolors li a.active[style="background: #000;"] {border-color: #ff0;}
     width: 10px;
     height: 10px;
   }
+}
+
+/* ================ GLOBAL TYPOGRAPHY CONSISTENCY ================== */
+/* Standardize typography across the entire site */
+
+/* Global product title styling */
+.card__heading,
+.product__title,
+.product__title h1,
+h1.product__title,
+.collection-list .card__heading,
+.product-grid .card__heading {
+  font-family: var(--font-heading-family) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+}
+
+/* Global section heading styling */
+.section__heading,
+.related-products__heading,
+.collection-hero__title,
+.footer-block__heading,
+h2.footer-block__heading,
+.newsletter__heading,
+h2 {
+  font-family: var(--font-heading-family) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+}
+
+/* Global navigation styling */
+.header__menu-item,
+.list-menu__item,
+nav ul li a {
+  font-family: var(--font-heading-family) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+}
+
+/* Remove Impact font usage globally */
+.banner__heading,
+.video-text-overlay h2.banner__heading,
+h2.banner__heading,
+h3.footer-brand-title {
+  font-family: var(--font-heading-family) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
 }
 
 /* ================ ULTRA AGGRESSIVE HEADER COLOR OVERRIDES ================== */
