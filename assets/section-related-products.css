@@ -170,29 +170,7 @@ html body .related-products .grid__item {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ensure full card clickability */
-.related-products .card-wrapper .full-unstyled-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 3;
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Ensure card content is properly positioned */
-.related-products .card-wrapper .card__content {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.related-products .card-wrapper .card__content * {
-  pointer-events: none;
-}
+/* Ensure full card clickability - Let existing script handle this */
 
 /* Shimmer effect on hover */
 .related-products .card-wrapper::before {
@@ -354,16 +332,6 @@ html body .related-products .grid__item {
   height: 100%;
 }
 
-.related-products .card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  padding: 0.5rem;
-  box-sizing: border-box;
-  background-color: rgba(var(--color-foreground), 0.02);
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 /* Ensure grid layout works properly */
 .related-products .product-grid {
