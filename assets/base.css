@@ -685,6 +685,17 @@ hr {
   display: block;
 }
 
+/* Make card links cover entire card area */
+.card-wrapper .full-unstyled-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: block;
+}
+
 .placeholder {
   background-color: rgba(var(--color-foreground), 0.04);
   color: rgba(var(--color-foreground), 0.55);
