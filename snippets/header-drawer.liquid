@@ -21,7 +21,14 @@
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
-              {%- for link in menu.links -%}
+              {%- liquid
+                if menu != blank
+                  assign menu_links = menu.links
+                else
+                  assign menu_links = section.settings.menu.links
+                endif
+              -%}
+              {%- for link in menu_links -%}
                 <li>
                   {%- if link.links != blank -%}
                     <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
