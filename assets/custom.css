@@ -1105,6 +1105,11 @@ body .available-retail + .available-retail {
     position: inherit;
     object-fit: contain;
 }
+.related-products .card .card__media .media img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
 .related-products .card .card__heading {
     font-size: 1.6rem !important;
     font-weight: 500 !important;
