@@ -896,6 +896,38 @@
     })();
     </script>
 
+    <script>
+    // Debug Panel for Scroll System
+    if (window.location.search.includes('debug=scroll')) {
+      const debugPanel = document.createElement('div');
+      debugPanel.style.cssText = `
+        position: fixed; 
+        top: 10px; 
+        right: 10px; 
+        background: rgba(0,0,0,0.8); 
+        color: white; 
+        padding: 10px; 
+        font-family: monospace; 
+        z-index: 9999; 
+        max-width: 300px; 
+        font-size: 12px;
+        border-radius: 4px;
+      `;
+      debugPanel.innerHTML = '<div id="debug-content">Debug info will appear here...</div>';
+      document.body.appendChild(debugPanel);
+      
+      // Override console.log to show in debug panel
+      const originalLog = console.log;
+      console.log = function(...args) {
+        originalLog.apply(console, args);
+        const debugContent = document.getElementById('debug-content');
+        if (debugContent) {
+          debugContent.innerHTML += '<br>' + args.join(' ');
+          debugContent.scrollTop = debugContent.scrollHeight;
+        }
+      };
+    }
+    </script>
 
     <!-- Scroll To Top Button -->
     {% render 'scroll-button' %}
