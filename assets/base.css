@@ -51,15 +51,27 @@
     min-height: var(--real-viewport-height);
   }
   
+  /* FIXED: Allow sections to grow with content, don't force viewport height */
   section {
-    min-height: var(--real-viewport-height);
-    height: var(--real-viewport-height); /* ENHANCED: Force exact viewport height */
-    max-height: var(--real-viewport-height); /* ENHANCED: Prevent oversize */
+    min-height: auto; /* Let content determine minimum height */
+    height: auto; /* Allow sections to grow with content */
+    max-height: none; /* Don't limit section height */
     /* Ensure sections are touch-scrollable */
     -webkit-overflow-scrolling: touch;
     /* ANDROID FIX: Better section alignment */
     box-sizing: border-box;
-    overflow: hidden; /* Prevent content overflow affecting height */
+    overflow: visible; /* Allow content to be visible */
+  }
+  
+  /* Only force viewport height for specific full-screen sections */
+  .banner, 
+  .image-banner,
+  .hero-section,
+  .autoplay-video {
+    min-height: var(--real-viewport-height);
+    height: var(--real-viewport-height);
+    max-height: var(--real-viewport-height);
+    overflow: hidden;
   }
 
   /* TechPack specific overrides - Fix mobile white space */
@@ -82,13 +94,6 @@
     }
   }
   
-  .banner,
-  .image-banner {
-    min-height: var(--real-viewport-height);
-    height: var(--real-viewport-height); /* ENHANCED: Force exact height */
-    max-height: var(--real-viewport-height); /* ENHANCED: Prevent overflow */
-    box-sizing: border-box;
-  }
   
   .banner__media {
     height: var(--real-viewport-height);
