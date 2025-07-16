@@ -27,7 +27,7 @@
   }
 {%- endstyle -%}
 
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+<footer class="footer {% if template contains 'index' %}footer-banner-img{% endif %} color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   {%- liquid
     assign has_social_icons = true
     if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -82,6 +82,10 @@
                   {%- when '@app' -%}
                     {% render block %}
                   {%- when 'text' -%}
+                    <div class="footer-block__details-content rte">
+                      {{ block.settings.subtext }}
+                    </div>
+                  {%- when 'text_footer' -%}
                     <div class="footer-block__details-content rte">
                       {{ block.settings.subtext }}
                     </div>
@@ -173,6 +177,11 @@
               {%- if section.settings.newsletter_heading != blank -%}
                 <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
               {%- endif -%}
+              
+              {%- comment -%} Use Klaviyo for homepage, Shopify form for other pages {%- endcomment -%}
+              {% if template contains 'index' %}
+                <div class="klaviyo-form-Xx3Apa newsletter_Klaviyo"></div>
+              {% else %}
               {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="newsletter-form__field-wrapper">
@@ -232,6 +241,7 @@
                   </h3>
                 {%- endif -%}
               {%- endform -%}
+              {% endif %}
                {%- if section.settings.newsletter_paragraph != blank -%}
                 <div class="footer-block__paragraph inline-richtext">{{ section.settings.newsletter_paragraph }}</div>
               {%- endif -%}
@@ -386,6 +396,11 @@
       </div>
     </div>
   </div>
+  
+  {%- comment -%} Add section-dot navigation only for homepage {%- endcomment -%}
+  {% if template contains 'index' %}
+    <div id="section-dots" class="section-dot-navigation"></div>
+  {% endif %}
 </footer>
 
 {% schema %}
@@ -450,6 +465,24 @@
           "id": "subtext",
           "default": "<p>Share contact information, store details, and brand content with your customers.</p>",
           "label": "t:sections.footer.blocks.text.settings.subtext.label"
+        }
+      ]
+    },
+    {
+      "type": "text_footer",
+      "name": "Text Footer (Homepage)",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "subtext",
+          "default": "<p>Share contact information, store details, and brand content with your customers.</p>",
+          "label": "Footer text"
         }
       ]
     },
