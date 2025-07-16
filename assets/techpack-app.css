@@ -619,8 +619,8 @@ body {
 .techpack-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .techpack-btn__icon {
@@ -763,9 +763,9 @@ body {
 .techpack-file__tag-label {
   display: block;
   font-size: 0.625rem;
-  color: #374151 !important;
+  color: #374151;
   margin-bottom: var(--techpack-space-sm);
-  font-weight: var(--techpack-font-weight-semibold) !important;
+  font-weight: var(--techpack-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -792,37 +792,37 @@ body {
 /* RED styling when no file type is selected */
 .techpack-file__tag-select[value=""],
 .techpack-file__tag-select:invalid {
-  border: 2px solid var(--techpack-error) !important;
-  background-color: rgba(220, 38, 38, 0.05) !important;
-  color: var(--techpack-error) !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+  border: 2px solid var(--techpack-error);
+  background-color: rgba(220, 38, 38, 0.05);
+  color: var(--techpack-error);
+  font-weight: var(--techpack-font-weight-semibold);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
   animation: pulseRed 2s infinite;
 }
 
 /* When a valid option is selected */
 .techpack-file__tag-select:valid:not([value=""]) {
-  border: 1px solid var(--techpack-success) !important;
-  background-color: var(--techpack-bg) !important;
-  color: var(--techpack-text) !important;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1) !important;
+  border: 1px solid var(--techpack-success);
+  background-color: var(--techpack-bg);
+  color: var(--techpack-text);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
   animation: none;
 }
 
 /* Make the placeholder option red */
 .techpack-file__tag-select option[value=""] {
-  color: var(--techpack-error) !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
-  font-style: italic !important;
+  color: var(--techpack-error);
+  font-weight: var(--techpack-font-weight-semibold);
+  font-style: italic;
 }
 
 /* DARK GREY label when required */
 .techpack-file__tag-label {
   display: block;
   font-size: 0.625rem;
-  color: #374151 !important;
+  color: #374151;
   margin-bottom: var(--techpack-space-sm);
-  font-weight: var(--techpack-font-weight-semibold) !important;
+  font-weight: var(--techpack-font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -1150,47 +1150,47 @@ body {
   width: 100%;
   padding: var(--techpack-space-lg);
   border: none;
-  background: rgba(220, 38, 38, 0.08) !important;
-  color: #dc2626 !important;
-  border: 1px solid #dc2626 !important;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  border: 1px solid #dc2626;
   text-align: center;
   font-size: 0.875rem;
-  font-weight: var(--techpack-font-weight-semibold) !important;
+  font-weight: var(--techpack-font-weight-semibold);
   transition: var(--techpack-transition);
   font-family: var(--techpack-font-family);
 }
 
 /* ORANGE styling for progress towards minimum */
 .techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-progress {
-  background: rgba(249, 115, 22, 0.08) !important;
-  color: #ea580c !important;
-  border: 1px solid #ea580c !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
+  background: rgba(249, 115, 22, 0.08);
+  color: #ea580c;
+  border: 1px solid #ea580c;
+  font-weight: var(--techpack-font-weight-medium);
 }
 
 /* GREEN styling when minimum is reached */
 .techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-filled {
-  background: rgba(34, 197, 94, 0.08) !important;
-  color: #16a34a !important;
-  border: 1px solid #16a34a !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
+  background: rgba(34, 197, 94, 0.08);
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  font-weight: var(--techpack-font-weight-medium);
 }
 
 /* PURPLE styling for excess sizes */
 .techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-excess {
-  background: rgba(147, 51, 234, 0.08) !important;
-  color: #7c3aed !important;
-  border: 1px solid #7c3aed !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
+  background: rgba(147, 51, 234, 0.08);
+  color: #7c3aed;
+  border: 1px solid #7c3aed;
+  font-weight: var(--techpack-font-weight-semibold);
   animation: excessPulse 2s infinite;
 }
 
 /* GRAY/NEUTRAL styling for empty fields when minimum is already reached */
 .techpack-colorway .techpack-size-grid .techpack-size-grid__input.quantity-neutral {
-  background: var(--techpack-bg-secondary) !important;
-  color: var(--techpack-text-muted) !important;
-  border: 1px solid var(--techpack-border) !important;
-  font-weight: var(--techpack-font-weight-normal) !important;
+  background: var(--techpack-bg-secondary);
+  color: var(--techpack-text-muted);
+  border: 1px solid var(--techpack-border);
+  font-weight: var(--techpack-font-weight-normal);
 }
 
 @keyframes excessPulse {
@@ -1200,11 +1200,11 @@ body {
 
 /* Focus styling - HIGHEST PRIORITY */
 .techpack-colorway .techpack-size-grid .techpack-size-grid__input:focus {
-  outline: none !important;
-  background: var(--techpack-bg-tertiary) !important;
-  color: var(--techpack-primary) !important;
-  box-shadow: inset 0 0 0 2px var(--techpack-primary) !important;
-  border: 1px solid var(--techpack-primary) !important;
+  outline: none;
+  background: var(--techpack-bg-tertiary);
+  color: var(--techpack-primary);
+  box-shadow: inset 0 0 0 2px var(--techpack-primary);
+  border: 1px solid var(--techpack-primary);
 }
 
 /* Size distribution warning messages */
@@ -1240,18 +1240,18 @@ body {
 .techpack-size-grid__input:invalid,
 .techpack-size-grid__input[value=""],
 .techpack-size-grid__input[value="0"] {
-  background: rgba(220, 38, 38, 0.05) !important;
-  color: var(--techpack-error) !important;
-  border: 1px solid var(--techpack-error) !important;
-  font-weight: var(--techpack-font-weight-semibold) !important;
+  background: rgba(220, 38, 38, 0.05);
+  color: var(--techpack-error);
+  border: 1px solid var(--techpack-error);
+  font-weight: var(--techpack-font-weight-semibold);
 }
 
 /* When input has a valid value > 0 */
 .techpack-size-grid__input:valid:not([value=""]):not([value="0"]) {
-  background: var(--techpack-bg) !important;
-  color: var(--techpack-text) !important;
-  border: none !important;
-  font-weight: var(--techpack-font-weight-medium) !important;
+  background: var(--techpack-bg);
+  color: var(--techpack-text);
+  border: none;
+  font-weight: var(--techpack-font-weight-medium);
 }
 
 .techpack-colorway__total {
@@ -1682,7 +1682,7 @@ body {
   cursor: pointer;
   position: relative;
   padding-right: 3rem;
-  background: var(--techpack-bg) !important;
+  background: var(--techpack-bg);
 }
 
 .techpack-form__input--date::-webkit-calendar-picker-indicator {
@@ -1776,9 +1776,9 @@ body {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }
 
@@ -1809,11 +1809,11 @@ body {
   .techpack-progress,
   .debug-panel,
   .debug-toggle {
-    display: none !important;
+    display: none;
   }
   
   .techpack-step {
-    display: block !important;
+    display: block;
   }
   
   .techpack-content {
@@ -1843,7 +1843,7 @@ body {
   .techpack-form__input,
   .techpack-form__select,
   .techpack-form__textarea {
-    font-size: 16px !important; /* Prevents iOS zoom */
+    font-size: 16px; /* Prevents iOS zoom */
     max-height: none;
     transform: scale(1);
   }
@@ -1856,7 +1856,7 @@ body {
   input[type="date"],
   select,
   textarea {
-    font-size: 16px !important;
+    font-size: 16px;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -2029,11 +2029,11 @@ body {
   /* Mobile file type selection - ensure RED styling works */
   .techpack-file__tag-select[value=""],
   .techpack-file__tag-select:invalid {
-    border: 2px solid var(--techpack-error) !important;
-    background-color: rgba(220, 38, 38, 0.05) !important;
-    color: var(--techpack-error) !important;
-    font-weight: var(--techpack-font-weight-semibold) !important;
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    border: 2px solid var(--techpack-error);
+    background-color: rgba(220, 38, 38, 0.05);
+    color: var(--techpack-error);
+    font-weight: var(--techpack-font-weight-semibold);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
     animation: pulseRed 2s infinite;
   }
   
@@ -2297,12 +2297,12 @@ body {
 }
 
 .techpack-form__input--error {
-  border-color: #dc3545 !important;
+  border-color: #dc3545;
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
 }
 
 .techpack-form__input--success {
-  border-color: #28a745 !important;
+  border-color: #28a745;
   box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
 
@@ -2576,8 +2576,8 @@ body {
 /* ENHANCED: Loading states and visual feedback for buttons */
 .techpack-premium-btn[data-loading="true"] {
   position: relative;
-  pointer-events: none !important;
-  opacity: 0.6 !important;
+  pointer-events: none;
+  opacity: 0.6;
   transition: all 0.3s ease;
 }
 
@@ -4601,25 +4601,25 @@ body {
   /* Force body and html to eliminate white space */
   body.techpack-page,
   html.techpack-page {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden !important;
-    background: var(--techpack-bg) !important;
-    height: 100vh !important;
-    height: 100dvh !important;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: var(--techpack-bg);
+    height: 100vh;
+    height: 100dvh;
   }
   
   /* Remove any default Shopify section spacing */
   .shopify-section {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
   }
   
   /* Fix main content wrapper */
   main {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: var(--techpack-bg) !important;
+    margin: 0;
+    padding: 0;
+    background: var(--techpack-bg);
   }
 
   .techpack-app-wrapper {
@@ -4655,21 +4655,21 @@ body {
   
   /* Override section spacing for techpack pages */
   .techpack-step + .techpack-step {
-    margin-top: 0 !important;
+    margin-top: 0;
   }
   
   /* Ensure no section margins/padding leak through */
   .techpack-app section,
   .techpack-app div[class*="section"],
   .techpack-app .section {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
   }
   
   /* Fix any potential above/below section spacing issues */
   .techpack-app::before,
   .techpack-app::after {
-    display: none !important;
+    display: none;
   }
   
   /* Fix dynamic height calculation to prevent white space gaps */
@@ -4885,7 +4885,7 @@ body {
   }
   
   .techpack-form__actions {
-    position: relative !important;
+    position: relative;
     margin: 1rem 0 0 0;
     left: auto;
     right: auto;
@@ -4893,11 +4893,11 @@ body {
   }
   
   .techpack-content {
-    padding-bottom: 1rem !important;
+    padding-bottom: 1rem;
   }
   
   .techpack-form {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
   }
 }
 
