@@ -37,7 +37,7 @@
 @media screen and (max-width: 749px) {
   html {
     /* CRITICAL: Use auto for custom scroll system */
-    scroll-behavior: auto !important;
+    scroll-behavior: auto;
     /* Fix iOS bounce scrolling */
     -webkit-overflow-scrolling: touch;
   }
@@ -46,7 +46,7 @@
     /* Ensure proper touch scrolling */
     -webkit-overflow-scrolling: touch;
     /* CRITICAL: Restrict touch gestures to vertical scrolling only */
-    touch-action: pan-y !important;
+    touch-action: pan-y;
     /* Fix iOS viewport issues */
     min-height: var(--real-viewport-height);
   }
@@ -77,20 +77,20 @@
   /* TechPack specific overrides - Fix mobile white space */
   .tech-pack-section,
   [id^="TechPack-"] {
-    height: auto !important;
-    min-height: auto !important;
-    max-height: none !important;
+    height: auto;
+    min-height: auto;
+    max-height: none;
   }
 
   /* Mobile specific overrides for TechPack */
   @media (max-width: 768px) {
     .tech-pack-section,
     [id^="TechPack-"] {
-      height: auto !important;
-      min-height: 100vh !important;
-      max-height: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
+      height: auto;
+      min-height: 100vh;
+      max-height: none;
+      margin: 0;
+      padding: 0;
     }
   }
   
@@ -113,11 +113,11 @@
   
   /* CRITICAL: Highest specificity for mobile devices */
   .mobile-device body {
-    touch-action: pan-y !important;
+    touch-action: pan-y;
   }
   
   .mobile-device html {
-    scroll-behavior: auto !important;
+    scroll-behavior: auto;
   }
 }
 
@@ -197,23 +197,23 @@
 /* base */
 
 .no-js:not(html) {
-  display: none !important;
+  display: none;
 }
 
 html.no-js .no-js:not(html) {
-  display: block !important;
+  display: block;
 }
 
 .no-js-inline {
-  display: none !important;
+  display: none;
 }
 
 html.no-js .no-js-inline {
-  display: inline-block !important;
+  display: inline-block;
 }
 
 html.no-js .no-js-hidden {
-  display: none !important;
+  display: none;
 }
 
 .page-width {
@@ -332,11 +332,11 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 .visually-hidden {
-  position: absolute !important;
+  position: absolute;
   overflow: hidden;
   width: 1px;
   height: 1px;
@@ -344,7 +344,7 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   padding: 0;
   border: 0;
   clip: rect(0 0 0 0);
-  word-wrap: normal !important;
+  word-wrap: normal;
 }
 
 .visually-hidden--inline {
@@ -563,19 +563,19 @@ table:not([class]) th {
 
 @media screen and (max-width: 749px) {
   .small-hide {
-    display: none !important;
+    display: none;
   }
 }
 
 @media screen and (min-width: 750px) and (max-width: 989px) {
   .medium-hide {
-    display: none !important;
+    display: none;
   }
 }
 
 @media screen and (min-width: 990px) {
   .large-up-hide {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -685,6 +685,17 @@ hr {
   display: block;
 }
 
+/* Make card links cover entire card area */
+.card-wrapper .full-unstyled-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: block;
+}
+
 .placeholder {
   background-color: rgba(var(--color-foreground), 0.04);
   color: rgba(var(--color-foreground), 0.55);
@@ -705,8 +716,8 @@ details > * {
 
 @media (prefers-reduced-motion) {
   .motion-reduce {
-    transition: none !important;
-    animation: none !important;
+    transition: none;
+    animation: none;
   }
 }
 
@@ -878,8 +889,8 @@ summary::-webkit-details-marker {
 
 /* Dangerous for a11y - Use with care */
 .focus-none {
-  box-shadow: none !important;
-  outline: 0 !important;
+  box-shadow: none;
+  outline: 0;
 }
 
 .focus-offset:focus-visible {
@@ -2115,8 +2126,8 @@ input[type='checkbox'] {
 .quantity__input:-webkit-autofill,
 .quantity__input:-webkit-autofill:hover,
 .quantity__input:-webkit-autofill:active {
-  box-shadow: 0 0 0 10rem rgb(var(--color-background)) inset !important;
-  -webkit-box-shadow: 0 0 0 10rem rgb(var(--color-background)) inset !important;
+  box-shadow: 0 0 0 10rem rgb(var(--color-background)) inset;
+  -webkit-box-shadow: 0 0 0 10rem rgb(var(--color-background)) inset;
 }
 
 .quantity__input::-webkit-outer-spin-button,
@@ -3084,7 +3095,7 @@ details-disclosure > details {
 @media screen and (forced-colors: active) {
   .icon {
     color: CanvasText;
-    fill: CanvasText !important;
+    fill: CanvasText;
   }
 
   .icon-close-small path {
@@ -3145,7 +3156,7 @@ details-disclosure > details {
   position: relative;
   border: var(--media-border-width) solid rgba(var(--color-foreground), var(--media-border-opacity));
   border-radius: var(--media-radius);
-  overflow: visible !important;
+  overflow: visible;
   background-color: rgb(var(--color-background));
 }
 
@@ -3164,7 +3175,7 @@ details-disclosure > details {
 }
 
 .global-media-settings--no-shadow {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
 .global-media-settings--no-shadow:after {
@@ -3642,28 +3653,28 @@ details-disclosure > details {
 }
 
 .header {
-  padding-top: 20px !important;
-  padding-bottom: 20px !important;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 /* Force all product card images to be perfect squares */
 .card__inner {
-  --ratio-percent: 100% !important;
+  --ratio-percent: 100%;
 }
 
 .card {
-  --ratio-percent: 100% !important;
+  --ratio-percent: 100%;
 }
 
 /* Target specific collections if needed */
 .collection-oversized-luxury .card__inner,
 .collection-relaxed-high-end .card__inner {
-  --ratio-percent: 100% !important;
+  --ratio-percent: 100%;
 }
 
 /* Alternative approach - force aspect ratio directly on media */
 .card__media .media {
-  aspect-ratio: 1 / 1 !important;
+  aspect-ratio: 1 / 1;
 }
 
 /* ===============================================
@@ -3677,15 +3688,15 @@ details-disclosure > details {
   .mobile-device .section-dot-navigation,
   .mobile-device .section-dots,
   .mobile-device #section-dots {
-    display: flex !important;
-    opacity: 0.8 !important;
+    display: flex;
+    opacity: 0.8;
   }
   
   /* Make dots larger and more touch-friendly on mobile */
   .mobile-device .section-dot {
-    width: 12px !important;
-    height: 12px !important;
-    margin: 4px 0 !important;
+    width: 12px;
+    height: 12px;
+    margin: 4px 0;
   }
   
   /* Larger touch area for mobile dots */
@@ -3701,8 +3712,8 @@ details-disclosure > details {
   
   /* Ensure sections work with custom scroll system on mobile */
   .mobile-device section {
-    overflow: visible !important;
-    position: relative !important;
+    overflow: visible;
+    position: relative;
     min-height: 100vh;
   }
   
@@ -3711,8 +3722,8 @@ details-disclosure > details {
   /* Remove scroll blocking from modals on mobile */
   .mobile-device .modal-open,
   .mobile-device .modal-open body {
-    overflow: auto !important;
-    position: static !important;
+    overflow: auto;
+    position: static;
   }
 }
 
@@ -3720,11 +3731,11 @@ details-disclosure > details {
 @supports (-webkit-touch-callout: none) {
   @media screen and (max-width: 749px) {
     html {
-      height: -webkit-fill-available !important;
+      height: -webkit-fill-available;
     }
     
     body {
-      min-height: -webkit-fill-available !important;
+      min-height: -webkit-fill-available;
     }
   }
 }
