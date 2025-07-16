@@ -1582,21 +1582,49 @@ body.template-index .header-wrapper,
   pointer-events: auto !important;
 }
 
-/* Global fix for product images - show full image without cropping */
-.card__media .media img {
-  object-fit: contain !important;
-  object-position: center !important;
-  padding: 0.5rem !important;
-  background-color: rgba(var(--color-foreground), 0.02) !important;
-  box-sizing: border-box !important;
+/* UNIVERSAL PRODUCT IMAGE RULE - OVERRIDES ALL BASE.CSS */
+body .card__media .media img,
+body .card__media img,
+body .media img {
+  object-fit: contain;
+  object-position: center center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: rgba(var(--color-foreground), 0.02);
+  width: 100%;
+  height: 100%;
 }
 
-/* Ensure images have proper aspect ratio container */
+/* FIX CONTAINER SIZING ISSUES - ALLOW FULL IMAGE DISPLAY */
 .card__media {
+  aspect-ratio: unset !important;
+  height: auto !important;
+  min-height: 200px !important;
+  max-height: none !important;
+  padding-bottom: 0 !important;
   position: relative !important;
   overflow: hidden !important;
-  background-color: rgba(var(--color-foreground), 0.02) !important;
 }
+
+.card__media .media {
+  position: relative !important;
+  height: auto !important;
+  min-height: 200px !important;
+  padding-bottom: 0 !important;
+  width: 100% !important;
+}
+
+/* ENSURE IMAGES CAN DISPLAY PROPERLY IN CONTAINERS */
+.card__media .media img {
+  object-fit: contain !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 200px !important;
+  padding: 0.5rem !important;
+  box-sizing: border-box !important;
+  background-color: rgba(0,0,0,0.02) !important;
+}
+
 
 /* Override any z-index conflicts */
 .card-wrapper .full-unstyled-link {
