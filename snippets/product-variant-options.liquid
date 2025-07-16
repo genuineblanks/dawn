@@ -105,7 +105,9 @@
     >
     <label for="{{ input_id }}">
       {{ value -}}
-      {{ label_unavailable }}
+      {%- if option_disabled -%}
+        {{ label_unavailable }}
+      {%- endif -%}
     </label>
    
   {%- elsif picker_type == 'dropdown' or picker_type == 'swatch_dropdown' -%}
