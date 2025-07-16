@@ -34,14 +34,15 @@
 }
 
 .related-products__heading {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  margin: 0 0 3rem;
-  color: #000000;
-  position: relative;
-  text-transform: uppercase;
+  text-align: center !important;
+  font-size: 2.5rem !important;
+  font-weight: 500 !important;
+  font-family: var(--font-heading-family) !important;
+  letter-spacing: 0.15em !important;
+  margin: 0 0 3rem !important;
+  color: #000000 !important;
+  position: relative !important;
+  text-transform: uppercase !important;
 }
 
 .related-products__heading::after {
@@ -77,25 +78,53 @@
   }
 }
 
-/* Mobile responsive - More specific and stronger */
+/* AGGRESSIVE Mobile Grid Layout - Override Base Flexbox */
 @media screen and (max-width: 749px) {
+  /* Force CSS Grid with ultra-high specificity */
   .related-products .grid,
   .related-products .product-grid,
-  .related-products .grid--2-col-tablet-down {
+  .related-products .grid--2-col-tablet-down,
+  .page-width .related-products .grid,
+  .page-width .related-products .product-grid,
+  section.related-products .grid,
+  section.related-products .product-grid,
+  body .related-products .grid,
+  body .related-products .product-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem;
+    gap: 1rem !important;
     width: 100% !important;
-    /* Override any vertical/column layouts */
+    /* Override base.css flex rules */
+    flex-wrap: unset !important;
     flex-direction: unset !important;
+    margin-bottom: 2rem !important;
+    /* Grid specific rules */
     grid-auto-flow: row !important;
+    justify-content: unset !important;
+    align-items: stretch !important;
   }
   
-  /* Ensure grid items are properly sized */
-  .related-products .grid__item {
+  /* Force grid items to behave correctly */
+  .related-products .grid__item,
+  .page-width .related-products .grid__item,
+  section.related-products .grid__item,
+  body .related-products .grid__item {
     width: 100% !important;
     min-width: 0 !important;
+    max-width: 100% !important;
     display: block !important;
+    flex-grow: unset !important;
+    flex-shrink: unset !important;
+    /* Remove any flex-based sizing */
+    flex-basis: unset !important;
+  }
+  
+  /* Remove any product-grid flex overrides */
+  .related-products .product-grid.grid,
+  .page-width .related-products .product-grid.grid,
+  section.related-products .product-grid.grid,
+  body .related-products .product-grid.grid {
+    display: grid !important;
   }
 }
 
