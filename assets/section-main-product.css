@@ -7,6 +7,7 @@
 /* === ROOT VARIABLES & BRAND ALIGNMENT === */
 :root {
   --futuristic-primary: #000000;
+  --futuristic-primary-rgb: 0, 0, 0;
   --futuristic-secondary: #ffffff;
   --futuristic-accent: #666666;
   --futuristic-hover: #333333;
@@ -1420,6 +1421,153 @@
 .quantity-input:focus {
   outline: none;
   background: #f8f9fa;
+}
+
+/* === ENHANCED QUANTITY SELECTOR FIXES === */
+/* Override and fix conflicting quantity styles */
+.product-form__input-wrapper.quantity-section {
+  margin: var(--futuristic-spacing-lg) 0;
+}
+
+/* Ensure consistent quantity wrapper styling */
+.quantity-wrapper.futuristic-quantity,
+.futuristic-quantity {
+  display: flex;
+  align-items: center;
+  background: var(--futuristic-secondary);
+  border: 2px solid var(--futuristic-border);
+  border-radius: var(--futuristic-radius);
+  overflow: hidden;
+  transition: var(--futuristic-transition);
+  max-width: 160px;
+  width: 160px;
+  height: 48px;
+  position: relative;
+  box-shadow: var(--futuristic-shadow);
+}
+
+.quantity-wrapper.futuristic-quantity:hover,
+.futuristic-quantity:hover {
+  border-color: var(--futuristic-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.quantity-wrapper.futuristic-quantity:focus-within,
+.futuristic-quantity:focus-within {
+  border-color: var(--futuristic-primary);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced quantity buttons */
+.quantity-wrapper .quantity-btn,
+.quantity-wrapper .quantity__button {
+  background: var(--futuristic-secondary);
+  border: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--futuristic-transition);
+  color: var(--futuristic-primary);
+  font-weight: 600;
+  font-size: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.quantity-wrapper .quantity-btn:first-child,
+.quantity-wrapper .quantity__button:first-child {
+  border-right: 1px solid var(--futuristic-border);
+}
+
+.quantity-wrapper .quantity-btn:last-child,
+.quantity-wrapper .quantity__button:last-child {
+  border-right: none;
+  border-left: 1px solid var(--futuristic-border);
+}
+
+.quantity-wrapper .quantity-btn:hover,
+.quantity-wrapper .quantity__button:hover {
+  background: var(--futuristic-primary);
+  color: var(--futuristic-secondary);
+  transform: scale(1.05);
+}
+
+.quantity-wrapper .quantity-btn:active,
+.quantity-wrapper .quantity__button:active {
+  transform: scale(0.95);
+}
+
+.quantity-wrapper .quantity-btn:disabled,
+.quantity-wrapper .quantity__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.quantity-wrapper .quantity-btn svg,
+.quantity-wrapper .quantity__button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+}
+
+/* Enhanced quantity input */
+.quantity-wrapper .futuristic-input,
+.quantity-wrapper .quantity__input {
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--futuristic-primary);
+  width: 64px;
+  height: 48px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  flex: 1;
+  min-width: 0;
+}
+
+.quantity-wrapper .futuristic-input::-webkit-outer-spin-button,
+.quantity-wrapper .futuristic-input::-webkit-inner-spin-button,
+.quantity-wrapper .quantity__input::-webkit-outer-spin-button,
+.quantity-wrapper .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-wrapper .futuristic-input:focus,
+.quantity-wrapper .quantity__input:focus {
+  background: rgba(var(--futuristic-primary-rgb), 0.05);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .quantity-wrapper.futuristic-quantity,
+  .futuristic-quantity {
+    max-width: 140px;
+    width: 140px;
+    height: 44px;
+  }
+  
+  .quantity-wrapper .quantity-btn,
+  .quantity-wrapper .quantity__button {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .quantity-wrapper .futuristic-input,
+  .quantity-wrapper .quantity__input {
+    width: 52px;
+    height: 44px;
+    font-size: 0.9rem;
+  }
 }
 
 /* Buy Buttons Enhancement */
