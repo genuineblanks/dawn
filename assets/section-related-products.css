@@ -71,15 +71,16 @@ html body .related-products .product-grid {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 2rem !important;
-  margin-bottom: 2rem !important;
-  padding: 0 !important;
+  margin: 0 auto 2rem auto !important;
+  padding: 0 2rem !important;
   width: 100% !important;
+  max-width: 1200px !important;
   /* Override base.css flex rules */
   flex-wrap: unset !important;
   flex-direction: unset !important;
   /* Grid specific rules */
   grid-auto-flow: row !important;
-  justify-content: unset !important;
+  justify-content: center !important;
   align-items: stretch !important;
 }
 
@@ -103,7 +104,9 @@ html body .related-products .grid__item {
   .related-products .grid,
   .related-products .product-grid {
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 1.5rem;
+    gap: 1.5rem !important;
+    padding: 0 1.5rem !important;
+    margin: 0 auto 2rem auto !important;
   }
 }
 
@@ -165,6 +168,30 @@ html body .related-products .grid__item {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure full card clickability */
+.related-products .card-wrapper .full-unstyled-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Ensure card content is properly positioned */
+.related-products .card-wrapper .card__content {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.related-products .card-wrapper .card__content * {
+  pointer-events: none;
 }
 
 /* Shimmer effect on hover */
@@ -271,7 +298,7 @@ html body .related-products .grid__item {
 @media (max-width: 749px) {
   .related-products {
     padding: 2rem 0;
-    margin: 0 -1rem;
+    margin: 0;
   }
   
   .related-products__heading {
@@ -281,9 +308,10 @@ html body .related-products .grid__item {
   }
   
   .related-products .grid {
-    gap: 1rem;
-    padding: 0 1rem;
-    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem !important;
+    padding: 0 1rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    margin: 0 auto 2rem auto !important;
   }
   
   .related-products .card-wrapper {
@@ -329,8 +357,11 @@ html body .related-products .grid__item {
 .related-products .card__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: rgba(var(--color-foreground), 0.02);
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
