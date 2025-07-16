@@ -18,9 +18,7 @@
     {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
   {%- endif -%}
   
-  <!-- Bulk Quantity Styles and Scripts -->
-  {{ 'component-bulk-quantity.css' | asset_url | stylesheet_tag }}
-  <script src="{{ 'bulk-quantity-handler.js' | asset_url }}" defer="defer"></script>
+  <!-- Removed custom bulk quantity implementation -->
 
   {%- style -%}
     .section-{{ section.id }}-padding {
@@ -183,9 +181,6 @@
                           </button>
                         </quantity-input>
                       </div>
-                      
-                      <!-- Bulk Quantity Buttons -->
-                      {% render 'bulk-quantity-buttons', product: product, section_id: section.id %}
                     </div>
                     
                   {%- when 'buy_buttons' -%}
