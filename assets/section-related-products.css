@@ -168,6 +168,19 @@ html body .related-products .grid__item {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+/* Ensure image link covers the entire media area */
+.related-products .card__media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  border-radius: inherit;
 }
 
 /* Ensure full card clickability - Let existing script handle this */
@@ -222,6 +235,12 @@ html body .related-products .grid__item {
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.related-products .card-wrapper:hover .card__media img {
+  transform: scale(1.12);
+}
+
+/* Ensure hover effects work with clickable image link */
+.related-products .card__media-link:hover + .media img,
 .related-products .card-wrapper:hover .card__media img {
   transform: scale(1.12);
 }
@@ -322,6 +341,7 @@ html body .related-products .grid__item {
   width: 100%;
   padding-bottom: 100%; /* Square aspect ratio */
   overflow: hidden;
+  border-radius: 4px 4px 0 0;
 }
 
 .related-products .card__media .media {
@@ -330,6 +350,14 @@ html body .related-products .grid__item {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.related-products .card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 
