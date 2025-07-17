@@ -115,12 +115,14 @@
     
     <!-- Left Panel: Image Gallery (Scrollable) -->
     <div class="product-images-panel">
-      {% render 'product-media-gallery', 
-        product: product,
-        variant_images: variant_images, 
-        is_clothing: is_clothing,
-        is_design_service: is_design_service,
-        is_accessories: is_accessories %}
+      <div id="MediaGallery-{{ section.id }}">
+        {% render 'product-media-gallery',
+          product: product,
+          «variant_images: variant_images,
+          is_clothing: is_clothing,
+          is_design_service: is_design_service,
+          is_accessories: is_accessories %}
+      </div>
     </div>
 
     <!-- Right Panel: Product Information (Sticky) -->
@@ -253,16 +255,6 @@
             is_design_service: is_design_service,
             is_accessories: is_accessories %}
         </div>
-    +   <div class="product-images-panel">
-    +     <div id="MediaGallery-{{ section.id }}">
-    +       {% render 'product-media-gallery',
-    +         product: product,
-    +         variant_images: variant_images,
-    +         is_clothing: is_clothing,
-    +         is_design_service: is_design_service,
-    +         is_accessories: is_accessories %}
-    +     </div>
-    +   </div>
 
         <!-- Additional Blocks (excluding variant_picker, quantity_selector, buy_buttons - already rendered in form) -->
         {%- for block in section.blocks -%}
