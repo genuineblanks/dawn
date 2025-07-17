@@ -1659,3 +1659,75 @@
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+/* === BULK QUANTITY BUTTONS === */
+.bulk-quantity-section {
+  margin-top: var(--futuristic-spacing-md);
+  padding-top: var(--futuristic-spacing-md);
+  border-top: 1px solid var(--futuristic-border);
+}
+
+.bulk-quantity-label {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--futuristic-spacing-sm);
+  color: var(--futuristic-primary);
+  text-transform: uppercase;
+}
+
+.bulk-quantity-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--futuristic-spacing-xs);
+  margin-bottom: var(--futuristic-spacing-sm);
+}
+
+@media screen and (min-width: 750px) {
+  .bulk-quantity-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.bulk-quantity-btn {
+  background: var(--futuristic-secondary);
+  border: 2px solid var(--futuristic-border);
+  color: var(--futuristic-primary);
+  padding: var(--futuristic-spacing-sm) var(--futuristic-spacing-xs);
+  border-radius: var(--futuristic-radius);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--futuristic-transition);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bulk-quantity-btn:hover {
+  background: var(--futuristic-hover);
+  color: var(--futuristic-secondary);
+  border-color: var(--futuristic-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--futuristic-shadow);
+}
+
+.bulk-quantity-btn.active {
+  background: var(--futuristic-primary);
+  color: var(--futuristic-secondary);
+  border-color: var(--futuristic-primary);
+  box-shadow: var(--futuristic-shadow);
+}
+
+.bulk-unit-price, .bulk-total-price {
+  font-size: 1.2rem;
+  margin-top: var(--futuristic-spacing-xs);
+  color: var(--futuristic-accent);
+}
+
+.bulk-total-price {
+  font-weight: 600;
+  color: var(--futuristic-primary);
+}
