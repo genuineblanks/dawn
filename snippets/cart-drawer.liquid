@@ -70,7 +70,9 @@
           {% render 'icon-close' %}
         </button>
       </div>
-      <cart-drawer-items{% if cart == empty %} class=" is-empty"{% endif %}>
+      <cart-drawer-items
+        {% if cart == empty %} class=" is-empty"{% endif %}>
+        data-section="{{ section.id }}"
         <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
           <form
             action="{{ routes.cart_url }}"
