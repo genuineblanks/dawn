@@ -367,21 +367,19 @@ html body .related-products .grid__item {
 .related-products .card .card__inner .card__media,
 .related-products .card--card .card__inner .card__media,
 .related-products .card--standard .card__inner .card__media {
-  position: absolute !important; /* Change to absolute to eliminate any container spacing */
-  top: 0 !important;
-  left: 0 !important;
+  position: relative !important;
   width: 100% !important;
-  height: 250px !important; /* Fixed height instead of padding-bottom */
+  height: 250px !important;
   overflow: hidden !important;
   border-radius: 4px 4px 0 0 !important;
   background: #f5f5f5 !important;
   /* Override base.css aspect-ratio */
   aspect-ratio: unset !important;
-  padding-bottom: 0 !important;
-  margin: 0 !important; /* Remove any margins causing white space */
-  padding-top: 0 !important;
   padding: 0 !important;
-  z-index: 1 !important;
+  margin: 0 !important;
+  display: block !important;
+  /* Eliminate any top spacing */
+  vertical-align: top !important;
 }
 
 .related-products .card__media .media,
@@ -422,21 +420,30 @@ html body .related-products .grid__item {
 .related-products .card-wrapper .card--card .card__inner,
 .related-products .card-wrapper .card--standard .card__inner {
   height: auto !important;
-  padding: 0 !important; /* Remove any padding causing white space */
+  padding: 0 !important;
   margin: 0 !important;
-  display: block !important; /* Override flex behavior */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
 }
 
 .related-products .card-wrapper .card__inner.ratio,
 .related-products .card__inner.ratio {
   padding-bottom: 0 !important;
   height: auto !important;
-  padding-top: 0 !important; /* Remove ratio padding */
-  /* Completely disable ratio behavior */
+  padding-top: 0 !important;
+  /* Disable ratio completely */
 }
 
 .related-products .card__inner.ratio::before {
-  display: none !important; /* Remove ratio pseudo-element */
+  display: none !important;
+}
+
+/* Force media to be the first element with no spacing */
+.related-products .card__inner > .card__media:first-child {
+  margin-top: 0 !important;
+  order: -1 !important;
 }
 
 /* Force proper card media structure - RELATED PRODUCTS ONLY */
@@ -450,21 +457,35 @@ html body .related-products .grid__item {
 .related-products .card {
   margin: 0 !important;
   padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .related-products .card .card__inner {
   margin: 0 !important;
   padding: 0 !important;
   position: relative !important;
+  flex-grow: 1 !important;
 }
 
-/* Adjust content positioning for absolute positioned media */
+/* Kill any line-height or font-size issues that create spacing */
+.related-products .card,
+.related-products .card__inner {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
 .related-products .card__content {
-  margin-top: 250px !important; /* Push content below absolute positioned image */
+  font-size: initial !important;
+  line-height: initial !important;
+}
+
+/* Normal content positioning */
+.related-products .card__content {
+  margin-top: 0 !important;
   padding-top: 1rem !important;
   margin-bottom: 0 !important;
   position: relative !important;
-  z-index: 2 !important;
 }
 
 /* Ensure grid layout works properly */
@@ -512,9 +533,9 @@ html body .related-products .grid__item {
     height: 200px !important; /* Smaller height for mobile */
   }
   
-  /* Adjust content positioning for mobile */
+  /* Normal content positioning for mobile */
   .related-products .card__content {
-    margin-top: 200px !important; /* Push content below mobile image height */
+    margin-top: 0 !important;
   }
 
 }
