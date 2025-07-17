@@ -28,11 +28,12 @@ class BulkQuantityHandler {
    * Bind event listeners
    */
   bindEvents() {
-    // Bulk quantity button clicks
+    // Bulk quantity button clicks - listen for multiple possible selectors
     document.addEventListener('click', (e) => {
-      if (e.target.closest('.bulk-quantity-btn')) {
+      const bulkBtn = e.target.closest('.bulk-quantity-btn, [data-quantity], .bulk-btn, button[data-bulk-quantity]');
+      if (bulkBtn) {
         e.preventDefault();
-        this.handleBulkQuantityClick(e.target.closest('.bulk-quantity-btn'));
+        this.handleBulkQuantityClick(bulkBtn);
       }
     });
 
@@ -201,7 +202,12 @@ class BulkQuantityHandler {
   handleBulkQuantityClick(button) {
     if (this.isLoading) return;
 
-    const quantity = parseInt(button.dataset.quantity);
+    // Try multiple ways to get the quantity value
+    let quantity = parseInt(button.dataset.quantity) || 
+                   parseInt(button.dataset.bulkQuantity) ||
+                   parseInt(button.textContent) ||
+                   parseInt(button.innerText);
+    
     if (!quantity || quantity <= 0) return;
 
     this.isLoading = true;
@@ -212,11 +218,17 @@ class BulkQuantityHandler {
     // Update quantity input
     this.updateQuantityInput(quantity);
     
+    // Update current variant from DOM to ensure we have latest
+    this.updateCurrentVariant();
+    
     // Update pricing
     this.updatePricing();
     
     // Update product form
     this.updateProductForm(quantity);
+    
+    // Trigger variant change event to update other components
+    this.triggerVariantChange();
     
     this.isLoading = false;
   }
@@ -225,13 +237,18 @@ class BulkQuantityHandler {
    * Update active button state
    */
   updateActiveButton(activeButton) {
-    // Remove active class from all buttons
-    document.querySelectorAll('.bulk-quantity-btn').forEach(btn => {
-      btn.classList.remove('active');
+    // Remove active class from all possible bulk quantity buttons
+    document.querySelectorAll('.bulk-quantity-btn, [data-quantity], .bulk-btn, button[data-bulk-quantity]').forEach(btn => {
+      btn.classList.remove('active', 'selected');
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
     });
     
     // Add active class to clicked button
     activeButton.classList.add('active');
+    // Also try other common active states
+    activeButton.style.backgroundColor = '#000';
+    activeButton.style.color = '#fff';
   }
 
   /**
@@ -252,7 +269,10 @@ class BulkQuantityHandler {
    * Update pricing based on quantity
    */
   updatePricing() {
-    if (!this.currentVariant) return;
+    if (!this.currentVariant) {
+      this.updateCurrentVariant();
+      if (!this.currentVariant) return;
+    }
 
     const variantId = this.currentVariant.id;
     const quantity = this.currentQuantity;
@@ -271,6 +291,11 @@ class BulkQuantityHandler {
 
     // Update price display
     this.updatePriceDisplay(finalPrice, quantity);
+    
+    // Update variant in current variant object for other scripts
+    if (this.currentVariant.price !== finalPrice) {
+      this.currentVariant.price = finalPrice;
+    }
   }
 
   /**
@@ -294,20 +319,30 @@ class BulkQuantityHandler {
    * Update price display in the UI
    */
   updatePriceDisplay(price, quantity) {
-    const priceElement = document.querySelector('.price');
-    const totalPriceElement = document.querySelector('.bulk-total-price');
+    const formattedPrice = this.formatMoney(price);
     
-    if (priceElement) {
-      // Format price using Shopify's money format
-      const formattedPrice = this.formatMoney(price);
-      priceElement.innerHTML = `
-        <span class="price-item price-item--regular">
-          ${formattedPrice}
-        </span>
-      `;
-    }
+    // Update all possible price elements
+    const priceSelectors = [
+      '.price',
+      '.price-item--regular',
+      '.product-price',
+      '.current-price',
+      '[data-price]'
+    ];
+    
+    priceSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        if (element.tagName === 'INPUT') {
+          element.value = formattedPrice;
+        } else {
+          element.innerHTML = `<span class="price-item price-item--regular">${formattedPrice}</span>`;
+        }
+      });
+    });
 
-    // Update total price
+    // Update total price if element exists
+    const totalPriceElement = document.querySelector('.bulk-total-price, .total-price, [data-total-price]');
     if (totalPriceElement) {
       const totalPrice = price * quantity;
       const formattedTotal = this.formatMoney(totalPrice);
@@ -316,6 +351,12 @@ class BulkQuantityHandler {
 
     // Update unit price display
     this.updateUnitPriceDisplay(price, quantity);
+    
+    // Trigger a custom event for other scripts to listen to
+    document.dispatchEvent(new CustomEvent('price:updated', {
+      detail: { price, quantity, formattedPrice },
+      bubbles: true
+    }));
   }
 
   /**
@@ -336,11 +377,35 @@ class BulkQuantityHandler {
    * Update product form with new quantity
    */
   updateProductForm(quantity) {
-    const productForm = document.querySelector('product-form form');
+    // Update all possible quantity inputs
+    const quantityInputs = document.querySelectorAll(
+      'input[name="quantity"], .quantity-input, [data-quantity-input]'
+    );
+    
+    quantityInputs.forEach(input => {
+      input.value = quantity;
+      // Trigger change event to notify other scripts
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    
+    // Update variant ID in form if current variant exists
+    if (this.currentVariant) {
+      const variantInputs = document.querySelectorAll(
+        'input[name="id"], .product-variant-id, [data-variant-id]'
+      );
+      
+      variantInputs.forEach(input => {
+        input.value = this.currentVariant.id;
+      });
+    }
+    
+    // Update form data attributes
+    const productForm = document.querySelector('product-form');
     if (productForm) {
-      const quantityInput = productForm.querySelector('input[name="quantity"]');
-      if (quantityInput) {
-        quantityInput.value = quantity;
+      productForm.setAttribute('data-quantity', quantity);
+      if (this.currentVariant) {
+        productForm.setAttribute('data-variant-id', this.currentVariant.id);
       }
     }
   }
@@ -364,14 +429,45 @@ class BulkQuantityHandler {
    */
   updateActiveButtonByQuantity(quantity) {
     // Remove active class from all buttons
-    document.querySelectorAll('.bulk-quantity-btn').forEach(btn => {
-      btn.classList.remove('active');
+    document.querySelectorAll('.bulk-quantity-btn, [data-quantity], .bulk-btn, button[data-bulk-quantity]').forEach(btn => {
+      btn.classList.remove('active', 'selected');
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
     });
     
-    // Find matching button
-    const matchingButton = document.querySelector(`[data-quantity="${quantity}"]`);
+    // Find matching button by different methods
+    let matchingButton = document.querySelector(`[data-quantity="${quantity}"]`) ||
+                        document.querySelector(`[data-bulk-quantity="${quantity}"]`) ||
+                        Array.from(document.querySelectorAll('button')).find(btn => 
+                          parseInt(btn.textContent) === quantity || parseInt(btn.innerText) === quantity
+                        );
+    
     if (matchingButton) {
       matchingButton.classList.add('active');
+      matchingButton.style.backgroundColor = '#000';
+      matchingButton.style.color = '#fff';
+    }
+  }
+
+  /**
+   * Trigger variant change event for other components
+   */
+  triggerVariantChange() {
+    if (this.currentVariant) {
+      // Trigger variant change event
+      document.dispatchEvent(new CustomEvent('variant:change', {
+        detail: { variant: this.currentVariant },
+        bubbles: true
+      }));
+      
+      // Also trigger on product form for Shopify compatibility
+      const productForm = document.querySelector('product-form');
+      if (productForm) {
+        productForm.dispatchEvent(new CustomEvent('variant:change', {
+          detail: { variant: this.currentVariant },
+          bubbles: true
+        }));
+      }
     }
   }
 
