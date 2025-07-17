@@ -38,7 +38,7 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'sticky-product-behavior.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'accordion-system.js' | asset_url }}" defer="defer"></script>
-  <!-- <script src="{{ 'bulk-quantity-handler.js' | asset_url }}" defer="defer"></script> -->
+  <script src="{{ 'native-quantity-handler.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -195,6 +195,17 @@
                       
                       <!-- Native Shopify Volume Pricing -->
                       {%- if product.quantity_price_breaks_configured? -%}
+                        <div class="bulk-quantity-section">
+                          <h5 class="bulk-quantity-label">{{ 'products.product.volume_pricing.title' | t }}</h5>
+                          <div class="bulk-quantity-buttons">
+                            {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+                              <button type="button" class="bulk-quantity-btn" data-quantity="{{ price_break.minimum_quantity }}">
+                                {{ price_break.minimum_quantity }}
+                              </button>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                        
                         <div class="price-per-item__container">
                           <price-per-item
                             class="no-js-hidden"
