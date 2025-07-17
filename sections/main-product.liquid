@@ -128,7 +128,7 @@
                   {{ product.title | escape }}
                 </h1>
               {%- when 'price' -%}
-                <div id="price-{{ section.id }}" class="product-price" {{ block.shopify_attributes }}>
+                <div class="product-price" {{ block.shopify_attributes }}>
                   {% render 'price', product: product, use_variant: true, show_badges: true %}
                 </div>
             {%- endcase -%}
