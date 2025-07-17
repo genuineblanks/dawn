@@ -14,6 +14,7 @@ class NativeQuantityHandler {
   }
 
   init() {
+    console.log('🔄 Initializing Native Quantity Handler');
     this.loadVariantData();
     this.bindEvents();
     this.setupQuantityTierButtons();
@@ -103,9 +104,16 @@ class NativeQuantityHandler {
    */
   handleQuantityTierClick(button) {
     const tierQuantity = parseInt(button.dataset.quantity);
-    if (!tierQuantity) return;
+    console.log(`🔵 Button clicked, tier quantity: ${tierQuantity}`);
+    
+    if (!tierQuantity) {
+      console.log('❌ No tier quantity found');
+      return;
+    }
 
     console.log(`🔵 Quantity tier selected: ${tierQuantity}`);
+    console.log(`🔵 Current variant:`, this.currentVariant);
+    console.log(`🔵 Available price breaks:`, this.quantityPriceBreaks);
     
     // Update active button state
     this.updateActiveButton(button);
@@ -141,6 +149,9 @@ class NativeQuantityHandler {
    */
   updateQuantityInput(quantity) {
     const quantityInput = document.querySelector('.quantity__input');
+    console.log('🔄 Updating quantity input to:', quantity);
+    console.log('🔄 Found quantity input:', !!quantityInput);
+    
     if (quantityInput) {
       quantityInput.value = quantity;
       this.currentQuantity = quantity;
@@ -148,6 +159,16 @@ class NativeQuantityHandler {
       // Trigger native events
       quantityInput.dispatchEvent(new Event('input', { bubbles: true }));
       quantityInput.dispatchEvent(new Event('change', { bubbles: true }));
+      
+      // Also trigger on the parent quantity-input element
+      const quantityInputElement = quantityInput.closest('quantity-input');
+      if (quantityInputElement) {
+        quantityInputElement.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      
+      console.log('✅ Quantity input updated');
+    } else {
+      console.log('❌ Quantity input not found');
     }
   }
 
@@ -272,8 +293,25 @@ class NativeQuantityHandler {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.querySelector('.bulk-quantity-btn')) {
+  console.log('🔍 Native Quantity Handler: DOM loaded');
+  
+  const bulkButtons = document.querySelectorAll('.bulk-quantity-btn');
+  console.log('🔍 Found bulk quantity buttons:', bulkButtons.length);
+  
+  const quantityInput = document.querySelector('.quantity__input');
+  console.log('🔍 Found quantity input:', !!quantityInput);
+  
+  const variantSelects = document.querySelector('variant-selects');
+  console.log('🔍 Found variant-selects:', !!variantSelects);
+  
+  const priceElements = document.querySelectorAll('.price-item--regular');
+  console.log('🔍 Found price elements:', priceElements.length);
+  
+  if (bulkButtons.length > 0) {
+    console.log('✅ Initializing Native Quantity Handler');
     window.nativeQuantityHandler = new NativeQuantityHandler();
+  } else {
+    console.log('❌ No bulk quantity buttons found');
   }
 });
 
