@@ -100,6 +100,16 @@
     endif
   -%}
 
+  <!-- DEBUG: Product Type Information -->
+  <script>
+    console.log('🔍 Product Type Debug:');
+    console.log('Product Type: {{ product.type }}');
+    console.log('Product Tags: {{ product.tags | join: ", " }}');
+    console.log('is_design_service: {{ is_design_service }}');
+    console.log('is_accessories: {{ is_accessories }}');
+    console.log('show_hybrid_logic: {{ show_hybrid_logic }}');
+  </script>
+
   <!-- Futuristic Split-Screen Layout -->
   <div class="futuristic-product-container">
     
@@ -183,21 +193,28 @@
                         </quantity-input>
                       </div>
                       
-                      <!-- Bulk Quantity Buttons for Design Services & Accessories -->
-                      {% if is_design_service or is_accessories %}
-                        <div class="bulk-quantity-section">
-                          <h4 class="bulk-quantity-label">{{ 'products.product.bulk_quantities' | t | default: 'BULK QUANTITIES' }}</h4>
-                          <div class="bulk-quantity-buttons">
-                            <button type="button" class="bulk-quantity-btn" data-quantity="1000">1000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="2000">2000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="5000">5000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="10000">10000</button>
-                          </div>
-                          <div class="bulk-unit-price"></div>
-                          <div class="bulk-total-price"></div>
-                        </div>
-                      {% endif %}
                     </div>
+                    
+                    <!-- Bulk Quantity Buttons - Moved outside quantity_selector block -->
+                    {% comment %} DEBUG: Show for all products temporarily {% endcomment %}
+                    {% assign show_bulk = true %}
+                    {% comment %} Original condition: {% if is_design_service or is_accessories %} {% endcomment %}
+                    {% if show_bulk %}
+                      <div class="bulk-quantity-section">
+                        <h4 class="bulk-quantity-label">{{ 'products.product.bulk_quantities' | t | default: 'BULK QUANTITIES' }}</h4>
+                        <div class="bulk-quantity-buttons">
+                          <button type="button" class="bulk-quantity-btn" data-quantity="1000">1000</button>
+                          <button type="button" class="bulk-quantity-btn" data-quantity="2000">2000</button>
+                          <button type="button" class="bulk-quantity-btn" data-quantity="5000">5000</button>
+                          <button type="button" class="bulk-quantity-btn" data-quantity="10000">10000</button>
+                        </div>
+                        <div class="bulk-unit-price"></div>
+                        <div class="bulk-total-price"></div>
+                        <div class="debug-info" style="font-size: 12px; color: #666; margin-top: 10px;">
+                          DEBUG: Product Type: {{ product.type }}, Tags: {{ product.tags | join: ', ' }}
+                        </div>
+                      </div>
+                    {% endif %}
                     
                   {%- when 'buy_buttons' -%}
                     <div class="product-form__buttons" {{ block.shopify_attributes }}>
