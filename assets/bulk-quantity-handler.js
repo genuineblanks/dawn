@@ -218,6 +218,7 @@ class BulkQuantityHandler {
     
     if (!quantity || quantity <= 0) return;
 
+    console.log(`🔵 Bulk quantity clicked: ${quantity}`);
     this.isLoading = true;
     
     // Update active button state
@@ -225,24 +226,100 @@ class BulkQuantityHandler {
     
     // Update quantity input
     this.updateQuantityInput(quantity);
+    console.log(`📝 Quantity input updated to: ${quantity}`);
     
     // Update current variant from DOM to ensure we have latest
     this.updateCurrentVariant();
+    console.log(`🎯 Current variant: ${this.currentVariant?.id}`);
     
     // Update pricing
     this.updatePricing();
     
     // Update product form
     this.updateProductForm(quantity);
+    console.log(`📋 Product form updated`);
     
     // Trigger variant change event to update other components
     this.triggerVariantChange();
     
-    // Save state and update URL
-    this.saveCurrentState();
-    this.updateURL(quantity);
+    // Add small delay to ensure all events propagate before verification
+    setTimeout(() => {
+      // Verify form state after all updates
+      this.verifyFormState(quantity);
+      
+      // Final form sync for cart integration
+      this.finalFormSync();
+      
+      // Save state and update URL
+      this.saveCurrentState();
+      this.updateURL(quantity);
+      
+      this.isLoading = false;
+      console.log(`✅ Bulk quantity update complete for ${quantity}`);
+    }, 100);
+  }
+
+  /**
+   * Verify form state is correctly set for cart integration
+   */
+  verifyFormState(expectedQuantity) {
+    const quantityInput = document.querySelector('.quantity-input, input[name="quantity"]');
+    const variantInput = document.querySelector('.product-variant-id, input[name="id"]');
+    const productForm = document.querySelector('product-form');
     
-    this.isLoading = false;
+    console.log(`🔍 Form State Verification:`);
+    console.log(`   Expected quantity: ${expectedQuantity}`);
+    console.log(`   Quantity input value: ${quantityInput?.value}`);
+    console.log(`   Variant input value: ${variantInput?.value}`);
+    console.log(`   Current variant ID: ${this.currentVariant?.id}`);
+    console.log(`   Product form element:`, productForm);
+    
+    // Check if values match expectations
+    if (quantityInput && parseInt(quantityInput.value) !== expectedQuantity) {
+      console.warn(`⚠️ Quantity mismatch! Expected: ${expectedQuantity}, Got: ${quantityInput.value}`);
+    }
+    
+    if (variantInput && this.currentVariant && variantInput.value != this.currentVariant.id) {
+      console.warn(`⚠️ Variant mismatch! Expected: ${this.currentVariant.id}, Got: ${variantInput.value}`);
+    }
+    
+    return {
+      quantityCorrect: quantityInput && parseInt(quantityInput.value) === expectedQuantity,
+      variantCorrect: !variantInput || !this.currentVariant || variantInput.value == this.currentVariant.id,
+      formExists: !!productForm
+    };
+  }
+
+  /**
+   * Final form synchronization for cart integration
+   */
+  finalFormSync() {
+    const productForm = document.querySelector('product-form');
+    const quantityInput = document.querySelector('.quantity-input, input[name="quantity"]');
+    
+    if (productForm && quantityInput) {
+      // Trigger any remaining Shopify-specific events
+      productForm.dispatchEvent(new CustomEvent('variant:update', {
+        detail: { 
+          variant: this.currentVariant,
+          quantity: this.currentQuantity 
+        },
+        bubbles: true
+      }));
+      
+      // Force final form validation
+      if (productForm.checkValidity) {
+        productForm.checkValidity();
+      }
+      
+      // Trigger final form ready event
+      productForm.dispatchEvent(new CustomEvent('form:ready', {
+        detail: { quantity: this.currentQuantity },
+        bubbles: true
+      }));
+      
+      console.log(`🔄 Final form sync completed`);
+    }
   }
 
   /**
@@ -272,8 +349,15 @@ class BulkQuantityHandler {
       quantityInput.value = quantity;
       this.currentQuantity = quantity;
       
-      // Trigger change event
+      // Trigger multiple events to ensure Shopify form integration
+      quantityInput.dispatchEvent(new Event('input', { bubbles: true }));
       quantityInput.dispatchEvent(new Event('change', { bubbles: true }));
+      quantityInput.dispatchEvent(new Event('blur', { bubbles: true }));
+      
+      // Force form validation
+      if (quantityInput.form) {
+        quantityInput.form.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     }
   }
 
@@ -396,9 +480,14 @@ class BulkQuantityHandler {
     
     quantityInputs.forEach(input => {
       input.value = quantity;
-      // Trigger change event to notify other scripts
-      input.dispatchEvent(new Event('change', { bubbles: true }));
+      // Trigger comprehensive events for Shopify integration
       input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      input.dispatchEvent(new Event('blur', { bubbles: true }));
+      
+      // Force focus and blur to trigger validation
+      input.focus();
+      input.blur();
     });
     
     // Update variant ID in form if current variant exists
@@ -409,17 +498,35 @@ class BulkQuantityHandler {
       
       variantInputs.forEach(input => {
         input.value = this.currentVariant.id;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
       });
     }
     
-    // Update form data attributes
+    // Update form data attributes and trigger form events
     const productForm = document.querySelector('product-form');
     if (productForm) {
       productForm.setAttribute('data-quantity', quantity);
       if (this.currentVariant) {
         productForm.setAttribute('data-variant-id', this.currentVariant.id);
       }
+      
+      // Force form to re-validate and update internal state
+      productForm.dispatchEvent(new Event('change', { bubbles: true }));
+      productForm.dispatchEvent(new Event('input', { bubbles: true }));
+      
+      // Trigger custom events that Shopify might be listening for
+      productForm.dispatchEvent(new CustomEvent('form:update', {
+        detail: { quantity, variantId: this.currentVariant?.id },
+        bubbles: true
+      }));
     }
+    
+    // Force entire form re-validation
+    const allForms = document.querySelectorAll('form[data-type="add-to-cart-form"]');
+    allForms.forEach(form => {
+      form.dispatchEvent(new Event('change', { bubbles: true }));
+      form.dispatchEvent(new Event('input', { bubbles: true }));
+    });
   }
 
   /**
