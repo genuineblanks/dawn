@@ -38,7 +38,6 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'sticky-product-behavior.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'accordion-system.js' | asset_url }}" defer="defer"></script>
-  <script src="{{ 'bulk-quantity-handler.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -182,21 +181,6 @@
                           </button>
                         </quantity-input>
                       </div>
-                      
-                      <!-- Bulk Quantity Buttons for Design Services & Accessories -->
-                      {% if is_design_service or is_accessories %}
-                        <div class="bulk-quantity-section">
-                          <h4 class="bulk-quantity-label">{{ 'products.product.bulk_quantities' | t | default: 'BULK QUANTITIES' }}</h4>
-                          <div class="bulk-quantity-buttons">
-                            <button type="button" class="bulk-quantity-btn" data-quantity="1000">1000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="2000">2000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="5000">5000</button>
-                            <button type="button" class="bulk-quantity-btn" data-quantity="10000">10000</button>
-                          </div>
-                          <div class="bulk-unit-price"></div>
-                          <div class="bulk-total-price"></div>
-                        </div>
-                      {% endif %}
                     </div>
                     
                   {%- when 'buy_buttons' -%}
