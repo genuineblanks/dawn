@@ -21,13 +21,13 @@
     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}" class="product-variant-id">
     
     <!-- Native Shopify Variant Selector -->
-    {% if is_clothing %}
+    {% unless product.has_only_default_variant %}
       {% render 'product-variant-picker', 
         product: product, 
         block: block, 
         product_form_id: product_form_id,
         update_url: update_url %}
-    {% endif %}
+    {% endunless %}
 
     <!-- Native Shopify Quantity Selector is handled by main-product.liquid -->
 
