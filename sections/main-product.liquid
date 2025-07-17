@@ -205,10 +205,11 @@
                             </svg>
                           </button>
                         </quantity-input>
+                        <div id="Quantity-Rules-{{ section.id }}" class="quantity__rules hidden"></div>
                       </div>
                       
                       <!-- Native Shopify Volume Pricing -->
-                      <div class="bulk-quantity-section">
+                      <div id="Volume-{{ section.id }}" class="bulk-quantity-section">
                         <h5 class="bulk-quantity-label">{{ 'products.product.volume_pricing.title' | t }}</h5>
                         <div class="bulk-quantity-buttons">
                           {%- if product.quantity_price_breaks_configured? -%}
