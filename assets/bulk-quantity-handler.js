@@ -22,6 +22,8 @@ class BulkQuantityHandler {
     this.bindEvents();
     this.loadProductData();
     this.initializeVolumeData();
+    this.initializeFromURL();
+    this.observeQuantityChanges();
   }
 
   /**
@@ -70,7 +72,13 @@ class BulkQuantityHandler {
     // Listen for URL changes (variant selection changes URL)
     window.addEventListener('popstate', () => {
       this.updateCurrentVariant();
+      this.initializeFromURL();
       this.updatePricing();
+    });
+
+    // Listen for navigation changes
+    window.addEventListener('beforeunload', () => {
+      this.saveCurrentState();
     });
   }
 
@@ -229,6 +237,10 @@ class BulkQuantityHandler {
     
     // Trigger variant change event to update other components
     this.triggerVariantChange();
+    
+    // Save state and update URL
+    this.saveCurrentState();
+    this.updateURL(quantity);
     
     this.isLoading = false;
   }
@@ -501,6 +513,104 @@ class BulkQuantityHandler {
   async refreshPricing() {
     await this.loadVolumePricing();
     this.updatePricing();
+  }
+
+  /**
+   * Initialize quantity from URL parameters or local storage
+   */
+  initializeFromURL() {
+    // Check URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlQuantity = urlParams.get('quantity');
+    
+    if (urlQuantity) {
+      const quantity = parseInt(urlQuantity);
+      if (quantity > 0) {
+        this.currentQuantity = quantity;
+        this.updateQuantityInput(quantity);
+        this.updateActiveButtonByQuantity(quantity);
+        this.updatePricing();
+        return;
+      }
+    }
+
+    // Check local storage for saved quantity
+    const savedQuantity = localStorage.getItem(`bulk-quantity-${this.productId}`);
+    if (savedQuantity) {
+      const quantity = parseInt(savedQuantity);
+      if (quantity > 0) {
+        this.currentQuantity = quantity;
+        this.updateQuantityInput(quantity);
+        this.updateActiveButtonByQuantity(quantity);
+        this.updatePricing();
+      }
+    }
+  }
+
+  /**
+   * Save current state to URL and localStorage
+   */
+  saveCurrentState() {
+    if (this.productId && this.currentQuantity > 1) {
+      localStorage.setItem(`bulk-quantity-${this.productId}`, this.currentQuantity.toString());
+    }
+  }
+
+  /**
+   * Update URL with quantity parameter
+   */
+  updateURL(quantity) {
+    const url = new URL(window.location);
+    if (quantity && quantity > 1) {
+      url.searchParams.set('quantity', quantity.toString());
+    } else {
+      url.searchParams.delete('quantity');
+    }
+    // Use replaceState to avoid creating browser history entries
+    history.replaceState(null, '', url);
+  }
+
+  /**
+   * Observe quantity changes from any source
+   */
+  observeQuantityChanges() {
+    // Watch for quantity input changes from other scripts
+    const quantityInputs = document.querySelectorAll('input[name="quantity"], .quantity-input');
+    
+    quantityInputs.forEach(input => {
+      // Create a MutationObserver to watch for value changes
+      const observer = new MutationObserver(() => {
+        const newQuantity = parseInt(input.value);
+        if (newQuantity && newQuantity !== this.currentQuantity) {
+          this.currentQuantity = newQuantity;
+          this.updateActiveButtonByQuantity(newQuantity);
+          this.updatePricing();
+        }
+      });
+
+      // Watch for attribute changes (value)
+      observer.observe(input, { attributes: true, attributeFilter: ['value'] });
+
+      // Also listen for input events
+      input.addEventListener('input', () => {
+        const newQuantity = parseInt(input.value) || 1;
+        if (newQuantity !== this.currentQuantity) {
+          this.currentQuantity = newQuantity;
+          this.updateActiveButtonByQuantity(newQuantity);
+          this.updatePricing();
+        }
+      });
+    });
+
+    // Watch for URL changes manually
+    let lastUrl = window.location.href;
+    setInterval(() => {
+      const currentUrl = window.location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        this.initializeFromURL();
+      }
+    }, 1000);
   }
 }
 
