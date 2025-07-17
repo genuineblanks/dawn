@@ -194,18 +194,26 @@
                       </div>
                       
                       <!-- Native Shopify Volume Pricing -->
-                      {%- if product.quantity_price_breaks_configured? -%}
-                        <div class="bulk-quantity-section">
-                          <h5 class="bulk-quantity-label">{{ 'products.product.volume_pricing.title' | t }}</h5>
-                          <div class="bulk-quantity-buttons">
+                      <div class="bulk-quantity-section">
+                        <h5 class="bulk-quantity-label">{{ 'products.product.volume_pricing.title' | t }}</h5>
+                        <div class="bulk-quantity-buttons">
+                          {%- if product.quantity_price_breaks_configured? -%}
                             {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
                               <button type="button" class="bulk-quantity-btn" data-quantity="{{ price_break.minimum_quantity }}">
                                 {{ price_break.minimum_quantity }}
                               </button>
                             {%- endfor -%}
-                          </div>
+                          {%- else -%}
+                            <!-- Debug: quantity_price_breaks not configured, showing static buttons -->
+                            <button type="button" class="bulk-quantity-btn" data-quantity="1000">1000</button>
+                            <button type="button" class="bulk-quantity-btn" data-quantity="2000">2000</button>
+                            <button type="button" class="bulk-quantity-btn" data-quantity="5000">5000</button>
+                            <button type="button" class="bulk-quantity-btn" data-quantity="10000">10000</button>
+                          {%- endif -%}
                         </div>
+                      </div>
                         
+                      {%- if product.quantity_price_breaks_configured? -%}
                         <div class="price-per-item__container">
                           <price-per-item
                             class="no-js-hidden"
