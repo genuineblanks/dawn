@@ -362,7 +362,7 @@ html body .related-products .grid__item {
   }
 }
 
-/* COMPLETE IMAGE FILL FIX - Override ALL conflicting rules */
+/* COMPLETE IMAGE FILL FIX - SPECIFIC TO RELATED PRODUCTS ONLY */
 .related-products .card__media,
 .related-products .card .card__inner .card__media,
 .related-products .card--card .card__inner .card__media,
@@ -376,6 +376,8 @@ html body .related-products .grid__item {
   /* Override base.css aspect-ratio */
   aspect-ratio: unset !important;
   padding-bottom: 0 !important;
+  margin: 0 !important; /* Remove any margins causing white space */
+  padding-top: 0 !important;
 }
 
 .related-products .card__media .media,
@@ -411,21 +413,32 @@ html body .related-products .grid__item {
 }
 
 
-/* Additional overrides for stubborn base.css rules */
+/* Additional overrides for stubborn base.css rules - RELATED PRODUCTS ONLY */
 .related-products .card-wrapper .card__inner,
 .related-products .card-wrapper .card--card .card__inner,
 .related-products .card-wrapper .card--standard .card__inner {
   height: auto !important;
+  padding: 0 !important; /* Remove any padding causing white space */
+  margin: 0 !important;
 }
 
 .related-products .card-wrapper .card__inner.ratio {
   padding-bottom: 0 !important;
   height: auto !important;
+  padding-top: 0 !important; /* Remove ratio padding */
 }
 
-/* Force proper card media structure */
+/* Force proper card media structure - RELATED PRODUCTS ONLY */
 .related-products .card-wrapper .card__media {
   margin: 0 !important;
+  top: 0 !important;
+  position: relative !important;
+}
+
+/* Remove any content spacing above media */
+.related-products .card__content {
+  margin-top: 0 !important;
+  padding-top: 1rem !important;
 }
 
 /* Ensure grid layout works properly */
@@ -466,12 +479,54 @@ html body .related-products .grid__item {
     gap: 1rem;
   }
   
-  /* Mobile image sizing */
+  /* Mobile image sizing - RELATED PRODUCTS ONLY */
   .related-products .card__media,
   .related-products .card .card__inner .card__media,
   .related-products .card--card .card__inner .card__media {
     height: 200px !important; /* Smaller height for mobile */
   }
+
+}
+
+/* IMPORTANT: Exclude collection pages from related products styling */
+.collection .card__media,
+.collection-template .card__media,
+.template-collection .card__media,
+body.template-collection .card__media {
+  height: auto !important;
+  aspect-ratio: auto !important;
+  padding-bottom: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.collection .card__media img,
+.collection-template .card__media img, 
+.template-collection .card__media img,
+body.template-collection .card__media img {
+  position: static !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: auto !important;
+  top: auto !important;
+  left: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+}
+
+/* Restore normal card behavior for collections */
+.collection .card__inner,
+.collection-template .card__inner,
+.template-collection .card__inner,
+body.template-collection .card__inner {
+  padding: var(--image-padding) !important;
+}
+
+.collection .card--media .card__inner,
+.template-collection .card--media .card__inner {
+  aspect-ratio: auto !important;
+  height: auto !important;
+}
   
   /* Prevent layout breaking */
   .related-products .card-wrapper {
