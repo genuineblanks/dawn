@@ -128,6 +128,7 @@
       <div class="sticky-product-info">
         
         <!-- Product Header -->
+        <!-- Product Header -->
         <div class="product-header">
           {%- for block in section.blocks -%}
             {%- case block.type -%}
@@ -142,6 +143,17 @@
             {%- endcase -%}
           {%- endfor -%}
         </div>
+        <div id="Sku-{{ section.id }}" class="product-sku">
+          {{ product.selected_or_first_available_variant.sku }}
+        </div>
+        <div id="Inventory-{{ section.id }}" class="product-inventory">
+          {% if product.selected_or_first_available_variant.available %}
+            {{ 'products.product.in_stock' | t }}
+          {% else %}
+            {{ 'products.product.sold_out' | t }}
+          {% endif %}
+        </div>
+
 
         <!-- Shopify Product Form with Global Components -->
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
@@ -241,6 +253,16 @@
             is_design_service: is_design_service,
             is_accessories: is_accessories %}
         </div>
+    +   <div class="product-images-panel">
+    +     <div id="MediaGallery-{{ section.id }}">
+    +       {% render 'product-media-gallery',
+    +         product: product,
+    +         variant_images: variant_images,
+    +         is_clothing: is_clothing,
+    +         is_design_service: is_design_service,
+    +         is_accessories: is_accessories %}
+    +     </div>
+    +   </div>
 
         <!-- Additional Blocks (excluding variant_picker, quantity_selector, buy_buttons - already rendered in form) -->
         {%- for block in section.blocks -%}
