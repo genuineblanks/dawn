@@ -59,29 +59,21 @@ class NativeQuantityHandler {
    * Bind event listeners
    */
   bindEvents() {
-    // Listen for variant changes from variant-selects component
-    document.addEventListener('change', (e) => {
-      if (e.target.closest('variant-selects')) {
-        setTimeout(() => {
-          this.updateCurrentVariant();
-          this.updatePricing();
-        }, 100);
-      }
-    });
-
-    // Listen for quantity input changes
-    document.addEventListener('input', (e) => {
-      if (e.target.classList.contains('quantity__input')) {
-        this.currentQuantity = parseInt(e.target.value) || 1;
-        this.updatePricing();
-      }
-    });
-
     // Listen for bulk quantity tier button clicks
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('bulk-quantity-btn')) {
         e.preventDefault();
         this.handleQuantityTierClick(e.target);
+      }
+    });
+
+    // Listen for variant changes from variant-selects component (passive monitoring)
+    document.addEventListener('change', (e) => {
+      if (e.target.closest('variant-selects')) {
+        setTimeout(() => {
+          this.updateCurrentVariant();
+          console.log('🔄 Variant changed, current variant:', this.currentVariant?.id);
+        }, 100);
       }
     });
   }
@@ -112,8 +104,6 @@ class NativeQuantityHandler {
     }
 
     console.log(`🔵 Quantity tier selected: ${tierQuantity}`);
-    console.log(`🔵 Current variant:`, this.currentVariant);
-    console.log(`🔵 Available price breaks:`, this.quantityPriceBreaks);
     
     // Update active button state
     this.updateActiveButton(button);
@@ -124,11 +114,11 @@ class NativeQuantityHandler {
     // Update quantity input to reflect the tier
     this.updateQuantityInput(tierQuantity);
     
+    // CRITICAL: Ensure form state is synchronized
+    this.synchronizeFormState();
+    
     // Update pricing based on the tier
     this.updatePricing();
-    
-    // Trigger events for other components
-    this.triggerQuantityTierChange(tierQuantity);
   }
 
   /**
@@ -173,23 +163,92 @@ class NativeQuantityHandler {
   }
 
   /**
+   * Synchronize form state with current selections
+   */
+  synchronizeFormState() {
+    console.log('🔄 Synchronizing form state...');
+    
+    // Get current variant from variant-selects
+    const variantSelects = document.querySelector('variant-selects');
+    if (variantSelects) {
+      // Force variant-selects to update its state
+      const changeEvent = new Event('change', { bubbles: true });
+      variantSelects.dispatchEvent(changeEvent);
+      
+      // Wait a moment for variant selection to process
+      setTimeout(() => {
+        this.updateCurrentVariant();
+        this.ensureFormInputsAreSynced();
+      }, 50);
+    } else {
+      this.ensureFormInputsAreSynced();
+    }
+  }
+
+  /**
+   * Ensure form inputs are properly synchronized
+   */
+  ensureFormInputsAreSynced() {
+    // Ensure quantity input is correct
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    if (quantityInput) {
+      quantityInput.value = this.currentQuantity;
+      console.log(`✅ Form quantity synchronized: ${this.currentQuantity}`);
+    }
+    
+    // Ensure variant ID is correct
+    const variantInput = document.querySelector('input[name="id"]');
+    if (variantInput && this.currentVariant) {
+      variantInput.value = this.currentVariant.id;
+      console.log(`✅ Form variant synchronized: ${this.currentVariant.id}`);
+    }
+    
+    // Trigger form validation and events
+    const productForm = document.querySelector('product-form');
+    if (productForm) {
+      productForm.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    
+    // Verify form state
+    this.verifyFormState();
+  }
+
+  /**
+   * Verify form state is correct
+   */
+  verifyFormState() {
+    const quantityInput = document.querySelector('input[name="quantity"]');
+    const variantInput = document.querySelector('input[name="id"]');
+    
+    console.log('🔍 Form State Verification:');
+    console.log(`   Quantity input value: ${quantityInput?.value}`);
+    console.log(`   Variant input value: ${variantInput?.value}`);
+    console.log(`   Expected quantity: ${this.currentQuantity}`);
+    console.log(`   Expected variant: ${this.currentVariant?.id}`);
+    
+    // Check for mismatches
+    if (quantityInput && parseInt(quantityInput.value) !== this.currentQuantity) {
+      console.warn('⚠️ Quantity mismatch detected!');
+    }
+    
+    if (variantInput && this.currentVariant && variantInput.value != this.currentVariant.id) {
+      console.warn('⚠️ Variant mismatch detected!');
+    }
+  }
+
+  /**
    * Update pricing based on selected tier and quantity
    */
   updatePricing() {
-    if (!this.currentVariant) return;
-
-    const tierQuantity = this.selectedQuantityTier || this.currentQuantity;
-    const multiplier = this.currentQuantity;
+    // For now, just update the quantity display
+    // Let Shopify handle the actual pricing calculations
+    console.log(`🔄 Updating pricing for quantity: ${this.currentQuantity}`);
     
-    // Find the appropriate price break for the tier
-    const priceBreak = this.findPriceBreak(tierQuantity);
-    const finalPrice = priceBreak ? priceBreak.price : this.currentVariant.price;
-    
-    // Update price display
-    this.updatePriceDisplay(finalPrice, multiplier);
-    
-    // Update price-per-item component
-    this.updatePricePerItem(finalPrice, tierQuantity);
+    // Update any price displays that need to show the current quantity
+    const quantityDisplays = document.querySelectorAll('.quantity-display');
+    quantityDisplays.forEach(display => {
+      display.textContent = this.currentQuantity;
+    });
   }
 
   /**
@@ -213,36 +272,6 @@ class NativeQuantityHandler {
   }
 
   /**
-   * Update price display
-   */
-  updatePriceDisplay(price, multiplier) {
-    const totalPrice = price * multiplier;
-    
-    // Update main price display
-    const priceElements = document.querySelectorAll('.price-item--regular');
-    priceElements.forEach(element => {
-      const formattedPrice = this.formatMoney(totalPrice);
-      element.textContent = formattedPrice;
-    });
-  }
-
-  /**
-   * Update price-per-item component
-   */
-  updatePricePerItem(price, tierQuantity) {
-    const pricePerItem = document.querySelector('price-per-item');
-    if (pricePerItem) {
-      const formattedPrice = this.formatMoney(price);
-      const priceText = `${formattedPrice} each (${tierQuantity} tier)`;
-      
-      const priceSpan = pricePerItem.querySelector('.price-per-item--current');
-      if (priceSpan) {
-        priceSpan.textContent = priceText;
-      }
-    }
-  }
-
-  /**
    * Update quantity tier buttons based on current variant
    */
   updateQuantityTierButtons() {
@@ -263,31 +292,6 @@ class NativeQuantityHandler {
       button.addEventListener('click', () => this.handleQuantityTierClick(button));
       buttonContainer.appendChild(button);
     });
-  }
-
-  /**
-   * Trigger quantity tier change event
-   */
-  triggerQuantityTierChange(tierQuantity) {
-    document.dispatchEvent(new CustomEvent('quantity-tier:change', {
-      detail: {
-        tier: tierQuantity,
-        variant: this.currentVariant,
-        quantity: this.currentQuantity
-      },
-      bubbles: true
-    }));
-  }
-
-  /**
-   * Format money using Shopify's format
-   */
-  formatMoney(cents) {
-    const currency = window.Shopify?.currency?.active || 'EUR';
-    const format = window.Shopify?.money_format || '€{{amount}}';
-    
-    const value = (cents / 100).toFixed(2);
-    return format.replace('{{amount}}', value);
   }
 }
 
