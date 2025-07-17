@@ -38,6 +38,7 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'sticky-product-behavior.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'accordion-system.js' | asset_url }}" defer="defer"></script>
+  <!-- <script src="{{ 'bulk-quantity-handler.js' | asset_url }}" defer="defer"></script> -->
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -98,6 +99,16 @@
       assign show_hybrid_logic = true
     endif
   -%}
+
+  <!-- DEBUG: Product Type Information -->
+  <script>
+    console.log('🔍 Product Type Debug:');
+    console.log('Product Type: {{ product.type }}');
+    console.log('Product Tags: {{ product.tags | join: ", " }}');
+    console.log('is_design_service: {{ is_design_service }}');
+    console.log('is_accessories: {{ is_accessories }}');
+    console.log('show_hybrid_logic: {{ show_hybrid_logic }}');
+  </script>
 
   <!-- Futuristic Split-Screen Layout -->
   <div class="futuristic-product-container">
@@ -181,7 +192,46 @@
                           </button>
                         </quantity-input>
                       </div>
+                      
+                      <!-- Native Shopify Volume Pricing -->
+                      {%- if product.quantity_price_breaks_configured? -%}
+                        <div class="price-per-item__container">
+                          <price-per-item
+                            class="no-js-hidden"
+                            id="Price-Per-Item-{{ section.id }}"
+                            data-section-id="{{ section.id }}"
+                            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                          >
+                            {%- assign variant_price = product.selected_or_first_available_variant.price | money_with_currency -%}
+                            <span class="price-per-item--current">
+                              {{- 'products.product.volume_pricing.price_at_each' | t: price: variant_price -}}
+                            </span>
+                          </price-per-item>
+                        </div>
+                        
+                        <volume-pricing class="parent-display" id="Volume-{{ section.id }}">
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                            <span class="caption-large">{{ 'products.product.volume_pricing.title' | t }}</span>
+                            <ul class="list-unstyled no-js-hidden">
+                              <li>
+                                <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+                                {%- assign price = product.selected_or_first_available_variant.price | money_with_currency -%}
+                                <span>{{ 'sections.quick_order_list.each' | t: money: price }}</span>
+                              </li>
+                              {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+                                {%- assign price_break_price = price_break.price | money_with_currency -%}
+                                <li>
+                                  <span>{{ price_break.minimum_quantity }}+</span>
+                                  <span>{{ 'sections.quick_order_list.each' | t: money: price_break_price }}</span>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </volume-pricing>
+                      {%- endif -%}
+                      
                     </div>
+                    
                     
                   {%- when 'buy_buttons' -%}
                     <div class="product-form__buttons" {{ block.shopify_attributes }}>
