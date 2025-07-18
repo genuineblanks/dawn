@@ -115,17 +115,82 @@ function selectBulkQuantityVariant(variantValue, bulkQuantityMap, hiddenVariantI
   const targetRadio = bulkQuantityMap.get(variantValue);
   
   if (targetRadio) {
-    // Select the radio button
+    console.log(`🎯 Selecting variant radio for: ${variantValue}`);
+    
+    // Uncheck all other radios in the same group first
+    const radioGroup = document.querySelectorAll(`input[name="${targetRadio.name}"]`);
+    radioGroup.forEach(radio => {
+      radio.checked = false;
+    });
+    
+    // Select the target radio button
     targetRadio.checked = true;
     
-    // Trigger change event to notify Shopify's variant system
-    const changeEvent = new Event('change', { bubbles: true });
-    targetRadio.dispatchEvent(changeEvent);
+    // Trigger multiple events to ensure Shopify's variant system responds
+    const events = ['change', 'input', 'click'];
+    events.forEach(eventType => {
+      const event = new Event(eventType, { bubbles: true, cancelable: true });
+      targetRadio.dispatchEvent(event);
+      console.log(`📡 Triggered ${eventType} event`);
+    });
+    
+    // Force update the variant ID after a short delay
+    setTimeout(() => {
+      forceUpdateVariantId(targetRadio, hiddenVariantInput);
+    }, 100);
     
     // Update debug display
     updateDebugDisplay(variantValue, hiddenVariantInput);
     
     console.log(`✅ Selected bulk quantity variant: ${variantValue}`);
+  }
+}
+
+function forceUpdateVariantId(selectedRadio, hiddenVariantInput) {
+  // Try to find the variant ID that corresponds to this radio button value
+  const variantSelects = document.querySelector('variant-selects');
+  
+  if (variantSelects) {
+    // Look for the JSON script that contains variant data
+    const variantScript = variantSelects.querySelector('script[type="application/json"]');
+    
+    if (variantScript) {
+      try {
+        const variants = JSON.parse(variantScript.textContent);
+        console.log(`🔍 Found ${variants.length} variants in product data`);
+        
+        // Find the variant that matches our selected radio button value
+        const matchingVariant = variants.find(variant => {
+          // Check if any option value matches our selected value
+          return variant.option1 === selectedRadio.value || 
+                 variant.option2 === selectedRadio.value || 
+                 variant.option3 === selectedRadio.value ||
+                 variant.title.includes(selectedRadio.value);
+        });
+        
+        if (matchingVariant) {
+          console.log(`🎯 Found matching variant ID: ${matchingVariant.id} for value: ${selectedRadio.value}`);
+          
+          // Update the hidden variant ID input
+          if (hiddenVariantInput) {
+            hiddenVariantInput.value = matchingVariant.id;
+            console.log(`✅ Updated hidden variant ID to: ${matchingVariant.id}`);
+            
+            // Trigger change event on the hidden input
+            const changeEvent = new Event('change', { bubbles: true });
+            hiddenVariantInput.dispatchEvent(changeEvent);
+          }
+        } else {
+          console.log(`❌ No matching variant found for value: ${selectedRadio.value}`);
+          // Log all variants for debugging
+          variants.forEach(variant => {
+            console.log(`   Variant: ${variant.title} | ID: ${variant.id} | Options: ${variant.option1}, ${variant.option2}, ${variant.option3}`);
+          });
+        }
+      } catch (error) {
+        console.error('❌ Error parsing variant data:', error);
+      }
+    }
   }
 }
 
@@ -171,10 +236,11 @@ function updateDebugDisplay(bulkQuantity, hiddenVariantInput) {
   }
   
   if (bulkPropertyDisplay) {
-    bulkPropertyDisplay.textContent = bulkQuantity;
+    const variantId = hiddenVariantInput ? hiddenVariantInput.value : 'Unknown';
+    bulkPropertyDisplay.textContent = `${bulkQuantity} (ID: ${variantId})`;
   }
   
-  // Also show current variant ID
+  // Also show current variant ID in console
   if (hiddenVariantInput) {
     console.log(`🔍 Current variant ID: ${hiddenVariantInput.value} | Bulk quantity: ${bulkQuantity}`);
   }
