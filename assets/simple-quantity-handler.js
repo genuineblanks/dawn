@@ -91,13 +91,16 @@ function initializeBulkQuantityHandlers() {
   // Initialize debug display with current values
   initializeDebugDisplay(quantityInput);
   
-  // Add click handlers to bulk quantity buttons
-  bulkQuantityButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const selectedQuantity = this.getAttribute('data-quantity');
+  // Add click handlers to bulk quantity buttons using event delegation
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('bulk-quantity-btn')) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      const selectedQuantity = event.target.getAttribute('data-quantity');
       
       if (selectedQuantity) {
-        console.log(`📦 Bulk quantity selected: ${selectedQuantity}`);
+        console.log(`📦 Bulk quantity clicked: ${selectedQuantity}`);
         
         // Update the main quantity input field
         quantityInput.value = selectedQuantity;
@@ -106,7 +109,7 @@ function initializeBulkQuantityHandlers() {
         updateBulkQuantityProperty(selectedQuantity, productForm);
         
         // Update button active states
-        updateButtonStates(this, bulkQuantityButtons);
+        updateButtonStates(event.target, bulkQuantityButtons);
         
         // Update debug display
         updateDebugDisplay(selectedQuantity);
@@ -116,8 +119,47 @@ function initializeBulkQuantityHandlers() {
         
         console.log(`✅ Updated quantity to ${selectedQuantity}`);
       }
-    });
+    }
   });
+  
+  // Also try direct event listeners as backup
+  bulkQuantityButtons.forEach((button, index) => {
+    console.log(`🔗 Adding direct listener to button ${index + 1}`);
+    
+    // Remove any existing listeners
+    button.removeEventListener('click', handleBulkQuantityClick);
+    
+    // Add new listener
+    button.addEventListener('click', handleBulkQuantityClick, true);
+  });
+  
+  function handleBulkQuantityClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const selectedQuantity = this.getAttribute('data-quantity');
+    
+    if (selectedQuantity) {
+      console.log(`📦 Direct click handler - Bulk quantity selected: ${selectedQuantity}`);
+      
+      // Update the main quantity input field
+      quantityInput.value = selectedQuantity;
+      
+      // Update or create the bulk quantity property field
+      updateBulkQuantityProperty(selectedQuantity, productForm);
+      
+      // Update button active states
+      updateButtonStates(this, bulkQuantityButtons);
+      
+      // Update debug display
+      updateDebugDisplay(selectedQuantity);
+      
+      // Trigger quantity change event for other components
+      triggerQuantityChangeEvent(quantityInput);
+      
+      console.log(`✅ Direct handler - Updated quantity to ${selectedQuantity}`);
+    }
+  }
   
   console.log(`✅ Bulk quantity handler initialized for ${bulkQuantityButtons.length} buttons`);
 }
