@@ -119,6 +119,13 @@
   padding: 2rem 0;
 }
 
+.footer-clean .footer__content-bottom-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
 .footer-clean .footer__navigation {
   margin-bottom: 2rem;
 }
@@ -127,7 +134,8 @@
   display: flex;
   justify-content: center;
   gap: 4rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 .footer-clean .footer__nav-link {
@@ -184,10 +192,35 @@
   text-transform: uppercase;
 }
 
+/* Homepage Footer Compact Styles */
+.footer-homepage .footer__content-main {
+  padding: 2rem 0 1rem;
+}
+
+.footer-homepage .footer__content-bottom {
+  padding: 1rem 0;
+}
+
+.footer-homepage .footer__navigation {
+  margin-bottom: 1rem;
+}
+
+.footer-homepage .footer__social-media {
+  margin-bottom: 1rem;
+}
+
 /* Mobile Responsive Styles for Clean Footer */
 @media screen and (max-width: 749px) {
   .footer-clean .footer__content-main {
     padding: 3rem 2rem 1.5rem;
+  }
+  
+  .footer-homepage .footer__content-main {
+    padding: 1.5rem 2rem 1rem;
+  }
+  
+  .footer-homepage .footer__content-bottom {
+    padding: 1rem 2rem;
   }
   
   .footer-clean .footer__newsletter-heading {
@@ -209,7 +242,7 @@
   }
   
   .footer-clean .footer__nav-links {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 1.5rem;
     text-align: center;
   }
