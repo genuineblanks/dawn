@@ -1,3 +1,4 @@
+if (!customElements.get('search-form')) {
 class SearchForm extends HTMLElement {
   constructor() {
     super();
@@ -45,3 +46,4 @@ class SearchForm extends HTMLElement {
 }
 
 customElements.define('search-form', SearchForm);
+}
