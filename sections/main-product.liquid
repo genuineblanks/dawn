@@ -38,7 +38,7 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'sticky-product-behavior.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'accordion-system.js' | asset_url }}" defer="defer"></script>
-  <script src="{{ 'simple-quantity-handler.js' | asset_url }}" defer="defer"></script>
+  <!-- simple-quantity-handler.js removed - using native Shopify variant system instead -->
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -166,7 +166,8 @@
         {% else %}
           <!-- Standard Product Form with Shopify Global Components -->
           <product-form class="product-form" data-hide-errors="{{ product.selected_or_first_available_variant.available }}" data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
-            <!-- Form wrapper removed - buy-buttons.liquid will create the Shopify form with all features -->
+            <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" id="{{ product_form_id }}" class="form" novalidate="novalidate" data-type="add-to-cart-form">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}" class="product-variant-id">
               
               <!-- Render Shopify Blocks: variant_picker, quantity_selector, buy_buttons -->
               {%- for block in section.blocks -%}
@@ -230,7 +231,7 @@
                     </div>
                 {%- endcase -%}
               {%- endfor -%}
-            <!-- Form provided by buy-buttons.liquid -->
+            </form>
           </product-form>
         {% endif %}
 
