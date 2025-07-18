@@ -207,8 +207,11 @@
                             type="number"
                             name="quantity"
                             id="Quantity-{{ section.id }}"
-                            min="1"
-                            value="1"
+                            min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                            {% if product.selected_or_first_available_variant.quantity_rule.max %}max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"{% endif %}
+                            {% if product.selected_or_first_available_variant.inventory_management == 'shopify' and product.selected_or_first_available_variant.inventory_policy != 'continue' %}max="{{ product.selected_or_first_available_variant.inventory_quantity }}"{% endif %}
+                            step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                            value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
                             form="{{ product_form_id }}"
                           >
                           <button class="quantity__button no-js-hidden quantity-btn quantity-increase" name="plus" type="button">
@@ -221,15 +224,6 @@
                         </quantity-input>
                         <div id="Quantity-Rules-{{ section.id }}" class="quantity__rules hidden"></div>
                       </div>
-                      
-                      <!-- Debug: Show current variant selection -->
-                      <div style="margin-top: 10px; font-size: 12px; color: #666; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
-                        <strong>Bulk Quantity Debug:</strong><br>
-                        <div id="debug-quantity-value">Quantity: <span id="current-quantity-value">1</span></div>
-                        <div id="debug-bulk-property">Selected Variant: <span id="current-bulk-property">Not set</span></div>
-                      </div>
-                        
-                      <!-- Native components removed to avoid conflicts -->
                       
                     </div>
                     
