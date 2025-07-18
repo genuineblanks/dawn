@@ -3,6 +3,30 @@
  * Handles synchronization between bulk quantity buttons and form fields
  */
 
+// Add a simple test to verify the script loads
+console.log('🔥 SIMPLE QUANTITY HANDLER SCRIPT LOADED!');
+
+// Test function that can be called from console
+window.testBulkQuantity = function() {
+  console.log('🧪 Testing bulk quantity elements...');
+  
+  const buttons = document.querySelectorAll('.bulk-quantity-btn');
+  const quantityInput = document.querySelector('input[name="quantity"]');
+  const forms = document.querySelectorAll('form');
+  
+  console.log('Bulk buttons found:', buttons.length);
+  console.log('Quantity input found:', !!quantityInput);
+  console.log('All forms found:', forms.length);
+  
+  forms.forEach((form, index) => {
+    console.log(`Form ${index}:`, form.action);
+  });
+  
+  if (buttons.length > 0) {
+    console.log('First button data-quantity:', buttons[0].getAttribute('data-quantity'));
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Simple quantity handler DOM loaded');
   // Initialize bulk quantity handlers
@@ -17,14 +41,45 @@ if (document.readyState === 'loading') {
   initializeBulkQuantityHandlers();
 }
 
+// Alternative initialization using setTimeout to ensure everything is loaded
+setTimeout(() => {
+  console.log('⏰ Timeout initialization attempt...');
+  initializeBulkQuantityHandlers();
+}, 1000);
+
 function initializeBulkQuantityHandlers() {
   const bulkQuantityButtons = document.querySelectorAll('.bulk-quantity-btn');
-  const quantityInput = document.querySelector('input[name="quantity"]');
-  const productForm = document.querySelector('form[action*="/cart/add"]');
+  
+  // Try multiple selectors for quantity input
+  let quantityInput = document.querySelector('input[name="quantity"]');
+  if (!quantityInput) {
+    quantityInput = document.querySelector('.quantity__input');
+  }
+  if (!quantityInput) {
+    quantityInput = document.querySelector('input[type="number"]');
+  }
+  
+  // Try multiple selectors for form
+  let productForm = document.querySelector('form[action*="/cart/add"]');
+  if (!productForm) {
+    productForm = document.querySelector('form[data-type="add-to-cart-form"]');
+  }
+  if (!productForm) {
+    productForm = document.querySelector('.product-form form');
+  }
   
   console.log(`🔍 Found ${bulkQuantityButtons.length} bulk quantity buttons`);
-  console.log('🔍 Quantity input:', quantityInput ? 'Found' : 'Not found');
-  console.log('🔍 Product form:', productForm ? 'Found' : 'Not found');
+  console.log('🔍 Quantity input:', quantityInput ? `Found: ${quantityInput.name || quantityInput.className}` : 'Not found');
+  console.log('🔍 Product form:', productForm ? `Found: ${productForm.action}` : 'Not found');
+  
+  // Debug: List all inputs to see what's available
+  const allInputs = document.querySelectorAll('input');
+  console.log('🔍 All inputs on page:', allInputs.length);
+  allInputs.forEach((input, index) => {
+    if (input.name === 'quantity' || input.type === 'number' || input.className.includes('quantity')) {
+      console.log(`   Input ${index}: name="${input.name}" type="${input.type}" class="${input.className}"`);
+    }
+  });
   
   if (!bulkQuantityButtons.length || !quantityInput || !productForm) {
     console.log('❌ Bulk quantity elements not found, skipping initialization');
