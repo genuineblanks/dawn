@@ -115,56 +115,73 @@ function initializeBulkQuantityVariantHandlers() {
 }
 
 function interceptFormSubmission(hiddenVariantInput, bulkQuantityMap) {
-  // Find the product form
-  const productForm = document.querySelector('form[action*="/cart/add"]');
+  // Find ALL possible forms that could submit
+  const allForms = document.querySelectorAll('form');
+  const productForms = document.querySelectorAll('form[action*="/cart/add"], form[data-type="add-to-cart-form"]');
   
-  if (productForm) {
-    console.log('🔒 Intercepting form submission for variant ID debugging...');
+  console.log(`🔍 Found ${allForms.length} total forms, ${productForms.length} cart forms`);
+  
+  productForms.forEach((form, index) => {
+    console.log(`🔒 Intercepting form ${index + 1} submission for debugging...`);
     
-    // Override form submission
-    productForm.addEventListener('submit', function(event) {
-      console.log('🚀 FORM SUBMISSION INTERCEPTED!');
+    form.addEventListener('submit', function(event) {
+      console.log(`🚀 FORM ${index + 1} SUBMISSION INTERCEPTED!`);
+      console.log(`📍 Form action: ${form.action}`);
+      console.log(`📍 Form method: ${form.method}`);
       
-      // Check what variant ID is currently in the hidden input
-      const currentVariantId = hiddenVariantInput ? hiddenVariantInput.value : 'Not found';
-      console.log(`📋 Hidden input variant ID: ${currentVariantId}`);
+      // Log ALL form inputs
+      const allInputs = form.querySelectorAll('input');
+      console.log(`📋 Form has ${allInputs.length} inputs:`);
+      allInputs.forEach(input => {
+        if (input.name === 'id' || input.name === 'quantity' || input.type === 'radio') {
+          console.log(`   ${input.name}: "${input.value}" ${input.type === 'radio' ? (input.checked ? '(CHECKED)' : '(unchecked)') : ''}`);
+        }
+      });
       
-      // Check which bulk quantity radio is selected
+      // Check which bulk quantity radio is actually selected
       let selectedBulkQuantity = 'None';
+      let selectedRadioDetails = null;
       bulkQuantityMap.forEach((radio, value) => {
         if (radio.checked) {
           selectedBulkQuantity = value;
+          selectedRadioDetails = {
+            value: radio.value,
+            name: radio.name,
+            id: radio.id,
+            form: radio.form ? radio.form.action : 'No form'
+          };
         }
       });
+      
       console.log(`📦 Selected bulk quantity: ${selectedBulkQuantity}`);
-      
-      // Create FormData to see what will actually be sent
-      const formData = new FormData(productForm);
-      const formVariantId = formData.get('id');
-      const formQuantity = formData.get('quantity');
-      
-      console.log(`📤 FormData will send - ID: ${formVariantId}, Quantity: ${formQuantity}`);
-      
-      // If there's a mismatch, try to fix it before submission
-      if (selectedBulkQuantity !== 'None' && selectedBulkQuantity !== '1000') {
-        console.log(`🔧 Attempting to fix variant ID before submission...`);
-        
-        // Force update the variant ID one more time
-        const targetRadio = bulkQuantityMap.get(selectedBulkQuantity);
-        if (targetRadio) {
-          forceUpdateVariantId(targetRadio, hiddenVariantInput);
-          
-          // Give it a moment to update, then let the form submit
-          setTimeout(() => {
-            console.log(`🔄 Variant ID after fix: ${hiddenVariantInput.value}`);
-          }, 50);
-        }
+      if (selectedRadioDetails) {
+        console.log(`📦 Selected radio details:`, selectedRadioDetails);
       }
       
-      // Let the form submission continue normally
+      // Create FormData to see what will actually be sent
+      const formData = new FormData(form);
+      console.log(`📤 FormData contents:`);
+      for (let [key, value] of formData.entries()) {
+        console.log(`   ${key}: ${value}`);
+      }
+      
+      // Check if there are multiple variant ID inputs
+      const variantInputs = form.querySelectorAll('input[name="id"]');
+      console.log(`🎯 Found ${variantInputs.length} variant ID inputs:`);
+      variantInputs.forEach((input, idx) => {
+        console.log(`   Input ${idx + 1}: value="${input.value}" class="${input.className}" id="${input.id}"`);
+      });
+      
+      // Check if the radio button belongs to this form
+      if (selectedRadioDetails && selectedRadioDetails.form !== form.action) {
+        console.log(`⚠️ WARNING: Selected radio belongs to different form!`);
+        console.log(`   Radio form: ${selectedRadioDetails.form}`);
+        console.log(`   Submitting form: ${form.action}`);
+      }
+      
       console.log('✅ Allowing form submission to proceed...');
     });
-  }
+  });
 }
 
 function selectBulkQuantityVariant(variantValue, bulkQuantityMap, hiddenVariantInput) {
