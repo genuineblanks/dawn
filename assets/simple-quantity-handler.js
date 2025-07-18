@@ -108,7 +108,63 @@ function initializeBulkQuantityVariantHandlers() {
     }
   });
   
+  // CRITICAL: Intercept form submission to debug and fix variant ID
+  interceptFormSubmission(hiddenVariantInput, bulkQuantityMap);
+  
   console.log(`✅ Bulk quantity variant handler initialized for ${bulkQuantityMap.size} variants`);
+}
+
+function interceptFormSubmission(hiddenVariantInput, bulkQuantityMap) {
+  // Find the product form
+  const productForm = document.querySelector('form[action*="/cart/add"]');
+  
+  if (productForm) {
+    console.log('🔒 Intercepting form submission for variant ID debugging...');
+    
+    // Override form submission
+    productForm.addEventListener('submit', function(event) {
+      console.log('🚀 FORM SUBMISSION INTERCEPTED!');
+      
+      // Check what variant ID is currently in the hidden input
+      const currentVariantId = hiddenVariantInput ? hiddenVariantInput.value : 'Not found';
+      console.log(`📋 Hidden input variant ID: ${currentVariantId}`);
+      
+      // Check which bulk quantity radio is selected
+      let selectedBulkQuantity = 'None';
+      bulkQuantityMap.forEach((radio, value) => {
+        if (radio.checked) {
+          selectedBulkQuantity = value;
+        }
+      });
+      console.log(`📦 Selected bulk quantity: ${selectedBulkQuantity}`);
+      
+      // Create FormData to see what will actually be sent
+      const formData = new FormData(productForm);
+      const formVariantId = formData.get('id');
+      const formQuantity = formData.get('quantity');
+      
+      console.log(`📤 FormData will send - ID: ${formVariantId}, Quantity: ${formQuantity}`);
+      
+      // If there's a mismatch, try to fix it before submission
+      if (selectedBulkQuantity !== 'None' && selectedBulkQuantity !== '1000') {
+        console.log(`🔧 Attempting to fix variant ID before submission...`);
+        
+        // Force update the variant ID one more time
+        const targetRadio = bulkQuantityMap.get(selectedBulkQuantity);
+        if (targetRadio) {
+          forceUpdateVariantId(targetRadio, hiddenVariantInput);
+          
+          // Give it a moment to update, then let the form submit
+          setTimeout(() => {
+            console.log(`🔄 Variant ID after fix: ${hiddenVariantInput.value}`);
+          }, 50);
+        }
+      }
+      
+      // Let the form submission continue normally
+      console.log('✅ Allowing form submission to proceed...');
+    });
+  }
 }
 
 function selectBulkQuantityVariant(variantValue, bulkQuantityMap, hiddenVariantInput) {
