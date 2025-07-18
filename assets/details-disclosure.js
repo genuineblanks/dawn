@@ -1,3 +1,4 @@
+if (!customElements.get('details-disclosure')) {
 class DetailsDisclosure extends HTMLElement {
   constructor() {
     super();
@@ -31,7 +32,9 @@ class DetailsDisclosure extends HTMLElement {
 }
 
 customElements.define('details-disclosure', DetailsDisclosure);
+}
 
+if (!customElements.get('header-menu')) {
 class HeaderMenu extends DetailsDisclosure {
   constructor() {
     super();
@@ -51,3 +54,4 @@ class HeaderMenu extends DetailsDisclosure {
 }
 
 customElements.define('header-menu', HeaderMenu);
+}

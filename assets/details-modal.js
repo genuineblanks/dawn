@@ -1,3 +1,4 @@
+if (!customElements.get('details-modal')) {
 class DetailsModal extends HTMLElement {
   constructor() {
     super();
@@ -45,3 +46,4 @@ class DetailsModal extends HTMLElement {
 }
 
 customElements.define('details-modal', DetailsModal);
+}
