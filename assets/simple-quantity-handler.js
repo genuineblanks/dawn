@@ -179,9 +179,83 @@ function interceptFormSubmission(hiddenVariantInput, bulkQuantityMap) {
         console.log(`   Submitting form: ${form.action}`);
       }
       
+      // CRITICAL: Before allowing submission, double-check and fix the variant ID
+      const finalFormData = new FormData(form);
+      const finalVariantId = finalFormData.get('id');
+      
+      console.log(`🔍 FINAL CHECK - Variant ID being sent: ${finalVariantId}`);
+      
+      // If we're sending the wrong variant ID, stop and fix it
+      if (selectedBulkQuantity !== 'None' && selectedBulkQuantity !== '1000') {
+        // Find what the correct variant ID should be
+        const correctVariantId = findCorrectVariantId(selectedBulkQuantity);
+        
+        if (correctVariantId && correctVariantId !== finalVariantId) {
+          console.log(`🚨 MISMATCH! Should send ${correctVariantId}, but sending ${finalVariantId}`);
+          console.log(`🔧 FIXING variant ID before submission...`);
+          
+          // Prevent default submission
+          event.preventDefault();
+          
+          // Update the variant ID and resubmit
+          const variantInput = form.querySelector('input[name="id"]');
+          if (variantInput) {
+            variantInput.value = correctVariantId;
+            console.log(`✅ Updated variant ID to: ${correctVariantId}`);
+            
+            // Resubmit the form
+            setTimeout(() => {
+              console.log('🔄 Resubmitting form with correct variant ID...');
+              form.submit();
+            }, 100);
+            
+            return; // Stop here
+          }
+        }
+      }
+      
       console.log('✅ Allowing form submission to proceed...');
     });
   });
+}
+
+function findCorrectVariantId(bulkQuantityValue) {
+  // Look through Shopify's variant data to find the correct ID
+  const variantSelects = document.querySelector('variant-selects');
+  
+  if (variantSelects) {
+    const variantScript = variantSelects.querySelector('script[type="application/json"]');
+    
+    if (variantScript) {
+      try {
+        const variants = JSON.parse(variantScript.textContent);
+        
+        // Find variant that matches our bulk quantity value
+        const matchingVariant = variants.find(variant => {
+          return variant.option1 === bulkQuantityValue || 
+                 variant.option2 === bulkQuantityValue || 
+                 variant.option3 === bulkQuantityValue ||
+                 variant.title.includes(bulkQuantityValue);
+        });
+        
+        if (matchingVariant) {
+          console.log(`🎯 Found correct variant ID: ${matchingVariant.id} for ${bulkQuantityValue}`);
+          return matchingVariant.id.toString();
+        } else {
+          console.log(`❌ No variant found for bulk quantity: ${bulkQuantityValue}`);
+          // Log all available variants for debugging
+          console.log('Available variants:');
+          variants.forEach(v => {
+            console.log(`  ${v.title} | ID: ${v.id} | Options: ${v.option1}, ${v.option2}, ${v.option3}`);
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing variant data:', error);
+      }
+    }
+  }
+  
+  return null;
 }
 
 function selectBulkQuantityVariant(variantValue, bulkQuantityMap, hiddenVariantInput) {
