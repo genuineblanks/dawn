@@ -47,9 +47,22 @@ if (!customElements.get('product-form')) {
         config.body = formData;
 
         fetch(`${routes.cart_add_url}`, config)
-          .then((response) => response.json())
+          .then((response) => {
+            console.log(`🌐 Cart add response status: ${response.status}`);
+            if (response.status === 422) {
+              console.log('❌ 422 ERROR - Logging request details:');
+              console.log('📤 Variant ID sent:', formData.get('id'));
+              console.log('📤 Quantity sent:', formData.get('quantity'));
+              console.log('📤 All form data:');
+              for (let [key, value] of formData.entries()) {
+                console.log(`   ${key}: ${value}`);
+              }
+            }
+            return response.json();
+          })
           .then((response) => {
             if (response.status) {
+              console.log('❌ Cart add error response:', response);
               publish(PUB_SUB_EVENTS.cartError, {
                 source: 'product-form',
                 productVariantId: formData.get('id'),
