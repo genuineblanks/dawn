@@ -39,6 +39,29 @@
   <script src="{{ 'sticky-product-behavior.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'accordion-system.js' | asset_url }}" defer="defer"></script>
   <!-- simple-quantity-handler.js removed - using native Shopify variant system instead -->
+  <script>
+    // Ensure variant selection is properly initialized on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const variantSelects = document.querySelector('variant-selects[data-section="{{ section.id }}"]');
+      if (variantSelects) {
+        // Trigger initial variant selection to sync UI with hidden input
+        const hiddenInput = document.querySelector('input[name="id"].product-variant-id');
+        if (hiddenInput && hiddenInput.value) {
+          // Find and select the correct variant options
+          const selectedVariantId = hiddenInput.value;
+          const variantData = JSON.parse(variantSelects.querySelector('script[type="application/json"]').textContent);
+          const selectedVariant = variantData.find(variant => variant.id.toString() === selectedVariantId);
+          
+          if (selectedVariant) {
+            // Update variant selects to match the selected variant
+            variantSelects.updateOptions();
+            variantSelects.updateMasterId();
+            variantSelects.updateVariantInput();
+          }
+        }
+      }
+    });
+  </script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
