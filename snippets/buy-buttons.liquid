@@ -44,22 +44,7 @@
         <span class="product-form__error-message"></span>
       </div>
 
-      {%- form 'product',
-        product,
-        id: product_form_id,
-        class: 'form',
-        novalidate: 'novalidate',
-        data-type: 'add-to-cart-form'
-      -%}
-        <input
-          type="hidden"
-          name="id"
-          value="{{ product.selected_or_first_available_variant.id }}"
-          {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
-            disabled
-          {% endif %}
-          class="product-variant-id"
-        >
+        <!-- Variant ID input is handled by main form in main-product.liquid -->
 
         {%- if gift_card_recipient_feature_active -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
@@ -99,10 +84,12 @@
             {%- render 'loading-spinner' -%}
           </button>
           {%- if show_dynamic_checkout -%}
-            {{ form | payment_button }}
+            <div class="shopify-payment-button" data-shopify="payment-button" data-form-id="{{ product_form_id }}">
+              <!-- Dynamic checkout buttons will be handled by Shopify when form is present -->
+            </div>
           {%- endif -%}
         </div>
-      {%- endform -%}
+        <!-- Form closed by main-product.liquid -->
     </product-form>
   {%- else -%}
     <div class="product-form">
