@@ -44,21 +44,12 @@
     document.addEventListener('DOMContentLoaded', function() {
       const variantSelects = document.querySelector('variant-selects[data-section="{{ section.id }}"]');
       if (variantSelects) {
-        // Trigger initial variant selection to sync UI with hidden input
-        const hiddenInput = document.querySelector('input[name="id"].product-variant-id');
-        if (hiddenInput && hiddenInput.value) {
-          // Find and select the correct variant options
-          const selectedVariantId = hiddenInput.value;
-          const variantData = JSON.parse(variantSelects.querySelector('script[type="application/json"]').textContent);
-          const selectedVariant = variantData.find(variant => variant.id.toString() === selectedVariantId);
-          
-          if (selectedVariant) {
-            // Update variant selects to match the selected variant
-            variantSelects.updateOptions();
-            variantSelects.updateMasterId();
-            variantSelects.updateVariantInput();
-          }
-        }
+        // Small delay to ensure all elements are fully initialized
+        setTimeout(() => {
+          // Trigger the change event to properly initialize the variant state
+          const changeEvent = new Event('change', { bubbles: true });
+          variantSelects.dispatchEvent(changeEvent);
+        }, 100);
       }
     });
   </script>
