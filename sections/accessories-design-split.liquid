@@ -55,7 +55,7 @@
 >
   <div class="divider"></div>
   
-  <div class="service-half accessories-half" onclick="goToAccessories{{ section.id }}()">
+  <div class="service-half accessories-half" onclick="goToAccessories{{ section.id | replace: '-', '_' | replace: '__', '_' }}()">
     {%- if section.settings.accessories_bg_image != blank -%}
       <div class="service-media">
         {{
@@ -87,7 +87,7 @@
           <li>{{ section.settings.accessories_feature_3 | default: 'Composition labels' }}</li>
         </ul>
       {% endif %}
-      <a href="{{ section.settings.accessories_url | default: '#' }}" class="explore-button" onclick="goToAccessories{{ section.id }}(); return false;">
+      <a href="{{ section.settings.accessories_url | default: '#' }}" class="explore-button" onclick="goToAccessories{{ section.id | replace: '-', '_' | replace: '__', '_' }}(); return false;">
         {{ section.settings.accessories_button_text | default: 'Check Our Accessories' }}
       </a>
     </div>
@@ -96,7 +96,7 @@
     {% endif %}
   </div>
 
-  <div class="service-half design-half" onclick="goToDesign{{ section.id }}()">
+  <div class="service-half design-half" onclick="goToDesign{{ section.id | replace: '-', '_' | replace: '__', '_' }}()">
     {%- if section.settings.design_bg_image != blank -%}
       <div class="service-media">
         {{
@@ -128,7 +128,7 @@
           <li>{{ section.settings.design_feature_3 | default: 'Product concepts' }}</li>
         </ul>
       {% endif %}
-      <a href="{{ section.settings.design_url | default: '#' }}" class="explore-button" onclick="goToDesign{{ section.id }}(); return false;">
+      <a href="{{ section.settings.design_url | default: '#' }}" class="explore-button" onclick="goToDesign{{ section.id | replace: '-', '_' | replace: '__', '_' }}(); return false;">
         {{ section.settings.design_button_text | default: 'Get Started & FAQs' }}
       </a>
     </div>
@@ -139,7 +139,7 @@
 </div>
 
 <script>
-  function goToAccessories{{ section.id }}() {
+  function goToAccessories{{ section.id | replace: '-', '_' | replace: '__', '_' }}() {
     const accessoriesSection = document.querySelector('#AccessoriesDesign-{{ section.id }} .accessories-half');
     if (accessoriesSection) {
       accessoriesSection.style.transform = 'scale(1.1)';
@@ -151,7 +151,7 @@
     }, 300);
   }
 
-  function goToDesign{{ section.id }}() {
+  function goToDesign{{ section.id | replace: '-', '_' | replace: '__', '_' }}() {
     const designSection = document.querySelector('#AccessoriesDesign-{{ section.id }} .design-half');
     if (designSection) {
       designSection.style.transform = 'scale(1.1)';
