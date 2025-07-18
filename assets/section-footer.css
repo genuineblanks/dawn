@@ -183,6 +183,9 @@
 
 .footer-clean .footer__copyright {
   text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .footer-clean .copyright__content {
@@ -190,6 +193,7 @@
   font-size: 1.2rem;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
+  text-align: center;
 }
 
 /* Homepage Footer Compact Styles */
@@ -199,6 +203,7 @@
 
 .footer-homepage .footer__content-bottom {
   padding: 1rem 0;
+  margin-bottom: 5rem; /* Add space for section-dot navigation */
 }
 
 .footer-homepage .footer__navigation {
@@ -207,6 +212,10 @@
 
 .footer-homepage .footer__social-media {
   margin-bottom: 1rem;
+}
+
+.footer-homepage .footer__newsletter-section {
+  margin-bottom: 2rem;
 }
 
 /* Mobile Responsive Styles for Clean Footer */
@@ -221,6 +230,11 @@
   
   .footer-homepage .footer__content-bottom {
     padding: 1rem 2rem;
+    margin-bottom: 3rem; /* Reduced for mobile */
+  }
+  
+  .footer-homepage .footer__newsletter-section {
+    margin-bottom: 1.5rem;
   }
   
   .footer-clean .footer__newsletter-heading {
