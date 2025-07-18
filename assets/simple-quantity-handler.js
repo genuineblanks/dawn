@@ -273,21 +273,47 @@ function selectBulkQuantityVariant(variantValue, bulkQuantityMap, hiddenVariantI
     // Select the target radio button
     targetRadio.checked = true;
     
-    // Trigger multiple events to ensure Shopify's variant system responds
-    const events = ['change', 'input', 'click'];
-    events.forEach(eventType => {
-      const event = new Event(eventType, { bubbles: true, cancelable: true });
-      targetRadio.dispatchEvent(event);
-      console.log(`📡 Triggered ${eventType} event`);
-    });
-    
-    // Force update the variant ID after a short delay
-    setTimeout(() => {
-      forceUpdateVariantId(targetRadio, hiddenVariantInput);
-    }, 100);
-    
-    // Update debug display
-    updateDebugDisplay(variantValue, hiddenVariantInput);
+    // CRITICAL: Trigger Shopify's official variant system first
+    const variantSelects = document.querySelector('variant-selects');
+    if (variantSelects) {
+      console.log(`🔧 Triggering Shopify VariantSelects system...`);
+      
+      // Create a change event that bubbles to the variant-selects container
+      const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+      targetRadio.dispatchEvent(changeEvent);
+      
+      // Give Shopify's system time to process the change
+      setTimeout(() => {
+        // Verify the variant ID was updated correctly
+        const currentVariantId = hiddenVariantInput ? hiddenVariantInput.value : 'unknown';
+        console.log(`🔍 After Shopify update, variant ID is: ${currentVariantId}`);
+        
+        // If Shopify didn't update correctly, force update
+        if (!currentVariantId || currentVariantId === 'unknown') {
+          console.log(`🛠️ Shopify update failed, forcing manual update...`);
+          forceUpdateVariantId(targetRadio, hiddenVariantInput);
+        }
+        
+        // Update debug display
+        updateDebugDisplay(variantValue, hiddenVariantInput);
+      }, 200);
+    } else {
+      console.log(`⚠️ No variant-selects found, using manual method...`);
+      
+      // Fallback: trigger events manually
+      const events = ['change', 'input'];
+      events.forEach(eventType => {
+        const event = new Event(eventType, { bubbles: true, cancelable: true });
+        targetRadio.dispatchEvent(event);
+        console.log(`📡 Triggered ${eventType} event`);
+      });
+      
+      // Force update the variant ID after a short delay
+      setTimeout(() => {
+        forceUpdateVariantId(targetRadio, hiddenVariantInput);
+        updateDebugDisplay(variantValue, hiddenVariantInput);
+      }, 100);
+    }
     
     console.log(`✅ Selected bulk quantity variant: ${variantValue}`);
   }
