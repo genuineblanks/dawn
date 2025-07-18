@@ -4,9 +4,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Simple quantity handler DOM loaded');
   // Initialize bulk quantity handlers
   initializeBulkQuantityHandlers();
 });
+
+// Also try immediate initialization in case DOM is already loaded
+if (document.readyState === 'loading') {
+  console.log('📄 DOM still loading, waiting...');
+} else {
+  console.log('📄 DOM already loaded, initializing immediately');
+  initializeBulkQuantityHandlers();
+}
 
 function initializeBulkQuantityHandlers() {
   const bulkQuantityButtons = document.querySelectorAll('.bulk-quantity-btn');
