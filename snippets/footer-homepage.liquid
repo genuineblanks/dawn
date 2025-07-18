@@ -42,8 +42,23 @@
       assign only_empty_brand = true
     endif
   -%}
-  <!-- Clean Homepage Footer Design (No Newsletter) -->
+  <!-- Clean Homepage Footer Design (With Newsletter) -->
   <div class="footer__content-main page-width">
+    
+    {%- if section.settings.newsletter_enable -%}
+      <!-- Newsletter Section -->
+      <div class="footer__newsletter-section">
+        {%- if section.settings.newsletter_heading != blank -%}
+          <h2 class="footer__newsletter-heading">{{ section.settings.newsletter_heading }}</h2>
+        {%- endif -%}
+        
+        <div class="klaviyo-form-Xx3Apa newsletter_Klaviyo"></div>
+        
+        {%- if section.settings.newsletter_paragraph != blank -%}
+          <div class="footer__newsletter-paragraph">{{ section.settings.newsletter_paragraph }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
     
     <!-- Payment Icons -->
     {%- if section.settings.payment_enable -%} 
@@ -101,7 +116,7 @@
           {%- if section.settings.copyright_text != blank -%}
             {{ section.settings.copyright_text }}
           {%- else -%}
-            GENUINEBLANKS © {{ 'now' | date: '%Y' }}. ALL RIGHTS RESERVED.
+            GENUINEBLANKS © 2025. ALL RIGHTS RESERVED.
           {%- endif -%}
         </small>
       </div>
