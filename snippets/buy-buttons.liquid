@@ -84,8 +84,8 @@
             {%- render 'loading-spinner' -%}
           </button>
           {%- if show_dynamic_checkout -%}
-            <div class="shopify-payment-button" data-shopify="payment-button" data-form-id="{{ product_form_id }}">
-              <!-- Dynamic checkout buttons will be handled by Shopify when form is present -->
+            <div class="shopify-payment-button" data-shopify="payment-button">
+              {{ form | payment_button }}
             </div>
           {%- endif -%}
         </div>
