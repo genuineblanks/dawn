@@ -22,12 +22,19 @@ function initializeBulkQuantityHandlers() {
   const quantityInput = document.querySelector('input[name="quantity"]');
   const productForm = document.querySelector('form[action*="/cart/add"]');
   
+  console.log(`🔍 Found ${bulkQuantityButtons.length} bulk quantity buttons`);
+  console.log('🔍 Quantity input:', quantityInput ? 'Found' : 'Not found');
+  console.log('🔍 Product form:', productForm ? 'Found' : 'Not found');
+  
   if (!bulkQuantityButtons.length || !quantityInput || !productForm) {
-    console.log('Bulk quantity elements not found, skipping initialization');
+    console.log('❌ Bulk quantity elements not found, skipping initialization');
     return;
   }
 
   console.log('🔧 Initializing bulk quantity handler...');
+  
+  // Initialize debug display with current values
+  initializeDebugDisplay(quantityInput);
   
   // Add click handlers to bulk quantity buttons
   bulkQuantityButtons.forEach(button => {
@@ -88,6 +95,27 @@ function updateButtonStates(activeButton, allButtons) {
   
   // Add active class to clicked button
   activeButton.classList.add('active');
+}
+
+function initializeDebugDisplay(quantityInput) {
+  // Initialize debug display with current values
+  const quantityDisplay = document.getElementById('current-quantity-value');
+  const bulkPropertyDisplay = document.getElementById('current-bulk-property');
+  const existingBulkProperty = document.querySelector('input[name="properties[Bulk Quantity]"]');
+  
+  if (quantityDisplay && quantityInput) {
+    quantityDisplay.textContent = quantityInput.value || '1';
+  }
+  
+  if (bulkPropertyDisplay) {
+    if (existingBulkProperty) {
+      bulkPropertyDisplay.textContent = existingBulkProperty.value;
+    } else {
+      bulkPropertyDisplay.textContent = 'Not set';
+    }
+  }
+  
+  console.log('🐛 Debug display initialized');
 }
 
 function updateDebugDisplay(quantity) {
