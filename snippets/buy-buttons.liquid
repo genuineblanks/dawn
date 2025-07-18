@@ -44,7 +44,22 @@
         <span class="product-form__error-message"></span>
       </div>
 
-        <!-- Variant ID input is handled by main form in main-product.liquid -->
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+            disabled
+          {% endif %}
+          class="product-variant-id"
+        >
 
         {%- if gift_card_recipient_feature_active -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
@@ -69,7 +84,6 @@
             id="ProductSubmitButton-{{ section_id }}"
             type="submit"
             name="add"
-            form="{{ product_form_id }}"
             class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
             {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
               disabled
@@ -88,7 +102,7 @@
             {{ form | payment_button }}
           {%- endif -%}
         </div>
-        <!-- Form closed by main-product.liquid -->
+      {%- endform -%}
     </product-form>
   {%- else -%}
     <div class="product-form">
