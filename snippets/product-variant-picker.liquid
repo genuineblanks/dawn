@@ -95,7 +95,7 @@
   <div class="custom-color-input hide" id="custom-color-input">    
     <label for="custom-color-picker" class="custom-color-label">Select your custom color:</label>
     <div class="custom-color-controls">
-      <input type="color" id="custom-color-picker" name="custom_color" value="#ff0000" class="custom-color-field">
+      <input type="color" id="custom-color-picker" name="properties[Custom Color]" value="#ff0000" class="custom-color-field" disabled>
       <button type="button" class="apply-custom-color btn-secondary">Apply Color</button>
       <button type="button" class="cancel-custom-color btn-tertiary">Cancel</button>
     </div>
@@ -213,6 +213,10 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       customColorInput.classList.remove('hide');
       customColorInput.classList.add('show');
+      // Enable the custom color input when shown
+      if (customColorPicker) {
+        customColorPicker.disabled = false;
+      }
     });
   }
 
@@ -249,6 +253,10 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelButton.addEventListener('click', function() {
       customColorInput.classList.remove('show');
       customColorInput.classList.add('hide');
+      // Disable the custom color input when hidden
+      if (customColorPicker) {
+        customColorPicker.disabled = true;
+      }
     });
   }
 
@@ -264,10 +272,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const label = this.parentNode.querySelector('.color-label');
       if (label) label.classList.add('active');
       
-      // Hide custom color input if it's open
+      // Hide custom color input if it's open and disable it
       if (customColorInput && !this.classList.contains('custom-color')) {
         customColorInput.classList.remove('show');
         customColorInput.classList.add('hide');
+        // Disable the custom color input when a regular color is selected
+        if (customColorPicker) {
+          customColorPicker.disabled = true;
+        }
       }
     });
   });
