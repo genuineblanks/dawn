@@ -799,22 +799,7 @@
         }
       }
       
-      // Force scroll to top on page refresh for non-homepage
-      function handlePageRefresh() {
-        if (!isHomepage) {
-          console.log('🔄 Page refresh on non-homepage - forcing scroll to top');
-          window.scrollTo(0, 0);
-          // Also clear any saved position for this page
-          try {
-            let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
-            const currentPath = window.location.pathname;
-            if (scrollPositions[currentPath]) {
-              delete scrollPositions[currentPath];
-              sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-            }
-          } catch(e) {}
-        }
-      }
+      // Removed: Force scroll to top on page refresh - allowing natural scroll behavior
       
       // Save position when leaving page
       window.addEventListener('beforeunload', function() {
@@ -855,17 +840,17 @@
           // For homepage, try to restore position
           restoreScrollPosition();
         } else {
-          // For other pages, always start at top
-          window.scrollTo(0, 0);
+          // For other pages, allow natural scroll behavior
+          // Removed: window.scrollTo(0, 0);
         }
       }
       
-      // Check if page was refreshed (not back/forward navigation)
-      const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
-      if (wasRefreshed && !isHomepage) {
-        console.log('🔄 Detected page refresh on non-homepage');
-        window.scrollTo(0, 0);
-      }
+      // Removed: Check if page was refreshed - allowing natural scroll behavior
+      // const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
+      // if (wasRefreshed && !isHomepage) {
+      //   console.log('🔄 Detected page refresh on non-homepage');
+      //   window.scrollTo(0, 0);
+      // }
       
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', handleInitialLoad);
@@ -887,17 +872,17 @@
         }
       });
       
-      // Additional safety: Force non-homepage pages to top on window focus
-      window.addEventListener('focus', function() {
-        if (!isHomepage && !isNavigating) {
-          setTimeout(function() {
-            if (window.pageYOffset > 100) {
-              console.log('🎯 Window focus - forcing non-homepage to top');
-              window.scrollTo(0, 0);
-            }
-          }, 100);
-        }
-      });
+      // Removed: Force non-homepage pages to top on window focus - allowing natural scroll behavior
+      // window.addEventListener('focus', function() {
+      //   if (!isHomepage && !isNavigating) {
+      //     setTimeout(function() {
+      //       if (window.pageYOffset > 100) {
+      //         console.log('🎯 Window focus - forcing non-homepage to top');
+      //         window.scrollTo(0, 0);
+      //       }
+      //     }, 100);
+      //   }
+      // });
       
     })();
     </script>
