@@ -15,19 +15,12 @@
     <!-- Company Branding -->
     <div class="footer-branding">
       <h2 class="footer-brand-name">GENUINEBLANKS</h2>
-      <p class="footer-brand-subtitle">PREMIUM BLANK GARMENTS</p>
     </div>
 
     <!-- Email Signup (Optional - can be enabled/disabled) -->
     {%- if section.settings.newsletter_enable -%}
       <div class="footer-newsletter-compact">
-        {%- if section.settings.newsletter_heading != blank -%}
-          <h3 class="newsletter-heading">{{ section.settings.newsletter_heading }}</h3>
-        {%- endif -%}
         <div class="klaviyo-form-Xx3Apa newsletter_Klaviyo"></div>
-        {%- if section.settings.newsletter_paragraph != blank -%}
-          <p class="newsletter-paragraph">{{ section.settings.newsletter_paragraph }}</p>
-        {%- endif -%}
       </div>
     {%- endif -%}
 
