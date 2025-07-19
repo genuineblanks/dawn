@@ -173,8 +173,6 @@
               {%- if section.settings.newsletter_heading != blank -%}
                 <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
               {%- endif -%}
-              <div class="klaviyo-form-Xx3Apa newsletter_Klaviyo"></div>
-              {% comment %}
               {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="newsletter-form__field-wrapper">
@@ -234,7 +232,6 @@
                   </h3>
                 {%- endif -%}
               {%- endform -%}
-              {% endcomment %}
                {%- if section.settings.newsletter_paragraph != blank -%}
                 <div class="footer-block__paragraph inline-richtext">{{ section.settings.newsletter_paragraph }}</div>
               {%- endif -%}
