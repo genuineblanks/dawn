@@ -492,6 +492,47 @@
   }
 }
 
+/* Footer links styling - centered under newsletter */
+.footer-block__links {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 0;
+}
+
+.footer-links li {
+  margin: 0;
+}
+
+.footer-link {
+  color: rgba(var(--color-foreground), 0.7);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: rgb(var(--color-foreground));
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 749px) {
+  .footer-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
 /* check for flexbox gap in older Safari versions */
 @supports not (inset: 10px) {
   @media screen and (max-width: 749px) {
