@@ -232,9 +232,22 @@
                   </h3>
                 {%- endif -%}
               {%- endform -%}
-               {%- if section.settings.newsletter_paragraph != blank -%}
-                <div class="footer-block__paragraph inline-richtext">{{ section.settings.newsletter_paragraph }}</div>
-              {%- endif -%}
+              <div class="footer-block__links">
+                <ul class="footer-links list-unstyled">
+                  {%- if section.settings.show_policy_menu != blank -%}
+                    {%- for link in section.settings.show_policy_menu.links -%}
+                      <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  {%- endif -%}
+                  {%- if section.settings.show_policy -%}
+                    {%- for policy in shop.policies -%}
+                      {%- if policy != blank -%}
+                        <li><a href="{{ policy.url }}" class="footer-link">{{ policy.title }}</a></li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+                </ul>
+              </div>
             </div>
           {%- endif -%}
            
