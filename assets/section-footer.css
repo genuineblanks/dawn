@@ -127,11 +127,9 @@
 
 .footer-block--newsletter {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
   margin-top: 3rem;
   gap: 1rem;
-  width: 100%;
 }
 
 .footer-block--newsletter:only-child {
@@ -148,7 +146,6 @@
   .footer-block--newsletter {
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
   }
 }
 
@@ -181,10 +178,6 @@
 .footer-block__newsletter {
   text-align: center;
   flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 @media screen and (min-width: 750px) {
