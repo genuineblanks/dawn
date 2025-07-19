@@ -18,7 +18,10 @@
   padding: 0 2rem;
 }
 
-/* Don't hide the blocks wrapper, we need it for the newsletter */
+/* Hide the default grid layout for global footer */
+.footer:not(.footer-banner-img) .footer__blocks-wrapper {
+  display: none;
+}
 
 /* Newsletter section redesign to match example */
 .footer:not(.footer-banner-img) .footer-block--newsletter {
@@ -63,8 +66,10 @@
   text-transform: uppercase;
 }
 
-/* Newsletter description - using a separate div instead of ::after */
-.footer:not(.footer-banner-img) .footer-block__newsletter .newsletter-description {
+/* Newsletter description */
+.footer:not(.footer-banner-img) .footer-block__newsletter::after {
+  content: "BE THE FIRST TO KNOW WHEN OUR PRODUCTS RESTOCK, NEW DROP LAUNCHES AND GET EARLY ACCESS.";
+  display: block;
   font-size: 1.2rem;
   font-weight: 400;
   letter-spacing: 0.05rem;
@@ -74,12 +79,6 @@
   max-width: 50rem;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
-}
-
-/* Hide unwanted form elements */
-.footer:not(.footer-banner-img) .field__label {
-  display: none;
 }
 
 /* Form styling to match example */
@@ -92,12 +91,6 @@
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper {
   width: 100%;
   margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field {
-  position: relative;
-  width: 100%;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input {
@@ -129,24 +122,23 @@
 
 /* Subscribe button - full width below input */
 .footer:not(.footer-banner-img) .newsletter-form__button {
-  position: static !important;
-  right: auto !important;
-  top: auto !important;
-  transform: none !important;
-  width: 100% !important;
-  height: 5rem !important;
-  background: rgb(var(--color-foreground)) !important;
-  color: rgb(var(--color-background)) !important;
-  border: none !important;
-  border-radius: 0 !important;
-  font-weight: 600 !important;
-  font-size: 1.4rem !important;
-  letter-spacing: 0.1rem !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  position: relative;
+  right: auto;
+  top: auto;
+  transform: none;
+  width: 100%;
+  height: 5rem;
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border: none;
+  border-radius: 0;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__button:hover {
