@@ -332,6 +332,9 @@
     {%- if template contains 'techpack-modern' -%}
       {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
+    
+    {%- comment -%} Klaviyo Email Signup Integration {%- endcomment -%}
+    <script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=Xx3Apa"></script>
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
