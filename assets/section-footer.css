@@ -511,259 +511,294 @@
   }
 }
 
-/* UNIFIED CLEAN FOOTER LAYOUT - BOTH HOMEPAGE AND MAIN FOOTER */
-
-/* Main footer container - remove all divisions and borders */
-.footer-banner-img,
-.footer {
+/* HOMEPAGE FOOTER - COMPACT LAYOUT (152px height constraint) */
+.footer-banner-img {
   border-top: none !important;
-  padding: 4rem 0;
-  min-height: 300px;
-  background: transparent;
-  width: 100%;
-  margin: 0;
-  position: relative;
-}
-
-/* Content containers for both footer types */
-.footer .footer__content-top,
-.footer .footer__content-bottom {
-  border-top: none !important;
-  padding: 0;
-  width: 100%;
+  padding: 1rem 0;
+  height: 152px;
+  max-height: 152px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  text-align: center;
-  margin: 0;
+  background: transparent;
 }
 
-.footer .footer__content-bottom-wrapper {
+.footer-banner-img .homepage-footer-content {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
-  justify-content: center;
-  padding: 0 2rem;
+  gap: 0.6rem;
+  padding: 0 1rem;
+  text-align: center;
 }
 
-/* Company branding - using existing logo structure, not pseudo-elements */
-.footer .footer__content-bottom-wrapper::before {
-  content: "GENUINEBLANKS";
-  font-size: 2.2rem;
+/* Homepage footer branding */
+.footer-banner-img .footer-branding {
+  margin: 0;
+}
+
+.footer-banner-img .footer-brand-name {
+  font-size: 1.4rem;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+  margin: 0;
+  line-height: 1;
+}
+
+.footer-banner-img .footer-brand-subtitle {
+  font-size: 0.7rem;
+  font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgb(var(--color-foreground));
-  margin-bottom: 0.5rem;
-  display: block;
-  text-align: center;
-}
-
-.footer .footer__content-bottom-wrapper::after {
-  content: "PREMIUM BLANK GARMENTS";
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: rgba(var(--color-foreground), 0.7);
-  margin-bottom: 2rem;
-  display: block;
-  text-align: center;
-}
-
-/* Email signup section styling */
-.footer .footer-block--newsletter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 0;
-  gap: 1.5rem;
-  order: 1;
-  width: 100%;
+  line-height: 1;
 }
 
-.footer .footer-block__newsletter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-}
-
-.footer .footer-block__heading {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-  color: rgb(var(--color-foreground));
-  text-align: center;
-}
-
-.footer .footer-block__paragraph {
-  font-size: 0.9rem;
-  color: rgba(var(--color-foreground), 0.7);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-  text-align: center;
-}
-
-/* Klaviyo form styling for homepage, Shopify form for main footer */
-.footer-banner-img .klaviyo-form-Xx3Apa {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.footer .footer__newsletter {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-/* Navigation links horizontal layout */
-.footer .footer__copyright {
-  order: 2;
+/* Homepage footer newsletter - optional and compact */
+.footer-banner-img .footer-newsletter-compact {
+  display: none; /* Hidden by default to save space */
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.5rem;
-  width: 100%;
 }
 
-.footer .policies {
+/* Homepage footer navigation */
+.footer-banner-img .footer-navigation {
+  margin: 0;
+}
+
+.footer-banner-img .footer-nav-list {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
+  gap: 1.2rem;
   margin: 0;
   padding: 0;
   list-style: none;
   flex-wrap: wrap;
 }
 
-.footer .policies li {
-  display: inline-block;
+.footer-banner-img .footer-nav-list li {
   margin: 0;
 }
 
-.footer .policies li::before {
-  display: none;
-}
-
-.footer .policies li a {
-  font-size: 1rem;
+.footer-banner-img .footer-nav-list a {
+  font-size: 0.8rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   color: rgb(var(--color-foreground));
   text-decoration: none;
-  transition: all 0.3s ease;
-  padding: 0.5rem 0;
-  position: relative;
+  transition: color 0.3s ease;
+  padding: 0.2rem 0;
+  line-height: 1;
 }
 
-.footer .policies li a:hover {
+.footer-banner-img .footer-nav-list a:hover {
   color: rgba(var(--color-foreground), 0.7);
 }
 
-/* Social media icons */
-.footer .footer__list-social {
+/* Homepage footer social icons */
+.footer-banner-img .footer-social {
+  margin: 0;
+}
+
+.footer-banner-img .footer-social .footer__list-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+
+/* Homepage footer copyright */
+.footer-banner-img .footer-copyright p {
+  font-size: 0.7rem;
+  color: rgba(var(--color-foreground), 0.6);
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* MAIN FOOTER - FULL LAYOUT (no height constraint) */
+.footer:not(.footer-banner-img) {
+  border-top: none !important;
+  padding: 3rem 0 2rem 0;
+  min-height: auto;
+  background: transparent;
+}
+
+.footer:not(.footer-banner-img) .main-footer-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+/* Main footer branding */
+.footer:not(.footer-banner-img) .footer-branding {
+  margin: 0;
+}
+
+.footer:not(.footer-banner-img) .footer-brand-name {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+  margin: 0 0 0.5rem 0;
+  line-height: 1;
+}
+
+.footer:not(.footer-banner-img) .footer-brand-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.7);
+  margin: 0;
+  line-height: 1;
+}
+
+/* Main footer newsletter */
+.footer:not(.footer-banner-img) .footer-newsletter {
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+}
+
+.footer:not(.footer-banner-img) .newsletter-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem 0;
+  color: rgb(var(--color-foreground));
+}
+
+.footer:not(.footer-banner-img) .newsletter-description {
+  font-size: 0.8rem;
+  color: rgba(var(--color-foreground), 0.7);
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.footer:not(.footer-banner-img) .klaviyo-form-Xx3Apa {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Main footer navigation */
+.footer:not(.footer-banner-img) .footer-navigation {
+  margin: 0;
+}
+
+.footer:not(.footer-banner-img) .footer-nav-list {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2rem;
   margin: 0;
-  order: 3;
+  padding: 0;
+  list-style: none;
+  flex-wrap: wrap;
 }
 
-/* Copyright text */
-.footer .copyright__content {
+.footer:not(.footer-banner-img) .footer-nav-list li {
+  margin: 0;
+}
+
+.footer:not(.footer-banner-img) .footer-nav-list a {
   font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 0.5rem 0;
+}
+
+.footer:not(.footer-banner-img) .footer-nav-list a:hover {
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+/* Main footer social icons */
+.footer:not(.footer-banner-img) .footer-social {
+  margin: 0;
+}
+
+.footer:not(.footer-banner-img) .footer-social .footer__list-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+}
+
+/* Main footer copyright */
+.footer:not(.footer-banner-img) .footer-copyright p {
+  font-size: 0.8rem;
   color: rgba(var(--color-foreground), 0.6);
   text-align: center;
   margin: 0;
   letter-spacing: 0.05em;
-  order: 4;
 }
 
-/* Hide elements that interfere with clean layout */
-.footer .footer__payment {
-  display: none !important;
-}
-
-.footer .footer__follow-on-shop {
-  display: none !important;
-}
-
-.footer .footer__localization {
-  display: none !important;
-}
-
-/* Mobile responsive adjustments */
+/* Mobile responsive */
 @media screen and (max-width: 768px) {
-  .footer {
-    padding: 3rem 1rem 2rem 1rem;
-    min-height: 280px;
+  .footer-banner-img {
+    padding: 0.8rem 0;
+    height: 140px;
+    max-height: 140px;
   }
   
-  .footer .footer__content-bottom-wrapper::before {
-    font-size: 1.8rem;
+  .footer-banner-img .homepage-footer-content {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
   }
   
-  .footer .footer__content-bottom-wrapper::after {
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+  .footer-banner-img .footer-brand-name {
+    font-size: 1.2rem;
   }
   
-  .footer .footer__content-bottom-wrapper {
-    gap: 2rem;
+  .footer-banner-img .footer-brand-subtitle {
+    font-size: 0.65rem;
+  }
+  
+  .footer-banner-img .footer-nav-list {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .footer-banner-img .footer-nav-list a {
+    font-size: 0.75rem;
+  }
+  
+  .footer:not(.footer-banner-img) {
+    padding: 2rem 1rem 1.5rem 1rem;
+  }
+  
+  .footer:not(.footer-banner-img) .main-footer-content {
+    gap: 1.5rem;
     padding: 0 1rem;
   }
   
-  .footer .policies {
+  .footer:not(.footer-banner-img) .footer-nav-list {
     gap: 1.5rem;
     flex-direction: column;
-  }
-  
-  .footer .policies li a {
-    font-size: 0.95rem;
-  }
-  
-  .footer .footer__list-social {
-    gap: 1.5rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .footer {
-    padding: 2.5rem 1rem;
-    min-height: 250px;
-  }
-  
-  .footer .footer__content-bottom-wrapper::before {
-    font-size: 1.5rem;
-  }
-  
-  .footer .footer__content-bottom-wrapper::after {
-    font-size: 0.8rem;
-  }
-  
-  .footer .footer__content-bottom-wrapper {
-    gap: 1.5rem;
-  }
-  
-  .footer .policies {
-    gap: 1rem;
-  }
-  
-  .footer .policies li a {
-    font-size: 0.9rem;
   }
 }
