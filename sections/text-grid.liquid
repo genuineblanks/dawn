@@ -1,419 +1,275 @@
-/* Text Grid - Original Structure with Premium Effects */
+{{ 'text-grid.css' | asset_url | stylesheet_tag }}
 
-/* Container */
-.textGrid {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-}
+<div class="textGrid">
+    {% for block in section.blocks %} 
+      {%- case block.type -%}
+        {%- when 'Add-text-grid' -%}
+        <a href="{{ block.settings.link }}">
+          <div class="grid">
+            <div class="grid__item">
+              <h3>{{ block.settings.title | strip_html | strip }}</h3>
+            </div>
+            <div class="grid__item">
+              <h3>{{ block.settings.subtitle | strip_html | strip }}</h3>
+            </div>
+            <div class="grid__item">
+              {%- assign rich_content = block.settings.rich | strip_html | strip -%}
+              {%- unless rich_content contains '1ST -' or rich_content contains '2ND -' or rich_content contains '3RD -' or rich_content contains '4TH -' or rich_content contains '5TH -' or rich_content contains 'REDIRECTS TO' or rich_content contains 'redirects to' -%}
+                <p>{{ rich_content }}</p>
+              {%- endunless -%}
+            </div>
+          </div>
+        </a>
+     {%- endcase -%}    
+    {% endfor %}
+</div>
 
-/* Home section layout */
-.home-section .textGrid {
-  display: grid;
-  background: transparent !important;
-  align-items: center;
-  height: calc(100% - 200px); /* Increased to accommodate new footer */
-}
+{% if section.settings.enable_footer == true and template contains 'index' %}
+  {% include 'footer-homepage' %}
+{% endif %}
 
-/* When footer is enabled in text-grid section */
-.text-grid .textGrid {
-  min-height: calc(100vh - 280px); /* Ensure proper spacing for footer */
-}
-
-/* Button styling - PREMIUM GLASS MORPHISM BUTTONS */
-.textGrid a {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 60px 40px;
-  text-decoration: none;
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-  border: none;
-  outline: none;
-  
-  /* Glass Morphism Effect */
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-}
-
-/* Premium hover effects - Enhanced Glass */
-.textGrid a:hover {
-  transform: translateY(-8px) scale(1.005);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.25),
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  filter: brightness(1.08) contrast(1.05);
-  z-index: 10;
-}
-
-/* Enhanced glass overlay system */
-.textGrid a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(0, 0, 0, 0.05) 100%);
-  z-index: 2;
-  transition: all 0.6s ease;
-  opacity: 0;
-  border-radius: 14px;
-}
-
-.textGrid a:hover::before {
-  opacity: 1;
-  background: 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(0, 0, 0, 0.02) 100%);
-}
-
-/* Shimmer effect */
-.textGrid a::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-  z-index: 5;
-}
-
-.textGrid a:hover::after {
-  left: 100%;
-}
-
-/* Grid layout - PERFECT CENTER ALIGNMENT */
-.textGrid .grid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 30px;
-  position: relative;
-  z-index: 10;
-  min-height: 100%;
-}
-
-.textGrid .grid__item {
-  flex: 1;
-  text-align: center;
-  padding: 0 10px;
-  position: relative;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-/* PREMIUM LUXURY TYPOGRAPHY SYSTEM - PERFECT CENTER */
-.textGrid .grid__item h3 {
-  font-family: 'Futura', 'Avenir Next', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 3.5rem;
-  line-height: 1.1;
-  margin: 0;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  word-wrap: break-word;
-  hyphens: auto;
-  color: #000000 !important;
-  text-shadow: none;
-  transition: all 0.5s ease;
-  position: relative;
-  font-variant: small-caps;
-  text-align: center;
-  align-self: center;
-}
-
-/* Subtitle styling (second grid item) */
-.textGrid .grid__item:nth-child(2) h3 {
-  font-family: 'Futura', 'Avenir Next', 'Century Gothic', sans-serif;
-  font-weight: 600;
-  font-size: 1.3rem;
-  line-height: 1.4;
-  margin: 0;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #000000 !important;
-  text-shadow: none;
-  opacity: 1;
-  font-variant: normal;
-  text-align: center;
-  align-self: center;
-}
-
-.textGrid .grid__item p,
-.textGrid .grid__item div {
-  font-family: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
-  font-weight: 500;
-  font-size: 1.3rem;
-  line-height: 1.7;
-  margin: 0;
-  letter-spacing: 0.08em;
-  word-wrap: break-word;
-  hyphens: auto;
-  color: #000000 !important;
-  text-shadow: none;
-  transition: all 0.3s ease;
-  font-feature-settings: "kern" 1, "liga" 1;
-  text-align: center;
-  align-self: center;
-}
-
-.textGrid a:hover .grid__item h3 {
-  transform: scale(1.03);
-  letter-spacing: 0.28em;
-  text-shadow: none;
-}
-
-.textGrid a:hover .grid__item p,
-.textGrid a:hover .grid__item div {
-  transform: translateY(-3px);
-  letter-spacing: 0.1em;
-  text-shadow: none;
-}
-
-/* SPECTACULAR GRADIENT PROGRESSIONS - ORIGINAL nth-child STRUCTURE */
-
-/* Button 1 - Ethereal Light */
-body .home-section section.text-grid .textGrid a[href]:nth-child(1),
-body .home-section .textGrid a[href]:nth-child(1),
-body section.text-grid .textGrid a[href]:nth-child(1),
-body .textGrid a[href]:nth-child(1) {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 25%, #f0f0f0 50%, #e8e8e8 75%, #e0e0e0 100%) !important;
-}
-
-/* Button 2 - Soft Mist */
-body .home-section section.text-grid .textGrid a[href]:nth-child(2),
-body .home-section .textGrid a[href]:nth-child(2),
-body section.text-grid .textGrid a[href]:nth-child(2),
-body .textGrid a[href]:nth-child(2) {
-  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 25%, #e0e0e0 50%, #d8d8d8 75%, #d0d0d0 100%) !important;
-}
-
-/* Button 3 - Gentle Fog */
-body .home-section section.text-grid .textGrid a[href]:nth-child(3),
-body .home-section .textGrid a[href]:nth-child(3),
-body section.text-grid .textGrid a[href]:nth-child(3),
-body .textGrid a[href]:nth-child(3) {
-  background: linear-gradient(135deg, #e0e0e0 0%, #d8d8d8 25%, #d0d0d0 50%, #c8c8c8 75%, #c0c0c0 100%) !important;
-}
-
-/* Button 4 - Silver Whisper */
-body .home-section section.text-grid .textGrid a[href]:nth-child(4),
-body .home-section .textGrid a[href]:nth-child(4),
-body section.text-grid .textGrid a[href]:nth-child(4),
-body .textGrid a[href]:nth-child(4) {
-  background: linear-gradient(135deg, #d0d0d0 0%, #c8c8c8 25%, #c0c0c0 50%, #b8b8b8 75%, #b0b0b0 100%) !important;
-}
-
-/* Button 5 - Platinum Veil */
-body .home-section section.text-grid .textGrid a[href]:nth-child(5),
-body .home-section .textGrid a[href]:nth-child(5),
-body section.text-grid .textGrid a[href]:nth-child(5),
-body .textGrid a[href]:nth-child(5) {
-  background: linear-gradient(135deg, #c0c0c0 0%, #b8b8b8 25%, #b0b0b0 50%, #a8a8a8 75%, #a0a0a0 100%) !important;
-}
-
-/* Button 6 - Steel Embrace */
-body .home-section section.text-grid .textGrid a[href]:nth-child(6),
-body .home-section .textGrid a[href]:nth-child(6),
-body section.text-grid .textGrid a[href]:nth-child(6),
-body .textGrid a[href]:nth-child(6) {
-  background: linear-gradient(135deg, #b0b0b0 0%, #a8a8a8 25%, #a0a0a0 50%, #989898 75%, #909090 100%) !important;
-}
-
-/* Button 7 - Gunmetal Dreams */
-body .home-section section.text-grid .textGrid a[href]:nth-child(7),
-body .home-section .textGrid a[href]:nth-child(7),
-body section.text-grid .textGrid a[href]:nth-child(7),
-body .textGrid a[href]:nth-child(7) {
-  background: linear-gradient(135deg, #a0a0a0 0%, #989898 25%, #909090 50%, #888888 75%, #808080 100%) !important;
-}
-
-/* Button 8 - Charcoal Depths */
-body .home-section section.text-grid .textGrid a[href]:nth-child(8),
-body .home-section .textGrid a[href]:nth-child(8),
-body section.text-grid .textGrid a[href]:nth-child(8),
-body .textGrid a[href]:nth-child(8) {
-  background: linear-gradient(135deg, #909090 0%, #888888 25%, #808080 50%, #707070 75%, #606060 100%) !important;
-}
-
-/* Button 9 - Shadow Realm */
-body .home-section section.text-grid .textGrid a[href]:nth-child(9),
-body .home-section .textGrid a[href]:nth-child(9),
-body section.text-grid .textGrid a[href]:nth-child(9),
-body .textGrid a[href]:nth-child(9) {
-  background: linear-gradient(135deg, #707070 0%, #606060 25%, #505050 50%, #404040 75%, #303030 100%) !important;
-}
-
-/* Button 10 - Void Elegance */
-body .home-section section.text-grid .textGrid a[href]:nth-child(10),
-body .home-section .textGrid a[href]:nth-child(10),
-body section.text-grid .textGrid a[href]:nth-child(10),
-body .textGrid a[href]:nth-child(10) {
-  background: linear-gradient(135deg, #505050 0%, #404040 25%, #303030 50%, #202020 75%, #000000 100%) !important;
-}
-
-/* Responsive - PERFECT CENTER ALIGNMENT */
-@media screen and (max-width: 768px) {
-  .textGrid a {
-    padding: 40px 20px;
-    border-radius: 12px;
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
+{% schema %}
+  {
+    "name": "Text grid",
+    "tag": "section",
+    "class": "text-grid",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_footer",
+        "default": false,
+        "label": "Enable Footer in the section."
+      },
+      {
+      "type":"header",
+      "content": "Footer Section Settings"
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "scheme-1"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__1.content",
+        "info": "t:sections.footer.settings.header__1.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "newsletter_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.newsletter_enable.label"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "newsletter_heading",
+        "default": "Subscribe to our emails",
+        "label": "t:sections.footer.settings.newsletter_heading.label"
+      },
+       {
+        "type": "inline_richtext",
+        "id": "newsletter_paragraph",
+        "label": "Paragraph"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__9.content",
+        "info": "t:sections.footer.settings.header__9.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_follow_on_shop",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_follow_on_shop.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__2.content",
+        "info": "t:sections.footer.settings.header__2.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "default": true,
+        "label": "t:sections.footer.settings.show_social.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__3.content",
+        "info": "t:sections.footer.settings.header__4.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_country_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_country_selector.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__5.content",
+        "info": "t:sections.footer.settings.header__6.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_language_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_language_selector.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__7.content"
+      },
+      {
+        "type": "checkbox",
+        "id": "payment_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.payment_enable.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__8.content",
+        "info": "t:sections.footer.settings.header__8.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_policy",
+        "default": false,
+        "label": "t:sections.footer.settings.show_policy.label"
+      },
+      {
+        "type": "link_list",
+        "id": "show_policy_menu",
+        "label": "Select Menu"
+      },
+      {
+        "type": "text",
+        "id": "copyright_text",
+        "label": "Enter Copyright Text Here"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.footer.settings.margin_top.label",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "max_blocks": 10,
+    "blocks": [
+      {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "richtext",
+          "label": "Enter text here."
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 50,
+          "max": 550,
+          "step": 5,
+          "unit": "px",
+          "label": "Image width",
+          "default": 100
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Image alignment on large screen",
+          "options": [
+            {
+              "value": "",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        }
+      ]
+    },
+      {
+        "name": "Add-text-grid",
+        "type": "Add-text-grid",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Sub heading"
+          },
+          {
+            "type": "richtext",
+            "id": "rich",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Url"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text grid"
+      }
+    ]
   }
-  
-  .textGrid a:hover {
-    transform: translateY(-6px) scale(1.005);
-    border: 1.5px solid rgba(255, 255, 255, 0.5);
-  }
-  
-  .textGrid a::before {
-    border-radius: 10px;
-  }
-  
-  .textGrid .grid {
-    flex-direction: column;
-    gap: 25px;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .textGrid .grid__item {
-    width: 100%;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .textGrid .grid__item h3 {
-    font-size: 2.8rem;
-    letter-spacing: 0.2em;
-    margin: 0;
-    line-height: 1.1;
-  }
-  
-  .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 1.2rem;
-    letter-spacing: 0.25em;
-    margin: 0;
-  }
-  
-  .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    font-size: 1.2rem;
-    letter-spacing: 0.06em;
-    line-height: 1.6;
-    margin: 0;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .textGrid a {
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-  
-  .textGrid a:hover {
-    transform: translateY(-4px) scale(1.005);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-  }
-  
-  .textGrid a::before {
-    border-radius: 8px;
-  }
-  
-  .textGrid .grid__item h3 {
-    font-size: 2.2rem;
-    letter-spacing: 0.18em;
-  }
-  
-  .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 1.1rem;
-    letter-spacing: 0.22em;
-  }
-  
-  .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    font-size: 1.1rem;
-    letter-spacing: 0.05em;
-  }
-}
-
-/* Force override any conflicting styles - KEEP ORIGINAL OVERRIDES */
-.home-section .textGrid a,
-.home-section .textGrid a:nth-child(2n+1),
-.home-section .textGrid a:hover,
-.home-section .textGrid a:nth-child(odd),
-.home-section .textGrid a:nth-child(even),
-section.text-grid .textGrid a,
-section.text-grid .textGrid a:nth-child(2n+1),
-section.text-grid .textGrid a:hover,
-section.text-grid .textGrid a:nth-child(odd),
-section.text-grid .textGrid a:nth-child(even) {
-  background: inherit !important;
-}
-
-/* Ensure all text stays BLACK with premium effects */
-.textGrid *,
-.textGrid a *,
-.textGrid .grid *,
-.textGrid .grid__item *,
-.home-section .textGrid *,
-.home-section .textGrid a *,
-section.text-grid .textGrid *,
-section.text-grid .textGrid a * {
-  color: #000000 !important;
-}
-
-/* Premium accessibility */
-.textGrid a:focus {
-  outline: 2px solid rgba(0,0,0,0.8);
-  outline-offset: 3px;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .textGrid a,
-  .textGrid .grid__item h3,
-  .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    transition: none;
-  }
-  
-  .textGrid a::after {
-    display: none;
-  }
-}
+{% endschema %}
