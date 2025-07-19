@@ -530,9 +530,10 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: 2rem;
   padding: 0 1rem;
   text-align: center;
 }
@@ -564,7 +565,6 @@
 
 /* Homepage footer newsletter - optional and compact */
 .footer-banner-img .footer-newsletter-compact {
-  display: none; /* Hidden by default to save space */
   margin: 0;
 }
 
@@ -758,6 +758,25 @@
   letter-spacing: 0.05em;
 }
 
+/* Homepage footer newsletter and social positioning */
+.footer-banner-img .footer-newsletter-compact,
+.footer-banner-img .footer-social {
+  flex-shrink: 0;
+}
+
+.footer-banner-img .footer-newsletter-compact .klaviyo-form-Xx3Apa {
+  max-width: 200px;
+}
+
+/* Social icons for homepage footer */
+.footer-banner-img .footer-social .footer__list-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+
 /* Mobile responsive */
 @media screen and (max-width: 768px) {
   .footer-banner-img {
@@ -767,16 +786,13 @@
   }
   
   .footer-banner-img .homepage-footer-content {
+    flex-direction: column;
     gap: 0.5rem;
     padding: 0 0.5rem;
   }
   
   .footer-banner-img .footer-brand-name {
     font-size: 1.2rem;
-  }
-  
-  .footer-banner-img .footer-brand-subtitle {
-    font-size: 0.65rem;
   }
   
   .footer-banner-img .footer-nav-list {
