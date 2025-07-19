@@ -37,18 +37,11 @@
     <!-- Company Branding -->
     <div class="footer-branding">
       <h2 class="footer-brand-name">GENUINEBLANKS</h2>
-      <p class="footer-brand-subtitle">PREMIUM BLANK GARMENTS</p>
     </div>
 
     <!-- Email Signup with Klaviyo -->
     {%- if section.settings.newsletter_enable -%}
       <div class="footer-newsletter">
-        {%- if section.settings.newsletter_heading != blank -%}
-          <h3 class="newsletter-heading">{{ section.settings.newsletter_heading }}</h3>
-        {%- endif -%}
-        {%- if section.settings.newsletter_paragraph != blank -%}
-          <p class="newsletter-description">{{ section.settings.newsletter_paragraph }}</p>
-        {%- endif -%}
         <div class="klaviyo-form-Xx3Apa newsletter_Klaviyo"></div>
       </div>
     {%- endif -%}
