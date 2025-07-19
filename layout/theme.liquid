@@ -53,9 +53,7 @@
         
         // Force optimal mobile scrolling settings
         document.documentElement.style.cssText += 'scroll-behavior: auto !important; overflow: auto !important;';
-        if (document.body) {
-          document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
-        }
+        document.body.style.cssText += 'overflow: auto !important; touch-action: pan-y !important; overscroll-behavior: none !important;';
       }
     </script>
     
@@ -66,12 +64,6 @@
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-    
-    <!-- Header/Navigation scripts -->
-    <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
     
     {{ content_for_header }}
 
@@ -292,6 +284,7 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {{ 'responsive.css' | asset_url | stylesheet_tag }}
+    {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-button.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
@@ -324,14 +317,6 @@
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
     {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
-    
-    {%- comment -%} Modern Account System Assets {%- endcomment -%}
-    {%- comment -%} Removed missing modern-account-enhancements.css file {%- endcomment -%}
-    
-    {%- comment -%} TechPack Modern System Assets {%- endcomment -%}
-    {%- if template contains 'techpack-modern' -%}
-      {{ 'techpack-app-modern.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
@@ -799,7 +784,22 @@
         }
       }
       
-      // Removed: Force scroll to top on page refresh - allowing natural scroll behavior
+      // Force scroll to top on page refresh for non-homepage
+      function handlePageRefresh() {
+        if (!isHomepage) {
+          console.log('🔄 Page refresh on non-homepage - forcing scroll to top');
+          window.scrollTo(0, 0);
+          // Also clear any saved position for this page
+          try {
+            let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
+            const currentPath = window.location.pathname;
+            if (scrollPositions[currentPath]) {
+              delete scrollPositions[currentPath];
+              sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
+            }
+          } catch(e) {}
+        }
+      }
       
       // Save position when leaving page
       window.addEventListener('beforeunload', function() {
@@ -840,17 +840,17 @@
           // For homepage, try to restore position
           restoreScrollPosition();
         } else {
-          // For other pages, allow natural scroll behavior
-          // Removed: window.scrollTo(0, 0);
+          // For other pages, always start at top
+          window.scrollTo(0, 0);
         }
       }
       
-      // Removed: Check if page was refreshed - allowing natural scroll behavior
-      // const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
-      // if (wasRefreshed && !isHomepage) {
-      //   console.log('🔄 Detected page refresh on non-homepage');
-      //   window.scrollTo(0, 0);
-      // }
+      // Check if page was refreshed (not back/forward navigation)
+      const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
+      if (wasRefreshed && !isHomepage) {
+        console.log('🔄 Detected page refresh on non-homepage');
+        window.scrollTo(0, 0);
+      }
       
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', handleInitialLoad);
@@ -872,17 +872,17 @@
         }
       });
       
-      // Removed: Force non-homepage pages to top on window focus - allowing natural scroll behavior
-      // window.addEventListener('focus', function() {
-      //   if (!isHomepage && !isNavigating) {
-      //     setTimeout(function() {
-      //       if (window.pageYOffset > 100) {
-      //         console.log('🎯 Window focus - forcing non-homepage to top');
-      //         window.scrollTo(0, 0);
-      //       }
-      //     }, 100);
-      //   }
-      // });
+      // Additional safety: Force non-homepage pages to top on window focus
+      window.addEventListener('focus', function() {
+        if (!isHomepage && !isNavigating) {
+          setTimeout(function() {
+            if (window.pageYOffset > 100) {
+              console.log('🎯 Window focus - forcing non-homepage to top');
+              window.scrollTo(0, 0);
+            }
+          }, 100);
+        }
+      });
       
     })();
     </script>
@@ -962,35 +962,6 @@
         });
       }
     </script>
-    
-    {%- comment -%} Modern Account System Scripts {%- endcomment -%}
-    {%- if customer -%}
-      <script>
-        // Initialize customer data for modern account system
-        window.shopifyCustomer = {
-          id: {{ customer.id | json }},
-          email: {{ customer.email | json }},
-          first_name: {{ customer.first_name | json }},
-          last_name: {{ customer.last_name | json }},
-          company: {{ customer.company | json }},
-          phone: {{ customer.phone | json }},
-          tags: {{ customer.tags | json }},
-          default_address: {{ customer.default_address | json }},
-          orders_count: {{ customer.orders_count | json }}
-        };
-      </script>
-    {%- endif -%}
-    
-    {%- comment -%} Page-specific Scripts {%- endcomment -%}
-    {%- if template.suffix == 'wholesale-portal' -%}
-      <script src="{{ 'modern-wholesale-portal.js' | asset_url }}" defer></script>
-    {%- endif -%}
-    {%- if template.suffix == 'verification' -%}
-      <script src="{{ 'modern-verification-system.js' | asset_url }}" defer></script>
-    {%- endif -%}
-    {%- if template contains 'techpack-modern' -%}
-      <script src="{{ 'techpack-app-modern.js' | asset_url }}" defer></script>
-    {%- endif -%}
     
   </body>
 </html>
