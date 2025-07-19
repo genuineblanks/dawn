@@ -5,22 +5,34 @@
   align-items: center;
   width: 100%;
   position: relative;
+  max-width: 50rem;
+  margin: 0 auto;
 }
 
 @media screen and (min-width: 750px) {
   .newsletter-form {
-    align-items: flex-start;
+    align-items: center;
     margin: 0 auto;
-    max-width: 62rem;
+    max-width: 55rem;
   }
 }
 
 .newsletter-form__field-wrapper {
   width: 100%;
+  position: relative;
+  margin-bottom: 2rem;
 }
 
 .newsletter-form__field-wrapper .field__input {
-  padding-right: 5rem;
+  padding-right: 16rem;
+  padding-left: 2rem;
+  height: 5.5rem;
+  border-radius: 3rem;
+  border: 0.2rem solid rgba(var(--color-foreground), 0.2);
+  background: rgba(var(--color-background), 0.95);
+  font-size: 1.6rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .newsletter-form__field-wrapper .field {
@@ -44,21 +56,25 @@
 
 .newsletter-form__button {
   width: auto;
-  min-width: 12rem;
+  min-width: 14rem;
   margin: 0;
-  right: var(--inputs-border-width);
-  top: 0;
-  height: 100%;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4.7rem;
   z-index: 2;
-  position: relative;
+  position: absolute;
   overflow: hidden;
-  transform: translateZ(0);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   letter-spacing: 0.15rem;
   font-weight: 600;
   text-transform: uppercase;
   background: linear-gradient(135deg, rgba(var(--color-button), var(--alpha-button-background)) 0%, rgba(var(--color-button), calc(var(--alpha-button-background) * 0.9)) 100%);
-  padding: 0 2rem;
+  padding: 0 2.5rem;
+  border-radius: 2.4rem;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
 .newsletter-form__button:focus-visible {
@@ -78,6 +94,18 @@
 
 .newsletter-form__button .icon {
   width: 1.5rem;
+}
+
+/* Enhanced input focus states */
+.newsletter-form__field-wrapper .field__input:focus {
+  border-color: rgba(var(--color-button), 0.6);
+  box-shadow: 0 0 0 0.3rem rgba(var(--color-button), 0.1);
+  outline: none;
+}
+
+.newsletter-form__field-wrapper .field__input::placeholder {
+  color: rgba(var(--color-foreground), 0.5);
+  font-weight: 400;
 }
 
 /* Premium hover effect with shimmer */
@@ -103,7 +131,7 @@
 }
 
 .newsletter-form__button:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-50%) translateY(-2px) scale(1.02);
   box-shadow: 
     0 8px 25px rgba(var(--color-button), 0.3),
     0 4px 12px rgba(0, 0, 0, 0.1);
@@ -111,6 +139,32 @@
 }
 
 .newsletter-form__button:active {
-  transform: translateY(0) scale(1);
+  transform: translateY(-50%) scale(1);
   transition: all 0.1s ease;
+}
+
+/* Mobile responsive enhancements */
+@media screen and (max-width: 749px) {
+  .newsletter-form {
+    max-width: 100%;
+  }
+  
+  .newsletter-form__field-wrapper .field__input {
+    padding-right: 14rem;
+    padding-left: 1.8rem;
+    height: 5rem;
+    font-size: 1.5rem;
+  }
+  
+  .newsletter-form__button {
+    min-width: 12rem;
+    height: 4.2rem;
+    font-size: 1.3rem;
+    padding: 0 2rem;
+  }
+  
+  .footer-block__heading {
+    font-size: calc(var(--font-heading-scale) * 1.8rem);
+    margin-bottom: 2rem;
+  }
 }
