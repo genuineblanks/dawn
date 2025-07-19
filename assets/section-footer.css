@@ -218,16 +218,6 @@
   margin-bottom: 2rem;
 }
 
-/* Text-grid section with footer integration */
-.text-grid .footer-homepage {
-  position: relative;
-  z-index: 10;
-}
-
-.text-grid .footer-homepage .footer__content-bottom {
-  margin-bottom: 8rem; /* Extra space for section navigation in text-grid */
-}
-
 /* Mobile Responsive Styles for Clean Footer */
 @media screen and (max-width: 749px) {
   .footer-clean .footer__content-main {
@@ -245,11 +235,6 @@
   
   .footer-homepage .footer__newsletter-section {
     margin-bottom: 1.5rem;
-  }
-  
-  /* Text-grid footer on mobile */
-  .text-grid .footer-homepage .footer__content-bottom {
-    margin-bottom: 5rem; /* Extra space for mobile section navigation */
   }
   
   .footer-clean .footer__newsletter-heading {
