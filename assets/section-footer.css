@@ -769,12 +769,46 @@
 }
 
 /* Social icons for homepage footer */
+.footer-banner-img .footer-social {
+  margin: 0;
+}
+
 .footer-banner-img .footer-social .footer__list-social {
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   margin: 0;
+  flex-wrap: nowrap;
+}
+
+.footer-banner-img .footer-social .list-social__item {
+  display: flex;
+  margin: 0;
+}
+
+.footer-banner-img .footer-social .list-social__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+.footer-banner-img .footer-social .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
+/* Main footer social icons */
+.footer:not(.footer-banner-img) .footer-social .footer__list-social {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+  flex-wrap: nowrap;
 }
 
 /* Mobile responsive */
