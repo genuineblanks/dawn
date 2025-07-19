@@ -1,117 +1,173 @@
 /* ===============================================
-   GLOBAL FOOTER ENHANCEMENTS 
+   GLOBAL FOOTER REDESIGN - MINIMAL CLEAN LAYOUT
    - Only affects footer.liquid (global footer)
    - Does NOT affect footer-homepage.liquid 
    =============================================== */
 
-/* Target ONLY the global footer, not homepage footer */
+/* Reset and clean global footer layout */
+.footer:not(.footer-banner-img) {
+  padding: 8rem 0 4rem;
+  text-align: center;
+  background: rgb(var(--color-background));
+  border-top: none;
+}
+
+.footer:not(.footer-banner-img) .footer__content-top {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Hide the default grid layout for global footer */
+.footer:not(.footer-banner-img) .footer__blocks-wrapper {
+  display: none;
+}
+
+/* Newsletter section redesign to match example */
+.footer:not(.footer-banner-img) .footer-block--newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  width: 100%;
+}
+
 .footer:not(.footer-banner-img) .footer-block__newsletter {
-  background: rgba(var(--color-background), 0.02);
-  border: 0.1rem solid rgba(var(--color-foreground), 0.08);
-  border-radius: 1rem;
-  padding: 4rem 3rem;
-  margin: 3rem auto;
+  text-align: center;
   max-width: 60rem;
+  margin: 0 auto;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
 }
 
-/* Enhanced newsletter heading for global footer only */
+/* Brand heading - GENUINEBLANKS */
 .footer:not(.footer-banner-img) .footer-block__heading {
-  font-size: 2.4rem;
+  font-size: 2.8rem;
   font-weight: 700;
-  letter-spacing: 0.2rem;
+  letter-spacing: 0.3rem;
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
   color: rgb(var(--color-foreground));
+  line-height: 1.1;
 }
 
-/* Subtitle/description for global footer */
+/* Subtitle line */
 .footer:not(.footer-banner-img) .footer-block__newsletter::before {
-  content: "Quick sign-up to our wholesale access program";
+  content: "PORTUGAL";
   display: block;
   font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.15rem;
   color: rgba(var(--color-foreground), 0.7);
   margin-bottom: 3rem;
-  text-align: center;
-  font-weight: 400;
+  text-transform: uppercase;
 }
 
-/* Enhanced form styling for global footer only */
+/* Newsletter description */
+.footer:not(.footer-banner-img) .footer-block__newsletter::after {
+  content: "BE THE FIRST TO KNOW WHEN OUR PRODUCTS RESTOCK, NEW DROP LAUNCHES AND GET EARLY ACCESS.";
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+  color: rgba(var(--color-foreground), 0.6);
+  margin: 0 0 4rem 0;
+  line-height: 1.4;
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Form styling to match example */
 .footer:not(.footer-banner-img) .newsletter-form {
-  max-width: 100%;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper {
-  position: relative;
-  margin-bottom: 3rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input {
   width: 100%;
-  padding: 1.8rem 15rem 1.8rem 2rem;
-  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
-  border-radius: 0.5rem;
+  padding: 1.8rem 2rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.3);
+  border-radius: 0;
   background: rgb(var(--color-background));
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 400;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  letter-spacing: 0.05rem;
+  color: rgb(var(--color-foreground));
+  transition: border-color 0.3s ease;
+  text-align: left;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input:focus {
   border-color: rgb(var(--color-foreground));
-  box-shadow: 0 0 0 0.3rem rgba(var(--color-foreground), 0.1);
   outline: none;
+  box-shadow: none;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input::placeholder {
   color: rgba(var(--color-foreground), 0.5);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
 }
 
-/* Premium button styling for global footer */
+/* Subscribe button - full width below input */
 .footer:not(.footer-banner-img) .newsletter-form__button {
-  position: absolute;
-  right: 0.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: auto;
-  min-width: 13rem;
-  height: calc(100% - 1.6rem);
+  position: relative;
+  right: auto;
+  top: auto;
+  transform: none;
+  width: 100%;
+  height: 5rem;
   background: rgb(var(--color-foreground));
   color: rgb(var(--color-background));
   border: none;
-  border-radius: 0.3rem;
+  border-radius: 0;
   font-weight: 600;
   font-size: 1.4rem;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(var(--color-foreground), 0.2);
+  margin: 0;
 }
 
 .footer:not(.footer-banner-img) .newsletter-form__button:hover {
-  transform: translateY(-50%) translateY(-2px);
-  box-shadow: 0 4px 16px rgba(var(--color-foreground), 0.3);
-  background: rgba(var(--color-foreground), 0.9);
+  transform: none;
+  background: rgba(var(--color-foreground), 0.8);
+  box-shadow: none;
 }
 
-.footer:not(.footer-banner-img) .newsletter-form__button:active {
-  transform: translateY(-50%);
-  box-shadow: 0 2px 8px rgba(var(--color-foreground), 0.2);
-}
-
-/* Enhanced footer bottom links styling */
+/* Footer bottom section */
 .footer:not(.footer-banner-img) .footer__content-bottom {
-  border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
-  padding-top: 2rem;
-  margin-top: 3rem;
+  border-top: none;
+  padding-top: 6rem;
+  margin-top: 0;
 }
 
+.footer:not(.footer-banner-img) .footer__content-bottom-wrapper {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Horizontal footer links */
 .footer:not(.footer-banner-img) .footer__copyright .policies {
+  display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 4rem;
+  margin: 0 0 4rem 0;
+  flex-wrap: wrap;
 }
 
 .footer:not(.footer-banner-img) .footer__copyright .policies li {
@@ -128,49 +184,60 @@
   font-size: 1.2rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05rem;
+  letter-spacing: 0.1rem;
   transition: color 0.3s ease;
 }
 
 .footer:not(.footer-banner-img) .footer__copyright .policies a:hover {
   color: rgb(var(--color-foreground));
-  text-decoration: underline;
 }
 
-/* Payment icons styling */
+/* Payment icons section */
 .footer:not(.footer-banner-img) .footer__payment {
-  margin-top: 2rem;
+  margin: 0 0 4rem 0;
   text-align: center;
 }
 
 .footer:not(.footer-banner-img) .list-payment {
+  display: flex;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Copyright text */
+.footer:not(.footer-banner-img) .footer__copyright .copyright__content {
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.5);
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
 }
 
 /* Mobile responsive */
 @media screen and (max-width: 749px) {
-  .footer:not(.footer-banner-img) .footer-block__newsletter {
-    padding: 3rem 2rem;
-    margin: 2rem auto;
+  .footer:not(.footer-banner-img) {
+    padding: 6rem 0 3rem;
   }
   
   .footer:not(.footer-banner-img) .footer-block__heading {
-    font-size: 2rem;
-  }
-  
-  .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input {
-    padding: 1.6rem 13rem 1.6rem 1.8rem;
-    font-size: 1.5rem;
-  }
-  
-  .footer:not(.footer-banner-img) .newsletter-form__button {
-    min-width: 11rem;
-    font-size: 1.3rem;
+    font-size: 2.2rem;
+    letter-spacing: 0.2rem;
   }
   
   .footer:not(.footer-banner-img) .footer__copyright .policies {
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
+  }
+  
+  .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input {
+    padding: 1.5rem 1.5rem;
+    font-size: 1.3rem;
+  }
+  
+  .footer:not(.footer-banner-img) .newsletter-form__button {
+    height: 4.5rem;
+    font-size: 1.3rem;
   }
 }
