@@ -4,7 +4,6 @@
 {{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
-{{ 'global-footer-enhanced.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .footer {
@@ -171,8 +170,9 @@
         >
           {%- if section.settings.newsletter_enable -%}
             <div class="footer-block__newsletter">
-              <h1 class="footer-block__heading">GENUINEBLANKS</h1>
-              <div class="newsletter-description">BE THE FIRST TO KNOW WHEN OUR PRODUCTS RESTOCK, NEW DROP LAUNCHES AND GET EARLY ACCESS.</div>
+              {%- if section.settings.newsletter_heading != blank -%}
+                <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
+              {%- endif -%}
               {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="newsletter-form__field-wrapper">
@@ -232,6 +232,22 @@
                   </h3>
                 {%- endif -%}
               {%- endform -%}
+              <div class="footer-block__links">
+                <ul class="footer-links list-unstyled">
+                  {%- if section.settings.show_policy_menu != blank -%}
+                    {%- for link in section.settings.show_policy_menu.links -%}
+                      <li><a href="{{ link.url }}" class="footer-link">{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  {%- endif -%}
+                  {%- if section.settings.show_policy -%}
+                    {%- for policy in shop.policies -%}
+                      {%- if policy != blank -%}
+                        <li><a href="{{ policy.url }}" class="footer-link">{{ policy.title }}</a></li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+                </ul>
+              </div>
             </div>
           {%- endif -%}
            
