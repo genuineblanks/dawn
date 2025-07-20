@@ -36,22 +36,26 @@
       <div class="why-different-card__visual">
         <div class="split-comparison">
           <div class="split-comparison__side split-comparison__others">
-            <span class="split-label">Others</span>
-            {%- if section.settings.card1_others_image != blank -%}
-              {{ section.settings.card1_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card1_others_text | default: "They buy leftover rolls—cheap stock from fabric warehouses or old batches from other brands. That means your hoodie, tee, or pant might be made with someone else's leftovers." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card1_others_text | default: "They buy leftover rolls—cheap stock from fabric warehouses or old batches from other brands. That means your hoodie, tee, or pant might be made with someone else's leftovers." }}</p>
             </div>
+            {%- if section.settings.card1_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card1_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
           <div class="split-comparison__side split-comparison__us">
-            <span class="split-label">Us</span>
-            {%- if section.settings.card1_us_image != blank -%}
-              {{ section.settings.card1_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card1_us_text | default: "We create your fabric from zero—spun, dyed, and finished from scratch for your product only, whether it's a heavyweight fleece hoodie or a delicate jersey tee." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card1_us_text | default: "We create your fabric from zero—spun, dyed, and finished from scratch for your product only, whether it's a heavyweight fleece hoodie or a delicate jersey tee." }}</p>
             </div>
+            {%- if section.settings.card1_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card1_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
         </div>
       </div>
@@ -73,22 +77,26 @@
       <div class="why-different-card__visual">
         <div class="split-comparison">
           <div class="split-comparison__side split-comparison__others">
-            <span class="split-label">Others</span>
-            {%- if section.settings.card2_others_image != blank -%}
-              {{ section.settings.card2_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card2_others_text | default: "Most skip critical tests—shrinkage, wash resistance, color stability, or even proper fitting. You only find out something's wrong after 500 pieces are in your hands." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card2_others_text | default: "Most skip critical tests—shrinkage, wash resistance, color stability, or even proper fitting. You only find out something's wrong after 500 pieces are in your hands." }}</p>
             </div>
+            {%- if section.settings.card2_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card2_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
           <div class="split-comparison__side split-comparison__us">
-            <span class="split-label">Us</span>
-            {%- if section.settings.card2_us_image != blank -%}
-              {{ section.settings.card2_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card2_us_text | default: "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card2_us_text | default: "Whether it's blanks or a custom design, we stress-test everything first—pre-washing, measuring, dye testing, fit validation." }}</p>
             </div>
+            {%- if section.settings.card2_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card2_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
         </div>
       </div>
@@ -110,22 +118,26 @@
       <div class="why-different-card__visual">
         <div class="split-comparison">
           <div class="split-comparison__side split-comparison__others">
-            <span class="split-label">Others</span>
-            {%- if section.settings.card3_others_image != blank -%}
-              {{ section.settings.card3_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card3_others_text | default: "Every new order means new people, new errors, forgotten specs. No memory. No connection." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card3_others_text | default: "Every new order means new people, new errors, forgotten specs. No memory. No connection." }}</p>
             </div>
+            {%- if section.settings.card3_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card3_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
           <div class="split-comparison__side split-comparison__us">
-            <span class="split-label">Us</span>
-            {%- if section.settings.card3_us_image != blank -%}
-              {{ section.settings.card3_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card3_us_text | default: "We assign you a dedicated team that handles your brand—across blanks or custom products. Same person, same fit, same attention. Every time." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card3_us_text | default: "We assign you a dedicated team that handles your brand—across blanks or custom products. Same person, same fit, same attention. Every time." }}</p>
             </div>
+            {%- if section.settings.card3_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card3_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
         </div>
       </div>
@@ -147,22 +159,26 @@
       <div class="why-different-card__visual">
         <div class="split-comparison">
           <div class="split-comparison__side split-comparison__others">
-            <span class="split-label">Others</span>
-            {%- if section.settings.card4_others_image != blank -%}
-              {{ section.settings.card4_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card4_others_text | default: "No photos. No updates. Just a vague timeline and silence." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card4_others_text | default: "No photos. No updates. Just a vague timeline and silence." }}</p>
             </div>
+            {%- if section.settings.card4_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card4_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
           <div class="split-comparison__side split-comparison__us">
-            <span class="split-label">Us</span>
-            {%- if section.settings.card4_us_image != blank -%}
-              {{ section.settings.card4_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card4_us_text | default: "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal. Film the process. Get real behind-the-scenes visuals for your brand's story." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card4_us_text | default: "From blanks to custom-developed pieces, we open the doors. Visit us in Portugal. Film the process. Get real behind-the-scenes visuals for your brand's story." }}</p>
             </div>
+            {%- if section.settings.card4_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card4_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
         </div>
       </div>
@@ -184,22 +200,26 @@
       <div class="why-different-card__visual">
         <div class="split-comparison">
           <div class="split-comparison__side split-comparison__others">
-            <span class="split-label">Others</span>
-            {%- if section.settings.card5_others_image != blank -%}
-              {{ section.settings.card5_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card5_others_text | default: "They rush orders, follow instructions, and move on. No care for your customer, your resale value, or your long-term vision." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Others</h3>
+              <p class="comparison-description">{{ section.settings.card5_others_text | default: "They rush orders, follow instructions, and move on. No care for your customer, your resale value, or your long-term vision." }}</p>
             </div>
+            {%- if section.settings.card5_others_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card5_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
           <div class="split-comparison__side split-comparison__us">
-            <span class="split-label">Us</span>
-            {%- if section.settings.card5_us_image != blank -%}
-              {{ section.settings.card5_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-            {%- endif -%}
-            <div class="comparison-text">
-              <p>{{ section.settings.card5_us_text | default: "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters. Because it does." }}</p>
+            <div class="comparison-content">
+              <h3 class="comparison-title">Us</h3>
+              <p class="comparison-description">{{ section.settings.card5_us_text | default: "Whether we're making your signature hoodie, gym shorts, or a full collection—we treat every piece like it matters. Because it does." }}</p>
             </div>
+            {%- if section.settings.card5_us_image != blank -%}
+              <div class="comparison-bg">
+                {{ section.settings.card5_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+              </div>
+            {%- endif -%}
           </div>
         </div>
       </div>
