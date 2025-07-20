@@ -18,8 +18,18 @@
   padding: 0 2rem;
 }
 
-/* Hide the default grid layout for global footer */
+/* Hide the default footer blocks and duplicate links for global footer */
 .footer:not(.footer-banner-img) .footer__blocks-wrapper {
+  display: none;
+}
+
+/* Hide the duplicate footer bottom links for global footer */
+.footer:not(.footer-banner-img) .footer__content-bottom-wrapper .footer__copyright .policies {
+  display: none;
+}
+
+/* Hide the bottom copyright section for global footer */
+.footer:not(.footer-banner-img) .footer__content-bottom {
   display: none;
 }
 
@@ -147,38 +157,30 @@
   box-shadow: none;
 }
 
-/* Footer bottom section */
-.footer:not(.footer-banner-img) .footer__content-bottom {
-  border-top: none;
-  padding-top: 6rem;
-  margin-top: 0;
+/* Footer links section - horizontal layout */
+.footer:not(.footer-banner-img) .footer-block__links {
+  margin-top: 6rem;
+  text-align: center;
+  width: 100%;
 }
 
-.footer:not(.footer-banner-img) .footer__content-bottom-wrapper {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-/* Horizontal footer links */
-.footer:not(.footer-banner-img) .footer__copyright .policies {
+.footer:not(.footer-banner-img) .footer-links {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 4rem;
   margin: 0 0 4rem 0;
+  padding: 0;
+  list-style: none;
   flex-wrap: wrap;
 }
 
-.footer:not(.footer-banner-img) .footer__copyright .policies li {
+.footer:not(.footer-banner-img) .footer-links li {
   margin: 0;
+  padding: 0;
 }
 
-.footer:not(.footer-banner-img) .footer__copyright .policies li::before {
-  display: none;
-}
-
-.footer:not(.footer-banner-img) .footer__copyright .policies a {
+.footer:not(.footer-banner-img) .footer-link {
   color: rgba(var(--color-foreground), 0.7);
   text-decoration: none;
   font-size: 1.2rem;
@@ -186,19 +188,21 @@
   text-transform: uppercase;
   letter-spacing: 0.1rem;
   transition: color 0.3s ease;
+  display: block;
+  padding: 0.5rem 0;
 }
 
-.footer:not(.footer-banner-img) .footer__copyright .policies a:hover {
+.footer:not(.footer-banner-img) .footer-link:hover {
   color: rgb(var(--color-foreground));
 }
 
 /* Payment icons section */
-.footer:not(.footer-banner-img) .footer__payment {
+.footer:not(.footer-banner-img) .footer__column--info .footer__payment {
   margin: 0 0 4rem 0;
   text-align: center;
 }
 
-.footer:not(.footer-banner-img) .list-payment {
+.footer:not(.footer-banner-img) .footer__column--info .list-payment {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,36 +212,25 @@
 }
 
 /* Copyright text */
-.footer:not(.footer-banner-img) .footer__copyright .copyright__content {
+.footer:not(.footer-banner-img) .footer__column--info::after {
+  content: "© 2024, GENUINE BLANKS";
+  display: block;
   font-size: 1.1rem;
   color: rgba(var(--color-foreground), 0.5);
   letter-spacing: 0.05rem;
   text-transform: uppercase;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 /* Mobile responsive */
 @media screen and (max-width: 749px) {
-  .footer:not(.footer-banner-img) {
-    padding: 6rem 0 3rem;
-  }
-  
-  .footer:not(.footer-banner-img) .footer-block__heading {
-    font-size: 2.2rem;
-    letter-spacing: 0.2rem;
-  }
-  
-  .footer:not(.footer-banner-img) .footer__copyright .policies {
+  .footer:not(.footer-banner-img) .footer-links {
     flex-direction: column;
     gap: 2rem;
   }
   
-  .footer:not(.footer-banner-img) .newsletter-form__field-wrapper .field__input {
-    padding: 1.5rem 1.5rem;
-    font-size: 1.3rem;
-  }
-  
-  .footer:not(.footer-banner-img) .newsletter-form__button {
-    height: 4.5rem;
-    font-size: 1.3rem;
+  .footer:not(.footer-banner-img) .footer-link {
+    font-size: 1.1rem;
   }
 }
