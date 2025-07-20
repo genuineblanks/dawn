@@ -3,11 +3,28 @@
    GenuineBlanks - Mobile-First Design
    =============================================== */
 
-/* Reset and Base Styles */
+/* Reset and Base Styles - HIGHLY SPECIFIC TO AVOID CONFLICTS */
+body[class*="template-page"] .why-different-page,
+.template-page .why-different-page,
 .why-different-page {
   --viewport-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  pointer-events: auto !important;
+  cursor: default !important;
+}
+
+/* CRITICAL: Override any theme styles that might interfere */
+body[class*="template-page"] .why-different-page * {
+  pointer-events: auto;
+}
+
+/* Hide footer specifically on this page template */
+body[class*="template-page"] .template-page #shopify-section-footer,
+.template-page #shopify-section-footer,
+body.template-page footer,
+body[class*="page-why-different"] footer {
+  display: none !important;
 }
 
 /* Dynamic viewport height for mobile browsers */
@@ -128,15 +145,20 @@
    CARD SECTIONS
    =============================================== */
 
-.why-different-card {
-  position: relative;
+/* HIGHLY SPECIFIC CARD STYLES TO OVERRIDE THEME */
+body .why-different-page .why-different-card,
+.template-page .why-different-card,
+.why-different-page .why-different-card {
+  position: relative !important;
   min-height: var(--viewport-height);
-  display: flex;
+  display: flex !important;
   align-items: center;
   padding: 2rem 0;
-  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  cursor: pointer !important;
   overflow: hidden;
+  pointer-events: auto !important;
+  z-index: 10 !important;
 }
 
 .why-different-card::before {
@@ -151,17 +173,24 @@
   z-index: 1;
 }
 
-.why-different-card:hover::before {
-  left: 100%;
+/* FORCE HOVER EFFECTS TO WORK */
+body .why-different-page .why-different-card:hover::before,
+.template-page .why-different-card:hover::before,
+.why-different-page .why-different-card:hover::before {
+  left: 100% !important;
 }
 
-.why-different-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+body .why-different-page .why-different-card:hover,
+.template-page .why-different-card:hover,
+.why-different-page .why-different-card:hover {
+  transform: scale(1.02) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2) !important;
 }
 
-.why-different-card--light:hover {
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+body .why-different-page .why-different-card--light:hover,
+.template-page .why-different-card--light:hover,
+.why-different-page .why-different-card--light:hover {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1) !important;
 }
 
 .why-different-card--dark {
@@ -283,22 +312,27 @@
   margin-top: 1.5rem;
 }
 
-.click-indicator {
-  position: absolute;
+/* FORCE CLICK INDICATOR TO WORK */
+body .why-different-page .click-indicator,
+.template-page .click-indicator,
+.why-different-page .click-indicator {
+  position: absolute !important;
   bottom: 1rem;
   right: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  animation: clickPulse 2s infinite;
-  transition: all 0.3s ease;
-  z-index: 3;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  animation: clickPulse 2s infinite !important;
+  transition: all 0.3s ease !important;
+  z-index: 100 !important;
+  pointer-events: none !important;
+  cursor: pointer !important;
 }
 
 .why-different-card--light .click-indicator {
