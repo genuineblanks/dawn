@@ -1,0 +1,143 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_HUxmna": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_bFKQFz": {
+          "type": "heading",
+          "settings": {
+            "heading": "Tech Pack Submission Form",
+            "heading_size": "h1"
+          }
+        },
+        "text_8RDjzT": {
+          "type": "text",
+          "settings": {
+            "text": "<h5><strong>If your tech-pack is missing any details, we'll proceed based on our expertise.<br/></strong>Please note that we may not accommodate any issues arising from incomplete information, so it's critical to ensure everything is in place.</h5><h5>To minimize defects and ensure alignment with your vision for the final garment, always include <strong>clear reference images of the desired outcome</strong> in your Tech Pack. This practice eliminates ambiguities, reduces errors, and prevents miscommunication during production.</h5>"
+          }
+        },
+        "button_eAxTyr": {
+          "type": "button",
+          "settings": {
+            "button_label": "No Tech-Pack? Download our templates",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_bFKQFz",
+        "text_8RDjzT",
+        "button_eAxTyr"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "additional-classroom": "",
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "page_4736gK": {
+      "type": "page",
+      "name": "t:sections.page.presets.name",
+      "settings": {
+        "page": "techpack-upload",
+        "heading_size": "h1",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 16,
+        "padding_bottom": 0
+      }
+    },
+    "collapsible_content_T7creP": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_fpCVet": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is the purpose of this Tech Pack Submission Form?",
+            "icon": "none",
+            "row_content": "<p>This form ensures your tech pack contains all necessary information to minimize delays or errors.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_Q9rqGB": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I attach more than one tech pack file?",
+            "icon": "none",
+            "row_content": "<p>Yes, you can. However, we recommend uploading one tech pack file per garment unless you are submitting a consolidated tech pack for an entire collection.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_XDxffb": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What should I do if I have a large number of garments to submit?",
+            "icon": "none",
+            "row_content": "<p>If you have multiple garments to submit, please ensure that all items submitted in a single form are related (e.g., part of the same collection or order). For unrelated items, or if the total number of garments exceeds the form's capacity, we recommend submitting a separate form for those additional items. This helps us process your submissions more accurately and efficiently.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_B44Eri": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What happens if I don't include the garment description below but it is in my Tech-Pack?",
+            "icon": "none",
+            "row_content": "<p>For quotation purposes, we will only consider the garments described here, even if additional garments are in the Tech-Pack. </p><p>This approach ensures clarity, as some clients provide comprehensive Tech-Packs but only intend to quote for the specific garment or colorway detailed in this section, simplifying coordination with multiple factories.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_fpCVet",
+        "collapsible_row_Q9rqGB",
+        "collapsible_row_XDxffb",
+        "collapsible_row_B44Eri"
+      ],
+      "settings": {
+        "dynamic-class": "whatYouNeed",
+        "caption": "",
+        "heading": "Frequently Asked Questions (FAQ)",
+        "heading_size": "h2",
+        "heading_alignment": "center",
+        "layout": "row",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "rich_text_HUxmna",
+    "page_4736gK",
+    "main",
+    "collapsible_content_T7creP"
+  ]
+}
