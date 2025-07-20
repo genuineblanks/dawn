@@ -127,17 +127,17 @@
         {% assign productBlockCount = productBlockCount | plus: 1 %}
     {%- endcase -%}
   {%- endfor -%}
-  <div class="{% if productBlockCount != 0 %}product-count-{{ productBlockCount }}{% endif %} banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+  <div class="{% if productBlockCount != 0 %}product-count-{{ productBlockCount }}{% endif %} banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="banner-content luxury-banner-content">
       {% if section.settings.banner_heading != blank %}
-        <h2 class="banner__heading luxury-heading inline-richtext">
+        <h2 class="banner__heading luxury-heading inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 1">
           {{ section.settings.banner_heading }}
         </h2>
       {% endif %}
       {% if section.settings.banner_paragraph != blank %}
         <p class="luxury-paragraph">{{ section.settings.banner_paragraph }}</p>
       {% endif %}
-      <div class="towbutonbaner luxury-button-container">
+      <div class="towbutonbaner luxury-button-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 2">
         {% if section.settings.banner_subtext1 != blank %}
           <a
             {% if section.settings.banner_link_url1 != blank %}
@@ -165,16 +165,16 @@
           {% if section.settings.banner_link_url != blank %}
             href="{{ section.settings.banner_link_url }}"
           {% endif %}
-          class="link luxury-link"
+          class="link luxury-link{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 3"
         >
           {{- section.settings.banner_link_txt -}}
         </a>
       {%- endif -%}
-      <span class="no-minimum luxury-no-minimum">MADE IN PORTUGAL</span>
+      <span class="no-minimum luxury-no-minimum{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 4">MADE IN PORTUGAL</span>
     </div>
-    <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient">
+    <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {%- for block in section.blocks -%}
-        <li class="item-banner luxury-item">
+        <li class="item-banner luxury-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 5 }}">
           {%- case block.type -%}
             {%- when 'heading' -%}
               <h2
@@ -278,7 +278,7 @@
       {%- endfor -%}
     </ul>
     {% if section.settings.banner_botton_text != blank %}
-      <div class="banner-bottom luxury-banner-bottom">{{ section.settings.banner_botton_text }}</div>
+      <div class="banner-bottom luxury-banner-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 12">{{ section.settings.banner_botton_text }}</div>
     {% endif %}
   </div>
 </div>
