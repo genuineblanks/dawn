@@ -1,6 +1,417 @@
+{{ 'section-why-different.css' | asset_url | stylesheet_tag }}
+
+<div class="why-different-page" id="why-different-{{ section.id }}">
+  
+  <!-- Intro Section -->
+  <section class="why-different-intro" data-card="intro">
+    <div class="why-different-intro__content">
+      <h1 class="why-different-intro__title">{{ section.settings.intro_title | default: "Why We're Different" }}</h1>
+      <p class="why-different-intro__subtitle">{{ section.settings.intro_subtitle | default: "Discover the 5 pillars that set us apart" }}</p>
+      <div class="scroll-prompt">
+        <span>{{ section.settings.scroll_text | default: "Scroll to explore" }}</span>
+        <svg class="scroll-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+      </div>
+    </div>
+    {%- if section.settings.intro_bg_image != blank -%}
+      <div class="why-different-intro__bg">
+        {{ section.settings.intro_bg_image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high' }}
+      </div>
+    {%- endif -%}
+  </section>
+
+  <!-- Card 1: No leftovers -->
+  <section class="why-different-card why-different-card--dark" data-card="1">
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card1_headline | default: "No leftovers. Ever." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card1_description | default: "We spin & dye fabric just for your brand—never leftovers from others." }}</p>
+        <div class="why-different-badge">{{ section.settings.card1_badge | default: "Exclusive Fabric" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <span class="split-label">Others</span>
+            {%- if section.settings.card1_others_image != blank -%}
+              {{ section.settings.card1_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Mass Production</div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <span class="split-label">Us</span>
+            {%- if section.settings.card1_us_image != blank -%}
+              {{ section.settings.card1_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Custom Dyeing</div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 2: Zero guesswork -->
+  <section class="why-different-card why-different-card--light" data-card="2">
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card2_headline | default: "Zero guesswork." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card2_description | default: "Shrink, stretch, test—it all happens before we bulk-produce. You won't lose €10k." }}</p>
+        <div class="why-different-badge">{{ section.settings.card2_badge | default: "100% Pre-tested" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <span class="split-label">Others</span>
+            {%- if section.settings.card2_others_image != blank -%}
+              {{ section.settings.card2_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Skip Testing</div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <span class="split-label">Us</span>
+            {%- if section.settings.card2_us_image != blank -%}
+              {{ section.settings.card2_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Quality Testing</div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 3: You matter -->
+  <section class="why-different-card why-different-card--dark" data-card="3">
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card3_headline | default: "You matter." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card3_description | default: "Same account manager, same seamstress, every time—your brand thrives on consistency." }}</p>
+        <div class="why-different-badge">{{ section.settings.card3_badge | default: "Named Dedicated Team" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <span class="split-label">Others</span>
+            {%- if section.settings.card3_others_image != blank -%}
+              {{ section.settings.card3_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Random Teams</div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <span class="split-label">Us</span>
+            {%- if section.settings.card3_us_image != blank -%}
+              {{ section.settings.card3_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Dedicated Team</div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 4: See it -->
+  <section class="why-different-card why-different-card--light" data-card="4">
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card4_headline | default: "See it." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card4_description | default: "Visit Portugal. Film content. Watch your product born in real-time." }}</p>
+        <div class="why-different-badge">{{ section.settings.card4_badge | default: "Fully Transparent" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <span class="split-label">Others</span>
+            {%- if section.settings.card4_others_image != blank -%}
+              {{ section.settings.card4_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Hidden Process</div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <span class="split-label">Us</span>
+            {%- if section.settings.card4_us_image != blank -%}
+              {{ section.settings.card4_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Factory Visit</div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 5: We build brands -->
+  <section class="why-different-card why-different-card--dark" data-card="5">
+    <div class="why-different-card__content">
+      <div class="why-different-card__text">
+        <h2 class="why-different-card__headline">{{ section.settings.card5_headline | default: "We build brands." }}</h2>
+        <p class="why-different-card__description">{{ section.settings.card5_description | default: "We treat each piece like it's your next bestseller—because it is." }}</p>
+        <div class="why-different-badge">{{ section.settings.card5_badge | default: "Brand-Building Mindset" }}</div>
+      </div>
+      <div class="why-different-card__visual">
+        <div class="split-comparison">
+          <div class="split-comparison__side split-comparison__others">
+            <span class="split-label">Others</span>
+            {%- if section.settings.card5_others_image != blank -%}
+              {{ section.settings.card5_others_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Just Orders</div>
+            {%- endif -%}
+          </div>
+          <div class="split-comparison__side split-comparison__us">
+            <span class="split-label">Us</span>
+            {%- if section.settings.card5_us_image != blank -%}
+              {{ section.settings.card5_us_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+            {%- else -%}
+              <div class="placeholder-image">Brand Building</div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky CTA Bar -->
+  <div class="why-different-cta-bar" id="sticky-cta">
+    <div class="why-different-cta-bar__content">
+      <span class="why-different-cta-bar__text">{{ section.settings.cta_text | default: "Ready to build your brand — not just an order?" }}</span>
+      <a href="{{ section.settings.cta_url | default: '/pages/tech-pack-submission' }}" class="why-different-cta-bar__button">
+        {{ section.settings.cta_button_text | default: "Get Your Custom Quote" }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="why-different-progress">
+    <div class="why-different-progress__bar"></div>
+  </div>
+
+</div>
+
+<script src="{{ 'why-different-interactions.js' | asset_url }}" defer></script>
+
 {% schema %}
-  {
-    "name": "Section name",
-    "settings": []
-  }
+{
+  "name": "Why Different Landing",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intro Section"
+    },
+    {
+      "type": "text",
+      "id": "intro_title",
+      "label": "Intro Title",
+      "default": "Why We're Different"
+    },
+    {
+      "type": "text",
+      "id": "intro_subtitle",
+      "label": "Intro Subtitle",
+      "default": "Discover the 5 pillars that set us apart"
+    },
+    {
+      "type": "text",
+      "id": "scroll_text",
+      "label": "Scroll Prompt Text",
+      "default": "Scroll to explore"
+    },
+    {
+      "type": "image_picker",
+      "id": "intro_bg_image",
+      "label": "Intro Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 1: No Leftovers"
+    },
+    {
+      "type": "text",
+      "id": "card1_headline",
+      "label": "Card 1 Headline",
+      "default": "No leftovers. Ever."
+    },
+    {
+      "type": "textarea",
+      "id": "card1_description",
+      "label": "Card 1 Description",
+      "default": "We spin & dye fabric just for your brand—never leftovers from others."
+    },
+    {
+      "type": "text",
+      "id": "card1_badge",
+      "label": "Card 1 Badge",
+      "default": "Exclusive Fabric"
+    },
+    {
+      "type": "image_picker",
+      "id": "card1_others_image",
+      "label": "Card 1 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card1_us_image",
+      "label": "Card 1 'Us' Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 2: Zero Guesswork"
+    },
+    {
+      "type": "text",
+      "id": "card2_headline",
+      "label": "Card 2 Headline",
+      "default": "Zero guesswork."
+    },
+    {
+      "type": "textarea",
+      "id": "card2_description",
+      "label": "Card 2 Description",
+      "default": "Shrink, stretch, test—it all happens before we bulk-produce. You won't lose €10k."
+    },
+    {
+      "type": "text",
+      "id": "card2_badge",
+      "label": "Card 2 Badge",
+      "default": "100% Pre-tested"
+    },
+    {
+      "type": "image_picker",
+      "id": "card2_others_image",
+      "label": "Card 2 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card2_us_image",
+      "label": "Card 2 'Us' Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 3: You Matter"
+    },
+    {
+      "type": "text",
+      "id": "card3_headline",
+      "label": "Card 3 Headline",
+      "default": "You matter."
+    },
+    {
+      "type": "textarea",
+      "id": "card3_description",
+      "label": "Card 3 Description",
+      "default": "Same account manager, same seamstress, every time—your brand thrives on consistency."
+    },
+    {
+      "type": "text",
+      "id": "card3_badge",
+      "label": "Card 3 Badge",
+      "default": "Named Dedicated Team"
+    },
+    {
+      "type": "image_picker",
+      "id": "card3_others_image",
+      "label": "Card 3 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card3_us_image",
+      "label": "Card 3 'Us' Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 4: See It"
+    },
+    {
+      "type": "text",
+      "id": "card4_headline",
+      "label": "Card 4 Headline",
+      "default": "See it."
+    },
+    {
+      "type": "textarea",
+      "id": "card4_description",
+      "label": "Card 4 Description",
+      "default": "Visit Portugal. Film content. Watch your product born in real-time."
+    },
+    {
+      "type": "text",
+      "id": "card4_badge",
+      "label": "Card 4 Badge",
+      "default": "Fully Transparent"
+    },
+    {
+      "type": "image_picker",
+      "id": "card4_others_image",
+      "label": "Card 4 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card4_us_image",
+      "label": "Card 4 'Us' Image"
+    },
+    {
+      "type": "header",
+      "content": "Card 5: We Build Brands"
+    },
+    {
+      "type": "text",
+      "id": "card5_headline",
+      "label": "Card 5 Headline",
+      "default": "We build brands."
+    },
+    {
+      "type": "textarea",
+      "id": "card5_description",
+      "label": "Card 5 Description",
+      "default": "We treat each piece like it's your next bestseller—because it is."
+    },
+    {
+      "type": "text",
+      "id": "card5_badge",
+      "label": "Card 5 Badge",
+      "default": "Brand-Building Mindset"
+    },
+    {
+      "type": "image_picker",
+      "id": "card5_others_image",
+      "label": "Card 5 'Others' Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card5_us_image",
+      "label": "Card 5 'Us' Image"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Ready to build your brand — not just an order?"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "CTA Button Text",
+      "default": "Get Your Custom Quote"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Different Landing"
+    }
+  ]
+}
 {% endschema %}
