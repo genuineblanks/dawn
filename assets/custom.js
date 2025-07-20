@@ -263,6 +263,9 @@ function createMobileDebugPanel() {
 // MOBILE TOUCH FAILSAFE SYSTEM - ENHANCED
 // ===============================================
 function addMobileTouchFailsafe() {
+  // DISABLED: Mobile uses natural scrolling (this was interfering)
+  return;
+  
   if (!isMobileDevice() || !isHomepage()) return;
   
   let swipeAttempts = 0;
@@ -426,6 +429,9 @@ function addMobileTouchFailsafe() {
 // ENHANCED OVERSCROLL PROTECTION AND RECOVERY
 // ===============================================
 function initializeOverscrollProtection() {
+  // DISABLED: Mobile uses natural scrolling (this was blocking scroll)
+  return;
+  
   if (!isMobileDevice() || !isHomepage()) return;
   
   console.log('🛡️ Initializing enhanced overscroll protection...');
@@ -521,6 +527,9 @@ function handleOverscrollRecovery(currentScroll, minScroll, maxScroll) {
 // MOBILE CONFLICT DETECTION SYSTEM
 // ===============================================
 function addMobileConflictDetection() {
+  // DISABLED: Mobile uses natural scrolling (this was interfering)
+  return;
+  
   if (!isMobileDevice() || !isHomepage()) return;
   
   console.log('🔍 Setting up mobile conflict detection...');
@@ -631,6 +640,9 @@ function addMobileConflictDetection() {
 // FORCED RESET MECHANISM FOR STUCK INSCROLL STATE
 // ===============================================
 function startInScrollWatchdog() {
+  // DISABLED: Mobile uses natural scrolling (not needed)
+  return;
+  
   if (!isMobileDevice()) return;
   
   console.log('🛡️ Starting inScroll watchdog for mobile...');
@@ -670,6 +682,9 @@ function startInScrollWatchdog() {
 // MOBILE SCROLL CAPABILITY TEST
 // ===============================================
 function testMobileScrollCapabilities() {
+  // DISABLED: Mobile uses natural scrolling (not needed)
+  return;
+  
   if (!isMobileDevice()) return;
   
   console.log('🧪 Testing mobile scroll capabilities...');
