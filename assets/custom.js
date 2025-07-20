@@ -188,25 +188,18 @@
       const viewportHeight = window.innerHeight;
       
       if (IS_MOBILE) {
-        // Mobile: Viewport overlap detection
-        const scrollTop = currentScrollPos;
-        const scrollBottom = currentScrollPos + viewportHeight;
+        // Mobile: Use scroll position + offset to determine which section we're closest to
+        const scrollReference = currentScrollPos + (viewportHeight * 0.3); // 30% from top feels more natural
         
-        let bestOverlap = 0;
+        let bestDistance = Infinity;
         let bestSection = 0;
         
         for (let i = 0; i < scrollSystem.arrSections.length; i++) {
           const sectionStart = scrollSystem.arrSections[i];
-          const sectionEnd = i < scrollSystem.arrSections.length - 1 
-            ? scrollSystem.arrSections[i + 1] 
-            : sectionStart + viewportHeight * 2;
+          const distance = Math.abs(scrollReference - sectionStart);
           
-          const overlapStart = Math.max(scrollTop, sectionStart);
-          const overlapEnd = Math.min(scrollBottom, sectionEnd);
-          const overlap = Math.max(0, overlapEnd - overlapStart);
-          
-          if (overlap > bestOverlap) {
-            bestOverlap = overlap;
+          if (distance < bestDistance) {
+            bestDistance = distance;
             bestSection = i;
           }
         }
@@ -214,8 +207,11 @@
         closestSection = bestSection;
         console.log('📱 Mobile section detection:', {
           currentScrollPos,
+          scrollReference,
           detectedSection: closestSection,
-          overlap: bestOverlap
+          distance: bestDistance,
+          sectionTop: scrollSystem.arrSections[closestSection],
+          allSections: scrollSystem.arrSections
         });
       } else {
         // Desktop: Center point detection
@@ -266,7 +262,7 @@
       document.body.appendChild(dotContainer);
     }
 
-    // Enhanced styles for better mobile touch
+    // Minimal styling to work with existing CSS
     dotContainer.style.cssText = `
       position: fixed;
       right: 20px;
@@ -275,7 +271,7 @@
       z-index: 1000;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
       pointer-events: auto;
     `;
 
@@ -284,13 +280,13 @@
       dot.className = 'section-dot';
       dot.setAttribute('data-section', i);
       
-      // Enhanced styling with better mobile touch targets
+      // Clean styling that works with existing theme
       dot.style.cssText = `
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.6);
-        border: 2px solid rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.7);
         cursor: pointer;
         transition: all 0.3s ease;
         position: relative;
@@ -301,10 +297,10 @@
         const touchArea = document.createElement('div');
         touchArea.style.cssText = `
           position: absolute;
-          top: -15px;
-          left: -15px;
-          right: -15px;
-          bottom: -15px;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
           z-index: 1;
         `;
         dot.appendChild(touchArea);
@@ -361,19 +357,19 @@
         // Active dot
         dot.style.background = 'rgba(255, 255, 255, 1)';
         dot.style.border = '2px solid rgba(255, 255, 255, 1)';
-        dot.style.transform = 'scale(1.3)';
-        dot.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.6)';
-        dot.style.width = '14px';
-        dot.style.height = '14px';
+        dot.style.transform = 'scale(1.2)';
+        dot.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.5)';
+        dot.style.width = '12px';
+        dot.style.height = '12px';
         dot.classList.add('active');
       } else {
         // Inactive dot
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
-        dot.style.border = '2px solid rgba(255, 255, 255, 0.6)';
+        dot.style.background = 'rgba(255, 255, 255, 0.5)';
+        dot.style.border = '2px solid rgba(255, 255, 255, 0.7)';
         dot.style.transform = 'scale(1)';
-        dot.style.boxShadow = '0 0 0 0 rgba(255, 255, 255, 0)';
-        dot.style.width = '12px';
-        dot.style.height = '12px';
+        dot.style.boxShadow = 'none';
+        dot.style.width = '10px';
+        dot.style.height = '10px';
         dot.classList.remove('active');
       }
     }
@@ -612,6 +608,7 @@
   window.goToSection = goToSection;
   window.updateCurrentSectionFromScrollPosition = updateCurrentSectionFromScrollPosition;
   window.updateDotNavigation = updateDotNavigation;
+
 
   // ===============================================
   // INITIALIZATION SEQUENCE
