@@ -540,18 +540,39 @@
   backface-visibility: hidden !important;
 }
 
-/* Premium Enhanced Collection Buttons - Wider & More Stylish */
+/* Completely Redesigned Minimal Collection Buttons */
 .luxury-button--premium {
-  min-width: 320px !important;
-  padding: 22px 48px !important;
-  font-size: 0.9rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 3px !important;
+  /* Reset all previous styling */
+  min-width: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 2.5px solid #000000 !important;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  
+  /* New minimal design */
+  font-size: 0.75rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  color: #999 !important;
+  position: relative !important;
+  display: inline-block !important;
+  transition: all 0.3s ease !important;
+  margin: 0 1rem !important;
+}
+
+.luxury-button--premium::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+  width: 100% !important;
+  height: 1px !important;
+  background: #333 !important;
+  transition: transform 0.3s ease !important;
 }
 
 /* Advanced sliding animation effect */
@@ -582,12 +603,15 @@
   border-color: #000000 !important;
 }
 
-/* Premium Enhanced Hover Effects */
+/* Minimal Premium Hover Effects */
 .luxury-button--premium:hover {
-  transform: translateY(-6px) scale(1.02) translateZ(0) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(0, 0, 0, 0.1) !important;
-  border-color: #000000 !important;
-  letter-spacing: 3.5px !important;
+  color: #333 !important;
+  letter-spacing: 2.5px !important;
+  transform: translateY(-1px) !important;
+}
+
+.luxury-button--premium:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
 }
 
 .luxury-button:hover::before,
@@ -694,14 +718,27 @@
   align-items: center !important;
 }
 
-/* Premium Button Container Enhancement */
+/* Minimal Button Container - Clean & Elegant */
 .luxury-button-container {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 12px !important;
-  padding: 2rem !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+  padding: 1rem 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+}
+
+/* Add subtle separator line above buttons */
+.luxury-button-container::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 60px !important;
+  height: 1px !important;
+  background: #ddd !important;
 }
 
 /* Enhanced Link Styling - Discrete but Cool */
@@ -868,10 +905,9 @@
   }
   
   .luxury-button--premium {
-    min-width: 280px !important;
-    padding: 18px 36px !important;
-    font-size: 0.8rem !important;
-    letter-spacing: 2.5px !important;
+    margin: 0.5rem 0 !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 1.5px !important;
   }
   
   .luxury-paragraph {
