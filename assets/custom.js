@@ -1303,6 +1303,29 @@ function goToSection(sectionIndex) {
       
       // Restore conflicting listeners
       restoreConflictingListeners();
+      
+      // MOBILE FAILSAFE: Ensure final section position is correct after animation
+      setTimeout(() => {
+        const finalScrollPos = window.pageYOffset;
+        const expectedPos = scrollSystem.arrSections[sectionIndex];
+        const positionDiff = Math.abs(finalScrollPos - expectedPos);
+        
+        console.log('🔍 Post-animation position check:', {
+          finalScroll: finalScrollPos,
+          expectedScroll: expectedPos,
+          difference: positionDiff,
+          currentSection: scrollSystem.currentSection,
+          targetSection: sectionIndex
+        });
+        
+        // If position is significantly off, update section tracking
+        if (positionDiff > 100) {
+          console.log('⚠️ Position mismatch detected - updating section tracking');
+          updateCurrentSectionFromScrollPosition();
+        }
+        
+        updateDotNavigation();
+      }, 100); // Small delay to ensure all scroll events have settled
     },
     fail: function() {
       const deviceType = IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP';
@@ -1420,15 +1443,16 @@ function updateCurrentSectionFromScrollPosition() {
   
   const oldSection = scrollSystem.currentSection;
   
-  // CRITICAL DEBUG: Log when this runs during animation
+  // CRITICAL FIX: Prevent section updates during animation to avoid race conditions
   if (scrollSystem.inScroll) {
-    console.log('⚠️ ⚠️ updateCurrentSectionFromScrollPosition called DURING ANIMATION:', {
+    console.log('🚫 BLOCKED: updateCurrentSectionFromScrollPosition during animation - preventing race condition:', {
       inScroll: scrollSystem.inScroll,
       currentScrollPos: currentScrollPos,
       oldSection: oldSection,
       detectedSection: closestSection,
-      willUpdate: oldSection !== closestSection
+      reason: 'Animation in progress - section update blocked to prevent mobile scroll bug'
     });
+    return; // ← CRITICAL FIX: Exit early to prevent section updates during animation
   }
   
   scrollSystem.currentSection = closestSection;
