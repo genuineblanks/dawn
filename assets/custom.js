@@ -1392,22 +1392,8 @@ function updateCurrentSectionFromScrollPosition() {
   // ENHANCED: Better section detection with tolerance for mobile
   const detectionTolerance = isMobileDevice() ? 75 : 50; // More forgiving for mobile
   
-  console.log('🔍 DEBUG: Section detection starting:', {
-    currentScrollPos: currentScrollPos,
-    sectionPositions: scrollSystem.arrSections,
-    isMobile: isMobileDevice(),
-    tolerance: detectionTolerance
-  });
-  
   scrollSystem.arrSections.forEach((sectionTop, index) => {
     const distance = Math.abs(currentScrollPos - sectionTop);
-    
-    console.log(`🔍 Section ${index} analysis:`, {
-      sectionTop: sectionTop,
-      distance: distance,
-      currentClosest: closestSection,
-      minDistance: minDistance
-    });
     
     // ANDROID FIX: If we're within tolerance, prefer viewport-aligned positions
     if (isMobileDevice() && distance <= detectionTolerance) {
@@ -1415,20 +1401,12 @@ function updateCurrentSectionFromScrollPosition() {
       const expectedPosition = index * viewportHeight;
       const viewportAlignedDistance = Math.abs(currentScrollPos - expectedPosition);
       
-      console.log(`📱 Mobile viewport check for section ${index}:`, {
-        expectedPosition: expectedPosition,
-        viewportAlignedDistance: viewportAlignedDistance,
-        betterThanDistance: viewportAlignedDistance < distance,
-        betterThanMin: viewportAlignedDistance < minDistance
-      });
-      
       // If viewport-aligned position is closer, use that for comparison
       if (viewportAlignedDistance < distance) {
         console.log('📱 Using viewport-aligned detection for section', index);
         if (viewportAlignedDistance < minDistance) {
           minDistance = viewportAlignedDistance;
           closestSection = index;
-          console.log(`📱 NEW CLOSEST: Section ${index} (viewport-aligned)`);
         }
         return;
       }
@@ -1437,7 +1415,6 @@ function updateCurrentSectionFromScrollPosition() {
     if (distance < minDistance) {
       minDistance = distance;
       closestSection = index;
-      console.log(`📍 NEW CLOSEST: Section ${index} (normal detection)`);
     }
   });
   
@@ -1453,15 +1430,6 @@ function updateCurrentSectionFromScrollPosition() {
       willUpdate: oldSection !== closestSection
     });
   }
-  
-  console.log('🎯 FINAL DETECTION RESULT:', {
-    oldSection: oldSection,
-    newSection: closestSection,
-    currentScrollPos: currentScrollPos,
-    finalMinDistance: minDistance,
-    willUpdate: oldSection !== closestSection,
-    duringAnimation: scrollSystem.inScroll
-  });
   
   scrollSystem.currentSection = closestSection;
   
