@@ -113,6 +113,9 @@ function isIOSCheck() {
 }
 
 function handleTouchStart(e) {
+  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation
+  if (isMobileDevice()) return;
+  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
   const touch = e.touches[0];
@@ -123,57 +126,50 @@ function handleTouchStart(e) {
   hasMoved = false;
   touchTarget = e.target;
   
-  // FIXED: No preventDefault in passive events - allow all native iOS behavior
   lastTouchTime = Date.now();
   
-  console.log('📱 Touch start at:', touchStartY, 'Device:', isMobileDevice() ? 'Mobile' : 'Desktop');
+  console.log('🖥️ Desktop touch start at:', touchStartY);
 }
 
 function handleTouchMove(e) {
+  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation  
+  if (isMobileDevice()) return;
+  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
-  // SIMPLIFIED: If touching dot navigation, let it handle everything
+  // If touching dot navigation, let it handle everything
   if (touchTarget && (
     touchTarget.classList.contains('section-dot') || 
     touchTarget.closest('.section-dot-navigation')
   )) {
-    return; // Let dots work normally
+    return;
   }
   
   const touch = e.touches[0];
   const deltaY = Math.abs(touch.clientY - initialTouchY);
   const deltaX = Math.abs(touch.clientX - touchStartX);
   
-  // Mark as moved with lower threshold for mobile
   if (deltaY > 3 || deltaX > 3) {
     hasMoved = true;
   }
   
-  // FIXED: No preventDefault needed - passive events allow native scrolling
-  // Just track movement for section navigation detection
   if (deltaY > 50 && deltaY > deltaX * 2) {
-    console.log('📱 Large vertical movement detected for section nav, deltaY:', deltaY, 'deltaX:', deltaX);
+    console.log('🖥️ Desktop touch movement detected, deltaY:', deltaY, 'deltaX:', deltaX);
   }
 }
 
 function handleTouchEnd(e) {
+  // DESKTOP ONLY: Mobile devices use natural scrolling + dot navigation
+  if (isMobileDevice()) return;
+  
   if (!isHomepage() || !scrollSystem.isEnabled || scrollSystem.inScroll) return;
   
-  // SECTION LOCKING: Check cooldown period
-  const currentTime = Date.now();
-  if (currentTime - lastSwipeTime < swipeCooldownPeriod) {
-    console.log('📱 🔒 SWIPE BLOCKED - Cooldown period active:', currentTime - lastSwipeTime, 'ms since last swipe');
-    hasMoved = false;
-    touchTarget = null;
-    return;
-  }
-  
-  // SIMPLIFIED: If touching dot navigation, let it handle everything
+  // If touching dot navigation, let it handle everything
   if (touchTarget && (
     touchTarget.classList.contains('section-dot') || 
     touchTarget.closest('.section-dot-navigation')
   )) {
-    console.log('📱 Touch on dot navigation - allowing normal behavior');
+    console.log('🖥️ Desktop touch on dot navigation - allowing normal behavior');
     touchTarget = null;
     return;
   }
@@ -187,82 +183,34 @@ function handleTouchEnd(e) {
   const horizontalDistance = Math.abs(touchEndX - touchStartX);
   const totalVerticalDistance = Math.abs(verticalDistance);
   
-  console.log('📱 Touch end analysis:', {
-    duration: touchDuration,
-    verticalDistance: verticalDistance,
-    horizontalDistance: horizontalDistance,
-    totalVertical: totalVerticalDistance,
-    moved: hasMoved,
-    mobile: isMobileDevice(),
-    startY: touchStartY,
-    endY: touchEndY,
-    timeSinceLastSwipe: currentTime - lastSwipeTime
-  });
+  // Desktop touch validation (for touch laptops)
+  const minDistance = 40;
+  const maxDuration = 1200;
+  const ratioThreshold = 1.2;
   
-  // IMPROVED SWIPE DETECTION - Much more sensitive for natural mobile gestures
-  const isMobile = isMobileDevice();
-  const minDistance = isMobile ? 25 : 40;      // REDUCED: Much more sensitive for mobile
-  const maxDuration = isMobile ? 1000 : 1200;  // More generous timing for mobile
-  const ratioThreshold = isMobile ? 1.5 : 1.2; // More forgiving ratio for mobile
-  
-  // SIMPLIFIED validation - remove the redundant 80px check
   const isValidSwipe = touchDuration < maxDuration && 
                       totalVerticalDistance > minDistance && 
                       totalVerticalDistance > horizontalDistance * ratioThreshold &&
                       hasMoved;
   
-  console.log('📱 Swipe validation:', {
-    isValid: isValidSwipe,
-    durationOK: touchDuration < maxDuration,
-    distanceOK: totalVerticalDistance > minDistance,
-    ratioOK: totalVerticalDistance > horizontalDistance * ratioThreshold,
-    movedOK: hasMoved,
-    thresholds: { minDistance, maxDuration, ratioThreshold },
-    cooldownOK: currentTime - lastSwipeTime >= swipeCooldownPeriod
-  });
-  
   if (isValidSwipe) {
-    // SECTION LOCKING: Set swipe in progress
-    isSwipeInProgress = true;
-    lastSwipeTime = currentTime;
-    
-    console.log('📱 ✅ VALID SWIPE DETECTED - Processing section change...');
-    console.log('📱 🔒 Section locking active - cooldown period started');
-    
     let targetSection = scrollSystem.currentSection;
-    const swipeThreshold = isMobile ? 15 : 25; // REDUCED: More sensitive threshold
+    const swipeThreshold = 25;
     
     if (verticalDistance > swipeThreshold) {
-      // Swipe up = next section (EXACTLY ONE SECTION)
       targetSection = Math.min(scrollSystem.currentSection + 1, scrollSystem.arrSections.length - 1);
-      console.log('📱 🔥 SWIPE UP detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
+      console.log('🖥️ Desktop swipe up - Going to section:', targetSection);
     } else if (verticalDistance < -swipeThreshold) {
-      // Swipe down = previous section (EXACTLY ONE SECTION)
       targetSection = Math.max(scrollSystem.currentSection - 1, 0);
-      console.log('📱 🔥 SWIPE DOWN detected - Going to section:', targetSection, 'from:', scrollSystem.currentSection);
+      console.log('🖥️ Desktop swipe down - Going to section:', targetSection);
     }
     
     if (targetSection !== scrollSystem.currentSection) {
-      console.log('📱 🚀 EXECUTING SECTION NAVIGATION:', scrollSystem.currentSection, '->', targetSection);
-      console.log('📱 🎯 Target position:', scrollSystem.arrSections[targetSection]);
-      console.log('📱 🔒 Section locked - next swipe blocked for', swipeCooldownPeriod, 'ms');
       goToSection(targetSection);
-    } else {
-      console.log('📱 ❌ No section change - same section');
-      isSwipeInProgress = false;
-      scrollSystem.inScroll = false;
     }
-  } else {
-    console.log('📱 ❌ Invalid swipe - conditions not met');
-    console.log('📱 💡 Swipe detected but too small/horizontal/slow:', {
-      distance: totalVerticalDistance,
-      needed: minDistance,
-      duration: touchDuration,
-      maxDuration: maxDuration
-    });
   }
   
-  // Reset all touch tracking
+  // Reset touch tracking
   hasMoved = false;
   touchTarget = null;
 }
@@ -1355,23 +1303,8 @@ function calculateSectionPositions() {
     const section = $(this);
     let sectionTop = section.offset().top;
     
-    // ANDROID FIX: Ensure sections align to viewport boundaries
-    if (isMobileDevice()) {
-      const viewportHeight = window.innerHeight;
-      const expectedPosition = index * viewportHeight;
-      
-      // If section is close to expected viewport position, snap it
-      if (Math.abs(sectionTop - expectedPosition) < 100) {
-        console.log('📱 Android fix - snapping section', index, 'from', sectionTop, 'to', expectedPosition);
-        sectionTop = expectedPosition;
-      }
-      
-      // Ensure section height fills viewport
-      const sectionHeight = section.outerHeight();
-      if (Math.abs(sectionHeight - viewportHeight) > 50) {
-        console.log('📱 Android fix - section', index, 'height mismatch:', sectionHeight, 'vs viewport:', viewportHeight);
-      }
-    }
+    // MOBILE: Use natural section positions (no artificial snapping)
+    console.log(`✅ Section ${index} uses natural position:`, sectionTop);
     
     return sectionTop;
   }).get();
@@ -1389,28 +1322,13 @@ function updateCurrentSectionFromScrollPosition() {
   let closestSection = 0;
   let minDistance = Infinity;
   
-  // ENHANCED: Better section detection with tolerance for mobile
-  const detectionTolerance = isMobileDevice() ? 75 : 50; // More forgiving for mobile
+  // SIMPLIFIED: Standard section detection for both mobile and desktop
+  const detectionTolerance = 50;
   
   scrollSystem.arrSections.forEach((sectionTop, index) => {
     const distance = Math.abs(currentScrollPos - sectionTop);
     
-    // ANDROID FIX: If we're within tolerance, prefer viewport-aligned positions
-    if (isMobileDevice() && distance <= detectionTolerance) {
-      const viewportHeight = window.innerHeight;
-      const expectedPosition = index * viewportHeight;
-      const viewportAlignedDistance = Math.abs(currentScrollPos - expectedPosition);
-      
-      // If viewport-aligned position is closer, use that for comparison
-      if (viewportAlignedDistance < distance) {
-        console.log('📱 Using viewport-aligned detection for section', index);
-        if (viewportAlignedDistance < minDistance) {
-          minDistance = viewportAlignedDistance;
-          closestSection = index;
-        }
-        return;
-      }
-    }
+    // MOBILE: Use natural distance calculation (no viewport snapping)
     
     if (distance < minDistance) {
       minDistance = distance;
@@ -1451,17 +1369,15 @@ function initializeScrollSystem() {
     return;
   }
   
-  // MOBILE: Enable section scrolling for mobile devices too
+  // MOBILE: Natural scrolling (no restrictions)
   if (IS_MOBILE_DEVICE) {
-    console.log('📱 Mobile device detected - enabling mobile section scrolling');
-    // Apply mobile-specific optimizations
-    document.body.style.touchAction = 'pan-y';
-    document.body.style.webkitOverflowScrolling = 'touch';
-    // Mobile gets overscroll behavior none only when needed
-    document.body.style.overscrollBehavior = 'none';
+    console.log('📱 Mobile device detected - using natural scrolling with dot navigation');
+    // Allow natural mobile scrolling behavior
+    document.body.style.touchAction = 'auto';
+    document.body.style.overscrollBehavior = 'auto';
   } else {
     console.log('🖥️ Desktop device detected - enabling desktop section scrolling');
-    // Desktop optimizations - Allow normal scrolling
+    // Desktop optimizations - Allow normal scrolling  
     document.body.style.overscrollBehavior = 'auto';
     document.body.style.touchAction = 'auto';
   }
@@ -1497,42 +1413,10 @@ function initializeScrollSystem() {
     console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop', 'iOS:', isIOS());
     
     if (isMobile) {
-      // Mobile-specific optimizations
-      console.log('📱 Applying mobile optimizations...');
+      // Mobile: Natural scrolling only, no section forcing
+      console.log('📱 Mobile: Using natural scrolling + dot navigation (no touch event binding)');
       
-      // iOS specific fixes
-      if (isIOS()) {
-        document.body.style.webkitOverflowScrolling = 'touch';
-        document.documentElement.style.webkitOverflowScrolling = 'touch';
-      }
-      
-      // FIXED: Completely passive touch events - no interference with native scrolling
-      const touchOptions = { 
-        passive: true, 
-        capture: false,
-        once: false
-      };
-      
-      // CRITICAL: Make touchmove passive too to avoid blocking scrolling
-      const touchMoveOptions = { 
-        passive: true, 
-        capture: false,
-        once: false
-      };
-      
-      // Remove any existing touch listeners first
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-      
-      // FIXED: Add touch listeners with proper options
-      document.addEventListener('touchstart', handleTouchStart, touchOptions);
-      document.addEventListener('touchmove', handleTouchMove, touchMoveOptions);
-      document.addEventListener('touchend', handleTouchEnd, touchOptions);
-      
-      console.log('📱 Mobile touch events bound successfully');
-      
-      // Add visual feedback for mobile users
+      // Mobile visual feedback for dot navigation
       setTimeout(() => {
         if (scrollSystem.dotNavigation) {
           scrollSystem.dotNavigation.style.opacity = '0.8';
