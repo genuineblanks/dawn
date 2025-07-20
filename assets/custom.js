@@ -145,10 +145,20 @@
     if (!isHomepage()) return [];
 
     scrollSystem.$sections = $('section');
-    console.log('📊 Found sections:', scrollSystem.$sections.length);
+    console.log('📊 SECTION DETECTION:', {
+      foundSections: scrollSystem.$sections.length,
+      sectionElements: Array.from(document.querySelectorAll('section')).map((s, i) => ({
+        index: i,
+        id: s.id,
+        classes: s.className,
+        offsetTop: s.offsetTop,
+        clientHeight: s.clientHeight
+      }))
+    });
 
     if (scrollSystem.$sections.length === 0) {
-      console.log('❌ No sections found');
+      console.log('❌ No sections found - checking all elements...');
+      console.log('Available elements:', Array.from(document.querySelectorAll('*')).filter(el => el.tagName === 'SECTION'));
       return [];
     }
 
@@ -249,7 +259,20 @@
   // DOT NAVIGATION
   // ===============================================
   function createDotNavigation() {
-    if (!isHomepage() || scrollSystem.arrSections.length < 2) return;
+    console.log('🎯 createDotNavigation called:', {
+      isHomepage: isHomepage(),
+      sectionsLength: scrollSystem.arrSections.length,
+      sections: scrollSystem.arrSections,
+      shouldCreate: isHomepage() && scrollSystem.arrSections.length >= 2
+    });
+    
+    if (!isHomepage() || scrollSystem.arrSections.length < 2) {
+      console.log('❌ Dot navigation creation blocked:', {
+        isHomepage: isHomepage(),
+        sectionsLength: scrollSystem.arrSections.length
+      });
+      return;
+    }
     
     let dotContainer = document.getElementById('section-dots');
     
@@ -537,21 +560,37 @@
   // INITIALIZATION
   // ===============================================
   function initializeScrollSystem() {
-    if (scrollSystem.initialized || !isHomepage()) return;
+    if (scrollSystem.initialized || !isHomepage()) {
+      console.log('❌ Initialization blocked:', {
+        alreadyInitialized: scrollSystem.initialized,
+        isHomepage: isHomepage(),
+        pathname: window.location.pathname
+      });
+      return;
+    }
     
-    console.log('🚀 Initializing scroll system...');
+    console.log('🚀 Initializing scroll system...', {
+      timestamp: new Date().toISOString(),
+      pathname: window.location.pathname,
+      bodyClasses: document.body.className
+    });
     
     calculateSectionPositions();
     
-    const minSections = IS_MOBILE ? 2 : 4;
+    // FIXED: Use consistent requirement across devices to ensure dots appear
+    const minSections = 2; // Lowered from 4 for desktop
     scrollSystem.isEnabled = scrollSystem.arrSections.length >= minSections;
     scrollSystem.initialized = true;
     
-    console.log('📊 Analysis:', {
+    console.log('📊 DETAILED Analysis:', {
       sections: scrollSystem.arrSections.length,
       minRequired: minSections,
       enabled: scrollSystem.isEnabled,
-      device: IS_MOBILE ? 'Mobile' : 'Desktop'
+      device: IS_MOBILE ? 'Mobile' : 'Desktop',
+      sectionPositions: scrollSystem.arrSections,
+      isHomepage: isHomepage(),
+      bodyClasses: document.body.className,
+      pathname: window.location.pathname
     });
     
     if (scrollSystem.isEnabled) {
@@ -568,6 +607,15 @@
       }
     } else {
       console.log('❌ Scroll system disabled - not enough sections');
+      
+      // RETRY MECHANISM: Try again after a delay in case sections are still loading
+      setTimeout(() => {
+        if (!scrollSystem.initialized) {
+          console.log('🔄 Retrying scroll system initialization...');
+          scrollSystem.initialized = false; // Reset flag
+          initializeScrollSystem();
+        }
+      }, 1000);
     }
   }
 
