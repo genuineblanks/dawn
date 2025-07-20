@@ -1,0 +1,455 @@
+/* ===============================================
+   WHY WE'RE DIFFERENT LANDING PAGE
+   GenuineBlanks - Mobile-First Design
+   =============================================== */
+
+/* Reset and Base Styles */
+.why-different-page {
+  --viewport-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Dynamic viewport height for mobile browsers */
+@supports (height: 100dvh) {
+  .why-different-page {
+    --viewport-height: 100dvh;
+  }
+}
+
+/* ===============================================
+   INTRO SECTION
+   =============================================== */
+
+.why-different-intro {
+  position: relative;
+  height: var(--viewport-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+.why-different-intro__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.why-different-intro__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+.why-different-intro__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.why-different-intro__title {
+  font-family: var(--font-heading-family), sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.why-different-intro__subtitle {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 300;
+  margin: 0 0 3rem;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.scroll-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: pulse 2s infinite;
+}
+
+.scroll-icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ===============================================
+   CARD SECTIONS
+   =============================================== */
+
+.why-different-card {
+  position: relative;
+  min-height: var(--viewport-height);
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  transition: background-color 0.6s ease;
+}
+
+.why-different-card--dark {
+  background: #000;
+  color: #fff;
+}
+
+.why-different-card--light {
+  background: #fff;
+  color: #000;
+}
+
+.why-different-card__content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .why-different-card__content {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+  }
+}
+
+.why-different-card__text {
+  position: relative;
+}
+
+.why-different-card__headline {
+  font-family: var(--font-heading-family), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.why-different-card__description {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  line-height: 1.5;
+  margin: 0 0 2rem;
+  opacity: 0.9;
+}
+
+.why-different-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+}
+
+.why-different-card--light .why-different-badge {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.why-different-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.why-different-badge:hover::before {
+  left: 100%;
+}
+
+/* ===============================================
+   SPLIT COMPARISON VISUALS
+   =============================================== */
+
+.why-different-card__visual {
+  position: relative;
+}
+
+.split-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.split-comparison__side {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.split-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+.split-comparison__others {
+  background: #666;
+}
+
+.split-comparison__us {
+  background: #000;
+}
+
+.split-comparison img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.split-comparison__side:hover img {
+  transform: scale(1.05);
+}
+
+.placeholder-image {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ===============================================
+   STICKY CTA BAR
+   =============================================== */
+
+.why-different-cta-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.why-different-cta-bar.show {
+  transform: translateY(0);
+}
+
+.why-different-cta-bar__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 767px) {
+  .why-different-cta-bar__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+}
+
+.why-different-cta-bar__text {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.why-different-cta-bar__button {
+  background: #fff;
+  color: #000;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.why-different-cta-bar__button:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+}
+
+/* ===============================================
+   PROGRESS INDICATOR
+   =============================================== */
+
+.why-different-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 101;
+}
+
+.why-different-progress__bar {
+  height: 100%;
+  background: linear-gradient(90deg, #fff, #ddd);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* ===============================================
+   SCROLL ANIMATIONS
+   =============================================== */
+
+.why-different-card {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.why-different-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.split-comparison__side {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.why-different-card.animate-in .split-comparison__side {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.split-comparison__side:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.split-comparison__side:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+/* ===============================================
+   MOBILE OPTIMIZATIONS
+   =============================================== */
+
+@media screen and (max-width: 767px) {
+  .why-different-intro__content {
+    padding: 0 1rem;
+  }
+  
+  .why-different-card__content {
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+  
+  .split-comparison {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+  
+  .split-comparison__side {
+    aspect-ratio: 16/9;
+  }
+  
+  .why-different-card {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+  
+  /* Enable swipe gestures on mobile */
+  .why-different-page {
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===============================================
+   ACCESSIBILITY & PERFORMANCE
+   =============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-prompt {
+    animation: none;
+  }
+  
+  .why-different-card,
+  .split-comparison__side,
+  .why-different-cta-bar {
+    transition: none;
+  }
+  
+  .split-comparison img {
+    transition: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.why-different-cta-bar__button:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .why-different-cta-bar,
+  .why-different-progress {
+    display: none;
+  }
+  
+  .why-different-card {
+    min-height: auto;
+    page-break-inside: avoid;
+  }
+}
