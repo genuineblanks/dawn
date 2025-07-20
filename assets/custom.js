@@ -1337,19 +1337,49 @@ function updateCurrentSectionFromScrollPosition() {
   let closestSection = 0;
   let minDistance = Infinity;
   
-  // SIMPLIFIED: Standard section detection for both mobile and desktop
-  const detectionTolerance = 50;
+  // SAFETY CHECK: Must have sections
+  if (!scrollSystem.arrSections || scrollSystem.arrSections.length === 0) {
+    return;
+  }
   
+  // FIXED: Find truly closest section by checking all sections
   scrollSystem.arrSections.forEach((sectionTop, index) => {
     const distance = Math.abs(currentScrollPos - sectionTop);
-    
-    // MOBILE: Use natural distance calculation (no viewport snapping)
     
     if (distance < minDistance) {
       minDistance = distance;
       closestSection = index;
     }
   });
+  
+  // MOBILE FIX: Use improved viewport-based detection 
+  if (isMobileDevice()) {
+    const viewportHeight = window.innerHeight;
+    const scrollCenter = currentScrollPos + (viewportHeight / 3); // Use top third for better mobile feel
+    
+    // Find the section closest to the scroll center, not just first match
+    let bestDistance = Infinity;
+    let bestSection = 0;
+    
+    for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+      const sectionStart = scrollSystem.arrSections[i];
+      const distance = Math.abs(scrollCenter - sectionStart);
+      
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestSection = i;
+      }
+    }
+    
+    closestSection = bestSection;
+    console.log('📱 Mobile section detection:', {
+      currentScrollPos,
+      scrollCenter,
+      viewportHeight,
+      detectedSection: closestSection,
+      sectionTop: scrollSystem.arrSections[closestSection]
+    });
+  }
   
   const oldSection = scrollSystem.currentSection;
   
