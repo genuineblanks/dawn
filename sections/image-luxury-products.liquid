@@ -303,6 +303,27 @@
   .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
     .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
     .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
+    
+    /* Animation Safe Overrides */
+    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger {
+      transition: all var(--duration-extra-long) var(--ease-out-slow) !important;
+    }
+    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger.animate--fade-in {
+      opacity: 0.01 !important;
+    }
+    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger.animate--slide-in {
+      opacity: 0.01 !important;
+      transform: translateY(2rem) !important;
+    }
+    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger:not(.scroll-trigger--offscreen).animate--fade-in {
+      opacity: 1 !important;
+      animation: var(--animation-fade-in) !important;
+      animation-delay: calc(var(--animation-order) * 75ms) !important;
+    }
+    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger:not(.scroll-trigger--offscreen).animate--slide-in {
+      animation: var(--animation-slide-in) !important;
+      animation-delay: calc(var(--animation-order) * 75ms) !important;
+    }
 {% endstyle %}
 
 {% schema %}
