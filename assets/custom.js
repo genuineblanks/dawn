@@ -1346,23 +1346,48 @@ function goToSection(sectionIndex) {
 // SECTION POSITION CALCULATIONS
 // ===============================================
 function calculateSectionPositions() {
-  if (!scrollSystem.$sections || scrollSystem.$sections.length === 0 || !isHomepage()) return;
+  console.log('🔧 CALCULATING SECTION POSITIONS:', {
+    hasJQuerySections: !!scrollSystem.$sections,
+    sectionCount: scrollSystem.$sections ? scrollSystem.$sections.length : 0,
+    isHomepage: isHomepage(),
+    isMobile: isMobileDevice(),
+    viewportHeight: window.innerHeight
+  });
+  
+  if (!scrollSystem.$sections || scrollSystem.$sections.length === 0 || !isHomepage()) {
+    console.log('❌ Cannot calculate positions - missing sections or not homepage');
+    return;
+  }
   
   const oldPositions = [...scrollSystem.arrSections];
   
   // ENHANCED: Better mobile section position calculation
   scrollSystem.arrSections = scrollSystem.$sections.map(function(index) {
     const section = $(this);
-    let sectionTop = section.offset().top;
+    const originalTop = section.offset().top;
+    let sectionTop = originalTop;
+    
+    console.log(`🔧 Section ${index} calculation:`, {
+      originalTop: originalTop,
+      sectionHTML: section[0] ? section[0].tagName + (section[0].className ? '.' + section[0].className.split(' ')[0] : '') : 'unknown'
+    });
     
     // ANDROID FIX: Ensure sections align to viewport boundaries
     if (isMobileDevice()) {
       const viewportHeight = window.innerHeight;
       const expectedPosition = index * viewportHeight;
+      const snapDistance = Math.abs(originalTop - expectedPosition);
+      
+      console.log(`📱 Android fix analysis for section ${index}:`, {
+        originalTop: originalTop,
+        expectedPosition: expectedPosition,
+        snapDistance: snapDistance,
+        willSnap: snapDistance < 100
+      });
       
       // If section is close to expected viewport position, snap it
-      if (Math.abs(sectionTop - expectedPosition) < 100) {
-        console.log('📱 Android fix - snapping section', index, 'from', sectionTop, 'to', expectedPosition);
+      if (snapDistance < 100) {
+        console.log('📱 Android fix - snapping section', index, 'from', originalTop, 'to', expectedPosition);
         sectionTop = expectedPosition;
       }
       
@@ -1373,10 +1398,15 @@ function calculateSectionPositions() {
       }
     }
     
+    console.log(`✅ Section ${index} final position:`, sectionTop);
     return sectionTop;
   }).get();
   
-  console.log('📍 Enhanced section positions (Android optimized):', scrollSystem.arrSections);
+  console.log('📍 FINAL SECTION POSITIONS:', {
+    oldPositions: oldPositions,
+    newPositions: scrollSystem.arrSections,
+    changed: JSON.stringify(oldPositions) !== JSON.stringify(scrollSystem.arrSections)
+  });
   updateCurrentSectionFromScrollPosition();
   
   return oldPositions;
@@ -1389,11 +1419,35 @@ function updateCurrentSectionFromScrollPosition() {
   let closestSection = 0;
   let minDistance = Infinity;
   
+  // CRITICAL DEBUG: Check if arrSections is properly populated
+  console.log('🔍 SECTION DETECTION DEBUG:', {
+    currentScrollPos: currentScrollPos,
+    arrSectionsLength: scrollSystem.arrSections.length,
+    arrSections: scrollSystem.arrSections,
+    isMobile: isMobileDevice(),
+    isEnabled: scrollSystem.isEnabled,
+    currentSection: scrollSystem.currentSection
+  });
+  
+  // SAFETY CHECK: If no sections found, exit early
+  if (!scrollSystem.arrSections || scrollSystem.arrSections.length === 0) {
+    console.log('❌ No sections found in arrSections - cannot detect current section');
+    return;
+  }
+  
   // ENHANCED: Better section detection with tolerance for mobile
   const detectionTolerance = isMobileDevice() ? 75 : 50; // More forgiving for mobile
   
   scrollSystem.arrSections.forEach((sectionTop, index) => {
     const distance = Math.abs(currentScrollPos - sectionTop);
+    
+    console.log(`🔍 Section ${index} analysis:`, {
+      sectionTop: sectionTop,
+      distance: distance,
+      currentClosest: closestSection,
+      currentMinDistance: minDistance,
+      withinTolerance: isMobileDevice() && distance <= detectionTolerance
+    });
     
     // ANDROID FIX: If we're within tolerance, prefer viewport-aligned positions
     if (isMobileDevice() && distance <= detectionTolerance) {
@@ -1401,20 +1455,32 @@ function updateCurrentSectionFromScrollPosition() {
       const expectedPosition = index * viewportHeight;
       const viewportAlignedDistance = Math.abs(currentScrollPos - expectedPosition);
       
+      console.log(`📱 ANDROID FIX for section ${index}:`, {
+        viewportHeight: viewportHeight,
+        expectedPosition: expectedPosition,
+        viewportAlignedDistance: viewportAlignedDistance,
+        betterThanOriginal: viewportAlignedDistance < distance,
+        betterThanMin: viewportAlignedDistance < minDistance
+      });
+      
       // If viewport-aligned position is closer, use that for comparison
       if (viewportAlignedDistance < distance) {
         console.log('📱 Using viewport-aligned detection for section', index);
         if (viewportAlignedDistance < minDistance) {
+          const previousClosest = closestSection;
           minDistance = viewportAlignedDistance;
           closestSection = index;
+          console.log(`📱 NEW VIEWPORT CLOSEST: ${previousClosest} → ${index}`);
         }
         return;
       }
     }
     
     if (distance < minDistance) {
+      const previousClosest = closestSection;
       minDistance = distance;
       closestSection = index;
+      console.log(`📍 NEW NORMAL CLOSEST: ${previousClosest} → ${index}`);
     }
   });
   
@@ -1430,6 +1496,15 @@ function updateCurrentSectionFromScrollPosition() {
       willUpdate: oldSection !== closestSection
     });
   }
+  
+  console.log('🎯 FINAL DETECTION RESULT:', {
+    finalClosestSection: closestSection,
+    finalMinDistance: minDistance,
+    oldSection: oldSection,
+    willUpdate: oldSection !== closestSection,
+    currentScrollPos: currentScrollPos,
+    duringAnimation: scrollSystem.inScroll
+  });
   
   scrollSystem.currentSection = closestSection;
   
