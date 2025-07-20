@@ -43,8 +43,22 @@
   function init() {
     if (state.initialized) return;
     
+    console.log('🎯 Why Different: Starting initialization...');
+    
     // Cache DOM elements
     cacheElements();
+    
+    // Verify we found the elements
+    if (!elements.page || !elements.cards || elements.cards.length === 0) {
+      console.error('❌ Why Different: Required elements not found');
+      return;
+    }
+    
+    console.log('🎯 Found elements:', {
+      page: !!elements.page,
+      cards: elements.cards.length,
+      ctaBar: !!elements.ctaBar
+    });
     
     // Check if we're on mobile
     state.isMobile = window.innerWidth < CONFIG.MOBILE_BREAKPOINT;
@@ -58,8 +72,14 @@
     // Initial progress update
     updateProgress();
     
+    // Force initial state
+    setTimeout(() => {
+      updateProgress();
+      updateCTABar();
+    }, 100);
+    
     state.initialized = true;
-    console.log('🎯 Why Different: Interactions initialized');
+    console.log('✅ Why Different: Interactions initialized successfully');
   }
 
   /**
@@ -94,12 +114,104 @@
       setupTouchEvents();
     }
     
+    // Card click events for expansion
+    setupCardClickEvents();
+    
     // Intersection Observer for card animations
     setupIntersectionObserver();
     
     // CTA button analytics (if needed)
     if (elements.ctaButton) {
       elements.ctaButton.addEventListener('click', handleCtaClick);
+    }
+  }
+
+  /**
+   * Set up click events for card expansion
+   */
+  function setupCardClickEvents() {
+    console.log('🎯 Setting up card click events for', elements.cards.length, 'cards');
+    
+    elements.cards.forEach((card, index) => {
+      // Remove any existing listeners
+      card.removeEventListener('click', handleCardClick);
+      
+      // Add new click listener
+      const clickHandler = (e) => {
+        console.log('🎯 Card clicked:', index + 1, e.target);
+        
+        // Prevent expansion when clicking on images or other interactive elements
+        if (e.target.closest('.split-comparison') || e.target.closest('.why-different-badge')) {
+          console.log('🎯 Ignoring click on interactive element');
+          return;
+        }
+        
+        e.preventDefault();
+        e.stopPropagation();
+        handleCardClick(card, index);
+      };
+      
+      card.addEventListener('click', clickHandler);
+      
+      // Force cursor pointer styling
+      card.style.cursor = 'pointer';
+      card.style.pointerEvents = 'auto';
+      
+      console.log('✅ Click handler added to card', index + 1);
+    });
+  }
+
+  /**
+   * Handle card click for expansion
+   */
+  function handleCardClick(card, index) {
+    console.log('🎯 Handling card click for card', index + 1);
+    
+    const isExpanded = card.classList.contains('expanded');
+    console.log('🎯 Card current state - expanded:', isExpanded);
+    
+    // Close all other expanded cards first
+    elements.cards.forEach((otherCard, otherIndex) => {
+      if (otherCard !== card) {
+        otherCard.classList.remove('expanded');
+        updateClickIndicator(otherCard, false);
+        console.log('🎯 Closed card', otherIndex + 1);
+      }
+    });
+    
+    // Toggle current card
+    if (isExpanded) {
+      card.classList.remove('expanded');
+      updateClickIndicator(card, false);
+      console.log('🎯 Card', index + 1, 'collapsed');
+    } else {
+      card.classList.add('expanded');
+      updateClickIndicator(card, true);
+      console.log('🎯 Card', index + 1, 'expanded');
+      
+      // Smooth scroll to keep the card centered if needed
+      setTimeout(() => {
+        const cardRect = card.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        if (cardRect.bottom > viewportHeight * 0.9) {
+          card.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 300);
+    }
+  }
+
+  /**
+   * Update click indicator visual state
+   */
+  function updateClickIndicator(card, isExpanded) {
+    const indicator = card.querySelector('.click-indicator');
+    if (indicator) {
+      indicator.textContent = isExpanded ? '−' : '+';
+      indicator.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
     }
   }
 
@@ -245,6 +357,11 @@
     updateProgress();
     updateCTABar();
     state.currentCard = getCurrentCard();
+    
+    // Debug scroll position
+    if (window.location.search.includes('debug=true')) {
+      console.log('📍 Scroll position:', window.pageYOffset, 'Current card:', state.currentCard);
+    }
   }
 
   /**
@@ -254,10 +371,26 @@
     if (!elements.progressBar) return;
 
     const scrollTop = window.pageYOffset;
-    const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollTop / documentHeight) * 100;
+    
+    // Calculate based on the last card position instead of full document
+    // This prevents footer from affecting the progress calculation
+    let documentHeight;
+    if (elements.cards.length > 0) {
+      const lastCard = elements.cards[elements.cards.length - 1];
+      const lastCardBottom = lastCard.offsetTop + lastCard.offsetHeight;
+      documentHeight = lastCardBottom - window.innerHeight;
+    } else {
+      documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+    }
+    
+    const scrollPercent = Math.min((scrollTop / documentHeight) * 100, 100);
 
-    elements.progressBar.style.width = Math.min(scrollPercent, 100) + '%';
+    elements.progressBar.style.width = scrollPercent + '%';
+    
+    // Debug progress
+    if (window.location.search.includes('debug=true')) {
+      console.log('📊 Progress:', scrollPercent.toFixed(1) + '%');
+    }
   }
 
   /**
