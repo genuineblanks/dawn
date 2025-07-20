@@ -1354,6 +1354,48 @@ function calculateSectionPositions() {
   return oldPositions;
 }
 
+// MOBILE-SPECIFIC SECTION DETECTION (no blocking flags)
+function updateMobileSectionDetection() {
+  if (!isHomepage() || !scrollSystem.arrSections || scrollSystem.arrSections.length === 0) return;
+  
+  const currentScrollPos = window.pageYOffset;
+  const viewportHeight = window.innerHeight;
+  let closestSection = 0;
+  
+  // If at top of page, always use section 0
+  if (currentScrollPos < 50) {
+    closestSection = 0;
+  } else {
+    // Find section with most viewport overlap
+    const scrollTop = currentScrollPos;
+    const scrollBottom = currentScrollPos + viewportHeight;
+    let bestOverlap = 0;
+    
+    for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+      const sectionStart = scrollSystem.arrSections[i];
+      const sectionEnd = i < scrollSystem.arrSections.length - 1 
+        ? scrollSystem.arrSections[i + 1] 
+        : sectionStart + viewportHeight * 2;
+      
+      const overlapStart = Math.max(scrollTop, sectionStart);
+      const overlapEnd = Math.min(scrollBottom, sectionEnd);
+      const overlap = Math.max(0, overlapEnd - overlapStart);
+      
+      if (overlap > bestOverlap) {
+        bestOverlap = overlap;
+        closestSection = i;
+      }
+    }
+  }
+  
+  const oldSection = scrollSystem.currentSection;
+  scrollSystem.currentSection = closestSection;
+  
+  if (oldSection !== closestSection) {
+    updateDotNavigation();
+  }
+}
+
 function updateCurrentSectionFromScrollPosition() {
   if (!isHomepage()) return;
   
@@ -1701,24 +1743,18 @@ function initializeAllFeatures() {
    });
    
    $(window).on('scroll.dotNavigation', function() {
-     // CRITICAL DEBUG: Log all scroll events
+     if (!scrollSystem.initialized) return;
+     
      const currentScroll = window.pageYOffset;
      
-     if (scrollSystem.inScroll) {
-       console.log('🔄 🔄 Scroll event fired DURING ANIMATION:', {
-         currentScroll: currentScroll,
-         inScroll: scrollSystem.inScroll,
-         willUpdate: false
-       });
-     }
-     
-     if (scrollSystem.initialized && !scrollSystem.inScroll) {
-       if (isMobileDevice()) {
-         console.log('📱 Mobile scroll event - updating dots:', currentScroll);
-       } else {
-         console.log('🔄 Desktop scroll event processing:', currentScroll);
+     if (isMobileDevice()) {
+       // MOBILE FIX: Always update dots on mobile, ignore blocking flags
+       updateMobileSectionDetection();
+     } else {
+       // DESKTOP: Keep existing logic with animation checks
+       if (!scrollSystem.inScroll) {
+         updateCurrentSectionFromScrollPosition();
        }
-       updateCurrentSectionFromScrollPosition();
      }
    });
 }
