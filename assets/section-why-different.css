@@ -483,6 +483,40 @@ body .why-different-page .click-indicator,
   opacity: 0.8;
 }
 
+/* COMPARISON TEXT OVERLAY INSIDE CARDS */
+body .why-different-page .comparison-text,
+.template-page .comparison-text,
+.why-different-page .comparison-text {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)) !important;
+  color: #fff !important;
+  padding: 2rem 1rem 1rem !important;
+  transform: translateY(100%) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  opacity: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+body .why-different-page .split-comparison__side:hover .comparison-text,
+.template-page .split-comparison__side:hover .comparison-text,
+.why-different-page .split-comparison__side:hover .comparison-text {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+body .why-different-page .comparison-text p,
+.template-page .comparison-text p,
+.why-different-page .comparison-text p {
+  margin: 0 !important;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem) !important;
+  line-height: 1.4 !important;
+  font-weight: 500 !important;
+}
+
 /* ===============================================
    STICKY CTA BAR
    =============================================== */
