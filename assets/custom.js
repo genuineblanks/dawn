@@ -76,6 +76,11 @@ let disabledListeners = [];
 let originalListeners = {};
 let globalAnimationTimeout = null;
 
+// USER INTERACTION PRIORITY SYSTEM
+let userInteractionActive = false;
+let userInteractionTimeout = null;
+let animationCompletionDelay = 500; // ms to wait after animation before allowing auto-updates
+
 // ===============================================
 // MOBILE TOUCH SUPPORT - COMPLETELY REWRITTEN FOR RELIABILITY
 // ===============================================
@@ -1026,6 +1031,12 @@ function createDotNavigation() {
       e.preventDefault();
       e.stopPropagation();
       console.log('🎯 Dot clicked:', index, 'going to section at position:', scrollSystem.arrSections[index]);
+      
+      // USER INTERACTION PRIORITY: Set flag to prevent auto-updates
+      userInteractionActive = true;
+      clearTimeout(userInteractionTimeout);
+      console.log('🎯 User interaction started - blocking auto-updates');
+      
       goToSection(index);
     };
     
@@ -1037,6 +1048,12 @@ function createDotNavigation() {
       e.preventDefault();
       e.stopPropagation();
       console.log('📱 Dot touched:', index);
+      
+      // USER INTERACTION PRIORITY: Set flag to prevent auto-updates
+      userInteractionActive = true;
+      clearTimeout(userInteractionTimeout);
+      console.log('📱 User touch interaction started - blocking auto-updates');
+      
       goToSection(index);
     };
     
@@ -1239,6 +1256,13 @@ function goToSection(sectionIndex) {
       // Clear global timeout
       clearTimeout(globalAnimationTimeout);
       
+      // USER INTERACTION PRIORITY: Clear user interaction flag after delay
+      clearTimeout(userInteractionTimeout);
+      userInteractionTimeout = setTimeout(() => {
+        userInteractionActive = false;
+        console.log('✅ User interaction timeout cleared - auto-updates re-enabled');
+      }, animationCompletionDelay);
+      
       console.log(`✅ ✅ ${deviceType} Animation COMPLETE:`, {
         section: sectionIndex,
         duration: endTime - startTime + 'ms',
@@ -1333,9 +1357,15 @@ function calculateSectionPositions() {
 function updateCurrentSectionFromScrollPosition() {
   if (!isHomepage()) return;
   
-  // MOBILE: Don't update section during animations - prevents interference with dot clicks
-  if (isMobileDevice() && scrollSystem.inScroll) {
-    console.log('📱 Mobile section detection skipped during animation - preserving dot click target');
+  // CRITICAL FIX: Don't update section during animations on ANY device - prevents interference with dot clicks
+  if (scrollSystem.inScroll) {
+    console.log('🚫 Section detection skipped during animation - preserving user navigation target');
+    return;
+  }
+  
+  // USER INTERACTION PRIORITY: Don't auto-update during user interactions
+  if (userInteractionActive) {
+    console.log('🚫 Section detection skipped during user interaction - preserving user choice');
     return;
   }
   
@@ -1348,17 +1378,9 @@ function updateCurrentSectionFromScrollPosition() {
     return;
   }
   
-  // FIXED: Find truly closest section by checking all sections
-  scrollSystem.arrSections.forEach((sectionTop, index) => {
-    const distance = Math.abs(currentScrollPos - sectionTop);
-    
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestSection = index;
-    }
-  });
+  // IMPROVED: Use viewport-aware detection for both mobile and desktop
+  const viewportHeight = window.innerHeight;
   
-  // MOBILE FIX: Use improved section detection for natural scrolling
   if (isMobileDevice()) {
     // INITIAL LOAD FIX: If we're at the very top (within 50px), always use section 0
     if (currentScrollPos < 50) {
@@ -1396,6 +1418,35 @@ function updateCurrentSectionFromScrollPosition() {
         viewportHeight,
         detectedSection: closestSection,
         overlap: bestOverlap,
+        sectionTop: scrollSystem.arrSections[closestSection]
+      });
+    }
+  } else {
+    // DESKTOP: Use improved viewport-aware detection (less bias toward early sections)
+    if (currentScrollPos < 50) {
+      closestSection = 0;
+      console.log('🖥️ Desktop: At page top, using section 0');
+    } else {
+      // Use viewport center point for more accurate detection
+      const viewportCenter = currentScrollPos + (viewportHeight / 2);
+      let bestDistance = Infinity;
+      
+      for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+        const sectionStart = scrollSystem.arrSections[i];
+        // Calculate distance from viewport center to section start
+        const distance = Math.abs(viewportCenter - sectionStart);
+        
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          closestSection = i;
+        }
+      }
+      
+      console.log('🖥️ Desktop section detection:', {
+        currentScrollPos,
+        viewportCenter,
+        detectedSection: closestSection,
+        distance: bestDistance,
         sectionTop: scrollSystem.arrSections[closestSection]
       });
     }
