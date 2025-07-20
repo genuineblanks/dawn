@@ -63,14 +63,33 @@
   line-height: 1.1;
   margin: 0 0 1rem;
   letter-spacing: -0.02em;
+  animation: titleReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+  transform: translateY(50px);
 }
 
 .why-different-intro__subtitle {
   font-size: clamp(1.1rem, 3vw, 1.5rem);
   font-weight: 300;
   margin: 0 0 3rem;
-  opacity: 0.9;
+  opacity: 0;
   line-height: 1.4;
+  animation: subtitleReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+  transform: translateY(30px);
+}
+
+@keyframes titleReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtitleReveal {
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
 }
 
 .scroll-prompt {
@@ -81,7 +100,17 @@
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  animation: pulse 2s infinite;
+  animation: scrollPromptReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards, 
+             pulse 2s infinite 2s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes scrollPromptReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .scroll-icon {
@@ -105,7 +134,34 @@
   display: flex;
   align-items: center;
   padding: 2rem 0;
-  transition: background-color 0.6s ease;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.why-different-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+  transition: left 0.8s ease;
+  z-index: 1;
+}
+
+.why-different-card:hover::before {
+  left: 100%;
+}
+
+.why-different-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+.why-different-card--light:hover {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
 }
 
 .why-different-card--dark {
@@ -127,6 +183,13 @@
   grid-template-columns: 1fr;
   gap: 3rem;
   align-items: center;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.6s ease;
+}
+
+.why-different-card:hover .why-different-card__content {
+  transform: translateY(-10px);
 }
 
 @media screen and (min-width: 768px) {
@@ -138,6 +201,11 @@
 
 .why-different-card__text {
   position: relative;
+  transition: all 0.4s ease;
+}
+
+.why-different-card:hover .why-different-card__text {
+  transform: translateX(10px);
 }
 
 .why-different-card__headline {
@@ -147,6 +215,24 @@
   line-height: 1.1;
   margin: 0 0 1.5rem;
   letter-spacing: -0.02em;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.why-different-card__headline::after {
+  content: '→';
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%) translateX(20px);
+  opacity: 0;
+  transition: all 0.4s ease;
+  font-size: 0.6em;
+}
+
+.why-different-card:hover .why-different-card__headline::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 .why-different-card__description {
@@ -154,6 +240,86 @@
   line-height: 1.5;
   margin: 0 0 2rem;
   opacity: 0.9;
+  transition: opacity 0.4s ease;
+}
+
+.why-different-card:hover .why-different-card__description {
+  opacity: 1;
+}
+
+.why-different-card__expanded-text {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin-top: 1rem;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.why-different-card__expanded-text strong {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+}
+
+.why-different-card--light .why-different-card__expanded-text strong {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.why-different-card__expanded-text em {
+  font-style: italic;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.why-different-card--light .why-different-card__expanded-text {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.why-different-card.expanded .why-different-card__expanded-text {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 1.5rem;
+}
+
+.click-indicator {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  animation: clickPulse 2s infinite;
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.why-different-card--light .click-indicator {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.why-different-card:hover .click-indicator {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes clickPulse {
+  0%, 100% { 
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 
 .why-different-badge {
@@ -169,11 +335,23 @@
   letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .why-different-card--light .why-different-badge {
   background: rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.2);
+}
+
+.why-different-card:hover .why-different-badge {
+  transform: translateY(-5px) scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.why-different-card--light:hover .why-different-badge {
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .why-different-badge::before {
@@ -183,11 +361,11 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.6s ease;
 }
 
-.why-different-badge:hover::before {
+.why-different-card:hover .why-different-badge::before {
   left: 100%;
 }
 
@@ -244,11 +422,23 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(0.9) contrast(1.1);
+}
+
+.why-different-card:hover .split-comparison img {
+  transform: scale(1.05);
+  filter: brightness(1) contrast(1.2);
 }
 
 .split-comparison__side:hover img {
-  transform: scale(1.05);
+  transform: scale(1.1);
+  filter: brightness(1.1) contrast(1.3);
+}
+
+.why-different-card:hover .split-comparison {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
 }
 
 .placeholder-image {
