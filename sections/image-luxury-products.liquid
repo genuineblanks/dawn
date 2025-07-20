@@ -3,6 +3,67 @@
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
+<!-- CUSTOM HOMEPAGE ANIMATIONS - ISOLATED -->
+<style>
+  /* Homepage Collection Grid Animations - Independent System */
+  .homepage-collection-animation {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .homepage-collection-animation.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Staggered delays for collection items */
+  .homepage-collection-animation[data-delay="1"] { transition-delay: 0.1s; }
+  .homepage-collection-animation[data-delay="2"] { transition-delay: 0.2s; }
+  .homepage-collection-animation[data-delay="3"] { transition-delay: 0.3s; }
+  .homepage-collection-animation[data-delay="4"] { transition-delay: 0.4s; }
+  .homepage-collection-animation[data-delay="5"] { transition-delay: 0.5s; }
+  .homepage-collection-animation[data-delay="6"] { transition-delay: 0.6s; }
+  
+  /* Bottom text animation */
+  .homepage-bottom-animation {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.5s ease;
+    transition-delay: 0.7s;
+  }
+  
+  .homepage-bottom-animation.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<!-- CUSTOM ANIMATION TRIGGER SCRIPT - HOMEPAGE ONLY -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only run on homepage
+    if (!document.body.classList.contains('template-index')) return;
+    
+    function triggerAnimations() {
+      // Animate collection items
+      const collectionItems = document.querySelectorAll('.homepage-collection-animation');
+      collectionItems.forEach(function(item) {
+        item.classList.add('animate-in');
+      });
+      
+      // Animate bottom text
+      const bottomText = document.querySelector('.homepage-bottom-animation');
+      if (bottomText) {
+        bottomText.classList.add('animate-in');
+      }
+    }
+    
+    // Trigger animations after a short delay to ensure everything is loaded
+    setTimeout(triggerAnimations, 500);
+  });
+</script>
+
 {%- if section.settings.image_height == 'adapt' and section.settings.image != blank -%}
   {%- style -%}
     @media screen and (max-width: 749px) {
@@ -174,7 +235,7 @@
     </div>
     <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 5">
       {%- for block in section.blocks -%}
-        <li class="item-banner luxury-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 5 }}">
+        <li class="item-banner luxury-item homepage-collection-animation" data-delay="{{ forloop.index }}">
           {%- case block.type -%}
             {%- when 'heading' -%}
               <h2
@@ -278,10 +339,8 @@
       {%- endfor -%}
     </ul>
     {% if section.settings.banner_botton_text != blank %}
-      <div class="banner-bottom luxury-banner-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 12">
-        <div class="banner-bottom-content{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: 13">
-          {{ section.settings.banner_botton_text }}
-        </div>
+      <div class="banner-bottom luxury-banner-bottom homepage-bottom-animation">
+        {{ section.settings.banner_botton_text }}
       </div>
     {% endif %}
   </div>
@@ -303,27 +362,6 @@
   .product-count-{{productBlockCount}} { display: flex; flex-direction: column;}
     .product-count-7 ul.banner__box li:nth-child(3) {margin-left: 6px!important;}
     .product-count-7 ul.banner__box li {width: calc(100%/4.1);}
-    
-    /* Animation Safe Overrides */
-    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger {
-      transition: all var(--duration-extra-long) var(--ease-out-slow) !important;
-    }
-    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger.animate--fade-in {
-      opacity: 0.01 !important;
-    }
-    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger.animate--slide-in {
-      opacity: 0.01 !important;
-      transform: translateY(2rem) !important;
-    }
-    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger:not(.scroll-trigger--offscreen).animate--fade-in {
-      opacity: 1 !important;
-      animation: var(--animation-fade-in) !important;
-      animation-delay: calc(var(--animation-order) * 75ms) !important;
-    }
-    .product-count-{{productBlockCount}} ul.banner__box li.scroll-trigger:not(.scroll-trigger--offscreen).animate--slide-in {
-      animation: var(--animation-slide-in) !important;
-      animation-delay: calc(var(--animation-order) * 75ms) !important;
-    }
 {% endstyle %}
 
 {% schema %}
