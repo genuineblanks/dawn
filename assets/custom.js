@@ -281,53 +281,20 @@
     } else {
       dotContainer = document.createElement('div');
       dotContainer.id = 'section-dots';
-      dotContainer.className = 'section-dots';
+      dotContainer.className = 'section-dot-navigation'; // FIXED: Use correct CSS class
       document.body.appendChild(dotContainer);
     }
 
-    // Minimal styling to work with existing CSS
-    dotContainer.style.cssText = `
-      position: fixed;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      pointer-events: auto;
-    `;
+    // Let CSS handle all styling - don't override with inline styles
 
     for (let i = 0; i < scrollSystem.arrSections.length; i++) {
       const dot = document.createElement('div');
       dot.className = 'section-dot';
       dot.setAttribute('data-section', i);
       
-      // Clean styling that works with existing theme
-      dot.style.cssText = `
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        border: 2px solid rgba(255, 255, 255, 0.7);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-      `;
+      // Let CSS handle all dot styling
 
-      // Mobile touch area enhancement
-      if (IS_MOBILE) {
-        const touchArea = document.createElement('div');
-        touchArea.style.cssText = `
-          position: absolute;
-          top: -10px;
-          left: -10px;
-          right: -10px;
-          bottom: -10px;
-          z-index: 1;
-        `;
-        dot.appendChild(touchArea);
-      }
+      // CSS already handles mobile touch areas
 
       // Click handler
       const clickHandler = function(e) {
@@ -342,22 +309,7 @@
         dot.addEventListener('touchend', clickHandler);
       }
 
-      // Hover effects (desktop only)
-      if (!IS_MOBILE) {
-        dot.addEventListener('mouseenter', function() {
-          if (i !== scrollSystem.currentSection) {
-            dot.style.background = 'rgba(255, 255, 255, 0.8)';
-            dot.style.transform = 'scale(1.2)';
-          }
-        });
-        
-        dot.addEventListener('mouseleave', function() {
-          if (i !== scrollSystem.currentSection) {
-            dot.style.background = 'rgba(255, 255, 255, 0.6)';
-            dot.style.transform = 'scale(1)';
-          }
-        });
-      }
+      // CSS handles all hover effects - no JavaScript needed
 
       dotContainer.appendChild(dot);
     }
@@ -377,22 +329,10 @@
       const dot = dots[i];
       
       if (i === scrollSystem.currentSection) {
-        // Active dot
-        dot.style.background = 'rgba(255, 255, 255, 1)';
-        dot.style.border = '2px solid rgba(255, 255, 255, 1)';
-        dot.style.transform = 'scale(1.2)';
-        dot.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.5)';
-        dot.style.width = '12px';
-        dot.style.height = '12px';
+        // Active dot - CSS handles styling via .active class
         dot.classList.add('active');
       } else {
-        // Inactive dot
-        dot.style.background = 'rgba(255, 255, 255, 0.5)';
-        dot.style.border = '2px solid rgba(255, 255, 255, 0.7)';
-        dot.style.transform = 'scale(1)';
-        dot.style.boxShadow = 'none';
-        dot.style.width = '10px';
-        dot.style.height = '10px';
+        // Inactive dot - remove active class, CSS handles styling
         dot.classList.remove('active');
       }
     }
