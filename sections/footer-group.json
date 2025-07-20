@@ -1,1 +1,53 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"footer":{"type":"footer","blocks":{"image_yc4pqh":{"type":"image","settings":{"title":"Genuineblanks","richtext":"<p>Quick sign-up to our wholesale access program<\/p>","image_width":300,"alignment":"center"}}},"block_order":["image_yc4pqh"],"settings":{"color_scheme":"scheme-2","newsletter_enable":true,"newsletter_heading":"","newsletter_paragraph":"By click SIGN UP, you agree to receive marketing text meassages from GENB at the number provided, including messages sent by autodialer. Consent is not a condition of any purchase. Message and data rates may apply. Message frequency varies. View our Privacy Policy and Terms of Service","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":false,"enable_language_selector":false,"payment_enable":true,"show_policy":false,"show_policy_menu":"privacy-menu","copyright_text":"© 2024, Genuine blanks","margin_top":0,"padding_top":52,"padding_bottom":12}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "image_yc4pqh": {
+          "type": "image",
+          "settings": {
+            "title": "Genuineblanks",
+            "richtext": "<p>Quick sign-up to our wholesale access program</p>",
+            "image_width": 300,
+            "alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "image_yc4pqh"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "",
+        "newsletter_paragraph": "By click SIGN UP, you agree to receive marketing text meassages from GENB at the number provided, including messages sent by autodialer. Consent is not a condition of any purchase. Message and data rates may apply. Message frequency varies. View our Privacy Policy and Terms of Service",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": true,
+        "show_policy": false,
+        "show_policy_menu": "privacy-menu",
+        "copyright_text": "© 2024, Genuine blanks",
+        "margin_top": 0,
+        "padding_top": 52,
+        "padding_bottom": 12
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}
