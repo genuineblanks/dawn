@@ -747,6 +747,25 @@
   text-transform: uppercase !important;
 }
 
+/* Bottom Text Animation Enhancement */
+.banner-bottom-content {
+  position: relative !important;
+}
+
+.banner-bottom-content p.click-to-scroll span {
+  display: inline-block !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.banner-bottom-content p.click-to-scroll a {
+  display: inline-block !important;
+  transition: all 0.3s ease !important;
+}
+
+.banner-bottom-content p.click-to-scroll a:hover {
+  transform: translateY(-1px) !important;
+}
+
 /* PNG TRANSPARENCY FIXES */
 .luxury-product-image-container,
 .banner__box .luxury-item,
