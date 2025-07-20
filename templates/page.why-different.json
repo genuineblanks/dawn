@@ -12,9 +12,32 @@
     "why_different_landing": {
       "type": "why-different-pg",
       "settings": {
-        "cta_url": "/pages/tech-pack-submission"
+        "intro_title": "Why We're Different",
+        "intro_subtitle": "Discover the 5 pillars that set us apart",
+        "scroll_text": "Scroll to explore",
+        "intro_bg_image": "shopify://shop_images/Tech-Pack-Website-Page2EDIT.jpg",
+        "card1_headline": "No leftovers. Ever.",
+        "card1_description": "We spin & dye fabric just for your brand—never leftovers from others.",
+        "card1_badge": "Exclusive Fabric",
+        "card2_headline": "Zero guesswork.",
+        "card2_description": "Shrink, stretch, test—it all happens before we bulk-produce. You won't lose €10k.",
+        "card2_badge": "100% Pre-tested",
+        "card3_headline": "You matter.",
+        "card3_description": "Same account manager, same seamstress, every time—your brand thrives on consistency.",
+        "card3_badge": "Named Dedicated Team",
+        "card4_headline": "See it.",
+        "card4_description": "Visit Portugal. Film content. Watch your product born in real-time.",
+        "card4_badge": "Fully Transparent",
+        "card5_headline": "We build brands.",
+        "card5_description": "We treat each piece like it's your next bestseller—because it is.",
+        "card5_badge": "Brand-Building Mindset",
+        "cta_text": "Ready to build your brand — not just an order?",
+        "cta_button_text": "Get Your Custom Quote",
+        "cta_url": "shopify://pages/tech-pack-submission"
       }
     }
   },
-  "order": ["why_different_landing"]
+  "order": [
+    "why_different_landing"
+  ]
 }
