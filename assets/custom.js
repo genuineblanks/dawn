@@ -1360,39 +1360,45 @@ function updateCurrentSectionFromScrollPosition() {
   
   // MOBILE FIX: Use improved section detection for natural scrolling
   if (isMobileDevice()) {
-    const viewportHeight = window.innerHeight;
-    const scrollTop = currentScrollPos;
-    const scrollBottom = currentScrollPos + viewportHeight;
-    
-    // Find section that has the most overlap with the current viewport
-    let bestOverlap = 0;
-    let bestSection = 0;
-    
-    for (let i = 0; i < scrollSystem.arrSections.length; i++) {
-      const sectionStart = scrollSystem.arrSections[i];
-      const sectionEnd = i < scrollSystem.arrSections.length - 1 
-        ? scrollSystem.arrSections[i + 1] 
-        : sectionStart + viewportHeight * 2; // Give last section more space
+    // INITIAL LOAD FIX: If we're at the very top (within 50px), always use section 0
+    if (currentScrollPos < 50) {
+      closestSection = 0;
+      console.log('📱 Mobile: At page top, using section 0');
+    } else {
+      const viewportHeight = window.innerHeight;
+      const scrollTop = currentScrollPos;
+      const scrollBottom = currentScrollPos + viewportHeight;
       
-      // Calculate overlap between viewport and section
-      const overlapStart = Math.max(scrollTop, sectionStart);
-      const overlapEnd = Math.min(scrollBottom, sectionEnd);
-      const overlap = Math.max(0, overlapEnd - overlapStart);
+      // Find section that has the most overlap with the current viewport
+      let bestOverlap = 0;
+      let bestSection = 0;
       
-      if (overlap > bestOverlap) {
-        bestOverlap = overlap;
-        bestSection = i;
+      for (let i = 0; i < scrollSystem.arrSections.length; i++) {
+        const sectionStart = scrollSystem.arrSections[i];
+        const sectionEnd = i < scrollSystem.arrSections.length - 1 
+          ? scrollSystem.arrSections[i + 1] 
+          : sectionStart + viewportHeight * 2; // Give last section more space
+        
+        // Calculate overlap between viewport and section
+        const overlapStart = Math.max(scrollTop, sectionStart);
+        const overlapEnd = Math.min(scrollBottom, sectionEnd);
+        const overlap = Math.max(0, overlapEnd - overlapStart);
+        
+        if (overlap > bestOverlap) {
+          bestOverlap = overlap;
+          bestSection = i;
+        }
       }
+      
+      closestSection = bestSection;
+      console.log('📱 Mobile section detection:', {
+        currentScrollPos,
+        viewportHeight,
+        detectedSection: closestSection,
+        overlap: bestOverlap,
+        sectionTop: scrollSystem.arrSections[closestSection]
+      });
     }
-    
-    closestSection = bestSection;
-    console.log('📱 Mobile section detection:', {
-      currentScrollPos,
-      viewportHeight,
-      detectedSection: closestSection,
-      overlap: bestOverlap,
-      sectionTop: scrollSystem.arrSections[closestSection]
-    });
   }
   
   const oldSection = scrollSystem.currentSection;
@@ -1656,7 +1662,11 @@ function initializeAllFeatures() {
      }
      
      if (scrollSystem.initialized && !scrollSystem.inScroll) {
-       console.log('🔄 Normal scroll event processing:', currentScroll);
+       if (isMobileDevice()) {
+         console.log('📱 Mobile scroll event - updating dots:', currentScroll);
+       } else {
+         console.log('🔄 Desktop scroll event processing:', currentScroll);
+       }
        updateCurrentSectionFromScrollPosition();
      }
    });
