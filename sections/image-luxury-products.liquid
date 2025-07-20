@@ -3,6 +3,84 @@
 {% endif %}
 {{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
 
+<!-- CUSTOM HOMEPAGE ANIMATIONS - ISOLATED -->
+<style>
+  /* Homepage Collection Grid Animations - Safe with fallback */
+  .homepage-collection-animation {
+    opacity: 1; /* Default visible for safety */
+    transform: translateY(0);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Only hide when page is loaded */
+  .page-loaded .homepage-collection-animation {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .homepage-collection-animation.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Staggered delays for collection items */
+  .homepage-collection-animation[data-delay="1"] { transition-delay: 0.1s; }
+  .homepage-collection-animation[data-delay="2"] { transition-delay: 0.2s; }
+  .homepage-collection-animation[data-delay="3"] { transition-delay: 0.3s; }
+  .homepage-collection-animation[data-delay="4"] { transition-delay: 0.4s; }
+  .homepage-collection-animation[data-delay="5"] { transition-delay: 0.5s; }
+  .homepage-collection-animation[data-delay="6"] { transition-delay: 0.6s; }
+  
+  /* Bottom text animation - safe fallback */
+  .homepage-bottom-animation {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+  }
+  
+  .page-loaded .homepage-bottom-animation {
+    opacity: 0;
+    transform: translateY(15px);
+    transition-delay: 0.7s;
+  }
+  
+  .homepage-bottom-animation.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<!-- CUSTOM ANIMATION TRIGGER SCRIPT - HOMEPAGE ONLY -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only run on homepage
+    if (!document.body.classList.contains('template-index')) return;
+    
+    function initializeAnimations() {
+      // Add page-loaded class to trigger the hidden state
+      document.body.classList.add('page-loaded');
+      
+      // Then trigger animations after a brief moment
+      setTimeout(function() {
+        // Animate collection items
+        const collectionItems = document.querySelectorAll('.homepage-collection-animation');
+        collectionItems.forEach(function(item) {
+          item.classList.add('animate-in');
+        });
+        
+        // Animate bottom text
+        const bottomText = document.querySelector('.homepage-bottom-animation');
+        if (bottomText) {
+          bottomText.classList.add('animate-in');
+        }
+      }, 100);
+    }
+    
+    // Initialize animations after everything is loaded
+    setTimeout(initializeAnimations, 300);
+  });
+</script>
+
 {%- if section.settings.image_height == 'adapt' and section.settings.image != blank -%}
   {%- style -%}
     @media screen and (max-width: 749px) {
@@ -137,13 +215,13 @@
       {% if section.settings.banner_paragraph != blank %}
         <p class="luxury-paragraph">{{ section.settings.banner_paragraph }}</p>
       {% endif %}
-      <div class="towbutonbaner luxury-button-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 2">
+      <div class="towbutonbaner luxury-button-container">
         {% if section.settings.banner_subtext1 != blank %}
           <a
             {% if section.settings.banner_link_url1 != blank %}
               href="{{ section.settings.banner_link_url1 }}"
             {% endif %}
-            class="banner_subtext2 changeSection luxury-button luxury-button--primary"
+            class="banner_subtext2 changeSection luxury-button luxury-button--primary luxury-button--premium"
           >
             {{- section.settings.banner_subtext1 -}}
           </a>
@@ -153,7 +231,7 @@
             {% if section.settings.banner_link_url2 != blank %}
               href="{{ section.settings.banner_link_url2 }}"
             {% endif %}
-            class="banner_subtext1 changeSection luxury-button luxury-button--secondary"
+            class="banner_subtext1 changeSection luxury-button luxury-button--secondary luxury-button--premium"
           >
             {{- section.settings.banner_subtext2 -}}
           </a>
@@ -172,9 +250,9 @@
       {%- endif -%}
       <span class="no-minimum luxury-no-minimum{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 4">MADE IN PORTUGAL</span>
     </div>
-    <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+    <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 5">
       {%- for block in section.blocks -%}
-        <li class="item-banner luxury-item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 5 }}">
+        <li class="item-banner luxury-item homepage-collection-animation" data-delay="{{ forloop.index }}">
           {%- case block.type -%}
             {%- when 'heading' -%}
               <h2
@@ -191,8 +269,8 @@
                   class="banner__text products luxury-product-card rte {{ block.settings.text_style }}"
                   {{ block.shopify_attributes }}
                 >
-                  <a href="{{ productObj.url }}" class="luxury-product-link">
-                    <div class="luxury-product-image-container">
+                  <a href="{{ productObj.url }}" class="luxury-product-link{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 7 }}">
+                    <div class="luxury-product-image-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 6 }}">
                       {{
                         block.settings.product_image
                         | default: productObj.featured_image
@@ -201,12 +279,12 @@
                       }}
                     </div>
                     {% if block.settings.show_title != false %}
-                      <h2 class="banner__heading luxury-product-title inline-richtext">
+                      <h2 class="banner__heading luxury-product-title inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 8 }}">
                         {{ productObj.title | truncate: 20 }}
                       </h2>
                     {% endif %}
                     {% if block.settings.show_price != false %}
-                      <span class="luxury-product-price">{{ productObj.price | money }}</span>
+                      <span class="luxury-product-price{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 9 }}">{{ productObj.price | money }}</span>
                     {% endif %}
                   </a>
                 </div>
@@ -219,8 +297,8 @@
                   class="banner__text products luxury-product-card rte {{ block.settings.text_style }}"
                   {{ block.shopify_attributes }}
                 >
-                  <a href="{{ productObj.url }}" class="luxury-product-link">
-                    <div class="luxury-product-image-container">
+                  <a href="{{ productObj.url }}" class="luxury-product-link{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 7 }}">
+                    <div class="luxury-product-image-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 6 }}">
                       {{
                         block.settings.product_image
                         | default: productObj.featured_image
@@ -229,12 +307,12 @@
                       }}
                     </div>
                     {% if block.settings.show_title != false %}
-                      <h2 class="banner__heading luxury-product-title inline-richtext">
+                      <h2 class="banner__heading luxury-product-title inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 8 }}">
                         {{ productObj.title | truncate: 20 }}
                       </h2>
                     {% endif %}
                     {% if block.settings.show_price != false %}
-                      <span class="luxury-product-price">{{ productObj.price | money }}</span>
+                      <span class="luxury-product-price{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" style="--animation-order: {{ forloop.index | plus: 9 }}">{{ productObj.price | money }}</span>
                     {% endif %}
                   </a>
                 </div>
@@ -278,7 +356,9 @@
       {%- endfor -%}
     </ul>
     {% if section.settings.banner_botton_text != blank %}
-      <div class="banner-bottom luxury-banner-bottom{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="--animation-order: 12">{{ section.settings.banner_botton_text }}</div>
+      <div class="banner-bottom luxury-banner-bottom homepage-bottom-animation">
+        {{ section.settings.banner_botton_text }}
+      </div>
     {% endif %}
   </div>
 </div>
