@@ -188,25 +188,18 @@
       const viewportHeight = window.innerHeight;
       
       if (IS_MOBILE) {
-        // Mobile: Viewport overlap detection
-        const scrollTop = currentScrollPos;
-        const scrollBottom = currentScrollPos + viewportHeight;
+        // Mobile: Use scroll position + offset to determine which section we're closest to
+        const scrollReference = currentScrollPos + (viewportHeight * 0.3); // 30% from top feels more natural
         
-        let bestOverlap = 0;
+        let bestDistance = Infinity;
         let bestSection = 0;
         
         for (let i = 0; i < scrollSystem.arrSections.length; i++) {
           const sectionStart = scrollSystem.arrSections[i];
-          const sectionEnd = i < scrollSystem.arrSections.length - 1 
-            ? scrollSystem.arrSections[i + 1] 
-            : sectionStart + viewportHeight * 2;
+          const distance = Math.abs(scrollReference - sectionStart);
           
-          const overlapStart = Math.max(scrollTop, sectionStart);
-          const overlapEnd = Math.min(scrollBottom, sectionEnd);
-          const overlap = Math.max(0, overlapEnd - overlapStart);
-          
-          if (overlap > bestOverlap) {
-            bestOverlap = overlap;
+          if (distance < bestDistance) {
+            bestDistance = distance;
             bestSection = i;
           }
         }
@@ -214,8 +207,11 @@
         closestSection = bestSection;
         console.log('📱 Mobile section detection:', {
           currentScrollPos,
+          scrollReference,
           detectedSection: closestSection,
-          overlap: bestOverlap
+          distance: bestDistance,
+          sectionTop: scrollSystem.arrSections[closestSection],
+          allSections: scrollSystem.arrSections
         });
       } else {
         // Desktop: Center point detection
@@ -614,10 +610,81 @@
   window.updateDotNavigation = updateDotNavigation;
 
   // ===============================================
+  // MOBILE LAYOUT FIXES
+  // ===============================================
+  function applyMobileLayoutFixes() {
+    if (!IS_MOBILE) return;
+    
+    console.log('📱 Applying mobile layout fixes...');
+    
+    // Add critical mobile CSS that might have been lost
+    const mobileStyle = document.createElement('style');
+    mobileStyle.id = 'mobile-layout-fixes';
+    mobileStyle.textContent = `
+      /* Mobile Layout Restoration */
+      @media screen and (max-width: 768px) {
+        html, body {
+          scroll-behavior: auto !important;
+          -webkit-overflow-scrolling: touch;
+          overflow-x: hidden;
+        }
+        
+        body {
+          touch-action: pan-y !important;
+          overscroll-behavior: none !important;
+          position: relative !important;
+        }
+        
+        section {
+          min-height: 100vh;
+          position: relative !important;
+          overflow: visible !important;
+        }
+        
+        /* Ensure mobile sections fill viewport properly */
+        .banner, 
+        .image-banner,
+        .hero-section,
+        .autoplay-video,
+        .image-luxury-products,
+        .image-high-end-products {
+          min-height: var(--real-viewport-height, 100vh);
+          height: var(--real-viewport-height, 100vh);
+        }
+        
+        /* Fix mobile media scaling */
+        .banner__media,
+        .image-banner .banner__media {
+          height: var(--real-viewport-height, 100vh);
+          object-fit: cover;
+        }
+        
+        /* Ensure content is properly contained */
+        .banner__content,
+        .image-banner .banner__content {
+          position: absolute;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    `;
+    
+    document.head.appendChild(mobileStyle);
+    console.log('✅ Mobile layout fixes applied');
+  }
+
+  // ===============================================
   // INITIALIZATION SEQUENCE
   // ===============================================
   waitForJQuery(function() {
     console.log('📱 jQuery ready - initializing system');
+    
+    // Apply mobile layout fixes first
+    applyMobileLayoutFixes();
     
     if (isHomepage()) {
       setTimeout(initializeScrollSystem, 50);
