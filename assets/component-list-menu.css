@@ -133,4 +133,24 @@
   
   /* Active arrow effects disabled */
   
+  /* FOCUS OUTLINE ELIMINATION - Desktop Menu Specific */
+  .header__menu-item.list-menu__item:focus,
+  .header__menu-item.list-menu__item:focus-visible,
+  .header__menu-item.list-menu__item summary:focus,
+  .header__menu-item.list-menu__item summary:focus-visible,
+  .list-menu--disclosure:focus,
+  .list-menu--disclosure:focus-visible,
+  .list-menu__item:focus,
+  .list-menu__item:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #333333 !important; /* Keep existing border styling */
+  }
+  
+  /* Ensure all interactive elements in desktop menu have no blue outlines */
+  .header__menu .focus-inset:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
 }
