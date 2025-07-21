@@ -354,6 +354,108 @@ details[open].menu-opening > .menu-drawer__submenu {
 * {
   --color-scheme-5-background: #000000 !important;
   --color-scheme-5-button-label: #ffffff !important;
+  /* Override the problematic --color-foreground variable globally */
+  --color-foreground: 0, 0, 0 !important; /* RGB values for black */
+}
+
+/* GLOBAL FOCUS OUTLINE ELIMINATION - PROFESSIONAL STYLING */
+/* Override all focus-inset styles that cause blue outlines */
+.focus-inset:focus-visible,
+.focused.focus-inset,
+.no-js .focus-inset:focus,
+.focus-inset:focus,
+.focus-inset:active,
+*:focus-visible,
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  /* Professional subtle focus styling */
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+/* COMPREHENSIVE INTERACTIVE ELEMENT OVERRIDE */
+/* Remove blue outlines from ALL interactive elements */
+button:focus,
+button:focus-visible,
+button:active,
+a:focus,
+a:focus-visible,
+a:active,
+summary:focus,
+summary:focus-visible,
+summary:active,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+details:focus,
+details:focus-visible,
+.link:focus,
+.link:focus-visible,
+.header__menu-item:focus,
+.header__menu-item:focus-visible,
+.list-menu__item:focus,
+.list-menu__item:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  /* Professional subtle background change */
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* COMPONENT-SPECIFIC OVERRIDES */
+/* Override any component CSS that might use --color-foreground */
+.component-swatch-input *:focus-visible,
+.enhanced-color-picker *:focus-visible,
+.mobile-product-enhancements *:focus-visible,
+.component-interactive-tabs *:focus-visible,
+[class*="component-"] *:focus,
+[class*="component-"] *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* BROWSER DEFAULT OVERRIDES */
+/* Remove browser default focus styles completely */
+*::-moz-focus-inner {
+  border: 0 !important;
+  outline: none !important;
+}
+
+*:focus {
+  -moz-outline: none !important;
+  -webkit-outline: none !important;
+  outline: none !important;
+}
+
+/* Webkit specific overrides */
+*:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ABSOLUTE FINAL OVERRIDE - NUCLEAR OPTION */
+/* This ensures NO element can have a blue outline regardless of source */
+*,
+*::before,
+*::after {
+  /* Prevent any blue outlines from any source */
+  outline-color: transparent !important;
+  /* Override any CSS variables that could cause blue */
+  --outline-color: transparent !important;
+  --focus-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Force override inline styles that might contain blue */
+*[style*="outline"],
+*[style*="box-shadow"] {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Override any remaining blue colors globally */
