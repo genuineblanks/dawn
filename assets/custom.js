@@ -920,6 +920,11 @@ function waitForJQuery(callback) {
 // DOT NAVIGATION SYSTEM - FUNCTIONAL ELEGANT RIGHT-SIDE
 // ===============================================
 function createDotNavigation() {
+  // MOBILE REMOVAL: Skip dot navigation on mobile devices
+  if (isMobileDevice()) {
+    console.log('📱 Mobile device detected - skipping dot navigation creation');
+    return;
+  }
   console.log('🎯 Creating functional elegant dot navigation...');
   
   // Force remove any existing containers first
@@ -1146,6 +1151,11 @@ function updateDotNavigation() {
 }
 
 function goToSection(sectionIndex) {
+  // MOBILE REMOVAL: Block section navigation on mobile devices
+  if (isMobileDevice()) {
+    console.log('📱 Mobile device detected - section navigation disabled');
+    return;
+  }
   console.log('🔥 NEW GOTOSECTION VERSION 2024-07-10-FIXED CALLED for section:', sectionIndex);
   console.log('🔍 Pre-check: inScroll =', scrollSystem.inScroll, 'should be false to proceed');
   
@@ -1527,20 +1537,18 @@ function initializeScrollSystem() {
     return;
   }
   
-  // MOBILE: Natural scrolling (no restrictions)
-  if (IS_MOBILE_DEVICE) {
-    console.log('📱 Mobile device detected - using natural scrolling with dot navigation');
-    // Allow natural mobile scrolling behavior
-    document.body.style.touchAction = 'auto';
-    document.body.style.overscrollBehavior = 'auto';
-  } else {
-    console.log('🖥️ Desktop device detected - enabling desktop section scrolling');
-    // Desktop optimizations - Allow normal scrolling  
-    document.body.style.overscrollBehavior = 'auto';
-    document.body.style.touchAction = 'auto';
+  // MOBILE REMOVAL: Completely disable scroll system on mobile
+  if (isMobileDevice()) {
+    console.log('📱 Mobile device detected - scroll system disabled');
+    return;
   }
   
-  console.log('🚀 Initializing scroll system for', IS_MOBILE_DEVICE ? 'mobile' : 'desktop', '...');
+  console.log('🖥️ Desktop device detected - enabling desktop section scrolling');
+  // Desktop optimizations - Allow normal scrolling  
+  document.body.style.overscrollBehavior = 'auto';
+  document.body.style.touchAction = 'auto';
+  
+  console.log('🚀 Initializing scroll system for desktop...');
   
   scrollSystem.$sections = $('section');
   console.log('🔍 Found sections:', scrollSystem.$sections.length);
@@ -1745,16 +1753,14 @@ function initializeAllFeatures() {
    $(window).on('scroll.dotNavigation', function() {
      if (!scrollSystem.initialized) return;
      
-     const currentScroll = window.pageYOffset;
-     
+     // MOBILE REMOVAL: Skip all scroll handling on mobile
      if (isMobileDevice()) {
-       // MOBILE FIX: Always update dots on mobile, ignore blocking flags
-       updateMobileSectionDetection();
-     } else {
-       // DESKTOP: Keep existing logic with animation checks
-       if (!scrollSystem.inScroll) {
-         updateCurrentSectionFromScrollPosition();
-       }
+       return;
+     }
+     
+     // DESKTOP ONLY: Keep existing logic with animation checks
+     if (!scrollSystem.inScroll) {
+       updateCurrentSectionFromScrollPosition();
      }
    });
 }
