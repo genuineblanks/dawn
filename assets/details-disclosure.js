@@ -39,22 +39,6 @@ class HeaderMenu extends DetailsDisclosure {
   constructor() {
     super();
     this.header = document.querySelector('.header-wrapper');
-    this.onDocumentClick = this.onDocumentClick.bind(this);
-  }
-
-  connectedCallback() {
-    document.addEventListener('click', this.onDocumentClick);
-  }
-
-  disconnectedCallback() {
-    document.removeEventListener('click', this.onDocumentClick);
-  }
-
-  onDocumentClick(event) {
-    // Close menu when clicking outside
-    if (!this.contains(event.target) && this.mainDetailsToggle.hasAttribute('open')) {
-      this.close();
-    }
   }
 
   onToggle() {
