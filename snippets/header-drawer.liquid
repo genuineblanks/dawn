@@ -131,12 +131,57 @@
             </ul>
           </nav>
           
-          <!-- Learn More Button (matching desktop functionality) -->
+          <!-- Learn More Submenu (matching desktop functionality) -->
           <div class="menu-drawer__learn-more-container">
-            <a href="{{ pages.luxury-lookbook.url | default: '/pages/luxury-lookbook' }}" 
-               class="menu-drawer__learn-more-button luxury-link">
-              <span class="learn-more-text">Learn More</span>
-            </a>
+            <details id="Details-mobile-learn-more" class="menu-drawer__learn-more-details">
+              <summary class="menu-drawer__learn-more-button">
+                <span class="learn-more-text">Learn More</span>
+                <span class="learn-more-caret">
+                  {% render 'icon-caret' %}
+                </span>
+              </summary>
+              
+              <div class="menu-drawer__learn-more-submenu">
+                <ul class="learn-more-submenu-list" role="list">
+                  <li>
+                    <a href="{{ pages.luxury-lookbook.url | default: '/pages/luxury-lookbook' }}" 
+                       class="learn-more-submenu-item">
+                      <span>Luxury Lookbook</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ pages.what-we-offer.url | default: '/pages/what-we-offer' }}" 
+                       class="learn-more-submenu-item">
+                      <span>What We Offer</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ pages.how-does-it-work.url | default: '/pages/how-does-it-work' }}" 
+                       class="learn-more-submenu-item">
+                      <span>How It Works</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ pages.why-different.url | default: '/pages/why-different' }}" 
+                       class="learn-more-submenu-item">
+                      <span>Why Different</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ pages.aboutus.url | default: '/pages/about-us' }}" 
+                       class="learn-more-submenu-item">
+                      <span>About Us</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ pages.design-lab.url | default: '/pages/design-lab' }}" 
+                       class="learn-more-submenu-item">
+                      <span>Design Lab</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </details>
           </div>
           
           <div class="menu-drawer__utility-links">
