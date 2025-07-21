@@ -683,8 +683,9 @@ details[open].menu-opening > .menu-drawer__submenu {
     outline: none !important;
     box-shadow: none !important;
     border: none !important;
-    background: rgba(0, 0, 0, 0.05) !important;
+    background: rgba(0, 0, 0, 0.08) !important;
     color: #000000 !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
   
   /* Override any system focus styles */
@@ -693,6 +694,19 @@ details[open].menu-opening > .menu-drawer__submenu {
   .menu-drawer *:active {
     outline: none !important;
     box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Remove blue tap highlights from all interactive elements */
+  .menu-drawer a,
+  .menu-drawer button,
+  .menu-drawer summary,
+  .menu-drawer .menu-drawer__menu-item,
+  .menu-drawer .learn-more-submenu-item {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
   }
   
   /* Learn More Text */
