@@ -356,4 +356,19 @@ details[open].menu-opening > .menu-drawer__submenu {
     filter: none !important;
     transition: none !important;
   }
+  
+  /* Force vertical layout for mobile menu */
+  .menu-drawer__menu {
+    display: block !important;
+  }
+  
+  .menu-drawer__menu li {
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  .menu-drawer__menu-item {
+    display: block !important;
+    width: 100% !important;
+  }
 }
