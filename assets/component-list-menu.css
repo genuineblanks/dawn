@@ -64,19 +64,9 @@
     transform: translateX(-100%);
   }
   
-  /* Luxury Link Arrow Animation */
+  /* Luxury Link Arrow Animation - DISABLED for desktop menu */
   .header__menu-item.list-menu__item::after {
-    content: '→';
-    position: absolute;
-    right: -16px;
-    top: 50%;
-    transform: translateY(-50%) translateX(10px);
-    opacity: 0.6;
-    color: #333333;
-    font-size: 1rem;
-    font-weight: normal;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 2;
+    display: none;
   }
   
   /* Luxury Hover Effects */
@@ -93,12 +83,7 @@
     transform: translateX(0);
   }
   
-  .header__menu-item.list-menu__item:hover::after,
-  .header__menu-item.list-menu__item:focus::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-    color: #000000;
-  }
+  /* Arrow hover effects disabled */
   
   /* Active State */
   .header__menu-item.list-menu__item.list-menu__item--active {
@@ -112,23 +97,6 @@
     transform: translateX(0);
   }
   
-  .header__menu-item.list-menu__item.list-menu__item--active::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-    color: #000000;
-  }
+  /* Active arrow effects disabled */
   
-  /* Desktop Learn More Button Special Styling */
-  .desktop-learn-more .header__menu-item.list-menu__item {
-    font-weight: 500 !important;
-    font-size: 1.1rem !important;
-    color: #333333 !important;
-    margin-left: 1rem !important;
-    padding: 4px 8px 4px 0 !important;
-  }
-  
-  .desktop-learn-more .header__menu-item.list-menu__item:hover,
-  .desktop-learn-more .header__menu-item.list-menu__item:focus {
-    color: #000000 !important;
-  }
 }
