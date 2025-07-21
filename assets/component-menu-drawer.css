@@ -39,7 +39,7 @@ menu-drawer > details[open] > summary::before {
   -webkit-backdrop-filter: blur(40px);
   border-right: 1px solid rgba(18, 18, 18, 0.08);
   box-shadow: 0 20px 60px rgba(18, 18, 18, 0.15),
-              0 8px 25px rgba(51, 79, 180, 0.1),
+              0 8px 25px rgba(0, 0, 0, 0.1),
               inset 0 1px 0 rgba(255, 255, 255, 0.9);
   overflow-x: hidden;
   border-radius: 0 20px 20px 0;
@@ -205,7 +205,7 @@ details[open].menu-opening > .menu-drawer__submenu {
   left: 0;
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, rgba(51, 79, 180, 0.1), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
   transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border-radius: 0 16px 16px 0;
 }
@@ -215,11 +215,11 @@ details[open].menu-opening > .menu-drawer__submenu {
 .menu-drawer__close-button:focus,
 .menu-drawer__menu-item:hover,
 .menu-drawer__close-button:hover {
-  color: #334fb4;
-  background: rgba(255, 255, 255, 0.2);
-  border-left-color: #334fb4;
+  color: #000000;
+  background: rgba(0, 0, 0, 0.05);
+  border-left-color: #000000;
   transform: translateX(8px);
-  box-shadow: 0 4px 15px rgba(51, 79, 180, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .menu-drawer__menu-item:hover::before {
@@ -227,17 +227,17 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__menu-item--active {
-  background: linear-gradient(135deg, rgba(51, 79, 180, 0.15) 0%, rgba(255, 255, 255, 0.2) 100%);
-  border-left-color: #334fb4;
-  color: #334fb4;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0.2) 100%);
+  border-left-color: #000000;
+  color: #000000;
   font-weight: 600;
-  box-shadow: 0 6px 20px rgba(51, 79, 180, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .menu-drawer__menu-item--active:hover {
-  background: linear-gradient(135deg, rgba(51, 79, 180, 0.2) 0%, rgba(255, 255, 255, 0.25) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.25) 100%);
   transform: translateX(12px);
-  box-shadow: 0 8px 25px rgba(51, 79, 180, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .js .menu-drawer__menu-item .icon-caret,
@@ -350,6 +350,22 @@ details[open].menu-opening > .menu-drawer__submenu {
   padding: 1.1rem 1.1rem;
 }
 
+/* GLOBAL BLUE COLOR ELIMINATION - ENTIRE WEBSITE */
+* {
+  --color-scheme-5-background: #000000 !important;
+  --color-scheme-5-button-label: #ffffff !important;
+}
+
+/* Override any remaining blue colors globally */
+[style*="#334fb4"],
+[style*="rgb(51, 79, 180)"],
+[style*="rgba(51, 79, 180"] {
+  background-color: transparent !important;
+  color: #000000 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
 @media screen and (max-width: 749px) {
   .menu-drawer.country-selector-open {
     transform: none !important;
@@ -425,8 +441,8 @@ details[open].menu-opening > .menu-drawer__submenu {
     width: 0;
     height: 100%;
     background: linear-gradient(90deg, 
-      rgba(51, 79, 180, 0.08) 0%, 
-      rgba(51, 79, 180, 0.04) 50%, 
+      rgba(0, 0, 0, 0.08) 0%, 
+      rgba(0, 0, 0, 0.04) 50%, 
       transparent 100%);
     transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 0;
@@ -439,7 +455,7 @@ details[open].menu-opening > .menu-drawer__submenu {
     top: 50%;
     transform: translateY(-50%) translateX(20px);
     opacity: 0;
-    color: #334fb4;
+    color: #000000;
     font-size: 1.4rem;
     font-weight: bold;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -448,11 +464,11 @@ details[open].menu-opening > .menu-drawer__submenu {
   
   .menu-drawer__menu-item:hover,
   .menu-drawer__menu-item:focus {
-    color: #334fb4 !important;
-    background: rgba(51, 79, 180, 0.02) !important;
-    border-left-color: #334fb4 !important;
+    color: #000000 !important;
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-left-color: #000000 !important;
     transform: translateX(8px) !important;
-    box-shadow: 0 4px 20px rgba(51, 79, 180, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
   }
   
   .menu-drawer__menu-item:hover::before,
@@ -468,12 +484,12 @@ details[open].menu-opening > .menu-drawer__submenu {
   
   .menu-drawer__menu-item--active {
     background: linear-gradient(90deg, 
-      rgba(51, 79, 180, 0.12) 0%, 
-      rgba(51, 79, 180, 0.06) 100%) !important;
-    border-left-color: #334fb4 !important;
-    color: #334fb4 !important;
+      rgba(0, 0, 0, 0.12) 0%, 
+      rgba(0, 0, 0, 0.06) 100%) !important;
+    border-left-color: #000000 !important;
+    color: #000000 !important;
     font-weight: 700 !important;
-    box-shadow: 0 6px 25px rgba(51, 79, 180, 0.2) !important;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15) !important;
     transform: translateX(8px) !important;
   }
   
@@ -505,7 +521,7 @@ details[open].menu-opening > .menu-drawer__submenu {
   }
   
   .menu-drawer__account:hover {
-    color: #334fb4 !important;
+    color: #000000 !important;
     transform: translateX(4px) !important;
   }
   
@@ -524,10 +540,10 @@ details[open].menu-opening > .menu-drawer__submenu {
   }
   
   .menu-drawer .list-social__link:hover {
-    background: #334fb4 !important;
+    background: #000000 !important;
     color: white !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(51, 79, 180, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
   }
   
   /* ===== LUXURY STYLING FOR MOBILE MENU ===== */
@@ -697,16 +713,86 @@ details[open].menu-opening > .menu-drawer__submenu {
     -webkit-tap-highlight-color: transparent !important;
   }
   
-  /* Remove blue tap highlights from all interactive elements */
+  /* COMPREHENSIVE BLUE HIGHLIGHT REMOVAL - ALL SOURCES */
   .menu-drawer a,
   .menu-drawer button,
   .menu-drawer summary,
+  .menu-drawer details,
+  .menu-drawer li,
+  .menu-drawer *,
   .menu-drawer .menu-drawer__menu-item,
   .menu-drawer .learn-more-submenu-item {
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
     -webkit-user-select: none !important;
     user-select: none !important;
+    -webkit-appearance: none !important;
+    outline-color: transparent !important;
+  }
+
+  /* Override any system or browser focus styles */
+  .menu-drawer *:focus,
+  .menu-drawer *:active,
+  .menu-drawer *:focus-visible,
+  .menu-drawer *:focus-within,
+  .menu-drawer *:target,
+  .menu-drawer a:focus,
+  .menu-drawer a:active,
+  .menu-drawer button:focus,
+  .menu-drawer button:active,
+  .menu-drawer summary:focus,
+  .menu-drawer summary:active,
+  .menu-drawer li:focus,
+  .menu-drawer li:active {
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #000000 !important;
+  }
+
+  /* ELIMINATE ALL POSSIBLE BLUE COLORS FROM MOBILE MENU */
+  .menu-drawer *,
+  .menu-drawer *::before,
+  .menu-drawer *::after {
+    --color-accent: #000000 !important;
+    --color-button: #000000 !important;
+    --color-button-text: #ffffff !important;
+    /* Override any CSS variables that might contain blue */
+    --color-base-accent-1: #000000 !important;
+    --color-base-accent-2: #000000 !important;
+    --button-primary-bg: #000000 !important;
+    --button-primary-color: #ffffff !important;
+    /* Prevent any inherit of blue colors */
+    border-color: transparent !important;
+  }
+
+  /* Force override any blue that might come from parent elements or theme */
+  .menu-drawer,
+  .menu-drawer *,
+  .menu-drawer li,
+  .menu-drawer a,
+  .menu-drawer button,
+  .menu-drawer summary {
+    /* Remove any possible blue backgrounds */
+    background-image: none !important;
+    /* Override any blue colors */
+    color: inherit !important;
+  }
+
+  /* Additional safety net - override specific selectors that might have blue */
+  .menu-drawer__menu-item[style*="334fb4"],
+  .menu-drawer__menu-item[style*="51, 79, 180"],
+  .menu-drawer *[style*="334fb4"],
+  .menu-drawer *[style*="51, 79, 180"] {
+    background: transparent !important;
+    color: #000000 !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
   
   /* Learn More Text */
