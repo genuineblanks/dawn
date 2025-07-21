@@ -697,16 +697,53 @@ details[open].menu-opening > .menu-drawer__submenu {
     -webkit-tap-highlight-color: transparent !important;
   }
   
-  /* Remove blue tap highlights from all interactive elements */
+  /* COMPREHENSIVE BLUE HIGHLIGHT REMOVAL - ALL SOURCES */
   .menu-drawer a,
   .menu-drawer button,
   .menu-drawer summary,
+  .menu-drawer details,
+  .menu-drawer li,
+  .menu-drawer *,
   .menu-drawer .menu-drawer__menu-item,
   .menu-drawer .learn-more-submenu-item {
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
     -webkit-user-select: none !important;
     user-select: none !important;
+    -webkit-appearance: none !important;
+    outline-color: transparent !important;
+  }
+
+  /* Override any system or browser focus styles */
+  .menu-drawer *:focus,
+  .menu-drawer *:active,
+  .menu-drawer *:focus-visible,
+  .menu-drawer *:focus-within,
+  .menu-drawer *:target,
+  .menu-drawer a:focus,
+  .menu-drawer a:active,
+  .menu-drawer button:focus,
+  .menu-drawer button:active,
+  .menu-drawer summary:focus,
+  .menu-drawer summary:active,
+  .menu-drawer li:focus,
+  .menu-drawer li:active {
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: #000000 !important;
+  }
+
+  /* Ensure no blue colors from theme color scheme */
+  .menu-drawer * {
+    --color-accent: #000000 !important;
+    --color-button: #000000 !important;
+    --color-button-text: #ffffff !important;
   }
   
   /* Learn More Text */

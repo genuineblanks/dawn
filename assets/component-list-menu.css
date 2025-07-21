@@ -29,6 +29,19 @@
   padding: 0.5rem;
 }
 
+/* Desktop Learn More Arrow Spacing Fix */
+@media screen and (min-width: 990px) {
+  .header__menu-item.list-menu__item .icon-caret {
+    margin-left: 0.5rem !important;
+  }
+  
+  .header__menu-item summary {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+}
+
 /* ===== LUXURY STYLING FOR DESKTOP MENU ===== */
 
 /* Desktop Menu Items - Apply Luxury Link Styling */
@@ -44,7 +57,7 @@
     position: relative !important;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     display: inline-block !important;
-    margin: 1rem 0 !important;
+    margin: 0.25rem 0 !important;
     padding: 2px 8px 2px 0 !important;
     cursor: pointer !important;
     border-bottom: 1px solid transparent !important;
