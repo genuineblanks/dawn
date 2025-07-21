@@ -530,205 +530,185 @@ details[open].menu-opening > .menu-drawer__submenu {
     box-shadow: 0 4px 15px rgba(51, 79, 180, 0.3) !important;
   }
   
-  /* ===== LEARN MORE EXPANDABLE SECTION ===== */
+  /* ===== LUXURY STYLING FOR MOBILE MENU ===== */
   
-  /* Learn More Container */
-  .menu-drawer__learn-more-container {
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    margin-top: 1rem;
+  /* Menu Items - Apply Luxury Link Styling */
+  .menu-drawer__menu-item {
+    display: block !important;
+    width: 100% !important;
+    padding: 1.8rem 3rem !important;
+    font-size: 1.6rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.08rem !important;
+    text-transform: none !important;
+    color: #333333 !important;
+    background: transparent !important;
+    border-left: 4px solid transparent !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+    border-bottom: 1px solid transparent !important;
   }
   
-  /* Learn More Toggle Button */
-  .menu-drawer__learn-more {
+  /* Luxury Link Background Sweep Animation */
+  .menu-drawer__menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 0;
+  }
+  
+  /* Luxury Link Arrow Animation */
+  .menu-drawer__menu-item::after {
+    content: '→';
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%) translateX(20px);
+    opacity: 0.6;
+    color: #333333;
+    font-size: 1.4rem;
+    font-weight: normal;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 2;
+  }
+  
+  /* Luxury Hover Effects */
+  .menu-drawer__menu-item:hover,
+  .menu-drawer__menu-item:focus {
+    color: #000000 !important;
+    background: transparent !important;
+    border-left-color: transparent !important;
+    transform: translateY(-1px) !important;
+    border-bottom: 1px solid #333333 !important;
+    box-shadow: none !important;
+  }
+  
+  .menu-drawer__menu-item:hover::before,
+  .menu-drawer__menu-item:focus::before {
+    width: 100%;
+    transform: translateX(0);
+  }
+  
+  .menu-drawer__menu-item:hover::after,
+  .menu-drawer__menu-item:focus::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    color: #000000;
+  }
+  
+  /* Active State */
+  .menu-drawer__menu-item--active {
+    color: #000000 !important;
+    background: transparent !important;
+    border-left-color: transparent !important;
+    border-bottom: 1px solid #333333 !important;
+    font-weight: 500 !important;
+    transform: translateY(-1px) !important;
+  }
+  
+  .menu-drawer__menu-item--active::before {
     width: 100%;
   }
   
-  .menu-drawer__learn-more-toggle {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
+  .menu-drawer__menu-item--active::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    color: #000000;
+  }
+  
+  /* Learn More Button Container */
+  .menu-drawer__learn-more-container {
+    border-top: 1px solid rgba(51, 51, 51, 0.08);
+    margin-top: 1rem;
+    padding: 2rem 0 1rem 0;
+  }
+  
+  /* Learn More Button - Luxury Link Styling */
+  .menu-drawer__learn-more-button {
+    display: block !important;
     width: 100% !important;
     padding: 2rem 3rem !important;
     font-size: 1.7rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.05em !important;
-    text-transform: uppercase !important;
-    color: #334fb4 !important;
-    background: linear-gradient(135deg, 
-      rgba(51, 79, 180, 0.08) 0%, 
-      rgba(51, 79, 180, 0.04) 100%) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.08rem !important;
+    text-transform: none !important;
+    color: #333333 !important;
+    background: transparent !important;
     border: none !important;
-    border-left: 4px solid #334fb4 !important;
     border-radius: 0 !important;
     margin: 0 !important;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     position: relative;
     overflow: hidden;
-    list-style: none;
+    text-decoration: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+    border-bottom: 1px solid transparent !important;
+    text-align: left;
   }
   
-  .menu-drawer__learn-more-toggle::marker {
-    display: none;
+  /* Learn More Background Sweep */
+  .menu-drawer__learn-more-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 0;
   }
   
-  .menu-drawer__learn-more-toggle::-webkit-details-marker {
-    display: none;
+  /* Learn More Arrow */
+  .menu-drawer__learn-more-button::after {
+    content: '→';
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%) translateX(20px);
+    opacity: 0.6;
+    color: #333333;
+    font-size: 1.6rem;
+    font-weight: normal;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 2;
   }
   
-  .menu-drawer__learn-more-toggle:hover,
-  .menu-drawer__learn-more-toggle:focus {
-    background: linear-gradient(135deg, 
-      rgba(51, 79, 180, 0.15) 0%, 
-      rgba(51, 79, 180, 0.08) 100%) !important;
-    transform: translateX(8px) !important;
-    box-shadow: 0 6px 25px rgba(51, 79, 180, 0.2) !important;
+  /* Learn More Hover Effects */
+  .menu-drawer__learn-more-button:hover,
+  .menu-drawer__learn-more-button:focus {
+    color: #000000 !important;
+    background: transparent !important;
+    transform: translateY(-1px) !important;
+    border-bottom: 1px solid #333333 !important;
+  }
+  
+  .menu-drawer__learn-more-button:hover::before,
+  .menu-drawer__learn-more-button:focus::before {
+    width: 100%;
+  }
+  
+  .menu-drawer__learn-more-button:hover::after,
+  .menu-drawer__learn-more-button:focus::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    color: #000000;
   }
   
   /* Learn More Text */
-  .menu-drawer__learn-more-text {
+  .learn-more-text {
     position: relative;
     z-index: 2;
-  }
-  
-  /* Learn More Icon */
-  .menu-drawer__learn-more-icon {
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    color: #334fb4;
-    z-index: 2;
-  }
-  
-  /* Rotate arrow when expanded */
-  .menu-drawer__learn-more[open] .menu-drawer__learn-more-icon {
-    transform: rotate(180deg);
-  }
-  
-  /* Learn More Content Container */
-  .menu-drawer__learn-more-content {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    background: linear-gradient(135deg, 
-      rgba(248, 249, 250, 0.95) 0%, 
-      rgba(240, 242, 247, 0.9) 100%);
-    transform: translateY(-20px);
-  }
-  
-  /* Expanded state */
-  .menu-drawer__learn-more[open] .menu-drawer__learn-more-content {
-    max-height: 80vh;
-    opacity: 1;
-    transform: translateY(0);
-    padding: 2rem 0;
-    overflow-y: auto;
-  }
-  
-  /* Individual Learn More Sections */
-  .learn-more-section {
-    padding: 0 3rem 2rem 3rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    position: relative;
-  }
-  
-  .learn-more-section:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  
-  /* Section Headings */
-  .learn-more-heading {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.02em !important;
-    text-transform: uppercase !important;
-    color: #2c2c2c !important;
-    margin-bottom: 1.2rem !important;
-    padding-bottom: 0.8rem;
-    border-bottom: 2px solid rgba(51, 79, 180, 0.1);
-  }
-  
-  .learn-more-heading svg {
-    color: #334fb4;
-    flex-shrink: 0;
-  }
-  
-  /* Section Content */
-  .learn-more-content {
-    color: #4a4a4a;
-    line-height: 1.6;
-  }
-  
-  .learn-more-content p {
-    font-size: 1.4rem;
-    margin-bottom: 1.2rem;
-    color: #4a4a4a;
-  }
-  
-  /* Lists */
-  .learn-more-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .learn-more-list li {
-    position: relative;
-    padding: 0.6rem 0 0.6rem 2rem;
-    font-size: 1.3rem;
-    color: #555;
-    transition: all 0.3s ease;
-  }
-  
-  .learn-more-list li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    top: 0.6rem;
-    color: #334fb4;
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-  
-  .learn-more-list li:hover {
-    color: #334fb4;
-    transform: translateX(4px);
-  }
-  
-  /* Hide main menu when Learn More is expanded */
-  .menu-drawer__learn-more[open] ~ * .menu-drawer__menu {
-    opacity: 0.3;
-    pointer-events: none;
-    transform: scale(0.98);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  /* Animation for menu items fade out effect */
-  .menu-drawer__learn-more[open] ~ * .menu-drawer__menu .menu-drawer__menu-item {
-    opacity: 0.2;
-    transform: translateX(-10px);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  
-  /* Scrollable content styling */
-  .menu-drawer__learn-more-content::-webkit-scrollbar {
-    width: 4px;
-  }
-  
-  .menu-drawer__learn-more-content::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 2px;
-  }
-  
-  .menu-drawer__learn-more-content::-webkit-scrollbar-thumb {
-    background: #334fb4;
-    border-radius: 2px;
-  }
-  
-  .menu-drawer__learn-more-content::-webkit-scrollbar-thumb:hover {
-    background: #2a3f99;
   }
 }
