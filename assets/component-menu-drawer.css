@@ -484,6 +484,9 @@ details:focus-visible,
     border-radius: 0 25px 25px 0 !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
+    /* Ensure solid background - override any transparency */
+    background-color: #ffffff !important;
+    opacity: 1 !important;
   }
   
   .menu-drawer__navigation {
