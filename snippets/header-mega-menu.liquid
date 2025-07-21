@@ -20,8 +20,18 @@
                   {%- if link.child_active %}
                     class="header__active-menu-item"
                   {% endif %}
+                  data-menu-title="{{ link.title | escape }}"
                 >
-                  {{- link.title | escape -}}
+                  {%- if link.handle == 'learn-more' and link.child_active -%}
+                    {%- for childlink in link.links -%}
+                      {%- if childlink.current -%}
+                        {{ childlink.title | escape }}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- else -%}
+                    {{- link.title | escape -}}
+                  {%- endif -%}
                 </span>
                 {% render 'icon-caret' %}
               </summary>
