@@ -3728,3 +3728,135 @@ details-disclosure > details {
     }
   }
 }
+
+/* ===== GLOBAL FOCUS OUTLINE ELIMINATION ===== */
+/* Nuclear option: Remove all blue focus outlines site-wide */
+
+/* Override all base focus styles */
+*:focus,
+*:focus-visible,
+.focused,
+.no-js *:focus,
+.focus-inset:focus-visible,
+.focused.focus-inset,
+.no-js .focus-inset:focus,
+.focus-offset:focus-visible,
+.focus-offset.focused,
+.no-js .focus-offset:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Buttons and interactive elements */
+.button:focus-visible,
+.button:focus,
+.button.focused,
+.shopify-payment-button__button--unbranded:focus-visible,
+.shopify-payment-button [role='button']:focus-visible,
+.shopify-payment-button__button--unbranded:focus,
+.shopify-payment-button [role='button']:focus,
+a:focus,
+a:focus-visible,
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible,
+summary:focus,
+summary:focus-visible,
+details:focus,
+details:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Form fields */
+.field__input:focus-visible,
+.select__select:focus-visible,
+.customer .field input:focus-visible,
+.customer select:focus-visible,
+.localization-form__select:focus-visible,
+.field__input:focus,
+.select__select:focus,
+.customer .field input:focus,
+.customer select:focus,
+.localization-form__select:focus,
+.share-button__fallback .field__input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Menu and navigation elements */
+.header__menu-item:focus,
+.header__menu-item:focus-visible,
+.list-menu__item:focus,
+.list-menu__item:focus-visible,
+.menu-drawer__menu-item:focus,
+.menu-drawer__menu-item:focus-visible,
+.menu-drawer__menu a:focus,
+.menu-drawer__menu a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Quantity selectors */
+.quantity__button:focus-visible,
+.quantity__input:focus-visible,
+.quantity__button:focus,
+.quantity__input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Share buttons */
+.share-button__copy:focus-visible,
+.share-button__close:focus-visible,
+.share-button__copy:focus,
+.share-button__close:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Skip to content */
+.skip-to-content-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Slider buttons */
+.announcement-bar .slider-button--next:focus-visible,
+.announcement-bar .slider-button--prev:focus-visible,
+.utility-bar .list-social__link:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Header specific */
+.header *[tabindex='-1']:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* High contrast mode override */
+@media (forced-colors: active) {
+  .button:focus-visible,
+  .button:focus,
+  .button.focused,
+  .shopify-payment-button__button--unbranded:focus-visible,
+  .shopify-payment-button [role='button']:focus-visible,
+  .shopify-payment-button__button--unbranded:focus,
+  .shopify-payment-button [role='button']:focus,
+  .field__input:focus,
+  .select__select:focus,
+  .customer .field input:focus,
+  .customer select:focus,
+  .localization-form__select:focus.localization-form__select:after,
+  .localization-form__select:focus {
+    outline: none !important;
+  }
+}
