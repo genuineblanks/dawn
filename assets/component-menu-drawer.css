@@ -529,4 +529,206 @@ details[open].menu-opening > .menu-drawer__submenu {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 15px rgba(51, 79, 180, 0.3) !important;
   }
+  
+  /* ===== LEARN MORE EXPANDABLE SECTION ===== */
+  
+  /* Learn More Container */
+  .menu-drawer__learn-more-container {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin-top: 1rem;
+  }
+  
+  /* Learn More Toggle Button */
+  .menu-drawer__learn-more {
+    width: 100%;
+  }
+  
+  .menu-drawer__learn-more-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100% !important;
+    padding: 2rem 3rem !important;
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    color: #334fb4 !important;
+    background: linear-gradient(135deg, 
+      rgba(51, 79, 180, 0.08) 0%, 
+      rgba(51, 79, 180, 0.04) 100%) !important;
+    border: none !important;
+    border-left: 4px solid #334fb4 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    position: relative;
+    overflow: hidden;
+    list-style: none;
+  }
+  
+  .menu-drawer__learn-more-toggle::marker {
+    display: none;
+  }
+  
+  .menu-drawer__learn-more-toggle::-webkit-details-marker {
+    display: none;
+  }
+  
+  .menu-drawer__learn-more-toggle:hover,
+  .menu-drawer__learn-more-toggle:focus {
+    background: linear-gradient(135deg, 
+      rgba(51, 79, 180, 0.15) 0%, 
+      rgba(51, 79, 180, 0.08) 100%) !important;
+    transform: translateX(8px) !important;
+    box-shadow: 0 6px 25px rgba(51, 79, 180, 0.2) !important;
+  }
+  
+  /* Learn More Text */
+  .menu-drawer__learn-more-text {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Learn More Icon */
+  .menu-drawer__learn-more-icon {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    color: #334fb4;
+    z-index: 2;
+  }
+  
+  /* Rotate arrow when expanded */
+  .menu-drawer__learn-more[open] .menu-drawer__learn-more-icon {
+    transform: rotate(180deg);
+  }
+  
+  /* Learn More Content Container */
+  .menu-drawer__learn-more-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: linear-gradient(135deg, 
+      rgba(248, 249, 250, 0.95) 0%, 
+      rgba(240, 242, 247, 0.9) 100%);
+    transform: translateY(-20px);
+  }
+  
+  /* Expanded state */
+  .menu-drawer__learn-more[open] .menu-drawer__learn-more-content {
+    max-height: 80vh;
+    opacity: 1;
+    transform: translateY(0);
+    padding: 2rem 0;
+    overflow-y: auto;
+  }
+  
+  /* Individual Learn More Sections */
+  .learn-more-section {
+    padding: 0 3rem 2rem 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    position: relative;
+  }
+  
+  .learn-more-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  /* Section Headings */
+  .learn-more-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    color: #2c2c2c !important;
+    margin-bottom: 1.2rem !important;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid rgba(51, 79, 180, 0.1);
+  }
+  
+  .learn-more-heading svg {
+    color: #334fb4;
+    flex-shrink: 0;
+  }
+  
+  /* Section Content */
+  .learn-more-content {
+    color: #4a4a4a;
+    line-height: 1.6;
+  }
+  
+  .learn-more-content p {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    color: #4a4a4a;
+  }
+  
+  /* Lists */
+  .learn-more-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .learn-more-list li {
+    position: relative;
+    padding: 0.6rem 0 0.6rem 2rem;
+    font-size: 1.3rem;
+    color: #555;
+    transition: all 0.3s ease;
+  }
+  
+  .learn-more-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    color: #334fb4;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .learn-more-list li:hover {
+    color: #334fb4;
+    transform: translateX(4px);
+  }
+  
+  /* Hide main menu when Learn More is expanded */
+  .menu-drawer__learn-more[open] ~ * .menu-drawer__menu {
+    opacity: 0.3;
+    pointer-events: none;
+    transform: scale(0.98);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Animation for menu items fade out effect */
+  .menu-drawer__learn-more[open] ~ * .menu-drawer__menu .menu-drawer__menu-item {
+    opacity: 0.2;
+    transform: translateX(-10px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Scrollable content styling */
+  .menu-drawer__learn-more-content::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .menu-drawer__learn-more-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+  }
+  
+  .menu-drawer__learn-more-content::-webkit-scrollbar-thumb {
+    background: #334fb4;
+    border-radius: 2px;
+  }
+  
+  .menu-drawer__learn-more-content::-webkit-scrollbar-thumb:hover {
+    background: #2a3f99;
+  }
 }
