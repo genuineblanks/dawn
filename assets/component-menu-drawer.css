@@ -628,89 +628,57 @@ details[open].menu-opening > .menu-drawer__submenu {
   
   /* Learn More Button Container */
   .menu-drawer__learn-more-container {
-    border-top: 2px solid rgba(51, 51, 51, 0.15);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
     margin-top: 2rem;
-    padding: 1rem 0;
-    background: linear-gradient(135deg, 
-      rgba(248, 249, 250, 0.7) 0%, 
-      rgba(240, 242, 247, 0.5) 100%);
+    padding: 0;
+    background: transparent;
   }
   
-  /* Learn More Button - Enhanced Visibility */
+  /* Learn More Button - Clean Design */
   .menu-drawer__learn-more-button {
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     width: 100% !important;
-    padding: 2.5rem 3rem !important;
-    font-size: 2rem !important;
+    padding: 1.8rem 3rem !important;
+    font-size: 1.6rem !important;
     font-weight: 600 !important;
-    letter-spacing: 0.1em !important;
+    letter-spacing: 0.08rem !important;
     text-transform: uppercase !important;
-    color: #000000 !important;
-    background: linear-gradient(135deg, 
-      rgba(51, 51, 51, 0.08) 0%, 
-      rgba(51, 51, 51, 0.04) 100%) !important;
+    color: #333333 !important;
+    background: transparent !important;
     border: none !important;
-    border-left: 4px solid #333333 !important;
     border-radius: 0 !important;
     margin: 0 !important;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     position: relative;
-    overflow: hidden;
     text-decoration: none !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-    border-bottom: 1px solid rgba(51, 51, 51, 0.1) !important;
     text-align: left;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
   
-  /* Learn More Background Sweep */
-  .menu-drawer__learn-more-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 0;
-  }
-  
-  /* Learn More Arrow */
-  .menu-drawer__learn-more-button::after {
-    content: '→';
-    position: absolute;
-    right: 3rem;
-    top: 50%;
-    transform: translateY(-50%) translateX(20px);
-    opacity: 0.6;
-    color: #333333;
-    font-size: 1.6rem;
-    font-weight: normal;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 2;
-  }
-  
-  /* Learn More Hover Effects */
+  /* Learn More Hover Effects - Clean Style */
   .menu-drawer__learn-more-button:hover,
   .menu-drawer__learn-more-button:focus {
     color: #000000 !important;
-    background: transparent !important;
-    transform: translateY(-1px) !important;
-    border-bottom: 1px solid #333333 !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
   
-  .menu-drawer__learn-more-button:hover::before,
-  .menu-drawer__learn-more-button:focus::before {
-    width: 100%;
+  /* Remove blue shadow and focus outline */
+  .menu-drawer__learn-more-button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
   }
   
-  .menu-drawer__learn-more-button:hover::after,
-  .menu-drawer__learn-more-button:focus::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-    color: #000000;
+  .menu-drawer__learn-more-button:active {
+    background: rgba(0, 0, 0, 0.05) !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
   
   /* Learn More Text */
@@ -743,22 +711,23 @@ details[open].menu-opening > .menu-drawer__submenu {
   
   /* Learn More Caret */
   .learn-more-caret {
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    color: #333333;
-    margin-left: 1rem;
+    transition: transform 0.2s ease;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    opacity: 0.8;
   }
   
   .menu-drawer__learn-more-details[open] .learn-more-caret {
     transform: rotate(180deg);
+    color: #333333;
+    opacity: 1;
   }
   
   /* Learn More Submenu */
   .menu-drawer__learn-more-submenu {
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.95) 0%, 
-      rgba(248, 249, 250, 0.9) 100%);
-    border-top: 1px solid rgba(51, 51, 51, 0.1);
-    padding: 0;
+    background: rgba(248, 249, 250, 0.3);
+    padding: 0.5rem 0;
     margin: 0;
     overflow: hidden;
   }
@@ -769,46 +738,32 @@ details[open].menu-opening > .menu-drawer__submenu {
     margin: 0;
   }
   
-  /* Learn More Submenu Items */
+  /* Learn More Submenu Items - Clean Style */
   .learn-more-submenu-item {
     display: block !important;
     width: 100% !important;
-    padding: 1.5rem 3rem 1.5rem 4rem !important;
+    padding: 1.2rem 3rem !important;
     font-size: 1.4rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.05em !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.02em !important;
     text-transform: none !important;
-    color: #555555 !important;
+    color: #666666 !important;
     background: transparent !important;
     border: none !important;
     border-radius: 0 !important;
     margin: 0 !important;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    transition: all 0.2s ease !important;
     position: relative;
     text-decoration: none !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-    border-bottom: 1px solid rgba(51, 51, 51, 0.05) !important;
-  }
-  
-  .learn-more-submenu-item::before {
-    content: '•';
-    position: absolute;
-    left: 2rem;
-    color: #333333;
-    font-weight: bold;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
   }
   
   .learn-more-submenu-item:hover,
   .learn-more-submenu-item:focus {
-    color: #000000 !important;
-    background: rgba(51, 51, 51, 0.05) !important;
-    transform: translateX(8px) !important;
-  }
-  
-  .learn-more-submenu-item:hover::before,
-  .learn-more-submenu-item:focus::before {
-    color: #000000;
+    color: #333333 !important;
+    background: rgba(0, 0, 0, 0.02) !important;
   }
   
   /* Last submenu item */
