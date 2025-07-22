@@ -724,10 +724,9 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "LUXURY & HIGH END BLANKS",
+            "subtitle": "TAKE A LOOK AT OUR PAST PRODUCTS, FACILITY & TEAM",
             "rich": "",
-            "link": "shopify://pages/luxary-lookbook",
-            "background_image": "shopify://shop_images/Tech-Pack-Website-Page2EDIT.jpg"
+            "link": "shopify://pages/futuristic"
           }
         },
         "add_text_grid_zc3Xgn": {
