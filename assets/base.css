@@ -1249,15 +1249,6 @@ summary::-webkit-details-marker {
   background-color: transparent;
 }
 
-/* Fix: Remove unwanted white space before lookbook-split section on mobile */
-@media screen and (max-width: 749px) {
-  .section-main-page + .section[class*="lookbook"],
-  .section-main-page + .section[id*="lookbook"],
-  .section + .section[class*="lookbook-split"] {
-    margin-top: 0 !important;
-  }
-}
-
 .media > *:not(.zoom):not(.deferred-media__poster-button),
 .media model-viewer {
   display: block;
