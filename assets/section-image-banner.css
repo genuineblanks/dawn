@@ -514,10 +514,75 @@
 }
 
 /* Premium Button Styling - Advanced Animations */
-.luxury-button,
+/* Ultra-Premium Collection Buttons - Minimal & Professional */
 .banner_subtext1,
 .banner_subtext2,
 .changeSection {
+  /* Reset and core design */
+  display: inline-block !important;
+  padding: 0 !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  
+  /* Premium typography */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: #2c2c2c !important;
+  
+  /* Minimal styling */
+  position: relative !important;
+  margin: 0 2.5rem !important;
+  padding: 0.8rem 0 !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  
+  /* Performance optimizations */
+  will-change: transform, color !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+}
+
+/* Subtle underline effect for collection buttons */
+.banner_subtext1::after,
+.banner_subtext2::after,
+.changeSection::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+  transform-origin: center !important;
+  width: 100% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, currentColor, transparent) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Sophisticated hover states */
+.banner_subtext1:hover,
+.banner_subtext2:hover,
+.changeSection:hover {
+  color: #000000 !important;
+  letter-spacing: 3.5px !important;
+  transform: translateY(-1px) translateZ(0) !important;
+  text-decoration: none !important;
+}
+
+.banner_subtext1:hover::after,
+.banner_subtext2:hover::after,
+.changeSection:hover::after {
+  transform: translateX(-50%) scaleX(0.9) !important;
+}
+
+/* Keep luxury-button class separate for other uses */
+.luxury-button {
   display: inline-block !important;
   padding: 16px 32px !important;
   background: transparent !important;
@@ -637,11 +702,42 @@
   transition: transform 0.1s ease !important;
 }
 
-/* Advanced sliding animation effect */
-.luxury-button::before,
-.banner_subtext1::before,
-.banner_subtext2::before,
-.changeSection::before {
+/* Primary button specific styling (banner_subtext2 = "OVERSIZED COLLECTION") */
+.banner_subtext2 {
+  font-weight: 400 !important;
+  color: #1a1a1a !important;
+}
+
+.banner_subtext2::after {
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #1a1a1a, transparent) !important;
+}
+
+.banner_subtext2:hover {
+  color: #000000 !important;
+  transform: translateY(-2px) translateZ(0) !important;
+}
+
+.banner_subtext2:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+/* Secondary button styling (banner_subtext1 = "RELAXED COLLECTION") */
+.banner_subtext1 {
+  font-weight: 300 !important;
+  color: #555555 !important;
+}
+
+.banner_subtext1::after {
+  background: linear-gradient(90deg, transparent, #555555, transparent) !important;
+}
+
+.banner_subtext1:hover {
+  color: #2c2c2c !important;
+}
+
+/* Advanced sliding animation effect for luxury-button only */
+.luxury-button::before {
   content: '' !important;
   position: absolute !important;
   top: 0 !important;
@@ -653,11 +749,8 @@
   z-index: -1 !important;
 }
 
-/* Hover state with advanced animations */
-.luxury-button:hover,
-.banner_subtext1:hover,
-.banner_subtext2:hover,
-.changeSection:hover {
+/* Hover state with advanced animations for luxury-button only */
+.luxury-button:hover {
   color: #ffffff !important;
   text-decoration: none !important;
   transform: translateY(-3px) translateZ(0) !important;
@@ -692,64 +785,69 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Primary Button (Black fill by default) */
-.luxury-button--primary,
-.banner_subtext2 {
+/* Primary Button (Black fill by default) for luxury-button class only */
+.luxury-button--primary {
   background: #000000 !important;
   color: #ffffff !important;
   border: 2px solid #000000 !important;
 }
 
-.luxury-button--primary::before,
-.banner_subtext2::before {
+.luxury-button--primary::before {
   background: #ffffff !important;
   left: -100% !important;
 }
 
-.luxury-button--primary:hover,
-.banner_subtext2:hover {
+.luxury-button--primary:hover {
   color: #000000 !important;
   background: #000000 !important;
 }
 
-.luxury-button--primary:hover::before,
-.banner_subtext2:hover::before {
+.luxury-button--primary:hover::before {
   left: 0 !important;
 }
 
-/* Secondary Button (White/transparent) */
-.luxury-button--secondary,
-.banner_subtext1 {
+/* Secondary Button (White/transparent) for luxury-button class only */
+.luxury-button--secondary {
   background: transparent !important;
   color: #000000 !important;
   border: 2px solid #000000 !important;
 }
 
-.luxury-button--secondary::before,
-.banner_subtext1::before {
+.luxury-button--secondary::before {
   background: #000000 !important;
 }
 
-/* Focus states for accessibility */
-.luxury-button:focus,
+/* Focus states for accessibility - Collection buttons */
 .banner_subtext1:focus,
 .banner_subtext2:focus,
 .changeSection:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.3) !important;
+  outline-offset: 4px !important;
+  border-radius: 2px !important;
+}
+
+/* Active/press state for collection buttons */
+.banner_subtext1:active,
+.banner_subtext2:active,
+.changeSection:active {
+  transform: translateY(0px) translateZ(0) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Focus states for luxury-button class */
+.luxury-button:focus {
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Glow effect on hover */
-.luxury-button:hover,
-.banner_subtext1:hover,
-.banner_subtext2:hover,
-.changeSection:hover {
+/* Glow effect on hover for luxury-button only */
+.luxury-button:hover {
   box-shadow: 
     0 10px 25px rgba(0, 0, 0, 0.25),
     0 0 20px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Pulse animation for extra flair */
+/* Pulse animation for luxury-button only */
 @keyframes luxuryPulse {
   0% {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
@@ -762,10 +860,7 @@
   }
 }
 
-.luxury-button:focus,
-.banner_subtext1:focus,
-.banner_subtext2:focus,
-.changeSection:focus {
+.luxury-button:focus {
   animation: luxuryPulse 1.5s infinite !important;
 }
 
@@ -959,9 +1054,30 @@
     gap: 1.5rem !important;
   }
   
-  .luxury-button,
+  /* Mobile optimization for collection buttons */
   .banner_subtext1,
-  .banner_subtext2 {
+  .banner_subtext2,
+  .changeSection {
+    font-size: 0.75rem !important;
+    letter-spacing: 2px !important;
+    margin: 0 1rem !important;
+    padding: 1rem 0 !important;
+    min-width: auto !important;
+  }
+  
+  .banner_subtext1:hover,
+  .banner_subtext2:hover,
+  .changeSection:hover {
+    letter-spacing: 2.5px !important;
+    transform: translateY(-0.5px) translateZ(0) !important;
+  }
+  
+  .banner_subtext2:hover {
+    transform: translateY(-1px) translateZ(0) !important;
+  }
+  
+  /* Luxury button mobile styles */
+  .luxury-button {
     width: 100% !important;
     max-width: 280px !important;
   }
