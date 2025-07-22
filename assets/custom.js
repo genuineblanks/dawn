@@ -32,18 +32,6 @@ console.log('📱 Device Detection - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DE
 window.isMobileDevice = isMobileDevice;
 window.isIOS = isIOS;
 
-// Initialize collection button states when page loads
-$(document).ready(function() {
-  // Set initial selected state - luxury collection is default  
-  if ($('.luxury-collection').is(':visible')) {
-    $('.luxury-collection .changeSection.collection-toggle-btn').removeClass('collection-toggle-btn--inactive').addClass('collection-toggle-btn--active selected');
-    $('.high-end-collection .changeSection.collection-toggle-btn').removeClass('collection-toggle-btn--active').addClass('collection-toggle-btn--inactive');
-  } else if ($('.high-end-collection').is(':visible')) {
-    $('.high-end-collection .changeSection.collection-toggle-btn').removeClass('collection-toggle-btn--inactive').addClass('collection-toggle-btn--active selected');
-    $('.luxury-collection .changeSection.collection-toggle-btn').removeClass('collection-toggle-btn--active').addClass('collection-toggle-btn--inactive');
-  }
-});
-
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
 // ===============================================
@@ -1726,20 +1714,8 @@ function initializeAllFeatures() {
   setTimeout(testMobileScrollCapabilities, 800);
   setTimeout(startInScrollWatchdog, 900);
   
-  $(".changeSection").click(function(e){
-    e.preventDefault();
-    
-    // Don't proceed if this button is already active
-    if ($(this).hasClass('collection-toggle-btn--active')) {
-      return false;
-    }
-    
+  $(".changeSection").click(function(){
     var parentSectionClass = $(this).closest("section").attr("class");
-    
-    // Update button states - remove active from all, add to clicked
-    $('.changeSection.collection-toggle-btn').removeClass('collection-toggle-btn--active selected').addClass('collection-toggle-btn--inactive');
-    $(this).removeClass('collection-toggle-btn--inactive').addClass('collection-toggle-btn--active selected');
-    
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
        $('.high-end-collection').show();
        $('.luxury-collection').hide();
