@@ -49,13 +49,17 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Captivating hover effects */
+/* Captivating hover effects - Works with or without background images */
 .textGrid a:hover {
   transform: translateY(-4px);
-  background: #f0f0f0 !important;
   border: 1px solid #000000;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   z-index: 2;
+}
+
+/* For buttons without background images */
+.textGrid a:not([style*="background-image"]):hover {
+  background: #f0f0f0 !important;
 }
 
 .textGrid a:hover .grid__item h3 {
@@ -80,6 +84,30 @@
 
 .textGrid a:hover::before {
   opacity: 1;
+}
+
+/* Background image overlay for high opacity (almost white) effect */
+.textGrid a .background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9); /* High opacity white overlay */
+  z-index: 1;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Reduce overlay opacity on hover to show more background */
+.textGrid a:hover .background-overlay {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* Ensure content stays above overlay */
+.textGrid .grid {
+  position: relative;
+  z-index: 10;
 }
 
 /* Remove shimmer effect - Keep it minimal */
@@ -185,6 +213,10 @@ body .textGrid a[href]:nth-child(even) {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     border: 1px solid #000000;
+  }
+  
+  .textGrid a:not([style*="background-image"]):hover {
+    background: #f0f0f0 !important;
   }
   
   .textGrid .grid {
