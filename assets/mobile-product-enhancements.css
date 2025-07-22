@@ -1,4 +1,4 @@
-/* Mobile-specific enhancements for the product page */
+/* Mobile-specific enhancements for the product page and collection grids */
 
 /* Enhanced mobile layout for product page */
 @media screen and (max-width: 749px) {
@@ -324,6 +324,77 @@
   
   .help-options {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Product Grid Mobile Optimizations - Make images the focus */
+@media screen and (max-width: 749px) {
+  /* Optimize product grid for image prominence */
+  .product-grid .card-wrapper,
+  .collection .card-wrapper {
+    margin-bottom: 0.8rem;
+  }
+  
+  .product-grid .card__media,
+  .collection .card__media {
+    margin: 0;
+    border-radius: 8px;
+  }
+  
+  /* Make product images taller and more prominent */
+  .product-grid .media,
+  .collection .media {
+    min-height: 220px;
+    aspect-ratio: 3/4;
+  }
+  
+  /* Elegant product card content spacing */
+  .product-grid .card__content,
+  .collection .card__content {
+    padding: 0.6rem 0.3rem;
+    gap: 0.2rem;
+  }
+  
+  /* Minimize text elements to let images shine */
+  .product-grid .card__heading,
+  .collection .card__heading {
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0.2rem !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+  }
+  
+  .product-grid .card-information,
+  .collection .card-information {
+    margin-top: 0.3rem;
+  }
+  
+  /* Price styling - keep minimal */
+  .product-grid .price,
+  .collection .price {
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    margin-top: 0.2rem !important;
+  }
+  
+  /* Reduce gap between grid items */
+  .product-grid,
+  .collection .product-grid {
+    gap: 0.5rem;
+  }
+  
+  /* On very small screens, consider single column for larger images */
+  @media screen and (max-width: 480px) {
+    .product-grid.grid--2-col-tablet-down .grid__item {
+      width: calc(50% - 0.25rem);
+    }
+    
+    .product-grid .media,
+    .collection .media {
+      min-height: 200px;
+    }
   }
 }
 
