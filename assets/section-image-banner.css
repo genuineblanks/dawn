@@ -339,7 +339,7 @@
 }
 
 .banner__box {
-  padding: 4rem 3.5rem;
+  padding: 2rem 2rem; /* Reduced to match mobile compact layout */
   position: relative;
   height: fit-content;
   align-items: center;
@@ -415,6 +415,22 @@
     width: auto;
     max-width: 71rem;
     min-width: 45rem;
+    padding: 2rem 2rem !important; /* Apply compact mobile layout to desktop */
+  }
+  
+  /* Desktop: Apply mobile's compact spacing */
+  .luxury-button-container,
+  .towbutonbaner {
+    padding: 0.8rem !important; /* Match mobile padding */
+    gap: 1rem !important; /* Match mobile gap */
+    margin: 2rem 0 1rem 0 !important; /* Match mobile margins */
+  }
+  
+  /* Desktop: Apply compact spacing for buttons */
+  .banner_subtext1,
+  .banner_subtext2,
+  .changeSection {
+    padding: 0.8rem 0 !important; /* Match mobile padding */
   }
 }
 
@@ -494,7 +510,7 @@
   letter-spacing: 4px !important;
   line-height: 1.1 !important;
   color: #1a1a1a !important;
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.5rem !important; /* Reduced for desktop to match mobile */
   text-transform: uppercase !important;
 }
 
@@ -504,7 +520,7 @@
   font-size: 1rem !important;
   line-height: 1.6 !important;
   color: #666 !important;
-  margin-bottom: 2.5rem !important;
+  margin-bottom: 1.5rem !important; /* Reduced for desktop to match mobile */
   font-weight: 400 !important;
   letter-spacing: 0.5px !important;
   text-transform: uppercase !important;
@@ -868,11 +884,12 @@
 .luxury-button-container,
 .towbutonbaner {
   display: flex !important;
-  gap: 2rem !important;
-  margin: 3.5rem 0 !important;
+  gap: 1rem !important; /* Reduced gap to match mobile */
+  margin: 2rem 0 1rem 0 !important; /* Reduced margins to match mobile */
   justify-content: center !important;
   flex-wrap: wrap !important;
   align-items: center !important;
+  padding: 0.8rem !important; /* Added padding to match mobile */
 }
 
 /* Minimal Button Container - Clean & Elegant */
@@ -910,7 +927,7 @@
   position: relative !important;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   display: inline-block !important;
-  margin: 1rem 0 !important;
+  margin: 0.5rem 0 !important; /* Reduced to match mobile */
   padding: 2px 8px 2px 0 !important;
   cursor: pointer !important;
 }
@@ -969,7 +986,7 @@
   letter-spacing: 2px !important;
   color: #999 !important;
   font-weight: 400 !important;
-  margin-top: 2rem !important;
+  margin-top: 1rem !important; /* Reduced to match mobile */
   display: block !important;
   text-transform: uppercase !important;
 }
