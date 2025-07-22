@@ -32,6 +32,16 @@ console.log('📱 Device Detection - Device:', IS_MOBILE_DEVICE ? 'MOBILE' : 'DE
 window.isMobileDevice = isMobileDevice;
 window.isIOS = isIOS;
 
+// Initialize collection button states when page loads
+$(document).ready(function() {
+  // Set initial selected state - luxury collection is default  
+  if ($('.luxury-collection').is(':visible')) {
+    $('.luxury-collection .changeSection').addClass('selected');
+  } else if ($('.high-end-collection').is(':visible')) {
+    $('.high-end-collection .changeSection').addClass('selected');
+  }
+});
+
 // ===============================================
 // DESKTOP ONLY - HOMEPAGE DETECTION UTILITY
 // ===============================================
@@ -1714,8 +1724,22 @@ function initializeAllFeatures() {
   setTimeout(testMobileScrollCapabilities, 800);
   setTimeout(startInScrollWatchdog, 900);
   
-  $(".changeSection").click(function(){
+  $(".changeSection").click(function(e){
+    e.preventDefault();
+    
+    // Don't proceed if this button is already selected
+    if ($(this).hasClass('selected')) {
+      return false;
+    }
+    
     var parentSectionClass = $(this).closest("section").attr("class");
+    
+    // Remove selected class from all collection buttons
+    $('.changeSection').removeClass('selected');
+    
+    // Add selected class to clicked button
+    $(this).addClass('selected');
+    
     if (parentSectionClass && parentSectionClass.includes('luxury-collection')) {
        $('.high-end-collection').show();
        $('.luxury-collection').hide();
