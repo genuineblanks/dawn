@@ -16,7 +16,7 @@
   height: calc(100% - 152px);
 }
 
-/* Button styling - PREMIUM GLASS MORPHISM BUTTONS */
+/* Button styling - CLEAN MINIMAL BUTTONS TO MATCH WEBSITE AESTHETIC */
 .textGrid a {
   display: block;
   width: 100%;
@@ -26,79 +26,55 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: none;
   outline: none;
   
-  /* Glass Morphism Effect */
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  /* Clean Minimal Design - Match Website Style */
+  background: transparent !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
 }
 
-/* Premium hover effects - Enhanced Glass */
+/* Clean hover effects - Match Website Collection Buttons */
 .textGrid a:hover {
-  transform: translateY(-8px) scale(1.005);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.25),
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  filter: brightness(1.08) contrast(1.05);
-  z-index: 10;
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.02) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: none;
+  z-index: 2;
 }
 
-/* Enhanced glass overlay system */
+/* Clean underline effect system - Match Website Style */
 .textGrid a::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(0, 0, 0, 0.05) 100%);
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 80%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.15);
   z-index: 2;
-  transition: all 0.6s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   opacity: 0;
-  border-radius: 14px;
 }
 
 .textGrid a:hover::before {
   opacity: 1;
-  background: 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(0, 0, 0, 0.02) 100%);
+  transform: translateX(-50%) scaleX(1);
 }
 
-/* Shimmer effect */
+/* Remove shimmer effect - Keep it minimal */
 .textGrid a::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-  z-index: 5;
-}
-
-.textGrid a:hover::after {
-  left: 100%;
+  display: none;
 }
 
 /* Grid layout - PERFECT CENTER ALIGNMENT */
@@ -129,36 +105,36 @@
   height: 100%;
 }
 
-/* PREMIUM LUXURY TYPOGRAPHY SYSTEM - PERFECT CENTER */
+/* CLEAN TYPOGRAPHY SYSTEM - MATCH WEBSITE STYLE */
 .textGrid .grid__item h3 {
-  font-family: 'Futura', 'Avenir Next', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 3.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
   line-height: 1.1;
   margin: 0;
-  letter-spacing: 0.25em;
+  letter-spacing: 3px;
   text-transform: uppercase;
   word-wrap: break-word;
   hyphens: auto;
-  color: #000000 !important;
+  color: #2c2c2c !important;
   text-shadow: none;
-  transition: all 0.5s ease;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
-  font-variant: small-caps;
+  font-variant: normal;
   text-align: center;
   align-self: center;
 }
 
-/* Subtitle styling (second grid item) */
+/* Remove subtitle styling - Keep all text uniform */
 .textGrid .grid__item:nth-child(2) h3 {
-  font-family: 'Futura', 'Avenir Next', 'Century Gothic', sans-serif;
-  font-weight: 600;
-  font-size: 1.3rem;
-  line-height: 1.4;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  line-height: 1.1;
   margin: 0;
-  letter-spacing: 0.3em;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  color: #000000 !important;
+  color: #2c2c2c !important;
   text-shadow: none;
   opacity: 1;
   font-variant: normal;
@@ -166,134 +142,59 @@
   align-self: center;
 }
 
+/* Hide paragraphs/divs - Keep only main text visible */
 .textGrid .grid__item p,
 .textGrid .grid__item div {
-  font-family: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
-  font-weight: 500;
-  font-size: 1.3rem;
-  line-height: 1.7;
-  margin: 0;
-  letter-spacing: 0.08em;
-  word-wrap: break-word;
-  hyphens: auto;
-  color: #000000 !important;
-  text-shadow: none;
-  transition: all 0.3s ease;
-  font-feature-settings: "kern" 1, "liga" 1;
-  text-align: center;
-  align-self: center;
+  display: none;
 }
 
 .textGrid a:hover .grid__item h3 {
-  transform: scale(1.03);
-  letter-spacing: 0.28em;
+  transform: translateY(-1px);
+  letter-spacing: 3.5px;
+  color: #000000 !important;
   text-shadow: none;
 }
 
-.textGrid a:hover .grid__item p,
-.textGrid a:hover .grid__item div {
-  transform: translateY(-3px);
-  letter-spacing: 0.1em;
-  text-shadow: none;
+/* CLEAN BACKGROUNDS - MATCH WEBSITE AESTHETIC */
+
+/* All buttons use consistent minimal backgrounds */
+body .home-section section.text-grid .textGrid a[href],
+body .home-section .textGrid a[href],
+body section.text-grid .textGrid a[href],
+body .textGrid a[href] {
+  background: #f8f8f8 !important;
 }
 
-/* SPECTACULAR GRADIENT PROGRESSIONS - ORIGINAL nth-child STRUCTURE */
-
-/* Button 1 - Ethereal Light */
-body .home-section section.text-grid .textGrid a[href]:nth-child(1),
-body .home-section .textGrid a[href]:nth-child(1),
-body section.text-grid .textGrid a[href]:nth-child(1),
-body .textGrid a[href]:nth-child(1) {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 25%, #f0f0f0 50%, #e8e8e8 75%, #e0e0e0 100%) !important;
+/* Subtle alternating pattern for visual hierarchy */
+body .home-section section.text-grid .textGrid a[href]:nth-child(odd),
+body .home-section .textGrid a[href]:nth-child(odd),
+body section.text-grid .textGrid a[href]:nth-child(odd),
+body .textGrid a[href]:nth-child(odd) {
+  background: #f8f8f8 !important;
 }
 
-/* Button 2 - Soft Mist */
-body .home-section section.text-grid .textGrid a[href]:nth-child(2),
-body .home-section .textGrid a[href]:nth-child(2),
-body section.text-grid .textGrid a[href]:nth-child(2),
-body .textGrid a[href]:nth-child(2) {
-  background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 25%, #e0e0e0 50%, #d8d8d8 75%, #d0d0d0 100%) !important;
+body .home-section section.text-grid .textGrid a[href]:nth-child(even),
+body .home-section .textGrid a[href]:nth-child(even),
+body section.text-grid .textGrid a[href]:nth-child(even),
+body .textGrid a[href]:nth-child(even) {
+  background: #f2f2f2 !important;
 }
 
-/* Button 3 - Gentle Fog */
-body .home-section section.text-grid .textGrid a[href]:nth-child(3),
-body .home-section .textGrid a[href]:nth-child(3),
-body section.text-grid .textGrid a[href]:nth-child(3),
-body .textGrid a[href]:nth-child(3) {
-  background: linear-gradient(135deg, #e0e0e0 0%, #d8d8d8 25%, #d0d0d0 50%, #c8c8c8 75%, #c0c0c0 100%) !important;
-}
-
-/* Button 4 - Silver Whisper */
-body .home-section section.text-grid .textGrid a[href]:nth-child(4),
-body .home-section .textGrid a[href]:nth-child(4),
-body section.text-grid .textGrid a[href]:nth-child(4),
-body .textGrid a[href]:nth-child(4) {
-  background: linear-gradient(135deg, #d0d0d0 0%, #c8c8c8 25%, #c0c0c0 50%, #b8b8b8 75%, #b0b0b0 100%) !important;
-}
-
-/* Button 5 - Platinum Veil */
-body .home-section section.text-grid .textGrid a[href]:nth-child(5),
-body .home-section .textGrid a[href]:nth-child(5),
-body section.text-grid .textGrid a[href]:nth-child(5),
-body .textGrid a[href]:nth-child(5) {
-  background: linear-gradient(135deg, #c0c0c0 0%, #b8b8b8 25%, #b0b0b0 50%, #a8a8a8 75%, #a0a0a0 100%) !important;
-}
-
-/* Button 6 - Steel Embrace */
-body .home-section section.text-grid .textGrid a[href]:nth-child(6),
-body .home-section .textGrid a[href]:nth-child(6),
-body section.text-grid .textGrid a[href]:nth-child(6),
-body .textGrid a[href]:nth-child(6) {
-  background: linear-gradient(135deg, #b0b0b0 0%, #a8a8a8 25%, #a0a0a0 50%, #989898 75%, #909090 100%) !important;
-}
-
-/* Button 7 - Gunmetal Dreams */
-body .home-section section.text-grid .textGrid a[href]:nth-child(7),
-body .home-section .textGrid a[href]:nth-child(7),
-body section.text-grid .textGrid a[href]:nth-child(7),
-body .textGrid a[href]:nth-child(7) {
-  background: linear-gradient(135deg, #a0a0a0 0%, #989898 25%, #909090 50%, #888888 75%, #808080 100%) !important;
-}
-
-/* Button 8 - Charcoal Depths */
-body .home-section section.text-grid .textGrid a[href]:nth-child(8),
-body .home-section .textGrid a[href]:nth-child(8),
-body section.text-grid .textGrid a[href]:nth-child(8),
-body .textGrid a[href]:nth-child(8) {
-  background: linear-gradient(135deg, #909090 0%, #888888 25%, #808080 50%, #707070 75%, #606060 100%) !important;
-}
-
-/* Button 9 - Shadow Realm */
-body .home-section section.text-grid .textGrid a[href]:nth-child(9),
-body .home-section .textGrid a[href]:nth-child(9),
-body section.text-grid .textGrid a[href]:nth-child(9),
-body .textGrid a[href]:nth-child(9) {
-  background: linear-gradient(135deg, #707070 0%, #606060 25%, #505050 50%, #404040 75%, #303030 100%) !important;
-}
-
-/* Button 10 - Void Elegance */
-body .home-section section.text-grid .textGrid a[href]:nth-child(10),
-body .home-section .textGrid a[href]:nth-child(10),
-body section.text-grid .textGrid a[href]:nth-child(10),
-body .textGrid a[href]:nth-child(10) {
-  background: linear-gradient(135deg, #505050 0%, #404040 25%, #303030 50%, #202020 75%, #000000 100%) !important;
-}
-
-/* Responsive - PERFECT CENTER ALIGNMENT */
+/* Responsive - Clean Mobile Design */
 @media screen and (max-width: 768px) {
   .textGrid a {
     padding: 40px 20px;
-    border-radius: 12px;
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
   
   .textGrid a:hover {
-    transform: translateY(-6px) scale(1.005);
-    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
   
   .textGrid a::before {
-    border-radius: 10px;
+    border-radius: 0;
   }
   
   .textGrid .grid {
@@ -314,56 +215,42 @@ body .textGrid a[href]:nth-child(10) {
   }
   
   .textGrid .grid__item h3 {
-    font-size: 2.8rem;
-    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    letter-spacing: 2.5px;
     margin: 0;
     line-height: 1.1;
   }
   
   .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 1.2rem;
-    letter-spacing: 0.25em;
-    margin: 0;
-  }
-  
-  .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    font-size: 1.2rem;
-    letter-spacing: 0.06em;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    letter-spacing: 2.5px;
     margin: 0;
   }
 }
 
 @media screen and (max-width: 480px) {
   .textGrid a {
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
   
   .textGrid a:hover {
-    transform: translateY(-4px) scale(1.005);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
   
   .textGrid a::before {
-    border-radius: 8px;
+    border-radius: 0;
   }
   
   .textGrid .grid__item h3 {
-    font-size: 2.2rem;
-    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
   }
   
   .textGrid .grid__item:nth-child(2) h3 {
-    font-size: 1.1rem;
-    letter-spacing: 0.22em;
-  }
-  
-  .textGrid .grid__item p,
-  .textGrid .grid__item div {
-    font-size: 1.1rem;
-    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
   }
 }
 
@@ -381,7 +268,7 @@ section.text-grid .textGrid a:nth-child(even) {
   background: inherit !important;
 }
 
-/* Ensure all text stays BLACK with premium effects */
+/* Ensure all text uses consistent colors - Match Website Style */
 .textGrid *,
 .textGrid a *,
 .textGrid .grid *,
@@ -390,13 +277,14 @@ section.text-grid .textGrid a:nth-child(even) {
 .home-section .textGrid a *,
 section.text-grid .textGrid *,
 section.text-grid .textGrid a * {
-  color: #000000 !important;
+  color: #2c2c2c !important;
 }
 
-/* Premium accessibility */
+/* Clean accessibility - Match Website Style */
 .textGrid a:focus {
-  outline: 2px solid rgba(0,0,0,0.8);
-  outline-offset: 3px;
+  outline: 2px solid rgba(44, 44, 44, 0.3);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 /* Reduced motion */
