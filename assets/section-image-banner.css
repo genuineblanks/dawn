@@ -514,71 +514,68 @@
 }
 
 /* Premium Button Styling - Advanced Animations */
-/* Ultra-Premium Collection Buttons - Minimal & Professional */
+/* Ultra-Minimal Premium Collection Buttons */
 .banner_subtext1,
 .banner_subtext2,
 .changeSection {
-  /* Reset and core design */
+  /* Reset everything */
+  all: unset !important;
+  
+  /* Core minimal design */
   display: inline-block !important;
-  padding: 0 !important;
-  background: transparent !important;
-  text-decoration: none !important;
-  border: none !important;
-  box-shadow: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.7rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
   cursor: pointer !important;
   
-  /* Premium typography */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-  font-size: 0.8rem !important;
-  font-weight: 300 !important;
-  letter-spacing: 3px !important;
-  text-transform: uppercase !important;
-  color: #2c2c2c !important;
-  
-  /* Minimal styling */
+  /* Ultra-minimal styling */
+  padding: 0.6rem 0 !important;
+  margin: 0 3rem !important;
   position: relative !important;
-  margin: 0 2.5rem !important;
-  padding: 0.8rem 0 !important;
-  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   
-  /* Performance optimizations */
-  will-change: transform, color !important;
-  transform: translateZ(0) !important;
+  /* Subtle transitions only for color */
+  transition: color 0.2s ease !important;
+  
+  /* Performance */
   backface-visibility: hidden !important;
-  z-index: 1 !important;
-  overflow: visible !important;
 }
 
-/* Subtle underline effect for collection buttons */
-.banner_subtext1::after,
-.banner_subtext2::after,
-.changeSection::after {
-  content: '' !important;
-  position: absolute !important;
-  bottom: 0 !important;
-  left: 50% !important;
-  transform: translateX(-50%) scaleX(0) !important;
-  transform-origin: center !important;
-  width: 100% !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, currentColor, transparent) !important;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+/* Selection States - Clean and Clear */
+
+/* Default state: Light gray (not selected) */
+.banner_subtext1,
+.banner_subtext2 {
+  color: #999999 !important;
 }
 
-/* Sophisticated hover states */
+/* Selected state: Black */
+.banner_subtext1.selected,
+.banner_subtext2.selected {
+  color: #000000 !important;
+}
+
+/* Hover states - Only subtle color change, no movement */
+.banner_subtext1:hover,
+.banner_subtext2:hover {
+  color: #666666 !important;
+}
+
+.banner_subtext1.selected:hover,
+.banner_subtext2.selected:hover {
+  color: #000000 !important;
+}
+
+/* Remove all transform effects - no movement */
 .banner_subtext1:hover,
 .banner_subtext2:hover,
-.changeSection:hover {
-  color: #000000 !important;
-  letter-spacing: 3.5px !important;
-  transform: translateY(-1px) translateZ(0) !important;
-  text-decoration: none !important;
-}
-
-.banner_subtext1:hover::after,
-.banner_subtext2:hover::after,
-.changeSection:hover::after {
-  transform: translateX(-50%) scaleX(0.9) !important;
+.banner_subtext1:active,
+.banner_subtext2:active,
+.banner_subtext1.selected,
+.banner_subtext2.selected {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Keep luxury-button class separate for other uses */
@@ -702,39 +699,7 @@
   transition: transform 0.1s ease !important;
 }
 
-/* Primary button specific styling (banner_subtext2 = "OVERSIZED COLLECTION") */
-.banner_subtext2 {
-  font-weight: 400 !important;
-  color: #1a1a1a !important;
-}
-
-.banner_subtext2::after {
-  height: 2px !important;
-  background: linear-gradient(90deg, transparent, #1a1a1a, transparent) !important;
-}
-
-.banner_subtext2:hover {
-  color: #000000 !important;
-  transform: translateY(-2px) translateZ(0) !important;
-}
-
-.banner_subtext2:hover::after {
-  transform: translateX(-50%) scaleX(1) !important;
-}
-
-/* Secondary button styling (banner_subtext1 = "RELAXED COLLECTION") */
-.banner_subtext1 {
-  font-weight: 300 !important;
-  color: #555555 !important;
-}
-
-.banner_subtext1::after {
-  background: linear-gradient(90deg, transparent, #555555, transparent) !important;
-}
-
-.banner_subtext1:hover {
-  color: #2c2c2c !important;
-}
+/* Clean minimal styling - no complex effects */
 
 /* Advanced sliding animation effect for luxury-button only */
 .luxury-button::before {
@@ -817,21 +782,19 @@
   background: #000000 !important;
 }
 
-/* Focus states for accessibility - Collection buttons */
+/* Clean focus states for collection buttons */
 .banner_subtext1:focus,
 .banner_subtext2:focus,
 .changeSection:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.3) !important;
-  outline-offset: 4px !important;
-  border-radius: 2px !important;
+  outline: 1px solid rgba(0, 0, 0, 0.2) !important;
+  outline-offset: 3px !important;
 }
 
-/* Active/press state for collection buttons */
+/* No active transformations */
 .banner_subtext1:active,
 .banner_subtext2:active,
 .changeSection:active {
-  transform: translateY(0px) translateZ(0) !important;
-  transition: transform 0.1s ease !important;
+  transform: none !important;
 }
 
 /* Focus states for luxury-button class */
@@ -1058,22 +1021,20 @@
   .banner_subtext1,
   .banner_subtext2,
   .changeSection {
-    font-size: 0.75rem !important;
+    font-size: 0.65rem !important;
     letter-spacing: 2px !important;
-    margin: 0 1rem !important;
-    padding: 1rem 0 !important;
-    min-width: auto !important;
+    margin: 0 2rem !important;
+    padding: 0.8rem 0 !important;
   }
   
+  /* No transforms on mobile */
   .banner_subtext1:hover,
   .banner_subtext2:hover,
-  .changeSection:hover {
-    letter-spacing: 2.5px !important;
-    transform: translateY(-0.5px) translateZ(0) !important;
-  }
-  
-  .banner_subtext2:hover {
-    transform: translateY(-1px) translateZ(0) !important;
+  .changeSection:hover,
+  .banner_subtext1:active,
+  .banner_subtext2:active,
+  .changeSection:active {
+    transform: none !important;
   }
   
   /* Luxury button mobile styles */
@@ -1149,4 +1110,101 @@
 .luxury-link:focus {
   outline: 2px solid #1a1a1a;
   outline-offset: 2px;
+}
+
+/* ===============================================
+   COLLECTION TOGGLE BUTTONS - NEW DESIGN
+   =============================================== */
+
+/* Base button styling for collection toggles */
+.collection-toggle-btn {
+  display: inline-block !important;
+  padding: 14px 28px !important;
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 1.8px !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  border: 2px solid #000 !important;
+  border-radius: 0 !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  position: relative !important;
+  min-width: 180px !important;
+  text-align: center !important;
+  user-select: none !important;
+}
+
+/* Active state - selected collection */
+.collection-toggle-btn--active {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Inactive state - not selected */
+.collection-toggle-btn--inactive {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: #000 !important;
+  box-shadow: none !important;
+}
+
+/* Hover effects */
+.collection-toggle-btn:hover {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.collection-toggle-btn--active:hover {
+  background: #1a1a1a !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.collection-toggle-btn--inactive:hover {
+  background: #f8f8f8 !important;
+  border-color: #1a1a1a !important;
+}
+
+/* Focus states for accessibility */
+.collection-toggle-btn:focus {
+  outline: 2px solid rgba(0, 0, 0, 0.5) !important;
+  outline-offset: 4px !important;
+}
+
+/* Active state for keyboard/mouse interaction */
+.collection-toggle-btn:active {
+  transform: translateY(0) scale(1) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 749px) {
+  .collection-toggle-btn {
+    padding: 12px 20px !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 1.5px !important;
+    min-width: 150px !important;
+  }
+  
+  .collection-toggle-btn:hover {
+    transform: translateY(-0.5px) scale(1.01) !important;
+  }
+}
+
+/* Container improvements for new buttons */
+.luxury-button-container .collection-toggle-btn,
+.towbutonbaner .collection-toggle-btn {
+  margin: 0 0.5rem !important;
+}
+
+@media screen and (max-width: 749px) {
+  .luxury-button-container .collection-toggle-btn,
+  .towbutonbaner .collection-toggle-btn {
+    margin: 0.5rem 0 !important;
+    width: 100% !important;
+    max-width: 220px !important;
+  }
 }
