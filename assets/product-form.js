@@ -12,11 +12,6 @@ if (!customElements.get('product-form')) {
           this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
         }
         this.cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
-        
-        // Enhanced cart element validation
-        if (this.cart && !this.cart.getSectionsToRender) {
-          console.warn('Cart element found but getSectionsToRender method not available. Cart functionality may be limited.');
-        }
         this.submitButton = this.querySelector('[type="submit"]');
 
         if (document.querySelector('cart-drawer') && this.submitButton) {
@@ -41,16 +36,13 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
-        if (this.cart && typeof this.cart.getSectionsToRender === 'function') {
-          const sectionsToRender = this.cart.getSectionsToRender();
-          if (sectionsToRender && sectionsToRender.length > 0) {
-            formData.append(
-              'sections',
-              sectionsToRender.map((section) => section.id)
-            );
-            formData.append('sections_url', window.location.pathname);
-            this.cart.setActiveElement(document.activeElement);
-          }
+        if (this.cart) {
+          formData.append(
+            'sections',
+            this.cart.getSectionsToRender().map((section) => section.id)
+          );
+          formData.append('sections_url', window.location.pathname);
+          this.cart.setActiveElement(document.activeElement);
         }
         config.body = formData;
 
@@ -104,18 +96,14 @@ if (!customElements.get('product-form')) {
                 'modalClosed',
                 () => {
                   setTimeout(() => {
-                    if (this.cart && typeof this.cart.renderContents === 'function') {
-                      this.cart.renderContents(response);
-                    }
+                    this.cart.renderContents(response);
                   });
                 },
                 { once: true }
               );
               quickAddModal.hide(true);
             } else {
-              if (this.cart && typeof this.cart.renderContents === 'function') {
-                this.cart.renderContents(response);
-              }
+              this.cart.renderContents(response);
             }
           })
           .catch((e) => {
