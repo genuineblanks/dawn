@@ -4,7 +4,7 @@
   
   console.log('💪 SCROLL ANIMATION FIX LOADING...');
   
-  var isHomepage = document.body.classList.contains('home-section');
+  const isHomepage = document.body.classList.contains('home-section');
   if (!isHomepage) {
     console.log('❌ Not homepage, skipping scroll fix');
     return;
@@ -15,8 +15,8 @@
     console.log('ℹ️ Custom scroll system detected - limiting to animation fixes only');
   }
   
-  var scrollFixed = false;
-  var scrollHandler = null;
+  let scrollFixed = false;
+  let scrollHandler = null;
   
   function destroyExistingFix() {
     if (scrollHandler) {
@@ -40,9 +40,9 @@
     }
     
     // Reset all elements
-    var allTriggers = document.querySelectorAll('.scroll-trigger');
+    const allTriggers = document.querySelectorAll('.scroll-trigger');
     allTriggers.forEach(function(el) {
-      var rect = el.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       
       // Only show elements in top 25% of viewport
       if (rect.top < window.innerHeight * 0.25) {
@@ -66,9 +66,9 @@
         return;
       }
       
-      var offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
+      const offscreenElements = document.querySelectorAll('.scroll-trigger--offscreen');
       offscreenElements.forEach(function(el) {
-        var rect = el.getBoundingClientRect();
+        const rect = el.getBoundingClientRect();
         if (rect.top < window.innerHeight - 50) {
           el.classList.remove('scroll-trigger--offscreen');
           el.style.opacity = '1';
