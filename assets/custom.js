@@ -1735,11 +1735,54 @@ function initializeAllFeatures() {
      if (this.hash !== "") {
       event.preventDefault();
       var hash = this.hash;
-       $('html, body').animate({
-         scrollTop: $(hash).offset().top
-       }, 800, function(){
-         window.location.hash = hash;
-       });
+      var target = $(hash);
+      
+      // If the target doesn't exist, find the next section to scroll to
+      if (target.length === 0) {
+        console.log('Target element not found:', hash, 'Finding next section...');
+        
+        // Find the current banner section
+        var currentBanner = $(this).closest('.banner, section');
+        
+        // Look for the next section on the page
+        var nextSection = currentBanner.next('section, .shopify-section, [class*="section"]');
+        
+        // If still not found, look for any section that comes after the current one
+        if (nextSection.length === 0) {
+          var allSections = $('section, .shopify-section, [class*="section"]');
+          var currentIndex = allSections.index(currentBanner);
+          if (currentIndex >= 0 && currentIndex < allSections.length - 1) {
+            nextSection = allSections.eq(currentIndex + 1);
+          }
+        }
+        
+        if (nextSection.length > 0) {
+          target = nextSection;
+          console.log('Found next section to scroll to:', nextSection[0]);
+        } else {
+          console.log('No next section found, scrolling down by viewport height');
+          // Fallback: scroll down by one viewport height
+          var scrollTarget = $(window).scrollTop() + $(window).height();
+          $('html, body').animate({
+            scrollTop: scrollTarget
+          }, 800);
+          return;
+        }
+      }
+      
+      // Check if target has offset (is visible element)
+      if (target.offset()) {
+        // Animate scroll to target
+        $('html, body').animate({
+           scrollTop: target.offset().top
+         }, 800, function(){
+           if ($(hash).length > 0) {
+             window.location.hash = hash;
+           }
+         });
+      } else {
+        console.error('Target element found but has no offset:', target);
+      }
      }
    });
    
