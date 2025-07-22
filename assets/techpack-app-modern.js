@@ -1812,11 +1812,11 @@
     }
 
     setupNetworkErrorHandling() {
-      // Override fetch to add error handling
-      const originalFetch = window.fetch;
-      window.fetch = async (...args) => {
+      // Don't override window.fetch - it breaks Shopify's payment system
+      // Use custom fetch wrapper only for internal techpack requests
+      this.techpackFetch = async (...args) => {
         try {
-          const response = await originalFetch(...args);
+          const response = await fetch(...args);
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
