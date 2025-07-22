@@ -143,7 +143,9 @@
             {% if section.settings.banner_link_url1 != blank %}
               href="{{ section.settings.banner_link_url1 }}"
             {% endif %}
-            class="banner_subtext2 changeSection luxury-button luxury-button--primary"
+            class="luxury-button--minimal-premium luxury-button--primary"
+            role="button"
+            aria-label="Browse {{ section.settings.banner_subtext1 | escape }}"
           >
             {{- section.settings.banner_subtext1 -}}
           </a>
@@ -153,7 +155,9 @@
             {% if section.settings.banner_link_url2 != blank %}
               href="{{ section.settings.banner_link_url2 }}"
             {% endif %}
-            class="banner_subtext1 changeSection luxury-button luxury-button--secondary"
+            class="luxury-button--minimal-premium luxury-button--secondary"
+            role="button"
+            aria-label="Browse {{ section.settings.banner_subtext2 | escape }}"
           >
             {{- section.settings.banner_subtext2 -}}
           </a>
