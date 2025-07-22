@@ -724,7 +724,7 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "TAKE A LOOK AT - OUR PAST PRODUCTS, FACILITY & TEAM",
+            "subtitle": "SHOWROOM, FACTORY & TEAM LOOKBOOK",
             "rich": "",
             "link": "shopify://pages/futuristic"
           }
@@ -733,7 +733,7 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "WHAT DO YOU NEED TO GET STARTED - FREQUENTLY ASKED QUESTIONS",
+            "subtitle": "WHAT DO YOU NEED TO GET STARTED & FAQ'S",
             "rich": "",
             "link": "shopify://pages/how-does-it-work"
           }
@@ -742,7 +742,7 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "BRANDING SOLUTIONS - ACCESSORIES & RELATED",
+            "subtitle": "BRANDING SOLUTIONS - labels, hang-tags & packaging",
             "rich": "",
             "link": "shopify://collections/accessories"
           }
@@ -751,7 +751,7 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "DESIGN SERVICES - EMBROIDERY DIGITIZING, BRANDMARK DEVELOPMENT...",
+            "subtitle": "DESIGN SERVICES - BRAND DEVELOPMENT ARTWORK",
             "rich": "",
             "link": "shopify://collections/design"
           }
