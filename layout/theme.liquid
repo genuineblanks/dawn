@@ -327,6 +327,9 @@
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}
     {%- endif -%}
+    {%- if settings.cart_type == 'notification' -%}
+      {%- render 'cart-notification' -%}
+    {%- endif -%}
     {% unless template contains 'index' %}
       {% sections 'header-group' %}
     {% endunless %}
