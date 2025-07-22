@@ -4,7 +4,10 @@
     {% for block in section.blocks %} 
       {%- case block.type -%}
         {%- when 'Add-text-grid' -%}
-        <a href="{{ block.settings.link }}">
+        <a href="{{ block.settings.link }}" {% if block.settings.background_image %}style="background-image: url('{{ block.settings.background_image | image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"{% endif %}>
+          {% if block.settings.background_image %}
+            <div class="background-overlay"></div>
+          {% endif %}
           <div class="grid">
             <div class="grid__item">
               <h3>{{ block.settings.title | strip_html | strip }}</h3>
@@ -262,6 +265,11 @@
             "type": "url",
             "id": "link",
             "label": "Url"
+          },
+          {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "Background Image"
           }
         ]
       }
