@@ -1249,6 +1249,20 @@ summary::-webkit-details-marker {
   background-color: transparent;
 }
 
+/* Mobile Product Grid Optimizations - Enhanced Image Focus */
+@media screen and (max-width: 749px) {
+  /* Optimize spacing for product grids specifically */
+  .product-grid.grid--2-col-tablet-down {
+    --grid-mobile-horizontal-spacing: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .product-grid .grid__item {
+    margin-bottom: 0.8rem;
+  }
+}
+}
+
 .media > *:not(.zoom):not(.deferred-media__poster-button),
 .media model-viewer {
   display: block;
