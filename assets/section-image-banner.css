@@ -540,39 +540,101 @@
   backface-visibility: hidden !important;
 }
 
-/* Completely Redesigned Minimal Collection Buttons */
-.luxury-button--premium {
-  /* Reset all previous styling */
-  min-width: auto !important;
-  padding: 0 !important;
+/* Ultra-Premium Minimal Collection Buttons */
+.luxury-button--minimal-premium {
+  /* Reset all styling */
+  all: unset !important;
+  
+  /* Core minimal design */
+  display: inline-block !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: #2c2c2c !important;
+  text-decoration: none !important;
+  position: relative !important;
+  cursor: pointer !important;
+  padding: 0.75rem 0 !important;
+  margin: 0 2rem !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   background: transparent !important;
   border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  border-radius: 0 !important;
-  
-  /* New minimal design */
-  font-size: 0.75rem !important;
-  font-weight: 400 !important;
-  letter-spacing: 2px !important;
-  text-transform: uppercase !important;
-  color: #999 !important;
-  position: relative !important;
-  display: inline-block !important;
-  transition: all 0.3s ease !important;
-  margin: 0 1rem !important;
+  outline: none !important;
+  box-sizing: border-box !important;
 }
 
-.luxury-button--premium::after {
+/* Ultra-subtle underline effect */
+.luxury-button--minimal-premium::after {
   content: '' !important;
   position: absolute !important;
-  bottom: -8px !important;
+  bottom: 0 !important;
   left: 50% !important;
   transform: translateX(-50%) scaleX(0) !important;
+  transform-origin: center !important;
   width: 100% !important;
   height: 1px !important;
-  background: #333 !important;
-  transition: transform 0.3s ease !important;
+  background: linear-gradient(90deg, transparent, #2c2c2c, transparent) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Sophisticated hover states */
+.luxury-button--minimal-premium:hover {
+  color: #000000 !important;
+  letter-spacing: 3.5px !important;
+  transform: translateY(-1px) !important;
+}
+
+.luxury-button--minimal-premium:hover::after {
+  transform: translateX(-50%) scaleX(0.8) !important;
+}
+
+/* Primary button variation (Oversized Collection) */
+.luxury-button--minimal-premium.luxury-button--primary {
+  font-weight: 400 !important;
+  color: #1a1a1a !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary::after {
+  background: linear-gradient(90deg, transparent, #1a1a1a, transparent) !important;
+  height: 2px !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary:hover {
+  color: #000000 !important;
+  transform: translateY(-2px) !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+/* Secondary button variation (Relaxed Collection) */  
+.luxury-button--minimal-premium.luxury-button--secondary {
+  font-weight: 300 !important;
+  color: #555555 !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--secondary::after {
+  background: linear-gradient(90deg, transparent, #555555, transparent) !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--secondary:hover {
+  color: #2c2c2c !important;
+}
+
+/* Focus states for accessibility */
+.luxury-button--minimal-premium:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.3) !important;
+  outline-offset: 4px !important;
+  border-radius: 2px !important;
+}
+
+/* Active/press state */
+.luxury-button--minimal-premium:active {
+  transform: translateY(0px) !important;
+  transition: transform 0.1s ease !important;
 }
 
 /* Advanced sliding animation effect */
@@ -908,6 +970,23 @@
     margin: 0.5rem 0 !important;
     font-size: 0.7rem !important;
     letter-spacing: 1.5px !important;
+  }
+  
+  /* Mobile optimization for minimal premium buttons */
+  .luxury-button--minimal-premium {
+    font-size: 0.75rem !important;
+    letter-spacing: 2px !important;
+    margin: 0 1rem !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .luxury-button--minimal-premium:hover {
+    letter-spacing: 2.5px !important;
+    transform: translateY(-0.5px) !important;
+  }
+  
+  .luxury-button--minimal-premium.luxury-button--primary:hover {
+    transform: translateY(-1px) !important;
   }
   
   .luxury-paragraph {
