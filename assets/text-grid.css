@@ -57,32 +57,12 @@
   z-index: 2;
 }
 
-/* Spectacular hover effects for BLACK buttons (odd) */
-.textGrid a:not([style*="background-image"]):nth-child(odd):hover {
-  background: #333333 !important;
-  color: #ffffff !important;
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+/* For buttons without background images */
+.textGrid a:not([style*="background-image"]):hover {
+  background: #f0f0f0 !important;
 }
 
-/* Spectacular hover effects for WHITE buttons (even) */
-.textGrid a:not([style*="background-image"]):nth-child(even):hover {
-  background: #f8f8f8 !important;
-  color: #000000 !important;
-  border: 3px solid #000000 !important;
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-}
-
-/* Text color on hover - BLACK buttons (white text) */
-.textGrid a:not([style*="background-image"]):nth-child(odd):hover .grid__item h3 {
-  color: #ffffff !important;
-  transform: translateY(-1px);
-  letter-spacing: 3px;
-}
-
-/* Text color on hover - WHITE buttons (black text) */
-.textGrid a:not([style*="background-image"]):nth-child(even):hover .grid__item h3 {
+.textGrid a:hover .grid__item h3 {
   color: #000000 !important;
   transform: translateY(-1px);
   letter-spacing: 3px;
@@ -106,31 +86,22 @@
   opacity: 1;
 }
 
-/* Background image overlay for subtle effect */
+/* Background image overlay for high opacity (almost white) effect */
 .textGrid a .background-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  background: rgba(255, 255, 255, 0.9); /* High opacity white overlay */
   z-index: 1;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* WHITE overlay for buttons with background images (odd positioned - should be black-ish) */
-.textGrid a[style*="background-image"]:nth-child(odd) .background-overlay {
-  background: rgba(0, 0, 0, 0.7); /* Dark overlay for odd buttons */
-}
-
-/* LIGHT overlay for buttons with background images (even positioned - should be white-ish) */
-.textGrid a[style*="background-image"]:nth-child(even) .background-overlay {
-  background: rgba(255, 255, 255, 0.8); /* Light overlay for even buttons */
-}
-
 /* Reduce overlay opacity on hover to show more background */
-.textGrid a[style*="background-image"]:hover .background-overlay {
-  opacity: 0.7;
+.textGrid a:hover .background-overlay {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* Ensure content stays above overlay */
@@ -199,35 +170,29 @@
 
 /* Remove this - we have hover effects above */
 
-/* SPECTACULAR BLACK & WHITE ALTERNATING DESIGN */
+/* CAPTIVATING COLOR SCHEME */
 
-/* Default white background for buttons without images */
-body .home-section section.text-grid .textGrid a[href]:not([style*="background-image"]),
-body .home-section .textGrid a[href]:not([style*="background-image"]),
-body section.text-grid .textGrid a[href]:not([style*="background-image"]),
-body .textGrid a[href]:not([style*="background-image"]) {
+/* Clean white base for all buttons */
+body .home-section section.text-grid .textGrid a[href],
+body .home-section .textGrid a[href],
+body section.text-grid .textGrid a[href],
+body .textGrid a[href] {
   background: #ffffff !important;
-  color: #000000 !important;
 }
 
-/* BLACK buttons - odd positioned (1st, 3rd, 5th) */
-body .home-section section.text-grid .textGrid a[href]:not([style*="background-image"]):nth-child(odd),
-body .home-section .textGrid a[href]:not([style*="background-image"]):nth-child(odd),
-body section.text-grid .textGrid a[href]:not([style*="background-image"]):nth-child(odd),
-body .textGrid a[href]:not([style*="background-image"]):nth-child(odd) {
-  background: #000000 !important;
-  color: #ffffff !important;
-  border-color: #000000 !important;
+/* Keep all buttons the same color - no alternating pattern */
+body .home-section section.text-grid .textGrid a[href]:nth-child(odd),
+body .home-section .textGrid a[href]:nth-child(odd),
+body section.text-grid .textGrid a[href]:nth-child(odd),
+body .textGrid a[href]:nth-child(odd) {
+  background: #ffffff !important;
 }
 
-/* WHITE buttons - even positioned (2nd, 4th, 6th) */
-body .home-section section.text-grid .textGrid a[href]:not([style*="background-image"]):nth-child(even),
-body .home-section .textGrid a[href]:not([style*="background-image"]):nth-child(even),
-body section.text-grid .textGrid a[href]:not([style*="background-image"]):nth-child(even),
-body .textGrid a[href]:not([style*="background-image"]):nth-child(even) {
+body .home-section section.text-grid .textGrid a[href]:nth-child(even),
+body .home-section .textGrid a[href]:nth-child(even),
+body section.text-grid .textGrid a[href]:nth-child(even),
+body .textGrid a[href]:nth-child(even) {
   background: #ffffff !important;
-  color: #000000 !important;
-  border: 2px solid #000000 !important;
 }
 
 /* Mobile responsiveness - No gaps */
@@ -250,19 +215,8 @@ body .textGrid a[href]:not([style*="background-image"]):nth-child(even) {
     border: 1px solid #000000;
   }
   
-  /* Mobile hover effects for BLACK buttons (odd) */
-  .textGrid a:not([style*="background-image"]):nth-child(odd):hover {
-    background: #333333 !important;
-    color: #ffffff !important;
-    transform: translateY(-4px);
-  }
-
-  /* Mobile hover effects for WHITE buttons (even) */
-  .textGrid a:not([style*="background-image"]):nth-child(even):hover {
-    background: #f8f8f8 !important;
-    color: #000000 !important;
-    border: 3px solid #000000 !important;
-    transform: translateY(-4px);
+  .textGrid a:not([style*="background-image"]):hover {
+    background: #f0f0f0 !important;
   }
   
   .textGrid .grid {
@@ -306,7 +260,7 @@ section.text-grid .textGrid a:nth-child(even) {
   background: inherit !important;
 }
 
-/* Default black text for white buttons */
+/* Bold text for better visibility */
 .textGrid *,
 .textGrid a *,
 .textGrid .grid *,
@@ -315,34 +269,6 @@ section.text-grid .textGrid a:nth-child(even) {
 .home-section .textGrid a *,
 section.text-grid .textGrid *,
 section.text-grid .textGrid a * {
-  color: #000000 !important;
-}
-
-/* WHITE text for BLACK buttons (odd positioned) */
-.textGrid a:not([style*="background-image"]):nth-child(odd) *,
-.textGrid a:not([style*="background-image"]):nth-child(odd) .grid *,
-.textGrid a:not([style*="background-image"]):nth-child(odd) .grid__item *,
-.home-section .textGrid a:not([style*="background-image"]):nth-child(odd) *,
-section.text-grid .textGrid a:not([style*="background-image"]):nth-child(odd) * {
-  color: #ffffff !important;
-}
-
-/* Text colors for buttons WITH background images */
-/* WHITE text for odd positioned buttons with images (dark overlay) */
-.textGrid a[style*="background-image"]:nth-child(odd) *,
-.textGrid a[style*="background-image"]:nth-child(odd) .grid *,
-.textGrid a[style*="background-image"]:nth-child(odd) .grid__item *,
-.home-section .textGrid a[style*="background-image"]:nth-child(odd) *,
-section.text-grid .textGrid a[style*="background-image"]:nth-child(odd) * {
-  color: #ffffff !important;
-}
-
-/* BLACK text for even positioned buttons with images (light overlay) */
-.textGrid a[style*="background-image"]:nth-child(even) *,
-.textGrid a[style*="background-image"]:nth-child(even) .grid *,
-.textGrid a[style*="background-image"]:nth-child(even) .grid__item *,
-.home-section .textGrid a[style*="background-image"]:nth-child(even) *,
-section.text-grid .textGrid a[style*="background-image"]:nth-child(even) * {
   color: #000000 !important;
 }
 
