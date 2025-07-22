@@ -724,7 +724,7 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "TAKE A LOOK AT OUR PAST PRODUCTS, FACILITY & TEAM",
+            "subtitle": "TAKE A LOOK AT - OUR PAST PRODUCTS, FACILITY & TEAM",
             "rich": "",
             "link": "shopify://pages/futuristic"
           }
@@ -733,16 +733,16 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "DESIGNER LAB",
+            "subtitle": "WHAT DO YOU NEED TO GET STARTED - FREQUENTLY ASKED QUESTIONS",
             "rich": "",
-            "link": "shopify://pages/design-lab"
+            "link": "shopify://pages/how-does-it-work"
           }
         },
         "add_text_grid_Nz7RMR": {
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "LABELLING & ACCESSORIES SERVICE",
+            "subtitle": "BRANDING SOLUTIONS - ACCESSORIES & RELATED",
             "rich": "",
             "link": "shopify://collections/accessories"
           }
@@ -751,9 +751,9 @@
           "type": "Add-text-grid",
           "settings": {
             "title": "",
-            "subtitle": "ABOUT US - GET TO KNOW US BETTER",
+            "subtitle": "DESIGN SERVICES - EMBROIDERY DIGITIZING, BRANDMARK DEVELOPMENT...",
             "rich": "",
-            "link": "shopify://pages/about-us"
+            "link": "shopify://collections/design"
           }
         },
         "add_text_grid_ktQ6ix": {
@@ -762,7 +762,7 @@
             "title": "",
             "subtitle": "LUXURY & HIGH END LOOKBOOK",
             "rich": "",
-            "link": "shopify://pages/luxary-lookbook"
+            "link": "shopify://pages/luxury-lookbook"
           }
         },
         "add_text_grid_atVwXA": {
