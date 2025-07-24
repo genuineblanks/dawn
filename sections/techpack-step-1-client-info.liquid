@@ -214,9 +214,13 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
                 id="deadline"
                 name="deadline"
                 class="techpack-form__input techpack-form__input--date"
-                min="{{ 'now' | date: '%Y-%m-%d' }}"
+                min="{{ 'now' | date: '%s' | plus: 3628800 | date: '%Y-%m-%d' }}"
                 max="{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
+                data-min-weeks="6"
               >
+              <div class="techpack-form__date-hint">
+                Minimum 6 weeks from today ({{ 'now' | date: '%s' | plus: 3628800 | date: '%B %d, %Y' }})
+              </div>
             </div>
             <div class="techpack-form__error" role="alert"></div>
           </div>
@@ -372,4 +376,4 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 </div>
 
 <!-- Load Tech Pack Application -->
-<script src="{{ 'techpack-app.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'techpack-modern.js' | asset_url }}" defer="defer"></script>
