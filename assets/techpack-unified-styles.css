@@ -1,0 +1,930 @@
+/* TECHPACK UNIFIED STYLES - Single Source of Truth */
+/* Clean, consistent black/grey/white design that works perfectly on desktop and mobile */
+
+/* 
+===========================================
+CSS CUSTOM PROPERTIES - UNIFIED COLOR SYSTEM
+===========================================
+*/
+
+:root {
+  /* Primary Colors - Black/Grey/White Theme */
+  --techpack-primary: #000000;
+  --techpack-primary-hover: #1a1a1a;
+  --techpack-secondary: #6b7280;
+  --techpack-accent: #374151;
+  
+  /* Background Colors */
+  --techpack-bg: #ffffff;
+  --techpack-bg-secondary: #f9fafb;
+  --techpack-bg-tertiary: #f3f4f6;
+  --techpack-bg-dark: #000000;
+  
+  /* Border Colors */
+  --techpack-border: #e5e7eb;
+  --techpack-border-light: #f3f4f6;
+  --techpack-border-dark: #d1d5db;
+  
+  /* Text Colors */
+  --techpack-text: #111827;
+  --techpack-text-secondary: #6b7280;
+  --techpack-text-muted: #9ca3af;
+  --techpack-text-light: #ffffff;
+  
+  /* Status Colors */
+  --techpack-success: #10b981;
+  --techpack-error: #ef4444;
+  --techpack-warning: #f59e0b;
+  
+  /* Shadows */
+  --techpack-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --techpack-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Transitions */
+  --techpack-transition: all 0.2s ease;
+  
+  /* Typography */
+  --techpack-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* 
+===========================================
+BASE LAYOUT & CONTAINER
+===========================================
+*/
+
+.techpack-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  background: var(--techpack-bg);
+}
+
+.techpack-step {
+  min-height: auto;
+  width: 100%;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.techpack-content {
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 
+===========================================
+TYPOGRAPHY
+===========================================
+*/
+
+.techpack-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--techpack-text);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  font-family: var(--techpack-font-family);
+}
+
+.techpack-subtitle {
+  font-size: 1.125rem;
+  color: var(--techpack-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  font-family: var(--techpack-font-family);
+}
+
+/* 
+===========================================
+PROGRESS BAR
+===========================================
+*/
+
+.techpack-progress {
+  background: var(--techpack-bg);
+  border-bottom: 1px solid var(--techpack-border);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--techpack-shadow);
+}
+
+.techpack-progress__bar {
+  width: 100%;
+  height: 4px;
+  background: var(--techpack-bg-tertiary);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.techpack-progress__fill {
+  height: 100%;
+  background: var(--techpack-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.techpack-progress__steps {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+
+.techpack-progress__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 80px;
+  text-align: center;
+}
+
+.techpack-progress__step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: var(--techpack-bg-tertiary);
+  color: var(--techpack-text-secondary);
+  border: 2px solid var(--techpack-border);
+  transition: var(--techpack-transition);
+}
+
+.techpack-progress__step-circle--active {
+  background: var(--techpack-primary);
+  color: var(--techpack-text-light);
+  border-color: var(--techpack-primary);
+}
+
+.techpack-progress__step-circle--completed {
+  background: var(--techpack-success);
+  color: var(--techpack-text-light);
+  border-color: var(--techpack-success);
+}
+
+.techpack-progress__step-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--techpack-text-secondary);
+  white-space: nowrap;
+}
+
+/* 
+===========================================
+FORM ELEMENTS
+===========================================
+*/
+
+.techpack-form__group {
+  margin-bottom: 1.5rem;
+}
+
+.techpack-form__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin-bottom: 0.5rem;
+  font-family: var(--techpack-font-family);
+}
+
+.techpack-form__input,
+.techpack-form__select,
+.techpack-form__textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--techpack-border);
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: var(--techpack-font-family);
+  background: var(--techpack-bg);
+  color: var(--techpack-text);
+  transition: var(--techpack-transition);
+  box-sizing: border-box;
+  min-height: 48px;
+}
+
+.techpack-form__input:focus,
+.techpack-form__select:focus,
+.techpack-form__textarea:focus {
+  outline: none;
+  border-color: var(--techpack-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-form__input:hover,
+.techpack-form__select:hover,
+.techpack-form__textarea:hover {
+  border-color: var(--techpack-border-dark);
+}
+
+/* Date Input Styling */
+.techpack-form__input--date {
+  background-image: url("data:image/svg+xml,%3csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M6 2V1a1 1 0 00-2 0v1H3a2 2 0 00-2 2v11a2 2 0 002 2h14a2 2 0 002-2V4a2 2 0 00-2-2h-1V1a1 1 0 10-2 0v1H6z' fill='%236b7280'/%3e%3cpath d='M3 8h14M8 12h1m4 0h1' stroke='%236b7280' stroke-width='1.5'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 20px;
+  cursor: pointer;
+}
+
+.techpack-form__date-hint {
+  font-size: 0.75rem;
+  color: var(--techpack-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Checkbox Styling */
+.techpack-form__checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.techpack-form__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--techpack-text);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: var(--techpack-transition);
+  min-height: 44px;
+}
+
+.techpack-form__checkbox:hover {
+  background: var(--techpack-bg-secondary);
+}
+
+.techpack-form__checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Error States */
+.techpack-form__error {
+  color: var(--techpack-error);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+.techpack-form__group--error .techpack-form__error {
+  display: block;
+}
+
+.techpack-form__group--error .techpack-form__input,
+.techpack-form__group--error .techpack-form__select {
+  border-color: var(--techpack-error);
+}
+
+/* 
+===========================================
+BUTTONS
+===========================================
+*/
+
+.techpack-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--techpack-font-family);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  border: none;
+  min-height: 48px;
+  touch-action: manipulation;
+}
+
+.techpack-btn--primary {
+  background: var(--techpack-primary);
+  color: var(--techpack-text-light);
+  box-shadow: var(--techpack-shadow);
+}
+
+.techpack-btn--primary:hover {
+  background: var(--techpack-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--techpack-shadow-lg);
+}
+
+.techpack-btn--secondary {
+  background: var(--techpack-bg);
+  color: var(--techpack-text);
+  border: 1px solid var(--techpack-border);
+}
+
+.techpack-btn--secondary:hover {
+  background: var(--techpack-bg-secondary);
+  border-color: var(--techpack-border-dark);
+}
+
+.techpack-btn--ghost {
+  background: transparent;
+  color: var(--techpack-text-secondary);
+  border: 1px solid var(--techpack-border);
+}
+
+.techpack-btn--ghost:hover {
+  color: var(--techpack-text);
+  border-color: var(--techpack-primary);
+}
+
+.techpack-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.techpack-btn__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.techpack-btn__icon--left {
+  order: -1;
+}
+
+/* 
+===========================================
+GARMENT CARDS
+===========================================
+*/
+
+.techpack-garments {
+  margin-bottom: 2rem;
+}
+
+.techpack-garment {
+  background: var(--techpack-bg);
+  border: 1px solid var(--techpack-border);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: var(--techpack-shadow);
+  transition: var(--techpack-transition);
+}
+
+.techpack-garment:hover {
+  box-shadow: var(--techpack-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.techpack-garment__header {
+  padding: 1rem;
+  background: var(--techpack-bg-secondary);
+  border-bottom: 1px solid var(--techpack-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.techpack-garment__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0;
+  font-family: var(--techpack-font-family);
+}
+
+.techpack-garment__remove {
+  background: none;
+  border: none;
+  color: var(--techpack-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: var(--techpack-transition);
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.techpack-garment__remove:hover {
+  color: var(--techpack-error);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.techpack-garment__content {
+  padding: 1rem;
+}
+
+/* Form rows within garments */
+.techpack-form__row {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 
+===========================================
+COLORWAYS SECTION  
+===========================================
+*/
+
+.techpack-colorways {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--techpack-border);
+  padding-top: 1.5rem;
+}
+
+.techpack-colorways__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.techpack-colorways__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0;
+  font-family: var(--techpack-font-family);
+}
+
+.add-colorway {
+  background: var(--techpack-bg-tertiary);
+  border: 1px solid var(--techpack-border);
+  color: var(--techpack-text);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 36px;
+}
+
+.add-colorway:hover {
+  background: var(--techpack-primary);
+  color: var(--techpack-text-light);
+  border-color: var(--techpack-primary);
+}
+
+.techpack-colorway {
+  background: var(--techpack-bg-secondary);
+  border: 1px solid var(--techpack-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.techpack-colorway__header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.techpack-colorway__color {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-colorway__pantone {
+  flex: 2;
+  min-width: 0;
+}
+
+.techpack-colorway__remove {
+  background: none;
+  border: none;
+  color: var(--techpack-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: var(--techpack-transition);
+  min-height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.techpack-colorway__remove:hover {
+  color: var(--techpack-error);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.techpack-color-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.techpack-color-picker__input {
+  width: 40px;
+  height: 32px;
+  border: 1px solid var(--techpack-border);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 
+===========================================
+SIZE GRID
+===========================================
+*/
+
+.techpack-size-grid {
+  margin: 1rem 0;
+  border: 1px solid var(--techpack-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--techpack-bg);
+}
+
+.techpack-size-grid__header,
+.techpack-size-grid__row {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  min-width: 420px;
+}
+
+.techpack-size-grid__header {
+  background: var(--techpack-bg-secondary);
+  border-bottom: 1px solid var(--techpack-border);
+}
+
+.techpack-size-grid__label {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--techpack-text);
+  border-right: 1px solid var(--techpack-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--techpack-font-family);
+}
+
+.techpack-size-grid__input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-right: 1px solid var(--techpack-border);
+  text-align: center;
+  font-size: 14px;
+  background: transparent;
+  color: var(--techpack-text);
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.techpack-size-grid__input:focus {
+  outline: none;
+  background: var(--techpack-bg-secondary);
+  position: relative;
+  z-index: 1;
+}
+
+.techpack-size-grid {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 
+===========================================
+QUANTITY TRACKER
+===========================================
+*/
+
+.techpack-quantity-tracker {
+  background: var(--techpack-bg-secondary);
+  border: 1px solid var(--techpack-border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.techpack-quantity-tracker__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.techpack-quantity-tracker__label {
+  font-weight: 600;
+  color: var(--techpack-text);
+}
+
+.techpack-quantity-tracker__value {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--techpack-primary);
+}
+
+.techpack-quantity-tracker__minimum {
+  color: var(--techpack-text-secondary);
+  font-size: 0.75rem;
+}
+
+.techpack-quantity-tracker__bar {
+  height: 4px;
+  background: var(--techpack-bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.techpack-quantity-tracker__fill {
+  height: 100%;
+  background: var(--techpack-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* 
+===========================================
+TOTALS
+===========================================
+*/
+
+.techpack-garment__total,
+.techpack-colorway__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--techpack-bg-tertiary);
+  border-top: 1px solid var(--techpack-border);
+  margin: 1rem -0.75rem -0.75rem;
+  font-size: 0.875rem;
+}
+
+.techpack-garment__total-label,
+.techpack-colorway__total-label {
+  color: var(--techpack-text-secondary);
+  font-weight: 500;
+}
+
+.techpack-garment__total-value,
+.techpack-colorway__total-value {
+  color: var(--techpack-text);
+  font-weight: 700;
+}
+
+/* 
+===========================================
+NAVIGATION ACTIONS
+===========================================
+*/
+
+.techpack-form__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.techpack-form__actions button {
+  flex: 1;
+}
+
+.techpack-form__actions .techpack-btn--primary {
+  flex: 2;
+}
+
+/* 
+===========================================
+ADD GARMENT BUTTON
+===========================================
+*/
+
+.techpack-btn--add-garment {
+  width: 100%;
+  background: var(--techpack-bg-tertiary);
+  border: 2px dashed var(--techpack-border);
+  color: var(--techpack-text-secondary);
+  margin: 1.5rem 0;
+  padding: 1rem;
+  font-weight: 500;
+  transition: var(--techpack-transition);
+}
+
+.techpack-btn--add-garment:hover {
+  background: var(--techpack-bg-secondary);
+  border-color: var(--techpack-primary);
+  color: var(--techpack-primary);
+  border-style: solid;
+}
+
+/* 
+===========================================
+MOBILE RESPONSIVE (768px and below)
+===========================================
+*/
+
+@media (max-width: 768px) {
+  .techpack-content {
+    padding: 1rem;
+  }
+  
+  .techpack-title {
+    font-size: 1.5rem;
+  }
+  
+  .techpack-subtitle {
+    font-size: 1rem;
+  }
+  
+  .techpack-progress {
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  .techpack-step {
+    padding-top: 120px;
+    padding-bottom: 100px;
+  }
+  
+  .techpack-progress__steps {
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .techpack-progress__steps::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .techpack-progress__step {
+    flex-shrink: 0;
+    min-width: 70px;
+  }
+  
+  .techpack-progress__step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  
+  .techpack-progress__step-label {
+    font-size: 0.6875rem;
+  }
+  
+  .techpack-form__actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--techpack-border);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 90;
+    padding: 1rem;
+    margin: 0;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .techpack-form__actions button {
+    min-height: 48px;
+  }
+  
+  .techpack-form__row {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-form__checkboxes {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-colorway__header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .techpack-colorway__color,
+  .techpack-colorway__pantone {
+    flex: none;
+  }
+  
+  .techpack-size-grid__header,
+  .techpack-size-grid__row {
+    grid-template-columns: 50px repeat(7, 45px);
+    min-width: 365px;
+  }
+  
+  .techpack-size-grid__label {
+    padding: 0.375rem 0.25rem;
+    font-size: 0.6875rem;
+  }
+  
+  .techpack-size-grid__input {
+    padding: 0.375rem 0.25rem;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  /* Prevent zoom on form inputs */
+  .techpack-form__input,
+  .techpack-form__select {
+    font-size: 16px !important;
+  }
+  
+  /* Touch targets */
+  button,
+  input,
+  select {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+/* 
+===========================================
+DESKTOP OPTIMIZATION (769px+)
+===========================================
+*/
+
+@media (min-width: 769px) {
+  .techpack-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .techpack-colorway__header {
+    align-items: center;
+  }
+  
+  .techpack-progress {
+    position: sticky;
+  }
+  
+  .techpack-form__actions {
+    position: relative;
+    margin-top: 2rem;
+  }
+  
+  .techpack-step {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* 
+===========================================
+HIGH CONTRAST & ACCESSIBILITY
+===========================================
+*/
+
+@media (prefers-contrast: high) {
+  .techpack-form__input,
+  .techpack-form__select,
+  .techpack-garment,
+  .techpack-colorway {
+    border-width: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--techpack-primary);
+  outline-offset: 2px;
+}
