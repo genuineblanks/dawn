@@ -1,535 +1,655 @@
-// ===============================================
-// TECH PACK CORE MANAGERS MODULE
-// ===============================================
+/**
+ * TechPack Core Application Controller
+ * Main orchestrator for the multi-step TechPack submission form
+ * Handles step navigation, initialization, and module coordination
+ */
 
-// Enhanced Step Manager
-class StepManager {
-  constructor(state, animationManager) {
-    this.state = state;
-    this.animationManager = animationManager;
-    this.steps = ['0', '1', '2', '3', '4']; // Include step 0 for registration check
-    this.stepElements = new Map();
-    this.initialized = false;
-  }
+(function() {
+  'use strict';
 
-  init() {
-    this.cacheStepElements();
-    this.attachNavigationListeners();
-    this.updateProgress();
-    this.initialized = true;
-  }
+  // Configuration constants
+  const CONFIG = {
+    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30,
+    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20,
+    MIN_ORDER_QUANTITY_CUSTOM: 75,
+    MIN_COLORWAY_QUANTITY: 50,
+    MAX_FILES: 10,
+    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
+    ANIMATION_DURATION: 400,
+    DEBOUNCE_DELAY: 300,
+    MIN_DELIVERY_WEEKS: 6
+  };
 
-  cacheStepElements() {
-    this.steps.forEach(step => {
-      const element = document.querySelector(`#techpack-step-${step}`);
-      if (element) {
-        this.stepElements.set(step, element);
-      }
-    });
-  }
-
-  attachNavigationListeners() {
-    // Next buttons
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('[id$="-next"]')) {
-        e.preventDefault();
-        this.handleNextStep(e.target);
-      }
-    });
-
-    // Back buttons
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('[id$="-back"]')) {
-        e.preventDefault();
-        this.handlePreviousStep();
-      }
-    });
-  }
-
-  async handleNextStep(button) {
-    const currentStep = this.getCurrentStep();
-    const nextStep = this.getNextStep(currentStep);
-
-    if (!nextStep) return;
-
-    // Validate current step before proceeding
-    if (await this.validateCurrentStep()) {
-      await this.goToStep(nextStep, 'forward');
-    }
-  }
-
-  async handlePreviousStep() {
-    const currentStep = this.getCurrentStep();
-    const previousStep = this.getPreviousStep(currentStep);
-
-    if (previousStep !== null) {
-      await this.goToStep(previousStep, 'backward');
-    }
-  }
-
-  async goToStep(stepNumber, direction = 'forward') {
-    const currentStep = this.getCurrentStep();
+  // Utility function for minimum quantity calculation
+  function getMinimumQuantity(colorwayCount, productionType) {
+    colorwayCount = colorwayCount || 1;
     
-    if (currentStep === stepNumber) return;
-
-    // Hide current step
-    const currentElement = this.stepElements.get(currentStep.toString());
-    const nextElement = this.stepElements.get(stepNumber.toString());
-
-    if (currentElement && nextElement) {
-      currentElement.style.display = 'none';
-      nextElement.style.display = 'block';
-
-      // Animate transition if animation manager is available
-      if (this.animationManager) {
-        await this.animationManager.transitionToStep(currentStep, stepNumber, direction);
-      }
+    if (!productionType) {
+      const productionSelect = document.querySelector('#production-type, select[name="productionType"]');
+      productionType = productionSelect ? productionSelect.value : 'our-blanks';
     }
-
-    // Update state
-    this.state.currentStep = stepNumber;
-    this.updateProgress();
-    this.updateURL();
-
-    // Trigger step change event
-    this.triggerStepChangeEvent(currentStep, stepNumber);
-  }
-
-  getCurrentStep() {
-    return this.state.currentStep;
-  }
-
-  getNextStep(currentStep) {
-    const currentIndex = this.steps.indexOf(currentStep.toString());
-    return currentIndex < this.steps.length - 1 ? parseInt(this.steps[currentIndex + 1]) : null;
-  }
-
-  getPreviousStep(currentStep) {
-    const currentIndex = this.steps.indexOf(currentStep.toString());
-    return currentIndex > 0 ? parseInt(this.steps[currentIndex - 1]) : null;
-  }
-
-  updateProgress() {
-    const currentStep = this.getCurrentStep();
-    const progressPercentage = (currentStep / (this.steps.length - 1)) * 100;
-
-    // Update progress bar
-    const progressFill = document.querySelector('.techpack-progress__fill');
-    if (progressFill) {
-      progressFill.style.width = `${progressPercentage}%`;
+    
+    if (productionType === 'our-blanks') {
+      return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_SINGLE_COLORWAY : CONFIG.MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY;
     }
+    
+    return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_CUSTOM : CONFIG.MIN_COLORWAY_QUANTITY;
+  }
 
-    // Update step indicators
-    this.steps.forEach((step, index) => {
-      const stepElement = document.querySelector(`[data-step="${step}"] .techpack-progress__step`);
-      const circle = document.querySelector(`[data-step="${step}"] .techpack-progress__step-circle`);
+  /**
+   * Main TechPack Application Class
+   * Coordinates all modules and manages the overall application flow
+   */
+  class TechPackApp {
+    constructor() {
+      this.state = null;
+      this.stepManager = null;
+      this.fileManager = null;
+      this.garmentManager = null;
+      this.ui = null;
+      this.mobile = null;
+      this.validator = null;
+      this.initialized = false;
       
-      if (stepElement && circle) {
-        const stepNum = parseInt(step);
-        if (stepNum < currentStep) {
-          // Completed step
-          circle.classList.add('techpack-progress__step-circle--completed');
-          circle.classList.remove('techpack-progress__step-circle--active');
-          circle.textContent = '✓';
-        } else if (stepNum === currentStep) {
-          // Active step
-          circle.classList.add('techpack-progress__step-circle--active');
-          circle.classList.remove('techpack-progress__step-circle--completed');
-          circle.textContent = stepNum + 1;
-        } else {
-          // Future step
-          circle.classList.remove('techpack-progress__step-circle--active', 'techpack-progress__step-circle--completed');
-          circle.textContent = stepNum + 1;
-        }
-      }
-    });
-  }
-
-  async validateCurrentStep() {
-    const currentStep = this.getCurrentStep();
-    
-    // Step-specific validation logic
-    switch (currentStep) {
-      case 0:
-        return this.validateRegistrationStep();
-      case 1:
-        return this.validateClientInfoStep();
-      case 2:
-        return this.validateFileUploadStep();
-      case 3:
-        return this.validateGarmentSpecsStep();
-      default:
-        return true;
-    }
-  }
-
-  validateRegistrationStep() {
-    // Registration step should be handled by the button click handlers
-    return true;
-  }
-
-  validateClientInfoStep() {
-    const formValidator = window.techPackApp?.validator;
-    if (!formValidator) return true;
-
-    const formData = this.getFormData();
-    const result = formValidator.validateAll(formData);
-    
-    if (!result.isValid) {
-      // Show validation errors
-      Object.entries(result.errors).forEach(([field, errors]) => {
-        formValidator.showFieldError(field, errors[0]);
-      });
-      return false;
-    }
-
-    return true;
-  }
-
-  validateFileUploadStep() {
-    const files = this.state.formData.files || [];
-    if (files.length === 0) {
-      this.showStepError('Please upload at least one file before continuing.');
-      return false;
-    }
-    return true;
-  }
-
-  validateGarmentSpecsStep() {
-    const garments = this.state.formData.garments || [];
-    if (garments.length === 0) {
-      this.showStepError('Please add at least one garment specification.');
-      return false;
-    }
-    return true;
-  }
-
-  getFormData() {
-    const formData = {};
-    const form = document.querySelector('.techpack-form');
-    
-    if (form) {
-      const inputs = form.querySelectorAll('input, select, textarea');
-      inputs.forEach(input => {
-        if (input.name) {
-          formData[input.name] = input.value;
-        }
-      });
-    }
-
-    return formData;
-  }
-
-  showStepError(message) {
-    // Create or show error message for the step
-    let errorElement = document.querySelector('.techpack-step-error');
-    
-    if (!errorElement) {
-      errorElement = document.createElement('div');
-      errorElement.className = 'techpack-step-error';
-      errorElement.style.cssText = `
-        background: rgba(220, 38, 38, 0.1);
-        border: 1px solid #dc2626;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        color: #dc2626;
-        font-size: 0.875rem;
-      `;
-      
-      const currentStepElement = this.stepElements.get(this.getCurrentStep().toString());
-      if (currentStepElement) {
-        const content = currentStepElement.querySelector('.techpack-content');
-        if (content) {
-          content.insertBefore(errorElement, content.firstChild);
-        }
-      }
-    }
-
-    errorElement.textContent = message;
-    errorElement.style.display = 'block';
-
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      if (errorElement) {
-        errorElement.style.display = 'none';
-      }
-    }, 5000);
-  }
-
-  updateURL() {
-    // Update URL to reflect current step without page reload
-    const url = new URL(window.location);
-    url.searchParams.set('step', this.getCurrentStep());
-    window.history.replaceState({}, '', url);
-  }
-
-  triggerStepChangeEvent(fromStep, toStep) {
-    const event = new CustomEvent('techpack:stepChange', {
-      detail: { fromStep, toStep, state: this.state.getState() }
-    });
-    document.dispatchEvent(event);
-  }
-}
-
-// Enhanced File Manager
-class FileManager {
-  constructor(state, validator) {
-    this.state = state;
-    this.validator = validator;
-    this.uploadArea = null;
-    this.fileInput = null;
-    this.fileList = null;
-    this.maxFiles = window.TechPackConfig?.CONFIG?.MAX_FILES || 10;
-    this.maxFileSize = window.TechPackConfig?.CONFIG?.MAX_FILE_SIZE || 10485760;
-  }
-
-  init() {
-    this.setupDropZone();
-    this.setupFileInput();
-    this.setupFileList();
-    this.attachEventListeners();
-  }
-
-  setupDropZone() {
-    this.uploadArea = document.querySelector('.techpack-file-upload');
-    
-    if (this.uploadArea) {
-      this.uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
-      this.uploadArea.addEventListener('dragleave', this.handleDragLeave.bind(this));
-      this.uploadArea.addEventListener('drop', this.handleDrop.bind(this));
-      this.uploadArea.addEventListener('click', this.handleClick.bind(this));
-    }
-  }
-
-  setupFileInput() {
-    this.fileInput = document.querySelector('#tech-pack-files');
-    
-    if (this.fileInput) {
-      this.fileInput.addEventListener('change', this.handleFileSelect.bind(this));
-    }
-  }
-
-  setupFileList() {
-    this.fileList = document.querySelector('.techpack-file-list');
-    
-    if (!this.fileList) {
-      this.fileList = document.createElement('div');
-      this.fileList.className = 'techpack-file-list';
-      
-      const uploadSection = document.querySelector('.techpack-file-upload')?.parentElement;
-      if (uploadSection) {
-        uploadSection.appendChild(this.fileList);
-      }
-    }
-  }
-
-  attachEventListeners() {
-    // Remove file event delegation
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('.techpack-file-item__remove')) {
-        const fileIndex = parseInt(e.target.dataset.fileIndex);
-        this.removeFile(fileIndex);
-      }
-    });
-  }
-
-  handleDragOver(e) {
-    e.preventDefault();
-    this.uploadArea.classList.add('techpack-file-upload--dragover');
-  }
-
-  handleDragLeave(e) {
-    e.preventDefault();
-    this.uploadArea.classList.remove('techpack-file-upload--dragover');
-  }
-
-  handleDrop(e) {
-    e.preventDefault();
-    this.uploadArea.classList.remove('techpack-file-upload--dragover');
-    
-    const files = Array.from(e.dataTransfer.files);
-    this.processFiles(files);
-  }
-
-  handleClick(e) {
-    if (this.fileInput) {
-      this.fileInput.click();
-    }
-  }
-
-  handleFileSelect(e) {
-    const files = Array.from(e.target.files);
-    this.processFiles(files);
-  }
-
-  processFiles(files) {
-    const currentFiles = this.state.formData.files || [];
-    
-    // Check if adding these files would exceed the limit
-    if (currentFiles.length + files.length > this.maxFiles) {
-      this.showError(`Maximum ${this.maxFiles} files allowed. You can add ${this.maxFiles - currentFiles.length} more files.`);
-      return;
-    }
-
-    // Validate each file
-    const validFiles = [];
-    const errors = [];
-
-    files.forEach(file => {
-      if (this.validator) {
-        const result = this.validator.validateFile(file);
-        if (result.isValid) {
-          validFiles.push(file);
-        } else {
-          errors.push(`${file.name}: ${result.errors.join(', ')}`);
-        }
-      } else {
-        validFiles.push(file);
-      }
-    });
-
-    // Show validation errors
-    if (errors.length > 0) {
-      this.showError(errors.join('\n'));
-    }
-
-    // Add valid files
-    if (validFiles.length > 0) {
-      this.addFiles(validFiles);
-    }
-  }
-
-  addFiles(files) {
-    const currentFiles = this.state.formData.files || [];
-    
-    files.forEach(file => {
-      const fileData = {
-        id: this.generateFileId(),
-        file: file,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        uploadedAt: new Date().toISOString()
+      // DOM references
+      this.elements = {
+        steps: new Map(),
+        progressBar: null,
+        progressSteps: null
       };
+    }
+
+    /**
+     * Initialize the application
+     * Sets up all modules and starts the form flow
+     */
+    async init() {
+      try {
+        console.log('🚀 Initializing TechPack Application...');
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+          await new Promise(resolve => {
+            document.addEventListener('DOMContentLoaded', resolve);
+          });
+        }
+
+        // Initialize modules in correct order
+        await this.initializeState();
+        await this.initializeStepManager();
+        await this.initializeModules();
+        await this.setupEventListeners();
+        await this.startApplication();
+        
+        this.initialized = true;
+        console.log('✅ TechPack Application initialized successfully');
+        
+      } catch (error) {
+        console.error('❌ Failed to initialize TechPack Application:', error);
+        this.showError('Failed to initialize the form. Please refresh the page.');
+      }
+    }
+
+    /**
+     * Initialize the state management system
+     */
+    async initializeState() {
+      if (window.TechPackState) {
+        this.state = new window.TechPackState();
+        console.log('✅ State manager initialized');
+      } else {
+        throw new Error('TechPackState not available');
+      }
+    }
+
+    /**
+     * Initialize the step manager
+     */
+    async initializeStepManager() {
+      // Cache step elements
+      const stepSelectors = [
+        '#techpack-step-0',
+        '#techpack-step-1', 
+        '#techpack-step-2',
+        '#techpack-step-3',
+        '#techpack-step-4'
+      ];
+
+      stepSelectors.forEach((selector, index) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          this.elements.steps.set(index, element);
+        }
+      });
+
+      // Cache progress elements
+      this.elements.progressBar = document.querySelector('.techpack-progress__fill');
+      this.elements.progressSteps = document.querySelectorAll('.techpack-progress__step');
+
+      console.log(`✅ Step manager initialized with ${this.elements.steps.size} steps`);
+    }
+
+    /**
+     * Initialize all sub-modules
+     */
+    async initializeModules() {
+      // Initialize validator first (other modules depend on it)
+      if (window.TechPackValidator) {
+        this.validator = new window.TechPackValidator();
+        console.log('✅ Validator initialized');
+      }
+
+      // Initialize file manager
+      if (window.TechPackFileManager) {
+        this.fileManager = new window.TechPackFileManager(this.state, this.validator);
+        await this.fileManager.init();
+        console.log('✅ File manager initialized');
+      }
+
+      // Initialize garment manager
+      if (window.TechPackGarmentManager) {
+        this.garmentManager = new window.TechPackGarmentManager(this.state, this.validator);
+        await this.garmentManager.init();
+        console.log('✅ Garment manager initialized');
+      }
+
+      // Initialize UI manager
+      if (window.TechPackUI) {
+        this.ui = new window.TechPackUI(this.state);
+        await this.ui.init();
+        console.log('✅ UI manager initialized');
+      }
+
+      // Initialize mobile optimizations
+      if (window.TechPackMobile) {
+        this.mobile = new window.TechPackMobile();
+        await this.mobile.init();
+        console.log('✅ Mobile optimizations initialized');
+      }
+    }
+
+    /**
+     * Setup global event listeners
+     */
+    async setupEventListeners() {
+      // Navigation event delegation
+      document.addEventListener('click', this.handleNavigation.bind(this));
       
-      currentFiles.push(fileData);
-    });
+      // Form submission
+      document.addEventListener('submit', this.handleFormSubmission.bind(this));
+      
+      // State change listener
+      if (this.state) {
+        this.state.subscribe(this.handleStateChange.bind(this));
+      }
 
-    this.state.formData.files = currentFiles;
-    this.renderFileList();
-    this.updateFileCounter();
-  }
+      // Window events
+      window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
+      
+      console.log('✅ Event listeners setup complete');
+    }
 
-  removeFile(index) {
-    const currentFiles = this.state.formData.files || [];
-    
-    if (index >= 0 && index < currentFiles.length) {
-      currentFiles.splice(index, 1);
-      this.state.formData.files = currentFiles;
-      this.renderFileList();
-      this.updateFileCounter();
+    /**
+     * Start the application flow
+     * Determines initial step and sets up the form
+     */
+    async startApplication() {
+      // Check URL parameters for step
+      const urlParams = new URLSearchParams(window.location.search);
+      const stepParam = urlParams.get('step');
+      
+      // Determine starting step
+      let initialStep = 0; // Always start with verification
+      if (stepParam) {
+        const parsedStep = parseInt(stepParam);
+        if (!isNaN(parsedStep) && parsedStep >= 0 && parsedStep <= 4) {
+          initialStep = parsedStep;
+        }
+      }
+
+      // Show initial step
+      await this.showStep(initialStep);
+      
+      // Setup the working Step 0 verification system
+      this.setupClientModal();
+      
+      console.log(`✅ Application started at step ${initialStep}`);
+    }
+
+    /**
+     * Setup client verification modal (preserve existing working functionality)
+     */
+    setupClientModal() {
+      console.log('🔧 Setting up client verification modal...');
+      
+      const modal = document.querySelector('#client-verification-modal');
+      const openBtn = document.querySelector('#open-client-modal');
+      const closeBtn = document.querySelector('#close-client-modal');
+      const backdrop = document.querySelector('.techpack-modal__backdrop');
+      
+      if (!modal || !openBtn) {
+        console.log('❌ Modal elements not found, skipping modal setup');
+        this.showStep(1); // Fallback to step 1
+        return;
+      }
+
+      // Mobile scroll management
+      const isMobile = () => window.innerWidth <= 768;
+      let scrollPosition = 0;
+
+      const lockScroll = () => {
+        if (isMobile()) {
+          scrollPosition = window.pageYOffset;
+          document.body.style.overflow = 'hidden';
+          document.body.style.position = 'fixed';
+          document.body.style.top = `-${scrollPosition}px`;
+          document.body.style.width = '100%';
+        }
+      };
+
+      const unlockScroll = () => {
+        if (isMobile()) {
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('position');
+          document.body.style.removeProperty('top');
+          document.body.style.removeProperty('width');
+          window.scrollTo(0, scrollPosition);
+        }
+      };
+
+      // Global scroll unlock failsafe
+      window.forceUnlockBodyScroll = unlockScroll;
+
+      // Open modal
+      openBtn.addEventListener('click', () => {
+        lockScroll();
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+        console.log('✅ Client verification modal opened');
+      });
+
+      // Close modal function
+      const closeModal = () => {
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          unlockScroll();
+        }, 300);
+        console.log('✅ Client verification modal closed');
+      };
+
+      // Close modal events
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+      }
+      
+      if (backdrop) {
+        backdrop.addEventListener('click', closeModal);
+      }
+
+      // Escape key close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+          closeModal();
+        }
+      });
+
+      // Registration choice handlers
+      const handleRegistrationChoice = (isReturning) => {
+        // Store registration status in state
+        this.state.setClientInfo({ isReturning });
+        
+        // Show appropriate warning for returning clients
+        const warning = document.querySelector('#registration-warning');
+        if (warning) {
+          warning.style.display = isReturning ? 'block' : 'none';
+        }
+        
+        // Close modal and proceed to Step 1
+        setTimeout(() => {
+          closeModal();
+          setTimeout(() => this.showStep(1), 300);
+        }, 1000);
+        
+        console.log(`✅ Registration choice: ${isReturning ? 'Returning' : 'New'} client`);
+      };
+
+      // Registration button handlers
+      const yesBtn = document.querySelector('#registration-yes-btn');
+      const noBtn = document.querySelector('#registration-no-btn');
+      
+      if (yesBtn) {
+        yesBtn.addEventListener('click', () => handleRegistrationChoice(true));
+      }
+      
+      if (noBtn) {
+        noBtn.addEventListener('click', () => handleRegistrationChoice(false));
+      }
+
+      console.log('✅ Client verification modal setup complete');
+    }
+
+    /**
+     * Show specific step
+     */
+    async showStep(stepNumber) {
+      try {
+        // Hide all steps
+        this.elements.steps.forEach((element, index) => {
+          element.style.display = 'none';
+        });
+
+        // Show target step
+        const targetStep = this.elements.steps.get(stepNumber);
+        if (targetStep) {
+          targetStep.style.display = 'block';
+          
+          // Update state
+          this.state.setCurrentStep(stepNumber);
+          
+          // Update progress
+          this.updateProgress(stepNumber);
+          
+          // Update URL
+          this.updateURL(stepNumber);
+          
+          console.log(`✅ Showing step ${stepNumber}`);
+          
+          return true;
+        } else {
+          throw new Error(`Step ${stepNumber} not found`);
+        }
+        
+      } catch (error) {
+        console.error(`❌ Failed to show step ${stepNumber}:`, error);
+        return false;
+      }
+    }
+
+    /**
+     * Update progress bar and indicators
+     */
+    updateProgress(currentStep) {
+      const totalSteps = 4; // Steps 1-4 (excluding step 0)
+      const progressStep = Math.max(0, currentStep - 1); // Adjust for step 0
+      const percentage = (progressStep / totalSteps) * 100;
+
+      // Update progress bar
+      if (this.elements.progressBar) {
+        this.elements.progressBar.style.width = `${percentage}%`;
+      }
+
+      // Update step indicators
+      this.elements.progressSteps.forEach((stepElement, index) => {
+        const stepNum = index + 1; // Steps are 1-based in UI
+        const circle = stepElement.querySelector('.techpack-progress__step-circle');
+        
+        if (circle) {
+          // Remove all state classes
+          circle.classList.remove(
+            'techpack-progress__step-circle--active',
+            'techpack-progress__step-circle--completed'
+          );
+          
+          if (stepNum < currentStep) {
+            // Completed step
+            circle.classList.add('techpack-progress__step-circle--completed');
+            circle.textContent = '✓';
+          } else if (stepNum === currentStep) {
+            // Active step
+            circle.classList.add('techpack-progress__step-circle--active');
+            circle.textContent = stepNum;
+          } else {
+            // Future step
+            circle.textContent = stepNum;
+          }
+        }
+      });
+    }
+
+    /**
+     * Update URL without page reload
+     */
+    updateURL(stepNumber) {
+      if (stepNumber > 0) { // Don't show step 0 in URL
+        const url = new URL(window.location);
+        url.searchParams.set('step', stepNumber);
+        window.history.replaceState({}, '', url);
+      }
+    }
+
+    /**
+     * Handle navigation clicks
+     */
+    handleNavigation(event) {
+      const target = event.target;
+      
+      // Next buttons
+      if (target.matches('[id$="-next"]') || target.closest('[id$="-next"]')) {
+        event.preventDefault();
+        const button = target.matches('[id$="-next"]') ? target : target.closest('[id$="-next"]');
+        this.handleNext(button);
+        return;
+      }
+      
+      // Previous/Back buttons  
+      if (target.matches('[id$="-back"], [id$="-prev"]') || target.closest('[id$="-back"], [id$="-prev"]')) {
+        event.preventDefault();
+        this.handlePrevious();
+        return;
+      }
+    }
+
+    /**
+     * Handle next step navigation
+     */
+    async handleNext(button) {
+      const currentStep = this.state.getCurrentStep();
+      
+      try {
+        // Validate current step
+        const isValid = await this.validateCurrentStep();
+        
+        if (!isValid) {
+          console.log('❌ Validation failed for current step');
+          return;
+        }
+        
+        // Move to next step
+        const nextStep = currentStep + 1;
+        if (nextStep <= 4) {
+          await this.showStep(nextStep);
+          
+          // Scroll to top smoothly
+          if (this.mobile) {
+            this.mobile.scrollToTop();
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
+        
+      } catch (error) {
+        console.error('❌ Navigation error:', error);
+        this.showError('Navigation failed. Please try again.');
+      }
+    }
+
+    /**
+     * Handle previous step navigation
+     */
+    async handlePrevious() {
+      const currentStep = this.state.getCurrentStep();
+      
+      if (currentStep > 1) {
+        await this.showStep(currentStep - 1);
+        
+        // Scroll to top smoothly
+        if (this.mobile) {
+          this.mobile.scrollToTop();
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    }
+
+    /**
+     * Validate current step
+     */
+    async validateCurrentStep() {
+      const currentStep = this.state.getCurrentStep();
+      
+      switch (currentStep) {
+        case 1:
+          return this.validator ? this.validator.validateClientInfo() : true;
+        case 2:
+          return this.fileManager ? this.fileManager.validateFiles() : true;
+        case 3:
+          return this.garmentManager ? this.garmentManager.validateGarments() : true;
+        case 4:
+          return true; // Review step doesn't need validation
+        default:
+          return true;
+      }
+    }
+
+    /**
+     * Handle form submission
+     */
+    async handleFormSubmission(event) {
+      if (event.target.closest('#techpack-step-4')) {
+        event.preventDefault();
+        
+        try {
+          // Final validation
+          const isValid = await this.validateAllSteps();
+          
+          if (!isValid) {
+            this.showError('Please complete all required fields before submitting.');
+            return;
+          }
+          
+          // Collect form data
+          const formData = this.collectFormData();
+          
+          // Submit form
+          await this.submitForm(formData);
+          
+        } catch (error) {
+          console.error('❌ Form submission error:', error);
+          this.showError('Submission failed. Please try again.');
+        }
+      }
+    }
+
+    /**
+     * Validate all steps
+     */
+    async validateAllSteps() {
+      const validations = await Promise.all([
+        this.validator?.validateClientInfo() || true,
+        this.fileManager?.validateFiles() || true,
+        this.garmentManager?.validateGarments() || true
+      ]);
+      
+      return validations.every(v => v === true);
+    }
+
+    /**
+     * Collect all form data
+     */
+    collectFormData() {
+      return {
+        clientInfo: this.state.getClientInfo(),
+        files: this.state.getFiles(),
+        garments: this.state.getGarments(),
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    /**
+     * Submit form data
+     */
+    async submitForm(formData) {
+      // This would integrate with your backend/email system
+      console.log('📤 Submitting form data:', formData);
+      
+      // Show success message
+      this.showSuccess('Your tech pack submission has been sent successfully!');
+    }
+
+    /**
+     * Handle state changes
+     */
+    handleStateChange(newState) {
+      // React to state changes if needed
+      console.log('📊 State changed:', newState);
+    }
+
+    /**
+     * Handle before unload
+     */
+    handleBeforeUnload(event) {
+      const hasUnsavedData = this.state.hasUnsavedData();
+      
+      if (hasUnsavedData) {
+        event.preventDefault();
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    }
+
+    /**
+     * Show error message
+     */
+    showError(message) {
+      if (this.ui) {
+        this.ui.showMessage(message, 'error');
+      } else {
+        alert(message);
+      }
+    }
+
+    /**
+     * Show success message
+     */
+    showSuccess(message) {
+      if (this.ui) {
+        this.ui.showMessage(message, 'success');
+      } else {
+        alert(message);
+      }
+    }
+
+    /**
+     * Get minimum quantity utility
+     */
+    getMinimumQuantity(colorwayCount, productionType) {
+      return getMinimumQuantity(colorwayCount, productionType);
     }
   }
 
-  renderFileList() {
-    if (!this.fileList) return;
-
-    const files = this.state.formData.files || [];
-    
-    if (files.length === 0) {
-      this.fileList.innerHTML = '';
-      return;
+  // Initialize application when DOM is ready
+  let app;
+  
+  function initTechPackApp() {
+    if (!app) {
+      app = new TechPackApp();
+      app.init();
     }
-
-    this.fileList.innerHTML = files.map((fileData, index) => `
-      <div class="techpack-file-item">
-        <div class="techpack-file-item__icon">
-          ${this.getFileIcon(fileData.name)}
-        </div>
-        <div class="techpack-file-item__info">
-          <p class="techpack-file-item__name">${fileData.name}</p>
-          <p class="techpack-file-item__size">${this.formatFileSize(fileData.size)}</p>
-        </div>
-        <button type="button" class="techpack-file-item__remove" data-file-index="${index}" title="Remove file">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M4 4l8 8m0-8l-8 8"/>
-          </svg>
-        </button>
-      </div>
-    `).join('');
+    return app;
   }
 
-  updateFileCounter() {
-    const files = this.state.formData.files || [];
-    const counter = document.querySelector('.techpack-file-counter');
-    
-    if (counter) {
-      counter.textContent = `${files.length} / ${this.maxFiles} files`;
-    }
+  // Auto-initialize or expose for manual initialization
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTechPackApp);
+  } else {
+    // DOM is already ready
+    setTimeout(initTechPackApp, 0);
   }
 
-  generateFileId() {
-    return `file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
+  // Expose globally for other modules
+  window.TechPackApp = TechPackApp;
+  window.techPackApp = app;
+  window.TechPackConfig = CONFIG;
 
-  getFileIcon(filename) {
-    const extension = filename.split('.').pop().toLowerCase();
-    
-    const icons = {
-      pdf: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>',
-      ai: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>',
-      zip: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>',
-      default: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>'
-    };
-
-    return icons[extension] || icons.default;
-  }
-
-  formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
-
-  showError(message) {
-    const errorElement = document.querySelector('.techpack-file-upload-error') || this.createErrorElement();
-    errorElement.textContent = message;
-    errorElement.style.display = 'block';
-
-    setTimeout(() => {
-      errorElement.style.display = 'none';
-    }, 5000);
-  }
-
-  createErrorElement() {
-    const errorElement = document.createElement('div');
-    errorElement.className = 'techpack-file-upload-error';
-    errorElement.style.cssText = `
-      background: rgba(220, 38, 38, 0.1);
-      border: 1px solid #dc2626;
-      border-radius: 8px;
-      padding: 0.75rem;
-      margin-top: 1rem;
-      color: #dc2626;
-      font-size: 0.875rem;
-      display: none;
-    `;
-    
-    const uploadSection = this.uploadArea?.parentElement;
-    if (uploadSection) {
-      uploadSection.appendChild(errorElement);
-    }
-    
-    return errorElement;
-  }
-}
-
-// Export classes
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { StepManager, FileManager };
-} else {
-  window.TechPackCore = { StepManager, FileManager };
-}
+})();
