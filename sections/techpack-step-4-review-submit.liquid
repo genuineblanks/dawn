@@ -48,8 +48,8 @@ Tech-Pack Step 4: Review & Submit Section
             </h3>
             <button type="button" class="techpack-review__edit" data-edit-step="1">Edit</button>
           </div>
-          <div class="techpack-review__content" id="review-step-1">
-            <!-- populated by populateReviewStep1() -->
+          <div class="techpack-review__content" id="review-client-content">
+            <!-- populated by populateClientReview() -->
           </div>
         </div>
 
@@ -66,8 +66,8 @@ Tech-Pack Step 4: Review & Submit Section
             </h3>
             <button type="button" class="techpack-review__edit" data-edit-step="2">Edit</button>
           </div>
-          <div class="techpack-review__content" id="review-step-2">
-            <!-- populated by populateReviewStep2() -->
+          <div class="techpack-review__content" id="review-files-content">
+            <!-- populated by populateFilesReview() -->
           </div>
         </div>
 
@@ -83,8 +83,23 @@ Tech-Pack Step 4: Review & Submit Section
             </h3>
             <button type="button" class="techpack-review__edit" data-edit-step="3">Edit</button>
           </div>
-          <div class="techpack-review__content" id="review-step-3">
-            <!-- Content populated by JavaScript -->
+          <div class="techpack-review__content" id="review-garments-content">
+            <!-- populated by populateGarmentsReview() -->
+          </div>
+        </div>
+        
+        <!-- Summary Section -->
+        <div class="techpack-review__section">
+          <div class="techpack-review__header">
+            <h3 class="techpack-review__title">
+              <svg class="techpack-review__icon" width="20" height="20" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+              Summary
+            </h3>
+          </div>
+          <div class="techpack-review__content" id="review-summary-content">
+            <!-- populated by populateSummaryReview() -->
           </div>
         </div>
       </div>
