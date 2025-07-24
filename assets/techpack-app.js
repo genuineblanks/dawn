@@ -5651,5 +5651,456 @@ setupInitialization();
   };
 
   debugSystem.log('TechPack Enhanced Application Loaded', { version: '2.0.0' }, 'success');
+  
+  // ========================================
+  // MOBILE ENHANCEMENTS & DATE VALIDATION
+  // ========================================
+  
+  // Enhanced date validation for mobile consistency
+  function validateDateInput(dateInput) {
+    if (!dateInput) return true;
+    
+    const selectedDate = new Date(dateInput.value);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 42); // 6 weeks = 42 days
+    
+    const dateHint = dateInput.parentNode.querySelector('.techpack-form__date-hint');
+    
+    if (dateInput.value && selectedDate < minDate) {
+      dateInput.classList.add('error');
+      if (dateHint) {
+        dateHint.classList.add('error');
+        dateHint.textContent = `Selected date is too soon. Minimum is ${minDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} (6 weeks from today)`;
+      }
+      debugSystem.log('❌ Date validation failed: Selected date too soon', { selected: selectedDate, minimum: minDate }, 'error');
+      return false;
+    } else {
+      dateInput.classList.remove('error');
+      if (dateHint) {
+        dateHint.classList.remove('error');
+        dateHint.textContent = `Minimum 6 weeks from today (${minDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })})`;
+      }
+      debugSystem.log('✅ Date validation passed', { selected: selectedDate, minimum: minDate });
+      return true;
+    }
+  }
+  
+  // Mobile-specific enhancements
+  function initializeMobileEnhancements() {
+    debugSystem.log('🔧 Initializing mobile enhancements...');
+    
+    // Add techpack-active class to body for modal prevention
+    document.body.classList.add('techpack-active');
+    
+    // Enhanced date input validation for mobile
+    const dateInputs = document.querySelectorAll('.techpack-form__input--date, input[type="date"]');
+    dateInputs.forEach(input => {
+      // Set minimum date dynamically for mobile compatibility
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() + 42);
+      input.min = minDate.toISOString().split('T')[0];
+      
+      // Add real-time validation
+      input.addEventListener('change', function() {
+        validateDateInput(this);
+      });
+      
+      input.addEventListener('input', function() {
+        validateDateInput(this);
+      });
+      
+      // Mobile-specific: ensure proper keyboard on focus
+      input.addEventListener('focus', function() {
+        this.setAttribute('type', 'date');
+        debugSystem.log('📅 Date input focused on mobile');
+      });
+      
+      debugSystem.log('📅 Enhanced date input initialized', { min: input.min });
+    });
+    
+    // Size grid input enhancements for mobile
+    const sizeInputs = document.querySelectorAll('.techpack-size-grid__input');
+    sizeInputs.forEach(input => {
+      // Ensure numeric input only
+      input.addEventListener('input', function() {
+        const oldValue = this.value;
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (oldValue !== this.value) {
+          debugSystem.log('🔢 Non-numeric characters removed from size input');
+        }
+      });
+      
+      // Add visual feedback on mobile
+      input.addEventListener('focus', function() {
+        this.style.transform = 'scale(1.05)';
+        this.style.zIndex = '10';
+      });
+      
+      input.addEventListener('blur', function() {
+        this.style.transform = '';
+        this.style.zIndex = '';
+      });
+    });
+    
+    // Prevent modal interference from other site modals
+    const otherModals = document.querySelectorAll('.modal:not(.techpack-modal), .overlay:not(.techpack-overlay), .popup:not(.techpack-popup)');
+    otherModals.forEach(modal => {
+      if (modal.style.zIndex && parseInt(modal.style.zIndex) > 500) {
+        modal.style.zIndex = '1';
+        debugSystem.log('🚫 Lowered z-index of interfering modal');
+      }
+    });
+    
+    // Enhanced navigation button stability
+    const navButtons = document.querySelectorAll('.techpack-form__actions');
+    navButtons.forEach(nav => {
+      nav.style.position = 'fixed';
+      nav.style.zIndex = '999';
+      nav.style.transform = 'translateZ(0)';
+      nav.style.willChange = 'transform';
+    });
+    
+    debugSystem.log('✅ Mobile enhancements initialized');
+  }
+  
+  // Initialize mobile enhancements when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMobileEnhancements);
+  } else {
+    initializeMobileEnhancements();
+  }
+  
+  // ========================================
+  // STEP 4 REVIEW DATA POPULATION
+  // ========================================
+  
+  // Populate client information review
+  function populateClientReview() {
+    debugSystem.log('🔍 Populating client review...');
+    const container = document.getElementById('review-client-content');
+    if (!container) {
+      debugSystem.log('❌ Client review container not found');
+      return;
+    }
+    
+    // Collect client data from step 1
+    const clientData = {
+      businessName: document.getElementById('business-name')?.value || '',
+      email: document.getElementById('business-email')?.value || '',
+      productionType: document.getElementById('production-type')?.value || '',
+      deadline: document.getElementById('deadline')?.value || ''
+    };
+    
+    // Generate review HTML
+    let html = '<div class="review-section">';
+    
+    if (clientData.businessName) {
+      html += `<div class="review-item">
+        <span class="review-label">Business/Brand Name:</span>
+        <span class="review-value">${clientData.businessName}</span>
+      </div>`;
+    }
+    
+    if (clientData.email) {
+      html += `<div class="review-item">
+        <span class="review-label">Email Address:</span>
+        <span class="review-value">${clientData.email}</span>
+      </div>`;
+    }
+    
+    if (clientData.productionType) {
+      const productionText = clientData.productionType === 'our-blanks' ? 'Our Blanks' : 'Custom Production';
+      html += `<div class="review-item">
+        <span class="review-label">Production Type:</span>
+        <span class="review-value">${productionText}</span>
+      </div>`;
+    }
+    
+    if (clientData.deadline) {
+      const deadlineDate = new Date(clientData.deadline);
+      const formattedDate = deadlineDate.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+      html += `<div class="review-item">
+        <span class="review-label">Target Deadline:</span>
+        <span class="review-value">${formattedDate}</span>
+      </div>`;
+    }
+    
+    html += '</div>';
+    
+    if (html === '<div class="review-section"></div>') {
+      html = '<div class="review-empty">No client information available</div>';
+    }
+    
+    container.innerHTML = html;
+    debugSystem.log('✅ Client review populated', clientData);
+  }
+  
+  // Populate files review
+  function populateFilesReview() {
+    debugSystem.log('🔍 Populating files review...');
+    const container = document.getElementById('review-files-content');
+    if (!container) {
+      debugSystem.log('❌ Files review container not found');
+      return;
+    }
+    
+    // Try to find uploaded files data
+    const fileItems = document.querySelectorAll('.techpack-file-item, .file-item');
+    
+    let html = '<div class="review-section">';
+    
+    if (fileItems.length > 0) {
+      html += '<div class="review-files-list">';
+      fileItems.forEach((item, index) => {
+        const fileName = item.querySelector('.file-name, .techpack-file-name')?.textContent || `File ${index + 1}`;
+        const fileSize = item.querySelector('.file-size, .techpack-file-size')?.textContent || '';
+        
+        html += `<div class="review-file-item">
+          <span class="review-file-name">${fileName}</span>
+          ${fileSize ? `<span class="review-file-size">${fileSize}</span>` : ''}
+        </div>`;
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="review-empty">No files uploaded</div>';
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
+    debugSystem.log('✅ Files review populated', { fileCount: fileItems.length });
+  }
+  
+  // Populate garments review
+  function populateGarmentsReview() {
+    debugSystem.log('🔍 Populating garments review...');
+    const container = document.getElementById('review-garments-content');
+    if (!container) {
+      debugSystem.log('❌ Garments review container not found');
+      return;
+    }
+    
+    // Find all garment cards
+    const garments = document.querySelectorAll('.techpack-garment');
+    
+    let html = '<div class="review-section">';
+    let totalQuantity = 0;
+    
+    if (garments.length > 0) {
+      garments.forEach((garment, index) => {
+        const garmentType = garment.querySelector('select[name="garmentType"]')?.value || '';
+        const fabricType = garment.querySelector('select[name="fabricType"]')?.value || '';
+        const printingMethods = [];
+        
+        // Get selected printing methods
+        garment.querySelectorAll('input[name="printingMethods[]"]:checked').forEach(checkbox => {
+          printingMethods.push(checkbox.value);
+        });
+        
+        // Get colorways and quantities
+        const colorways = garment.querySelectorAll('.techpack-colorway');
+        let garmentTotal = 0;
+        
+        html += `<div class="review-garment">
+          <h4 class="review-garment-title">Garment ${index + 1}</h4>`;
+        
+        if (garmentType) {
+          html += `<div class="review-item">
+            <span class="review-label">Type:</span>
+            <span class="review-value">${garmentType}</span>
+          </div>`;
+        }
+        
+        if (fabricType) {
+          html += `<div class="review-item">
+            <span class="review-label">Fabric:</span>
+            <span class="review-value">${fabricType}</span>
+          </div>`;
+        }
+        
+        if (printingMethods.length > 0) {
+          html += `<div class="review-item">
+            <span class="review-label">Printing Methods:</span>
+            <span class="review-value">${printingMethods.join(', ')}</span>
+          </div>`;
+        }
+        
+        if (colorways.length > 0) {
+          html += '<div class="review-colorways">';
+          html += '<span class="review-label">Colorways & Quantities:</span>';
+          
+          colorways.forEach((colorway, colorIndex) => {
+            const colorInput = colorway.querySelector('.techpack-color-picker__input');
+            const color = colorInput ? colorInput.value : '#000000';
+            
+            // Get size quantities
+            const sizeInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+            const sizes = [];
+            let colorwayTotal = 0;
+            
+            sizeInputs.forEach(input => {
+              const qty = parseInt(input.value) || 0;
+              if (qty > 0) {
+                const sizeName = input.name?.replace('qty-', '').toUpperCase() || 'Unknown';
+                sizes.push(`${sizeName}: ${qty}`);
+                colorwayTotal += qty;
+              }
+            });
+            
+            garmentTotal += colorwayTotal;
+            
+            html += `<div class="review-colorway-item">
+              <div class="review-colorway-header">
+                <span class="review-color-swatch" style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
+                <span>Colorway ${colorIndex + 1} (Total: ${colorwayTotal})</span>
+              </div>`;
+            
+            if (sizes.length > 0) {
+              html += `<div class="review-sizes">${sizes.join(', ')}</div>`;
+            }
+            
+            html += '</div>';
+          });
+          
+          html += '</div>';
+        }
+        
+        html += `<div class="review-garment-total">
+          <strong>Garment Total: ${garmentTotal} units</strong>
+        </div>`;
+        
+        html += '</div>';
+        totalQuantity += garmentTotal;
+      });
+      
+      html += `<div class="review-total-summary">
+        <h4>Overall Summary</h4>
+        <div class="review-item">
+          <span class="review-label">Total Garments:</span>
+          <span class="review-value">${garments.length}</span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">Total Quantity:</span>
+          <span class="review-value"><strong>${totalQuantity} units</strong></span>
+        </div>
+      </div>`;
+    } else {
+      html += '<div class="review-empty">No garments configured</div>';
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
+    debugSystem.log('✅ Garments review populated', { garmentCount: garments.length, totalQuantity });
+  }
+  
+  // Populate summary review
+  function populateSummaryReview() {
+    debugSystem.log('🔍 Populating summary review...');
+    const container = document.getElementById('review-summary-content');
+    if (!container) {
+      debugSystem.log('❌ Summary review container not found');
+      return;
+    }
+    
+    // Calculate totals
+    let totalGarments = document.querySelectorAll('.techpack-garment').length;
+    let totalQuantity = 0;
+    let totalFiles = document.querySelectorAll('.techpack-file-item, .file-item').length;
+    
+    // Calculate total quantity
+    document.querySelectorAll('.techpack-size-grid__input').forEach(input => {
+      totalQuantity += parseInt(input.value) || 0;
+    });
+    
+    let html = `<div class="review-section">
+      <div class="review-summary-stats">
+        <div class="review-stat-item">
+          <span class="review-stat-number">${totalGarments}</span>
+          <span class="review-stat-label">Garment${totalGarments !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="review-stat-item">
+          <span class="review-stat-number">${totalQuantity}</span>
+          <span class="review-stat-label">Total Units</span>
+        </div>
+        <div class="review-stat-item">
+          <span class="review-stat-number">${totalFiles}</span>
+          <span class="review-stat-label">File${totalFiles !== 1 ? 's' : ''}</span>
+        </div>
+      </div>
+    </div>`;
+    
+    container.innerHTML = html;
+    debugSystem.log('✅ Summary review populated', { totalGarments, totalQuantity, totalFiles });
+  }
+  
+  // Main function to populate all review content
+  function populateReviewContent() {
+    debugSystem.log('📋 Populating all review content...');
+    
+    try {
+      populateClientReview();
+      populateFilesReview();
+      populateGarmentsReview();
+      populateSummaryReview();
+      debugSystem.log('✅ All review content populated successfully');
+    } catch (error) {
+      debugSystem.log('❌ Error populating review content', error, 'error');
+    }
+  }
+  
+  // Auto-populate review when step 4 becomes visible
+  function initializeReviewPopulation() {
+    const step4 = document.getElementById('techpack-step-4');
+    if (!step4) return;
+    
+    // Use MutationObserver to detect when step 4 becomes visible
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const isVisible = step4.style.display !== 'none';
+          if (isVisible) {
+            debugSystem.log('👀 Step 4 became visible, populating review content...');
+            setTimeout(populateReviewContent, 100); // Small delay to ensure DOM is ready
+          }
+        }
+      });
+    });
+    
+    observer.observe(step4, { attributes: true });
+    
+    // Also check if step 4 is already visible
+    if (step4.style.display !== 'none') {
+      setTimeout(populateReviewContent, 500);
+    }
+  }
+  
+  // Initialize review population when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeReviewPopulation);
+  } else {
+    initializeReviewPopulation();
+  }
+  
+  // Global mobile utilities
+  window.validateAllDates = function() {
+    const dateInputs = document.querySelectorAll('.techpack-form__input--date, input[type="date"]');
+    let allValid = true;
+    dateInputs.forEach(input => {
+      if (!validateDateInput(input)) {
+        allValid = false;
+      }
+    });
+    debugSystem.log(allValid ? '✅ All dates valid' : '❌ Some dates invalid');
+    return allValid;
+  };
+  
+  // Global review utilities  
+  window.refreshReview = function() {
+    debugSystem.log('🔄 Manually refreshing review content...');
+    populateReviewContent();
+  };
 
 })();

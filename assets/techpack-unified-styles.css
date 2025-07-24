@@ -1136,3 +1136,295 @@ body.techpack-active .popup:not(.techpack-popup) {
   opacity: 1;
   transform: scale(1.1);
 }
+
+/* 
+===========================================
+STEP 4 REVIEW SECTION STYLING
+===========================================
+*/
+
+.techpack-review__section {
+  margin-bottom: 2rem;
+  background: var(--techpack-bg);
+  border: 1px solid var(--techpack-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--techpack-shadow);
+}
+
+.techpack-review__header {
+  padding: 1rem 1.25rem;
+  background: var(--techpack-bg-secondary);
+  border-bottom: 1px solid var(--techpack-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.techpack-review__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--techpack-font-family);
+}
+
+.techpack-review__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--techpack-text-secondary);
+}
+
+.techpack-review__edit {
+  background: none;
+  border: 1px solid var(--techpack-border);
+  color: var(--techpack-text-secondary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+}
+
+.techpack-review__edit:hover {
+  background: var(--techpack-bg-tertiary);
+  border-color: var(--techpack-primary);
+  color: var(--techpack-primary);
+}
+
+.techpack-review__content {
+  padding: 1.25rem;
+}
+
+/* Review content styling */
+.review-section {
+  width: 100%;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--techpack-border-light);
+  gap: 1rem;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-label {
+  font-weight: 600;
+  color: var(--techpack-text-secondary);
+  font-size: 0.875rem;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.review-value {
+  color: var(--techpack-text);
+  font-size: 0.875rem;
+  text-align: right;
+  word-break: break-word;
+}
+
+.review-empty {
+  color: var(--techpack-text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.875rem;
+}
+
+/* Files review styling */
+.review-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.review-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--techpack-bg-secondary);
+  border-radius: 6px;
+  gap: 1rem;
+}
+
+.review-file-name {
+  font-weight: 500;
+  color: var(--techpack-text);
+  font-size: 0.875rem;
+  flex: 1;
+  word-break: break-word;
+}
+
+.review-file-size {
+  color: var(--techpack-text-secondary);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Garments review styling */
+.review-garment {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--techpack-bg-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--techpack-border);
+}
+
+.review-garment:last-child {
+  margin-bottom: 0;
+}
+
+.review-garment-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--techpack-text);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--techpack-border);
+  font-family: var(--techpack-font-family);
+}
+
+.review-colorways {
+  margin: 1rem 0;
+}
+
+.review-colorway-item {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: var(--techpack-bg);
+  border-radius: 4px;
+  border: 1px solid var(--techpack-border-light);
+}
+
+.review-colorway-header {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: var(--techpack-text);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.review-color-swatch {
+  border: 1px solid var(--techpack-border) !important;
+  box-shadow: var(--techpack-shadow);
+}
+
+.review-sizes {
+  font-size: 0.75rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.4;
+}
+
+.review-garment-total {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--techpack-border);
+  text-align: right;
+  font-size: 0.875rem;
+  color: var(--techpack-text);
+}
+
+.review-total-summary {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: var(--techpack-bg);
+  border-radius: 6px;
+  border: 2px solid var(--techpack-primary);
+}
+
+.review-total-summary h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--techpack-text);
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-family: var(--techpack-font-family);
+}
+
+/* Summary stats styling */
+.review-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.review-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--techpack-bg-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--techpack-border);
+}
+
+.review-stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--techpack-primary);
+  line-height: 1;
+  font-family: var(--techpack-font-family);
+}
+
+.review-stat-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--techpack-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile responsive adjustments for review */
+@media (max-width: 768px) {
+  .review-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .review-label {
+    min-width: auto;
+    font-size: 0.75rem;
+  }
+  
+  .review-value {
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .review-summary-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .review-stat-item {
+    padding: 1.25rem;
+  }
+  
+  .review-stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .review-colorway-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .review-garment-total {
+    text-align: left;
+  }
+}
