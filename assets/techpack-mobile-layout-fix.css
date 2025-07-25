@@ -168,6 +168,7 @@ CRITICAL MOBILE LAYOUT FIXES
   
   .techpack-form__actions button:active {
     transform: translateY(0);
+    background: var(--techpack-bg, #ffffff) !important; /* Force white background */
   }
   
   /* Disabled button states */
@@ -436,19 +437,22 @@ CRITICAL MOBILE LAYOUT FIXES
     margin: 1.5rem 0;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     background: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     position: relative;
+    -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
+    scroll-behavior: smooth;
   }
   
   /* Mobile-optimized grid layout */
   .techpack-size-grid__header,
   .techpack-size-grid__row {
     display: grid;
-    grid-template-columns: 70px repeat(7, minmax(55px, 1fr));
+    grid-template-columns: 70px repeat(7, minmax(60px, 1fr));
     gap: 0;
-    min-width: 450px; /* Increased for better spacing */
+    min-width: 480px; /* Optimized for mobile scroll */
   }
   
   .techpack-size-grid__header {
@@ -481,17 +485,18 @@ CRITICAL MOBILE LAYOUT FIXES
   
   .techpack-size-grid__input {
     width: 100%;
-    min-height: 52px;
-    padding: 0.75rem 0.5rem;
+    min-height: 56px; /* Increased for better mobile touch */
+    padding: 0.875rem 0.5rem;
     border: none;
     border-right: 1px solid #e2e8f0;
     text-align: center;
-    font-size: 16px;
+    font-size: 16px; /* Prevents iOS zoom */
     font-weight: 600;
     background: transparent;
     transition: all 0.2s ease;
     -webkit-appearance: none;
     -moz-appearance: textfield;
+    touch-action: manipulation; /* Improves touch responsiveness */
   }
   
   .techpack-size-grid__input::-webkit-outer-spin-button,
@@ -517,11 +522,33 @@ CRITICAL MOBILE LAYOUT FIXES
     background: #f8fafc;
   }
   
-  /* Scroll container with indicators */
+  /* Enhanced scroll container with better mobile support */
   .techpack-size-grid {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
+    /* Better mobile scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  }
+  
+  /* WebKit scrollbar styling for mobile */
+  .techpack-size-grid::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .techpack-size-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+  
+  .techpack-size-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  
+  .techpack-size-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
   }
   
   /* Scroll indicator shadows */
