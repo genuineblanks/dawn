@@ -15,8 +15,8 @@
     MIN_DELIVERY_WEEKS: 6,
     
     // Security Configuration
-    CLIENT_SECRET: 'YOUR_ACTUAL_SECURE_SECRET_KEY', // Replace with your secure secret
-    WEBHOOK_URL: 'YOUR_ACTUAL_MAKECOM_WEBHOOK_URL', // Replace with your Make.com webhook URL
+    CLIENT_SECRET: 'enuineblanks_techpack_2025_secure_key', // Replace with your secure secret
+    WEBHOOK_URL: 'https://hook.eu2.make.com/pckqx6ycq27i4xcytw1vhnikiduk3i8b', // Replace with your Make.com webhook URL
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
     TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
   };
