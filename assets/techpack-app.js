@@ -5291,7 +5291,6 @@
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        
         this.showThankYou();
         debugSystem.log('Form submitted successfully', null, 'success');
       } catch (error) {
@@ -5927,6 +5926,56 @@ setupInitialization();
     debugSystem.log('✅ Client review populated', clientData);
   }
   
+  // Helper function to find closest PANTONE color by hex value
+  function findClosestPantoneColor(hexColor) {
+    // Sample of PANTONE colors for matching (from existing pantoneColors array)
+    const pantoneColors = [
+      { code: 'PANTONE Black 6 C', hex: '#2D2926', name: 'Black' },
+      { code: 'PANTONE 11-4001 TPX', hex: '#F5F5F5', name: 'White' },
+      { code: 'PANTONE Cool Gray 1 C', hex: '#F2F2F2', name: 'Cool Gray 1' },
+      { code: 'PANTONE 18-1664 TPX', hex: '#C5282F', name: 'True Red' },
+      { code: 'PANTONE 19-4052 TPX', hex: '#0F4C75', name: 'Classic Blue' },
+      { code: 'PANTONE 15-0343 TPX', hex: '#88B04B', name: 'Greenery' },
+      { code: 'PANTONE 13-0859 TPX', hex: '#EFC050', name: 'Yellow' },
+      { code: 'PANTONE 18-3949 TPX', hex: '#C3447A', name: 'Pink' },
+      { code: 'PANTONE 18-3838 TPX', hex: '#6B5B95', name: 'Ultra Violet' }
+    ];
+    
+    // Convert hex to RGB for distance calculation
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+    
+    // Calculate color distance
+    function colorDistance(rgb1, rgb2) {
+      const dr = rgb1.r - rgb2.r;
+      const dg = rgb1.g - rgb2.g;
+      const db = rgb1.b - rgb2.b;
+      return Math.sqrt(dr * dr + dg * dg + db * db);
+    }
+    
+    const targetRgb = hexToRgb(hexColor);
+    if (!targetRgb) return 'Unknown Color';
+    
+    let closestColor = pantoneColors[0];
+    let minDistance = colorDistance(targetRgb, hexToRgb(closestColor.hex));
+    
+    for (let i = 1; i < pantoneColors.length; i++) {
+      const distance = colorDistance(targetRgb, hexToRgb(pantoneColors[i].hex));
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestColor = pantoneColors[i];
+      }
+    }
+    
+    return closestColor.code;
+  }
+
   // Populate files review
   function populateFilesReview() {
     debugSystem.log('🔍 Populating files review...');
@@ -5936,20 +5985,48 @@ setupInitialization();
       return;
     }
     
-    // Try to find uploaded files data
-    const fileItems = document.querySelectorAll('.techpack-file-item, .file-item');
+    // Try to find uploaded files from multiple possible sources
+    let fileItems = document.querySelectorAll('.techpack-file-item, .file-item, .uploaded-file-item, [data-file-name]');
+    
+    // Also check for input files that were selected
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    const uploadedFilesList = [];
+    
+    fileInputs.forEach(input => {
+      if (input.files && input.files.length > 0) {
+        Array.from(input.files).forEach((file, index) => {
+          uploadedFilesList.push({
+            name: file.name,
+            size: formatFileSize(file.size),
+            type: file.type
+          });
+        });
+      }
+    });
     
     let html = '<div class="review-section">';
     
-    if (fileItems.length > 0) {
-      html += '<div class="review-files-list">';
-      fileItems.forEach((item, index) => {
-        const fileName = item.querySelector('.file-name, .techpack-file-name')?.textContent || `File ${index + 1}`;
-        const fileSize = item.querySelector('.file-size, .techpack-file-size')?.textContent || '';
-        
+    // Show file input files if available, otherwise show DOM file items
+    const filesToShow = uploadedFilesList.length > 0 ? uploadedFilesList : 
+      Array.from(fileItems).map((item, index) => ({
+        name: item.querySelector('.file-name, .techpack-file-name, [data-file-name]')?.textContent || 
+              item.dataset.fileName || `File ${index + 1}`,
+        size: item.querySelector('.file-size, .techpack-file-size')?.textContent || '',
+        type: item.dataset.fileType || ''
+      }));
+    
+    if (filesToShow.length > 0) {
+      html += `<div class="review-files-list">
+        <div class="review-files-count"><strong>${filesToShow.length} file${filesToShow.length !== 1 ? 's' : ''} uploaded:</strong></div>`;
+      
+      filesToShow.forEach((file, index) => {
+        const fileIcon = getFileTypeIcon(file.name, file.type);
         html += `<div class="review-file-item">
-          <span class="review-file-name">${fileName}</span>
-          ${fileSize ? `<span class="review-file-size">${fileSize}</span>` : ''}
+          <span class="review-file-icon">${fileIcon}</span>
+          <div class="review-file-info">
+            <span class="review-file-name">${file.name}</span>
+            ${file.size ? `<span class="review-file-size">${file.size}</span>` : ''}
+          </div>
         </div>`;
       });
       html += '</div>';
@@ -5959,7 +6036,111 @@ setupInitialization();
     
     html += '</div>';
     container.innerHTML = html;
-    debugSystem.log('✅ Files review populated', { fileCount: fileItems.length });
+    debugSystem.log('✅ Files review populated', { fileCount: filesToShow.length });
+  }
+  
+  // Helper function to format file size
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+  
+  // Helper function to get file type icon
+  function getFileTypeIcon(fileName, fileType) {
+    const extension = fileName.split('.').pop().toLowerCase();
+    const icons = {
+      pdf: '📄',
+      ai: '🎨', 
+      png: '🖼️',
+      jpg: '🖼️',
+      jpeg: '🖼️',
+      zip: '📦',
+      doc: '📝',
+      docx: '📝',
+      txt: '📄'
+    };
+    return icons[extension] || '📄';
+  }
+
+  // File upload system for generating public URLs
+  async function uploadFilesToStorage(files) {
+    const uploadedFiles = [];
+    
+    for (const file of files) {
+      try {
+        // Create a FormData object for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('timestamp', Date.now());
+        
+        // For Shopify, we can use the Files API or a third-party service
+        // This is a placeholder implementation - you'll need to configure your upload endpoint
+        
+        // Option 1: Upload to Shopify Files API (requires backend implementation)
+        // const response = await fetch('/admin/api/2023-10/files.json', {
+        //   method: 'POST',
+        //   headers: {
+        //     'X-Shopify-Access-Token': 'your-private-app-token'
+        //   },
+        //   body: formData
+        // });
+        
+        // Option 2: Upload to cloud storage (AWS S3, Cloudinary, etc.)
+        // For now, we'll create a temporary URL using File API for demo purposes
+        const fileUrl = URL.createObjectURL(file);
+        
+        uploadedFiles.push({
+          originalName: file.name,
+          size: file.size,
+          type: file.type,
+          url: fileUrl, // This would be the public URL from your storage service
+          uploadedAt: new Date().toISOString()
+        });
+        
+        debugSystem.log(`📁 File uploaded: ${file.name}`, { url: fileUrl });
+        
+      } catch (error) {
+        debugSystem.log(`❌ Error uploading file ${file.name}:`, error);
+      }
+    }
+    
+    return uploadedFiles;
+  }
+  
+  // Enhanced file review with upload URLs
+  function populateFilesReviewWithUrls(uploadedFiles) {
+    const container = document.getElementById('review-files-content');
+    if (!container) return;
+    
+    let html = '<div class="review-section">';
+    
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      html += `<div class="review-files-list">
+        <div class="review-files-count"><strong>${uploadedFiles.length} file${uploadedFiles.length !== 1 ? 's' : ''} uploaded with public URLs:</strong></div>`;
+      
+      uploadedFiles.forEach((file, index) => {
+        const fileIcon = getFileTypeIcon(file.originalName, file.type);
+        html += `<div class="review-file-item">
+          <span class="review-file-icon">${fileIcon}</span>
+          <div class="review-file-info">
+            <span class="review-file-name">${file.originalName}</span>
+            <span class="review-file-size">${formatFileSize(file.size)}</span>
+            <div class="review-file-url">
+              <small>URL: <a href="${file.url}" target="_blank" rel="noopener">${file.url.substring(0, 50)}...</a></small>
+            </div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="review-empty">No files uploaded</div>';
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
   }
   
   // Populate garments review
@@ -6024,33 +6205,47 @@ setupInitialization();
             const colorInput = colorway.querySelector('.techpack-color-picker__input');
             const color = colorInput ? colorInput.value : '#000000';
             
-            // Get size quantities
-            const sizeInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
-            const sizes = [];
+            // Get PANTONE color name from selected button or default to color name
+            const selectedPantoneButton = colorway.querySelector('.techpack-pantone-buttons button[data-pantone-code]:not([data-pantone-code=""])');
+            let colorName = 'Unknown Color';
+            
+            if (selectedPantoneButton && selectedPantoneButton.dataset.pantoneCode) {
+              colorName = selectedPantoneButton.dataset.pantoneCode;
+            } else {
+              // Find closest PANTONE color by hex value
+              colorName = findClosestPantoneColor(color);
+            }
+            
+            // Get size quantities with proper formatting
+            const sizeInputs = colorway.querySelectorAll('.techpack-size-grid__input[type="number"]:not(:disabled)');
+            const sizeBreakdown = [];
             let colorwayTotal = 0;
             
-            sizeInputs.forEach(input => {
-              const qty = parseInt(input.value) || 0;
-              if (qty > 0) {
-                const sizeName = input.name?.replace('qty-', '').toUpperCase() || 'Unknown';
-                sizes.push(`${sizeName}: ${qty}`);
-                colorwayTotal += qty;
+            // Standard size order for consistent display
+            const sizeOrder = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+            
+            sizeOrder.forEach(size => {
+              const input = colorway.querySelector(`[name*="qty-${size.toLowerCase()}"], [data-size="${size.toLowerCase()}"]`);
+              if (input) {
+                const qty = parseInt(input.value) || 0;
+                if (qty > 0) {
+                  sizeBreakdown.push(`${qty}${size}`);
+                  colorwayTotal += qty;
+                }
               }
             });
             
             garmentTotal += colorwayTotal;
             
+            // Format: "Colorway 1 - PANTONE Black (TOTAL: 20S 25M 30L)"
+            const totalBreakdown = sizeBreakdown.length > 0 ? ` (TOTAL: ${sizeBreakdown.join(' ')})` : ` (TOTAL: ${colorwayTotal})`;
+            
             html += `<div class="review-colorway-item">
               <div class="review-colorway-header">
                 <span class="review-color-swatch" style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-                <span>Colorway ${colorIndex + 1} (Total: ${colorwayTotal})</span>
-              </div>`;
-            
-            if (sizes.length > 0) {
-              html += `<div class="review-sizes">${sizes.join(', ')}</div>`;
-            }
-            
-            html += '</div>';
+                <span><strong>Colorway ${colorIndex + 1} - ${colorName}${totalBreakdown}</strong></span>
+              </div>
+            </div>`;
           });
           
           html += '</div>';
@@ -6125,17 +6320,47 @@ setupInitialization();
   }
   
   // Main function to populate all review content
-  function populateReviewContent() {
+  async function populateReviewContent() {
     debugSystem.log('📋 Populating all review content...');
     
     try {
       populateClientReview();
-      populateFilesReview();
+      
+      // Handle file uploads and populate files review
+      await handleFileUploadsForReview();
+      
       populateGarmentsReview();
       populateSummaryReview();
       debugSystem.log('✅ All review content populated successfully');
     } catch (error) {
       debugSystem.log('❌ Error populating review content', error, 'error');
+    }
+  }
+  
+  // Handle file uploads and populate files review with URLs
+  async function handleFileUploadsForReview() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    let allFiles = [];
+    
+    fileInputs.forEach(input => {
+      if (input.files && input.files.length > 0) {
+        allFiles = allFiles.concat(Array.from(input.files));
+      }
+    });
+    
+    if (allFiles.length > 0) {
+      debugSystem.log('📁 Uploading files for review...', { count: allFiles.length });
+      const uploadedFiles = await uploadFilesToStorage(allFiles);
+      
+      if (uploadedFiles.length > 0) {
+        populateFilesReviewWithUrls(uploadedFiles);
+        // Store uploaded files for webhook payload
+        window.techpackUploadedFiles = uploadedFiles;
+      } else {
+        populateFilesReview(); // Fallback to standard display
+      }
+    } else {
+      populateFilesReview(); // Standard display when no files
     }
   }
   

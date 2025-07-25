@@ -18,8 +18,8 @@
   
   /* Background Colors - Pure & Clean */
   --techpack-bg: #ffffff;
-  --techpack-bg-secondary: #fafbfc;
-  --techpack-bg-tertiary: #f5f6f7;
+  --techpack-bg-secondary: #f9fafb;
+  --techpack-bg-tertiary: #f3f4f6;
   --techpack-bg-accent: #f1f3f4;
   --techpack-bg-dark: #000000;
   
@@ -591,9 +591,8 @@ body {
 .techpack-btn--secondary:active {
   transform: translateY(0) scale(0.98);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  background: linear-gradient(135deg, 
-    var(--techpack-bg-tertiary) 0%, 
-    var(--techpack-bg-secondary) 100%);
+  background: var(--techpack-bg); /* Keep white background */
+  border-color: var(--techpack-primary);
 }
 
 .techpack-btn--ghost {
@@ -614,6 +613,7 @@ body {
 .techpack-btn--ghost:active {
   transform: translateY(0) scale(0.98);
   box-shadow: none;
+  background: var(--techpack-bg); /* Keep white background */
 }
 
 .techpack-btn:disabled {
