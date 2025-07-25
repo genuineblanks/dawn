@@ -12,7 +12,50 @@
     VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
     ANIMATION_DURATION: 400,
     DEBOUNCE_DELAY: 300,
-    MIN_DELIVERY_WEEKS: 6
+    MIN_DELIVERY_WEEKS: 6,
+    
+    // Security Configuration
+    CLIENT_SECRET: 'YOUR_ACTUAL_SECURE_SECRET_KEY', // Replace with your secure secret
+    WEBHOOK_URL: 'YOUR_ACTUAL_MAKECOM_WEBHOOK_URL', // Replace with your Make.com webhook URL
+    SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
+    TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
+  };
+
+  // Security & Webhook Utilities
+  const SecurityUtils = {
+    // Generate HMAC signature for payload authentication
+    generateHMAC: function(payload, timestamp) {
+      const message = JSON.stringify(payload) + timestamp.toString();
+      return CryptoJS.HmacSHA256(message, CONFIG.CLIENT_SECRET).toString();
+    },
+    
+    // Generate unique submission ID
+    generateSubmissionId: function() {
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substr(2, 9);
+      return `TP-${timestamp}-${randomId}`;
+    },
+    
+    // Rate limiting check
+    canSubmit: function() {
+      const lastSubmission = window.techpackLastSubmission || 0;
+      const now = Date.now();
+      return (now - lastSubmission) >= CONFIG.SUBMISSION_COOLDOWN;
+    },
+    
+    // Update last submission time
+    updateSubmissionTime: function() {
+      window.techpackLastSubmission = Date.now();
+    },
+    
+    // Format file size for display
+    formatFileSize: function(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
   };
 
   // Utility function to get minimum quantity based on production type and colorway count
@@ -5263,6 +5306,143 @@
       debugSystem.log('Edit buttons setup complete');
     }
 
+    // ENHANCED: Secure payload building functions for webhook integration
+    collectAllClientData() {
+      return {
+        clientName: document.getElementById('client-name')?.value || '',
+        companyName: document.getElementById('company-name')?.value || '',
+        email: document.getElementById('email')?.value || '',
+        vatEin: document.getElementById('vat-ein')?.value || '',
+        phone: document.getElementById('phone')?.value || '',
+        country: document.getElementById('country')?.value || '',
+        productionType: document.getElementById('production-type')?.value || '',
+        deadline: document.getElementById('deadline')?.value || '',
+        notes: document.getElementById('notes')?.value || ''
+      };
+    }
+
+    collectUploadedFiles() {
+      const files = [];
+      const fileElements = document.querySelectorAll('.techpack-file');
+      
+      fileElements.forEach(fileElement => {
+        const nameElement = fileElement.querySelector('.techpack-file__name');
+        const sizeElement = fileElement.querySelector('.techpack-file__size');
+        const typeSelect = fileElement.querySelector('.techpack-file__tag-select');
+        
+        if (nameElement && sizeElement) {
+          files.push({
+            name: nameElement.textContent || '',
+            size: sizeElement.textContent || '',
+            type: typeSelect?.value || 'Unknown',
+            // For demo purposes - in production, these would be actual CDN URLs
+            url: `https://cdn.genuineblanks.com/techpack-files/${Date.now()}-${nameElement.textContent}`,
+            uploadedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      return files;
+    }
+
+    buildColorwayRecords(clientData, submissionId, submissionDate) {
+      const colorwayRecords = [];
+      
+      document.querySelectorAll('.techpack-garment').forEach(garment => {
+        const garmentType = garment.querySelector('[name="garmentType"]')?.value || 'Unknown Garment';
+        const fabricType = garment.querySelector('[name="fabricType"]')?.value || 'Unknown Fabric';
+        
+        // Get printing methods
+        const printingMethods = Array.from(
+          garment.querySelectorAll('[name="printingMethods[]"]:checked')
+        ).map(cb => cb.value);
+        
+        // Process each colorway in this garment
+        garment.querySelectorAll('.techpack-colorway').forEach(colorway => {
+          const colorInput = colorway.querySelector('.techpack-color-picker__input');
+          const pantoneButton = colorway.querySelector('.techpack-pantone-buttons button[data-pantone-code]:not([data-pantone-code=""])');
+          
+          // Get color information
+          const hexColor = colorInput ? colorInput.value : '#000000';
+          const colorName = pantoneButton && pantoneButton.dataset.pantoneCode ? 
+            pantoneButton.dataset.pantoneCode : 
+            findClosestPantoneColor(hexColor);
+          
+          // Build size breakdown and calculate total
+          const sizeInputs = colorway.querySelectorAll('.techpack-size-grid__input[type="number"]');
+          const sizeBreakdown = [];
+          let totalUnits = 0;
+          
+          sizeInputs.forEach(input => {
+            const size = input.dataset.size?.toUpperCase() || input.name?.replace('qty-', '').toUpperCase();
+            const qty = parseInt(input.value) || 0;
+            if (qty > 0 && size) {
+              sizeBreakdown.push(`${size}: ${qty}`);
+              totalUnits += qty;
+            }
+          });
+          
+          // Only add records for colorways with quantities
+          if (totalUnits > 0) {
+            colorwayRecords.push({
+              // Complete client information (repeated for each colorway)
+              client_name: clientData.clientName,
+              company_name: clientData.companyName,
+              email: clientData.email,
+              vat_ein: clientData.vatEin,
+              phone: clientData.phone,
+              country: clientData.country,
+              production_type: clientData.productionType,
+              deadline: clientData.deadline,
+              notes: clientData.notes,
+              
+              // Garment/colorway specific data
+              garment_description: `${colorName} ${garmentType}, ${fabricType}${printingMethods.length > 0 ? ' w/ ' + printingMethods.join(', ') : ''}`,
+              size_breakdown: sizeBreakdown.join(', '),
+              total_units: totalUnits,
+              
+              // Meta data
+              submission_date: submissionDate,
+              reference_id: submissionId,
+              submission_id: submissionId
+            });
+          }
+        });
+      });
+      
+      return colorwayRecords;
+    }
+
+    buildSecurePayload() {
+      const timestamp = Date.now();
+      const submissionId = SecurityUtils.generateSubmissionId();
+      const submissionDate = new Date().toISOString().split('T')[0];
+      
+      // Collect all data
+      const clientData = this.collectAllClientData();
+      const uploadedFiles = this.collectUploadedFiles();
+      const colorwayRecords = this.buildColorwayRecords(clientData, submissionId, submissionDate);
+      
+      debugSystem.log('🔒 Building secure payload', {
+        clientData,
+        colorwayRecords: colorwayRecords.length,
+        uploadedFiles: uploadedFiles.length,
+        submissionId
+      });
+      
+      return {
+        timestamp,
+        submission_id: submissionId,
+        records: colorwayRecords,
+        files: uploadedFiles,
+        meta: {
+          user_agent: navigator.userAgent,
+          page_url: window.location.href,
+          form_version: '2.1'
+        }
+      };
+    }
+
     // EXISTING: Keep your exact setupFormSubmission method
     setupFormSubmission() {
       const submitBtn = document.querySelector('#step-4-submit');
@@ -5276,6 +5456,13 @@
       const submitBtn = document.querySelector('#step-4-submit');
       if (!submitBtn) return;
 
+      // Rate limiting check
+      if (!SecurityUtils.canSubmit()) {
+        const remaining = Math.ceil((CONFIG.SUBMISSION_COOLDOWN - (Date.now() - (window.techpackLastSubmission || 0))) / 1000);
+        this.showError(`Please wait ${remaining} seconds before submitting again.`);
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
         <svg class="techpack-btn__spinner" width="16" height="16" viewBox="0 0 16 16">
@@ -5285,27 +5472,126 @@
         Submitting...
       `;
 
-      debugSystem.log('Form submission started');
+      debugSystem.log('🚀 Enhanced form submission started');
 
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Build secure payload with all data
+        const payload = this.buildSecurePayload();
         
-        this.showThankYou();
-        debugSystem.log('Form submitted successfully', null, 'success');
+        // Validate payload has data
+        if (!payload.records || payload.records.length === 0) {
+          throw new Error('No garment data found. Please ensure you have added garments with quantities.');
+        }
+
+        // Generate HMAC signature
+        const signature = SecurityUtils.generateHMAC(payload, payload.timestamp);
+        
+        debugSystem.log('🔐 Payload built and signed', {
+          records: payload.records.length,
+          files: payload.files.length,
+          signature: signature.substring(0, 10) + '...'
+        });
+
+        // Send to Make.com webhook
+        const response = await fetch(CONFIG.WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Signature': signature,
+            'X-Timestamp': payload.timestamp.toString(),
+            'X-Form-Version': '2.1'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Webhook submission failed (${response.status}): ${errorText}`);
+        }
+
+        const responseData = await response.json();
+        debugSystem.log('✅ Webhook response received', responseData);
+
+        // Update rate limiting
+        SecurityUtils.updateSubmissionTime();
+        
+        // Show success page with actual submission data
+        this.showThankYou(payload.submission_id, payload.records.length);
+        debugSystem.log('✅ Form submitted successfully', {
+          submissionId: payload.submission_id,
+          records: payload.records.length,
+          files: payload.files.length
+        }, 'success');
+
       } catch (error) {
-        debugSystem.log('Form submission failed', error, 'error');
+        debugSystem.log('❌ Form submission failed', error, 'error');
+        
+        // Reset button state
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Submit Tech-Pack';
+        
+        // Show user-friendly error
+        this.showError(this.getErrorMessage(error));
       }
     }
 
-// EXISTING: Keep your exact showThankYou method
-    showThankYou() {
+    showError(message) {
+      // Create or update error message display
+      let errorDiv = document.querySelector('.techpack-submission-error');
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'techpack-submission-error';
+        errorDiv.style.cssText = `
+          position: fixed;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #dc2626;
+          color: white;
+          padding: 1rem 2rem;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+          z-index: 1000;
+          max-width: 500px;
+          text-align: center;
+        `;
+        document.body.appendChild(errorDiv);
+      }
+      
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        if (errorDiv.parentNode) {
+          errorDiv.style.display = 'none';
+        }
+      }, 5000);
+    }
+
+    getErrorMessage(error) {
+      const message = error.message || 'An unexpected error occurred';
+      
+      // Provide user-friendly error messages
+      if (message.includes('Webhook submission failed')) {
+        return 'Unable to submit your tech-pack. Please check your internet connection and try again.';
+      } else if (message.includes('No garment data found')) {
+        return 'Please add at least one garment with quantities before submitting.';
+      } else if (message.includes('wait')) {
+        return message; // Rate limiting message is already user-friendly
+      } else {
+        return 'We encountered an issue submitting your tech-pack. Please try again or contact support.';
+      }
+    }
+
+// ENHANCED: showThankYou method with actual submission data
+    showThankYou(submissionId, totalGarments) {
       const step4 = document.querySelector('#techpack-step-4');
       if (!step4) return;
 
       const totalQuantity = quantityCalculator.getTotalQuantityFromAllColorways();
+      const actualSubmissionId = submissionId || `TP-${Date.now().toString().slice(-8)}`;
+      const actualGarmentCount = totalGarments || document.querySelectorAll('.techpack-garment').length;
       
       step4.innerHTML = `
         <div class="techpack-container">
@@ -5331,7 +5617,12 @@
                 <div class="techpack-success__details">
                   <div class="techpack-success__detail-item">
                     <span class="techpack-success__detail-label">Reference ID</span>
-                    <span class="techpack-success__detail-value">TP-${Date.now().toString().slice(-8)}</span>
+                    <span class="techpack-success__detail-value">${actualSubmissionId}</span>
+                  </div>
+                  
+                  <div class="techpack-success__detail-item">
+                    <span class="techpack-success__detail-label">Total Garments</span>
+                    <span class="techpack-success__detail-value">${actualGarmentCount} ${actualGarmentCount === 1 ? 'garment' : 'garments'}</span>
                   </div>
                   
                   <div class="techpack-success__detail-item">
@@ -5341,7 +5632,7 @@
                   
                   <div class="techpack-success__detail-item">
                     <span class="techpack-success__detail-label">Files Uploaded</span>
-                    <span class="techpack-success__detail-value">${state.formData.files.length} ${state.formData.files.length === 1 ? 'file' : 'files'}</span>
+                    <span class="techpack-success__detail-value">${document.querySelectorAll('.techpack-file').length} ${document.querySelectorAll('.techpack-file').length === 1 ? 'file' : 'files'}</span>
                   </div>
                   
                   <div class="techpack-success__detail-item">
