@@ -5721,12 +5721,25 @@ setupInitialization();
     // Size grid input enhancements for mobile
     const sizeInputs = document.querySelectorAll('.techpack-size-grid__input[type="number"]');
     sizeInputs.forEach(input => {
-      // Ensure numeric input only
+      // Ensure numeric input only and prevent overflow
       input.addEventListener('input', function() {
         const oldValue = this.value;
+        // Remove non-numeric characters
         this.value = this.value.replace(/[^0-9]/g, '');
+        // Limit to 4 characters to prevent overflow on mobile
+        if (this.value.length > 4) {
+          this.value = this.value.slice(0, 4);
+        }
+        // Cap at reasonable maximum (9999)
+        const numValue = parseInt(this.value) || 0;
+        if (numValue > 9999) {
+          this.value = '9999';
+        }
         if (oldValue !== this.value) {
-          debugSystem.log('🔢 Non-numeric characters removed from size input');
+          debugSystem.log('🔢 Input sanitized for mobile compatibility', { 
+            old: oldValue, 
+            new: this.value 
+          });
         }
       });
       
@@ -6243,7 +6256,7 @@ setupInitialization();
             html += `<div class="review-colorway-item">
               <div class="review-colorway-header">
                 <span class="review-color-swatch" style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-                <span><strong>Colorway ${colorIndex + 1} - ${colorName}${totalBreakdown}</strong></span>
+                <span><strong>${colorName} (Total: ${colorwayTotal} units)</strong></span>
               </div>
             </div>`;
           });
@@ -6259,11 +6272,18 @@ setupInitialization();
         totalQuantity += garmentTotal;
       });
       
+      // Count total colorways across all garments (each colorway = 1 garment)
+      let totalColorways = 0;
+      garments.forEach(garment => {
+        const colorways = garment.querySelectorAll('.techpack-colorway');
+        totalColorways += colorways.length;
+      });
+      
       html += `<div class="review-total-summary">
         <h4>Overall Summary</h4>
         <div class="review-item">
           <span class="review-label">Total Garments:</span>
-          <span class="review-value">${garments.length}</span>
+          <span class="review-value">${totalColorways}</span>
         </div>
         <div class="review-item">
           <span class="review-label">Total Quantity:</span>
@@ -6288,8 +6308,12 @@ setupInitialization();
       return;
     }
     
-    // Calculate totals
-    let totalGarments = document.querySelectorAll('.techpack-garment').length;
+    // Calculate totals - count colorways as garments (each colorway = 1 garment)
+    let totalGarments = 0;
+    document.querySelectorAll('.techpack-garment').forEach(garment => {
+      const colorways = garment.querySelectorAll('.techpack-colorway');
+      totalGarments += colorways.length;
+    });
     let totalQuantity = 0;
     let totalFiles = document.querySelectorAll('.techpack-file-item, .file-item').length;
     
