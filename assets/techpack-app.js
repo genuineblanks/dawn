@@ -5783,21 +5783,72 @@ setupInitialization();
       return;
     }
     
-    // Collect client data from step 1
-    const clientData = {
-      businessName: document.getElementById('business-name')?.value || '',
-      email: document.getElementById('business-email')?.value || '',
-      productionType: document.getElementById('production-type')?.value || '',
-      deadline: document.getElementById('deadline')?.value || ''
-    };
+    // ENHANCED: Collect client data - handle both registered and new client forms
+    let clientData = {};
     
-    // Generate review HTML
+    // Try to get data from main form using correct field IDs
+    const mainFormData = {
+      clientName: document.getElementById('client-name')?.value || '',
+      companyName: document.getElementById('company-name')?.value || '',
+      email: document.getElementById('email')?.value || '',
+      vatEin: document.getElementById('vat-ein')?.value || '',
+      phone: document.getElementById('phone')?.value || '',
+      country: document.getElementById('country')?.value || '',
+      productionType: document.getElementById('production-type')?.value || '',
+      deadline: document.getElementById('deadline')?.value || '',
+      notes: document.getElementById('notes')?.value || ''
+    };
+
+    // Check if main form has data
+    const hasMainFormData = mainFormData.clientName || mainFormData.companyName || mainFormData.email;
+    
+    if (hasMainFormData) {
+      clientData = mainFormData;
+      debugSystem.log('📋 Using main form client data', clientData);
+    } else {
+      // Try alternative selectors for backward compatibility
+      debugSystem.log('⚠️ Main form appears empty, checking alternative selectors...');
+      
+      clientData = {
+        clientName: document.getElementById('client-name')?.value || 
+                   document.getElementById('contact-name')?.value || '',
+        companyName: document.getElementById('company-name')?.value || 
+                    document.getElementById('business-name')?.value || '',
+        email: document.getElementById('email')?.value || 
+               document.getElementById('business-email')?.value || '',
+        vatEin: document.getElementById('vat-ein')?.value || '',
+        phone: document.getElementById('phone')?.value || 
+               document.getElementById('business-phone')?.value || '',
+        country: document.getElementById('country')?.value || '',
+        productionType: document.getElementById('production-type')?.value || '',
+        deadline: document.getElementById('deadline')?.value || '',
+        notes: document.getElementById('notes')?.value || ''
+      };
+      
+      debugSystem.log('📋 Using alternative client data collection', clientData);
+    }
+    
+    // Also check for stored client data from modal interactions
+    const registrationStatus = localStorage.getItem('techpack-client-registration');
+    if (registrationStatus) {
+      clientData.registrationStatus = registrationStatus;
+      debugSystem.log(`👤 Client registration status: ${registrationStatus}`);
+    }
+    
+    // ENHANCED: Generate comprehensive review HTML - show all client information
     let html = '<div class="review-section">';
     
-    if (clientData.businessName) {
+    if (clientData.clientName) {
+      html += `<div class="review-item">
+        <span class="review-label">Contact Name:</span>
+        <span class="review-value">${clientData.clientName}</span>
+      </div>`;
+    }
+    
+    if (clientData.companyName) {
       html += `<div class="review-item">
         <span class="review-label">Business/Brand Name:</span>
-        <span class="review-value">${clientData.businessName}</span>
+        <span class="review-value">${clientData.companyName}</span>
       </div>`;
     }
     
@@ -5805,6 +5856,27 @@ setupInitialization();
       html += `<div class="review-item">
         <span class="review-label">Email Address:</span>
         <span class="review-value">${clientData.email}</span>
+      </div>`;
+    }
+    
+    if (clientData.vatEin) {
+      html += `<div class="review-item">
+        <span class="review-label">VAT/EIN Number:</span>
+        <span class="review-value">${clientData.vatEin}</span>
+      </div>`;
+    }
+    
+    if (clientData.phone) {
+      html += `<div class="review-item">
+        <span class="review-label">Phone Number:</span>
+        <span class="review-value">${clientData.phone}</span>
+      </div>`;
+    }
+    
+    if (clientData.country) {
+      html += `<div class="review-item">
+        <span class="review-label">Business Location:</span>
+        <span class="review-value">${clientData.country}</span>
       </div>`;
     }
     
@@ -5826,6 +5898,21 @@ setupInitialization();
       html += `<div class="review-item">
         <span class="review-label">Target Deadline:</span>
         <span class="review-value">${formattedDate}</span>
+      </div>`;
+    }
+    
+    if (clientData.notes) {
+      html += `<div class="review-item">
+        <span class="review-label">Project Details:</span>
+        <span class="review-value">${clientData.notes}</span>
+      </div>`;
+    }
+    
+    if (clientData.registrationStatus) {
+      const statusText = clientData.registrationStatus === 'yes' ? 'Registered Client' : 'New Client';
+      html += `<div class="review-item">
+        <span class="review-label">Client Status:</span>
+        <span class="review-value">${statusText}</span>
       </div>`;
     }
     
@@ -6102,5 +6189,169 @@ setupInitialization();
     debugSystem.log('🔄 Manually refreshing review content...');
     populateReviewContent();
   };
+
+  // ===================================
+  // NEW: Size Selection Management for Checkbox Interface
+  // ===================================
+  class SizeSelectionManager {
+    constructor() {
+      this.init();
+    }
+
+    init() {
+      debugSystem.log('🔲 Initializing Size Selection Manager...');
+      
+      // Handle checkbox changes - enable/disable quantity inputs
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('input[name="selectedSizes[]"]')) {
+          this.handleSizeCheckboxChange(e.target);
+        }
+      });
+
+      // Handle quantity input changes  
+      document.addEventListener('input', (e) => {
+        if (e.target.matches('.techpack-form__input--quantity')) {
+          this.handleQuantityChange(e.target);
+        }
+      });
+
+      // Initialize existing size inputs on page load
+      this.initializeExistingSizes();
+    }
+
+    initializeExistingSizes() {
+      // Find all existing size options and set up their initial state
+      document.querySelectorAll('.techpack-size-option').forEach(sizeOption => {
+        const checkbox = sizeOption.querySelector('input[name="selectedSizes[]"]');
+        const quantityInput = sizeOption.querySelector('.techpack-form__input--quantity');
+        
+        if (checkbox && quantityInput) {
+          // Set initial state based on existing values
+          const hasQuantity = parseInt(quantityInput.value) > 0;
+          checkbox.checked = hasQuantity;
+          quantityInput.disabled = !hasQuantity;
+        }
+      });
+    }
+
+    handleSizeCheckboxChange(checkbox) {
+      const sizeOption = checkbox.closest('.techpack-size-option');
+      const quantityInput = sizeOption.querySelector('.techpack-form__input--quantity');
+      
+      if (checkbox.checked) {
+        // Enable quantity input and set minimum value
+        quantityInput.disabled = false;
+        quantityInput.focus();
+        if (parseInt(quantityInput.value) === 0) {
+          quantityInput.value = 1; // Set minimum quantity when size is selected
+        }
+      } else {
+        // Disable quantity input and reset value
+        quantityInput.disabled = true;
+        quantityInput.value = 0;
+      }
+
+      // Update totals after checkbox change
+      this.updateColorwayTotal(checkbox);
+      debugSystem.log(`📦 Size ${checkbox.value.toUpperCase()} ${checkbox.checked ? 'selected' : 'deselected'}`);
+    }
+
+    handleQuantityChange(quantityInput) {
+      const sizeOption = quantityInput.closest('.techpack-size-option');
+      const checkbox = sizeOption.querySelector('input[name="selectedSizes[]"]');
+      const value = parseInt(quantityInput.value) || 0;
+
+      // Auto-check checkbox if quantity > 0, uncheck if 0
+      if (value > 0 && !checkbox.checked) {
+        checkbox.checked = true;
+        quantityInput.disabled = false;
+      } else if (value === 0 && checkbox.checked) {
+        checkbox.checked = false;
+        quantityInput.disabled = true;
+      }
+
+      // Update totals after quantity change
+      this.updateColorwayTotal(quantityInput);
+      debugSystem.log(`🔢 Quantity updated: ${checkbox.value.toUpperCase()} = ${value}`);
+    }
+
+    updateColorwayTotal(element) {
+      const colorway = element.closest('.techpack-colorway');
+      if (!colorway) return;
+
+      const quantityInputs = colorway.querySelectorAll('.techpack-form__input--quantity');
+      let total = 0;
+
+      quantityInputs.forEach(input => {
+        if (!input.disabled) {
+          total += parseInt(input.value) || 0;
+        }
+      });
+
+      const totalElement = colorway.querySelector('.techpack-colorway__total-value');
+      if (totalElement) {
+        totalElement.textContent = total;
+      }
+
+      // Trigger overall total calculation
+      if (window.quantityCalculator) {
+        window.quantityCalculator.calculateAndUpdateProgress();
+      }
+
+      debugSystem.log(`📊 Colorway total updated: ${total}`);
+    }
+
+    // Helper methods for compatibility with existing code
+    getQuantityInputs(colorway) {
+      return colorway.querySelectorAll('.techpack-form__input--quantity');
+    }
+
+    getActiveQuantityInputs(colorway) {
+      return colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
+    }
+  }
+
+  // Initialize the new size selection manager
+  const sizeSelectionManager = new SizeSelectionManager();
+  window.sizeSelectionManager = sizeSelectionManager;
+
+  // ===================================
+  // UPDATE: Modify existing selectors to work with new interface
+  // ===================================
+  
+  // Override old size grid selectors with new ones
+  function updateLegacySelectors() {
+    // Update quantity calculator to use new selectors
+    if (window.quantityCalculator) {
+      const originalMethods = window.quantityCalculator;
+      
+      // Override methods that use old selectors
+      const originalUpdateColorwayTotal = originalMethods.updateColorwayTotal;
+      originalMethods.updateColorwayTotal = function(colorwayId) {
+        const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+        if (!colorway) return 0;
+
+        // Use new quantity input selector
+        const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
+        let total = 0;
+
+        qtyInputs.forEach(input => {
+          const value = parseInt(input.value) || 0;
+          total += value;
+        });
+
+        const totalElement = colorway.querySelector('.techpack-colorway__total-value');
+        if (totalElement) {
+          totalElement.textContent = total;
+        }
+
+        debugSystem.log(`✅ Updated colorway ${colorwayId} total: ${total}`);
+        return total;
+      };
+    }
+  }
+
+  // Run selector updates after a brief delay to ensure everything is initialized
+  setTimeout(updateLegacySelectors, 100);
 
 })();
