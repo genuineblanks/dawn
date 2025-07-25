@@ -1517,7 +1517,7 @@
         const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
     
         colorwaysInGarment.forEach((colorway) => {
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+          const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
           let colorwayTotal = 0;
           
           qtyInputs.forEach(input => {
@@ -1816,7 +1816,7 @@
           }
     
           // Get quantities from size grid
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+          const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
           const quantities = {};
           let colorwayTotal = 0;
     
@@ -2420,7 +2420,7 @@
       }, 500);
 
       document.addEventListener('input', (e) => {
-        if (e.target.matches('.techpack-size-grid__input[type="number"]')) {
+        if (e.target.matches('.techpack-form__input--quantity')) {
           // Update individual colorway totals immediately
           const colorway = e.target.closest('.techpack-colorway');
           if (colorway) {
@@ -2436,7 +2436,7 @@
       });
 
       document.addEventListener('change', (e) => {
-        if (e.target.matches('.techpack-size-grid__input[type="number"]')) {
+        if (e.target.matches('.techpack-form__input--quantity')) {
           const colorway = e.target.closest('.techpack-colorway');
           if (colorway) {
             const colorwayId = colorway.dataset.colorwayId;
@@ -2482,7 +2482,7 @@
 
     getTotalQuantityFromAllColorways() {
       let total = 0;
-      const colorwayInputs = document.querySelectorAll('.techpack-size-grid__input[type="number"]');
+      const colorwayInputs = document.querySelectorAll('.techpack-form__input--quantity');
       
       colorwayInputs.forEach(input => {
         const value = parseInt(input.value) || 0;
@@ -2756,7 +2756,7 @@
       const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
       if (!colorway) return 0;
 
-      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+      const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
       let total = 0;
 
       qtyInputs.forEach(input => {
@@ -2787,7 +2787,7 @@
       const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
       if (!colorway) return;
 
-      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+      const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
       const colorwayTotal = this.updateColorwayTotal(colorwayId);
       
       // FIXED: Get colorway count for THIS garment only and use correct minimums
@@ -3191,7 +3191,7 @@
       }
 
       // Quantity inputs
-      const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+      const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
       qtyInputs.forEach(input => {
         const debouncedUpdate = Utils.debounce(() => {
           quantityCalculator.validateQuantityInputs(colorwayId);
@@ -5719,7 +5719,7 @@ setupInitialization();
     });
     
     // Size grid input enhancements for mobile
-    const sizeInputs = document.querySelectorAll('.techpack-size-grid__input');
+    const sizeInputs = document.querySelectorAll('.techpack-form__input--quantity');
     sizeInputs.forEach(input => {
       // Ensure numeric input only
       input.addEventListener('input', function() {
@@ -6024,7 +6024,7 @@ setupInitialization();
             const color = colorInput ? colorInput.value : '#000000';
             
             // Get size quantities
-            const sizeInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+            const sizeInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
             const sizes = [];
             let colorwayTotal = 0;
             
@@ -6097,8 +6097,8 @@ setupInitialization();
     let totalQuantity = 0;
     let totalFiles = document.querySelectorAll('.techpack-file-item, .file-item').length;
     
-    // Calculate total quantity
-    document.querySelectorAll('.techpack-size-grid__input').forEach(input => {
+    // Calculate total quantity - FIXED: Use new selector
+    document.querySelectorAll('.techpack-form__input--quantity:not(:disabled)').forEach(input => {
       totalQuantity += parseInt(input.value) || 0;
     });
     
@@ -6293,12 +6293,28 @@ setupInitialization();
         totalElement.textContent = total;
       }
 
-      // Trigger overall total calculation
-      if (window.quantityCalculator) {
+      // CRITICAL FIX: Trigger the existing validation system
+      const colorwayId = colorway.dataset.colorwayId;
+      if (colorwayId && window.quantityCalculator) {
+        // Update totals using existing system
+        window.quantityCalculator.updateColorwayTotal(colorwayId);
         window.quantityCalculator.calculateAndUpdateProgress();
+        
+        // Trigger validation for the garment
+        const garment = colorway.closest('.techpack-garment');
+        if (garment) {
+          const garmentId = garment.dataset.garmentId;
+          window.quantityCalculator.updateGarmentTotal(garmentId);
+        }
+        
+        // Trigger step validation
+        if (window.techpackApp && window.techpackApp.stepManager) {
+          window.techpackApp.stepManager.validateStep3();
+        }
       }
 
-      debugSystem.log(`📊 Colorway total updated: ${total}`);
+      debugSystem.log(`📊 Colorway total updated: ${total} (with validation)`);
+      return total;
     }
 
     // Helper methods for compatibility with existing code
@@ -6314,24 +6330,32 @@ setupInitialization();
   // Initialize the new size selection manager
   const sizeSelectionManager = new SizeSelectionManager();
   window.sizeSelectionManager = sizeSelectionManager;
+  
+  // Make quantityCalculator globally available for validation integration
+  window.quantityCalculator = window.techpackApp.quantityCalculator;
 
   // ===================================
   // UPDATE: Modify existing selectors to work with new interface
   // ===================================
   
-  // Override old size grid selectors with new ones
+  // CRITICAL FIX: Update selectors to work with new interface but keep all validation logic
   function updateLegacySelectors() {
-    // Update quantity calculator to use new selectors
+    debugSystem.log('🔧 Updating legacy selectors to work with new interface...');
+    
+    // Override specific methods that search for old size-grid selectors
     if (window.quantityCalculator) {
       const originalMethods = window.quantityCalculator;
       
-      // Override methods that use old selectors
-      const originalUpdateColorwayTotal = originalMethods.updateColorwayTotal;
+      // Store the original methods
+      const originalUpdateColorwayTotal = originalMethods.updateColorwayTotal.bind(originalMethods);
+      const originalValidateQuantityInputs = originalMethods.validateQuantityInputs.bind(originalMethods);
+      
+      // Override updateColorwayTotal to use new selectors while keeping all validation
       originalMethods.updateColorwayTotal = function(colorwayId) {
         const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
         if (!colorway) return 0;
 
-        // Use new quantity input selector
+        // Use new quantity input selector instead of .techpack-size-grid__input
         const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
         let total = 0;
 
@@ -6346,6 +6370,39 @@ setupInitialization();
         }
 
         debugSystem.log(`✅ Updated colorway ${colorwayId} total: ${total}`);
+        return total;
+      };
+
+      // Override validateQuantityInputs to use new selectors while keeping validation logic
+      originalMethods.validateQuantityInputs = function(colorwayId) {
+        const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+        if (!colorway) return;
+
+        // Use new selector
+        const qtyInputs = colorway.querySelectorAll('.techpack-form__input--quantity:not(:disabled)');
+        const colorwayTotal = this.updateColorwayTotal(colorwayId);
+        
+        // Keep all the existing validation logic from the original method
+        const garment = colorway.closest('.techpack-garment');
+        const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
+        const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+        
+        const activeSizes = Array.from(qtyInputs).filter(input => parseInt(input.value) || 0 > 0).length;
+        const maxAllowedSizes = this.getMaxAllowedSizes(colorwayTotal);
+        
+        // Rest of validation logic remains the same
+        return originalValidateQuantityInputs(colorwayId);
+      };
+    }
+
+    // Also update other places that might use old selectors
+    const originalGetTotalQuantity = window.getTotalQuantity;
+    if (originalGetTotalQuantity) {
+      window.getTotalQuantity = function() {
+        let total = 0;
+        document.querySelectorAll('.techpack-form__input--quantity:not(:disabled)').forEach(input => {
+          total += parseInt(input.value) || 0;
+        });
         return total;
       };
     }
