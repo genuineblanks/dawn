@@ -5291,6 +5291,7 @@
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
         
+        
         this.showThankYou();
         debugSystem.log('Form submitted successfully', null, 'success');
       } catch (error) {
