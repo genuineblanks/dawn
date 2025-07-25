@@ -5509,7 +5509,17 @@
           throw new Error(`Webhook submission failed (${response.status}): ${errorText}`);
         }
 
-        const responseData = await response.json();
+        // Handle different response types
+        let responseData;
+        const contentType = response.headers.get('content-type');
+
+        if (contentType && contentType.includes('application/json')) {
+          responseData = await response.json();
+        } else {
+            const responseText = await response.text();
+          responseData = { status: response.status, message: responseText };
+        }
+
         debugSystem.log('✅ Webhook response received', responseData);
 
         // Update rate limiting
