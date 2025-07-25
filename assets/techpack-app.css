@@ -5301,6 +5301,130 @@ body {
     margin: 0 !important;
   }
 
+  /* ===================================
+     NEW: MOBILE SIZE SELECTION INTERFACE
+     =================================== */
+  
+  /* Size selection container - replaces scrollable grid */
+  .techpack-size-selection {
+    margin: 1.5rem 0 !important;
+    background: var(--techpack-bg, #ffffff) !important;
+    border: 2px solid var(--techpack-border, #e5e7eb) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .techpack-size-selection__title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: var(--techpack-text, #111827) !important;
+    margin: 0 0 1rem 0 !important;
+    padding-bottom: 0.75rem !important;
+    border-bottom: 1px solid var(--techpack-border-light, #f3f4f6) !important;
+  }
+
+  /* Size option container - each size/quantity pair */
+  .techpack-size-option {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.75rem 0 !important;
+    border-bottom: 1px solid var(--techpack-border-light, #f8fafc) !important;
+    min-height: 56px !important; /* Better touch target */
+  }
+
+  .techpack-size-option:last-child {
+    border-bottom: none !important;
+  }
+
+  /* Checkbox side - size selection */
+  .techpack-size-option__checkbox {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 56px !important;
+    padding: 1rem 0 !important;
+  }
+
+  .techpack-size-option__label {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: var(--techpack-text, #111827) !important;
+    margin-left: 0.75rem !important;
+    min-width: 3rem !important;
+    text-align: left !important;
+  }
+
+  /* Quantity input side */
+  .techpack-size-option__quantity {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    flex: 0 0 auto !important;
+  }
+
+  .techpack-form__label--inline {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--techpack-text-secondary, #6b7280) !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .techpack-form__input--quantity {
+    width: 80px !important;
+    min-height: 48px !important;
+    padding: 0.75rem !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border: 2px solid var(--techpack-border, #e5e7eb) !important;
+    border-radius: 8px !important;
+    background: var(--techpack-bg, #ffffff) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .techpack-form__input--quantity:focus {
+    outline: none !important;
+    border-color: var(--techpack-primary, #000000) !important;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+    background: #f0f9ff !important;
+  }
+
+  .techpack-form__input--quantity:disabled {
+    background: #f9fafb !important;
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+  }
+
+  /* Checkbox styling - consistent with existing */
+  .techpack-form__checkboxes--size {
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide quantity input when size is not selected */
+  .techpack-size-option__checkbox input[type="checkbox"]:not(:checked) ~ .techpack-size-option__quantity .techpack-form__input--quantity {
+    opacity: 0.5 !important;
+  }
+
+  /* Active state when checkbox is checked */
+  .techpack-size-option__checkbox input[type="checkbox"]:checked ~ .techpack-size-option__label {
+    color: var(--techpack-primary, #000000) !important;
+    font-weight: 700 !important;
+  }
+
+  .techpack-size-option:has(input[type="checkbox"]:checked) {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border-radius: 8px !important;
+    margin: 0 -0.75rem !important;
+    padding: 0.75rem !important;
+  }
+
   /* CONFLICT RESOLUTION: Override any other CSS files trying to control navigation */
   .techpack-step .techpack-form__actions,
   #techpack-step-1 .techpack-form__actions,
