@@ -518,7 +518,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-family: var(--techpack-font-family);
-  min-height: 48px;
+  min-height: 56px;
   transform: translateY(0);
   box-shadow: var(--techpack-shadow-sm);
 }
@@ -1892,7 +1892,7 @@ body {
   .techpack-form__input,
   .techpack-form__select,
   .techpack-form__textarea {
-    min-height: 48px; /* Better touch target */
+    min-height: 56px; /* Better touch target */
     padding: 0.875rem 1rem;
     font-size: 1rem; /* Prevent zoom on iOS */
     border-radius: 8px;
@@ -2933,7 +2933,7 @@ body {
   .techpack-form__input,
   .techpack-form__select,
   .techpack-form__textarea {
-    min-height: 48px; /* Better touch target */
+    min-height: 56px; /* Better touch target */
     font-size: 1rem; /* Prevent zoom on iOS */
     padding: 0.75rem 1rem;
     border-radius: 8px;
@@ -3373,7 +3373,7 @@ body {
   
   .techpack-dropdown__trigger {
     width: 100%;
-    min-height: 48px;
+    min-height: 56px;
     padding: 0.75rem 1rem;
     background: var(--techpack-bg);
     border: 2px solid var(--techpack-border);
@@ -5125,5 +5125,302 @@ body {
   .techpack-pantone-hex {
     width: 100%;
     height: 40px;
+  }
+}
+
+/* ===================================
+   TECHPACK CSS HIERARCHY NOTICE
+   =================================== 
+   
+   This file (techpack-app.css) is the MAIN CSS file for the TechPack application.
+   It takes precedence over all other techpack-*.css files including:
+   - techpack-navigation-fixes.css
+   - techpack-mobile-enhancements.css  
+   - techpack-unified-styles.css
+   - And others...
+   
+   The !important declarations below are necessary to override conflicting
+   styles from multiple CSS files. This ensures consistent behavior across
+   all devices and prevents CSS conflicts.
+   
+   =================================== */
+
+/* ===================================
+   MOBILE IMPROVEMENTS - BETTER UX
+   =================================== */
+@media (max-width: 768px) {
+  /* ENHANCED: Better touch targets for all buttons */
+  .techpack-btn {
+    min-height: 56px !important; /* Apple recommended minimum touch target */
+    padding: 1rem 1.5rem !important;
+    font-size: 1rem !important; /* Larger, more readable text */
+    font-weight: 600 !important;
+    border-radius: 12px !important; /* More modern rounded corners */
+    line-height: 1.4 !important;
+    letter-spacing: 0.025em !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* ENHANCED: Form action buttons specifically */
+  .techpack-form__actions {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid var(--techpack-border-light) !important;
+    padding: 1.25rem 1rem !important; /* More generous padding */
+    margin: 0 !important;
+    z-index: 100 !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+    /* Safe area support for modern devices */
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1rem !important;
+    align-items: center !important;
+  }
+
+  /* ENHANCED: Button layout within actions */
+  .techpack-form__actions .techpack-btn {
+    flex: 1 !important;
+    min-height: 56px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* ENHANCED: Primary button styling */
+  .techpack-btn--primary {
+    flex: 2 !important; /* Make primary button larger */
+    background: var(--techpack-primary, #000000) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .techpack-btn--primary:hover,
+  .techpack-btn--primary:active {
+    background: var(--techpack-primary-hover, #1a1a1a) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* ENHANCED: Secondary button styling */
+  .techpack-btn--secondary,
+  .techpack-btn--ghost {
+    background: transparent !important;
+    border: 2px solid var(--techpack-border, #e5e7eb) !important;
+    color: var(--techpack-text, #111827) !important;
+  }
+
+  .techpack-btn--secondary:hover,
+  .techpack-btn--ghost:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: var(--techpack-primary, #000000) !important;
+  }
+
+  /* ENHANCED: Content spacing to prevent overlap with fixed buttons */
+  .techpack-content {
+    padding-bottom: 120px !important; /* More space for larger buttons */
+    margin-bottom: 0 !important;
+  }
+
+  /* ENHANCED: Step spacing */
+  .techpack-step {
+    padding-bottom: 140px !important; /* Account for fixed navigation */
+    min-height: 100vh !important;
+  }
+
+  /* ENHANCED: Form inputs with better touch targets */
+  .techpack-form__input,
+  .techpack-form__select,
+  .techpack-form__textarea {
+    min-height: 56px !important; /* Consistent with buttons */
+    padding: 1rem !important;
+    font-size: 1rem !important; /* Prevent iOS zoom */
+    border-radius: 12px !important; /* Match button radius */
+    border: 2px solid var(--techpack-border) !important;
+    line-height: 1.5 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* ENHANCED: Focus states for better accessibility */
+  .techpack-form__input:focus,
+  .techpack-form__select:focus,
+  .techpack-form__textarea:focus {
+    outline: none !important;
+    border-color: var(--techpack-primary) !important;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* ENHANCED: Better spacing between form groups */
+  .techpack-form__group {
+    margin-bottom: 1.5rem !important; /* More generous spacing */
+  }
+
+  /* ENHANCED: Labels with better readability */
+  .techpack-form__label {
+    font-size: 1rem !important; /* Larger, more readable labels */
+    font-weight: 600 !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--techpack-text) !important;
+    line-height: 1.4 !important;
+  }
+
+  /* ENHANCED: Better checkbox and radio touch targets */
+  .techpack-form__checkbox,
+  .techpack-form__radio {
+    min-height: 56px !important;
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* ENHANCED: Progress bar mobile styling */
+  .techpack-progress {
+    position: sticky !important;
+    top: 0 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid var(--techpack-border-light) !important;
+    padding: 1rem !important;
+    z-index: 90 !important;
+    /* Safe area support */
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+  }
+
+  /* ENHANCED: Container spacing */
+  .techpack-container {
+    padding: 0 1rem !important;
+    margin: 0 !important;
+  }
+
+  /* CONFLICT RESOLUTION: Override any other CSS files trying to control navigation */
+  .techpack-step .techpack-form__actions,
+  #techpack-step-1 .techpack-form__actions,
+  #techpack-step-2 .techpack-form__actions,
+  #techpack-step-3 .techpack-form__actions,
+  #techpack-step-4 .techpack-form__actions {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+
+  /* CONFLICT RESOLUTION: Ensure add garment button doesn't overlap navigation */
+  .techpack-btn--add-garment {
+    margin-bottom: 2rem !important;
+  }
+
+  /* CONFLICT RESOLUTION: Step 3 specific spacing fixes */
+  #techpack-step-3 .techpack-content {
+    margin-bottom: 2rem !important;
+  }
+
+  /* CONFLICT RESOLUTION: Override sticky positioning from other files */
+  .techpack-form__actions[class*="sticky"],
+  .techpack-form__actions[style*="sticky"] {
+    position: fixed !important;
+  }
+
+  /* CONFLICT RESOLUTION: Ensure no overflow issues cause scroll problems */
+  .techpack-app-wrapper,
+  .techpack-step,
+  .techpack-container,
+  .techpack-content {
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* CONFLICT RESOLUTION: Mobile scroll behavior */
+  body:has(.techpack-step[style*="block"]) {
+    overflow-x: hidden !important;
+  }
+}
+
+/* ===================================
+   DESKTOP FIXES - REMOVE SCROLLING ISSUES
+   =================================== */
+@media (min-width: 769px) {
+  /* CRITICAL: Fix desktop navigation scrolling issue */
+  .techpack-form__actions {
+    position: static !important; /* Override all mobile positioning */
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 2rem 0 0 0 !important;
+    padding: 1.5rem 0 !important;
+    background: transparent !important;
+    border-top: 1px solid var(--techpack-border-light);
+    box-shadow: none !important;
+    z-index: auto !important;
+    width: auto !important;
+    overflow: visible !important; /* Prevent any scroll conflicts */
+  }
+
+  /* Ensure desktop button layout doesn't cause horizontal scroll */
+  .techpack-form__actions .btn-group {
+    overflow: visible !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Desktop button styling - prevent scroll issues */
+  .techpack-btn {
+    flex: none !important;
+    width: auto !important;
+    min-width: 140px !important;
+    max-width: none !important;
+    overflow: hidden !important; /* Prevent button content overflow */
+  }
+
+  /* Remove mobile-specific content padding on desktop */
+  .techpack-content {
+    padding-bottom: 1rem !important; /* Reset mobile bottom padding */
+  }
+
+  /* Reset mobile step padding on desktop */
+  .techpack-step {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+
+  /* Ensure desktop form doesn't have mobile constraints */
+  .techpack-form {
+    margin-bottom: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Desktop-specific progress bar - reset mobile positioning */
+  .techpack-progress {
+    position: sticky !important;
+    top: 0 !important;
+    margin-bottom: 2rem !important;
+    z-index: 10 !important;
+  }
+
+  /* Desktop container - ensure no overflow issues */
+  .techpack-container {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Desktop app wrapper - reset mobile constraints */
+  .techpack-app-wrapper {
+    overflow: visible !important;
+    min-height: auto !important;
+    height: auto !important;
   }
 }
