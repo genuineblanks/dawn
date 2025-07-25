@@ -27,7 +27,9 @@ CRITICAL MOBILE LAYOUT FIXES
     padding-top: 0;
     padding-bottom: 0;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal overflow */
   }
   
   .techpack-step {
@@ -359,6 +361,11 @@ CRITICAL MOBILE LAYOUT FIXES
     margin-bottom: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
+    /* Prevent overflow issues */
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   
   .techpack-colorway:hover {
@@ -446,13 +453,21 @@ CRITICAL MOBILE LAYOUT FIXES
     scroll-behavior: smooth;
   }
   
-  /* Mobile-optimized grid layout */
+  /* Mobile-optimized grid layout - REMOVE XXS and XXL for mobile */
   .techpack-size-grid__header,
   .techpack-size-grid__row {
     display: grid;
-    grid-template-columns: 70px repeat(7, minmax(60px, 1fr));
+    grid-template-columns: 70px repeat(5, minmax(70px, 1fr)); /* Changed from 7 to 5 columns */
     gap: 0;
-    min-width: 480px; /* Optimized for mobile scroll */
+    min-width: 400px; /* Reduced from 480px to accommodate fewer columns */
+  }
+  
+  /* Hide XXS and XXL columns on mobile */
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(2), /* XXS header */
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(8), /* XXL header */
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(2), /* XXS input */
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(8) { /* XXL input */
+    display: none;
   }
   
   .techpack-size-grid__header {
@@ -497,6 +512,13 @@ CRITICAL MOBILE LAYOUT FIXES
     -webkit-appearance: none;
     -moz-appearance: textfield;
     touch-action: manipulation; /* Improves touch responsiveness */
+    /* Prevent overflow and layout breaks */
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    word-break: break-all;
+    /* Limit input length to prevent overflow */
+    max-length: 4;
   }
   
   .techpack-size-grid__input::-webkit-outer-spin-button,
@@ -525,11 +547,16 @@ CRITICAL MOBILE LAYOUT FIXES
   /* Enhanced scroll container with better mobile support */
   .techpack-size-grid {
     overflow-x: auto;
+    overflow-y: hidden; /* Prevent vertical overflow */
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     /* Better mobile scrollbar */
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    /* Prevent layout break */
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   /* WebKit scrollbar styling for mobile */
