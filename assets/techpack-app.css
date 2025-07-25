@@ -5412,17 +5412,29 @@ body {
     opacity: 0.5 !important;
   }
 
-  /* Active state when checkbox is checked */
+  /* Active state when checkbox is checked - FIXED: Prevent black background */
   .techpack-size-option__checkbox input[type="checkbox"]:checked ~ .techpack-size-option__label {
     color: var(--techpack-primary, #000000) !important;
     font-weight: 700 !important;
   }
 
+  /* FIXED: Light background that doesn't hide text */
   .techpack-size-option:has(input[type="checkbox"]:checked) {
-    background: rgba(0, 0, 0, 0.02) !important;
+    background: rgba(59, 130, 246, 0.05) !important; /* Light blue instead of black */
     border-radius: 8px !important;
     margin: 0 -0.75rem !important;
     padding: 0.75rem !important;
+    border-left: 3px solid var(--techpack-primary, #000000) !important;
+  }
+
+  /* Ensure text is always visible */
+  .techpack-size-option .techpack-size-option__label {
+    color: var(--techpack-text, #111827) !important;
+  }
+
+  .techpack-size-option:has(input[type="checkbox"]:checked) .techpack-size-option__label {
+    color: var(--techpack-primary, #000000) !important;
+    font-weight: 700 !important;
   }
 
   /* CONFLICT RESOLUTION: Override any other CSS files trying to control navigation */
