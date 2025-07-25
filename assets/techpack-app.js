@@ -15,8 +15,8 @@
     MIN_DELIVERY_WEEKS: 6,
     
     // Security Configuration
-    CLIENT_SECRET: 'genuineblanks_techpack_2025_secure_key', // Replace with your secure secret
-    WEBHOOK_URL: 'https://hook.eu2.make.com/pckqx6ycq27i4xcytw1vhnikiduk3i8b', // Replace with your Make.com webhook URL
+    CLIENT_SECRET: 'YOUR_ACTUAL_SECURE_SECRET_KEY', // Replace with your secure secret
+    WEBHOOK_URL: 'YOUR_ACTUAL_MAKECOM_WEBHOOK_URL', // Replace with your Make.com webhook URL
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
     TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
   };
@@ -5321,28 +5321,59 @@
       };
     }
 
-    collectUploadedFiles() {
+    async collectUploadedFiles() {
       const files = [];
       const fileElements = document.querySelectorAll('.techpack-file');
       
-      fileElements.forEach(fileElement => {
+      for (const fileElement of fileElements) {
         const nameElement = fileElement.querySelector('.techpack-file__name');
         const sizeElement = fileElement.querySelector('.techpack-file__size');
         const typeSelect = fileElement.querySelector('.techpack-file__tag-select');
+        const fileId = fileElement.dataset.fileId;
         
-        if (nameElement && sizeElement) {
-          files.push({
-            name: nameElement.textContent || '',
-            size: sizeElement.textContent || '',
-            type: typeSelect?.value || 'Unknown',
-            // For demo purposes - in production, these would be actual CDN URLs
-            url: `https://cdn.genuineblanks.com/techpack-files/${Date.now()}-${nameElement.textContent}`,
-            uploadedAt: new Date().toISOString()
-          });
+        // Find the actual file object from state
+        const fileObj = state.formData.files.find(f => f.id === fileId);
+        
+        if (nameElement && sizeElement && fileObj) {
+          try {
+            // Convert file to base64
+            const base64Data = await this.fileToBase64(fileObj.file);
+            
+            files.push({
+              name: nameElement.textContent || '',
+              size: sizeElement.textContent || '',
+              type: typeSelect?.value || 'Unknown',
+              base64: base64Data,
+              mimeType: fileObj.file.type,
+              uploadedAt: new Date().toISOString()
+            });
+            
+            debugSystem.log(`✅ File converted to base64: ${nameElement.textContent}`);
+          } catch (error) {
+            debugSystem.log(`❌ Failed to convert file ${nameElement.textContent} to base64:`, error, 'error');
+            // Include file info without base64 data
+            files.push({
+              name: nameElement.textContent || '',
+              size: sizeElement.textContent || '',
+              type: typeSelect?.value || 'Unknown',
+              error: 'Failed to process file',
+              uploadedAt: new Date().toISOString()
+            });
+          }
         }
-      });
+      }
       
       return files;
+    }
+
+    // Helper function to convert file to base64
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
     }
 
     buildColorwayRecords(clientData, submissionId, submissionDate) {
@@ -5420,7 +5451,7 @@
       
       // Collect all data
       const clientData = this.collectAllClientData();
-      const uploadedFiles = this.collectUploadedFiles();
+      const uploadedFiles = await this.collectUploadedFiles();
       const colorwayRecords = this.buildColorwayRecords(clientData, submissionId, submissionDate);
       
       debugSystem.log('🔒 Building secure payload', {
@@ -5512,14 +5543,14 @@
         // Handle different response types
         let responseData;
         const contentType = response.headers.get('content-type');
-
+        
         if (contentType && contentType.includes('application/json')) {
           responseData = await response.json();
         } else {
-            const responseText = await response.text();
+          const responseText = await response.text();
           responseData = { status: response.status, message: responseText };
         }
-
+        
         debugSystem.log('✅ Webhook response received', responseData);
 
         // Update rate limiting
