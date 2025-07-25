@@ -5998,8 +5998,8 @@ setupInitialization();
       return;
     }
     
-    // Try to find uploaded files from multiple possible sources
-    let fileItems = document.querySelectorAll('.techpack-file-item, .file-item, .uploaded-file-item, [data-file-name]');
+    // Try to find uploaded files from multiple possible sources - FIXED to match step 2 structure
+    let fileItems = document.querySelectorAll('.techpack-file, .techpack-file-item, .file-item, .uploaded-file-item, [data-file-name]');
     
     // Also check for input files that were selected
     const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -6022,9 +6022,9 @@ setupInitialization();
     // Show file input files if available, otherwise show DOM file items
     const filesToShow = uploadedFilesList.length > 0 ? uploadedFilesList : 
       Array.from(fileItems).map((item, index) => ({
-        name: item.querySelector('.file-name, .techpack-file-name, [data-file-name]')?.textContent || 
+        name: item.querySelector('.techpack-file__name, .file-name, .techpack-file-name, [data-file-name]')?.textContent || 
               item.dataset.fileName || `File ${index + 1}`,
-        size: item.querySelector('.file-size, .techpack-file-size')?.textContent || '',
+        size: item.querySelector('.techpack-file__size, .file-size, .techpack-file-size')?.textContent || '',
         type: item.dataset.fileType || ''
       }));
     
@@ -6242,7 +6242,7 @@ setupInitialization();
               if (input) {
                 const qty = parseInt(input.value) || 0;
                 if (qty > 0) {
-                  sizeBreakdown.push(`${qty}${size}`);
+                  sizeBreakdown.push(`${size}:${qty}`);
                   colorwayTotal += qty;
                 }
               }
@@ -6250,13 +6250,13 @@ setupInitialization();
             
             garmentTotal += colorwayTotal;
             
-            // Format: "Colorway 1 - PANTONE Black (TOTAL: 20S 25M 30L)"
-            const totalBreakdown = sizeBreakdown.length > 0 ? ` (TOTAL: ${sizeBreakdown.join(' ')})` : ` (TOTAL: ${colorwayTotal})`;
+            // Format: "PANTONE Black (S:15 M:20 L:10 - TOTAL 45 units)"
+            const sizeBreakdownText = sizeBreakdown.length > 0 ? `${sizeBreakdown.join(' ')} - ` : '';
             
             html += `<div class="review-colorway-item">
               <div class="review-colorway-header">
                 <span class="review-color-swatch" style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-                <span><strong>${colorName} (Total: ${colorwayTotal} units)</strong></span>
+                <span><strong>${colorName} (${sizeBreakdownText}TOTAL ${colorwayTotal} units)</strong></span>
               </div>
             </div>`;
           });
@@ -6315,7 +6315,7 @@ setupInitialization();
       totalGarments += colorways.length;
     });
     let totalQuantity = 0;
-    let totalFiles = document.querySelectorAll('.techpack-file-item, .file-item').length;
+    let totalFiles = document.querySelectorAll('.techpack-file, .techpack-file-item, .file-item').length;
     
     // Calculate total quantity - restored original selector
     document.querySelectorAll('.techpack-size-grid__input[type="number"]').forEach(input => {
