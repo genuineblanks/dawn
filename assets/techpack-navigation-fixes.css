@@ -63,11 +63,21 @@ CRITICAL NAVIGATION POSITIONING FIXES
     transform: translateY(-50%);
   }
 
-  /* FIX 4: Content spacing for fixed elements */
+  /* FIX 4: Content spacing for fixed elements - ENHANCED FOR STEP 3 */
   .techpack-step {
     padding-top: 100px !important; /* Space for progress bar */
-    padding-bottom: 120px !important; /* Space for navigation */
+    padding-bottom: 140px !important; /* Increased space for navigation + add garment button */
     min-height: auto;
+  }
+
+  /* Specific extra spacing for step 3 garment specs */
+  #techpack-step-3 .techpack-content {
+    margin-bottom: 60px; /* Extra spacing for add garment button */
+  }
+
+  /* Ensure add garment button has proper spacing */
+  .techpack-btn--add-garment {
+    margin-bottom: 2rem !important; /* Extra margin for mobile */
   }
 
   /* FIX 5: Navigation button improvements */
@@ -322,9 +332,9 @@ DESKTOP OPTIMIZATION
 */
 
 @media (min-width: 769px) {
-  /* Ensure desktop navigation works properly */
+  /* Ensure desktop navigation works properly - FIXED SCROLLING ISSUE */
   .techpack-form__actions {
-    position: relative;
+    position: static !important; /* Force static positioning to prevent scroll issues */
     bottom: auto;
     left: auto;
     right: auto;
@@ -335,6 +345,9 @@ DESKTOP OPTIMIZATION
     box-shadow: none;
     margin-top: 2rem;
     padding: 0;
+    /* Remove any transform or overflow that could cause scrolling */
+    transform: none;
+    overflow: visible;
   }
 
   .techpack-progress {
@@ -346,5 +359,23 @@ DESKTOP OPTIMIZATION
   .techpack-step {
     padding-top: 0;
     padding-bottom: 0;
+    /* Ensure no scrolling conflicts */
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+
+  /* Desktop button container - prevent any scroll conflicts */
+  .techpack-form__actions .btn-group {
+    overflow: visible;
+    width: auto;
+    max-width: none;
+  }
+
+  /* Ensure desktop buttons don't create horizontal scroll */
+  .techpack-form__actions button {
+    flex: none;
+    width: auto;
+    min-width: 120px;
+    max-width: none;
   }
 }
