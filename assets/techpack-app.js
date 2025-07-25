@@ -5444,7 +5444,7 @@
       return colorwayRecords;
     }
 
-    buildSecurePayload() {
+    async buildSecurePayload() {
       const timestamp = Date.now();
       const submissionId = SecurityUtils.generateSubmissionId();
       const submissionDate = new Date().toISOString().split('T')[0];
@@ -5507,7 +5507,7 @@
 
       try {
         // Build secure payload with all data
-        const payload = this.buildSecurePayload();
+        const payload = await this.buildSecurePayload();
         
         // Validate payload has data
         if (!payload.records || payload.records.length === 0) {
