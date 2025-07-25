@@ -5783,21 +5783,33 @@ setupInitialization();
       return;
     }
     
-    // Collect client data from step 1
+    // Collect client data from step 1 - FIXED: Use correct field IDs
     const clientData = {
-      businessName: document.getElementById('business-name')?.value || '',
-      email: document.getElementById('business-email')?.value || '',
+      clientName: document.getElementById('client-name')?.value || '',
+      companyName: document.getElementById('company-name')?.value || '',
+      email: document.getElementById('email')?.value || '',
+      vatEin: document.getElementById('vat-ein')?.value || '',
+      phone: document.getElementById('phone')?.value || '',
+      country: document.getElementById('country')?.value || '',
       productionType: document.getElementById('production-type')?.value || '',
-      deadline: document.getElementById('deadline')?.value || ''
+      deadline: document.getElementById('deadline')?.value || '',
+      notes: document.getElementById('notes')?.value || ''
     };
     
-    // Generate review HTML
+    // Generate review HTML - ENHANCED: Show all client information
     let html = '<div class="review-section">';
     
-    if (clientData.businessName) {
+    if (clientData.clientName) {
+      html += `<div class="review-item">
+        <span class="review-label">Contact Name:</span>
+        <span class="review-value">${clientData.clientName}</span>
+      </div>`;
+    }
+    
+    if (clientData.companyName) {
       html += `<div class="review-item">
         <span class="review-label">Business/Brand Name:</span>
-        <span class="review-value">${clientData.businessName}</span>
+        <span class="review-value">${clientData.companyName}</span>
       </div>`;
     }
     
@@ -5805,6 +5817,27 @@ setupInitialization();
       html += `<div class="review-item">
         <span class="review-label">Email Address:</span>
         <span class="review-value">${clientData.email}</span>
+      </div>`;
+    }
+    
+    if (clientData.vatEin) {
+      html += `<div class="review-item">
+        <span class="review-label">VAT/EIN Number:</span>
+        <span class="review-value">${clientData.vatEin}</span>
+      </div>`;
+    }
+    
+    if (clientData.phone) {
+      html += `<div class="review-item">
+        <span class="review-label">Phone Number:</span>
+        <span class="review-value">${clientData.phone}</span>
+      </div>`;
+    }
+    
+    if (clientData.country) {
+      html += `<div class="review-item">
+        <span class="review-label">Business Location:</span>
+        <span class="review-value">${clientData.country}</span>
       </div>`;
     }
     
@@ -5826,6 +5859,13 @@ setupInitialization();
       html += `<div class="review-item">
         <span class="review-label">Target Deadline:</span>
         <span class="review-value">${formattedDate}</span>
+      </div>`;
+    }
+    
+    if (clientData.notes) {
+      html += `<div class="review-item">
+        <span class="review-label">Project Details:</span>
+        <span class="review-value">${clientData.notes}</span>
       </div>`;
     }
     
