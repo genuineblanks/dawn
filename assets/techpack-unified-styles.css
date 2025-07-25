@@ -608,6 +608,29 @@ SIZE GRID
 .techpack-size-grid {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* Enhanced scroll behavior for mobile */
+  scroll-behavior: smooth;
+  /* Better scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* WebKit scrollbar styling for size grid */
+.techpack-size-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.techpack-size-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.techpack-size-grid::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.techpack-size-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* 
@@ -990,6 +1013,21 @@ MOBILE RESPONSIVE (768px and below)
     transform: scale(1.02);
     z-index: 10;
     position: relative;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+  }
+  
+  /* Enhanced mobile touch interactions */
+  .techpack-size-grid__input:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Better visual feedback when values are entered */
+  .techpack-size-grid__input:not([value="0"]):not([value=""]) {
+    background: rgba(34, 197, 94, 0.05);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: var(--techpack-text);
+    font-weight: 700;
   }
   
   /* Prevent zoom on form inputs */
