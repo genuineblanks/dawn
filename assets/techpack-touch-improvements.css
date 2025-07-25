@@ -107,6 +107,7 @@
   .techpack-form button:active,
   .techpack-form__actions button:active {
     transform: scale(0.98);
+    background: var(--techpack-bg, #ffffff) !important; /* Keep white background */
   }
 
   /* Primary button styling */

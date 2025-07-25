@@ -142,6 +142,7 @@ CRITICAL NAVIGATION POSITIONING FIXES
   /* Button active states */
   .techpack-form__actions button:active {
     transform: translateY(0) scale(0.98);
+    background: var(--techpack-bg, #ffffff) !important; /* Keep white background */
   }
 
   /* Disabled button states */
