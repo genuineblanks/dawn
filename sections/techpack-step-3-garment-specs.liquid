@@ -223,92 +223,26 @@ Tech-Pack Step 3: Garment Specifications Section
       </button>
     </div>
 
-    <div class="techpack-size-selection">
-      <h5 class="techpack-size-selection__title">Size & Quantity Selection</h5>
-      <div class="techpack-form__checkboxes techpack-form__checkboxes--size">
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="xxs" data-size="xxs">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">XXS</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-xxs" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="xs" data-size="xs">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">XS</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-xs" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="s" data-size="s">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">S</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-s" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="m" data-size="m">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">M</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-m" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="l" data-size="l">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">L</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-l" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="xl" data-size="xl">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">XL</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-xl" min="0" value="0" disabled>
-          </div>
-        </div>
-        
-        <div class="techpack-size-option">
-          <label class="techpack-form__checkbox techpack-size-option__checkbox">
-            <input type="checkbox" name="selectedSizes[]" value="xxl" data-size="xxl">
-            <span class="techpack-form__checkbox-mark"></span>
-            <span class="techpack-size-option__label">XXL</span>
-          </label>
-          <div class="techpack-size-option__quantity">
-            <label class="techpack-form__label techpack-form__label--inline">Qty:</label>
-            <input type="number" class="techpack-form__input techpack-form__input--quantity" name="qty-xxl" min="0" value="0" disabled>
-          </div> 
-        </div>
+    <div class="techpack-size-grid">
+      <div class="techpack-size-grid__header">
+        <div class="techpack-size-grid__label">Size</div>
+        <div class="techpack-size-grid__label">XXS</div>
+        <div class="techpack-size-grid__label">XS</div>
+        <div class="techpack-size-grid__label">S</div>
+        <div class="techpack-size-grid__label">M</div>
+        <div class="techpack-size-grid__label">L</div>
+        <div class="techpack-size-grid__label">XL</div>
+        <div class="techpack-size-grid__label">XXL</div>
+      </div>
+      <div class="techpack-size-grid__row">
+        <div class="techpack-size-grid__label">Qty</div>
+        <input type="number" class="techpack-size-grid__input" name="qty-xxs" min="0" value="0" data-size="xxs">
+        <input type="number" class="techpack-size-grid__input" name="qty-xs" min="0" value="0" data-size="xs">
+        <input type="number" class="techpack-size-grid__input" name="qty-s" min="0" value="0" data-size="s">
+        <input type="number" class="techpack-size-grid__input" name="qty-m" min="0" value="0" data-size="m">
+        <input type="number" class="techpack-size-grid__input" name="qty-l" min="0" value="0" data-size="l">
+        <input type="number" class="techpack-size-grid__input" name="qty-xl" min="0" value="0" data-size="xl">
+        <input type="number" class="techpack-size-grid__input" name="qty-xxl" min="0" value="0" data-size="xxl">
       </div>
     </div>
 
