@@ -15,8 +15,8 @@
     MIN_DELIVERY_WEEKS: 6,
     
     // Security Configuration
-    CLIENT_SECRET: 'YOUR_ACTUAL_SECURE_SECRET_KEY', // Replace with your secure secret
-    WEBHOOK_URL: 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.ver', // Replace with your Make.com webhook URL
+    CLIENT_SECRET: 'genuineblanks-techpack-secret-2025', // Security key for HMAC signatures
+    WEBHOOK_URL: 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.vercel.app/api/techpack-proxy', // Vercel API endpoint
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
     TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
   };
@@ -5523,10 +5523,9 @@
           signature: signature.substring(0, 10) + '...'
         });
 
-        // Send to Make.com webhook
-        // Use Shopify App Proxy (CORS-free) instead of direct webhook call
-        const shopDomain = window.location.hostname;
-        const appProxyUrl = `https://${shopDomain}/apps/techpack-submission`;
+        // Send to Make.com webhook via Vercel API
+        // Use Vercel endpoint (CORS-enabled) instead of Shopify app proxy
+        const appProxyUrl = 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.vercel.app/api/techpack-proxy';
         
         const response = await fetch(appProxyUrl, {
           method: 'POST',
