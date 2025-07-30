@@ -16,7 +16,7 @@
     
     // Security Configuration
     CLIENT_SECRET: 'YOUR_ACTUAL_SECURE_SECRET_KEY', // Replace with your secure secret
-    WEBHOOK_URL: 'YOUR_ACTUAL_MAKECOM_WEBHOOK_URL', // Replace with your Make.com webhook URL
+    WEBHOOK_URL: 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.ver', // Replace with your Make.com webhook URL
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
     TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
   };
