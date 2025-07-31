@@ -5324,39 +5324,60 @@
     async collectUploadedFiles() {
       const files = [];
       const fileElements = document.querySelectorAll('.techpack-file');
+      const filesToUpload = [];
       
+      // First, collect all file objects for upload
       for (const fileElement of fileElements) {
-        const nameElement = fileElement.querySelector('.techpack-file__name');
-        const sizeElement = fileElement.querySelector('.techpack-file__size');
-        const typeSelect = fileElement.querySelector('.techpack-file__tag-select');
         const fileId = fileElement.dataset.fileId;
-        
-        // Find the actual file object from state
         const fileObj = state.formData.files.find(f => f.id === fileId);
         
-        if (nameElement && sizeElement && fileObj) {
-          try {
-            // Convert file to base64
-            const base64Data = await this.fileToBase64(fileObj.file);
-            
+        if (fileObj && fileObj.file) {
+          filesToUpload.push(fileObj.file);
+        }
+      }
+      
+      // Upload files to Vercel Blob storage
+      if (filesToUpload.length > 0) {
+        debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Vercel Blob...`);
+        
+        try {
+          const uploadedFiles = await uploadFilesToStorage(filesToUpload);
+          
+          // Process upload results
+          for (const uploadResult of uploadedFiles) {
+            if (uploadResult.url && !uploadResult.error) {
+              files.push({
+                name: uploadResult.originalName,
+                size: this.formatFileSize ? this.formatFileSize(uploadResult.size) : uploadResult.size,
+                type: uploadResult.type,
+                url: uploadResult.url, // Public URL from Vercel Blob
+                mimeType: uploadResult.type,
+                uploadedAt: uploadResult.uploadedAt
+              });
+              
+              debugSystem.log(`✅ File uploaded with public URL: ${uploadResult.originalName}`);
+            } else {
+              files.push({
+                name: uploadResult.originalName || 'Unknown file',
+                size: this.formatFileSize ? this.formatFileSize(uploadResult.size || 0) : (uploadResult.size || 0),
+                type: uploadResult.type || 'Unknown',
+                error: uploadResult.error || 'Upload failed',
+                uploadedAt: new Date().toISOString()
+              });
+              
+              debugSystem.log(`❌ File upload failed: ${uploadResult.originalName} - ${uploadResult.error}`);
+            }
+          }
+        } catch (error) {
+          debugSystem.log(`❌ Upload process failed: ${error.message}`);
+          
+          // Fallback: create error entries for all files
+          for (const file of filesToUpload) {
             files.push({
-              name: nameElement.textContent || '',
-              size: sizeElement.textContent || '',
-              type: typeSelect?.value || 'Unknown',
-              base64: base64Data,
-              mimeType: fileObj.file.type,
-              uploadedAt: new Date().toISOString()
-            });
-            
-            debugSystem.log(`✅ File converted to base64: ${nameElement.textContent}`);
-          } catch (error) {
-            debugSystem.log(`❌ Failed to convert file ${nameElement.textContent} to base64:`, error, 'error');
-            // Include file info without base64 data
-            files.push({
-              name: nameElement.textContent || '',
-              size: sizeElement.textContent || '',
-              type: typeSelect?.value || 'Unknown',
-              error: 'Failed to process file',
+              name: file.name,
+              size: this.formatFileSize ? this.formatFileSize(file.size) : file.size,
+              type: file.type,
+              error: 'Upload system error',
               uploadedAt: new Date().toISOString()
             });
           }
