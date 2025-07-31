@@ -21,7 +21,7 @@
     TIMESTAMP_WINDOW: 300000, // 5 minutes for timestamp validation
     
     // Google Drive Configuration
-    GOOGLE_DRIVE_WEB_APP_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE', // Replace with your actual Google Apps Script Web App URL
+    GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx8Z5JRHhyhs_NftaHqozU6M3RxdvsWorZlhYZcp-gqa4IiawG6k_gufy01WKh9DWh43w/exec', // Replace with your actual Google Apps Script Web App URL
     UPLOAD_TIMEOUT: 30000 // 30 seconds timeout for file uploads
   };
 
