@@ -16,7 +16,7 @@
     
     // Security Configuration
     CLIENT_SECRET: 'genuineblanks-techpack-secret-2025', // Security key for HMAC signatures
-    WEBHOOK_URL: 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.vercel.app/api/techpack-proxy', // Vercel API endpoint
+    WEBHOOK_URL: 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy', // Vercel API endpoint
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
     TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
   };
