@@ -6414,52 +6414,95 @@ setupInitialization();
     return icons[extension] || '📄';
   }
 
-  // File upload system for generating public URLs
+  // File upload system for generating public URLs via Vercel Blob
   async function uploadFilesToStorage(files) {
     const uploadedFiles = [];
     
+    // Get the Vercel upload endpoint URL (same base as webhook URL but with /api/upload)
+    const webhookUrl = CONFIG.WEBHOOK_URL;
+    const uploadUrl = webhookUrl.replace('/api/techpack-proxy', '/api/upload');
+    
+    debugSystem.log(`🔗 Using upload endpoint: ${uploadUrl}`);
+    
     for (const file of files) {
       try {
-        // Create a FormData object for file upload
+        // Validate file size (4.5MB limit for Vercel)
+        const maxSize = 4.5 * 1024 * 1024; // 4.5MB
+        if (file.size > maxSize) {
+          debugSystem.log(`❌ File ${file.name} too large: ${file.size} bytes (max: ${maxSize})`);
+          uploadedFiles.push({
+            originalName: file.name,
+            size: file.size,
+            type: file.type,
+            error: `File too large (max ${Math.round(maxSize / (1024 * 1024))}MB)`,
+            uploadedAt: new Date().toISOString()
+          });
+          continue;
+        }
+
+        // Create FormData for upload
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('timestamp', Date.now());
+        formData.append('filename', file.name);
+
+        debugSystem.log(`📤 Uploading ${file.name} (${file.size} bytes) to Vercel Blob...`);
+
+        // Upload to Vercel Blob via our API endpoint
+        const response = await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
+          throw new Error(errorData.error || `HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
         
-        // For Shopify, we can use the Files API or a third-party service
-        // This is a placeholder implementation - you'll need to configure your upload endpoint
+        if (!result.success || !result.url) {
+          throw new Error(result.error || 'Invalid response from upload service');
+        }
+
+        // Store the successful upload with public URL
+        uploadedFiles.push({
+          originalName: result.originalName,
+          size: result.size,
+          type: result.type,
+          url: result.url, // This is the public URL from Vercel Blob
+          filename: result.filename,
+          uploadedAt: result.uploadedAt
+        });
         
-        // Option 1: Upload to Shopify Files API (requires backend implementation)
-        // const response = await fetch('/admin/api/2023-10/files.json', {
-        //   method: 'POST',
-        //   headers: {
-        //     'X-Shopify-Access-Token': 'your-private-app-token'
-        //   },
-        //   body: formData
-        // });
+        debugSystem.log(`✅ File uploaded successfully: ${file.name}`, { 
+          url: result.url,
+          size: result.size,
+          publicAccess: true
+        });
         
-        // Option 2: Upload to cloud storage (AWS S3, Cloudinary, etc.)
-        // For now, we'll create a temporary URL using File API for demo purposes
-        const fileUrl = URL.createObjectURL(file);
+      } catch (error) {
+        debugSystem.log(`❌ Error uploading file ${file.name}:`, error.message);
         
+        // Add failed upload to results with error info
         uploadedFiles.push({
           originalName: file.name,
           size: file.size,
           type: file.type,
-          url: fileUrl, // This would be the public URL from your storage service
+          error: error.message,
           uploadedAt: new Date().toISOString()
         });
-        
-        debugSystem.log(`📁 File uploaded: ${file.name}`, { url: fileUrl });
-        
-      } catch (error) {
-        debugSystem.log(`❌ Error uploading file ${file.name}:`, error);
       }
     }
+    
+    debugSystem.log(`📊 Upload summary: ${uploadedFiles.length} files processed`, {
+      successful: uploadedFiles.filter(f => f.url && !f.error).length,
+      failed: uploadedFiles.filter(f => f.error).length
+    });
     
     return uploadedFiles;
   }
   
-  // Enhanced file review with upload URLs
+  // Enhanced file review with upload URLs and error handling
   function populateFilesReviewWithUrls(uploadedFiles) {
     const container = document.getElementById('review-files-content');
     if (!container) return;
@@ -6467,21 +6510,51 @@ setupInitialization();
     let html = '<div class="review-section">';
     
     if (uploadedFiles && uploadedFiles.length > 0) {
+      const successfulUploads = uploadedFiles.filter(file => file.url && !file.error);
+      const failedUploads = uploadedFiles.filter(file => file.error);
+      
       html += `<div class="review-files-list">
-        <div class="review-files-count"><strong>${uploadedFiles.length} file${uploadedFiles.length !== 1 ? 's' : ''} uploaded with public URLs:</strong></div>`;
+        <div class="review-files-count">
+          <strong>${uploadedFiles.length} file${uploadedFiles.length !== 1 ? 's' : ''} processed:</strong>
+          ${successfulUploads.length > 0 ? `<span style="color: green;">✅ ${successfulUploads.length} uploaded successfully</span>` : ''}
+          ${failedUploads.length > 0 ? `<span style="color: red;">❌ ${failedUploads.length} failed</span>` : ''}
+        </div>`;
       
       uploadedFiles.forEach((file, index) => {
         const fileIcon = getFileTypeIcon(file.originalName, file.type);
-        html += `<div class="review-file-item">
+        const hasError = file.error;
+        const statusIcon = hasError ? '❌' : '✅';
+        const statusColor = hasError ? 'red' : 'green';
+        
+        html += `<div class="review-file-item" style="border-left: 3px solid ${statusColor}; margin-bottom: 10px; padding: 8px;">
           <span class="review-file-icon">${fileIcon}</span>
           <div class="review-file-info">
-            <span class="review-file-name">${file.originalName}</span>
-            <span class="review-file-size">${formatFileSize(file.size)}</span>
-            <div class="review-file-url">
-              <small>URL: <a href="${file.url}" target="_blank" rel="noopener">${file.url.substring(0, 50)}...</a></small>
-            </div>
-          </div>
-        </div>`;
+            <span class="review-file-name">
+              ${statusIcon} ${file.originalName}
+              <small style="color: #666;">(${formatFileSize(file.size)})</small>
+            </span>`;
+            
+        if (hasError) {
+          html += `<div class="review-file-error" style="color: red; font-size: 12px; margin-top: 4px;">
+              <strong>Error:</strong> ${file.error}
+            </div>`;
+        } else if (file.url) {
+          // Display public URL for successful uploads
+          const displayUrl = file.url.length > 60 ? file.url.substring(0, 60) + '...' : file.url;
+          html += `<div class="review-file-url" style="margin-top: 4px;">
+              <small style="color: #0066cc;">
+                <strong>Public URL:</strong> 
+                <a href="${file.url}" target="_blank" rel="noopener" style="text-decoration: underline;">
+                  ${displayUrl}
+                </a>
+              </small>
+              <div style="font-size: 10px; color: #888; margin-top: 2px;">
+                ⚠️ This link is publicly accessible - do not share if file contains sensitive information
+              </div>
+            </div>`;
+        }
+        
+        html += `</div></div>`;
       });
       html += '</div>';
     } else {
