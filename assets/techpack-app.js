@@ -1887,6 +1887,9 @@
         this.populateReviewStep2();
         this.populateReviewStep3();
         
+        // Check upload status and update submit button
+        this.updateSubmitButtonStatus();
+        
         debugSystem.log('Review populated', null, 'success');
         
         // Ensure edit buttons are working after review is populated
@@ -1894,6 +1897,34 @@
           formInitializer.setupEditButtons();
         }, 100);
       }, 50);
+    }
+
+    // Check upload status and enable/disable submit button
+    updateSubmitButtonStatus() {
+      const submitBtn = document.querySelector('#step-4-submit');
+      if (!submitBtn) return;
+
+      const uploadingFiles = state.formData.files.filter(f => f.uploadStatus === 'uploading');
+      const failedFiles = state.formData.files.filter(f => f.uploadStatus === 'failed');
+
+      if (uploadingFiles.length > 0) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg class="techpack-btn__spinner" width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+            <path d="M8 2v6" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          Uploading ${uploadingFiles.length} file(s)...
+        `;
+      } else if (failedFiles.length > 0) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `❌ ${failedFiles.length} upload(s) failed - please retry`;
+        submitBtn.style.backgroundColor = '#dc3545';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Tech-Pack';
+        submitBtn.style.backgroundColor = '';
+      }
     }
 
     // In StepManager class, REPLACE populateReviewStep1():
@@ -2322,6 +2353,11 @@
           // Show success indicator in UI
           GoogleDriveUtils.showUploadSuccess(fileId, result.fileUrl);
 
+          // Update submit button status if on step 4
+          if (state.currentStep === 4) {
+            stepManager.updateSubmitButtonStatus();
+          }
+
           debugSystem.log('✅ File uploaded to Google Drive', {
             fileId,
             fileName: file.name,
@@ -2334,6 +2370,11 @@
           fileObj.uploadStatus = 'failed';
           GoogleDriveUtils.showUploadError(fileId, result.error);
 
+          // Update submit button status if on step 4
+          if (state.currentStep === 4) {
+            stepManager.updateSubmitButtonStatus();
+          }
+
           debugSystem.log('❌ Google Drive upload failed', {
             fileId,
             fileName: file.name,
@@ -2345,6 +2386,11 @@
         // Handle unexpected errors
         fileObj.uploadStatus = 'failed';
         GoogleDriveUtils.showUploadError(fileId, error.message);
+
+        // Update submit button status if on step 4
+        if (state.currentStep === 4) {
+          stepManager.updateSubmitButtonStatus();
+        }
 
         debugSystem.log('❌ Unexpected error during Google Drive upload', {
           fileId,
@@ -5777,6 +5823,18 @@
       debugSystem.log('🚀 Enhanced form submission started');
 
       try {
+        // Check if any files are still uploading
+        const uploadingFiles = state.formData.files.filter(f => f.uploadStatus === 'uploading');
+        if (uploadingFiles.length > 0) {
+          throw new Error(`Please wait - ${uploadingFiles.length} file(s) are still uploading to Google Drive.`);
+        }
+
+        // Check for failed uploads
+        const failedFiles = state.formData.files.filter(f => f.uploadStatus === 'failed');
+        if (failedFiles.length > 0) {
+          throw new Error(`${failedFiles.length} file(s) failed to upload. Please remove and re-upload these files.`);
+        }
+
         // Build secure payload with all data
         const payload = await this.buildSecurePayload();
         
