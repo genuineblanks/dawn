@@ -18,7 +18,11 @@
     CLIENT_SECRET: 'genuineblanks-techpack-secret-2025', // Security key for HMAC signatures
     WEBHOOK_URL: 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy', // Vercel API endpoint
     SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
-    TIMESTAMP_WINDOW: 300000 // 5 minutes for timestamp validation
+    TIMESTAMP_WINDOW: 300000, // 5 minutes for timestamp validation
+    
+    // Google Drive Configuration
+    GOOGLE_DRIVE_WEB_APP_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE', // Replace with your actual Google Apps Script Web App URL
+    UPLOAD_TIMEOUT: 30000 // 30 seconds timeout for file uploads
   };
 
   // Security & Webhook Utilities
@@ -55,6 +59,171 @@
       const sizes = ['Bytes', 'KB', 'MB', 'GB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+  };
+
+  // Google Drive Upload Utilities
+  const GoogleDriveUtils = {
+    // Convert file to base64 for upload
+    fileToBase64: function(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Remove the data:mime/type;base64, prefix
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+      });
+    },
+
+    // Upload file to Google Drive via Apps Script Web App
+    uploadFile: async function(file, onProgress = null) {
+      try {
+        if (!CONFIG.GOOGLE_DRIVE_WEB_APP_URL || CONFIG.GOOGLE_DRIVE_WEB_APP_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+          throw new Error('Google Drive Web App URL not configured. Please update CONFIG.GOOGLE_DRIVE_WEB_APP_URL');
+        }
+
+        debugSystem.log('📤 Starting Google Drive upload', { fileName: file.name });
+        
+        if (onProgress) onProgress(10, 'Converting file...');
+        
+        // Convert file to base64
+        const base64Data = await GoogleDriveUtils.fileToBase64(file);
+        
+        if (onProgress) onProgress(30, 'Uploading to Google Drive...');
+
+        // Prepare form data for Google Apps Script
+        const formData = new FormData();
+        formData.append('fileData', base64Data);
+        formData.append('fileName', file.name);
+        formData.append('mimeType', file.type);
+
+        // Upload to Google Drive via Apps Script
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), CONFIG.UPLOAD_TIMEOUT);
+
+        const response = await fetch(CONFIG.GOOGLE_DRIVE_WEB_APP_URL, {
+          method: 'POST',
+          body: formData,
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+        }
+
+        if (onProgress) onProgress(80, 'Processing response...');
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Upload failed');
+        }
+
+        if (onProgress) onProgress(100, 'Upload complete!');
+
+        debugSystem.log('✅ Google Drive upload successful', { 
+          fileName: file.name, 
+          fileId: result.fileId,
+          fileUrl: result.fileUrl 
+        });
+
+        return {
+          success: true,
+          fileId: result.fileId,
+          fileName: result.fileName,
+          fileUrl: result.fileUrl,
+          downloadUrl: result.downloadUrl
+        };
+
+      } catch (error) {
+        debugSystem.log('❌ Google Drive upload failed', { 
+          fileName: file.name, 
+          error: error.message 
+        }, 'error');
+
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    },
+
+    // Update UI with upload progress
+    updateFileProgress: function(fileId, progress, status) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      const progressContainer = fileItem.querySelector('.techpack-file__progress');
+      const progressFill = fileItem.querySelector('.techpack-file__progress-fill');
+      const fileName = fileItem.querySelector('.techpack-file__name');
+
+      if (progressContainer && progressFill) {
+        progressContainer.style.display = 'block';
+        progressFill.style.width = `${progress}%`;
+        
+        // Update file name to show status
+        if (fileName) {
+          const originalName = fileName.dataset.originalName || fileName.textContent;
+          if (!fileName.dataset.originalName) {
+            fileName.dataset.originalName = originalName;
+          }
+          fileName.textContent = `${originalName} - ${status}`;
+        }
+
+        // Hide progress when complete
+        if (progress >= 100) {
+          setTimeout(() => {
+            progressContainer.style.display = 'none';
+            if (fileName) {
+              fileName.textContent = fileName.dataset.originalName;
+            }
+          }, 2000);
+        }
+      }
+    },
+
+    // Show upload success indicator
+    showUploadSuccess: function(fileId, driveUrl) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      // Add success indicator
+      const successIcon = document.createElement('span');
+      successIcon.className = 'techpack-file__success-icon';
+      successIcon.innerHTML = '✅';
+      successIcon.style.marginLeft = '8px';
+      successIcon.title = 'Uploaded to Google Drive';
+
+      const fileName = fileItem.querySelector('.techpack-file__name');
+      if (fileName && !fileName.querySelector('.techpack-file__success-icon')) {
+        fileName.appendChild(successIcon);
+      }
+
+      // Store Google Drive URL in the file item
+      fileItem.dataset.driveUrl = driveUrl;
+    },
+
+    // Show upload error indicator
+    showUploadError: function(fileId, error) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      // Add error indicator
+      const errorIcon = document.createElement('span');
+      errorIcon.className = 'techpack-file__error-icon';
+      errorIcon.innerHTML = '❌';
+      errorIcon.style.marginLeft = '8px';
+      errorIcon.title = `Upload failed: ${error}`;
+
+      const fileName = fileItem.querySelector('.techpack-file__name');
+      if (fileName && !fileName.querySelector('.techpack-file__error-icon')) {
+        fileName.appendChild(errorIcon);
+      }
     }
   };
 
@@ -2044,7 +2213,10 @@
       state.formData.files.push({
         id: fileId,
         file: file,
-        type: ''
+        type: '',
+        driveUrl: null,
+        driveFileId: null,
+        uploadStatus: 'pending'
       });
 
       // Animate in
@@ -2052,6 +2224,9 @@
 
       debugSystem.log('File added', { fileId, fileName: file.name });
       this.validateStep2();
+
+      // Automatically upload to Google Drive
+      this.uploadFileToGoogleDrive(fileId, file);
     }
 
     removeFile(fileId) {
@@ -2117,6 +2292,65 @@
         requiredGarments: state.formData.requiredGarmentCount,
         fileTypes: state.formData.files.map(f => ({ name: f.file.name, type: f.type }))
       });
+    }
+
+    // Upload file to Google Drive automatically
+    async uploadFileToGoogleDrive(fileId, file) {
+      // Find the file object in state
+      const fileObj = state.formData.files.find(f => f.id === fileId);
+      if (!fileObj) {
+        debugSystem.log('❌ File object not found for upload', { fileId }, 'error');
+        return;
+      }
+
+      // Update file status
+      fileObj.uploadStatus = 'uploading';
+
+      try {
+        // Upload file with progress callback
+        const result = await GoogleDriveUtils.uploadFile(file, (progress, status) => {
+          GoogleDriveUtils.updateFileProgress(fileId, progress, status);
+        });
+
+        if (result.success) {
+          // Update file object with Google Drive info
+          fileObj.driveUrl = result.fileUrl;
+          fileObj.driveFileId = result.fileId;
+          fileObj.uploadStatus = 'completed';
+
+          // Show success indicator in UI
+          GoogleDriveUtils.showUploadSuccess(fileId, result.fileUrl);
+
+          debugSystem.log('✅ File uploaded to Google Drive', {
+            fileId,
+            fileName: file.name,
+            driveUrl: result.fileUrl,
+            driveFileId: result.fileId
+          });
+
+        } else {
+          // Update file status and show error
+          fileObj.uploadStatus = 'failed';
+          GoogleDriveUtils.showUploadError(fileId, result.error);
+
+          debugSystem.log('❌ Google Drive upload failed', {
+            fileId,
+            fileName: file.name,
+            error: result.error
+          }, 'error');
+        }
+
+      } catch (error) {
+        // Handle unexpected errors
+        fileObj.uploadStatus = 'failed';
+        GoogleDriveUtils.showUploadError(fileId, error.message);
+
+        debugSystem.log('❌ Unexpected error during Google Drive upload', {
+          fileId,
+          fileName: file.name,
+          error: error.message
+        }, 'error');
+      }
     }
 
     showError(message) {
@@ -5324,65 +5558,79 @@
     async collectUploadedFiles() {
       const files = [];
       const fileElements = document.querySelectorAll('.techpack-file');
-      const filesToUpload = [];
       
-      // First, collect all file objects for upload
+      debugSystem.log(`📁 Collecting ${fileElements.length} files from Google Drive uploads...`);
+      
+      // Collect all file objects with Google Drive URLs
       for (const fileElement of fileElements) {
         const fileId = fileElement.dataset.fileId;
         const fileObj = state.formData.files.find(f => f.id === fileId);
         
         if (fileObj && fileObj.file) {
-          filesToUpload.push(fileObj.file);
+          // Check if file was successfully uploaded to Google Drive
+          if (fileObj.uploadStatus === 'completed' && fileObj.driveUrl) {
+            files.push({
+              name: fileObj.file.name,
+              size: SecurityUtils.formatFileSize(fileObj.file.size),
+              type: fileObj.type, // File tag type (Collection, Single, Design, Accessories)
+              mimeType: fileObj.file.type,
+              url: fileObj.driveUrl, // Google Drive public URL
+              fileId: fileObj.driveFileId, // Google Drive file ID
+              uploadedAt: new Date().toISOString(),
+              source: 'google-drive'
+            });
+            
+            debugSystem.log(`✅ File ready for submission: ${fileObj.file.name} (Google Drive)`);
+            
+          } else if (fileObj.uploadStatus === 'uploading') {
+            // File is still uploading
+            files.push({
+              name: fileObj.file.name,
+              size: SecurityUtils.formatFileSize(fileObj.file.size),
+              type: fileObj.type,
+              mimeType: fileObj.file.type,
+              error: 'Upload in progress - please wait',
+              uploadedAt: new Date().toISOString(),
+              source: 'google-drive'
+            });
+            
+            debugSystem.log(`⏳ File still uploading: ${fileObj.file.name}`);
+            
+          } else if (fileObj.uploadStatus === 'failed') {
+            // File upload failed
+            files.push({
+              name: fileObj.file.name,
+              size: SecurityUtils.formatFileSize(fileObj.file.size),
+              type: fileObj.type,
+              mimeType: fileObj.file.type,
+              error: 'Google Drive upload failed',
+              uploadedAt: new Date().toISOString(),
+              source: 'google-drive'
+            });
+            
+            debugSystem.log(`❌ File upload failed: ${fileObj.file.name}`);
+            
+          } else {
+            // File upload is pending or unknown status
+            files.push({
+              name: fileObj.file.name,
+              size: SecurityUtils.formatFileSize(fileObj.file.size),
+              type: fileObj.type,
+              mimeType: fileObj.file.type,
+              error: 'Upload status unknown',
+              uploadedAt: new Date().toISOString(),
+              source: 'google-drive'
+            });
+            
+            debugSystem.log(`⚠️ File upload status unknown: ${fileObj.file.name}`);
+          }
         }
       }
       
-      // Upload files to Vercel Blob storage
-      if (filesToUpload.length > 0) {
-        debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Vercel Blob...`);
-        
-        try {
-          const uploadedFiles = await uploadFilesToStorage(filesToUpload);
-          
-          // Process upload results
-          for (const uploadResult of uploadedFiles) {
-            if (uploadResult.url && !uploadResult.error) {
-              files.push({
-                name: uploadResult.originalName,
-                size: this.formatFileSize ? this.formatFileSize(uploadResult.size) : uploadResult.size,
-                type: uploadResult.type,
-                url: uploadResult.url, // Public URL from Vercel Blob
-                mimeType: uploadResult.type,
-                uploadedAt: uploadResult.uploadedAt
-              });
-              
-              debugSystem.log(`✅ File uploaded with public URL: ${uploadResult.originalName}`);
-            } else {
-              files.push({
-                name: uploadResult.originalName || 'Unknown file',
-                size: this.formatFileSize ? this.formatFileSize(uploadResult.size || 0) : (uploadResult.size || 0),
-                type: uploadResult.type || 'Unknown',
-                error: uploadResult.error || 'Upload failed',
-                uploadedAt: new Date().toISOString()
-              });
-              
-              debugSystem.log(`❌ File upload failed: ${uploadResult.originalName} - ${uploadResult.error}`);
-            }
-          }
-        } catch (error) {
-          debugSystem.log(`❌ Upload process failed: ${error.message}`);
-          
-          // Fallback: create error entries for all files
-          for (const file of filesToUpload) {
-            files.push({
-              name: file.name,
-              size: this.formatFileSize ? this.formatFileSize(file.size) : file.size,
-              type: file.type,
-              error: 'Upload system error',
-              uploadedAt: new Date().toISOString()
-            });
-          }
-        }
-      }
+      debugSystem.log(`📋 Collected ${files.length} files for submission`, {
+        successful: files.filter(f => f.url && !f.error).length,
+        failed: files.filter(f => f.error).length
+      });
       
       return files;
     }
