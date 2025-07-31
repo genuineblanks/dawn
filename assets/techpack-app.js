@@ -5523,12 +5523,10 @@
           signature: signature.substring(0, 10) + '...'
         });
 
-        // Send to Make.com webhook via Shopify App Proxy (CORS-free)
-        const shopDomain = window.location.hostname;
-        const appProxyUrl = `https://${shopDomain}/apps/techpack-submission`;
+        // Send to Make.com webhook via direct Vercel API (temporary bypass of App Proxy)
+        const appProxyUrl = 'https://shopify-techpack-app-git-main-pedros-projects-5f26302d.vercel.app/api/techpack-proxy';
         
-        console.log(`🔍 DEBUG: shopDomain = ${shopDomain}`);
-        console.log(`🔍 DEBUG: appProxyUrl = ${appProxyUrl}`);
+        console.log(`🔍 DEBUG: Using direct Vercel URL = ${appProxyUrl}`);
         
         const response = await fetch(appProxyUrl, {
           method: 'POST',
