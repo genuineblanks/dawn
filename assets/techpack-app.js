@@ -21,7 +21,7 @@
     TIMESTAMP_WINDOW: 300000, // 5 minutes for timestamp validation
     
     // Google Drive Configuration
-    GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx8Z5JRHhyhs_NftaHqozU6M3RxdvsWorZlhYZcp-gqa4IiawG6k_gufy01WKh9DWh43w/exec', // Replace with your actual Google Apps Script Web App URL
+    GOOGLE_DRIVE_WEB_APP_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE', // Replace with your actual Google Apps Script Web App URL
     UPLOAD_TIMEOUT: 30000 // 30 seconds timeout for file uploads
   };
 
@@ -2315,6 +2315,7 @@
         if (result.success) {
           // Update file object with Google Drive info
           fileObj.driveUrl = result.fileUrl;
+          fileObj.driveDownloadUrl = result.downloadUrl;
           fileObj.driveFileId = result.fileId;
           fileObj.uploadStatus = 'completed';
 
@@ -5574,7 +5575,8 @@
               size: SecurityUtils.formatFileSize(fileObj.file.size),
               type: fileObj.type, // File tag type (Collection, Single, Design, Accessories)
               mimeType: fileObj.file.type,
-              url: fileObj.driveUrl, // Google Drive public URL
+              url: fileObj.driveUrl, // Google Drive view URL
+              downloadUrl: fileObj.driveDownloadUrl, // Google Drive direct download URL
               fileId: fileObj.driveFileId, // Google Drive file ID
               uploadedAt: new Date().toISOString(),
               source: 'google-drive'
