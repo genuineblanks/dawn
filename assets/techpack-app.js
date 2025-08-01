@@ -21,7 +21,7 @@
     TIMESTAMP_WINDOW: 300000, // 5 minutes for timestamp validation
     
     // Google Drive Configuration
-    GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx8Z5JRHhyhs_NftaHqozU6M3RxdvsWorZlhYZcp-gqa4IiawG6k_gufy01WKh9DWh43w/exec', // Google Apps Script Web App URL
+    GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx8Z5JRHhyhs_NftaHqozU6M3RxdvsWorZlhYZcp-gqa4IiawG6k_gufy01WKh9DWh43w/exec', // Replace with your actual Google Apps Script Web App URL
     UPLOAD_TIMEOUT: 30000 // 30 seconds timeout for file uploads
   };
 
@@ -94,17 +94,11 @@
         
         if (onProgress) onProgress(30, 'Uploading to Google Drive...');
 
-        // Get client information for folder organization
-        const clientName = document.getElementById('client-name')?.value || 'Unknown Client';
-        const companyName = document.getElementById('company-name')?.value || clientName;
-
         // Prepare form data for Google Apps Script
         const formData = new FormData();
         formData.append('fileData', base64Data);
         formData.append('fileName', file.name);
         formData.append('mimeType', file.type);
-        formData.append('clientName', clientName);
-        formData.append('companyName', companyName);
 
         // Upload to Google Drive via Apps Script
         const controller = new AbortController();
@@ -143,11 +137,7 @@
           fileId: result.fileId,
           fileName: result.fileName,
           fileUrl: result.fileUrl,
-          downloadUrl: result.downloadUrl,
-          folderId: result.folderId,
-          folderName: result.folderName,
-          folderPath: result.folderPath,
-          clientName: result.clientName
+          downloadUrl: result.downloadUrl
         };
 
       } catch (error) {
@@ -1897,9 +1887,6 @@
         this.populateReviewStep2();
         this.populateReviewStep3();
         
-        // Check upload status and update submit button
-        this.updateSubmitButtonStatus();
-        
         debugSystem.log('Review populated', null, 'success');
         
         // Ensure edit buttons are working after review is populated
@@ -1907,34 +1894,6 @@
           formInitializer.setupEditButtons();
         }, 100);
       }, 50);
-    }
-
-    // Check upload status and enable/disable submit button
-    updateSubmitButtonStatus() {
-      const submitBtn = document.querySelector('#step-4-submit');
-      if (!submitBtn) return;
-
-      const uploadingFiles = state.formData.files.filter(f => f.uploadStatus === 'uploading');
-      const failedFiles = state.formData.files.filter(f => f.uploadStatus === 'failed');
-
-      if (uploadingFiles.length > 0) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-          <svg class="techpack-btn__spinner" width="16" height="16" viewBox="0 0 16 16">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
-            <path d="M8 2v6" stroke="currentColor" stroke-width="1"/>
-          </svg>
-          Uploading ${uploadingFiles.length} file(s)...
-        `;
-      } else if (failedFiles.length > 0) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `❌ ${failedFiles.length} upload(s) failed - please retry`;
-        submitBtn.style.backgroundColor = '#dc3545';
-      } else {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit Tech-Pack';
-        submitBtn.style.backgroundColor = '';
-      }
     }
 
     // In StepManager class, REPLACE populateReviewStep1():
@@ -2356,21 +2315,11 @@
         if (result.success) {
           // Update file object with Google Drive info
           fileObj.driveUrl = result.fileUrl;
-          fileObj.driveDownloadUrl = result.downloadUrl;
           fileObj.driveFileId = result.fileId;
-          fileObj.driveFolderId = result.folderId;
-          fileObj.driveFolderName = result.folderName;
-          fileObj.driveFolderPath = result.folderPath;
-          fileObj.driveClientName = result.clientName;
           fileObj.uploadStatus = 'completed';
 
           // Show success indicator in UI
           GoogleDriveUtils.showUploadSuccess(fileId, result.fileUrl);
-
-          // Update submit button status if on step 4
-          if (state.currentStep === 4) {
-            stepManager.updateSubmitButtonStatus();
-          }
 
           debugSystem.log('✅ File uploaded to Google Drive', {
             fileId,
@@ -2384,11 +2333,6 @@
           fileObj.uploadStatus = 'failed';
           GoogleDriveUtils.showUploadError(fileId, result.error);
 
-          // Update submit button status if on step 4
-          if (state.currentStep === 4) {
-            stepManager.updateSubmitButtonStatus();
-          }
-
           debugSystem.log('❌ Google Drive upload failed', {
             fileId,
             fileName: file.name,
@@ -2400,11 +2344,6 @@
         // Handle unexpected errors
         fileObj.uploadStatus = 'failed';
         GoogleDriveUtils.showUploadError(fileId, error.message);
-
-        // Update submit button status if on step 4
-        if (state.currentStep === 4) {
-          stepManager.updateSubmitButtonStatus();
-        }
 
         debugSystem.log('❌ Unexpected error during Google Drive upload', {
           fileId,
@@ -5635,13 +5574,8 @@
               size: SecurityUtils.formatFileSize(fileObj.file.size),
               type: fileObj.type, // File tag type (Collection, Single, Design, Accessories)
               mimeType: fileObj.file.type,
-              url: fileObj.driveUrl, // Google Drive view URL
-              downloadUrl: fileObj.driveDownloadUrl, // Google Drive direct download URL
+              url: fileObj.driveUrl, // Google Drive public URL
               fileId: fileObj.driveFileId, // Google Drive file ID
-              folderId: fileObj.driveFolderId, // Google Drive folder ID
-              folderName: fileObj.driveFolderName, // Client folder name
-              folderPath: fileObj.driveFolderPath, // Full folder path
-              clientName: fileObj.driveClientName, // Client name for organization
               uploadedAt: new Date().toISOString(),
               source: 'google-drive'
             });
@@ -5711,9 +5645,8 @@
       });
     }
 
-    async buildColorwayRecords(clientData, submissionId, submissionDate, uploadedFiles) {
+    buildColorwayRecords(clientData, submissionId, submissionDate) {
       const colorwayRecords = [];
-      let isFirstRecord = true;
       
       document.querySelectorAll('.techpack-garment').forEach(garment => {
         const garmentType = garment.querySelector('[name="garmentType"]')?.value || 'Unknown Garment';
@@ -5768,17 +5701,11 @@
               size_breakdown: sizeBreakdown.join(', '),
               total_units: totalUnits,
               
-              // Files - ALL files bundled with first record only
-              files: isFirstRecord ? uploadedFiles : [],
-              
               // Meta data
               submission_date: submissionDate,
               reference_id: submissionId,
               submission_id: submissionId
             });
-            
-            // After adding first record, set flag to false
-            isFirstRecord = false;
           }
         });
       });
@@ -5794,7 +5721,7 @@
       // Collect all data
       const clientData = this.collectAllClientData();
       const uploadedFiles = await this.collectUploadedFiles();
-      const colorwayRecords = await this.buildColorwayRecords(clientData, submissionId, submissionDate, uploadedFiles);
+      const colorwayRecords = this.buildColorwayRecords(clientData, submissionId, submissionDate);
       
       debugSystem.log('🔒 Building secure payload', {
         clientData,
@@ -5848,18 +5775,6 @@
       debugSystem.log('🚀 Enhanced form submission started');
 
       try {
-        // Check if any files are still uploading
-        const uploadingFiles = state.formData.files.filter(f => f.uploadStatus === 'uploading');
-        if (uploadingFiles.length > 0) {
-          throw new Error(`Please wait - ${uploadingFiles.length} file(s) are still uploading to Google Drive.`);
-        }
-
-        // Check for failed uploads
-        const failedFiles = state.formData.files.filter(f => f.uploadStatus === 'failed');
-        if (failedFiles.length > 0) {
-          throw new Error(`${failedFiles.length} file(s) failed to upload. Please remove and re-upload these files.`);
-        }
-
         // Build secure payload with all data
         const payload = await this.buildSecurePayload();
         
