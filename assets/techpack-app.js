@@ -94,11 +94,17 @@
         
         if (onProgress) onProgress(30, 'Uploading to Google Drive...');
 
+        // Get client information for folder organization
+        const clientName = document.getElementById('client-name')?.value || 'Unknown Client';
+        const companyName = document.getElementById('company-name')?.value || clientName;
+
         // Prepare form data for Google Apps Script
         const formData = new FormData();
         formData.append('fileData', base64Data);
         formData.append('fileName', file.name);
         formData.append('mimeType', file.type);
+        formData.append('clientName', clientName);
+        formData.append('companyName', companyName);
 
         // Upload to Google Drive via Apps Script
         const controller = new AbortController();
@@ -137,7 +143,11 @@
           fileId: result.fileId,
           fileName: result.fileName,
           fileUrl: result.fileUrl,
-          downloadUrl: result.downloadUrl
+          downloadUrl: result.downloadUrl,
+          folderId: result.folderId,
+          folderName: result.folderName,
+          folderPath: result.folderPath,
+          clientName: result.clientName
         };
 
       } catch (error) {
@@ -2348,6 +2358,10 @@
           fileObj.driveUrl = result.fileUrl;
           fileObj.driveDownloadUrl = result.downloadUrl;
           fileObj.driveFileId = result.fileId;
+          fileObj.driveFolderId = result.folderId;
+          fileObj.driveFolderName = result.folderName;
+          fileObj.driveFolderPath = result.folderPath;
+          fileObj.driveClientName = result.clientName;
           fileObj.uploadStatus = 'completed';
 
           // Show success indicator in UI
@@ -5624,6 +5638,10 @@
               url: fileObj.driveUrl, // Google Drive view URL
               downloadUrl: fileObj.driveDownloadUrl, // Google Drive direct download URL
               fileId: fileObj.driveFileId, // Google Drive file ID
+              folderId: fileObj.driveFolderId, // Google Drive folder ID
+              folderName: fileObj.driveFolderName, // Client folder name
+              folderPath: fileObj.driveFolderPath, // Full folder path
+              clientName: fileObj.driveClientName, // Client name for organization
               uploadedAt: new Date().toISOString(),
               source: 'google-drive'
             });
@@ -5693,8 +5711,12 @@
       });
     }
 
-    buildColorwayRecords(clientData, submissionId, submissionDate) {
+    async buildColorwayRecords(clientData, submissionId, submissionDate) {
       const colorwayRecords = [];
+      
+      // Collect all uploaded files once at the beginning
+      const allUploadedFiles = await this.collectUploadedFiles();
+      let isFirstRecord = true;
       
       document.querySelectorAll('.techpack-garment').forEach(garment => {
         const garmentType = garment.querySelector('[name="garmentType"]')?.value || 'Unknown Garment';
@@ -5749,11 +5771,17 @@
               size_breakdown: sizeBreakdown.join(', '),
               total_units: totalUnits,
               
+              // Files - ALL files bundled with first record only
+              files: isFirstRecord ? allUploadedFiles : [],
+              
               // Meta data
               submission_date: submissionDate,
               reference_id: submissionId,
               submission_id: submissionId
             });
+            
+            // After adding first record, set flag to false
+            isFirstRecord = false;
           }
         });
       });
@@ -5768,13 +5796,16 @@
       
       // Collect all data
       const clientData = this.collectAllClientData();
-      const uploadedFiles = await this.collectUploadedFiles();
-      const colorwayRecords = this.buildColorwayRecords(clientData, submissionId, submissionDate);
+      const colorwayRecords = await this.buildColorwayRecords(clientData, submissionId, submissionDate);
+      
+      // Count total files from first record for logging
+      const totalFiles = colorwayRecords.length > 0 ? colorwayRecords[0].files.length : 0;
       
       debugSystem.log('🔒 Building secure payload', {
         clientData,
         colorwayRecords: colorwayRecords.length,
-        uploadedFiles: uploadedFiles.length,
+        totalFiles: totalFiles,
+        filesInFirstRecord: totalFiles,
         submissionId
       });
       
@@ -5782,7 +5813,6 @@
         timestamp,
         submission_id: submissionId,
         records: colorwayRecords,
-        files: uploadedFiles,
         meta: {
           user_agent: navigator.userAgent,
           page_url: window.location.href,
