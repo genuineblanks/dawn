@@ -5878,7 +5878,7 @@
         
         debugSystem.log('🔐 Payload built and signed', {
           records: payload.records.length,
-          files: payload.files.length,
+          filesInFirstRecord: payload.records.length > 0 ? payload.records[0].files.length : 0,
           signature: signature.substring(0, 10) + '...'
         });
 
@@ -5924,7 +5924,7 @@
         debugSystem.log('✅ Form submitted successfully', {
           submissionId: payload.submission_id,
           records: payload.records.length,
-          files: payload.files.length
+          files: payload.records.length > 0 ? payload.records[0].files.length : 0
         }, 'success');
 
       } catch (error) {
