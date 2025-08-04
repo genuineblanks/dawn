@@ -22,7 +22,332 @@
     
     // Google Drive Configuration
     GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbzXaKCGuTdupw-ZGjeijbuINIvEIn1xSOYl_9mtThUuUBbVGU1z7ThCcMffKN48FTJVXA/exec', // Google Apps Script Web App URL
-    UPLOAD_TIMEOUT: 30000 // 30 seconds timeout for file uploads
+    UPLOAD_TIMEOUT: 120000 // 2 minutes timeout for file uploads
+  };
+
+  // Premium Loading Overlay System
+  const LoadingOverlay = {
+    overlay: null,
+    messages: [
+      'Processing your TechPack submission...',
+      'Uploading files to secure cloud storage...',
+      'Finalizing your garment specifications...',
+      'Almost ready - preparing your submission...'
+    ],
+    currentMessageIndex: 0,
+    messageInterval: null,
+
+    create() {
+      if (this.overlay) return;
+
+      this.overlay = document.createElement('div');
+      this.overlay.className = 'techpack-loading-overlay';
+      this.overlay.innerHTML = `
+        <div class="techpack-loading-container">
+          <div class="techpack-loading-brand">
+            <div class="techpack-loading-logo">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                <path d="M24 4v20l16-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <div class="techpack-loading-spinner"></div>
+            </div>
+            <h3 class="techpack-loading-title">GenuineBlanks</h3>
+            <p class="techpack-loading-subtitle">Premium Garment Manufacturing</p>
+          </div>
+          
+          <div class="techpack-loading-content">
+            <div class="techpack-loading-progress">
+              <div class="techpack-loading-progress-bar">
+                <div class="techpack-loading-progress-fill"></div>
+              </div>
+            </div>
+            
+            <p class="techpack-loading-message">${this.messages[0]}</p>
+            
+            <div class="techpack-loading-files">
+              <div class="techpack-loading-files-list"></div>
+            </div>
+          </div>
+          
+          <div class="techpack-loading-footer">
+            <p>Please do not close this window</p>
+          </div>
+        </div>
+      `;
+
+      // Add CSS styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .techpack-loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(5px);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: techpackFadeIn 0.3s ease-out;
+        }
+        
+        .techpack-loading-container {
+          background: white;
+          border-radius: 16px;
+          padding: 40px;
+          max-width: 480px;
+          width: 90%;
+          text-align: center;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+          animation: techpackSlideUp 0.4s ease-out;
+        }
+        
+        .techpack-loading-brand {
+          margin-bottom: 32px;
+        }
+        
+        .techpack-loading-logo {
+          position: relative;
+          display: inline-block;
+          margin-bottom: 16px;
+        }
+        
+        .techpack-loading-logo svg {
+          color: #2563eb;
+        }
+        
+        .techpack-loading-spinner {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 48px;
+          height: 48px;
+          border: 2px solid transparent;
+          border-top: 2px solid #2563eb;
+          border-radius: 50%;
+          animation: techpackSpin 1s linear infinite;
+        }
+        
+        .techpack-loading-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0 0 4px 0;
+          letter-spacing: -0.025em;
+        }
+        
+        .techpack-loading-subtitle {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0;
+          font-weight: 500;
+        }
+        
+        .techpack-loading-content {
+          margin-bottom: 24px;
+        }
+        
+        .techpack-loading-progress {
+          margin-bottom: 20px;
+        }
+        
+        .techpack-loading-progress-bar {
+          width: 100%;
+          height: 4px;
+          background: #e5e7eb;
+          border-radius: 2px;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .techpack-loading-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #2563eb, #1d4ed8);
+          border-radius: 2px;
+          width: 0%;
+          transition: width 0.5s ease-out;
+          position: relative;
+        }
+        
+        .techpack-loading-progress-fill::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 20px;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+          animation: techpackShimmer 1.5s infinite;
+        }
+        
+        .techpack-loading-message {
+          font-size: 16px;
+          color: #374151;
+          margin: 0;
+          font-weight: 500;
+          min-height: 24px;
+          animation: techpackPulse 2s ease-in-out infinite;
+        }
+        
+        .techpack-loading-files {
+          margin-top: 16px;
+        }
+        
+        .techpack-loading-files-list {
+          text-align: left;
+          max-height: 120px;
+          overflow-y: auto;
+        }
+        
+        .techpack-loading-file {
+          display: flex;
+          align-items: center;
+          padding: 8px 0;
+          font-size: 14px;
+          color: #6b7280;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .techpack-loading-file:last-child {
+          border-bottom: none;
+        }
+        
+        .techpack-loading-file-icon {
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+          color: #10b981;
+        }
+        
+        .techpack-loading-footer {
+          border-top: 1px solid #e5e7eb;
+          padding-top: 20px;
+        }
+        
+        .techpack-loading-footer p {
+          font-size: 12px;
+          color: #9ca3af;
+          margin: 0;
+        }
+        
+        @keyframes techpackFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes techpackSlideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes techpackSpin {
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes techpackPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        
+        @keyframes techpackShimmer {
+          0% { transform: translateX(-20px); }
+          100% { transform: translateX(100px); }
+        }
+      `;
+      
+      document.head.appendChild(style);
+      document.body.appendChild(this.overlay);
+    },
+
+    show() {
+      this.create();
+      this.overlay.style.display = 'flex';
+      this.currentMessageIndex = 0;
+      this.updateMessage();
+      this.startMessageRotation();
+      document.body.style.overflow = 'hidden';
+    },
+
+    hide() {
+      if (this.overlay) {
+        this.stopMessageRotation();
+        this.overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    },
+
+    updateProgress(percentage) {
+      if (!this.overlay) return;
+      const progressFill = this.overlay.querySelector('.techpack-loading-progress-fill');
+      if (progressFill) {
+        progressFill.style.width = `${percentage}%`;
+      }
+    },
+
+    updateMessage(customMessage = null) {
+      if (!this.overlay) return;
+      const messageEl = this.overlay.querySelector('.techpack-loading-message');
+      if (messageEl) {
+        messageEl.textContent = customMessage || this.messages[this.currentMessageIndex];
+      }
+    },
+
+    startMessageRotation() {
+      this.stopMessageRotation();
+      this.messageInterval = setInterval(() => {
+        this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
+        this.updateMessage();
+      }, 3000);
+    },
+
+    stopMessageRotation() {
+      if (this.messageInterval) {
+        clearInterval(this.messageInterval);
+        this.messageInterval = null;
+      }
+    },
+
+    addFileStatus(fileName, status = 'uploading') {
+      if (!this.overlay) return;
+      const filesList = this.overlay.querySelector('.techpack-loading-files-list');
+      if (!filesList) return;
+
+      const existingFile = filesList.querySelector(`[data-filename="${fileName}"]`);
+      if (existingFile) {
+        const icon = existingFile.querySelector('.techpack-loading-file-icon');
+        if (status === 'completed') {
+          icon.innerHTML = `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          `;
+          icon.style.color = '#10b981';
+        }
+        return;
+      }
+
+      const fileEl = document.createElement('div');
+      fileEl.className = 'techpack-loading-file';
+      fileEl.setAttribute('data-filename', fileName);
+      fileEl.innerHTML = `
+        <div class="techpack-loading-file-icon">
+          ${status === 'completed' ? `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          ` : `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+            </svg>
+          `}
+        </div>
+        <span>${fileName}</span>
+      `;
+      filesList.appendChild(fileEl);
+    }
   };
 
   // Security & Webhook Utilities
@@ -2192,7 +2517,7 @@
       
       files.forEach(file => {
         if (state.formData.files.length >= CONFIG.MAX_FILES) {
-          this.showError(`Maximum ${CONFIG.MAX_FILES} files allowed`);
+          this.showError(`Maximum ${CONFIG.MAX_FILES} files allowed. Please remove some files before adding more.`);
           return;
         }
 
@@ -2208,12 +2533,12 @@
       const fileExt = '.' + file.name.split('.').pop().toLowerCase();
       
       if (!CONFIG.VALID_FILE_TYPES.includes(fileExt)) {
-        this.showError(`Invalid file type: ${file.name}`);
+        this.showError(`File "${file.name}" has an unsupported format (${fileExt}). Please use one of these formats: ${CONFIG.VALID_FILE_TYPES.join(', ')}`);
         return false;
       }
 
       if (file.size > CONFIG.MAX_FILE_SIZE) {
-        this.showError(`File too large: ${file.name} (max ${Utils.formatFileSize(CONFIG.MAX_FILE_SIZE)})`);
+        this.showError(`File "${file.name}" is too large (${Utils.formatFileSize(file.size)}). Maximum allowed size is ${Utils.formatFileSize(CONFIG.MAX_FILE_SIZE)}. Please compress or resize your file and try again.`);
         return false;
       }
 
@@ -2416,8 +2741,89 @@
 
     showError(message) {
       debugSystem.log('File error', message, 'error');
-      // You could implement a toast notification system here
-      console.error(message);
+      
+      // Create and show user-friendly error notification
+      let errorDiv = document.querySelector('.techpack-file-error');
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'techpack-file-error';
+        document.body.appendChild(errorDiv);
+      }
+      
+      errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        border-left: 4px solid #ef4444;
+        color: #991b1b;
+        padding: 16px 20px;
+        border-radius: 8px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        z-index: 10001;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+        animation: techpackSlideIn 0.3s ease-out;
+      `;
+      
+      // Add close button
+      errorDiv.innerHTML = `
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+          <div style="flex: 1; margin-right: 12px;">
+            <div style="font-weight: 600; margin-bottom: 4px;">File Upload Error</div>
+            <div>${message}</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" style="
+            background: none;
+            border: none;
+            color: #991b1b;
+            cursor: pointer;
+            padding: 0;
+            font-size: 18px;
+            line-height: 1;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">&times;</button>
+        </div>
+      `;
+      
+      // Add animation styles if not already added
+      if (!document.querySelector('#techpack-error-styles')) {
+        const style = document.createElement('style');
+        style.id = 'techpack-error-styles';
+        style.textContent = `
+          @keyframes techpackSlideIn {
+            from {
+              transform: translateX(100%);
+              opacity: 0;
+            }
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (errorDiv && errorDiv.parentElement) {
+          errorDiv.style.animation = 'techpackSlideIn 0.3s ease-in reverse';
+          setTimeout(() => {
+            if (errorDiv && errorDiv.parentElement) {
+              errorDiv.remove();
+            }
+          }, 300);
+        }
+      }, 5000);
     }
   }
 
@@ -5829,6 +6235,10 @@
         return;
       }
 
+      // Show premium loading overlay
+      LoadingOverlay.show();
+      LoadingOverlay.updateProgress(10);
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
         <svg class="techpack-btn__spinner" width="16" height="16" viewBox="0 0 16 16">
@@ -5842,6 +6252,8 @@
 
       try {
         // First, upload all files to Google Drive
+        LoadingOverlay.updateMessage('Uploading files to secure cloud storage...');
+        LoadingOverlay.updateProgress(20);
         debugSystem.log('📤 Starting file uploads to Google Drive...');
         await this.uploadAllFilesToGoogleDrive();
         
@@ -5858,6 +6270,8 @@
         }
 
         // Build secure payload with all data
+        LoadingOverlay.updateMessage('Finalizing your garment specifications...');
+        LoadingOverlay.updateProgress(60);
         const payload = await this.buildSecurePayload();
         
         // Validate payload has data
@@ -5875,6 +6289,8 @@
         });
 
         // Send to Make.com webhook via Vercel API
+        LoadingOverlay.updateMessage('Almost ready - preparing your submission...');
+        LoadingOverlay.updateProgress(80);
         const appProxyUrl = CONFIG.WEBHOOK_URL;
         
         console.log(`🔍 DEBUG: Using webhook URL = ${appProxyUrl}`);
@@ -5911,8 +6327,17 @@
         // Update rate limiting
         SecurityUtils.updateSubmissionTime();
         
-        // Show success page with actual submission data
-        this.showThankYou(payload.submission_id, payload.records.length);
+        // Complete loading and show success
+        LoadingOverlay.updateMessage('Submission completed successfully!');
+        LoadingOverlay.updateProgress(100);
+        
+        // Brief delay to show completion before hiding
+        setTimeout(() => {
+          LoadingOverlay.hide();
+          // Show success page with actual submission data
+          this.showThankYou(payload.submission_id, payload.records.length);
+        }, 1000);
+        
         debugSystem.log('✅ Form submitted successfully', {
           submissionId: payload.submission_id,
           records: payload.records.length,
@@ -5921,6 +6346,9 @@
 
       } catch (error) {
         debugSystem.log('❌ Form submission failed', error, 'error');
+        
+        // Hide loading overlay on error
+        LoadingOverlay.hide();
         
         // Reset button state
         submitBtn.disabled = false;
@@ -6146,10 +6574,23 @@
       debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Google Drive...`);
 
       // Upload files sequentially to avoid overwhelming the server
-      for (const fileObj of filesToUpload) {
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const fileObj = filesToUpload[i];
         try {
           debugSystem.log(`📤 Uploading file: ${fileObj.file.name}`);
+          
+          // Add file to loading overlay
+          LoadingOverlay.addFileStatus(fileObj.file.name, 'uploading');
+          
           await this.uploadSingleFileToGoogleDrive(fileObj.id, fileObj.file);
+          
+          // Mark file as completed in loading overlay
+          LoadingOverlay.addFileStatus(fileObj.file.name, 'completed');
+          
+          // Update progress based on files uploaded
+          const progressPercentage = 20 + ((i + 1) / filesToUpload.length) * 30; // 20-50% for file uploads
+          LoadingOverlay.updateProgress(progressPercentage);
+          
         } catch (error) {
           debugSystem.log(`❌ Failed to upload file: ${fileObj.file.name}`, error, 'error');
           throw new Error(`Failed to upload file "${fileObj.file.name}": ${error.message}`);
