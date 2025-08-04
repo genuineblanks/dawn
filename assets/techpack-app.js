@@ -730,7 +730,6 @@
       `;
       
       this.content.appendChild(logElement);
-      this.content.scrollTop = this.content.scrollHeight;
     }
 
     getLogColor(level) {
@@ -1562,119 +1561,7 @@
       }
     }
 
-    scrollToTechPackTopEnhanced() {
-      // More aggressive search for TechPack elements
-      const selectors = [
-        'section[id*="techpack"]',     // Any section with techpack in ID
-        'div[class*="techpack"]',      // Any div with techpack in class
-        '.techpack-progress',          // Progress bar specifically
-        '[data-step]',                 // Any element with data-step
-        'h2.techpack-title',           // The "Client Information" title
-        'h1.techpack-success__title',  // Thank you page title
-        '.techpack-success-page',      // Thank you page container
-        '*[id*="step"]'                // Any element with "step" in ID
-      ];
-      
-      let techPackElement = null;
-      
-      // Try each selector until we find something
-      for (const selector of selectors) {
-        const elements = document.querySelectorAll(selector);
-        if (elements.length > 0) {
-          // Take the first visible element
-          for (const element of elements) {
-            const rect = element.getBoundingClientRect();
-            if (rect.height > 0 && rect.width > 0) { // Element is visible
-              techPackElement = element;
-              debugSystem.log('Found TechPack element', { 
-                selector, 
-                elementId: element.id,
-                elementClass: element.className 
-              });
-              break;
-            }
-          }
-          if (techPackElement) break;
-        }
-      }
-      
-      if (techPackElement) {
-        // Use scrollIntoView for more reliable positioning
-        techPackElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',    // Align to top of viewport
-          inline: 'nearest'
-        });
-        
-        // Add a small offset after scrolling
-        setTimeout(() => {
-          const currentScroll = window.pageYOffset;
-          window.scrollTo({
-            top: currentScroll - 60, // 60px offset from top
-            behavior: 'smooth'
-          });
-        }, 500);
-        
-        debugSystem.log('Scrolled to TechPack element successfully');
-      } else {
-        // Ultimate fallback - look for ANY text containing "techpack" or "client"
-        const allElements = document.querySelectorAll('*');
-        let foundByText = null;
-        
-        for (const element of allElements) {
-          const text = element.textContent || '';
-          const id = element.id || '';
-          const className = element.className || '';
-          
-          if ((text.toLowerCase().includes('client information') ||
-               text.toLowerCase().includes('tech pack') ||
-               text.toLowerCase().includes('submission received') ||
-               text.toLowerCase().includes('thank you') ||
-               id.toLowerCase().includes('techpack') ||
-               className.toLowerCase().includes('techpack')) &&
-              element.getBoundingClientRect().height > 50) { // Must be substantial element
-            foundByText = element;
-            break;
-          }
-        }
-        
-        if (foundByText) {
-          foundByText.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-          debugSystem.log('Found TechPack by text content');
-        } else {
-          // Auto-scroll to top removed for better UX
-          debugSystem.log('TechPack element not found, staying at current position');
-        }
-      }
-    }
 
-    // Polyfill for smooth scrolling in older browsers
-    smoothScrollPolyfill(targetPosition) {
-      const startPosition = window.pageYOffset;
-      const distance = targetPosition - startPosition;
-      const duration = 500; // 500ms
-      let start = null;
-
-      function animation(currentTime) {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        // Easing function
-        const ease = progress * (2 - progress);
-        
-        window.scrollTo(0, startPosition + (distance * ease));
-        
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
-        }
-      }
-      
-      requestAnimationFrame(animation);
-    }
 
     handleStepEnter(stepNumber) {
       switch (stepNumber) {
@@ -1734,10 +1621,6 @@
           quantityCalculator.calculateAndUpdateProgress();
         }
         
-        // ADD: Scroll to center TechPack after garments load
-        setTimeout(() => {
-          this.scrollToTechPackTopEnhanced();
-        }, 300);
       }, 100);
     }
 
@@ -5217,10 +5100,6 @@
                 
                 if (navigationSuccess) {
                   debugSystem.log('✅ Registration navigation successful');
-                  // Add scroll after navigation
-                  setTimeout(() => {
-                    stepManager.scrollToTechPackTopEnhanced();
-                  }, 600);
                 } else {
                   throw new Error('Navigation failed completely');
                 }
@@ -5278,10 +5157,6 @@
                 
                 if (navigationSuccess) {
                   debugSystem.log('✅ New client navigation successful');
-                  // Add scroll after navigation
-                  setTimeout(() => {
-                    stepManager.scrollToTechPackTopEnhanced();
-                  }, 600);
                 } else {
                   throw new Error('Navigation failed completely');
                 }
@@ -5857,10 +5732,6 @@
       if (step1Next) {
         step1Next.addEventListener('click', () => {
           stepManager.navigateToStep(2);
-          // Force scroll to TechPack
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
 
@@ -5871,17 +5742,11 @@
       if (step2Prev) {
         step2Prev.addEventListener('click', () => {
           stepManager.navigateToStep(1);
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
       if (step2Next) {
         step2Next.addEventListener('click', () => {
           stepManager.navigateToStep(3);
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
 
@@ -5892,17 +5757,11 @@
       if (step3Prev) {
         step3Prev.addEventListener('click', () => {
           stepManager.navigateToStep(2);
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
       if (step3Next) {
         step3Next.addEventListener('click', () => {
           stepManager.navigateToStep(4);
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
 
@@ -5911,9 +5770,6 @@
       if (step4Prev) {
         step4Prev.addEventListener('click', () => {
           stepManager.navigateToStep(3);
-          setTimeout(() => {
-            stepManager.scrollToTechPackTopEnhanced();
-          }, 600);
         });
       }
 
@@ -5994,10 +5850,6 @@
               // Navigate AND scroll
               stepManager.navigateToStep(targetStep);
               
-              // IMPORTANT: Add scroll after navigation
-              setTimeout(() => {
-                stepManager.scrollToTechPackTopEnhanced();
-              }, 600); // Wait for navigation to complete
               
               debugSystem.log('Edit button navigation with scroll', { targetStep, found });
             };
@@ -6514,51 +6366,6 @@
         </div>
       `;
 
-      // IMPORTANT: Wait for DOM to be fully updated, then scroll to the new content
-      setTimeout(() => {
-        // First try to find the new thank you page elements
-        const thankYouContainer = document.querySelector('.techpack-success-page');
-        const thankYouTitle = document.querySelector('.techpack-success__title');
-        const techPackStep4 = document.querySelector('#techpack-step-4');
-        
-        let targetElement = null;
-        
-        // Try to find the best element to scroll to
-        if (thankYouContainer) {
-          targetElement = thankYouContainer;
-          debugSystem.log('Found thank you container for scroll');
-        } else if (thankYouTitle) {
-          targetElement = thankYouTitle;
-          debugSystem.log('Found thank you title for scroll');
-        } else if (techPackStep4) {
-          targetElement = techPackStep4;
-          debugSystem.log('Found step 4 container for scroll');
-        }
-        
-        if (targetElement) {
-          // Scroll directly to the thank you page
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest'
-          });
-          
-          // Add small offset
-          setTimeout(() => {
-            const currentScroll = window.pageYOffset;
-            window.scrollTo({
-              top: currentScroll - 60,
-              behavior: 'smooth'
-            });
-          }, 500);
-          
-          debugSystem.log('Scrolled to thank you page');
-        } else {
-          // Fallback: use the enhanced scroll function
-          debugSystem.log('Using fallback scroll for thank you page');
-          stepManager.scrollToTechPackTopEnhanced();
-        }
-      }, 800); // Longer delay to ensure DOM is fully updated
     }
 
     // Upload all files to Google Drive during form submission
@@ -7574,17 +7381,6 @@ setupInitialization();
         totalColorways += colorways.length;
       });
       
-      html += `<div class="review-total-summary">
-        <h4>Overall Summary</h4>
-        <div class="review-item">
-          <span class="review-label">Total Garments:</span>
-          <span class="review-value">${totalColorways}</span>
-        </div>
-        <div class="review-item">
-          <span class="review-label">Total Quantity:</span>
-          <span class="review-value"><strong>${totalQuantity} units</strong></span>
-        </div>
-      </div>`;
     } else {
       html += '<div class="review-empty">No garments configured</div>';
     }
