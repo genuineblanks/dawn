@@ -6135,7 +6135,8 @@
 
     // Upload all files to Google Drive during form submission
     async uploadAllFilesToGoogleDrive() {
-      const filesToUpload = state.formData.files.filter(f => !f.uploadStatus || f.uploadStatus === 'failed');
+      // Upload files that haven't been successfully uploaded yet
+      const filesToUpload = state.formData.files.filter(f => f.uploadStatus !== 'completed');
       
       if (filesToUpload.length === 0) {
         debugSystem.log('📋 No files need uploading - all files already uploaded');
