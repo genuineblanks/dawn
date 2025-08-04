@@ -95,8 +95,8 @@
         if (onProgress) onProgress(30, 'Uploading to Google Drive...');
 
         // Get client information for folder organization
-        const clientName = document.getElementById('client-name')?.value || 'Unknown Client';
-        const companyName = document.getElementById('company-name')?.value || clientName;
+        const companyName = document.getElementById('company-name')?.value || 'Unknown Company';
+        const clientName = companyName; // Use company name as client name for folder organization
 
         // Prepare form data for Google Apps Script
         const formData = new FormData();
@@ -2266,8 +2266,7 @@
       debugSystem.log('File added', { fileId, fileName: file.name });
       this.validateStep2();
 
-      // Automatically upload to Google Drive
-      this.uploadFileToGoogleDrive(fileId, file);
+      // Note: Files will be uploaded to Google Drive during form submission (Step 4)
     }
 
     removeFile(fileId) {
@@ -2412,6 +2411,31 @@
           error: error.message
         }, 'error');
       }
+    }
+
+    // Upload all files to Google Drive during form submission
+    async uploadAllFilesToGoogleDrive() {
+      const filesToUpload = state.formData.files.filter(f => !f.uploadStatus || f.uploadStatus === 'failed');
+      
+      if (filesToUpload.length === 0) {
+        debugSystem.log('📋 No files need uploading - all files already uploaded');
+        return;
+      }
+
+      debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Google Drive...`);
+
+      // Upload files sequentially to avoid overwhelming the server
+      for (const fileObj of filesToUpload) {
+        try {
+          debugSystem.log(`📤 Uploading file: ${fileObj.file.name}`);
+          await this.uploadFileToGoogleDrive(fileObj.id, fileObj.file);
+        } catch (error) {
+          debugSystem.log(`❌ Failed to upload file: ${fileObj.file.name}`, error, 'error');
+          throw new Error(`Failed to upload file "${fileObj.file.name}": ${error.message}`);
+        }
+      }
+
+      debugSystem.log('✅ All files uploaded to Google Drive successfully');
     }
 
     showError(message) {
@@ -5841,6 +5865,10 @@
       debugSystem.log('🚀 Enhanced form submission started');
 
       try {
+        // First, upload all files to Google Drive
+        debugSystem.log('📤 Starting file uploads to Google Drive...');
+        await this.uploadAllFilesToGoogleDrive();
+        
         // Check if any files are still uploading
         const uploadingFiles = state.formData.files.filter(f => f.uploadStatus === 'uploading');
         if (uploadingFiles.length > 0) {
