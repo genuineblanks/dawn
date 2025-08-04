@@ -2413,30 +2413,6 @@
       }
     }
 
-    // Upload all files to Google Drive during form submission
-    async uploadAllFilesToGoogleDrive() {
-      const filesToUpload = state.formData.files.filter(f => !f.uploadStatus || f.uploadStatus === 'failed');
-      
-      if (filesToUpload.length === 0) {
-        debugSystem.log('📋 No files need uploading - all files already uploaded');
-        return;
-      }
-
-      debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Google Drive...`);
-
-      // Upload files sequentially to avoid overwhelming the server
-      for (const fileObj of filesToUpload) {
-        try {
-          debugSystem.log(`📤 Uploading file: ${fileObj.file.name}`);
-          await this.uploadFileToGoogleDrive(fileObj.id, fileObj.file);
-        } catch (error) {
-          debugSystem.log(`❌ Failed to upload file: ${fileObj.file.name}`, error, 'error');
-          throw new Error(`Failed to upload file "${fileObj.file.name}": ${error.message}`);
-        }
-      }
-
-      debugSystem.log('✅ All files uploaded to Google Drive successfully');
-    }
 
     showError(message) {
       debugSystem.log('File error', message, 'error');
@@ -6155,6 +6131,99 @@
           stepManager.scrollToTechPackTopEnhanced();
         }
       }, 800); // Longer delay to ensure DOM is fully updated
+    }
+
+    // Upload all files to Google Drive during form submission
+    async uploadAllFilesToGoogleDrive() {
+      const filesToUpload = state.formData.files.filter(f => !f.uploadStatus || f.uploadStatus === 'failed');
+      
+      if (filesToUpload.length === 0) {
+        debugSystem.log('📋 No files need uploading - all files already uploaded');
+        return;
+      }
+
+      debugSystem.log(`📤 Uploading ${filesToUpload.length} files to Google Drive...`);
+
+      // Upload files sequentially to avoid overwhelming the server
+      for (const fileObj of filesToUpload) {
+        try {
+          debugSystem.log(`📤 Uploading file: ${fileObj.file.name}`);
+          await this.uploadSingleFileToGoogleDrive(fileObj.id, fileObj.file);
+        } catch (error) {
+          debugSystem.log(`❌ Failed to upload file: ${fileObj.file.name}`, error, 'error');
+          throw new Error(`Failed to upload file "${fileObj.file.name}": ${error.message}`);
+        }
+      }
+
+      debugSystem.log('✅ All files uploaded to Google Drive successfully');
+    }
+
+    // Upload single file to Google Drive (helper method for form submission)
+    async uploadSingleFileToGoogleDrive(fileId, file) {
+      // Find the file object in state
+      const fileObj = state.formData.files.find(f => f.id === fileId);
+      if (!fileObj) {
+        debugSystem.log('❌ File object not found for upload', { fileId }, 'error');
+        return;
+      }
+
+      // Update file status
+      fileObj.uploadStatus = 'uploading';
+
+      try {
+        // Upload file with progress callback
+        const result = await GoogleDriveUtils.uploadFile(file, (progress, status) => {
+          GoogleDriveUtils.updateFileProgress(fileId, progress, status);
+        });
+
+        if (result.success) {
+          // Update file object with Google Drive info
+          fileObj.driveUrl = result.fileUrl;
+          fileObj.driveDownloadUrl = result.downloadUrl;
+          fileObj.driveFileId = result.fileId;
+          fileObj.driveFolderId = result.folderId;
+          fileObj.driveFolderName = result.folderName;
+          fileObj.driveFolderPath = result.folderPath;
+          fileObj.driveClientName = result.clientName;
+          fileObj.uploadStatus = 'completed';
+
+          // Show success indicator in UI
+          GoogleDriveUtils.showUploadSuccess(fileId, result.fileUrl);
+
+          debugSystem.log('✅ File uploaded to Google Drive', {
+            fileId,
+            fileName: file.name,
+            driveUrl: result.fileUrl,
+            driveFileId: result.fileId
+          });
+
+        } else {
+          // Update file status and show error
+          fileObj.uploadStatus = 'failed';
+          GoogleDriveUtils.showUploadError(fileId, result.error);
+
+          debugSystem.log('❌ Google Drive upload failed', {
+            fileId,
+            fileName: file.name,
+            error: result.error
+          }, 'error');
+
+          throw new Error(result.error);
+        }
+
+      } catch (error) {
+        // Update file status and show error
+        fileObj.uploadStatus = 'failed';
+        GoogleDriveUtils.showUploadError(fileId, error.message);
+
+        debugSystem.log('❌ Unexpected error during Google Drive upload', {
+          fileId,
+          fileName: file.name,
+          error: error.message
+        }, 'error');
+
+        throw error;
+      }
     }
 
     // ENHANCED: Updated showStep method to handle step 0 (registration check)
