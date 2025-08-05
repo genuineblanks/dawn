@@ -65,7 +65,7 @@
       "settings": {
         "image": "shopify://shop_images/Front_Page_3_Image.jpg",
         "banner_heading": "for startups and scaling brands.",
-        "banner_paragraph": "Product development.  Sampling. Production. All streamlined.",
+        "banner_paragraph": "Custom Product development.  Sampling. Production.",
         "banner_subtext1": "OVERSIZED COLLECTION",
         "banner_link_url1": "",
         "banner_subtext2": "RELAXED COLLECTION",
@@ -135,7 +135,7 @@
           "type": "collection",
           "settings": {
             "collection": "sweatpants-high-end",
-            "product_image": "shopify://shop_images/20250805_0959_Flowing_Sweatpants_Design_remix_01k1wq7avvf20bh2p3mnywzbzv.png"
+            "product_image": "shopify://shop_images/RELAXED_SWEATPANTS_BLACK3.png"
           }
         },
         "link_list_cYVVVY": {
