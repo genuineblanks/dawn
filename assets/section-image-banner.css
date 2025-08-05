@@ -1199,10 +1199,10 @@
 
 /* Banner Heading Font Size Override */
 .luxury-heading {
-  font-size: 1.4rem !important;  /* Was 2.5rem */
+  font-size: 2.4rem !important;  /* Was 2.5rem */
 }
 
 /* Banner Paragraph Font Size Override */
 .luxury-paragraph {
-  font-size: 0.4rem !important;  /* Was 1rem */
+  font-size: 0.8rem !important;  /* Was 1rem */
 }
