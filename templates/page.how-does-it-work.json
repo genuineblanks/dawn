@@ -242,7 +242,7 @@
           "settings": {
             "heading": "What are the lead times?",
             "icon": "none",
-            "row_content": "<p>Sample Lead Time: 3-5 weeks. Bulk Production Lead Time: 4-6 weeks.</p>",
+            "row_content": "<p>Sample Lead Time: 4-6 weeks. <br/>Bulk Production Lead Time: 4-6 weeks.</p>",
             "page": ""
           }
         },
