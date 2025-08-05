@@ -224,7 +224,7 @@
           "settings": {
             "heading": "What’s the MOQ (minimum order quantity) to order？",
             "icon": "none",
-            "row_content": "<p>Our minimum order quantity is 100 pieces per colour for 1 design and 300 pieces per order.</p>",
+            "row_content": "<p>Our minimum order quantity is 75 pieces for 1 color, and 50 pieces if 2+ colorways.</p>",
             "page": ""
           }
         },
