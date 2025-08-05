@@ -233,7 +233,7 @@
           "settings": {
             "heading": "How much money do I need to start my project?",
             "icon": "none",
-            "row_content": "<p>Based on our expertise, it is required an approx. minimum investment of $1,500 USD.</p>",
+            "row_content": "<p>While final costs depend on design and quantities, a minimum investment of <strong>approximately 1,500€</strong> is typically required to begin production.</p>",
             "page": ""
           }
         },
