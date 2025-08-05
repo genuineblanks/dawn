@@ -437,7 +437,9 @@ p.click-to-scroll span {display: block;font-weight: bold;}
     cursor: pointer;
     min-width: 215px;
 }
-/* Button styles moved to section-image-banner.css for better organization */
+.towbutonbaner a:hover{background:#000; color:#fff;}
+.towbutonbaner a.banner_subtext2 {background:#000; color:#fff;}
+.towbutonbaner a.banner_subtext2:hover {background:#fff; color:#000;}
 
 /* ================ Banner section css end here ================== */
 

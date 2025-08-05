@@ -555,7 +555,7 @@
   position: relative !important;
   margin: 0 2.5rem !important;
   padding: 0.8rem 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   
   /* Performance optimizations */
   will-change: transform, color !important;
@@ -578,25 +578,23 @@
   width: 100% !important;
   height: 1px !important;
   background: linear-gradient(90deg, transparent, currentColor, transparent) !important;
-  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
-/* Sophisticated hover states - Enhanced */
+/* Sophisticated hover states */
 .banner_subtext1:hover,
 .banner_subtext2:hover,
 .changeSection:hover {
-  color: #1a1a1a !important;
-  letter-spacing: 3.2px !important;
-  transform: translateY(-2px) translateZ(0) !important;
+  color: #000000 !important;
+  letter-spacing: 3.5px !important;
+  transform: translateY(-1px) translateZ(0) !important;
   text-decoration: none !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .banner_subtext1:hover::after,
 .banner_subtext2:hover::after,
 .changeSection:hover::after {
-  transform: translateX(-50%) scaleX(0.95) !important;
-  opacity: 0.9 !important;
+  transform: translateX(-50%) scaleX(0.9) !important;
 }
 
 /* Keep luxury-button class separate for other uses */
@@ -733,8 +731,7 @@
 
 .banner_subtext2:hover {
   color: #000000 !important;
-  transform: translateY(-2.5px) translateZ(0) !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-2px) translateZ(0) !important;
 }
 
 .banner_subtext2:hover::after {
@@ -883,17 +880,16 @@
   animation: luxuryPulse 1.5s infinite !important;
 }
 
-/* Button Container - Enhanced */
+/* Button Container */
 .luxury-button-container,
 .towbutonbaner {
   display: flex !important;
-  gap: 1.5rem !important; /* Increased gap for better spacing */
-  margin: 2rem 0 1rem 0 !important;
+  gap: 1rem !important; /* Reduced gap to match mobile */
+  margin: 2rem 0 1rem 0 !important; /* Reduced margins to match mobile */
   justify-content: center !important;
   flex-wrap: wrap !important;
   align-items: center !important;
-  padding: 0.8rem !important;
-  position: relative !important;
+  padding: 0.8rem !important; /* Added padding to match mobile */
 }
 
 /* Minimal Button Container - Clean & Elegant */
