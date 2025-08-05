@@ -171,6 +171,9 @@
         </a>
       {%- endif -%}
       <span class="no-minimum luxury-no-minimum">MADE IN PORTUGAL</span>
+      {% if section.settings.banner_botton_text != blank %}
+        <div class="banner-bottom luxury-banner-bottom">{{ section.settings.banner_botton_text }}</div>
+      {% endif %}
     </div>
     <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient">
       {%- for block in section.blocks -%}
@@ -277,9 +280,6 @@
         </li>
       {%- endfor -%}
     </ul>
-    {% if section.settings.banner_botton_text != blank %}
-      <div class="banner-bottom luxury-banner-bottom">{{ section.settings.banner_botton_text }}</div>
-    {% endif %}
   </div>
 </div>
 <!-- dynamic css for banner products -->
