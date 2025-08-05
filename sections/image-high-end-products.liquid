@@ -141,12 +141,12 @@
       {% if section.settings.banner_subtext1 != blank %}
         <a {% if section.settings.banner_link_url1 != blank %}
             href="{{ section.settings.banner_link_url1 }}"
-          {% endif %} class="banner_subtext1 changeSection">{{ section.settings.banner_subtext1 }}</a>
+          {% endif %} class="banner_subtext1 changeSection luxury-button luxury-button--secondary">{{ section.settings.banner_subtext1 }}</a>
       {% endif %}
       {% if section.settings.banner_subtext2 != blank %}
         <a {% if section.settings.banner_link_url2 != blank %}
             href="{{ section.settings.banner_link_url2 }}"
-          {% endif %} class="banner_subtext2 changeSection">{{ section.settings.banner_subtext2 }}</a>
+          {% endif %} class="banner_subtext2 changeSection luxury-button luxury-button--primary">{{ section.settings.banner_subtext2 }}</a>
       {% endif %}
         
       </div>
@@ -161,7 +161,7 @@
           {{- section.settings.banner_link_txt -}}
         </a>
       {%- endif -%}
-          <span class="no-minimum luxury-no-minimum">MADE IN PORTUGAL</span>
+          <span class="no-minimum luxury-no-minimum">NO MINIMUMS</span>
     </div>
     <ul class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme_section }} gradient">
       {%- for block in section.blocks -%}
@@ -299,14 +299,12 @@
     {
       "type": "text",
       "id": "banner_heading",
-      "label": "Banner Heading",
-      "default": "FOR STARTUPS AND SCALING BRANDS"
+      "label": "Banner Heading"
     },
      {
       "type": "text",
       "id": "banner_paragraph",
-      "label": "Banner Paragraph",
-      "default": "PREMIUM QUALITY BLANKS DESIGNED FOR GROWING BUSINESSES"
+      "label": "Banner Paragraph"
     },
      {
       "type": "text",
