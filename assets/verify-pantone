@@ -1,0 +1,63 @@
+// Simple verification script for Pantone integration
+// This can be run in the browser console to test the integration
+
+console.log('🧪 Testing Pantone Integration...');
+
+// Test PantoneManager availability
+if (typeof PantoneManager !== 'undefined') {
+    console.log('✅ PantoneManager is available');
+    
+    // Test database loading
+    PantoneManager.loadDatabase().then(colors => {
+        console.log(`✅ Database loaded successfully: ${colors.length} colors`);
+        
+        // Test color matching
+        const testColors = [
+            '#000000', // Black
+            '#ffffff', // White  
+            '#ff0000', // Red
+            '#00ff00', // Green
+            '#0000ff'  // Blue
+        ];
+        
+        console.log('\n🎨 Testing color matches:');
+        
+        testColors.forEach(async (testColor) => {
+            try {
+                const match = await PantoneManager.findClosest(testColor, 1);
+                console.log(`${testColor} → ${match.code} (${match.name}) - Distance: ${Math.round(match.distance)}`);
+            } catch (error) {
+                console.error(`❌ Error matching ${testColor}:`, error);
+            }
+        });
+        
+        // Test multiple matches
+        PantoneManager.findClosest('#ff0000', 3).then(matches => {
+            console.log('\n🔍 Top 3 matches for red (#ff0000):');
+            matches.forEach((match, index) => {
+                console.log(`${index + 1}. ${match.code} (${match.name}) - Distance: ${Math.round(match.distance)}`);
+            });
+        });
+        
+    }).catch(error => {
+        console.error('❌ Failed to load database:', error);
+    });
+    
+} else {
+    console.error('❌ PantoneManager not found. Make sure techpack-app.js is loaded.');
+}
+
+// Test function availability  
+if (typeof findClosestPantoneColor !== 'undefined') {
+    console.log('✅ findClosestPantoneColor function is available');
+} else {
+    console.log('⚠️ findClosestPantoneColor function not found (may be inside a scope)');
+}
+
+console.log('\n📋 Integration Test Summary:');
+console.log('- PantoneManager system: ' + (typeof PantoneManager !== 'undefined' ? '✅' : '❌'));
+console.log('- Database file: /assets/pantone-numbers.json');
+console.log('- Expected colors: 2,310');
+console.log('- Test page: pantone-test.html');
+
+console.log('\n🚀 To run full tests, open pantone-test.html in your browser');
