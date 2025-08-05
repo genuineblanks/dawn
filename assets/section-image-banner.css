@@ -1,830 +1,46 @@
-/* ========================================
-   LUXURY BANNER SYSTEM - GENUINEBLANKS
-   Modern CSS Architecture with Design Tokens
-   ======================================== */
-
-/* ========================================
-   1. CSS CUSTOM PROPERTIES & DESIGN TOKENS
-   ======================================== */
-
-:root {
-  /* Color Palette - Luxury Brand System */
-  --color-luxury-black: #000000;
-  --color-luxury-charcoal: #1a1a1a;
-  --color-luxury-dark-gray: #2c2c2c;
-  --color-luxury-medium-gray: #555555;
-  --color-luxury-light-gray: #666666;
-  --color-luxury-silver: #999999;
-  --color-luxury-platinum: #cccccc;
-  --color-luxury-white: #ffffff;
-  --color-luxury-ghost: #f8f8f8;
-  
-  /* Typography Scale - Harmonious Relationships */
-  --font-luxury-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --font-size-luxury-hero: clamp(2rem, 4vw, 2.5rem);
-  --font-size-luxury-heading: clamp(1.5rem, 3vw, 2rem);
-  --font-size-luxury-body: clamp(0.875rem, 2vw, 1rem);
-  --font-size-luxury-caption: clamp(0.75rem, 1.5vw, 0.8rem);
-  --font-size-luxury-micro: clamp(0.7rem, 1.2vw, 0.75rem);
-  
-  /* Letter Spacing - Premium Feel */
-  --letter-spacing-luxury-wide: 4px;
-  --letter-spacing-luxury-medium: 3px;
-  --letter-spacing-luxury-narrow: 2px;
-  --letter-spacing-luxury-tight: 1px;
-  --letter-spacing-luxury-normal: 0.5px;
-  
-  /* Spacing System - Mathematical Progression */
-  --space-luxury-xs: clamp(0.5rem, 1vw, 0.75rem);
-  --space-luxury-sm: clamp(0.75rem, 1.5vw, 1rem);
-  --space-luxury-md: clamp(1rem, 2vw, 1.5rem);
-  --space-luxury-lg: clamp(1.5rem, 3vw, 2rem);
-  --space-luxury-xl: clamp(2rem, 4vw, 2.5rem);
-  --space-luxury-xxl: clamp(2.5rem, 5vw, 3rem);
-  
-  /* Transitions - Smooth & Sophisticated */
-  --transition-luxury-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --transition-luxury-medium: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --transition-luxury-slow: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  
-  /* Shadows - Subtle Depth */
-  --shadow-luxury-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-luxury-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-luxury-strong: 0 8px 32px rgba(0, 0, 0, 0.16);
-  
-  /* Border Radius - Refined Curves */
-  --radius-luxury-subtle: 2px;
-  --radius-luxury-medium: 4px;
-  --radius-luxury-large: 8px;
-}
-
-/* ========================================
-   2. BASE BANNER STRUCTURE
-   ======================================== */
-
 .banner {
   display: flex;
   position: relative;
   flex-direction: column;
+  z-index: auto;
   isolation: isolate;
-  min-height: 50vh;
-  overflow: hidden;
 }
 
-@media (min-width: 750px) {
-  .banner {
-    flex-direction: row;
-    min-height: 60vh;
-  }
-}
-
-/* Banner Size Variants */
-.banner--small:not(.banner--adapt) { min-height: 40vh; }
-.banner--medium:not(.banner--adapt) { min-height: 60vh; }
-.banner--large:not(.banner--adapt) { min-height: 80vh; }
-
-@media (min-width: 750px) {
-  .banner--small:not(.banner--adapt) { min-height: 42rem; }
-  .banner--medium:not(.banner--adapt) { min-height: 56rem; }
-  .banner--large:not(.banner--adapt) { min-height: 72rem; }
-}
-
-/* Banner Media Container */
-.banner__media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.banner__media img,
-.banner__media svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Banner Content Container */
-.banner__content {
-  display: flex;
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-luxury-lg);
-  min-height: inherit;
-}
-
-@media (min-width: 750px) {
-  .banner__content {
-    padding: var(--space-luxury-xxl);
-  }
-}
-
-/* Content Positioning System */
-.banner__content--top-left { align-items: flex-start; justify-content: flex-start; }
-.banner__content--top-center { align-items: flex-start; justify-content: center; }
-.banner__content--top-right { align-items: flex-start; justify-content: flex-end; }
-.banner__content--middle-left { align-items: center; justify-content: flex-start; }
-.banner__content--middle-center { align-items: center; justify-content: center; }
-.banner__content--middle-right { align-items: center; justify-content: flex-end; }
-.banner__content--bottom-left { align-items: flex-end; justify-content: flex-start; }
-.banner__content--bottom-center { align-items: flex-end; justify-content: center; }
-.banner__content--bottom-right { align-items: flex-end; justify-content: flex-end; }
-
-/* Banner Box - Content Wrapper */
 .banner__box {
-  position: relative;
-  width: 100%;
-  max-width: 71rem;
-  padding: var(--space-luxury-lg);
-  text-align: center;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-luxury-medium);
-  box-shadow: var(--shadow-luxury-subtle);
-}
-
-@media (min-width: 750px) {
-  .banner__box {
-    padding: var(--space-luxury-xl);
-  }
-}
-
-@media (min-width: 1400px) {
-  .banner__box {
-    max-width: 90rem;
-  }
-}
-
-/* Desktop Transparent Variant */
-@media (min-width: 750px) {
-  .banner--desktop-transparent .banner__box {
-    background: transparent;
-    backdrop-filter: none;
-    box-shadow: none;
-    border-radius: 0;
-    max-width: 89rem;
-  }
-}
-
-/* Content Alignment */
-.banner--content-align-left .banner__box { text-align: left; }
-.banner--content-align-center .banner__box { text-align: center; }
-.banner--content-align-right .banner__box { text-align: right; }
-
-@media (max-width: 749px) {
-  .banner--content-align-mobile-left .banner__box { text-align: left; }
-  .banner--content-align-mobile-center .banner__box { text-align: center; }
-  .banner--content-align-mobile-right .banner__box { text-align: right; }
-}
-
-/* Overlay System */
-.banner::after,
-.banner__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--color-luxury-black);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transition-luxury-medium);
-}
-
-/* ========================================
-   3. LUXURY TYPOGRAPHY SYSTEM
-   ======================================== */
-
-.luxury-heading {
-  font-family: var(--font-luxury-primary);
-  font-size: var(--font-size-luxury-hero);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: var(--letter-spacing-luxury-wide);
-  color: var(--color-luxury-charcoal);
-  text-transform: uppercase;
-  margin: 0 0 var(--space-luxury-sm) 0;
-}
-
-.luxury-paragraph {
-  font-family: var(--font-luxury-primary);
-  font-size: var(--font-size-luxury-body);
-  font-weight: 400;
-  line-height: 1.6;
-  letter-spacing: var(--letter-spacing-luxury-normal);
-  color: var(--color-luxury-light-gray);
-  text-transform: uppercase;
-  margin: 0 auto var(--space-luxury-md) auto;
-  max-width: 600px;
-}
-
-.banner__heading {
-  margin-bottom: 0;
-}
-
-.banner__box .banner__heading + * {
-  margin-top: var(--space-luxury-sm);
-}
-
-.banner__box > * + .banner__text {
-  margin-top: var(--space-luxury-md);
-}
-
-.banner__box > * + * {
-  margin-top: var(--space-luxury-sm);
-}
-
-.banner__box > *:first-child {
-  margin-top: 0;
-}
-
-/* ========================================
-   4. PREMIUM BUTTON SYSTEM
-   ======================================== */
-
-/* Base Button Foundation */
-.luxury-button-base {
-  display: inline-block;
-  font-family: var(--font-luxury-primary);
-  font-weight: 500;
-  text-decoration: none;
-  text-transform: uppercase;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-luxury-medium);
-  position: relative;
-  overflow: hidden;
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Primary Luxury Button */
-.luxury-button {
-  @extend .luxury-button-base;
-  padding: 16px 32px;
-  font-size: 0.85rem;
-  letter-spacing: var(--letter-spacing-luxury-narrow);
-  background: transparent;
-  color: var(--color-luxury-black);
-  border: 2px solid var(--color-luxury-black);
-  border-radius: var(--radius-luxury-subtle);
-  min-width: 220px;
-}
-
-.luxury-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--color-luxury-black);
-  transform: translateX(-100%);
-  transition: transform var(--transition-luxury-medium);
-  z-index: -1;
-}
-
-.luxury-button:hover {
-  color: var(--color-luxury-white);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-luxury-medium);
-}
-
-.luxury-button:hover::before {
-  transform: translateX(0);
-}
-
-.luxury-button:active {
-  transform: translateY(0);
-}
-
-/* Primary Button Variant */
-.luxury-button--primary {
-  background: var(--color-luxury-black);
-  color: var(--color-luxury-white);
-}
-
-.luxury-button--primary::before {
-  background: var(--color-luxury-white);
-}
-
-.luxury-button--primary:hover {
-  color: var(--color-luxury-black);
-}
-
-/* Secondary Button Variant */
-.luxury-button--secondary {
-  background: transparent;
-  color: var(--color-luxury-black);
-  border-color: var(--color-luxury-black);
-}
-
-/* Collection Navigation Buttons - Minimal Premium Style */
-.banner_subtext1,
-.banner_subtext2,
-.changeSection {
-  display: inline-block;
-  font-family: var(--font-luxury-primary);
-  font-size: var(--font-size-luxury-caption);
-  font-weight: 300;
-  letter-spacing: var(--letter-spacing-luxury-medium);
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--color-luxury-dark-gray);
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  position: relative;
-  margin: 0 var(--space-luxury-lg);
-  padding: var(--space-luxury-xs) 0;
-  transition: all var(--transition-luxury-medium);
-}
-
-/* Elegant Underline Effect */
-.banner_subtext1::after,
-.banner_subtext2::after,
-.changeSection::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor, transparent);
-  transition: transform var(--transition-luxury-slow);
-}
-
-/* Hover States */
-.banner_subtext1:hover,
-.banner_subtext2:hover,
-.changeSection:hover {
-  color: var(--color-luxury-black);
-  letter-spacing: calc(var(--letter-spacing-luxury-medium) + 0.5px);
-  transform: translateY(-1px);
-}
-
-.banner_subtext1:hover::after,
-.banner_subtext2:hover::after,
-.changeSection:hover::after {
-  transform: translateX(-50%) scaleX(0.9);
-}
-
-/* Primary Collection Button (Oversized) */
-.banner_subtext2 {
-  font-weight: 400;
-  color: var(--color-luxury-charcoal);
-}
-
-.banner_subtext2::after {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-luxury-charcoal), transparent);
-}
-
-.banner_subtext2:hover::after {
-  transform: translateX(-50%) scaleX(1);
-}
-
-/* Secondary Collection Button (Relaxed) */
-.banner_subtext1 {
-  color: var(--color-luxury-medium-gray);
-}
-
-.banner_subtext1::after {
-  background: linear-gradient(90deg, transparent, var(--color-luxury-medium-gray), transparent);
-}
-
-.banner_subtext1:hover {
-  color: var(--color-luxury-dark-gray);
-}
-
-/* Button Container */
-.luxury-button-container,
-.towbutonbaner {
-  display: flex;
-  gap: var(--space-luxury-sm);
-  margin: var(--space-luxury-lg) 0 var(--space-luxury-sm) 0;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: var(--space-luxury-xs);
-}
-
-.luxury-button-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 1px;
-  background: var(--color-luxury-platinum);
-}
-
-/* Button Groups */
-.banner__buttons {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: var(--space-luxury-sm);
-  max-width: 45rem;
-  word-break: break-word;
-}
-
-.banner__box > * + .banner__buttons {
-  margin-top: var(--space-luxury-lg);
-}
-
-/* ========================================
-   5. PRODUCT DISPLAY SYSTEM
-   ======================================== */
-
-/* Product Grid Container */
-.banner__box {
-  display: flex;
-  flex-direction: column;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.banner__box.content-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  justify-content: center;
-  padding: 0;
-}
-
-/* Product Items */
-.item-banner,
-.luxury-item {
-  display: block;
-  margin: 0;
-  background: transparent;
-}
-
-/* Product Cards */
-.luxury-product-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-luxury-subtle);
-  transition: transform var(--transition-luxury-medium);
-}
-
-.luxury-product-card:hover {
-  transform: translateY(-2px);
-}
-
-/* Product Images */
-.luxury-product-image-container {
-  position: relative;
-  background: transparent;
-  overflow: hidden;
-  border-radius: var(--radius-luxury-subtle);
-}
-
-.luxury-product-image {
-  width: 100%;
-  height: auto;
-  max-height: 165px;
-  object-fit: contain;
-  background: transparent;
-  border: none;
-  transition: transform var(--transition-luxury-medium);
-}
-
-.luxury-product-card:hover .luxury-product-image {
-  transform: scale(1.02);
-}
-
-/* Product Text (Hidden by default as requested) */
-.luxury-product-title,
-.luxury-product-price {
-  display: none;
-}
-
-/* Product Links */
-.luxury-product-link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-/* Dynamic Product Layout CSS */
-.product-count-1 .banner__box { padding: 0; }
-.product-count-2 .banner__box { padding: 0; }
-.product-count-3 .banner__box { padding: 0; }
-.product-count-4 .banner__box { padding: 0; }
-.product-count-5 .banner__box { padding: 0; }
-.product-count-6 .banner__box { padding: 0; }
-.product-count-7 .banner__box { padding: 0; }
-.product-count-8 .banner__box { padding: 0; }
-
-/* Flexible Grid System */
-.product-count-1 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-2 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-3 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-4 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-5 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-6 ul.banner__box li { width: calc(100% / 3.2); }
-.product-count-7 ul.banner__box li { width: calc(100% / 4.1); }
-.product-count-8 ul.banner__box li { width: calc(100% / 3.2); }
-
-.product-count-7 ul.banner__box li:nth-child(3) { margin-left: 6px; }
-
-/* ========================================
-   6. LUXURY LINK SYSTEM
-   ======================================== */
-
-.luxury-link {
-  display: inline-block;
-  font-family: var(--font-luxury-primary);
-  font-size: var(--font-size-luxury-body);
-  font-weight: 500;
-  letter-spacing: var(--letter-spacing-luxury-tight);
-  color: var(--color-luxury-dark-gray);
-  text-decoration: none;
-  position: relative;
-  margin: var(--space-luxury-sm) 0;
-  padding: 2px 8px 2px 0;
-  transition: all var(--transition-luxury-medium);
-}
-
-.luxury-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform var(--transition-luxury-slow);
-}
-
-.luxury-link::after {
-  content: '→';
-  position: absolute;
-  right: -16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.9rem;
-  opacity: 0.6;
-  transition: all var(--transition-luxury-medium);
-}
-
-.luxury-link:hover {
-  color: var(--color-luxury-black);
-  transform: translateY(-1px);
-  border-bottom: 1px solid var(--color-luxury-dark-gray);
-}
-
-.luxury-link:hover::before {
-  transform: translateX(100%);
-}
-
-.luxury-link:hover::after {
-  transform: translateY(-50%) translateX(4px);
-  opacity: 1;
-}
-
-/* ========================================
-   7. SPECIALTY TEXT ELEMENTS
-   ======================================== */
-
-.luxury-no-minimum {
-  display: block;
-  font-family: var(--font-luxury-primary);
-  font-size: var(--font-size-luxury-micro);
-  font-weight: 400;
-  letter-spacing: var(--letter-spacing-luxury-narrow);
-  color: var(--color-luxury-silver);
-  text-transform: uppercase;
-  margin-top: var(--space-luxury-sm);
-}
-
-/* Banner Bottom Content */
-.luxury-banner-bottom,
-.banner-bottom {
-  margin-top: var(--space-luxury-lg);
   text-align: center;
 }
 
-.luxury-bottom-text {
-  font-family: var(--font-luxury-primary);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--color-luxury-light-gray);
-  text-align: center;
-  margin-top: var(--space-luxury-lg);
+/* Needed for gradient continuity with or without animation, the transform scopes the gradient to its container which happens already when animation are turned on */
+.banner__box.gradient {
+  transform: perspective(0);
 }
 
-.luxury-bottom-link {
-  color: var(--color-luxury-charcoal);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all var(--transition-luxury-fast);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
+@media only screen and (max-width: 749px) {
+  .banner--content-align-mobile-right .banner__box {
+    text-align: right;
+  }
 
-.luxury-bottom-link:hover {
-  color: var(--color-luxury-black);
-  transform: translateY(-1px);
-}
-
-.luxury-arrow-icon {
-  transition: transform var(--transition-luxury-fast);
-}
-
-.luxury-bottom-link:hover .luxury-arrow-icon {
-  transform: translateY(2px);
-}
-
-/* ========================================
-   8. MOBILE OPTIMIZATIONS
-   ======================================== */
-
-@media (max-width: 768px) {
-  /* Mobile Banner Structure */
-  .banner--stacked {
-    height: auto;
-    flex-direction: column;
-  }
-  
-  .banner--stacked .banner__media {
-    position: relative;
-    height: 50vh;
-    min-height: 300px;
-  }
-  
-  .banner--mobile-bottom .banner__content {
-    order: 2;
-  }
-  
-  /* Mobile Typography */
-  .luxury-heading {
-    font-size: var(--font-size-luxury-heading);
-    letter-spacing: var(--letter-spacing-luxury-narrow);
-    margin-bottom: var(--space-luxury-xs);
-  }
-  
-  .luxury-paragraph {
-    margin-bottom: var(--space-luxury-sm);
-    font-size: 0.875rem;
-    letter-spacing: 0.3px;
-  }
-  
-  /* Mobile Button Container */
-  .luxury-button-container,
-  .towbutonbaner {
-    flex-direction: column;
-    align-items: center;
-    padding: var(--space-luxury-xs);
-    gap: var(--space-luxury-sm);
-    margin: var(--space-luxury-lg) 0 var(--space-luxury-sm) 0;
-  }
-  
-  /* Mobile Collection Buttons */
-  .banner_subtext1,
-  .banner_subtext2,
-  .changeSection {
-    font-size: var(--font-size-luxury-micro);
-    letter-spacing: var(--letter-spacing-luxury-narrow);
-    margin: 0 var(--space-luxury-sm);
-    padding: var(--space-luxury-xs) 0;
-  }
-  
-  .banner_subtext1:hover,
-  .banner_subtext2:hover,
-  .changeSection:hover {
-    letter-spacing: calc(var(--letter-spacing-luxury-narrow) + 0.5px);
-    transform: translateY(-0.5px);
-  }
-  
-  .banner_subtext2:hover {
-    transform: translateY(-1px);
-  }
-  
-  /* Mobile Luxury Buttons */
-  .luxury-button {
-    width: 100%;
-    max-width: 280px;
-    margin: var(--space-luxury-xs) 0;
-  }
-  
-  /* Mobile Links and Text */
-  .luxury-link {
-    margin: var(--space-luxury-xs) 0;
-    font-size: 0.95rem;
-  }
-  
-  .luxury-no-minimum {
-    margin-top: var(--space-luxury-sm);
-    font-size: var(--font-size-luxury-micro);
-  }
-  
-  /* Mobile Banner Box */
-  .banner__box {
-    padding: var(--space-luxury-lg);
-    margin: var(--space-luxury-sm);
-    border-radius: var(--radius-luxury-medium);
-  }
-  
-  /* Mobile Transparent Backgrounds */
-  .banner:not(.banner--mobile-bottom):not(.email-signup-banner) .banner__box {
-    background: transparent;
-    backdrop-filter: none;
-    box-shadow: none;
-    border: none;
-    border-radius: 0;
-  }
-  
-  /* Mobile Height Adjustments */
-  .banner--small.banner--mobile-bottom:not(.banner--adapt) .banner__media,
-  .banner--small.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
-    height: 28rem;
-  }
-  
-  .banner--medium.banner--mobile-bottom:not(.banner--adapt) .banner__media,
-  .banner--medium.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
-    height: 34rem;
-  }
-  
-  .banner--large.banner--mobile-bottom:not(.banner--adapt) .banner__media,
-  .banner--large.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
-    height: 39rem;
+  .banner--content-align-mobile-left .banner__box {
+    text-align: left;
   }
 }
 
-/* ========================================
-   9. ANIMATION & INTERACTION STATES
-   ======================================== */
-
-/* Luxury Fade In Animation */
-@keyframes luxuryFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+@media only screen and (min-width: 750px) {
+  .banner--content-align-right .banner__box {
+    text-align: right;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .banner--content-align-left .banner__box {
+    text-align: left;
+  }
+
+  .banner--content-align-left.banner--desktop-transparent .banner__box,
+  .banner--content-align-right.banner--desktop-transparent .banner__box,
+  .banner--medium.banner--desktop-transparent .banner__box {
+    max-width: 68rem;
   }
 }
 
-.luxury-banner-content > * {
-  animation: luxuryFadeIn 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-.luxury-banner-content > *:nth-child(1) { animation-delay: 0.2s; }
-.luxury-banner-content > *:nth-child(2) { animation-delay: 0.4s; }
-.luxury-banner-content > *:nth-child(3) { animation-delay: 0.6s; }
-.luxury-banner-content > *:nth-child(4) { animation-delay: 0.8s; }
-
-/* Pulse Animation for Focus States */
-@keyframes luxuryPulse {
-  0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2); }
-  70% { box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-}
-
-/* Focus States for Accessibility */
-.luxury-button:focus,
-.luxury-link:focus {
-  outline: 2px solid var(--color-luxury-charcoal);
-  outline-offset: 2px;
-  border-radius: var(--radius-luxury-subtle);
-}
-
-.luxury-button:focus {
-  animation: luxuryPulse 1.5s infinite;
-}
-
-.banner_subtext1:focus,
-.banner_subtext2:focus,
-.changeSection:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.3);
-  outline-offset: 4px;
-  border-radius: var(--radius-luxury-subtle);
-}
-
-/* Active States */
-.banner_subtext1:active,
-.banner_subtext2:active,
-.changeSection:active {
-  transform: translateY(0);
-  transition: transform 0.1s ease;
-}
-
-/* ========================================
-   10. SPECIALIZED BANNER VARIANTS
-   ======================================== */
-
-/* Image Behavior Animations */
 .banner__media.animate--zoom-in {
   clip-path: inset(0px);
 }
@@ -833,11 +49,123 @@
 .banner__media.animate--zoom-in > svg:not(.zoom):not(.deferred-media__poster-button) {
   position: fixed;
   height: 100vh;
-  width: 100vw;
-  object-fit: cover;
 }
 
-/* Half Media Layouts */
+@media screen and (max-width: 749px) {
+  .banner--small.banner--mobile-bottom:not(.banner--adapt) .banner__media,
+  .banner--small.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
+    height: 28rem;
+  }
+
+  .banner--medium.banner--mobile-bottom:not(.banner--adapt) .banner__media,
+  .banner--medium.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
+    height: 34rem;
+  }
+
+  .banner--large.banner--mobile-bottom:not(.banner--adapt) .banner__media,
+  .banner--large.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
+    height: 39rem;
+  }
+
+  .banner--small:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+    min-height: 28rem;
+  }
+
+  .banner--medium:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+    min-height: 34rem;
+  }
+
+  .banner--large:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+    min-height: 39rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .banner {
+    flex-direction: row;
+  }
+
+  .banner--small:not(.banner--adapt) {
+    min-height: 42rem;
+  }
+
+  .banner--medium:not(.banner--adapt) {
+    min-height: 56rem;
+  }
+
+  .banner--large:not(.banner--adapt) {
+    min-height: 72rem;
+  }
+
+  .banner__content.banner__content--top-left {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .banner__content.banner__content--top-center {
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .banner__content.banner__content--top-right {
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .banner__content.banner__content--middle-left {
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .banner__content.banner__content--middle-center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banner__content.banner__content--middle-right {
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .banner__content.banner__content--bottom-left {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .banner__content.banner__content--bottom-center {
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .banner__content.banner__content--bottom-right {
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .banner:not(.banner--stacked) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .banner--stacked {
+    height: auto;
+  }
+
+  .banner--stacked .banner__media {
+    flex-direction: column;
+  }
+}
+
+.banner__media {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
 .banner__media-half {
   width: 50%;
 }
@@ -858,72 +186,1013 @@
   width: 50%;
 }
 
-/* Gradient Overlay Support */
-.banner__box.gradient {
-  transform: perspective(0);
+@media screen and (max-width: 749px) {
+  .banner--stacked .animate--fixed:first-child > img,
+  .banner--stacked .animate--zoom-in:first-child > img {
+    width: 100%;
+  }
+
+  .banner--stacked .banner__media-half.animate--fixed:nth-child(2) > img,
+  .banner--stacked .banner__media-half.animate--zoom-in:nth-child(2) > img {
+    left: 0;
+    width: 100%;
+  }
+
+  .banner--stacked .banner__media-half {
+    width: 100%;
+  }
+
+  .banner--stacked .banner__media-half + .banner__media-half {
+    order: 1;
+  }
 }
 
-/* High-End Collection Specific */
+@media screen and (min-width: 750px) {
+  .banner__media {
+    height: 100%;
+  }
+}
+
+.banner--adapt,
+.banner--adapt_image.banner--mobile-bottom .banner__media:not(.placeholder) {
+  height: auto;
+}
+
+@media screen and (max-width: 749px) {
+  .banner--mobile-bottom .banner__media,
+  .banner--stacked:not(.banner--mobile-bottom) .banner__media {
+    position: relative;
+  }
+
+  .banner--stacked.banner--adapt .banner__content {
+    height: auto;
+  }
+
+  .banner:not(.banner--mobile-bottom):not(.email-signup-banner) .banner__box {
+    background: transparent;
+  }
+
+  .banner:not(.banner--mobile-bottom) .banner__box {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .banner:not(.banner--mobile-bottom) .button--secondary {
+    --alpha-button-background: 0;
+  }
+
+  .banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+    position: absolute;
+    height: auto;
+  }
+
+  .banner--stacked.banner--adapt:not(.banner--mobile-bottom) .banner__content {
+    max-height: 100%;
+    overflow: hidden;
+    position: absolute;
+  }
+
+  .banner--stacked:not(.banner--adapt) .banner__media {
+    position: relative;
+  }
+
+  .banner::before {
+    display: none !important;
+  }
+
+  .banner--stacked .banner__media-image-half {
+    width: 100%;
+  }
+}
+
+.banner__content {
+  padding: 0;
+  display: flex;
+  position: relative;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+@media screen and (min-width: 750px) {
+  .banner__content {
+    padding: 3rem;
+  }
+
+  .banner__content--top-left {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .banner__content--top-center {
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .banner__content--top-right {
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .banner__content--middle-left {
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .banner__content--middle-center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banner__content--middle-right {
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .banner__content--bottom-left {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .banner__content--bottom-center {
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .banner__content--bottom-right {
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .banner--mobile-bottom:not(.banner--stacked) .banner__content {
+    order: 2;
+  }
+
+  .banner:not(.banner--mobile-bottom) .field__input,
+  .banner--mobile-bottom:not(.banner--stacked) .banner__box.color-scheme-1 {
+    background: transparent;
+  }
+}
+
+.banner__box {
+  padding: 2rem 2rem; /* Reduced to match mobile compact layout */
+  position: relative;
+  height: fit-content;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  word-wrap: break-word;
+  z-index: 1;
+}
+
+@media screen and (min-width: 750px) {
+  .banner--desktop-transparent .banner__box {
+    background: transparent;
+    max-width: 89rem;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .banner--desktop-transparent .button--secondary {
+    --alpha-button-background: 0;
+  }
+
+  .banner--desktop-transparent .content-container:after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .banner--mobile-bottom::after,
+  .banner--mobile-bottom .banner__media::after {
+    display: none;
+  }
+}
+
+.banner::after,
+.banner__media::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  background: #000000;
+  opacity: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.banner__box > * + .banner__text {
+  margin-top: 1.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .banner__box > * + .banner__text {
+    margin-top: 2rem;
+  }
+}
+
+.banner__box > * + * {
+  margin-top: 1rem;
+}
+
+.banner__box > *:first-child {
+  margin-top: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .banner--stacked .banner__box {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .banner__box {
+    width: auto;
+    max-width: 71rem;
+    min-width: 45rem;
+    padding: 2rem 2rem !important; /* Apply compact mobile layout to desktop */
+  }
+  
+  /* Desktop: Apply mobile's compact spacing */
+  .luxury-button-container,
+  .towbutonbaner {
+    padding: 0.8rem !important; /* Match mobile padding */
+    gap: 1rem !important; /* Match mobile gap */
+    margin: 2rem 0 1rem 0 !important; /* Match mobile margins */
+  }
+  
+  /* Desktop: Apply compact spacing for buttons */
+  .banner_subtext1,
+  .banner_subtext2,
+  .changeSection {
+    padding: 0.8rem 0 !important; /* Match mobile padding */
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .banner__box {
+    max-width: 90rem;
+  }
+}
+
+.banner__heading {
+  margin-bottom: 0;
+}
+
+.banner__box .banner__heading + * {
+  margin-top: 1rem;
+}
+
+.banner__buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 45rem;
+  word-break: break-word;
+}
+
+@media screen and (max-width: 749px) {
+  .banner--content-align-mobile-right .banner__buttons--multiple {
+    justify-content: flex-end;
+  }
+
+  .banner--content-align-mobile-center .banner__buttons--multiple > * {
+    flex-grow: 1;
+    min-width: 22rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .banner--content-align-center .banner__buttons--multiple > * {
+    flex-grow: 1;
+    min-width: 25rem;
+  }
+
+  .banner--content-align-right .banner__buttons--multiple {
+    justify-content: flex-end;
+  }
+}
+
+.banner__box > * + .banner__buttons {
+  margin-top: 2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .banner:not(.slideshow) .rte a,
+  .banner:not(.slideshow) .inline-richtext a:hover,
+  .banner:not(.slideshow) .rte a:hover {
+    color: currentColor;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .banner--desktop-transparent .rte a,
+  .banner--desktop-transparent .inline-richtext a:hover,
+  .banner--desktop-transparent .rte a:hover {
+    color: currentColor;
+  }
+}
+
+/* ======================
+   LUXURY FONT & BUTTON ENHANCEMENTS ONLY
+   ====================== */
+
+/* GENUINEBLANKS Brand Typography Enhancement */
+.luxury-heading {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 2rem !important;
+  letter-spacing: 4px !important;
+  line-height: 1.1 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 0.5rem !important; /* Reduced for desktop to match mobile */
+  text-transform: uppercase !important;
+}
+
+/* Subtitle/Paragraph Typography */
+.luxury-paragraph {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: #666 !important;
+  margin-bottom: 1.5rem !important; /* Reduced for desktop to match mobile */
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  max-width: 600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Premium Button Styling - Advanced Animations */
+/* Ultra-Premium Collection Buttons - Minimal & Professional */
+.banner_subtext1,
+.banner_subtext2,
+.changeSection {
+  /* Reset and core design */
+  display: inline-block !important;
+  padding: 0 !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  
+  /* Premium typography */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: #2c2c2c !important;
+  
+  /* Minimal styling */
+  position: relative !important;
+  margin: 0 2.5rem !important;
+  padding: 0.8rem 0 !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  
+  /* Performance optimizations */
+  will-change: transform, color !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  z-index: 1 !important;
+  overflow: visible !important;
+}
+
+/* Subtle underline effect for collection buttons */
+.banner_subtext1::after,
+.banner_subtext2::after,
+.changeSection::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+  transform-origin: center !important;
+  width: 100% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, currentColor, transparent) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Sophisticated hover states */
+.banner_subtext1:hover,
+.banner_subtext2:hover,
+.changeSection:hover {
+  color: #000000 !important;
+  letter-spacing: 3.5px !important;
+  transform: translateY(-1px) translateZ(0) !important;
+  text-decoration: none !important;
+}
+
+.banner_subtext1:hover::after,
+.banner_subtext2:hover::after,
+.changeSection:hover::after {
+  transform: translateX(-50%) scaleX(0.9) !important;
+}
+
+/* Keep luxury-button class separate for other uses */
+.luxury-button {
+  display: inline-block !important;
+  padding: 16px 32px !important;
+  background: transparent !important;
+  color: #000000 !important;
+  text-decoration: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  border: 2px solid #000000 !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-width: 220px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  z-index: 1 !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+}
+
+/* Ultra-Premium Minimal Collection Buttons */
+.luxury-button--minimal-premium {
+  /* Reset all styling */
+  all: unset !important;
+  
+  /* Core minimal design */
+  display: inline-block !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  color: #2c2c2c !important;
+  text-decoration: none !important;
+  position: relative !important;
+  cursor: pointer !important;
+  padding: 0.75rem 0 !important;
+  margin: 0 2rem !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Ultra-subtle underline effect */
+.luxury-button--minimal-premium::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+  transform-origin: center !important;
+  width: 100% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, #2c2c2c, transparent) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Sophisticated hover states */
+.luxury-button--minimal-premium:hover {
+  color: #000000 !important;
+  letter-spacing: 3.5px !important;
+  transform: translateY(-1px) !important;
+}
+
+.luxury-button--minimal-premium:hover::after {
+  transform: translateX(-50%) scaleX(0.8) !important;
+}
+
+/* Primary button variation (Oversized Collection) */
+.luxury-button--minimal-premium.luxury-button--primary {
+  font-weight: 400 !important;
+  color: #1a1a1a !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary::after {
+  background: linear-gradient(90deg, transparent, #1a1a1a, transparent) !important;
+  height: 2px !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary:hover {
+  color: #000000 !important;
+  transform: translateY(-2px) !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--primary:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+/* Secondary button variation (Relaxed Collection) */  
+.luxury-button--minimal-premium.luxury-button--secondary {
+  font-weight: 300 !important;
+  color: #555555 !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--secondary::after {
+  background: linear-gradient(90deg, transparent, #555555, transparent) !important;
+}
+
+.luxury-button--minimal-premium.luxury-button--secondary:hover {
+  color: #2c2c2c !important;
+}
+
+/* Focus states for accessibility */
+.luxury-button--minimal-premium:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.3) !important;
+  outline-offset: 4px !important;
+  border-radius: 2px !important;
+}
+
+/* Active/press state */
+.luxury-button--minimal-premium:active {
+  transform: translateY(0px) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Primary button specific styling (banner_subtext2 = "OVERSIZED COLLECTION") */
+.banner_subtext2 {
+  font-weight: 400 !important;
+  color: #1a1a1a !important;
+}
+
+.banner_subtext2::after {
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #1a1a1a, transparent) !important;
+}
+
+.banner_subtext2:hover {
+  color: #000000 !important;
+  transform: translateY(-2px) translateZ(0) !important;
+}
+
+.banner_subtext2:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+/* Secondary button styling (banner_subtext1 = "RELAXED COLLECTION") */
+.banner_subtext1 {
+  font-weight: 300 !important;
+  color: #555555 !important;
+}
+
+.banner_subtext1::after {
+  background: linear-gradient(90deg, transparent, #555555, transparent) !important;
+}
+
+.banner_subtext1:hover {
+  color: #2c2c2c !important;
+}
+
+/* Advanced sliding animation effect for luxury-button only */
+.luxury-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000000 !important;
+  transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  z-index: -1 !important;
+}
+
+/* Hover state with advanced animations for luxury-button only */
+.luxury-button:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  transform: translateY(-3px) translateZ(0) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+  border-color: #000000 !important;
+}
+
+/* Minimal Premium Hover Effects */
+.luxury-button--premium:hover {
+  color: #333 !important;
+  letter-spacing: 2.5px !important;
+  transform: translateY(-1px) !important;
+}
+
+.luxury-button--premium:hover::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+.luxury-button:hover::before,
+.banner_subtext1:hover::before,
+.banner_subtext2:hover::before,
+.changeSection:hover::before {
+  left: 0 !important;
+}
+
+/* Active/click state */
+.luxury-button:active,
+.banner_subtext1:active,
+.banner_subtext2:active,
+.changeSection:active {
+  transform: translateY(-1px) translateZ(0) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Primary Button (Black fill by default) for luxury-button class only */
+.luxury-button--primary {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+
+.luxury-button--primary::before {
+  background: #ffffff !important;
+  left: -100% !important;
+}
+
+.luxury-button--primary:hover {
+  color: #000000 !important;
+  background: #000000 !important;
+}
+
+.luxury-button--primary:hover::before {
+  left: 0 !important;
+}
+
+/* Secondary Button (White/transparent) for luxury-button class only */
+.luxury-button--secondary {
+  background: transparent !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+.luxury-button--secondary::before {
+  background: #000000 !important;
+}
+
+/* Focus states for accessibility - Collection buttons */
+.banner_subtext1:focus,
+.banner_subtext2:focus,
+.changeSection:focus {
+  outline: 2px solid rgba(44, 44, 44, 0.3) !important;
+  outline-offset: 4px !important;
+  border-radius: 2px !important;
+}
+
+/* Active/press state for collection buttons */
+.banner_subtext1:active,
+.banner_subtext2:active,
+.changeSection:active {
+  transform: translateY(0px) translateZ(0) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Focus states for luxury-button class */
+.luxury-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Glow effect on hover for luxury-button only */
+.luxury-button:hover {
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.25),
+    0 0 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Pulse animation for luxury-button only */
+@keyframes luxuryPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.luxury-button:focus {
+  animation: luxuryPulse 1.5s infinite !important;
+}
+
+/* Button Container */
+.luxury-button-container,
+.towbutonbaner {
+  display: flex !important;
+  gap: 1rem !important; /* Reduced gap to match mobile */
+  margin: 2rem 0 1rem 0 !important; /* Reduced margins to match mobile */
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  padding: 0.8rem !important; /* Added padding to match mobile */
+}
+
+/* Minimal Button Container - Clean & Elegant */
+.luxury-button-container {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+  padding: 1rem 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+}
+
+/* Add subtle separator line above buttons */
+.luxury-button-container::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 60px !important;
+  height: 1px !important;
+  background: #ddd !important;
+}
+
+/* Enhanced Link Styling - Discrete but Cool */
+.luxury-link {
+  color: #333333 !important;
+  text-decoration: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.08rem !important;
+  text-transform: none !important;
+  position: relative !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  display: inline-block !important;
+  margin: 0.5rem 0 !important; /* Reduced to match mobile */
+  padding: 2px 8px 2px 0 !important;
+  cursor: pointer !important;
+}
+
+.luxury-link::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(51, 51, 51, 0.08) 50%, transparent 100%) !important;
+  transform: translateX(-100%) !important;
+  transition: transform 0.6s ease !important;
+}
+
+.luxury-link::after {
+  content: '→' !important;
+  position: absolute !important;
+  right: -16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(0) !important;
+  font-size: 0.9rem !important;
+  opacity: 0.6 !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.luxury-link:hover {
+  color: #000 !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+.luxury-link:hover::before {
+  transform: translateX(100%) !important;
+}
+
+.luxury-link:hover::after {
+  transform: translateY(-50%) translateX(4px) !important;
+  opacity: 1 !important;
+}
+
+/* Add underline effect */
+.luxury-link {
+  border-bottom: 1px solid transparent !important;
+}
+
+.luxury-link:hover {
+  border-bottom: 1px solid #333333 !important;
+}
+
+/* No Minimum Text Enhancement */
+.luxury-no-minimum {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 2px !important;
+  color: #999 !important;
+  font-weight: 400 !important;
+  margin-top: 1rem !important; /* Reduced to match mobile */
+  display: block !important;
+  text-transform: uppercase !important;
+}
+
+/* Bottom Text Animation Enhancement */
+.banner-bottom-content {
+  position: relative !important;
+}
+
+.banner-bottom-content p.click-to-scroll span {
+  display: inline-block !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.banner-bottom-content p.click-to-scroll a {
+  display: inline-block !important;
+  transition: all 0.3s ease !important;
+}
+
+.banner-bottom-content p.click-to-scroll a:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* PNG TRANSPARENCY FIXES */
+.luxury-product-image-container,
+.banner__box .luxury-item,
+.luxury-product-card,
+.banner__text.products {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.luxury-product-image {
+  background: transparent !important;
+  background-color: transparent !important;
+  mix-blend-mode: normal !important;
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+  border: none !important;
+}
+
+.banner__box li.item-banner {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.product-banner .banner__box {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .high-end-collection .banner__box,
 .high-end-collection .luxury-item,
 .high-end-collection .luxury-product-card,
 .high-end-collection .luxury-product-image-container {
-  background: transparent;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
-/* Adapt Height Banners */
-.banner--adapt,
-.banner--adapt_image.banner--mobile-bottom .banner__media:not(.placeholder) {
-  height: auto;
-  min-height: auto;
+/* Remove product descriptions, keep only images */
+.luxury-product-title,
+.luxury-product-price {
+  display: none !important;
 }
 
-/* ========================================
-   11. PERFORMANCE OPTIMIZATIONS
-   ======================================== */
-
-/* GPU Acceleration for Smooth Animations */
-.luxury-button,
-.banner_subtext1,
-.banner_subtext2,
-.changeSection,
-.luxury-link {
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Optimized Image Rendering */
-.luxury-product-image,
-.banner__media img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* Reduce Motion for Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Print Styles */
-@media print {
-  .banner {
-    break-inside: avoid;
-    page-break-inside: avoid;
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .luxury-heading {
+    font-size: 2rem !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 0.5rem !important; /* Reduced margin for mobile */
   }
   
-  .luxury-button,
+  /* Reduce spacing for luxury paragraph on mobile */
+  .luxury-paragraph {
+    margin-bottom: 1.5rem !important; /* Reduced from 2.5rem */
+  }
+  
+  .luxury-button-container,
+  .towbutonbaner {
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 0.8rem !important; /* Reduced padding from 1.5rem */
+    gap: 1rem !important; /* Reduced gap from 1.5rem */
+    margin: 2rem 0 1rem 0 !important; /* Reduced top margin */
+  }
+  
+  /* Mobile optimization for collection buttons */
   .banner_subtext1,
   .banner_subtext2,
   .changeSection {
-    background: transparent !important;
-    color: var(--color-luxury-black) !important;
-    border: 1px solid var(--color-luxury-black) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 2px !important;
+    margin: 0 1rem !important;
+    padding: 0.8rem 0 !important; /* Reduced padding from 1rem */
+    min-width: auto !important;
   }
+  
+  .banner_subtext1:hover,
+  .banner_subtext2:hover,
+  .changeSection:hover {
+    letter-spacing: 2.5px !important;
+    transform: translateY(-0.5px) translateZ(0) !important;
+  }
+  
+  .banner_subtext2:hover {
+    transform: translateY(-1px) translateZ(0) !important;
+  }
+  
+  /* Luxury button mobile styles */
+  .luxury-button {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  .luxury-button--premium {
+    margin: 0.5rem 0 !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 1.5px !important;
+  }
+  
+  /* Mobile optimization for minimal premium buttons */
+  .luxury-button--minimal-premium {
+    font-size: 0.75rem !important;
+    letter-spacing: 2px !important;
+    margin: 0 1rem !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .luxury-button--minimal-premium:hover {
+    letter-spacing: 2.5px !important;
+    transform: translateY(-0.5px) !important;
+  }
+  
+  .luxury-button--minimal-premium.luxury-button--primary:hover {
+    transform: translateY(-1px) !important;
+  }
+  
+  .luxury-paragraph {
+    font-size: 0.875rem !important;
+    letter-spacing: 0.3px !important;
+  }
+  
+  /* Mobile: Reduce spacing for luxury link (Flawless Production button) */
+  .luxury-link {
+    margin: 0.5rem 0 !important; /* Reduced from 1rem 0 */
+    font-size: 0.95rem !important; /* Slightly smaller on mobile */
+  }
+  
+  /* Mobile: Reduce spacing for luxury-no-minimum (Made in Portugal text) */
+  .luxury-no-minimum {
+    margin-top: 1rem !important; /* Reduced from 2rem */
+    font-size: 0.7rem !important; /* Slightly smaller on mobile */
+  }
+  
+  /* Mobile: Reduce overall banner content spacing */
+  .luxury-banner-content {
+    padding: 1rem 0 !important; /* Add specific mobile padding */
+  }
+  
+  /* Mobile: Optimize banner box spacing */
+  .banner__box {
+    padding: 2rem 2rem !important; /* Reduced from 4rem 3.5rem */
+  }
+}
+
+/* Animation keyframes for enhanced effects */
+@keyframes luxuryFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.luxury-banner-content > * {
+  animation: luxuryFadeIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.luxury-banner-content > *:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.luxury-banner-content > *:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.luxury-banner-content > *:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.luxury-banner-content > *:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+/* Enhanced focus states for accessibility */
+.luxury-button:focus,
+.luxury-link:focus {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 2px;
 }
