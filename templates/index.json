@@ -134,7 +134,8 @@
         "collection_BTWtgq": {
           "type": "collection",
           "settings": {
-            "collection": "sweatpants-high-end"
+            "collection": "sweatpants-high-end",
+            "product_image": "shopify://shop_images/RELAXED_SWEATPANTS_BLACK.png"
           }
         },
         "link_list_cYVVVY": {
