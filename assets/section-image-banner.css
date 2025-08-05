@@ -1196,3 +1196,13 @@
   outline: 2px solid #1a1a1a;
   outline-offset: 2px;
 }
+
+/* Banner Heading Font Size Override */
+.luxury-heading {
+  font-size: 3.4rem !important;  /* Was 2.5rem */
+}
+
+/* Banner Paragraph Font Size Override */
+.luxury-paragraph {
+  font-size: 1.1rem !important;  /* Was 1rem */
+}
