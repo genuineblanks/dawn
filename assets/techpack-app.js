@@ -3746,7 +3746,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3761,8 +3761,8 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.techpack-pantone-name');
-              const colorCircle = button.querySelector('.techpack-pantone-color-circle');
+              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
+              const colorCircle = button.querySelector('.techpack-pantone-circle');
               
               if (pantoneNameSpan && colorCircle) {
                 // Update hex color circle
@@ -3807,23 +3807,13 @@
             // Single selection behavior: deselect all others first
             pantoneButtonElements.forEach(btn => {
               btn.classList.remove('selected');
-              // Hide radio dot
-              const radioDot = btn.querySelector('.techpack-pantone-radio-dot');
-              if (radioDot) {
-                radioDot.style.opacity = '0';
-                radioDot.style.scale = '0';
-              }
+              // Radio dot styling handled by CSS classes
             });
             
             // Select the clicked button
             button.classList.add('selected');
             
-            // Show radio dot for selected button
-            const selectedRadioDot = button.querySelector('.techpack-pantone-radio-dot');
-            if (selectedRadioDot) {
-              selectedRadioDot.style.opacity = '1';
-              selectedRadioDot.style.scale = '1';
-            }
+            // Radio dot styling handled by CSS classes
             
             // Show the size grid now that pantone is selected
             const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
@@ -3841,7 +3831,7 @@
         
         // Sample request functionality
         const sampleRequestBtn = colorway.querySelector('.techpack-btn--sample-request');
-        const sampleSizeSelector = colorway.querySelector('.techpack-sample-size-selector');
+        const sampleSizeSelector = colorway.querySelector('.techpack-sample-size-selector-inline');
         
         if (sampleRequestBtn && sampleSizeSelector) {
           sampleRequestBtn.addEventListener('click', (e) => {
@@ -6964,7 +6954,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
       if (hasValidPantone) {
@@ -6989,7 +6979,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const selectedPantone = selectedButtons.length > 0 ? {
         code: selectedButtons[0].dataset.pantoneCode,
         hex: selectedButtons[0].dataset.pantoneHex
