@@ -215,123 +215,67 @@ Tech-Pack Step 3: Garment Specifications Section
 <template id="colorway-template">
   <div class="techpack-colorway" data-colorway-id="">
     <div class="techpack-colorway__header">
-      <!-- Two-Step Color Picker System -->
-      <div class="techpack-colorway__color-selection">
-        <div class="techpack-color-families">
-          <label class="techpack-form__label">Choose a Color Family</label>
-          <div class="techpack-color-families__grid">
-            <button type="button" class="techpack-color-family" data-family="neutrals" data-color="#F5F5F5">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 50%, #C7C7C7 100%)"></div>
-              <span class="techpack-color-family__label">Neutrals</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="blues" data-color="#4169E1">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #87CEEB 0%, #4169E1 50%, #0000CD 100%)"></div>
-              <span class="techpack-color-family__label">Blues</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="greens" data-color="#32CD32">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #90EE90 0%, #32CD32 50%, #006400 100%)"></div>
-              <span class="techpack-color-family__label">Greens</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="reds" data-color="#DC143C">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #FF6347 0%, #DC143C 50%, #8B0000 100%)"></div>
-              <span class="techpack-color-family__label">Reds</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="yellows" data-color="#FFD700">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #FFFFE0 0%, #FFD700 50%, #DAA520 100%)"></div>
-              <span class="techpack-color-family__label">Yellows</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="oranges" data-color="#FF8C00">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #FFA07A 0%, #FF8C00 50%, #FF4500 100%)"></div>
-              <span class="techpack-color-family__label">Oranges</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="purples" data-color="#9370DB">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #DDA0DD 0%, #9370DB 50%, #4B0082 100%)"></div>
-              <span class="techpack-color-family__label">Purples</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="pinks" data-color="#FF69B4">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 50%, #C71585 100%)"></div>
-              <span class="techpack-color-family__label">Pinks</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="browns" data-color="#A0522D">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #D2B48C 0%, #A0522D 50%, #8B4513 100%)"></div>
-              <span class="techpack-color-family__label">Browns</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="greys" data-color="#808080">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #D3D3D3 0%, #808080 50%, #2F2F2F 100%)"></div>
-              <span class="techpack-color-family__label">Greys</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="blacks" data-color="#000000">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #2F2F2F 0%, #000000 100%)"></div>
-              <span class="techpack-color-family__label">Blacks</span>
-            </button>
-            <button type="button" class="techpack-color-family" data-family="whites" data-color="#FFFFFF">
-              <div class="techpack-color-family__swatch" style="background: linear-gradient(135deg, #FFFFFF 0%, #F8F8FF 100%); border: 1px solid #E5E7EB;"></div>
-              <span class="techpack-color-family__label">Whites</span>
-            </button>
+      <!-- Compact Color Picker System -->
+      <div class="techpack-colorway__color">
+        <label class="techpack-form__label">Colorway</label>
+        <div class="techpack-colorway__inputs">
+          <!-- Compact Two-Step Dropdowns -->
+          <div class="techpack-color-dropdowns">
+            <select class="techpack-form__select techpack-color-family-select" data-color-family-select>
+              <option value="">Choose Color Family</option>
+              <option value="neutrals">Neutrals</option>
+              <option value="blues">Blues</option>
+              <option value="greens">Greens</option>
+              <option value="reds">Reds</option>
+              <option value="yellows">Yellows</option>
+              <option value="oranges">Oranges</option>
+              <option value="purples">Purples</option>
+              <option value="pinks">Pinks</option>
+              <option value="browns">Browns</option>
+              <option value="greys">Greys</option>
+              <option value="blacks">Blacks</option>
+              <option value="whites">Whites</option>
+            </select>
+            
+            <select class="techpack-form__select techpack-color-shade-select" data-color-shade-select disabled>
+              <option value="">First choose a family</option>
+            </select>
           </div>
-        </div>
-        
-        <div class="techpack-color-shades" style="display: none;">
-          <label class="techpack-form__label">Choose a Shade</label>
-          <div class="techpack-color-shades__list">
-            <!-- Shades will be populated dynamically -->
+          
+          <!-- Custom Color Option -->
+          <div class="techpack-custom-color">
+            <span class="techpack-custom-divider">or</span>
+            <input type="text" class="techpack-form__input techpack-form__input--compact" placeholder="Custom color name" data-custom-color>
           </div>
-          <div class="techpack-color-custom">
-            <label class="techpack-form__label">Or enter custom color name:</label>
-            <input type="text" class="techpack-form__input" placeholder="e.g., Midnight Navy, Forest Green" data-custom-color>
-          </div>
-        </div>
-        
-        <div class="techpack-colorway__name" style="display: none;">
-          <label class="techpack-form__label">Colorway Name</label>
-          <input type="text" class="techpack-form__input" placeholder="Selected color will appear here" readonly data-colorway-name>
         </div>
       </div>
-
-      <!-- Pantone TPX Integration -->
-      <div class="techpack-colorway__pantone" style="display: none;">
-        <label class="techpack-form__label">Pantone TPX Code (Optional)</label>
-        
-        <div class="techpack-pantone-option">
-          <label class="techpack-form__checkbox">
-            <input type="checkbox" data-pantone-in-techpack>
-            <span class="techpack-form__checkbox-mark"></span>
-            Pantone code is inside my tech pack
-          </label>
-        </div>
-        
-        <div class="techpack-pantone-manual" style="display: block;">
-          <label class="techpack-form__label">Enter Pantone TPX code</label>
-          <input type="text" class="techpack-form__input" placeholder="e.g., PANTONE 19-4052 TPX" data-pantone-code>
+      
+      <!-- Enhanced Options Row -->
+      <div class="techpack-colorway__options">
+        <!-- Pantone Code (Inline) -->
+        <div class="techpack-colorway__pantone">
+          <label class="techpack-form__label">Pantone TPX (Optional)</label>
+          <div class="techpack-pantone-controls">
+            <input type="text" class="techpack-form__input techpack-form__input--compact" placeholder="e.g., PANTONE 19-4052 TPX" data-pantone-code>
+            <label class="techpack-form__checkbox techpack-form__checkbox--inline">
+              <input type="checkbox" data-pantone-in-techpack>
+              <span class="techpack-form__checkbox-mark"></span>
+              In tech pack
+            </label>
+          </div>
           <div class="techpack-pantone-preview" style="display: none;">
             <div class="techpack-pantone-preview__swatch"></div>
             <span class="techpack-pantone-preview__name"></span>
           </div>
         </div>
         
-        <div class="techpack-pantone-note">
-          <p class="techpack-form__help-text">
-            Pantone TPX codes are the most accurate way to specify colors and are widely used for color evaluation in textiles. If you do not provide one, we will match your selected color as closely as possible.
-          </p>
-        </div>
-        
-        <div class="techpack-custom-color-warning" style="display: none;">
-          <p class="techpack-form__warning">
-            Custom colors may require lab-dip approval and add 2–4 weeks to production time.
-          </p>
-        </div>
-      </div>
-      
-      <!-- Sample Request -->
-      <div class="techpack-colorway__sample" style="display: none;">
-        <label class="techpack-form__checkbox">
-          <input type="checkbox" data-sample-request>
-          <span class="techpack-form__checkbox-mark"></span>
-          Request sample
-        </label>
-        <div class="techpack-sample-quantity" style="display: none;">
-          <label class="techpack-form__label">Sample Quantity</label>
-          <input type="number" class="techpack-form__input techpack-form__input--small" value="1" min="1" max="5" data-sample-quantity>
+        <!-- Sample Request (Inline) -->
+        <div class="techpack-colorway__sample">
+          <label class="techpack-form__checkbox">
+            <input type="checkbox" data-sample-request>
+            <span class="techpack-form__checkbox-mark"></span>
+            Request sample (1 unit)
+          </label>
         </div>
       </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
