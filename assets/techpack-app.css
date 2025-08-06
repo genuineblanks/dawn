@@ -1065,13 +1065,7 @@ body {
   border-color: var(--techpack-border-accent);
 }
 
-.techpack-colorway__header {
-  display: grid;
-  gap: var(--techpack-space-lg);
-  align-items: end;
-  margin-bottom: var(--techpack-space-xl);
-  grid-template-columns: auto 1fr auto;
-}
+/* Colorway header styles moved to techpack-unified-styles.css */
 
 /* Premium Color Picker */
 .techpack-color-picker {
@@ -2017,10 +2011,7 @@ body {
     animation: pulseRed 2s infinite;
   }
   
-  .techpack-colorway__header {
-    grid-template-columns: 1fr;
-    gap: var(--techpack-space-lg);
-  }
+  /* Colorway header styles moved to techpack-unified-styles.css */
   
   .techpack-review__item {
     grid-template-columns: 1fr;
@@ -4735,10 +4726,7 @@ body {
     background: var(--techpack-bg-secondary);
   }
   
-  .techpack-colorway__header {
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
+  /* Colorway header mobile styles moved to techpack-unified-styles.css */
   
   /* Mobile size grid improvements */
   .techpack-size-grid {
