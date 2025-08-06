@@ -1094,27 +1094,7 @@ body {
   box-shadow: var(--techpack-shadow);
 }
 
-.techpack-colorway__remove {
-  background: var(--techpack-bg-secondary);
-  border: 1px solid var(--techpack-border);
-  color: var(--techpack-text-secondary);
-  cursor: pointer;
-  padding: var(--techpack-space-sm);
-  border-radius: var(--techpack-radius);
-  transition: var(--techpack-transition);
-  font-size: 0.875rem;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.techpack-colorway__remove:hover {
-  background: var(--techpack-error);
-  color: var(--techpack-text-light);
-  border-color: var(--techpack-error);
-}
+/* Colorway remove button styles moved to techpack-unified-styles.css */
 
 /* Premium Size Grid - FINAL WORKING VERSION */
 .techpack-size-grid {
@@ -3509,8 +3489,7 @@ body {
     font-size: 0.95rem;
   }
   
-  /* Fix X button positioning on mobile */
-  .techpack-colorway__remove,
+  /* Keep only garment remove button styles - colorway now uses unified styles */
   .techpack-garment__remove {
     position: absolute;
     top: 8px;
@@ -3528,23 +3507,15 @@ body {
     transition: var(--techpack-transition);
   }
   
-  .techpack-colorway__remove:hover,
   .techpack-garment__remove:hover {
     background: rgba(255, 255, 255, 1);
     border-color: var(--techpack-error);
     color: var(--techpack-error);
   }
   
-  .techpack-colorway__remove svg,
   .techpack-garment__remove svg {
     width: 16px;
     height: 16px;
-  }
-  
-  /* Fix colorway header positioning */
-  .techpack-colorway__header {
-    position: relative;
-    padding-right: 40px; /* Space for X button */
   }
   
   .techpack-garment__header {
