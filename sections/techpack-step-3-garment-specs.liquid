@@ -190,65 +190,37 @@ Tech-Pack Step 3: Garment Specifications Section
 <template id="colorway-template">
   <div class="techpack-colorway" data-colorway-id="">
     <div class="techpack-colorway__header">
-      <h4 class="techpack-colorway__title">COLORWAY</h4>
+      <div class="techpack-colorway__color">
+        <label class="techpack-form__label">Color</label>
+        <div class="techpack-color-picker">
+          <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
+          <div class="techpack-color-picker__preview"></div>
+        </div>
+      </div>
+      <div class="techpack-colorway__pantone">
+        <label class="techpack-form__label">
+          PANTONE Color Options <span class="techpack-form__required">*</span>
+          <span class="techpack-form__help-text">Select at least one Pantone color that matches your selection</span>
+        </label>
+        <div class="techpack-pantone-buttons" style="display: none;">
+          <div class="techpack-pantone-button-group">
+            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
+              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+            </button>
+            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
+              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+            </button>
+          </div>
+        </div>
+        <div class="techpack-pantone-validation-message" style="display: none;"></div>
+      </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
         <svg width="16" height="16" viewBox="0 0 16 16">
           <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
         </svg>
       </button>
-    </div>
-
-    <div class="techpack-colorway__content">
-      <!-- Top row: Color Family -->
-      <div class="techpack-colorway__row">
-        <select class="techpack-form__select techpack-colorway-family" name="colorFamily">
-          <option value="">Choose Color Family</option>
-          <option value="Red" data-color="#DC2626">Red</option>
-          <option value="Blue" data-color="#2563EB">Blue</option>
-          <option value="Green" data-color="#16A34A">Green</option>
-          <option value="Yellow" data-color="#FACC15">Yellow</option>
-          <option value="Orange" data-color="#EA580C">Orange</option>
-          <option value="Purple" data-color="#9333EA">Purple</option>
-          <option value="Pink" data-color="#EC4899">Pink</option>
-          <option value="Brown" data-color="#92400E">Brown</option>
-          <option value="Gray" data-color="#6B7280">Gray</option>
-          <option value="Black" data-color="#000000">Black</option>
-          <option value="White" data-color="#FFFFFF">White</option>
-        </select>
-      </div>
-
-      <!-- Or divider -->
-      <div class="techpack-colorway__divider">
-        <span class="techpack-colorway__divider-text">or</span>
-      </div>
-
-      <!-- Custom color name -->
-      <div class="techpack-colorway__row">
-        <input type="text" class="techpack-form__input techpack-colorway__custom-input" name="customColorName" placeholder="Custom color name">
-      </div>
-
-      <!-- Bottom row: PANTONE and IN TECH PACK -->
-      <div class="techpack-colorway__bottom-row">
-        <div class="techpack-colorway__pantone-group">
-          <label class="techpack-colorway__small-label">PANTONE TPX (OPTIONAL)</label>
-          <input type="text" class="techpack-form__input techpack-colorway__pantone-input" name="pantoneCode" placeholder="e.g., PANTONE 18-1664 TPX">
-        </div>
-        <div class="techpack-colorway__tech-pack-group">
-          <label class="techpack-colorway__small-label">IN TECH PACK</label>
-          <button type="button" class="techpack-colorway__remove-btn" data-action="remove-from-techpack">
-            <svg width="12" height="12" viewBox="0 0 16 16">
-              <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Sample request -->
-      <div class="techpack-colorway__sample-row">
-        <button type="button" class="techpack-colorway__sample-btn" data-action="request-sample">
-          REQUEST SAMPLE (1 UNIT)
-        </button>
-      </div>
     </div>
 
     <div class="techpack-size-grid">
