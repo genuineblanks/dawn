@@ -872,10 +872,10 @@ MOBILE RESPONSIVE (768px and below)
   /* PERFECT SINGLE LINE COLORWAY LAYOUT */
   
   .techpack-colorway__header-line {
-    display: grid;
-    grid-template-columns: auto auto 1fr auto;
-    gap: 1.5rem;
-    align-items: start;
+    display: grid !important;
+    grid-template-columns: auto auto 1fr auto !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
   }
   
   /* Column 1: Color Picker */
@@ -1015,20 +1015,21 @@ MOBILE RESPONSIVE (768px and below)
   
   /* Column 4: Remove Button (Original Position) */
   .techpack-colorway__remove {
-    background: none;
-    border: none;
-    color: var(--techpack-text-secondary);
+    background: none !important;
+    border: none !important;
+    color: var(--techpack-text-secondary) !important;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 4px;
+    padding: 0.5rem !important;
+    border-radius: 4px !important;
     transition: var(--techpack-transition);
-    min-height: 40px;
-    min-width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: flex-start;
-    margin-top: 1.25rem; /* Align with form elements */
+    min-height: 40px !important;
+    min-width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: flex-start !important;
+    margin-top: 1.25rem !important; /* Align with form elements */
+    position: static !important; /* Override any absolute positioning */
   }
   
   .techpack-colorway__remove:hover {
@@ -1048,8 +1049,8 @@ MOBILE RESPONSIVE (768px and below)
   /* Mobile Responsiveness for Single Line Layout */
   @media (max-width: 768px) {
     .techpack-colorway__header-line {
-      grid-template-columns: 1fr;
-      gap: 1rem;
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
     }
     
     .techpack-colorway__color,
