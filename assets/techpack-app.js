@@ -3829,26 +3829,51 @@
           });
         });
         
-        // Sample request functionality
-        const sampleRequestBtn = colorway.querySelector('.techpack-btn--sample-request');
-        const sampleSizeSelector = colorway.querySelector('.techpack-sample-size-selector-inline');
-        
-        if (sampleRequestBtn && sampleSizeSelector) {
-          sampleRequestBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (sampleSizeSelector.style.display === 'none' || !sampleSizeSelector.style.display) {
+        // Sample request functionality - In-place transformation
+        const sampleToggle = colorway.querySelector('.techpack-sample-toggle');
+        if (sampleToggle) {
+          const sampleRequestBtn = sampleToggle.querySelector('.techpack-btn--sample-request');
+          const sampleSizeSelector = sampleToggle.querySelector('.techpack-form__select--sample-size');
+          
+          if (sampleRequestBtn && sampleSizeSelector) {
+            sampleRequestBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              // Smooth transition to select
+              sampleRequestBtn.style.opacity = '0';
+              sampleRequestBtn.style.pointerEvents = 'none';
               sampleSizeSelector.style.display = 'block';
-              sampleRequestBtn.textContent = 'Cancel Sample Request';
-              sampleRequestBtn.classList.add('active');
-            } else {
-              sampleSizeSelector.style.display = 'none';
-              sampleRequestBtn.textContent = 'Request Sample';
-              sampleRequestBtn.classList.remove('active');
-              // Reset the selector
-              const sizeSelect = sampleSizeSelector.querySelector('.techpack-form__select--sample-size');
-              if (sizeSelect) sizeSelect.value = '';
-            }
-          });
+              sampleSizeSelector.style.opacity = '1';
+              sampleSizeSelector.style.pointerEvents = 'auto';
+              sampleSizeSelector.focus(); // Focus the select for better UX
+            });
+            
+            // Handle dropdown change and blur events
+            sampleSizeSelector.addEventListener('change', (e) => {
+              if (e.target.value === '') {
+                // If no size selected, go back to button
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+            
+            sampleSizeSelector.addEventListener('blur', (e) => {
+              // If no value selected on blur, go back to button
+              if (e.target.value === '') {
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+          }
         }
       }
       
