@@ -3723,6 +3723,8 @@
       // CRITICAL: Don't trigger validation immediately, let it settle first
       setTimeout(() => {
         quantityCalculator.calculateAndUpdateProgress();
+        // FIXED: Update colorway validation messages when colorway count changes
+        quantityCalculator.updateColorwayValidationMessages();
         // Use a longer delay for validation to prevent interference
         setTimeout(() => {
           stepManager.validateStep3();
@@ -3744,7 +3746,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.group');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-pantone-option');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3755,20 +3757,28 @@
           // Auto-select closest 2 Pantone colors for buttons
           const closestPantones = this.findClosestPantoneColors(colorPicker.value, 2);
           
-          // Populate the 2 Pantone buttons
+          // Populate the 2 Pantone buttons with improved visual design
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const colorSpan = button.querySelector('span');
+              const pantoneNameSpan = button.querySelector('.pantone-name');
+              const colorCircle = button.querySelector('.pantone-color-circle');
               
-              if (colorSpan) {
-                // Set the color using CSS custom property
-                button.style.setProperty('--dye-color', pantone.hex);
+              if (pantoneNameSpan && colorCircle) {
+                // Update hex color circle
+                button.style.setProperty('--pantone-hex', pantone.hex);
+                colorCircle.style.backgroundColor = pantone.hex;
+                
                 // Update the text content
-                colorSpan.textContent = pantone.code;
+                pantoneNameSpan.textContent = pantone.code;
+                
                 // Update data attributes
                 button.dataset.pantoneCode = pantone.code;
                 button.dataset.pantoneHex = pantone.hex;
+                
+                // Enable the button
+                button.disabled = false;
+                button.classList.remove('opacity-50');
               }
             }
           });
@@ -3789,19 +3799,38 @@
           this.validatePantoneSelection(colorway);
         });
         
-        // Add click handlers for Pantone buttons
+        // Add click handlers for Pantone buttons (SINGLE SELECTION)
         pantoneButtonElements.forEach((button, index) => {
           button.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Toggle selection
-            const isSelected = button.classList.contains('selected');
+            // Single selection behavior: deselect all others first
+            pantoneButtonElements.forEach(btn => {
+              btn.classList.remove('selected');
+              // Hide radio dot
+              const radioDot = btn.querySelector('.pantone-radio-dot');
+              if (radioDot) {
+                radioDot.style.opacity = '0';
+                radioDot.style.transform = 'translate(-50%, -50%) scale(0)';
+              }
+              // Reset border color
+              btn.style.borderColor = '#e5e7eb';
+              btn.style.backgroundColor = 'white';
+            });
             
-            if (isSelected) {
-              button.classList.remove('selected');
-            } else {
-              button.classList.add('selected');
+            // Select the clicked button
+            button.classList.add('selected');
+            
+            // Show radio dot for selected button
+            const selectedRadioDot = button.querySelector('.pantone-radio-dot');
+            if (selectedRadioDot) {
+              selectedRadioDot.style.opacity = '1';
+              selectedRadioDot.style.transform = 'translate(-50%, -50%) scale(1)';
             }
+            
+            // Update selected button appearance
+            button.style.borderColor = '#3b82f6';
+            button.style.backgroundColor = '#eff6ff';
             
             // Update colorway data
             this.updateColorwayPantoneData(garmentId, colorwayId);
@@ -6907,27 +6936,30 @@
       }));
     }
 
-    // Validate Pantone selection for grid system
+    // Validate Pantone selection for single-select system
     validatePantoneSelection(colorway) {
       const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.group.selected');
-      const hasValidPantones = selectedButtons.length > 0;
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
-      if (hasValidPantones) {
-        pantoneValidationMsg.textContent = `✓ ${selectedButtons.length} PANTONE option(s) selected`;
+      if (hasValidPantone) {
+        const selectedPantone = selectedButtons[0].dataset.pantoneCode;
+        pantoneValidationMsg.textContent = `✓ PANTONE ${selectedPantone} selected`;
         pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
         pantoneValidationMsg.style.display = 'block';
+        pantoneValidationMsg.style.cssText = 'color: #10b981; font-size: 0.875rem; margin-top: 0.5rem; display: block;';
       } else {
-        pantoneValidationMsg.textContent = 'Please select a color to auto-generate PANTONE matches.';
+        pantoneValidationMsg.textContent = 'Please select one PANTONE color option.';
         pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
         pantoneValidationMsg.style.display = 'block';
+        pantoneValidationMsg.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; display: block;';
       }
       
-      return hasValidPantones;
+      return hasValidPantone;
     }
 
     updateColorwayPantoneData(garmentId, colorwayId) {
@@ -6936,18 +6968,19 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.group.selected');
-      const selectedPantones = Array.from(selectedButtons).map(button => ({
-        code: button.dataset.pantoneCode,
-        hex: button.dataset.pantoneHex
-      }));
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedPantone = selectedButtons.length > 0 ? {
+        code: selectedButtons[0].dataset.pantoneCode,
+        hex: selectedButtons[0].dataset.pantoneHex
+      } : null;
       
-      // Update state
+      // Update state - single pantone selection
       const garmentData = state.formData.garments.find(g => g.id === garmentId);
       if (garmentData) {
         const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
         if (colorwayData) {
-          colorwayData.selectedPantones = selectedPantones;
+          colorwayData.selectedPantone = selectedPantone; // Single selection
+          colorwayData.selectedPantones = selectedPantone ? [selectedPantone] : []; // Keep array for compatibility
         }
       }
     }
@@ -6975,6 +7008,9 @@
         
         // Recalculate and validate after DOM is updated
         setTimeout(() => {
+          quantityCalculator.calculateAndUpdateProgress();
+          // FIXED: Update colorway validation messages when colorway count changes
+          quantityCalculator.updateColorwayValidationMessages();
           stepManager.validateStep3();
         }, 200);
       }, 50);
