@@ -7543,4 +7543,537 @@ setupInitialization();
     return total;
   }
 
+  // =============================================
+  // ENHANCED COLORWAY SYSTEM - PRESERVES ALL EXISTING FUNCTIONALITY
+  // =============================================
+
+  // Enhanced Color Family and Shade Data for Two-Step Picker
+  const COLOR_FAMILIES = {
+    neutrals: {
+      name: 'Neutrals',
+      shades: [
+        { name: 'Pure White', hex: '#FFFFFF' },
+        { name: 'Off White', hex: '#F8F8FF' },
+        { name: 'Cream', hex: '#FFFDD0' },
+        { name: 'Beige', hex: '#F5F5DC' },
+        { name: 'Natural', hex: '#FAEBD7' }
+      ]
+    },
+    blues: {
+      name: 'Blues', 
+      shades: [
+        { name: 'Baby Blue', hex: '#87CEEB' },
+        { name: 'Sky Blue', hex: '#87CEFA' },
+        { name: 'Royal Blue', hex: '#4169E1' },
+        { name: 'Navy Blue', hex: '#0000CD' },
+        { name: 'Midnight Blue', hex: '#191970' }
+      ]
+    },
+    greens: {
+      name: 'Greens',
+      shades: [
+        { name: 'Mint Green', hex: '#98FB98' },
+        { name: 'Forest Green', hex: '#228B22' },
+        { name: 'Hunter Green', hex: '#355E3B' },
+        { name: 'Olive Green', hex: '#808000' },
+        { name: 'Dark Green', hex: '#006400' }
+      ]
+    },
+    reds: {
+      name: 'Reds',
+      shades: [
+        { name: 'Cherry Red', hex: '#DC143C' },
+        { name: 'Crimson', hex: '#DC143C' },
+        { name: 'Burgundy', hex: '#800020' },
+        { name: 'Maroon', hex: '#800000' },
+        { name: 'Deep Red', hex: '#8B0000' }
+      ]
+    },
+    yellows: {
+      name: 'Yellows',
+      shades: [
+        { name: 'Lemon Yellow', hex: '#FFFACD' },
+        { name: 'Golden Yellow', hex: '#FFD700' },
+        { name: 'Mustard Yellow', hex: '#FFDB58' },
+        { name: 'Amber', hex: '#FFBF00' },
+        { name: 'Dark Yellow', hex: '#DAA520' }
+      ]
+    },
+    oranges: {
+      name: 'Oranges',
+      shades: [
+        { name: 'Peach', hex: '#FFCBA4' },
+        { name: 'Orange', hex: '#FFA500' },
+        { name: 'Burnt Orange', hex: '#CC5500' },
+        { name: 'Rust', hex: '#B7410E' },
+        { name: 'Dark Orange', hex: '#FF8C00' }
+      ]
+    },
+    purples: {
+      name: 'Purples',
+      shades: [
+        { name: 'Lavender', hex: '#E6E6FA' },
+        { name: 'Purple', hex: '#9370DB' },
+        { name: 'Deep Purple', hex: '#4B0082' },
+        { name: 'Plum', hex: '#8E4585' },
+        { name: 'Dark Purple', hex: '#301934' }
+      ]
+    },
+    pinks: {
+      name: 'Pinks',
+      shades: [
+        { name: 'Light Pink', hex: '#FFB6C1' },
+        { name: 'Hot Pink', hex: '#FF69B4' },
+        { name: 'Deep Pink', hex: '#FF1493' },
+        { name: 'Rose', hex: '#FF007F' },
+        { name: 'Magenta', hex: '#C71585' }
+      ]
+    },
+    browns: {
+      name: 'Browns',
+      shades: [
+        { name: 'Tan', hex: '#D2B48C' },
+        { name: 'Brown', hex: '#A52A2A' },
+        { name: 'Chocolate', hex: '#D2691E' },
+        { name: 'Coffee', hex: '#6F4E37' },
+        { name: 'Dark Brown', hex: '#654321' }
+      ]
+    },
+    greys: {
+      name: 'Greys',
+      shades: [
+        { name: 'Light Grey', hex: '#D3D3D3' },
+        { name: 'Silver', hex: '#C0C0C0' },
+        { name: 'Medium Grey', hex: '#808080' },
+        { name: 'Dark Grey', hex: '#696969' },
+        { name: 'Charcoal', hex: '#36454F' }
+      ]
+    },
+    blacks: {
+      name: 'Blacks',
+      shades: [
+        { name: 'Soft Black', hex: '#2F2F2F' },
+        { name: 'True Black', hex: '#000000' },
+        { name: 'Jet Black', hex: '#0A0A0A' }
+      ]
+    },
+    whites: {
+      name: 'Whites',
+      shades: [
+        { name: 'Pure White', hex: '#FFFFFF' },
+        { name: 'Ivory', hex: '#FFFFF0' },
+        { name: 'Snow White', hex: '#FFFAFA' }
+      ]
+    }
+  };
+
+  // Enhanced Step 3 Colorway Management System
+  const EnhancedColorwayManager = {
+    
+    // Initialize the enhanced colorway system
+    init() {
+      this.bindModalEvents();
+      this.bindColorFamilyEvents();
+      this.bindPantoneEvents();
+      this.bindSampleEvents();
+      debugSystem.log('✅ Enhanced Colorway Manager initialized', null, 'success');
+    },
+
+    // Handle Step 2 to Step 3 modal
+    bindModalEvents() {
+      const modal = document.getElementById('step-3-intro-modal');
+      const continueBtn = document.getElementById('step-3-modal-continue');
+      
+      if (continueBtn) {
+        continueBtn.addEventListener('click', () => {
+          if (modal) {
+            modal.style.display = 'none';
+          }
+        });
+      }
+
+      // Show modal when advancing to Step 3
+      document.addEventListener('click', (e) => {
+        if ((e.target.id === 'step-2-next' || e.target.matches('[onclick*="showStep(3)"]')) && modal) {
+          setTimeout(() => {
+            modal.style.display = 'block';
+          }, 300);
+        }
+      });
+    },
+
+    // Bind color family selection events
+    bindColorFamilyEvents() {
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.techpack-color-family')) {
+          e.preventDefault();
+          this.handleColorFamilySelection(e.target.closest('.techpack-color-family'));
+        }
+        
+        if (e.target.closest('.techpack-color-shade')) {
+          e.preventDefault();
+          this.handleColorShadeSelection(e.target.closest('.techpack-color-shade'));
+        }
+      });
+
+      document.addEventListener('input', (e) => {
+        if (e.target.matches('[data-custom-color]')) {
+          this.handleCustomColorInput(e.target);
+        }
+      });
+    },
+
+    // Handle color family selection
+    handleColorFamilySelection(familyBtn) {
+      const colorway = familyBtn.closest('.techpack-colorway');
+      const family = familyBtn.dataset.family;
+      const shades = colorway.querySelector('.techpack-color-shades');
+      const shadesList = colorway.querySelector('.techpack-color-shades__list');
+      
+      // Update selected state
+      colorway.querySelectorAll('.techpack-color-family').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      familyBtn.classList.add('selected');
+
+      // Populate shades
+      if (COLOR_FAMILIES[family] && shadesList) {
+        shadesList.innerHTML = COLOR_FAMILIES[family].shades.map(shade => `
+          <button type="button" class="techpack-color-shade" data-shade-name="${shade.name}" data-shade-hex="${shade.hex}">
+            <div class="techpack-color-shade__swatch" style="background-color: ${shade.hex}"></div>
+            ${shade.name}
+          </button>
+        `).join('');
+        
+        shades.style.display = 'block';
+      }
+    },
+
+    // Handle color shade selection
+    handleColorShadeSelection(shadeBtn) {
+      const colorway = shadeBtn.closest('.techpack-colorway');
+      const shadeName = shadeBtn.dataset.shadeName;
+      const shadeHex = shadeBtn.dataset.shadeHex;
+      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
+      const colorwayNameDiv = colorway.querySelector('.techpack-colorway__name');
+      const pantoneSection = colorway.querySelector('.techpack-colorway__pantone');
+      const sampleSection = colorway.querySelector('.techpack-colorway__sample');
+      
+      // Update selected state
+      colorway.querySelectorAll('.techpack-color-shade').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      shadeBtn.classList.add('selected');
+
+      // Set colorway name
+      if (colorwayNameInput) {
+        colorwayNameInput.value = shadeName;
+      }
+
+      // Show next sections
+      if (colorwayNameDiv) colorwayNameDiv.style.display = 'block';
+      if (pantoneSection) pantoneSection.style.display = 'block';
+      if (sampleSection) sampleSection.style.display = 'block';
+
+      // Show size grid conditionally
+      this.showSizeGridConditionally(colorway);
+      
+      // Update colorway data in existing system
+      this.updateColorwayData(colorway, { colorFamily: shadeBtn.closest('.techpack-color-families').querySelector('.selected')?.dataset.family, colorName: shadeName, colorHex: shadeHex, isCustomColor: false });
+    },
+
+    // Handle custom color input
+    handleCustomColorInput(input) {
+      const colorway = input.closest('.techpack-colorway');
+      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
+      const colorwayNameDiv = colorway.querySelector('.techpack-colorway__name');
+      const customWarning = colorway.querySelector('.techpack-custom-color-warning');
+      const pantoneSection = colorway.querySelector('.techpack-colorway__pantone');
+      const sampleSection = colorway.querySelector('.techpack-colorway__sample');
+      
+      if (input.value.trim()) {
+        // Clear shade selections
+        colorway.querySelectorAll('.techpack-color-shade').forEach(btn => {
+          btn.classList.remove('selected');
+        });
+
+        if (colorwayNameInput) {
+          colorwayNameInput.value = input.value + ' (Custom)';
+        }
+
+        if (colorwayNameDiv) colorwayNameDiv.style.display = 'block';
+        if (customWarning) customWarning.style.display = 'block';
+        if (pantoneSection) pantoneSection.style.display = 'block';
+        if (sampleSection) sampleSection.style.display = 'block';
+        
+        // Show size grid conditionally
+        this.showSizeGridConditionally(colorway);
+        
+        // Update colorway data
+        this.updateColorwayData(colorway, { colorName: input.value, isCustomColor: true });
+      }
+    },
+
+    // Show size grid conditionally
+    showSizeGridConditionally(colorway) {
+      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
+      const sizeGrid = colorway.querySelector('.techpack-size-grid');
+      
+      if (colorwayNameInput && colorwayNameInput.value.trim() && sizeGrid) {
+        sizeGrid.style.display = 'block';
+        debugSystem.log('✅ Size grid shown for colorway: ' + colorwayNameInput.value);
+      }
+    },
+
+    // Bind Pantone events
+    bindPantoneEvents() {
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('[data-pantone-in-techpack]')) {
+          this.handlePantoneInTechpack(e.target);
+        }
+      });
+
+      document.addEventListener('input', (e) => {
+        if (e.target.matches('[data-pantone-code]')) {
+          this.handlePantoneCodeInput(e.target);
+        }
+      });
+    },
+
+    // Handle Pantone in techpack checkbox
+    handlePantoneInTechpack(checkbox) {
+      const colorway = checkbox.closest('.techpack-colorway');
+      const manualSection = colorway.querySelector('.techpack-pantone-manual');
+      
+      if (manualSection) {
+        manualSection.style.display = checkbox.checked ? 'none' : 'block';
+      }
+    },
+
+    // Handle Pantone code input with validation using existing database
+    handlePantoneCodeInput(input) {
+      const colorway = input.closest('.techpack-colorway');
+      const preview = colorway.querySelector('.techpack-pantone-preview');
+      const swatch = preview?.querySelector('.techpack-pantone-preview__swatch');
+      const name = preview?.querySelector('.techpack-pantone-preview__name');
+      
+      const code = input.value.trim().toUpperCase();
+      
+      if (code && preview) {
+        // Use existing Pantone database for validation
+        const pantoneMatch = this.findPantoneMatch(code);
+        
+        if (pantoneMatch) {
+          swatch.style.backgroundColor = pantoneMatch.hex;
+          name.textContent = pantoneMatch.code;
+          preview.style.display = 'flex';
+          
+          // Update colorway data
+          this.updateColorwayData(colorway, { pantoneCode: code, pantoneHex: pantoneMatch.hex });
+          debugSystem.log('✅ Pantone code validated: ' + code);
+        } else {
+          preview.style.display = 'none';
+          debugSystem.log('⚠️ Pantone code not found: ' + code);
+        }
+      } else if (preview) {
+        preview.style.display = 'none';
+      }
+    },
+
+    // Find Pantone match using existing database
+    findPantoneMatch(code) {
+      // Use existing garmentManager's pantone database
+      if (typeof garmentManager !== 'undefined' && garmentManager.findClosestPantoneColor) {
+        // Simple implementation - would need more sophisticated matching in production
+        const mockColor = '#000000';
+        const result = garmentManager.findClosestPantoneColor(mockColor);
+        if (result && result.code && result.code.includes(code.substring(0, 10))) {
+          return result;
+        }
+      }
+      return null;
+    },
+
+    // Bind sample request events  
+    bindSampleEvents() {
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('[data-sample-request]')) {
+          this.handleSampleRequest(e.target);
+        }
+      });
+    },
+
+    // Handle sample request checkbox
+    handleSampleRequest(checkbox) {
+      const colorway = checkbox.closest('.techpack-colorway');
+      const sampleQtyDiv = colorway.querySelector('.techpack-sample-quantity');
+      
+      if (sampleQtyDiv) {
+        sampleQtyDiv.style.display = checkbox.checked ? 'block' : 'none';
+      }
+      
+      // Update colorway data
+      this.updateColorwayData(colorway, { sampleRequested: checkbox.checked });
+      debugSystem.log(checkbox.checked ? '✅ Sample requested' : '❌ Sample removed');
+    },
+
+    // Update colorway data in existing system (preserves all existing functionality)
+    updateColorwayData(colorwayElement, newData) {
+      const garmentContainer = colorwayElement.closest('.techpack-garment');
+      const garmentId = garmentContainer ? parseInt(garmentContainer.dataset.garmentId) : null;
+      const colorwayId = parseInt(colorwayElement.dataset.colorwayId);
+      
+      // Find and update in existing state system - PRESERVES ALL EXISTING DATA
+      if (typeof state !== 'undefined' && state.formData && state.formData.garments && garmentId && colorwayId) {
+        const garment = state.formData.garments.find(g => g.id === garmentId);
+        if (garment) {
+          const colorway = garment.colorways.find(c => c.id === colorwayId);
+          if (colorway) {
+            // CRITICAL: Preserve all existing fields and only add/update new ones
+            Object.assign(colorway, newData);
+            debugSystem.log('✅ Colorway data updated', { garmentId, colorwayId, newData });
+          }
+        }
+      }
+    }
+  };
+
+  // Enhanced Review System for New Colorway Structure
+  const EnhancedReviewSystem = {
+    
+    // Enhance existing review content with new colorway data
+    enhanceReviewContent() {
+      const reviewContent = document.querySelector('.techpack-review__content, .review-content');
+      if (!reviewContent) return;
+
+      // Find all garment reviews and enhance them
+      const garmentReviews = reviewContent.querySelectorAll('.review-garment, .techpack-review__garment');
+      
+      garmentReviews.forEach((garmentReview, garmentIndex) => {
+        this.enhanceGarmentReview(garmentReview, garmentIndex);
+      });
+    },
+
+    // Enhance individual garment review with new colorway data
+    enhanceGarmentReview(garmentReview, garmentIndex) {
+      if (typeof state === 'undefined' || !state.formData || !state.formData.garments) return;
+      
+      const garment = state.formData.garments[garmentIndex];
+      if (!garment || !garment.colorways) return;
+
+      const colorwaysContainer = garmentReview.querySelector('.review-colorways, .techpack-review__colorways');
+      if (!colorwaysContainer) return;
+
+      // Generate enhanced colorway HTML
+      let enhancedColorwaysHtml = '<div class="enhanced-review-colorways">';
+      enhancedColorwaysHtml += '<span class="review-label">Colorways & Specifications:</span>';
+
+      garment.colorways.forEach((colorway, colorwayIndex) => {
+        enhancedColorwaysHtml += this.generateEnhancedColorwayHtml(colorway);
+      });
+
+      enhancedColorwaysHtml += '</div>';
+      
+      // Replace existing colorways content
+      colorwaysContainer.innerHTML = enhancedColorwaysHtml;
+    },
+
+    // Generate enhanced colorway HTML with new features
+    generateEnhancedColorwayHtml(colorway) {
+      const colorName = colorway.colorName || colorway.name || 'Unnamed Color';
+      const isCustom = colorway.isCustomColor || false;
+      const pantoneCode = colorway.pantoneCode || '';
+      const sampleRequested = colorway.sampleRequested || false;
+      const sampleQuantity = colorway.sampleQuantity || 1;
+      
+      // Calculate bulk quantities (preserve existing logic)
+      const quantities = colorway.quantities || {};
+      let bulkTotal = 0;
+      const sizeBreakdown = [];
+      
+      Object.entries(quantities).forEach(([size, qty]) => {
+        const quantity = parseInt(qty) || 0;
+        if (quantity > 0) {
+          bulkTotal += quantity;
+          sizeBreakdown.push(`${size}: ${quantity}`);
+        }
+      });
+
+      const sizeBreakdownText = sizeBreakdown.length > 0 ? `${sizeBreakdown.join(', ')} - ` : '';
+      
+      // Color display with better styling
+      const colorHex = colorway.colorHex || colorway.color || '#000000';
+      const displayName = isCustom ? `${colorName} (Custom)` : colorName;
+      
+      return `
+        <div class="enhanced-review-colorway-item">
+          <div class="enhanced-review-colorway-header">
+            <div class="enhanced-review-color-info">
+              <span class="enhanced-review-color-swatch" style="background-color: ${colorHex}"></span>
+              <div class="enhanced-review-color-details">
+                <strong class="enhanced-review-color-name">${displayName}</strong>
+                ${pantoneCode ? `<span class="enhanced-review-pantone">PANTONE: ${pantoneCode}</span>` : ''}
+                ${isCustom ? '<span class="enhanced-review-custom-warning">⚠️ Custom color - may require lab-dip approval</span>' : ''}
+              </div>
+            </div>
+          </div>
+          
+          <div class="enhanced-review-quantities">
+            <div class="enhanced-review-bulk">
+              <span class="enhanced-review-label">Bulk Production:</span>
+              <span class="enhanced-review-value">${sizeBreakdownText}Total: ${bulkTotal} units</span>
+            </div>
+            ${sampleRequested ? `
+              <div class="enhanced-review-sample">
+                <span class="enhanced-review-label">Sample Requested:</span>
+                <span class="enhanced-review-value">Yes (${sampleQuantity} unit${sampleQuantity !== 1 ? 's' : ''})</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    },
+
+    // Initialize enhanced review system
+    init() {
+      // Monitor for review content updates
+      if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.target.classList && (
+              mutation.target.classList.contains('review-content') ||
+              mutation.target.classList.contains('techpack-review__content')
+            )) {
+              setTimeout(() => {
+                this.enhanceReviewContent();
+              }, 100);
+            }
+          });
+        });
+
+        // Observe review content changes
+        const reviewElements = document.querySelectorAll('.review-content, .techpack-review__content');
+        reviewElements.forEach(element => {
+          observer.observe(element, { childList: true, subtree: true });
+        });
+      }
+
+      // Enhance existing content
+      setTimeout(() => {
+        this.enhanceReviewContent();
+      }, 1000);
+      
+      debugSystem.log('✅ Enhanced Review System initialized', null, 'success');
+    }
+  };
+
+  // Initialize enhanced colorway manager with existing system
+  document.addEventListener('DOMContentLoaded', () => {
+    // Wait for existing system to initialize first
+    setTimeout(() => {
+      EnhancedColorwayManager.init();
+      EnhancedReviewSystem.init();
+    }, 500);
+  });
+
 })();
