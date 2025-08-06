@@ -3746,7 +3746,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3761,8 +3761,8 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
-              const colorCircle = button.querySelector('.techpack-pantone-circle');
+              const pantoneNameSpan = button.querySelector('.techpack-pantone-name');
+              const colorCircle = button.querySelector('.techpack-pantone-color-circle');
               
               if (pantoneNameSpan && colorCircle) {
                 // Update hex color circle
@@ -3807,13 +3807,23 @@
             // Single selection behavior: deselect all others first
             pantoneButtonElements.forEach(btn => {
               btn.classList.remove('selected');
-              // Radio dot styling handled by CSS classes
+              // Hide radio dot
+              const radioDot = btn.querySelector('.techpack-pantone-radio-dot');
+              if (radioDot) {
+                radioDot.style.opacity = '0';
+                radioDot.style.scale = '0';
+              }
             });
             
             // Select the clicked button
             button.classList.add('selected');
             
-            // Radio dot styling handled by CSS classes
+            // Show radio dot for selected button
+            const selectedRadioDot = button.querySelector('.techpack-pantone-radio-dot');
+            if (selectedRadioDot) {
+              selectedRadioDot.style.opacity = '1';
+              selectedRadioDot.style.scale = '1';
+            }
             
             // Show the size grid now that pantone is selected
             const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
@@ -3829,51 +3839,26 @@
           });
         });
         
-        // Sample request functionality - In-place transformation
-        const sampleToggle = colorway.querySelector('.techpack-sample-toggle');
-        if (sampleToggle) {
-          const sampleRequestBtn = sampleToggle.querySelector('.techpack-btn--sample-request');
-          const sampleSizeSelector = sampleToggle.querySelector('.techpack-form__select--sample-size');
-          
-          if (sampleRequestBtn && sampleSizeSelector) {
-            sampleRequestBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              // Smooth transition to select
-              sampleRequestBtn.style.opacity = '0';
-              sampleRequestBtn.style.pointerEvents = 'none';
+        // Sample request functionality
+        const sampleRequestBtn = colorway.querySelector('.techpack-btn--sample-request');
+        const sampleSizeSelector = colorway.querySelector('.techpack-sample-size-selector');
+        
+        if (sampleRequestBtn && sampleSizeSelector) {
+          sampleRequestBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (sampleSizeSelector.style.display === 'none' || !sampleSizeSelector.style.display) {
               sampleSizeSelector.style.display = 'block';
-              sampleSizeSelector.style.opacity = '1';
-              sampleSizeSelector.style.pointerEvents = 'auto';
-              sampleSizeSelector.focus(); // Focus the select for better UX
-            });
-            
-            // Handle dropdown change and blur events
-            sampleSizeSelector.addEventListener('change', (e) => {
-              if (e.target.value === '') {
-                // If no size selected, go back to button
-                sampleRequestBtn.style.opacity = '1';
-                sampleRequestBtn.style.pointerEvents = 'auto';
-                sampleSizeSelector.style.opacity = '0';
-                sampleSizeSelector.style.pointerEvents = 'none';
-                setTimeout(() => {
-                  sampleSizeSelector.style.display = 'none';
-                }, 200);
-              }
-            });
-            
-            sampleSizeSelector.addEventListener('blur', (e) => {
-              // If no value selected on blur, go back to button
-              if (e.target.value === '') {
-                sampleRequestBtn.style.opacity = '1';
-                sampleRequestBtn.style.pointerEvents = 'auto';
-                sampleSizeSelector.style.opacity = '0';
-                sampleSizeSelector.style.pointerEvents = 'none';
-                setTimeout(() => {
-                  sampleSizeSelector.style.display = 'none';
-                }, 200);
-              }
-            });
-          }
+              sampleRequestBtn.textContent = 'Cancel Sample Request';
+              sampleRequestBtn.classList.add('active');
+            } else {
+              sampleSizeSelector.style.display = 'none';
+              sampleRequestBtn.textContent = 'Request Sample';
+              sampleRequestBtn.classList.remove('active');
+              // Reset the selector
+              const sizeSelect = sampleSizeSelector.querySelector('.techpack-form__select--sample-size');
+              if (sizeSelect) sizeSelect.value = '';
+            }
+          });
         }
       }
       
@@ -6979,7 +6964,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone.selected');
       const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
       if (hasValidPantone) {
@@ -7004,7 +6989,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone.selected');
       const selectedPantone = selectedButtons.length > 0 ? {
         code: selectedButtons[0].dataset.pantoneCode,
         hex: selectedButtons[0].dataset.pantoneHex
