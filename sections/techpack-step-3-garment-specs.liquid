@@ -5,30 +5,6 @@ Tech-Pack Step 3: Garment Specifications Section
 {{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'techpack-app.js' | asset_url }}" defer="defer"></script>
 
-<!-- Step 3 Introduction Modal -->
-<div id="step-3-intro-modal" class="techpack-modal" style="display: none;">
-  <div class="techpack-modal__overlay">
-    <div class="techpack-modal__content">
-      <div class="techpack-modal__header">
-        <h3 class="techpack-modal__title">Step 3: Order Specifications</h3>
-      </div>
-      <div class="techpack-modal__body">
-        <p class="techpack-modal__text">
-          This step defines your production order. The tech pack is a design reference only. Here you specify garment types, colorways, sizes and quantities. Any colorway or size not entered here will not be manufactured. Please review your tech pack and enter every colorway and quantity you intend to order.
-        </p>
-      </div>
-      <div class="techpack-modal__footer">
-        <button type="button" class="techpack-btn techpack-btn--primary" id="step-3-modal-continue">
-          Continue to Order Specifications
-          <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
-            <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <section id="techpack-step-3" class="techpack-step" data-step="3" style="display: none;">
   <div class="techpack-container">
     <div class="techpack-progress">
