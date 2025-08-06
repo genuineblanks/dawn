@@ -199,59 +199,53 @@ Tech-Pack Step 3: Garment Specifications Section
     </div>
 
     <div class="techpack-colorway__content">
-      <div class="techpack-form__row techpack-form__row--two-cols">
-        <div class="techpack-form__group techpack-form__group--with-preview">
-          <select class="techpack-form__select techpack-colorway-family" name="colorFamily">
-            <option value="">Choose Color Family</option>
-            <option value="Reds">Reds</option>
-            <option value="Blues">Blues</option>
-            <option value="Greens">Greens</option>
-            <option value="Yellows">Yellows</option>
-            <option value="Oranges">Oranges</option>
-            <option value="Purples">Purples</option>
-            <option value="Pinks">Pinks</option>
-            <option value="Browns">Browns</option>
-            <option value="Grays">Grays</option>
-            <option value="Blacks">Blacks</option>
-            <option value="Whites">Whites</option>
-          </select>
-          <div class="techpack-color-preview" style="display: none;"></div>
-        </div>
-        <div class="techpack-form__group techpack-form__group--with-preview">
-          <select class="techpack-form__select techpack-colorway-specific" name="specificColor" disabled>
-            <option value="">First choose a family</option>
-          </select>
-          <div class="techpack-color-preview" style="display: none;"></div>
-        </div>
+      <!-- Top row: Color Family -->
+      <div class="techpack-colorway__row">
+        <select class="techpack-form__select techpack-colorway-family" name="colorFamily">
+          <option value="">Choose Color Family</option>
+          <option value="Red" data-color="#DC2626">Red</option>
+          <option value="Blue" data-color="#2563EB">Blue</option>
+          <option value="Green" data-color="#16A34A">Green</option>
+          <option value="Yellow" data-color="#FACC15">Yellow</option>
+          <option value="Orange" data-color="#EA580C">Orange</option>
+          <option value="Purple" data-color="#9333EA">Purple</option>
+          <option value="Pink" data-color="#EC4899">Pink</option>
+          <option value="Brown" data-color="#92400E">Brown</option>
+          <option value="Gray" data-color="#6B7280">Gray</option>
+          <option value="Black" data-color="#000000">Black</option>
+          <option value="White" data-color="#FFFFFF">White</option>
+        </select>
       </div>
 
-      <div class="techpack-form__divider">
-        <span class="techpack-form__divider-text">or</span>
+      <!-- Or divider -->
+      <div class="techpack-colorway__divider">
+        <span class="techpack-colorway__divider-text">or</span>
       </div>
 
-      <div class="techpack-form__group">
-        <input type="text" class="techpack-form__input" name="customColorName" placeholder="Custom color name">
+      <!-- Custom color name -->
+      <div class="techpack-colorway__row">
+        <input type="text" class="techpack-form__input techpack-colorway__custom-input" name="customColorName" placeholder="Custom color name">
       </div>
 
-      <div class="techpack-form__row techpack-form__row--two-cols">
-        <div class="techpack-form__group">
-          <label class="techpack-form__label">PANTONE TPX (OPTIONAL)</label>
-          <input type="text" class="techpack-form__input" name="pantoneCode" placeholder="e.g., PANTONE 18-1664 TPX">
+      <!-- Bottom row: PANTONE and IN TECH PACK -->
+      <div class="techpack-colorway__bottom-row">
+        <div class="techpack-colorway__pantone-group">
+          <label class="techpack-colorway__small-label">PANTONE TPX (OPTIONAL)</label>
+          <input type="text" class="techpack-form__input techpack-colorway__pantone-input" name="pantoneCode" placeholder="e.g., PANTONE 18-1664 TPX">
         </div>
-        <div class="techpack-form__group">
-          <div class="techpack-sample-request">
-            <label class="techpack-form__label">IN TECH PACK</label>
-            <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary">
-              <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </button>
-          </div>
+        <div class="techpack-colorway__tech-pack-group">
+          <label class="techpack-colorway__small-label">IN TECH PACK</label>
+          <button type="button" class="techpack-colorway__remove-btn" data-action="remove-from-techpack">
+            <svg width="12" height="12" viewBox="0 0 16 16">
+              <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div class="techpack-sample-section">
-        <button type="button" class="techpack-btn techpack-btn--outline techpack-sample-btn">
+      <!-- Sample request -->
+      <div class="techpack-colorway__sample-row">
+        <button type="button" class="techpack-colorway__sample-btn" data-action="request-sample">
           REQUEST SAMPLE (1 UNIT)
         </button>
       </div>
