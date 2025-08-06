@@ -3,7 +3,6 @@ Tech-Pack Step 3: Garment Specifications Section
 {% endcomment %}
 
 {{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'techpack-app.js' | asset_url }}" defer="defer"></script>
 
 <section id="techpack-step-3" class="techpack-step" data-step="3" style="display: none;">
   <div class="techpack-container">
@@ -191,68 +190,31 @@ Tech-Pack Step 3: Garment Specifications Section
 <template id="colorway-template">
   <div class="techpack-colorway" data-colorway-id="">
     <div class="techpack-colorway__header">
-      <!-- Compact Color Picker System -->
       <div class="techpack-colorway__color">
-        <label class="techpack-form__label">Colorway</label>
-        <div class="techpack-colorway__inputs">
-          <!-- Compact Two-Step Dropdowns -->
-          <div class="techpack-color-dropdowns">
-            <select class="techpack-form__select techpack-color-family-select" data-color-family-select>
-              <option value="">Choose Color Family</option>
-              <option value="neutrals">Neutrals</option>
-              <option value="blues">Blues</option>
-              <option value="greens">Greens</option>
-              <option value="reds">Reds</option>
-              <option value="yellows">Yellows</option>
-              <option value="oranges">Oranges</option>
-              <option value="purples">Purples</option>
-              <option value="pinks">Pinks</option>
-              <option value="browns">Browns</option>
-              <option value="greys">Greys</option>
-              <option value="blacks">Blacks</option>
-              <option value="whites">Whites</option>
-            </select>
-            
-            <select class="techpack-form__select techpack-color-shade-select" data-color-shade-select disabled>
-              <option value="">First choose a family</option>
-            </select>
-          </div>
-          
-          <!-- Custom Color Option -->
-          <div class="techpack-custom-color">
-            <span class="techpack-custom-divider">or</span>
-            <input type="text" class="techpack-form__input techpack-form__input--compact" placeholder="Custom color name" data-custom-color>
-          </div>
+        <label class="techpack-form__label">Color</label>
+        <div class="techpack-color-picker">
+          <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
+          <div class="techpack-color-picker__preview"></div>
         </div>
       </div>
-      
-      <!-- Enhanced Options Row -->
-      <div class="techpack-colorway__options">
-        <!-- Pantone Code (Inline) -->
-        <div class="techpack-colorway__pantone">
-          <label class="techpack-form__label">Pantone TPX (Optional)</label>
-          <div class="techpack-pantone-controls">
-            <input type="text" class="techpack-form__input techpack-form__input--compact" placeholder="e.g., PANTONE 19-4052 TPX" data-pantone-code>
-            <label class="techpack-form__checkbox techpack-form__checkbox--inline">
-              <input type="checkbox" data-pantone-in-techpack>
-              <span class="techpack-form__checkbox-mark"></span>
-              In tech pack
-            </label>
-          </div>
-          <div class="techpack-pantone-preview" style="display: none;">
-            <div class="techpack-pantone-preview__swatch"></div>
-            <span class="techpack-pantone-preview__name"></span>
+      <div class="techpack-colorway__pantone">
+        <label class="techpack-form__label">
+          PANTONE Color Options <span class="techpack-form__required">*</span>
+          <span class="techpack-form__help-text">Select at least one Pantone color that matches your selection</span>
+        </label>
+        <div class="techpack-pantone-buttons" style="display: none;">
+          <div class="techpack-pantone-button-group">
+            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
+              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+            </button>
+            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
+              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+            </button>
           </div>
         </div>
-        
-        <!-- Sample Request (Inline) -->
-        <div class="techpack-colorway__sample">
-          <label class="techpack-form__checkbox">
-            <input type="checkbox" data-sample-request>
-            <span class="techpack-form__checkbox-mark"></span>
-            Request sample (1 unit)
-          </label>
-        </div>
+        <div class="techpack-pantone-validation-message" style="display: none;"></div>
       </div>
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
         <svg width="16" height="16" viewBox="0 0 16 16">
@@ -261,7 +223,7 @@ Tech-Pack Step 3: Garment Specifications Section
       </button>
     </div>
 
-    <div class="techpack-size-grid" style="display: none;">
+    <div class="techpack-size-grid">
       <div class="techpack-size-grid__header">
         <div class="techpack-size-grid__label">Size</div>
         <div class="techpack-size-grid__label">XXS</div>
