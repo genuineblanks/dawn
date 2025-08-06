@@ -189,57 +189,49 @@ Tech-Pack Step 3: Garment Specifications Section
 <!-- Colorway Template -->
 <template id="colorway-template">
   <div class="techpack-colorway" data-colorway-id="">
-    <!-- Perfect Single Line Layout: Color → Sample → Pantone → X -->
-    <div class="techpack-colorway__header-line">
-      <!-- Column 1: Color Picker -->
+    <div class="techpack-colorway__header">
       <div class="techpack-colorway__color">
         <label class="techpack-form__label">Color</label>
-        <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
-      </div>
-      
-      <!-- Column 2: Sample Request (Transform in place) -->
-      <div class="techpack-colorway__sample">
-        <label class="techpack-form__label">Sample</label>
-        <div class="techpack-sample-toggle">
-          <button type="button" class="techpack-btn techpack-btn--secondary techpack-btn--sample-request">
-            Request Sample
-          </button>
-          <select class="techpack-form__select techpack-form__select--sample-size" style="display: none;">
-            <option value="">Select size...</option>
-            <option value="xxs">XXS</option>
-            <option value="xs">XS</option>
-            <option value="s">S</option>
-            <option value="m">M</option>
-            <option value="l">L</option>
-            <option value="xl">XL</option>
-            <option value="xxl">XXL</option>
-          </select>
+        <div class="techpack-color-picker">
+          <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
+          <div class="techpack-color-picker__preview"></div>
         </div>
       </div>
-      
-      <!-- Column 3: Pantone Options (Takes remaining space) -->
       <div class="techpack-colorway__pantone">
         <label class="techpack-form__label">
-          PANTONE Options <span class="techpack-form__required">*</span>
+          PANTONE Color Options <span class="techpack-form__required">*</span>
+          <span class="techpack-form__help-text">Select one Pantone color that matches your selection</span>
         </label>
         <div class="techpack-pantone-buttons" style="display: none;">
-          <div class="techpack-pantone-grid">
-            <button type="button" class="techpack-btn techpack-btn--pantone-compact" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
-              <div class="techpack-pantone-circle" style="background-color: var(--pantone-hex)"></div>
-              <span class="techpack-pantone-text">Select color</span>
-              <div class="techpack-pantone-radio"></div>
+          <div class="techpack-pantone-button-group" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <button type="button" class="techpack-pantone-option group flex items-center gap-3 p-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-left w-full" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="flex items-center gap-3">
+                <!-- Radio button indicator -->
+                <div class="pantone-radio-indicator w-4 h-4 rounded-full border-2 border-gray-300 group-hover:border-blue-400 transition-colors relative">
+                  <div class="pantone-radio-dot w-2 h-2 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200"></div>
+                </div>
+                <!-- Hex color circle -->
+                <div class="pantone-color-circle w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm" style="background-color: var(--pantone-hex)"></div>
+                <!-- Pantone name -->
+                <span class="pantone-name text-sm font-medium text-gray-800 group-disabled:opacity-50">Select color first</span>
+              </div>
             </button>
-            <button type="button" class="techpack-btn techpack-btn--pantone-compact" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
-              <div class="techpack-pantone-circle" style="background-color: var(--pantone-hex)"></div>
-              <span class="techpack-pantone-text">Select color</span>
-              <div class="techpack-pantone-radio"></div>
+            <button type="button" class="techpack-pantone-option group flex items-center gap-3 p-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-left w-full" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="flex items-center gap-3">
+                <!-- Radio button indicator -->
+                <div class="pantone-radio-indicator w-4 h-4 rounded-full border-2 border-gray-300 group-hover:border-blue-400 transition-colors relative">
+                  <div class="pantone-radio-dot w-2 h-2 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200"></div>
+                </div>
+                <!-- Hex color circle -->
+                <div class="pantone-color-circle w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm" style="background-color: var(--pantone-hex)"></div>
+                <!-- Pantone name -->
+                <span class="pantone-name text-sm font-medium text-gray-800 group-disabled:opacity-50">Select color first</span>
+              </div>
             </button>
           </div>
         </div>
         <div class="techpack-pantone-validation-message" style="display: none;"></div>
       </div>
-      
-      <!-- Column 4: Remove Button (Original position) -->
       <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
         <svg width="16" height="16" viewBox="0 0 16 16">
           <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
@@ -247,7 +239,7 @@ Tech-Pack Step 3: Garment Specifications Section
       </button>
     </div>
 
-    <div class="techpack-size-grid" style="display: none;" data-requires-pantone="true">
+    <div class="techpack-size-grid">
       <div class="techpack-size-grid__header">
         <div class="techpack-size-grid__label">Size</div>
         <div class="techpack-size-grid__label">XXS</div>
