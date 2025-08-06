@@ -200,17 +200,33 @@ Tech-Pack Step 3: Garment Specifications Section
       <div class="techpack-colorway__pantone">
         <label class="techpack-form__label">
           PANTONE Color Options <span class="techpack-form__required">*</span>
-          <span class="techpack-form__help-text">Select at least one Pantone color that matches your selection</span>
+          <span class="techpack-form__help-text">Select one Pantone color that matches your selection</span>
         </label>
         <div class="techpack-pantone-buttons" style="display: none;">
-          <div class="techpack-pantone-button-group">
-            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
-              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
-              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+          <div class="techpack-pantone-button-group" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <button type="button" class="techpack-pantone-option group flex items-center gap-3 p-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-left w-full" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="flex items-center gap-3">
+                <!-- Radio button indicator -->
+                <div class="pantone-radio-indicator w-4 h-4 rounded-full border-2 border-gray-300 group-hover:border-blue-400 transition-colors relative">
+                  <div class="pantone-radio-dot w-2 h-2 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200"></div>
+                </div>
+                <!-- Hex color circle -->
+                <div class="pantone-color-circle w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm" style="background-color: var(--pantone-hex)"></div>
+                <!-- Pantone name -->
+                <span class="pantone-name text-sm font-medium text-gray-800 group-disabled:opacity-50">Select color first</span>
+              </div>
             </button>
-            <button type="button" class="group flex items-center gap-3 overflow-hidden rounded-lg p-1 bg-transparent hover:bg-gray-100 disabled:hover:bg-transparent text-sm text-gray-600 hover:text-black disabled:hover:text-gray-600 transition-colors" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--dye-color: #000000;">
-              <div class="relative shrink-0 aspect-square w-8 h-8 rounded-full bg-[--dye-color] ring-2 ring-transparent group-hover:ring-offset-2 group-hover:ring-offset-gray-100 transition-all after:absolute after:inset-0 after:rounded-full after:ring-1 after:ring-inset after:ring-black/10 after:content-['']"></div>
-              <span class="overflow-hidden text-ellipsis whitespace-nowrap group-disabled:opacity-20">Select color first</span>
+            <button type="button" class="techpack-pantone-option group flex items-center gap-3 p-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-left w-full" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="flex items-center gap-3">
+                <!-- Radio button indicator -->
+                <div class="pantone-radio-indicator w-4 h-4 rounded-full border-2 border-gray-300 group-hover:border-blue-400 transition-colors relative">
+                  <div class="pantone-radio-dot w-2 h-2 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-0 transition-all duration-200"></div>
+                </div>
+                <!-- Hex color circle -->
+                <div class="pantone-color-circle w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm" style="background-color: var(--pantone-hex)"></div>
+                <!-- Pantone name -->
+                <span class="pantone-name text-sm font-medium text-gray-800 group-disabled:opacity-50">Select color first</span>
+              </div>
             </button>
           </div>
         </div>
