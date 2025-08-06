@@ -1962,9 +1962,9 @@
             }, 'error');
           }
           
-          // Check Pantone selection for each colorway (grid system)
-          const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
-          if (pantoneGrid) {
+          // Check Pantone selection for each colorway (button system)
+          const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
+          if (pantoneButtons) {
             const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
             if (!pantoneValidationResult) {
               isValid = false;
@@ -3746,7 +3746,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-pantone-option');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3761,8 +3761,8 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.pantone-name');
-              const colorCircle = button.querySelector('.pantone-color-circle');
+              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
+              const colorCircle = button.querySelector('.techpack-pantone-circle');
               
               if (pantoneNameSpan && colorCircle) {
                 // Update hex color circle
@@ -3807,30 +3807,19 @@
             // Single selection behavior: deselect all others first
             pantoneButtonElements.forEach(btn => {
               btn.classList.remove('selected');
-              // Hide radio dot
-              const radioDot = btn.querySelector('.pantone-radio-dot');
-              if (radioDot) {
-                radioDot.style.opacity = '0';
-                radioDot.style.transform = 'translate(-50%, -50%) scale(0)';
-              }
-              // Reset border color
-              btn.style.borderColor = '#e5e7eb';
-              btn.style.backgroundColor = 'white';
+              // Radio dot styling handled by CSS classes
             });
             
             // Select the clicked button
             button.classList.add('selected');
             
-            // Show radio dot for selected button
-            const selectedRadioDot = button.querySelector('.pantone-radio-dot');
-            if (selectedRadioDot) {
-              selectedRadioDot.style.opacity = '1';
-              selectedRadioDot.style.transform = 'translate(-50%, -50%) scale(1)';
-            }
+            // Radio dot styling handled by CSS classes
             
-            // Update selected button appearance
-            button.style.borderColor = '#3b82f6';
-            button.style.backgroundColor = '#eff6ff';
+            // Show the size grid now that pantone is selected
+            const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
+            if (sizeGrid) {
+              sizeGrid.style.display = 'block';
+            }
             
             // Update colorway data
             this.updateColorwayPantoneData(garmentId, colorwayId);
@@ -3839,6 +3828,53 @@
             this.validatePantoneSelection(colorway);
           });
         });
+        
+        // Sample request functionality - In-place transformation
+        const sampleToggle = colorway.querySelector('.techpack-sample-toggle');
+        if (sampleToggle) {
+          const sampleRequestBtn = sampleToggle.querySelector('.techpack-btn--sample-request');
+          const sampleSizeSelector = sampleToggle.querySelector('.techpack-form__select--sample-size');
+          
+          if (sampleRequestBtn && sampleSizeSelector) {
+            sampleRequestBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              // Smooth transition to select
+              sampleRequestBtn.style.opacity = '0';
+              sampleRequestBtn.style.pointerEvents = 'none';
+              sampleSizeSelector.style.display = 'block';
+              sampleSizeSelector.style.opacity = '1';
+              sampleSizeSelector.style.pointerEvents = 'auto';
+              sampleSizeSelector.focus(); // Focus the select for better UX
+            });
+            
+            // Handle dropdown change and blur events
+            sampleSizeSelector.addEventListener('change', (e) => {
+              if (e.target.value === '') {
+                // If no size selected, go back to button
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+            
+            sampleSizeSelector.addEventListener('blur', (e) => {
+              // If no value selected on blur, go back to button
+              if (e.target.value === '') {
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+          }
+        }
       }
       
       // Fix mobile null reference error - check colorPreview and colorPicker exist
@@ -6943,7 +6979,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
       if (hasValidPantone) {
@@ -6968,7 +7004,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const selectedPantone = selectedButtons.length > 0 ? {
         code: selectedButtons[0].dataset.pantoneCode,
         hex: selectedButtons[0].dataset.pantoneHex
