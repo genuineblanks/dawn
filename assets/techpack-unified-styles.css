@@ -918,138 +918,61 @@ MOBILE RESPONSIVE (768px and below)
     transform: scale(1.02);
   }
   
-  /* PANTONE Color Options Enhanced Styling */
+  /* PANTONE Color Options Mobile Enhancement */
   .techpack-pantone-buttons {
     margin-top: 1rem;
   }
   
-  .techpack-form__checkboxes--pantone {
-    margin-top: 0.5rem;
+  .techpack-pantone-button-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
   
-  .techpack-btn--pantone {
+  .techpack-pantone-button-group button {
     background: var(--techpack-bg);
-    border: 1px solid var(--techpack-border);
-    color: var(--techpack-text);
+    border: 2px solid var(--techpack-border);
+    border-radius: 8px;
     padding: 0.75rem 1rem;
+    transition: var(--techpack-transition);
+    cursor: pointer;
     text-align: left;
-    justify-content: flex-start;
     min-height: 52px;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--techpack-text);
   }
   
-  .techpack-btn--pantone:hover:not(:disabled) {
+  .techpack-pantone-button-group button:hover:not(:disabled) {
+    border-color: var(--techpack-primary);
     background: var(--techpack-bg-secondary);
-    border-color: var(--techpack-border-dark);
     transform: translateY(-1px);
     box-shadow: var(--techpack-shadow);
   }
   
-  .techpack-btn--pantone.selected {
+  .techpack-pantone-button-group button.selected {
     border-color: var(--techpack-primary);
     background: var(--techpack-primary);
     color: var(--techpack-text-light);
+    font-weight: 600;
   }
   
-  .techpack-btn--pantone.selected .techpack-pantone-radio-dot {
-    opacity: 1;
-    scale: 1;
-  }
-  
-  .techpack-btn--pantone:disabled {
+  .techpack-pantone-button-group button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background: var(--techpack-bg-tertiary);
     color: var(--techpack-text-muted);
   }
   
-  .techpack-pantone-content {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-  }
-  
-  .techpack-pantone-color-circle {
+  .techpack-pantone-button-group button .relative {
     width: 24px;
     height: 24px;
     border-radius: 50%;
     border: 2px solid var(--techpack-border);
     flex-shrink: 0;
-    box-shadow: var(--techpack-shadow);
-  }
-  
-  .techpack-pantone-name {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .techpack-pantone-radio-indicator {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--techpack-border);
-    position: relative;
-    flex-shrink: 0;
-  }
-  
-  .techpack-pantone-radio-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--techpack-text-light);
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    scale: 0;
-    transition: var(--techpack-transition);
-  }
-  
-  /* Sample Request Styling */
-  .techpack-btn--sample-request {
-    width: 100%;
-    font-size: 0.875rem;
-  }
-  
-  .techpack-btn--sample-request.active {
-    background: var(--techpack-primary);
-    color: var(--techpack-text-light);
-    border-color: var(--techpack-primary);
-  }
-  
-  /* Improved Layout - Reduce White Space */
-  .techpack-colorway {
-    margin-bottom: 1rem;
-  }
-  
-  .techpack-colorway__header {
-    margin-bottom: 1rem;
-    gap: 1rem;
-  }
-  
-  .techpack-form__help-text {
-    margin-top: 0.25rem;
-    color: var(--techpack-text-secondary);
-    font-size: 0.75rem;
-  }
-  
-  /* Conditional Size Grid Animation */
-  .techpack-size-grid[data-requires-pantone="true"] {
-    transition: opacity 0.3s ease, max-height 0.3s ease;
-    overflow: hidden;
-  }
-  
-  .techpack-size-grid[data-requires-pantone="true"][style*="display: none"] {
-    max-height: 0;
-    opacity: 0;
-  }
-  
-  .techpack-size-grid[data-requires-pantone="true"][style*="display: block"] {
-    max-height: 200px;
-    opacity: 1;
   }
   
   .techpack-size-grid__header,
