@@ -7669,51 +7669,63 @@ setupInitialization();
 
   // Enhanced Step 3 Colorway Management System - Fixed Event Handlers
   const EnhancedColorwayManager = {
+    initialized: false,
+    eventListenersAdded: false,
     
     // Initialize the enhanced colorway system
     init() {
+      if (this.initialized) {
+        debugSystem.log('⚠️ Enhanced Colorway Manager already initialized, skipping...', null, 'warn');
+        return;
+      }
+      
       this.bindModalEvents();
       this.bindDropdownEvents();
       this.bindPantoneEvents();
       this.bindSampleEvents();
+      
+      this.initialized = true;
       debugSystem.log('✅ Enhanced Colorway Manager initialized', null, 'success');
     },
 
-    // Handle Step 2 to Step 3 modal - DISABLED TO FIX UPLOAD ISSUES
+    // Modal completely disabled to fix upload issues
     bindModalEvents() {
+      // NO MODAL EVENTS - Completely disabled to prevent upload interference
       const modal = document.getElementById('step-3-intro-modal');
-      const continueBtn = document.getElementById('step-3-modal-continue');
-      
-      if (continueBtn) {
-        continueBtn.addEventListener('click', () => {
-          if (modal) {
-            modal.style.display = 'none';
-          }
-        });
+      if (modal) {
+        modal.style.display = 'none'; // Ensure it's always hidden
+        modal.remove(); // Remove from DOM entirely to prevent any interference
       }
-
-      // REMOVED: Automatic modal showing - was interfering with uploads
     },
 
     // Bind dropdown events using change events (NOT click events to avoid conflicts)
     bindDropdownEvents() {
-      // Use event delegation on document but with very specific selectors
-      document.addEventListener('change', (e) => {
-        if (e.target.matches('[data-color-family-select]')) {
+      // Use VERY specific event delegation to avoid conflicts with existing handlers
+      const handleDropdownChange = (e) => {
+        // ONLY handle our specific enhanced dropdown elements
+        if (e.target.matches('[data-color-family-select]') && e.target.closest('.techpack-colorway')) {
           this.handleColorFamilyChange(e.target);
         }
         
-        if (e.target.matches('[data-color-shade-select]')) {
+        if (e.target.matches('[data-color-shade-select]') && e.target.closest('.techpack-colorway')) {
           this.handleColorShadeChange(e.target);
         }
-      });
+      };
 
-      // Handle custom color input - but only on input event, not click
-      document.addEventListener('input', (e) => {
-        if (e.target.matches('[data-custom-color]')) {
+      const handleCustomColorInput = (e) => {
+        // ONLY handle our specific custom color inputs
+        if (e.target.matches('[data-custom-color]') && e.target.closest('.techpack-colorway')) {
           this.handleCustomColorInput(e.target);
         }
-      });
+      };
+
+      // Add event listeners only once and with specific checks
+      if (!this.eventListenersAdded) {
+        document.addEventListener('change', handleDropdownChange);
+        document.addEventListener('input', handleCustomColorInput);
+        this.eventListenersAdded = true;
+        debugSystem.log('✅ Enhanced dropdown events bound (non-conflicting)');
+      }
     },
 
     // Handle color family dropdown change
@@ -7913,6 +7925,7 @@ setupInitialization();
 
   // Enhanced Review System for New Colorway Structure
   const EnhancedReviewSystem = {
+    initialized: false,
     
     // Enhance existing review content with new colorway data
     enhanceReviewContent() {
@@ -8009,6 +8022,11 @@ setupInitialization();
 
     // Initialize enhanced review system
     init() {
+      if (this.initialized) {
+        debugSystem.log('⚠️ Enhanced Review System already initialized, skipping...', null, 'warn');
+        return;
+      }
+      
       // Monitor for review content updates
       if (typeof MutationObserver !== 'undefined') {
         const observer = new MutationObserver((mutations) => {
@@ -8036,17 +8054,51 @@ setupInitialization();
         this.enhanceReviewContent();
       }, 1000);
       
+      this.initialized = true;
       debugSystem.log('✅ Enhanced Review System initialized', null, 'success');
     }
   };
 
-  // Initialize enhanced colorway manager with existing system
-  document.addEventListener('DOMContentLoaded', () => {
-    // Wait for existing system to initialize first
-    setTimeout(() => {
+  // FIXED: Integrate enhanced features into existing initialization system
+  // Add enhanced features to the existing formInitializer instead of separate DOMContentLoaded
+  if (typeof formInitializer !== 'undefined') {
+    const originalInit = formInitializer.init;
+    formInitializer.init = function() {
+      // Call original initialization first
+      originalInit.call(this);
+      
+      // Then initialize enhanced features
+      setTimeout(() => {
+        if (typeof EnhancedColorwayManager !== 'undefined') {
+          EnhancedColorwayManager.init();
+        }
+        if (typeof EnhancedReviewSystem !== 'undefined') {
+          EnhancedReviewSystem.init();
+        }
+        debugSystem.log('✅ Enhanced features integrated into existing system');
+      }, 200);
+    };
+  } else {
+    // Fallback: If formInitializer is not available, use delayed initialization
+    // But add a check to prevent double initialization
+    let enhancedInitialized = false;
+    
+    const initializeEnhanced = () => {
+      if (enhancedInitialized) return;
+      enhancedInitialized = true;
+      
       EnhancedColorwayManager.init();
       EnhancedReviewSystem.init();
-    }, 500);
-  });
+      debugSystem.log('✅ Enhanced features initialized as fallback');
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initializeEnhanced, 1000); // Wait longer to ensure other systems are ready
+      });
+    } else {
+      setTimeout(initializeEnhanced, 1000);
+    }
+  }
 
 })();
