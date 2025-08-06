@@ -3737,7 +3737,101 @@
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
       removeBtn.addEventListener('click', () => this.removeColorway(garmentId, colorwayId));
       
-      // Color picker and button Pantone system
+      // Color family dropdown
+      const colorFamilySelect = colorway.querySelector('.techpack-colorway-family');
+      if (colorFamilySelect) {
+        colorFamilySelect.addEventListener('change', (e) => {
+          const selectedOption = e.target.options[e.target.selectedIndex];
+          const colorValue = selectedOption.dataset.color;
+          
+          if (colorValue) {
+            // Update colorway data
+            const garmentData = state.formData.garments.find(g => g.id === garmentId);
+            if (garmentData) {
+              let colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+              if (!colorwayData) {
+                colorwayData = { id: colorwayId, color: colorValue, colorFamily: e.target.value };
+                garmentData.colorways.push(colorwayData);
+              } else {
+                colorwayData.color = colorValue;
+                colorwayData.colorFamily = e.target.value;
+              }
+            }
+            
+            debugSystem.log('Color family selected', { colorFamily: e.target.value, color: colorValue });
+          }
+        });
+      }
+      
+      // Custom color name input
+      const customColorInput = colorway.querySelector('input[name="customColorName"]');
+      if (customColorInput) {
+        customColorInput.addEventListener('input', (e) => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            let colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (!colorwayData) {
+              colorwayData = { id: colorwayId, customColorName: e.target.value };
+              garmentData.colorways.push(colorwayData);
+            } else {
+              colorwayData.customColorName = e.target.value;
+            }
+          }
+        });
+      }
+      
+      // PANTONE TPX input
+      const pantoneInput = colorway.querySelector('input[name="pantoneCode"]');
+      if (pantoneInput) {
+        pantoneInput.addEventListener('input', (e) => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            let colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (!colorwayData) {
+              colorwayData = { id: colorwayId, pantoneCode: e.target.value };
+              garmentData.colorways.push(colorwayData);
+            } else {
+              colorwayData.pantoneCode = e.target.value;
+            }
+          }
+        });
+      }
+      
+      // Remove from tech pack button
+      const removeTechPackBtn = colorway.querySelector('[data-action="remove-from-techpack"]');
+      if (removeTechPackBtn) {
+        removeTechPackBtn.addEventListener('click', () => {
+          // Handle tech pack removal logic here
+          debugSystem.log('Remove from tech pack clicked', { colorwayId });
+        });
+      }
+      
+      // Request sample button
+      const requestSampleBtn = colorway.querySelector('[data-action="request-sample"]');
+      if (requestSampleBtn) {
+        requestSampleBtn.addEventListener('click', () => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            let colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+            if (!colorwayData) {
+              colorwayData = { id: colorwayId, sampleRequested: true };
+              garmentData.colorways.push(colorwayData);
+            } else {
+              colorwayData.sampleRequested = true;
+            }
+          }
+          
+          // Visual feedback
+          requestSampleBtn.style.background = '#10b981';
+          requestSampleBtn.style.color = 'white';
+          requestSampleBtn.textContent = 'SAMPLE REQUESTED ✓';
+          requestSampleBtn.disabled = true;
+          
+          debugSystem.log('Sample requested', { colorwayId });
+        });
+      }
+      
+      // Legacy color picker and button Pantone system (keeping for backward compatibility)
       const colorPicker = colorway.querySelector('.techpack-color-picker__input');
       const colorPreview = colorway.querySelector('.techpack-color-picker__preview');
       const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
