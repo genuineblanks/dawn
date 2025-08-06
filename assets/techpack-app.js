@@ -7667,19 +7667,19 @@ setupInitialization();
     }
   };
 
-  // Enhanced Step 3 Colorway Management System
+  // Enhanced Step 3 Colorway Management System - Fixed Event Handlers
   const EnhancedColorwayManager = {
     
     // Initialize the enhanced colorway system
     init() {
       this.bindModalEvents();
-      this.bindColorFamilyEvents();
+      this.bindDropdownEvents();
       this.bindPantoneEvents();
       this.bindSampleEvents();
       debugSystem.log('✅ Enhanced Colorway Manager initialized', null, 'success');
     },
 
-    // Handle Step 2 to Step 3 modal
+    // Handle Step 2 to Step 3 modal - DISABLED TO FIX UPLOAD ISSUES
     bindModalEvents() {
       const modal = document.getElementById('step-3-intro-modal');
       const continueBtn = document.getElementById('step-3-modal-continue');
@@ -7692,30 +7692,23 @@ setupInitialization();
         });
       }
 
-      // Show modal when advancing to Step 3
-      document.addEventListener('click', (e) => {
-        if ((e.target.id === 'step-2-next' || e.target.matches('[onclick*="showStep(3)"]')) && modal) {
-          setTimeout(() => {
-            modal.style.display = 'block';
-          }, 300);
-        }
-      });
+      // REMOVED: Automatic modal showing - was interfering with uploads
     },
 
-    // Bind color family selection events
-    bindColorFamilyEvents() {
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('.techpack-color-family')) {
-          e.preventDefault();
-          this.handleColorFamilySelection(e.target.closest('.techpack-color-family'));
+    // Bind dropdown events using change events (NOT click events to avoid conflicts)
+    bindDropdownEvents() {
+      // Use event delegation on document but with very specific selectors
+      document.addEventListener('change', (e) => {
+        if (e.target.matches('[data-color-family-select]')) {
+          this.handleColorFamilyChange(e.target);
         }
         
-        if (e.target.closest('.techpack-color-shade')) {
-          e.preventDefault();
-          this.handleColorShadeSelection(e.target.closest('.techpack-color-shade'));
+        if (e.target.matches('[data-color-shade-select]')) {
+          this.handleColorShadeChange(e.target);
         }
       });
 
+      // Handle custom color input - but only on input event, not click
       document.addEventListener('input', (e) => {
         if (e.target.matches('[data-custom-color]')) {
           this.handleCustomColorInput(e.target);
@@ -7723,105 +7716,85 @@ setupInitialization();
       });
     },
 
-    // Handle color family selection
-    handleColorFamilySelection(familyBtn) {
-      const colorway = familyBtn.closest('.techpack-colorway');
-      const family = familyBtn.dataset.family;
-      const shades = colorway.querySelector('.techpack-color-shades');
-      const shadesList = colorway.querySelector('.techpack-color-shades__list');
+    // Handle color family dropdown change
+    handleColorFamilyChange(familySelect) {
+      const colorway = familySelect.closest('.techpack-colorway');
+      const family = familySelect.value;
+      const shadeSelect = colorway.querySelector('[data-color-shade-select]');
       
-      // Update selected state
-      colorway.querySelectorAll('.techpack-color-family').forEach(btn => {
-        btn.classList.remove('selected');
-      });
-      familyBtn.classList.add('selected');
+      if (!family) {
+        shadeSelect.disabled = true;
+        shadeSelect.innerHTML = '<option value="">First choose a family</option>';
+        return;
+      }
 
-      // Populate shades
-      if (COLOR_FAMILIES[family] && shadesList) {
-        shadesList.innerHTML = COLOR_FAMILIES[family].shades.map(shade => `
-          <button type="button" class="techpack-color-shade" data-shade-name="${shade.name}" data-shade-hex="${shade.hex}">
-            <div class="techpack-color-shade__swatch" style="background-color: ${shade.hex}"></div>
-            ${shade.name}
-          </button>
-        `).join('');
-        
-        shades.style.display = 'block';
+      // Populate shade dropdown
+      if (COLOR_FAMILIES[family]) {
+        shadeSelect.disabled = false;
+        shadeSelect.innerHTML = '<option value="">Choose a shade</option>' + 
+          COLOR_FAMILIES[family].shades.map(shade => 
+            `<option value="${shade.name}" data-hex="${shade.hex}">${shade.name}</option>`
+          ).join('');
       }
     },
 
-    // Handle color shade selection
-    handleColorShadeSelection(shadeBtn) {
-      const colorway = shadeBtn.closest('.techpack-colorway');
-      const shadeName = shadeBtn.dataset.shadeName;
-      const shadeHex = shadeBtn.dataset.shadeHex;
-      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
-      const colorwayNameDiv = colorway.querySelector('.techpack-colorway__name');
-      const pantoneSection = colorway.querySelector('.techpack-colorway__pantone');
-      const sampleSection = colorway.querySelector('.techpack-colorway__sample');
+    // Handle color shade dropdown change
+    handleColorShadeChange(shadeSelect) {
+      const colorway = shadeSelect.closest('.techpack-colorway');
+      const shadeName = shadeSelect.value;
+      const selectedOption = shadeSelect.querySelector('option:checked');
+      const shadeHex = selectedOption?.dataset.hex || '#000000';
       
-      // Update selected state
-      colorway.querySelectorAll('.techpack-color-shade').forEach(btn => {
-        btn.classList.remove('selected');
-      });
-      shadeBtn.classList.add('selected');
+      if (!shadeName) return;
 
-      // Set colorway name
-      if (colorwayNameInput) {
-        colorwayNameInput.value = shadeName;
-      }
-
-      // Show next sections
-      if (colorwayNameDiv) colorwayNameDiv.style.display = 'block';
-      if (pantoneSection) pantoneSection.style.display = 'block';
-      if (sampleSection) sampleSection.style.display = 'block';
-
-      // Show size grid conditionally
-      this.showSizeGridConditionally(colorway);
+      // Show size grid - this was the main requirement
+      this.showSizeGridConditionally(colorway, shadeName);
       
       // Update colorway data in existing system
-      this.updateColorwayData(colorway, { colorFamily: shadeBtn.closest('.techpack-color-families').querySelector('.selected')?.dataset.family, colorName: shadeName, colorHex: shadeHex, isCustomColor: false });
+      this.updateColorwayData(colorway, { 
+        colorFamily: colorway.querySelector('[data-color-family-select]').value,
+        colorName: shadeName, 
+        colorHex: shadeHex, 
+        isCustomColor: false 
+      });
+      
+      debugSystem.log('✅ Color selected:', shadeName);
     },
 
     // Handle custom color input
     handleCustomColorInput(input) {
       const colorway = input.closest('.techpack-colorway');
-      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
-      const colorwayNameDiv = colorway.querySelector('.techpack-colorway__name');
-      const customWarning = colorway.querySelector('.techpack-custom-color-warning');
-      const pantoneSection = colorway.querySelector('.techpack-colorway__pantone');
-      const sampleSection = colorway.querySelector('.techpack-colorway__sample');
+      const customColorValue = input.value.trim();
       
-      if (input.value.trim()) {
-        // Clear shade selections
-        colorway.querySelectorAll('.techpack-color-shade').forEach(btn => {
-          btn.classList.remove('selected');
-        });
-
-        if (colorwayNameInput) {
-          colorwayNameInput.value = input.value + ' (Custom)';
-        }
-
-        if (colorwayNameDiv) colorwayNameDiv.style.display = 'block';
-        if (customWarning) customWarning.style.display = 'block';
-        if (pantoneSection) pantoneSection.style.display = 'block';
-        if (sampleSection) sampleSection.style.display = 'block';
+      if (customColorValue) {
+        // Clear dropdown selections
+        const familySelect = colorway.querySelector('[data-color-family-select]');
+        const shadeSelect = colorway.querySelector('[data-color-shade-select]');
         
-        // Show size grid conditionally
-        this.showSizeGridConditionally(colorway);
+        familySelect.value = '';
+        shadeSelect.disabled = true;
+        shadeSelect.innerHTML = '<option value="">First choose a family</option>';
+        
+        // Show size grid with custom color name
+        this.showSizeGridConditionally(colorway, customColorValue + ' (Custom)');
         
         // Update colorway data
-        this.updateColorwayData(colorway, { colorName: input.value, isCustomColor: true });
+        this.updateColorwayData(colorway, { 
+          colorName: customColorValue, 
+          isCustomColor: true 
+        });
+        
+        debugSystem.log('✅ Custom color entered:', customColorValue);
       }
     },
 
-    // Show size grid conditionally
-    showSizeGridConditionally(colorway) {
-      const colorwayNameInput = colorway.querySelector('[data-colorway-name]');
+    // Show size grid conditionally - this is the key functionality
+    showSizeGridConditionally(colorway, colorName) {
       const sizeGrid = colorway.querySelector('.techpack-size-grid');
       
-      if (colorwayNameInput && colorwayNameInput.value.trim() && sizeGrid) {
+      if (colorName && sizeGrid) {
         sizeGrid.style.display = 'block';
-        debugSystem.log('✅ Size grid shown for colorway: ' + colorwayNameInput.value);
+        debugSystem.log('✅ Size grid shown for colorway: ' + colorName);
       }
     },
 
