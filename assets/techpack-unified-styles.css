@@ -1046,8 +1046,15 @@ MOBILE RESPONSIVE (768px and below)
     display: block;
   }
   
-  /* Mobile Responsiveness for Single Line Layout */
-  @media (max-width: 768px) {
+  /* Tablet Layout - Keep horizontal but adjust spacing */
+  @media (max-width: 768px) and (min-width: 481px) {
+    .techpack-colorway__header-line {
+      gap: 1rem !important;
+    }
+  }
+
+  /* Mobile Responsiveness for Single Line Layout - Only actual phones */
+  @media (max-width: 480px) {
     .techpack-colorway__header-line {
       grid-template-columns: 1fr !important;
       gap: 1rem !important;
