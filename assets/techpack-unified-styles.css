@@ -493,43 +493,7 @@ COLORWAYS SECTION
   margin-bottom: 0.75rem;
 }
 
-.techpack-colorway__header {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.techpack-colorway__color {
-  flex: 1;
-  min-width: 0;
-}
-
-.techpack-colorway__pantone {
-  flex: 2;
-  min-width: 0;
-}
-
-.techpack-colorway__remove {
-  background: none;
-  border: none;
-  color: var(--techpack-text-secondary);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: var(--techpack-transition);
-  min-height: 32px;
-  min-width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.techpack-colorway__remove:hover {
-  color: var(--techpack-error);
-  background: rgba(239, 68, 68, 0.1);
-}
+/* Legacy styles removed - using compact layout now */
 
 .techpack-color-picker {
   display: flex;
@@ -860,41 +824,9 @@ MOBILE RESPONSIVE (768px and below)
     grid-template-columns: 1fr;
   }
   
-  .techpack-colorway__header {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    align-items: stretch;
-  }
+  /* Old header styles removed */
   
-  .techpack-colorway__color,
-  .techpack-colorway__pantone {
-    width: 100%;
-  }
-  
-  .techpack-colorway__remove {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-  }
-  
-  .techpack-colorway {
-    position: relative;
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
+  /* Old mobile override removed - was causing positioning conflicts */
   
   .techpack-color-picker {
     flex-direction: column;
@@ -918,61 +850,262 @@ MOBILE RESPONSIVE (768px and below)
     transform: scale(1.02);
   }
   
-  /* PANTONE Color Options Mobile Enhancement */
+  /* PANTONE Color Options Enhanced Styling */
   .techpack-pantone-buttons {
     margin-top: 1rem;
   }
   
-  .techpack-pantone-button-group {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  /* Legacy pantone styles removed - using compact layout */
+  
+  /* Sample Request Styling */
+  .techpack-btn--sample-request {
+    width: 100%;
+    font-size: 0.875rem;
   }
   
-  .techpack-pantone-button-group button {
-    background: var(--techpack-bg);
-    border: 2px solid var(--techpack-border);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    transition: var(--techpack-transition);
-    cursor: pointer;
-    text-align: left;
-    min-height: 52px;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--techpack-text);
-  }
-  
-  .techpack-pantone-button-group button:hover:not(:disabled) {
-    border-color: var(--techpack-primary);
-    background: var(--techpack-bg-secondary);
-    transform: translateY(-1px);
-    box-shadow: var(--techpack-shadow);
-  }
-  
-  .techpack-pantone-button-group button.selected {
-    border-color: var(--techpack-primary);
+  .techpack-btn--sample-request.active {
     background: var(--techpack-primary);
     color: var(--techpack-text-light);
-    font-weight: 600;
+    border-color: var(--techpack-primary);
   }
   
-  .techpack-pantone-button-group button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--techpack-bg-tertiary);
-    color: var(--techpack-text-muted);
+  /* PERFECT SINGLE LINE COLORWAY LAYOUT */
+  
+  .techpack-colorway__header-line {
+    display: grid !important;
+    grid-template-columns: auto auto 1fr auto !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
   }
   
-  .techpack-pantone-button-group button .relative {
-    width: 24px;
-    height: 24px;
+  /* Column 1: Color Picker */
+  .techpack-colorway__color {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 80px;
+  }
+  
+  .techpack-color-picker__input {
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--techpack-border);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  /* Column 2: Sample Request */
+  .techpack-colorway__sample {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 140px;
+  }
+  
+  .techpack-sample-toggle {
+    position: relative;
+    width: 140px;
+    height: 40px;
+  }
+  
+  .techpack-btn--sample-request,
+  .techpack-form__select--sample-size {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    font-size: 0.875rem;
+    transition: opacity 0.2s ease;
+  }
+  
+  .techpack-btn--sample-request {
+    opacity: 1;
+  }
+  
+  .techpack-form__select--sample-size {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .techpack-form__select--sample-size[style*="display: block"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Column 3: Pantone Options */
+  .techpack-colorway__pantone {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .techpack-pantone-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  .techpack-btn--pantone-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    min-height: 40px;
+    background: var(--techpack-bg);
+    border: 1px solid var(--techpack-border);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-align: left;
+    transition: var(--techpack-transition);
+    cursor: pointer;
+  }
+  
+  .techpack-btn--pantone-compact:hover:not(:disabled) {
+    background: var(--techpack-bg-secondary);
+    border-color: var(--techpack-border-dark);
+  }
+  
+  .techpack-btn--pantone-compact.selected {
+    background: var(--techpack-primary);
+    color: var(--techpack-text-light);
+    border-color: var(--techpack-primary);
+  }
+  
+  .techpack-pantone-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--techpack-border);
+    flex-shrink: 0;
+  }
+  
+  .techpack-pantone-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .techpack-pantone-radio {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     border: 2px solid var(--techpack-border);
+    position: relative;
     flex-shrink: 0;
+  }
+  
+  .techpack-btn--pantone-compact.selected .techpack-pantone-radio::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--techpack-text-light);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Sample request in-place transformation styles handled above */
+  
+  /* Column 4: Remove Button (Original Position) */
+  .techpack-colorway__remove {
+    background: none !important;
+    border: none !important;
+    color: var(--techpack-text-secondary) !important;
+    cursor: pointer;
+    padding: 0.5rem !important;
+    border-radius: 4px !important;
+    transition: var(--techpack-transition);
+    min-height: 40px !important;
+    min-width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: flex-start !important;
+    margin-top: 1.25rem !important; /* Align with form elements */
+    position: static !important; /* Override any absolute positioning */
+  }
+  
+  .techpack-colorway__remove:hover {
+    color: var(--techpack-error);
+    background: rgba(239, 68, 68, 0.1);
+  }
+  
+  /* Form Labels - Consistent */
+  .techpack-colorway__header-line .techpack-form__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--techpack-text);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  /* Tablet Layout - Keep horizontal but adjust spacing */
+  @media (max-width: 768px) and (min-width: 481px) {
+    .techpack-colorway__header-line {
+      gap: 1rem !important;
+    }
+  }
+
+  /* Mobile Responsiveness for Single Line Layout - Only actual phones */
+  @media (max-width: 480px) {
+    .techpack-colorway__header-line {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+    
+    .techpack-colorway__color,
+    .techpack-colorway__sample {
+      min-width: auto;
+    }
+    
+    .techpack-colorway__remove {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      margin-top: 0;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    
+    .techpack-colorway {
+      position: relative;
+      padding-top: 3rem;
+    }
+    
+    .techpack-pantone-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .techpack-btn--sample-request,
+    .techpack-form__select--sample-size {
+      width: 100%;
+    }
+  }
+  
+  /* Conditional Size Grid Animation */
+  .techpack-size-grid[data-requires-pantone="true"] {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .techpack-size-grid[data-requires-pantone="true"][style*="display: none"] {
+    max-height: 0;
+    opacity: 0;
+  }
+  
+  .techpack-size-grid[data-requires-pantone="true"][style*="display: block"] {
+    max-height: 200px;
+    opacity: 1;
   }
   
   .techpack-size-grid__header,
@@ -1056,9 +1189,7 @@ DESKTOP OPTIMIZATION (769px+)
     grid-template-columns: 1fr 1fr;
   }
   
-  .techpack-colorway__header {
-    align-items: center;
-  }
+  /* Old header reference removed */
   
   .techpack-progress {
     position: sticky;
