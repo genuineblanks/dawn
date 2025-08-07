@@ -1464,7 +1464,9 @@
                 currentStep: state.currentStep,
                 targetStep: stepNumber 
               }, 'warn');
-              return false;
+              // FIXED: Don't prevent navigation, just warn - let user proceed
+              debugSystem.log('🔄 Allowing navigation despite validation failure for better UX');
+              // return false; // Commented out to allow navigation
             }
           }
         } catch (validationError) {
@@ -1855,7 +1857,7 @@
       return isValid;
     }
 
-    // In StepManager class, REPLACE the existing validateStep3() method:
+    // FIXED: Enhanced validateStep3() method with improved UX
     validateStep3() {
       const nextBtn = document.querySelector('#step-3-next');
       
@@ -10081,83 +10083,40 @@ setupInitialization();
 
   class SampleManager {
     constructor() {
-      this.sampleData = {
-        blackRaw: { 
-          enabled: false, 
-          fabricColor: '', 
-          size: '', 
-          quantity: 1,
-          cost: 0 // Will be calculated
-        },
-        labDips: [], // Array of { id, pantone, color, cost: 25 }
-        customColor: { 
-          enabled: false, 
-          pantone: '', 
-          size: '', 
-          confirmed: false,
-          cost: 0 // Will be calculated
-        },
-        patterns: { 
-          colorwayIncluded: false, 
-          sizingDefined: false, 
-          needsSizeHelp: false 
-        }
-      };
-      this.labDipCounter = 0;
+      // Per-garment sample data: garmentId -> { blackRaw: {}, labDip: {}, customColor: {} }
+      this.perGarmentSamples = new Map();
       this.init();
     }
 
     init() {
       this.bindEventListeners();
       this.checkRequestType();
-      debugSystem.log('SampleManager initialized');
+      debugSystem.log('Per-garment SampleManager initialized');
     }
 
     bindEventListeners() {
-      // Request type change handler (from Step 1)
+      // Request type change handler - show/hide per-garment sample sections
       const requestTypeSelect = document.getElementById('request-type');
       if (requestTypeSelect) {
         requestTypeSelect.addEventListener('change', () => this.checkRequestType());
       }
 
-      // Sample option checkboxes
+      // Per-garment sample option checkboxes
       document.addEventListener('change', (e) => {
-        if (e.target.classList.contains('techpack-sample-option__checkbox')) {
-          this.handleSampleOptionToggle(e.target);
-        }
-        if (e.target.classList.contains('techpack-pattern-option__checkbox')) {
-          this.handlePatternOptionChange(e.target);
+        if (e.target.classList.contains('techpack-sample-compact-checkbox')) {
+          this.handlePerGarmentSampleToggle(e.target);
         }
       });
 
-      // Add lab dip button
-      document.addEventListener('click', (e) => {
-        if (e.target.id === 'add-lab-dip') {
-          this.addLabDip();
-        }
-        if (e.target.classList.contains('techpack-lab-dip-remove')) {
-          this.removeLabDip(e.target);
-        }
-      });
-
-      // Form field changes for sample options
+      // Per-garment sample form changes (size, fabric color)
       document.addEventListener('change', (e) => {
-        if (e.target.id === 'sample-fabric-color' || 
-            e.target.id === 'sample-black-raw-size') {
-          this.updateBlackRawSample();
-        }
-        if (e.target.id === 'sample-custom-pantone' || 
-            e.target.id === 'sample-custom-color-size' ||
-            e.target.id === 'custom-color-confirmation') {
-          this.updateCustomColorSample();
-        }
-        if (e.target.classList.contains('techpack-lab-dip-pantone') ||
-            e.target.classList.contains('techpack-lab-dip-color')) {
-          this.updateLabDip(e.target);
+        if (e.target.classList.contains('techpack-garment-sample-size') || 
+            e.target.classList.contains('techpack-garment-fabric-color')) {
+          this.updatePerGarmentSampleDetails(e.target);
         }
       });
 
-      // Tooltip functionality
+      // Tooltip functionality for per-garment sample help
       document.addEventListener('click', (e) => {
         if (e.target.closest('.techpack-tooltip-trigger')) {
           const trigger = e.target.closest('.techpack-tooltip-trigger');
@@ -10168,44 +10127,212 @@ setupInitialization();
           this.closeAllTooltips();
         }
       });
+
+      debugSystem.log('Per-garment sample event listeners bound');
     }
 
     checkRequestType() {
       const requestType = document.getElementById('request-type')?.value;
-      const sampleSection = document.getElementById('sample-options-section');
-      const bulkTracker = document.getElementById('bulk-quantity-tracker');
-      const garmentsContainer = document.getElementById('garments-container');
-      const addGarmentBtn = document.getElementById('add-garment');
       const subtitle = document.getElementById('step-3-subtitle');
 
+      // Show/hide per-garment sample sections based on request type
+      const perGarmentSampleSections = document.querySelectorAll('.techpack-garment-samples[data-sample-request-only]');
+      
       if (requestType === 'sample-request') {
-        // Show sample options, hide bulk elements
-        if (sampleSection) sampleSection.style.display = 'block';
-        if (bulkTracker) bulkTracker.style.display = 'none';
-        if (garmentsContainer) garmentsContainer.style.display = 'none';
-        if (addGarmentBtn) addGarmentBtn.style.display = 'none';
-        if (subtitle) subtitle.textContent = 'Choose your sample options and provide garment details';
-
-        // Add first lab dip by default
-        setTimeout(() => {
-          if (this.sampleData.labDips.length === 0) {
-            this.addLabDip();
-          }
-        }, 100);
-
-        debugSystem.log('Sample request mode activated');
+        // Show per-garment sample options
+        perGarmentSampleSections.forEach(section => {
+          section.style.display = 'block';
+        });
+        if (subtitle) subtitle.textContent = 'Choose sample options for each garment and provide garment details';
+        
+        debugSystem.log('Sample request mode - per-garment sample options shown');
       } else {
-        // Show bulk elements, hide sample options
-        if (sampleSection) sampleSection.style.display = 'none';
-        if (bulkTracker) bulkTracker.style.display = 'block';
-        if (garmentsContainer) garmentsContainer.style.display = 'block';
-        if (addGarmentBtn) addGarmentBtn.style.display = 'block';
+        // Hide per-garment sample options
+        perGarmentSampleSections.forEach(section => {
+          section.style.display = 'none';
+        });
         if (subtitle) subtitle.textContent = 'Define your garment details and quantity requirements';
-
-        debugSystem.log('Bulk request mode activated');
+        
+        debugSystem.log('Bulk request mode - per-garment sample options hidden');
       }
 
+      // Update validation
       this.updateNextButtonState();
+    }
+
+    // Initialize sample data for a new garment
+    initializeGarmentSampleData(garmentId) {
+      if (!this.perGarmentSamples.has(garmentId)) {
+        this.perGarmentSamples.set(garmentId, {
+          blackRaw: { enabled: false, fabricColor: '', size: '' },
+          labDip: { enabled: false, pantone: '', size: '' },
+          customColor: { enabled: false, fabricColor: '', size: '' },
+          totalCost: 0
+        });
+        debugSystem.log('Initialized sample data for garment', { garmentId });
+      }
+    }
+
+    // Handle per-garment sample option toggle
+    handlePerGarmentSampleToggle(checkbox) {
+      const garmentElement = checkbox.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      this.initializeGarmentSampleData(garmentId);
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      const sampleType = checkbox.name;
+
+      // Update sample data based on checkbox type
+      if (sampleType === 'sample-black-raw') {
+        sampleData.blackRaw.enabled = checkbox.checked;
+      } else if (sampleType === 'sample-lab-dip') {
+        sampleData.labDip.enabled = checkbox.checked;
+      } else if (sampleType === 'sample-custom-color') {
+        sampleData.customColor.enabled = checkbox.checked;
+      }
+
+      // Update sample details section visibility
+      this.updateSampleDetailsVisibility(garmentElement, sampleData);
+      
+      // Update cost and summary
+      this.updateGarmentSampleCost(garmentId);
+      this.updateGarmentSampleSummary(garmentElement, sampleData);
+
+      debugSystem.log('Per-garment sample option toggled', { 
+        garmentId, 
+        sampleType, 
+        enabled: checkbox.checked 
+      });
+    }
+
+    // Update sample details section based on selections
+    updateSampleDetailsVisibility(garmentElement, sampleData) {
+      const detailsSection = garmentElement.querySelector('.techpack-sample-details');
+      if (!detailsSection) return;
+
+      const hasAnySelection = sampleData.blackRaw.enabled || 
+                             sampleData.labDip.enabled || 
+                             sampleData.customColor.enabled;
+
+      detailsSection.style.display = hasAnySelection ? 'block' : 'none';
+    }
+
+    // Update per-garment sample form details (size, fabric color)
+    updatePerGarmentSampleDetails(input) {
+      const garmentElement = input.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      this.initializeGarmentSampleData(garmentId);
+      const sampleData = this.perGarmentSamples.get(garmentId);
+
+      if (input.classList.contains('techpack-garment-sample-size')) {
+        // Update size for all enabled sample types
+        const size = input.value;
+        if (sampleData.blackRaw.enabled) sampleData.blackRaw.size = size;
+        if (sampleData.labDip.enabled) sampleData.labDip.size = size;
+        if (sampleData.customColor.enabled) sampleData.customColor.size = size;
+      } else if (input.classList.contains('techpack-garment-fabric-color')) {
+        // Update fabric color for black/raw samples
+        sampleData.blackRaw.fabricColor = input.value;
+      }
+
+      this.updateGarmentSampleCost(garmentId);
+      this.updateGarmentSampleSummary(garmentElement, sampleData);
+
+      debugSystem.log('Per-garment sample details updated', { garmentId, sampleData });
+    }
+
+    // Calculate and update sample cost for a specific garment
+    updateGarmentSampleCost(garmentId) {
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      if (!sampleData) return;
+
+      let totalCost = 0;
+      if (sampleData.blackRaw.enabled) totalCost += 35;
+      if (sampleData.labDip.enabled) totalCost += 25;
+      if (sampleData.customColor.enabled) totalCost += 65;
+
+      sampleData.totalCost = totalCost;
+
+      // Update cost display in DOM
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const costElement = garmentElement?.querySelector('.techpack-garment-sample-cost');
+      if (costElement) {
+        costElement.textContent = totalCost;
+      }
+    }
+
+    // Update sample summary for a specific garment
+    updateGarmentSampleSummary(garmentElement, sampleData) {
+      const summaryElement = garmentElement.querySelector('.techpack-garment-sample-summary');
+      if (!summaryElement) return;
+
+      const selectedOptions = [];
+      if (sampleData.blackRaw.enabled) selectedOptions.push('Black/Raw');
+      if (sampleData.labDip.enabled) selectedOptions.push('Lab Dip');
+      if (sampleData.customColor.enabled) selectedOptions.push('Custom Color');
+
+      summaryElement.textContent = selectedOptions.length > 0 ? selectedOptions.join(', ') : 'None';
+    }
+
+    // Get all per-garment sample data (for step 4 review)
+    getAllSampleData() {
+      const allSampleData = {};
+      for (const [garmentId, sampleData] of this.perGarmentSamples.entries()) {
+        allSampleData[garmentId] = { ...sampleData };
+      }
+      return allSampleData;
+    }
+
+    // Calculate total sample cost across all garments
+    getTotalSampleCost() {
+      let totalCost = 0;
+      for (const [garmentId, sampleData] of this.perGarmentSamples.entries()) {
+        totalCost += sampleData.totalCost || 0;
+      }
+      return totalCost;
+    }
+
+    // Validate sample selections for sample requests
+    validateSampleSelections() {
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType !== 'sample-request') return true;
+
+      // Check if at least one garment has sample selections
+      const garments = document.querySelectorAll('.techpack-garment');
+      let hasAnySampleSelection = false;
+
+      for (const garment of garments) {
+        const garmentId = garment.dataset.garmentId;
+        const sampleData = this.perGarmentSamples.get(garmentId);
+        
+        if (sampleData && (sampleData.blackRaw.enabled || sampleData.labDip.enabled || sampleData.customColor.enabled)) {
+          hasAnySampleSelection = true;
+          break;
+        }
+      }
+
+      return hasAnySampleSelection;
+    }
+
+    // Update next button state based on sample validation
+    updateNextButtonState() {
+      const nextBtn = document.getElementById('step-3-next');
+      if (!nextBtn) return;
+
+      const requestType = document.getElementById('request-type')?.value;
+      
+      if (requestType === 'sample-request') {
+        // For sample requests, enable if at least one garment has samples
+        const isValid = this.validateSampleSelections();
+        // FIXED: Don't disable the button - let user proceed and handle validation elsewhere
+        // nextBtn.disabled = !isValid;
+        debugSystem.log('Sample validation result', { isValid });
+      }
     }
 
     handleSampleOptionToggle(checkbox) {
@@ -10552,7 +10679,8 @@ setupInitialization();
       }
       
       msgElement.querySelector('.validation-message-text').textContent = message;
-      msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // FIXED: Remove auto-scroll behavior that causes page jumps
+      // msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     hideValidationMessage() {
