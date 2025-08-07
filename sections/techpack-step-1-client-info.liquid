@@ -204,24 +204,19 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
             <div class="techpack-form__error" role="alert"></div>
           </div>
 
-          <div class="techpack-form__group">
-            <label for="deadline" class="techpack-form__label"
-              >Target Deadline <span class="techpack-form__label-status">(optional)</span></label
+          <div class="techpack-form__group techpack-form__group--required">
+            <label for="request-type" class="techpack-form__label">Select Sample or Bulk Order Request</label>
+            <select
+              id="request-type"
+              name="requestType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
             >
-            <div class="techpack-form__date-wrapper">
-              <input
-                type="date"
-                id="deadline"
-                name="deadline"
-                class="techpack-form__input techpack-form__input--date"
-                min="{{ 'now' | date: '%s' | plus: 3628800 | date: '%Y-%m-%d' }}"
-                max="{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}"
-                data-min-weeks="6"
-              >
-              <div class="techpack-form__date-hint">
-                Minimum 6 weeks from today ({{ 'now' | date: '%s' | plus: 3628800 | date: '%B %d, %Y' }})
-              </div>
-            </div>
+              <option value="">Select request type...</option>
+              <option value="sample-request">Sample Request</option>
+              <option value="bulk-order-request">Bulk Order Request</option>
+            </select>
             <div class="techpack-form__error" role="alert"></div>
           </div>
         </div>
