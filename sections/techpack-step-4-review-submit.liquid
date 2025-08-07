@@ -71,8 +71,8 @@ Tech-Pack Step 4: Review & Submit Section
           </div>
         </div>
 
-        <!-- Step 3 Review: Garment Specifications -->
-        <div class="techpack-review__section">
+        <!-- Step 3 Review: Garment Specifications OR Sample Summary -->
+        <div class="techpack-review__section" id="bulk-garments-review">
           <div class="techpack-review__header">
             <h3 class="techpack-review__title">
               <svg class="techpack-review__icon" width="20" height="20" viewBox="0 0 20 20">
@@ -85,6 +85,24 @@ Tech-Pack Step 4: Review & Submit Section
           </div>
           <div class="techpack-review__content" id="review-garments-content">
             <!-- populated by populateGarmentsReview() -->
+          </div>
+        </div>
+
+        <!-- Sample Summary Section (shown only for sample requests) -->
+        <div class="techpack-review__section" id="sample-summary-review" style="display: none;">
+          <div class="techpack-review__header">
+            <h3 class="techpack-review__title">
+              <svg class="techpack-review__icon" width="20" height="20" viewBox="0 0 20 20">
+                <circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M4 18c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <circle cx="15" cy="6" r="2" fill="currentColor"/>
+              </svg>
+              Sample Summary
+            </h3>
+            <button type="button" class="techpack-review__edit" data-edit-step="3">Edit</button>
+          </div>
+          <div class="techpack-review__content" id="review-sample-content">
+            <!-- populated by populateSampleReview() -->
           </div>
         </div>
         
