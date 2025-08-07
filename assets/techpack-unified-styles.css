@@ -2591,3 +2591,198 @@ TOOLTIP SYSTEM - EDUCATIONAL TOOLTIPS
     margin: 0.5rem 0;
   }
 }
+
+/* 
+===========================================
+PER-GARMENT SAMPLE SYSTEM - COMPACT DESIGN
+===========================================
+*/
+
+/* Per-Garment Sample Container */
+.techpack-garment-samples {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--techpack-bg-secondary);
+  border: 1px solid var(--techpack-border-light);
+  border-radius: 8px;
+  transition: var(--techpack-transition);
+}
+
+.techpack-garment-samples__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--techpack-border-light);
+}
+
+/* Compact Sample Grid */
+.techpack-sample-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.techpack-sample-compact-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--techpack-bg);
+  border: 2px solid var(--techpack-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  user-select: none;
+}
+
+.techpack-sample-compact-option:hover {
+  border-color: var(--techpack-primary);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.techpack-sample-compact-option:has(input:checked) {
+  border-color: var(--techpack-primary);
+  background: rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 1px var(--techpack-primary);
+}
+
+.techpack-sample-compact-checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--techpack-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.techpack-sample-compact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.techpack-sample-compact-title {
+  font-weight: 600;
+  color: var(--techpack-text);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.techpack-sample-compact-info {
+  font-size: 0.8rem;
+  color: var(--techpack-primary);
+  font-weight: 500;
+}
+
+.techpack-sample-compact-desc {
+  font-size: 0.8rem;
+  color: var(--techpack-text-secondary);
+  font-style: italic;
+}
+
+/* Sample Details (Expandable) */
+.techpack-sample-details {
+  padding-top: 1rem;
+  border-top: 1px solid var(--techpack-border-light);
+  animation: slideDown 0.3s ease-out;
+}
+
+.techpack-sample-detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.techpack-sample-summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--techpack-bg-tertiary);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.techpack-sample-summary-text {
+  color: var(--techpack-text);
+}
+
+.techpack-garment-sample-summary {
+  font-weight: 600;
+  color: var(--techpack-primary);
+}
+
+.techpack-sample-summary-cost {
+  font-weight: 600;
+  color: var(--techpack-text);
+}
+
+.techpack-garment-sample-cost {
+  color: var(--techpack-primary);
+  font-size: 1.1em;
+}
+
+/* Hide sample options for bulk requests initially */
+.techpack-garment-samples[data-sample-request-only="true"] {
+  display: none;
+}
+
+/* Show sample options when in sample request mode */
+.techpack-step[data-request-type="sample-request"] .techpack-garment-samples[data-sample-request-only="true"] {
+  display: block;
+}
+
+/* Mobile Responsive - Compact Sample Options */
+@media (max-width: 768px) {
+  .techpack-sample-compact-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .techpack-sample-compact-option {
+    padding: 0.5rem;
+  }
+  
+  .techpack-sample-detail-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .techpack-garment-samples {
+    padding: 0.75rem;
+  }
+  
+  .techpack-sample-summary-line {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .techpack-garment-samples__title {
+    font-size: 0.9rem;
+  }
+  
+  .techpack-sample-compact-title {
+    font-size: 0.85rem;
+  }
+  
+  .techpack-sample-compact-info,
+  .techpack-sample-compact-desc {
+    font-size: 0.75rem;
+  }
+  
+  .techpack-sample-compact-option {
+    gap: 0.5rem;
+  }
+}
