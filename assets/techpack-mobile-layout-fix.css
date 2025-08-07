@@ -436,67 +436,15 @@ CRITICAL MOBILE LAYOUT FIXES
   
   /* 
   ============================================
-  FIX 6: IMPROVED SIZE GRID FOR MOBILE
+  FIX 6: IMPROVED SIZE GRID FOR MOBILE (MOVED TO MOBILE MEDIA QUERY)
   ============================================
   */
   
-  .techpack-size-grid {
-    margin: 1.5rem 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    position: relative;
-    -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
-    scroll-behavior: smooth;
-  }
   
-  /* Mobile-optimized grid layout - REMOVE XXS and XXL for mobile */
-  .techpack-size-grid__header,
-  .techpack-size-grid__row {
-    display: grid;
-    grid-template-columns: 70px repeat(5, minmax(70px, 1fr)); /* Changed from 7 to 5 columns */
-    gap: 0;
-    min-width: 400px; /* Reduced from 480px to accommodate fewer columns */
-  }
   
-  /* Hide XXS and XXL columns on mobile */
-  .techpack-size-grid__header .techpack-size-grid__label:nth-child(2), /* XXS header */
-  .techpack-size-grid__header .techpack-size-grid__label:nth-child(8), /* XXL header */
-  .techpack-size-grid__row .techpack-size-grid__input:nth-child(2), /* XXS input */
-  .techpack-size-grid__row .techpack-size-grid__input:nth-child(8) { /* XXL input */
-    display: none;
-  }
   
-  .techpack-size-grid__header {
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-    border-bottom: 2px solid #e2e8f0;
-    position: sticky;
-    left: 0;
-    z-index: 2;
-  }
   
-  .techpack-size-grid__label {
-    padding: 1rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-align: center;
-    color: #475569;
-    border-right: 1px solid #e2e8f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
   
-  .techpack-size-grid__label:first-child {
-    background: #334155;
-    color: #ffffff;
-    font-weight: 800;
-  }
   
   .techpack-size-grid__input {
     width: 100%;
@@ -1068,5 +1016,20 @@ DESKTOP RESET (769px+)
   .techpack-step {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
+  }
+
+  /* Mobile-specific size grid styles */
+  .techpack-size-grid__header,
+  .techpack-size-grid__row {
+    grid-template-columns: 70px repeat(5, minmax(70px, 1fr));
+    min-width: 400px;
+  }
+  
+  /* Hide XXS and XXL columns on mobile */
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(2),
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(8),
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(2),
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(8) {
+    display: none;
   }
 }
