@@ -34,280 +34,7 @@ Tech-Pack Step 3: Garment Specifications Section
       <h2 class="techpack-title">Garment Specifications</h2>
       <p class="techpack-subtitle" id="step-3-subtitle">Define your garment details and quantity requirements</p>
 
-      <!-- Sample Options Section (shown only for sample requests) -->
-      <div class="techpack-sample-options" id="sample-options-section" style="display: none;">
-        <h3 class="techpack-sample-options__title">Sample Options – Choose the type(s) of sample you want to receive</h3>
-        <p class="techpack-sample-options__subtitle">You can select one, two, or all three options based on your needs.</p>
-        
-        <div class="techpack-sample-options__grid">
-          
-          <!-- Option 1: Black/Raw Sample Garment -->
-          <div class="techpack-sample-option" data-option="black-raw">
-            <div class="techpack-sample-option__header">
-              <label class="techpack-sample-option__checkbox-wrapper">
-                <input type="checkbox" class="techpack-sample-option__checkbox" id="sample-black-raw">
-                <span class="techpack-sample-option__checkmark"></span>
-                <span class="techpack-sample-option__title">🔲 Black / Raw Sample Garment (Fastest)</span>
-                <button type="button" class="techpack-tooltip-trigger" data-tooltip="why-black-raw">
-                  <svg width="16" height="16" viewBox="0 0 16 16">
-                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <circle cx="8" cy="6" r="1" fill="currentColor"/>
-                    <path d="M8 8.5v3" stroke="currentColor" stroke-width="1.5"/>
-                  </svg>
-                </button>
-              </label>
-            </div>
-            
-            <div class="techpack-sample-option__content" style="display: none;">
-              <div class="techpack-form__row">
-                <div class="techpack-form__group">
-                  <label class="techpack-form__label">Choose fabric color</label>
-                  <select class="techpack-form__select" id="sample-fabric-color">
-                    <option value="">Select fabric color...</option>
-                    <option value="black">Black</option>
-                    <option value="raw">Raw (natural)</option>
-                  </select>
-                </div>
-                <div class="techpack-form__group">
-                  <label class="techpack-form__label">Sample size</label>
-                  <select class="techpack-form__select" id="sample-black-raw-size">
-                    <option value="">Select size...</option>
-                    <option value="xxs">XXS</option>
-                    <option value="xs">XS</option>
-                    <option value="s">S</option>
-                    <option value="m">M</option>
-                    <option value="l">L</option>
-                    <option value="xl">XL</option>
-                    <option value="xxl">XXL</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div class="techpack-sample-option__description">
-                <svg class="techpack-sample-option__icon" width="16" height="16" viewBox="0 0 16 16">
-                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                  <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                </svg>
-                <p>This option uses in-stock fabric to quickly produce your garment. Ideal to validate fit and construction. <strong>~1–2 week lead time.</strong></p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Option 2: Lab Dip Swatches -->
-          <div class="techpack-sample-option" data-option="lab-dip">
-            <div class="techpack-sample-option__header">
-              <label class="techpack-sample-option__checkbox-wrapper">
-                <input type="checkbox" class="techpack-sample-option__checkbox" id="sample-lab-dip">
-                <span class="techpack-sample-option__checkmark"></span>
-                <span class="techpack-sample-option__title">🔲 Lab Dip – Pantone Color Swatch (€25 each)</span>
-                <button type="button" class="techpack-tooltip-trigger" data-tooltip="what-is-lab-dip">
-                  <svg width="16" height="16" viewBox="0 0 16 16">
-                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <circle cx="8" cy="6" r="1" fill="currentColor"/>
-                    <path d="M8 8.5v3" stroke="currentColor" stroke-width="1.5"/>
-                  </svg>
-                </button>
-              </label>
-            </div>
-            
-            <div class="techpack-sample-option__content" style="display: none;">
-              <div class="techpack-lab-dip-list" id="lab-dip-list">
-                <!-- Lab dip items will be added here -->
-              </div>
-              
-              <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary" id="add-lab-dip">
-                <svg class="techpack-btn__icon" width="14" height="14" viewBox="0 0 16 16">
-                  <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                + Add Another Lab Dip
-              </button>
-              
-              <div class="techpack-sample-option__description">
-                <svg class="techpack-sample-option__icon" width="16" height="16" viewBox="0 0 16 16">
-                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                  <circle cx="8" cy="6" r="1.5" fill="currentColor"/>
-                  <path d="M8 9v3" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-                <div>
-                  <p>We'll dye small swatches of your Pantone color on the fabric you selected. This helps confirm color accuracy before full production or custom garments.</p>
-                  <div class="techpack-sample-tooltip">
-                    <strong>💡 Lab dips do NOT delay black/raw samples – they're produced in parallel.</strong>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="techpack-sample-cost-display">
-                <span class="techpack-sample-cost-label">Lab Dip Cost:</span>
-                <span class="techpack-sample-cost-value" id="lab-dip-cost">€0</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Option 3: Custom-Colored Sample Garment -->
-          <div class="techpack-sample-option" data-option="custom-color">
-            <div class="techpack-sample-option__header">
-              <label class="techpack-sample-option__checkbox-wrapper">
-                <input type="checkbox" class="techpack-sample-option__checkbox" id="sample-custom-color">
-                <span class="techpack-sample-option__checkmark"></span>
-                <span class="techpack-sample-option__title">🔲 Custom-Colored Sample Garment (Slower + Costlier)</span>
-                <button type="button" class="techpack-tooltip-trigger" data-tooltip="why-custom-color-slow">
-                  <svg width="16" height="16" viewBox="0 0 16 16">
-                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <circle cx="8" cy="6" r="1" fill="currentColor"/>
-                    <path d="M8 8.5v3" stroke="currentColor" stroke-width="1.5"/>
-                  </svg>
-                </button>
-              </label>
-            </div>
-            
-            <div class="techpack-sample-option__content" style="display: none;">
-              <div class="techpack-form__row">
-                <div class="techpack-form__group">
-                  <label class="techpack-form__label">Choose Pantone TCX</label>
-                  <select class="techpack-form__select" id="sample-custom-pantone">
-                    <option value="">Select from your lab dips...</option>
-                    <!-- Options populated from lab dips -->
-                  </select>
-                  <div class="techpack-form__help">Must have a corresponding lab dip</div>
-                </div>
-                <div class="techpack-form__group">
-                  <label class="techpack-form__label">Sample size</label>
-                  <select class="techpack-form__select" id="sample-custom-color-size">
-                    <option value="">Select size...</option>
-                    <option value="xxs">XXS</option>
-                    <option value="xs">XS</option>
-                    <option value="s">S</option>
-                    <option value="m">M</option>
-                    <option value="l">L</option>
-                    <option value="xl">XL</option>
-                    <option value="xxl">XXL</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="techpack-sample-warning">
-                <svg class="techpack-sample-warning__icon" width="20" height="20" viewBox="0 0 20 20">
-                  <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
-                </svg>
-                <div>
-                  <strong>⚠️ Adds ~3 weeks to timeline</strong>
-                  <p>After lab dip approval, we will dye fabric in your color and produce your garment. This adds +2–3 weeks to the timeline. Ideal if you want to test exact final color.</p>
-                </div>
-              </div>
-
-              <div class="techpack-sample-suggestion">
-                <svg class="techpack-sample-suggestion__icon" width="16" height="16" viewBox="0 0 16 16">
-                  <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3.5a.5.5 0 01.5.5v3.5a.5.5 0 01-1 0V5a.5.5 0 01.5-.5zM8 11a.75.75 0 100 1.5A.75.75 0 008 11z"/>
-                </svg>
-                <p><strong>💡 Want to validate fit while your color sample is being dyed?</strong> Add a black/raw sample too.</p>
-              </div>
-
-              <label class="techpack-sample-confirmation">
-                <input type="checkbox" class="techpack-sample-confirmation__checkbox" id="custom-color-confirmation">
-                <span class="techpack-sample-confirmation__checkmark"></span>
-                <span>I understand this sample takes additional time due to custom dyeing.</span>
-              </label>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Sample Summary -->
-        <div class="techpack-sample-summary" id="sample-summary" style="display: none;">
-          <h4 class="techpack-sample-summary__title">Selected Samples</h4>
-          <div class="techpack-sample-summary__content" id="sample-summary-content">
-            <!-- Populated by JavaScript -->
-          </div>
-          <div class="techpack-sample-summary__total">
-            <span class="techpack-sample-summary__total-label">Estimated Sample Cost:</span>
-            <span class="techpack-sample-summary__total-value" id="total-sample-cost">€0</span>
-          </div>
-        </div>
-
-        <!-- Pattern Section -->
-        <div class="techpack-pattern-section">
-          <h4 class="techpack-pattern-section__title">✂️ Garment Info Provided in Techpack</h4>
-          <p class="techpack-pattern-section__subtitle">Please confirm what your file already includes</p>
-          
-          <div class="techpack-pattern-options">
-            <label class="techpack-pattern-option">
-              <input type="checkbox" class="techpack-pattern-option__checkbox" id="pattern-colorway-included">
-              <span class="techpack-pattern-option__checkmark"></span>
-              <span class="techpack-pattern-option__text">Colorway is already included inside the techpack</span>
-            </label>
-            
-            <label class="techpack-pattern-option">
-              <input type="checkbox" class="techpack-pattern-option__checkbox" id="pattern-sizing-defined">
-              <span class="techpack-pattern-option__checkmark"></span>
-              <span class="techpack-pattern-option__text">Sizing or custom measurements are defined in the techpack</span>
-            </label>
-            
-            <label class="techpack-pattern-option">
-              <input type="checkbox" class="techpack-pattern-option__checkbox" id="pattern-needs-size-help">
-              <span class="techpack-pattern-option__checkmark"></span>
-              <span class="techpack-pattern-option__text">You need help with sizing or fit adjustments</span>
-            </label>
-          </div>
-          
-          <div class="techpack-pattern-note">
-            <svg class="techpack-pattern-note__icon" width="16" height="16" viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              <circle cx="8" cy="6" r="1" fill="currentColor"/>
-              <path d="M8 8.5v3" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-            <span>💡 If nothing is selected, we will assume standard sizing and basic fit.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Educational Tooltips -->
-      <div class="techpack-tooltips">
-        <div class="techpack-tooltip" id="tooltip-why-black-raw" style="display: none;">
-          <div class="techpack-tooltip__content">
-            <h5 class="techpack-tooltip__title">Why choose black/raw first?</h5>
-            <p>Black and raw fabric samples are the fastest to produce because we keep these materials in stock. This option helps you:</p>
-            <ul>
-              <li><strong>Validate fit and construction</strong> without waiting for custom colors</li>
-              <li><strong>Test garment quality</strong> and feel the fabric texture</li>
-              <li><strong>Speed up your decision process</strong> with a 1-2 week turnaround</li>
-            </ul>
-            <p><em>Perfect for confirming the garment meets your expectations before investing in custom colors.</em></p>
-          </div>
-        </div>
-        
-        <div class="techpack-tooltip" id="tooltip-what-is-lab-dip" style="display: none;">
-          <div class="techpack-tooltip__content">
-            <h5 class="techpack-tooltip__title">What's a lab dip?</h5>
-            <p>A lab dip is a small fabric swatch dyed in your exact Pantone color. This process helps you:</p>
-            <ul>
-              <li><strong>Confirm color accuracy</strong> before full production</li>
-              <li><strong>See how the color looks</strong> on your chosen fabric</li>
-              <li><strong>Avoid costly mistakes</strong> by testing colors first</li>
-            </ul>
-            <div class="techpack-tooltip__highlight">
-              <strong>💡 Pro tip:</strong> Lab dips are produced in parallel with other samples, so they don't delay your timeline!
-            </div>
-          </div>
-        </div>
-        
-        <div class="techpack-tooltip" id="tooltip-why-custom-color-slow" style="display: none;">
-          <div class="techpack-tooltip__content">
-            <h5 class="techpack-tooltip__title">Why do custom colors take longer?</h5>
-            <p>Custom-colored samples require extra time because we:</p>
-            <ul>
-              <li><strong>Wait for lab dip approval</strong> to ensure color accuracy</li>
-              <li><strong>Dye fabric to your specification</strong> in our facilities</li>
-              <li><strong>Produce your garment</strong> with the custom-dyed fabric</li>
-            </ul>
-            <div class="techpack-tooltip__process">
-              <strong>Process:</strong> Lab dip → Approval → Fabric dyeing → Garment production
-            </div>
-            <p><em>The result? A sample that exactly matches your final production color.</em></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="techpack-quantity-tracker" id="bulk-quantity-tracker">
+      <div class="techpack-quantity-tracker">
         <div class="techpack-quantity-tracker__content">
           <span class="techpack-quantity-tracker__label">Total Quantity:</span>
           <span class="techpack-quantity-tracker__value" id="total-quantity">0</span>
@@ -448,6 +175,84 @@ Tech-Pack Step 3: Garment Specifications Section
         </div>
         <div class="techpack-colorways__list">
           <!-- Colorways will be added here -->
+        </div>
+      </div>
+
+      <!-- Sample Options for this Garment (shown only for sample requests) -->
+      <div class="techpack-garment-samples" data-sample-request-only="true" style="display: none;">
+        <h5 class="techpack-garment-samples__title">
+          Sample Options for this Garment
+          <button type="button" class="techpack-tooltip-trigger" data-tooltip="garment-samples">
+            <svg width="14" height="14" viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <circle cx="8" cy="6" r="1" fill="currentColor"/>
+              <path d="M8 8.5v3" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </h5>
+        
+        <div class="techpack-sample-compact-grid">
+          <!-- Black/Raw Sample Option -->
+          <label class="techpack-sample-compact-option">
+            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-black-raw">
+            <div class="techpack-sample-compact-content">
+              <span class="techpack-sample-compact-title">Black/Raw Sample</span>
+              <span class="techpack-sample-compact-info">1-2 weeks • €35</span>
+              <span class="techpack-sample-compact-desc">Fast fit validation</span>
+            </div>
+          </label>
+          
+          <!-- Lab Dip Option -->
+          <label class="techpack-sample-compact-option">
+            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-lab-dip">
+            <div class="techpack-sample-compact-content">
+              <span class="techpack-sample-compact-title">Lab Dip Swatch</span>
+              <span class="techpack-sample-compact-info">Parallel • €25</span>
+              <span class="techpack-sample-compact-desc">Color confirmation</span>
+            </div>
+          </label>
+          
+          <!-- Custom Color Sample Option -->
+          <label class="techpack-sample-compact-option">
+            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-custom-color">
+            <div class="techpack-sample-compact-content">
+              <span class="techpack-sample-compact-title">Custom Color Sample</span>
+              <span class="techpack-sample-compact-info">+3 weeks • €65</span>
+              <span class="techpack-sample-compact-desc">Exact final color</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Sample Options Detail (expandable) -->
+        <div class="techpack-sample-details" style="display: none;">
+          <div class="techpack-sample-detail-row">
+            <div class="techpack-form__group">
+              <label class="techpack-form__label">Sample Size</label>
+              <select class="techpack-form__select techpack-garment-sample-size">
+                <option value="">Select size...</option>
+                <option value="xxs">XXS</option>
+                <option value="xs">XS</option>
+                <option value="s">S</option>
+                <option value="m">M</option>
+                <option value="l">L</option>
+                <option value="xl">XL</option>
+                <option value="xxl">XXL</option>
+              </select>
+            </div>
+            <div class="techpack-form__group">
+              <label class="techpack-form__label">Fabric Color (Black/Raw)</label>
+              <select class="techpack-form__select techpack-garment-fabric-color">
+                <option value="">Select color...</option>
+                <option value="black">Black</option>
+                <option value="raw">Raw (natural)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="techpack-sample-summary-line">
+            <span class="techpack-sample-summary-text">Selected: <span class="techpack-garment-sample-summary">None</span></span>
+            <span class="techpack-sample-summary-cost">Cost: €<span class="techpack-garment-sample-cost">0</span></span>
+          </div>
         </div>
       </div>
 
@@ -621,3 +426,21 @@ Tech-Pack Step 3: Garment Specifications Section
   ]
 }
 {% endschema %}
+
+<!-- Educational Tooltip for Per-Garment Samples -->
+<div class="techpack-tooltips">
+  <div class="techpack-tooltip" id="tooltip-garment-samples" style="display: none;">
+    <div class="techpack-tooltip__content">
+      <h5 class="techpack-tooltip__title">Per-Garment Sample Options</h5>
+      <p>For sample requests, you can choose different sample types for each garment:</p>
+      <ul>
+        <li><strong>Black/Raw Sample:</strong> Quick fit and construction validation using stock fabric</li>
+        <li><strong>Lab Dip:</strong> Color swatch to confirm Pantone accuracy before production</li>
+        <li><strong>Custom Color Sample:</strong> Full garment in your exact color (requires lab dip first)</li>
+      </ul>
+      <div class="techpack-tooltip__highlight">
+        <strong>💡 Pro tip:</strong> Mix and match options - get a black sample for quick fit validation while waiting for your custom color sample!
+      </div>
+    </div>
+  </div>
+</div>
