@@ -1815,7 +1815,7 @@
       });
     
       // Clear errors for valid fields - ENHANCED to handle both client types
-      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'deadline', 'notes'];
+      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'requestType', 'notes'];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -1962,9 +1962,9 @@
             }, 'error');
           }
           
-          // Check Pantone selection for each colorway (grid system)
-          const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
-          if (pantoneGrid) {
+          // Check Pantone selection for each colorway (button system)
+          const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
+          if (pantoneButtons) {
             const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
             if (!pantoneValidationResult) {
               isValid = false;
@@ -2183,8 +2183,8 @@
             <span class="techpack-review__value">${data.phone || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
-            <span class="techpack-review__label">Project Deadline:</span>
-            <span class="techpack-review__value">${data.deadline || 'N/A'}</span>
+            <span class="techpack-review__label">Request Type:</span>
+            <span class="techpack-review__value">${data.requestType === 'sample-request' ? 'Sample Request' : data.requestType === 'bulk-order-request' ? 'Bulk Order Request' : 'N/A'}</span>
           </div>
           <div class="techpack-review__item techpack-review__item--full-width">
             <span class="techpack-review__label">Additional Notes:</span>
@@ -3120,6 +3120,21 @@
     }
 
     calculateAndUpdateProgress() {
+      // Check if this is a sample request - samples don't need quantity minimums
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType === 'sample-request') {
+        // For sample requests, set totals to 0 and progress to 100%
+        this.updateTotalQuantityDisplay(0, 0, []);
+        this.updateQuantityProgressBar(100);
+        
+        // Update minimum text to indicate sample request
+        const minText = document.getElementById('min-text');
+        if (minText) minText.textContent = 'Sample Request (No minimum)';
+        
+        debugSystem.log('Sample request - no quantity minimum required');
+        return 100;
+      }
+      
       const totalQuantity = this.getTotalQuantityFromAllColorways();
       const minimumRequired = this.calculateMinimumRequired();
       
@@ -3704,6 +3719,9 @@
       
       this.setupColorwayEventListeners(colorway, garmentId, colorwayId);
       
+      // Check request type and conditionally show/hide size grid
+      this.handleSizeGridBasedOnRequestType(colorway);
+      
       colorwaysList.appendChild(clone);
       
       // Add to state
@@ -3734,6 +3752,34 @@
       debugSystem.log('Colorway added', { garmentId, colorwayId });
     }
 
+    handleSizeGridBasedOnRequestType(colorway) {
+      // Get the request type from the form
+      const requestType = document.getElementById('request-type')?.value;
+      const sizeGrid = colorway.querySelector('.techpack-size-grid');
+      
+      if (sizeGrid && requestType === 'sample-request') {
+        // For Sample Request: Hide the size grid completely, no quantities needed
+        sizeGrid.style.display = 'none';
+        sizeGrid.setAttribute('data-hidden-for-sample', 'true');
+        
+        // Set colorway total to 0 since no quantities are needed for samples
+        const totalElement = colorway.querySelector('.techpack-colorway__total-value');
+        if (totalElement) {
+          totalElement.textContent = '0';
+        }
+        
+        debugSystem.log('Size grid hidden for sample request', { requestType });
+      } else if (sizeGrid && requestType === 'bulk-order-request') {
+        // For Bulk Order Request: Show the size grid (default behavior)
+        sizeGrid.style.display = 'block';
+        sizeGrid.removeAttribute('data-hidden-for-sample');
+        debugSystem.log('Size grid shown for bulk order request', { requestType });
+      } else if (sizeGrid) {
+        // Default case: keep existing pantone-based logic
+        sizeGrid.style.display = sizeGrid.getAttribute('data-requires-pantone') === 'true' ? 'none' : 'block';
+      }
+    }
+
     setupColorwayEventListeners(colorway, garmentId, colorwayId) {
       // Remove button
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
@@ -3746,7 +3792,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-pantone-option');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3761,8 +3807,8 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.pantone-name');
-              const colorCircle = button.querySelector('.pantone-color-circle');
+              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
+              const colorCircle = button.querySelector('.techpack-pantone-circle');
               
               if (pantoneNameSpan && colorCircle) {
                 // Update hex color circle
@@ -3807,30 +3853,19 @@
             // Single selection behavior: deselect all others first
             pantoneButtonElements.forEach(btn => {
               btn.classList.remove('selected');
-              // Hide radio dot
-              const radioDot = btn.querySelector('.pantone-radio-dot');
-              if (radioDot) {
-                radioDot.style.opacity = '0';
-                radioDot.style.transform = 'translate(-50%, -50%) scale(0)';
-              }
-              // Reset border color
-              btn.style.borderColor = '#e5e7eb';
-              btn.style.backgroundColor = 'white';
+              // Radio dot styling handled by CSS classes
             });
             
             // Select the clicked button
             button.classList.add('selected');
             
-            // Show radio dot for selected button
-            const selectedRadioDot = button.querySelector('.pantone-radio-dot');
-            if (selectedRadioDot) {
-              selectedRadioDot.style.opacity = '1';
-              selectedRadioDot.style.transform = 'translate(-50%, -50%) scale(1)';
-            }
+            // Radio dot styling handled by CSS classes
             
-            // Update selected button appearance
-            button.style.borderColor = '#3b82f6';
-            button.style.backgroundColor = '#eff6ff';
+            // Show the size grid now that pantone is selected
+            const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
+            if (sizeGrid) {
+              sizeGrid.style.display = 'block';
+            }
             
             // Update colorway data
             this.updateColorwayPantoneData(garmentId, colorwayId);
@@ -3839,6 +3874,53 @@
             this.validatePantoneSelection(colorway);
           });
         });
+        
+        // Sample request functionality - In-place transformation
+        const sampleToggle = colorway.querySelector('.techpack-sample-toggle');
+        if (sampleToggle) {
+          const sampleRequestBtn = sampleToggle.querySelector('.techpack-btn--sample-request');
+          const sampleSizeSelector = sampleToggle.querySelector('.techpack-form__select--sample-size');
+          
+          if (sampleRequestBtn && sampleSizeSelector) {
+            sampleRequestBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              // Smooth transition to select
+              sampleRequestBtn.style.opacity = '0';
+              sampleRequestBtn.style.pointerEvents = 'none';
+              sampleSizeSelector.style.display = 'block';
+              sampleSizeSelector.style.opacity = '1';
+              sampleSizeSelector.style.pointerEvents = 'auto';
+              sampleSizeSelector.focus(); // Focus the select for better UX
+            });
+            
+            // Handle dropdown change and blur events
+            sampleSizeSelector.addEventListener('change', (e) => {
+              if (e.target.value === '') {
+                // If no size selected, go back to button
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+            
+            sampleSizeSelector.addEventListener('blur', (e) => {
+              // If no value selected on blur, go back to button
+              if (e.target.value === '') {
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+          }
+        }
       }
       
       // Fix mobile null reference error - check colorPreview and colorPicker exist
@@ -6943,7 +7025,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
       if (hasValidPantone) {
@@ -6968,7 +7050,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const selectedPantone = selectedButtons.length > 0 ? {
         code: selectedButtons[0].dataset.pantoneCode,
         hex: selectedButtons[0].dataset.pantoneHex
@@ -7034,9 +7116,9 @@
       this.setupClientModal();
       
       // EXISTING: Keep all your existing setup methods
-      this.setupDateConstraints();
       this.setupPhoneFormatting();
       this.setupProductionTypeListener();
+      this.setupRequestTypeListener();
       this.setupNavigationButtons();
       this.setupFormSubmission();
       this.setupVATFormatting();
@@ -7198,24 +7280,6 @@
       debugSystem.log('✅ Client modal setup complete');
     }
 
-    setupDateConstraints() {
-      const dateInput = document.getElementById('deadline');
-      if (!dateInput) return;
-
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() + (CONFIG.MIN_DELIVERY_WEEKS * 7));
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() + 2);
-
-      dateInput.min = minDate.toISOString().split('T')[0];
-      dateInput.max = maxDate.toISOString().split('T')[0];
-
-      debugSystem.log('Date constraints applied', {
-        min: dateInput.min,
-        max: dateInput.max
-      });
-    }
 
     setupPhoneFormatting() {
       const phoneInput = document.getElementById('phone');
@@ -7749,26 +7813,6 @@
       debugSystem.log('Configured Step 1 for new client');
     }
 
-// EXISTING: Keep your exact setupDateConstraints method
-    setupDateConstraints() {
-      const dateInput = document.getElementById('deadline');
-      if (!dateInput) return;
-
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() + (CONFIG.MIN_DELIVERY_WEEKS * 7));
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() + 2);
-
-      dateInput.min = minDate.toISOString().split('T')[0];
-      dateInput.max = maxDate.toISOString().split('T')[0];
-
-      debugSystem.log('Date constraints set', { 
-        min: dateInput.min, 
-        max: dateInput.max,
-        minWeeksFromToday: CONFIG.MIN_DELIVERY_WEEKS
-      });
-    }
 
     // EXISTING: Keep your exact setupPhoneFormatting method
     setupPhoneFormatting() {
@@ -7776,6 +7820,30 @@
       if (phoneInput) {
         phoneInput.addEventListener('input', (e) => {
           e.target.value = Utils.formatPhoneNumber(e.target.value);
+        });
+      }
+    }
+
+    setupRequestTypeListener() {
+      const requestTypeSelect = document.getElementById('request-type');
+      if (requestTypeSelect) {
+        requestTypeSelect.addEventListener('change', () => {
+          // Update all existing colorways when request type changes
+          const existingColorways = document.querySelectorAll('.techpack-colorway');
+          existingColorways.forEach(colorway => {
+            garmentManager.handleSizeGridBasedOnRequestType(colorway);
+          });
+          
+          // Recalculate quantities and progress
+          setTimeout(() => {
+            quantityCalculator.calculateAndUpdateProgress();
+            stepManager.validateStep3();
+          }, 100);
+          
+          debugSystem.log('Request type changed, updated all colorways', { 
+            requestType: requestTypeSelect.value,
+            colorwayCount: existingColorways.length 
+          });
         });
       }
     }
@@ -8139,7 +8207,7 @@
         phone: document.getElementById('phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.getElementById('production-type')?.value || '',
-        deadline: document.getElementById('deadline')?.value || '',
+        requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
     }
@@ -8287,7 +8355,7 @@
               phone: clientData.phone,
               country: clientData.country,
               production_type: clientData.productionType,
-              deadline: clientData.deadline,
+              request_type: clientData.requestType,
               notes: clientData.notes,
               
               // Garment/colorway specific data
@@ -9107,7 +9175,7 @@ setupInitialization();
       phone: document.getElementById('phone')?.value || '',
       country: document.getElementById('country')?.value || '',
       productionType: document.getElementById('production-type')?.value || '',
-      deadline: document.getElementById('deadline')?.value || '',
+      requestType: document.getElementById('request-type')?.value || '',
       notes: document.getElementById('notes')?.value || ''
     };
 
@@ -9133,7 +9201,7 @@ setupInitialization();
                document.getElementById('business-phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.getElementById('production-type')?.value || '',
-        deadline: document.getElementById('deadline')?.value || '',
+        requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
       
@@ -9200,16 +9268,13 @@ setupInitialization();
       </div>`;
     }
     
-    if (clientData.deadline) {
-      const deadlineDate = new Date(clientData.deadline);
-      const formattedDate = deadlineDate.toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
-      });
+    if (clientData.requestType) {
+      const requestTypeLabel = clientData.requestType === 'sample-request' ? 'Sample Request' : 
+                              clientData.requestType === 'bulk-order-request' ? 'Bulk Order Request' : 
+                              clientData.requestType;
       html += `<div class="review-item">
-        <span class="review-label">Target Deadline:</span>
-        <span class="review-value">${formattedDate}</span>
+        <span class="review-label">Request Type:</span>
+        <span class="review-value">${requestTypeLabel}</span>
       </div>`;
     }
     
@@ -9711,6 +9776,188 @@ setupInitialization();
     container.innerHTML = html;
     debugSystem.log('✅ Summary review populated', { totalGarments, totalQuantity, totalFiles });
   }
+
+  // Populate Sample Review for Sample Requests
+  function populateSampleReview() {
+    debugSystem.log('🔍 Populating sample review...');
+    const container = document.getElementById('review-sample-content');
+    if (!container) {
+      debugSystem.log('❌ Sample review container not found');
+      return;
+    }
+
+    // Check if this is a sample request
+    const requestType = document.getElementById('request-type')?.value;
+    if (requestType !== 'sample-request') {
+      document.getElementById('sample-summary-review').style.display = 'none';
+      return;
+    }
+
+    // Show sample review section
+    document.getElementById('sample-summary-review').style.display = 'block';
+    document.getElementById('bulk-garments-review').style.display = 'none';
+
+    // Get sample data from SampleManager
+    const sampleData = window.sampleManager ? window.sampleManager.getSampleData() : null;
+    if (!sampleData) {
+      container.innerHTML = '<div class="review-empty">Sample data not available</div>';
+      return;
+    }
+
+    let html = '<div class="review-section">';
+
+    // Sample Options Summary
+    html += '<div class="techpack-sample-review-summary">';
+    html += '<h4 class="techpack-sample-review-title">Selected Sample Options</h4>';
+
+    let hasOptions = false;
+
+    // Black/Raw Sample
+    if (sampleData.blackRaw.enabled) {
+      hasOptions = true;
+      const leadTime = '1-2 weeks';
+      html += `
+        <div class="techpack-sample-review-item">
+          <div class="techpack-sample-review-item__header">
+            <span class="techpack-sample-review-item__title">🔲 Black/Raw Sample Garment</span>
+            <span class="techpack-sample-review-item__badge techpack-sample-review-item__badge--fast">Fastest</span>
+          </div>
+          <div class="techpack-sample-review-item__details">
+            <span class="techpack-sample-review-detail">Fabric: ${sampleData.blackRaw.fabricColor || 'TBD'}</span>
+            <span class="techpack-sample-review-detail">Size: ${sampleData.blackRaw.size || 'TBD'}</span>
+            <span class="techpack-sample-review-detail">Lead Time: ${leadTime}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Lab Dips
+    if (sampleData.labDips.length > 0) {
+      hasOptions = true;
+      html += `
+        <div class="techpack-sample-review-item">
+          <div class="techpack-sample-review-item__header">
+            <span class="techpack-sample-review-item__title">🔲 Lab Dip Color Swatches</span>
+            <span class="techpack-sample-review-item__badge">€${sampleData.labDips.length * 25}</span>
+          </div>
+          <div class="techpack-sample-review-item__details">
+      `;
+      
+      sampleData.labDips.forEach((labDip, index) => {
+        html += `<span class="techpack-sample-review-detail">Dip ${index + 1}: ${labDip.pantone || 'Pantone TBD'}</span>`;
+      });
+      
+      html += `
+            <span class="techpack-sample-review-detail">Lead Time: Parallel production (no delay)</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Custom Color Sample
+    if (sampleData.customColor.enabled) {
+      hasOptions = true;
+      html += `
+        <div class="techpack-sample-review-item">
+          <div class="techpack-sample-review-item__header">
+            <span class="techpack-sample-review-item__title">🔲 Custom-Colored Sample Garment</span>
+            <span class="techpack-sample-review-item__badge techpack-sample-review-item__badge--slow">+3 weeks</span>
+          </div>
+          <div class="techpack-sample-review-item__details">
+            <span class="techpack-sample-review-detail">Color: ${sampleData.customColor.pantone || 'TBD'}</span>
+            <span class="techpack-sample-review-detail">Size: ${sampleData.customColor.size || 'TBD'}</span>
+            <span class="techpack-sample-review-detail">Lead Time: 3-4 weeks (after lab dip approval)</span>
+            <span class="techpack-sample-review-detail">Confirmation: ${sampleData.customColor.confirmed ? '✅ Confirmed' : '❌ Pending'}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (!hasOptions) {
+      html += '<div class="review-empty">No sample options selected</div>';
+    }
+
+    html += '</div>'; // End sample options summary
+
+    // Pattern Information
+    html += '<div class="techpack-sample-pattern-review">';
+    html += '<h4 class="techpack-sample-review-title">Pattern Information</h4>';
+    
+    const patterns = sampleData.patterns;
+    const hasPatternInfo = patterns.colorwayIncluded || patterns.sizingDefined || patterns.needsSizeHelp;
+    
+    if (hasPatternInfo) {
+      if (patterns.colorwayIncluded) {
+        html += '<div class="techpack-sample-pattern-item">✅ Colorway information included in techpack</div>';
+      }
+      if (patterns.sizingDefined) {
+        html += '<div class="techpack-sample-pattern-item">✅ Sizing/measurements defined in techpack</div>';
+      }
+      if (patterns.needsSizeHelp) {
+        html += '<div class="techpack-sample-pattern-item">🔧 Client needs sizing/fit assistance</div>';
+      }
+    } else {
+      html += '<div class="techpack-sample-pattern-item">📋 Standard sizing and basic fit assumed</div>';
+    }
+    
+    html += '</div>'; // End pattern information
+
+    // Cost Breakdown
+    html += '<div class="techpack-sample-cost-breakdown">';
+    html += '<h4 class="techpack-sample-review-title">Sample Cost Breakdown</h4>';
+    
+    let totalCost = 0;
+    
+    if (sampleData.blackRaw.enabled) {
+      html += '<div class="techpack-sample-cost-item">Black/Raw Sample: €35</div>';
+      totalCost += 35;
+    }
+    
+    if (sampleData.labDips.length > 0) {
+      const labDipCost = sampleData.labDips.length * 25;
+      html += `<div class="techpack-sample-cost-item">Lab Dips (${sampleData.labDips.length}): €${labDipCost}</div>`;
+      totalCost += labDipCost;
+    }
+    
+    if (sampleData.customColor.enabled) {
+      html += '<div class="techpack-sample-cost-item">Custom Color Sample: €65</div>';
+      totalCost += 65;
+    }
+    
+    html += `
+      <div class="techpack-sample-cost-total">
+        <strong>Estimated Total: €${totalCost}</strong>
+      </div>
+    `;
+    
+    html += '</div>'; // End cost breakdown
+
+    // Lead Time Summary
+    let maxLeadTime = '1-2 weeks';
+    if (sampleData.customColor.enabled) {
+      maxLeadTime = '3-4 weeks';
+    } else if (sampleData.blackRaw.enabled || sampleData.labDips.length > 0) {
+      maxLeadTime = '1-2 weeks';
+    }
+
+    html += `
+      <div class="techpack-sample-timeline">
+        <h4 class="techpack-sample-review-title">Expected Timeline</h4>
+        <div class="techpack-sample-timeline-item">
+          <strong>Total Lead Time: ${maxLeadTime}</strong>
+        </div>
+        ${sampleData.customColor.enabled ? 
+          '<div class="techpack-sample-timeline-note">⚠️ Custom color samples require lab dip approval first, adding 2-3 weeks to the timeline.</div>' : 
+          ''
+        }
+      </div>
+    `;
+
+    html += '</div>'; // End review section
+
+    container.innerHTML = html;
+    debugSystem.log('✅ Sample review populated', { sampleData, totalCost });
+  }
   
   // Main function to populate all review content
   async function populateReviewContent() {
@@ -9722,7 +9969,14 @@ setupInitialization();
       // Handle file uploads and populate files review
       await handleFileUploadsForReview();
       
-      populateGarmentsReview();
+      // Populate garments OR sample review based on request type
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType === 'sample-request') {
+        populateSampleReview();
+      } else {
+        populateGarmentsReview();
+      }
+      
       populateSummaryReview();
       debugSystem.log('✅ All review content populated successfully');
     } catch (error) {
@@ -9820,5 +10074,581 @@ setupInitialization();
     });
     return total;
   }
+
+  // ===============================================
+  // SAMPLE OPTIONS SYSTEM - COMPREHENSIVE LOGIC
+  // ===============================================
+
+  class SampleManager {
+    constructor() {
+      this.sampleData = {
+        blackRaw: { 
+          enabled: false, 
+          fabricColor: '', 
+          size: '', 
+          quantity: 1,
+          cost: 0 // Will be calculated
+        },
+        labDips: [], // Array of { id, pantone, color, cost: 25 }
+        customColor: { 
+          enabled: false, 
+          pantone: '', 
+          size: '', 
+          confirmed: false,
+          cost: 0 // Will be calculated
+        },
+        patterns: { 
+          colorwayIncluded: false, 
+          sizingDefined: false, 
+          needsSizeHelp: false 
+        }
+      };
+      this.labDipCounter = 0;
+      this.init();
+    }
+
+    init() {
+      this.bindEventListeners();
+      this.checkRequestType();
+      debugSystem.log('SampleManager initialized');
+    }
+
+    bindEventListeners() {
+      // Request type change handler (from Step 1)
+      const requestTypeSelect = document.getElementById('request-type');
+      if (requestTypeSelect) {
+        requestTypeSelect.addEventListener('change', () => this.checkRequestType());
+      }
+
+      // Sample option checkboxes
+      document.addEventListener('change', (e) => {
+        if (e.target.classList.contains('techpack-sample-option__checkbox')) {
+          this.handleSampleOptionToggle(e.target);
+        }
+        if (e.target.classList.contains('techpack-pattern-option__checkbox')) {
+          this.handlePatternOptionChange(e.target);
+        }
+      });
+
+      // Add lab dip button
+      document.addEventListener('click', (e) => {
+        if (e.target.id === 'add-lab-dip') {
+          this.addLabDip();
+        }
+        if (e.target.classList.contains('techpack-lab-dip-remove')) {
+          this.removeLabDip(e.target);
+        }
+      });
+
+      // Form field changes for sample options
+      document.addEventListener('change', (e) => {
+        if (e.target.id === 'sample-fabric-color' || 
+            e.target.id === 'sample-black-raw-size') {
+          this.updateBlackRawSample();
+        }
+        if (e.target.id === 'sample-custom-pantone' || 
+            e.target.id === 'sample-custom-color-size' ||
+            e.target.id === 'custom-color-confirmation') {
+          this.updateCustomColorSample();
+        }
+        if (e.target.classList.contains('techpack-lab-dip-pantone') ||
+            e.target.classList.contains('techpack-lab-dip-color')) {
+          this.updateLabDip(e.target);
+        }
+      });
+
+      // Tooltip functionality
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.techpack-tooltip-trigger')) {
+          const trigger = e.target.closest('.techpack-tooltip-trigger');
+          this.toggleTooltip(trigger);
+        }
+        // Close tooltips when clicking outside
+        if (!e.target.closest('.techpack-tooltip-trigger') && !e.target.closest('.techpack-tooltip')) {
+          this.closeAllTooltips();
+        }
+      });
+    }
+
+    checkRequestType() {
+      const requestType = document.getElementById('request-type')?.value;
+      const sampleSection = document.getElementById('sample-options-section');
+      const bulkTracker = document.getElementById('bulk-quantity-tracker');
+      const garmentsContainer = document.getElementById('garments-container');
+      const addGarmentBtn = document.getElementById('add-garment');
+      const subtitle = document.getElementById('step-3-subtitle');
+
+      if (requestType === 'sample-request') {
+        // Show sample options, hide bulk elements
+        if (sampleSection) sampleSection.style.display = 'block';
+        if (bulkTracker) bulkTracker.style.display = 'none';
+        if (garmentsContainer) garmentsContainer.style.display = 'none';
+        if (addGarmentBtn) addGarmentBtn.style.display = 'none';
+        if (subtitle) subtitle.textContent = 'Choose your sample options and provide garment details';
+
+        // Add first lab dip by default
+        setTimeout(() => {
+          if (this.sampleData.labDips.length === 0) {
+            this.addLabDip();
+          }
+        }, 100);
+
+        debugSystem.log('Sample request mode activated');
+      } else {
+        // Show bulk elements, hide sample options
+        if (sampleSection) sampleSection.style.display = 'none';
+        if (bulkTracker) bulkTracker.style.display = 'block';
+        if (garmentsContainer) garmentsContainer.style.display = 'block';
+        if (addGarmentBtn) addGarmentBtn.style.display = 'block';
+        if (subtitle) subtitle.textContent = 'Define your garment details and quantity requirements';
+
+        debugSystem.log('Bulk request mode activated');
+      }
+
+      this.updateNextButtonState();
+    }
+
+    handleSampleOptionToggle(checkbox) {
+      const option = checkbox.closest('.techpack-sample-option');
+      const optionType = option.dataset.option;
+      const content = option.querySelector('.techpack-sample-option__content');
+      
+      if (checkbox.checked) {
+        option.classList.add('active');
+        content.style.display = 'block';
+        
+        // Enable the option in data
+        if (optionType === 'black-raw') {
+          this.sampleData.blackRaw.enabled = true;
+        } else if (optionType === 'lab-dip') {
+          // Ensure at least one lab dip exists
+          if (this.sampleData.labDips.length === 0) {
+            this.addLabDip();
+          }
+        } else if (optionType === 'custom-color') {
+          this.sampleData.customColor.enabled = true;
+          this.updateCustomColorPantoneOptions();
+        }
+      } else {
+        option.classList.remove('active');
+        content.style.display = 'none';
+        
+        // Disable the option in data
+        if (optionType === 'black-raw') {
+          this.sampleData.blackRaw.enabled = false;
+        } else if (optionType === 'lab-dip') {
+          // Clear all lab dips
+          this.sampleData.labDips = [];
+          document.getElementById('lab-dip-list').innerHTML = '';
+        } else if (optionType === 'custom-color') {
+          this.sampleData.customColor.enabled = false;
+        }
+      }
+
+      this.updateSampleSummary();
+      this.updateNextButtonState();
+      debugSystem.log('Sample option toggled', { optionType, enabled: checkbox.checked });
+    }
+
+    addLabDip() {
+      const labDipId = `lab-dip-${++this.labDipCounter}`;
+      const template = document.getElementById('lab-dip-template');
+      const clone = template.content.cloneNode(true);
+      
+      // Set unique ID
+      const labDipItem = clone.querySelector('.techpack-lab-dip-item');
+      labDipItem.dataset.labDipId = labDipId;
+      
+      // Add to data
+      this.sampleData.labDips.push({
+        id: labDipId,
+        pantone: '',
+        color: '#000000',
+        cost: 25
+      });
+
+      // Add to DOM
+      document.getElementById('lab-dip-list').appendChild(clone);
+      
+      // Update cost display
+      this.updateLabDipCost();
+      this.updateCustomColorPantoneOptions();
+      this.updateSampleSummary();
+
+      debugSystem.log('Lab dip added', { labDipId });
+    }
+
+    removeLabDip(button) {
+      const labDipItem = button.closest('.techpack-lab-dip-item');
+      const labDipId = labDipItem.dataset.labDipId;
+      
+      // Remove from data
+      this.sampleData.labDips = this.sampleData.labDips.filter(dip => dip.id !== labDipId);
+      
+      // Remove from DOM
+      labDipItem.remove();
+      
+      // Update displays
+      this.updateLabDipCost();
+      this.updateCustomColorPantoneOptions();
+      this.updateSampleSummary();
+
+      debugSystem.log('Lab dip removed', { labDipId });
+    }
+
+    updateLabDip(input) {
+      const labDipItem = input.closest('.techpack-lab-dip-item');
+      const labDipId = labDipItem.dataset.labDipId;
+      const labDip = this.sampleData.labDips.find(dip => dip.id === labDipId);
+      
+      if (input.classList.contains('techpack-lab-dip-pantone')) {
+        labDip.pantone = input.value;
+      } else if (input.classList.contains('techpack-lab-dip-color')) {
+        labDip.color = input.value;
+      }
+
+      this.updateCustomColorPantoneOptions();
+      this.updateSampleSummary();
+      debugSystem.log('Lab dip updated', { labDipId, labDip });
+    }
+
+    updateBlackRawSample() {
+      this.sampleData.blackRaw.fabricColor = document.getElementById('sample-fabric-color')?.value || '';
+      this.sampleData.blackRaw.size = document.getElementById('sample-black-raw-size')?.value || '';
+      
+      this.updateSampleSummary();
+      this.updateNextButtonState();
+      debugSystem.log('Black/Raw sample updated', this.sampleData.blackRaw);
+    }
+
+    updateCustomColorSample() {
+      this.sampleData.customColor.pantone = document.getElementById('sample-custom-pantone')?.value || '';
+      this.sampleData.customColor.size = document.getElementById('sample-custom-color-size')?.value || '';
+      this.sampleData.customColor.confirmed = document.getElementById('custom-color-confirmation')?.checked || false;
+      
+      this.updateSampleSummary();
+      this.updateNextButtonState();
+      debugSystem.log('Custom color sample updated', this.sampleData.customColor);
+    }
+
+    updateCustomColorPantoneOptions() {
+      const select = document.getElementById('sample-custom-pantone');
+      if (!select) return;
+
+      // Clear existing options except placeholder
+      select.innerHTML = '<option value="">Select from your lab dips...</option>';
+
+      // Add options from lab dips
+      this.sampleData.labDips.forEach(labDip => {
+        if (labDip.pantone) {
+          const option = document.createElement('option');
+          option.value = labDip.pantone;
+          option.textContent = labDip.pantone;
+          select.appendChild(option);
+        }
+      });
+
+      // Show warning if custom color enabled but no lab dips
+      const warning = document.querySelector('.techpack-sample-warning');
+      if (this.sampleData.customColor.enabled && this.sampleData.labDips.length === 0) {
+        // Show warning about needing lab dip
+        this.showCustomColorWarning(true);
+      } else {
+        this.showCustomColorWarning(false);
+      }
+    }
+
+    showCustomColorWarning(show) {
+      let warning = document.querySelector('.techpack-custom-color-warning');
+      if (show && !warning) {
+        warning = document.createElement('div');
+        warning.className = 'techpack-sample-warning techpack-custom-color-warning';
+        warning.innerHTML = `
+          <svg class="techpack-sample-warning__icon" width="20" height="20" viewBox="0 0 20 20">
+            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+          </svg>
+          <div>
+            <strong>⚠️ Lab Dip Required</strong>
+            <p>Custom-colored garments require lab dip approval first. Please add at least one lab dip above.</p>
+          </div>
+        `;
+        
+        const customColorContent = document.querySelector('[data-option="custom-color"] .techpack-sample-option__content');
+        if (customColorContent) {
+          customColorContent.appendChild(warning);
+        }
+      } else if (!show && warning) {
+        warning.remove();
+      }
+    }
+
+    updateLabDipCost() {
+      const totalCost = this.sampleData.labDips.length * 25;
+      const costDisplay = document.getElementById('lab-dip-cost');
+      if (costDisplay) {
+        costDisplay.textContent = `€${totalCost}`;
+      }
+    }
+
+    calculateSampleCosts() {
+      let totalCost = 0;
+
+      // Lab dips cost
+      totalCost += this.sampleData.labDips.length * 25;
+
+      // Black/Raw sample cost (estimated)
+      if (this.sampleData.blackRaw.enabled) {
+        totalCost += 35; // Base sample cost
+      }
+
+      // Custom color sample cost (estimated)  
+      if (this.sampleData.customColor.enabled) {
+        totalCost += 65; // Base + dyeing cost
+      }
+
+      return totalCost;
+    }
+
+    updateSampleSummary() {
+      const summary = document.getElementById('sample-summary');
+      const content = document.getElementById('sample-summary-content');
+      const totalCost = document.getElementById('total-sample-cost');
+      
+      if (!summary || !content || !totalCost) return;
+
+      let hasSelectedOptions = false;
+      let html = '';
+
+      // Black/Raw sample
+      if (this.sampleData.blackRaw.enabled) {
+        hasSelectedOptions = true;
+        html += `
+          <div class="techpack-sample-summary-item">
+            <span class="techpack-sample-summary-item__label">Black/Raw Sample</span>
+            <span class="techpack-sample-summary-item__value">
+              ${this.sampleData.blackRaw.fabricColor} - Size: ${this.sampleData.blackRaw.size || 'TBD'}
+            </span>
+          </div>
+        `;
+      }
+
+      // Lab dips
+      if (this.sampleData.labDips.length > 0) {
+        hasSelectedOptions = true;
+        this.sampleData.labDips.forEach(labDip => {
+          html += `
+            <div class="techpack-sample-summary-item">
+              <span class="techpack-sample-summary-item__label">Lab Dip</span>
+              <span class="techpack-sample-summary-item__value">
+                ${labDip.pantone || 'Pantone TBD'} - €25
+              </span>
+            </div>
+          `;
+        });
+      }
+
+      // Custom color sample
+      if (this.sampleData.customColor.enabled) {
+        hasSelectedOptions = true;
+        html += `
+          <div class="techpack-sample-summary-item">
+            <span class="techpack-sample-summary-item__label">Custom Color Sample</span>
+            <span class="techpack-sample-summary-item__value">
+              ${this.sampleData.customColor.pantone} - Size: ${this.sampleData.customColor.size || 'TBD'}
+            </span>
+          </div>
+        `;
+      }
+
+      content.innerHTML = html;
+      totalCost.textContent = `€${this.calculateSampleCosts()}`;
+      
+      summary.style.display = hasSelectedOptions ? 'block' : 'none';
+    }
+
+    handlePatternOptionChange(checkbox) {
+      const optionId = checkbox.id;
+      
+      if (optionId === 'pattern-colorway-included') {
+        this.sampleData.patterns.colorwayIncluded = checkbox.checked;
+      } else if (optionId === 'pattern-sizing-defined') {
+        this.sampleData.patterns.sizingDefined = checkbox.checked;
+      } else if (optionId === 'pattern-needs-size-help') {
+        this.sampleData.patterns.needsSizeHelp = checkbox.checked;
+      }
+
+      debugSystem.log('Pattern option changed', this.sampleData.patterns);
+    }
+
+    validateSampleSelections() {
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType !== 'sample-request') return true;
+
+      // At least one sample option must be selected
+      const hasAnySelection = this.sampleData.blackRaw.enabled || 
+                             this.sampleData.labDips.length > 0 || 
+                             this.sampleData.customColor.enabled;
+
+      if (!hasAnySelection) {
+        this.showValidationMessage('Please select at least one sample option.');
+        return false;
+      }
+
+      // Black/Raw sample validation
+      if (this.sampleData.blackRaw.enabled) {
+        if (!this.sampleData.blackRaw.fabricColor || !this.sampleData.blackRaw.size) {
+          this.showValidationMessage('Please complete Black/Raw sample details (fabric color and size).');
+          return false;
+        }
+      }
+
+      // Custom color sample validation
+      if (this.sampleData.customColor.enabled) {
+        if (this.sampleData.labDips.length === 0) {
+          this.showValidationMessage('Custom-colored samples require at least one lab dip.');
+          return false;
+        }
+        if (!this.sampleData.customColor.pantone || !this.sampleData.customColor.size) {
+          this.showValidationMessage('Please complete custom color sample details.');
+          return false;
+        }
+        if (!this.sampleData.customColor.confirmed) {
+          this.showValidationMessage('Please confirm you understand the additional time for custom dyeing.');
+          return false;
+        }
+      }
+
+      // Lab dip validation
+      for (let labDip of this.sampleData.labDips) {
+        if (!labDip.pantone.trim()) {
+          this.showValidationMessage('Please enter Pantone codes for all lab dips.');
+          return false;
+        }
+      }
+
+      this.hideValidationMessage();
+      return true;
+    }
+
+    showValidationMessage(message) {
+      let msgElement = document.querySelector('.techpack-sample-validation-message');
+      if (!msgElement) {
+        msgElement = document.createElement('div');
+        msgElement.className = 'techpack-sample-validation-message techpack-sample-warning';
+        msgElement.innerHTML = `
+          <svg class="techpack-sample-warning__icon" width="20" height="20" viewBox="0 0 20 20">
+            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+          </svg>
+          <div>
+            <strong>⚠️ Validation Error</strong>
+            <p class="validation-message-text"></p>
+          </div>
+        `;
+        
+        const sampleOptions = document.getElementById('sample-options-section');
+        if (sampleOptions) {
+          sampleOptions.appendChild(msgElement);
+        }
+      }
+      
+      msgElement.querySelector('.validation-message-text').textContent = message;
+      msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    hideValidationMessage() {
+      const msgElement = document.querySelector('.techpack-sample-validation-message');
+      if (msgElement) {
+        msgElement.remove();
+      }
+    }
+
+    updateNextButtonState() {
+      const nextBtn = document.getElementById('step-3-next');
+      if (!nextBtn) return;
+
+      const requestType = document.getElementById('request-type')?.value;
+      
+      if (requestType === 'sample-request') {
+        // For sample requests, enable if basic validation passes
+        const isValid = this.validateSampleSelections();
+        nextBtn.disabled = !isValid;
+      } else {
+        // For bulk requests, use existing quantity validation
+        // This is handled by existing QuantityCalculator
+      }
+    }
+
+    getSampleData() {
+      return {
+        ...this.sampleData,
+        totalCost: this.calculateSampleCosts(),
+        isValid: this.validateSampleSelections()
+      };
+    }
+
+    // Tooltip Management
+    toggleTooltip(trigger) {
+      const tooltipId = trigger.dataset.tooltip;
+      const tooltip = document.getElementById(`tooltip-${tooltipId}`);
+      
+      if (!tooltip) return;
+
+      // Close other tooltips first
+      this.closeAllTooltips();
+
+      // Position and show tooltip
+      this.positionTooltip(tooltip, trigger);
+      tooltip.style.display = 'block';
+      tooltip.classList.add('techpack-tooltip--active');
+
+      // Focus management for accessibility
+      tooltip.setAttribute('tabindex', '-1');
+      tooltip.focus();
+
+      debugSystem.log('Tooltip opened', { tooltipId });
+    }
+
+    closeAllTooltips() {
+      const tooltips = document.querySelectorAll('.techpack-tooltip');
+      tooltips.forEach(tooltip => {
+        tooltip.style.display = 'none';
+        tooltip.classList.remove('techpack-tooltip--active');
+      });
+    }
+
+    positionTooltip(tooltip, trigger) {
+      const triggerRect = trigger.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+      // Position tooltip below and center to trigger
+      const top = triggerRect.bottom + scrollTop + 10;
+      const left = Math.max(20, triggerRect.left + scrollLeft - 200); // Prevent going off-screen
+
+      tooltip.style.position = 'absolute';
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
+      tooltip.style.maxWidth = '400px';
+      tooltip.style.zIndex = '10000';
+    }
+  }
+
+  // Initialize Sample Manager
+  const sampleManager = new SampleManager();
+  
+  // Make it globally available
+  window.sampleManager = sampleManager;
+
+  // Integrate with existing step navigation
+  const originalValidateStep = window.validateStep;
+  window.validateStep = function(stepNumber) {
+    if (stepNumber === 3) {
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType === 'sample-request') {
+        return sampleManager.validateSampleSelections();
+      }
+    }
+    return originalValidateStep ? originalValidateStep(stepNumber) : true;
+  };
 
 })();
