@@ -1815,7 +1815,7 @@
       });
     
       // Clear errors for valid fields - ENHANCED to handle both client types
-      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'deadline', 'notes'];
+      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'requestType', 'notes'];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -1962,9 +1962,9 @@
             }, 'error');
           }
           
-          // Check Pantone selection for each colorway (grid system)
-          const pantoneGrid = colorway.querySelector('.techpack-pantone-grid');
-          if (pantoneGrid) {
+          // Check Pantone selection for each colorway (button system)
+          const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
+          if (pantoneButtons) {
             const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
             if (!pantoneValidationResult) {
               isValid = false;
@@ -2183,8 +2183,8 @@
             <span class="techpack-review__value">${data.phone || 'N/A'}</span>
           </div>
           <div class="techpack-review__item">
-            <span class="techpack-review__label">Project Deadline:</span>
-            <span class="techpack-review__value">${data.deadline || 'N/A'}</span>
+            <span class="techpack-review__label">Request Type:</span>
+            <span class="techpack-review__value">${data.requestType === 'sample-request' ? 'Sample Request' : data.requestType === 'bulk-order-request' ? 'Bulk Order Request' : 'N/A'}</span>
           </div>
           <div class="techpack-review__item techpack-review__item--full-width">
             <span class="techpack-review__label">Additional Notes:</span>
@@ -3120,6 +3120,21 @@
     }
 
     calculateAndUpdateProgress() {
+      // Check if this is a sample request - samples don't need quantity minimums
+      const requestType = document.getElementById('request-type')?.value;
+      if (requestType === 'sample-request') {
+        // For sample requests, set totals to 0 and progress to 100%
+        this.updateTotalQuantityDisplay(0, 0, []);
+        this.updateQuantityProgressBar(100);
+        
+        // Update minimum text to indicate sample request
+        const minText = document.getElementById('min-text');
+        if (minText) minText.textContent = 'Sample Request (No minimum)';
+        
+        debugSystem.log('Sample request - no quantity minimum required');
+        return 100;
+      }
+      
       const totalQuantity = this.getTotalQuantityFromAllColorways();
       const minimumRequired = this.calculateMinimumRequired();
       
@@ -3704,6 +3719,9 @@
       
       this.setupColorwayEventListeners(colorway, garmentId, colorwayId);
       
+      // Check request type and conditionally show/hide size grid
+      this.handleSizeGridBasedOnRequestType(colorway);
+      
       colorwaysList.appendChild(clone);
       
       // Add to state
@@ -3734,6 +3752,34 @@
       debugSystem.log('Colorway added', { garmentId, colorwayId });
     }
 
+    handleSizeGridBasedOnRequestType(colorway) {
+      // Get the request type from the form
+      const requestType = document.getElementById('request-type')?.value;
+      const sizeGrid = colorway.querySelector('.techpack-size-grid');
+      
+      if (sizeGrid && requestType === 'sample-request') {
+        // For Sample Request: Hide the size grid completely, no quantities needed
+        sizeGrid.style.display = 'none';
+        sizeGrid.setAttribute('data-hidden-for-sample', 'true');
+        
+        // Set colorway total to 0 since no quantities are needed for samples
+        const totalElement = colorway.querySelector('.techpack-colorway__total-value');
+        if (totalElement) {
+          totalElement.textContent = '0';
+        }
+        
+        debugSystem.log('Size grid hidden for sample request', { requestType });
+      } else if (sizeGrid && requestType === 'bulk-order-request') {
+        // For Bulk Order Request: Show the size grid (default behavior)
+        sizeGrid.style.display = 'block';
+        sizeGrid.removeAttribute('data-hidden-for-sample');
+        debugSystem.log('Size grid shown for bulk order request', { requestType });
+      } else if (sizeGrid) {
+        // Default case: keep existing pantone-based logic
+        sizeGrid.style.display = sizeGrid.getAttribute('data-requires-pantone') === 'true' ? 'none' : 'block';
+      }
+    }
+
     setupColorwayEventListeners(colorway, garmentId, colorwayId) {
       // Remove button
       const removeBtn = colorway.querySelector('.techpack-colorway__remove');
@@ -3746,7 +3792,7 @@
       const pantoneValidationMsg = colorway.querySelector('.techpack-pantone-validation-message');
       
       if (pantoneButtons && colorPicker) {
-        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-pantone-option');
+        const pantoneButtonElements = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact');
         
         colorPicker.addEventListener('change', () => {
           // Fix mobile null reference error - check colorPreview exists
@@ -3761,8 +3807,8 @@
           closestPantones.forEach((pantone, index) => {
             if (pantoneButtonElements[index]) {
               const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.pantone-name');
-              const colorCircle = button.querySelector('.pantone-color-circle');
+              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
+              const colorCircle = button.querySelector('.techpack-pantone-circle');
               
               if (pantoneNameSpan && colorCircle) {
                 // Update hex color circle
@@ -3807,30 +3853,19 @@
             // Single selection behavior: deselect all others first
             pantoneButtonElements.forEach(btn => {
               btn.classList.remove('selected');
-              // Hide radio dot
-              const radioDot = btn.querySelector('.pantone-radio-dot');
-              if (radioDot) {
-                radioDot.style.opacity = '0';
-                radioDot.style.transform = 'translate(-50%, -50%) scale(0)';
-              }
-              // Reset border color
-              btn.style.borderColor = '#e5e7eb';
-              btn.style.backgroundColor = 'white';
+              // Radio dot styling handled by CSS classes
             });
             
             // Select the clicked button
             button.classList.add('selected');
             
-            // Show radio dot for selected button
-            const selectedRadioDot = button.querySelector('.pantone-radio-dot');
-            if (selectedRadioDot) {
-              selectedRadioDot.style.opacity = '1';
-              selectedRadioDot.style.transform = 'translate(-50%, -50%) scale(1)';
-            }
+            // Radio dot styling handled by CSS classes
             
-            // Update selected button appearance
-            button.style.borderColor = '#3b82f6';
-            button.style.backgroundColor = '#eff6ff';
+            // Show the size grid now that pantone is selected
+            const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
+            if (sizeGrid) {
+              sizeGrid.style.display = 'block';
+            }
             
             // Update colorway data
             this.updateColorwayPantoneData(garmentId, colorwayId);
@@ -3839,6 +3874,53 @@
             this.validatePantoneSelection(colorway);
           });
         });
+        
+        // Sample request functionality - In-place transformation
+        const sampleToggle = colorway.querySelector('.techpack-sample-toggle');
+        if (sampleToggle) {
+          const sampleRequestBtn = sampleToggle.querySelector('.techpack-btn--sample-request');
+          const sampleSizeSelector = sampleToggle.querySelector('.techpack-form__select--sample-size');
+          
+          if (sampleRequestBtn && sampleSizeSelector) {
+            sampleRequestBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              // Smooth transition to select
+              sampleRequestBtn.style.opacity = '0';
+              sampleRequestBtn.style.pointerEvents = 'none';
+              sampleSizeSelector.style.display = 'block';
+              sampleSizeSelector.style.opacity = '1';
+              sampleSizeSelector.style.pointerEvents = 'auto';
+              sampleSizeSelector.focus(); // Focus the select for better UX
+            });
+            
+            // Handle dropdown change and blur events
+            sampleSizeSelector.addEventListener('change', (e) => {
+              if (e.target.value === '') {
+                // If no size selected, go back to button
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+            
+            sampleSizeSelector.addEventListener('blur', (e) => {
+              // If no value selected on blur, go back to button
+              if (e.target.value === '') {
+                sampleRequestBtn.style.opacity = '1';
+                sampleRequestBtn.style.pointerEvents = 'auto';
+                sampleSizeSelector.style.opacity = '0';
+                sampleSizeSelector.style.pointerEvents = 'none';
+                setTimeout(() => {
+                  sampleSizeSelector.style.display = 'none';
+                }, 200);
+              }
+            });
+          }
+        }
       }
       
       // Fix mobile null reference error - check colorPreview and colorPicker exist
@@ -6943,7 +7025,7 @@
       
       if (!pantoneButtons || !pantoneValidationMsg) return true;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const hasValidPantone = selectedButtons.length === 1; // Exactly one selection required
       
       if (hasValidPantone) {
@@ -6968,7 +7050,7 @@
       
       if (!pantoneButtons) return;
       
-      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-pantone-option.selected');
+      const selectedButtons = pantoneButtons.querySelectorAll('button.techpack-btn--pantone-compact.selected');
       const selectedPantone = selectedButtons.length > 0 ? {
         code: selectedButtons[0].dataset.pantoneCode,
         hex: selectedButtons[0].dataset.pantoneHex
@@ -7034,9 +7116,9 @@
       this.setupClientModal();
       
       // EXISTING: Keep all your existing setup methods
-      this.setupDateConstraints();
       this.setupPhoneFormatting();
       this.setupProductionTypeListener();
+      this.setupRequestTypeListener();
       this.setupNavigationButtons();
       this.setupFormSubmission();
       this.setupVATFormatting();
@@ -7198,24 +7280,6 @@
       debugSystem.log('✅ Client modal setup complete');
     }
 
-    setupDateConstraints() {
-      const dateInput = document.getElementById('deadline');
-      if (!dateInput) return;
-
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() + (CONFIG.MIN_DELIVERY_WEEKS * 7));
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() + 2);
-
-      dateInput.min = minDate.toISOString().split('T')[0];
-      dateInput.max = maxDate.toISOString().split('T')[0];
-
-      debugSystem.log('Date constraints applied', {
-        min: dateInput.min,
-        max: dateInput.max
-      });
-    }
 
     setupPhoneFormatting() {
       const phoneInput = document.getElementById('phone');
@@ -7749,26 +7813,6 @@
       debugSystem.log('Configured Step 1 for new client');
     }
 
-// EXISTING: Keep your exact setupDateConstraints method
-    setupDateConstraints() {
-      const dateInput = document.getElementById('deadline');
-      if (!dateInput) return;
-
-      const today = new Date();
-      const minDate = new Date();
-      minDate.setDate(today.getDate() + (CONFIG.MIN_DELIVERY_WEEKS * 7));
-      const maxDate = new Date();
-      maxDate.setFullYear(maxDate.getFullYear() + 2);
-
-      dateInput.min = minDate.toISOString().split('T')[0];
-      dateInput.max = maxDate.toISOString().split('T')[0];
-
-      debugSystem.log('Date constraints set', { 
-        min: dateInput.min, 
-        max: dateInput.max,
-        minWeeksFromToday: CONFIG.MIN_DELIVERY_WEEKS
-      });
-    }
 
     // EXISTING: Keep your exact setupPhoneFormatting method
     setupPhoneFormatting() {
@@ -7776,6 +7820,30 @@
       if (phoneInput) {
         phoneInput.addEventListener('input', (e) => {
           e.target.value = Utils.formatPhoneNumber(e.target.value);
+        });
+      }
+    }
+
+    setupRequestTypeListener() {
+      const requestTypeSelect = document.getElementById('request-type');
+      if (requestTypeSelect) {
+        requestTypeSelect.addEventListener('change', () => {
+          // Update all existing colorways when request type changes
+          const existingColorways = document.querySelectorAll('.techpack-colorway');
+          existingColorways.forEach(colorway => {
+            garmentManager.handleSizeGridBasedOnRequestType(colorway);
+          });
+          
+          // Recalculate quantities and progress
+          setTimeout(() => {
+            quantityCalculator.calculateAndUpdateProgress();
+            stepManager.validateStep3();
+          }, 100);
+          
+          debugSystem.log('Request type changed, updated all colorways', { 
+            requestType: requestTypeSelect.value,
+            colorwayCount: existingColorways.length 
+          });
         });
       }
     }
@@ -8139,7 +8207,7 @@
         phone: document.getElementById('phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.getElementById('production-type')?.value || '',
-        deadline: document.getElementById('deadline')?.value || '',
+        requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
     }
@@ -8287,7 +8355,7 @@
               phone: clientData.phone,
               country: clientData.country,
               production_type: clientData.productionType,
-              deadline: clientData.deadline,
+              request_type: clientData.requestType,
               notes: clientData.notes,
               
               // Garment/colorway specific data
@@ -9107,7 +9175,7 @@ setupInitialization();
       phone: document.getElementById('phone')?.value || '',
       country: document.getElementById('country')?.value || '',
       productionType: document.getElementById('production-type')?.value || '',
-      deadline: document.getElementById('deadline')?.value || '',
+      requestType: document.getElementById('request-type')?.value || '',
       notes: document.getElementById('notes')?.value || ''
     };
 
@@ -9133,7 +9201,7 @@ setupInitialization();
                document.getElementById('business-phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.getElementById('production-type')?.value || '',
-        deadline: document.getElementById('deadline')?.value || '',
+        requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
       
@@ -9200,16 +9268,13 @@ setupInitialization();
       </div>`;
     }
     
-    if (clientData.deadline) {
-      const deadlineDate = new Date(clientData.deadline);
-      const formattedDate = deadlineDate.toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
-      });
+    if (clientData.requestType) {
+      const requestTypeLabel = clientData.requestType === 'sample-request' ? 'Sample Request' : 
+                              clientData.requestType === 'bulk-order-request' ? 'Bulk Order Request' : 
+                              clientData.requestType;
       html += `<div class="review-item">
-        <span class="review-label">Target Deadline:</span>
-        <span class="review-value">${formattedDate}</span>
+        <span class="review-label">Request Type:</span>
+        <span class="review-value">${requestTypeLabel}</span>
       </div>`;
     }
     
