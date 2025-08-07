@@ -3122,17 +3122,20 @@
     calculateAndUpdateProgress() {
       // Check if this is a sample request - samples don't need quantity minimums
       const requestType = document.getElementById('request-type')?.value;
+      const quantityTracker = document.getElementById('quantity-tracker');
+      const sampleIndicator = document.getElementById('sample-indicator');
+      
       if (requestType === 'sample-request') {
-        // For sample requests, set totals to 0 and progress to 100%
-        this.updateTotalQuantityDisplay(0, 0, []);
-        this.updateQuantityProgressBar(100);
+        // Hide quantity tracker and show sample indicator
+        if (quantityTracker) quantityTracker.style.display = 'none';
+        if (sampleIndicator) sampleIndicator.style.display = 'block';
         
-        // Update minimum text to indicate sample request
-        const minText = document.getElementById('min-text');
-        if (minText) minText.textContent = 'Sample Request (No minimum)';
-        
-        debugSystem.log('Sample request - no quantity minimum required');
+        debugSystem.log('Sample request - showing sample indicator, hiding quantity tracker');
         return 100;
+      } else {
+        // Show quantity tracker and hide sample indicator for bulk orders
+        if (quantityTracker) quantityTracker.style.display = 'block';
+        if (sampleIndicator) sampleIndicator.style.display = 'none';
       }
       
       const totalQuantity = this.getTotalQuantityFromAllColorways();
@@ -7828,6 +7831,19 @@
       const requestTypeSelect = document.getElementById('request-type');
       if (requestTypeSelect) {
         requestTypeSelect.addEventListener('change', () => {
+          const requestType = requestTypeSelect.value;
+          const quantityTracker = document.getElementById('quantity-tracker');
+          const sampleIndicator = document.getElementById('sample-indicator');
+          
+          // Immediate UI update for tracker/indicator visibility
+          if (requestType === 'sample-request') {
+            if (quantityTracker) quantityTracker.style.display = 'none';
+            if (sampleIndicator) sampleIndicator.style.display = 'block';
+          } else {
+            if (quantityTracker) quantityTracker.style.display = 'block';
+            if (sampleIndicator) sampleIndicator.style.display = 'none';
+          }
+          
           // Update all existing colorways when request type changes
           const existingColorways = document.querySelectorAll('.techpack-colorway');
           existingColorways.forEach(colorway => {
@@ -7840,9 +7856,11 @@
             stepManager.validateStep3();
           }, 100);
           
-          debugSystem.log('Request type changed, updated all colorways', { 
-            requestType: requestTypeSelect.value,
-            colorwayCount: existingColorways.length 
+          debugSystem.log('Request type changed, updated UI and colorways', { 
+            requestType: requestType,
+            colorwayCount: existingColorways.length,
+            showingTracker: requestType !== 'sample-request',
+            showingSampleIndicator: requestType === 'sample-request'
           });
         });
       }
