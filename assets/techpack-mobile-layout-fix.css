@@ -440,11 +440,20 @@ CRITICAL MOBILE LAYOUT FIXES
   ============================================
   */
   
+  /* Mobile-specific size grid layout - responsive 5-column grid */
+  .techpack-size-grid__header,
+  .techpack-size-grid__row {
+    grid-template-columns: 70px repeat(5, minmax(70px, 1fr));
+    min-width: 400px;
+  }
   
-  
-  
-  
-  
+  /* Hide XXS and XXL columns on mobile for better fit */
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(2),
+  .techpack-size-grid__header .techpack-size-grid__label:nth-child(8),
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(2),
+  .techpack-size-grid__row .techpack-size-grid__input:nth-child(8) {
+    display: none;
+  }
   
   .techpack-size-grid__input {
     width: 100%;
@@ -1016,20 +1025,5 @@ DESKTOP RESET (769px+)
   .techpack-step {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-  }
-
-  /* Mobile-specific size grid styles */
-  .techpack-size-grid__header,
-  .techpack-size-grid__row {
-    grid-template-columns: 70px repeat(5, minmax(70px, 1fr));
-    min-width: 400px;
-  }
-  
-  /* Hide XXS and XXL columns on mobile */
-  .techpack-size-grid__header .techpack-size-grid__label:nth-child(2),
-  .techpack-size-grid__header .techpack-size-grid__label:nth-child(8),
-  .techpack-size-grid__row .techpack-size-grid__input:nth-child(2),
-  .techpack-size-grid__row .techpack-size-grid__input:nth-child(8) {
-    display: none;
   }
 }
