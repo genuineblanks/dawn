@@ -1943,48 +1943,77 @@
           if (printingError) printingError.textContent = '';
         }
     
-        // Check colorway quantities
-        const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
-        const colorwayCountInGarment = colorwaysInGarment.length;
-        const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
-    
-        colorwaysInGarment.forEach((colorway) => {
-          const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
-          let colorwayTotal = 0;
-          
-          qtyInputs.forEach(input => {
-            colorwayTotal += parseInt(input.value) || 0;
-          });
-    
-          if (colorwayTotal < requiredPerColorway) {
-            isValid = false;
-            debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
-              total: colorwayTotal, 
-              required: requiredPerColorway 
-            }, 'error');
-          }
-          
-          // Check Pantone selection for each colorway (button system)
-          const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
-          if (pantoneButtons) {
-            const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
-            if (!pantoneValidationResult) {
+        // CRITICAL: Skip colorway/quantity validation for sample requests
+        const requestType = document.getElementById('request-type')?.value;
+        
+        if (requestType === 'sample-request') {
+          // For sample requests: Skip colorway validation (no quantities/colors needed)
+          // Validation success depends only on basic garment info + sample selections
+          debugSystem.log(`Sample request: Skipping colorway validation for garment ${index + 1}`);
+        } else {
+          // For bulk requests: Perform full colorway and quantity validation
+          const colorwaysInGarment = garmentElement.querySelectorAll('.techpack-colorway');
+          const colorwayCountInGarment = colorwaysInGarment.length;
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+      
+          colorwaysInGarment.forEach((colorway) => {
+            const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
+            let colorwayTotal = 0;
+            
+            qtyInputs.forEach(input => {
+              colorwayTotal += parseInt(input.value) || 0;
+            });
+      
+            if (colorwayTotal < requiredPerColorway) {
               isValid = false;
-              debugSystem.log(`Garment ${index + 1} colorway missing Pantone selection`, null, 'error');
+              debugSystem.log(`Garment ${index + 1} colorway below minimum`, { 
+                total: colorwayTotal, 
+                required: requiredPerColorway 
+              }, 'error');
             }
-          }
-        });
+            
+            // Check Pantone selection for each colorway (button system)
+            const pantoneButtons = colorway.querySelector('.techpack-pantone-buttons');
+            if (pantoneButtons) {
+              const pantoneValidationResult = garmentManager.validatePantoneSelection(colorway);
+              if (!pantoneValidationResult) {
+                isValid = false;
+                debugSystem.log(`Garment ${index + 1} colorway missing Pantone selection`, null, 'error');
+              }
+            }
+          });
+        }
       });
+    
+      // FINAL VALIDATION: Check request-type specific requirements
+      const requestType = document.getElementById('request-type')?.value;
+      
+      if (requestType === 'sample-request') {
+        // For sample requests: Also validate sample selections
+        if (window.sampleManager && window.sampleManager.validateSampleSelections) {
+          const sampleValidation = window.sampleManager.validateSampleSelections();
+          // Don't make sample validation blocking - user can proceed and handle in Step 4
+          debugSystem.log('Sample validation result', { 
+            basicGarmentInfo: isValid, 
+            sampleSelections: sampleValidation 
+          });
+        }
+        // Sample requests only need basic garment info to proceed
+      } else {
+        // Bulk requests need full validation (colorway quantities, etc.)
+        // This is already handled above
+      }
     
       // Update button state
       if (nextBtn) {
         nextBtn.disabled = !isValid;
       }
     
+      const validationType = requestType === 'sample-request' ? 'sample request' : 'bulk request';
       if (isValid) {
-        debugSystem.log('Step 3 validation passed', null, 'success');
+        debugSystem.log(`Step 3 validation passed for ${validationType}`, null, 'success');
       } else {
-        debugSystem.log('Step 3 validation failed', null, 'error');
+        debugSystem.log(`Step 3 validation failed for ${validationType}`, null, 'error');
       }
     
       return isValid;
@@ -10114,10 +10143,20 @@ setupInitialization();
         requestTypeSelect.addEventListener('change', () => this.checkRequestType());
       }
 
-      // Per-garment sample option checkboxes
+      // Per-garment sample option checkboxes (main toggles)
       document.addEventListener('change', (e) => {
         if (e.target.classList.contains('techpack-sample-compact-checkbox')) {
           this.handlePerGarmentSampleToggle(e.target);
+        }
+        
+        // Black/Raw fabric color selection
+        if (e.target.name && e.target.name.includes('blackraw-fabric-color')) {
+          this.handleBlackRawFabricSelection(e.target);
+        }
+        
+        // PANTONE input changes
+        if (e.target.classList.contains('techpack-pantone-input')) {
+          this.handlePantoneInput(e.target);
         }
       });
 
@@ -10128,10 +10167,23 @@ setupInitialization();
           this.updatePerGarmentSampleDetails(e.target);
         }
       });
+      
+      // Lab dip PANTONE system buttons
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-labdip-pantone')) {
+          this.addLabDipPantone(e.target);
+        }
+        
+        if (e.target.classList.contains('remove-labdip-color')) {
+          this.removeLabDipPantone(e.target);
+        }
+      });
 
       // Tooltip functionality for per-garment sample help
       document.addEventListener('click', (e) => {
         if (e.target.closest('.techpack-tooltip-trigger')) {
+          e.preventDefault(); // Prevent scroll to top
+          e.stopPropagation(); // Stop event bubbling
           const trigger = e.target.closest('.techpack-tooltip-trigger');
           this.toggleTooltip(trigger);
         }
@@ -10148,25 +10200,61 @@ setupInitialization();
       const requestType = document.getElementById('request-type')?.value;
       const subtitle = document.getElementById('step-3-subtitle');
 
-      // Show/hide per-garment sample sections based on request type
+      // Get UI elements to show/hide
       const perGarmentSampleSections = document.querySelectorAll('.techpack-garment-samples[data-sample-request-only]');
+      const quantityTracker = document.querySelector('.techpack-quantity-tracker');
+      const colorwaysSections = document.querySelectorAll('.techpack-colorways');
       
       if (requestType === 'sample-request') {
+        // SAMPLE REQUEST MODE: Show sample options, hide bulk elements
+        
         // Show per-garment sample options
         perGarmentSampleSections.forEach(section => {
           section.style.display = 'block';
         });
+        
+        // Hide quantity tracker bar (not needed for samples)
+        if (quantityTracker) {
+          quantityTracker.style.display = 'none';
+        }
+        
+        // Hide all colorways sections (no quantities/colors needed for samples)
+        colorwaysSections.forEach(section => {
+          section.style.display = 'none';
+        });
+        
         if (subtitle) subtitle.textContent = 'Choose sample options for each garment and provide garment details';
         
-        debugSystem.log('Sample request mode - per-garment sample options shown');
+        debugSystem.log('Sample request mode - simplified interface active', {
+          sampleSections: perGarmentSampleSections.length,
+          hiddenColorways: colorwaysSections.length,
+          quantityTrackerHidden: !!quantityTracker
+        });
       } else {
+        // BULK REQUEST MODE: Show bulk elements, hide sample options
+        
         // Hide per-garment sample options
         perGarmentSampleSections.forEach(section => {
           section.style.display = 'none';
         });
+        
+        // Show quantity tracker bar
+        if (quantityTracker) {
+          quantityTracker.style.display = 'block';
+        }
+        
+        // Show all colorways sections
+        colorwaysSections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
         if (subtitle) subtitle.textContent = 'Define your garment details and quantity requirements';
         
-        debugSystem.log('Bulk request mode - per-garment sample options hidden');
+        debugSystem.log('Bulk request mode - full interface active', {
+          hiddenSampleSections: perGarmentSampleSections.length,
+          visibleColorways: colorwaysSections.length,
+          quantityTrackerVisible: !!quantityTracker
+        });
       }
 
       // Update validation
@@ -10177,12 +10265,28 @@ setupInitialization();
     initializeGarmentSampleData(garmentId) {
       if (!this.perGarmentSamples.has(garmentId)) {
         this.perGarmentSamples.set(garmentId, {
-          blackRaw: { enabled: false, fabricColor: '', size: '' },
-          labDip: { enabled: false, pantone: '', size: '' },
-          customColor: { enabled: false, fabricColor: '', size: '' },
+          blackRaw: { 
+            enabled: false, 
+            fabricColor: 'black', // Default to black
+            size: '', 
+            cost: 35 
+          },
+          labDip: { 
+            enabled: false, 
+            pantoneColors: [{ code: '', hex: '#ffffff', cost: 25 }], // Default first color
+            totalCost: 25,
+            size: '' 
+          },
+          customColor: { 
+            enabled: false, 
+            pantoneCode: '',
+            pantoneHex: '#ffffff',
+            size: '',
+            cost: 65 
+          },
           totalCost: 0
         });
-        debugSystem.log('Initialized sample data for garment', { garmentId });
+        debugSystem.log('Initialized enhanced sample data for garment', { garmentId });
       }
     }
 
@@ -10196,6 +10300,8 @@ setupInitialization();
       this.initializeGarmentSampleData(garmentId);
       const sampleData = this.perGarmentSamples.get(garmentId);
       const sampleType = checkbox.name;
+      const expandableOption = checkbox.closest('.techpack-sample-expandable');
+      const subOptions = expandableOption?.querySelector('.techpack-sample-sub-options');
 
       // Update sample data based on checkbox type
       if (sampleType === 'sample-black-raw') {
@@ -10206,6 +10312,17 @@ setupInitialization();
         sampleData.customColor.enabled = checkbox.checked;
       }
 
+      // Show/hide sub-options with animation
+      if (subOptions) {
+        if (checkbox.checked) {
+          subOptions.style.display = 'block';
+          // Ensure unique radio button names for each garment
+          this.updateRadioButtonNames(subOptions, garmentId);
+        } else {
+          subOptions.style.display = 'none';
+        }
+      }
+
       // Update sample details section visibility
       this.updateSampleDetailsVisibility(garmentElement, sampleData);
       
@@ -10213,11 +10330,245 @@ setupInitialization();
       this.updateGarmentSampleCost(garmentId);
       this.updateGarmentSampleSummary(garmentElement, sampleData);
 
-      debugSystem.log('Per-garment sample option toggled', { 
+      debugSystem.log('Enhanced per-garment sample option toggled', { 
         garmentId, 
         sampleType, 
-        enabled: checkbox.checked 
+        enabled: checkbox.checked,
+        hasSubOptions: !!subOptions
       });
+    }
+
+    // Ensure unique radio button names for each garment
+    updateRadioButtonNames(subOptions, garmentId) {
+      const radioInputs = subOptions.querySelectorAll('input[type="radio"]');
+      radioInputs.forEach(input => {
+        if (input.name.includes('blackraw-fabric-color')) {
+          input.name = `blackraw-fabric-color-${garmentId}`;
+        }
+      });
+    }
+
+    // Main sample checkbox toggle handler
+    handlePerGarmentSampleToggle(checkbox) {
+      const garmentElement = checkbox.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      this.initializeGarmentSampleData(garmentId);
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      const sampleType = checkbox.name;
+      const isChecked = checkbox.checked;
+      
+      // Find the expandable sub-options section
+      const expandableOption = checkbox.closest('.techpack-sample-expandable');
+      const subOptions = expandableOption?.querySelector('.techpack-sample-sub-options');
+      
+      // Update data based on sample type
+      if (sampleType === 'sample-black-raw') {
+        sampleData.blackRaw.enabled = isChecked;
+        if (!isChecked) {
+          sampleData.blackRaw.fabricColor = 'black';
+          sampleData.blackRaw.size = '';
+        }
+      } else if (sampleType === 'sample-lab-dip') {
+        sampleData.labDip.enabled = isChecked;
+        if (!isChecked) {
+          // Reset lab dip data
+          sampleData.labDip.pantoneColors = [{ code: '', hex: '#ffffff', cost: 25 }];
+          sampleData.labDip.totalCost = 25;
+          sampleData.labDip.size = '';
+        }
+      } else if (sampleType === 'sample-custom-color') {
+        sampleData.customColor.enabled = isChecked;
+        if (!isChecked) {
+          sampleData.customColor.pantoneCode = '';
+          sampleData.customColor.pantoneHex = '#ffffff';
+          sampleData.customColor.size = '';
+        }
+      }
+      
+      // Show/hide sub-options
+      if (subOptions) {
+        subOptions.style.display = isChecked ? 'block' : 'none';
+      }
+      
+      // Update sample details visibility and costs
+      this.updateSampleDetailsVisibility(garmentElement, sampleData);
+      this.updateGarmentSampleCost(garmentId);
+      this.updateGarmentSampleSummary(garmentElement, sampleData);
+      
+      debugSystem.log('Sample toggle updated', { garmentId, sampleType, isChecked });
+    }
+
+    // Handle Black/Raw fabric color selection
+    handleBlackRawFabricSelection(radioInput) {
+      const garmentElement = radioInput.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      if (sampleData) {
+        sampleData.blackRaw.fabricColor = radioInput.value;
+        this.updateGarmentSampleSummary(garmentElement, sampleData);
+        
+        debugSystem.log('Black/Raw fabric color selected', { 
+          garmentId, 
+          fabricColor: radioInput.value 
+        });
+      }
+    }
+
+    // Handle PANTONE input changes for both lab dip and custom color
+    handlePantoneInput(input) {
+      const garmentElement = input.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      this.initializeGarmentSampleData(garmentId);
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      
+      // Determine if this is for lab dip or custom color
+      if (input.closest('.techpack-labdip-pantone-system')) {
+        // Lab dip PANTONE input
+        const pantoneIndex = parseInt(input.dataset.pantoneIndex);
+        const pantoneCode = input.value.trim();
+        
+        if (sampleData.labDip.pantoneColors[pantoneIndex]) {
+          sampleData.labDip.pantoneColors[pantoneIndex].code = pantoneCode;
+          // In a real implementation, you'd fetch the hex color from PANTONE API
+          sampleData.labDip.pantoneColors[pantoneIndex].hex = this.getPantoneHexColor(pantoneCode);
+        }
+        
+      } else if (input.classList.contains('custom-color-pantone')) {
+        // Custom color PANTONE input
+        const pantoneCode = input.value.trim();
+        sampleData.customColor.pantoneCode = pantoneCode;
+        sampleData.customColor.pantoneHex = this.getPantoneHexColor(pantoneCode);
+        
+        // Update color preview
+        const preview = input.closest('.techpack-custom-color-pantone').querySelector('.techpack-color-swatch');
+        if (preview) {
+          preview.style.backgroundColor = sampleData.customColor.pantoneHex;
+        }
+      }
+      
+      this.updateGarmentSampleSummary(garmentElement, sampleData);
+      debugSystem.log('PANTONE input updated', { garmentId, inputValue: input.value });
+    }
+
+    // Helper method to get hex color from PANTONE code (simplified)
+    getPantoneHexColor(pantoneCode) {
+      // In a real implementation, this would call a PANTONE API
+      // For now, return a placeholder based on the code
+      if (!pantoneCode) return '#ffffff';
+      
+      // Simple hash-based color generation for demo
+      let hash = 0;
+      for (let i = 0; i < pantoneCode.length; i++) {
+        hash = pantoneCode.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const color = Math.floor(Math.abs((Math.sin(hash) * 10000) % 1) * 16777215).toString(16);
+      return '#' + '000000'.substring(0, 6 - color.length) + color;
+    }
+
+    // Add new Lab Dip PANTONE color
+    addLabDipPantone(button) {
+      const garmentElement = button.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      
+      if (!garmentId) return;
+
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      const colorsList = button.parentElement.querySelector('.techpack-labdip-colors-list');
+      const newIndex = sampleData.labDip.pantoneColors.length;
+
+      // Add new color to data
+      sampleData.labDip.pantoneColors.push({ 
+        code: '', 
+        hex: '#ffffff', 
+        cost: 25 
+      });
+
+      // Create new color input element
+      const colorItem = document.createElement('div');
+      colorItem.className = 'techpack-labdip-color-item';
+      colorItem.setAttribute('data-color-index', newIndex);
+      colorItem.innerHTML = `
+        <input type="text" placeholder="e.g., 18-3949 TPX" class="techpack-pantone-input" data-pantone-index="${newIndex}">
+        <button type="button" class="techpack-btn techpack-btn--small remove-labdip-color">×</button>
+      `;
+
+      colorsList.appendChild(colorItem);
+
+      // Update costs
+      this.updateLabDipCosts(garmentId);
+      this.updateGarmentSampleCost(garmentId);
+
+      debugSystem.log('Lab dip PANTONE color added', { garmentId, newIndex });
+    }
+
+    // Remove Lab Dip PANTONE color
+    removeLabDipPantone(button) {
+      const garmentElement = button.closest('.techpack-garment');
+      const garmentId = garmentElement?.dataset.garmentId;
+      const colorItem = button.closest('.techpack-labdip-color-item');
+      const colorIndex = parseInt(colorItem.getAttribute('data-color-index'));
+      
+      if (!garmentId) return;
+
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      
+      // Don't allow removing the last color
+      if (sampleData.labDip.pantoneColors.length <= 1) {
+        debugSystem.log('Cannot remove last lab dip color', { garmentId });
+        return;
+      }
+
+      // Remove from data
+      sampleData.labDip.pantoneColors.splice(colorIndex, 1);
+      
+      // Remove from DOM
+      colorItem.remove();
+
+      // Re-index remaining color items
+      const remainingItems = garmentElement.querySelectorAll('.techpack-labdip-color-item');
+      remainingItems.forEach((item, index) => {
+        item.setAttribute('data-color-index', index);
+        const input = item.querySelector('.techpack-pantone-input');
+        if (input) {
+          input.setAttribute('data-pantone-index', index);
+        }
+      });
+
+      // Update costs
+      this.updateLabDipCosts(garmentId);
+      this.updateGarmentSampleCost(garmentId);
+
+      debugSystem.log('Lab dip PANTONE color removed', { garmentId, removedIndex: colorIndex });
+    }
+
+    // Update Lab Dip costs display
+    updateLabDipCosts(garmentId) {
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const sampleData = this.perGarmentSamples.get(garmentId);
+      
+      const colorCount = sampleData.labDip.pantoneColors.length;
+      const totalCost = colorCount * 25;
+      
+      // Update data
+      sampleData.labDip.totalCost = totalCost;
+
+      // Update UI displays
+      const costDisplay = garmentElement.querySelector('.labdip-cost');
+      const totalCostDisplay = garmentElement.querySelector('.labdip-total-cost');
+      
+      if (costDisplay) costDisplay.textContent = totalCost;
+      if (totalCostDisplay) totalCostDisplay.textContent = totalCost;
+
+      debugSystem.log('Lab dip costs updated', { garmentId, colorCount, totalCost });
     }
 
     // Update sample details section based on selections
@@ -10266,7 +10617,7 @@ setupInitialization();
 
       let totalCost = 0;
       if (sampleData.blackRaw.enabled) totalCost += 35;
-      if (sampleData.labDip.enabled) totalCost += 25;
+      if (sampleData.labDip.enabled) totalCost += sampleData.labDip.totalCost;
       if (sampleData.customColor.enabled) totalCost += 65;
 
       sampleData.totalCost = totalCost;
@@ -10285,9 +10636,22 @@ setupInitialization();
       if (!summaryElement) return;
 
       const selectedOptions = [];
-      if (sampleData.blackRaw.enabled) selectedOptions.push('Black/Raw');
-      if (sampleData.labDip.enabled) selectedOptions.push('Lab Dip');
-      if (sampleData.customColor.enabled) selectedOptions.push('Custom Color');
+      
+      if (sampleData.blackRaw.enabled) {
+        const fabricColor = sampleData.blackRaw.fabricColor;
+        selectedOptions.push(`Black/Raw (${fabricColor})`);
+      }
+      
+      if (sampleData.labDip.enabled) {
+        const colorCount = sampleData.labDip.pantoneColors.length;
+        selectedOptions.push(`Lab Dip (${colorCount} color${colorCount !== 1 ? 's' : ''})`);
+      }
+      
+      if (sampleData.customColor.enabled) {
+        const pantoneCode = sampleData.customColor.pantoneCode;
+        const displayText = pantoneCode ? `Custom (${pantoneCode})` : 'Custom Color';
+        selectedOptions.push(displayText);
+      }
 
       summaryElement.textContent = selectedOptions.length > 0 ? selectedOptions.join(', ') : 'None';
     }
@@ -10370,10 +10734,6 @@ setupInitialization();
       tooltip.style.display = 'block';
       tooltip.classList.add('techpack-tooltip--active');
 
-      // Focus management for accessibility
-      tooltip.setAttribute('tabindex', '-1');
-      tooltip.focus();
-
       debugSystem.log('Tooltip opened', { tooltipId });
     }
 
@@ -10389,16 +10749,36 @@ setupInitialization();
       const triggerRect = trigger.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      const viewportWidth = window.innerWidth;
 
-      // Position tooltip below and center to trigger
-      const top = triggerRect.bottom + scrollTop + 10;
-      const left = Math.max(20, triggerRect.left + scrollLeft - 200); // Prevent going off-screen
+      // Calculate preferred position (below and centered to trigger)
+      let top = triggerRect.bottom + scrollTop + 10;
+      let left = triggerRect.left + scrollLeft + (triggerRect.width / 2) - 200; // Center tooltip
 
+      // Keep tooltip within viewport boundaries
+      const tooltipWidth = 400; // max-width from CSS
+      const rightEdge = left + tooltipWidth;
+      
+      if (rightEdge > viewportWidth - 20) {
+        left = viewportWidth - tooltipWidth - 20;
+      }
+      
+      if (left < 20) {
+        left = 20;
+      }
+
+      // Apply positioning
       tooltip.style.position = 'absolute';
       tooltip.style.top = `${top}px`;
       tooltip.style.left = `${left}px`;
       tooltip.style.maxWidth = '400px';
       tooltip.style.zIndex = '10000';
+      
+      debugSystem.log('Tooltip positioned', { 
+        triggerRect, 
+        calculatedTop: top, 
+        calculatedLeft: left 
+      });
     }
   }
 
