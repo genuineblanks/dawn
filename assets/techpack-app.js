@@ -7557,6 +7557,14 @@
       registrationYesBtn?.addEventListener('click', () => {
         state.formData.isRegisteredClient = true;
         this.hideModal(modal);
+        
+        // Show warning popup for registered clients
+        this.showWarningPopup(
+          'Registration Verification Required',
+          'We will verify your registration status during processing. If you\'re not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.',
+          'warning'
+        );
+        
         setTimeout(() => {
           this.showSubmissionTypeModal();
         }, 300);
@@ -7749,138 +7757,7 @@
           return false;
         }
         
-        // Store original button text
-        yesBtn.setAttribute('data-original-text', yesBtn.textContent);
-        noBtn.setAttribute('data-original-text', noBtn.textContent);
-        
-        // Clear any existing event listeners
-        yesBtn.replaceWith(yesBtn.cloneNode(true));
-        noBtn.replaceWith(noBtn.cloneNode(true));
-        
-        // Get fresh references after cloning
-        const freshYesBtn = document.querySelector('#registration-yes-btn, .registration-yes-btn, [data-registration="yes"]');
-        const freshNoBtn = document.querySelector('#registration-no-btn, .registration-no-btn, [data-registration="no"]');
-        
-        // Enhanced YES button handler
-        freshYesBtn.addEventListener('click', async (event) => {
-          try {
-            debugSystem.log('✅ YES button clicked - Registered client selected');
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Close modal immediately
-            this.closeClientModal();
-            
-            // Show warning popup
-            this.showWarningPopup(
-              'Registration Verification Required',
-              'We will verify your registration status during processing. If you\'re not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.',
-              'warning'
-            );
-            
-            // Configure for registered client
-            state.formData.isRegisteredClient = true;
-            this.configureStep1ForRegisteredClient();
-            
-            // Navigate to step 1
-            setTimeout(async () => {
-              try {
-                debugSystem.log('🔄 Processing registered client navigation...');
-                
-                // Enhanced navigation with better error handling
-                let navigationSuccess = false;
-                try {
-                  navigationSuccess = await stepManager.navigateToStep(1);
-                } catch (navError) {
-                  debugSystem.log('❌ Navigation error:', navError, 'error');
-                  navigationSuccess = false;
-                }
-                
-                if (!navigationSuccess) {
-                  debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
-                  try {
-                    stepManager.debugTestNavigation(1);
-                    navigationSuccess = true;
-                  } catch (fallbackError) {
-                    debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
-                    throw new Error('All navigation methods failed');
-                  }
-                }
-                
-                if (navigationSuccess) {
-                  debugSystem.log('✅ Registration navigation successful');
-                } else {
-                  throw new Error('Navigation failed completely');
-                }
-                
-              } catch (processingError) {
-                debugSystem.log('❌ Registration processing failed:', processingError, 'error');
-                this.showWarningPopup('Error', 'Technical issue occurred. Please try again.', 'error');
-              }
-            }, 1000); // 1 second delay
-            
-          } catch (error) {
-            debugSystem.log('❌ YES button handler failed:', error, 'error');
-            this.showWarningPopup('Error', 'Unexpected error occurred. Please refresh the page.', 'error');
-          }
-        });
-
-        // Enhanced NO button handler
-        freshNoBtn.addEventListener('click', async (event) => {
-          try {
-            debugSystem.log('✅ NO button clicked - New client selected');
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Close modal immediately
-            this.closeClientModal();
-            
-            // Configure for new client
-            state.formData.isRegisteredClient = false;
-            this.configureStep1ForNewClient();
-            
-            // Navigate to step 1
-            setTimeout(async () => {
-              try {
-                debugSystem.log('🔄 Processing new client navigation...');
-                
-                // Enhanced navigation with better error handling
-                let navigationSuccess = false;
-                try {
-                  navigationSuccess = await stepManager.navigateToStep(1);
-                } catch (navError) {
-                  debugSystem.log('❌ Navigation error:', navError, 'error');
-                  navigationSuccess = false;
-                }
-                
-                if (!navigationSuccess) {
-                  debugSystem.log('🔄 Primary navigation failed, trying fallback method', null, 'warn');
-                  try {
-                    stepManager.debugTestNavigation(1);
-                    navigationSuccess = true;
-                  } catch (fallbackError) {
-                    debugSystem.log('❌ Fallback navigation failed:', fallbackError, 'error');
-                    throw new Error('All navigation methods failed');
-                  }
-                }
-                
-                if (navigationSuccess) {
-                  debugSystem.log('✅ New client navigation successful');
-                } else {
-                  throw new Error('Navigation failed completely');
-                }
-                
-              } catch (processingError) {
-                debugSystem.log('❌ New client processing failed:', processingError, 'error');
-                this.showWarningPopup('Error', 'Technical issue occurred. Please try again.', 'error');
-              }
-            }, 500); // Shorter delay for new clients
-            
-          } catch (error) {
-            debugSystem.log('❌ NO button handler failed:', error, 'error');
-            this.showWarningPopup('Error', 'Unexpected error occurred. Please refresh the page.', 'error');
-          }
-        });
+        // Registration button handlers are already set up earlier in setupClientModal()
 
         debugSystem.log('✅ Registration check event listeners attached successfully');
         return true;
