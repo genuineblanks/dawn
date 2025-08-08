@@ -7558,13 +7558,6 @@
         state.formData.isRegisteredClient = true;
         this.hideModal(modal);
         
-        // Show warning popup for registered clients
-        this.showWarningPopup(
-          'Registration Verification Required',
-          'We will verify your registration status during processing. If you\'re not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.',
-          'warning'
-        );
-        
         setTimeout(() => {
           this.showSubmissionTypeModal();
         }, 300);
@@ -7607,6 +7600,16 @@
     showSubmissionTypeModal() {
       const submissionModal = document.querySelector('#submission-type-modal');
       if (submissionModal) {
+        // Show/hide registration notice based on client type
+        const registrationNotice = document.getElementById('registration-notice');
+        if (registrationNotice) {
+          if (state.formData.isRegisteredClient) {
+            registrationNotice.style.display = 'flex';
+          } else {
+            registrationNotice.style.display = 'none';
+          }
+        }
+        
         this.showModal(submissionModal);
         debugSystem.log('Submission type modal opened');
       } else {
@@ -7623,6 +7626,15 @@
       this.hideModal(submissionModal);
       
       setTimeout(() => {
+        // Configure Step 1 based on client type BEFORE showing it
+        if (state.formData.isRegisteredClient) {
+          this.configureStep1ForRegisteredClient();
+          debugSystem.log('Configured Step 1 for registered client');
+        } else {
+          this.configureStep1ForNewClient();
+          debugSystem.log('Configured Step 1 for new client');
+        }
+        
         this.showStep(1);
         debugSystem.log(`Submission type selected: ${type}`);
         
@@ -7646,6 +7658,126 @@
           if (subtitle) subtitle.textContent = 'Submit your details for bulk production planning';
           break;
       }
+    }
+
+    // Handle change submission type - preserves Step 1 data, resets everything else
+    changeSubmissionType() {
+      // Preserve current Step 1 form data
+      const step1Data = this.preserveStep1Data();
+      
+      // Reset form state except Step 1
+      this.resetFormStateExceptStep1();
+      
+      // Show submission type modal again
+      this.showSubmissionTypeModal();
+      
+      // Restore Step 1 data after a brief delay
+      setTimeout(() => {
+        this.restoreStep1Data(step1Data);
+      }, 100);
+      
+      debugSystem.log('🔄 Changing submission type - Step 1 data preserved');
+    }
+
+    // Preserve current Step 1 form data
+    preserveStep1Data() {
+      const step1Form = document.querySelector('#techpack-step-1 .techpack-form');
+      if (!step1Form) return {};
+
+      const formData = {};
+      const formElements = step1Form.querySelectorAll('input, select, textarea');
+      
+      formElements.forEach(element => {
+        if (element.type === 'checkbox' || element.type === 'radio') {
+          formData[element.name || element.id] = element.checked;
+        } else {
+          formData[element.name || element.id] = element.value;
+        }
+      });
+
+      debugSystem.log('💾 Step 1 data preserved', formData);
+      return formData;
+    }
+
+    // Reset form state except Step 1
+    resetFormStateExceptStep1() {
+      // Reset state data except clientInfo
+      const preservedClientInfo = { ...state.formData.clientInfo };
+      const preservedIsRegistered = state.formData.isRegisteredClient;
+      
+      // Reset state
+      state.formData = {
+        isRegisteredClient: preservedIsRegistered,
+        clientInfo: preservedClientInfo,
+        requestType: null, // This will be set again when user selects
+        files: [],
+        garments: [],
+        totalQuantity: 0,
+        totalCost: 0,
+        submissionId: Utils.generateUID()
+      };
+      
+      // Reset step progress
+      state.currentStep = 1;
+      
+      // Clear any step 2 and step 3 data from DOM
+      this.clearStep2Data();
+      this.clearStep3Data();
+      
+      debugSystem.log('🔄 Form state reset except Step 1');
+    }
+
+    // Restore Step 1 data to form fields
+    restoreStep1Data(formData) {
+      if (!formData || Object.keys(formData).length === 0) return;
+
+      const step1Form = document.querySelector('#techpack-step-1 .techpack-form');
+      if (!step1Form) return;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const element = step1Form.querySelector(`[name="${key}"], #${key}`);
+        if (element) {
+          if (element.type === 'checkbox' || element.type === 'radio') {
+            element.checked = value;
+          } else {
+            element.value = value;
+          }
+        }
+      });
+
+      // Re-run validation to update button states
+      setTimeout(() => {
+        stepManager.validateStep1();
+      }, 50);
+
+      debugSystem.log('✅ Step 1 data restored to form');
+    }
+
+    // Clear Step 2 data
+    clearStep2Data() {
+      // Clear file upload area
+      const fileList = document.querySelector('#file-list');
+      if (fileList) fileList.innerHTML = '';
+      
+      const fileCounter = document.querySelector('#file-counter');
+      if (fileCounter) fileCounter.textContent = '0 files uploaded';
+      
+      debugSystem.log('🗑️ Step 2 data cleared');
+    }
+
+    // Clear Step 3 data
+    clearStep3Data() {
+      // Clear garments container
+      const garmentsContainer = document.querySelector('#garments-container');
+      if (garmentsContainer) garmentsContainer.innerHTML = '';
+      
+      // Reset quantity tracker
+      const totalQuantity = document.querySelector('#total-quantity');
+      const quantityProgress = document.querySelector('#quantity-progress');
+      if (totalQuantity) totalQuantity.textContent = '0';
+      if (quantityProgress) quantityProgress.style.width = '0%';
+      
+      debugSystem.log('🗑️ Step 3 data cleared');
     }
 
     // Generic modal show/hide functions
@@ -8322,6 +8454,14 @@
       if (step1Next) {
         step1Next.addEventListener('click', () => {
           stepManager.navigateToStep(2);
+        });
+      }
+
+      // Change Submission Type button
+      const changeSubmissionBtn = document.querySelector('#change-submission-type');
+      if (changeSubmissionBtn) {
+        changeSubmissionBtn.addEventListener('click', () => {
+          this.changeSubmissionType();
         });
       }
 
