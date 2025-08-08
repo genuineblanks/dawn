@@ -101,6 +101,7 @@ Tech-Pack Step 3: Garment Specifications Section
             <option value="Sweatpants">Sweatpants</option>
             <option value="Shorts">Shorts</option>
             <option value="Long Sleeve T-Shirt">Long Sleeve T-Shirt</option>
+            <option value="Shirt">Shirt</option>
             <option value="Polo Shirt">Polo Shirt</option>
             <option value="Tank Top">Tank Top</option>
             <option value="Hat/Cap">Hat/Cap</option>
@@ -114,18 +115,7 @@ Tech-Pack Step 3: Garment Specifications Section
           <label class="techpack-form__label">Fabric Type</label>
           <select class="techpack-form__select" name="fabricType" required>
             <option value="" selected>Select fabric type...</option>
-            <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
-            <option value="French Terry 100% Organic Cotton Fleece">French Terry 100% Organic Cotton</option>
-            <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
-            <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
-            <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
-            <option value="100% Polyester">100% Polyester</option>
-            <option value="100% Linen">100% Linen</option>
-            <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
-            <option value="Jersey Knit">Jersey Knit</option>
-            <option value="Pique">Pique</option>
-            <option value="Canvas">Canvas</option>
-            <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
+            <!-- Fabric options will be populated dynamically based on garment type -->
           </select>
           <div class="techpack-form__error" role="alert"></div>
         </div>
@@ -296,11 +286,12 @@ Tech-Pack Step 3: Garment Specifications Section
               </select>
             </div>
             <div class="techpack-form__group">
-              <label class="techpack-form__label">Fabric Color (Black/Raw)</label>
-              <select class="techpack-form__select techpack-garment-fabric-color">
-                <option value="">Select color...</option>
-                <option value="black">Black</option>
-                <option value="raw">Raw (natural)</option>
+              <label class="techpack-form__label">Type of Fit</label>
+              <select class="techpack-form__select techpack-garment-fit-type">
+                <option value="">Select fit type...</option>
+                <option value="measurements-inside-techpack">Measurements inside Tech-Pack</option>
+                <option value="oversized-fit">Oversized Fit</option>
+                <option value="relaxed-fit">Relaxed Fit</option>
               </select>
             </div>
           </div>
@@ -328,7 +319,7 @@ Tech-Pack Step 3: Garment Specifications Section
       </div>
 
 
-      <div class="techpack-garment__total">
+      <div class="techpack-garment__total" data-bulk-request-only="true" style="display: none;">
         <span class="techpack-garment__total-label">Garment Total:</span>
         <span class="techpack-garment__total-value">0</span>
       </div>
