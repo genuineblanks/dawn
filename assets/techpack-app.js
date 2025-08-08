@@ -2113,16 +2113,76 @@
       const requestType = document.getElementById('request-type')?.value;
       
       if (requestType === 'sample-request') {
-        // For sample requests: Also validate sample selections
+        // For sample requests: Validate sample options, size, and fit type
+        garmentElements.forEach((garmentElement, index) => {
+          const sampleOptionsSelected = garmentElement.querySelectorAll('.techpack-sample-compact-checkbox:checked');
+          
+          if (sampleOptionsSelected.length > 0) {
+            // Check if sample size is selected
+            const sampleSizeSelect = garmentElement.querySelector('.techpack-garment-sample-size');
+            if (!sampleSizeSelect || !sampleSizeSelect.value) {
+              isValid = false;
+              // Add error styling and message
+              const sampleSizeGroup = sampleSizeSelect?.closest('.techpack-form__group');
+              if (sampleSizeGroup) {
+                sampleSizeGroup.classList.add('techpack-form__group--error');
+                const errorDiv = sampleSizeGroup.querySelector('.techpack-form__error');
+                if (errorDiv) {
+                  errorDiv.textContent = 'Sample size is required when sample options are selected';
+                  errorDiv.style.display = 'block';
+                }
+              }
+              debugSystem.log(`Garment ${index + 1}: Sample size required`, null, 'error');
+            } else {
+              // Clear error if size is selected
+              const sampleSizeGroup = sampleSizeSelect?.closest('.techpack-form__group');
+              if (sampleSizeGroup) {
+                sampleSizeGroup.classList.remove('techpack-form__group--error');
+                const errorDiv = sampleSizeGroup.querySelector('.techpack-form__error');
+                if (errorDiv) {
+                  errorDiv.textContent = '';
+                  errorDiv.style.display = 'none';
+                }
+              }
+            }
+
+            // Check if fit type is selected
+            const fitTypeSelect = garmentElement.querySelector('.techpack-garment-fit-type');
+            if (!fitTypeSelect || !fitTypeSelect.value) {
+              isValid = false;
+              // Add error styling and message
+              const fitTypeGroup = fitTypeSelect?.closest('.techpack-form__group');
+              if (fitTypeGroup) {
+                fitTypeGroup.classList.add('techpack-form__group--error');
+                const errorDiv = fitTypeGroup.querySelector('.techpack-form__error');
+                if (errorDiv) {
+                  errorDiv.textContent = 'Fit type is required when sample options are selected';
+                  errorDiv.style.display = 'block';
+                }
+              }
+              debugSystem.log(`Garment ${index + 1}: Fit type required`, null, 'error');
+            } else {
+              // Clear error if fit type is selected
+              const fitTypeGroup = fitTypeSelect?.closest('.techpack-form__group');
+              if (fitTypeGroup) {
+                fitTypeGroup.classList.remove('techpack-form__group--error');
+                const errorDiv = fitTypeGroup.querySelector('.techpack-form__error');
+                if (errorDiv) {
+                  errorDiv.textContent = '';
+                  errorDiv.style.display = 'none';
+                }
+              }
+            }
+          }
+        });
+        
         if (window.sampleManager && window.sampleManager.validateSampleSelections) {
           const sampleValidation = window.sampleManager.validateSampleSelections();
-          // Don't make sample validation blocking - user can proceed and handle in Step 4
           debugSystem.log('Sample validation result', { 
             basicGarmentInfo: isValid, 
             sampleSelections: sampleValidation 
           });
         }
-        // Sample requests only need basic garment info to proceed
       } else {
         // Bulk requests need full validation (colorway quantities, etc.)
         // This is already handled above
@@ -10527,6 +10587,11 @@ setupInitialization();
       this.updateGarmentSampleCost(garmentId);
       this.updateGarmentSampleSummary(garmentElement, sampleData);
 
+      // Trigger validation to check if sample size and fit type are required
+      if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+        setTimeout(() => stepManager.validateStep3(), 100);
+      }
+
       debugSystem.log('Enhanced per-garment sample option toggled', { 
         garmentId, 
         sampleType, 
@@ -10783,6 +10848,11 @@ setupInitialization();
 
       this.updateGarmentSampleCost(garmentId);
       this.updateGarmentSampleSummary(garmentElement, sampleData);
+
+      // Trigger validation to clear errors when size/fit type is selected
+      if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+        setTimeout(() => stepManager.validateStep3(), 100);
+      }
 
       debugSystem.log('Per-garment sample details updated', { garmentId, sampleData });
     }
