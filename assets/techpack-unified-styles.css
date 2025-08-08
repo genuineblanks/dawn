@@ -945,8 +945,8 @@ MOBILE RESPONSIVE (768px and below)
   
   .techpack-pantone-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
   
   .techpack-btn--pantone-compact {
@@ -2784,5 +2784,244 @@ PER-GARMENT SAMPLE SYSTEM - COMPACT DESIGN
   
   .techpack-sample-compact-option {
     gap: 0.5rem;
+  }
+}
+
+/* ===============================================
+   ENHANCED SAMPLE OPTIONS SYSTEM
+   =============================================== */
+
+/* Expandable Sample Options */
+.techpack-sample-expandable {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.techpack-sample-compact-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+}
+
+/* Sub-options container */
+.techpack-sample-sub-options {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--techpack-bg-alt);
+  border: 1px solid var(--techpack-border);
+  border-radius: 6px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Black/Raw Sample Fabric Options */
+.techpack-sample-fabric-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.techpack-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--techpack-bg);
+  border: 2px solid var(--techpack-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--techpack-transition);
+  font-size: 0.875rem;
+}
+
+.techpack-radio-option:hover {
+  border-color: var(--techpack-primary);
+  background: var(--techpack-primary-light);
+}
+
+.techpack-radio-option input[type="radio"] {
+  display: none;
+}
+
+.techpack-radio-mark {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--techpack-border);
+  border-radius: 50%;
+  position: relative;
+  transition: var(--techpack-transition);
+}
+
+.techpack-radio-option input[type="radio"]:checked + .techpack-radio-mark {
+  border-color: var(--techpack-primary);
+  background: var(--techpack-primary);
+}
+
+.techpack-radio-option input[type="radio"]:checked + .techpack-radio-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* Lab Dip PANTONE System */
+.techpack-labdip-pantone-system {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-labdip-colors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.techpack-labdip-color-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.techpack-pantone-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--techpack-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: var(--techpack-font-mono, 'Monaco', 'Menlo', monospace);
+  transition: var(--techpack-transition);
+}
+
+.techpack-pantone-input:focus {
+  border-color: var(--techpack-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--techpack-primary-light);
+}
+
+.techpack-pantone-input::placeholder {
+  color: var(--techpack-text-secondary);
+  font-style: italic;
+}
+
+.remove-labdip-color {
+  width: 32px;
+  height: 32px;
+  background: var(--techpack-error);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: var(--techpack-transition);
+}
+
+.remove-labdip-color:hover {
+  background: var(--techpack-error-dark);
+  transform: scale(1.05);
+}
+
+.add-labdip-pantone {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+}
+
+.techpack-labdip-total {
+  padding: 0.75rem;
+  background: var(--techpack-success-light);
+  border: 1px solid var(--techpack-success);
+  border-radius: 6px;
+  text-align: center;
+  color: var(--techpack-success-dark);
+}
+
+/* Custom Color PANTONE System */
+.techpack-custom-color-pantone {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-pantone-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.techpack-color-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--techpack-transition);
+}
+
+.techpack-pantone-name {
+  font-size: 0.875rem;
+  color: var(--techpack-text-secondary);
+  font-weight: 500;
+}
+
+.techpack-custom-color-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--techpack-warning-light);
+  border: 1px solid var(--techpack-warning);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--techpack-warning-dark);
+}
+
+.techpack-custom-color-note svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .techpack-sample-fabric-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-radio-option {
+    padding: 0.75rem;
+  }
+  
+  .techpack-labdip-color-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .remove-labdip-color {
+    align-self: flex-end;
+  }
+  
+  .techpack-pantone-preview {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
