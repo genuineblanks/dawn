@@ -295,6 +295,26 @@ FORM ELEMENTS
   border-color: var(--techpack-error);
 }
 
+/* Disabled Form Elements */
+.techpack-form__input:disabled,
+.techpack-form__select:disabled,
+.techpack-form__textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--techpack-bg-tertiary);
+  color: var(--techpack-text-muted);
+  transform: none !important;
+}
+
+.techpack-form__input:disabled:hover,
+.techpack-form__select:disabled:hover,
+.techpack-form__textarea:disabled:hover {
+  border-color: var(--techpack-border);
+  background: var(--techpack-bg-tertiary);
+  box-shadow: none;
+  transform: none !important;
+}
+
 /* 
 ===========================================
 BUTTONS
