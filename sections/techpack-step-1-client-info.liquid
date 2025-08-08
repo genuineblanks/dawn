@@ -259,6 +259,13 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
             </svg>
             Back
           </button>
+          <button type="button" class="techpack-btn techpack-btn--ghost" id="change-submission-type">
+            <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M8 3a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V10H3a1 1 0 110-2h4V4a1 1 0 011-1z" fill="currentColor"/>
+              <path d="M15 8A7 7 0 111 8a7 7 0 0114 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Change Submission Type
+          </button>
           <button type="button" class="techpack-btn techpack-btn--primary" id="step-1-next">
             Continue to Upload
             <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
@@ -406,6 +413,22 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
     
     <div class="techpack-modal__body">
       <div class="techpack-submission-selection">
+        <!-- Registration Verification Notice (for registered clients) -->
+        <div class="techpack-registration-notice" id="registration-notice" style="display: none;">
+          <div class="techpack-registration-notice__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="techpack-registration-notice__content">
+            <h5 class="techpack-registration-notice__title">Registration Verification Required</h5>
+            <p class="techpack-registration-notice__message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected. Please ensure you have worked with us before.
+            </p>
+          </div>
+        </div>
+        
         <p class="techpack-submission-selection__description">
           Select the type of submission that best matches your current needs. Each option is tailored to different stages of your garment development process.
         </p>
@@ -413,18 +436,20 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         <div class="techpack-submission-options">
           <!-- Garment Quotation Option -->
           <button type="button" class="techpack-submission-option techpack-glass-card" id="quotation-btn" data-submission-type="quotation">
-            <div class="techpack-glass-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9c.83 0 1.65-.12 2.41-.35.38-.11.74-.25 1.09-.4.21-.09.42-.2.62-.31L21 22l-1.9-4.88c.74-1.26 1.16-2.73 1.16-4.3C20.26 7.08 16.74 3 12 3z" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
             <div class="techpack-glass-card__content">
-              <h4 class="techpack-glass-card__title">Garment Quotation</h4>
-              <p class="techpack-glass-card__description">Get average pricing estimates across different garment types and quantities before committing to samples</p>
-              <div class="techpack-glass-card__features">
-                <span class="techpack-glass-card__feature">💰 Pricing estimates</span>
-                <span class="techpack-glass-card__feature">📊 Quantity breakdowns</span>
-                <span class="techpack-glass-card__feature">⚡ Fast turnaround</span>
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9c.83 0 1.65-.12 2.41-.35.38-.11.74-.25 1.09-.4.21-.09.42-.2.62-.31L21 22l-1.9-4.88c.74-1.26 1.16-2.73 1.16-4.3C20.26 7.08 16.74 3 12 3z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Garment Quotation</h4>
+                <p class="techpack-glass-card__description">Get average pricing estimates across different garment types and quantities before committing to samples</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">💰 Pricing estimates</span>
+                  <span class="techpack-glass-card__feature">📊 Quantity breakdowns</span>
+                  <span class="techpack-glass-card__feature">⚡ Fast turnaround</span>
+                </div>
               </div>
             </div>
             <div class="techpack-glass-card__shimmer"></div>
@@ -432,19 +457,21 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           
           <!-- Sample Request Option -->
           <button type="button" class="techpack-submission-option techpack-glass-card" id="sample-btn" data-submission-type="sample">
-            <div class="techpack-glass-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M20.38 8.53l-1.45-1.45C18.21 6.36 17.41 6 16.54 6H13V4c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10.54c0-.87-.36-1.67-1.08-2.29z" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M12 8v8m4-4H8" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
             <div class="techpack-glass-card__content">
-              <h4 class="techpack-glass-card__title">Request Sample</h4>
-              <p class="techpack-glass-card__description">Create physical prototypes to validate design, fit, and quality before moving to bulk production</p>
-              <div class="techpack-glass-card__features">
-                <span class="techpack-glass-card__feature">🧵 Physical samples</span>
-                <span class="techpack-glass-card__feature">✅ Quality validation</span>
-                <span class="techpack-glass-card__feature">📏 Fit confirmation</span>
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M20.38 8.53l-1.45-1.45C18.21 6.36 17.41 6 16.54 6H13V4c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10.54c0-.87-.36-1.67-1.08-2.29z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 8v8m4-4H8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Request Sample</h4>
+                <p class="techpack-glass-card__description">Create physical prototypes to validate design, fit, and quality before moving to bulk production</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">🧵 Physical samples</span>
+                  <span class="techpack-glass-card__feature">✅ Quality validation</span>
+                  <span class="techpack-glass-card__feature">📏 Fit confirmation</span>
+                </div>
               </div>
             </div>
             <div class="techpack-glass-card__shimmer"></div>
@@ -452,19 +479,21 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           
           <!-- Bulk Order Option -->
           <button type="button" class="techpack-submission-option techpack-glass-card" id="bulk-btn" data-submission-type="bulk">
-            <div class="techpack-glass-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" fill="none"/>
-                <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
             <div class="techpack-glass-card__content">
-              <h4 class="techpack-glass-card__title">Request Bulk Order</h4>
-              <p class="techpack-glass-card__description">Ready for production? Submit detailed specifications for full-scale manufacturing and delivery</p>
-              <div class="techpack-glass-card__features">
-                <span class="techpack-glass-card__feature">🏭 Full production</span>
-                <span class="techpack-glass-card__feature">📦 Large quantities</span>
-                <span class="techpack-glass-card__feature">🚚 Direct delivery</span>
+              <div class="techpack-glass-card__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h4 class="techpack-glass-card__title">Request Bulk Order</h4>
+                <p class="techpack-glass-card__description">Ready for production? Submit detailed specifications for full-scale manufacturing and delivery</p>
+                <div class="techpack-glass-card__features">
+                  <span class="techpack-glass-card__feature">🏭 Full production</span>
+                  <span class="techpack-glass-card__feature">📦 Large quantities</span>
+                  <span class="techpack-glass-card__feature">🚚 Direct delivery</span>
+                </div>
               </div>
             </div>
             <div class="techpack-glass-card__shimmer"></div>
