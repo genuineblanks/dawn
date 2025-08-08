@@ -2446,11 +2446,15 @@ TOOLTIP SYSTEM - EDUCATIONAL TOOLTIPS
   transition: opacity 0.3s ease, transform 0.3s ease;
   max-width: 400px;
   width: max-content;
+  pointer-events: none; /* Prevent layout interference when hidden */
+  display: none; /* Hidden by default */
 }
 
 .techpack-tooltip--active {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto; /* Enable interaction when visible */
+  display: block; /* Show when active */
 }
 
 .techpack-tooltip__content {
