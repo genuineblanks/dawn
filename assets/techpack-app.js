@@ -7714,7 +7714,7 @@
         garments: [],
         totalQuantity: 0,
         totalCost: 0,
-        submissionId: Utils.generateUID()
+        submissionId: Date.now()
       };
       
       // Reset step progress
