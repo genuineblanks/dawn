@@ -156,19 +156,23 @@ PROGRESS BAR
   background: var(--techpack-bg-tertiary);
   color: var(--techpack-text-secondary);
   border: 2px solid var(--techpack-border);
-  transition: var(--techpack-transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .techpack-progress__step-circle--active {
   background: var(--techpack-primary);
   color: var(--techpack-text-light);
   border-color: var(--techpack-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
 }
 
 .techpack-progress__step-circle--completed {
   background: var(--techpack-success);
   color: var(--techpack-text-light);
   border-color: var(--techpack-success);
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
 }
 
 .techpack-progress__step-label {
@@ -271,13 +275,46 @@ FORM ELEMENTS
 }
 
 .techpack-form__checkbox:hover {
-  background: var(--techpack-bg-secondary);
+  background: var(--techpack-bg-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .techpack-form__checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
   cursor: pointer;
+  border: 2px solid var(--techpack-border-dark);
+  border-radius: 4px;
+  background: var(--techpack-bg);
+  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.techpack-form__checkbox input[type="checkbox"]:hover {
+  border-color: var(--techpack-secondary);
+  background: var(--techpack-bg-tertiary);
+  transform: scale(1.05);
+}
+
+.techpack-form__checkbox input[type="checkbox"]:checked {
+  background: var(--techpack-primary);
+  border-color: var(--techpack-primary);
+}
+
+.techpack-form__checkbox input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: var(--techpack-text-light);
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 /* Error States */
@@ -562,10 +599,24 @@ COLORWAYS SECTION
 .techpack-color-picker__input {
   width: 40px;
   height: 32px;
-  border: 1px solid var(--techpack-border);
-  border-radius: 4px;
+  border: 2px solid var(--techpack-border);
+  border-radius: 8px;
   cursor: pointer;
   padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.techpack-color-picker__input:hover {
+  border-color: var(--techpack-secondary);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-color-picker__input:focus {
+  outline: none;
+  border-color: var(--techpack-primary);
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* 
@@ -773,9 +824,12 @@ ADD GARMENT BUTTON
   border: 2px dashed var(--techpack-border);
   color: var(--techpack-text-secondary);
   margin: 1.5rem 0;
-  padding: 1rem;
+  padding: 1.25rem;
   font-weight: 500;
-  transition: var(--techpack-transition);
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .techpack-btn--add-garment:hover {
@@ -783,6 +837,24 @@ ADD GARMENT BUTTON
   border-color: var(--techpack-primary);
   color: var(--techpack-primary);
   border-style: solid;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-btn--add-garment::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.8s ease;
+  pointer-events: none;
+}
+
+.techpack-btn--add-garment:hover::before {
+  left: 100%;
 }
 
 /* 
@@ -1015,7 +1087,7 @@ MOBILE RESPONSIVE (768px and below)
     min-height: 40px;
     background: var(--techpack-bg);
     border: 1px solid var(--techpack-border);
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 0.75rem;
     text-align: left;
     transition: var(--techpack-transition);
@@ -1023,8 +1095,10 @@ MOBILE RESPONSIVE (768px and below)
   }
   
   .techpack-btn--pantone-compact:hover:not(:disabled) {
-    background: var(--techpack-bg-secondary);
-    border-color: var(--techpack-border-dark);
+    background: var(--techpack-bg-tertiary);
+    border-color: var(--techpack-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
   
   .techpack-btn--pantone-compact.selected {
