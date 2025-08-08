@@ -2276,10 +2276,11 @@
           <option value="Zip-Up Hoodie">Zip-Up Hoodie</option>
           <option value="Hoodie">Hoodie</option>
           <option value="T-Shirt">T-Shirt</option>
-          <option value="Crewneck Sweatshirt">Crewneck Sweatshirt</option>
+          <option value="Sweatshirt">Sweatshirt</option>
           <option value="Sweatpants">Sweatpants</option>
           <option value="Shorts">Shorts</option>
           <option value="Long Sleeve T-Shirt">Long Sleeve T-Shirt</option>
+          <option value="Shirt">Shirt</option>
           <option value="Polo Shirt">Polo Shirt</option>
           <option value="Tank Top">Tank Top</option>
           <option value="Hat/Cap">Hat/Cap</option>
@@ -3763,7 +3764,8 @@
       // Initialize fabric options with default garment type (if any)
       const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
       const fabricSelect = garment.querySelector('select[name="fabricType"]');
-      if (garmentTypeSelect && fabricSelect && garmentTypeSelect.value) {
+      if (garmentTypeSelect && fabricSelect) {
+        // Initialize fabric options based on current garment type (empty for new garments)
         this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, false);
       }
       
@@ -3803,10 +3805,21 @@
 
     // Update fabric options based on selected garment type
     updateFabricOptions(garmentType, fabricSelect, preserveSelection = true) {
-      if (!fabricSelect || !garmentType) return;
+      if (!fabricSelect) return;
 
       // Get current selection to preserve if possible
       const currentSelection = preserveSelection ? fabricSelect.value : '';
+      
+      // Handle empty garment type
+      if (!garmentType) {
+        fabricSelect.innerHTML = '<option value="">Choose garment type 1st</option>';
+        fabricSelect.disabled = true;
+        debugSystem.log('Fabric dropdown disabled - no garment type selected');
+        return;
+      }
+
+      // Re-enable fabric select if it was disabled
+      fabricSelect.disabled = false;
       
       // Get fabric options for this garment type
       const fabricOptions = CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
