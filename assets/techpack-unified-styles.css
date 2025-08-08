@@ -873,7 +873,7 @@ MOBILE RESPONSIVE (768px and below)
   
   .techpack-colorway__header-line {
     display: grid !important;
-    grid-template-columns: auto auto 1fr auto !important;
+    grid-template-columns: auto 1fr auto !important;
     gap: 1.5rem !important;
     align-items: start !important;
   }
@@ -1003,7 +1003,7 @@ MOBILE RESPONSIVE (768px and below)
     content: '';
     width: 6px;
     height: 6px;
-    background: var(--techpack-text-light);
+    background: #1f2937;
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -2647,12 +2647,12 @@ PER-GARMENT SAMPLE SYSTEM - COMPACT DESIGN
 
 .techpack-sample-compact-option:hover {
   border-color: var(--techpack-primary);
-  background: rgba(37, 99, 235, 0.05);
+  background: rgba(248, 250, 252, 0.8);
 }
 
 .techpack-sample-compact-option:has(input:checked) {
   border-color: var(--techpack-primary);
-  background: rgba(37, 99, 235, 0.1);
+  background: rgba(241, 245, 249, 0.9);
   box-shadow: 0 0 0 1px var(--techpack-primary);
 }
 
