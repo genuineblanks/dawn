@@ -14,6 +14,130 @@
     DEBOUNCE_DELAY: 300,
     MIN_DELIVERY_WEEKS: 6,
     
+    // Fabric Type Mapping Configuration
+    FABRIC_TYPE_MAPPING: {
+      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
+      'Zip-Up Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Crewneck Sweatshirt': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatpants': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Shorts': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      
+      // Light Garments - T-Shirts and Long Sleeves
+      'T-Shirt': [
+        '100% Organic Cotton Jersey',
+        '80% Cotton 20% Polyester Jersey',
+        '50% Cotton 50% Polyester Jersey',
+        '100% Polyester Jersey',
+        '100% Cotton & Elastan',
+        'Recycled Polyester'
+      ],
+      'Long Sleeve T-Shirt': [
+        '100% Organic Cotton Jersey',
+        '80% Cotton 20% Polyester Jersey',
+        '50% Cotton 50% Polyester Jersey',
+        '100% Polyester Jersey',
+        '100% Cotton & Elastan',
+        'Recycled Polyester'
+      ],
+      
+      // Shirts - Woven and structured fabrics
+      'Shirt': [
+        '100% Cotton Twill',
+        '100% Cotton Canvas',
+        '100% Linen',
+        '55% Linen / 45% Cotton',
+        '100% Viscose',
+        '100% Tencel (Lyocell)',
+        '100% Cotton Flannel',
+        '100% Cotton Corduroy',
+        '65% Polyester / 35% Cotton Poplin',
+        '100% Polyester Microfiber'
+      ],
+      
+      // Polo Shirts
+      'Polo Shirt': [
+        'Cotton Piqué',
+        'Merino Wool',
+        'Cotton Jersey',
+        'Cotton Polyester',
+        'Cotton Elastan',
+        '100% Polyester',
+        'Recycled Polyester'
+      ],
+      
+      // Tank Tops
+      'Tank Top': [
+        '100% Cotton Jersey',
+        '100% Cotton Waffle Knit',
+        '100% Cotton 2x2 Rib Knit',
+        '100% Cotton Slub Jersey',
+        '100% Cotton Lightweight French Terry',
+        '95% Cotton / 5% Elastane Jersey',
+        '50% Cotton / 50% Polyester Jersey',
+        '100% Polyester Mesh',
+        '65% Polyester / 35% Cotton Piqué Knit'
+      ],
+      
+      // Other/Default Garments - Keep original options for hats, beanies, etc.
+      'Hat/Cap': [
+        'Canvas',
+        'Cotton/Polyester Blend',
+        '100% Cotton',
+        '100% Polyester',
+        'Custom Fabric (Specify in Notes)'
+      ],
+      'Beanie': [
+        'Fleece 100% Organic Cotton',
+        'Cotton/Polyester Blend',
+        '100% Cotton',
+        '100% Polyester',
+        'Custom Fabric (Specify in Notes)'
+      ],
+      'Other': [
+        'Custom Fabric (Specify in Notes)',
+        '100% Organic Cotton Jersey',
+        'Cotton/Polyester Blend',
+        '100% Polyester',
+        'Canvas'
+      ]
+    },
+    
     // Security Configuration
     CLIENT_SECRET: 'genuineblanks-techpack-secret-2025', // Security key for HMAC signatures
     WEBHOOK_URL: 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy', // Vercel API endpoint
@@ -3576,6 +3700,13 @@
       // Setup event listeners
       this.setupGarmentEventListeners(garment, garmentId);
       
+      // Initialize fabric options with default garment type (if any)
+      const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
+      const fabricSelect = garment.querySelector('select[name="fabricType"]');
+      if (garmentTypeSelect && fabricSelect && garmentTypeSelect.value) {
+        this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, false);
+      }
+      
       container.appendChild(garment);
 
       // Apply production-specific interface
@@ -3610,6 +3741,49 @@
       debugSystem.log('Garment added', { garmentId });
     }
 
+    // Update fabric options based on selected garment type
+    updateFabricOptions(garmentType, fabricSelect, preserveSelection = true) {
+      if (!fabricSelect || !garmentType) return;
+
+      // Get current selection to preserve if possible
+      const currentSelection = preserveSelection ? fabricSelect.value : '';
+      
+      // Get fabric options for this garment type
+      const fabricOptions = CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
+      
+      // Clear existing options except the placeholder
+      fabricSelect.innerHTML = '<option value="">Select fabric type...</option>';
+      
+      // Add new options
+      fabricOptions.forEach(fabric => {
+        const option = document.createElement('option');
+        option.value = fabric;
+        option.textContent = fabric;
+        fabricSelect.appendChild(option);
+      });
+      
+      // Restore selection if it's still valid
+      if (currentSelection && fabricOptions.includes(currentSelection)) {
+        fabricSelect.value = currentSelection;
+      } else if (currentSelection) {
+        // Current selection is no longer valid, reset and show message
+        fabricSelect.value = '';
+        debugSystem.log('Fabric selection reset due to garment type change', { 
+          garmentType, 
+          previousFabric: currentSelection 
+        });
+      }
+
+      // Trigger change event to update validations and summaries
+      fabricSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      
+      debugSystem.log('Fabric options updated', { 
+        garmentType, 
+        optionCount: fabricOptions.length,
+        preservedSelection: fabricSelect.value 
+      });
+    }
+
     setupGarmentEventListeners(garment, garmentId) {
       // Remove button
       const removeBtn = garment.querySelector('.techpack-garment__remove');
@@ -3627,7 +3801,20 @@
           if (garmentData) {
             garmentData.type = garmentTypeSelect.value;
           }
+          
+          // Update fabric options based on new garment type
+          const fabricSelect = garment.querySelector('select[name="fabricType"]');
+          this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, true);
+          
           stepManager.validateStep3();
+          
+          // Update sample summary if in sample mode
+          if (window.sampleManager && state.formData.requestType === 'sample-request') {
+            const sampleData = window.sampleManager.perGarmentSamples.get(garmentId);
+            if (sampleData) {
+              window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
+            }
+          }
         });
       }
 
@@ -3640,6 +3827,14 @@
             garmentData.fabric = fabricSelect.value;
           }
           stepManager.validateStep3();
+          
+          // Update sample summary if in sample mode
+          if (window.sampleManager && state.formData.requestType === 'sample-request') {
+            const sampleData = window.sampleManager.perGarmentSamples.get(garmentId);
+            if (sampleData) {
+              window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
+            }
+          }
         });
       }
 
@@ -10149,21 +10344,16 @@ setupInitialization();
           this.handlePerGarmentSampleToggle(e.target);
         }
         
-        // Black/Raw fabric color selection
-        if (e.target.name && e.target.name.includes('blackraw-fabric-color')) {
-          this.handleBlackRawFabricSelection(e.target);
-        }
-        
         // PANTONE input changes
         if (e.target.classList.contains('techpack-pantone-input')) {
           this.handlePantoneInput(e.target);
         }
       });
 
-      // Per-garment sample form changes (size, fabric color)
+      // Per-garment sample form changes (size, fit type)
       document.addEventListener('change', (e) => {
         if (e.target.classList.contains('techpack-garment-sample-size') || 
-            e.target.classList.contains('techpack-garment-fabric-color')) {
+            e.target.classList.contains('techpack-garment-fit-type')) {
           this.updatePerGarmentSampleDetails(e.target);
         }
       });
@@ -10189,6 +10379,13 @@ setupInitialization();
         }
         // Close tooltips when clicking outside
         if (!e.target.closest('.techpack-tooltip-trigger') && !e.target.closest('.techpack-tooltip')) {
+          this.closeAllTooltips();
+        }
+      });
+
+      // Keyboard accessibility - ESC to close tooltips
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
           this.closeAllTooltips();
         }
       });
@@ -10267,7 +10464,6 @@ setupInitialization();
         this.perGarmentSamples.set(garmentId, {
           blackRaw: { 
             enabled: false, 
-            fabricColor: 'black', // Default to black
             size: '', 
             cost: 35 
           },
@@ -10284,6 +10480,7 @@ setupInitialization();
             size: '',
             cost: 65 
           },
+          typeOfFit: '', // New field for fit type
           totalCost: 0
         });
         debugSystem.log('Initialized enhanced sample data for garment', { garmentId });
@@ -10368,7 +10565,6 @@ setupInitialization();
       if (sampleType === 'sample-black-raw') {
         sampleData.blackRaw.enabled = isChecked;
         if (!isChecked) {
-          sampleData.blackRaw.fabricColor = 'black';
           sampleData.blackRaw.size = '';
         }
       } else if (sampleType === 'sample-lab-dip') {
@@ -10399,25 +10595,6 @@ setupInitialization();
       this.updateGarmentSampleSummary(garmentElement, sampleData);
       
       debugSystem.log('Sample toggle updated', { garmentId, sampleType, isChecked });
-    }
-
-    // Handle Black/Raw fabric color selection
-    handleBlackRawFabricSelection(radioInput) {
-      const garmentElement = radioInput.closest('.techpack-garment');
-      const garmentId = garmentElement?.dataset.garmentId;
-      
-      if (!garmentId) return;
-
-      const sampleData = this.perGarmentSamples.get(garmentId);
-      if (sampleData) {
-        sampleData.blackRaw.fabricColor = radioInput.value;
-        this.updateGarmentSampleSummary(garmentElement, sampleData);
-        
-        debugSystem.log('Black/Raw fabric color selected', { 
-          garmentId, 
-          fabricColor: radioInput.value 
-        });
-      }
     }
 
     // Handle PANTONE input changes for both lab dip and custom color
@@ -10599,9 +10776,9 @@ setupInitialization();
         if (sampleData.blackRaw.enabled) sampleData.blackRaw.size = size;
         if (sampleData.labDip.enabled) sampleData.labDip.size = size;
         if (sampleData.customColor.enabled) sampleData.customColor.size = size;
-      } else if (input.classList.contains('techpack-garment-fabric-color')) {
-        // Update fabric color for black/raw samples
-        sampleData.blackRaw.fabricColor = input.value;
+      } else if (input.classList.contains('techpack-garment-fit-type')) {
+        // Update type of fit for this garment
+        sampleData.typeOfFit = input.value;
       }
 
       this.updateGarmentSampleCost(garmentId);
@@ -10630,30 +10807,58 @@ setupInitialization();
       }
     }
 
-    // Update sample summary for a specific garment
+    // Update comprehensive sample summary for a specific garment
     updateGarmentSampleSummary(garmentElement, sampleData) {
       const summaryElement = garmentElement.querySelector('.techpack-garment-sample-summary');
       if (!summaryElement) return;
 
-      const selectedOptions = [];
+      const summaryParts = [];
+      
+      // Get main garment details
+      const garmentType = garmentElement.querySelector('[name="garmentType"]')?.value;
+      const fabricType = garmentElement.querySelector('[name="fabricType"]')?.value;
+      const fitType = sampleData.typeOfFit;
+      
+      // Add garment basics to summary
+      if (garmentType) summaryParts.push(garmentType);
+      if (fabricType) summaryParts.push(fabricType);
+      if (fitType) {
+        // Convert fit type value to display name
+        const fitDisplayNames = {
+          'measurements-inside-techpack': 'Measurements inside Tech-Pack',
+          'oversized-fit': 'Oversized Fit',
+          'relaxed-fit': 'Relaxed Fit'
+        };
+        summaryParts.push(fitDisplayNames[fitType] || fitType);
+      }
+      
+      // Add sample options
+      const sampleOptions = [];
       
       if (sampleData.blackRaw.enabled) {
-        const fabricColor = sampleData.blackRaw.fabricColor;
-        selectedOptions.push(`Black/Raw (${fabricColor})`);
+        const size = sampleData.blackRaw.size;
+        const sampleText = size ? `Black/Raw Sample (${size.toUpperCase()})` : 'Black/Raw Sample';
+        sampleOptions.push(sampleText);
       }
       
       if (sampleData.labDip.enabled) {
         const colorCount = sampleData.labDip.pantoneColors.length;
-        selectedOptions.push(`Lab Dip (${colorCount} color${colorCount !== 1 ? 's' : ''})`);
+        sampleOptions.push(`Lab Dip (${colorCount} color${colorCount !== 1 ? 's' : ''})`);
       }
       
       if (sampleData.customColor.enabled) {
         const pantoneCode = sampleData.customColor.pantoneCode;
-        const displayText = pantoneCode ? `Custom (${pantoneCode})` : 'Custom Color';
-        selectedOptions.push(displayText);
+        const displayText = pantoneCode ? `Custom Color (${pantoneCode})` : 'Custom Color';
+        sampleOptions.push(displayText);
+      }
+      
+      // Combine garment details and sample options
+      if (sampleOptions.length > 0) {
+        summaryParts.push(...sampleOptions);
       }
 
-      summaryElement.textContent = selectedOptions.length > 0 ? selectedOptions.join(', ') : 'None';
+      // Display comprehensive summary
+      summaryElement.textContent = summaryParts.length > 0 ? summaryParts.join(', ') : 'None';
     }
 
     // Get all per-garment sample data (for step 4 review)
