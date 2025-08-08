@@ -33,7 +33,7 @@
         '50% Cotton 50% Polyester Blend',
         '100% Polyester'
       ],
-      'Crewneck Sweatshirt': [
+      'Sweatshirt': [
         'Brushed Fleece 100% Organic Cotton',
         'French Terry 100% Organic Cotton',
         '80% Cotton 20% Polyester Blend',
