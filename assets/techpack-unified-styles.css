@@ -98,6 +98,570 @@ TYPOGRAPHY
 
 /* 
 ===========================================
+PREMIUM ENTRANCE HERO
+===========================================
+*/
+
+.techpack-entrance-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, 
+    rgba(248, 249, 250, 0.9) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(248, 249, 250, 0.9) 100%);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(42, 42, 42, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06),
+              0 8px 16px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.techpack-entrance-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 70%);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.techpack-entrance-hero__content {
+  z-index: 2;
+  position: relative;
+}
+
+.techpack-entrance-hero__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.techpack-entrance-hero__subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.techpack-entrance-hero__features {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.techpack-entrance-hero__feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  border: 1px solid rgba(42, 42, 42, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.techpack-entrance-hero__feature-icon {
+  color: #2a2a2a;
+  flex-shrink: 0;
+}
+
+.techpack-entrance-hero__cta {
+  z-index: 2;
+  position: relative;
+}
+
+/* 
+===========================================
+PREMIUM GLASS BUTTON SYSTEM
+===========================================
+*/
+
+.techpack-btn-premium {
+  position: relative;
+  display: inline-block;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: inherit;
+  transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  min-width: 280px;
+  transform-origin: center;
+}
+
+.techpack-btn-premium--glass {
+  background: linear-gradient(135deg, 
+    rgba(248, 249, 250, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(248, 249, 250, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(42, 42, 42, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
+              0 4px 8px rgba(0, 0, 0, 0.04),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.techpack-btn-premium__content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.techpack-btn-premium__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 8px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(42, 42, 42, 0.2);
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.techpack-btn-premium__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.techpack-btn-premium__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  transition: color 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.techpack-btn-premium__subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-top: 0.125rem;
+}
+
+.techpack-btn-premium__shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    transparent 100%);
+  transition: left 600ms cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+
+/* Hover States */
+.techpack-btn-premium:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12),
+              0 8px 16px rgba(0, 0, 0, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.techpack-btn-premium:hover .techpack-btn-premium__shimmer {
+  left: 100%;
+}
+
+.techpack-btn-premium:hover .techpack-btn-premium__icon {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  box-shadow: 0 6px 16px rgba(42, 42, 42, 0.3);
+  transform: scale(1.05);
+}
+
+.techpack-btn-premium:hover .techpack-btn-premium__title {
+  color: #0a0a0a;
+}
+
+/* Active States */
+.techpack-btn-premium:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.techpack-btn-premium:active .techpack-btn-premium__icon {
+  transform: scale(0.95);
+}
+
+/* Focus States */
+.techpack-btn-premium:focus {
+  outline: none;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12),
+              0 8px 16px rgba(0, 0, 0, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9),
+              0 0 0 3px rgba(42, 42, 42, 0.1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .techpack-entrance-hero {
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+  }
+  
+  .techpack-entrance-hero__title {
+    font-size: 2rem;
+  }
+  
+  .techpack-entrance-hero__features {
+    gap: 1rem;
+    flex-direction: column;
+  }
+  
+  .techpack-btn-premium {
+    min-width: 100%;
+    max-width: 320px;
+  }
+  
+  .techpack-btn-premium__content {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+/* 
+===========================================
+GLASS OPTION COMPONENTS (Reusable)
+===========================================
+*/
+
+.techpack-glass-option {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: linear-gradient(135deg, 
+    rgba(248, 249, 250, 0.9) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(248, 249, 250, 0.9) 100%);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(42, 42, 42, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1);
+  text-align: left;
+  font-family: inherit;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.techpack-glass-option__content {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.techpack-glass-option__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 8px;
+  color: white;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 12px rgba(42, 42, 42, 0.15);
+}
+
+.techpack-glass-option__text {
+  flex: 1;
+}
+
+.techpack-glass-option__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.techpack-glass-option__description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.techpack-glass-option__shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%);
+  transition: left 500ms cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+
+/* Glass Option Hover States */
+.techpack-glass-option:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1),
+              0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: rgba(42, 42, 42, 0.12);
+}
+
+.techpack-glass-option:hover .techpack-glass-option__shimmer {
+  left: 100%;
+}
+
+.techpack-glass-option:hover .techpack-glass-option__icon {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(42, 42, 42, 0.2);
+}
+
+.techpack-glass-option:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 
+===========================================
+GLASS CARD COMPONENTS (For Submission Options)
+===========================================
+*/
+
+.techpack-glass-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: linear-gradient(135deg, 
+    rgba(248, 249, 250, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(248, 249, 250, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(42, 42, 42, 0.08);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  text-align: left;
+  font-family: inherit;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06),
+              0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.techpack-glass-card__content {
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.techpack-glass-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 8px 20px rgba(42, 42, 42, 0.15);
+}
+
+.techpack-glass-card__title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.techpack-glass-card__description {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.techpack-glass-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.techpack-glass-card__feature {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.techpack-glass-card__shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    transparent 100%);
+  transition: left 600ms cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+
+/* Glass Card Hover States */
+.techpack-glass-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12),
+              0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(42, 42, 42, 0.15);
+}
+
+.techpack-glass-card:hover .techpack-glass-card__shimmer {
+  left: 100%;
+}
+
+.techpack-glass-card:hover .techpack-glass-card__icon {
+  transform: scale(1.1);
+  box-shadow: 0 12px 28px rgba(42, 42, 42, 0.25);
+}
+
+.techpack-glass-card:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 
+===========================================
+SUBMISSION TYPE MODAL
+===========================================
+*/
+
+.techpack-modal--submission-type .techpack-modal__content {
+  max-width: 900px;
+  width: 90vw;
+}
+
+.techpack-submission-selection__description {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.techpack-submission-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.techpack-submission-selection__note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 1rem;
+  background: rgba(248, 249, 250, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(42, 42, 42, 0.06);
+}
+
+/* Modal Transition Styles */
+.techpack-modal {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease-in-out;
+}
+
+.techpack-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.techpack-modal__content {
+  transform: translateY(20px) scale(0.95);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.techpack-modal.active .techpack-modal__content {
+  transform: translateY(0) scale(1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .techpack-submission-options {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .techpack-glass-card__content {
+    padding: 1.5rem;
+  }
+  
+  .techpack-glass-card__title {
+    font-size: 1.25rem;
+  }
+  
+  .techpack-glass-card__icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .techpack-modal__content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}
+
+/* 
+===========================================
 PROGRESS BAR
 ===========================================
 */

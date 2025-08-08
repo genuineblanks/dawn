@@ -1588,9 +1588,7 @@
                 currentStep: state.currentStep,
                 targetStep: stepNumber 
               }, 'warn');
-              // FIXED: Don't prevent navigation, just warn - let user proceed
-              debugSystem.log('🔄 Allowing navigation despite validation failure for better UX');
-              // return false; // Commented out to allow navigation
+              return false; // Prevent navigation when validation fails
             }
           }
         } catch (validationError) {
@@ -1941,7 +1939,7 @@
       });
     
       // Clear errors for valid fields - ENHANCED to handle both client types
-      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'requestType', 'notes'];
+      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'notes'];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -1951,6 +1949,12 @@
         }
       });
     
+      // Update Next button state
+      const nextBtn = document.querySelector('#step-1-next');
+      if (nextBtn) {
+        nextBtn.disabled = !isValid;
+      }
+
       if (isValid) {
         // Add client type info to your existing data structure
         data.isRegisteredClient = isRegisteredClient;
@@ -1961,6 +1965,13 @@
         }, 'success');
       } else {
         debugSystem.log('Step 1 validation failed', errors, 'error');
+      }
+      
+      // Update Next button state
+      const nextBtn = document.getElementById('step-1-next');
+      if (nextBtn) {
+        nextBtn.disabled = !isValid;
+        nextBtn.classList.toggle('techpack-btn--disabled', !isValid);
       }
     
       return isValid;
@@ -7436,6 +7447,9 @@
       this.setupVATFormatting();
       this.setupRegistrationCheck();
       
+      // NEW: Add real-time Step 1 validation
+      this.setupStep1RealTimeValidation();
+      
       // CHANGED: Initialize with registration check (step 0) instead of step 1
       this.showStep(0);
       
@@ -7443,21 +7457,203 @@
       debugSystem.log('TechPack Application initialized successfully', null, 'success');
     }
 
+    // Add real-time validation for Step 1 form fields
+    setupStep1RealTimeValidation() {
+      const step1Form = document.querySelector('#techpack-step-1 form');
+      if (!step1Form) return;
+
+      // Get all required form fields that need real-time validation
+      const requiredFields = [
+        'client-name',
+        'company-name', 
+        'email',
+        'country',
+        'production-type'
+      ];
+
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          // Add event listeners for real-time validation
+          field.addEventListener('input', () => {
+            // Small delay to avoid too frequent validation calls
+            clearTimeout(this.validationTimeout);
+            this.validationTimeout = setTimeout(() => {
+              stepManager.validateStep1();
+            }, 300);
+          });
+          
+          field.addEventListener('change', () => {
+            // Immediate validation on change events
+            stepManager.validateStep1();
+          });
+          
+          // For select elements, also listen to blur events
+          if (field.tagName === 'SELECT') {
+            field.addEventListener('blur', () => {
+              stepManager.validateStep1();
+            });
+          }
+        }
+      });
+
+      debugSystem.log('Step 1 real-time validation setup completed');
+      
+      // Initialize Next button as disabled until all fields are valid
+      const nextBtn = document.getElementById('step-1-next');
+      if (nextBtn) {
+        nextBtn.disabled = true;
+        nextBtn.classList.add('techpack-btn--disabled');
+        
+        // Run initial validation to set correct state
+        setTimeout(() => {
+          stepManager.validateStep1();
+        }, 100);
+      }
+    }
+
 // ENHANCED: Registration setup with comprehensive error handling and user feedback
     setupClientModal() {
-      debugSystem.log('🔧 Setting up client verification modal...');
+      debugSystem.log('🔧 Setting up client verification and submission type modals...');
       
+      // Client Verification Modal Elements
       const modal = document.querySelector('#client-verification-modal');
       const openBtn = document.querySelector('#open-client-modal');
       const closeBtn = document.querySelector('#close-client-modal');
       const backdrop = document.querySelector('.techpack-modal__backdrop');
-      const existingClientBtn = document.querySelector('[data-client-type="existing"]');
-      const newClientBtn = document.querySelector('[data-client-type="new"]');
+      
+      // Submission Type Modal Elements
+      const submissionModal = document.querySelector('#submission-type-modal');
+      const closeSubmissionBtn = document.querySelector('#close-submission-modal');
+      const submissionBackdrop = submissionModal?.querySelector('.techpack-modal__backdrop');
+      
+      // Client registration buttons (updated selectors)
+      const registrationYesBtn = document.querySelector('#registration-yes-btn');
+      const registrationNoBtn = document.querySelector('#registration-no-btn');
+      
+      // Submission type buttons
+      const quotationBtn = document.querySelector('#quotation-btn');
+      const sampleBtn = document.querySelector('#sample-btn');
+      const bulkBtn = document.querySelector('#bulk-btn');
       
       if (!modal || !openBtn) {
         debugSystem.log('❌ Modal elements not found, skipping modal setup', null, 'error');
         this.showStep(1); // Fallback to step 1
         return;
+      }
+
+      // Open client verification modal
+      openBtn?.addEventListener('click', () => {
+        this.showModal(modal);
+        debugSystem.log('Client verification modal opened');
+      });
+
+      // Close client verification modal
+      closeBtn?.addEventListener('click', () => {
+        this.hideModal(modal);
+      });
+      
+      backdrop?.addEventListener('click', () => {
+        this.hideModal(modal);
+      });
+
+      // Client registration selection - leads to submission type modal
+      registrationYesBtn?.addEventListener('click', () => {
+        state.formData.isRegisteredClient = true;
+        this.hideModal(modal);
+        setTimeout(() => {
+          this.showSubmissionTypeModal();
+        }, 300);
+        debugSystem.log('Registered client selected');
+      });
+
+      registrationNoBtn?.addEventListener('click', () => {
+        state.formData.isRegisteredClient = false;
+        this.hideModal(modal);
+        setTimeout(() => {
+          this.showSubmissionTypeModal();
+        }, 300);
+        debugSystem.log('New client selected');
+      });
+
+      // Submission type modal controls
+      closeSubmissionBtn?.addEventListener('click', () => {
+        this.hideModal(submissionModal);
+      });
+      
+      submissionBackdrop?.addEventListener('click', () => {
+        this.hideModal(submissionModal);
+      });
+
+      // Submission type selection
+      quotationBtn?.addEventListener('click', () => {
+        this.selectSubmissionType('quotation');
+      });
+
+      sampleBtn?.addEventListener('click', () => {
+        this.selectSubmissionType('sample-request');
+      });
+
+      bulkBtn?.addEventListener('click', () => {
+        this.selectSubmissionType('bulk-order-request');
+      });
+    }
+
+    // Show submission type selection modal
+    showSubmissionTypeModal() {
+      const submissionModal = document.querySelector('#submission-type-modal');
+      if (submissionModal) {
+        this.showModal(submissionModal);
+        debugSystem.log('Submission type modal opened');
+      }
+    }
+
+    // Handle submission type selection
+    selectSubmissionType(type) {
+      state.formData.requestType = type;
+      const submissionModal = document.querySelector('#submission-type-modal');
+      
+      // Hide submission modal and proceed to Step 1
+      this.hideModal(submissionModal);
+      
+      setTimeout(() => {
+        this.showStep(1);
+        debugSystem.log(`Submission type selected: ${type}`);
+        
+        // Update UI based on submission type
+        this.updateUIForSubmissionType(type);
+      }, 300);
+    }
+
+    // Update UI elements based on submission type
+    updateUIForSubmissionType(type) {
+      const subtitle = document.getElementById('client-info-subtitle');
+      
+      switch(type) {
+        case 'quotation':
+          if (subtitle) subtitle.textContent = 'Provide your details to receive accurate pricing estimates';
+          break;
+        case 'sample-request':
+          if (subtitle) subtitle.textContent = 'Enter your information to begin sample development';
+          break;
+        case 'bulk-order-request':
+          if (subtitle) subtitle.textContent = 'Submit your details for bulk production planning';
+          break;
+      }
+    }
+
+    // Generic modal show/hide functions
+    showModal(modal) {
+      if (modal) {
+        modal.style.display = 'block';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+    }
+
+    hideModal(modal) {
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
       }
       
       // Mobile scroll lock functions with overscroll preservation
