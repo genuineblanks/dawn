@@ -1949,7 +1949,11 @@
         }
       });
     
-      // Next button state handled below
+      // Update Next button state
+      const nextBtn = document.querySelector('#step-1-next');
+      if (nextBtn) {
+        nextBtn.disabled = !isValid;
+      }
 
       if (isValid) {
         // Add client type info to your existing data structure
