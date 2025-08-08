@@ -163,21 +163,6 @@ Tech-Pack Step 3: Garment Specifications Section
         <div class="techpack-form__error" role="alert"></div>
       </div>
 
-      <div class="techpack-colorways">
-        <div class="techpack-colorways__header">
-          <h4 class="techpack-colorways__title">Colorways</h4>
-          <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary add-colorway">
-            <svg class="techpack-btn__icon" width="14" height="14" viewBox="0 0 16 16">
-              <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Add Colorway
-          </button>
-        </div>
-        <div class="techpack-colorways__list">
-          <!-- Colorways will be added here -->
-        </div>
-      </div>
-
       <!-- Sample Options for this Garment (shown only for sample requests) -->
       <div class="techpack-garment-samples" data-sample-request-only="true" style="display: none;">
         <h5 class="techpack-garment-samples__title">
@@ -192,35 +177,106 @@ Tech-Pack Step 3: Garment Specifications Section
         </h5>
         
         <div class="techpack-sample-compact-grid">
-          <!-- Black/Raw Sample Option -->
-          <label class="techpack-sample-compact-option">
-            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-black-raw">
-            <div class="techpack-sample-compact-content">
-              <span class="techpack-sample-compact-title">Black/Raw Sample</span>
-              <span class="techpack-sample-compact-info">1-2 weeks • €35</span>
-              <span class="techpack-sample-compact-desc">Fast fit validation</span>
+          <!-- Black/Raw Sample Option - Enhanced -->
+          <div class="techpack-sample-compact-option techpack-sample-expandable">
+            <label class="techpack-sample-compact-header">
+              <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-black-raw">
+              <div class="techpack-sample-compact-content">
+                <span class="techpack-sample-compact-title">Black/Raw Sample</span>
+                <span class="techpack-sample-compact-info">1-2 weeks • €35</span>
+                <span class="techpack-sample-compact-desc">Fast fit validation</span>
+              </div>
+            </label>
+            
+            <!-- Expandable fabric color options -->
+            <div class="techpack-sample-sub-options" style="display: none;">
+              <label class="techpack-form__label">Fabric Color Options:</label>
+              <div class="techpack-sample-fabric-options">
+                <label class="techpack-radio-option">
+                  <input type="radio" name="blackraw-fabric-color" value="black" checked>
+                  <span class="techpack-radio-mark"></span>
+                  Black
+                </label>
+                <label class="techpack-radio-option">
+                  <input type="radio" name="blackraw-fabric-color" value="off-white">
+                  <span class="techpack-radio-mark"></span>
+                  Off-White
+                </label>
+                <label class="techpack-radio-option">
+                  <input type="radio" name="blackraw-fabric-color" value="stock-color">
+                  <span class="techpack-radio-mark"></span>
+                  Stock Color (Random)
+                </label>
+              </div>
             </div>
-          </label>
+          </div>
           
-          <!-- Lab Dip Option -->
-          <label class="techpack-sample-compact-option">
-            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-lab-dip">
-            <div class="techpack-sample-compact-content">
-              <span class="techpack-sample-compact-title">Lab Dip Swatch</span>
-              <span class="techpack-sample-compact-info">Parallel • €25</span>
-              <span class="techpack-sample-compact-desc">Color confirmation</span>
+          <!-- Lab Dip Option - Enhanced -->
+          <div class="techpack-sample-compact-option techpack-sample-expandable">
+            <label class="techpack-sample-compact-header">
+              <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-lab-dip">
+              <div class="techpack-sample-compact-content">
+                <span class="techpack-sample-compact-title">Lab Dip Swatch</span>
+                <span class="techpack-sample-compact-info">Parallel • €<span class="labdip-cost">25</span></span>
+                <span class="techpack-sample-compact-desc">Color confirmation</span>
+              </div>
+            </label>
+            
+            <!-- Dynamic PANTONE addition system -->
+            <div class="techpack-sample-sub-options" style="display: none;">
+              <label class="techpack-form__label">PANTONE TPX Colors:</label>
+              <div class="techpack-labdip-pantone-system">
+                <div class="techpack-labdip-colors-list">
+                  <!-- First PANTONE color (default) -->
+                  <div class="techpack-labdip-color-item" data-color-index="0">
+                    <input type="text" placeholder="e.g., 18-3949 TPX" class="techpack-pantone-input" data-pantone-index="0">
+                    <button type="button" class="techpack-btn techpack-btn--small remove-labdip-color" style="display: none;">×</button>
+                  </div>
+                </div>
+                <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary add-labdip-pantone">
+                  <svg width="12" height="12" viewBox="0 0 16 16">
+                    <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  Add PANTONE Color (+€25)
+                </button>
+                <div class="techpack-labdip-total">
+                  <strong>Total: €<span class="labdip-total-cost">25</span></strong>
+                </div>
+              </div>
             </div>
-          </label>
+          </div>
           
-          <!-- Custom Color Sample Option -->
-          <label class="techpack-sample-compact-option">
-            <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-custom-color">
-            <div class="techpack-sample-compact-content">
-              <span class="techpack-sample-compact-title">Custom Color Sample</span>
-              <span class="techpack-sample-compact-info">+3 weeks • €65</span>
-              <span class="techpack-sample-compact-desc">Exact final color</span>
+          <!-- Custom Color Sample Option - Enhanced -->
+          <div class="techpack-sample-compact-option techpack-sample-expandable">
+            <label class="techpack-sample-compact-header">
+              <input type="checkbox" class="techpack-sample-compact-checkbox" name="sample-custom-color">
+              <div class="techpack-sample-compact-content">
+                <span class="techpack-sample-compact-title">Custom Color Sample</span>
+                <span class="techpack-sample-compact-info">+3 weeks • €65</span>
+                <span class="techpack-sample-compact-desc">Exact final color</span>
+              </div>
+            </label>
+            
+            <!-- PANTONE selection system -->
+            <div class="techpack-sample-sub-options" style="display: none;">
+              <label class="techpack-form__label">Select PANTONE TPX Color:</label>
+              <div class="techpack-custom-color-pantone">
+                <input type="text" placeholder="Enter PANTONE TPX (e.g. 18-3949 TPX)" class="techpack-pantone-input custom-color-pantone">
+                <div class="techpack-pantone-preview">
+                  <div class="techpack-color-swatch" style="background-color: #ffffff; border: 1px solid #ddd;"></div>
+                  <span class="techpack-pantone-name">Color Preview</span>
+                </div>
+              </div>
+              <div class="techpack-custom-color-note">
+                <svg width="16" height="16" viewBox="0 0 16 16">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M8 5v3" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="8" cy="11" r="1" fill="currentColor"/>
+                </svg>
+                <span>Note: Requires lab dip confirmation before production</span>
+              </div>
             </div>
-          </label>
+          </div>
         </div>
 
         <!-- Sample Options Detail (expandable) -->
@@ -256,6 +312,22 @@ Tech-Pack Step 3: Garment Specifications Section
         </div>
       </div>
 
+      <div class="techpack-colorways">
+        <div class="techpack-colorways__header">
+          <h4 class="techpack-colorways__title">Colorways</h4>
+          <button type="button" class="techpack-btn techpack-btn--small techpack-btn--secondary add-colorway">
+            <svg class="techpack-btn__icon" width="14" height="14" viewBox="0 0 16 16">
+              <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Add Colorway
+          </button>
+        </div>
+        <div class="techpack-colorways__list">
+          <!-- Colorways will be added here -->
+        </div>
+      </div>
+
+
       <div class="techpack-garment__total">
         <span class="techpack-garment__total-label">Garment Total:</span>
         <span class="techpack-garment__total-value">0</span>
@@ -273,26 +345,6 @@ Tech-Pack Step 3: Garment Specifications Section
       <div class="techpack-colorway__color">
         <label class="techpack-form__label">Color</label>
         <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
-      </div>
-      
-      <!-- Column 2: Sample Request (Transform in place) -->
-      <div class="techpack-colorway__sample">
-        <label class="techpack-form__label">Sample</label>
-        <div class="techpack-sample-toggle">
-          <button type="button" class="techpack-btn techpack-btn--secondary techpack-btn--sample-request">
-            Request Sample
-          </button>
-          <select class="techpack-form__select techpack-form__select--sample-size" style="display: none;">
-            <option value="">Select size...</option>
-            <option value="xxs">XXS</option>
-            <option value="xs">XS</option>
-            <option value="s">S</option>
-            <option value="m">M</option>
-            <option value="l">L</option>
-            <option value="xl">XL</option>
-            <option value="xxl">XXL</option>
-          </select>
-        </div>
       </div>
       
       <!-- Column 3: Pantone Options (Takes remaining space) -->
