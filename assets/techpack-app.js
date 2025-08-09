@@ -3889,7 +3889,7 @@
           stepManager.validateStep3();
           
           // Update sample summary if in sample mode
-          if (window.sampleManager && state.formData.requestType === 'sample-request') {
+          if (window.sampleManager && window.sampleManager.perGarmentSamples && state.formData.requestType === 'sample-request') {
             const sampleData = window.sampleManager.perGarmentSamples.get(garmentId);
             if (sampleData) {
               window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
@@ -3909,7 +3909,7 @@
           stepManager.validateStep3();
           
           // Update sample summary if in sample mode
-          if (window.sampleManager && state.formData.requestType === 'sample-request') {
+          if (window.sampleManager && window.sampleManager.perGarmentSamples && state.formData.requestType === 'sample-request') {
             const sampleData = window.sampleManager.perGarmentSamples.get(garmentId);
             if (sampleData) {
               window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
@@ -10496,6 +10496,10 @@ setupInitialization();
           needSizingHelp: false
         }
       };
+      
+      // Legacy compatibility - maintain old per-garment structure for existing code
+      this.perGarmentSamples = new Map();
+      
       this.init();
     }
 
@@ -10878,6 +10882,12 @@ setupInitialization();
       const requestType = state.formData.requestType;
       const subtitle = document.getElementById('step-3-subtitle');
       
+      // Don't interfere with existing UI state if no request type is set yet
+      if (requestType === null || requestType === undefined) {
+        debugSystem.log('checkRequestType: No request type set, skipping UI modification');
+        return;
+      }
+      
       // Get UI elements to show/hide
       const perGarmentSampleSections = document.querySelectorAll('.techpack-garment-samples[data-sample-request-only]');
       const quantityTracker = document.querySelector('.techpack-quantity-tracker');
@@ -11006,6 +11016,12 @@ setupInitialization();
 
     // Initialize sample data for a new garment
     initializeGarmentSampleData(garmentId) {
+      // Ensure perGarmentSamples exists (legacy compatibility)
+      if (!this.perGarmentSamples) {
+        this.perGarmentSamples = new Map();
+        debugSystem.log('SampleManager: Re-initialized perGarmentSamples map for legacy compatibility');
+      }
+      
       if (!this.perGarmentSamples.has(garmentId)) {
         this.perGarmentSamples.set(garmentId, {
           blackRaw: { 
@@ -11281,6 +11297,10 @@ setupInitialization();
     // Update Lab Dip costs display
     updateLabDipCosts(garmentId) {
       const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!this.perGarmentSamples) {
+        debugSystem.log('updateLabDipCosts: perGarmentSamples not initialized');
+        return;
+      }
       const sampleData = this.perGarmentSamples.get(garmentId);
       
       const colorCount = sampleData.labDip.pantoneColors.length;
@@ -11345,6 +11365,10 @@ setupInitialization();
 
     // Calculate and update sample cost for a specific garment
     updateGarmentSampleCost(garmentId) {
+      if (!this.perGarmentSamples) {
+        debugSystem.log('updateGarmentSampleCost: perGarmentSamples not initialized');
+        return;
+      }
       const sampleData = this.perGarmentSamples.get(garmentId);
       if (!sampleData) return;
 
