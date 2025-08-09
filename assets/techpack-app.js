@@ -10877,7 +10877,7 @@ setupInitialization();
     checkRequestType() {
       const requestType = state.formData.requestType;
       const subtitle = document.getElementById('step-3-subtitle');
-
+      
       // Get UI elements to show/hide
       const perGarmentSampleSections = document.querySelectorAll('.techpack-garment-samples[data-sample-request-only]');
       const quantityTracker = document.querySelector('.techpack-quantity-tracker');
@@ -10975,7 +10975,12 @@ setupInitialization();
           quantityTrackerHidden: !!quantityTracker
         });
       } else {
-        // DEFAULT/FALLBACK: Hide everything extra
+        // If requestType is null, don't change the UI - wait for user selection
+        if (requestType === null || requestType === undefined) {
+          return;
+        }
+        
+        // DEFAULT/FALLBACK: Hide everything extra for unknown types
         perGarmentSampleSections.forEach(section => {
           section.style.display = 'none';
         });
