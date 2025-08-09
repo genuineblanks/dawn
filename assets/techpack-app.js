@@ -7658,6 +7658,17 @@
           if (subtitle) subtitle.textContent = 'Submit your details for bulk production planning';
           break;
       }
+
+      // Set data attribute on Step 3 section for CSS targeting
+      const step3Section = document.getElementById('techpack-step-3');
+      if (step3Section) {
+        step3Section.setAttribute('data-request-type', type);
+      }
+
+      // Update Step 3 layout using existing checkRequestType logic
+      if (window.sampleManager && typeof window.sampleManager.checkRequestType === 'function') {
+        window.sampleManager.checkRequestType();
+      }
     }
 
     // Handle change submission type - preserves Step 1 data, resets everything else
@@ -10547,15 +10558,16 @@ setupInitialization();
     }
 
     checkRequestType() {
-      const requestType = document.getElementById('request-type')?.value;
+      const requestType = state.formData.requestType;
       const subtitle = document.getElementById('step-3-subtitle');
 
       // Get UI elements to show/hide
       const perGarmentSampleSections = document.querySelectorAll('.techpack-garment-samples[data-sample-request-only]');
       const quantityTracker = document.querySelector('.techpack-quantity-tracker');
       const colorwaysSections = document.querySelectorAll('.techpack-colorways');
+      const bulkOnlyElements = document.querySelectorAll('[data-bulk-request-only]');
       
-      if (requestType === 'sample-request') {
+      if (requestType === 'sample') {
         // SAMPLE REQUEST MODE: Show sample options, hide bulk elements
         
         // Show per-garment sample options
@@ -10573,6 +10585,11 @@ setupInitialization();
           section.style.display = 'none';
         });
         
+        // Hide bulk-only elements
+        bulkOnlyElements.forEach(element => {
+          element.style.display = 'none';
+        });
+        
         if (subtitle) subtitle.textContent = 'Choose sample options for each garment and provide garment details';
         
         debugSystem.log('Sample request mode - simplified interface active', {
@@ -10580,7 +10597,7 @@ setupInitialization();
           hiddenColorways: colorwaysSections.length,
           quantityTrackerHidden: !!quantityTracker
         });
-      } else {
+      } else if (requestType === 'bulk') {
         // BULK REQUEST MODE: Show bulk elements, hide sample options
         
         // Hide per-garment sample options
@@ -10598,6 +10615,11 @@ setupInitialization();
           section.style.display = 'block';
         });
         
+        // Show bulk-only elements
+        bulkOnlyElements.forEach(element => {
+          element.style.display = 'block';
+        });
+        
         if (subtitle) subtitle.textContent = 'Define your garment details and quantity requirements';
         
         debugSystem.log('Bulk request mode - full interface active', {
@@ -10605,6 +10627,55 @@ setupInitialization();
           visibleColorways: colorwaysSections.length,
           quantityTrackerVisible: !!quantityTracker
         });
+      } else if (requestType === 'quotation') {
+        // QUOTATION MODE: Simple interface, no samples, no quantities
+        
+        // Hide per-garment sample options
+        perGarmentSampleSections.forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        // Hide quantity tracker bar (not needed for quotations)
+        if (quantityTracker) {
+          quantityTracker.style.display = 'none';
+        }
+        
+        // Hide all colorways sections (no quantities/colors needed for quotations)
+        colorwaysSections.forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        // Hide bulk-only elements
+        bulkOnlyElements.forEach(element => {
+          element.style.display = 'none';
+        });
+        
+        if (subtitle) subtitle.textContent = 'Provide garment specifications to receive pricing estimates';
+        
+        debugSystem.log('Quotation mode - simple interface active', {
+          hiddenSampleSections: perGarmentSampleSections.length,
+          hiddenColorways: colorwaysSections.length,
+          quantityTrackerHidden: !!quantityTracker
+        });
+      } else {
+        // DEFAULT/FALLBACK: Hide everything extra
+        perGarmentSampleSections.forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        if (quantityTracker) {
+          quantityTracker.style.display = 'none';
+        }
+        
+        colorwaysSections.forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        bulkOnlyElements.forEach(element => {
+          element.style.display = 'none';
+        });
+        
+        if (subtitle) subtitle.textContent = 'Define your garment details';
       }
 
       // Update validation
