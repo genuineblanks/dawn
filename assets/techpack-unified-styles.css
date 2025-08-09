@@ -2411,191 +2411,394 @@ STEP 4 REVIEW SECTION STYLING
 
 /* 
 ===========================================
-SAMPLE OPTIONS SYSTEM - COMPLETE STYLING
+SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 ===========================================
 */
 
-/* Sample Options Container */
-.techpack-sample-options {
+/* ===========================================
+   SECTION A: SAMPLE TYPE SELECTION CARDS
+   ========================================== */
+
+/* Main container for sample request interface */
+.techpack-garment-samples {
   margin: 2rem 0;
-  padding: 2rem;
-  background: var(--techpack-bg-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--techpack-border);
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
-.techpack-sample-options__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--techpack-text);
-  margin: 0 0 0.5rem 0;
-  line-height: 1.3;
-}
-
-.techpack-sample-options__subtitle {
-  color: var(--techpack-text-secondary);
-  margin: 0 0 2rem 0;
-  font-size: 0.95rem;
-}
-
-/* Sample Options Grid */
-.techpack-sample-options__grid {
-  display: grid;
-  gap: 1.5rem;
+/* Sample type selection container */
+.techpack-sample-type-selection {
   margin-bottom: 2rem;
 }
 
-/* Individual Sample Option */
-.techpack-sample-option {
-  background: var(--techpack-bg);
-  border: 2px solid var(--techpack-border);
-  border-radius: 8px;
-  transition: var(--techpack-transition);
+/* Section titles with futuristic styling */
+.techpack-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--techpack-text);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.3;
+  position: relative;
+  font-family: var(--techpack-font-family);
 }
 
-.techpack-sample-option:hover {
-  border-color: var(--techpack-border-dark);
+.techpack-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--techpack-primary) 0%, rgba(0,0,0,0.2) 100%);
+  border-radius: 1px;
 }
 
-.techpack-sample-option.active {
+/* Glass morphism sample cards */
+.techpack-sample-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.techpack-sample-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.techpack-sample-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.techpack-sample-card:hover::before {
+  left: 100%;
+}
+
+/* Selected state with enhanced styling */
+.techpack-sample-card:has(.techpack-sample-radio:checked) {
+  background: rgba(0, 0, 0, 0.02);
   border-color: var(--techpack-primary);
-  box-shadow: 0 0 0 1px var(--techpack-primary);
+  border-width: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 4px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
 }
 
-/* Sample Option Header */
-.techpack-sample-option__header {
-  padding: 1.25rem;
-  border-bottom: 1px solid var(--techpack-border-light);
+.techpack-sample-card:has(.techpack-sample-radio:checked)::after {
+  content: '✓';
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  background: var(--techpack-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2;
+  animation: scaleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* Card header */
+.techpack-sample-card-header {
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Hide native radio button */
+.techpack-sample-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Card label - clickable area */
+.techpack-sample-card-label {
+  display: block;
   cursor: pointer;
   user-select: none;
 }
 
-.techpack-sample-option__checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  margin: 0;
-}
-
-.techpack-sample-option__checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.techpack-sample-option__checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--techpack-border-dark);
-  border-radius: 4px;
-  background: var(--techpack-bg);
-  transition: var(--techpack-transition);
-  position: relative;
-  flex-shrink: 0;
-}
-
-.techpack-sample-option__checkbox:checked + .techpack-sample-option__checkmark {
-  background: var(--techpack-primary);
-  border-color: var(--techpack-primary);
-}
-
-.techpack-sample-option__checkbox:checked + .techpack-sample-option__checkmark::after {
-  content: '';
-  position: absolute;
-  left: 6px;
-  top: 2px;
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.techpack-sample-option__title {
-  font-weight: 600;
+/* Card title */
+.techpack-sample-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
   color: var(--techpack-text);
-  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  font-family: var(--techpack-font-family);
 }
 
-/* Sample Option Content */
-.techpack-sample-option__content {
-  padding: 1.25rem;
-  border-top: 1px solid var(--techpack-border-light);
+/* Meta information (timing and price) */
+.techpack-sample-meta {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--techpack-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+  font-family: var(--techpack-font-family);
+}
+
+/* Description text */
+.techpack-sample-description {
+  color: var(--techpack-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Subtitle */
+.techpack-sample-subtitle {
+  color: var(--techpack-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Expandable options section */
+.techpack-sample-options {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.02);
+  padding: 1.5rem;
+  display: none;
   animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
-  from {
+  0% { 
     opacity: 0;
     transform: translateY(-10px);
   }
-  to {
+  100% { 
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.techpack-sample-option__description {
+/* Stock fabric color options */
+.techpack-fabric-colors {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 0.75rem;
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--techpack-bg-tertiary);
-  border-radius: 6px;
-}
-
-.techpack-sample-option__icon {
-  flex-shrink: 0;
-  color: var(--techpack-secondary);
-  margin-top: 2px;
-}
-
-.techpack-sample-option__description p {
-  margin: 0;
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-/* Sample Tooltip */
-.techpack-sample-tooltip {
-  margin-top: 0.5rem;
-  padding: 0.75rem;
-  background: rgba(243, 244, 246, 0.6);
-  border-left: 3px solid var(--techpack-primary);
-  border-radius: 4px;
-}
-
-.techpack-sample-tooltip strong {
-  color: var(--techpack-primary);
-  font-size: 0.85rem;
-}
-
-/* Lab Dip Components */
-.techpack-lab-dip-list {
   margin-bottom: 1rem;
 }
 
-.techpack-lab-dip-item {
-  background: var(--techpack-bg-tertiary);
+.techpack-fabric-color-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.techpack-fabric-color-option:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateX(2px);
+}
+
+.techpack-fabric-color-option:has(input:checked) {
+  background: var(--techpack-primary);
+  color: white;
+  border-color: var(--techpack-primary);
+  transform: translateX(4px);
+}
+
+.techpack-fabric-color-option input[type="radio"] {
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.techpack-radio-mark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.techpack-fabric-color-option:has(input:checked) .techpack-radio-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Sample notes and warnings */
+.techpack-sample-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.4;
+}
+
+.techpack-sample-note svg {
+  color: var(--techpack-success);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.techpack-sample-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.techpack-sample-warning svg {
+  color: var(--techpack-warning);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ===========================================
+   SECTION B: LAB DIP MANAGEMENT SYSTEM
+   ========================================== */
+
+.techpack-lab-dips-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(249, 250, 251, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
   border: 1px solid var(--techpack-border-light);
-  border-radius: 6px;
+}
+
+.techpack-lab-dip-meta {
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--techpack-success);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
   margin-bottom: 0.75rem;
-  transition: var(--techpack-transition);
+}
+
+.techpack-section-description {
+  color: var(--techpack-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* Lab dip form controls */
+.techpack-lab-dip-form {
+  margin-bottom: 2rem;
+}
+
+.techpack-lab-dip-form .techpack-form__group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.techpack-lab-dip-form .techpack-form__input {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Lab dip list container */
+.techpack-lab-dip-list {
+  margin-top: 1rem;
+}
+
+/* Individual lab dip item */
+.techpack-lab-dip-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--techpack-border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .techpack-lab-dip-item:hover {
-  border-color: var(--techpack-border-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .techpack-lab-dip-item__content {
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr auto auto;
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  align-items: end;
+  flex: 1;
+}
+
+.techpack-lab-dip-item .techpack-form__group {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .techpack-lab-dip-color-preview {
@@ -2605,1721 +2808,365 @@ SAMPLE OPTIONS SYSTEM - COMPLETE STYLING
 }
 
 .techpack-lab-dip-color {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--techpack-border);
-  cursor: pointer;
-  transition: var(--techpack-transition);
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(0, 0, 0, 0.2) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
 .techpack-lab-dip-color:hover {
-  border-color: var(--techpack-primary);
+  transform: scale(1.1);
+  border-color: var(--techpack-primary) !important;
 }
 
 .techpack-lab-dip-color-text {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--techpack-text-secondary);
+  white-space: nowrap;
 }
 
 .techpack-lab-dip-cost {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .techpack-lab-dip-cost-label {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--techpack-text-secondary);
-  font-weight: 500;
 }
 
 .techpack-lab-dip-cost-value {
-  font-weight: 700;
-  color: var(--techpack-text);
-  font-size: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--techpack-success);
 }
 
 .techpack-lab-dip-remove {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border: none;
-  background: var(--techpack-error);
-  color: white;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--techpack-error);
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--techpack-transition);
+  flex-shrink: 0;
 }
 
 .techpack-lab-dip-remove:hover {
-  background: #dc2626;
-  transform: scale(1.05);
-}
-
-/* Sample Warning */
-.techpack-sample-warning {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(251, 146, 60, 0.1);
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  border-radius: 6px;
-}
-
-.techpack-sample-warning__icon {
-  flex-shrink: 0;
-  color: var(--techpack-warning);
-  margin-top: 2px;
-}
-
-.techpack-sample-warning strong {
-  color: var(--techpack-warning);
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.techpack-sample-warning p {
-  margin: 0;
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-/* Sample Suggestion */
-.techpack-sample-suggestion {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 6px;
-}
-
-.techpack-sample-suggestion__icon {
-  flex-shrink: 0;
-  color: var(--techpack-success);
-  margin-top: 2px;
-}
-
-.techpack-sample-suggestion p {
-  margin: 0;
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.techpack-sample-suggestion strong {
-  color: var(--techpack-success);
-}
-
-/* Sample Confirmation */
-.techpack-sample-confirmation {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
-  cursor: pointer;
-  user-select: none;
-}
-
-.techpack-sample-confirmation__checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.techpack-sample-confirmation__checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--techpack-border-dark);
-  border-radius: 3px;
-  background: var(--techpack-bg);
-  transition: var(--techpack-transition);
-  position: relative;
-  flex-shrink: 0;
-}
-
-.techpack-sample-confirmation__checkbox:checked + .techpack-sample-confirmation__checkmark {
-  background: var(--techpack-primary);
-  border-color: var(--techpack-primary);
-}
-
-.techpack-sample-confirmation__checkbox:checked + .techpack-sample-confirmation__checkmark::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.techpack-sample-confirmation span:last-child {
-  color: var(--techpack-text);
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-/* Sample Cost Display */
-.techpack-sample-cost-display {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border);
-  border-radius: 6px;
-}
-
-.techpack-sample-cost-label {
-  font-weight: 600;
-  color: var(--techpack-text);
-}
-
-.techpack-sample-cost-value {
-  font-weight: 700;
-  color: var(--techpack-primary);
-  font-size: 1.1rem;
-}
-
-/* Sample Summary */
-.techpack-sample-summary {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: var(--techpack-bg);
-  border: 2px solid var(--techpack-primary);
-  border-radius: 8px;
-}
-
-.techpack-sample-summary__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--techpack-text);
-  margin: 0 0 1rem 0;
-}
-
-.techpack-sample-summary__content {
-  margin-bottom: 1rem;
-}
-
-.techpack-sample-summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--techpack-border-light);
-}
-
-.techpack-sample-summary-item:last-child {
-  border-bottom: none;
-}
-
-.techpack-sample-summary-item__label {
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-}
-
-.techpack-sample-summary-item__value {
-  font-weight: 600;
-  color: var(--techpack-text);
-}
-
-.techpack-sample-summary__total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: var(--techpack-bg-secondary);
-  border-radius: 6px;
-  margin-top: 1rem;
-}
-
-.techpack-sample-summary__total-label {
-  font-weight: 700;
-  color: var(--techpack-text);
-  font-size: 1.1rem;
-}
-
-.techpack-sample-summary__total-value {
-  font-weight: 700;
-  color: var(--techpack-primary);
-  font-size: 1.5rem;
-}
-
-/* Pattern Section */
-.techpack-pattern-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border);
-  border-radius: 8px;
-}
-
-.techpack-pattern-section__title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--techpack-text);
-  margin: 0 0 0.5rem 0;
-}
-
-.techpack-pattern-section__subtitle {
-  color: var(--techpack-text-secondary);
-  margin: 0 0 1.5rem 0;
-  font-size: 0.9rem;
-}
-
-.techpack-pattern-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.techpack-pattern-option {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  user-select: none;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: var(--techpack-transition);
-}
-
-.techpack-pattern-option:hover {
-  background: var(--techpack-bg-tertiary);
-}
-
-.techpack-pattern-option__checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.techpack-pattern-option__checkmark {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--techpack-border-dark);
-  border-radius: 3px;
-  background: var(--techpack-bg);
-  transition: var(--techpack-transition);
-  position: relative;
-  flex-shrink: 0;
-}
-
-.techpack-pattern-option__checkbox:checked + .techpack-pattern-option__checkmark {
-  background: var(--techpack-primary);
-  border-color: var(--techpack-primary);
-}
-
-.techpack-pattern-option__checkbox:checked + .techpack-pattern-option__checkmark::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 6px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.techpack-pattern-option__text {
-  color: var(--techpack-text);
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-.techpack-pattern-note {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--techpack-bg-tertiary);
-  border-radius: 6px;
-  margin-top: 1rem;
-}
-
-.techpack-pattern-note__icon {
-  flex-shrink: 0;
-  color: var(--techpack-secondary);
-}
-
-.techpack-pattern-note span {
-  color: var(--techpack-text-secondary);
-  font-size: 0.85rem;
-}
-
-/* Mobile Responsive Design */
-@media (max-width: 768px) {
-  .techpack-sample-options {
-    padding: 1rem;
-    margin: 1rem 0;
-  }
-  
-  .techpack-sample-options__title {
-    font-size: 1.25rem;
-  }
-  
-  .techpack-sample-option__header {
-    padding: 1rem;
-  }
-  
-  .techpack-sample-option__content {
-    padding: 1rem;
-  }
-  
-  .techpack-lab-dip-item__content {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  
-  .techpack-sample-summary {
-    padding: 1rem;
-  }
-  
-  .techpack-pattern-section {
-    padding: 1rem;
-  }
-  
-  .techpack-sample-summary__total-value {
-    font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .techpack-sample-options__grid {
-    gap: 1rem;
-  }
-  
-  .techpack-sample-option__title {
-    font-size: 1rem;
-  }
-  
-  .techpack-sample-option__description {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .techpack-sample-warning,
-  .techpack-sample-suggestion {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* 
-===========================================
-SAMPLE REVIEW SYSTEM - STEP 4 STYLING
-===========================================
-*/
-
-/* Sample Review Summary */
-.techpack-sample-review-summary {
-  margin-bottom: 2rem;
-}
-
-.techpack-sample-review-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--techpack-text);
-  margin: 0 0 1rem 0;
-  border-bottom: 2px solid var(--techpack-border-light);
-  padding-bottom: 0.5rem;
-}
-
-.techpack-sample-review-item {
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  transition: var(--techpack-transition);
-}
-
-.techpack-sample-review-item:hover {
-  border-color: var(--techpack-border-dark);
-  box-shadow: var(--techpack-shadow);
-}
-
-.techpack-sample-review-item__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: var(--techpack-bg-secondary);
-  border-bottom: 1px solid var(--techpack-border-light);
-}
-
-.techpack-sample-review-item__title {
-  font-weight: 600;
-  color: var(--techpack-text);
-  font-size: 1rem;
-}
-
-.techpack-sample-review-item__badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  background: var(--techpack-secondary);
-  color: white;
-}
-
-.techpack-sample-review-item__badge--fast {
-  background: var(--techpack-success);
-}
-
-.techpack-sample-review-item__badge--slow {
-  background: var(--techpack-warning);
-}
-
-.techpack-sample-review-item__details {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.techpack-sample-review-detail {
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-  padding: 0.25rem 0;
-}
-
-.techpack-sample-review-detail:before {
-  content: '•';
-  color: var(--techpack-primary);
-  margin-right: 0.5rem;
-}
-
-/* Pattern Review */
-.techpack-sample-pattern-review {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: var(--techpack-bg-tertiary);
-  border-radius: 8px;
-}
-
-.techpack-sample-pattern-item {
-  padding: 0.5rem 0;
-  color: var(--techpack-text-secondary);
-  font-size: 0.9rem;
-  border-bottom: 1px solid var(--techpack-border-light);
-}
-
-.techpack-sample-pattern-item:last-child {
-  border-bottom: none;
-}
-
-/* Cost Breakdown */
-.techpack-sample-cost-breakdown {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: var(--techpack-bg);
-  border: 2px solid var(--techpack-border);
-  border-radius: 8px;
-}
-
-.techpack-sample-cost-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  color: var(--techpack-text-secondary);
-  font-size: 0.95rem;
-  border-bottom: 1px solid var(--techpack-border-light);
-}
-
-.techpack-sample-cost-item:last-of-type {
-  border-bottom: none;
-  margin-bottom: 0.5rem;
-}
-
-.techpack-sample-cost-total {
-  padding: 1rem 0 0 0;
-  border-top: 2px solid var(--techpack-primary);
-  text-align: right;
-  font-size: 1.2rem;
-  color: var(--techpack-primary);
-}
-
-/* Timeline Summary */
-.techpack-sample-timeline {
-  padding: 1rem;
-  background: rgba(243, 244, 246, 0.6);
-  border: 1px solid rgba(209, 213, 219, 0.6);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.techpack-sample-timeline-item {
-  color: var(--techpack-primary);
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.techpack-sample-timeline-note {
-  color: var(--techpack-text-secondary);
-  font-size: 0.85rem;
-  font-style: italic;
-  margin-top: 0.5rem;
-}
-
-/* Mobile Responsive - Sample Review */
-@media (max-width: 768px) {
-  .techpack-sample-review-item__header {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
-  
-  .techpack-sample-review-item__badge {
-    align-self: flex-end;
-  }
-  
-  .techpack-sample-cost-breakdown {
-    padding: 0.75rem;
-  }
-  
-  .techpack-sample-timeline {
-    padding: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .techpack-sample-review-title {
-    font-size: 1rem;
-  }
-  
-  .techpack-sample-review-item__title {
-    font-size: 0.9rem;
-  }
-  
-  .techpack-sample-cost-total {
-    font-size: 1.1rem;
-  }
-}
-
-/* 
-===========================================
-TOOLTIP SYSTEM - EDUCATIONAL TOOLTIPS
-===========================================
-*/
-
-/* Tooltip Triggers */
-.techpack-tooltip-trigger {
-  background: none;
-  border: none;
-  color: var(--techpack-secondary);
-  cursor: pointer;
-  padding: 4px;
-  margin-left: 8px;
-  border-radius: 50%;
-  transition: var(--techpack-transition);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.techpack-tooltip-trigger:hover {
-  background: var(--techpack-bg-tertiary);
-  color: var(--techpack-primary);
+  background: rgba(239, 68, 68, 0.2);
   transform: scale(1.1);
 }
 
-.techpack-tooltip-trigger:focus {
-  outline: 2px solid var(--techpack-primary);
-  outline-offset: 2px;
-}
-
-/* Tooltip Content */
-.techpack-tooltip {
-  position: absolute;
-  background: white;
-  border: 2px solid var(--techpack-primary);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  z-index: 10000;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  max-width: 400px;
-  width: max-content;
-  pointer-events: none; /* Prevent layout interference when hidden */
-  display: none; /* Hidden by default */
-}
-
-.techpack-tooltip--active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto; /* Enable interaction when visible */
-  display: block; /* Show when active */
-}
-
-.techpack-tooltip__content {
-  padding: 1.5rem;
-}
-
-.techpack-tooltip__title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--techpack-primary);
-  margin: 0 0 1rem 0;
-  border-bottom: 2px solid var(--techpack-primary);
-  padding-bottom: 0.5rem;
-}
-
-.techpack-tooltip__content p {
-  color: var(--techpack-text);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0 0 1rem 0;
-}
-
-.techpack-tooltip__content p:last-child {
-  margin-bottom: 0;
-}
-
-.techpack-tooltip__content ul {
-  color: var(--techpack-text);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0 0 1rem 0;
-  padding-left: 1.5rem;
-}
-
-.techpack-tooltip__content li {
-  margin-bottom: 0.5rem;
-}
-
-.techpack-tooltip__content strong {
-  color: var(--techpack-text);
-  font-weight: 600;
-}
-
-.techpack-tooltip__content em {
-  color: var(--techpack-text-secondary);
-  font-style: italic;
-}
-
-.techpack-tooltip__highlight {
-  background: rgba(243, 244, 246, 0.6);
-  border-left: 3px solid var(--techpack-primary);
-  padding: 0.75rem;
-  margin: 1rem 0;
-  border-radius: 4px;
-}
-
-.techpack-tooltip__highlight strong {
-  color: var(--techpack-primary);
-}
-
-.techpack-tooltip__process {
-  background: var(--techpack-bg-tertiary);
-  padding: 0.75rem;
-  border-radius: 6px;
-  margin: 1rem 0;
-  font-family: monospace;
-  font-size: 0.85rem;
+/* Empty state for lab dips */
+.techpack-lab-dip-empty {
   text-align: center;
-}
-
-.techpack-tooltip__process strong {
-  color: var(--techpack-text);
-}
-
-/* Tooltip Arrow */
-.techpack-tooltip::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid var(--techpack-primary);
-}
-
-.techpack-tooltip::after {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid white;
-}
-
-/* Mobile Responsive Tooltips */
-@media (max-width: 768px) {
-  .techpack-tooltip {
-    max-width: 90vw;
-    left: 5vw !important;
-    right: 5vw;
-    width: auto;
-  }
-  
-  .techpack-tooltip__content {
-    padding: 1rem;
-  }
-  
-  .techpack-tooltip__title {
-    font-size: 1rem;
-  }
-  
-  .techpack-tooltip__content p,
-  .techpack-tooltip__content ul {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .techpack-tooltip-trigger {
-    padding: 6px;
-    margin-left: 6px;
-  }
-  
-  .techpack-tooltip__content {
-    padding: 0.75rem;
-  }
-  
-  .techpack-tooltip__highlight,
-  .techpack-tooltip__process {
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-  }
-}
-
-/* 
-===========================================
-PER-GARMENT SAMPLE SYSTEM - COMPACT DESIGN
-===========================================
-*/
-
-/* Per-Garment Sample Container */
-.techpack-garment-samples {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: var(--techpack-bg-secondary);
-  border: 1px solid var(--techpack-border-light);
-  border-radius: 8px;
-  transition: var(--techpack-transition);
-}
-
-.techpack-garment-samples__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--techpack-text);
-  margin: 0 0 1rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--techpack-border-light);
-}
-
-/* Compact Sample Grid */
-.techpack-sample-compact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 0.5rem;
-}
-
-.techpack-sample-compact-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.875rem;
-  padding: 1rem;
-  background: var(--techpack-bg);
-  border: 2px solid var(--techpack-border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.techpack-sample-compact-option::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-
-.techpack-sample-compact-option:hover {
-  border-color: var(--techpack-secondary);
-  background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.techpack-sample-compact-option:hover::before {
-  left: 100%;
-}
-
-.techpack-sample-compact-option:has(input:checked) {
-  border-color: var(--techpack-primary);
-  background: #ffffff;
-  box-shadow: 0 0 0 1px var(--techpack-primary), 0 4px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
-}
-
-.techpack-sample-compact-option:active {
-  transform: translateY(0px);
-  transition: transform 0.1s ease;
-}
-
-.techpack-sample-compact-checkbox {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  cursor: pointer;
-  flex-shrink: 0;
-  margin-top: 2px;
-  border: 2px solid var(--techpack-border-dark);
-  border-radius: 4px;
-  background: var(--techpack-bg);
-  position: relative;
-  appearance: none;
-  -webkit-appearance: none;
-  transition: var(--techpack-transition);
-}
-
-.techpack-sample-compact-checkbox:hover {
-  border-color: var(--techpack-secondary);
-  background: var(--techpack-bg-tertiary);
-  transform: scale(1.05);
-}
-
-.techpack-sample-compact-checkbox:checked {
-  background: var(--techpack-primary);
-  border-color: var(--techpack-primary);
-}
-
-.techpack-sample-compact-checkbox:checked::after {
-  content: '✓';
-  position: absolute;
-  top: -2px;
-  left: 2px;
-  color: var(--techpack-text-light);
-  font-size: 14px;
-  font-weight: 700;
-  pointer-events: none;
-}
-
-.techpack-sample-compact-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  flex: 1;
-}
-
-.techpack-sample-compact-title {
-  font-weight: 700;
-  color: var(--techpack-text);
-  font-size: 1rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-.techpack-sample-compact-info {
-  font-size: 0.875rem;
-  color: var(--techpack-primary);
-  font-weight: 600;
-  opacity: 0.9;
-}
-
-.techpack-sample-compact-desc {
-  font-size: 0.8125rem;
+  padding: 2rem;
   color: var(--techpack-text-muted);
-  line-height: 1.4;
-  margin-top: 0.125rem;
 }
 
-/* Sample Details (Expandable) */
-.techpack-sample-details {
-  padding-top: 1rem;
-  border-top: 1px solid var(--techpack-border-light);
-  animation: slideDown 0.3s ease-out;
-}
-
-.techpack-sample-detail-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.techpack-lab-dip-empty svg {
+  opacity: 0.4;
   margin-bottom: 1rem;
 }
 
-.techpack-sample-summary-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem;
-  background: var(--techpack-bg-tertiary);
-  border-radius: 4px;
-  font-size: 0.9rem;
+.techpack-lab-dip-empty p {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: var(--techpack-text-secondary);
 }
 
-.techpack-sample-summary-text {
-  color: var(--techpack-text);
-}
-
-.techpack-garment-sample-summary {
-  font-weight: 600;
-  color: var(--techpack-primary);
-}
-
-.techpack-sample-summary-cost {
-  font-weight: 600;
-  color: var(--techpack-text);
-}
-
-.techpack-garment-sample-cost {
-  color: var(--techpack-primary);
-  font-size: 1.1em;
-}
-
-/* Hide sample options for bulk requests initially */
-.techpack-garment-samples[data-sample-request-only="true"] {
-  display: none;
-}
-
-/* Show sample options when in sample request mode */
-.techpack-step[data-request-type="sample-request"] .techpack-garment-samples[data-sample-request-only="true"] {
-  display: block;
-}
-
-/* Mobile Responsive - Compact Sample Options */
-@media (max-width: 768px) {
-  .techpack-sample-compact-grid {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-  
-  .techpack-sample-compact-option {
-    padding: 0.5rem;
-  }
-  
-  .techpack-sample-detail-row {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  
-  .techpack-garment-samples {
-    padding: 0.75rem;
-  }
-  
-  .techpack-sample-summary-line {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  .techpack-garment-samples__title {
-    font-size: 0.9rem;
-  }
-  
-  .techpack-sample-compact-title {
-    font-size: 0.85rem;
-  }
-  
-  .techpack-sample-compact-info,
-  .techpack-sample-compact-desc {
-    font-size: 0.75rem;
-  }
-  
-  .techpack-sample-compact-option {
-    gap: 0.5rem;
-  }
-}
-
-/* ===============================================
-   ENHANCED SAMPLE OPTIONS SYSTEM
-   =============================================== */
-
-/* Expandable Sample Options */
-.techpack-sample-expandable {
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.techpack-sample-compact-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  cursor: pointer;
-  transition: var(--techpack-transition);
-}
-
-/* Sub-options container */
-.techpack-sample-sub-options {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--techpack-bg-alt);
-  border: 1px solid var(--techpack-border);
-  border-radius: 6px;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Black/Raw Sample Fabric Options */
-.techpack-sample-fabric-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.techpack-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--techpack-bg);
-  border: 2px solid var(--techpack-border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--techpack-transition);
+.techpack-lab-dip-empty span {
   font-size: 0.875rem;
+  color: var(--techpack-text-muted);
 }
 
-.techpack-radio-option:hover {
+/* ===========================================
+   SECTION C: TECHPACK INFO CHECKBOXES
+   ========================================== */
+
+.techpack-info-check {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(243, 244, 246, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+  border: 1px solid var(--techpack-border-light);
+}
+
+.techpack-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.techpack-checkbox-option:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.12);
+  transform: translateX(2px);
+}
+
+.techpack-checkbox-option:has(input:checked) {
+  background: rgba(0, 0, 0, 0.04);
   border-color: var(--techpack-primary);
-  background: var(--techpack-primary-light);
+  transform: translateX(4px);
 }
 
-.techpack-radio-option input[type="radio"] {
-  display: none;
+.techpack-checkbox-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.techpack-radio-mark {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--techpack-border);
-  border-radius: 50%;
+.techpack-checkbox-mark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--techpack-border-dark);
+  border-radius: 4px;
   position: relative;
-  transition: var(--techpack-transition);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background: white;
 }
 
-.techpack-radio-option input[type="radio"]:checked + .techpack-radio-mark {
+.techpack-checkbox-option:has(input:checked) .techpack-checkbox-mark {
   border-color: var(--techpack-primary);
   background: var(--techpack-primary);
 }
 
-.techpack-radio-option input[type="radio"]:checked + .techpack-radio-mark::after {
-  content: '';
+.techpack-checkbox-option:has(input:checked) .techpack-checkbox-mark::after {
+  content: '✓';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-}
-
-/* Lab Dip PANTONE System */
-.techpack-labdip-pantone-system {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.techpack-labdip-colors-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.techpack-labdip-color-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.techpack-pantone-input {
-  flex: 1;
-  padding: 0.75rem;
-  border: 2px solid var(--techpack-border);
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-family: var(--techpack-font-mono, 'Monaco', 'Menlo', monospace);
-  transition: var(--techpack-transition);
-}
-
-.techpack-pantone-input:focus {
-  border-color: var(--techpack-primary);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--techpack-primary-light);
-}
-
-.techpack-pantone-input::placeholder {
-  color: var(--techpack-text-secondary);
-  font-style: italic;
-}
-
-.remove-labdip-color {
-  width: 32px;
-  height: 32px;
-  background: var(--techpack-error);
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.25rem;
-  line-height: 1;
-  transition: var(--techpack-transition);
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.remove-labdip-color:hover {
-  background: var(--techpack-error-dark);
-  transform: scale(1.05);
-}
+/* ===========================================
+   GUIDANCE BANNER & RECOMMENDATIONS
+   ========================================== */
 
-.add-labdip-pantone {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  align-self: flex-start;
-}
-
-.techpack-labdip-total {
-  padding: 0.75rem;
-  background: var(--techpack-success-light);
-  border: 1px solid var(--techpack-success);
-  border-radius: 6px;
-  text-align: center;
-  color: var(--techpack-success-dark);
-}
-
-/* Custom Color PANTONE System */
-.techpack-custom-color-pantone {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.techpack-pantone-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.techpack-color-swatch {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: var(--techpack-transition);
-}
-
-.techpack-pantone-name {
-  font-size: 0.875rem;
-  color: var(--techpack-text-secondary);
-  font-weight: 500;
-}
-
-.techpack-custom-color-note {
+.techpack-guidance-banner {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--techpack-warning-light);
-  border: 1px solid var(--techpack-warning);
-  border-radius: 6px;
-  font-size: 0.875rem;
-  color: var(--techpack-warning-dark);
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
 }
 
-.techpack-custom-color-note svg {
+.techpack-guidance-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(99, 102, 241) 0%, rgb(139, 92, 246) 100%);
+}
+
+.techpack-guidance-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  margin-top: 0.1rem;
 }
 
-/* Mobile Responsive Styles */
+.techpack-guidance-icon svg {
+  color: rgb(99, 102, 241);
+}
+
+.techpack-guidance-content h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.techpack-guidance-content p {
+  font-size: 0.95rem;
+  color: var(--techpack-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.techpack-guidance-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-text);
+  margin: 0 0 0.5rem 0;
+}
+
+/* ===========================================
+   MOBILE OPTIMIZATION & RESPONSIVE DESIGN
+   ========================================== */
+
 @media (max-width: 768px) {
-  .techpack-sample-fabric-options {
-    grid-template-columns: 1fr;
-  }
-  
-  .techpack-radio-option {
-    padding: 0.75rem;
-  }
-  
-  .techpack-labdip-color-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-  
-  .remove-labdip-color {
-    align-self: flex-end;
-  }
-  
-  .techpack-pantone-preview {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  /* ====================================
-     NEW SAMPLE REQUEST DESIGN SYSTEM
-     ==================================== */
-
-  /* Section Titles */
-  .techpack-section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--techpack-text-primary);
-    margin: 0 0 1rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .techpack-optional {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: var(--techpack-text-secondary);
-    font-style: italic;
-  }
-
-  .techpack-section-description {
-    color: var(--techpack-text-secondary);
-    margin: 0 0 1.5rem 0;
-    line-height: 1.5;
-  }
-
-  /* Sample Type Selection Cards */
-  .techpack-sample-type-selection {
-    margin-bottom: 2rem;
-  }
-
-  .techpack-sample-card {
-    border: 1px solid var(--techpack-border);
-    border-radius: 8px;
-    background: #ffffff;
-    margin-bottom: 1rem;
-    transition: all 0.2s ease;
-    position: relative;
-  }
-
-  .techpack-sample-card:hover {
-    border-color: var(--techpack-secondary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
-
-  .techpack-sample-card:has(.techpack-sample-radio:checked) {
-    border-color: var(--techpack-primary);
-    border-width: 2px;
-    box-shadow: 0 0 0 1px var(--techpack-primary), 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
   .techpack-sample-card-header {
-    padding: 1.5rem;
+    padding: 1.25rem 1rem;
   }
 
-  .techpack-sample-radio {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-
-  .techpack-sample-card-label {
-    display: block;
-    cursor: pointer;
-    padding-right: 2.5rem;
-  }
-
-  .techpack-sample-card-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--techpack-text-primary);
-    margin: 0 0 0.5rem 0;
-  }
-
-  .techpack-sample-meta {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--techpack-accent);
-    margin-bottom: 0.75rem;
-  }
-
-  .techpack-sample-description {
-    color: var(--techpack-text-secondary);
-    margin: 0 0 0.5rem 0;
-    line-height: 1.5;
-  }
-
-  .techpack-sample-subtitle {
-    font-size: 0.875rem;
-    color: var(--techpack-text-tertiary);
-    margin: 0;
-    font-style: italic;
-  }
-
-  /* Sample Options (expandable content) */
   .techpack-sample-options {
-    border-top: 1px solid var(--techpack-border);
-    padding: 1.5rem;
-    background: var(--techpack-bg-secondary);
+    padding: 1.25rem 1rem;
   }
 
-  /* Fabric Color Options */
-  .techpack-fabric-colors {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .techpack-fabric-color-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    padding: 0.5rem 0;
-  }
-
-  .techpack-fabric-color-option input[type="radio"] {
-    margin: 0;
-  }
-
-  .techpack-radio-mark {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--techpack-border);
-    border-radius: 50%;
-    position: relative;
-    transition: all 0.2s ease;
-  }
-
-  .techpack-fabric-color-option input[type="radio"]:checked + .techpack-radio-mark {
-    border-color: var(--techpack-primary);
-    background: var(--techpack-primary);
-  }
-
-  .techpack-fabric-color-option input[type="radio"]:checked + .techpack-radio-mark::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 6px;
-    height: 6px;
-    background: white;
-    border-radius: 50%;
-  }
-
-  /* Sample Notes */
-  .techpack-sample-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--techpack-bg-info);
-    border: 1px solid var(--techpack-border-info);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: var(--techpack-text-info);
-  }
-
-  .techpack-sample-note svg {
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-    color: var(--techpack-icon-info);
-  }
-
-  /* Sample Warnings */
-  .techpack-sample-warning {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--techpack-bg-warning);
-    border: 1px solid var(--techpack-border-warning);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: var(--techpack-text-warning);
-    margin-bottom: 1rem;
-  }
-
-  .techpack-sample-warning svg {
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-    color: var(--techpack-icon-warning);
-  }
-
-  /* Lab Dip Section */
-  .techpack-lab-dips-section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    border: 1px solid var(--techpack-border);
-    border-radius: 8px;
-    background: var(--techpack-bg-secondary);
-  }
-
-  .techpack-lab-dip-meta {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--techpack-accent);
-    margin-bottom: 0.5rem;
-  }
-
-  .techpack-lab-dip-form {
-    margin-bottom: 1.5rem;
+  .techpack-lab-dips-section,
+  .techpack-info-check {
+    padding: 1.25rem 1rem;
+    margin: 1.5rem 0;
   }
 
   .techpack-lab-dip-form .techpack-form__group {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  .techpack-lab-dip-form .techpack-form__input {
-    flex: 1;
-  }
-
-  /* Lab Dip List */
-  .techpack-lab-dip-list {
-    min-height: 3rem;
-  }
-
-  .techpack-lab-dip-empty {
-    text-align: center;
-    padding: 2rem;
-    color: var(--techpack-text-tertiary);
-  }
-
-  .techpack-lab-dip-empty svg {
-    opacity: 0.3;
-    margin-bottom: 1rem;
-  }
-
-  .techpack-lab-dip-empty p {
-    font-weight: 500;
-    margin: 0 0 0.25rem 0;
-  }
-
-  .techpack-lab-dip-empty span {
-    font-size: 0.875rem;
-    opacity: 0.8;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 
   .techpack-lab-dip-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: white;
-    border: 1px solid var(--techpack-border);
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-  }
-
-  .techpack-lab-dip-pantone {
-    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-    font-weight: 500;
-    font-size: 0.875rem;
-    flex: 1;
-  }
-
-  .techpack-lab-dip-status {
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-  }
-
-  .techpack-lab-dip-status--pending {
-    background: var(--techpack-bg-warning);
-    color: var(--techpack-text-warning);
-    border: 1px solid var(--techpack-border-warning);
-  }
-
-  .techpack-lab-dip-status--approved {
-    background: var(--techpack-bg-success);
-    color: var(--techpack-text-success);
-    border: 1px solid var(--techpack-border-success);
-  }
-
-  .techpack-lab-dip-status--rejected {
-    background: var(--techpack-bg-error);
-    color: var(--techpack-text-error);
-    border: 1px solid var(--techpack-border-error);
-  }
-
-  .techpack-lab-dip-actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  /* Info Check Section */
-  .techpack-info-check {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    border: 1px solid var(--techpack-border);
-    border-radius: 8px;
-    background: white;
-  }
-
-  .techpack-checkboxes {
-    display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .techpack-checkbox-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    padding: 0.5rem 0;
-  }
-
-  .techpack-checkbox-option input[type="checkbox"] {
-    margin: 0;
-  }
-
-  .techpack-checkbox-mark {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid var(--techpack-border);
-    border-radius: 3px;
-    position: relative;
-    transition: all 0.2s ease;
-  }
-
-  .techpack-checkbox-option input[type="checkbox"]:checked + .techpack-checkbox-mark {
-    border-color: var(--techpack-primary);
-    background: var(--techpack-primary);
-  }
-
-  .techpack-checkbox-option input[type="checkbox"]:checked + .techpack-checkbox-mark::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 4px;
-    width: 4px;
-    height: 8px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
-
-  /* Guidance Banner */
-  .techpack-guidance-banner {
-    display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
-    padding: 1.5rem;
-    background: var(--techpack-bg-primary);
-    border: 1px solid var(--techpack-primary);
-    border-radius: 8px;
-    margin-bottom: 2rem;
+  }
+
+  .techpack-lab-dip-item__content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .techpack-guidance-banner {
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .techpack-guidance-icon {
-    flex-shrink: 0;
-    color: var(--techpack-primary);
+    align-self: flex-start;
   }
 
-  .techpack-guidance-title {
+  .techpack-section-title::after {
+    width: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .techpack-sample-card-header {
+    padding: 1rem 0.75rem;
+  }
+
+  .techpack-sample-options {
+    padding: 1rem 0.75rem;
+  }
+
+  .techpack-lab-dips-section,
+  .techpack-info-check {
+    padding: 1rem 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .techpack-sample-card-title {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--techpack-primary);
-    margin: 0 0 0.5rem 0;
+  }
+
+  .techpack-section-title {
+    font-size: 1.125rem;
+  }
+
+  .techpack-guidance-content h5 {
+    font-size: 0.9rem;
   }
 
   .techpack-guidance-content p {
-    margin: 0;
-    line-height: 1.5;
-    color: var(--techpack-text-primary);
+    font-size: 0.875rem;
+  }
+}
+
+/* ===========================================
+   ACCESSIBILITY & INTERACTION STATES
+   ========================================== */
+
+/* Focus states for keyboard navigation */
+.techpack-sample-card:focus-within {
+  outline: 3px solid var(--techpack-primary);
+  outline-offset: 2px;
+  border-radius: 16px;
+}
+
+.techpack-checkbox-option:focus-within,
+.techpack-fabric-color-option:focus-within {
+  outline: 2px solid var(--techpack-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.techpack-lab-dip-remove:focus {
+  outline: 2px solid var(--techpack-error);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .techpack-sample-card,
+  .techpack-checkbox-option,
+  .techpack-fabric-color-option,
+  .techpack-lab-dip-item,
+  .techpack-lab-dip-remove {
+    transition: none;
   }
 
-  /* Disabled States */
-  .techpack-sample-card[data-disabled="true"] {
-    opacity: 0.6;
-    pointer-events: none;
+  .techpack-sample-card::before,
+  @keyframes fadeInUp,
+  @keyframes slideDown,
+  @keyframes scaleIn {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .techpack-sample-card {
+    border-width: 2px;
   }
 
-  select[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
+  .techpack-checkbox-mark,
+  .techpack-radio-mark {
+    border-width: 3px;
   }
 
-  /* Mobile Responsive */
-  @media (max-width: 768px) {
-    .techpack-sample-card-header {
-      padding: 1rem;
-    }
-
-    .techpack-sample-options {
-      padding: 1rem;
-    }
-
-    .techpack-lab-dips-section,
-    .techpack-info-check {
-      padding: 1rem;
-    }
-
-    .techpack-lab-dip-form .techpack-form__group {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .techpack-lab-dip-item {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.75rem;
-    }
-
-    .techpack-guidance-banner {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+  .techpack-lab-dip-item {
+    border-width: 2px;
   }
+}
+
+/* End of Sample Request Interface Styles */
 }
