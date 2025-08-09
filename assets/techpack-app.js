@@ -10567,7 +10567,7 @@ setupInitialization();
       const colorwaysSections = document.querySelectorAll('.techpack-colorways');
       const bulkOnlyElements = document.querySelectorAll('[data-bulk-request-only]');
       
-      if (requestType === 'sample') {
+      if (requestType === 'sample-request') {
         // SAMPLE REQUEST MODE: Show sample options, hide bulk elements
         
         // Show per-garment sample options
@@ -10597,7 +10597,7 @@ setupInitialization();
           hiddenColorways: colorwaysSections.length,
           quantityTrackerHidden: !!quantityTracker
         });
-      } else if (requestType === 'bulk') {
+      } else if (requestType === 'bulk-order-request') {
         // BULK REQUEST MODE: Show bulk elements, hide sample options
         
         // Hide per-garment sample options
