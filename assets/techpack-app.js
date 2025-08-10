@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration
+  // Enhanced Configuration - Updated
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3927,6 +3927,9 @@
       const garment = clone.querySelector('.techpack-garment');
       
       garment.dataset.garmentId = garmentId;
+      
+      // Replace GARMENT_ID placeholders in HTML with actual garment ID
+      garment.innerHTML = garment.innerHTML.replace(/GARMENT_ID/g, garmentId);
       
       // Set the garment number based on current count of garments, not counter
       const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
@@ -10686,7 +10689,7 @@ setupInitialization();
       // Create debounced validation function to prevent interference
       this.debouncedUpdateValidation = this.debounce(() => {
         this.updateValidation();
-      }, 1000); // 1 second delay to allow user interactions to complete
+      }, 300); // 300ms delay to allow user interactions to complete
       
       // Track user interaction state to prevent validation interference
       this.isUserInteracting = false;
@@ -10695,15 +10698,17 @@ setupInitialization();
     }
 
     bindEventListeners() {
-      // Sample type radio button changes (mutual exclusivity with proper reset)
+      // Sample type radio button changes - FIXED: Per-garment sample type handling
       document.addEventListener('change', (e) => {
-        if (e.target.name === 'garment-sample-type') {
-          this.handleSampleTypeChange(e.target.value);
+        if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
+          const garmentId = e.target.name.split('garment-sample-type-')[1];
+          this.handleSampleTypeChange(e.target.value, garmentId);
         }
         
-        // Stock fabric color selection
-        if (e.target.name === 'stock-fabric-color') {
-          this.handleStockColorChange(e.target.value);
+        // Stock fabric color selection (per-garment)
+        if (e.target.name && e.target.name.startsWith('stock-fabric-color-')) {
+          const garmentId = e.target.name.replace('stock-fabric-color-', '');
+          this.handleStockColorChange(e.target.value, garmentId);
         }
         
         // Lab dip selection for custom sample
@@ -10719,24 +10724,8 @@ setupInitialization();
         }
       });
       
-      // Add click handling for sample cards - FIXED: Proper radio button behavior
-      document.addEventListener('click', (e) => {
-        const sampleCard = e.target.closest('.techpack-sample-card');
-        if (sampleCard) {
-          const radio = sampleCard.querySelector('.techpack-sample-radio');
-          if (radio && !radio.checked) {
-            // Protect during selection
-            this.isUserInteracting = true;
-            setTimeout(() => { this.isUserInteracting = false; }, 1500);
-            
-            // Only select if not already selected - no deselection allowed for radio buttons
-            // Clear other selections first
-            document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
-            radio.checked = true;
-            this.handleSampleTypeChange(radio.value);
-          }
-        }
-      });
+      // REMOVED: Conflicting click handler - let native radio buttons work
+      // Native radio buttons will now handle their own events properly
 
       // Lab dip management buttons - NEW DUAL MODE SYSTEM
       document.addEventListener('click', (e) => {
@@ -10915,14 +10904,19 @@ setupInitialization();
     }
     
     // Reset stock color selection when changing sample types
-    resetStockColorSelection() {
-      // Clear all stock color radio buttons
-      const stockColorInputs = document.querySelectorAll('input[name="stock-fabric-color"]');
+    resetStockColorSelection(garmentId) {
+      // Clear stock color radio buttons for specific garment
+      const stockColorInputs = document.querySelectorAll(`input[name="stock-fabric-color-${garmentId}"]`);
       stockColorInputs.forEach(input => {
         input.checked = false;
       });
       
-      debugSystem.log('Stock color selection reset');
+      // Clear the garment's stock color state
+      if (this.perGarmentSampleState.has(garmentId)) {
+        this.perGarmentSampleState.get(garmentId).stockColor = null;
+      }
+      
+      debugSystem.log('Stock color selection reset for garment:', garmentId);
     }
     
     // Initialize dual-mode system on page load
@@ -11108,42 +11102,57 @@ setupInitialization();
       }, 5000);
     }
 
-    // Handle sample type selection (mutual exclusivity with proper reset)
-    handleSampleTypeChange(type) {
+    // Handle sample type selection - UPDATED: Per-garment handling
+    handleSampleTypeChange(type, garmentId) {
       // Protect user interaction from validation interference
       this.isUserInteracting = true;
       setTimeout(() => { this.isUserInteracting = false; }, 2000); // 2 second protection
       
-      const previousType = this.sampleState.type;
-      this.sampleState.type = type;
+      // Initialize per-garment sample state if not exists
+      if (!this.perGarmentSampleState) {
+        this.perGarmentSampleState = new Map();
+      }
+      
+      // Get or create garment sample state
+      if (!this.perGarmentSampleState.has(garmentId)) {
+        this.perGarmentSampleState.set(garmentId, {
+          type: null,
+          stockColor: null,
+          selectedLabDipId: null
+        });
+      }
+      
+      const garmentState = this.perGarmentSampleState.get(garmentId);
+      const previousType = garmentState.type;
+      garmentState.type = type;
       
       // RESET LOGIC: Clear previous selections when changing sample types OR deselecting
       if (previousType !== type) {
         if (previousType === 'stock') {
-          // Reset stock color selection
-          this.sampleState.stockColor = null;
-          this.resetStockColorSelection();
+          // Reset stock color selection for this garment
+          garmentState.stockColor = null;
+          this.resetStockColorSelection(garmentId);
         }
         
         if (previousType === 'custom') {
-          // Reset custom lab dip selection
-          this.sampleState.selectedLabDipId = null;
+          // Reset custom lab dip selection for this garment
+          garmentState.selectedLabDipId = null;
         }
       }
       
       // Handle deselection (type is null)
       if (type === null) {
-        // Reset all selections
-        this.sampleState.stockColor = null;
-        this.sampleState.selectedLabDipId = null;
-        this.resetStockColorSelection();
+        // Reset all selections for this garment
+        garmentState.stockColor = null;
+        garmentState.selectedLabDipId = null;
+        this.resetStockColorSelection(garmentId);
       }
       
-      // Show/hide sample options based on selection
-      this.updateCardStates();
+      // Show/hide sample options based on selection for this specific garment
+      this.updateCardStates(garmentId);
       
       // Update dynamic subtitle for stock option (with reset)
-      this.updateStockSubtitle();
+      this.updateStockSubtitle(garmentId);
       
       // Update lab dip selection area when custom color is selected
       this.updateLabDipSelectionArea();
@@ -11155,10 +11164,14 @@ setupInitialization();
       debugSystem.log('Sample type changed to:', type, 'from:', previousType);
     }
 
-    // Update card visual states and show/hide options with immediate feedback
-    updateCardStates() {
-      const stockCard = document.querySelector('[data-sample-type="stock"]');
-      const customCard = document.querySelector('[data-sample-type="custom"]');
+    // Update card visual states and show/hide options - UPDATED: Per-garment
+    updateCardStates(garmentId) {
+      // Find cards within the specific garment
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) return;
+      
+      const stockCard = garment.querySelector('[data-sample-type="stock"]');
+      const customCard = garment.querySelector('[data-sample-type="custom"]');
       const stockOptions = stockCard?.querySelector('.techpack-sample-options');
       const customOptions = customCard?.querySelector('.techpack-sample-options');
       
@@ -11166,24 +11179,27 @@ setupInitialization();
       this.addCardTransition(stockCard);
       this.addCardTransition(customCard);
       
-      if (this.sampleState.type === 'stock') {
+      // Get garment-specific state
+      const garmentState = this.perGarmentSampleState?.get(garmentId) || { type: null };
+      
+      if (garmentState.type === 'stock') {
         // Stock selected - show stock options, hide custom
         this.activateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log('✅ Stock sample type activated');
-      } else if (this.sampleState.type === 'custom') {
+        debugSystem.log(`✅ Stock sample type activated for garment ${garmentId}`);
+      } else if (garmentState.type === 'custom') {
         // Custom selected - show custom options, hide stock
         this.activateCard(customCard, customOptions);
         this.deactivateCard(stockCard, stockOptions);
         
-        debugSystem.log('✅ Custom sample type activated');
+        debugSystem.log(`✅ Custom sample type activated for garment ${garmentId}`);
       } else {
         // No selection - hide all options
         this.deactivateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log('ℹ️ No sample type selected - showing selection prompt');
+        debugSystem.log(`ℹ️ No sample type selected for garment ${garmentId} - showing selection prompt`);
       }
       
       // Update step validation status immediately
@@ -11267,25 +11283,36 @@ setupInitialization();
     }
 
     // Handle stock fabric color selection
-    handleStockColorChange(color) {
-      this.sampleState.stockColor = color;
-      this.updateStockSubtitle();
+    handleStockColorChange(color, garmentId) {
+      // Initialize garment state if not exists
+      if (!this.perGarmentSampleState.has(garmentId)) {
+        this.perGarmentSampleState.set(garmentId, {
+          type: null,
+          stockColor: null,
+          selectedLabDipId: null
+        });
+      }
+      
+      const garmentState = this.perGarmentSampleState.get(garmentId);
+      garmentState.stockColor = color;
+      this.updateStockSubtitle(garmentId);
       this.debouncedUpdateValidation();
-      debugSystem.log('Stock color selected:', color);
+      debugSystem.log('Stock color selected for garment:', garmentId, color);
     }
 
     // Update stock subtitle based on selection
-    updateStockSubtitle() {
-      const subtitle = document.getElementById('stock-subtitle');
+    updateStockSubtitle(garmentId) {
+      const subtitle = document.getElementById(`stock-subtitle-${garmentId}`);
       if (!subtitle) return;
       
-      if (this.sampleState.stockColor) {
+      const garmentState = this.perGarmentSampleState.get(garmentId);
+      if (garmentState && garmentState.stockColor) {
         const colorMap = {
           'black': 'Black',
           'off-white': 'Off-White / Natural', 
           'random': 'Random Stock Color'
         };
-        subtitle.textContent = `Selected: ${colorMap[this.sampleState.stockColor]}`;
+        subtitle.textContent = `Selected: ${colorMap[garmentState.stockColor]}`;
       } else {
         subtitle.textContent = 'Choose from available stock colors for faster turnaround.';
       }
