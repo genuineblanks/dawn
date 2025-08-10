@@ -15,14 +15,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         <p class="techpack-entrance-hero__subtitle">
           Transform your designs into reality with our expert garment development process
         </p>
-        <div class="techpack-entrance-hero__buttons">
-          <button class="techpack-btn-hero" onclick="document.getElementById('techpack-step-1').style.display='none'; document.getElementById('techpack-step-1-form').style.display='block';">
-            Start Your Submission
-          </button>
-          <button class="techpack-btn-outline" onclick="toggleProcessInfo()">
-            Learn How It Works
-          </button>
-        </div>
       </div>
     </div>
 
@@ -112,57 +104,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
       </div>
     </div>
 
-    <!-- Process Flow - Hidden in minimal design -->
-    <div class="techpack-entrance-process" style="display: none;" id="process-info">
-      <h2 class="techpack-section-title">How Our TechPack Process Works</h2>
-      <p class="techpack-section-subtitle">From concept to creation in 5 streamlined steps</p>
-      
-      <div class="techpack-process-flow">
-        <div class="techpack-process-step">
-          <div class="techpack-process-step__number">01</div>
-          <div class="techpack-process-step__content">
-            <h3 class="techpack-process-step__title">Submit Requirements</h3>
-            <p class="techpack-process-step__description">Upload your design files and provide garment specifications through our streamlined interface</p>
-          </div>
-          <div class="techpack-process-step__connector"></div>
-        </div>
-
-        <div class="techpack-process-step">
-          <div class="techpack-process-step__number">02</div>
-          <div class="techpack-process-step__content">
-            <h3 class="techpack-process-step__title">Expert Review</h3>
-            <p class="techpack-process-step__description">Our garment development specialists analyze your project requirements and technical feasibility</p>
-          </div>
-          <div class="techpack-process-step__connector"></div>
-        </div>
-
-        <div class="techpack-process-step">
-          <div class="techpack-process-step__number">03</div>
-          <div class="techpack-process-step__content">
-            <h3 class="techpack-process-step__title">Quote & Timeline</h3>
-            <p class="techpack-process-step__description">Receive detailed pricing and delivery schedule within 24-48 hours of submission</p>
-          </div>
-          <div class="techpack-process-step__connector"></div>
-        </div>
-
-        <div class="techpack-process-step">
-          <div class="techpack-process-step__number">04</div>
-          <div class="techpack-process-step__content">
-            <h3 class="techpack-process-step__title">Sample Creation</h3>
-            <p class="techpack-process-step__description">Optional prototyping phase for fit validation and color approval before bulk production</p>
-          </div>
-          <div class="techpack-process-step__connector"></div>
-        </div>
-
-        <div class="techpack-process-step">
-          <div class="techpack-process-step__number">05</div>
-          <div class="techpack-process-step__content">
-            <h3 class="techpack-process-step__title">Production & Delivery</h3>
-            <p class="techpack-process-step__description">Professional manufacturing with quality control and direct delivery to your specifications</p>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- CTA Section -->
     <div class="techpack-entrance-cta">
@@ -642,17 +583,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
     </div>
   </div>
 </div>
-
-<script>
-  function toggleProcessInfo() {
-    const processSection = document.getElementById('process-info');
-    if (processSection.style.display === 'none' || processSection.style.display === '') {
-      processSection.style.display = 'block';
-    } else {
-      processSection.style.display = 'none';
-    }
-  }
-</script>
 
 <!-- Load Tech Pack Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
