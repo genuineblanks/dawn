@@ -11933,7 +11933,7 @@ setupInitialization();
           existingCards.forEach(card => card.remove());
           
           // Count how many lab dips are assigned to this garment
-          const garmentId = garment.dataset.garmentId;
+          // garmentId already defined above
           let assignedLabDipCount = 0;
           labDipsToUse.forEach((labDip) => {
             if (labDip.assignments && labDip.assignments.has(garmentId)) {
@@ -11953,7 +11953,7 @@ setupInitialization();
             // Create selection card for each lab dip ONLY if assigned to this garment
             labDipsToUse.forEach((labDip, id) => {
               // Check if this lab dip is assigned to this specific garment
-              const garmentId = garment.dataset.garmentId;
+              // garmentId already defined in parent scope
               const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
               
               if (!isAssigned) {
