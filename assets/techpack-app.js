@@ -1,4 +1,841 @@
-ss: 'color: #10b981'
+(function() {
+  'use strict';
+
+  // Enhanced Configuration
+  const CONFIG = {
+    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
+    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
+    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
+    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
+    MAX_FILES: 10,
+    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
+    ANIMATION_DURATION: 400,
+    DEBOUNCE_DELAY: 300,
+    MIN_DELIVERY_WEEKS: 6,
+    
+    // Fabric Type Mapping Configuration
+    FABRIC_TYPE_MAPPING: {
+      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
+      'Zip-Up Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatshirt': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatpants': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Shorts': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      
+      // Light Garments - T-Shirts and Long Sleeves
+      'T-Shirt': [
+        '100% Organic Cotton Jersey',
+        '80% Cotton 20% Polyester Jersey',
+        '50% Cotton 50% Polyester Jersey',
+        '100% Polyester Jersey',
+        '100% Cotton & Elastan',
+        'Recycled Polyester'
+      ],
+      'Long Sleeve T-Shirt': [
+        '100% Organic Cotton Jersey',
+        '80% Cotton 20% Polyester Jersey',
+        '50% Cotton 50% Polyester Jersey',
+        '100% Polyester Jersey',
+        '100% Cotton & Elastan',
+        'Recycled Polyester'
+      ],
+      
+      // Shirts - Woven and structured fabrics
+      'Shirt': [
+        '100% Cotton Twill',
+        '100% Cotton Canvas',
+        '100% Linen',
+        '55% Linen / 45% Cotton',
+        '100% Viscose',
+        '100% Tencel (Lyocell)',
+        '100% Cotton Flannel',
+        '100% Cotton Corduroy',
+        '65% Polyester / 35% Cotton Poplin',
+        '100% Polyester Microfiber'
+      ],
+      
+      // Polo Shirts
+      'Polo Shirt': [
+        'Cotton Piqué',
+        'Merino Wool',
+        'Cotton Jersey',
+        'Cotton Polyester',
+        'Cotton Elastan',
+        '100% Polyester',
+        'Recycled Polyester'
+      ],
+      
+      // Tank Tops
+      'Tank Top': [
+        '100% Cotton Jersey',
+        '100% Cotton Waffle Knit',
+        '100% Cotton 2x2 Rib Knit',
+        '100% Cotton Slub Jersey',
+        '100% Cotton Lightweight French Terry',
+        '95% Cotton / 5% Elastane Jersey',
+        '50% Cotton / 50% Polyester Jersey',
+        '100% Polyester Mesh',
+        '65% Polyester / 35% Cotton Piqué Knit'
+      ],
+      
+      // Other/Default Garments - Keep original options for hats, beanies, etc.
+      'Hat/Cap': [
+        'Canvas',
+        'Cotton/Polyester Blend',
+        '100% Cotton',
+        '100% Polyester',
+        'Custom Fabric (Specify in Notes)'
+      ],
+      'Beanie': [
+        'Fleece 100% Organic Cotton',
+        'Cotton/Polyester Blend',
+        '100% Cotton',
+        '100% Polyester',
+        'Custom Fabric (Specify in Notes)'
+      ],
+      'Other': [
+        'Custom Fabric (Specify in Notes)',
+        '100% Organic Cotton Jersey',
+        'Cotton/Polyester Blend',
+        '100% Polyester',
+        'Canvas'
+      ]
+    },
+    
+    // Security Configuration
+    CLIENT_SECRET: 'genuineblanks-techpack-secret-2025', // Security key for HMAC signatures
+    WEBHOOK_URL: 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy', // Vercel API endpoint
+    SUBMISSION_COOLDOWN: 30000, // 30 seconds between submissions
+    TIMESTAMP_WINDOW: 300000, // 5 minutes for timestamp validation
+    
+    // Google Drive Configuration
+    GOOGLE_DRIVE_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbzXaKCGuTdupw-ZGjeijbuINIvEIn1xSOYl_9mtThUuUBbVGU1z7ThCcMffKN48FTJVXA/exec', // Google Apps Script Web App URL
+    UPLOAD_TIMEOUT: 120000 // 2 minutes timeout for file uploads
+  };
+
+  // Premium Loading Overlay System
+  const LoadingOverlay = {
+    overlay: null,
+    messages: [
+      'Processing your TechPack submission...',
+      'Uploading files to secure cloud storage...',
+      'Finalizing your garment specifications...',
+      'Almost ready - preparing your submission...'
+    ],
+    currentMessageIndex: 0,
+    messageInterval: null,
+
+    create() {
+      if (this.overlay) return;
+
+      this.overlay = document.createElement('div');
+      this.overlay.className = 'techpack-loading-overlay';
+      this.overlay.innerHTML = `
+        <div class="techpack-loading-container">
+          <div class="techpack-loading-brand">
+            <div class="techpack-loading-logo">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                <path d="M24 4v20l16-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <div class="techpack-loading-spinner"></div>
+            </div>
+            <h3 class="techpack-loading-title">GenuineBlanks</h3>
+            <p class="techpack-loading-subtitle">Premium Garment Manufacturing</p>
+          </div>
+          
+          <div class="techpack-loading-content">
+            <div class="techpack-loading-progress">
+              <div class="techpack-loading-progress-bar">
+                <div class="techpack-loading-progress-fill"></div>
+              </div>
+            </div>
+            
+            <p class="techpack-loading-message">${this.messages[0]}</p>
+            
+            <div class="techpack-loading-files">
+              <div class="techpack-loading-files-list"></div>
+            </div>
+          </div>
+          
+          <div class="techpack-loading-footer">
+            <p>Please do not close this window</p>
+          </div>
+        </div>
+      `;
+
+      // Add CSS styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .techpack-loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(5px);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: techpackFadeIn 0.3s ease-out;
+        }
+        
+        .techpack-loading-container {
+          background: white;
+          border-radius: 16px;
+          padding: 40px;
+          max-width: 480px;
+          width: 90%;
+          text-align: center;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+          animation: techpackSlideUp 0.4s ease-out;
+        }
+        
+        .techpack-loading-brand {
+          margin-bottom: 32px;
+        }
+        
+        .techpack-loading-logo {
+          position: relative;
+          display: inline-block;
+          margin-bottom: 16px;
+        }
+        
+        .techpack-loading-logo svg {
+          color: #2563eb;
+        }
+        
+        .techpack-loading-spinner {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 48px;
+          height: 48px;
+          border: 2px solid transparent;
+          border-top: 2px solid #2563eb;
+          border-radius: 50%;
+          animation: techpackSpin 1s linear infinite;
+        }
+        
+        .techpack-loading-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #1f2937;
+          margin: 0 0 4px 0;
+          letter-spacing: -0.025em;
+        }
+        
+        .techpack-loading-subtitle {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0;
+          font-weight: 500;
+        }
+        
+        .techpack-loading-content {
+          margin-bottom: 24px;
+        }
+        
+        .techpack-loading-progress {
+          margin-bottom: 20px;
+        }
+        
+        .techpack-loading-progress-bar {
+          width: 100%;
+          height: 4px;
+          background: #e5e7eb;
+          border-radius: 2px;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .techpack-loading-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #2563eb, #1d4ed8);
+          border-radius: 2px;
+          width: 0%;
+          transition: width 0.5s ease-out;
+          position: relative;
+        }
+        
+        .techpack-loading-progress-fill::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 20px;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+          animation: techpackShimmer 1.5s infinite;
+        }
+        
+        .techpack-loading-message {
+          font-size: 16px;
+          color: #374151;
+          margin: 0;
+          font-weight: 500;
+          min-height: 24px;
+          animation: techpackPulse 2s ease-in-out infinite;
+        }
+        
+        .techpack-loading-files {
+          margin-top: 16px;
+        }
+        
+        .techpack-loading-files-list {
+          text-align: left;
+          max-height: 120px;
+          overflow-y: auto;
+        }
+        
+        .techpack-loading-file {
+          display: flex;
+          align-items: center;
+          padding: 8px 0;
+          font-size: 14px;
+          color: #6b7280;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .techpack-loading-file:last-child {
+          border-bottom: none;
+        }
+        
+        .techpack-loading-file-icon {
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+          color: #10b981;
+        }
+        
+        .techpack-loading-footer {
+          border-top: 1px solid #e5e7eb;
+          padding-top: 20px;
+        }
+        
+        .techpack-loading-footer p {
+          font-size: 12px;
+          color: #9ca3af;
+          margin: 0;
+        }
+        
+        @keyframes techpackFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes techpackSlideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes techpackSpin {
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes techpackPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        
+        @keyframes techpackShimmer {
+          0% { transform: translateX(-20px); }
+          100% { transform: translateX(100px); }
+        }
+      `;
+      
+      document.head.appendChild(style);
+      document.body.appendChild(this.overlay);
+    },
+
+    show() {
+      this.create();
+      this.overlay.style.display = 'flex';
+      this.currentMessageIndex = 0;
+      this.updateMessage();
+      this.startMessageRotation();
+      document.body.style.overflow = 'hidden';
+    },
+
+    hide() {
+      if (this.overlay) {
+        this.stopMessageRotation();
+        this.overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    },
+
+    updateProgress(percentage) {
+      if (!this.overlay) return;
+      const progressFill = this.overlay.querySelector('.techpack-loading-progress-fill');
+      if (progressFill) {
+        progressFill.style.width = `${percentage}%`;
+      }
+    },
+
+    updateMessage(customMessage = null) {
+      if (!this.overlay) return;
+      const messageEl = this.overlay.querySelector('.techpack-loading-message');
+      if (messageEl) {
+        messageEl.textContent = customMessage || this.messages[this.currentMessageIndex];
+      }
+    },
+
+    startMessageRotation() {
+      this.stopMessageRotation();
+      this.messageInterval = setInterval(() => {
+        this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
+        this.updateMessage();
+      }, 3000);
+    },
+
+    stopMessageRotation() {
+      if (this.messageInterval) {
+        clearInterval(this.messageInterval);
+        this.messageInterval = null;
+      }
+    },
+
+    addFileStatus(fileName, status = 'uploading') {
+      if (!this.overlay) return;
+      const filesList = this.overlay.querySelector('.techpack-loading-files-list');
+      if (!filesList) return;
+
+      const existingFile = filesList.querySelector(`[data-filename="${fileName}"]`);
+      if (existingFile) {
+        const icon = existingFile.querySelector('.techpack-loading-file-icon');
+        if (status === 'completed') {
+          icon.innerHTML = `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          `;
+          icon.style.color = '#10b981';
+        }
+        return;
+      }
+
+      const fileEl = document.createElement('div');
+      fileEl.className = 'techpack-loading-file';
+      fileEl.setAttribute('data-filename', fileName);
+      fileEl.innerHTML = `
+        <div class="techpack-loading-file-icon">
+          ${status === 'completed' ? `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+            </svg>
+          ` : `
+            <svg fill="currentColor" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+            </svg>
+          `}
+        </div>
+        <span>${fileName}</span>
+      `;
+      filesList.appendChild(fileEl);
+    }
+  };
+
+  // Security & Webhook Utilities
+  const SecurityUtils = {
+    // Generate HMAC signature for payload authentication
+    generateHMAC: function(payload, timestamp) {
+      const message = JSON.stringify(payload) + timestamp.toString();
+      return CryptoJS.HmacSHA256(message, CONFIG.CLIENT_SECRET).toString();
+    },
+    
+    // Generate unique submission ID
+    generateSubmissionId: function() {
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substr(2, 9);
+      return `TP-${timestamp}-${randomId}`;
+    },
+    
+    // Rate limiting check
+    canSubmit: function() {
+      const lastSubmission = window.techpackLastSubmission || 0;
+      const now = Date.now();
+      return (now - lastSubmission) >= CONFIG.SUBMISSION_COOLDOWN;
+    },
+    
+    // Update last submission time
+    updateSubmissionTime: function() {
+      window.techpackLastSubmission = Date.now();
+    },
+    
+    // Format file size for display
+    formatFileSize: function(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+  };
+
+  // Google Drive Upload Utilities
+  const GoogleDriveUtils = {
+    // Convert file to base64 for upload
+    fileToBase64: function(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Remove the data:mime/type;base64, prefix
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+      });
+    },
+
+    // Upload file to Google Drive via Apps Script Web App
+    uploadFile: async function(file, onProgress = null) {
+      try {
+        if (!CONFIG.GOOGLE_DRIVE_WEB_APP_URL || CONFIG.GOOGLE_DRIVE_WEB_APP_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+          throw new Error('Google Drive Web App URL not configured. Please update CONFIG.GOOGLE_DRIVE_WEB_APP_URL');
+        }
+
+        debugSystem.log('📤 Starting Google Drive upload', { fileName: file.name });
+        
+        if (onProgress) onProgress(10, 'Converting file...');
+        
+        // Convert file to base64
+        const base64Data = await GoogleDriveUtils.fileToBase64(file);
+        
+        if (onProgress) onProgress(30, 'Uploading to Google Drive...');
+
+        // Get client information for folder organization
+        const companyName = document.getElementById('company-name')?.value || 'Unknown Company';
+        const clientName = companyName; // Use company name as client name for folder organization
+
+        // Prepare form data for Google Apps Script
+        const formData = new FormData();
+        formData.append('fileData', base64Data);
+        formData.append('fileName', file.name);
+        formData.append('mimeType', file.type);
+        formData.append('clientName', clientName);
+        formData.append('companyName', companyName);
+
+        // Upload to Google Drive via Apps Script
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), CONFIG.UPLOAD_TIMEOUT);
+
+        const response = await fetch(CONFIG.GOOGLE_DRIVE_WEB_APP_URL, {
+          method: 'POST',
+          body: formData,
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+        }
+
+        if (onProgress) onProgress(80, 'Processing response...');
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Upload failed');
+        }
+
+        if (onProgress) onProgress(100, 'Upload complete!');
+
+        debugSystem.log('✅ Google Drive upload successful', { 
+          fileName: file.name, 
+          fileId: result.fileId,
+          fileUrl: result.fileUrl 
+        });
+
+        return {
+          success: true,
+          fileId: result.fileId,
+          fileName: result.fileName,
+          fileUrl: result.fileUrl,
+          downloadUrl: result.downloadUrl,
+          folderId: result.folderId,
+          folderName: result.folderName,
+          folderPath: result.folderPath,
+          clientName: result.clientName
+        };
+
+      } catch (error) {
+        debugSystem.log('❌ Google Drive upload failed', { 
+          fileName: file.name, 
+          error: error.message 
+        }, 'error');
+
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    },
+
+    // Update UI with upload progress
+    updateFileProgress: function(fileId, progress, status) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      const progressContainer = fileItem.querySelector('.techpack-file__progress');
+      const progressFill = fileItem.querySelector('.techpack-file__progress-fill');
+      const fileName = fileItem.querySelector('.techpack-file__name');
+
+      if (progressContainer && progressFill) {
+        progressContainer.style.display = 'block';
+        progressFill.style.width = `${progress}%`;
+        
+        // Update file name to show status
+        if (fileName) {
+          const originalName = fileName.dataset.originalName || fileName.textContent;
+          if (!fileName.dataset.originalName) {
+            fileName.dataset.originalName = originalName;
+          }
+          fileName.textContent = `${originalName} - ${status}`;
+        }
+
+        // Hide progress when complete
+        if (progress >= 100) {
+          setTimeout(() => {
+            progressContainer.style.display = 'none';
+            if (fileName) {
+              fileName.textContent = fileName.dataset.originalName;
+            }
+          }, 2000);
+        }
+      }
+    },
+
+    // Show upload success indicator
+    showUploadSuccess: function(fileId, driveUrl) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      // Add success indicator
+      const successIcon = document.createElement('span');
+      successIcon.className = 'techpack-file__success-icon';
+      successIcon.innerHTML = '✅';
+      successIcon.style.marginLeft = '8px';
+      successIcon.title = 'Uploaded to Google Drive';
+
+      const fileName = fileItem.querySelector('.techpack-file__name');
+      if (fileName && !fileName.querySelector('.techpack-file__success-icon')) {
+        fileName.appendChild(successIcon);
+      }
+
+      // Store Google Drive URL in the file item
+      fileItem.dataset.driveUrl = driveUrl;
+    },
+
+    // Show upload error indicator
+    showUploadError: function(fileId, error) {
+      const fileItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (!fileItem) return;
+
+      // Add error indicator
+      const errorIcon = document.createElement('span');
+      errorIcon.className = 'techpack-file__error-icon';
+      errorIcon.innerHTML = '❌';
+      errorIcon.style.marginLeft = '8px';
+      errorIcon.title = `Upload failed: ${error}`;
+
+      const fileName = fileItem.querySelector('.techpack-file__name');
+      if (fileName && !fileName.querySelector('.techpack-file__error-icon')) {
+        fileName.appendChild(errorIcon);
+      }
+    }
+  };
+
+  // Utility function to get minimum quantity based on production type and colorway count
+  function getMinimumQuantity(colorwayCount, productionType) {
+    // Set defaults
+    colorwayCount = colorwayCount || 1;
+    
+    // Get production type from form if not provided
+    if (!productionType) {
+      var productionSelect = document.querySelector('#production-type, select[name="productionType"]');
+      productionType = productionSelect ? productionSelect.value : 'our-blanks';
+    }
+    
+    if (productionType === 'our-blanks') {
+      return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_SINGLE_COLORWAY : CONFIG.MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY;
+    }
+    
+    // Custom production uses the old minimums
+    return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_CUSTOM : CONFIG.MIN_COLORWAY_QUANTITY;
+  }
+
+  // Enhanced Application State
+  class TechPackState {
+    constructor() {
+      this.currentStep = 1;
+      this.isInitialized = false;
+      this.formData = {
+        clientInfo: {},
+        files: [],
+        garments: [],
+        requiredGarmentCount: 1
+      };
+      this.counters = {
+        file: 0,
+        garment: 0,
+        colorway: 0
+      };
+      this.ui = {
+        animations: new Map(),
+        validators: new Map(),
+        observers: new Set()
+      };
+    }
+
+    reset() {
+      this.currentStep = 1;
+      this.formData = { clientInfo: {}, files: [], garments: [] };
+      this.counters = { file: 0, garment: 0, colorway: 0 };
+      this.ui.animations.clear();
+      this.ui.validators.clear();
+    }
+
+    // Deep clone for immutability
+    getState() {
+      return JSON.parse(JSON.stringify({
+        currentStep: this.currentStep,
+        formData: this.formData,
+        counters: this.counters
+      }));
+    }
+
+    setState(newState) {
+      Object.assign(this, newState);
+      this.notifyObservers();
+    }
+
+    subscribe(callback) {
+      this.ui.observers.add(callback);
+      return () => this.ui.observers.delete(callback);
+    }
+
+    notifyObservers() {
+      this.ui.observers.forEach(callback => callback(this.getState()));
+    }
+  }
+
+  // Enhanced Debug System
+  class DebugSystem {
+    constructor() {
+      this.enabled = false;
+      this.panel = null;
+      this.content = null;
+      this.logs = [];
+      this.maxLogs = 100;
+    }
+
+    init() {
+      this.createPanel();
+      this.setupKeyboardShortcuts();
+    }
+
+    createPanel() {
+      this.panel = document.createElement('div');
+      this.panel.id = 'debug-panel';
+      this.panel.className = 'debug-panel';
+      this.panel.style.cssText = `
+        position: fixed; top: 20px; right: 20px; width: 350px; max-height: 400px;
+        background: rgba(0,0,0,0.9); color: #fff; border-radius: 8px; padding: 15px;
+        font-family: 'Courier New', monospace; font-size: 11px; z-index: 10000;
+        display: none; overflow-y: auto; backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+      `;
+
+      this.content = document.createElement('div');
+      this.content.id = 'debug-content';
+      this.panel.appendChild(this.content);
+
+      const controls = document.createElement('div');
+      controls.style.cssText = 'position: sticky; top: 0; background: inherit; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);';
+      controls.innerHTML = `
+        <button onclick="debugSystem.clear()" style="background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; margin-right: 5px; cursor: pointer;">Clear</button>
+        <button onclick="debugSystem.exportLogs()" style="background: #333; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Export</button>
+      `;
+      this.panel.insertBefore(controls, this.content);
+
+      document.body.appendChild(this.panel);
+    }
+
+    setupKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+          e.preventDefault();
+          this.toggle();
+        }
+      });
+    }
+
+    log(message, data = null, level = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = {
+        timestamp,
+        message,
+        data,
+        level,
+        id: Date.now() + Math.random()
+      };
+
+      this.logs.push(logEntry);
+      if (this.logs.length > this.maxLogs) {
+        this.logs.shift();
+      }
+
+      if (this.enabled && this.content) {
+        this.renderLog(logEntry);
+      }
+
+      // Console output with styling
+      const style = {
+        info: 'color: #3b82f6',
+        warn: 'color: #f59e0b',
+        error: 'color: #ef4444',
+        success: 'color: #10b981'
       };
       console.log(`%c[${timestamp}] ${message}`, style[level] || style.info, data || '');
     }
@@ -3090,9 +3927,6 @@ ss: 'color: #10b981'
       const garment = clone.querySelector('.techpack-garment');
       
       garment.dataset.garmentId = garmentId;
-      
-      // Replace GARMENT_ID placeholders in HTML with actual garment ID
-      garment.innerHTML = garment.innerHTML.replace(/GARMENT_ID/g, garmentId);
       
       // Set the garment number based on current count of garments, not counter
       const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
@@ -9861,17 +10695,15 @@ setupInitialization();
     }
 
     bindEventListeners() {
-      // Sample type radio button changes - FIXED: Per-garment sample type handling
+      // Sample type radio button changes (mutual exclusivity with proper reset)
       document.addEventListener('change', (e) => {
-        if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
-          const garmentId = e.target.name.split('garment-sample-type-')[1];
-          this.handleSampleTypeChange(e.target.value, garmentId);
+        if (e.target.name === 'garment-sample-type') {
+          this.handleSampleTypeChange(e.target.value);
         }
         
-        // Stock fabric color selection (per-garment)
-        if (e.target.name && e.target.name.startsWith('stock-fabric-color-')) {
-          const garmentId = e.target.name.replace('stock-fabric-color-', '');
-          this.handleStockColorChange(e.target.value, garmentId);
+        // Stock fabric color selection
+        if (e.target.name === 'stock-fabric-color') {
+          this.handleStockColorChange(e.target.value);
         }
         
         // Lab dip selection for custom sample
@@ -9887,8 +10719,24 @@ setupInitialization();
         }
       });
       
-      // REMOVED: Conflicting click handler - let native radio buttons work
-      // Native radio buttons will now handle their own events properly
+      // Add click handling for sample cards - FIXED: Proper radio button behavior
+      document.addEventListener('click', (e) => {
+        const sampleCard = e.target.closest('.techpack-sample-card');
+        if (sampleCard) {
+          const radio = sampleCard.querySelector('.techpack-sample-radio');
+          if (radio && !radio.checked) {
+            // Protect during selection
+            this.isUserInteracting = true;
+            setTimeout(() => { this.isUserInteracting = false; }, 1500);
+            
+            // Only select if not already selected - no deselection allowed for radio buttons
+            // Clear other selections first
+            document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
+            radio.checked = true;
+            this.handleSampleTypeChange(radio.value);
+          }
+        }
+      });
 
       // Lab dip management buttons - NEW DUAL MODE SYSTEM
       document.addEventListener('click', (e) => {
@@ -10067,19 +10915,14 @@ setupInitialization();
     }
     
     // Reset stock color selection when changing sample types
-    resetStockColorSelection(garmentId) {
-      // Clear stock color radio buttons for specific garment
-      const stockColorInputs = document.querySelectorAll(`input[name="stock-fabric-color-${garmentId}"]`);
+    resetStockColorSelection() {
+      // Clear all stock color radio buttons
+      const stockColorInputs = document.querySelectorAll('input[name="stock-fabric-color"]');
       stockColorInputs.forEach(input => {
         input.checked = false;
       });
       
-      // Clear the garment's stock color state
-      if (this.perGarmentSampleState.has(garmentId)) {
-        this.perGarmentSampleState.get(garmentId).stockColor = null;
-      }
-      
-      debugSystem.log('Stock color selection reset for garment:', garmentId);
+      debugSystem.log('Stock color selection reset');
     }
     
     // Initialize dual-mode system on page load
@@ -10265,57 +11108,42 @@ setupInitialization();
       }, 5000);
     }
 
-    // Handle sample type selection - UPDATED: Per-garment handling
-    handleSampleTypeChange(type, garmentId) {
+    // Handle sample type selection (mutual exclusivity with proper reset)
+    handleSampleTypeChange(type) {
       // Protect user interaction from validation interference
       this.isUserInteracting = true;
       setTimeout(() => { this.isUserInteracting = false; }, 2000); // 2 second protection
       
-      // Initialize per-garment sample state if not exists
-      if (!this.perGarmentSampleState) {
-        this.perGarmentSampleState = new Map();
-      }
-      
-      // Get or create garment sample state
-      if (!this.perGarmentSampleState.has(garmentId)) {
-        this.perGarmentSampleState.set(garmentId, {
-          type: null,
-          stockColor: null,
-          selectedLabDipId: null
-        });
-      }
-      
-      const garmentState = this.perGarmentSampleState.get(garmentId);
-      const previousType = garmentState.type;
-      garmentState.type = type;
+      const previousType = this.sampleState.type;
+      this.sampleState.type = type;
       
       // RESET LOGIC: Clear previous selections when changing sample types OR deselecting
       if (previousType !== type) {
         if (previousType === 'stock') {
-          // Reset stock color selection for this garment
-          garmentState.stockColor = null;
-          this.resetStockColorSelection(garmentId);
+          // Reset stock color selection
+          this.sampleState.stockColor = null;
+          this.resetStockColorSelection();
         }
         
         if (previousType === 'custom') {
-          // Reset custom lab dip selection for this garment
-          garmentState.selectedLabDipId = null;
+          // Reset custom lab dip selection
+          this.sampleState.selectedLabDipId = null;
         }
       }
       
       // Handle deselection (type is null)
       if (type === null) {
-        // Reset all selections for this garment
-        garmentState.stockColor = null;
-        garmentState.selectedLabDipId = null;
-        this.resetStockColorSelection(garmentId);
+        // Reset all selections
+        this.sampleState.stockColor = null;
+        this.sampleState.selectedLabDipId = null;
+        this.resetStockColorSelection();
       }
       
-      // Show/hide sample options based on selection for this specific garment
-      this.updateCardStates(garmentId);
+      // Show/hide sample options based on selection
+      this.updateCardStates();
       
       // Update dynamic subtitle for stock option (with reset)
-      this.updateStockSubtitle(garmentId);
+      this.updateStockSubtitle();
       
       // Update lab dip selection area when custom color is selected
       this.updateLabDipSelectionArea();
@@ -10327,14 +11155,10 @@ setupInitialization();
       debugSystem.log('Sample type changed to:', type, 'from:', previousType);
     }
 
-    // Update card visual states and show/hide options - UPDATED: Per-garment
-    updateCardStates(garmentId) {
-      // Find cards within the specific garment
-      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garment) return;
-      
-      const stockCard = garment.querySelector('[data-sample-type="stock"]');
-      const customCard = garment.querySelector('[data-sample-type="custom"]');
+    // Update card visual states and show/hide options with immediate feedback
+    updateCardStates() {
+      const stockCard = document.querySelector('[data-sample-type="stock"]');
+      const customCard = document.querySelector('[data-sample-type="custom"]');
       const stockOptions = stockCard?.querySelector('.techpack-sample-options');
       const customOptions = customCard?.querySelector('.techpack-sample-options');
       
@@ -10342,27 +11166,24 @@ setupInitialization();
       this.addCardTransition(stockCard);
       this.addCardTransition(customCard);
       
-      // Get garment-specific state
-      const garmentState = this.perGarmentSampleState?.get(garmentId) || { type: null };
-      
-      if (garmentState.type === 'stock') {
+      if (this.sampleState.type === 'stock') {
         // Stock selected - show stock options, hide custom
         this.activateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log(`✅ Stock sample type activated for garment ${garmentId}`);
-      } else if (garmentState.type === 'custom') {
+        debugSystem.log('✅ Stock sample type activated');
+      } else if (this.sampleState.type === 'custom') {
         // Custom selected - show custom options, hide stock
         this.activateCard(customCard, customOptions);
         this.deactivateCard(stockCard, stockOptions);
         
-        debugSystem.log(`✅ Custom sample type activated for garment ${garmentId}`);
+        debugSystem.log('✅ Custom sample type activated');
       } else {
         // No selection - hide all options
         this.deactivateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log(`ℹ️ No sample type selected for garment ${garmentId} - showing selection prompt`);
+        debugSystem.log('ℹ️ No sample type selected - showing selection prompt');
       }
       
       // Update step validation status immediately
@@ -10446,36 +11267,25 @@ setupInitialization();
     }
 
     // Handle stock fabric color selection
-    handleStockColorChange(color, garmentId) {
-      // Initialize garment state if not exists
-      if (!this.perGarmentSampleState.has(garmentId)) {
-        this.perGarmentSampleState.set(garmentId, {
-          type: null,
-          stockColor: null,
-          selectedLabDipId: null
-        });
-      }
-      
-      const garmentState = this.perGarmentSampleState.get(garmentId);
-      garmentState.stockColor = color;
-      this.updateStockSubtitle(garmentId);
+    handleStockColorChange(color) {
+      this.sampleState.stockColor = color;
+      this.updateStockSubtitle();
       this.debouncedUpdateValidation();
-      debugSystem.log('Stock color selected for garment:', garmentId, color);
+      debugSystem.log('Stock color selected:', color);
     }
 
     // Update stock subtitle based on selection
-    updateStockSubtitle(garmentId) {
-      const subtitle = document.getElementById(`stock-subtitle-${garmentId}`);
+    updateStockSubtitle() {
+      const subtitle = document.getElementById('stock-subtitle');
       if (!subtitle) return;
       
-      const garmentState = this.perGarmentSampleState.get(garmentId);
-      if (garmentState && garmentState.stockColor) {
+      if (this.sampleState.stockColor) {
         const colorMap = {
           'black': 'Black',
           'off-white': 'Off-White / Natural', 
           'random': 'Random Stock Color'
         };
-        subtitle.textContent = `Selected: ${colorMap[garmentState.stockColor]}`;
+        subtitle.textContent = `Selected: ${colorMap[this.sampleState.stockColor]}`;
       } else {
         subtitle.textContent = 'Choose from available stock colors for faster turnaround.';
       }
