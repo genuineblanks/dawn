@@ -316,6 +316,7 @@
     </script>
 
     {{ 'wholesale.css' | asset_url | stylesheet_tag }}
+    {{ 'techpack-app.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="{% if template contains 'bss-b2b-wholesaler-22949' %}wholesale-form{% endif %} {% if template contains 'index' %}home-section{% endif %} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
