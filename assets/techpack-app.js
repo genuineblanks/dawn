@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration - Template Fix Version
+  // Enhanced Configuration - Nuclear Fix Version
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3926,14 +3926,15 @@
       
       if (!template || !container) return;
 
-      // EMERGENCY DEBUG: Check template content before cloning
+      // EMERGENCY DEBUG: Check template content before cloning - FIXED: Use template.content
+      const templateContentHTML = template.content ? template.content.innerHTML : 'NO CONTENT';
       debugSystem.log('🔍 TEMPLATE INVESTIGATION:', {
         templateFound: !!template,
         templateContent: !!template.content,
         templateInnerHTML: template.innerHTML,
-        templateContentHTML: template.content ? template.content.innerHTML : 'NO CONTENT',
-        containsGarmentID: template.innerHTML.includes('GARMENT_ID'),
-        garmentIDCount: (template.innerHTML.match(/GARMENT_ID/g) || []).length
+        templateContentHTML: templateContentHTML,
+        containsGarmentID: templateContentHTML.includes('GARMENT_ID'),
+        garmentIDCount: (templateContentHTML.match(/GARMENT_ID/g) || []).length
       });
 
       const garmentId = `garment-${++state.counters.garment}`;
@@ -4017,11 +4018,52 @@
         window.sampleManager.initializeGarmentSampleData(garmentId);
         // Recheck request type to show/hide sample sections
         setTimeout(() => window.sampleManager.checkRequestType(), 50);
+        // EMERGENCY FIX: Fix duplicate radio IDs
+        setTimeout(() => this.fixDuplicateRadioIds(), 75);
         // EMERGENCY DEBUG: Inspect all radio buttons in DOM after garment addition
         setTimeout(() => this.debugAllRadioButtons(), 100);
       }
       
       debugSystem.log('Garment added', { garmentId });
+    }
+    
+    // EMERGENCY FIX: Manually fix duplicate IDs if template replacement fails
+    fixDuplicateRadioIds() {
+      debugSystem.log('🔧 MANUALLY FIXING DUPLICATE RADIO IDs');
+      
+      const garments = document.querySelectorAll('.techpack-garment[data-garment-id]');
+      garments.forEach(garment => {
+        const garmentId = garment.dataset.garmentId;
+        const radioButtons = garment.querySelectorAll('input[type="radio"]');
+        
+        radioButtons.forEach(radio => {
+          const oldId = radio.id;
+          const oldName = radio.name;
+          
+          // Fix sample type radio buttons
+          if (radio.name === 'garment-sample-type' && radio.value === 'stock') {
+            radio.id = `sample-stock-${garmentId}`;
+            radio.name = `garment-sample-type-${garmentId}`;
+            // Fix associated label
+            const label = garment.querySelector(`label[for="${oldId}"]`);
+            if (label) label.setAttribute('for', radio.id);
+          } else if (radio.name === 'garment-sample-type' && radio.value === 'custom') {
+            radio.id = `sample-custom-${garmentId}`;
+            radio.name = `garment-sample-type-${garmentId}`;
+            // Fix associated label
+            const label = garment.querySelector(`label[for="${oldId}"]`);
+            if (label) label.setAttribute('for', radio.id);
+          }
+          
+          debugSystem.log('🔄 Fixed radio button:', {
+            garmentId,
+            oldId,
+            newId: radio.id,
+            oldName,
+            newName: radio.name
+          });
+        });
+      });
     }
     
     // EMERGENCY DEBUG: Function to inspect all radio buttons in DOM
@@ -10828,12 +10870,24 @@ setupInitialization();
         }
         // Method 2: TEMPORARY FIX - Broken naming (garment-sample-type) 
         else if (e.target.name === 'garment-sample-type') {
-          // Extract garment ID from DOM structure
+          // Extract garment ID from DOM structure with detailed debugging
           const garmentContainer = e.target.closest('[data-garment-id]');
+          debugSystem.log('🔍 DOM EXTRACTION DEBUG:', {
+            targetElement: e.target,
+            targetName: e.target.name,
+            targetId: e.target.id,
+            garmentContainerFound: !!garmentContainer,
+            garmentContainerDataset: garmentContainer?.dataset,
+            garmentId: garmentContainer?.dataset?.garmentId,
+            closestGarmentQuery: '[data-garment-id]'
+          });
+          
           if (garmentContainer && garmentContainer.dataset.garmentId) {
             garmentId = garmentContainer.dataset.garmentId;
             shouldHandle = true;
-            debugSystem.log('🔧 TEMPORARY FIX: Extracted garment ID from DOM');
+            debugSystem.log('🔧 TEMPORARY FIX: Extracted garment ID from DOM:', garmentId);
+          } else {
+            debugSystem.log('❌ TEMPORARY FIX FAILED: Could not extract garment ID');
           }
         }
         
@@ -13733,6 +13787,14 @@ setupInitialization();
         garment: radio.closest('[data-garment-id]')?.dataset?.garmentId
       });
     });
+  };
+
+  // EMERGENCY FIX: Global function to manually fix duplicate IDs
+  window.fixDuplicateIds = function() {
+    if (window.techpackApp && window.techpackApp.garmentManager) {
+      window.techpackApp.garmentManager.fixDuplicateRadioIds();
+      console.log('✅ Manually fixed duplicate radio button IDs');
+    }
   };
 
 })();
