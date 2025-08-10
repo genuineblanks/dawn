@@ -13076,7 +13076,8 @@ setupInitialization();
     showHelpModal() {
       const modal = document.getElementById('step-3-help-modal');
       if (modal) {
-        modal.style.display = 'flex';
+        // Use CSS .active class instead of inline styles
+        modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         
         // Focus management for accessibility
@@ -13094,7 +13095,8 @@ setupInitialization();
     hideHelpModal() {
       const modal = document.getElementById('step-3-help-modal');
       if (modal) {
-        modal.style.display = 'none';
+        // Use CSS .active class instead of inline styles
+        modal.classList.remove('active');
         document.body.style.overflow = '';
         
         // Return focus to help button
