@@ -2138,20 +2138,107 @@
                 custom: !!customRadio 
               });
               
+              // Clear sample type selection errors
+              const sampleTypeSection = sampleSection.querySelector('.techpack-sample-type-selection');
+              if (sampleTypeSection) {
+                const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
+                sampleCards.forEach(card => {
+                  card.classList.remove('techpack-sample-card--error');
+                });
+                const errorElement = sampleTypeSection.querySelector('.techpack-sample-type-error');
+                if (errorElement) {
+                  errorElement.style.display = 'none';
+                }
+              }
+              
               // Additional validation for custom color samples
               if (customRadio) {
-                const labDipSelect = sampleSection.querySelector('select[name="selected-lab-dip"]');
-                if (labDipSelect && !labDipSelect.value) {
-                  // Check if we have any lab dips available
-                  const hasLabDips = labDipSelect.options.length > 1; // More than just the default "No Lab Dips" option
-                  if (!hasLabDips) {
-                    debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dips available`, null, 'warning');
-                    // This is OK - user can still proceed, they just need to add lab dips
+                const labDipSelection = sampleSection.querySelector('.techpack-lab-dip-selection');
+                const selectedLabDip = sampleSection.querySelector('.techpack-lab-dip-selection-card.selected');
+                const labDipSelectionEmpty = sampleSection.querySelector('.techpack-lab-dip-selection-empty');
+                
+                // Check if lab dip selection is required and present
+                if (labDipSelection) {
+                  // Check if there are lab dips available
+                  const hasLabDipsAvailable = labDipSelectionEmpty && labDipSelectionEmpty.style.display === 'none';
+                  
+                  if (!hasLabDipsAvailable) {
+                    // No lab dips available at all
+                    isValid = false;
+                    debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dips available - user must add lab dips first`, null, 'error');
+                    
+                    // Show error on the lab dip selection area
+                    const labDipGroup = labDipSelection.closest('.techpack-form__group');
+                    const labDipError = labDipGroup?.querySelector('.techpack-form__error');
+                    if (labDipGroup) labDipGroup.classList.add('techpack-form__group--error');
+                    if (labDipError) labDipError.textContent = 'Please add at least one Lab Dip below, then select it here';
+                    
+                  } else if (!selectedLabDip) {
+                    // Lab dips available but none selected
+                    isValid = false;
+                    debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dip selected for application`, null, 'error');
+                    
+                    // Show error on the lab dip selection area
+                    const labDipGroup = labDipSelection.closest('.techpack-form__group');
+                    const labDipError = labDipGroup?.querySelector('.techpack-form__error');
+                    if (labDipGroup) labDipGroup.classList.add('techpack-form__group--error');
+                    if (labDipError) labDipError.textContent = 'Please select which Lab Dip to apply to this custom color garment';
+                    
+                  } else {
+                    // Lab dip properly selected
+                    debugSystem.log(`Garment ${index + 1}: Custom color with lab dip selected`, { 
+                      selectedLabDipId: selectedLabDip.dataset.labDipId 
+                    });
+                    
+                    // Clear any existing errors
+                    const labDipGroup = labDipSelection.closest('.techpack-form__group');
+                    const labDipError = labDipGroup?.querySelector('.techpack-form__error');
+                    if (labDipGroup) labDipGroup.classList.remove('techpack-form__group--error');
+                    if (labDipError) labDipError.textContent = '';
                   }
                 }
               }
             } else {
-              debugSystem.log(`Garment ${index + 1}: No sample type selected`, null, 'warning');
+              // No sample type selected - this is required
+              isValid = false;
+              debugSystem.log(`Garment ${index + 1}: No sample type selected - sample type selection is required`, null, 'error');
+              
+              // Show error on the sample type selection
+              const sampleTypeSection = sampleSection.querySelector('.techpack-sample-type-selection');
+              if (sampleTypeSection) {
+                // Add error styling to the sample type selection cards
+                const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
+                sampleCards.forEach(card => {
+                  card.classList.add('techpack-sample-card--error');
+                });
+                
+                // Find or create an error message element
+                let errorElement = sampleTypeSection.querySelector('.techpack-sample-type-error');
+                if (!errorElement) {
+                  errorElement = document.createElement('div');
+                  errorElement.className = 'techpack-sample-type-error';
+                  errorElement.style.cssText = `
+                    color: var(--techpack-error);
+                    font-size: 0.875rem;
+                    margin-top: 0.75rem;
+                    padding: 0.75rem;
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  `;
+                  errorElement.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
+                    </svg>
+                    <span>Please select a sample type to continue</span>
+                  `;
+                  sampleTypeSection.appendChild(errorElement);
+                }
+                errorElement.style.display = 'flex';
+              }
             }
           }
         });
