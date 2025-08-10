@@ -1,4 +1,30 @@
-der: #e5e7eb;
+/* Premium Tech-Pack App Styles - Luxury Minimalist Design */
+/* Sophisticated grayscale palette with premium typography and spacing */
+
+/* CSS Custom Properties - Premium Luxury Palette */
+:root {
+  /* Primary Colors - Sophisticated Black/White/Grey */
+  --techpack-primary: #000000;
+  --techpack-primary-hover: #1a1a1a;
+  --techpack-primary-light: #f8f9fa;
+  --techpack-primary-dark: #000000;
+  
+  /* Secondary & Neutral Colors - Refined Grey Scale */
+  --techpack-secondary: #6b7280;
+  --techpack-success: #000000;
+  --techpack-error: #dc2626;
+  --techpack-warning: #6b7280;
+  --techpack-info: #000000;
+  
+  /* Background Colors - Pure & Clean */
+  --techpack-bg: #ffffff;
+  --techpack-bg-secondary: #f9fafb;
+  --techpack-bg-tertiary: #f3f4f6;
+  --techpack-bg-accent: #f1f3f4;
+  --techpack-bg-dark: #000000;
+  
+  /* Border & Divider Colors - Ultra Subtle */
+  --techpack-border: #e5e7eb;
   --techpack-border-light: #f3f4f6;
   --techpack-border-accent: #d1d5db;
   --techpack-border-dark: #374151;
@@ -77,8 +103,6 @@ body {
   background: var(--techpack-bg);
   position: relative;
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Tech pack app wrapper for proper spacing with other sections */
@@ -252,6 +276,10 @@ body {
   box-shadow: var(--techpack-shadow-lg);
   border: 1px solid var(--techpack-border-light);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .techpack-title {
