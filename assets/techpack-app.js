@@ -11992,9 +11992,8 @@ setupInitialization();
               // Update garment name placeholders
               this.updateGarmentNamePlaceholders(card, garment);
               
-              // Check if this lab dip is assigned to this garment
-              const garmentId = garment.dataset.garmentId;
-              const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
+              // This lab dip is assigned to this garment (filtered above)
+              // garmentId already available in scope from line 11956
               
               // Auto-select if assigned (always true here since we filtered above)
               card.classList.add('techpack-lab-dip-selection-card--selected');
