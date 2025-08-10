@@ -1,30 +1,4 @@
-/* Premium Tech-Pack App Styles - Luxury Minimalist Design */
-/* Sophisticated grayscale palette with premium typography and spacing */
-
-/* CSS Custom Properties - Premium Luxury Palette */
-:root {
-  /* Primary Colors - Sophisticated Black/White/Grey */
-  --techpack-primary: #000000;
-  --techpack-primary-hover: #1a1a1a;
-  --techpack-primary-light: #f8f9fa;
-  --techpack-primary-dark: #000000;
-  
-  /* Secondary & Neutral Colors - Refined Grey Scale */
-  --techpack-secondary: #6b7280;
-  --techpack-success: #000000;
-  --techpack-error: #dc2626;
-  --techpack-warning: #6b7280;
-  --techpack-info: #000000;
-  
-  /* Background Colors - Pure & Clean */
-  --techpack-bg: #ffffff;
-  --techpack-bg-secondary: #f9fafb;
-  --techpack-bg-tertiary: #f3f4f6;
-  --techpack-bg-accent: #f1f3f4;
-  --techpack-bg-dark: #000000;
-  
-  /* Border & Divider Colors - Ultra Subtle */
-  --techpack-border: #e5e7eb;
+der: #e5e7eb;
   --techpack-border-light: #f3f4f6;
   --techpack-border-accent: #d1d5db;
   --techpack-border-dark: #374151;
@@ -102,6 +76,9 @@ body {
   padding: var(--techpack-space-2xl);
   background: var(--techpack-bg);
   position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Tech pack app wrapper for proper spacing with other sections */
@@ -127,9 +104,11 @@ body {
   
   /* Fix white space issues on mobile */
   .techpack-step {
-    min-height: auto;
+    min-height: calc(100vh - 200px);
     height: auto;
     padding-bottom: 80px; /* Account for sticky buttons */
+    display: flex;
+    flex-direction: column;
   }
   
   .techpack-content {
@@ -642,9 +621,10 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: var(--techpack-space-lg);
-  margin-top: var(--techpack-space-4xl);
+  margin-top: auto;
   padding-top: var(--techpack-space-2xl);
   border-top: 1px solid var(--techpack-border-light);
+  flex-shrink: 0;
 }
 
 /* Premium File Upload */
@@ -4641,7 +4621,7 @@ body {
   
   .techpack-step {
     width: 100%;
-    min-height: calc(100vh - 4rem);
+    min-height: calc(100vh - 200px);
     position: relative;
     overflow: visible;
   }
@@ -5234,7 +5214,7 @@ body {
   /* ENHANCED: Step spacing */
   .techpack-step {
     padding-bottom: 140px !important; /* Account for fixed navigation */
-    min-height: 100vh !important;
+    min-height: calc(100vh - 150px) !important;
   }
 
   /* ENHANCED: Form inputs with better touch targets */
