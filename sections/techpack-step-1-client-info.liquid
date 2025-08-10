@@ -2,7 +2,7 @@
 Tech-Pack Pre-Step: Client Registration Check - Premium Design
 {% endcomment %}
 
-{{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
 
 <section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
   <div class="techpack-entrance-container">
