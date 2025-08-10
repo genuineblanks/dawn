@@ -2120,75 +2120,59 @@
       const requestType = document.getElementById('request-type')?.value;
       
       if (requestType === 'sample-request') {
-        // For sample requests: Validate sample options, size, and fit type
+        // For sample requests: Validate that at least one garment has sample options selected
+        let hasSampleSelections = false;
+        
         garmentElements.forEach((garmentElement, index) => {
-          const sampleOptionsSelected = garmentElement.querySelectorAll('.techpack-sample-compact-checkbox:checked');
+          const sampleSection = garmentElement.querySelector('.techpack-garment-samples[data-sample-request-only]');
           
-          if (sampleOptionsSelected.length > 0) {
-            // Check if sample size is selected
-            const sampleSizeSelect = garmentElement.querySelector('.techpack-garment-sample-size');
-            if (!sampleSizeSelect || !sampleSizeSelect.value) {
-              isValid = false;
-              // Add error styling and message
-              const sampleSizeGroup = sampleSizeSelect?.closest('.techpack-form__group');
-              if (sampleSizeGroup) {
-                sampleSizeGroup.classList.add('techpack-form__group--error');
-                const errorDiv = sampleSizeGroup.querySelector('.techpack-form__error');
-                if (errorDiv) {
-                  errorDiv.textContent = 'Sample size is required when sample options are selected';
-                  errorDiv.style.display = 'block';
+          if (sampleSection && sampleSection.style.display !== 'none') {
+            // Check if any sample type is selected (stock or custom)
+            const stockRadio = sampleSection.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
+            const customRadio = sampleSection.querySelector('input[name="garment-sample-type"][value="custom"]:checked');
+            
+            if (stockRadio || customRadio) {
+              hasSampleSelections = true;
+              debugSystem.log(`Garment ${index + 1}: Sample type selected`, { 
+                stock: !!stockRadio, 
+                custom: !!customRadio 
+              });
+              
+              // Additional validation for custom color samples
+              if (customRadio) {
+                const labDipSelect = sampleSection.querySelector('select[name="selected-lab-dip"]');
+                if (labDipSelect && !labDipSelect.value) {
+                  // Check if we have any lab dips available
+                  const hasLabDips = labDipSelect.options.length > 1; // More than just the default "No Lab Dips" option
+                  if (!hasLabDips) {
+                    debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dips available`, null, 'warning');
+                    // This is OK - user can still proceed, they just need to add lab dips
+                  }
                 }
               }
-              debugSystem.log(`Garment ${index + 1}: Sample size required`, null, 'error');
             } else {
-              // Clear error if size is selected
-              const sampleSizeGroup = sampleSizeSelect?.closest('.techpack-form__group');
-              if (sampleSizeGroup) {
-                sampleSizeGroup.classList.remove('techpack-form__group--error');
-                const errorDiv = sampleSizeGroup.querySelector('.techpack-form__error');
-                if (errorDiv) {
-                  errorDiv.textContent = '';
-                  errorDiv.style.display = 'none';
-                }
-              }
-            }
-
-            // Check if fit type is selected
-            const fitTypeSelect = garmentElement.querySelector('.techpack-garment-fit-type');
-            if (!fitTypeSelect || !fitTypeSelect.value) {
-              isValid = false;
-              // Add error styling and message
-              const fitTypeGroup = fitTypeSelect?.closest('.techpack-form__group');
-              if (fitTypeGroup) {
-                fitTypeGroup.classList.add('techpack-form__group--error');
-                const errorDiv = fitTypeGroup.querySelector('.techpack-form__error');
-                if (errorDiv) {
-                  errorDiv.textContent = 'Fit type is required when sample options are selected';
-                  errorDiv.style.display = 'block';
-                }
-              }
-              debugSystem.log(`Garment ${index + 1}: Fit type required`, null, 'error');
-            } else {
-              // Clear error if fit type is selected
-              const fitTypeGroup = fitTypeSelect?.closest('.techpack-form__group');
-              if (fitTypeGroup) {
-                fitTypeGroup.classList.remove('techpack-form__group--error');
-                const errorDiv = fitTypeGroup.querySelector('.techpack-form__error');
-                if (errorDiv) {
-                  errorDiv.textContent = '';
-                  errorDiv.style.display = 'none';
-                }
-              }
+              debugSystem.log(`Garment ${index + 1}: No sample type selected`, null, 'warning');
             }
           }
         });
         
+        // For sample requests, we need basic garment info AND at least one sample selection
+        if (!hasSampleSelections) {
+          isValid = false;
+          debugSystem.log('Sample request validation failed: No sample selections found', null, 'error');
+        }
+        
+        // Also validate using the sampleManager if available
         if (window.sampleManager && window.sampleManager.validateSampleSelections) {
           const sampleValidation = window.sampleManager.validateSampleSelections();
           debugSystem.log('Sample validation result', { 
             basicGarmentInfo: isValid, 
-            sampleSelections: sampleValidation 
+            hasSampleSelections: hasSampleSelections,
+            sampleManagerValidation: sampleValidation 
           });
+          
+          // Combine validations - we need both basic info AND sample selections
+          isValid = isValid && (hasSampleSelections || sampleValidation);
         }
       } else {
         // Bulk requests need full validation (colorway quantities, etc.)
@@ -11576,10 +11560,16 @@ setupInitialization();
   // Make it globally available
   window.sampleManager = sampleManager;
 
-  // Integrate with existing step navigation
+  // Integrate with existing step navigation - FIXED to use proper validation flow
   const originalValidateStep = window.validateStep;
   window.validateStep = function(stepNumber) {
     if (stepNumber === 3) {
+      // Use the main validateStep3() method which handles both sample and bulk requests properly
+      if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+        return stepManager.validateStep3();
+      }
+      
+      // Fallback: if stepManager not available, handle basic validation
       const requestType = document.getElementById('request-type')?.value;
       if (requestType === 'sample-request') {
         return sampleManager.validateSampleSelections();
@@ -11587,5 +11577,82 @@ setupInitialization();
     }
     return originalValidateStep ? originalValidateStep(stepNumber) : true;
   };
+
+  // Initialize Help System
+  const helpSystem = {
+    init() {
+      this.bindHelpEvents();
+    },
+
+    bindHelpEvents() {
+      // Help button click
+      const helpBtn = document.getElementById('step-3-help-btn');
+      if (helpBtn) {
+        helpBtn.addEventListener('click', () => this.showHelpModal());
+      }
+
+      // Close help modal
+      const closeBtn = document.getElementById('close-help-modal');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => this.hideHelpModal());
+      }
+
+      // Close on backdrop click
+      const modal = document.getElementById('step-3-help-modal');
+      if (modal) {
+        const backdrop = modal.querySelector('.techpack-modal__backdrop');
+        if (backdrop) {
+          backdrop.addEventListener('click', () => this.hideHelpModal());
+        }
+      }
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.hideHelpModal();
+        }
+      });
+    },
+
+    showHelpModal() {
+      const modal = document.getElementById('step-3-help-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Focus management for accessibility
+        setTimeout(() => {
+          const firstFocusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
+        }, 100);
+
+        debugSystem.log('Help modal opened');
+      }
+    },
+
+    hideHelpModal() {
+      const modal = document.getElementById('step-3-help-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        
+        // Return focus to help button
+        const helpBtn = document.getElementById('step-3-help-btn');
+        if (helpBtn) {
+          helpBtn.focus();
+        }
+
+        debugSystem.log('Help modal closed');
+      }
+    }
+  };
+
+  // Initialize help system
+  helpSystem.init();
+
+  // Make help system globally available
+  window.helpSystem = helpSystem;
 
 })();
