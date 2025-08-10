@@ -15,26 +15,13 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         <p class="techpack-entrance-hero__subtitle">
           Transform your designs into reality with our expert garment development process
         </p>
-        <div class="techpack-entrance-hero__badges">
-          <div class="techpack-hero-badge">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 12l-4-4 4-4h4v8H8z"/>
-            </svg>
-            Industry Experts
-          </div>
-          <div class="techpack-hero-badge">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            24-48h Turnaround
-          </div>
-          <div class="techpack-hero-badge">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <circle cx="8" cy="8" r="3"/>
-              <path d="M12 2v4h4"/>
-            </svg>
-            Premium Quality
-          </div>
+        <div class="techpack-entrance-hero__buttons">
+          <button class="techpack-btn-hero" onclick="document.getElementById('techpack-step-1').style.display='none'; document.getElementById('techpack-step-1-form').style.display='block';">
+            Start Your Submission
+          </button>
+          <button class="techpack-btn-outline" onclick="toggleProcessInfo()">
+            Learn How It Works
+          </button>
         </div>
       </div>
     </div>
@@ -125,8 +112,8 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
       </div>
     </div>
 
-    <!-- Process Flow -->
-    <div class="techpack-entrance-process">
+    <!-- Process Flow - Hidden in minimal design -->
+    <div class="techpack-entrance-process" style="display: none;" id="process-info">
       <h2 class="techpack-section-title">How Our TechPack Process Works</h2>
       <p class="techpack-section-subtitle">From concept to creation in 5 streamlined steps</p>
       
@@ -655,6 +642,17 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
     </div>
   </div>
 </div>
+
+<script>
+  function toggleProcessInfo() {
+    const processSection = document.getElementById('process-info');
+    if (processSection.style.display === 'none' || processSection.style.display === '') {
+      processSection.style.display = 'block';
+    } else {
+      processSection.style.display = 'none';
+    }
+  }
+</script>
 
 <!-- Load Tech Pack Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
