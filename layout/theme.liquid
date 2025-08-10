@@ -771,35 +771,13 @@
                 }
               }, 300);
             });
-          } else if (!isHomepage) {
-            // For non-homepage, always scroll to top
-            console.log('📄 Non-homepage detected - scrolling to top');
-            window.scrollTo({
-              top: 0,
-              behavior: 'instant'
-            });
           }
         } catch(e) {
           console.log('❌ Could not restore scroll position');
         }
       }
       
-      // Force scroll to top on page refresh for non-homepage
-      function handlePageRefresh() {
-        if (!isHomepage) {
-          console.log('🔄 Page refresh on non-homepage - forcing scroll to top');
-          window.scrollTo(0, 0);
-          // Also clear any saved position for this page
-          try {
-            let scrollPositions = JSON.parse(sessionStorage.getItem('shopifyScrollPositions') || '{}');
-            const currentPath = window.location.pathname;
-            if (scrollPositions[currentPath]) {
-              delete scrollPositions[currentPath];
-              sessionStorage.setItem('shopifyScrollPositions', JSON.stringify(scrollPositions));
-            }
-          } catch(e) {}
-        }
-      }
+      // Force scroll to top on page refresh for non-homepage - REMOVED
       
       // Save position when leaving page
       window.addEventListener('beforeunload', function() {
@@ -839,18 +817,10 @@
         if (isHomepage) {
           // For homepage, try to restore position
           restoreScrollPosition();
-        } else {
-          // For other pages, always start at top
-          window.scrollTo(0, 0);
         }
       }
       
-      // Check if page was refreshed (not back/forward navigation)
-      const wasRefreshed = performance.navigation && performance.navigation.type === performance.navigation.TYPE_RELOAD;
-      if (wasRefreshed && !isHomepage) {
-        console.log('🔄 Detected page refresh on non-homepage');
-        window.scrollTo(0, 0);
-      }
+      // Check if page was refreshed (not back/forward navigation) - REMOVED scroll to top
       
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', handleInitialLoad);
@@ -872,17 +842,7 @@
         }
       });
       
-      // Additional safety: Force non-homepage pages to top on window focus
-      window.addEventListener('focus', function() {
-        if (!isHomepage && !isNavigating) {
-          setTimeout(function() {
-            if (window.pageYOffset > 100) {
-              console.log('🎯 Window focus - forcing non-homepage to top');
-              window.scrollTo(0, 0);
-            }
-          }, 100);
-        }
-      });
+      // Additional safety: Force non-homepage pages to top on window focus - REMOVED
       
     })();
     </script>
