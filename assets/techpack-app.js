@@ -10683,6 +10683,14 @@ setupInitialization();
       // Initialize dual-mode system
       this.initializeDualModeSystem();
       
+      // Create debounced validation function to prevent interference
+      this.debouncedUpdateValidation = this.debounce(() => {
+        this.updateValidation();
+      }, 1000); // 1 second delay to allow user interactions to complete
+      
+      // Track user interaction state to prevent validation interference
+      this.isUserInteracting = false;
+      
       debugSystem.log('New SampleManager initialized with dual-mode lab dip system');
     }
 
@@ -10711,26 +10719,21 @@ setupInitialization();
         }
       });
       
-      // Add click handling for sample cards to enable toggle behavior
+      // Add click handling for sample cards - FIXED: Proper radio button behavior
       document.addEventListener('click', (e) => {
         const sampleCard = e.target.closest('.techpack-sample-card');
         if (sampleCard) {
           const radio = sampleCard.querySelector('.techpack-sample-radio');
-          if (radio) {
-            // If clicking on the currently selected radio, allow deselecting
-            if (radio.checked && e.target !== radio) {
-              radio.checked = false;
-              this.handleSampleTypeChange(null); // Reset to no selection
-              return;
-            }
+          if (radio && !radio.checked) {
+            // Protect during selection
+            this.isUserInteracting = true;
+            setTimeout(() => { this.isUserInteracting = false; }, 1500);
             
-            // Normal selection behavior
-            if (!radio.checked) {
-              // Clear other selections first
-              document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
-              radio.checked = true;
-              this.handleSampleTypeChange(radio.value);
-            }
+            // Only select if not already selected - no deselection allowed for radio buttons
+            // Clear other selections first
+            document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
+            radio.checked = true;
+            this.handleSampleTypeChange(radio.value);
           }
         }
       });
@@ -10746,9 +10749,14 @@ setupInitialization();
           this.switchInputMode('manual-entry');
         }
         
-        // Go to Color Assignment button
+        // Go to Color Assignment button - PROTECTED from validation interference
         if (e.target.hasAttribute('data-scroll-to-lab-dips')) {
           e.preventDefault();
+          
+          // Protect during scroll operation
+          this.isUserInteracting = true;
+          setTimeout(() => { this.isUserInteracting = false; }, 1500);
+          
           const labDipsSection = document.querySelector('.techpack-global-lab-dips');
           if (labDipsSection) {
             labDipsSection.scrollIntoView({ 
@@ -10993,7 +11001,7 @@ setupInitialization();
       // Update UI
       this.renderLabDipList();
       this.updateLabDipSelectionArea();
-      this.updateValidation();
+      this.debouncedUpdateValidation();
       this.updatePricing();
     }
     
@@ -11102,6 +11110,10 @@ setupInitialization();
 
     // Handle sample type selection (mutual exclusivity with proper reset)
     handleSampleTypeChange(type) {
+      // Protect user interaction from validation interference
+      this.isUserInteracting = true;
+      setTimeout(() => { this.isUserInteracting = false; }, 2000); // 2 second protection
+      
       const previousType = this.sampleState.type;
       this.sampleState.type = type;
       
@@ -11136,8 +11148,8 @@ setupInitialization();
       // Update lab dip selection area when custom color is selected
       this.updateLabDipSelectionArea();
       
-      // Update validation and pricing
-      this.updateValidation();
+      // Update validation and pricing - DEBOUNCED to prevent interference
+      this.debouncedUpdateValidation();
       this.updatePricing();
       
       debugSystem.log('Sample type changed to:', type, 'from:', previousType);
@@ -11258,7 +11270,7 @@ setupInitialization();
     handleStockColorChange(color) {
       this.sampleState.stockColor = color;
       this.updateStockSubtitle();
-      this.updateValidation();
+      this.debouncedUpdateValidation();
       debugSystem.log('Stock color selected:', color);
     }
 
@@ -11306,7 +11318,7 @@ setupInitialization();
       this.renderLabDipList(); // This now calls updateLabDipSelectionArea() internally
       this.updateCustomLabDipDropdown(); // Keep for compatibility
       this.updatePricing();
-      this.updateValidation();
+      this.debouncedUpdateValidation();
       
       // Clear input
       if (pantoneInput) pantoneInput.value = '';
@@ -11326,7 +11338,7 @@ setupInitialization();
         this.renderLabDipList();
         this.updateCustomLabDipDropdown();
         this.updatePricing();
-        this.updateValidation();
+        this.debouncedUpdateValidation();
         
         debugSystem.log('Lab dip removed:', labDipId);
       }
@@ -11335,7 +11347,7 @@ setupInitialization();
     // Handle lab dip selection for custom sample
     handleLabDipSelection(labDipId) {
       this.sampleState.selectedLabDipId = labDipId || null;
-      this.updateValidation();
+      this.debouncedUpdateValidation();
       debugSystem.log('Lab dip selected for custom:', labDipId);
     }
 
@@ -11650,7 +11662,7 @@ setupInitialization();
       if (labDipError) labDipError.textContent = '';
       
       // Trigger validation update
-      this.updateValidation();
+      this.debouncedUpdateValidation();
       
       debugSystem.log('Lab dip selected for custom color', { labDipId, garmentElement: garmentElement.dataset.garmentId });
     }
@@ -11784,17 +11796,37 @@ setupInitialization();
       return { valid: true };
     }
 
-    // Update validation UI
+    // Debounce utility method
+    debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Update validation UI - ISOLATED to prevent state interference
     updateValidation() {
+      // Skip validation if user is currently interacting with sample types
+      if (this.isUserInteracting) {
+        debugSystem.log('Skipping validation - user is interacting with sample types');
+        return;
+      }
+      
       const validation = this.validateSampleSelection();
       const nextBtn = document.getElementById('step-3-next');
       const warningDiv = document.getElementById('lab-dip-warning');
       
+      // Only update button state, don't interfere with form inputs
       if (nextBtn) {
         nextBtn.disabled = !validation.valid;
       }
       
-      // Show/hide warnings
+      // Show/hide warnings without DOM manipulation that could interfere
       if (warningDiv) {
         if (this.sampleState.type === 'custom' && this.labDips.size === 0) {
           warningDiv.style.display = 'block';
