@@ -2200,8 +2200,8 @@
         
         if (sampleSection && sampleSection.style.display !== 'none') {
           // DEBUG: Check what radio buttons exist in the section
-          const allRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type"]');
-          const checkedRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type"]:checked');
+          const allRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type-"]');
+          const checkedRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type-"]:checked');
           
           debugSystem.log('📻 ALL RADIOS IN SECTION:', {
             garmentIndex: index + 1,
@@ -11932,7 +11932,16 @@ setupInitialization();
           const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
           existingCards.forEach(card => card.remove());
           
-          if (labDipsToUse.size === 0) {
+          // Count how many lab dips are assigned to this garment
+          const garmentId = garment.dataset.garmentId;
+          let assignedLabDipCount = 0;
+          labDipsToUse.forEach((labDip) => {
+            if (labDip.assignments && labDip.assignments.has(garmentId)) {
+              assignedLabDipCount++;
+            }
+          });
+          
+          if (assignedLabDipCount === 0) {
             // Show empty state
             selectionEmpty && (selectionEmpty.style.display = 'block');
             selectionArea.classList.remove('has-items');
@@ -11941,9 +11950,17 @@ setupInitialization();
             selectionEmpty && (selectionEmpty.style.display = 'none');
             selectionArea.classList.add('has-items');
             
-            // Create selection card for each lab dip
+            // Create selection card for each lab dip ONLY if assigned to this garment
             labDipsToUse.forEach((labDip, id) => {
-              debugSystem.log(`Creating selection card for lab dip:`, { id, pantone: labDip.pantone });
+              // Check if this lab dip is assigned to this specific garment
+              const garmentId = garment.dataset.garmentId;
+              const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
+              
+              if (!isAssigned) {
+                return; // Skip lab dips not assigned to this garment
+              }
+              
+              debugSystem.log(`Creating selection card for assigned lab dip:`, { id, pantone: labDip.pantone, garmentId });
               
               const cardClone = selectionTemplate.content.cloneNode(true);
               const card = cardClone.querySelector('.techpack-lab-dip-selection-card');
@@ -11979,25 +11996,21 @@ setupInitialization();
               const garmentId = garment.dataset.garmentId;
               const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
               
-              // Auto-select if assigned
-              if (isAssigned) {
-                card.classList.add('techpack-lab-dip-selection-card--selected');
-                // Store as selected in the enhanced sample state
-                if (window.sampleManager && window.sampleManager.enhancedSampleState.has(garmentId)) {
-                  const state = window.sampleManager.enhancedSampleState.get(garmentId);
-                  state.selectedLabDipId = id;
-                }
+              // Auto-select if assigned (always true here since we filtered above)
+              card.classList.add('techpack-lab-dip-selection-card--selected');
+              // Store as selected in the enhanced sample state
+              if (window.sampleManager && window.sampleManager.enhancedSampleState.has(garmentId)) {
+                const state = window.sampleManager.enhancedSampleState.get(garmentId);
+                state.selectedLabDipId = id; // Store the first one, or could store multiple
               }
               
-              // Set initial status message
+              debugSystem.log(`✅ Auto-selected assigned lab dip for ${garmentId}:`, { labDipId: id, pantone: labDip.pantone });
+              
+              // Set initial status message (always assigned and selected here)
               const statusText = card.querySelector('.techpack-lab-dip-selection-card__status .status-text');
               if (statusText) {
                 const garmentName = this.getGarmentName(garment);
-                if (isAssigned) {
-                  statusText.innerHTML = `✓ Selected for ${garmentName}`;
-                } else {
-                  statusText.innerHTML = `You'll receive a fabric swatch together with the ${garmentName}`;
-                }
+                statusText.innerHTML = `✓ Selected for ${garmentName}`;
               }
               
               // Set up selection button
@@ -13263,6 +13276,11 @@ setupInitialization();
         
         // Bridge: Update per-garment selection areas
         this.updatePerGarmentSelections();
+        
+        // Trigger validation update for the assigned garment
+        if (window.sampleManager && typeof window.sampleManager.debouncedUpdateValidation === 'function') {
+          window.sampleManager.debouncedUpdateValidation();
+        }
       }
     }
 
