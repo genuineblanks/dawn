@@ -1,4 +1,60 @@
-ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+/* Premium Tech-Pack App Styles - Luxury Minimalist Design */
+/* Sophisticated grayscale palette with premium typography and spacing */
+
+/* CSS Custom Properties - Premium Luxury Palette */
+:root {
+  /* Primary Colors - Sophisticated Black/White/Grey */
+  --techpack-primary: #000000;
+  --techpack-primary-hover: #1a1a1a;
+  --techpack-primary-light: #f8f9fa;
+  --techpack-primary-dark: #000000;
+  
+  /* Secondary & Neutral Colors - Refined Grey Scale */
+  --techpack-secondary: #6b7280;
+  --techpack-success: #000000;
+  --techpack-error: #dc2626;
+  --techpack-warning: #6b7280;
+  --techpack-info: #000000;
+  
+  /* Background Colors - Pure & Clean */
+  --techpack-bg: #ffffff;
+  --techpack-bg-secondary: #f9fafb;
+  --techpack-bg-tertiary: #f3f4f6;
+  --techpack-bg-accent: #f1f3f4;
+  --techpack-bg-dark: #000000;
+  
+  /* Border & Divider Colors - Ultra Subtle */
+  --techpack-border: #e5e7eb;
+  --techpack-border-light: #f3f4f6;
+  --techpack-border-accent: #d1d5db;
+  --techpack-border-dark: #374151;
+  
+  /* Text Colors - High Contrast Hierarchy */
+  --techpack-text: #111827;
+  --techpack-text-secondary: #6b7280;
+  --techpack-text-muted: #9ca3af;
+  --techpack-text-light: #ffffff;
+  --techpack-text-disabled: #d1d5db;
+  
+  /* Shadows - Refined & Subtle */
+  --techpack-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  --techpack-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --techpack-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --techpack-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+  --techpack-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  --techpack-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  
+  /* Border Radius - Minimal & Refined */
+  --techpack-radius: 0px;
+  --techpack-radius-sm: 2px;
+  --techpack-radius-md: 4px;
+  --techpack-radius-lg: 6px;
+  --techpack-radius-xl: 8px;
+  --techpack-radius-full: 9999px;
+  
+  /* Transitions - Fluid & Premium */
+  --techpack-transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --techpack-transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   --techpack-transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Typography - Premium Font Stack */
@@ -22,27 +78,19 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   --techpack-space-5xl: 6rem;
 }
 
-/* Scoped Reset & Typography - Only for TechPack App */
-.techpack-app *,
-.tech-pack-section *,
-.techpack-step *,
-.techpack-container *,
-[data-techpack] *,
-[id^="techpack-"] * {
+/* Base Reset & Typography */
+* {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* TechPack specific typography - only within techpack contexts */
-.techpack-app,
-.tech-pack-section,
-.techpack-step,
-.techpack-container,
-[data-techpack],
-[id^="techpack-"] {
+body {
   font-family: var(--techpack-font-family);
   font-size: 16px;
   line-height: 1.5;
   color: var(--techpack-text);
+  background: var(--techpack-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "kern" 1, "liga" 1;
@@ -1017,7 +1065,13 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   border-color: var(--techpack-border-accent);
 }
 
-/* Colorway header styles moved to techpack-unified-styles.css */
+.techpack-colorway__header {
+  display: grid;
+  gap: var(--techpack-space-lg);
+  align-items: end;
+  margin-bottom: var(--techpack-space-xl);
+  grid-template-columns: auto 1fr auto;
+}
 
 /* Premium Color Picker */
 .techpack-color-picker {
@@ -1040,7 +1094,27 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--techpack-shadow);
 }
 
-/* Colorway remove button styles moved to techpack-unified-styles.css */
+.techpack-colorway__remove {
+  background: var(--techpack-bg-secondary);
+  border: 1px solid var(--techpack-border);
+  color: var(--techpack-text-secondary);
+  cursor: pointer;
+  padding: var(--techpack-space-sm);
+  border-radius: var(--techpack-radius);
+  transition: var(--techpack-transition);
+  font-size: 0.875rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.techpack-colorway__remove:hover {
+  background: var(--techpack-error);
+  color: var(--techpack-text-light);
+  border-color: var(--techpack-error);
+}
 
 /* Premium Size Grid - FINAL WORKING VERSION */
 .techpack-size-grid {
@@ -1963,7 +2037,10 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     animation: pulseRed 2s infinite;
   }
   
-  /* Colorway header styles moved to techpack-unified-styles.css */
+  .techpack-colorway__header {
+    grid-template-columns: 1fr;
+    gap: var(--techpack-space-lg);
+  }
   
   .techpack-review__item {
     grid-template-columns: 1fr;
@@ -3432,7 +3509,8 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.95rem;
   }
   
-  /* Keep only garment remove button styles - colorway now uses unified styles */
+  /* Fix X button positioning on mobile */
+  .techpack-colorway__remove,
   .techpack-garment__remove {
     position: absolute;
     top: 8px;
@@ -3450,15 +3528,23 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     transition: var(--techpack-transition);
   }
   
+  .techpack-colorway__remove:hover,
   .techpack-garment__remove:hover {
     background: rgba(255, 255, 255, 1);
     border-color: var(--techpack-error);
     color: var(--techpack-error);
   }
   
+  .techpack-colorway__remove svg,
   .techpack-garment__remove svg {
     width: 16px;
     height: 16px;
+  }
+  
+  /* Fix colorway header positioning */
+  .techpack-colorway__header {
+    position: relative;
+    padding-right: 40px; /* Space for X button */
   }
   
   .techpack-garment__header {
@@ -4678,7 +4764,10 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--techpack-bg-secondary);
   }
   
-  /* Colorway header mobile styles moved to techpack-unified-styles.css */
+  .techpack-colorway__header {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
   
   /* Mobile size grid improvements */
   .techpack-size-grid {
@@ -5469,163 +5558,5 @@ ition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: visible !important;
     min-height: auto !important;
     height: auto !important;
-  }
-}
-
-/* ================================
-   COLOR ASSIGNMENT GUIDANCE CARD
-   ================================ */
-
-.techpack-color-assignment-guidance {
-  background: var(--techpack-bg-secondary);
-  border: 1px solid var(--techpack-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-}
-
-.techpack-guidance-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.techpack-guidance-icon {
-  color: var(--techpack-primary);
-  flex-shrink: 0;
-}
-
-.techpack-guidance-title {
-  font-weight: 600;
-  color: var(--techpack-primary);
-  font-size: 1.1rem;
-}
-
-.techpack-assignment-status {
-  margin-bottom: 1rem;
-  padding: 0.875rem;
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border-light);
-  border-radius: 8px;
-}
-
-.techpack-status-unassigned,
-.techpack-status-assigned {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.techpack-status-unassigned {
-  color: var(--techpack-secondary);
-}
-
-.techpack-status-assigned {
-  color: var(--techpack-success);
-}
-
-.techpack-status-icon {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-}
-
-.techpack-status-text {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.techpack-assigned-colors {
-  margin-top: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-}
-
-.techpack-assigned-color-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: var(--techpack-primary);
-  color: white;
-  font-size: 0.8rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 16px;
-  font-weight: 500;
-}
-
-.techpack-assigned-color-swatch {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.techpack-guidance-content {
-  margin-bottom: 1.5rem;
-}
-
-.techpack-guidance-text {
-  color: var(--techpack-secondary);
-  line-height: 1.5;
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.techpack-guidance-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--techpack-primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.techpack-guidance-action:hover {
-  background: var(--techpack-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.techpack-guidance-action svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.2s ease;
-}
-
-.techpack-guidance-action:hover svg {
-  transform: translateY(2px);
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .techpack-color-assignment-guidance {
-    padding: 1rem;
-  }
-  
-  .techpack-guidance-header {
-    margin-bottom: 0.75rem;
-  }
-  
-  .techpack-guidance-title {
-    font-size: 1rem;
-  }
-  
-  .techpack-assignment-status {
-    padding: 0.75rem;
-  }
-  
-  .techpack-guidance-action {
-    width: 100%;
-    justify-content: center;
   }
 }
