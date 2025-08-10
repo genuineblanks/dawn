@@ -7668,9 +7668,11 @@
         nextBtn.disabled = true;
         nextBtn.classList.add('techpack-btn--disabled');
         
-        // Run initial validation to set correct state
+        // Run initial validation to set correct state - ONLY if on step 1
         setTimeout(() => {
-          stepManager.validateStep1();
+          if (state.currentStep === 1) {
+            stepManager.validateStep1();
+          }
         }, 100);
       }
     }
@@ -10818,6 +10820,9 @@ setupInitialization();
         garmentId: null // For future expansion if needed
       });
       
+      debugSystem.log('✅ Lab dip stored:', { id: labDipId, pantone, totalLabDips: this.labDips.size });
+      debugSystem.log('🔍 Current lab dips:', Array.from(this.labDips.entries()));
+      
       // Update UI
       this.renderLabDipList(); // This now calls updateLabDipSelectionArea() internally
       this.updateCustomLabDipDropdown(); // Keep for compatibility
@@ -10967,15 +10972,24 @@ setupInitialization();
       // Find all garments that have custom color selected
       const garments = document.querySelectorAll('.techpack-garment');
       
-      garments.forEach(garment => {
+      debugSystem.log(`🔍 updateLabDipSelectionArea: Found ${garments.length} garments, ${this.labDips.size} lab dips`);
+      
+      garments.forEach((garment, index) => {
         const customRadio = garment.querySelector('input[name="garment-sample-type"][value="custom"]:checked');
+        
+        debugSystem.log(`Garment ${index}: custom radio checked = ${!!customRadio}`);
         
         if (customRadio) {
           const selectionArea = garment.querySelector('.techpack-lab-dip-selection');
           const selectionEmpty = garment.querySelector('.techpack-lab-dip-selection-empty');
           const selectionTemplate = document.getElementById('lab-dip-selection-card-template');
           
-          if (!selectionArea || !selectionTemplate) return;
+          debugSystem.log(`Garment ${index}: selectionArea = ${!!selectionArea}, selectionEmpty = ${!!selectionEmpty}, selectionTemplate = ${!!selectionTemplate}`);
+          
+          if (!selectionArea || !selectionTemplate) {
+            debugSystem.log(`❌ Missing elements for garment ${index}`);
+            return;
+          }
           
           // Clear existing selection cards
           const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
@@ -10992,8 +11006,15 @@ setupInitialization();
             
             // Create selection card for each lab dip
             this.labDips.forEach((labDip, id) => {
+              debugSystem.log(`Creating selection card for lab dip:`, { id, pantone: labDip.pantone });
+              
               const cardClone = selectionTemplate.content.cloneNode(true);
               const card = cardClone.querySelector('.techpack-lab-dip-selection-card');
+              
+              if (!card) {
+                debugSystem.log('❌ No card element found in template');
+                return;
+              }
               
               // Set lab dip ID
               card.dataset.labDipId = id;
@@ -11002,6 +11023,9 @@ setupInitialization();
               const pantoneDisplay = card.querySelector('.techpack-lab-dip-selection-card__pantone');
               if (pantoneDisplay) {
                 pantoneDisplay.textContent = `PANTONE ${labDip.pantone}`;
+                debugSystem.log(`✅ Set pantone text: PANTONE ${labDip.pantone}`);
+              } else {
+                debugSystem.log('❌ No pantone display element found');
               }
               
               // Update color circle
@@ -11034,6 +11058,7 @@ setupInitialization();
                 this.handleLabDipSelectionCardClick(id, garment);
               });
               
+              debugSystem.log(`✅ Appending card to selection area`);
               selectionArea.appendChild(card);
             });
           }
