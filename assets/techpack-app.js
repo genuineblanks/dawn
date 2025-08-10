@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  // DEBUG VERSION: 1.8.17 - FIXED: Removed pointer-events blocking from disabled cards
+  // DEBUG VERSION: 1.8.18 - FIXED: Added missing lab dip selection UI elements and validation debugging
 
   // Enhanced Configuration - Complete Overhaul Version
   const CONFIG = {
@@ -2190,10 +2190,27 @@
         // SAMPLE-SPECIFIC: Validate sample type selection
         const sampleSection = garmentElement.querySelector('.techpack-garment-samples[data-sample-request-only]');
         
+        // DEBUG: Log what we're finding
+        debugSystem.log('🔍 VALIDATION DEBUG:', {
+          garmentIndex: index + 1,
+          sampleSectionFound: !!sampleSection,
+          sampleSectionDisplay: sampleSection?.style.display,
+          isVisible: sampleSection && sampleSection.style.display !== 'none'
+        });
+        
         if (sampleSection && sampleSection.style.display !== 'none') {
           // Check if any sample type is selected (stock or custom) - FIXED: Updated selectors
           const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
           const customRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
+          
+          // MORE DEBUG: Log what radio buttons we find
+          debugSystem.log('📻 VALIDATION RADIO CHECK:', {
+            garmentIndex: index + 1,
+            stockRadioFound: !!stockRadio,
+            customRadioFound: !!customRadio,
+            stockRadioName: stockRadio?.name,
+            customRadioName: customRadio?.name
+          });
           
           if (!stockRadio && !customRadio) {
             // No sample type selected - this is required
