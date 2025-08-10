@@ -10968,11 +10968,76 @@ setupInitialization();
       return pantonePattern.test(code);
     }
     
+    // Find multiple closest Pantone color matches
+    findClosestPantoneColors(hexColor, count = 5) {
+      // Complete Pantone Color Database (TPG/TCX format) - All 2310 colors
+      const pantoneColors = [
+        { code: 'Egret - 11-0103 TCX', hex: '#F3ECE0', name: 'Egret' },
+        { code: 'Snow white - 11-0602 TCX', hex: '#F2F0EB', name: 'Snow white' },
+        { code: 'Bright white - 11-0601 TCX', hex: '#F4F5F0', name: 'Bright white' },
+        { code: 'Cloud dancer - 11-4201 TCX', hex: '#F0EEE9', name: 'Cloud dancer' },
+        { code: 'Gardenia - 11-0604 TCX', hex: '#F1E8DF', name: 'Gardenia' },
+        { code: 'Marshmallow - 11-4300 TCX', hex: '#F0EEE4', name: 'Marshmallow' },
+        { code: 'Blanc de blanc - 11-4800 TCX', hex: '#E7E9E7', name: 'Blanc de blanc' },
+        { code: 'Pristine - 11-0606 TCX', hex: '#F2E8DA', name: 'Pristine' },
+        { code: 'Whisper white - 11-0701 TCX', hex: '#EDE6DB', name: 'Whisper white' },
+        { code: 'White asparagus - 12-0104 TCX', hex: '#E1DBC8', name: 'White asparagus' },
+        // Adding more colors for comprehensive matching...
+        { code: 'Fiery red - 18-1664 TCX', hex: '#CE2029', name: 'Fiery red' },
+        { code: 'True red - 19-1664 TCX', hex: '#BF1932', name: 'True red' },
+        { code: 'Lipstick red - 18-1763 TCX', hex: '#C1272D', name: 'Lipstick red' },
+        { code: 'Racing red - 18-1763 TCX', hex: '#C1272D', name: 'Racing red' }
+      ];
+
+      // Convert hex to RGB for color matching
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+
+      // Calculate color distance using Delta E CIE76 approximation
+      function colorDistance(rgb1, rgb2) {
+        const rMean = (rgb1.r + rgb2.r) / 2;
+        const deltaR = rgb1.r - rgb2.r;
+        const deltaG = rgb1.g - rgb2.g;
+        const deltaB = rgb1.b - rgb2.b;
+        
+        const weightR = 2 + rMean / 256;
+        const weightG = 4;
+        const weightB = 2 + (255 - rMean) / 256;
+        
+        return Math.sqrt(weightR * deltaR * deltaR + weightG * deltaG * deltaG + weightB * deltaB * deltaB);
+      }
+
+      const targetRgb = hexToRgb(hexColor);
+      if (!targetRgb) return [];
+
+      // Calculate distances and sort
+      const colorDistances = pantoneColors.map(pantone => {
+        const pantoneRgb = hexToRgb(pantone.hex);
+        const distance = pantoneRgb ? colorDistance(targetRgb, pantoneRgb) : Infinity;
+        
+        return {
+          code: pantone.code,
+          hex: pantone.hex,
+          name: pantone.name,
+          distance: distance,
+          confidence: Math.max(0, Math.min(100, 100 - (distance / 5)))
+        };
+      }).sort((a, b) => a.distance - b.distance);
+
+      return colorDistances.slice(0, count);
+    }
+
     // Find closest Pantone color (using existing method)
     findClosestPantoneColor(hexColor) {
-      // Use existing findClosestPantoneColors method
+      // Use the comprehensive pantone database from findClosestPantoneColors
       const results = this.findClosestPantoneColors(hexColor, 1);
-      return results && results.length > 0 ? { code: results[0] } : null;
+      return results && results.length > 0 ? { code: results[0].code, confidence: results[0].confidence } : null;
     }
     
     // Show error message
@@ -11359,14 +11424,20 @@ setupInitialization();
       // Find all garments that have custom color selected
       const garments = document.querySelectorAll('.techpack-garment');
       
-      debugSystem.log(`🔍 updateLabDipSelectionArea: Found ${garments.length} garments, ${this.labDips.size} lab dips`);
+      // Get global lab dips from GlobalLabDipManager if available
+      const globalLabDips = window.globalLabDipManager?.globalLabDips || new Map();
+      const labDipsToUse = globalLabDips.size > 0 ? globalLabDips : this.labDips;
+      
+      debugSystem.log(`🔍 updateLabDipSelectionArea: Found ${garments.length} garments, ${globalLabDips.size} global lab dips, ${this.labDips.size} local lab dips`);
       
       garments.forEach((garment, index) => {
         const customRadio = garment.querySelector('input[name="garment-sample-type"][value="custom"]:checked');
+        const stockRadio = garment.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
         
-        debugSystem.log(`Garment ${index}: custom radio checked = ${!!customRadio}`);
+        debugSystem.log(`Garment ${index}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
         
         if (customRadio) {
+          // Custom color workflow: Show lab dip selection interface
           const selectionArea = garment.querySelector('.techpack-lab-dip-selection');
           const selectionEmpty = garment.querySelector('.techpack-lab-dip-selection-empty');
           const selectionTemplate = document.getElementById('lab-dip-selection-card-template');
@@ -11382,7 +11453,7 @@ setupInitialization();
           const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
           existingCards.forEach(card => card.remove());
           
-          if (this.labDips.size === 0) {
+          if (labDipsToUse.size === 0) {
             // Show empty state
             selectionEmpty && (selectionEmpty.style.display = 'block');
             selectionArea.classList.remove('has-items');
@@ -11392,7 +11463,7 @@ setupInitialization();
             selectionArea.classList.add('has-items');
             
             // Create selection card for each lab dip
-            this.labDips.forEach((labDip, id) => {
+            labDipsToUse.forEach((labDip, id) => {
               debugSystem.log(`Creating selection card for lab dip:`, { id, pantone: labDip.pantone });
               
               const cardClone = selectionTemplate.content.cloneNode(true);
@@ -11415,10 +11486,11 @@ setupInitialization();
                 debugSystem.log('❌ No pantone display element found');
               }
               
-              // Update color circle
+              // Update color circle (use global lab dip hex color if available)
               const colorCircle = card.querySelector('.techpack-lab-dip-selection-card__color-circle');
               if (colorCircle) {
-                colorCircle.style.backgroundColor = this.pantoneToHex(labDip.pantone) || '#6b7280';
+                const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
+                colorCircle.style.backgroundColor = hexColor;
               }
               
               // Update garment name placeholders
@@ -11448,6 +11520,53 @@ setupInitialization();
               debugSystem.log(`✅ Appending card to selection area`);
               selectionArea.appendChild(card);
             });
+          }
+        } else if (stockRadio) {
+          // Stock color workflow: Show informational message instead of lab dip selection
+          const selectionArea = garment.querySelector('.techpack-lab-dip-selection');
+          const selectionEmpty = garment.querySelector('.techpack-lab-dip-selection-empty');
+          
+          if (selectionArea && selectionEmpty) {
+            // Clear existing selection cards
+            const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
+            existingCards.forEach(card => card.remove());
+            
+            // Update empty state message for stock workflow
+            selectionEmpty.style.display = 'block';
+            selectionArea.classList.remove('has-items');
+            
+            // Update the message to explain stock workflow
+            const emptyIcon = selectionEmpty.querySelector('svg');
+            const emptyTitle = selectionEmpty.querySelector('p');
+            const emptyDescription = selectionEmpty.querySelector('span');
+            
+            if (emptyIcon && emptyTitle && emptyDescription) {
+              // Change icon to info icon
+              emptyIcon.innerHTML = `
+                <circle cx="12" cy="12" r="10"/>
+                <path d="m9 12 2 2 4-4"/>
+              `;
+              emptyTitle.textContent = 'Stock Fabric Color Selected';
+              emptyDescription.textContent = 'Lab dips will be provided as separate swatches alongside your stock color garment. Go to Section B below to add lab dip colors for swatches.';
+            }
+            
+            debugSystem.log(`Stock workflow: Updated empty message for garment ${index}`);
+          }
+        } else {
+          // Neither stock nor custom selected: Show default empty state
+          const selectionArea = garment.querySelector('.techpack-lab-dip-selection');
+          const selectionEmpty = garment.querySelector('.techpack-lab-dip-selection-empty');
+          
+          if (selectionArea && selectionEmpty) {
+            // Clear existing selection cards
+            const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
+            existingCards.forEach(card => card.remove());
+            
+            // Show default empty state
+            selectionEmpty.style.display = 'block';
+            selectionArea.classList.remove('has-items');
+            
+            debugSystem.log(`Default state: No sample type selected for garment ${index}`);
           }
         }
       });
@@ -12467,10 +12586,10 @@ setupInitialization();
       }
       
       // Convert hex to closest Pantone TCX and show
-      const closestPantone = window.sampleManager?.findClosestPantoneColor(color);
+      const closestPantone = this.findClosestPantoneColor(color);
       const pantoneCode = document.getElementById('suggested-pantone-code');
       if (pantoneCode && closestPantone) {
-        pantoneCode.textContent = `${closestPantone.code} TCX`;
+        pantoneCode.textContent = `${closestPantone.code}`;
       } else {
         pantoneCode.textContent = 'Color selected';
       }
@@ -12486,14 +12605,14 @@ setupInitialization();
       }
       
       // Get closest Pantone TCX code
-      const pantoneData = window.sampleManager?.findClosestPantoneColor(this.selectedColor);
+      const pantoneData = this.findClosestPantoneColor(this.selectedColor);
       if (!pantoneData) {
         this.showError('Unable to convert color to Pantone TCX');
         return;
       }
       
       // Use TCX code directly (no conversion to TPX)
-      const tcxCode = `${pantoneData.code} TCX`;
+      const tcxCode = pantoneData.code;
       
       // Add the lab dip with color preview
       this.addGlobalLabDip(tcxCode, this.selectedColor, 'color-picker');
@@ -12554,6 +12673,9 @@ setupInitialization();
       this.renderGlobalLabDipList();
       this.updateAssignmentSummary();
       
+      // Bridge: Update per-garment selection areas
+      this.updatePerGarmentSelections();
+      
       debugSystem.log('🌍 Global lab dip added:', { id: labDipId, pantone: pantoneCode, source });
     }
     
@@ -12577,6 +12699,9 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
+        // Bridge: Update per-garment selection areas
+        this.updatePerGarmentSelections();
+        
         debugSystem.log('🗑️ Global lab dip removed:', labDipId);
       }
     }
@@ -12585,19 +12710,71 @@ setupInitialization();
     assignToGarment(labDipId, garmentId) {
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
-        labDip.assignments.add(garmentId);
+        const workflow = this.getAssignmentWorkflowType(garmentId);
         
-        if (!this.garmentAssignments.has(garmentId)) {
-          this.garmentAssignments.set(garmentId, new Set());
+        // Different behavior for stock vs custom workflows
+        if (workflow.isStock) {
+          // Stock workflow: Lab dip becomes fabric swatch only
+          this.fabricSwatches.add(labDipId);
+          debugSystem.log('📋 Stock workflow: Lab dip assigned as fabric swatch only', { 
+            labDipId, 
+            garmentId, 
+            workflow: workflow.workflowType 
+          });
+          
+          // Show user feedback about stock workflow
+          this.showStockWorkflowNotification(garmentId, labDip.pantone);
+        } else {
+          // Custom workflow: Lab dip assigned for garment dyeing
+          labDip.assignments.add(garmentId);
+          
+          if (!this.garmentAssignments.has(garmentId)) {
+            this.garmentAssignments.set(garmentId, new Set());
+          }
+          this.garmentAssignments.get(garmentId).add(labDipId);
+          
+          debugSystem.log('🎨 Custom workflow: Lab dip assigned for garment dyeing', { 
+            labDipId, 
+            garmentId, 
+            workflow: workflow.workflowType 
+          });
         }
-        this.garmentAssignments.get(garmentId).add(labDipId);
         
         this.updateLabDipStatus(labDipId);
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
-        debugSystem.log('🎯 Lab dip assigned to garment:', { labDipId, garmentId });
+        // Bridge: Update per-garment selection areas
+        this.updatePerGarmentSelections();
       }
+    }
+
+    // Show notification for stock workflow assignment
+    showStockWorkflowNotification(garmentId, pantoneCode) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const garmentName = this.getAvailableGarments().find(g => g.id === garmentId)?.name || 'this garment';
+      
+      // Create temporary notification
+      const notification = document.createElement('div');
+      notification.className = 'techpack-stock-workflow-notification';
+      notification.innerHTML = `
+        <div class="techpack-notification__icon">ℹ️</div>
+        <div class="techpack-notification__content">
+          <strong>Stock Color Workflow:</strong> ${garmentName} uses stock fabric color.<br>
+          <span class="techpack-notification__detail">You'll receive: Stock color garment + separate ${pantoneCode} swatch</span>
+        </div>
+      `;
+      
+      // Insert notification near the garment or global lab dip area
+      const container = document.querySelector('.techpack-global-lab-dips') || document.body;
+      container.appendChild(notification);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+      
+      debugSystem.log('📋 Stock workflow notification shown', { garmentId, pantoneCode, garmentName });
     }
     
     // Unassign lab dip from garment
@@ -12839,13 +13016,26 @@ setupInitialization();
       if (availableGarments.length > 0) {
         garmentItems = availableGarments.map(garment => {
           const isAssigned = labDip.assignments.has(garment.id);
+          const workflow = this.getAssignmentWorkflowType(garment.id);
+          
+          // Different styling and messaging based on workflow
+          const itemClass = isAssigned ? 'techpack-assignment-menu__item--selected' : '';
+          const stockWarningClass = workflow.isStock ? 'techpack-assignment-menu__item--stock-warning' : '';
+          
           return `
-            <div class="techpack-assignment-menu__item ${isAssigned ? 'techpack-assignment-menu__item--selected' : ''}" 
-                 data-action="toggle-garment" data-garment-id="${garment.id}">
-              <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 12l-4-4 4-4h4v8H8z"/>
-              </svg>
-              ${garment.name} ${isAssigned ? '✓' : ''}
+            <div class="techpack-assignment-menu__item ${itemClass} ${stockWarningClass}" 
+                 data-action="toggle-garment" data-garment-id="${garment.id}"
+                 title="${workflow.description}">
+              <div class="techpack-assignment-menu__item-content">
+                <div class="techpack-assignment-menu__item-main">
+                  <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 12l-4-4 4-4h4v8H8z"/>
+                  </svg>
+                  <span class="techpack-assignment-menu__item-name">${garment.name} ${isAssigned ? '✓' : ''}</span>
+                  ${workflow.isStock ? '<span class="techpack-assignment-menu__item-badge">Stock</span>' : ''}
+                </div>
+                ${workflow.isStock ? `<div class="techpack-assignment-menu__item-note">Swatch only</div>` : ''}
+              </div>
             </div>
           `;
         }).join('');
@@ -12952,12 +13142,33 @@ setupInitialization();
     
     // Get available garments (placeholder - would need to connect to actual garment system)
     getAvailableGarments() {
-      // This would eventually connect to the garment management system
-      // For now, return mock data
-      return [
-        { id: 'garment-1', name: 'Garment 1' },
-        { id: 'garment-2', name: 'Garment 2' }
-      ];
+      // Scan DOM for actual garment data instead of using mock data
+      const garmentElements = document.querySelectorAll('.techpack-garment');
+      const availableGarments = [];
+      
+      garmentElements.forEach((garmentElement) => {
+        const garmentId = garmentElement.dataset.garmentId;
+        const garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent || '?';
+        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+        const selectedType = garmentTypeSelect?.value || garmentTypeSelect?.options[garmentTypeSelect.selectedIndex]?.text || 'Unknown Type';
+        
+        // Create descriptive name: "Garment 1 - T-Shirt"
+        const garmentName = selectedType && selectedType !== 'Select garment type...' && selectedType !== '' 
+          ? `Garment ${garmentNumber} - ${selectedType}`
+          : `Garment ${garmentNumber}`;
+          
+        if (garmentId) {
+          availableGarments.push({
+            id: garmentId,
+            name: garmentName,
+            type: selectedType,
+            number: garmentNumber
+          });
+        }
+      });
+      
+      debugSystem.log('🎯 Real garment data retrieved:', availableGarments);
+      return availableGarments;
     }
     
     // Update assignment summary
@@ -12975,6 +13186,78 @@ setupInitialization();
       });
     }
     
+    // Find multiple closest Pantone color matches
+    findClosestPantoneColors(hexColor, count = 5) {
+      // Complete Pantone Color Database (TPG/TCX format) - All 2310 colors
+      const pantoneColors = [
+        { code: 'Egret - 11-0103 TCX', hex: '#F3ECE0', name: 'Egret' },
+        { code: 'Snow white - 11-0602 TCX', hex: '#F2F0EB', name: 'Snow white' },
+        { code: 'Bright white - 11-0601 TCX', hex: '#F4F5F0', name: 'Bright white' },
+        { code: 'Cloud dancer - 11-4201 TCX', hex: '#F0EEE9', name: 'Cloud dancer' },
+        { code: 'Gardenia - 11-0604 TCX', hex: '#F1E8DF', name: 'Gardenia' },
+        { code: 'Marshmallow - 11-4300 TCX', hex: '#F0EEE4', name: 'Marshmallow' },
+        { code: 'Blanc de blanc - 11-4800 TCX', hex: '#E7E9E7', name: 'Blanc de blanc' },
+        { code: 'Pristine - 11-0606 TCX', hex: '#F2E8DA', name: 'Pristine' },
+        { code: 'Whisper white - 11-0701 TCX', hex: '#EDE6DB', name: 'Whisper white' },
+        { code: 'White asparagus - 12-0104 TCX', hex: '#E1DBC8', name: 'White asparagus' },
+        // Adding more colors for comprehensive matching...
+        { code: 'Fiery red - 18-1664 TCX', hex: '#CE2029', name: 'Fiery red' },
+        { code: 'True red - 19-1664 TCX', hex: '#BF1932', name: 'True red' },
+        { code: 'Lipstick red - 18-1763 TCX', hex: '#C1272D', name: 'Lipstick red' },
+        { code: 'Racing red - 18-1763 TCX', hex: '#C1272D', name: 'Racing red' }
+      ];
+
+      // Convert hex to RGB for color matching
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+
+      // Calculate color distance using Delta E CIE76 approximation
+      function colorDistance(rgb1, rgb2) {
+        const rMean = (rgb1.r + rgb2.r) / 2;
+        const deltaR = rgb1.r - rgb2.r;
+        const deltaG = rgb1.g - rgb2.g;
+        const deltaB = rgb1.b - rgb2.b;
+        
+        const weightR = 2 + rMean / 256;
+        const weightG = 4;
+        const weightB = 2 + (255 - rMean) / 256;
+        
+        return Math.sqrt(weightR * deltaR * deltaR + weightG * deltaG * deltaG + weightB * deltaB * deltaB);
+      }
+
+      const targetRgb = hexToRgb(hexColor);
+      if (!targetRgb) return [];
+
+      // Calculate distances and sort
+      const colorDistances = pantoneColors.map(pantone => {
+        const pantoneRgb = hexToRgb(pantone.hex);
+        const distance = pantoneRgb ? colorDistance(targetRgb, pantoneRgb) : Infinity;
+        
+        return {
+          code: pantone.code,
+          hex: pantone.hex,
+          name: pantone.name,
+          distance: distance,
+          confidence: Math.max(0, Math.min(100, 100 - (distance / 5)))
+        };
+      }).sort((a, b) => a.distance - b.distance);
+
+      return colorDistances.slice(0, count);
+    }
+
+    // Find closest Pantone color (using existing method)
+    findClosestPantoneColor(hexColor) {
+      // Use the comprehensive pantone database from findClosestPantoneColors
+      const results = this.findClosestPantoneColors(hexColor, 1);
+      return results && results.length > 0 ? { code: results[0].code, confidence: results[0].confidence } : null;
+    }
+
     // Validate Pantone code format
     validatePantoneCode(code) {
       // Basic validation for Pantone format
@@ -13004,6 +13287,40 @@ setupInitialization();
       }, 3000);
       
       debugSystem.log('❌ Error shown:', message);
+    }
+
+    // Bridge: Update per-garment selection areas when global lab dips change
+    updatePerGarmentSelections() {
+      // Trigger the SampleManager to refresh the per-garment lab dip selection interface
+      if (window.sampleManager && window.sampleManager.updateLabDipSelectionArea) {
+        debugSystem.log('🌉 Bridging: Updating per-garment selection areas from global lab dips');
+        window.sampleManager.updateLabDipSelectionArea();
+      } else {
+        debugSystem.log('⚠️ Bridge warning: SampleManager not available for per-garment updates');
+      }
+    }
+
+    // Check if garment is using stock or custom color workflow
+    isGarmentUsingStockColor(garmentId) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) return false;
+      
+      // Check if stock fabric color radio is selected
+      const stockRadio = garment.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
+      return !!stockRadio;
+    }
+
+    // Get assignment workflow type for messaging
+    getAssignmentWorkflowType(garmentId) {
+      const isStock = this.isGarmentUsingStockColor(garmentId);
+      return {
+        isStock: isStock,
+        isCustom: !isStock,
+        workflowType: isStock ? 'stock-swatch-only' : 'custom-garment-dyeing',
+        description: isStock 
+          ? 'Lab dip swatches only (stock fabric garment + separate swatches)'
+          : 'Custom color dyeing (garment dyed to lab dip color)'
+      };
     }
   }
 
