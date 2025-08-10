@@ -10654,7 +10654,7 @@ setupInitialization();
   class SampleManager {
     constructor() {
       // New sample request data structure
-      this.labDips = new Map(); // id -> { pantone, status, garmentId }
+      this.labDips = new Map(); // id -> { pantone, status, garmentId, source }
       this.sampleState = {
         type: null, // 'stock' | 'custom' | null
         stockColor: null, // 'black' | 'off-white' | 'random'
@@ -10666,6 +10666,10 @@ setupInitialization();
         }
       };
       
+      // Dual-mode input system state
+      this.inputMode = 'color-picker'; // 'color-picker' | 'manual-entry'
+      this.selectedColor = '#000000';
+      
       // Legacy compatibility - maintain old per-garment structure for existing code
       this.perGarmentSamples = new Map();
       
@@ -10675,11 +10679,15 @@ setupInitialization();
     init() {
       this.bindEventListeners();
       this.checkRequestType();
-      debugSystem.log('New SampleManager initialized');
+      
+      // Initialize dual-mode system
+      this.initializeDualModeSystem();
+      
+      debugSystem.log('New SampleManager initialized with dual-mode lab dip system');
     }
 
     bindEventListeners() {
-      // Sample type radio button changes (mutual exclusivity)
+      // Sample type radio button changes (mutual exclusivity with proper reset)
       document.addEventListener('change', (e) => {
         if (e.target.name === 'garment-sample-type') {
           this.handleSampleTypeChange(e.target.value);
@@ -10703,8 +10711,34 @@ setupInitialization();
         }
       });
 
-      // Lab dip management buttons
+      // Lab dip management buttons - NEW DUAL MODE SYSTEM
       document.addEventListener('click', (e) => {
+        // Mode toggle buttons
+        if (e.target.id === 'color-picker-mode') {
+          this.switchInputMode('color-picker');
+        }
+        
+        if (e.target.id === 'manual-entry-mode') {
+          this.switchInputMode('manual-entry');
+        }
+        
+        // Add lab dip buttons
+        if (e.target.id === 'add-lab-dip-color') {
+          this.addLabDipFromColorPicker();
+        }
+        
+        if (e.target.id === 'add-lab-dip-manual') {
+          this.addLabDipFromManualEntry();
+        }
+        
+        // Remove lab dip (updated for new template)
+        if (e.target.classList.contains('techpack-lab-dip-item__remove')) {
+          const labDipItem = e.target.closest('.techpack-lab-dip-item');
+          const labDipId = labDipItem?.dataset.labDipId;
+          if (labDipId) this.removeLabDip(labDipId);
+        }
+        
+        // Legacy support (maintain old functionality)
         if (e.target.id === 'add-lab-dip') {
           this.addLabDip();
         }
@@ -10720,6 +10754,13 @@ setupInitialization();
         }
       });
       
+      // Color picker change event
+      document.addEventListener('change', (e) => {
+        if (e.target.id === 'lab-dip-color-picker') {
+          this.handleColorPickerChange(e.target.value);
+        }
+      });
+      
       // Pantone prefill functionality
       document.addEventListener('blur', (e) => {
         if (e.target.id === 'pantone-prefill') {
@@ -10730,14 +10771,257 @@ setupInitialization();
       debugSystem.log('New sample management event listeners bound');
     }
 
-    // Handle sample type selection (mutual exclusivity)
+    // ===============================================
+    // DUAL-MODE INPUT SYSTEM METHODS
+    // ===============================================
+    
+    // Switch between color picker and manual entry modes
+    switchInputMode(mode) {
+      this.inputMode = mode;
+      
+      // Update UI toggle buttons
+      const colorPickerBtn = document.getElementById('color-picker-mode');
+      const manualEntryBtn = document.getElementById('manual-entry-mode');
+      const colorPickerInput = document.getElementById('color-picker-input');
+      const manualEntryInput = document.getElementById('manual-entry-input');
+      
+      if (mode === 'color-picker') {
+        colorPickerBtn?.classList.add('techpack-mode-btn--active');
+        manualEntryBtn?.classList.remove('techpack-mode-btn--active');
+        colorPickerInput?.classList.add('techpack-input-mode--active');
+        manualEntryInput?.classList.remove('techpack-input-mode--active');
+      } else {
+        manualEntryBtn?.classList.add('techpack-mode-btn--active');
+        colorPickerBtn?.classList.remove('techpack-mode-btn--active');
+        manualEntryInput?.classList.add('techpack-input-mode--active');
+        colorPickerInput?.classList.remove('techpack-input-mode--active');
+      }
+      
+      debugSystem.log('Input mode switched to:', mode);
+    }
+    
+    // Handle color picker change
+    handleColorPickerChange(color) {
+      this.selectedColor = color;
+      
+      // Update color preview
+      const colorPreview = document.getElementById('lab-dip-color-preview');
+      if (colorPreview) {
+        colorPreview.style.backgroundColor = color;
+      }
+      
+      // Convert hex to closest Pantone TCX and show
+      const closestPantone = this.findClosestPantoneColor(color);
+      const pantoneCode = document.getElementById('suggested-pantone-code');
+      if (pantoneCode && closestPantone) {
+        pantoneCode.textContent = `${closestPantone.code} TCX`;
+      } else {
+        pantoneCode.textContent = 'Color selected';
+      }
+      
+      debugSystem.log('Color picker changed:', color, 'closest pantone:', closestPantone);
+    }
+    
+    // Add lab dip from color picker mode (TCX only)
+    addLabDipFromColorPicker() {
+      if (!this.selectedColor) {
+        this.showError('Please select a color first');
+        return;
+      }
+      
+      // Get closest Pantone TCX code
+      const pantoneData = this.findClosestPantoneColor(this.selectedColor);
+      if (!pantoneData) {
+        this.showError('Unable to convert color to Pantone TCX');
+        return;
+      }
+      
+      // Use TCX code directly (no conversion to TPX)
+      const tcxCode = `${pantoneData.code} TCX`;
+      
+      // Add the lab dip with color preview
+      this.addLabDipWithData(tcxCode, this.selectedColor, 'color-picker');
+      
+      debugSystem.log('Lab dip added from color picker:', tcxCode);
+    }
+    
+    // Add lab dip from manual entry mode (TCX or TPX)
+    addLabDipFromManualEntry() {
+      const input = document.getElementById('manual-pantone-code');
+      const pantoneCode = input?.value?.trim();
+      
+      if (!pantoneCode) {
+        this.showError('Please enter a Pantone TCX or TPX code');
+        return;
+      }
+      
+      // Validate TCX or TPX format
+      if (!this.validatePantoneCode(pantoneCode)) {
+        this.showError('Please enter a valid Pantone code (e.g., 18-1664 TPX or 18-1664 TCX)');
+        return;
+      }
+      
+      // Add the lab dip without color preview for manual entries
+      this.addLabDipWithData(pantoneCode, null, 'manual-entry');
+      
+      // Clear input
+      input.value = '';
+      
+      debugSystem.log('Lab dip added from manual entry:', pantoneCode);
+    }
+    
+    // Reset stock color selection when changing sample types
+    resetStockColorSelection() {
+      // Clear all stock color radio buttons
+      const stockColorInputs = document.querySelectorAll('input[name="stock-fabric-color"]');
+      stockColorInputs.forEach(input => {
+        input.checked = false;
+      });
+      
+      debugSystem.log('Stock color selection reset');
+    }
+    
+    // Initialize dual-mode system on page load
+    initializeDualModeSystem() {
+      // Set default mode to color picker
+      this.switchInputMode('color-picker');
+      
+      // Initialize color picker with default color
+      const colorPicker = document.getElementById('lab-dip-color-picker');
+      const colorPreview = document.getElementById('lab-dip-color-preview');
+      
+      if (colorPicker && colorPreview) {
+        colorPreview.style.backgroundColor = colorPicker.value;
+        this.selectedColor = colorPicker.value;
+      }
+      
+      // Add touch-friendly enhancements for mobile
+      this.addMobileTouchEnhancements();
+      
+      debugSystem.log('Dual-mode system initialized');
+    }
+    
+    // Add mobile touch enhancements
+    addMobileTouchEnhancements() {
+      // Add touch feedback to all interactive elements
+      const touchElements = document.querySelectorAll(
+        '.techpack-mode-btn, .techpack-lab-dip-item, .techpack-lab-dip-item__remove, .techpack-sample-card'
+      );
+      
+      touchElements.forEach(element => {
+        // Add touch start/end events for visual feedback
+        element.addEventListener('touchstart', () => {
+          element.style.transform = 'scale(0.98)';
+          element.style.transition = 'transform 0.1s ease';
+        });
+        
+        element.addEventListener('touchend', () => {
+          setTimeout(() => {
+            element.style.transform = '';
+          }, 100);
+        });
+        
+        element.addEventListener('touchcancel', () => {
+          element.style.transform = '';
+        });
+      });
+      
+      debugSystem.log('Mobile touch enhancements added');
+    }
+    
+    // ===============================================
+    // HELPER METHODS
+    // ===============================================
+    
+    // Add lab dip with comprehensive data
+    addLabDipWithData(pantoneCode, hexColor, source) {
+      const labDipId = Date.now().toString();
+      
+      // Store lab dip with source information
+      this.labDips.set(labDipId, {
+        pantone: pantoneCode,
+        hexColor: hexColor,
+        source: source, // 'color-picker' | 'manual-entry'
+        status: 'Pending',
+        garmentId: null
+      });
+      
+      debugSystem.log('✅ Lab dip stored with data:', { 
+        id: labDipId, 
+        pantone: pantoneCode, 
+        hexColor, 
+        source,
+        totalLabDips: this.labDips.size 
+      });
+      
+      // Update UI
+      this.renderLabDipList();
+      this.updateLabDipSelectionArea();
+      this.updateValidation();
+      this.updatePricing();
+    }
+    
+    // Validate Pantone code format (TCX or TPX)
+    validatePantoneCode(code) {
+      // Basic validation for TCX or TPX format
+      const pantonePattern = /^\d{2}-\d{4}\s?(TPX|TCX)$/i;
+      return pantonePattern.test(code);
+    }
+    
+    // Find closest Pantone color (using existing method)
+    findClosestPantoneColor(hexColor) {
+      // Use existing findClosestPantoneColors method
+      const results = this.findClosestPantoneColors(hexColor, 1);
+      return results && results.length > 0 ? { code: results[0] } : null;
+    }
+    
+    // Show error message
+    showError(message) {
+      // Create or update error display
+      let errorDiv = document.getElementById('lab-dip-error');
+      if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.id = 'lab-dip-error';
+        errorDiv.className = 'techpack-error-message';
+        
+        const inputSystem = document.querySelector('.techpack-lab-dip-input-system');
+        if (inputSystem) {
+          inputSystem.appendChild(errorDiv);
+        }
+      }
+      
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Handle sample type selection (mutual exclusivity with proper reset)
     handleSampleTypeChange(type) {
+      const previousType = this.sampleState.type;
       this.sampleState.type = type;
+      
+      // RESET LOGIC: Clear previous selections when changing sample types
+      if (previousType !== type) {
+        if (previousType === 'stock') {
+          // Reset stock color selection
+          this.sampleState.stockColor = null;
+          this.resetStockColorSelection();
+        }
+        
+        if (previousType === 'custom') {
+          // Reset custom lab dip selection
+          this.sampleState.selectedLabDipId = null;
+        }
+      }
       
       // Show/hide sample options based on selection
       this.updateCardStates();
       
-      // Update dynamic subtitle for stock option
+      // Update dynamic subtitle for stock option (with reset)
       this.updateStockSubtitle();
       
       // Update lab dip selection area when custom color is selected
@@ -10747,31 +11031,117 @@ setupInitialization();
       this.updateValidation();
       this.updatePricing();
       
-      debugSystem.log('Sample type changed to:', type);
+      debugSystem.log('Sample type changed to:', type, 'from:', previousType);
     }
 
-    // Update card visual states and show/hide options
+    // Update card visual states and show/hide options with immediate feedback
     updateCardStates() {
       const stockCard = document.querySelector('[data-sample-type="stock"]');
       const customCard = document.querySelector('[data-sample-type="custom"]');
       const stockOptions = stockCard?.querySelector('.techpack-sample-options');
       const customOptions = customCard?.querySelector('.techpack-sample-options');
       
+      // Add loading state for immediate feedback
+      this.addCardTransition(stockCard);
+      this.addCardTransition(customCard);
+      
       if (this.sampleState.type === 'stock') {
-        stockOptions?.style && (stockOptions.style.display = 'block');
-        customOptions?.style && (customOptions.style.display = 'none');
-        customCard?.setAttribute('data-disabled', 'true');
-        stockCard?.removeAttribute('data-disabled');
+        // Stock selected - show stock options, hide custom
+        this.activateCard(stockCard, stockOptions);
+        this.deactivateCard(customCard, customOptions);
+        
+        debugSystem.log('✅ Stock sample type activated');
       } else if (this.sampleState.type === 'custom') {
-        customOptions?.style && (customOptions.style.display = 'block');
-        stockOptions?.style && (stockOptions.style.display = 'none');
-        stockCard?.setAttribute('data-disabled', 'true');
-        customCard?.removeAttribute('data-disabled');
+        // Custom selected - show custom options, hide stock
+        this.activateCard(customCard, customOptions);
+        this.deactivateCard(stockCard, stockOptions);
+        
+        debugSystem.log('✅ Custom sample type activated');
       } else {
-        stockOptions?.style && (stockOptions.style.display = 'none');
-        customOptions?.style && (customOptions.style.display = 'none');
-        stockCard?.removeAttribute('data-disabled');
-        customCard?.removeAttribute('data-disabled');
+        // No selection - hide all options
+        this.deactivateCard(stockCard, stockOptions);
+        this.deactivateCard(customCard, customOptions);
+        
+        debugSystem.log('ℹ️ No sample type selected - showing selection prompt');
+      }
+      
+      // Update step validation status immediately
+      this.updateStepValidationStatus();
+    }
+    
+    // Add smooth transition to cards
+    addCardTransition(card) {
+      if (!card) return;
+      card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+    
+    // Activate a sample type card
+    activateCard(card, options) {
+      if (!card) return;
+      
+      // Visual feedback
+      card.classList.add('techpack-sample-card--active');
+      card.removeAttribute('data-disabled');
+      card.style.transform = 'scale(1.02)';
+      card.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+      
+      // Show options with animation
+      if (options) {
+        options.style.display = 'block';
+        options.style.opacity = '0';
+        options.style.transform = 'translateY(-10px)';
+        
+        // Animate in
+        setTimeout(() => {
+          options.style.transition = 'all 0.3s ease';
+          options.style.opacity = '1';
+          options.style.transform = 'translateY(0)';
+        }, 50);
+      }
+    }
+    
+    // Deactivate a sample type card
+    deactivateCard(card, options) {
+      if (!card) return;
+      
+      // Remove active state
+      card.classList.remove('techpack-sample-card--active');
+      card.setAttribute('data-disabled', 'true');
+      card.style.transform = 'scale(1)';
+      card.style.boxShadow = '';
+      
+      // Hide options
+      if (options) {
+        options.style.display = 'none';
+        options.style.opacity = '0';
+        options.style.transform = 'translateY(-10px)';
+      }
+    }
+    
+    // Update step validation status with visual feedback
+    updateStepValidationStatus() {
+      const hasSelectedType = !!this.sampleState.type;
+      
+      // Update any "please select" messages
+      const selectPrompts = document.querySelectorAll('.techpack-selection-prompt');
+      selectPrompts.forEach(prompt => {
+        if (hasSelectedType) {
+          prompt.style.display = 'none';
+        } else {
+          prompt.style.display = 'block';
+        }
+      });
+      
+      // Update continue button state if exists
+      const continueBtn = document.querySelector('#step-3-next, .techpack-step-continue');
+      if (continueBtn) {
+        if (hasSelectedType) {
+          continueBtn.disabled = false;
+          continueBtn.classList.remove('techpack-btn--disabled');
+        } else {
+          continueBtn.disabled = true;
+          continueBtn.classList.add('techpack-btn--disabled');
+        }
       }
     }
 
@@ -10890,17 +11260,28 @@ setupInitialization();
       }
     }
 
-    // Render lab dip list in UI using new card template
+    // Render lab dip list using new compact template
     renderLabDipList() {
+      debugSystem.log('🎨 renderLabDipList called with', this.labDips.size, 'lab dips');
+      
       const container = document.getElementById('lab-dip-list');
       const emptyState = document.getElementById('lab-dip-empty');
       const template = document.getElementById('lab-dip-template');
       
-      if (!container || !template) return;
+      debugSystem.log('🎨 Elements found:', { 
+        container: !!container, 
+        emptyState: !!emptyState, 
+        template: !!template 
+      });
       
-      // Clear existing cards (except empty state)
-      const existingCards = container.querySelectorAll('.techpack-lab-dip-card');
-      existingCards.forEach(card => card.remove());
+      if (!container || !template) {
+        debugSystem.log('❌ Missing required elements for lab dip rendering');
+        return;
+      }
+      
+      // Clear existing items (both old cards and new items)
+      const existingItems = container.querySelectorAll('.techpack-lab-dip-card, .techpack-lab-dip-item');
+      existingItems.forEach(item => item.remove());
       
       if (this.labDips.size === 0) {
         emptyState && (emptyState.style.display = 'block');
@@ -10910,57 +11291,63 @@ setupInitialization();
       emptyState && (emptyState.style.display = 'none');
       
       this.labDips.forEach((labDip, id) => {
-        // Clone the template
-        const cardClone = template.content.cloneNode(true);
-        const card = cardClone.querySelector('.techpack-lab-dip-card');
+        // Clone the new compact template
+        const itemClone = template.content.cloneNode(true);
+        const item = itemClone.querySelector('.techpack-lab-dip-item');
         
         // Set lab dip ID
-        card.dataset.labDipId = id;
+        item.dataset.labDipId = id;
         
-        // Update pantone display in header
-        const pantoneDisplay = card.querySelector('.techpack-lab-dip-card__pantone');
-        if (pantoneDisplay) {
-          pantoneDisplay.textContent = `PANTONE ${labDip.pantone}`;
+        // Update visual elements based on source
+        const colorCircle = item.querySelector('.techpack-lab-dip-item__color-circle');
+        const badge = item.querySelector('.techpack-lab-dip-item__badge');
+        
+        if (labDip.source === 'color-picker' && labDip.hexColor) {
+          // Show color circle for color picker entries (TCX)
+          colorCircle.style.backgroundColor = labDip.hexColor;
+          colorCircle.style.display = 'block';
+          badge.style.display = 'none';
+        } else {
+          // Show badge for manual entries (TCX or TPX)
+          badge.setAttribute('data-source', labDip.source || 'manual');
+          
+          // Determine badge text and type from pantone code
+          const isTPX = labDip.pantone.toUpperCase().includes('TPX');
+          const badgeType = isTPX ? 'TPX' : 'TCX';
+          
+          badge.textContent = badgeType;
+          badge.setAttribute('data-type', badgeType);
+          
+          colorCircle.style.display = 'none';
+          badge.style.display = 'flex';
         }
         
-        // Update color preview
-        const colorCircle = card.querySelector('.techpack-lab-dip-card__color-circle');
-        if (colorCircle) {
-          // For now, use a default color - could be enhanced with color matching
-          colorCircle.style.backgroundColor = this.pantoneToHex(labDip.pantone) || '#6b7280';
+        // Update info
+        const codeElement = item.querySelector('.techpack-lab-dip-item__code');
+        const sourceElement = item.querySelector('.techpack-lab-dip-item__source');
+        
+        if (codeElement) {
+          codeElement.textContent = `PANTONE ${labDip.pantone}`;
         }
         
-        // Set up pantone input
-        const pantoneInput = card.querySelector('.techpack-lab-dip-pantone');
-        if (pantoneInput) {
-          pantoneInput.value = labDip.pantone;
+        if (sourceElement) {
+          sourceElement.textContent = labDip.source === 'color-picker' ? 'From color picker' : 'Manual entry';
         }
         
-        // Set up color picker
-        const colorPicker = card.querySelector('.techpack-lab-dip-color');
-        if (colorPicker) {
-          colorPicker.value = this.pantoneToHex(labDip.pantone) || '#6b7280';
-        }
-        
-        // Update garment name placeholders
-        this.updateGarmentNamePlaceholders(card);
-        
-        // Set up remove button
-        const removeBtn = card.querySelector('.techpack-lab-dip-card__remove');
+        // Set up remove button (no need for event listener - handled by delegation)
+        const removeBtn = item.querySelector('.techpack-lab-dip-item__remove');
         if (removeBtn) {
-          removeBtn.addEventListener('click', () => this.removeLabDip(id));
+          removeBtn.setAttribute('data-lab-dip-id', id);
         }
         
-        // Set up select button
-        const selectBtn = card.querySelector('.techpack-lab-dip-select-btn');
-        if (selectBtn) {
-          selectBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.selectLabDipForCustom(id);
-          });
-        }
+        container.appendChild(item);
         
-        container.appendChild(card);
+        debugSystem.log(`✅ Rendered lab dip item:`, {
+          id,
+          pantone: labDip.pantone,
+          source: labDip.source,
+          hasColor: !!labDip.hexColor
+        });
       });
       
       // Also update the selection area
@@ -11983,11 +12370,654 @@ setupInitialization();
     }
   }
 
+  // ===============================================
+  // GLOBAL LAB DIP MANAGEMENT SYSTEM
+  // ===============================================
+  
+  class GlobalLabDipManager {
+    constructor() {
+      // Global lab dip data structure
+      this.globalLabDips = new Map(); // id -> { pantone, hex, source, assignments, status }
+      this.garmentAssignments = new Map(); // garmentId -> Set of lab dip IDs
+      this.fabricSwatches = new Set(); // lab dip IDs marked as fabric swatches only
+      
+      this.initializeEventListeners();
+      this.initializeExistingData();
+      
+      debugSystem.log('🌍 GlobalLabDipManager initialized');
+    }
+    
+    // Initialize event listeners
+    initializeEventListeners() {
+      // Color picker mode handling
+      const colorPickerMode = document.getElementById('color-picker-mode');
+      const manualEntryMode = document.getElementById('manual-entry-mode');
+      
+      colorPickerMode?.addEventListener('click', () => this.switchInputMode('color-picker'));
+      manualEntryMode?.addEventListener('click', () => this.switchInputMode('manual-entry'));
+      
+      // Add lab dip buttons
+      const addLabDipColor = document.getElementById('add-lab-dip-color');
+      const addLabDipManual = document.getElementById('add-lab-dip-manual');
+      
+      addLabDipColor?.addEventListener('click', () => this.addLabDipFromColorPicker());
+      addLabDipManual?.addEventListener('click', () => this.addLabDipFromManualEntry());
+      
+      // Color picker change handling
+      const labDipColorPicker = document.getElementById('lab-dip-color-picker');
+      labDipColorPicker?.addEventListener('change', (e) => this.handleColorPickerChange(e.target.value));
+      
+      // Initialize color picker preview
+      if (labDipColorPicker) {
+        this.handleColorPickerChange(labDipColorPicker.value);
+      }
+      
+      debugSystem.log('🎯 Global lab dip event listeners initialized');
+    }
+    
+    // Initialize with existing data from SampleManager
+    initializeExistingData() {
+      // Import any existing lab dips from the old system if needed
+      if (window.sampleManager && window.sampleManager.labDips) {
+        window.sampleManager.labDips.forEach((labDip, id) => {
+          this.globalLabDips.set(id, {
+            pantone: labDip.pantone,
+            hex: labDip.hex || null,
+            source: labDip.source || 'manual-entry',
+            assignments: new Set(),
+            status: 'unassigned'
+          });
+        });
+        
+        this.renderGlobalLabDipList();
+        debugSystem.log('🔄 Imported existing lab dips:', this.globalLabDips.size);
+      }
+    }
+    
+    // Switch between color picker and manual entry modes
+    switchInputMode(mode) {
+      const colorPickerMode = document.getElementById('color-picker-mode');
+      const manualEntryMode = document.getElementById('manual-entry-mode');
+      const colorPickerInput = document.getElementById('color-picker-input');
+      const manualEntryInput = document.getElementById('manual-entry-input');
+      
+      if (mode === 'color-picker') {
+        colorPickerMode?.classList.add('techpack-mode-btn--active');
+        manualEntryMode?.classList.remove('techpack-mode-btn--active');
+        colorPickerInput?.classList.add('techpack-input-mode--active');
+        manualEntryInput?.classList.remove('techpack-input-mode--active');
+      } else {
+        manualEntryMode?.classList.add('techpack-mode-btn--active');
+        colorPickerMode?.classList.remove('techpack-mode-btn--active');
+        manualEntryInput?.classList.add('techpack-input-mode--active');
+        colorPickerInput?.classList.remove('techpack-input-mode--active');
+      }
+      
+      debugSystem.log('🔄 Input mode switched to:', mode);
+    }
+    
+    // Handle color picker change
+    handleColorPickerChange(color) {
+      this.selectedColor = color;
+      
+      // Update color preview
+      const colorPreview = document.getElementById('lab-dip-color-preview');
+      if (colorPreview) {
+        colorPreview.style.backgroundColor = color;
+      }
+      
+      // Convert hex to closest Pantone TCX and show
+      const closestPantone = window.sampleManager?.findClosestPantoneColor(color);
+      const pantoneCode = document.getElementById('suggested-pantone-code');
+      if (pantoneCode && closestPantone) {
+        pantoneCode.textContent = `${closestPantone.code} TCX`;
+      } else {
+        pantoneCode.textContent = 'Color selected';
+      }
+      
+      debugSystem.log('🎨 Color picker changed:', color, 'closest pantone:', closestPantone);
+    }
+    
+    // Add lab dip from color picker mode (TCX only)
+    addLabDipFromColorPicker() {
+      if (!this.selectedColor) {
+        this.showError('Please select a color first');
+        return;
+      }
+      
+      // Get closest Pantone TCX code
+      const pantoneData = window.sampleManager?.findClosestPantoneColor(this.selectedColor);
+      if (!pantoneData) {
+        this.showError('Unable to convert color to Pantone TCX');
+        return;
+      }
+      
+      // Use TCX code directly (no conversion to TPX)
+      const tcxCode = `${pantoneData.code} TCX`;
+      
+      // Add the lab dip with color preview
+      this.addGlobalLabDip(tcxCode, this.selectedColor, 'color-picker');
+      
+      debugSystem.log('🎨 Lab dip added from color picker:', tcxCode);
+    }
+    
+    // Add lab dip from manual entry mode (TCX or TPX)
+    addLabDipFromManualEntry() {
+      const input = document.getElementById('manual-pantone-code');
+      const pantoneCode = input?.value?.trim();
+      
+      if (!pantoneCode) {
+        this.showError('Please enter a Pantone code');
+        return;
+      }
+      
+      // Validate pantone format
+      if (!this.validatePantoneCode(pantoneCode)) {
+        this.showError('Please enter a valid Pantone code (e.g., 18-1664 TPX or 18-1664 TCX)');
+        return;
+      }
+      
+      // Add the lab dip (no color preview for manual entry)
+      this.addGlobalLabDip(pantoneCode, null, 'manual-entry');
+      
+      // Clear input
+      if (input) input.value = '';
+      
+      debugSystem.log('✍️ Lab dip added from manual entry:', pantoneCode);
+    }
+    
+    // Add global lab dip to the system
+    addGlobalLabDip(pantoneCode, hexColor = null, source = 'manual-entry') {
+      // Check for duplicates
+      const existingLabDip = Array.from(this.globalLabDips.values()).find(labDip => 
+        labDip.pantone.toLowerCase() === pantoneCode.toLowerCase()
+      );
+      
+      if (existingLabDip) {
+        this.showError(`${pantoneCode} already exists`);
+        return;
+      }
+      
+      // Generate unique ID
+      const labDipId = `global-${Date.now()}`;
+      
+      // Add to global data structure
+      this.globalLabDips.set(labDipId, {
+        pantone: pantoneCode,
+        hex: hexColor,
+        source: source,
+        assignments: new Set(), // Set of garment IDs this lab dip is assigned to
+        status: 'unassigned'
+      });
+      
+      // Update UI
+      this.renderGlobalLabDipList();
+      this.updateAssignmentSummary();
+      
+      debugSystem.log('🌍 Global lab dip added:', { id: labDipId, pantone: pantoneCode, source });
+    }
+    
+    // Remove global lab dip
+    removeGlobalLabDip(labDipId) {
+      if (this.globalLabDips.has(labDipId)) {
+        const labDip = this.globalLabDips.get(labDipId);
+        
+        // Remove all assignments
+        labDip.assignments.forEach(garmentId => {
+          this.unassignFromGarment(labDipId, garmentId);
+        });
+        
+        // Remove from fabric swatches
+        this.fabricSwatches.delete(labDipId);
+        
+        // Remove from global collection
+        this.globalLabDips.delete(labDipId);
+        
+        // Update UI
+        this.renderGlobalLabDipList();
+        this.updateAssignmentSummary();
+        
+        debugSystem.log('🗑️ Global lab dip removed:', labDipId);
+      }
+    }
+    
+    // Assign lab dip to garment
+    assignToGarment(labDipId, garmentId) {
+      if (this.globalLabDips.has(labDipId)) {
+        const labDip = this.globalLabDips.get(labDipId);
+        labDip.assignments.add(garmentId);
+        
+        if (!this.garmentAssignments.has(garmentId)) {
+          this.garmentAssignments.set(garmentId, new Set());
+        }
+        this.garmentAssignments.get(garmentId).add(labDipId);
+        
+        this.updateLabDipStatus(labDipId);
+        this.renderGlobalLabDipList();
+        this.updateAssignmentSummary();
+        
+        debugSystem.log('🎯 Lab dip assigned to garment:', { labDipId, garmentId });
+      }
+    }
+    
+    // Unassign lab dip from garment
+    unassignFromGarment(labDipId, garmentId) {
+      if (this.globalLabDips.has(labDipId)) {
+        const labDip = this.globalLabDips.get(labDipId);
+        labDip.assignments.delete(garmentId);
+        
+        if (this.garmentAssignments.has(garmentId)) {
+          this.garmentAssignments.get(garmentId).delete(labDipId);
+        }
+        
+        this.updateLabDipStatus(labDipId);
+        this.renderGlobalLabDipList();
+        this.updateAssignmentSummary();
+        
+        debugSystem.log('❌ Lab dip unassigned from garment:', { labDipId, garmentId });
+      }
+    }
+    
+    // Toggle lab dip as fabric swatch
+    toggleFabricSwatch(labDipId) {
+      if (this.fabricSwatches.has(labDipId)) {
+        this.fabricSwatches.delete(labDipId);
+      } else {
+        this.fabricSwatches.add(labDipId);
+      }
+      
+      this.updateLabDipStatus(labDipId);
+      this.renderGlobalLabDipList();
+      this.updateAssignmentSummary();
+      
+      debugSystem.log('🧪 Lab dip fabric swatch toggled:', { labDipId, isFabricSwatch: this.fabricSwatches.has(labDipId) });
+    }
+    
+    // Update lab dip status based on assignments
+    updateLabDipStatus(labDipId) {
+      if (this.globalLabDips.has(labDipId)) {
+        const labDip = this.globalLabDips.get(labDipId);
+        const hasAssignments = labDip.assignments.size > 0;
+        const isFabricSwatch = this.fabricSwatches.has(labDipId);
+        
+        if (hasAssignments && isFabricSwatch) {
+          labDip.status = 'assigned-and-fabric';
+        } else if (hasAssignments) {
+          labDip.status = 'assigned';
+        } else if (isFabricSwatch) {
+          labDip.status = 'fabric-swatch';
+        } else {
+          labDip.status = 'unassigned';
+        }
+      }
+    }
+    
+    // Render global lab dip list with smart categorization
+    renderGlobalLabDipList() {
+      const emptyState = document.getElementById('lab-dip-empty');
+      const assignmentSummary = document.getElementById('assignment-summary');
+      
+      // Clear all category lists
+      const assignedList = document.getElementById('assigned-list');
+      const fabricSwatchList = document.getElementById('fabric-swatch-list');
+      const unassignedList = document.getElementById('unassigned-list');
+      
+      if (assignedList) assignedList.innerHTML = '';
+      if (fabricSwatchList) fabricSwatchList.innerHTML = '';
+      if (unassignedList) unassignedList.innerHTML = '';
+      
+      if (this.globalLabDips.size === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+        if (assignmentSummary) assignmentSummary.style.display = 'none';
+        this.hideAllCategories();
+        return;
+      }
+      
+      if (emptyState) emptyState.style.display = 'none';
+      if (assignmentSummary) assignmentSummary.style.display = 'block';
+      
+      // Categorize lab dips
+      const categories = {
+        assigned: [],
+        fabricSwatch: [],
+        unassigned: []
+      };
+      
+      this.globalLabDips.forEach((labDip, id) => {
+        const hasAssignments = labDip.assignments.size > 0;
+        const isFabricSwatch = this.fabricSwatches.has(id);
+        
+        if (hasAssignments && !isFabricSwatch) {
+          categories.assigned.push({ id, labDip });
+        } else if (isFabricSwatch && !hasAssignments) {
+          categories.fabricSwatch.push({ id, labDip });
+        } else if (hasAssignments && isFabricSwatch) {
+          // Lab dips that are both assigned and fabric swatches appear in assigned category
+          categories.assigned.push({ id, labDip });
+        } else {
+          categories.unassigned.push({ id, labDip });
+        }
+      });
+      
+      // Render each category
+      this.renderCategory('assigned', categories.assigned, assignedList);
+      this.renderCategory('fabric-swatch', categories.fabricSwatch, fabricSwatchList);
+      this.renderCategory('unassigned', categories.unassigned, unassignedList);
+      
+      // Update assignment summary
+      this.updateAssignmentSummaryUI(categories);
+      
+      debugSystem.log('🎨 Categorized lab dip list rendered:', {
+        assigned: categories.assigned.length,
+        fabricSwatch: categories.fabricSwatch.length,
+        unassigned: categories.unassigned.length
+      });
+    }
+    
+    // Render a specific category
+    renderCategory(categoryName, items, container) {
+      const categoryElement = document.getElementById(`${categoryName}-category`);
+      const categoryCount = document.getElementById(`${categoryName}-category-count`);
+      
+      if (!container || !categoryElement) return;
+      
+      if (items.length === 0) {
+        categoryElement.style.display = 'none';
+        return;
+      }
+      
+      categoryElement.style.display = 'block';
+      if (categoryCount) categoryCount.textContent = items.length;
+      
+      items.forEach(({ id, labDip }) => {
+        const labDipElement = this.createGlobalLabDipElement(id, labDip);
+        container.appendChild(labDipElement);
+      });
+    }
+    
+    // Hide all category sections
+    hideAllCategories() {
+      const categories = ['assigned', 'fabric-swatch', 'unassigned'];
+      categories.forEach(category => {
+        const categoryElement = document.getElementById(`${category}-category`);
+        if (categoryElement) categoryElement.style.display = 'none';
+      });
+    }
+    
+    // Update assignment summary UI
+    updateAssignmentSummaryUI(categories) {
+      const assignedCount = document.getElementById('assigned-count');
+      const fabricSwatchCount = document.getElementById('fabric-swatch-count');
+      const unassignedCount = document.getElementById('unassigned-count');
+      
+      if (assignedCount) assignedCount.textContent = categories.assigned.length;
+      if (fabricSwatchCount) fabricSwatchCount.textContent = categories.fabricSwatch.length;
+      if (unassignedCount) unassignedCount.textContent = categories.unassigned.length;
+    }
+    
+    // Create global lab dip element
+    createGlobalLabDipElement(id, labDip) {
+      const item = document.createElement('div');
+      item.className = 'techpack-lab-dip-global-item';
+      item.dataset.labDipId = id;
+      
+      // Color indicator
+      let colorElement = '';
+      if (labDip.hex && labDip.source === 'color-picker') {
+        colorElement = `<div class="techpack-lab-dip-global-item__color" style="background-color: ${labDip.hex}"></div>`;
+      } else {
+        colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--tpx">TPX</div>`;
+      }
+      
+      // Assignment status badges
+      const assignmentBadges = this.createAssignmentBadges(labDip);
+      
+      item.innerHTML = `
+        ${colorElement}
+        <div class="techpack-lab-dip-global-item__info">
+          <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
+          <div class="techpack-lab-dip-global-item__source">
+            ${labDip.source === 'color-picker' ? 'Color Picker' : 'Manual Entry'}
+          </div>
+        </div>
+        <div class="techpack-lab-dip-global-item__assignment-status">
+          ${assignmentBadges}
+        </div>
+        <div class="techpack-lab-dip-global-item__assignment">
+          <div class="techpack-assignment-dropdown">
+            <button type="button" class="techpack-assignment-btn" data-lab-dip-id="${id}">
+              Assign
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 6l4 4 4-4H4z"/>
+              </svg>
+            </button>
+            ${this.createAssignmentMenu(id, labDip)}
+          </div>
+        </div>
+        <div class="techpack-lab-dip-global-item__actions">
+          <button type="button" class="techpack-lab-dip-global-item__remove" data-lab-dip-id="${id}">
+            <svg width="16" height="16" viewBox="0 0 16 16">
+              <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+      `;
+      
+      // Add event listeners
+      this.attachLabDipElementListeners(item, id);
+      
+      return item;
+    }
+    
+    // Create assignment status badges
+    createAssignmentBadges(labDip) {
+      const badges = [];
+      
+      if (labDip.assignments.size > 0) {
+        badges.push(`<span class="techpack-assignment-badge techpack-assignment-badge--assigned">
+          ${labDip.assignments.size} garment${labDip.assignments.size > 1 ? 's' : ''}
+        </span>`);
+      }
+      
+      if (this.fabricSwatches.has(Object.keys(this.globalLabDips.entries().find(([key, value]) => value === labDip))[0])) {
+        badges.push('<span class="techpack-assignment-badge techpack-assignment-badge--fabric-swatch">Fabric Swatch</span>');
+      }
+      
+      if (badges.length === 0) {
+        badges.push('<span class="techpack-assignment-badge techpack-assignment-badge--unassigned">Unassigned</span>');
+      }
+      
+      return badges.join('');
+    }
+    
+    // Create assignment menu
+    createAssignmentMenu(labDipId, labDip) {
+      // Get available garments (this would need to be connected to the garment system)
+      const availableGarments = this.getAvailableGarments();
+      
+      let garmentItems = '';
+      if (availableGarments.length > 0) {
+        garmentItems = availableGarments.map(garment => {
+          const isAssigned = labDip.assignments.has(garment.id);
+          return `
+            <div class="techpack-assignment-menu__item ${isAssigned ? 'techpack-assignment-menu__item--selected' : ''}" 
+                 data-action="toggle-garment" data-garment-id="${garment.id}">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 12l-4-4 4-4h4v8H8z"/>
+              </svg>
+              ${garment.name} ${isAssigned ? '✓' : ''}
+            </div>
+          `;
+        }).join('');
+      } else {
+        garmentItems = `
+          <div class="techpack-assignment-menu__item" style="color: #9ca3af; cursor: default;">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <circle cx="8" cy="8" r="6"/>
+            </svg>
+            No garments available
+          </div>
+        `;
+      }
+      
+      const isFabricSwatch = this.fabricSwatches.has(labDipId);
+      
+      return `
+        <div class="techpack-assignment-menu">
+          <div class="techpack-assignment-menu__section">
+            <div class="techpack-assignment-menu__header">Assign to Garments</div>
+            ${garmentItems}
+          </div>
+          <div class="techpack-assignment-menu__section">
+            <div class="techpack-assignment-menu__item ${isFabricSwatch ? 'techpack-assignment-menu__item--selected' : ''}" 
+                 data-action="toggle-fabric-swatch">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3z"/>
+              </svg>
+              Fabric Swatch Only ${isFabricSwatch ? '✓' : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Attach event listeners to lab dip element
+    attachLabDipElementListeners(item, labDipId) {
+      // Remove button
+      const removeBtn = item.querySelector('.techpack-lab-dip-global-item__remove');
+      removeBtn?.addEventListener('click', () => this.removeGlobalLabDip(labDipId));
+      
+      // Assignment button
+      const assignBtn = item.querySelector('.techpack-assignment-btn');
+      const assignMenu = item.querySelector('.techpack-assignment-menu');
+      
+      assignBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleAssignmentMenu(assignBtn, assignMenu);
+      });
+      
+      // Assignment menu items
+      const menuItems = item.querySelectorAll('.techpack-assignment-menu__item');
+      menuItems.forEach(menuItem => {
+        menuItem.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.handleAssignmentMenuAction(labDipId, menuItem);
+        });
+      });
+      
+      // Click outside to close menu
+      document.addEventListener('click', (e) => {
+        if (!item.contains(e.target)) {
+          assignBtn?.classList.remove('techpack-assignment-btn--open');
+          assignMenu?.classList.remove('techpack-assignment-menu--open');
+        }
+      });
+    }
+    
+    // Toggle assignment menu
+    toggleAssignmentMenu(button, menu) {
+      const isOpen = button.classList.contains('techpack-assignment-btn--open');
+      
+      // Close all other menus
+      document.querySelectorAll('.techpack-assignment-btn--open').forEach(btn => {
+        btn.classList.remove('techpack-assignment-btn--open');
+      });
+      document.querySelectorAll('.techpack-assignment-menu--open').forEach(menu => {
+        menu.classList.remove('techpack-assignment-menu--open');
+      });
+      
+      if (!isOpen) {
+        button.classList.add('techpack-assignment-btn--open');
+        menu.classList.add('techpack-assignment-menu--open');
+      }
+    }
+    
+    // Handle assignment menu action
+    handleAssignmentMenuAction(labDipId, menuItem) {
+      const action = menuItem.dataset.action;
+      
+      if (action === 'toggle-garment') {
+        const garmentId = menuItem.dataset.garmentId;
+        const labDip = this.globalLabDips.get(labDipId);
+        
+        if (labDip.assignments.has(garmentId)) {
+          this.unassignFromGarment(labDipId, garmentId);
+        } else {
+          this.assignToGarment(labDipId, garmentId);
+        }
+      } else if (action === 'toggle-fabric-swatch') {
+        this.toggleFabricSwatch(labDipId);
+      }
+    }
+    
+    // Get available garments (placeholder - would need to connect to actual garment system)
+    getAvailableGarments() {
+      // This would eventually connect to the garment management system
+      // For now, return mock data
+      return [
+        { id: 'garment-1', name: 'Garment 1' },
+        { id: 'garment-2', name: 'Garment 2' }
+      ];
+    }
+    
+    // Update assignment summary
+    updateAssignmentSummary() {
+      // This could show statistics about assignments
+      const assignedCount = Array.from(this.globalLabDips.values()).filter(labDip => labDip.assignments.size > 0).length;
+      const fabricSwatchCount = this.fabricSwatches.size;
+      const unassignedCount = this.globalLabDips.size - assignedCount;
+      
+      debugSystem.log('📊 Assignment summary:', { 
+        total: this.globalLabDips.size, 
+        assigned: assignedCount, 
+        fabricSwatch: fabricSwatchCount, 
+        unassigned: unassignedCount 
+      });
+    }
+    
+    // Validate Pantone code format
+    validatePantoneCode(code) {
+      // Basic validation for Pantone format
+      const pantonePattern = /^\d{1,2}-\d{4}\s+(TPX|TCX)$/i;
+      return pantonePattern.test(code.trim());
+    }
+    
+    // Show error message
+    showError(message) {
+      // Create or update error display
+      let errorElement = document.getElementById('global-lab-dip-error');
+      if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.id = 'global-lab-dip-error';
+        errorElement.className = 'techpack-error-message';
+        
+        const container = document.querySelector('.techpack-global-lab-dips');
+        container?.appendChild(errorElement);
+      }
+      
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        errorElement.style.display = 'none';
+      }, 3000);
+      
+      debugSystem.log('❌ Error shown:', message);
+    }
+  }
+
   // Initialize Sample Manager
   const sampleManager = new SampleManager();
   
   // Make it globally available
   window.sampleManager = sampleManager;
+
+  // Initialize Global Lab Dip Manager
+  const globalLabDipManager = new GlobalLabDipManager();
+  
+  // Make it globally available
+  window.globalLabDipManager = globalLabDipManager;
 
   // Integrate with existing step navigation - FIXED to use proper validation flow
   const originalValidateStep = window.validateStep;
