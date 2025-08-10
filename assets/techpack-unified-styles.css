@@ -2467,6 +2467,17 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+.techpack-sample-card--error {
+  border-color: var(--techpack-error);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.2);
+  animation: errorPulse 2s ease-in-out;
+}
+
+@keyframes errorPulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
 .techpack-sample-card::before {
   content: '';
   position: absolute;
@@ -2889,6 +2900,345 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   color: var(--techpack-text-muted);
 }
 
+/* ===========================================
+ * LAB DIP SELECTION CARDS (New Visual System)
+ * ========================================= */
+
+/* Lab Dip Selection Area (Custom Color Section) */
+.techpack-lab-dip-selection {
+  margin-top: 1rem;
+  border: 2px dashed rgba(139, 69, 19, 0.2);
+  border-radius: 12px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(252, 246, 238, 0.3);
+  transition: all 0.3s ease;
+}
+
+.techpack-lab-dip-selection:hover {
+  border-color: rgba(139, 69, 19, 0.4);
+  background: rgba(252, 246, 238, 0.5);
+}
+
+.techpack-lab-dip-selection.has-items {
+  border-style: solid;
+  border-color: rgba(139, 69, 19, 0.3);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.techpack-lab-dip-selection-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--techpack-text-muted);
+}
+
+.techpack-lab-dip-selection-empty svg {
+  opacity: 0.4;
+  margin-bottom: 1rem;
+  color: #8b4513;
+}
+
+.techpack-lab-dip-selection-empty p {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: var(--techpack-text-secondary);
+}
+
+.techpack-lab-dip-selection-empty span {
+  font-size: 0.825rem;
+  color: var(--techpack-text-muted);
+  max-width: 280px;
+}
+
+/* Lab Dip Selection Cards */
+.techpack-lab-dip-selection-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.techpack-lab-dip-selection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.techpack-lab-dip-selection-card.selected {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.05);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.2);
+}
+
+.techpack-lab-dip-selection-card__content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.techpack-lab-dip-selection-card__color {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.techpack-lab-dip-selection-card__color-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.techpack-lab-dip-selection-card:hover .techpack-lab-dip-selection-card__color-circle {
+  transform: scale(1.1);
+}
+
+.techpack-lab-dip-selection-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-lab-dip-selection-card__pantone {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--techpack-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.techpack-lab-dip-selection-card__status {
+  font-size: 0.825rem;
+  color: var(--techpack-text-secondary);
+}
+
+.techpack-lab-dip-selection-card.selected .techpack-lab-dip-selection-card__status {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.techpack-lab-dip-selection-card__action {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.techpack-lab-dip-selection-card__select-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.techpack-lab-dip-selection-card__select-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.techpack-lab-dip-selection-card__radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.techpack-lab-dip-selection-card.selected .techpack-lab-dip-selection-card__radio {
+  border-color: #22c55e;
+  background: #22c55e;
+}
+
+.techpack-lab-dip-selection-card__radio-inner {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.techpack-lab-dip-selection-card.selected .techpack-lab-dip-selection-card__radio-inner {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.techpack-lab-dip-selection-card__selected-indicator {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.techpack-lab-dip-selection-card.selected .techpack-lab-dip-selection-card__selected-indicator {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* New Lab Dip Cards (Enhanced version of existing items) */
+.techpack-lab-dip-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 1rem;
+}
+
+.techpack-lab-dip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.techpack-lab-dip-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(249, 250, 251, 0.8);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.techpack-lab-dip-card__color-preview {
+  flex-shrink: 0;
+}
+
+.techpack-lab-dip-card__color-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.techpack-lab-dip-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-lab-dip-card__pantone {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--techpack-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.techpack-lab-dip-card__cost {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--techpack-success);
+}
+
+.techpack-lab-dip-card__remove {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--techpack-error);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.techpack-lab-dip-card__remove:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.05);
+}
+
+.techpack-lab-dip-card__body {
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.techpack-lab-dip-card__actions {
+  padding: 1rem 1.25rem;
+  background: rgba(248, 250, 252, 0.8);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.techpack-lab-dip-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--techpack-primary);
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.techpack-lab-dip-select-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.techpack-lab-dip-select-btn.selected {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.techpack-lab-dip-card__status-message {
+  font-size: 0.825rem;
+  line-height: 1.4;
+}
+
+.techpack-lab-dip-status-selected {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.techpack-lab-dip-status-not-selected {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--techpack-text-secondary);
+}
+
+.techpack-lab-dip-status-selected svg,
+.techpack-lab-dip-status-not-selected svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
 /* Lab Dip Delivery Information */
 .techpack-lab-dip-delivery-info {
   margin: 1rem 0 1.5rem 0;
@@ -3078,6 +3428,54 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
     align-items: stretch;
   }
 
+  /* Mobile styles for new lab dip selection cards */
+  .techpack-lab-dip-selection {
+    padding: 0.875rem;
+    min-height: 100px;
+  }
+
+  .techpack-lab-dip-selection-card {
+    padding: 0.875rem;
+  }
+
+  .techpack-lab-dip-selection-card__content {
+    gap: 0.75rem;
+  }
+
+  .techpack-lab-dip-selection-card__color-circle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .techpack-lab-dip-selection-card__pantone {
+    font-size: 0.875rem;
+  }
+
+  .techpack-lab-dip-selection-card__status {
+    font-size: 0.75rem;
+  }
+
+  .techpack-lab-dip-card__header {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.875rem;
+  }
+
+  .techpack-lab-dip-card__body {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .techpack-lab-dip-card__actions {
+    padding: 0.875rem 1rem;
+  }
+
+  .techpack-lab-dip-select-btn {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
 
   .techpack-section-title::after {
     width: 40px;
@@ -3126,6 +3524,70 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 
   .techpack-guidance-content p {
     font-size: 0.875rem;
+  }
+
+  /* Extra small mobile styles for lab dip selection cards */
+  .techpack-lab-dip-selection {
+    padding: 0.75rem;
+    min-height: 80px;
+  }
+
+  .techpack-lab-dip-selection-empty {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .techpack-lab-dip-selection-empty p {
+    font-size: 0.875rem;
+  }
+
+  .techpack-lab-dip-selection-empty span {
+    font-size: 0.75rem;
+  }
+
+  .techpack-lab-dip-selection-card {
+    padding: 0.75rem;
+  }
+
+  .techpack-lab-dip-selection-card__content {
+    gap: 0.625rem;
+  }
+
+  .techpack-lab-dip-selection-card__color-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .techpack-lab-dip-selection-card__pantone {
+    font-size: 0.8rem;
+  }
+
+  .techpack-lab-dip-selection-card__status {
+    font-size: 0.7rem;
+  }
+
+  .techpack-lab-dip-card__header {
+    padding: 0.875rem 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .techpack-lab-dip-card__color-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .techpack-lab-dip-card__body {
+    padding: 0.875rem 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .techpack-lab-dip-card__actions {
+    padding: 0.75rem;
+  }
+
+  .techpack-lab-dip-select-btn {
+    padding: 0.625rem;
+    font-size: 0.75rem;
+    gap: 0.5rem;
   }
 }
 
