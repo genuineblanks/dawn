@@ -31,8 +31,20 @@ Tech-Pack Step 3: Garment Specifications Section
     </div>
 
     <div class="techpack-content">
-      <h2 class="techpack-title">Garment Specifications</h2>
-      <p class="techpack-subtitle" id="step-3-subtitle">Define your garment details and quantity requirements</p>
+      <div class="techpack-header-with-help">
+        <div class="techpack-header-content">
+          <h2 class="techpack-title">Garment Specifications</h2>
+          <p class="techpack-subtitle" id="step-3-subtitle">Define your garment details and quantity requirements</p>
+        </div>
+        <button type="button" class="techpack-help-btn" id="step-3-help-btn" aria-label="How does this step work?">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <circle cx="12" cy="17" r="1"/>
+          </svg>
+          <span>How does this work?</span>
+        </button>
+      </div>
 
       <div class="techpack-quantity-tracker">
         <div class="techpack-quantity-tracker__content">
@@ -166,7 +178,7 @@ Tech-Pack Step 3: Garment Specifications Section
               <label for="sample-stock" class="techpack-sample-card-label">
                 <h5 class="techpack-sample-card-title">Garment in Stock Fabric Color (Fastest)</h5>
                 <div class="techpack-sample-meta">~1–2 weeks · €35</div>
-                <p class="techpack-sample-description">Validate fit, sizing, stitching using in-stock colors.</p>
+                <p class="techpack-sample-description">Validate fit, sizing, stitching using in-stock colors. You'll receive the stock color garment plus separate lab dip swatches for any colors added below.</p>
                 <div class="techpack-sample-subtitle" id="stock-subtitle">Choose from available stock colors for faster turnaround.</div>
               </label>
             </div>
@@ -210,18 +222,26 @@ Tech-Pack Step 3: Garment Specifications Section
               <label for="sample-custom" class="techpack-sample-card-label">
                 <h5 class="techpack-sample-card-title">Garment in Your Custom Color (Dyed to Pantone)</h5>
                 <div class="techpack-sample-meta">~3 weeks · €65</div>
-                <p class="techpack-sample-description">Your garment in your exact Pantone shade (requires a Lab Dip to be selected).</p>
-                <div class="techpack-sample-subtitle">Requires a Lab Dip (select in Section B).</div>
+                <p class="techpack-sample-description">Your garment dyed to your exact Pantone color. You'll receive the custom-dyed garment plus separate lab dip swatches for all colors added below.</p>
+                <div class="techpack-sample-subtitle">Requires a Lab Dip (add in Section B below).</div>
               </label>
             </div>
             
             <!-- Custom color options (shown when selected) -->
             <div class="techpack-sample-options" style="display: none;">
               <div class="techpack-form__group">
-                <label class="techpack-form__label">Select Lab Dip to Use</label>
-                <select name="selected-lab-dip" id="selected-lab-dip" class="techpack-form__select" disabled>
-                  <option value="">No Lab Dips available - add one below</option>
-                </select>
+                <label class="techpack-form__label">Select Lab Dip for <span class="garment-name-placeholder">this garment</span> <span class="techpack-form__required">*</span></label>
+                <div class="techpack-lab-dip-selection" id="lab-dip-selection">
+                  <div class="techpack-lab-dip-selection-empty" id="lab-dip-selection-empty">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    <p>No Lab Dips available</p>
+                    <span>Add Lab Dips below to select one for this custom color garment</span>
+                  </div>
+                  <!-- Lab dip selection cards will be populated here -->
+                </div>
                 <div class="techpack-form__error" role="alert"></div>
               </div>
               
@@ -230,11 +250,6 @@ Tech-Pack Step 3: Garment Specifications Section
                   <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
                 </svg>
                 Requires a Lab Dip. Add one in Section B, then select it here.
-              </div>
-              
-              <div class="techpack-form__group">
-                <label class="techpack-form__label">Or enter Pantone to prefill a Lab Dip</label>
-                <input type="text" name="pantone-prefill" id="pantone-prefill" class="techpack-form__input" placeholder="Enter Pantone TCX (e.g., 18-3949 TPX)">
               </div>
             </div>
           </div>
@@ -247,7 +262,19 @@ Tech-Pack Step 3: Garment Specifications Section
             <span class="techpack-optional">(Optional — can be added with any sample type)</span>
           </h4>
           <div class="techpack-lab-dip-meta">Made in parallel · €25 each</div>
-          <p class="techpack-section-description">A small fabric swatch dyed to your Pantone to confirm color accuracy before dyeing a garment or bulk.</p>
+          <div class="techpack-lab-dip-delivery-info">
+            <div class="techpack-delivery-highlight">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM7 5a1 1 0 012 0v3a1 1 0 01-2 0V5zm1 7a1 1 0 100-2 1 1 0 000 2z"/>
+              </svg>
+              <strong>What you'll receive:</strong> You'll receive fabric swatches for <em>all</em> lab dip colors you add below, regardless of your sample type choice.
+            </div>
+            <ul class="techpack-delivery-details">
+              <li><strong>Stock Color Sample:</strong> Stock color garment + All lab dip swatches</li>
+              <li><strong>Custom Color Sample:</strong> Garment dyed to selected lab dip + All lab dip swatches</li>
+            </ul>
+          </div>
+          <p class="techpack-section-description">Lab dip swatches are small fabric pieces dyed to your exact Pantone colors to confirm color accuracy before production.</p>
           
           <div class="techpack-lab-dip-form">
             <div class="techpack-form__group">
@@ -262,7 +289,7 @@ Tech-Pack Step 3: Garment Specifications Section
           </div>
           
           <div class="techpack-lab-dip-list" id="lab-dip-list">
-            <!-- Lab dips will be added here dynamically -->
+            <!-- Lab dip selection cards will be added here dynamically -->
             <div class="techpack-lab-dip-empty" id="lab-dip-empty">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                 <circle cx="12" cy="12" r="3"/>
@@ -298,19 +325,6 @@ Tech-Pack Step 3: Garment Specifications Section
           </div>
         </div>
 
-        <!-- Guidance Banner -->
-        <div class="techpack-guidance-banner">
-          <div class="techpack-guidance-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="18" r="1"/>
-            </svg>
-          </div>
-          <div class="techpack-guidance-content">
-            <h5 class="techpack-guidance-title">Recommended path:</h5>
-            <p>Stock-Color Garment to check fit fast → Add Lab Dip(s) to lock your Pantone → Custom-Dyed Garment for exact final look.</p>
-          </div>
-        </div>
       </div>
 
       <div class="techpack-colorways">
@@ -410,8 +424,23 @@ Tech-Pack Step 3: Garment Specifications Section
 
 <!-- Lab Dip Template -->
 <template id="lab-dip-template">
-  <div class="techpack-lab-dip-item" data-lab-dip-id="">
-    <div class="techpack-lab-dip-item__content">
+  <div class="techpack-lab-dip-card" data-lab-dip-id="">
+    <div class="techpack-lab-dip-card__header">
+      <div class="techpack-lab-dip-card__color-preview">
+        <div class="techpack-lab-dip-card__color-circle" style="background-color: #000000;"></div>
+      </div>
+      <div class="techpack-lab-dip-card__info">
+        <div class="techpack-lab-dip-card__pantone">Loading...</div>
+        <div class="techpack-lab-dip-card__cost">€25</div>
+      </div>
+      <button type="button" class="techpack-lab-dip-card__remove" aria-label="Remove lab dip">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="techpack-lab-dip-card__body">
       <div class="techpack-form__group">
         <label class="techpack-form__label">Pantone TCX Code</label>
         <input 
@@ -430,17 +459,65 @@ Tech-Pack Step 3: Garment Specifications Section
           <span class="techpack-lab-dip-color-text">Click to select color</span>
         </div>
       </div>
-      
-      <div class="techpack-lab-dip-cost">
-        <span class="techpack-lab-dip-cost-label">Cost:</span>
-        <span class="techpack-lab-dip-cost-value">€25</span>
-      </div>
-      
-      <button type="button" class="techpack-lab-dip-remove" aria-label="Remove lab dip">
+    </div>
+    
+    <!-- Selection Actions (for custom color garment selection) -->
+    <div class="techpack-lab-dip-card__actions">
+      <button type="button" class="techpack-lab-dip-select-btn" data-lab-dip-select>
         <svg width="16" height="16" viewBox="0 0 16 16">
-          <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+          <path d="M6 8l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
         </svg>
+        <span class="techpack-lab-dip-select-text">Select for <span class="garment-name-placeholder">garment</span></span>
       </button>
+      
+      <div class="techpack-lab-dip-card__status-message">
+        <div class="techpack-lab-dip-status-selected" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" fill="#22c55e"/>
+            <path d="M6 8l2 2 4-4" stroke="white" stroke-width="2" fill="none"/>
+          </svg>
+          <strong>We will apply this pantone color to the above selected garment</strong>
+        </div>
+        
+        <div class="techpack-lab-dip-status-not-selected">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" fill="#3b82f6"/>
+            <path d="M8 5v4m0 2h.01" stroke="white" stroke-width="1.5"/>
+          </svg>
+          <span>You'll receive a fabric swatch together with the <span class="garment-name-placeholder">garment</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Lab Dip Selection Card Template (for custom color selection) -->
+<template id="lab-dip-selection-card-template">
+  <div class="techpack-lab-dip-selection-card" data-lab-dip-id="">
+    <div class="techpack-lab-dip-selection-card__content">
+      <div class="techpack-lab-dip-selection-card__color">
+        <div class="techpack-lab-dip-selection-card__color-circle" style="background-color: #000000;"></div>
+      </div>
+      <div class="techpack-lab-dip-selection-card__info">
+        <div class="techpack-lab-dip-selection-card__pantone">PANTONE Loading...</div>
+        <div class="techpack-lab-dip-selection-card__status">
+          <span class="status-text">Select for <span class="garment-name-placeholder">garment</span></span>
+        </div>
+      </div>
+      <div class="techpack-lab-dip-selection-card__action">
+        <button type="button" class="techpack-lab-dip-selection-card__select-btn" data-lab-dip-select>
+          <div class="techpack-lab-dip-selection-card__radio">
+            <div class="techpack-lab-dip-selection-card__radio-inner"></div>
+          </div>
+          <span class="sr-only">Select this lab dip</span>
+        </button>
+      </div>
+    </div>
+    <div class="techpack-lab-dip-selection-card__selected-indicator">
+      <svg width="20" height="20" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="8" fill="#22c55e"/>
+        <path d="M7 10l2 2 4-4" stroke="white" stroke-width="2" fill="none"/>
+      </svg>
     </div>
   </div>
 </template>
@@ -479,6 +556,125 @@ Tech-Pack Step 3: Garment Specifications Section
   ]
 }
 {% endschema %}
+
+<!-- Step 3 Help Modal -->
+<div class="techpack-modal techpack-modal--help" id="step-3-help-modal" style="display: none;">
+  <div class="techpack-modal__backdrop"></div>
+  <div class="techpack-modal__content techpack-modal__content--help">
+    <div class="techpack-modal__header">
+      <h3 class="techpack-modal__title">How Step 3 Works</h3>
+      <button type="button" class="techpack-modal__close" id="close-help-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="techpack-modal__body">
+      <div class="techpack-help-content">
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">📋 What This Step Does</h4>
+          <p>Step 3 configures your garment specifications and determines what you'll receive based on your submission type.</p>
+        </div>
+
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">🎯 Sample Requests</h4>
+          <p><strong>Purpose:</strong> Get physical samples to validate fit, quality, and color before bulk production.</p>
+          <div class="techpack-help-options">
+            <div class="techpack-help-option">
+              <strong>Stock Color Sample (€35 · 1-2 weeks)</strong>
+              <ul>
+                <li>✅ Best for: Quick fit and construction validation</li>
+                <li>📦 You receive: Stock color garment + Any lab dip swatches added</li>
+                <li>⚡ Fastest option for testing garment construction</li>
+              </ul>
+            </div>
+            <div class="techpack-help-option">
+              <strong>Custom Color Sample (€65 · 3 weeks)</strong>
+              <ul>
+                <li>✅ Best for: Final color approval and fit validation</li>
+                <li>📦 You receive: Custom-dyed garment + All lab dip swatches</li>
+                <li>🎨 Perfect for confirming exact Pantone color on final garment</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">🏭 Bulk Order Requests</h4>
+          <p><strong>Purpose:</strong> Ready for full production with specific quantities and colorways.</p>
+          <ul>
+            <li>🔢 Define exact quantities per size (minimum requirements apply)</li>
+            <li>🎨 Specify colorways with Pantone color matching</li>
+            <li>📏 Set size grading and distribution</li>
+            <li>🚚 Direct delivery to your location</li>
+          </ul>
+        </div>
+
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">🎨 Lab Dip System</h4>
+          <p><strong>What are Lab Dips?</strong> Small fabric swatches dyed to your exact Pantone colors (€25 each).</p>
+          <div class="techpack-help-highlight">
+            <strong>Important:</strong> You receive lab dip swatches for <em>all</em> colors you add, regardless of sample type.
+          </div>
+          <ul>
+            <li>🎯 Confirm color accuracy before production</li>
+            <li>📦 Always delivered as separate swatches</li>
+            <li>⏱️ Made in parallel with your samples</li>
+            <li>✅ Can be added to any sample type</li>
+          </ul>
+        </div>
+
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">🛤️ Recommended Workflow</h4>
+          <div class="techpack-help-workflow">
+            <div class="techpack-workflow-step">
+              <span class="techpack-workflow-number">1</span>
+              <div class="techpack-workflow-content">
+                <strong>Start with Stock Color Sample</strong>
+                <p>Validate fit, sizing, and construction quickly</p>
+              </div>
+            </div>
+            <div class="techpack-workflow-arrow">→</div>
+            <div class="techpack-workflow-step">
+              <span class="techpack-workflow-number">2</span>
+              <div class="techpack-workflow-content">
+                <strong>Add Lab Dips</strong>
+                <p>Confirm your Pantone colors separately</p>
+              </div>
+            </div>
+            <div class="techpack-workflow-arrow">→</div>
+            <div class="techpack-workflow-step">
+              <span class="techpack-workflow-number">3</span>
+              <div class="techpack-workflow-content">
+                <strong>Custom Color Sample</strong>
+                <p>Final approval with exact color + fit</p>
+              </div>
+            </div>
+            <div class="techpack-workflow-arrow">→</div>
+            <div class="techpack-workflow-step">
+              <span class="techpack-workflow-number">4</span>
+              <div class="techpack-workflow-content">
+                <strong>Bulk Production</strong>
+                <p>Full quantities with confidence</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="techpack-help-section">
+          <h4 class="techpack-help-section-title">💡 Pro Tips</h4>
+          <ul>
+            <li><strong>New Product:</strong> Start with stock color sample to validate fit quickly</li>
+            <li><strong>Color-Critical:</strong> Always add lab dips before requesting custom color samples</li>
+            <li><strong>Existing Product:</strong> Can go directly to custom color sample if fit is confirmed</li>
+            <li><strong>Budget-Conscious:</strong> Stock color samples provide maximum validation for minimum cost</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Educational Tooltip for Per-Garment Samples -->
 <div class="techpack-tooltips">
