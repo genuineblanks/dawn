@@ -2279,53 +2279,6 @@
         }
       });
 
-      // CRITICAL: Validate assignment status for custom color garments
-      if (window.sampleManager && window.sampleManager.validateAllCustomGarmentsAssigned) {
-        const assignmentValidation = window.sampleManager.validateAllCustomGarmentsAssigned();
-        
-        if (!assignmentValidation.isValid) {
-          isValid = false;
-          debugSystem.log('Assignment validation failed:', assignmentValidation, 'error');
-          
-          // Show specific error messages for unassigned custom garments
-          assignmentValidation.unassignedGarments.forEach(garment => {
-            const garmentElement = document.querySelector(`[data-garment-id="${garment.garmentId}"]`);
-            if (garmentElement) {
-              // Find the custom color options section and show error
-              const customOptions = garmentElement.querySelector('[data-sample-type="custom"] .techpack-sample-options');
-              if (customOptions && customOptions.style.display !== 'none') {
-                const errorElement = customOptions.querySelector('.techpack-form__error');
-                if (errorElement) {
-                  errorElement.textContent = `Please assign at least one color to this custom garment using the Lab Dip section below.`;
-                  errorElement.style.display = 'block';
-                }
-              }
-            }
-          });
-          
-          // Update the validation status display
-          window.sampleManager.updateAssignmentValidationStatus();
-        } else {
-          // Clear any assignment validation errors
-          const garmentElements = document.querySelectorAll('[data-garment-id]');
-          garmentElements.forEach(garment => {
-            const customOptions = garment.querySelector('[data-sample-type="custom"] .techpack-sample-options');
-            if (customOptions) {
-              const errorElement = customOptions.querySelector('.techpack-form__error');
-              if (errorElement && errorElement.textContent.includes('assign at least one color')) {
-                errorElement.style.display = 'none';
-              }
-            }
-          });
-        }
-        
-        debugSystem.log('Assignment validation completed:', {
-          totalCustomGarments: assignmentValidation.totalCustomGarments,
-          unassignedCount: assignmentValidation.unassignedGarments.length,
-          isValid: assignmentValidation.isValid
-        });
-      }
-
       debugSystem.log('Sample request validation result', { isValid });
       return isValid;
     }
@@ -3979,9 +3932,6 @@
       const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
       garment.querySelector('.techpack-garment__number').textContent = currentGarmentCount;
       
-      // CRITICAL FIX: Make radio button names and IDs unique per garment to prevent cross-contamination
-      this.makeRadioButtonsUnique(garment, garmentId);
-      
       // Setup event listeners
       this.setupGarmentEventListeners(garment, garmentId);
       
@@ -4079,75 +4029,6 @@
         optionCount: fabricOptions.length,
         preservedSelection: fabricSelect.value 
       });
-    }
-
-    // CRITICAL FIX: Make radio button names and IDs unique per garment to prevent cross-contamination
-    makeRadioButtonsUnique(garment, garmentId) {
-      debugSystem.log(`🔧 Making radio buttons unique for garment: ${garmentId}`);
-      
-      // Fix sample type radio buttons
-      const sampleTypeRadios = garment.querySelectorAll('input[name="garment-sample-type"]');
-      debugSystem.log(`📋 Found ${sampleTypeRadios.length} sample type radio buttons`);
-      
-      sampleTypeRadios.forEach((radio, index) => {
-        const oldId = radio.id;
-        const newId = `${oldId}-${garmentId}`;
-        const newName = `garment-sample-type-${garmentId}`;
-        
-        // Update radio button
-        radio.id = newId;
-        radio.name = newName;
-        
-        // Update the corresponding label
-        const label = garment.querySelector(`label[for="${oldId}"]`);
-        if (label) {
-          label.setAttribute('for', newId);
-          debugSystem.log(`✅ Updated sample type radio ${index}: ${oldId} → ${newId}, label updated`);
-        } else {
-          debugSystem.log(`⚠️ No label found for radio ${oldId}`);
-        }
-        
-        // Verify the changes
-        debugSystem.log(`📋 Radio ${index} final state:`, {
-          id: radio.id,
-          name: radio.name,
-          value: radio.value,
-          checked: radio.checked
-        });
-      });
-
-      // Fix stock fabric color radio buttons
-      const stockColorRadios = garment.querySelectorAll('input[name="stock-fabric-color"]');
-      debugSystem.log(`📋 Found ${stockColorRadios.length} stock color radio buttons`);
-      
-      stockColorRadios.forEach((radio, index) => {
-        const oldId = radio.id;
-        const newId = `${oldId}-${garmentId}`;
-        const newName = `stock-fabric-color-${garmentId}`;
-        
-        // Update radio button
-        radio.id = newId;
-        radio.name = newName;
-        
-        // Update the corresponding label
-        const label = garment.querySelector(`label[for="${oldId}"]`);
-        if (label) {
-          label.setAttribute('for', newId);
-          debugSystem.log(`✅ Updated stock color radio ${index}: ${oldId} → ${newId}, label updated`);
-        } else {
-          debugSystem.log(`⚠️ No label found for stock radio ${oldId}`);
-        }
-      });
-
-      // Test functionality by checking if clicking works
-      const testRadio = garment.querySelector(`input[name="garment-sample-type-${garmentId}"]`);
-      if (testRadio) {
-        debugSystem.log(`✅ Sample type radio group created successfully for ${garmentId}`);
-      } else {
-        debugSystem.log(`❌ Sample type radio group creation failed for ${garmentId}`);
-      }
-
-      debugSystem.log(`🎯 All radio buttons made unique for garment: ${garmentId}`);
     }
 
     setupGarmentEventListeners(garment, garmentId) {
@@ -10468,9 +10349,9 @@ setupInitialization();
     debugSystem.log('✅ Summary review populated', { totalGarments, totalQuantity, totalFiles });
   }
 
-  // Enhanced Populate Sample Review for Sample Requests with Multiple Color Variants
+  // Populate Sample Review for Sample Requests
   function populateSampleReview() {
-    debugSystem.log('🔍 Populating enhanced sample review with color variants...');
+    debugSystem.log('🔍 Populating sample review...');
     const container = document.getElementById('review-sample-content');
     if (!container) {
       debugSystem.log('❌ Sample review container not found');
@@ -10488,25 +10369,25 @@ setupInitialization();
     document.getElementById('sample-summary-review').style.display = 'block';
     document.getElementById('bulk-garments-review').style.display = 'none';
 
-    let html = '<div class="review-section">';
-    let totalCost = 0;
-    let totalVariants = 0;
-    let hasAnyCustomColors = false;
-
-    // Get all garments and their assignments
-    const garmentElements = document.querySelectorAll('[data-garment-id]');
-    
-    if (garmentElements.length === 0) {
-      container.innerHTML = '<div class="review-empty">No garments specified</div>';
+    // Get sample data from SampleManager
+    const sampleData = window.sampleManager ? window.sampleManager.getSampleData() : null;
+    if (!sampleData) {
+      container.innerHTML = '<div class="review-empty">Sample data not available</div>';
       return;
     }
 
-    html += '<h4 class="techpack-sample-review-title">Sample Variants</h4>';
-    html += '<div class="techpack-sample-variants-grid">';
+    let html = '<div class="review-section">';
 
-    // Process each garment and create color variants
-    garmentElements.forEach((garmentElement) => {
-      const garmentId = garmentElement.getAttribute('data-garment-id');
+    // Sample Options Summary
+    html += '<div class="techpack-sample-review-summary">';
+    html += '<h4 class="techpack-sample-review-title">Selected Sample Options</h4>';
+
+    let hasOptions = false;
+
+    // Black/Raw Sample
+    if (sampleData.blackRaw.enabled) {
+      hasOptions = true;
+      const leadTime = '1-2 weeks';
       html += `
         <div class="techpack-sample-review-item">
           <div class="techpack-sample-review-item__header">
@@ -10802,38 +10683,19 @@ setupInitialization();
       // Initialize dual-mode system
       this.initializeDualModeSystem();
       
-      // Initialize assignment status for guidance system
-      setTimeout(() => {
-        this.initializeAssignmentStatus();
-      }, 100);
-      
       debugSystem.log('New SampleManager initialized with dual-mode lab dip system');
     }
 
     bindEventListeners() {
       // Sample type radio button changes (mutual exclusivity with proper reset)
       document.addEventListener('change', (e) => {
-        // ENHANCED DEBUG: Log all radio button changes
-        if (e.target.type === 'radio') {
-          debugSystem.log(`🔘 Radio button changed:`, {
-            name: e.target.name,
-            value: e.target.value,
-            id: e.target.id,
-            checked: e.target.checked
-          });
+        if (e.target.name === 'garment-sample-type') {
+          this.handleSampleTypeChange(e.target.value);
         }
         
-        // CRITICAL FIX: Handle per-garment sample type changes (e.g., "garment-sample-type-garment-1")
-        if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
-          const garmentId = e.target.name.replace('garment-sample-type-', '');
-          debugSystem.log(`🎯 Detected sample type change for garment: ${garmentId}, value: ${e.target.value}`);
-          this.handleSampleTypeChange(e.target.value, garmentId);
-        }
-        
-        // Stock fabric color selection (also per-garment)
-        if (e.target.name && e.target.name.startsWith('stock-fabric-color-')) {
-          const garmentId = e.target.name.replace('stock-fabric-color-', '');
-          this.handleStockColorChange(e.target.value, garmentId);
+        // Stock fabric color selection
+        if (e.target.name === 'stock-fabric-color') {
+          this.handleStockColorChange(e.target.value);
         }
         
         // Lab dip selection for custom sample
@@ -10867,11 +10729,6 @@ setupInitialization();
         
         if (e.target.id === 'add-lab-dip-manual') {
           this.addLabDipFromManualEntry();
-        }
-        
-        // Guidance action - scroll to lab dips section
-        if (e.target.hasAttribute('data-scroll-to-lab-dips')) {
-          this.scrollToLabDipsSection();
         }
         
         // Remove lab dip (updated for new template)
@@ -11013,22 +10870,15 @@ setupInitialization();
       debugSystem.log('Lab dip added from manual entry:', pantoneCode);
     }
     
-    // Reset stock color selection when changing sample types - PER GARMENT
-    resetStockColorSelection(garmentId) {
-      // Find the specific garment element
-      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garmentElement) {
-        debugSystem.log(`❌ Garment element not found: ${garmentId}`);
-        return;
-      }
-      
-      // Clear stock color radio buttons within this garment only
-      const stockColorInputs = garmentElement.querySelectorAll('input[name^="stock-fabric-color-"]');
+    // Reset stock color selection when changing sample types
+    resetStockColorSelection() {
+      // Clear all stock color radio buttons
+      const stockColorInputs = document.querySelectorAll('input[name="stock-fabric-color"]');
       stockColorInputs.forEach(input => {
         input.checked = false;
       });
       
-      debugSystem.log(`✅ Stock color selection reset for garment: ${garmentId}`);
+      debugSystem.log('Stock color selection reset');
     }
     
     // Initialize dual-mode system on page load
@@ -11215,41 +11065,29 @@ setupInitialization();
     }
 
     // Handle sample type selection (mutual exclusivity with proper reset)
-    handleSampleTypeChange(type, garmentId) {
-      debugSystem.log(`🎯 Sample type change: ${type} for garment: ${garmentId}`);
+    handleSampleTypeChange(type) {
+      const previousType = this.sampleState.type;
+      this.sampleState.type = type;
       
-      // Get or create per-garment state
-      if (!this.perGarmentSamples.has(garmentId)) {
-        this.perGarmentSamples.set(garmentId, {
-          type: null,
-          stockColor: null,
-          selectedLabDipId: null
-        });
-      }
-      
-      const garmentState = this.perGarmentSamples.get(garmentId);
-      const previousType = garmentState.type;
-      garmentState.type = type;
-      
-      // RESET LOGIC: Clear previous selections when changing sample types for this garment
+      // RESET LOGIC: Clear previous selections when changing sample types
       if (previousType !== type) {
         if (previousType === 'stock') {
-          // Reset stock color selection for this garment
-          garmentState.stockColor = null;
-          this.resetStockColorSelection(garmentId);
+          // Reset stock color selection
+          this.sampleState.stockColor = null;
+          this.resetStockColorSelection();
         }
         
         if (previousType === 'custom') {
-          // Reset custom lab dip selection for this garment
-          garmentState.selectedLabDipId = null;
+          // Reset custom lab dip selection
+          this.sampleState.selectedLabDipId = null;
         }
       }
       
-      // Show/hide sample options based on selection for this specific garment
-      this.updateCardStates(garmentId, type);
+      // Show/hide sample options based on selection
+      this.updateCardStates();
       
       // Update dynamic subtitle for stock option (with reset)
-      this.updateStockSubtitle(garmentId);
+      this.updateStockSubtitle();
       
       // Update lab dip selection area when custom color is selected
       this.updateLabDipSelectionArea();
@@ -11258,64 +11096,38 @@ setupInitialization();
       this.updateValidation();
       this.updatePricing();
       
-      debugSystem.log(`✅ Sample type changed to: ${type} from: ${previousType} for garment: ${garmentId}`);
+      debugSystem.log('Sample type changed to:', type, 'from:', previousType);
     }
 
-    // Update card visual states and show/hide options with immediate feedback - PER GARMENT
-    updateCardStates(garmentId, type) {
-      debugSystem.log(`🔄 Starting updateCardStates for garment: ${garmentId}, type: ${type}`);
-      
-      // Find the specific garment element
-      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garmentElement) {
-        debugSystem.log(`❌ Garment element not found: ${garmentId}`);
-        // DEBUG: List all garment elements to help diagnose
-        const allGarments = document.querySelectorAll('[data-garment-id]');
-        debugSystem.log(`🔍 Found ${allGarments.length} total garments:`, 
-          Array.from(allGarments).map(g => g.getAttribute('data-garment-id')));
-        return;
-      }
-      
-      debugSystem.log(`✅ Found garment element: ${garmentId}`);
-      
-      // Find sample cards within this specific garment
-      const stockCard = garmentElement.querySelector('[data-sample-type="stock"]');
-      const customCard = garmentElement.querySelector('[data-sample-type="custom"]');
+    // Update card visual states and show/hide options with immediate feedback
+    updateCardStates() {
+      const stockCard = document.querySelector('[data-sample-type="stock"]');
+      const customCard = document.querySelector('[data-sample-type="custom"]');
       const stockOptions = stockCard?.querySelector('.techpack-sample-options');
       const customOptions = customCard?.querySelector('.techpack-sample-options');
-      
-      debugSystem.log(`🎴 Card elements found:`, {
-        stockCard: !!stockCard,
-        customCard: !!customCard,
-        stockOptions: !!stockOptions,
-        customOptions: !!customOptions
-      });
       
       // Add loading state for immediate feedback
       this.addCardTransition(stockCard);
       this.addCardTransition(customCard);
       
-      if (type === 'stock') {
+      if (this.sampleState.type === 'stock') {
         // Stock selected - show stock options, hide custom
-        debugSystem.log(`🎯 Activating STOCK card for garment: ${garmentId}`);
         this.activateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log(`✅ Stock sample type activated for garment: ${garmentId}`);
-      } else if (type === 'custom') {
+        debugSystem.log('✅ Stock sample type activated');
+      } else if (this.sampleState.type === 'custom') {
         // Custom selected - show custom options, hide stock
-        debugSystem.log(`🎯 Activating CUSTOM card for garment: ${garmentId}`);
         this.activateCard(customCard, customOptions);
         this.deactivateCard(stockCard, stockOptions);
         
-        debugSystem.log(`✅ Custom sample type activated for garment: ${garmentId}`);
+        debugSystem.log('✅ Custom sample type activated');
       } else {
         // No selection - hide all options
-        debugSystem.log(`🎯 Deactivating ALL cards for garment: ${garmentId}`);
         this.deactivateCard(stockCard, stockOptions);
         this.deactivateCard(customCard, customOptions);
         
-        debugSystem.log(`ℹ️ No sample type selected for garment: ${garmentId}`);
+        debugSystem.log('ℹ️ No sample type selected - showing selection prompt');
       }
       
       // Update step validation status immediately
@@ -11330,12 +11142,7 @@ setupInitialization();
     
     // Activate a sample type card
     activateCard(card, options) {
-      if (!card) {
-        debugSystem.log(`❌ activateCard: card is null`);
-        return;
-      }
-      
-      debugSystem.log(`✅ Activating card:`, card.getAttribute('data-sample-type'));
+      if (!card) return;
       
       // Visual feedback
       card.classList.add('techpack-sample-card--active');
@@ -11345,7 +11152,6 @@ setupInitialization();
       
       // Show options with animation
       if (options) {
-        debugSystem.log(`📂 Showing options for card:`, card.getAttribute('data-sample-type'));
         options.style.display = 'block';
         options.style.opacity = '0';
         options.style.transform = 'translateY(-10px)';
@@ -11356,19 +11162,12 @@ setupInitialization();
           options.style.opacity = '1';
           options.style.transform = 'translateY(0)';
         }, 50);
-      } else {
-        debugSystem.log(`⚠️ No options element found for card:`, card.getAttribute('data-sample-type'));
       }
     }
     
     // Deactivate a sample type card
     deactivateCard(card, options) {
-      if (!card) {
-        debugSystem.log(`❌ deactivateCard: card is null`);
-        return;
-      }
-      
-      debugSystem.log(`🔴 Deactivating card:`, card.getAttribute('data-sample-type'));
+      if (!card) return;
       
       // Remove active state
       card.classList.remove('techpack-sample-card--active');
@@ -11378,12 +11177,9 @@ setupInitialization();
       
       // Hide options
       if (options) {
-        debugSystem.log(`📁 Hiding options for card:`, card.getAttribute('data-sample-type'));
         options.style.display = 'none';
         options.style.opacity = '0';
         options.style.transform = 'translateY(-10px)';
-      } else {
-        debugSystem.log(`⚠️ No options element to hide for card:`, card.getAttribute('data-sample-type'));
       }
     }
     
@@ -11414,45 +11210,26 @@ setupInitialization();
       }
     }
 
-    // Handle stock fabric color selection - PER GARMENT
-    handleStockColorChange(color, garmentId) {
-      // Get or create per-garment state
-      if (!this.perGarmentSamples.has(garmentId)) {
-        this.perGarmentSamples.set(garmentId, {
-          type: null,
-          stockColor: null,
-          selectedLabDipId: null
-        });
-      }
-      
-      const garmentState = this.perGarmentSamples.get(garmentId);
-      garmentState.stockColor = color;
-      
-      this.updateStockSubtitle(garmentId);
+    // Handle stock fabric color selection
+    handleStockColorChange(color) {
+      this.sampleState.stockColor = color;
+      this.updateStockSubtitle();
       this.updateValidation();
-      debugSystem.log(`✅ Stock color selected: ${color} for garment: ${garmentId}`);
+      debugSystem.log('Stock color selected:', color);
     }
 
-    // Update stock subtitle based on selection - PER GARMENT
-    updateStockSubtitle(garmentId) {
-      // Find the subtitle within the specific garment
-      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garmentElement) {
-        debugSystem.log(`❌ Garment element not found: ${garmentId}`);
-        return;
-      }
-      
-      const subtitle = garmentElement.querySelector('#stock-subtitle');
+    // Update stock subtitle based on selection
+    updateStockSubtitle() {
+      const subtitle = document.getElementById('stock-subtitle');
       if (!subtitle) return;
       
-      const garmentState = this.perGarmentSamples.get(garmentId);
-      if (garmentState?.stockColor) {
+      if (this.sampleState.stockColor) {
         const colorMap = {
           'black': 'Black',
           'off-white': 'Off-White / Natural', 
           'random': 'Random Stock Color'
         };
-        subtitle.textContent = `Selected: ${colorMap[garmentState.stockColor]}`;
+        subtitle.textContent = `Selected: ${colorMap[this.sampleState.stockColor]}`;
       } else {
         subtitle.textContent = 'Choose from available stock colors for faster turnaround.';
       }
@@ -11654,18 +11431,10 @@ setupInitialization();
       debugSystem.log(`🔍 updateLabDipSelectionArea: Found ${garments.length} garments, ${globalLabDips.size} global lab dips, ${this.labDips.size} local lab dips`);
       
       garments.forEach((garment, index) => {
-        // Get garment ID to use with per-garment radio names
-        const garmentId = garment.dataset.garmentId;
-        if (!garmentId) {
-          debugSystem.log(`❌ Garment ${index}: No garmentId found`);
-          return;
-        }
+        const customRadio = garment.querySelector('input[name="garment-sample-type"][value="custom"]:checked');
+        const stockRadio = garment.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
         
-        // Use per-garment radio button names
-        const customRadio = garment.querySelector(`input[name="garment-sample-type-${garmentId}"][value="custom"]:checked`);
-        const stockRadio = garment.querySelector(`input[name="garment-sample-type-${garmentId}"][value="stock"]:checked`);
-        
-        debugSystem.log(`Garment ${index} (${garmentId}): custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
+        debugSystem.log(`Garment ${index}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
         
         if (customRadio) {
           // Custom color workflow: Show lab dip selection interface
@@ -12718,160 +12487,6 @@ setupInitialization();
         calculatedLeft: left 
       });
     }
-
-    // ===============================================
-    // COLOR ASSIGNMENT GUIDANCE SYSTEM
-    // ===============================================
-
-    // Scroll to the lab dips section smoothly
-    scrollToLabDipsSection() {
-      const labDipsSection = document.getElementById('lab-dip-global-list') || 
-                            document.querySelector('.techpack-lab-dip-global-list');
-      
-      if (labDipsSection) {
-        debugSystem.log('📍 Scrolling to lab dips section');
-        
-        // Add visual highlight effect
-        labDipsSection.style.transition = 'box-shadow 0.3s ease';
-        labDipsSection.style.boxShadow = '0 0 20px rgba(0, 123, 255, 0.3)';
-        
-        // Smooth scroll to the section
-        labDipsSection.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-        
-        // Remove highlight after animation
-        setTimeout(() => {
-          labDipsSection.style.boxShadow = '';
-        }, 2000);
-      } else {
-        debugSystem.log('⚠️ Lab dips section not found');
-      }
-    }
-
-    // Update assignment status for a specific garment
-    updateGarmentAssignmentStatus(garmentId, assignedColors = []) {
-      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garmentElement) return;
-
-      const statusElement = garmentElement.querySelector('[data-garment-assignment-status]');
-      if (!statusElement) return;
-
-      const unassignedDiv = statusElement.querySelector('.techpack-status-unassigned');
-      const assignedDiv = statusElement.querySelector('.techpack-status-assigned');
-      const countSpan = statusElement.querySelector('.techpack-assigned-count');
-      const colorsList = statusElement.querySelector('[data-assigned-colors-list]');
-
-      if (assignedColors.length === 0) {
-        // No colors assigned
-        unassignedDiv.style.display = 'flex';
-        assignedDiv.style.display = 'none';
-        debugSystem.log(`📋 Updated status: No colors assigned for garment ${garmentId}`);
-      } else {
-        // Colors assigned
-        unassignedDiv.style.display = 'none';
-        assignedDiv.style.display = 'flex';
-        
-        if (countSpan) {
-          countSpan.textContent = assignedColors.length;
-        }
-
-        // Update colors list
-        if (colorsList) {
-          colorsList.innerHTML = assignedColors.map(color => `
-            <div class="techpack-assigned-color-chip">
-              <div class="techpack-assigned-color-swatch" style="background-color: ${color.hex || '#ccc'}"></div>
-              ${color.pantone}
-            </div>
-          `).join('');
-        }
-
-        debugSystem.log(`✅ Updated status: ${assignedColors.length} colors assigned for garment ${garmentId}`, assignedColors);
-      }
-    }
-
-    // Check if all custom color garments have assigned colors
-    validateAllCustomGarmentsAssigned() {
-      const customGarments = [];
-      const garmentElements = document.querySelectorAll('[data-garment-id]');
-
-      garmentElements.forEach(garment => {
-        const garmentId = garment.getAttribute('data-garment-id');
-        const customRadio = garment.querySelector(`input[name="garment-sample-type-${garmentId}"][value="custom"]`);
-        
-        if (customRadio && customRadio.checked) {
-          const statusElement = garment.querySelector('[data-garment-assignment-status]');
-          const assignedDiv = statusElement?.querySelector('.techpack-status-assigned');
-          const isAssigned = assignedDiv && assignedDiv.style.display !== 'none';
-          
-          customGarments.push({
-            garmentId,
-            isAssigned,
-            garmentName: garment.querySelector('.techpack-garment__title')?.textContent || `Garment ${garmentId}`
-          });
-        }
-      });
-
-      const unassignedGarments = customGarments.filter(g => !g.isAssigned);
-      const isValid = unassignedGarments.length === 0;
-
-      debugSystem.log('🔍 Validation check:', {
-        totalCustomGarments: customGarments.length,
-        unassignedGarments: unassignedGarments.length,
-        isValid,
-        unassignedList: unassignedGarments.map(g => g.garmentName)
-      });
-
-      return {
-        isValid,
-        totalCustomGarments: customGarments.length,
-        unassignedGarments
-      };
-    }
-
-    // Update validation status with visual feedback
-    updateAssignmentValidationStatus() {
-      const validation = this.validateAllCustomGarmentsAssigned();
-      
-      if (validation.unassignedGarments.length > 0) {
-        // Show validation errors for unassigned garments
-        validation.unassignedGarments.forEach(garment => {
-          const garmentElement = document.querySelector(`[data-garment-id="${garment.garmentId}"]`);
-          if (garmentElement) {
-            const errorElement = garmentElement.querySelector('.techpack-form__error');
-            if (errorElement) {
-              errorElement.textContent = `Please assign at least one color to this custom garment using the Lab Dip section below.`;
-              errorElement.style.display = 'block';
-            }
-          }
-        });
-      } else {
-        // Clear all validation errors
-        const garmentElements = document.querySelectorAll('[data-garment-id]');
-        garmentElements.forEach(garment => {
-          const errorElement = garment.querySelector('.techpack-form__error');
-          if (errorElement) {
-            errorElement.style.display = 'none';
-          }
-        });
-      }
-
-      return validation;
-    }
-
-    // Initialize assignment status for all garments
-    initializeAssignmentStatus() {
-      const garmentElements = document.querySelectorAll('[data-garment-id]');
-      
-      garmentElements.forEach(garment => {
-        const garmentId = garment.getAttribute('data-garment-id');
-        // Initialize with no colors assigned
-        this.updateGarmentAssignmentStatus(garmentId, []);
-      });
-
-      debugSystem.log('🚀 Initialized assignment status for all garments');
-    }
   }
 
   // ===============================================
@@ -13129,12 +12744,6 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
-        // Update button text dynamically
-        this.updateAssignmentButtonText(labDipId);
-        
-        // Update guidance system assignment status
-        this.updateGarmentGuidanceStatus(garmentId);
-        
         // Bridge: Update per-garment selection areas
         this.updatePerGarmentSelections();
       }
@@ -13181,12 +12790,6 @@ setupInitialization();
         this.updateLabDipStatus(labDipId);
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
-        
-        // Update button text dynamically
-        this.updateAssignmentButtonText(labDipId);
-        
-        // Update guidance system assignment status
-        this.updateGarmentGuidanceStatus(garmentId);
         
         debugSystem.log('❌ Lab dip unassigned from garment:', { labDipId, garmentId });
       }
@@ -13360,7 +12963,7 @@ setupInitialization();
         <div class="techpack-lab-dip-global-item__assignment">
           <div class="techpack-assignment-dropdown">
             <button type="button" class="techpack-assignment-btn" data-lab-dip-id="${id}">
-              <span class="techpack-assignment-btn__text">${this.getAssignmentButtonText(labDip)}</span>
+              Assign
               <svg viewBox="0 0 16 16" fill="currentColor">
                 <path d="M4 6l4 4 4-4H4z"/>
               </svg>
@@ -13382,106 +12985,7 @@ setupInitialization();
       
       return item;
     }
-
-    // Get dynamic assignment button text based on assigned garments
-    getAssignmentButtonText(labDip) {
-      if (labDip.assignments.size === 0) {
-        return 'Assign';
-      }
-      
-      // Get garment names for assigned garments
-      const assignedGarmentNames = [];
-      labDip.assignments.forEach(garmentId => {
-        const garmentName = this.getGarmentDisplayName(garmentId);
-        assignedGarmentNames.push(garmentName);
-      });
-
-      // Handle display based on number of assignments
-      if (assignedGarmentNames.length === 1) {
-        return assignedGarmentNames[0];
-      } else if (assignedGarmentNames.length === 2) {
-        return `${assignedGarmentNames[0]}, ${assignedGarmentNames[1]}`;
-      } else if (assignedGarmentNames.length === 3) {
-        return `${assignedGarmentNames[0]}, ${assignedGarmentNames[1]}, ${assignedGarmentNames[2]}`;
-      } else {
-        // For 4+ assignments, show first two and count
-        return `${assignedGarmentNames[0]}, ${assignedGarmentNames[1]} (+${assignedGarmentNames.length - 2} more)`;
-      }
-    }
-
-    // Get display name for a garment (e.g., "Zip-up Hoodie", "T-shirt")
-    getGarmentDisplayName(garmentId) {
-      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garmentElement) {
-        return `Garment ${garmentId}`;
-      }
-
-      // Try to get the actual garment type from the form
-      const garmentTypeSelect = garmentElement.querySelector('select[name^="garmentType"]');
-      if (garmentTypeSelect && garmentTypeSelect.value) {
-        // Convert value to display name if needed
-        const garmentTypeMap = {
-          'hoodie': 'Hoodie',
-          'zip-up-hoodie': 'Zip-up Hoodie',
-          't-shirt': 'T-shirt',
-          'long-sleeve': 'Long Sleeve',
-          'sweatshirt': 'Sweatshirt',
-          'tank-top': 'Tank Top',
-          'polo': 'Polo',
-          'jacket': 'Jacket',
-          'pants': 'Pants',
-          'shorts': 'Shorts',
-          'dress': 'Dress',
-          'skirt': 'Skirt'
-        };
-        
-        return garmentTypeMap[garmentTypeSelect.value] || garmentTypeSelect.value.split('-').map(word => 
-          word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-      }
-
-      // Fallback to garment number from title
-      const garmentTitle = garmentElement.querySelector('.techpack-garment__title');
-      return garmentTitle ? garmentTitle.textContent.trim() : `Garment ${garmentId}`;
-    }
     
-    // Update assignment button text for a specific lab dip
-    updateAssignmentButtonText(labDipId) {
-      const labDip = this.globalLabDips.get(labDipId);
-      if (!labDip) return;
-
-      const button = document.querySelector(`.techpack-assignment-btn[data-lab-dip-id="${labDipId}"]`);
-      const buttonTextSpan = button?.querySelector('.techpack-assignment-btn__text');
-      
-      if (buttonTextSpan) {
-        const newText = this.getAssignmentButtonText(labDip);
-        buttonTextSpan.textContent = newText;
-        debugSystem.log(`🔄 Updated assignment button text for ${labDipId}: "${newText}"`);
-      }
-    }
-
-    // Update guidance status for a specific garment
-    updateGarmentGuidanceStatus(garmentId) {
-      // Get all assigned colors for this garment
-      const assignedColors = [];
-      
-      this.globalLabDips.forEach((labDip, labDipId) => {
-        if (labDip.assignments.has(garmentId)) {
-          assignedColors.push({
-            pantone: labDip.pantone,
-            hex: labDip.hex || '#ccc'
-          });
-        }
-      });
-
-      // Update the guidance card status using SampleManager method
-      if (window.sampleManager && window.sampleManager.updateGarmentAssignmentStatus) {
-        window.sampleManager.updateGarmentAssignmentStatus(garmentId, assignedColors);
-      }
-
-      debugSystem.log(`📋 Updated guidance status for garment ${garmentId}:`, assignedColors);
-    }
-
     // Create assignment status badges
     createAssignmentBadges(labDip) {
       const badges = [];
@@ -13796,13 +13300,13 @@ setupInitialization();
       }
     }
 
-    // Check if garment is using stock or custom color workflow - UPDATED FOR PER-GARMENT NAMES
+    // Check if garment is using stock or custom color workflow
     isGarmentUsingStockColor(garmentId) {
       const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (!garment) return false;
       
-      // Check if stock fabric color radio is selected using per-garment name pattern
-      const stockRadio = garment.querySelector(`input[name="garment-sample-type-${garmentId}"][value="stock"]:checked`);
+      // Check if stock fabric color radio is selected
+      const stockRadio = garment.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
       return !!stockRadio;
     }
 
@@ -13861,18 +13365,12 @@ setupInitialization();
       const helpBtn = document.getElementById('step-3-help-btn');
       if (helpBtn) {
         helpBtn.addEventListener('click', () => this.showHelpModal());
-        debugSystem.log('✅ Help button event listener added');
-      } else {
-        debugSystem.log('❌ Help button not found - step-3-help-btn');
       }
 
       // Close help modal
       const closeBtn = document.getElementById('close-help-modal');
       if (closeBtn) {
         closeBtn.addEventListener('click', () => this.hideHelpModal());
-        debugSystem.log('✅ Close help button event listener added');
-      } else {
-        debugSystem.log('❌ Close help button not found - close-help-modal');
       }
 
       // Close on backdrop click
@@ -13893,19 +13391,11 @@ setupInitialization();
     },
 
     showHelpModal() {
-      debugSystem.log('🔍 Help modal show triggered');
       const modal = document.getElementById('step-3-help-modal');
       if (modal) {
-        debugSystem.log('✅ Modal found, adding active class');
-        
         // Use CSS .active class instead of inline styles
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        
-        // Debug: Check if class was added
-        debugSystem.log('📋 Modal classes after adding active:', modal.className);
-        debugSystem.log('📋 Modal computed display:', getComputedStyle(modal).display);
-        debugSystem.log('📋 Modal computed opacity:', getComputedStyle(modal).opacity);
         
         // Focus management for accessibility
         setTimeout(() => {
@@ -13915,9 +13405,7 @@ setupInitialization();
           }
         }, 100);
 
-        debugSystem.log('✅ Help modal opened');
-      } else {
-        debugSystem.log('❌ Help modal not found - step-3-help-modal');
+        debugSystem.log('Help modal opened');
       }
     },
 
@@ -13944,70 +13432,5 @@ setupInitialization();
 
   // Make help system globally available
   window.helpSystem = helpSystem;
-
-  // ===============================================
-  // HELPER FUNCTIONS FOR ENHANCED SAMPLE REVIEW
-  // ===============================================
-
-  // Helper function to get garment display name
-  function getGarmentDisplayName(garmentId, garmentElement = null) {
-    if (!garmentElement) {
-      garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    }
-    
-    if (!garmentElement) {
-      return `Garment ${garmentId}`;
-    }
-
-    // Try to get the actual garment type from the form
-    const garmentTypeSelect = garmentElement.querySelector('select[name^="garmentType"]');
-    if (garmentTypeSelect && garmentTypeSelect.value) {
-      const garmentTypeMap = {
-        'hoodie': 'Hoodie',
-        'zip-up-hoodie': 'Zip-up Hoodie',
-        't-shirt': 'T-shirt',
-        'long-sleeve': 'Long Sleeve',
-        'sweatshirt': 'Sweatshirt',
-        'tank-top': 'Tank Top',
-        'polo': 'Polo',
-        'jacket': 'Jacket',
-        'pants': 'Pants',
-        'shorts': 'Shorts',
-        'dress': 'Dress',
-        'skirt': 'Skirt'
-      };
-      
-      return garmentTypeMap[garmentTypeSelect.value] || garmentTypeSelect.value.split('-').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-      ).join(' ');
-    }
-
-    // Fallback to garment number from title
-    const garmentTitle = garmentElement.querySelector('.techpack-garment__title');
-    return garmentTitle ? garmentTitle.textContent.trim() : `Garment ${garmentId}`;
-  }
-
-  // Helper function to get assigned colors for a garment
-  function getAssignedColorsForGarment(garmentId) {
-    const assignedColors = [];
-    
-    if (window.globalLabDipManager) {
-      window.globalLabDipManager.globalLabDips.forEach((labDip, labDipId) => {
-        if (labDip.assignments.has(garmentId)) {
-          assignedColors.push({
-            pantone: labDip.pantone,
-            hex: labDip.hex || '#ccc',
-            id: labDipId
-          });
-        }
-      });
-    }
-    
-    return assignedColors;
-  }
-
-  // Make helper functions globally available
-  window.getGarmentDisplayName = getGarmentDisplayName;
-  window.getAssignedColorsForGarment = getAssignedColorsForGarment;
 
 })();
