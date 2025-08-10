@@ -2216,8 +2216,8 @@
           });
           
           // Check if any sample type is selected (stock or custom) - FIXED: Updated selectors
-          const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
-          const customRadio = sampleSection.querySelector('input[name^="garment-sample-type"][value="custom"]:checked');
+          const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
+          const customRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
           
           // MORE DEBUG: Log what radio buttons we find
           debugSystem.log('📻 VALIDATION RADIO CHECK:', {
@@ -11910,8 +11910,8 @@ setupInitialization();
       garments.forEach((garment, index) => {
         const garmentId = garment.dataset.garmentId || `unknown-${index}`;
         // FIXED: Use updated radio button names that include garment ID
-        const customRadio = garment.querySelector('input[name^="garment-sample-type"][value="custom"]:checked');
-        const stockRadio = garment.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
+        const customRadio = garment.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
+        const stockRadio = garment.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
         
         debugSystem.log(`Garment ${garmentId}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
         
@@ -11975,11 +11975,29 @@ setupInitialization();
               // Update garment name placeholders
               this.updateGarmentNamePlaceholders(card, garment);
               
+              // Check if this lab dip is assigned to this garment
+              const garmentId = garment.dataset.garmentId;
+              const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
+              
+              // Auto-select if assigned
+              if (isAssigned) {
+                card.classList.add('techpack-lab-dip-selection-card--selected');
+                // Store as selected in the enhanced sample state
+                if (window.sampleManager && window.sampleManager.enhancedSampleState.has(garmentId)) {
+                  const state = window.sampleManager.enhancedSampleState.get(garmentId);
+                  state.selectedLabDipId = id;
+                }
+              }
+              
               // Set initial status message
               const statusText = card.querySelector('.techpack-lab-dip-selection-card__status .status-text');
               if (statusText) {
                 const garmentName = this.getGarmentName(garment);
-                statusText.innerHTML = `You'll receive a fabric swatch together with the ${garmentName}`;
+                if (isAssigned) {
+                  statusText.innerHTML = `✓ Selected for ${garmentName}`;
+                } else {
+                  statusText.innerHTML = `You'll receive a fabric swatch together with the ${garmentName}`;
+                }
               }
               
               // Set up selection button
@@ -13638,6 +13656,30 @@ setupInitialization();
       });
       
       if (!isOpen) {
+        // Rebuild menu with current garments before opening
+        const labDipId = button.dataset.labDipId;
+        if (labDipId && this.globalLabDips.has(labDipId)) {
+          const labDip = this.globalLabDips.get(labDipId);
+          const updatedMenuHTML = this.createAssignmentMenu(labDipId, labDip);
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = updatedMenuHTML;
+          const newMenu = tempDiv.firstElementChild;
+          
+          // Replace old menu with new one
+          if (menu && newMenu) {
+            menu.innerHTML = newMenu.innerHTML;
+            
+            // Re-attach event listeners to new menu items
+            const menuItems = menu.querySelectorAll('.techpack-assignment-menu__item');
+            menuItems.forEach((menuItem) => {
+              menuItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleAssignmentMenuAction(labDipId, menuItem);
+              });
+            });
+          }
+        }
+        
         button.classList.add('techpack-assignment-btn--open');
         menu.classList.add('techpack-assignment-menu--open');
       }
@@ -13847,7 +13889,7 @@ setupInitialization();
       if (!garment) return false;
       
       // Check if stock fabric color radio is selected - FIXED: Updated selector
-      const stockRadio = garment.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
+      const stockRadio = garment.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
       return !!stockRadio;
     }
 
