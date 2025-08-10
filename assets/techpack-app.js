@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration - Updated
+  // Enhanced Configuration - Debug Version
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3912,7 +3912,11 @@
     setupEventListeners() {
       const addGarmentBtn = document.querySelector('#add-garment');
       if (addGarmentBtn) {
-        addGarmentBtn.addEventListener('click', () => this.addGarment());
+        addGarmentBtn.addEventListener('click', (e) => {
+          e.preventDefault(); // Prevent any form submission behavior
+          e.stopPropagation(); // Prevent event bubbling
+          this.addGarment();
+        });
       }
     }
 
@@ -10702,6 +10706,12 @@ setupInitialization();
       document.addEventListener('change', (e) => {
         if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
           const garmentId = e.target.name.split('garment-sample-type-')[1];
+          debugSystem.log('🔘 Sample type change detected:', {
+            targetName: e.target.name,
+            value: e.target.value,
+            extractedGarmentId: garmentId,
+            targetElement: e.target
+          });
           this.handleSampleTypeChange(e.target.value, garmentId);
         }
         
@@ -11166,14 +11176,27 @@ setupInitialization();
 
     // Update card visual states and show/hide options - UPDATED: Per-garment
     updateCardStates(garmentId) {
+      debugSystem.log('🔄 updateCardStates called for garment:', garmentId);
+      
       // Find cards within the specific garment
       const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (!garment) return;
+      if (!garment) {
+        debugSystem.log('❌ Garment element not found for ID:', garmentId);
+        return;
+      }
       
       const stockCard = garment.querySelector('[data-sample-type="stock"]');
       const customCard = garment.querySelector('[data-sample-type="custom"]');
       const stockOptions = stockCard?.querySelector('.techpack-sample-options');
       const customOptions = customCard?.querySelector('.techpack-sample-options');
+      
+      debugSystem.log('🔍 Elements found:', {
+        garment: !!garment,
+        stockCard: !!stockCard,
+        customCard: !!customCard,
+        stockOptions: !!stockOptions,
+        customOptions: !!customOptions
+      });
       
       // Add loading state for immediate feedback
       this.addCardTransition(stockCard);
@@ -11181,6 +11204,7 @@ setupInitialization();
       
       // Get garment-specific state
       const garmentState = this.perGarmentSampleState?.get(garmentId) || { type: null };
+      debugSystem.log('📊 Garment state:', garmentState);
       
       if (garmentState.type === 'stock') {
         // Stock selected - show stock options, hide custom
@@ -11214,7 +11238,15 @@ setupInitialization();
     
     // Activate a sample type card
     activateCard(card, options) {
-      if (!card) return;
+      if (!card) {
+        debugSystem.log('❌ activateCard: no card provided');
+        return;
+      }
+      
+      debugSystem.log('✅ activateCard: activating card', {
+        card: card.dataset?.sampleType || 'unknown',
+        hasOptions: !!options
+      });
       
       // Visual feedback
       card.classList.add('techpack-sample-card--active');
@@ -11224,6 +11256,7 @@ setupInitialization();
       
       // Show options with animation
       if (options) {
+        debugSystem.log('📋 Showing options dropdown');
         options.style.display = 'block';
         options.style.opacity = '0';
         options.style.transform = 'translateY(-10px)';
@@ -11233,7 +11266,10 @@ setupInitialization();
           options.style.transition = 'all 0.3s ease';
           options.style.opacity = '1';
           options.style.transform = 'translateY(0)';
+          debugSystem.log('✨ Options dropdown animated in');
         }, 50);
+      } else {
+        debugSystem.log('⚠️ No options element found to show');
       }
     }
     
