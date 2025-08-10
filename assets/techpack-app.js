@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration - Debug Version
+  // Enhanced Configuration - Emergency Debug Version
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3932,8 +3932,36 @@
       
       garment.dataset.garmentId = garmentId;
       
+      // EMERGENCY DEBUG: Log before/after GARMENT_ID replacement
+      const beforeHTML = garment.innerHTML;
+      debugSystem.log('🔧 BEFORE GARMENT_ID replacement:', {
+        garmentId,
+        containsPlaceholder: beforeHTML.includes('GARMENT_ID'),
+        placeholderCount: (beforeHTML.match(/GARMENT_ID/g) || []).length
+      });
+      
       // Replace GARMENT_ID placeholders in HTML with actual garment ID
       garment.innerHTML = garment.innerHTML.replace(/GARMENT_ID/g, garmentId);
+      
+      // EMERGENCY DEBUG: Log after replacement and check radio buttons
+      const afterHTML = garment.innerHTML;
+      debugSystem.log('🔧 AFTER GARMENT_ID replacement:', {
+        garmentId,
+        stillContainsPlaceholder: afterHTML.includes('GARMENT_ID'),
+        replacementWorked: !afterHTML.includes('GARMENT_ID')
+      });
+      
+      // EMERGENCY DEBUG: Check what radio buttons exist after replacement
+      const radioButtons = garment.querySelectorAll('input[type="radio"]');
+      debugSystem.log('📻 Radio buttons found after replacement:', {
+        count: radioButtons.length,
+        radioButtons: Array.from(radioButtons).map(radio => ({
+          name: radio.name,
+          id: radio.id,
+          value: radio.value,
+          type: radio.type
+        }))
+      });
       
       // Set the garment number based on current count of garments, not counter
       const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
@@ -3979,9 +4007,58 @@
         window.sampleManager.initializeGarmentSampleData(garmentId);
         // Recheck request type to show/hide sample sections
         setTimeout(() => window.sampleManager.checkRequestType(), 50);
+        // EMERGENCY DEBUG: Inspect all radio buttons in DOM after garment addition
+        setTimeout(() => this.debugAllRadioButtons(), 100);
       }
       
       debugSystem.log('Garment added', { garmentId });
+    }
+    
+    // EMERGENCY DEBUG: Function to inspect all radio buttons in DOM
+    debugAllRadioButtons() {
+      const allRadioButtons = document.querySelectorAll('input[type="radio"]');
+      const sampleTypeRadios = document.querySelectorAll('input[name*="garment-sample-type"]');
+      
+      debugSystem.log('🔍 DOM RADIO BUTTON INSPECTION:', {
+        totalRadioButtons: allRadioButtons.length,
+        sampleTypeRadios: sampleTypeRadios.length,
+        allRadios: Array.from(allRadioButtons).map(radio => ({
+          name: radio.name,
+          id: radio.id,
+          value: radio.value,
+          checked: radio.checked,
+          disabled: radio.disabled,
+          visible: radio.offsetParent !== null,
+          inSampleSection: radio.closest('.techpack-garment-samples') !== null
+        })),
+        sampleTypeRadiosDetails: Array.from(sampleTypeRadios).map(radio => ({
+          name: radio.name,
+          id: radio.id, 
+          value: radio.value,
+          garmentContainer: radio.closest('.techpack-garment')?.dataset?.garmentId || 'NO GARMENT'
+        }))
+      });
+    }
+    
+    // EMERGENCY DEBUG: Manual radio button test function (call from console)
+    testRadioButtons() {
+      debugSystem.log('🧪 MANUAL RADIO BUTTON TEST:');
+      
+      const sampleTypeRadios = document.querySelectorAll('input[name*="garment-sample-type"]');
+      debugSystem.log('Found sample type radios:', sampleTypeRadios.length);
+      
+      sampleTypeRadios.forEach((radio, index) => {
+        debugSystem.log(`Testing radio ${index}:`, {
+          name: radio.name,
+          value: radio.value,
+          id: radio.id
+        });
+        
+        // Try to manually trigger the radio
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+        radio.dispatchEvent(new Event('click', { bubbles: true }));
+      });
     }
 
     // Update fabric options based on selected garment type
@@ -10702,6 +10779,32 @@ setupInitialization();
     }
 
     bindEventListeners() {
+      // EMERGENCY DEBUG: Log ALL change events to see what's being captured
+      document.addEventListener('change', (e) => {
+        debugSystem.log('🌍 ALL CHANGE EVENTS:', {
+          targetName: e.target.name || 'NO NAME',
+          targetId: e.target.id || 'NO ID',
+          targetType: e.target.type || 'NO TYPE',
+          targetValue: e.target.value || 'NO VALUE',
+          targetClass: e.target.className || 'NO CLASS',
+          isRadio: e.target.type === 'radio',
+          element: e.target
+        });
+      });
+
+      // EMERGENCY DEBUG: Also add click events for radio buttons  
+      document.addEventListener('click', (e) => {
+        if (e.target.type === 'radio') {
+          debugSystem.log('🔘 RADIO CLICK EVENT:', {
+            targetName: e.target.name || 'NO NAME',
+            targetId: e.target.id || 'NO ID', 
+            targetValue: e.target.value || 'NO VALUE',
+            isChecked: e.target.checked,
+            element: e.target
+          });
+        }
+      });
+
       // Sample type radio button changes - FIXED: Per-garment sample type handling
       document.addEventListener('change', (e) => {
         if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
@@ -13571,5 +13674,35 @@ setupInitialization();
 
   // Make help system globally available
   window.helpSystem = helpSystem;
+
+  // EMERGENCY DEBUG: Global test functions (call from browser console)
+  window.debugRadioButtons = function() {
+    if (window.techpackApp && window.techpackApp.garmentManager) {
+      window.techpackApp.garmentManager.debugAllRadioButtons();
+    }
+  };
+
+  window.testRadioButtons = function() {
+    if (window.techpackApp && window.techpackApp.garmentManager) {
+      window.techpackApp.garmentManager.testRadioButtons();
+    }
+  };
+
+  // EMERGENCY DEBUG: Manual DOM inspection
+  window.inspectSampleRadios = function() {
+    const radios = document.querySelectorAll('input[type="radio"][name*="garment-sample-type"]');
+    console.log('📻 SAMPLE RADIOS FOUND:', radios.length);
+    radios.forEach((radio, i) => {
+      console.log(`Radio ${i}:`, {
+        name: radio.name,
+        id: radio.id,
+        value: radio.value,
+        checked: radio.checked,
+        visible: radio.offsetParent !== null,
+        clickable: !radio.disabled,
+        garment: radio.closest('[data-garment-id]')?.dataset?.garmentId
+      });
+    });
+  };
 
 })();
