@@ -328,12 +328,12 @@ Tech-Pack Step 3: Garment Specifications Section
           <!-- A1: Stock Fabric Color -->
           <div class="techpack-sample-card" data-sample-type="stock">
             <div class="techpack-sample-card-header">
-              <input type="radio" name="garment-sample-type" value="stock" id="sample-stock" class="techpack-sample-radio">
-              <label for="sample-stock" class="techpack-sample-card-label">
+              <input type="radio" name="garment-sample-type-GARMENT_ID" value="stock" id="sample-stock-GARMENT_ID" class="techpack-sample-radio">
+              <label for="sample-stock-GARMENT_ID" class="techpack-sample-card-label">
                 <h5 class="techpack-sample-card-title">Garment in Stock Fabric Color (Fastest)</h5>
                 <div class="techpack-sample-meta">~1–2 weeks · €35</div>
                 <p class="techpack-sample-description">Validate fit, sizing, stitching using in-stock colors. You'll receive the stock color garment plus separate lab dip swatches for any colors added below.</p>
-                <div class="techpack-sample-subtitle" id="stock-subtitle">Choose from available stock colors for faster turnaround.</div>
+                <div class="techpack-sample-subtitle" id="stock-subtitle-GARMENT_ID">Choose from available stock colors for faster turnaround.</div>
               </label>
             </div>
             
@@ -341,19 +341,19 @@ Tech-Pack Step 3: Garment Specifications Section
             <div class="techpack-sample-options" style="display: none;">
               <div class="techpack-fabric-colors">
                 <label class="techpack-fabric-color-option">
-                  <input type="radio" name="stock-fabric-color" value="black" id="stock-black">
+                  <input type="radio" name="stock-fabric-color-GARMENT_ID" value="black" id="stock-black-GARMENT_ID">
                   <span class="techpack-radio-mark"></span>
                   Black (in-stock)
                 </label>
                 
                 <label class="techpack-fabric-color-option">
-                  <input type="radio" name="stock-fabric-color" value="off-white" id="stock-off-white">
+                  <input type="radio" name="stock-fabric-color-GARMENT_ID" value="off-white" id="stock-off-white-GARMENT_ID">
                   <span class="techpack-radio-mark"></span>
                   Off-White / Natural (in-stock)
                 </label>
                 
                 <label class="techpack-fabric-color-option">
-                  <input type="radio" name="stock-fabric-color" value="random" id="stock-random">
+                  <input type="radio" name="stock-fabric-color-GARMENT_ID" value="random" id="stock-random-GARMENT_ID">
                   <span class="techpack-radio-mark"></span>
                   Random Stock Color (we choose)
                 </label>
@@ -372,8 +372,8 @@ Tech-Pack Step 3: Garment Specifications Section
           <!-- A2: Custom Color -->
           <div class="techpack-sample-card" data-sample-type="custom">
             <div class="techpack-sample-card-header">
-              <input type="radio" name="garment-sample-type" value="custom" id="sample-custom" class="techpack-sample-radio">
-              <label for="sample-custom" class="techpack-sample-card-label">
+              <input type="radio" name="garment-sample-type-GARMENT_ID" value="custom" id="sample-custom-GARMENT_ID" class="techpack-sample-radio">
+              <label for="sample-custom-GARMENT_ID" class="techpack-sample-card-label">
                 <h5 class="techpack-sample-card-title">Garment in Your Custom Color (Dyed to Pantone)</h5>
                 <div class="techpack-sample-meta">~3 weeks · €65</div>
                 <p class="techpack-sample-description">Your garment dyed to your exact Pantone color. You'll receive the custom-dyed garment plus separate lab dip swatches for all colors added below.</p>
@@ -432,6 +432,12 @@ Tech-Pack Step 3: Garment Specifications Section
                     </svg>
                     Go to Color Assignment
                   </button>
+                </div>
+                
+                <!-- Lab Dip Selection Area (for displaying assigned lab dips) -->
+                <div class="techpack-lab-dip-selection"></div>
+                <div class="techpack-lab-dip-selection-empty" style="display: none;">
+                  <p>No lab dips assigned yet. Use the Lab Dip Swatches section below to create and assign colors.</p>
                 </div>
                 
                 <div class="techpack-form__error" role="alert"></div>
