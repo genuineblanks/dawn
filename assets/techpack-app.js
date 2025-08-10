@@ -2216,8 +2216,8 @@
           });
           
           // Check if any sample type is selected (stock or custom) - FIXED: Updated selectors
-          const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
-          const customRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
+          const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
+          const customRadio = sampleSection.querySelector('input[name^="garment-sample-type"][value="custom"]:checked');
           
           // MORE DEBUG: Log what radio buttons we find
           debugSystem.log('📻 VALIDATION RADIO CHECK:', {
@@ -11910,8 +11910,8 @@ setupInitialization();
       garments.forEach((garment, index) => {
         const garmentId = garment.dataset.garmentId || `unknown-${index}`;
         // FIXED: Use updated radio button names that include garment ID
-        const customRadio = garment.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
-        const stockRadio = garment.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
+        const customRadio = garment.querySelector('input[name^="garment-sample-type"][value="custom"]:checked');
+        const stockRadio = garment.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
         
         debugSystem.log(`Garment ${garmentId}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
         
@@ -13847,7 +13847,7 @@ setupInitialization();
       if (!garment) return false;
       
       // Check if stock fabric color radio is selected - FIXED: Updated selector
-      const stockRadio = garment.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
+      const stockRadio = garment.querySelector('input[name^="garment-sample-type"][value="stock"]:checked');
       return !!stockRadio;
     }
 
