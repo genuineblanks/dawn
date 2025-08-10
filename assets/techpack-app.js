@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  // DEBUG VERSION: 1.8.18 - FIXED: Added missing lab dip selection UI elements and validation debugging
+  // DEBUG VERSION: 1.8.19 - FIXED: Enhanced validation debugging for radio button detection
 
   // Enhanced Configuration - Complete Overhaul Version
   const CONFIG = {
@@ -2199,6 +2199,22 @@
         });
         
         if (sampleSection && sampleSection.style.display !== 'none') {
+          // DEBUG: Check what radio buttons exist in the section
+          const allRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type"]');
+          const checkedRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type"]:checked');
+          
+          debugSystem.log('📻 ALL RADIOS IN SECTION:', {
+            garmentIndex: index + 1,
+            totalRadios: allRadios.length,
+            checkedRadios: checkedRadios.length,
+            radioDetails: Array.from(allRadios).map(r => ({
+              name: r.name,
+              value: r.value,
+              checked: r.checked,
+              id: r.id
+            }))
+          });
+          
           // Check if any sample type is selected (stock or custom) - FIXED: Updated selectors
           const stockRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="stock"]:checked');
           const customRadio = sampleSection.querySelector('input[name^="garment-sample-type-"][value="custom"]:checked');
