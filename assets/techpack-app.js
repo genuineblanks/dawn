@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  // DEBUG VERSION: 1.8.16 - Added comprehensive radio button debugging
+  // DEBUG VERSION: 1.8.17 - FIXED: Removed pointer-events blocking from disabled cards
 
   // Enhanced Configuration - Complete Overhaul Version
   const CONFIG = {
