@@ -1,4 +1,55 @@
- [
+(function() {
+  'use strict';
+
+  // Enhanced Configuration
+  const CONFIG = {
+    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
+    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
+    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
+    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
+    MAX_FILES: 10,
+    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
+    ANIMATION_DURATION: 400,
+    DEBOUNCE_DELAY: 300,
+    MIN_DELIVERY_WEEKS: 6,
+    
+    // Fabric Type Mapping Configuration
+    FABRIC_TYPE_MAPPING: {
+      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
+      'Zip-Up Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatshirt': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatpants': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Shorts': [
         'Brushed Fleece 100% Organic Cotton',
         'French Terry 100% Organic Cotton',
         '80% Cotton 20% Polyester Blend',
@@ -10641,30 +10692,6 @@ setupInitialization();
         if (e.target.name === 'garment-sample-type') {
           this.handleSampleTypeChange(e.target.value);
         }
-      });
-      
-      // Add click handling for sample cards to enable toggle behavior
-      document.addEventListener('click', (e) => {
-        const sampleCard = e.target.closest('.techpack-sample-card');
-        if (!sampleCard) return;
-        
-        const radio = sampleCard.querySelector('.techpack-sample-radio');
-        if (!radio) return;
-        
-        // If clicking on the currently selected radio, allow deselecting
-        if (radio.checked && e.target !== radio) {
-          radio.checked = false;
-          this.handleSampleTypeChange(null); // Reset to no selection
-          return;
-        }
-        
-        // Normal selection behavior
-        if (!radio.checked) {
-          // Clear other selections first
-          document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
-          radio.checked = true;
-          this.handleSampleTypeChange(radio.value);
-        }
         
         // Stock fabric color selection
         if (e.target.name === 'stock-fabric-color') {
@@ -10681,6 +10708,30 @@ setupInitialization();
             e.target.name === 'sizing-in-techpack' ||
             e.target.name === 'need-sizing-help') {
           this.handleTechpackInfoChange(e.target);
+        }
+      });
+      
+      // Add click handling for sample cards to enable toggle behavior
+      document.addEventListener('click', (e) => {
+        const sampleCard = e.target.closest('.techpack-sample-card');
+        if (sampleCard) {
+          const radio = sampleCard.querySelector('.techpack-sample-radio');
+          if (radio) {
+            // If clicking on the currently selected radio, allow deselecting
+            if (radio.checked && e.target !== radio) {
+              radio.checked = false;
+              this.handleSampleTypeChange(null); // Reset to no selection
+              return;
+            }
+            
+            // Normal selection behavior
+            if (!radio.checked) {
+              // Clear other selections first
+              document.querySelectorAll('input[name="garment-sample-type"]').forEach(r => r.checked = false);
+              radio.checked = true;
+              this.handleSampleTypeChange(radio.value);
+            }
+          }
         }
       });
 
