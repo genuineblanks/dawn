@@ -1,5 +1,5 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
-    {{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
+    <link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
     <style>   
         .techpack-container {
             max-width: 900px;
@@ -664,19 +664,18 @@
                     
                     <div class="form-row">
     <div class="form-group">
-      <label for="deadline">Delivery Deadline</label>
-      <div class="date-wrapper">
-        <input
-          type="date"
-          id="deadline"
-          name="deadline"
-          class="date-input"
-          onkeydown="return false"
-          onkeypress="return false"
-          onpaste="return false"
-          min=""
+      <label for="request-type">Select Sample or Bulk Order Request</label>
+      <div class="select-wrapper">
+        <select
+          id="request-type"
+          name="requestType"
+          class="form-select"
+          required
         >
-        <span class="date-hint">Select Date&nbsp;⟶</span>
+          <option value="">Select request type...</option>
+          <option value="sample-request">Sample Request</option>
+          <option value="bulk-order-request">Bulk Order Request</option>
+        </select>
       </div>
     </div>
     
@@ -1031,7 +1030,7 @@
                         <p><strong>Company Name:</strong> ${formData.get('companyName') || 'Not specified'}</p>
                         <p><strong>Email:</strong> ${formData.get('email') || 'Not specified'}</p>
                         <p><strong>Phone:</strong> ${formData.get('phone') || 'Not specified'}</p>
-                        <p><strong>Deadline:</strong> ${formData.get('deadline') || 'Not specified'}</p>
+                        <p><strong>Request Type:</strong> ${formData.get('requestType') === 'sample-request' ? 'Sample Request' : formData.get('requestType') === 'bulk-order-request' ? 'Bulk Order Request' : 'Not specified'}</p>
                     </div>
                     
                     <div class="summary-card">
@@ -1325,11 +1324,6 @@
                 // Initialize country search
                 initCountrySearch();
 
-              const deadlineInput = document.getElementById('deadline');
-              const today = new Date();
-              const minDate = new Date(today.setDate(today.getDate() + 42)); // 6 weeks = 42 days
-              const formattedMinDate = minDate.toISOString().split('T')[0];
-              deadlineInput.setAttribute('min', formattedMinDate);
             }
             
             // Public API
