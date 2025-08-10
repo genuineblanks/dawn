@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration - Emergency Debug Version
+  // Enhanced Configuration - Template Fix Version
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3925,6 +3925,16 @@
       const container = document.querySelector('#garments-container');
       
       if (!template || !container) return;
+
+      // EMERGENCY DEBUG: Check template content before cloning
+      debugSystem.log('🔍 TEMPLATE INVESTIGATION:', {
+        templateFound: !!template,
+        templateContent: !!template.content,
+        templateInnerHTML: template.innerHTML,
+        templateContentHTML: template.content ? template.content.innerHTML : 'NO CONTENT',
+        containsGarmentID: template.innerHTML.includes('GARMENT_ID'),
+        garmentIDCount: (template.innerHTML.match(/GARMENT_ID/g) || []).length
+      });
 
       const garmentId = `garment-${++state.counters.garment}`;
       const clone = template.content.cloneNode(true);
@@ -10805,14 +10815,34 @@ setupInitialization();
         }
       });
 
-      // Sample type radio button changes - FIXED: Per-garment sample type handling
+      // Sample type radio button changes - EMERGENCY FIX: Handle both correct and broken names
       document.addEventListener('change', (e) => {
+        let garmentId = null;
+        let shouldHandle = false;
+        
+        // Method 1: Correct naming (garment-sample-type-garment-1)
         if (e.target.name && e.target.name.startsWith('garment-sample-type-')) {
-          const garmentId = e.target.name.split('garment-sample-type-')[1];
+          garmentId = e.target.name.split('garment-sample-type-')[1];
+          shouldHandle = true;
+          debugSystem.log('✅ Correct naming detected');
+        }
+        // Method 2: TEMPORARY FIX - Broken naming (garment-sample-type) 
+        else if (e.target.name === 'garment-sample-type') {
+          // Extract garment ID from DOM structure
+          const garmentContainer = e.target.closest('[data-garment-id]');
+          if (garmentContainer && garmentContainer.dataset.garmentId) {
+            garmentId = garmentContainer.dataset.garmentId;
+            shouldHandle = true;
+            debugSystem.log('🔧 TEMPORARY FIX: Extracted garment ID from DOM');
+          }
+        }
+        
+        if (shouldHandle && garmentId) {
           debugSystem.log('🔘 Sample type change detected:', {
             targetName: e.target.name,
             value: e.target.value,
             extractedGarmentId: garmentId,
+            method: e.target.name.includes('-') ? 'correct-naming' : 'dom-extraction',
             targetElement: e.target
           });
           this.handleSampleTypeChange(e.target.value, garmentId);
