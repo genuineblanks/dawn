@@ -5,73 +5,217 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 {{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
 
 <section id="techpack-step-0" class="techpack-step" data-step="0" style="display: block;">
-  <div class="techpack-container">
-    <div class="techpack-progress">
-      <div class="techpack-progress__bar">
-        <div class="techpack-progress__fill" style="width: 0%"></div>
-      </div>
-      <div class="techpack-progress__steps">
-        <div class="techpack-progress__step techpack-progress__step--active">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
-          <div class="techpack-progress__step-label">Client Info</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">2</div>
-          <div class="techpack-progress__step-label">File Upload</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">3</div>
-          <div class="techpack-progress__step-label">Garment Details</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">4</div>
-          <div class="techpack-progress__step-label">Review</div>
+  <div class="techpack-entrance-container">
+    <!-- Hero Section -->
+    <div class="techpack-entrance-hero">
+      <div class="techpack-entrance-hero__content">
+        <h1 class="techpack-entrance-hero__title">
+          Professional TechPack Submission
+        </h1>
+        <p class="techpack-entrance-hero__subtitle">
+          Transform your designs into reality with our expert garment development process
+        </p>
+        <div class="techpack-entrance-hero__badges">
+          <div class="techpack-hero-badge">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 12l-4-4 4-4h4v8H8z"/>
+            </svg>
+            Industry Experts
+          </div>
+          <div class="techpack-hero-badge">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            24-48h Turnaround
+          </div>
+          <div class="techpack-hero-badge">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <circle cx="8" cy="8" r="3"/>
+              <path d="M12 2v4h4"/>
+            </svg>
+            Premium Quality
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="techpack-content techpack-entrance">
-      <!-- Premium TechPack Entrance - Direct Content -->
-      <div class="techpack-entrance__content">
-        <h1 class="techpack-entrance__title">Welcome to Tech-Pack Submission</h1>
-        <p class="techpack-entrance__subtitle">Professional garment development starts here</p>
-        <div class="techpack-entrance__features">
-          <div class="techpack-entrance__feature">
-            <svg class="techpack-entrance__feature-icon" width="20" height="20" viewBox="0 0 24 24">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+    <!-- Requirements Section -->
+    <div class="techpack-entrance-requirements">
+      <h2 class="techpack-section-title">What You Need to Get Started</h2>
+      <p class="techpack-section-subtitle">Ensure you have these essentials for a smooth submission process</p>
+      
+      <div class="techpack-requirements-grid">
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <span>Professional Grade</span>
           </div>
-          <div class="techpack-entrance__feature">
-            <svg class="techpack-entrance__feature-icon" width="20" height="20" viewBox="0 0 24 24">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" stroke-width="2" fill="none"/>
-            </svg>
-            <span>Fast Turnaround</span>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">TechPack / Design Files</h3>
+            <p class="techpack-requirement-card__description">Upload your design specifications, technical drawings, or concept sketches</p>
+            <div class="techpack-requirement-card__formats">PDF, AI, PNG, JPG, ZIP</div>
           </div>
-          <div class="techpack-entrance__feature">
-            <svg class="techpack-entrance__feature-icon" width="20" height="20" viewBox="0 0 24 24">
-              <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" stroke="currentColor" stroke-width="2" fill="none"/>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--required">Required</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <span>Premium Quality</span>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Fitting Measurements</h3>
+            <p class="techpack-requirement-card__description">Provide body measurements or select from our standard sizing patterns</p>
+            <div class="techpack-requirement-card__formats">Size Chart, Custom Measurements</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--optional">Optional*</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+              <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+              <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Design Measurements</h3>
+            <p class="techpack-requirement-card__description">Garment dimensions and specifications (our experts can assist if needed)</p>
+            <div class="techpack-requirement-card__formats">Spec Sheet, Measurements</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--assisted">Expert Help Available</div>
+          </div>
+        </div>
+
+        <div class="techpack-requirement-card">
+          <div class="techpack-requirement-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-requirement-card__content">
+            <h3 class="techpack-requirement-card__title">Material Preferences</h3>
+            <p class="techpack-requirement-card__description">Fabric types, colors, quality requirements, and special instructions</p>
+            <div class="techpack-requirement-card__formats">Fabric Specs, Color Codes</div>
+          </div>
+          <div class="techpack-requirement-card__status">
+            <div class="techpack-status-indicator techpack-status-indicator--optional">Optional</div>
           </div>
         </div>
       </div>
+
+      <div class="techpack-requirements-note">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M8 5v3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="8" cy="11" r="1" fill="currentColor"/>
+        </svg>
+        <span>*Our sizing experts can help you determine the best fit specifications for your target market</span>
+      </div>
+    </div>
+
+    <!-- Process Flow -->
+    <div class="techpack-entrance-process">
+      <h2 class="techpack-section-title">How Our TechPack Process Works</h2>
+      <p class="techpack-section-subtitle">From concept to creation in 5 streamlined steps</p>
       
-      <div class="techpack-entrance__cta">
-        <button type="button" class="techpack-btn-premium techpack-btn-premium--glass techpack-btn-premium--wide" id="open-client-modal">
-          <div class="techpack-btn-premium__content">
-            <div class="techpack-btn-premium__icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <div class="techpack-process-flow">
+        <div class="techpack-process-step">
+          <div class="techpack-process-step__number">01</div>
+          <div class="techpack-process-step__content">
+            <h3 class="techpack-process-step__title">Submit Requirements</h3>
+            <p class="techpack-process-step__description">Upload your design files and provide garment specifications through our streamlined interface</p>
+          </div>
+          <div class="techpack-process-step__connector"></div>
+        </div>
+
+        <div class="techpack-process-step">
+          <div class="techpack-process-step__number">02</div>
+          <div class="techpack-process-step__content">
+            <h3 class="techpack-process-step__title">Expert Review</h3>
+            <p class="techpack-process-step__description">Our garment development specialists analyze your project requirements and technical feasibility</p>
+          </div>
+          <div class="techpack-process-step__connector"></div>
+        </div>
+
+        <div class="techpack-process-step">
+          <div class="techpack-process-step__number">03</div>
+          <div class="techpack-process-step__content">
+            <h3 class="techpack-process-step__title">Quote & Timeline</h3>
+            <p class="techpack-process-step__description">Receive detailed pricing and delivery schedule within 24-48 hours of submission</p>
+          </div>
+          <div class="techpack-process-step__connector"></div>
+        </div>
+
+        <div class="techpack-process-step">
+          <div class="techpack-process-step__number">04</div>
+          <div class="techpack-process-step__content">
+            <h3 class="techpack-process-step__title">Sample Creation</h3>
+            <p class="techpack-process-step__description">Optional prototyping phase for fit validation and color approval before bulk production</p>
+          </div>
+          <div class="techpack-process-step__connector"></div>
+        </div>
+
+        <div class="techpack-process-step">
+          <div class="techpack-process-step__number">05</div>
+          <div class="techpack-process-step__content">
+            <h3 class="techpack-process-step__title">Production & Delivery</h3>
+            <p class="techpack-process-step__description">Professional manufacturing with quality control and direct delivery to your specifications</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="techpack-entrance-cta">
+      <div class="techpack-cta-content">
+        <h2 class="techpack-cta-title">Ready to Start Your TechPack?</h2>
+        <p class="techpack-cta-subtitle">Join hundreds of successful brands who trust us with their garment development</p>
+        
+        <button type="button" class="techpack-btn-hero" id="open-client-modal">
+          <div class="techpack-btn-hero__content">
+            <div class="techpack-btn-hero__icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/>
               </svg>
             </div>
-            <div class="techpack-btn-premium__text">
-              <span class="techpack-btn-premium__title">Begin Verification</span>
-              <span class="techpack-btn-premium__subtitle">Start your professional tech-pack</span>
-            </div>
+            <span class="techpack-btn-hero__text">Begin Your TechPack Submission</span>
           </div>
-          <div class="techpack-btn-premium__shimmer"></div>
+          <div class="techpack-btn-hero__shimmer"></div>
         </button>
+
+        <div class="techpack-cta-trust">
+          <div class="techpack-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1l2.5 5 5.5.5-4 4 1 5.5L8 13l-5 2.5 1-5.5-4-4 5.5-.5L8 1z"/>
+            </svg>
+            <span>500+ Successful Projects</span>
+          </div>
+          <div class="techpack-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1L6 6H1l4 3-2 5 5-3 5 3-2-5 4-3h-5L8 1z"/>
+            </svg>
+            <span>Industry Leading Quality</span>
+          </div>
+          <div class="techpack-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M6 8l2 2 4-4"/>
+            </svg>
+            <span>24-48h Response Time</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
