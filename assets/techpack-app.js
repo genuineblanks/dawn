@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  // Enhanced Configuration - Nuclear Fix Version
+  // Enhanced Configuration - Complete Overhaul Version
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
@@ -3926,15 +3926,40 @@
       
       if (!template || !container) return;
 
-      // EMERGENCY DEBUG: Check template content before cloning - FIXED: Use template.content
-      const templateContentHTML = template.content ? template.content.innerHTML : 'NO CONTENT';
-      debugSystem.log('🔍 TEMPLATE INVESTIGATION:', {
+      // EMERGENCY DEBUG: Check template structure comprehensively
+      debugSystem.log('🔍 TEMPLATE INVESTIGATION - COMPREHENSIVE:', {
         templateFound: !!template,
+        templateTagName: template?.tagName,
+        templateId: template?.id,
         templateContent: !!template.content,
         templateInnerHTML: template.innerHTML,
-        templateContentHTML: templateContentHTML,
-        containsGarmentID: templateContentHTML.includes('GARMENT_ID'),
-        garmentIDCount: (templateContentHTML.match(/GARMENT_ID/g) || []).length
+        templateInnerHTMLLength: template.innerHTML?.length,
+        templateContentExists: !!template?.content,
+        templateContentHTML: template.content?.innerHTML,
+        templateContentHTMLLength: template.content?.innerHTML?.length,
+        templateFirstChild: template.firstElementChild?.tagName,
+        templateChildrenCount: template.children?.length
+      });
+
+      // Try multiple ways to get template content
+      let actualContent = '';
+      if (template.content && template.content.innerHTML) {
+        actualContent = template.content.innerHTML;
+        debugSystem.log('✅ Using template.content.innerHTML');
+      } else if (template.innerHTML) {
+        actualContent = template.innerHTML;
+        debugSystem.log('⚠️ Falling back to template.innerHTML');
+      } else {
+        actualContent = template.textContent || '';
+        debugSystem.log('❌ Using template.textContent as last resort');
+      }
+
+      debugSystem.log('📄 ACTUAL TEMPLATE CONTENT:', {
+        content: actualContent.substring(0, 200) + '...',
+        containsGarmentID: actualContent.includes('GARMENT_ID'),
+        garmentIDCount: (actualContent.match(/GARMENT_ID/g) || []).length,
+        containsSampleRadio: actualContent.includes('sample-stock'),
+        contentSource: actualContent === template.innerHTML ? 'innerHTML' : 'content.innerHTML'
       });
 
       const garmentId = `garment-${++state.counters.garment}`;
@@ -3945,21 +3970,28 @@
       
       // EMERGENCY DEBUG: Log before/after GARMENT_ID replacement
       const beforeHTML = garment.innerHTML;
+      const beforeContainsPlaceholder = beforeHTML.includes('GARMENT_ID');
       debugSystem.log('🔧 BEFORE GARMENT_ID replacement:', {
         garmentId,
-        containsPlaceholder: beforeHTML.includes('GARMENT_ID'),
-        placeholderCount: (beforeHTML.match(/GARMENT_ID/g) || []).length
+        containsPlaceholder: beforeContainsPlaceholder,
+        placeholderCount: (beforeHTML.match(/GARMENT_ID/g) || []).length,
+        htmlSample: beforeHTML.substring(0, 200) + '...'
       });
       
       // Replace GARMENT_ID placeholders in HTML with actual garment ID
-      garment.innerHTML = garment.innerHTML.replace(/GARMENT_ID/g, garmentId);
+      if (beforeContainsPlaceholder) {
+        garment.innerHTML = garment.innerHTML.replace(/GARMENT_ID/g, garmentId);
+        debugSystem.log('✅ Performed GARMENT_ID replacement');
+      } else {
+        debugSystem.log('⚠️ No GARMENT_ID placeholders found - using manual ID fixing instead');
+      }
       
       // EMERGENCY DEBUG: Log after replacement and check radio buttons
       const afterHTML = garment.innerHTML;
       debugSystem.log('🔧 AFTER GARMENT_ID replacement:', {
         garmentId,
         stillContainsPlaceholder: afterHTML.includes('GARMENT_ID'),
-        replacementWorked: !afterHTML.includes('GARMENT_ID')
+        replacementWorked: beforeContainsPlaceholder ? !afterHTML.includes('GARMENT_ID') : 'SKIPPED'
       });
       
       // EMERGENCY DEBUG: Check what radio buttons exist after replacement
@@ -4007,6 +4039,10 @@
       // Add initial colorway
       this.addColorway(garmentId);
       
+      // IMMEDIATE FIX: Fix radio button IDs right after DOM insertion
+      debugSystem.log('🚨 IMMEDIATE ID FIX: Fixing radio IDs for garment:', garmentId);
+      this.fixSingleGarmentRadioIds(garment, garmentId);
+      
       // Animate in
       animationManager.slideIn(garment, 'down');
       
@@ -4019,7 +4055,15 @@
         // Recheck request type to show/hide sample sections
         setTimeout(() => window.sampleManager.checkRequestType(), 50);
         // EMERGENCY FIX: Fix duplicate radio IDs
-        setTimeout(() => this.fixDuplicateRadioIds(), 75);
+        debugSystem.log('📅 Scheduling manual ID fix in 75ms');
+        setTimeout(() => {
+          debugSystem.log('⏰ Manual ID fix timeout triggered');
+          try {
+            this.fixDuplicateRadioIds();
+          } catch (error) {
+            debugSystem.log('❌ Error in fixDuplicateRadioIds:', error);
+          }
+        }, 75);
         // EMERGENCY DEBUG: Inspect all radio buttons in DOM after garment addition
         setTimeout(() => this.debugAllRadioButtons(), 100);
       }
@@ -4027,12 +4071,73 @@
       debugSystem.log('Garment added', { garmentId });
     }
     
+    // IMMEDIATE FIX: Fix radio button IDs for a single garment right after creation
+    fixSingleGarmentRadioIds(garment, garmentId) {
+      debugSystem.log('🔧 FIXING RADIO IDs FOR SINGLE GARMENT:', garmentId);
+      
+      const radioButtons = garment.querySelectorAll('input[type="radio"]');
+      debugSystem.log('📻 Found radio buttons in garment:', radioButtons.length);
+      
+      radioButtons.forEach((radio, index) => {
+        const oldId = radio.id;
+        const oldName = radio.name;
+        let fixed = false;
+        
+        // Fix sample type radio buttons
+        if (radio.name === 'garment-sample-type') {
+          if (radio.value === 'stock') {
+            radio.id = `sample-stock-${garmentId}`;
+            radio.name = `garment-sample-type-${garmentId}`;
+            fixed = true;
+          } else if (radio.value === 'custom') {
+            radio.id = `sample-custom-${garmentId}`;
+            radio.name = `garment-sample-type-${garmentId}`;
+            fixed = true;
+          }
+        }
+        // Fix stock fabric color radio buttons
+        else if (radio.name === 'stock-fabric-color') {
+          radio.name = `stock-fabric-color-${garmentId}`;
+          if (radio.id) {
+            radio.id = `${radio.id}-${garmentId}`;
+          }
+          fixed = true;
+        }
+        
+        if (fixed) {
+          // Fix associated label
+          const label = garment.querySelector(`label[for="${oldId}"]`);
+          if (label) {
+            label.setAttribute('for', radio.id);
+          }
+          
+          debugSystem.log('✅ Fixed radio button:', {
+            garmentId,
+            index,
+            oldId,
+            newId: radio.id,
+            oldName,
+            newName: radio.name
+          });
+        }
+      });
+    }
+    
     // EMERGENCY FIX: Manually fix duplicate IDs if template replacement fails
     fixDuplicateRadioIds() {
-      debugSystem.log('🔧 MANUALLY FIXING DUPLICATE RADIO IDs');
+      debugSystem.log('🚨 MANUAL ID FIXING FUNCTION CALLED');
       
       const garments = document.querySelectorAll('.techpack-garment[data-garment-id]');
-      garments.forEach(garment => {
+      debugSystem.log('🔍 Found garments to process:', garments.length);
+      
+      if (garments.length === 0) {
+        debugSystem.log('❌ No garments found - cannot fix radio IDs');
+        return;
+      }
+      
+      debugSystem.log('🔧 MANUALLY FIXING DUPLICATE RADIO IDs');
+      
+      garments.forEach((garment, index) => {
         const garmentId = garment.dataset.garmentId;
         const radioButtons = garment.querySelectorAll('input[type="radio"]');
         
@@ -11737,10 +11842,11 @@ setupInitialization();
       debugSystem.log(`🔍 updateLabDipSelectionArea: Found ${garments.length} garments, ${globalLabDips.size} global lab dips, ${this.labDips.size} local lab dips`);
       
       garments.forEach((garment, index) => {
+        const garmentId = garment.dataset.garmentId || `unknown-${index}`;
         const customRadio = garment.querySelector('input[name="garment-sample-type"][value="custom"]:checked');
         const stockRadio = garment.querySelector('input[name="garment-sample-type"][value="stock"]:checked');
         
-        debugSystem.log(`Garment ${index}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
+        debugSystem.log(`Garment ${garmentId}: custom radio checked = ${!!customRadio}, stock radio checked = ${!!stockRadio}`);
         
         if (customRadio) {
           // Custom color workflow: Show lab dip selection interface
@@ -11748,10 +11854,10 @@ setupInitialization();
           const selectionEmpty = garment.querySelector('.techpack-lab-dip-selection-empty');
           const selectionTemplate = document.getElementById('lab-dip-selection-card-template');
           
-          debugSystem.log(`Garment ${index}: selectionArea = ${!!selectionArea}, selectionEmpty = ${!!selectionEmpty}, selectionTemplate = ${!!selectionTemplate}`);
+          debugSystem.log(`Garment ${garmentId}: selectionArea = ${!!selectionArea}, selectionEmpty = ${!!selectionEmpty}, selectionTemplate = ${!!selectionTemplate}`);
           
           if (!selectionArea || !selectionTemplate) {
-            debugSystem.log(`❌ Missing elements for garment ${index}`);
+            debugSystem.log(`❌ Missing elements for garment ${garmentId}`);
             return;
           }
           
@@ -13795,6 +13901,18 @@ setupInitialization();
       window.techpackApp.garmentManager.fixDuplicateRadioIds();
       console.log('✅ Manually fixed duplicate radio button IDs');
     }
+  };
+
+  // IMMEDIATE FIX: Global function to force immediate ID fixing
+  window.forceImmediateIdFix = function() {
+    const garments = document.querySelectorAll('.techpack-garment[data-garment-id]');
+    garments.forEach(garment => {
+      const garmentId = garment.dataset.garmentId;
+      if (window.techpackApp && window.techpackApp.garmentManager && garmentId) {
+        window.techpackApp.garmentManager.fixSingleGarmentRadioIds(garment, garmentId);
+      }
+    });
+    console.log('✅ Force fixed all garment radio IDs immediately');
   };
 
 })();
