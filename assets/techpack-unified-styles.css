@@ -4317,7 +4317,7 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 /* Disabled Sample Card States */
 .techpack-sample-card[data-disabled="true"] {
   opacity: 0.6;
-  pointer-events: none;
+  /* REMOVED: pointer-events: none; - This was preventing users from switching sample types! */
 }
 
 .techpack-sample-card[data-disabled="true"] .techpack-sample-card-label {
