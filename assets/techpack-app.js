@@ -8152,6 +8152,12 @@
     // Handle submission type selection
     selectSubmissionType(type) {
       state.formData.requestType = type;
+      
+      // Trigger global lab dip visibility check when request type changes
+      if (window.globalLabDipManager && window.globalLabDipManager.checkVisibility) {
+        setTimeout(() => window.globalLabDipManager.checkVisibility(), 50);
+      }
+      
       const submissionModal = document.querySelector('#submission-type-modal');
       
       // Hide submission modal and proceed to Step 1
@@ -12981,23 +12987,15 @@ setupInitialization();
     
     // Handle request type visibility - only show for sample and bulk requests
     handleRequestTypeVisibility() {
-      const requestTypeSelect = document.getElementById('request-type');
       const globalLabDipContainer = document.querySelector('.techpack-global-lab-dips');
       
-      debugSystem.log('🎯 Request type visibility setup:', {
-        hasRequestTypeSelect: !!requestTypeSelect,
-        hasGlobalLabDipContainer: !!globalLabDipContainer,
-        initialRequestType: requestTypeSelect?.value || 'none'
-      });
-      
       const checkVisibility = () => {
-        const requestType = requestTypeSelect?.value || '';
+        // Read from actual source of truth: state.formData.requestType
+        const requestType = window.techpackApp?.state?.formData?.requestType || state?.formData?.requestType || '';
         
         if (globalLabDipContainer) {
-          // Show for sample-request and bulk-order-request, hide for quotation
-          // Default to visible if no request type is set yet (during initialization)
-          const shouldShow = (!requestType || requestType === 'sample-request' || requestType === 'bulk-order-request') && 
-                           requestType !== 'quotation';
+          // Show ONLY for sample-request and bulk-order-request, hide for quotation and empty state
+          const shouldShow = requestType === 'sample-request' || requestType === 'bulk-order-request';
           globalLabDipContainer.style.display = shouldShow ? 'block' : 'none';
           
           debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}"`);
@@ -13006,11 +13004,16 @@ setupInitialization();
         }
       };
       
+      debugSystem.log('🎯 Request type visibility setup:', {
+        hasGlobalLabDipContainer: !!globalLabDipContainer,
+        initialRequestType: window.techpackApp?.state?.formData?.requestType || state?.formData?.requestType || 'none'
+      });
+      
       // Check initial state (with delay to ensure DOM is ready)
       setTimeout(() => checkVisibility(), 100);
       
-      // Listen for request type changes
-      requestTypeSelect?.addEventListener('change', checkVisibility);
+      // Store reference for external triggering when request type changes
+      this.checkVisibility = checkVisibility;
     }
     
     // Initialize event listeners
