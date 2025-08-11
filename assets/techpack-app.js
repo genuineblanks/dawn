@@ -1991,6 +1991,12 @@
 
     // CLEAN: Enhanced validateStep3() method - Request Type Dispatcher
     validateStep3() {
+      // CRITICAL: Skip validation if user is currently interacting with sample types to prevent conflicts
+      if (window.sampleManager && window.sampleManager.isUserInteracting) {
+        debugSystem.log('🚨 VALIDATION BLOCKED - User is interacting with sample types');
+        return true; // Return true to avoid disabling buttons during user interaction
+      }
+      
       const nextBtn = document.querySelector('#step-3-next');
       
       if (state.formData.garments.length === 0) {
@@ -4705,7 +4711,11 @@
           
           // Only validate step if we're close to or above minimum to avoid interference
           if (colorwayTotal >= requiredPerColorway * 0.8) {
-            setTimeout(() => stepManager.validateStep3(), 300);
+            setTimeout(() => {
+              if (!window.sampleManager || !window.sampleManager.isUserInteracting) {
+                stepManager.validateStep3();
+              }
+            }, 300);
           }
         }, 200);
 
@@ -11936,7 +11946,7 @@ setupInitialization();
           // garmentId already defined above
           let assignedLabDipCount = 0;
           labDipsToUse.forEach((labDip) => {
-            if (labDip.assignments && labDip.assignments.has(garmentId)) {
+            if (labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garmentId)) {
               assignedLabDipCount++;
             }
           });
@@ -11954,7 +11964,7 @@ setupInitialization();
             labDipsToUse.forEach((labDip, id) => {
               // Check if this lab dip is assigned to this specific garment
               // garmentId already defined in parent scope
-              const isAssigned = labDip.assignments && labDip.assignments.has(garmentId);
+              const isAssigned = labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garmentId);
               
               if (!isAssigned) {
                 return; // Skip lab dips not assigned to this garment
@@ -11998,7 +12008,7 @@ setupInitialization();
               // Auto-select if assigned (always true here since we filtered above)
               card.classList.add('techpack-lab-dip-selection-card--selected');
               // Store as selected in the enhanced sample state
-              if (window.sampleManager && window.sampleManager.enhancedSampleState.has(garmentId)) {
+              if (window.sampleManager && window.sampleManager.enhancedSampleState && window.sampleManager.enhancedSampleState.has(garmentId)) {
                 const state = window.sampleManager.enhancedSampleState.get(garmentId);
                 state.selectedLabDipId = id; // Store the first one, or could store multiple
               }
@@ -12537,9 +12547,13 @@ setupInitialization();
       this.updateGarmentSampleCost(garmentId);
       this.updateGarmentSampleSummary(garmentElement, sampleData);
 
-      // Trigger validation to check if sample size and fit type are required
+      // Trigger validation to check if sample size and fit type are required (with interaction guard)
       if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
-        setTimeout(() => stepManager.validateStep3(), 100);
+        setTimeout(() => {
+          if (!window.sampleManager || !window.sampleManager.isUserInteracting) {
+            stepManager.validateStep3();
+          }
+        }, 100);
       }
 
       debugSystem.log('Enhanced per-garment sample option toggled', { 
@@ -12803,9 +12817,13 @@ setupInitialization();
       this.updateGarmentSampleCost(garmentId);
       this.updateGarmentSampleSummary(garmentElement, sampleData);
 
-      // Trigger validation to clear errors when size/fit type is selected
+      // Trigger validation to clear errors when size/fit type is selected (with interaction guard)
       if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
-        setTimeout(() => stepManager.validateStep3(), 100);
+        setTimeout(() => {
+          if (!window.sampleManager || !window.sampleManager.isUserInteracting) {
+            stepManager.validateStep3();
+          }
+        }, 100);
       }
 
       debugSystem.log('Per-garment sample details updated', { garmentId, sampleData });
@@ -13276,9 +13294,18 @@ setupInitialization();
         // Bridge: Update per-garment selection areas
         this.updatePerGarmentSelections();
         
-        // Trigger validation update for the assigned garment
+        // Trigger validation update AFTER a delay to ensure DOM updates complete
         if (window.sampleManager && typeof window.sampleManager.debouncedUpdateValidation === 'function') {
-          window.sampleManager.debouncedUpdateValidation();
+          // Set user interacting flag to prevent immediate validation conflicts
+          if (window.sampleManager.isUserInteracting !== undefined) {
+            window.sampleManager.isUserInteracting = true;
+            setTimeout(() => {
+              window.sampleManager.isUserInteracting = false;
+              window.sampleManager.debouncedUpdateValidation();
+            }, 500); // Wait for DOM updates to complete before validating
+          } else {
+            window.sampleManager.debouncedUpdateValidation();
+          }
         }
       }
     }
@@ -13549,7 +13576,7 @@ setupInitialization();
       let garmentItems = '';
       if (availableGarments.length > 0) {
         garmentItems = availableGarments.map(garment => {
-          const isAssigned = labDip.assignments.has(garment.id);
+          const isAssigned = labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garment.id);
           const workflow = this.getAssignmentWorkflowType(garment.id);
           
           // Different styling and messaging based on workflow
@@ -13722,10 +13749,10 @@ setupInitialization();
           garmentId,
           labDipExists: !!labDip,
           currentAssignments: labDip ? Array.from(labDip.assignments) : 'NO LAB DIP',
-          isCurrentlyAssigned: labDip ? labDip.assignments.has(garmentId) : false
+          isCurrentlyAssigned: labDip && labDip.assignments && typeof labDip.assignments.has === 'function' ? labDip.assignments.has(garmentId) : false
         });
         
-        if (labDip && labDip.assignments.has(garmentId)) {
+        if (labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garmentId)) {
           debugSystem.log('➖ Unassigning lab dip from garment');
           this.unassignFromGarment(labDipId, garmentId);
         } else if (labDip) {
