@@ -2536,7 +2536,43 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   /* Disabled */
 }
 
-/* Color Assignment Guidance Styling */
+/* Clean Garment Color Assignment Styling */
+.techpack-garment-color-assignment {
+  margin: 1.5rem 0;
+}
+
+/* Empty Assignment State */
+.techpack-empty-assignment-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background: rgba(248, 250, 252, 0.8);
+  border: 2px dashed rgba(203, 213, 225, 0.8);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.techpack-empty-icon {
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+}
+
+.techpack-empty-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.techpack-empty-description {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Color Assignment Guidance Styling - DEPRECATED */
 .techpack-color-assignment-guidance {
   background: #f8fafc;
   border: 1px solid #e5e7eb;
@@ -3224,6 +3260,30 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   position: relative;
 }
 
+/* Non-selected items - more muted/greyish appearance */
+.techpack-lab-dip-global-item:not(.techpack-lab-dip-global-item--selected) {
+  opacity: 0.75;
+  background: rgba(248, 250, 252, 0.8);
+  border-color: rgba(229, 231, 235, 0.4);
+}
+
+.techpack-lab-dip-global-item:not(.techpack-lab-dip-global-item--selected) .techpack-lab-dip-global-item__code {
+  color: #64748b;
+}
+
+.techpack-lab-dip-global-item:not(.techpack-lab-dip-global-item--selected) .techpack-lab-dip-global-item__color {
+  opacity: 0.7;
+  border-color: rgba(229, 231, 235, 0.6);
+}
+
+/* Selected items - enhanced visibility */
+.techpack-lab-dip-global-item--selected {
+  background: rgba(255, 255, 255, 1);
+  border: 2px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.1);
+  transform: translateY(-1px);
+}
+
 .techpack-lab-dip-global-item:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -3240,6 +3300,12 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
   position: relative;
+}
+
+.techpack-lab-dip-global-item__color--hex {
+  background: var(--color-hex, #000000);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 }
 
 .techpack-lab-dip-global-item__color--tpx {
@@ -4951,82 +5017,7 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   font-weight: 600;
 }
 
-/* ===========================================
-   SECTION C: TECHPACK INFO CHECKBOXES
-   ========================================== */
 
-.techpack-info-check {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: rgba(243, 244, 246, 0.6);
-  backdrop-filter: blur(5px);
-  border-radius: 12px;
-  border: 1px solid var(--techpack-border-light);
-}
-
-.techpack-checkboxes {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.techpack-checkbox-option {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  padding: 1rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
-  font-size: 0.95rem;
-}
-
-.techpack-checkbox-option:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(0, 0, 0, 0.12);
-  transform: translateX(2px);
-}
-
-.techpack-checkbox-option:has(input:checked) {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: var(--techpack-primary);
-  transform: translateX(4px);
-}
-
-.techpack-checkbox-option input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.techpack-checkbox-mark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--techpack-border-dark);
-  border-radius: 4px;
-  position: relative;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  background: white;
-}
-
-.techpack-checkbox-option:has(input:checked) .techpack-checkbox-mark {
-  border-color: var(--techpack-primary);
-  background: var(--techpack-primary);
-}
-
-.techpack-checkbox-option:has(input:checked) .techpack-checkbox-mark::after {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-}
 
 
 /* ===========================================
@@ -5042,8 +5033,7 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
     padding: 1.25rem 1rem;
   }
 
-  .techpack-lab-dips-section,
-  .techpack-info-check {
+  .techpack-lab-dips-section {
     padding: 1.25rem 1rem;
     margin: 1.5rem 0;
   }
@@ -5142,8 +5132,7 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
     padding: 1rem 0.75rem;
   }
 
-  .techpack-lab-dips-section,
-  .techpack-info-check {
+  .techpack-lab-dips-section {
     padding: 1rem 0.75rem;
     margin: 1rem 0;
   }
@@ -5253,7 +5242,6 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   border-radius: 16px;
 }
 
-.techpack-checkbox-option:focus-within,
 .techpack-fabric-color-option:focus-within {
   outline: 2px solid var(--techpack-primary);
   outline-offset: 2px;
@@ -5583,6 +5571,25 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(71, 85, 105, 0.06);
   min-height: 60px;
+}
+
+/* Non-selected color cards - more muted */
+.techpack-assigned-color-card:not(.techpack-assigned-color-card--selected) {
+  opacity: 0.7;
+  background: rgba(248, 250, 252, 0.9);
+  border-color: rgba(229, 231, 235, 0.5);
+}
+
+.techpack-assigned-color-card:not(.techpack-assigned-color-card--selected) .techpack-assigned-color-card__pantone {
+  color: #64748b;
+}
+
+/* Selected color cards - enhanced visibility */
+.techpack-assigned-color-card--selected {
+  background: #ffffff;
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.1);
+  transform: translateY(-1px);
 }
 
 .techpack-assigned-color-card:hover {
