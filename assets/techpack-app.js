@@ -13474,7 +13474,7 @@ setupInitialization();
       const pantoneHex = this.selectedPantone.hex;
       
       // Add the lab dip with exact Pantone color and hex
-      const labDipResult = this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
+      const labDipResult = this.addGlobalLabDip(pantoneCode, pantoneHex, 'color-picker');
       
       debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex, { 
         result: labDipResult,
@@ -13537,8 +13537,15 @@ setupInitialization();
       debugSystem.log('✍️ Lab dip added from manual entry:', pantoneCode);
     }
     
+    // Validate hex color format
+    isValidHexColor(hex) {
+      return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
+    }
+    
     // Add global lab dip to the system
     addGlobalLabDip(pantoneCode, hexColor = null, source = 'manual-entry') {
+      console.log(`🌍 DEBUG: addGlobalLabDip called with:`, { pantoneCode, hexColor, source });
+      
       // Check for duplicates
       const existingLabDip = Array.from(this.globalLabDips.values()).find(labDip => 
         labDip.pantone.toLowerCase() === pantoneCode.toLowerCase()
@@ -13549,17 +13556,29 @@ setupInitialization();
         return;
       }
       
+      // Validate hex color if provided
+      if (hexColor && !this.isValidHexColor(hexColor)) {
+        console.log(`⚠️ DEBUG: Invalid hex color provided: ${hexColor}, attempting pantone lookup`);
+        hexColor = this.pantoneToHex(pantoneCode) || null;
+        console.log(`🔄 DEBUG: Pantone lookup result: ${hexColor}`);
+      }
+      
       // Generate unique ID
       const labDipId = `global-${Date.now()}`;
       
-      // Add to global data structure
-      this.globalLabDips.set(labDipId, {
+      // Create lab dip object
+      const labDipData = {
         pantone: pantoneCode,
         hex: hexColor,
         source: source,
         assignments: new Set(), // Set of garment IDs this lab dip is assigned to
         status: 'fabric-swatch'
-      });
+      };
+      
+      console.log(`✅ DEBUG: Created lab dip data:`, labDipData);
+      
+      // Add to global data structure
+      this.globalLabDips.set(labDipId, labDipData);
       
       // Default to fabric swatch if no garment assignments
       this.fabricSwatches.add(labDipId);
