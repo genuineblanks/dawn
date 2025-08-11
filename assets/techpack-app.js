@@ -12982,22 +12982,31 @@ setupInitialization();
     // Handle request type visibility - only show for sample and bulk requests
     handleRequestTypeVisibility() {
       const requestTypeSelect = document.getElementById('request-type');
+      const globalLabDipContainer = document.querySelector('.techpack-global-lab-dips');
+      
+      debugSystem.log('🎯 Request type visibility setup:', {
+        hasRequestTypeSelect: !!requestTypeSelect,
+        hasGlobalLabDipContainer: !!globalLabDipContainer,
+        initialRequestType: requestTypeSelect?.value || 'none'
+      });
       
       const checkVisibility = () => {
         const requestType = requestTypeSelect?.value || '';
-        const globalLabDipContainer = document.querySelector('.techpack-global-lab-dips');
         
         if (globalLabDipContainer) {
           // Show for sample-request and bulk-order-request, hide for quotation-request
-          const shouldShow = requestType === 'sample-request' || requestType === 'bulk-order-request';
+          // Default to visible if no request type is set yet (during initialization)
+          const shouldShow = !requestType || requestType === 'sample-request' || requestType === 'bulk-order-request';
           globalLabDipContainer.style.display = shouldShow ? 'block' : 'none';
           
-          debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: ${requestType}`);
+          debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}"`);
+        } else {
+          debugSystem.log('⚠️ Global Lab Dip container not found');
         }
       };
       
-      // Check initial state
-      checkVisibility();
+      // Check initial state (with delay to ensure DOM is ready)
+      setTimeout(() => checkVisibility(), 100);
       
       // Listen for request type changes
       requestTypeSelect?.addEventListener('change', checkVisibility);
