@@ -1,4 +1,70 @@
- Polyester Jersey',
+(function() {
+  'use strict';
+  // DEBUG VERSION: 1.8.19 - FIXED: Enhanced validation debugging for radio button detection
+
+  // Enhanced Configuration - Complete Overhaul Version
+  const CONFIG = {
+    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
+    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
+    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
+    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
+    MAX_FILES: 10,
+    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
+    ANIMATION_DURATION: 400,
+    DEBOUNCE_DELAY: 300,
+    MIN_DELIVERY_WEEKS: 6,
+    
+    // Fabric Type Mapping Configuration
+    FABRIC_TYPE_MAPPING: {
+      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
+      'Zip-Up Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Hoodie': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatshirt': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Sweatpants': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      'Shorts': [
+        'Brushed Fleece 100% Organic Cotton',
+        'French Terry 100% Organic Cotton',
+        '80% Cotton 20% Polyester Blend',
+        '70% Cotton 30% Polyester Blend',
+        '50% Cotton 50% Polyester Blend',
+        '100% Polyester'
+      ],
+      
+      // Light Garments - T-Shirts and Long Sleeves
+      'T-Shirt': [
+        '100% Organic Cotton Jersey',
+        '80% Cotton 20% Polyester Jersey',
+        '50% Cotton 50% Polyester Jersey',
+        '100% Polyester Jersey',
         '100% Cotton & Elastan',
         'Recycled Polyester'
       ],
@@ -13939,6 +14005,127 @@ setupInitialization();
       } else {
         debugSystem.log('⚠️ Bridge warning: SampleManager not available for per-garment updates');
       }
+      
+      // Update assignment status displays for all garments
+      this.updateAllGarmentAssignmentDisplays();
+    }
+    
+    // Update assignment status displays for all garments
+    updateAllGarmentAssignmentDisplays() {
+      const garments = document.querySelectorAll('.techpack-garment');
+      
+      garments.forEach(garment => {
+        const garmentId = garment.dataset.garmentId;
+        if (garmentId) {
+          this.updateGarmentAssignmentDisplay(garmentId);
+        }
+      });
+    }
+    
+    // Update a single garment's assignment status display
+    updateGarmentAssignmentDisplay(garmentId) {
+      const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garment) {
+        debugSystem.log('❌ Garment not found for assignment display update:', garmentId);
+        return;
+      }
+      
+      // Find the assignment status elements
+      const statusUnassigned = garment.querySelector('.techpack-status-unassigned');
+      const statusAssigned = garment.querySelector('.techpack-status-assigned');
+      const assignedCountSpan = garment.querySelector('.techpack-assigned-count');
+      const assignedColorsList = garment.querySelector('[data-assigned-colors-list]');
+      
+      if (!statusUnassigned || !statusAssigned || !assignedCountSpan || !assignedColorsList) {
+        debugSystem.log('❌ Assignment status elements not found for garment:', garmentId);
+        return;
+      }
+      
+      // Get assigned lab dips for this garment
+      const assignedLabDips = [];
+      this.globalLabDips.forEach((labDip, labDipId) => {
+        if (labDip && labDip.assignments && labDip.assignments.has(garmentId)) {
+          assignedLabDips.push({
+            id: labDipId,
+            pantone: labDip.pantone,
+            hex: labDip.hex
+          });
+        }
+      });
+      
+      debugSystem.log(`🎨 Garment ${garmentId}: Found ${assignedLabDips.length} assigned colors`, assignedLabDips);
+      
+      if (assignedLabDips.length === 0) {
+        // Show unassigned state
+        statusUnassigned.style.display = 'flex';
+        statusAssigned.style.display = 'none';
+      } else {
+        // Show assigned state with beautiful color cards
+        statusUnassigned.style.display = 'none';
+        statusAssigned.style.display = 'flex';
+        assignedCountSpan.textContent = assignedLabDips.length;
+        
+        // Clear existing color cards
+        assignedColorsList.innerHTML = '';
+        
+        // Create beautiful color cards for each assigned color
+        assignedLabDips.forEach(labDip => {
+          const colorCard = this.createAssignedColorCard(labDip);
+          assignedColorsList.appendChild(colorCard);
+        });
+      }
+    }
+    
+    // Create a beautiful assigned color card matching global lab dip style
+    createAssignedColorCard(labDip) {
+      const card = document.createElement('div');
+      card.className = 'techpack-assigned-color-card';
+      card.dataset.labDipId = labDip.id;
+      
+      // Get hex color for display
+      const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
+      
+      card.innerHTML = `
+        <div class="techpack-assigned-color-card__content">
+          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+          <div class="techpack-assigned-color-card__info">
+            <div class="techpack-assigned-color-card__pantone">PANTONE ${labDip.pantone}</div>
+            <div class="techpack-assigned-color-card__status">Assigned</div>
+          </div>
+          <div class="techpack-assigned-color-card__check">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+            </svg>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+    
+    // Helper function to convert pantone to hex (enhanced from SampleManager)
+    pantoneToHex(pantoneCode) {
+      // Enhanced pantone color database
+      const pantoneColors = {
+        // Basic colors from SampleManager plus the specific ones from the screenshot
+        '18-1664': '#CE2029',  // Fiery red (exact from screenshot)
+        '12-0104': '#E1DBC8',  // White asparagus (exact from screenshot)
+        '19-1664': '#BF1932',  // True red
+        '18-3949': '#5A4FCF',
+        '19-4052': '#0F4C75',
+        '17-5126': '#00A693',
+        '18-1142': '#A0522D',
+        '19-3938': '#2D1B69',
+        '15-3817': '#E4C2C6',
+        '17-1456': '#D2386C',
+        '19-4007': '#2E3440'
+      };
+      
+      // Extract just the color number part (e.g., "18-1664" from "Fiery red - 18-1664 TCX")
+      const colorCode = pantoneCode.replace(/.*?(\d{2}-\d{4}).*/, '$1');
+      
+      // Return matched color or a default gray
+      return pantoneColors[colorCode] || '#6B7280';
     }
 
     // Check if garment is using stock or custom color workflow
