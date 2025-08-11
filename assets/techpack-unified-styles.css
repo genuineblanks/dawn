@@ -3202,32 +3202,59 @@ button:disabled.techpack-btn {
   color: rgba(107, 114, 128, 0.5) !important;
 }
 
-/* Restriction warning message for non-cotton fabrics */
+/* Restriction warning message for non-cotton fabrics - Elegant design */
 .techpack-sample-warning-restriction {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 8px;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: rgba(251, 191, 36, 0.08);  /* Soft amber background */
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 10px;
   font-size: 0.875rem;
-  color: #dc2626;
-  line-height: 1.4;
-  margin: 1rem 0;
-  font-weight: 500;
+  color: #92400e;  /* Amber-900 for readability */
+  line-height: 1.5;
+  margin: 0.75rem 1rem;
+  font-weight: 450;
+  animation: fadeIn 0.3s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 .techpack-sample-warning-restriction svg {
-  color: #dc2626;
+  color: #f59e0b;  /* Amber-500 */
+  fill: currentColor;
   flex-shrink: 0;
   margin-top: 0.1rem;
+  width: 16px;
+  height: 16px;
 }
 
 .techpack-custom-color-restriction-warning {
-  margin-top: 1rem;
-  border-top: 1px solid rgba(239, 68, 68, 0.1);
-  padding-top: 1rem;
+  margin-top: 0.75rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Animation for warning appearance */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 100px;
+  }
 }
 
 .techpack-sample-warning-required svg {
