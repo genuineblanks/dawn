@@ -103,7 +103,7 @@ Tech-Pack Step 3: Garment Specifications Section
               <!-- Color Input and Preview -->
               <div class="techpack-color-picker-section">
                 <div class="techpack-color-preview-wrapper">
-                  <input type="color" id="lab-dip-color-picker" class="techpack-color-picker__input" value="#000000">
+                  <input type="color" id="lab-dip-color-picker" class="techpack-color-picker__input">
                   <div class="techpack-color-picker__preview" id="lab-dip-color-preview"></div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ Tech-Pack Step 3: Garment Specifications Section
               <div class="techpack-auto-pantone-section">
                 <div class="techpack-auto-pantone-display" id="auto-pantone-display" style="display: none;">
                   <div class="techpack-pantone-result">
-                    <div class="techpack-pantone-circle" id="auto-pantone-circle" style="background-color: #000000;"></div>
+                    <div class="techpack-pantone-circle" id="auto-pantone-circle"></div>
                     <div class="techpack-pantone-info">
                       <div class="techpack-pantone-code" id="auto-pantone-code">Select a color</div>
                       <div class="techpack-pantone-note">Auto-selected from 2,310+ colors</div>
@@ -401,6 +401,9 @@ Tech-Pack Step 3: Garment Specifications Section
                     </div>
                     
                     <div class="techpack-status-assigned" style="display: none;">
+                      <div class="techpack-assigned-status-header">
+                        <span class="techpack-assigned-count">0</span> colors assigned
+                      </div>
                       <div class="techpack-assigned-colors" data-assigned-colors-list></div>
                     </div>
                   </div>
