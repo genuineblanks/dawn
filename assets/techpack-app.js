@@ -11312,8 +11312,8 @@ setupInitialization();
       if (closestPantone) {
         if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'block';
         if (autoPantoneCircle) autoPantoneCircle.style.backgroundColor = closestPantone.hex;
-        if (autoPantoneCode) autoPantoneCode.textContent = `${closestPantone.name} - ${closestPantone.code} TCX`;
-        debugSystem.log('Auto-selected Pantone:', `${closestPantone.name} - ${closestPantone.code} TCX`);
+        if (autoPantoneCode) autoPantoneCode.textContent = `${closestPantone.name} - ${closestPantone.code}`;
+        debugSystem.log('Auto-selected Pantone:', `${closestPantone.name} - ${closestPantone.code}`);
       } else {
         if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
       }
@@ -13260,14 +13260,15 @@ setupInitialization();
       
       // Use the auto-selected Pantone from the comprehensive 2,310+ color database
       const pantoneCode = this.selectedPantone.code.replace(/\s?(-\s?TCX|-\s?TPX)$/i, '').trim();
+      const pantoneHex = this.selectedPantone.hex;
       
       // Add the lab dip with exact Pantone color and hex
-      this.addGlobalLabDip(pantoneCode, 'color-picker', this.selectedPantone.hex);
+      this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
+      
+      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex);
       
       // Reset color picker to initial state
       this.resetColorPicker();
-      
-      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, this.selectedPantone.hex);
     }
     
     // Reset color picker to initial state
