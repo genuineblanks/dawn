@@ -12963,16 +12963,44 @@ setupInitialization();
   // ===============================================
   
   class GlobalLabDipManager {
-    constructor() {
+    constructor(garmentManager = null) {
       // Global lab dip data structure
       this.globalLabDips = new Map(); // id -> { pantone, hex, source, assignments, status }
       this.garmentAssignments = new Map(); // garmentId -> Set of lab dip IDs
       this.fabricSwatches = new Set(); // lab dip IDs marked as fabric swatches only
       
+      // Direct reference to garmentManager for reliable access to color database
+      this.garmentManager = garmentManager;
+      
       this.initializeEventListeners();
       this.initializeExistingData();
+      this.handleRequestTypeVisibility();
       
-      debugSystem.log('🌍 GlobalLabDipManager initialized');
+      debugSystem.log('🌍 GlobalLabDipManager initialized with garmentManager:', !!this.garmentManager);
+    }
+    
+    // Handle request type visibility - only show for sample and bulk requests
+    handleRequestTypeVisibility() {
+      const requestTypeSelect = document.getElementById('request-type');
+      
+      const checkVisibility = () => {
+        const requestType = requestTypeSelect?.value || '';
+        const globalLabDipContainer = document.querySelector('.techpack-global-lab-dips');
+        
+        if (globalLabDipContainer) {
+          // Show for sample-request and bulk-order-request, hide for quotation-request
+          const shouldShow = requestType === 'sample-request' || requestType === 'bulk-order-request';
+          globalLabDipContainer.style.display = shouldShow ? 'block' : 'none';
+          
+          debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: ${requestType}`);
+        }
+      };
+      
+      // Check initial state
+      checkVisibility();
+      
+      // Listen for request type changes
+      requestTypeSelect?.addEventListener('change', checkVisibility);
     }
     
     // Initialize event listeners
@@ -13055,9 +13083,20 @@ setupInitialization();
       }
       
       // Get comprehensive Pantone database match (2,310+ colors)
-      const closestPantones = window.garmentManager && window.garmentManager.findClosestPantoneColors ? 
-        window.garmentManager.findClosestPantoneColors(color, 1) : [];
+      debugSystem.log('🔍 Accessing Pantone database:', { 
+        hasGarmentManager: !!this.garmentManager, 
+        hasFunction: !!(this.garmentManager && this.garmentManager.findClosestPantoneColors),
+        color: color 
+      });
+      
+      const closestPantones = this.garmentManager && this.garmentManager.findClosestPantoneColors ? 
+        this.garmentManager.findClosestPantoneColors(color, 1) : [];
       const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
+      
+      debugSystem.log('🎨 Pantone search result:', { 
+        foundResults: closestPantones.length, 
+        closestPantone: closestPantone ? closestPantone.code : 'none' 
+      });
       
       // Update professional UI elements
       const autoPantoneDisplay = document.getElementById('auto-pantone-display');
@@ -13808,8 +13847,8 @@ setupInitialization();
     // Find closest Pantone color (using existing method)
     findClosestPantoneColor(hexColor) {
       // Use the comprehensive pantone database from findClosestPantoneColors
-      const results = window.garmentManager && window.garmentManager.findClosestPantoneColors ? 
-        window.garmentManager.findClosestPantoneColors(hexColor, 1) : [];
+      const results = this.garmentManager && this.garmentManager.findClosestPantoneColors ? 
+        this.garmentManager.findClosestPantoneColors(hexColor, 1) : [];
       return results && results.length > 0 ? { code: results[0].code, confidence: results[0].confidence } : null;
     }
 
@@ -14027,8 +14066,8 @@ setupInitialization();
   // Make it globally available
   window.sampleManager = sampleManager;
 
-  // Initialize Global Lab Dip Manager
-  const globalLabDipManager = new GlobalLabDipManager();
+  // Initialize Global Lab Dip Manager with garmentManager reference
+  const globalLabDipManager = new GlobalLabDipManager(garmentManager);
   
   // Make it globally available
   window.globalLabDipManager = globalLabDipManager;
