@@ -2195,16 +2195,20 @@
 
         // SAMPLE-SPECIFIC: Validate sample type selection
         const sampleSection = garmentElement.querySelector('.techpack-garment-samples[data-sample-request-only]');
+        const sampleTypeSection = sampleSection?.querySelector('.techpack-sample-type-selection');
         
         // DEBUG: Log what we're finding
         debugSystem.log('🔍 VALIDATION DEBUG:', {
           garmentIndex: index + 1,
           sampleSectionFound: !!sampleSection,
           sampleSectionDisplay: sampleSection?.style.display,
-          isVisible: sampleSection && sampleSection.style.display !== 'none'
+          sampleTypeSectionFound: !!sampleTypeSection,
+          sampleTypeSectionDisplay: sampleTypeSection?.style.display,
+          isVisible: sampleSection && sampleSection.style.display !== 'none' && sampleTypeSection && sampleTypeSection.style.display !== 'none'
         });
         
-        if (sampleSection && sampleSection.style.display !== 'none') {
+        // Only validate sample type if both the sample section AND the sample type selection are visible
+        if (sampleSection && sampleSection.style.display !== 'none' && sampleTypeSection && sampleTypeSection.style.display !== 'none') {
           // DEBUG: Check what radio buttons exist in the section
           const allRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type-"]');
           const checkedRadios = sampleSection.querySelectorAll('input[type="radio"][name^="garment-sample-type-"]:checked');
@@ -2239,8 +2243,7 @@
             isValid = false;
             debugSystem.log(`Garment ${index + 1}: No sample type selected - sample type selection is required`, null, 'error');
             
-            // Show error on the sample type selection
-            const sampleTypeSection = sampleSection.querySelector('.techpack-sample-type-selection');
+            // Show error on the sample type selection  
             if (sampleTypeSection) {
               const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
               sampleCards.forEach(card => card.classList.add('techpack-sample-card--error'));
@@ -2273,7 +2276,6 @@
             }
           } else {
             // Sample type selected - clear errors
-            const sampleTypeSection = sampleSection.querySelector('.techpack-sample-type-selection');
             if (sampleTypeSection) {
               const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
               sampleCards.forEach(card => card.classList.remove('techpack-sample-card--error'));
@@ -4153,6 +4155,8 @@
         window.sampleManager.initializeGarmentSampleData(garmentId);
         // Recheck request type to show/hide sample sections
         setTimeout(() => window.sampleManager.checkRequestType(), 50);
+        // Initialize sample type visibility (should be hidden until prerequisites are met)
+        setTimeout(() => this.updateSampleTypeVisibility(garment), 75);
         // EMERGENCY FIX: Fix duplicate radio IDs
         debugSystem.log('📅 Scheduling manual ID fix in 75ms');
         setTimeout(() => {
@@ -4371,6 +4375,57 @@
       });
     }
 
+    // Check if all prerequisites are met and show/hide sample type selection accordingly
+    updateSampleTypeVisibility(garment) {
+      const sampleTypeSection = garment.querySelector('.techpack-sample-type-selection');
+      if (!sampleTypeSection) return; // Not in sample mode or section doesn't exist
+      
+      // Only proceed if we're in sample request mode
+      if (state.formData.requestType !== 'sample-request') {
+        sampleTypeSection.style.display = 'none';
+        return;
+      }
+      
+      // Check prerequisites: garment type, fabric type, and at least one printing method
+      const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
+      const fabricTypeSelect = garment.querySelector('select[name="fabricType"]');
+      const printingMethodCheckboxes = garment.querySelectorAll('input[name="printingMethods[]"]:checked');
+      
+      const hasGarmentType = garmentTypeSelect && garmentTypeSelect.value.trim() !== '';
+      const hasFabricType = fabricTypeSelect && fabricTypeSelect.value.trim() !== '';
+      const hasPrintingMethod = printingMethodCheckboxes.length > 0;
+      
+      // Show sample type selection only if all prerequisites are met
+      if (hasGarmentType && hasFabricType && hasPrintingMethod) {
+        sampleTypeSection.style.display = 'block';
+        // Add smooth transition if not already visible
+        if (sampleTypeSection.style.opacity === '0' || !sampleTypeSection.style.opacity) {
+          sampleTypeSection.style.opacity = '0';
+          sampleTypeSection.style.transition = 'opacity 0.3s ease-in-out';
+          setTimeout(() => {
+            sampleTypeSection.style.opacity = '1';
+          }, 10);
+        }
+        debugSystem.log('Sample type selection shown - all prerequisites met', {
+          garmentType: garmentTypeSelect.value,
+          fabricType: fabricTypeSelect.value,
+          printingMethods: printingMethodCheckboxes.length
+        });
+      } else {
+        sampleTypeSection.style.display = 'none';
+        // Clear any sample type selection when hiding
+        const sampleTypeRadios = sampleTypeSection.querySelectorAll('input[type="radio"]');
+        sampleTypeRadios.forEach(radio => {
+          radio.checked = false;
+        });
+        debugSystem.log('Sample type selection hidden - prerequisites not met', {
+          hasGarmentType,
+          hasFabricType,
+          hasPrintingMethod: hasPrintingMethod
+        });
+      }
+    }
+
     setupGarmentEventListeners(garment, garmentId) {
       // Remove button
       const removeBtn = garment.querySelector('.techpack-garment__remove');
@@ -4393,6 +4448,9 @@
           const fabricSelect = garment.querySelector('select[name="fabricType"]');
           this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, true);
           
+          // Check if sample type section should be shown/hidden
+          this.updateSampleTypeVisibility(garment);
+          
           stepManager.validateStep3();
           
           // Update sample summary if in sample mode
@@ -4413,6 +4471,10 @@
           if (garmentData) {
             garmentData.fabric = fabricSelect.value;
           }
+          
+          // Check if sample type section should be shown/hidden
+          this.updateSampleTypeVisibility(garment);
+          
           stepManager.validateStep3();
           
           // Update sample summary if in sample mode
@@ -4466,6 +4528,9 @@
           if (printingError) {
             printingError.textContent = '';
           }
+          
+          // Check if sample type section should be shown/hidden
+          this.updateSampleTypeVisibility(garment);
           
           // Validate with debounce to prevent interference
           debouncedValidation();
@@ -12407,6 +12472,14 @@ setupInitialization();
         });
         
         if (subtitle) subtitle.textContent = 'Define your garment details';
+      }
+
+      // Update sample type visibility for all garments when request type changes
+      if (requestType === 'sample-request' && window.garmentManager && typeof window.garmentManager.updateSampleTypeVisibility === 'function') {
+        const garmentElements = document.querySelectorAll('.techpack-garment');
+        garmentElements.forEach(garment => {
+          window.garmentManager.updateSampleTypeVisibility(garment);
+        });
       }
 
       // Update validation
