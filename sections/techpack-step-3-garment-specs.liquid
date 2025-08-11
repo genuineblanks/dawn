@@ -79,7 +79,7 @@ Tech-Pack Step 3: Garment Specifications Section
         </div>
         <p class="techpack-section-description">Create color swatches that can be assigned to any garment or received as separate fabric samples for accuracy confirmation.</p>
         
-        <!-- Compact Dual-Mode Input System -->
+        <!-- Professional Color Picker System with Auto Pantone Selection -->
         <div class="techpack-lab-dip-input-system">
           <div class="techpack-input-mode-toggle">
             <button type="button" class="techpack-mode-btn techpack-mode-btn--active" data-mode="color-picker" id="color-picker-mode">
@@ -97,23 +97,43 @@ Tech-Pack Step 3: Garment Specifications Section
             </button>
           </div>
           
-          <!-- Color Picker Mode -->
+          <!-- Color Picker Mode with Auto Pantone Selection -->
           <div class="techpack-input-mode techpack-input-mode--active" id="color-picker-input">
-            <div class="techpack-color-picker-group">
-              <div class="techpack-color-preview-wrapper">
-                <input type="color" id="lab-dip-color-picker" class="techpack-color-picker" value="#000000">
-                <div class="techpack-color-preview" id="lab-dip-color-preview"></div>
+            <div class="techpack-professional-color-picker-group">
+              <!-- Color Input and Preview -->
+              <div class="techpack-color-picker-section">
+                <div class="techpack-color-preview-wrapper">
+                  <input type="color" id="lab-dip-color-picker" class="techpack-color-picker__input" value="#000000">
+                  <div class="techpack-color-picker__preview" id="lab-dip-color-preview"></div>
+                </div>
               </div>
-              <div class="techpack-color-info">
-                <div class="techpack-color-code" id="suggested-pantone-code">Select a color</div>
-                <div class="techpack-color-note">Closest Pantone TCX match</div>
+              
+              <!-- Auto-Selected Pantone Display -->
+              <div class="techpack-auto-pantone-section">
+                <div class="techpack-auto-pantone-display" id="auto-pantone-display" style="display: none;">
+                  <div class="techpack-pantone-result">
+                    <div class="techpack-pantone-circle" id="auto-pantone-circle" style="background-color: #000000;"></div>
+                    <div class="techpack-pantone-info">
+                      <div class="techpack-pantone-code" id="auto-pantone-code">Select a color</div>
+                      <div class="techpack-pantone-note">Closest Pantone TCX match</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="techpack-pantone-placeholder" id="pantone-placeholder">
+                  <div class="techpack-pantone-placeholder-icon">🎨</div>
+                  <div class="techpack-pantone-placeholder-text">Pick a color to see Pantone match</div>
+                </div>
               </div>
-              <button type="button" id="add-lab-dip-color" class="techpack-btn techpack-btn--primary">
-                <svg width="14" height="14" viewBox="0 0 16 16">
-                  <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                Add
-              </button>
+              
+              <!-- Add Button -->
+              <div class="techpack-add-button-section">
+                <button type="button" id="add-lab-dip-color" class="techpack-btn techpack-btn--primary" disabled>
+                  <svg width="14" height="14" viewBox="0 0 16 16">
+                    <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  Add Lab Dip
+                </button>
+              </div>
             </div>
           </div>
           
@@ -125,7 +145,7 @@ Tech-Pack Step 3: Garment Specifications Section
                 <svg width="14" height="14" viewBox="0 0 16 16">
                   <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
                 </svg>
-                Add
+                Add Lab Dip
               </button>
             </div>
           </div>
