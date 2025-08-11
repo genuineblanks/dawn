@@ -14440,7 +14440,13 @@ setupInitialization();
       
       // Get hex color for display
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
-      console.log(`🎨 DEBUG: Hex color resolved to: ${hexColor}`);
+      console.log(`🎨 DEBUG GARMENT: Hex color resolved to: ${hexColor}`, {
+        originalHex: labDip.hex,
+        pantone: labDip.pantone,
+        pantoneToHex: this.pantoneToHex(labDip.pantone),
+        finalHex: hexColor,
+        hasHex: !!labDip.hex
+      });
       
       const htmlContent = `
         <div class="techpack-assigned-color-card__content">
@@ -14458,6 +14464,11 @@ setupInitialization();
           </svg>
         </button>
       `;
+      
+      console.log(`🏗️ DEBUG GARMENT: Generated HTML for color circle:`, {
+        colorCircleStyle: `background-color: ${hexColor}`,
+        fullColorCircleHTML: `<div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>`
+      });
       
       card.innerHTML = htmlContent;
       console.log(`🏗️ DEBUG: Generated HTML:`, htmlContent);
