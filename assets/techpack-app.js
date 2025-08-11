@@ -11196,11 +11196,11 @@ setupInitialization();
       document.addEventListener('click', (e) => {
         // Mode toggle buttons
         if (e.target.id === 'color-picker-mode') {
-          this.switchInputMode('color-picker');
+          window.globalLabDipManager?.switchInputMode('color-picker');
         }
         
         if (e.target.id === 'manual-entry-mode') {
-          this.switchInputMode('manual-entry');
+          window.globalLabDipManager?.switchInputMode('manual-entry');
         }
         
         // Go to Color Assignment button - PROTECTED from validation interference
@@ -11222,20 +11222,24 @@ setupInitialization();
         
         // Add lab dip buttons
         if (e.target.id === 'add-lab-dip-color') {
+          debugSystem.log('🖱️ ADD LAB DIP button clicked!', { 
+            isDisabled: e.target.classList.contains('disabled'),
+            globalManager: !!window.globalLabDipManager
+          });
           if (!e.target.classList.contains('disabled')) {
-            this.addLabDipFromColorPicker();
+            window.globalLabDipManager?.addLabDipFromColorPicker();
           }
         }
         
         if (e.target.id === 'add-lab-dip-manual') {
-          this.addLabDipFromManualEntry();
+          window.globalLabDipManager?.addLabDipFromManualEntry();
         }
         
         // Remove lab dip (updated for new template)
         if (e.target.classList.contains('techpack-lab-dip-item__remove')) {
           const labDipItem = e.target.closest('.techpack-lab-dip-item');
           const labDipId = labDipItem?.dataset.labDipId;
-          if (labDipId) this.removeLabDip(labDipId);
+          if (labDipId) window.globalLabDipManager?.removeGlobalLabDip(labDipId);
         }
         
         // Legacy support (maintain old functionality)
@@ -11245,7 +11249,7 @@ setupInitialization();
         
         if (e.target.classList.contains('remove-lab-dip')) {
           const labDipId = e.target.dataset.labDipId;
-          this.removeLabDip(labDipId);
+          window.globalLabDipManager?.removeGlobalLabDip(labDipId);
         }
         
         if (e.target.classList.contains('select-lab-dip')) {
@@ -13183,6 +13187,11 @@ setupInitialization();
     
     // Add lab dip from color picker mode with auto-selected Pantone
     addLabDipFromColorPicker() {
+      debugSystem.log('🎨 addLabDipFromColorPicker called:', { 
+        selectedColor: this.selectedColor, 
+        selectedPantone: this.selectedPantone 
+      });
+      
       if (!this.selectedColor || !this.selectedPantone) {
         this.showError('Please select a color first');
         return;
