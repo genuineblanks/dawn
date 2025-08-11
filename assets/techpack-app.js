@@ -4563,6 +4563,17 @@
         radio.addEventListener('change', () => {
           debugSystem.log(`Sample type changed to: ${radio.value} for garment ${garmentId}`);
           
+          // CRITICAL: When switching FROM custom TO stock, cleanup all lab dip assignments
+          if (radio.value === 'stock' && window.globalLabDipManager) {
+            debugSystem.log(`🧹 Sample type changed to stock - cleaning up lab dip assignments for garment ${garmentId}`);
+            window.globalLabDipManager.cleanupGarmentAssignments(garmentId);
+            
+            // Also update the garment assignment display to show empty state
+            if (typeof window.globalLabDipManager.updateGarmentAssignmentDisplay === 'function') {
+              window.globalLabDipManager.updateGarmentAssignmentDisplay(garmentId);
+            }
+          }
+          
           // Immediately clear the main sample type error when any sample type is selected
           this.clearMainSampleTypeError(garment);
           
@@ -14432,21 +14443,12 @@ setupInitialization();
     
     // Create a professional unified color card
     createUnifiedColorCard(labDip, garmentId) {
-      console.log(`🏗️ DEBUG: Creating unified color card for:`, { labDip, garmentId });
-      
       const card = document.createElement('div');
       card.className = 'techpack-assigned-color-card';
       card.dataset.labDipId = labDip.id;
       
       // Get hex color for display
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
-      console.log(`🎨 DEBUG GARMENT: Hex color resolved to: ${hexColor}`, {
-        originalHex: labDip.hex,
-        pantone: labDip.pantone,
-        pantoneToHex: this.pantoneToHex(labDip.pantone),
-        finalHex: hexColor,
-        hasHex: !!labDip.hex
-      });
       
       const htmlContent = `
         <div class="techpack-assigned-color-card__content">
@@ -14465,14 +14467,7 @@ setupInitialization();
         </button>
       `;
       
-      console.log(`🏗️ DEBUG GARMENT: Generated HTML for color circle:`, {
-        colorCircleStyle: `background-color: ${hexColor}`,
-        fullColorCircleHTML: `<div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>`
-      });
-      
       card.innerHTML = htmlContent;
-      console.log(`🏗️ DEBUG: Generated HTML:`, htmlContent);
-      console.log(`✅ DEBUG: Created card element:`, card);
       
       return card;
     }
