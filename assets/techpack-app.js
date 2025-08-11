@@ -13052,7 +13052,8 @@ setupInitialization();
       }
       
       // Get comprehensive Pantone database match (2,310+ colors)
-      const closestPantones = this.findClosestPantoneColors(color, 1);
+      const closestPantones = window.garmentManager && window.garmentManager.findClosestPantoneColors ? 
+        window.garmentManager.findClosestPantoneColors(color, 1) : [];
       const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
       
       // Update professional UI elements
@@ -13804,7 +13805,8 @@ setupInitialization();
     // Find closest Pantone color (using existing method)
     findClosestPantoneColor(hexColor) {
       // Use the comprehensive pantone database from findClosestPantoneColors
-      const results = this.findClosestPantoneColors(hexColor, 1);
+      const results = window.garmentManager && window.garmentManager.findClosestPantoneColors ? 
+        window.garmentManager.findClosestPantoneColors(hexColor, 1) : [];
       return results && results.length > 0 ? { code: results[0].code, confidence: results[0].confidence } : null;
     }
 
