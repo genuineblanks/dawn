@@ -2646,13 +2646,14 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 .techpack-empty-cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 2rem;
+  gap: 0.4rem;
+  padding: 0.4rem 1.5rem;
   font-weight: 500;
-  font-size: 0.875rem;
-  min-width: 200px;
+  font-size: 0.8rem;
+  min-width: 180px;
   justify-content: center;
   transition: all 0.2s ease;
+  border-radius: 6px;
 }
 
 .techpack-empty-cta:hover {
@@ -3130,6 +3131,48 @@ button:disabled.techpack-btn {
 
 .techpack-sample-warning svg {
   color: var(--techpack-warning);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Orange info box for additional information */
+.techpack-sample-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.techpack-sample-info svg {
+  color: #f97316;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Red warning box for required fields */
+.techpack-sample-warning-required {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.techpack-sample-warning-required svg {
+  color: #ef4444;
   flex-shrink: 0;
   margin-top: 2px;
 }
