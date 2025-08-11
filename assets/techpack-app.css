@@ -693,7 +693,7 @@ body {
 .techpack-sample-radio {
   position: absolute;
   opacity: 0;
-  pointer-events: none;
+  /* REMOVED: pointer-events: none; - This was preventing ALL radio button interactions */
 }
 
 .techpack-sample-card-label {
