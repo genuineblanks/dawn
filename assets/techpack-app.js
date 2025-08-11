@@ -13603,7 +13603,6 @@ setupInitialization();
     
     // Assign lab dip to garment
     assignToGarment(labDipId, garmentId) {
-      console.log(`🎯 DEBUG: assignToGarment called with labDipId=${labDipId}, garmentId=${garmentId}`);
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
         const workflow = this.getAssignmentWorkflowType(garmentId);
@@ -13640,7 +13639,6 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
-        console.log(`🎯 DEBUG: Assignment completed, calling updateGarmentAssignmentDisplay(${garmentId})`);
         // CRITICAL: Update the individual garment assignment display
         this.updateGarmentAssignmentDisplay(garmentId);
         
@@ -13700,7 +13698,6 @@ setupInitialization();
     
     // Unassign lab dip from garment
     unassignFromGarment(labDipId, garmentId) {
-      console.log(`🗑️ DEBUG: unassignFromGarment called with labDipId=${labDipId}, garmentId=${garmentId}`);
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
         labDip.assignments.delete(garmentId);
@@ -13713,7 +13710,6 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
-        console.log(`🗑️ DEBUG: Unassignment completed, calling updateGarmentAssignmentDisplay(${garmentId})`);
         // CRITICAL: Update the individual garment assignment display
         this.updateGarmentAssignmentDisplay(garmentId);
         
@@ -14285,35 +14281,23 @@ setupInitialization();
     
     // Update a single garment's assignment status display
     updateGarmentAssignmentDisplay(garmentId) {
-      console.log(`🚀 DEBUG: updateGarmentAssignmentDisplay called for garment ${garmentId}`);
-      
       // Safety check: Ensure garmentId is valid
       if (!garmentId) {
-        console.log('❌ DEBUG: Invalid garmentId provided to updateGarmentAssignmentDisplay');
         debugSystem.log('❌ Invalid garmentId provided to updateGarmentAssignmentDisplay');
         return;
       }
 
       const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (!garment) {
-        console.log(`❌ DEBUG: Garment not found for garmentId: ${garmentId}`);
         debugSystem.log('❌ Garment not found for assignment display update:', garmentId);
         return;
       }
-      
-      console.log(`✅ DEBUG: Garment element found for ${garmentId}`);
       
       // Find the unified assignment elements
       const unifiedEmptyState = garment.querySelector('[data-empty-state]');
       const assignedColorsDisplay = garment.querySelector('.techpack-assigned-colors-display');
       
-      console.log(`🔍 DEBUG: Element search results:`, {
-        unifiedEmptyState: !!unifiedEmptyState,
-        assignedColorsDisplay: !!assignedColorsDisplay
-      });
-      
       if (!unifiedEmptyState || !assignedColorsDisplay) {
-        console.log('❌ DEBUG: Unified assignment elements not found');
         debugSystem.log('❌ Unified assignment elements not found for garment:', garmentId);
         debugSystem.log('🔍 Available elements in garment:', {
           unifiedEmptyState: !!unifiedEmptyState,
@@ -14325,7 +14309,6 @@ setupInitialization();
 
       // Safety check: Ensure globalLabDips is available
       if (!this.globalLabDips || typeof this.globalLabDips.forEach !== 'function') {
-        console.log('❌ DEBUG: globalLabDips not available');
         debugSystem.log('❌ globalLabDips not available in updateGarmentAssignmentDisplay');
         return;
       }
@@ -14342,89 +14325,65 @@ setupInitialization();
         }
       });
       
-      console.log(`🎨 DEBUG: Found ${assignedLabDips.length} assigned colors for garment ${garmentId}:`, assignedLabDips);
       debugSystem.log(`🎨 Garment ${garmentId}: Found ${assignedLabDips.length} assigned colors`, assignedLabDips);
       
       if (assignedLabDips.length === 0) {
-        console.log('📭 DEBUG: No assigned colors - showing empty state');
         // Show unified empty state
         unifiedEmptyState.style.display = 'flex';
         assignedColorsDisplay.style.display = 'none';
       } else {
-        console.log('🎨 DEBUG: Assigned colors found - showing color cards');
         // Show assigned colors with professional cards
         unifiedEmptyState.style.display = 'none';
         assignedColorsDisplay.style.display = 'block';
         
         // Update count in header
         const countSpan = assignedColorsDisplay.querySelector('.techpack-assigned-count');
-        console.log('🔢 DEBUG: Count span element found:', !!countSpan);
         if (countSpan) {
           countSpan.textContent = assignedLabDips.length;
-          console.log(`🔢 DEBUG: Updated count to ${assignedLabDips.length}`);
         }
         
         // Clear existing color cards
         const colorGrid = assignedColorsDisplay.querySelector('.techpack-assigned-colors-grid');
-        console.log('🌐 DEBUG: Color grid element found:', !!colorGrid);
         if (colorGrid) {
           colorGrid.innerHTML = '';
-          console.log('🧹 DEBUG: Cleared existing color cards');
           
           // Create professional color cards for each assigned color
-          assignedLabDips.forEach((labDip, index) => {
-            console.log(`🎨 DEBUG: Creating color card ${index + 1} for:`, labDip);
+          assignedLabDips.forEach(labDip => {
             try {
               const colorCard = this.createUnifiedColorCard(labDip, garmentId);
-              console.log(`✅ DEBUG: Color card created:`, colorCard);
               if (colorCard) {
                 colorGrid.appendChild(colorCard);
-                console.log(`➕ DEBUG: Color card appended to grid`);
-              } else {
-                console.log(`❌ DEBUG: Color card was null/undefined`);
               }
             } catch (error) {
-              console.log('❌ DEBUG: Error creating color card:', error);
               debugSystem.log('❌ Error creating color card:', { labDip, garmentId, error: error.message });
             }
           });
-          
-          console.log(`🏁 DEBUG: Finished creating ${assignedLabDips.length} color cards`);
         } else {
-          console.log('❌ DEBUG: Color grid not found in assigned colors display');
           debugSystem.log('❌ Color grid not found in assigned colors display');
         }
       }
       
       // Conditional logic for red warning box (show only when no colors assigned)
       const conditionalWarning = garment.querySelector('[data-conditional-warning]');
-      console.log(`⚠️ DEBUG: Conditional warning element found:`, !!conditionalWarning);
       if (conditionalWarning) {
         if (assignedLabDips.length === 0) {
-          console.log(`⚠️ DEBUG: Showing red warning (no colors assigned)`);
           conditionalWarning.style.display = 'flex';
         } else {
-          console.log(`✅ DEBUG: Hiding red warning (${assignedLabDips.length} colors assigned)`);
           conditionalWarning.style.display = 'none';
         }
-      } else {
-        console.log(`❌ DEBUG: Conditional warning element not found with selector [data-conditional-warning]`);
       }
     }
     
     // Create a professional unified color card
     createUnifiedColorCard(labDip, garmentId) {
-      console.log(`🏗️ DEBUG: Creating unified color card for:`, { labDip, garmentId });
-      
       const card = document.createElement('div');
       card.className = 'techpack-assigned-color-card';
       card.dataset.labDipId = labDip.id;
       
       // Get hex color for display
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
-      console.log(`🎨 DEBUG: Hex color resolved to: ${hexColor}`);
       
-      const htmlContent = `
+      card.innerHTML = `
         <div class="techpack-assigned-color-card__color-preview">
           <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
         </div>
@@ -14439,10 +14398,6 @@ setupInitialization();
           </svg>
         </button>
       `;
-      
-      card.innerHTML = htmlContent;
-      console.log(`🏗️ DEBUG: Generated HTML:`, htmlContent);
-      console.log(`✅ DEBUG: Created card element:`, card);
       
       return card;
     }
