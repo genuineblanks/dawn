@@ -3568,7 +3568,7 @@ button:disabled.techpack-btn {
 }
 
 .techpack-lab-dip-global-item:not(.techpack-lab-dip-global-item--selected) .techpack-lab-dip-global-item__color {
-  opacity: 0.7;
+  opacity: 1 !important; /* FIXED: Remove opacity stacking that made colors invisible */
   border-color: rgba(229, 231, 235, 0.6);
 }
 
@@ -3588,18 +3588,19 @@ button:disabled.techpack-btn {
 
 /* Color Indicator */
 .techpack-lab-dip-global-item__color {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
   margin-right: 0.875rem;
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 3px solid #ff0000 !important; /* DEBUG: Red border to verify positioning */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
   position: relative;
+  display: block !important; /* Ensure color circles are always visible */
 }
 
 .techpack-lab-dip-global-item__color--hex {
-  background: var(--color-hex, #000000);
+  /* Removed conflicting background - using inline background-color from JS instead */
   border: 2px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 }
