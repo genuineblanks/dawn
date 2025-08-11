@@ -12006,7 +12006,7 @@ setupInitialization();
               // garmentId already available in scope from line 11956
               
               // Auto-select if assigned (always true here since we filtered above)
-              card.classList.add('techpack-lab-dip-selection-card--selected');
+              card.classList.add('selected');
               // Store as selected in the enhanced sample state
               if (window.sampleManager && window.sampleManager.enhancedSampleState && window.sampleManager.enhancedSampleState.has(garmentId)) {
                 const state = window.sampleManager.enhancedSampleState.get(garmentId);
@@ -12287,6 +12287,13 @@ setupInitialization();
       // Only update button state, don't interfere with form inputs
       if (nextBtn) {
         nextBtn.disabled = !validation.valid;
+      }
+      
+      // CRITICAL: Also trigger main step validation to clear form errors
+      // This ensures the "please select a sample type" error clears after assignment
+      if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+        // Run main validation to update all form error states
+        stepManager.validateStep3();
       }
       
       // Show/hide warnings without DOM manipulation that could interfere
