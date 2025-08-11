@@ -14444,12 +14444,13 @@ setupInitialization();
       console.log(`🎨 DEBUG: Hex color resolved to: ${hexColor}`);
       
       const htmlContent = `
-        <div class="techpack-assigned-color-card__color-preview">
-          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
-        </div>
-        <div class="techpack-color-info">
-          <div class="techpack-color-pantone">${labDip.pantone}</div>
-          <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
+        <div class="techpack-assigned-color-card__content">
+          <div class="techpack-assigned-color-card__color-preview">
+            <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+          </div>
+          <div class="techpack-assigned-color-card__info">
+            <div class="techpack-assigned-color-card__pantone">${labDip.pantone}</div>
+          </div>
         </div>
         <button type="button" class="techpack-color-remove" data-action="unassign" data-lab-dip-id="${labDip.id}" data-garment-id="${garmentId}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
