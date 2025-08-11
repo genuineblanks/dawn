@@ -322,7 +322,9 @@ Tech-Pack Step 3: Garment Specifications Section
       <div class="techpack-garment-samples" data-sample-request-only="true" style="display: none;">
         <!-- Section A: Choose Your Sample Type -->
         <div class="techpack-sample-type-selection">
-          <h4 class="techpack-section-title">Choose Your Sample Type</h4>
+          <div class="techpack-section-header">
+            <h3 class="techpack-section-title">Choose Your Sample Type</h3>
+          </div>
           
           <!-- A1: Stock Fabric Color -->
           <div class="techpack-sample-card" data-sample-type="stock">
@@ -412,7 +414,12 @@ Tech-Pack Step 3: Garment Specifications Section
                 <!-- Lab Dip Selection Area (for displaying assigned lab dips) -->
                 <div class="techpack-lab-dip-selection"></div>
                 <div class="techpack-lab-dip-selection-empty" style="display: none;">
-                  <p>No lab dips assigned yet. Use the Lab Dip Swatches section below to create and assign colors.</p>
+                  <button type="button" class="techpack-btn techpack-btn--secondary" data-scroll-to-lab-dips>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 12l-4-4h8l-4 4z"/>
+                    </svg>
+                    Go to Lab Dip Swatches
+                  </button>
                 </div>
                 
                 <div class="techpack-form__error" role="alert"></div>
