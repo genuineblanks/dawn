@@ -13474,7 +13474,7 @@ setupInitialization();
       const pantoneHex = this.selectedPantone.hex;
       
       // Add the lab dip with exact Pantone color and hex
-      const labDipResult = this.addGlobalLabDip(pantoneCode, pantoneHex, 'color-picker');
+      const labDipResult = this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
       
       debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex, { 
         result: labDipResult,
@@ -13537,15 +13537,8 @@ setupInitialization();
       debugSystem.log('✍️ Lab dip added from manual entry:', pantoneCode);
     }
     
-    // Validate hex color format
-    isValidHexColor(hex) {
-      return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
-    }
-    
     // Add global lab dip to the system
     addGlobalLabDip(pantoneCode, hexColor = null, source = 'manual-entry') {
-      console.log(`🌍 DEBUG: addGlobalLabDip called with:`, { pantoneCode, hexColor, source });
-      
       // Check for duplicates
       const existingLabDip = Array.from(this.globalLabDips.values()).find(labDip => 
         labDip.pantone.toLowerCase() === pantoneCode.toLowerCase()
@@ -13556,29 +13549,17 @@ setupInitialization();
         return;
       }
       
-      // Validate hex color if provided
-      if (hexColor && !this.isValidHexColor(hexColor)) {
-        console.log(`⚠️ DEBUG: Invalid hex color provided: ${hexColor}, attempting pantone lookup`);
-        hexColor = this.pantoneToHex(pantoneCode) || null;
-        console.log(`🔄 DEBUG: Pantone lookup result: ${hexColor}`);
-      }
-      
       // Generate unique ID
       const labDipId = `global-${Date.now()}`;
       
-      // Create lab dip object
-      const labDipData = {
+      // Add to global data structure
+      this.globalLabDips.set(labDipId, {
         pantone: pantoneCode,
         hex: hexColor,
         source: source,
         assignments: new Set(), // Set of garment IDs this lab dip is assigned to
         status: 'fabric-swatch'
-      };
-      
-      console.log(`✅ DEBUG: Created lab dip data:`, labDipData);
-      
-      // Add to global data structure
-      this.globalLabDips.set(labDipId, labDipData);
+      });
       
       // Default to fabric swatch if no garment assignments
       this.fabricSwatches.add(labDipId);
@@ -13932,6 +13913,7 @@ setupInitialization();
         ${colorElement}
         <div class="techpack-lab-dip-global-item__info">
           <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
+          ${labDip.hex ? `<div class="techpack-lab-dip-global-item__hex">${labDip.hex.toUpperCase()}</div>` : ''}
           ${labDip.source === 'color-picker' && labDip.hex ? `<div class="techpack-lab-dip-global-item__source">Color Picker</div>` : ''}
         </div>
         <div class="techpack-lab-dip-global-item__assignment-status">
@@ -14443,13 +14425,12 @@ setupInitialization();
       console.log(`🎨 DEBUG: Hex color resolved to: ${hexColor}`);
       
       const htmlContent = `
-        <div class="techpack-assigned-color-card__content">
-          <div class="techpack-assigned-color-card__color-preview">
-            <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
-          </div>
-          <div class="techpack-assigned-color-card__info">
-            <div class="techpack-assigned-color-card__pantone">${labDip.pantone}</div>
-          </div>
+        <div class="techpack-assigned-color-card__color-preview">
+          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+        </div>
+        <div class="techpack-color-info">
+          <div class="techpack-color-pantone">${labDip.pantone}</div>
+          <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
         </div>
         <button type="button" class="techpack-color-remove" data-action="unassign" data-lab-dip-id="${labDip.id}" data-garment-id="${garmentId}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
