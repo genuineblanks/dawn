@@ -11997,94 +11997,22 @@ setupInitialization();
             }
           });
           
+          // Always hide the selection area when colors are assigned
+          // Assigned colors now appear in the beautiful assignment status area above
           if (assignedLabDipCount === 0) {
-            // Show empty state
+            // Show empty state - no colors assigned yet
             selectionEmpty && (selectionEmpty.style.display = 'block');
             selectionArea.classList.remove('has-items');
           } else {
-            // Hide empty state and show lab dip cards
+            // Hide selection area completely - assigned colors show in status area above
             selectionEmpty && (selectionEmpty.style.display = 'none');
-            selectionArea.classList.add('has-items');
+            selectionArea.classList.remove('has-items');
+            // Clear any existing selection cards since colors are now assigned
+            const existingCards = selectionArea.querySelectorAll('.techpack-lab-dip-selection-card');
+            existingCards.forEach(card => card.remove());
             
-            // Create selection card for each lab dip ONLY if assigned to this garment
-            labDipsToUse.forEach((labDip, id) => {
-              // Check if this lab dip is assigned to this specific garment
-              // garmentId already defined in parent scope
-              const isAssigned = labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garmentId);
-              
-              if (!isAssigned) {
-                return; // Skip lab dips not assigned to this garment
-              }
-              
-              debugSystem.log(`Creating selection card for assigned lab dip:`, { id, pantone: labDip.pantone, garmentId });
-              
-              const cardClone = selectionTemplate.content.cloneNode(true);
-              const card = cardClone.querySelector('.techpack-lab-dip-selection-card');
-              
-              if (!card) {
-                debugSystem.log('❌ No card element found in template');
-                return;
-              }
-              
-              // Set lab dip ID
-              card.dataset.labDipId = id;
-              
-              // Update pantone text
-              const pantoneDisplay = card.querySelector('.techpack-lab-dip-selection-card__pantone');
-              if (pantoneDisplay) {
-                pantoneDisplay.textContent = `PANTONE ${labDip.pantone}`;
-                debugSystem.log(`✅ Set pantone text: PANTONE ${labDip.pantone}`);
-              } else {
-                debugSystem.log('❌ No pantone display element found');
-              }
-              
-              // Update color circle (use global lab dip hex color if available)
-              const colorCircle = card.querySelector('.techpack-lab-dip-selection-card__color-circle');
-              if (colorCircle) {
-                const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
-                colorCircle.style.backgroundColor = hexColor;
-              }
-              
-              // Update garment name placeholders
-              this.updateGarmentNamePlaceholders(card, garment);
-              
-              // This lab dip is assigned to this garment (filtered above)
-              // garmentId already available in scope from line 11956
-              
-              // Auto-select if assigned (always true here since we filtered above)
-              card.classList.add('selected');
-              // Store as selected in the enhanced sample state
-              if (window.sampleManager && window.sampleManager.enhancedSampleState && window.sampleManager.enhancedSampleState.has(garmentId)) {
-                const state = window.sampleManager.enhancedSampleState.get(garmentId);
-                state.selectedLabDipId = id; // Store the first one, or could store multiple
-              }
-              
-              debugSystem.log(`✅ Auto-selected assigned lab dip for ${garmentId}:`, { labDipId: id, pantone: labDip.pantone });
-              
-              // Set initial status message (always assigned and selected here)
-              const statusText = card.querySelector('.techpack-lab-dip-selection-card__status .status-text');
-              if (statusText) {
-                const garmentName = this.getGarmentName(garment);
-                statusText.innerHTML = `✓ Selected for ${garmentName}`;
-              }
-              
-              // Set up selection button
-              const selectBtn = card.querySelector('.techpack-lab-dip-selection-card__select-btn');
-              if (selectBtn) {
-                selectBtn.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  this.handleLabDipSelectionCardClick(id, garment);
-                });
-              }
-              
-              // Also make the whole card clickable
-              card.addEventListener('click', () => {
-                this.handleLabDipSelectionCardClick(id, garment);
-              });
-              
-              debugSystem.log(`✅ Appending card to selection area`);
-              selectionArea.appendChild(card);
-            });
+            debugSystem.log(`✅ Hiding selection area for garment ${garmentId} - ${assignedLabDipCount} colors assigned`);
+            return; // Exit early - don't show selection cards when colors are assigned
           }
         } else if (stockRadio) {
           // Stock color workflow: Show informational message instead of lab dip selection
@@ -14070,14 +13998,14 @@ setupInitialization();
         
         // Create beautiful color cards for each assigned color
         assignedLabDips.forEach(labDip => {
-          const colorCard = this.createAssignedColorCard(labDip);
+          const colorCard = this.createAssignedColorCard(labDip, garmentId);
           assignedColorsList.appendChild(colorCard);
         });
       }
     }
     
     // Create a beautiful assigned color card matching global lab dip style
-    createAssignedColorCard(labDip) {
+    createAssignedColorCard(labDip, garmentId) {
       const card = document.createElement('div');
       card.className = 'techpack-assigned-color-card';
       card.dataset.labDipId = labDip.id;
@@ -14085,22 +14013,43 @@ setupInitialization();
       // Get hex color for display
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
       
+      // Get dynamic garment name
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const garmentName = this.getGarmentNameFromElement(garmentElement) || 'this garment';
+      
       card.innerHTML = `
         <div class="techpack-assigned-color-card__content">
-          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+          <div class="techpack-assigned-color-card__color-preview">
+            <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+          </div>
           <div class="techpack-assigned-color-card__info">
             <div class="techpack-assigned-color-card__pantone">PANTONE ${labDip.pantone}</div>
-            <div class="techpack-assigned-color-card__status">Assigned</div>
-          </div>
-          <div class="techpack-assigned-color-card__check">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-            </svg>
+            <div class="techpack-assigned-color-card__status">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+              </svg>
+              Selected for ${garmentName}
+            </div>
           </div>
         </div>
       `;
       
       return card;
+    }
+    
+    // Helper to get garment name from element
+    getGarmentNameFromElement(garmentElement) {
+      if (!garmentElement) return 'this garment';
+      
+      // Try to get garment type from select
+      const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+      if (garmentTypeSelect && garmentTypeSelect.value && garmentTypeSelect.value !== 'Select garment type...') {
+        return garmentTypeSelect.options[garmentTypeSelect.selectedIndex]?.text || garmentTypeSelect.value;
+      }
+      
+      // Fallback to garment number
+      const garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent || '1';
+      return `Garment ${garmentNumber}`;
     }
     
     // Helper function to convert pantone to hex (enhanced from SampleManager)
