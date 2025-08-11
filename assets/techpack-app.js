@@ -13474,7 +13474,7 @@ setupInitialization();
       const pantoneHex = this.selectedPantone.hex;
       
       // Add the lab dip with exact Pantone color and hex
-      const labDipResult = this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
+      const labDipResult = this.addGlobalLabDip(pantoneCode, pantoneHex, 'color-picker');
       
       debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex, { 
         result: labDipResult,
@@ -13537,8 +13537,15 @@ setupInitialization();
       debugSystem.log('✍️ Lab dip added from manual entry:', pantoneCode);
     }
     
+    // Validate hex color format
+    isValidHexColor(hex) {
+      return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex);
+    }
+    
     // Add global lab dip to the system
     addGlobalLabDip(pantoneCode, hexColor = null, source = 'manual-entry') {
+      console.log(`🌍 DEBUG: addGlobalLabDip called with:`, { pantoneCode, hexColor, source });
+      
       // Check for duplicates
       const existingLabDip = Array.from(this.globalLabDips.values()).find(labDip => 
         labDip.pantone.toLowerCase() === pantoneCode.toLowerCase()
@@ -13549,17 +13556,29 @@ setupInitialization();
         return;
       }
       
+      // Validate hex color if provided
+      if (hexColor && !this.isValidHexColor(hexColor)) {
+        console.log(`⚠️ DEBUG: Invalid hex color provided: ${hexColor}, attempting pantone lookup`);
+        hexColor = this.pantoneToHex(pantoneCode) || null;
+        console.log(`🔄 DEBUG: Pantone lookup result: ${hexColor}`);
+      }
+      
       // Generate unique ID
       const labDipId = `global-${Date.now()}`;
       
-      // Add to global data structure
-      this.globalLabDips.set(labDipId, {
+      // Create lab dip object
+      const labDipData = {
         pantone: pantoneCode,
         hex: hexColor,
         source: source,
         assignments: new Set(), // Set of garment IDs this lab dip is assigned to
         status: 'fabric-swatch'
-      });
+      };
+      
+      console.log(`✅ DEBUG: Created lab dip data:`, labDipData);
+      
+      // Add to global data structure
+      this.globalLabDips.set(labDipId, labDipData);
       
       // Default to fabric swatch if no garment assignments
       this.fabricSwatches.add(labDipId);
@@ -13603,6 +13622,7 @@ setupInitialization();
     
     // Assign lab dip to garment
     assignToGarment(labDipId, garmentId) {
+      console.log(`🎯 DEBUG: assignToGarment called with labDipId=${labDipId}, garmentId=${garmentId}`);
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
         const workflow = this.getAssignmentWorkflowType(garmentId);
@@ -13639,6 +13659,7 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
+        console.log(`🎯 DEBUG: Assignment completed, calling updateGarmentAssignmentDisplay(${garmentId})`);
         // CRITICAL: Update the individual garment assignment display
         this.updateGarmentAssignmentDisplay(garmentId);
         
@@ -13698,6 +13719,7 @@ setupInitialization();
     
     // Unassign lab dip from garment
     unassignFromGarment(labDipId, garmentId) {
+      console.log(`🗑️ DEBUG: unassignFromGarment called with labDipId=${labDipId}, garmentId=${garmentId}`);
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
         labDip.assignments.delete(garmentId);
@@ -13710,6 +13732,7 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
+        console.log(`🗑️ DEBUG: Unassignment completed, calling updateGarmentAssignmentDisplay(${garmentId})`);
         // CRITICAL: Update the individual garment assignment display
         this.updateGarmentAssignmentDisplay(garmentId);
         
@@ -13909,7 +13932,6 @@ setupInitialization();
         ${colorElement}
         <div class="techpack-lab-dip-global-item__info">
           <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
-          ${labDip.hex ? `<div class="techpack-lab-dip-global-item__hex">${labDip.hex.toUpperCase()}</div>` : ''}
           ${labDip.source === 'color-picker' && labDip.hex ? `<div class="techpack-lab-dip-global-item__source">Color Picker</div>` : ''}
         </div>
         <div class="techpack-lab-dip-global-item__assignment-status">
@@ -14281,23 +14303,35 @@ setupInitialization();
     
     // Update a single garment's assignment status display
     updateGarmentAssignmentDisplay(garmentId) {
+      console.log(`🚀 DEBUG: updateGarmentAssignmentDisplay called for garment ${garmentId}`);
+      
       // Safety check: Ensure garmentId is valid
       if (!garmentId) {
+        console.log('❌ DEBUG: Invalid garmentId provided to updateGarmentAssignmentDisplay');
         debugSystem.log('❌ Invalid garmentId provided to updateGarmentAssignmentDisplay');
         return;
       }
 
       const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (!garment) {
+        console.log(`❌ DEBUG: Garment not found for garmentId: ${garmentId}`);
         debugSystem.log('❌ Garment not found for assignment display update:', garmentId);
         return;
       }
+      
+      console.log(`✅ DEBUG: Garment element found for ${garmentId}`);
       
       // Find the unified assignment elements
       const unifiedEmptyState = garment.querySelector('[data-empty-state]');
       const assignedColorsDisplay = garment.querySelector('.techpack-assigned-colors-display');
       
+      console.log(`🔍 DEBUG: Element search results:`, {
+        unifiedEmptyState: !!unifiedEmptyState,
+        assignedColorsDisplay: !!assignedColorsDisplay
+      });
+      
       if (!unifiedEmptyState || !assignedColorsDisplay) {
+        console.log('❌ DEBUG: Unified assignment elements not found');
         debugSystem.log('❌ Unified assignment elements not found for garment:', garmentId);
         debugSystem.log('🔍 Available elements in garment:', {
           unifiedEmptyState: !!unifiedEmptyState,
@@ -14309,6 +14343,7 @@ setupInitialization();
 
       // Safety check: Ensure globalLabDips is available
       if (!this.globalLabDips || typeof this.globalLabDips.forEach !== 'function') {
+        console.log('❌ DEBUG: globalLabDips not available');
         debugSystem.log('❌ globalLabDips not available in updateGarmentAssignmentDisplay');
         return;
       }
@@ -14325,71 +14360,96 @@ setupInitialization();
         }
       });
       
+      console.log(`🎨 DEBUG: Found ${assignedLabDips.length} assigned colors for garment ${garmentId}:`, assignedLabDips);
       debugSystem.log(`🎨 Garment ${garmentId}: Found ${assignedLabDips.length} assigned colors`, assignedLabDips);
       
       if (assignedLabDips.length === 0) {
+        console.log('📭 DEBUG: No assigned colors - showing empty state');
         // Show unified empty state
         unifiedEmptyState.style.display = 'flex';
         assignedColorsDisplay.style.display = 'none';
       } else {
+        console.log('🎨 DEBUG: Assigned colors found - showing color cards');
         // Show assigned colors with professional cards
         unifiedEmptyState.style.display = 'none';
         assignedColorsDisplay.style.display = 'block';
         
         // Update count in header
         const countSpan = assignedColorsDisplay.querySelector('.techpack-assigned-count');
+        console.log('🔢 DEBUG: Count span element found:', !!countSpan);
         if (countSpan) {
           countSpan.textContent = assignedLabDips.length;
+          console.log(`🔢 DEBUG: Updated count to ${assignedLabDips.length}`);
         }
         
         // Clear existing color cards
         const colorGrid = assignedColorsDisplay.querySelector('.techpack-assigned-colors-grid');
+        console.log('🌐 DEBUG: Color grid element found:', !!colorGrid);
         if (colorGrid) {
           colorGrid.innerHTML = '';
+          console.log('🧹 DEBUG: Cleared existing color cards');
           
           // Create professional color cards for each assigned color
-          assignedLabDips.forEach(labDip => {
+          assignedLabDips.forEach((labDip, index) => {
+            console.log(`🎨 DEBUG: Creating color card ${index + 1} for:`, labDip);
             try {
               const colorCard = this.createUnifiedColorCard(labDip, garmentId);
+              console.log(`✅ DEBUG: Color card created:`, colorCard);
               if (colorCard) {
                 colorGrid.appendChild(colorCard);
+                console.log(`➕ DEBUG: Color card appended to grid`);
+              } else {
+                console.log(`❌ DEBUG: Color card was null/undefined`);
               }
             } catch (error) {
+              console.log('❌ DEBUG: Error creating color card:', error);
               debugSystem.log('❌ Error creating color card:', { labDip, garmentId, error: error.message });
             }
           });
+          
+          console.log(`🏁 DEBUG: Finished creating ${assignedLabDips.length} color cards`);
         } else {
+          console.log('❌ DEBUG: Color grid not found in assigned colors display');
           debugSystem.log('❌ Color grid not found in assigned colors display');
         }
       }
       
       // Conditional logic for red warning box (show only when no colors assigned)
       const conditionalWarning = garment.querySelector('[data-conditional-warning]');
+      console.log(`⚠️ DEBUG: Conditional warning element found:`, !!conditionalWarning);
       if (conditionalWarning) {
         if (assignedLabDips.length === 0) {
+          console.log(`⚠️ DEBUG: Showing red warning (no colors assigned)`);
           conditionalWarning.style.display = 'flex';
         } else {
+          console.log(`✅ DEBUG: Hiding red warning (${assignedLabDips.length} colors assigned)`);
           conditionalWarning.style.display = 'none';
         }
+      } else {
+        console.log(`❌ DEBUG: Conditional warning element not found with selector [data-conditional-warning]`);
       }
     }
     
     // Create a professional unified color card
     createUnifiedColorCard(labDip, garmentId) {
+      console.log(`🏗️ DEBUG: Creating unified color card for:`, { labDip, garmentId });
+      
       const card = document.createElement('div');
       card.className = 'techpack-assigned-color-card';
       card.dataset.labDipId = labDip.id;
       
       // Get hex color for display
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
+      console.log(`🎨 DEBUG: Hex color resolved to: ${hexColor}`);
       
-      card.innerHTML = `
-        <div class="techpack-assigned-color-card__color-preview">
-          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
-        </div>
-        <div class="techpack-color-info">
-          <div class="techpack-color-pantone">${labDip.pantone}</div>
-          <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
+      const htmlContent = `
+        <div class="techpack-assigned-color-card__content">
+          <div class="techpack-assigned-color-card__color-preview">
+            <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+          </div>
+          <div class="techpack-assigned-color-card__info">
+            <div class="techpack-assigned-color-card__pantone">${labDip.pantone}</div>
+          </div>
         </div>
         <button type="button" class="techpack-color-remove" data-action="unassign" data-lab-dip-id="${labDip.id}" data-garment-id="${garmentId}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -14398,6 +14458,10 @@ setupInitialization();
           </svg>
         </button>
       `;
+      
+      card.innerHTML = htmlContent;
+      console.log(`🏗️ DEBUG: Generated HTML:`, htmlContent);
+      console.log(`✅ DEBUG: Created card element:`, card);
       
       return card;
     }
