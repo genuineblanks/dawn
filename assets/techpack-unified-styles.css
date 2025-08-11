@@ -3173,65 +3173,94 @@ button:disabled.techpack-btn {
 
 /* COTTON-ONLY CUSTOM COLOR RESTRICTIONS */
 
-/* Disabled custom color section for non-cotton fabrics */
+/* Disabled custom color section for non-cotton fabrics - Amber warning style */
 .techpack-custom-color-section--disabled {
-  opacity: 0.4 !important;
-  background: rgba(239, 68, 68, 0.02) !important;
-  border-color: rgba(239, 68, 68, 0.1) !important;
+  opacity: 0.9 !important;
+  background: linear-gradient(135deg, 
+    rgba(251, 191, 36, 0.15) 0%, 
+    rgba(251, 191, 36, 0.08) 100%) !important;
+  border: 2px solid rgba(251, 191, 36, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.08) !important;
   pointer-events: none !important;
   cursor: not-allowed !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.techpack-custom-color-section--disabled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, 
+    rgba(251, 191, 36, 0.06) 0%, 
+    transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
 }
 
 .techpack-custom-color-section--disabled .techpack-sample-card-label {
-  color: rgba(107, 114, 128, 0.6) !important;
+  color: rgba(146, 64, 14, 0.8) !important;
+  position: relative;
+  z-index: 2;
 }
 
 .techpack-custom-color-section--disabled .techpack-sample-radio {
   cursor: not-allowed !important;
+  opacity: 0.4 !important;
 }
 
 .techpack-custom-color-section--disabled .techpack-sample-card-title {
-  color: rgba(107, 114, 128, 0.6) !important;
+  color: rgba(146, 64, 14, 0.75) !important;
 }
 
 .techpack-custom-color-section--disabled .techpack-sample-meta {
-  color: rgba(107, 114, 128, 0.5) !important;
+  color: rgba(146, 64, 14, 0.6) !important;
 }
 
 .techpack-custom-color-section--disabled .techpack-sample-description {
-  color: rgba(107, 114, 128, 0.5) !important;
+  color: rgba(146, 64, 14, 0.65) !important;
 }
 
-/* Restriction warning message for non-cotton fabrics - Elegant design */
+/* Restriction warning message for non-cotton fabrics - Prominent banner style */
 .techpack-sample-warning-restriction {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  background: rgba(251, 191, 36, 0.08);  /* Soft amber background */
-  border: 1px solid rgba(251, 191, 36, 0.2);
-  border-radius: 10px;
-  font-size: 0.875rem;
-  color: #92400e;  /* Amber-900 for readability */
-  line-height: 1.5;
-  margin: 0.75rem 1rem;
-  font-weight: 450;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(90deg, 
+    rgba(251, 191, 36, 0.95) 0%, 
+    rgba(245, 158, 11, 0.95) 100%);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #ffffff;
+  line-height: 1.4;
+  margin: 0.75rem 1rem 1rem 1rem;
+  font-weight: 500;
   animation: fadeIn 0.3s ease-in-out;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.25);
+  position: relative;
+  z-index: 10;
 }
 
 .techpack-sample-warning-restriction svg {
-  color: #f59e0b;  /* Amber-500 */
+  color: #ffffff;
   fill: currentColor;
   flex-shrink: 0;
-  margin-top: 0.1rem;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .techpack-custom-color-restriction-warning {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   animation: slideDown 0.3s ease-out;
+  position: relative;
+  z-index: 10;
 }
 
 /* Animation for warning appearance */
