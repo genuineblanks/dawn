@@ -2329,36 +2329,49 @@
             
             // If custom color is selected, validate lab dip selection
             if (customRadio) {
+              // Check for assigned colors in the status area (new assignment system)
+              const assignedColorsList = sampleSection.querySelector('[data-assigned-colors-list]');
+              const assignedColors = assignedColorsList?.children || [];
+              const hasAssignedColors = assignedColors.length > 0;
+              
+              // Also check legacy selection system for backwards compatibility
               const labDipSelection = sampleSection.querySelector('.techpack-lab-dip-selection');
               const selectedLabDip = sampleSection.querySelector('.techpack-lab-dip-selection-card.selected');
               const labDipSelectionEmpty = sampleSection.querySelector('.techpack-lab-dip-selection-empty');
+              const hasLegacySelection = selectedLabDip && labDipSelectionEmpty?.style.display === 'none';
               
-              if (labDipSelection) {
-                const hasLabDipsAvailable = labDipSelectionEmpty && labDipSelectionEmpty.style.display === 'none';
+              // Validation: Check if colors are assigned through either system
+              if (!hasAssignedColors && !hasLegacySelection) {
+                // Check if lab dips are available at all
+                const globalLabDips = window.globalLabDipManager?.globalLabDips?.size || 0;
+                const localLabDips = this.labDips?.size || 0;
+                const totalLabDips = globalLabDips + localLabDips;
                 
-                if (!hasLabDipsAvailable) {
+                if (totalLabDips === 0) {
                   isValid = false;
                   debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dips available`, null, 'error');
                   
-                  const labDipGroup = labDipSelection.closest('.techpack-form__group');
+                  const labDipGroup = labDipSelection?.closest('.techpack-form__group');
                   const labDipError = labDipGroup?.querySelector('.techpack-form__error');
                   if (labDipGroup) labDipGroup.classList.add('techpack-form__group--error');
-                  if (labDipError) labDipError.textContent = 'Please add at least one Lab Dip below, then select it here';
-                } else if (!selectedLabDip) {
-                  isValid = false;
-                  debugSystem.log(`Garment ${index + 1}: Custom color selected but no lab dip selected`, null, 'error');
-                  
-                  const labDipGroup = labDipSelection.closest('.techpack-form__group');
-                  const labDipError = labDipGroup?.querySelector('.techpack-form__error');
-                  if (labDipGroup) labDipGroup.classList.add('techpack-form__group--error');
-                  if (labDipError) labDipError.textContent = 'Please select which Lab Dip to apply to this custom color garment';
+                  if (labDipError) labDipError.textContent = 'Please add at least one Lab Dip below, then assign it to this garment';
                 } else {
-                  // Lab dip properly selected - clear errors
-                  const labDipGroup = labDipSelection.closest('.techpack-form__group');
+                  isValid = false;
+                  debugSystem.log(`Garment ${index + 1}: Custom color selected but no colors assigned`, null, 'error');
+                  
+                  const labDipGroup = labDipSelection?.closest('.techpack-form__group');
                   const labDipError = labDipGroup?.querySelector('.techpack-form__error');
-                  if (labDipGroup) labDipGroup.classList.remove('techpack-form__group--error');
-                  if (labDipError) labDipError.textContent = '';
+                  if (labDipGroup) labDipGroup.classList.add('techpack-form__group--error');
+                  if (labDipError) labDipError.textContent = 'Please assign a lab dip color to this custom garment';
                 }
+              } else {
+                // Colors are assigned - clear any errors
+                const labDipGroup = labDipSelection?.closest('.techpack-form__group');
+                const labDipError = labDipGroup?.querySelector('.techpack-form__error');
+                if (labDipGroup) labDipGroup.classList.remove('techpack-form__group--error');
+                if (labDipError) labDipError.textContent = '';
+                
+                debugSystem.log(`Garment ${index + 1}: Colors properly assigned (${hasAssignedColors ? 'new system' : 'legacy system'})`);
               }
             }
           }
@@ -11287,38 +11300,73 @@ setupInitialization();
       }
       
       // Convert hex to closest Pantone TCX and show
-      const closestPantone = this.findClosestPantoneColor(color);
-      const pantoneCode = document.getElementById('suggested-pantone-code');
-      if (pantoneCode && closestPantone) {
-        pantoneCode.textContent = `${closestPantone.code} TCX`;
+      // Get comprehensive Pantone database match (2,310+ colors)
+      const closestPantones = this.findClosestPantoneColors(color, 1);
+      const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
+      
+      // Update auto-selected Pantone display
+      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
+      const autoPantoneCircle = document.getElementById('auto-pantone-circle');
+      const autoPantoneCode = document.getElementById('auto-pantone-code');
+      
+      if (closestPantone) {
+        if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'block';
+        if (autoPantoneCircle) autoPantoneCircle.style.backgroundColor = closestPantone.hex;
+        if (autoPantoneCode) autoPantoneCode.textContent = `${closestPantone.name} - ${closestPantone.code} TCX`;
+        debugSystem.log('Auto-selected Pantone:', `${closestPantone.name} - ${closestPantone.code} TCX`);
       } else {
-        pantoneCode.textContent = 'Color selected';
+        if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
       }
       
       debugSystem.log('Color picker changed:', color, 'closest pantone:', closestPantone);
     }
     
-    // Add lab dip from color picker mode (TCX only)
+    // Add lab dip from color picker mode (auto-selected Pantone)
     addLabDipFromColorPicker() {
       if (!this.selectedColor) {
         this.showError('Please select a color first');
         return;
       }
       
-      // Get closest Pantone TCX code
-      const pantoneData = this.findClosestPantoneColor(this.selectedColor);
-      if (!pantoneData) {
-        this.showError('Unable to convert color to Pantone TCX');
+      // Get auto-selected Pantone from comprehensive database
+      const closestPantones = this.findClosestPantoneColors(this.selectedColor, 1);
+      const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
+      
+      if (!closestPantone) {
+        this.showError('Unable to find matching Pantone color');
         return;
       }
       
-      // Use TCX code directly (no conversion to TPX)
-      const tcxCode = `${pantoneData.code} TCX`;
+      // Use the auto-selected Pantone code
+      const tcxCode = `${closestPantone.code} TCX`;
       
-      // Add the lab dip with color preview
-      this.addLabDipWithData(tcxCode, this.selectedColor, 'color-picker');
+      // Add the lab dip with exact Pantone color
+      this.addLabDipWithData(tcxCode, closestPantone.hex, 'color-picker');
       
-      debugSystem.log('Lab dip added from color picker:', tcxCode);
+      // Reset the color picker
+      this.resetColorPicker();
+      
+      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', tcxCode);
+    }
+    
+    // Reset color picker to initial state
+    resetColorPicker() {
+      const colorPicker = document.getElementById('lab-dip-color-picker');
+      const colorPreview = document.getElementById('lab-dip-color-preview');
+      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
+      
+      if (colorPicker) {
+        colorPicker.value = '#000000';
+        this.selectedColor = '#000000';
+      }
+      
+      if (colorPreview) {
+        colorPreview.style.backgroundColor = '#000000';
+      }
+      
+      if (autoPantoneDisplay) {
+        autoPantoneDisplay.style.display = 'none';
+      }
     }
     
     // Add lab dip from manual entry mode (TCX or TPX)
