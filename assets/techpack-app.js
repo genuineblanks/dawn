@@ -13932,7 +13932,6 @@ setupInitialization();
         ${colorElement}
         <div class="techpack-lab-dip-global-item__info">
           <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
-          ${labDip.hex ? `<div class="techpack-lab-dip-global-item__hex">${labDip.hex.toUpperCase()}</div>` : ''}
           ${labDip.source === 'color-picker' && labDip.hex ? `<div class="techpack-lab-dip-global-item__source">Color Picker</div>` : ''}
         </div>
         <div class="techpack-lab-dip-global-item__assignment-status">
