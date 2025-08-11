@@ -3171,6 +3171,65 @@ button:disabled.techpack-btn {
   margin-bottom: 1rem;
 }
 
+/* COTTON-ONLY CUSTOM COLOR RESTRICTIONS */
+
+/* Disabled custom color section for non-cotton fabrics */
+.techpack-custom-color-section--disabled {
+  opacity: 0.4 !important;
+  background: rgba(239, 68, 68, 0.02) !important;
+  border-color: rgba(239, 68, 68, 0.1) !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+.techpack-custom-color-section--disabled .techpack-sample-card-label {
+  color: rgba(107, 114, 128, 0.6) !important;
+}
+
+.techpack-custom-color-section--disabled .techpack-sample-radio {
+  cursor: not-allowed !important;
+}
+
+.techpack-custom-color-section--disabled .techpack-sample-card-title {
+  color: rgba(107, 114, 128, 0.6) !important;
+}
+
+.techpack-custom-color-section--disabled .techpack-sample-meta {
+  color: rgba(107, 114, 128, 0.5) !important;
+}
+
+.techpack-custom-color-section--disabled .techpack-sample-description {
+  color: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Restriction warning message for non-cotton fabrics */
+.techpack-sample-warning-restriction {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #dc2626;
+  line-height: 1.4;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.techpack-sample-warning-restriction svg {
+  color: #dc2626;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.techpack-custom-color-restriction-warning {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(239, 68, 68, 0.1);
+  padding-top: 1rem;
+}
+
 .techpack-sample-warning-required svg {
   color: #ef4444;
   flex-shrink: 0;
@@ -5920,7 +5979,7 @@ button:disabled.techpack-btn {
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
-  border: 3px solid #ff0000 !important; /* DEBUG: Red border for garment circles */
+  border: 2px solid #f8fafc !important;
   box-shadow: 
     0 2px 8px rgba(71, 85, 105, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
