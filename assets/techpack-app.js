@@ -11347,6 +11347,19 @@ setupInitialization();
 
       // Lab dip management buttons - NEW DUAL MODE SYSTEM
       document.addEventListener('click', (e) => {
+        // Unified component remove buttons
+        if (e.target.closest('[data-action="unassign"]')) {
+          const button = e.target.closest('[data-action="unassign"]');
+          const labDipId = button.dataset.labDipId;
+          const garmentId = button.dataset.garmentId;
+          
+          if (labDipId && garmentId && window.globalLabDipManager) {
+            debugSystem.log('🗑️ Removing lab dip from unified component:', { labDipId, garmentId });
+            window.globalLabDipManager.unassignFromGarment(labDipId, garmentId);
+          }
+          return;
+        }
+        
         // Mode toggle buttons
         if (e.target.id === 'color-picker-mode') {
           window.globalLabDipManager?.switchInputMode('color-picker');
@@ -13835,10 +13848,8 @@ setupInitialization();
         ${colorElement}
         <div class="techpack-lab-dip-global-item__info">
           <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
-          <div class="techpack-lab-dip-global-item__hex">${labDip.hex ? labDip.hex.toUpperCase() : ''}</div>
-          <div class="techpack-lab-dip-global-item__source">
-            ${labDip.source === 'color-picker' ? 'Color Picker' : 'Manual Entry'}
-          </div>
+          ${labDip.hex ? `<div class="techpack-lab-dip-global-item__hex">${labDip.hex.toUpperCase()}</div>` : ''}
+          ${labDip.source === 'color-picker' && labDip.hex ? `<div class="techpack-lab-dip-global-item__source">Color Picker</div>` : ''}
         </div>
         <div class="techpack-lab-dip-global-item__assignment-status">
           ${assignmentBadges}
@@ -14256,7 +14267,7 @@ setupInitialization();
         assignedColorsDisplay.style.display = 'block';
         
         // Update count in header
-        const countSpan = assignedColorsDisplay.querySelector('.techpack-assigned-colors-count');
+        const countSpan = assignedColorsDisplay.querySelector('.techpack-assigned-count');
         if (countSpan) {
           countSpan.textContent = assignedLabDips.length;
         }
@@ -14293,7 +14304,7 @@ setupInitialization();
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
       
       card.innerHTML = `
-        <div class="techpack-color-preview" style="background-color: ${hexColor}"></div>
+        <div class="techpack-color-circle" style="background-color: ${hexColor}"></div>
         <div class="techpack-color-info">
           <div class="techpack-color-pantone">${labDip.pantone}</div>
           <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
