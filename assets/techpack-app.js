@@ -2275,12 +2275,15 @@
               errorElement.style.display = 'flex';
             }
           } else {
-            // Sample type selected - clear errors
+            // Sample type selected - clear main sample type error
             if (sampleTypeSection) {
               const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
               sampleCards.forEach(card => card.classList.remove('techpack-sample-card--error'));
               const errorElement = sampleTypeSection.querySelector('.techpack-sample-type-error');
-              if (errorElement) errorElement.style.display = 'none';
+              if (errorElement) {
+                errorElement.style.display = 'none';
+                debugSystem.log(`Garment ${index + 1}: Main sample type error cleared - sample type is selected`);
+              }
             }
 
             // If stock color is selected, validate stock color choice
@@ -2293,8 +2296,9 @@
                 isValid = false;
                 debugSystem.log(`Garment ${index + 1}: Stock sample selected but no color chosen`, null, 'error');
                 
-                // Show error on stock options
-                const stockOptions = sampleSection.querySelector('.techpack-sample-stock-options');
+                // Show error on stock options (stock sample card's options div)
+                const stockCard = sampleSection.querySelector('.techpack-sample-card[data-sample-type="stock"]');
+                const stockOptions = stockCard?.querySelector('.techpack-sample-options');
                 if (stockOptions) {
                   const stockError = stockOptions.querySelector('.techpack-stock-color-error') || document.createElement('div');
                   stockError.className = 'techpack-stock-color-error';
@@ -2323,7 +2327,8 @@
                 }
               } else {
                 // Stock color selected - clear errors
-                const stockOptions = sampleSection.querySelector('.techpack-sample-stock-options');
+                const stockCard = sampleSection.querySelector('.techpack-sample-card[data-sample-type="stock"]');
+                const stockOptions = stockCard?.querySelector('.techpack-sample-options');
                 const stockError = stockOptions?.querySelector('.techpack-stock-color-error');
                 if (stockError) stockError.style.display = 'none';
               }
@@ -4169,6 +4174,12 @@
         }, 75);
         // EMERGENCY DEBUG: Inspect all radio buttons in DOM after garment addition
         setTimeout(() => this.debugAllRadioButtons(), 100);
+        
+        // Setup stock color event listeners AFTER ID fixing is complete
+        setTimeout(() => {
+          this.setupStockColorEventListeners(garment, garmentId);
+          debugSystem.log('🎯 Stock color event listeners setup completed after ID fix');
+        }, 150);
       }
       
       debugSystem.log('Garment added', { garmentId });
@@ -4487,6 +4498,12 @@
         });
       }
 
+      // Sample type radio buttons (stock vs custom)
+      this.setupSampleTypeEventListeners(garment, garmentId);
+      
+      // Stock color radio buttons
+      this.setupStockColorEventListeners(garment, garmentId);
+
       // Printing methods
       this.setupPrintingMethodsLogic(garment, garmentId);
     }
@@ -4536,6 +4553,77 @@
           debouncedValidation();
         });
       });
+    }
+
+    // Setup event listeners for sample type radio buttons (stock vs custom)
+    setupSampleTypeEventListeners(garment, garmentId) {
+      const sampleTypeRadios = garment.querySelectorAll('input[name^="garment-sample-type-"]');
+      
+      sampleTypeRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          debugSystem.log(`Sample type changed to: ${radio.value} for garment ${garmentId}`);
+          
+          // Immediately clear the main sample type error when any sample type is selected
+          this.clearMainSampleTypeError(garment);
+          
+          // Check if sample type section should be shown/hidden
+          this.updateSampleTypeVisibility(garment);
+          
+          // Trigger validation to update other validations and button state
+          stepManager.validateStep3();
+        });
+      });
+      
+      debugSystem.log(`Setup sample type listeners for ${sampleTypeRadios.length} radios in garment ${garmentId}`);
+    }
+
+    // Setup event listeners for stock color radio buttons
+    setupStockColorEventListeners(garment, garmentId) {
+      // Use more flexible selector to find stock color radios
+      let stockColorRadios = garment.querySelectorAll(`input[name*="stock-fabric-color"][name*="${garmentId}"]`);
+      
+      // Also try alternative selectors if the main one doesn't work
+      if (stockColorRadios.length === 0) {
+        const alternativeRadios = garment.querySelectorAll('input[name^="stock-fabric-color-"]');
+        const matchingRadios = Array.from(alternativeRadios).filter(radio => radio.name.includes(garmentId));
+        stockColorRadios = matchingRadios;
+        debugSystem.log(`Alternative stock color radios found: ${matchingRadios.length} for garment ${garmentId}`);
+      }
+      
+      stockColorRadios.forEach(radio => {
+        // Remove any existing listeners to prevent duplicates
+        radio.removeEventListener('change', this.stockColorChangeHandler);
+        
+        // Add new listener
+        const handler = () => {
+          debugSystem.log(`Stock color changed to: ${radio.value} for garment ${garmentId}`);
+          
+          // Trigger validation to check if stock color selection is complete
+          stepManager.validateStep3();
+        };
+        
+        radio.addEventListener('change', handler);
+        // Store handler reference for future removal
+        radio.stockColorChangeHandler = handler;
+      });
+      
+      debugSystem.log(`Setup stock color listeners for ${stockColorRadios.length} radios in garment ${garmentId}`);
+    }
+
+    // Clear the main "Please select a sample type to continue" error
+    clearMainSampleTypeError(garment) {
+      const sampleTypeSection = garment.querySelector('.techpack-sample-type-selection');
+      if (sampleTypeSection) {
+        const sampleCards = sampleTypeSection.querySelectorAll('.techpack-sample-card');
+        sampleCards.forEach(card => card.classList.remove('techpack-sample-card--error'));
+        
+        const errorElement = sampleTypeSection.querySelector('.techpack-sample-type-error');
+        if (errorElement) {
+          errorElement.style.display = 'none';
+        }
+        
+        debugSystem.log('Cleared main sample type error');
+      }
     }
 
     removeGarment(garmentId) {
@@ -13508,6 +13596,13 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
+        // Trigger validation when lab dips are assigned (for custom color validation)
+        setTimeout(() => {
+          if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+            stepManager.validateStep3();
+          }
+        }, 100);
+        
         // Bridge: Update per-garment selection areas
         this.updatePerGarmentSelections();
         
@@ -13568,6 +13663,13 @@ setupInitialization();
         this.updateLabDipStatus(labDipId);
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
+        
+        // Trigger validation when lab dips are unassigned (for custom color validation)
+        setTimeout(() => {
+          if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
+            stepManager.validateStep3();
+          }
+        }, 100);
         
         debugSystem.log('❌ Lab dip unassigned from garment:', { labDipId, garmentId });
       }
