@@ -387,49 +387,40 @@ Tech-Pack Step 3: Garment Specifications Section
               <div class="techpack-form__group">
                 <label class="techpack-form__label">Assigned Colors for <span class="garment-name-placeholder">this garment</span></label>
                 
-                <!-- Clean Color Assignment Display -->
-                <div class="techpack-garment-color-assignment">
-                  <!-- Assignment Status Display -->
-                  <div class="techpack-assignment-status" data-garment-assignment-status="">
-                    <div class="techpack-status-unassigned">
-                      <div class="techpack-empty-assignment-state">
-                        <svg class="techpack-empty-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <circle cx="12" cy="12" r="3"/>
-                          <path d="M12 1v6m0 6v6"/>
+                <!-- Unified Lab Dip Assignment Display -->
+                <div class="techpack-lab-dip-assignment-container">
+                  <!-- Empty State (shown when no colors assigned) -->
+                  <div class="techpack-lab-dip-unified-empty-state" data-empty-state>
+                    <div class="techpack-empty-state-content">
+                      <svg class="techpack-empty-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                      <h4 class="techpack-empty-title">No Lab Dips Assigned</h4>
+                      <p class="techpack-empty-description">Create custom colors for this garment by adding Lab Dip swatches below</p>
+                      <button type="button" class="techpack-btn techpack-btn--primary techpack-empty-cta" data-scroll-to-lab-dips>
+                        <svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" fill="none">
+                          <path d="M8 2v12m-6-6h12"/>
                         </svg>
-                        <span class="techpack-empty-text">No colors assigned yet</span>
-                        <p class="techpack-empty-description">Create lab dip swatches below and assign them to this garment</p>
-                      </div>
-                    </div>
-                    
-                    <div class="techpack-status-assigned" style="display: none;">
-                      <div class="techpack-assigned-status-header">
-                        <span class="techpack-assigned-count">0</span> colors assigned
-                      </div>
-                      <div class="techpack-assigned-colors" data-assigned-colors-list></div>
+                        Create Lab Dip Swatches
+                      </button>
                     </div>
                   </div>
-                </div>
-                
-                <!-- Lab Dip Selection Area (for displaying assigned lab dips) -->
-                <div class="techpack-lab-dip-selection"></div>
-                <div class="techpack-lab-dip-selection-empty" style="display: none;">
-                  <button type="button" class="techpack-btn techpack-btn--secondary" data-scroll-to-lab-dips>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 12l-4-4h8l-4 4z"/>
-                    </svg>
-                    Go to Lab Dip Swatches
-                  </button>
+                  
+                  <!-- Assigned State (shown when colors are assigned) -->
+                  <div class="techpack-assigned-colors-display" data-assigned-state style="display: none;">
+                    <div class="techpack-assigned-status-header">
+                      <span class="techpack-assigned-count">0</span> colors assigned
+                    </div>
+                    <div class="techpack-assigned-colors-grid" data-assigned-colors-list>
+                      <!-- Professional color cards will be inserted here -->
+                    </div>
+                  </div>
+                  
+                  <!-- Legacy support for existing JavaScript -->
+                  <div class="techpack-lab-dip-selection" style="display: none;"></div>
                 </div>
                 
                 <div class="techpack-form__error" role="alert"></div>
-              </div>
-              
-              <div class="techpack-sample-warning" id="lab-dip-warning">
-                <svg width="16" height="16" viewBox="0 0 16 16">
-                  <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
-                </svg>
-                Requires a Lab Dip. Add one in Section B, then select it here.
               </div>
             </div>
           </div>
