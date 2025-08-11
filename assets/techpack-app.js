@@ -1,70 +1,4 @@
-(function() {
-  'use strict';
-  // DEBUG VERSION: 1.8.19 - FIXED: Enhanced validation debugging for radio button detection
-
-  // Enhanced Configuration - Complete Overhaul Version
-  const CONFIG = {
-    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
-    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
-    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
-    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
-    MAX_FILES: 10,
-    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
-    ANIMATION_DURATION: 400,
-    DEBOUNCE_DELAY: 300,
-    MIN_DELIVERY_WEEKS: 6,
-    
-    // Fabric Type Mapping Configuration
-    FABRIC_TYPE_MAPPING: {
-      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
-      'Zip-Up Hoodie': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Hoodie': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Sweatshirt': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Sweatpants': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Shorts': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      
-      // Light Garments - T-Shirts and Long Sleeves
-      'T-Shirt': [
-        '100% Organic Cotton Jersey',
-        '80% Cotton 20% Polyester Jersey',
-        '50% Cotton 50% Polyester Jersey',
-        '100% Polyester Jersey',
+ Polyester Jersey',
         '100% Cotton & Elastan',
         'Recycled Polyester'
       ],
@@ -2281,6 +2215,52 @@
               if (errorElement) errorElement.style.display = 'none';
             }
 
+            // If stock color is selected, validate stock color choice
+            if (stockRadio) {
+              // Check if a stock color has been selected
+              const garmentId = garmentElement.dataset.garmentId;
+              const stockColorRadios = sampleSection.querySelectorAll(`input[name="stock-fabric-color-${garmentId}"]:checked`);
+              
+              if (stockColorRadios.length === 0) {
+                isValid = false;
+                debugSystem.log(`Garment ${index + 1}: Stock sample selected but no color chosen`, null, 'error');
+                
+                // Show error on stock options
+                const stockOptions = sampleSection.querySelector('.techpack-sample-stock-options');
+                if (stockOptions) {
+                  const stockError = stockOptions.querySelector('.techpack-stock-color-error') || document.createElement('div');
+                  stockError.className = 'techpack-stock-color-error';
+                  stockError.style.cssText = `
+                    color: var(--techpack-error);
+                    font-size: 0.875rem;
+                    margin-top: 0.75rem;
+                    padding: 0.75rem;
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  `;
+                  stockError.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
+                    </svg>
+                    <span>Please select a stock color (black, off-white, or random)</span>
+                  `;
+                  if (!stockOptions.contains(stockError)) {
+                    stockOptions.appendChild(stockError);
+                  }
+                  stockError.style.display = 'flex';
+                }
+              } else {
+                // Stock color selected - clear errors
+                const stockOptions = sampleSection.querySelector('.techpack-sample-stock-options');
+                const stockError = stockOptions?.querySelector('.techpack-stock-color-error');
+                if (stockError) stockError.style.display = 'none';
+              }
+            }
+            
             // If custom color is selected, validate lab dip selection
             if (customRadio) {
               const labDipSelection = sampleSection.querySelector('.techpack-lab-dip-selection');
@@ -12237,26 +12217,53 @@ setupInitialization();
 
     // Validate current sample selection
     validateSampleSelection() {
-      if (!this.sampleState.type) {
-        return { valid: false, message: "Select a sample type to proceed." };
-      }
+      // Check all garments with per-garment state
+      const garments = document.querySelectorAll('.techpack-garment');
+      let allValid = true;
+      let errorMessage = "";
       
-      if (this.sampleState.type === 'custom') {
-        if (this.labDips.size === 0) {
-          return { valid: false, message: "No Lab Dips yet. Add one in Section B to proceed." };
+      garments.forEach((garment, index) => {
+        const garmentId = garment.dataset.garmentId;
+        const garmentState = this.perGarmentSampleState?.get(garmentId);
+        
+        // Check if this garment has a sample section visible
+        const sampleSection = garment.querySelector('.techpack-garment-samples[data-sample-request-only]');
+        if (!sampleSection || sampleSection.style.display === 'none') {
+          return; // Skip garments without sample sections
         }
         
-        if (!this.sampleState.selectedLabDipId) {
-          return { valid: false, message: "Select which Lab Dip to use for dyeing." };
+        if (!garmentState || !garmentState.type) {
+          allValid = false;
+          errorMessage = `Garment ${index + 1}: Select a sample type to proceed.`;
+          return;
         }
         
-        const selectedDip = this.labDips.get(this.sampleState.selectedLabDipId);
-        if (selectedDip?.status === 'Rejected') {
-          return { valid: false, message: "Selected Lab Dip is rejected. Choose another or add a new one." };
+        // Validate stock selection
+        if (garmentState.type === 'stock') {
+          if (!garmentState.stockColor) {
+            allValid = false;
+            errorMessage = `Garment ${index + 1}: Select a stock color (black, off-white, or random).`;
+            return;
+          }
         }
-      }
+        
+        // Validate custom selection
+        if (garmentState.type === 'custom') {
+          // Check if lab dips are available globally
+          const globalLabDips = window.globalLabDipManager?.globalLabDips || new Map();
+          const hasAssignedLabDips = Array.from(globalLabDips.values()).some(labDip => 
+            labDip.assignments && labDip.assignments.has(garmentId)
+          );
+          
+          if (!hasAssignedLabDips) {
+            allValid = false;
+            errorMessage = `Garment ${index + 1}: Assign a lab dip for custom color.`;
+            return;
+          }
+        }
+      });
       
-      return { valid: true };
+      return { valid: allValid, message: errorMessage };
     }
 
     // Debounce utility method
