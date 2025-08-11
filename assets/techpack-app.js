@@ -13912,14 +13912,6 @@ setupInitialization();
     
     // Create global lab dip element
     createGlobalLabDipElement(id, labDip) {
-      // DEBUG: Log color circle generation
-      debugSystem.log('🎨 DEBUG createGlobalLabDipElement:', {
-        id: id,
-        pantone: labDip.pantone,
-        hex: labDip.hex,
-        source: labDip.source
-      });
-      
       const item = document.createElement('div');
       item.className = 'techpack-lab-dip-global-item';
       item.dataset.labDipId = id;
@@ -13928,14 +13920,9 @@ setupInitialization();
       let colorElement = '';
       if (labDip.hex) {
         colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--hex" style="--color-hex: ${labDip.hex}; background-color: ${labDip.hex}"></div>`;
-        debugSystem.log('🎨 DEBUG Color element generated:', {
-          hex: labDip.hex,
-          colorElementHTML: colorElement
-        });
       } else {
         // Fallback for lab dips without hex (shouldn't happen with new system)
         colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--hex" style="--color-hex: #6b7280; background-color: #6b7280"></div>`;
-        debugSystem.log('🎨 DEBUG Using fallback color (no hex found)');
       }
       
       // Assignment status badges

@@ -3592,7 +3592,7 @@ button:disabled.techpack-btn {
   height: 40px !important;
   border-radius: 50% !important;
   margin-right: 0.875rem;
-  border: 3px solid #ff0000 !important; /* DEBUG: Red border to verify positioning */
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
   position: relative;
