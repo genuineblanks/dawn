@@ -4649,6 +4649,12 @@
           debugSystem.log('Cleaned up sample data for removed garment', { garmentId });
         }
         
+        // CRITICAL: Clean up lab dip assignments for removed garment
+        if (window.globalLabDipManager) {
+          window.globalLabDipManager.cleanupGarmentAssignments(garmentId);
+          debugSystem.log('Cleaned up lab dip assignments for removed garment', { garmentId });
+        }
+        
         // IMPORTANT: Renumber all remaining garments
         this.renumberGarments();
         
@@ -4665,10 +4671,20 @@
     // NEW METHOD: Renumber garments after deletion
     renumberGarments() {
       const garments = document.querySelectorAll('.techpack-garment');
+      let updatedCount = 0;
+      
       garments.forEach((garment, index) => {
+        const newNumber = index + 1;
+        
+        // Update number element
         const numberElement = garment.querySelector('.techpack-garment__number');
         if (numberElement) {
-          numberElement.textContent = index + 1;
+          const oldNumber = numberElement.textContent;
+          numberElement.textContent = newNumber;
+          if (oldNumber !== newNumber.toString()) {
+            updatedCount++;
+            debugSystem.log(`🔢 Updated garment number: ${oldNumber} → ${newNumber}`);
+          }
         }
         
         // Also update any titles that show garment numbers
@@ -4676,11 +4692,25 @@
         if (titleElement) {
           const currentText = titleElement.textContent;
           // Replace any existing "Garment X" with the new number
-          titleElement.textContent = currentText.replace(/Garment \d+/g, `Garment ${index + 1}`);
+          titleElement.textContent = currentText.replace(/Garment \d+/g, `Garment ${newNumber}`);
         }
+        
+        // Update garment name placeholders in labels
+        const garmentNamePlaceholders = garment.querySelectorAll('.garment-name-placeholder');
+        garmentNamePlaceholders.forEach(placeholder => {
+          placeholder.textContent = `Garment ${newNumber}`;
+        });
       });
       
-      debugSystem.log('Garments renumbered', { total: garments.length });
+      debugSystem.log(`🎯 Renumbering complete: ${garments.length} garments, ${updatedCount} numbers updated`);
+      
+      // Force refresh of assignment menus to reflect new numbers
+      if (window.globalLabDipManager) {
+        setTimeout(() => {
+          window.globalLabDipManager.renderGlobalLabDipList();
+          debugSystem.log('🔄 Refreshed assignment menus after renumbering');
+        }, 100);
+      }
     }
 
     addColorway(garmentId) {
@@ -13694,6 +13724,37 @@ setupInitialization();
       }
     }
     
+    // Clean up all assignments for a removed garment
+    cleanupGarmentAssignments(garmentId) {
+      let cleanedAssignments = 0;
+      
+      // Remove garment from all lab dip assignments
+      this.globalLabDips.forEach((labDip, labDipId) => {
+        if (labDip.assignments && labDip.assignments.has(garmentId)) {
+          labDip.assignments.delete(garmentId);
+          cleanedAssignments++;
+          debugSystem.log(`🧹 Removed garment ${garmentId} from lab dip ${labDipId}`);
+        }
+      });
+      
+      // Clean up garment assignments map
+      if (this.garmentAssignments.has(garmentId)) {
+        this.garmentAssignments.delete(garmentId);
+        debugSystem.log(`🧹 Removed garment assignments map for ${garmentId}`);
+      }
+      
+      // Update lab dip statuses
+      this.globalLabDips.forEach((labDip, labDipId) => {
+        this.updateLabDipStatus(labDipId);
+      });
+      
+      // Re-render the global lab dip list to reflect changes
+      this.renderGlobalLabDipList();
+      this.updateAssignmentSummary();
+      
+      debugSystem.log(`🧹 Cleanup complete: Removed ${cleanedAssignments} assignments for garment ${garmentId}`);
+    }
+    
     // Toggle lab dip as fabric swatch
     toggleFabricSwatch(labDipId) {
       if (this.fabricSwatches.has(labDipId)) {
@@ -14105,9 +14166,16 @@ setupInitialization();
       const garmentElements = document.querySelectorAll('.techpack-garment');
       const availableGarments = [];
       
-      garmentElements.forEach((garmentElement) => {
+      garmentElements.forEach((garmentElement, index) => {
         const garmentId = garmentElement.dataset.garmentId;
-        const garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent || '?';
+        
+        // Primary: Try to get from DOM element, Fallback: Use array index + 1
+        let garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent;
+        if (!garmentNumber || garmentNumber.trim() === '' || garmentNumber === '?') {
+          garmentNumber = (index + 1).toString();
+          debugSystem.log(`🔢 Using fallback garment number for ${garmentId}: ${garmentNumber}`);
+        }
+        
         const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
         const selectedType = garmentTypeSelect?.value || garmentTypeSelect?.options[garmentTypeSelect.selectedIndex]?.text || 'Unknown Type';
         
@@ -14123,6 +14191,8 @@ setupInitialization();
             type: selectedType,
             number: garmentNumber
           });
+          
+          debugSystem.log(`📋 Available garment: ${garmentName} (ID: ${garmentId})`);
         }
       });
       
