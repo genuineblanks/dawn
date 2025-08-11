@@ -13036,9 +13036,9 @@ setupInitialization();
       const labDipColorPicker = document.getElementById('lab-dip-color-picker');
       labDipColorPicker?.addEventListener('change', (e) => this.handleColorPickerChange(e.target.value));
       
-      // Initialize color picker preview
+      // Initialize color picker to show placeholder state (no auto-selection)
       if (labDipColorPicker) {
-        this.handleColorPickerChange(labDipColorPicker.value);
+        this.initializeEmptyColorPickerState();
       }
       
       debugSystem.log('🎯 Global lab dip event listeners initialized');
@@ -13061,6 +13061,34 @@ setupInitialization();
         this.renderGlobalLabDipList();
         debugSystem.log('🔄 Imported existing lab dips:', this.globalLabDips.size);
       }
+    }
+    
+    // Initialize color picker to empty state without triggering auto-selection
+    initializeEmptyColorPickerState() {
+      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
+      const pantonePlaceholder = document.getElementById('pantone-placeholder');
+      const addButton = document.getElementById('add-lab-dip-color');
+      
+      // Ensure placeholder is shown and auto-display is hidden
+      if (autoPantoneDisplay) {
+        autoPantoneDisplay.style.display = 'none';
+      }
+      
+      if (pantonePlaceholder) {
+        pantonePlaceholder.style.display = 'block';
+      }
+      
+      // Disable add button until user selects a color
+      if (addButton) {
+        addButton.disabled = true;
+        addButton.classList.add('disabled');
+      }
+      
+      // Reset selected state
+      this.selectedPantone = null;
+      this.selectedColor = null;
+      
+      debugSystem.log('🔄 Color picker initialized to empty state');
     }
     
     // Switch between color picker and manual entry modes
@@ -13087,6 +13115,12 @@ setupInitialization();
     
     // Handle color picker change with professional auto-selection
     handleColorPickerChange(color) {
+      // Skip processing if color is default/empty state
+      if (!color || color === '#000000') {
+        debugSystem.log('⏭️ Skipping default/empty color processing:', color);
+        return;
+      }
+      
       this.selectedColor = color;
       
       // Update color preview
@@ -13179,33 +13213,18 @@ setupInitialization();
       const pantonePlaceholder = document.getElementById('pantone-placeholder');
       const addButton = document.getElementById('add-lab-dip-color');
       
-      // Reset color picker to default
+      // Clear color picker value completely (don't set to black)
       if (colorPicker) {
-        colorPicker.value = '#000000';
+        colorPicker.value = '';
       }
       
-      // Reset preview
+      // Clear preview
       if (colorPreview) {
-        colorPreview.style.backgroundColor = '#000000';
+        colorPreview.style.backgroundColor = 'transparent';
       }
       
-      // Hide Pantone display and show placeholder
-      if (autoPantoneDisplay) {
-        autoPantoneDisplay.style.display = 'none';
-      }
-      
-      if (pantonePlaceholder) {
-        pantonePlaceholder.style.display = 'flex';
-      }
-      
-      // Disable add button
-      if (addButton) {
-        addButton.disabled = true;
-      }
-      
-      // Clear state
-      this.selectedColor = null;
-      this.selectedPantone = null;
+      // Use the empty state initialization
+      this.initializeEmptyColorPickerState();
       
       debugSystem.log('🔄 Color picker reset to initial state');
     }
