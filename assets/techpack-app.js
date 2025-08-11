@@ -11223,17 +11223,18 @@ setupInitialization();
         // Add lab dip buttons
         if (e.target.id === 'add-lab-dip-color') {
           debugSystem.log('🖱️ ADD LAB DIP button clicked!', { 
-            isDisabled: e.target.classList.contains('disabled'),
+            isDisabled: e.target.disabled,
+            hasDisabledClass: e.target.classList.contains('disabled'),
             globalManager: !!window.globalLabDipManager,
             buttonShouldBeEnabled: window.globalLabDipManager?.buttonShouldBeEnabled,
             buttonElement: e.target,
             buttonClasses: e.target.className
           });
-          if (!e.target.classList.contains('disabled')) {
+          if (!e.target.disabled) {
             debugSystem.log('✅ Button click proceeding - not disabled');
             window.globalLabDipManager?.addLabDipFromColorPicker();
           } else {
-            debugSystem.log('❌ Button click blocked - button has disabled class');
+            debugSystem.log('❌ Button click blocked - button is disabled');
           }
         }
         
@@ -13007,7 +13008,8 @@ setupInitialization();
       // Set up a periodic check to ensure button stays enabled
       const checkInterval = setInterval(() => {
         const addButton = document.getElementById('add-lab-dip-color');
-        if (addButton && this.buttonShouldBeEnabled && addButton.classList.contains('disabled')) {
+        if (addButton && this.buttonShouldBeEnabled && (addButton.disabled || addButton.classList.contains('disabled'))) {
+          addButton.disabled = false;
           addButton.classList.remove('disabled');
           debugSystem.log('🛡️ Re-enabled button - was disabled by external code');
         }
@@ -13016,7 +13018,7 @@ setupInitialization();
         if (!this.buttonShouldBeEnabled) {
           clearInterval(checkInterval);
         }
-      }, 1000);
+      }, 100); // More aggressive checking - every 100ms instead of 1000ms
       
       // Clear interval after 30 seconds to prevent memory leaks
       setTimeout(() => clearInterval(checkInterval), 30000);
@@ -13112,6 +13114,7 @@ setupInitialization();
       
       // Disable add button until user selects a color
       if (addButton) {
+        addButton.disabled = true;
         addButton.classList.add('disabled');
       }
       
@@ -13205,6 +13208,7 @@ setupInitialization();
         
         // ALWAYS enable the button if we have a Pantone match (essential functionality)
         if (addButton) {
+          addButton.disabled = false;
           addButton.classList.remove('disabled');
           this.buttonShouldBeEnabled = true; // Mark for protection
           this.protectButtonState(); // Prevent re-disabling
@@ -13231,6 +13235,7 @@ setupInitialization();
         
         // Disable button
         if (addButton) {
+          addButton.disabled = true;
           addButton.classList.add('disabled');
           this.buttonShouldBeEnabled = false; // Allow disabling
         }

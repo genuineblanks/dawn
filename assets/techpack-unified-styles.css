@@ -2592,11 +2592,9 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 }
 
 /* Disabled Add Lab Dip Button */
-button:disabled.techpack-btn,
-button.disabled.techpack-btn {
+button:disabled.techpack-btn {
   opacity: 0.5;
   cursor: not-allowed;
-  /* REMOVED: pointer-events: none; - This was blocking all clicks! */
 }
 
 /* Color Assignment Guidance Styling - DEPRECATED */
