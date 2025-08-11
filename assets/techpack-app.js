@@ -11243,12 +11243,6 @@ setupInitialization();
         }
       });
       
-      // Color picker change event
-      document.addEventListener('change', (e) => {
-        if (e.target.id === 'lab-dip-color-picker') {
-          this.handleColorPickerChange(e.target.value);
-        }
-      });
       
       // Pantone prefill functionality
       document.addEventListener('blur', (e) => {
@@ -11289,85 +11283,7 @@ setupInitialization();
       debugSystem.log('Input mode switched to:', mode);
     }
     
-    // Handle color picker change
-    handleColorPickerChange(color) {
-      this.selectedColor = color;
-      
-      // Update color preview
-      const colorPreview = document.getElementById('lab-dip-color-preview');
-      if (colorPreview) {
-        colorPreview.style.backgroundColor = color;
-      }
-      
-      // Convert hex to closest Pantone TCX and show
-      // Get comprehensive Pantone database match (2,310+ colors)
-      const closestPantones = this.findClosestPantoneColors(color, 1);
-      const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
-      
-      // Update auto-selected Pantone display
-      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
-      const autoPantoneCircle = document.getElementById('auto-pantone-circle');
-      const autoPantoneCode = document.getElementById('auto-pantone-code');
-      
-      if (closestPantone) {
-        if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'block';
-        if (autoPantoneCircle) autoPantoneCircle.style.backgroundColor = closestPantone.hex;
-        if (autoPantoneCode) autoPantoneCode.textContent = `${closestPantone.name} - ${closestPantone.code}`;
-        debugSystem.log('Auto-selected Pantone:', `${closestPantone.name} - ${closestPantone.code}`);
-      } else {
-        if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
-      }
-      
-      debugSystem.log('Color picker changed:', color, 'closest pantone:', closestPantone);
-    }
     
-    // Add lab dip from color picker mode (auto-selected Pantone)
-    addLabDipFromColorPicker() {
-      if (!this.selectedColor) {
-        this.showError('Please select a color first');
-        return;
-      }
-      
-      // Get auto-selected Pantone from comprehensive database
-      const closestPantones = this.findClosestPantoneColors(this.selectedColor, 1);
-      const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
-      
-      if (!closestPantone) {
-        this.showError('Unable to find matching Pantone color');
-        return;
-      }
-      
-      // Use the auto-selected Pantone code
-      const tcxCode = `${closestPantone.code} TCX`;
-      
-      // Add the lab dip with exact Pantone color
-      this.addLabDipWithData(tcxCode, closestPantone.hex, 'color-picker');
-      
-      // Reset the color picker
-      this.resetColorPicker();
-      
-      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', tcxCode);
-    }
-    
-    // Reset color picker to initial state
-    resetColorPicker() {
-      const colorPicker = document.getElementById('lab-dip-color-picker');
-      const colorPreview = document.getElementById('lab-dip-color-preview');
-      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
-      
-      if (colorPicker) {
-        colorPicker.value = '#000000';
-        this.selectedColor = '#000000';
-      }
-      
-      if (colorPreview) {
-        colorPreview.style.backgroundColor = '#000000';
-      }
-      
-      if (autoPantoneDisplay) {
-        autoPantoneDisplay.style.display = 'none';
-      }
-    }
     
     // Add lab dip from manual entry mode (TCX or TPX)
     addLabDipFromManualEntry() {
@@ -11495,78 +11411,6 @@ setupInitialization();
       // Basic validation for TCX or TPX format
       const pantonePattern = /^\d{2}-\d{4}\s?(TPX|TCX)$/i;
       return pantonePattern.test(code);
-    }
-    
-    // Find multiple closest Pantone color matches
-    findClosestPantoneColors(hexColor, count = 5) {
-      // Complete Pantone Color Database (TPG/TCX format) - All 2310 colors
-      const pantoneColors = [
-        { code: 'Egret - 11-0103 TCX', hex: '#F3ECE0', name: 'Egret' },
-        { code: 'Snow white - 11-0602 TCX', hex: '#F2F0EB', name: 'Snow white' },
-        { code: 'Bright white - 11-0601 TCX', hex: '#F4F5F0', name: 'Bright white' },
-        { code: 'Cloud dancer - 11-4201 TCX', hex: '#F0EEE9', name: 'Cloud dancer' },
-        { code: 'Gardenia - 11-0604 TCX', hex: '#F1E8DF', name: 'Gardenia' },
-        { code: 'Marshmallow - 11-4300 TCX', hex: '#F0EEE4', name: 'Marshmallow' },
-        { code: 'Blanc de blanc - 11-4800 TCX', hex: '#E7E9E7', name: 'Blanc de blanc' },
-        { code: 'Pristine - 11-0606 TCX', hex: '#F2E8DA', name: 'Pristine' },
-        { code: 'Whisper white - 11-0701 TCX', hex: '#EDE6DB', name: 'Whisper white' },
-        { code: 'White asparagus - 12-0104 TCX', hex: '#E1DBC8', name: 'White asparagus' },
-        // Adding more colors for comprehensive matching...
-        { code: 'Fiery red - 18-1664 TCX', hex: '#CE2029', name: 'Fiery red' },
-        { code: 'True red - 19-1664 TCX', hex: '#BF1932', name: 'True red' },
-        { code: 'Lipstick red - 18-1763 TCX', hex: '#C1272D', name: 'Lipstick red' },
-        { code: 'Racing red - 18-1763 TCX', hex: '#C1272D', name: 'Racing red' }
-      ];
-
-      // Convert hex to RGB for color matching
-      function hexToRgb(hex) {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        } : null;
-      }
-
-      // Calculate color distance using Delta E CIE76 approximation
-      function colorDistance(rgb1, rgb2) {
-        const rMean = (rgb1.r + rgb2.r) / 2;
-        const deltaR = rgb1.r - rgb2.r;
-        const deltaG = rgb1.g - rgb2.g;
-        const deltaB = rgb1.b - rgb2.b;
-        
-        const weightR = 2 + rMean / 256;
-        const weightG = 4;
-        const weightB = 2 + (255 - rMean) / 256;
-        
-        return Math.sqrt(weightR * deltaR * deltaR + weightG * deltaG * deltaG + weightB * deltaB * deltaB);
-      }
-
-      const targetRgb = hexToRgb(hexColor);
-      if (!targetRgb) return [];
-
-      // Calculate distances and sort
-      const colorDistances = pantoneColors.map(pantone => {
-        const pantoneRgb = hexToRgb(pantone.hex);
-        const distance = pantoneRgb ? colorDistance(targetRgb, pantoneRgb) : Infinity;
-        
-        return {
-          code: pantone.code,
-          hex: pantone.hex,
-          name: pantone.name,
-          distance: distance,
-          confidence: Math.max(0, Math.min(100, 100 - (distance / 5)))
-        };
-      }).sort((a, b) => a.distance - b.distance);
-
-      return colorDistances.slice(0, count);
-    }
-
-    // Find closest Pantone color (using existing method)
-    findClosestPantoneColor(hexColor) {
-      // Use the comprehensive pantone database from findClosestPantoneColors
-      const results = this.findClosestPantoneColors(hexColor, 1);
-      return results && results.length > 0 ? { code: results[0].code, confidence: results[0].confidence } : null;
     }
     
     // Show error message
