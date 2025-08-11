@@ -13596,6 +13596,9 @@ setupInitialization();
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
         
+        // CRITICAL: Update the individual garment assignment display
+        this.updateGarmentAssignmentDisplay(garmentId);
+        
         // Trigger validation when lab dips are assigned (for custom color validation)
         setTimeout(() => {
           if (typeof stepManager !== 'undefined' && stepManager.validateStep3) {
@@ -13663,6 +13666,9 @@ setupInitialization();
         this.updateLabDipStatus(labDipId);
         this.renderGlobalLabDipList();
         this.updateAssignmentSummary();
+        
+        // CRITICAL: Update the individual garment assignment display
+        this.updateGarmentAssignmentDisplay(garmentId);
         
         // Trigger validation when lab dips are unassigned (for custom color validation)
         setTimeout(() => {
@@ -13829,6 +13835,7 @@ setupInitialization();
         ${colorElement}
         <div class="techpack-lab-dip-global-item__info">
           <div class="techpack-lab-dip-global-item__code">${labDip.pantone}</div>
+          <div class="techpack-lab-dip-global-item__hex">${labDip.hex ? labDip.hex.toUpperCase() : ''}</div>
           <div class="techpack-lab-dip-global-item__source">
             ${labDip.source === 'color-picker' ? 'Color Picker' : 'Manual Entry'}
           </div>
@@ -14193,6 +14200,12 @@ setupInitialization();
     
     // Update a single garment's assignment status display
     updateGarmentAssignmentDisplay(garmentId) {
+      // Safety check: Ensure garmentId is valid
+      if (!garmentId) {
+        debugSystem.log('❌ Invalid garmentId provided to updateGarmentAssignmentDisplay');
+        return;
+      }
+
       const garment = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (!garment) {
         debugSystem.log('❌ Garment not found for assignment display update:', garmentId);
@@ -14205,6 +14218,17 @@ setupInitialization();
       
       if (!unifiedEmptyState || !assignedColorsDisplay) {
         debugSystem.log('❌ Unified assignment elements not found for garment:', garmentId);
+        debugSystem.log('🔍 Available elements in garment:', {
+          unifiedEmptyState: !!unifiedEmptyState,
+          assignedColorsDisplay: !!assignedColorsDisplay,
+          garmentHTML: garment.innerHTML.substring(0, 200) + '...'
+        });
+        return;
+      }
+
+      // Safety check: Ensure globalLabDips is available
+      if (!this.globalLabDips || typeof this.globalLabDips.forEach !== 'function') {
+        debugSystem.log('❌ globalLabDips not available in updateGarmentAssignmentDisplay');
         return;
       }
       
@@ -14244,9 +14268,17 @@ setupInitialization();
           
           // Create professional color cards for each assigned color
           assignedLabDips.forEach(labDip => {
-            const colorCard = this.createUnifiedColorCard(labDip, garmentId);
-            colorGrid.appendChild(colorCard);
+            try {
+              const colorCard = this.createUnifiedColorCard(labDip, garmentId);
+              if (colorCard) {
+                colorGrid.appendChild(colorCard);
+              }
+            } catch (error) {
+              debugSystem.log('❌ Error creating color card:', { labDip, garmentId, error: error.message });
+            }
           });
+        } else {
+          debugSystem.log('❌ Color grid not found in assigned colors display');
         }
       }
     }

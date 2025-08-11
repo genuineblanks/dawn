@@ -2656,6 +2656,20 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
 }
 
+.techpack-empty-cta:active,
+.techpack-empty-cta:focus {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  transform: translateY(0px);
+  outline: none;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.techpack-empty-cta:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
 .techpack-empty-cta svg {
   transition: transform 0.2s ease;
 }
@@ -3555,6 +3569,14 @@ button:disabled.techpack-btn {
   font-size: 0.95rem;
   font-weight: 600;
   color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.techpack-lab-dip-global-item__hex {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  font-family: monospace;
   margin-bottom: 0.25rem;
 }
 
