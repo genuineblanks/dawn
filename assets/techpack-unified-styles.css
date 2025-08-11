@@ -2469,9 +2469,10 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   border: none;
 }
 
-/* Sample type selection container */
+/* Sample type selection container - Hidden by default until prerequisites are met */
 .techpack-sample-type-selection {
   margin-bottom: 2rem;
+  display: none; /* Hidden by default, shown by JavaScript when prerequisites are met */
 }
 
 /* Section titles with futuristic styling */
