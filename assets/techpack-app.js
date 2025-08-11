@@ -13152,15 +13152,16 @@ setupInitialization();
       const autoPantoneCode = document.getElementById('auto-pantone-code');
       const addButton = document.getElementById('add-lab-dip-color');
       
-      if (closestPantone && autoPantoneDisplay && pantonePlaceholder && autoPantoneCircle && autoPantoneCode && addButton) {
-        // Show the auto-selected Pantone result
-        autoPantoneDisplay.style.display = 'block';
-        pantonePlaceholder.style.display = 'none';
-        
-        // Update the Pantone display
-        autoPantoneCircle.style.backgroundColor = closestPantone.hex;
-        autoPantoneCode.textContent = closestPantone.code;
-        
+      debugSystem.log('🔍 UI Elements detection:', {
+        autoPantoneDisplay: !!autoPantoneDisplay,
+        pantonePlaceholder: !!pantonePlaceholder,
+        autoPantoneCircle: !!autoPantoneCircle,
+        autoPantoneCode: !!autoPantoneCode,
+        addButton: !!addButton,
+        closestPantone: !!closestPantone
+      });
+      
+      if (closestPantone) {
         // Store the selected Pantone for lab dip creation
         this.selectedPantone = {
           code: closestPantone.code,
@@ -13168,17 +13169,39 @@ setupInitialization();
           name: closestPantone.name
         };
         
-        // Enable the Add button
-        addButton.classList.remove('disabled');
+        // ALWAYS enable the button if we have a Pantone match (essential functionality)
+        if (addButton) {
+          addButton.classList.remove('disabled');
+          debugSystem.log('✅ Button enabled - Pantone found:', closestPantone.code);
+        } else {
+          debugSystem.log('❌ Button element not found!');
+        }
+        
+        // Update UI display (optional, won't block button functionality)
+        if (autoPantoneDisplay && pantonePlaceholder && autoPantoneCircle && autoPantoneCode) {
+          // Show the auto-selected Pantone result
+          autoPantoneDisplay.style.display = 'block';
+          pantonePlaceholder.style.display = 'none';
+          
+          // Update the Pantone display
+          autoPantoneCircle.style.backgroundColor = closestPantone.hex;
+          autoPantoneCode.textContent = closestPantone.code;
+        }
         
         debugSystem.log('✅ Auto-selected Pantone:', closestPantone.code, 'from 2310+ colors database');
       } else {
-        // Show placeholder if no match found
+        // No Pantone match found
+        this.selectedPantone = null;
+        
+        // Disable button
+        if (addButton) {
+          addButton.classList.add('disabled');
+        }
+        
+        // Update UI display (optional)
         if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
         if (pantonePlaceholder) pantonePlaceholder.style.display = 'flex';
-        if (addButton) addButton.classList.add('disabled');
         
-        this.selectedPantone = null;
         debugSystem.log('❌ No Pantone match found for color:', color);
       }
       
@@ -13193,9 +13216,12 @@ setupInitialization();
       });
       
       if (!this.selectedColor || !this.selectedPantone) {
+        debugSystem.log('❌ Missing color or Pantone data');
         this.showError('Please select a color first');
         return;
       }
+      
+      debugSystem.log('✅ Proceeding to add lab dip with valid data');
       
       // Use the auto-selected Pantone from the comprehensive 2,310+ color database
       const pantoneCode = this.selectedPantone.code.replace(/\s?(-\s?TCX|-\s?TPX)$/i, '').trim();
