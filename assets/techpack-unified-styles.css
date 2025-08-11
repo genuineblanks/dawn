@@ -2592,6 +2592,181 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   margin-bottom: 0.5rem;
 }
 
+/* ====== UNIFIED LAB DIP ASSIGNMENT INTERFACE ====== */
+
+/* Unified Empty State - Replaces fragmented messages */
+.techpack-lab-dip-unified-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.techpack-lab-dip-unified-empty-state:hover {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-color: #94a3b8;
+}
+
+.techpack-empty-state-content {
+  max-width: 320px;
+}
+
+.techpack-lab-dip-unified-empty-state .techpack-empty-icon {
+  color: #64748b;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.techpack-lab-dip-unified-empty-state:hover .techpack-empty-icon {
+  color: #3b82f6;
+}
+
+.techpack-empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.3;
+}
+
+.techpack-empty-description {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.techpack-empty-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.techpack-empty-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
+}
+
+.techpack-empty-cta svg {
+  transition: transform 0.2s ease;
+}
+
+.techpack-empty-cta:hover svg {
+  transform: rotate(90deg);
+}
+
+/* Professional Assigned Colors Display */
+.techpack-assigned-colors-display {
+  padding: 1rem 0;
+}
+
+.techpack-assigned-status-header {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #16a34a;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.techpack-assigned-status-header::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: #16a34a;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.techpack-assigned-colors-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.techpack-assigned-color-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.techpack-assigned-color-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.techpack-color-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-right: 1rem;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.techpack-color-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-color-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.techpack-color-status {
+  font-size: 0.875rem;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.techpack-color-remove {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.techpack-color-remove:hover {
+  background: #fee2e2;
+  color: #991b1b;
+  transform: scale(1.1);
+}
+
 .techpack-empty-description {
   font-size: 0.875rem;
   color: #94a3b8;
