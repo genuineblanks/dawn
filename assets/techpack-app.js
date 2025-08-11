@@ -11222,7 +11222,9 @@ setupInitialization();
         
         // Add lab dip buttons
         if (e.target.id === 'add-lab-dip-color') {
-          this.addLabDipFromColorPicker();
+          if (!e.target.classList.contains('disabled')) {
+            this.addLabDipFromColorPicker();
+          }
         }
         
         if (e.target.id === 'add-lab-dip-manual') {
@@ -13025,12 +13027,7 @@ setupInitialization();
       colorPickerMode?.addEventListener('click', () => this.switchInputMode('color-picker'));
       manualEntryMode?.addEventListener('click', () => this.switchInputMode('manual-entry'));
       
-      // Add lab dip buttons
-      const addLabDipColor = document.getElementById('add-lab-dip-color');
-      const addLabDipManual = document.getElementById('add-lab-dip-manual');
-      
-      addLabDipColor?.addEventListener('click', () => this.addLabDipFromColorPicker());
-      addLabDipManual?.addEventListener('click', () => this.addLabDipFromManualEntry());
+      // Add lab dip buttons - handled by event delegation, no direct listeners needed
       
       // Color picker change handling
       const labDipColorPicker = document.getElementById('lab-dip-color-picker');
@@ -13080,7 +13077,6 @@ setupInitialization();
       
       // Disable add button until user selects a color
       if (addButton) {
-        addButton.disabled = true;
         addButton.classList.add('disabled');
       }
       
@@ -13169,14 +13165,14 @@ setupInitialization();
         };
         
         // Enable the Add button
-        addButton.disabled = false;
+        addButton.classList.remove('disabled');
         
         debugSystem.log('✅ Auto-selected Pantone:', closestPantone.code, 'from 2310+ colors database');
       } else {
         // Show placeholder if no match found
         if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
         if (pantonePlaceholder) pantonePlaceholder.style.display = 'flex';
-        if (addButton) addButton.disabled = true;
+        if (addButton) addButton.classList.add('disabled');
         
         this.selectedPantone = null;
         debugSystem.log('❌ No Pantone match found for color:', color);
