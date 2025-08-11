@@ -2596,7 +2596,7 @@ button:disabled.techpack-btn,
 button.disabled.techpack-btn {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none;
+  /* REMOVED: pointer-events: none; - This was blocking all clicks! */
 }
 
 /* Color Assignment Guidance Styling - DEPRECATED */

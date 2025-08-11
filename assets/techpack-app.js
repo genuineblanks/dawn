@@ -11224,10 +11224,16 @@ setupInitialization();
         if (e.target.id === 'add-lab-dip-color') {
           debugSystem.log('🖱️ ADD LAB DIP button clicked!', { 
             isDisabled: e.target.classList.contains('disabled'),
-            globalManager: !!window.globalLabDipManager
+            globalManager: !!window.globalLabDipManager,
+            buttonShouldBeEnabled: window.globalLabDipManager?.buttonShouldBeEnabled,
+            buttonElement: e.target,
+            buttonClasses: e.target.className
           });
           if (!e.target.classList.contains('disabled')) {
+            debugSystem.log('✅ Button click proceeding - not disabled');
             window.globalLabDipManager?.addLabDipFromColorPicker();
+          } else {
+            debugSystem.log('❌ Button click blocked - button has disabled class');
           }
         }
         
@@ -12984,11 +12990,36 @@ setupInitialization();
       // Direct reference to garmentManager for reliable access to color database
       this.garmentManager = garmentManager;
       
+      // Button state protection
+      this.buttonShouldBeEnabled = false;
+      
       this.initializeEventListeners();
       this.initializeExistingData();
       this.handleRequestTypeVisibility();
       
       debugSystem.log('🌍 GlobalLabDipManager initialized with garmentManager:', !!this.garmentManager);
+    }
+    
+    // Protect button from being re-disabled by validation systems
+    protectButtonState() {
+      if (!this.buttonShouldBeEnabled) return;
+      
+      // Set up a periodic check to ensure button stays enabled
+      const checkInterval = setInterval(() => {
+        const addButton = document.getElementById('add-lab-dip-color');
+        if (addButton && this.buttonShouldBeEnabled && addButton.classList.contains('disabled')) {
+          addButton.classList.remove('disabled');
+          debugSystem.log('🛡️ Re-enabled button - was disabled by external code');
+        }
+        
+        // Stop checking after button is no longer supposed to be enabled
+        if (!this.buttonShouldBeEnabled) {
+          clearInterval(checkInterval);
+        }
+      }, 1000);
+      
+      // Clear interval after 30 seconds to prevent memory leaks
+      setTimeout(() => clearInterval(checkInterval), 30000);
     }
     
     // Handle request type visibility - only show for sample and bulk requests
@@ -13084,6 +13115,9 @@ setupInitialization();
         addButton.classList.add('disabled');
       }
       
+      // Reset button protection
+      this.buttonShouldBeEnabled = false;
+      
       // Reset selected state
       this.selectedPantone = null;
       this.selectedColor = null;
@@ -13172,6 +13206,8 @@ setupInitialization();
         // ALWAYS enable the button if we have a Pantone match (essential functionality)
         if (addButton) {
           addButton.classList.remove('disabled');
+          this.buttonShouldBeEnabled = true; // Mark for protection
+          this.protectButtonState(); // Prevent re-disabling
           debugSystem.log('✅ Button enabled - Pantone found:', closestPantone.code);
         } else {
           debugSystem.log('❌ Button element not found!');
@@ -13196,6 +13232,7 @@ setupInitialization();
         // Disable button
         if (addButton) {
           addButton.classList.add('disabled');
+          this.buttonShouldBeEnabled = false; // Allow disabling
         }
         
         // Update UI display (optional)
@@ -13228,9 +13265,12 @@ setupInitialization();
       const pantoneHex = this.selectedPantone.hex;
       
       // Add the lab dip with exact Pantone color and hex
-      this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
+      const labDipResult = this.addGlobalLabDip(pantoneCode, 'color-picker', pantoneHex);
       
-      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex);
+      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, pantoneHex, { 
+        result: labDipResult,
+        totalLabDips: this.globalLabDips.size 
+      });
       
       // Reset color picker to initial state
       this.resetColorPicker();
@@ -13253,6 +13293,9 @@ setupInitialization();
       if (colorPreview) {
         colorPreview.style.backgroundColor = 'transparent';
       }
+      
+      // Reset button protection flag
+      this.buttonShouldBeEnabled = false;
       
       // Use the empty state initialization
       this.initializeEmptyColorPickerState();
