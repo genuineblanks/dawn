@@ -1,53 +1,3 @@
-(function() {
-  'use strict';
-  // DEBUG VERSION: 1.8.19 - FIXED: Enhanced validation debugging for radio button detection
-
-  // Enhanced Configuration - Complete Overhaul Version
-  const CONFIG = {
-    MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
-    MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
-    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
-    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
-    MAX_FILES: 10,
-    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-    VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
-    ANIMATION_DURATION: 400,
-    DEBOUNCE_DELAY: 300,
-    MIN_DELIVERY_WEEKS: 6,
-    
-    // Fabric Type Mapping Configuration
-    FABRIC_TYPE_MAPPING: {
-      // Heavy Garments - Sweatshirts, Hoodies, Sweatpants, Shorts
-      'Zip-Up Hoodie': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Hoodie': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Sweatshirt': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
-        '100% Polyester'
-      ],
-      'Sweatpants': [
-        'Brushed Fleece 100% Organic Cotton',
-        'French Terry 100% Organic Cotton',
-        '80% Cotton 20% Polyester Blend',
-        '70% Cotton 30% Polyester Blend',
-        '50% Cotton 50% Polyester Blend',
         '100% Polyester'
       ],
       'Shorts': [
@@ -13256,8 +13206,11 @@ setupInitialization();
         hex: hexColor,
         source: source,
         assignments: new Set(), // Set of garment IDs this lab dip is assigned to
-        status: 'unassigned'
+        status: 'fabric-swatch'
       });
+      
+      // Default to fabric swatch if no garment assignments
+      this.fabricSwatches.add(labDipId);
       
       // Update UI
       this.renderGlobalLabDipList();
@@ -13425,10 +13378,10 @@ setupInitialization();
           labDip.status = 'assigned-and-fabric';
         } else if (hasAssignments) {
           labDip.status = 'assigned';
-        } else if (isFabricSwatch) {
-          labDip.status = 'fabric-swatch';
         } else {
-          labDip.status = 'unassigned';
+          // If no garment assignments, always default to fabric swatch
+          this.fabricSwatches.add(labDipId);
+          labDip.status = 'fabric-swatch';
         }
       }
     }
@@ -13441,11 +13394,9 @@ setupInitialization();
       // Clear all category lists
       const assignedList = document.getElementById('assigned-list');
       const fabricSwatchList = document.getElementById('fabric-swatch-list');
-      const unassignedList = document.getElementById('unassigned-list');
       
       if (assignedList) assignedList.innerHTML = '';
       if (fabricSwatchList) fabricSwatchList.innerHTML = '';
-      if (unassignedList) unassignedList.innerHTML = '';
       
       if (this.globalLabDips.size === 0) {
         if (emptyState) emptyState.style.display = 'block';
@@ -13460,8 +13411,7 @@ setupInitialization();
       // Categorize lab dips
       const categories = {
         assigned: [],
-        fabricSwatch: [],
-        unassigned: []
+        fabricSwatch: []
       };
       
       this.globalLabDips.forEach((labDip, id) => {
@@ -13476,22 +13426,22 @@ setupInitialization();
           // Lab dips that are both assigned and fabric swatches appear in assigned category
           categories.assigned.push({ id, labDip });
         } else {
-          categories.unassigned.push({ id, labDip });
+          // Fallback: if somehow not in fabric swatches, add it there
+          this.fabricSwatches.add(id);
+          categories.fabricSwatch.push({ id, labDip });
         }
       });
       
       // Render each category
       this.renderCategory('assigned', categories.assigned, assignedList);
       this.renderCategory('fabric-swatch', categories.fabricSwatch, fabricSwatchList);
-      this.renderCategory('unassigned', categories.unassigned, unassignedList);
       
       // Update assignment summary
       this.updateAssignmentSummaryUI(categories);
       
       debugSystem.log('🎨 Categorized lab dip list rendered:', {
         assigned: categories.assigned.length,
-        fabricSwatch: categories.fabricSwatch.length,
-        unassigned: categories.unassigned.length
+        fabricSwatch: categories.fabricSwatch.length
       });
     }
     
@@ -13518,7 +13468,7 @@ setupInitialization();
     
     // Hide all category sections
     hideAllCategories() {
-      const categories = ['assigned', 'fabric-swatch', 'unassigned'];
+      const categories = ['assigned', 'fabric-swatch'];
       categories.forEach(category => {
         const categoryElement = document.getElementById(`${category}-category`);
         if (categoryElement) categoryElement.style.display = 'none';
@@ -13529,11 +13479,9 @@ setupInitialization();
     updateAssignmentSummaryUI(categories) {
       const assignedCount = document.getElementById('assigned-count');
       const fabricSwatchCount = document.getElementById('fabric-swatch-count');
-      const unassignedCount = document.getElementById('unassigned-count');
       
       if (assignedCount) assignedCount.textContent = categories.assigned.length;
       if (fabricSwatchCount) fabricSwatchCount.textContent = categories.fabricSwatch.length;
-      if (unassignedCount) unassignedCount.textContent = categories.unassigned.length;
     }
     
     // Create global lab dip element
@@ -13604,8 +13552,9 @@ setupInitialization();
         badges.push('<span class="techpack-assignment-badge techpack-assignment-badge--fabric-swatch">Fabric Swatch</span>');
       }
       
+      // Always show at least fabric swatch if no assignments
       if (badges.length === 0) {
-        badges.push('<span class="techpack-assignment-badge techpack-assignment-badge--unassigned">Unassigned</span>');
+        badges.push('<span class="techpack-assignment-badge techpack-assignment-badge--fabric-swatch">Fabric Swatch</span>');
       }
       
       return badges.join('');
@@ -13663,12 +13612,13 @@ setupInitialization();
             ${garmentItems}
           </div>
           <div class="techpack-assignment-menu__section">
-            <div class="techpack-assignment-menu__item ${isFabricSwatch ? 'techpack-assignment-menu__item--selected' : ''}" 
-                 data-action="toggle-fabric-swatch">
+            <div class="techpack-assignment-menu__note">
               <svg viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3z"/>
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M8 5v3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="8" cy="11" r="1" fill="currentColor"/>
               </svg>
-              Fabric Swatch Only ${isFabricSwatch ? '✓' : ''}
+              Lab dips automatically become fabric swatches when not assigned to garments.
             </div>
           </div>
         </div>
@@ -13804,9 +13754,6 @@ setupInitialization();
         } else {
           debugSystem.log('❌ Lab dip not found for assignment');
         }
-      } else if (action === 'toggle-fabric-swatch') {
-        debugSystem.log('🧵 Toggling fabric swatch');
-        this.toggleFabricSwatch(labDipId);
       }
     }
     
@@ -13846,13 +13793,11 @@ setupInitialization();
       // This could show statistics about assignments
       const assignedCount = Array.from(this.globalLabDips.values()).filter(labDip => labDip.assignments.size > 0).length;
       const fabricSwatchCount = this.fabricSwatches.size;
-      const unassignedCount = this.globalLabDips.size - assignedCount;
       
       debugSystem.log('📊 Assignment summary:', { 
         total: this.globalLabDips.size, 
         assigned: assignedCount, 
-        fabricSwatch: fabricSwatchCount, 
-        unassigned: unassignedCount 
+        fabricSwatch: fabricSwatchCount
       });
     }
     
