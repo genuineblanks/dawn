@@ -2336,9 +2336,9 @@
             
             // If custom color is selected, validate lab dip selection
             if (customRadio) {
-              // Check for assigned colors in the status area (new assignment system)
-              const assignedColorsList = sampleSection.querySelector('[data-assigned-colors-list]');
-              const assignedColors = assignedColorsList?.children || [];
+              // Check for assigned colors in the unified assignment system
+              const unifiedColorsGrid = sampleSection.querySelector('.techpack-assigned-colors-grid');
+              const assignedColors = unifiedColorsGrid?.children || [];
               const hasAssignedColors = assignedColors.length > 0;
               
               // Also check legacy selection system for backwards compatibility
@@ -14199,14 +14199,12 @@ setupInitialization();
         return;
       }
       
-      // Find the assignment status elements
-      const statusUnassigned = garment.querySelector('.techpack-status-unassigned');
-      const statusAssigned = garment.querySelector('.techpack-status-assigned');
-      const assignedCountSpan = garment.querySelector('.techpack-assigned-count');
-      const assignedColorsList = garment.querySelector('[data-assigned-colors-list]');
+      // Find the unified assignment elements
+      const unifiedEmptyState = garment.querySelector('[data-empty-state]');
+      const assignedColorsDisplay = garment.querySelector('.techpack-assigned-colors-display');
       
-      if (!statusUnassigned || !statusAssigned || !assignedCountSpan || !assignedColorsList) {
-        debugSystem.log('❌ Assignment status elements not found for garment:', garmentId);
+      if (!unifiedEmptyState || !assignedColorsDisplay) {
+        debugSystem.log('❌ Unified assignment elements not found for garment:', garmentId);
         return;
       }
       
@@ -14225,27 +14223,61 @@ setupInitialization();
       debugSystem.log(`🎨 Garment ${garmentId}: Found ${assignedLabDips.length} assigned colors`, assignedLabDips);
       
       if (assignedLabDips.length === 0) {
-        // Show unassigned state
-        statusUnassigned.style.display = 'flex';
-        statusAssigned.style.display = 'none';
+        // Show unified empty state
+        unifiedEmptyState.style.display = 'flex';
+        assignedColorsDisplay.style.display = 'none';
       } else {
-        // Show assigned state with beautiful color cards
-        statusUnassigned.style.display = 'none';
-        statusAssigned.style.display = 'flex';
-        assignedCountSpan.textContent = assignedLabDips.length;
+        // Show assigned colors with professional cards
+        unifiedEmptyState.style.display = 'none';
+        assignedColorsDisplay.style.display = 'block';
+        
+        // Update count in header
+        const countSpan = assignedColorsDisplay.querySelector('.techpack-assigned-colors-count');
+        if (countSpan) {
+          countSpan.textContent = assignedLabDips.length;
+        }
         
         // Clear existing color cards
-        assignedColorsList.innerHTML = '';
-        
-        // Create beautiful color cards for each assigned color
-        assignedLabDips.forEach(labDip => {
-          const colorCard = this.createAssignedColorCard(labDip, garmentId);
-          assignedColorsList.appendChild(colorCard);
-        });
+        const colorGrid = assignedColorsDisplay.querySelector('.techpack-assigned-colors-grid');
+        if (colorGrid) {
+          colorGrid.innerHTML = '';
+          
+          // Create professional color cards for each assigned color
+          assignedLabDips.forEach(labDip => {
+            const colorCard = this.createUnifiedColorCard(labDip, garmentId);
+            colorGrid.appendChild(colorCard);
+          });
+        }
       }
     }
     
-    // Create a beautiful assigned color card matching global lab dip style
+    // Create a professional unified color card
+    createUnifiedColorCard(labDip, garmentId) {
+      const card = document.createElement('div');
+      card.className = 'techpack-assigned-color-card';
+      card.dataset.labDipId = labDip.id;
+      
+      // Get hex color for display
+      const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
+      
+      card.innerHTML = `
+        <div class="techpack-color-preview" style="background-color: ${hexColor}"></div>
+        <div class="techpack-color-info">
+          <div class="techpack-color-pantone">${labDip.pantone}</div>
+          <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
+        </div>
+        <button type="button" class="techpack-color-remove" data-action="unassign" data-lab-dip-id="${labDip.id}" data-garment-id="${garmentId}">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      `;
+      
+      return card;
+    }
+
+    // Legacy: Create a beautiful assigned color card matching global lab dip style
     createAssignedColorCard(labDip, garmentId) {
       const card = document.createElement('div');
       card.className = 'techpack-assigned-color-card';
