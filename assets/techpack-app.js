@@ -13540,12 +13540,13 @@ setupInitialization();
       item.className = 'techpack-lab-dip-global-item';
       item.dataset.labDipId = id;
       
-      // Color indicator
+      // Color indicator - Always show hex color circle
       let colorElement = '';
-      if (labDip.hex && labDip.source === 'color-picker') {
-        colorElement = `<div class="techpack-lab-dip-global-item__color" style="background-color: ${labDip.hex}"></div>`;
+      if (labDip.hex) {
+        colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--hex" style="--color-hex: ${labDip.hex}; background-color: ${labDip.hex}"></div>`;
       } else {
-        colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--tpx">TPX</div>`;
+        // Fallback for lab dips without hex (shouldn't happen with new system)
+        colorElement = `<div class="techpack-lab-dip-global-item__color techpack-lab-dip-global-item__color--hex" style="--color-hex: #6b7280; background-color: #6b7280"></div>`;
       }
       
       // Assignment status badges
