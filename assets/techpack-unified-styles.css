@@ -2546,17 +2546,43 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 .techpack-empty-assignment-state {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 2rem;
+  align-items: flex-start; /* Changed from center to flex-start for left alignment */
+  width: 100%; /* Ensure full width */
+  padding: 1.5rem;
   background: rgba(248, 250, 252, 0.8);
   border: 2px dashed rgba(203, 213, 225, 0.8);
   border-radius: 12px;
-  text-align: center;
+  text-align: left; /* Changed from center to left */
 }
 
 .techpack-empty-icon {
   color: #94a3b8;
   margin-bottom: 0.75rem;
+}
+
+/* Lab Dip Selection Empty State with Navigation Button */
+.techpack-lab-dip-selection-empty {
+  text-align: center;
+  padding: 1rem;
+}
+
+.techpack-lab-dip-selection-empty .techpack-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.techpack-lab-dip-selection-empty .techpack-btn:hover {
+  transform: translateY(-1px);
+}
+
+.techpack-lab-dip-selection-empty .techpack-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.techpack-lab-dip-selection-empty .techpack-btn:hover svg {
+  transform: translateY(2px);
 }
 
 .techpack-empty-text {
