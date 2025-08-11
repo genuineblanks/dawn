@@ -150,6 +150,118 @@
     UPLOAD_TIMEOUT: 120000 // 2 minutes timeout for file uploads
   };
 
+  // COTTON-ONLY CUSTOM COLOR RESTRICTIONS - Utility Functions
+  // Check if a fabric type contains cotton (case-insensitive)
+  function isCottonFabric(fabricType) {
+    if (!fabricType || typeof fabricType !== 'string') {
+      return false;
+    }
+    
+    // Convert to lowercase for case-insensitive matching
+    const fabric = fabricType.toLowerCase();
+    
+    // Check for various cotton-containing fabric types
+    return fabric.includes('cotton') || 
+           fabric.includes('cotton/') ||  // Cotton blends
+           fabric.includes('/cotton') ||   // Reverse order blends
+           fabric.includes('organic cotton');
+  }
+  
+  // Check if garment should have custom color restrictions based on fabric type
+  function shouldRestrictCustomColor(garmentElement) {
+    if (!garmentElement) return false;
+    
+    const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+    const fabricType = fabricSelect?.value;
+    
+    // Only restrict if fabric is selected and is non-cotton
+    if (!fabricType) {
+      return false; // No restriction if no fabric selected yet
+    }
+    
+    return !isCottonFabric(fabricType);
+  }
+  
+  // Update garment custom color restrictions based on fabric type
+  function updateGarmentFabricRestrictions(garmentElement) {
+    if (!garmentElement) return;
+    
+    const garmentId = garmentElement.dataset.garmentId;
+    const shouldRestrict = shouldRestrictCustomColor(garmentElement);
+    
+    // Find the custom color section within this garment
+    const customColorSection = garmentElement.querySelector('.techpack-sample-card[data-sample-type="custom"]');
+    const customColorRadio = garmentElement.querySelector('input[name^="garment-sample-type-"][value="custom"]');
+    const customColorLabel = customColorSection?.querySelector('.techpack-sample-card-label');
+    
+    if (!customColorSection || !customColorRadio) {
+      // Custom color section not found in this garment - skip
+      return;
+    }
+    
+    if (shouldRestrict) {
+      // Apply restrictions for non-cotton fabrics
+      customColorSection.classList.add('techpack-custom-color-section--disabled');
+      customColorRadio.disabled = true;
+      
+      // If custom color was selected, clear it and switch to stock (if available)
+      if (customColorRadio.checked) {
+        customColorRadio.checked = false;
+        
+        // Try to select stock color option as fallback
+        const stockRadio = garmentElement.querySelector('input[name^="garment-sample-type-"][value="stock"]');
+        if (stockRadio) {
+          stockRadio.checked = true;
+          stockRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        
+        // Clean up any lab dip assignments for this garment
+        if (window.globalLabDipManager && garmentId) {
+          window.globalLabDipManager.cleanupGarmentAssignments(garmentId);
+        }
+      }
+      
+      debugSystem.log(`🚫 Custom color restricted for non-cotton garment: ${garmentId}`);
+    } else {
+      // Remove restrictions for cotton fabrics
+      customColorSection.classList.remove('techpack-custom-color-section--disabled');
+      customColorRadio.disabled = false;
+      
+      debugSystem.log(`✅ Custom color enabled for cotton garment: ${garmentId}`);
+    }
+    
+    // Update warning message visibility
+    updateCustomColorWarningMessage(garmentElement, shouldRestrict);
+  }
+  
+  // Update warning message for custom color restrictions
+  function updateCustomColorWarningMessage(garmentElement, shouldRestrict) {
+    if (!garmentElement) return;
+    
+    let warningElement = garmentElement.querySelector('.techpack-custom-color-restriction-warning');
+    
+    if (shouldRestrict && !warningElement) {
+      // Create warning message if it doesn't exist
+      const customColorSection = garmentElement.querySelector('.techpack-sample-card[data-sample-type="custom"] .techpack-sample-card-content');
+      if (customColorSection) {
+        warningElement = document.createElement('div');
+        warningElement.className = 'techpack-custom-color-restriction-warning';
+        warningElement.innerHTML = `
+          <div class="techpack-sample-warning-restriction">
+            <svg width="16" height="16" viewBox="0 0 16 16">
+              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            Custom colorways are only available for cotton garments. For non-cotton fabrics, custom colors can only be produced in bulk orders after color approval.
+          </div>
+        `;
+        customColorSection.appendChild(warningElement);
+      }
+    } else if (!shouldRestrict && warningElement) {
+      // Remove warning message if restrictions don't apply
+      warningElement.remove();
+    }
+  }
+
   // Premium Loading Overlay System
   const LoadingOverlay = {
     overlay: null,
@@ -4485,6 +4597,9 @@
           
           // Check if sample type section should be shown/hidden
           this.updateSampleTypeVisibility(garment);
+          
+          // COTTON-ONLY RESTRICTIONS: Update custom color restrictions based on fabric type
+          updateGarmentFabricRestrictions(garment);
           
           stepManager.validateStep3();
           
@@ -13634,6 +13749,24 @@ setupInitialization();
     // Assign lab dip to garment
     assignToGarment(labDipId, garmentId) {
       console.log(`🎯 DEBUG: assignToGarment called with labDipId=${labDipId}, garmentId=${garmentId}`);
+      
+      // COTTON-ONLY RESTRICTIONS: Validate that garment uses cotton fabric
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (garmentElement && shouldRestrictCustomColor(garmentElement)) {
+        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+        const fabricType = fabricSelect?.value || 'Unknown';
+        
+        debugSystem.log('🚫 Assignment blocked: Non-cotton fabric detected', { 
+          labDipId, 
+          garmentId, 
+          fabricType 
+        });
+        
+        // Show user feedback about restriction
+        this.showCottonRestrictionNotification(garmentId, fabricType);
+        return; // Prevent assignment
+      }
+      
       if (this.globalLabDips.has(labDipId)) {
         const labDip = this.globalLabDips.get(labDipId);
         const workflow = this.getAssignmentWorkflowType(garmentId);
@@ -13726,6 +13859,51 @@ setupInitialization();
       }, 5000);
       
       debugSystem.log('📋 Stock workflow notification shown', { garmentId, pantoneCode, garmentName });
+    }
+    
+    // Show cotton restriction notification to user
+    showCottonRestrictionNotification(garmentId, fabricType) {
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const garmentName = this.getGarmentDisplayName(garmentId) || `Garment ${garmentId}`;
+      
+      // Create temporary notification
+      const notification = document.createElement('div');
+      notification.className = 'techpack-cotton-restriction-notification';
+      notification.innerHTML = `
+        <div class="techpack-notification__icon" style="color: #dc2626;">⚠️</div>
+        <div class="techpack-notification__content">
+          <strong style="color: #dc2626;">Cotton-Only Restriction:</strong> ${garmentName} uses ${fabricType}.<br>
+          <span class="techpack-notification__detail">Custom colors can only be assigned to cotton garments. Lab dips can still be ordered as fabric swatches.</span>
+        </div>
+      `;
+      
+      // Apply styling similar to stock notification but with red theme
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        max-width: 350px;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      
+      // Insert notification
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 6 seconds (longer than stock notification due to more text)
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-in';
+        setTimeout(() => notification.remove(), 300);
+      }, 6000);
+      
+      debugSystem.log('🚫 Cotton restriction notification shown', { garmentId, fabricType, garmentName });
     }
     
     // Unassign lab dip from garment
@@ -14001,9 +14179,21 @@ setupInitialization();
       // Get available garments (this would need to be connected to the garment system)
       const availableGarments = this.getAvailableGarments();
       
+      // COTTON-ONLY RESTRICTIONS: Filter to only show cotton garments for lab dip assignment
+      const cottonGarments = availableGarments.filter(garment => {
+        const garmentElement = document.querySelector(`[data-garment-id="${garment.id}"]`);
+        if (!garmentElement) return false;
+        
+        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+        const fabricType = fabricSelect?.value;
+        
+        // Only include garments with cotton-containing fabrics
+        return fabricType && isCottonFabric(fabricType);
+      });
+      
       let garmentItems = '';
-      if (availableGarments.length > 0) {
-        garmentItems = availableGarments.map(garment => {
+      if (cottonGarments.length > 0) {
+        garmentItems = cottonGarments.map(garment => {
           const isAssigned = labDip && labDip.assignments && typeof labDip.assignments.has === 'function' && labDip.assignments.has(garment.id);
           const workflow = this.getAssignmentWorkflowType(garment.id);
           
@@ -14029,14 +14219,41 @@ setupInitialization();
           `;
         }).join('');
       } else {
-        garmentItems = `
-          <div class="techpack-assignment-menu__item" style="color: #9ca3af; cursor: default;">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <circle cx="8" cy="8" r="6"/>
-            </svg>
-            No garments available
-          </div>
-        `;
+        // Check if there are any garments at all vs only non-cotton garments
+        const hasNonCottonGarments = availableGarments.some(garment => {
+          const garmentElement = document.querySelector(`[data-garment-id="${garment.id}"]`);
+          if (!garmentElement) return false;
+          
+          const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+          const fabricType = fabricSelect?.value;
+          
+          return fabricType && !isCottonFabric(fabricType);
+        });
+        
+        if (hasNonCottonGarments) {
+          // There are garments, but they're non-cotton
+          garmentItems = `
+            <div class="techpack-assignment-menu__item techpack-assignment-menu__item--restriction" style="color: #dc2626; cursor: default; padding: 0.75rem;">
+              <svg viewBox="0 0 16 16" fill="currentColor" style="color: #dc2626;">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <div style="margin-left: 0.5rem; line-height: 1.4;">
+                <div style="font-weight: 500;">Only cotton garments available</div>
+                <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.25rem;">Custom colors can only be assigned to cotton fabrics</div>
+              </div>
+            </div>
+          `;
+        } else {
+          // No garments at all
+          garmentItems = `
+            <div class="techpack-assignment-menu__item" style="color: #9ca3af; cursor: default;">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <circle cx="8" cy="8" r="6"/>
+              </svg>
+              No garments available
+            </div>
+          `;
+        }
       }
       
       const isFabricSwatch = this.fabricSwatches.has(labDipId);
