@@ -4613,49 +4613,68 @@
             colorPreview.style.backgroundColor = colorPicker.value;
           }
           
-          // Auto-select closest 2 Pantone colors for buttons
-          const closestPantones = this.findClosestPantoneColors(colorPicker.value, 2);
+          // Auto-select the single closest Pantone color (no user choice needed)
+          const closestPantones = this.findClosestPantoneColors(colorPicker.value, 1);
+          const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
           
-          // Populate the 2 Pantone buttons with improved visual design
-          closestPantones.forEach((pantone, index) => {
-            if (pantoneButtonElements[index]) {
-              const button = pantoneButtonElements[index];
-              const pantoneNameSpan = button.querySelector('.techpack-pantone-text');
-              const colorCircle = button.querySelector('.techpack-pantone-circle');
+          if (closestPantone && pantoneButtonElements.length > 0) {
+            // Auto-select the first button with the closest Pantone
+            const firstButton = pantoneButtonElements[0];
+            const pantoneNameSpan = firstButton.querySelector('.techpack-pantone-text');
+            const colorCircle = firstButton.querySelector('.techpack-pantone-circle');
+            
+            if (pantoneNameSpan && colorCircle) {
+              // Update the button with auto-selected Pantone
+              firstButton.style.setProperty('--pantone-hex', closestPantone.hex);
+              colorCircle.style.backgroundColor = closestPantone.hex;
+              pantoneNameSpan.textContent = closestPantone.code;
+              firstButton.dataset.pantoneCode = closestPantone.code;
+              firstButton.dataset.pantoneHex = closestPantone.hex;
               
-              if (pantoneNameSpan && colorCircle) {
-                // Update hex color circle
-                button.style.setProperty('--pantone-hex', pantone.hex);
-                colorCircle.style.backgroundColor = pantone.hex;
-                
-                // Update the text content
-                pantoneNameSpan.textContent = pantone.code;
-                
-                // Update data attributes
-                button.dataset.pantoneCode = pantone.code;
-                button.dataset.pantoneHex = pantone.hex;
-                
-                // Enable the button
-                button.disabled = false;
-                button.classList.remove('opacity-50');
+              // Auto-select this button
+              pantoneButtonElements.forEach(btn => btn.classList.remove('selected'));
+              firstButton.classList.add('selected');
+              firstButton.disabled = false;
+              firstButton.classList.remove('opacity-50');
+              
+              // Hide the second button since we only want one auto-selection
+              if (pantoneButtonElements[1]) {
+                pantoneButtonElements[1].style.display = 'none';
               }
             }
-          });
-          
-          // Show the pantone buttons - already checked for null above
-          pantoneButtons.style.display = 'block';
-          
-          // Update state
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
-            if (colorwayData) {
-              colorwayData.color = colorPicker.value;
-              colorwayData.pantoneOptions = closestPantones;
+            
+            // Show the pantone buttons area
+            pantoneButtons.style.display = 'block';
+            
+            // Show size grid since Pantone is auto-selected
+            const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
+            if (sizeGrid) {
+              sizeGrid.style.display = 'block';
             }
+            
+            // Update state with auto-selected Pantone
+            const garmentData = state.formData.garments.find(g => g.id === garmentId);
+            if (garmentData) {
+              const colorwayData = garmentData.colorways.find(c => c.id === colorwayId);
+              if (colorwayData) {
+                colorwayData.color = colorPicker.value;
+                colorwayData.selectedPantone = {
+                  code: closestPantone.code,
+                  hex: closestPantone.hex
+                };
+                colorwayData.selectedPantones = [colorwayData.selectedPantone]; // Keep array for compatibility
+              }
+            }
+            
+            // Automatically validate since we have a selection
+            this.validatePantoneSelection(colorway);
+            
+            debugSystem.log('✅ Bulk order: Auto-selected closest Pantone:', closestPantone.code);
+          } else {
+            // Hide pantone buttons if no match found
+            pantoneButtons.style.display = 'none';
+            debugSystem.log('❌ Bulk order: No Pantone match found for color:', colorPicker.value);
           }
-          
-          this.validatePantoneSelection(colorway);
         });
         
         // Add click handlers for Pantone buttons (SINGLE SELECTION)
@@ -7847,12 +7866,12 @@
       
       if (hasValidPantone) {
         const selectedPantone = selectedButtons[0].dataset.pantoneCode;
-        pantoneValidationMsg.textContent = `✓ PANTONE ${selectedPantone} selected`;
+        pantoneValidationMsg.textContent = `✓ ${selectedPantone} auto-selected`;
         pantoneValidationMsg.className = 'techpack-pantone-validation-message success';
         pantoneValidationMsg.style.display = 'block';
         pantoneValidationMsg.style.cssText = 'color: #10b981; font-size: 0.875rem; margin-top: 0.5rem; display: block;';
       } else {
-        pantoneValidationMsg.textContent = 'Please select one PANTONE color option.';
+        pantoneValidationMsg.textContent = 'Please pick a color to auto-select closest Pantone.';
         pantoneValidationMsg.className = 'techpack-pantone-validation-message error';
         pantoneValidationMsg.style.display = 'block';
         pantoneValidationMsg.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; display: block;';
@@ -13130,7 +13149,7 @@ setupInitialization();
       debugSystem.log('🔄 Input mode switched to:', mode);
     }
     
-    // Handle color picker change
+    // Handle color picker change with professional auto-selection
     handleColorPickerChange(color) {
       this.selectedColor = color;
       
@@ -13140,39 +13159,106 @@ setupInitialization();
         colorPreview.style.backgroundColor = color;
       }
       
-      // Convert hex to closest Pantone TCX and show
-      const closestPantone = this.findClosestPantoneColor(color);
-      const pantoneCode = document.getElementById('suggested-pantone-code');
-      if (pantoneCode && closestPantone) {
-        pantoneCode.textContent = `${closestPantone.code}`;
+      // Get comprehensive Pantone database match (2,310+ colors)
+      const closestPantones = this.findClosestPantoneColors(color, 1);
+      const closestPantone = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
+      
+      // Update professional UI elements
+      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
+      const pantonePlaceholder = document.getElementById('pantone-placeholder');
+      const autoPantoneCircle = document.getElementById('auto-pantone-circle');
+      const autoPantoneCode = document.getElementById('auto-pantone-code');
+      const addButton = document.getElementById('add-lab-dip-color');
+      
+      if (closestPantone && autoPantoneDisplay && pantonePlaceholder && autoPantoneCircle && autoPantoneCode && addButton) {
+        // Show the auto-selected Pantone result
+        autoPantoneDisplay.style.display = 'block';
+        pantonePlaceholder.style.display = 'none';
+        
+        // Update the Pantone display
+        autoPantoneCircle.style.backgroundColor = closestPantone.hex;
+        autoPantoneCode.textContent = closestPantone.code;
+        
+        // Store the selected Pantone for lab dip creation
+        this.selectedPantone = {
+          code: closestPantone.code,
+          hex: closestPantone.hex,
+          name: closestPantone.name
+        };
+        
+        // Enable the Add button
+        addButton.disabled = false;
+        
+        debugSystem.log('✅ Auto-selected Pantone:', closestPantone.code, 'from 2310+ colors database');
       } else {
-        pantoneCode.textContent = 'Color selected';
+        // Show placeholder if no match found
+        if (autoPantoneDisplay) autoPantoneDisplay.style.display = 'none';
+        if (pantonePlaceholder) pantonePlaceholder.style.display = 'flex';
+        if (addButton) addButton.disabled = true;
+        
+        this.selectedPantone = null;
+        debugSystem.log('❌ No Pantone match found for color:', color);
       }
       
-      debugSystem.log('🎨 Color picker changed:', color, 'closest pantone:', closestPantone);
+      debugSystem.log('🎨 Professional color picker changed:', color, 'auto-selected:', this.selectedPantone);
     }
     
-    // Add lab dip from color picker mode (TCX only)
+    // Add lab dip from color picker mode with auto-selected Pantone
     addLabDipFromColorPicker() {
-      if (!this.selectedColor) {
+      if (!this.selectedColor || !this.selectedPantone) {
         this.showError('Please select a color first');
         return;
       }
       
-      // Get closest Pantone TCX code
-      const pantoneData = this.findClosestPantoneColor(this.selectedColor);
-      if (!pantoneData) {
-        this.showError('Unable to convert color to Pantone TCX');
-        return;
+      // Use the auto-selected Pantone from the comprehensive 2,310+ color database
+      const pantoneCode = this.selectedPantone.code.replace(/\s?(-\s?TCX|-\s?TPX)$/i, '').trim();
+      
+      // Add the lab dip with exact Pantone color and hex
+      this.addGlobalLabDip(pantoneCode, 'color-picker', this.selectedPantone.hex);
+      
+      // Reset color picker to initial state
+      this.resetColorPicker();
+      
+      debugSystem.log('✅ Lab dip added from auto-selected Pantone:', pantoneCode, this.selectedPantone.hex);
+    }
+    
+    // Reset color picker to initial state
+    resetColorPicker() {
+      const colorPicker = document.getElementById('lab-dip-color-picker');
+      const colorPreview = document.getElementById('lab-dip-color-preview');
+      const autoPantoneDisplay = document.getElementById('auto-pantone-display');
+      const pantonePlaceholder = document.getElementById('pantone-placeholder');
+      const addButton = document.getElementById('add-lab-dip-color');
+      
+      // Reset color picker to default
+      if (colorPicker) {
+        colorPicker.value = '#000000';
       }
       
-      // Use TCX code directly (no conversion to TPX)
-      const tcxCode = pantoneData.code;
+      // Reset preview
+      if (colorPreview) {
+        colorPreview.style.backgroundColor = '#000000';
+      }
       
-      // Add the lab dip with color preview
-      this.addGlobalLabDip(tcxCode, this.selectedColor, 'color-picker');
+      // Hide Pantone display and show placeholder
+      if (autoPantoneDisplay) {
+        autoPantoneDisplay.style.display = 'none';
+      }
       
-      debugSystem.log('🎨 Lab dip added from color picker:', tcxCode);
+      if (pantonePlaceholder) {
+        pantonePlaceholder.style.display = 'flex';
+      }
+      
+      // Disable add button
+      if (addButton) {
+        addButton.disabled = true;
+      }
+      
+      // Clear state
+      this.selectedColor = null;
+      this.selectedPantone = null;
+      
+      debugSystem.log('🔄 Color picker reset to initial state');
     }
     
     // Add lab dip from manual entry mode (TCX or TPX)
