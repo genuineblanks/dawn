@@ -14362,6 +14362,16 @@ setupInitialization();
           debugSystem.log('❌ Color grid not found in assigned colors display');
         }
       }
+      
+      // Conditional logic for red warning box (show only when no colors assigned)
+      const conditionalWarning = garment.querySelector('[data-conditional-warning]');
+      if (conditionalWarning) {
+        if (assignedLabDips.length === 0) {
+          conditionalWarning.style.display = 'flex';
+        } else {
+          conditionalWarning.style.display = 'none';
+        }
+      }
     }
     
     // Create a professional unified color card
@@ -14374,7 +14384,9 @@ setupInitialization();
       const hexColor = labDip.hex || this.pantoneToHex(labDip.pantone) || '#6b7280';
       
       card.innerHTML = `
-        <div class="techpack-color-circle" style="background-color: ${hexColor}"></div>
+        <div class="techpack-assigned-color-card__color-preview">
+          <div class="techpack-assigned-color-card__color-circle" style="background-color: ${hexColor}"></div>
+        </div>
         <div class="techpack-color-info">
           <div class="techpack-color-pantone">${labDip.pantone}</div>
           <div class="techpack-color-hex">${hexColor.toUpperCase()}</div>
