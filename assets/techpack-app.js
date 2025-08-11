@@ -160,11 +160,18 @@
     // Convert to lowercase for case-insensitive matching
     const fabric = fabricType.toLowerCase();
     
-    // Check for various cotton-containing fabric types
-    return fabric.includes('cotton') || 
-           fabric.includes('cotton/') ||  // Cotton blends
-           fabric.includes('/cotton') ||   // Reverse order blends
-           fabric.includes('organic cotton');
+    // SPECIAL CASE: Exclude 100% Cotton Flannel
+    if (fabric.includes('100%') && fabric.includes('cotton') && fabric.includes('flannel')) {
+      return false;
+    }
+    
+    // ONLY allow 100% cotton items (not blends or mixed fabrics)
+    // Must contain both "100%" and "cotton" to qualify
+    const has100Percent = fabric.includes('100%');
+    const hasCotton = fabric.includes('cotton');
+    
+    // Must have both 100% and cotton, but NOT be flannel
+    return has100Percent && hasCotton;
   }
   
   // Check if garment should have custom color restrictions based on fabric type
@@ -4274,6 +4281,13 @@
         setTimeout(() => window.sampleManager.checkRequestType(), 50);
         // Initialize sample type visibility (should be hidden until prerequisites are met)
         setTimeout(() => this.updateSampleTypeVisibility(garment), 75);
+        // COTTON-ONLY RESTRICTIONS: Apply fabric restrictions to new garment
+        setTimeout(() => {
+          if (typeof updateGarmentFabricRestrictions === 'function') {
+            updateGarmentFabricRestrictions(garment);
+            debugSystem.log('🧵 Applied fabric restrictions to new garment:', garmentId);
+          }
+        }, 100);
         // EMERGENCY FIX: Fix duplicate radio IDs
         debugSystem.log('📅 Scheduling manual ID fix in 75ms');
         setTimeout(() => {
@@ -4529,6 +4543,13 @@
             sampleTypeSection.style.opacity = '1';
           }, 10);
         }
+        
+        // COTTON-ONLY RESTRICTIONS: Apply fabric restrictions when sample section becomes visible
+        if (typeof updateGarmentFabricRestrictions === 'function') {
+          updateGarmentFabricRestrictions(garment);
+          debugSystem.log('🧵 Applied fabric restrictions when sample section shown');
+        }
+        
         debugSystem.log('Sample type selection shown - all prerequisites met', {
           garmentType: garmentTypeSelect.value,
           fabricType: fabricTypeSelect.value,
@@ -8285,6 +8306,9 @@
       // NEW: Add real-time Step 1 validation
       this.setupStep1RealTimeValidation();
       
+      // NEW: Initialize fabric restrictions for existing garments
+      this.initializeFabricRestrictions();
+      
       // CHANGED: Initialize with registration check (step 0) instead of step 1
       this.showStep(0);
       
@@ -8346,6 +8370,40 @@
             stepManager.validateStep1();
           }
         }, 100);
+      }
+    }
+
+    // Initialize fabric restrictions for existing garments on page load
+    initializeFabricRestrictions() {
+      debugSystem.log('🧵 Initializing fabric restrictions for existing garments...');
+      
+      try {
+        // Wait a moment for DOM to be fully ready
+        setTimeout(() => {
+          // Find all garment elements that might already exist
+          const garmentElements = document.querySelectorAll('.techpack-garment-item, [data-garment-id]');
+          let restrictionsApplied = 0;
+          
+          garmentElements.forEach(garmentElement => {
+            // Only process if this looks like a garment in sample request context
+            const sampleSection = garmentElement.closest('.techpack-sample-request-section, .techpack-garment-specifications');
+            if (sampleSection) {
+              if (typeof updateGarmentFabricRestrictions === 'function') {
+                updateGarmentFabricRestrictions(garmentElement);
+                restrictionsApplied++;
+              }
+            }
+          });
+          
+          if (restrictionsApplied > 0) {
+            debugSystem.log(`✅ Applied fabric restrictions to ${restrictionsApplied} existing garments`);
+          } else {
+            debugSystem.log('ℹ️ No existing garments found requiring fabric restriction updates');
+          }
+        }, 500); // Delay to ensure DOM is fully ready
+        
+      } catch (error) {
+        debugSystem.log('❌ Error initializing fabric restrictions:', error, 'error');
       }
     }
 
