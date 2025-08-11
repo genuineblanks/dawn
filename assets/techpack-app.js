@@ -9854,6 +9854,9 @@
     }
   };
 
+  // Backward compatibility: Expose garmentManager directly on window for existing code
+  window.garmentManager = garmentManager;
+
 // ENHANCED: Robust initialization with multiple readiness checks and error handling
 const initializeTechPackApp = () => {
   if (state.isInitialized) {
