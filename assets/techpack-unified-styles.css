@@ -3135,14 +3135,14 @@ button:disabled.techpack-btn {
   margin-top: 2px;
 }
 
-/* Orange info box for additional information */
+/* Orange info box for additional information - matching warning style */
 .techpack-sample-info {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
   padding: 1rem;
-  background: rgba(249, 115, 22, 0.08);
-  border: 1px solid rgba(249, 115, 22, 0.2);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: 8px;
   font-size: 0.875rem;
   color: var(--techpack-text-secondary);
@@ -3151,7 +3151,7 @@ button:disabled.techpack-btn {
 }
 
 .techpack-sample-info svg {
-  color: #f97316;
+  color: var(--techpack-warning);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -3166,7 +3166,7 @@ button:disabled.techpack-btn {
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
   font-size: 0.875rem;
-  color: var(--techpack-text-secondary);
+  color: #ef4444;
   line-height: 1.4;
   margin-bottom: 1rem;
 }
