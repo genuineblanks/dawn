@@ -383,54 +383,27 @@ Tech-Pack Step 3: Garment Specifications Section
             <!-- Custom color options (shown when selected) -->
             <div class="techpack-sample-options" style="display: none;">
               <div class="techpack-form__group">
-                <label class="techpack-form__label">Assign Colors for <span class="garment-name-placeholder">this garment</span> <span class="techpack-form__required">*</span></label>
+                <label class="techpack-form__label">Assigned Colors for <span class="garment-name-placeholder">this garment</span></label>
                 
-                <!-- Color Assignment Guidance Card -->
-                <div class="techpack-color-assignment-guidance">
-                  <div class="techpack-guidance-header">
-                    <svg class="techpack-guidance-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="techpack-guidance-title">Use Global Color Assignment</span>
-                  </div>
-                  
+                <!-- Clean Color Assignment Display -->
+                <div class="techpack-garment-color-assignment">
                   <!-- Assignment Status Display -->
                   <div class="techpack-assignment-status" data-garment-assignment-status="">
                     <div class="techpack-status-unassigned">
-                      <svg class="techpack-status-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M8 12l-4-4h8l-4 4z"/>
-                      </svg>
-                      <span class="techpack-status-text">No colors assigned yet</span>
+                      <div class="techpack-empty-assignment-state">
+                        <svg class="techpack-empty-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="12" cy="12" r="3"/>
+                          <path d="M12 1v6m0 6v6"/>
+                        </svg>
+                        <span class="techpack-empty-text">No colors assigned yet</span>
+                        <p class="techpack-empty-description">Create lab dip swatches below and assign them to this garment</p>
+                      </div>
                     </div>
                     
                     <div class="techpack-status-assigned" style="display: none;">
-                      <svg class="techpack-status-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                      </svg>
-                      <span class="techpack-status-text">
-                        <span class="techpack-assigned-count">0</span> colors assigned
-                      </span>
                       <div class="techpack-assigned-colors" data-assigned-colors-list></div>
                     </div>
                   </div>
-                  
-                  <!-- Guidance Text -->
-                  <div class="techpack-guidance-content">
-                    <p class="techpack-guidance-text">
-                      Create and assign colors using the <strong>Lab Dip Swatches</strong> section below. 
-                      You can assign multiple colors to create different variants of this garment.
-                    </p>
-                  </div>
-                  
-                  <!-- Action Button -->
-                  <button type="button" class="techpack-guidance-action" data-scroll-to-lab-dips>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
-                    </svg>
-                    Go to Color Assignment
-                  </button>
                 </div>
                 
                 <!-- Lab Dip Selection Area (for displaying assigned lab dips) -->
@@ -453,29 +426,6 @@ Tech-Pack Step 3: Garment Specifications Section
         </div>
 
 
-        <!-- Section C: Techpack Info Check -->
-        <div class="techpack-info-check">
-          <h4 class="techpack-section-title">Garment Info Provided in Techpack</h4>
-          <div class="techpack-checkboxes">
-            <label class="techpack-checkbox-option">
-              <input type="checkbox" name="colorway-in-techpack">
-              <span class="techpack-checkbox-mark"></span>
-              Colorway is already included in the techpack
-            </label>
-            
-            <label class="techpack-checkbox-option">
-              <input type="checkbox" name="sizing-in-techpack">
-              <span class="techpack-checkbox-mark"></span>
-              Sizing/custom measurements are defined in the techpack
-            </label>
-            
-            <label class="techpack-checkbox-option">
-              <input type="checkbox" name="need-sizing-help">
-              <span class="techpack-checkbox-mark"></span>
-              I need help with sizing or fit adjustments
-            </label>
-          </div>
-        </div>
 
       </div>
 
