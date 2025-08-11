@@ -12994,9 +12994,10 @@ setupInitialization();
         const requestType = requestTypeSelect?.value || '';
         
         if (globalLabDipContainer) {
-          // Show for sample-request and bulk-order-request, hide for quotation-request
+          // Show for sample-request and bulk-order-request, hide for quotation
           // Default to visible if no request type is set yet (during initialization)
-          const shouldShow = !requestType || requestType === 'sample-request' || requestType === 'bulk-order-request';
+          const shouldShow = (!requestType || requestType === 'sample-request' || requestType === 'bulk-order-request') && 
+                           requestType !== 'quotation';
           globalLabDipContainer.style.display = shouldShow ? 'block' : 'none';
           
           debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}"`);
