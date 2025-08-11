@@ -2640,14 +2640,18 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   color: #64748b;
   margin: 0 0 1.5rem 0;
   line-height: 1.5;
+  white-space: nowrap;
 }
 
 .techpack-empty-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 2rem;
   font-weight: 500;
+  font-size: 0.875rem;
+  min-width: 200px;
+  justify-content: center;
   transition: all 0.2s ease;
 }
 
@@ -2658,8 +2662,6 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 
 .techpack-empty-cta:active,
 .techpack-empty-cta:focus {
-  background-color: #3b82f6 !important;
-  color: white !important;
   transform: translateY(0px);
   outline: none;
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
@@ -2727,6 +2729,16 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 .techpack-assigned-color-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+.techpack-color-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .techpack-color-preview {
