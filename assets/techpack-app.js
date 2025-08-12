@@ -9898,7 +9898,7 @@
             );
             
             if (confirmed) {
-              this.clearAllGarments();
+              garmentManager.clearAllGarments();
               debugSystem.log('Garments cleared due to production type change');
             } else {
               // Revert the selection
