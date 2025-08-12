@@ -8770,6 +8770,10 @@
       const deliveryRow = document.getElementById('delivery-row');
       const shippingSection = document.getElementById('shipping-section');
       
+      // Second column elements in delivery row
+      const deliveryProductionType = document.getElementById('delivery-production-type');
+      const deliveryShippingMethod = document.getElementById('delivery-shipping-method');
+      
       if (!deliveryRow || !shippingSection) {
         debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
         return;
@@ -8779,18 +8783,34 @@
         case 'quotation':
           deliveryRow.style.display = 'none';
           shippingSection.style.display = 'none';
+          // Hide both second column options
+          if (deliveryProductionType) deliveryProductionType.style.display = 'none';
+          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'none';
           break;
+          
         case 'sample-request':
           deliveryRow.style.display = 'grid';
           shippingSection.style.display = 'none';
+          // Show Production Type, hide Shipping Method for sample requests
+          if (deliveryProductionType) deliveryProductionType.style.display = 'block';
+          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'none';
           break;
+          
         case 'bulk-order-request':
           deliveryRow.style.display = 'grid';
           shippingSection.style.display = 'block';
+          // Show Shipping Method, hide Production Type for bulk requests (it's in shipping section)
+          if (deliveryProductionType) deliveryProductionType.style.display = 'none';
+          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'block';
           break;
       }
       
-      debugSystem.log(`Delivery sections toggled for: ${type}`);
+      debugSystem.log(`Delivery sections toggled for: ${type}`, {
+        deliveryRowVisible: deliveryRow.style.display !== 'none',
+        shippingSectionVisible: shippingSection.style.display !== 'none',
+        productionTypeVisible: deliveryProductionType?.style.display !== 'none',
+        shippingMethodVisible: deliveryShippingMethod?.style.display !== 'none'
+      });
     }
 
     // Initialize delivery form interactions

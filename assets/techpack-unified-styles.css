@@ -7892,17 +7892,17 @@ UNIFIED COLOR PICKER STYLING
   }
 }
 
-/* Bulk Order - Horizontal shipping options (3-column layout) */
-.techpack-form__row--shipping-horizontal {
+/* Bulk Order - Production Type and Insurance (2-column layout) */
+.techpack-form__row--bulk-production-insurance {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 
-/* Responsive adjustments for shipping horizontal layout */
+/* Responsive adjustments for bulk production insurance layout */
 @media (max-width: 1024px) {
-  .techpack-form__row--shipping-horizontal {
+  .techpack-form__row--bulk-production-insurance {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -7913,7 +7913,7 @@ UNIFIED COLOR PICKER STYLING
     grid-template-columns: 1fr;
   }
   
-  .techpack-form__row--shipping-horizontal {
+  .techpack-form__row--bulk-production-insurance {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -8034,3 +8034,5 @@ UNIFIED COLOR PICKER STYLING
   margin-top: 0.25rem;
   font-style: italic;
 }
+
+/* JavaScript controls element visibility - no CSS overrides needed */
