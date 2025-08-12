@@ -7176,6 +7176,42 @@ UNIFIED COLOR PICKER STYLING
   flex-shrink: 0;
 }
 
+.techpack-help-btn--small {
+  padding: 4px;
+  margin-left: 8px;
+  background: none;
+  border: none;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+}
+
+.techpack-help-btn--small:hover {
+  background-color: #f5f5f5;
+  color: #333;
+  transform: none;
+  box-shadow: none;
+}
+
+.techpack-help-btn--small svg {
+  width: 14px;
+  height: 14px;
+}
+
+.techpack-section-title-with-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.techpack-section-title-with-info .techpack-section-title {
+  margin-bottom: 0;
+}
+
 /* Help Modal Styling */
 .techpack-modal--help .techpack-modal__content {
   max-width: 800px;

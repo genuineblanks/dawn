@@ -81,7 +81,16 @@ Tech-Pack Step 3: Garment Specifications Section
       <!-- Global Lab Dip Management Section -->
       <div class="techpack-global-lab-dips techpack-unified-section">
         <div class="techpack-section-header techpack-unified-header">
-          <h3 class="techpack-section-title techpack-unified-title">Lab Dip Swatches</h3>
+          <div class="techpack-section-title-with-info">
+            <h3 class="techpack-section-title techpack-unified-title">Lab Dip Swatches</h3>
+            <button type="button" class="techpack-help-btn techpack-help-btn--small" id="lab-dip-info-btn" aria-label="What is a Lab Dip?">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
           <span class="techpack-section-badge techpack-unified-badge">€25 each · Optional</span>
         </div>
         <p class="techpack-section-description">Create color swatches that can be assigned to any garment or received as separate fabric samples for accuracy confirmation.</p>
@@ -243,6 +252,41 @@ Tech-Pack Step 3: Garment Specifications Section
             <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lab Dip Information Modal -->
+  <div class="techpack-modal__backdrop" id="lab-dip-info-modal-backdrop" style="display: none;">
+    <div class="techpack-modal techpack-modal--info" id="lab-dip-info-modal">
+      <div class="techpack-modal__content">
+        <div class="techpack-modal__header">
+          <h3 class="techpack-modal__title">What is a Lab Dip?</h3>
+          <button type="button" class="techpack-modal__close" id="lab-dip-info-modal-close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="techpack-modal__body">
+          <div class="techpack-lab-dip-explanation">
+            <p class="techpack-explanation-intro">
+              A lab dip is a small, dyed fabric swatch used to confirm your chosen color before production.
+            </p>
+            
+            <h4 class="techpack-explanation-heading">Why it Matters</h4>
+            <ul class="techpack-explanation-list">
+              <li>Each lab dip = one swatch in that colorway.</li>
+              <li>Assign it to a garment → that garment is made in that color.</li>
+              <li>Assign multiple lab dips to the same garment → you'll receive that garment in each color, increasing cost and lead time.</li>
+            </ul>
+            
+            <div class="techpack-explanation-tip">
+              <strong>Tip:</strong> Approve lab dips first, then proceed to garment dyeing. Stock colors are faster and more economical than producing multiple custom-dyed garments.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -646,7 +690,7 @@ Tech-Pack Step 3: Garment Specifications Section
 {% endschema %}
 
 <!-- Step 3 Help Modal -->
-<div class="techpack-modal techpack-modal--help" id="step-3-help-modal" style="display: none;">
+<div class="techpack-modal techpack-modal--help" id="step-3-help-modal">
   <div class="techpack-modal__backdrop"></div>
   <div class="techpack-modal__content techpack-modal__content--help">
     <div class="techpack-modal__header">

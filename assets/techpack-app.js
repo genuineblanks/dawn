@@ -4597,8 +4597,14 @@
     }
 
     // Update fabric options based on selected garment type
-    updateFabricOptions(garmentType, fabricSelect, preserveSelection = true) {
+    updateFabricOptions(garmentType, fabricSelect, preserveSelection = true, productionType = null) {
       if (!fabricSelect) return;
+
+      // Get production type from DOM if not provided
+      if (!productionType) {
+        const productionSelect = document.querySelector('#production-type, select[name="productionType"]');
+        productionType = productionSelect ? productionSelect.value : 'custom-production';
+      }
 
       // Get current selection to preserve if possible
       const currentSelection = preserveSelection ? fabricSelect.value : '';
@@ -4614,30 +4620,51 @@
       // Re-enable fabric select if it was disabled
       fabricSelect.disabled = false;
       
-      // Get fabric options for this garment type
-      const fabricOptions = CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
-      
-      // Clear existing options except the placeholder
-      fabricSelect.innerHTML = '<option value="">Select fabric type...</option>';
-      
-      // Add new options
-      fabricOptions.forEach(fabric => {
-        const option = document.createElement('option');
-        option.value = fabric;
-        option.textContent = fabric;
-        fabricSelect.appendChild(option);
-      });
-      
-      // Restore selection if it's still valid
-      if (currentSelection && fabricOptions.includes(currentSelection)) {
-        fabricSelect.value = currentSelection;
-      } else if (currentSelection) {
-        // Current selection is no longer valid, reset and show message
-        fabricSelect.value = '';
-        debugSystem.log('Fabric selection reset due to garment type change', { 
-          garmentType, 
-          previousFabric: currentSelection 
+      // Handle different production types
+      if (productionType === 'our-blanks') {
+        // For Our Blanks, show Collection Type options
+        const fabricLabel = fabricSelect.closest('.techpack-form__group').querySelector('.techpack-form__label');
+        if (fabricLabel) {
+          fabricLabel.textContent = 'Collection Type';
+        }
+        
+        fabricSelect.innerHTML = `
+          <option value="">Select collection type...</option>
+          <option value="Oversized Luxury Collection">Oversized Luxury Collection</option>
+          <option value="Relaxed High-End Collection">Relaxed High-End Collection</option>
+        `;
+        
+        // Restore collection selection if it's still valid
+        const collectionOptions = ['Oversized Luxury Collection', 'Relaxed High-End Collection'];
+        if (currentSelection && collectionOptions.includes(currentSelection)) {
+          fabricSelect.value = currentSelection;
+        }
+        
+      } else {
+        // For Custom Production, show Fabric Type options
+        const fabricLabel = fabricSelect.closest('.techpack-form__group').querySelector('.techpack-form__label');
+        if (fabricLabel) {
+          fabricLabel.textContent = 'Fabric Type';
+        }
+        
+        // Get fabric options for this garment type
+        const fabricOptions = CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
+        
+        // Clear existing options except the placeholder
+        fabricSelect.innerHTML = '<option value="">Select fabric type...</option>';
+        
+        // Add new options
+        fabricOptions.forEach(fabric => {
+          const option = document.createElement('option');
+          option.value = fabric;
+          option.textContent = fabric;
+          fabricSelect.appendChild(option);
         });
+        
+        // Restore fabric selection if it's still valid
+        if (currentSelection && fabricOptions.includes(currentSelection)) {
+          fabricSelect.value = currentSelection;
+        }
       }
 
       // Trigger change event to update validations and summaries
@@ -8478,6 +8505,9 @@
       // Setup client verification modal
       this.setupClientModal();
       
+      // Setup lab dip information modal
+      this.setupLabDipInfoModal();
+      
       // EXISTING: Keep all your existing setup methods
       this.setupPhoneFormatting();
       this.setupProductionTypeListener();
@@ -8928,6 +8958,42 @@
           this.clearDeliveryFields();
         }
       }
+    }
+
+    // Setup Lab Dip Information Modal
+    setupLabDipInfoModal() {
+      const infoBtn = document.getElementById('lab-dip-info-btn');
+      const modal = document.getElementById('lab-dip-info-modal');
+      const modalBackdrop = document.getElementById('lab-dip-info-modal-backdrop');
+      const closeBtn = document.getElementById('lab-dip-info-modal-close');
+
+      if (!infoBtn || !modal || !modalBackdrop) {
+        debugSystem.log('Lab dip info modal elements not found, skipping setup');
+        return;
+      }
+
+      // Show modal when info button is clicked
+      infoBtn.addEventListener('click', () => {
+        modalBackdrop.style.display = 'flex';
+        setTimeout(() => modalBackdrop.classList.add('active'), 10);
+        debugSystem.log('Lab dip info modal opened');
+      });
+
+      // Hide modal when close button is clicked
+      closeBtn.addEventListener('click', () => {
+        modalBackdrop.classList.remove('active');
+        setTimeout(() => modalBackdrop.style.display = 'none', 300);
+        debugSystem.log('Lab dip info modal closed');
+      });
+
+      // Hide modal when backdrop is clicked
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) {
+          modalBackdrop.classList.remove('active');
+          setTimeout(() => modalBackdrop.style.display = 'none', 300);
+          debugSystem.log('Lab dip info modal closed via backdrop');
+        }
+      });
     }
 
     // Set delivery fields as required or optional
