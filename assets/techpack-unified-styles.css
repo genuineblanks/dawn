@@ -7259,8 +7259,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #6d28d9;
+  background: #fafafa;
+  border: 1px solid #d1d5db;
   border-radius: 12px;
   margin-bottom: 2rem;
 }
@@ -7274,14 +7274,14 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-alert-content h4 {
   margin: 0 0 0.5rem 0;
-  color: #1e293b;
+  color: #111827;
   font-weight: 700;
   font-size: 1rem;
 }
 
 .techpack-alert-content p {
   margin: 0;
-  color: #475569;
+  color: #374151;
   font-weight: 500;
 }
 
@@ -7322,9 +7322,10 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-workflow-step {
   padding: 0.75rem 1rem;
-  background: #f1f5f9;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
   border-radius: 6px;
-  color: #334155;
+  color: #374151;
   font-weight: 500;
 }
 
@@ -7348,8 +7349,8 @@ UNIFIED COLOR PICKER STYLING
 }
 
 .techpack-help-warning {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #6d28d9;
+  background: #fafafa;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1.5rem;
@@ -7357,13 +7358,13 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-help-warning h4 {
   margin: 0 0 0.5rem 0;
-  color: #1e293b;
+  color: #111827;
   font-weight: 600;
 }
 
 .techpack-help-tips {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #cbd5e1;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
@@ -7371,17 +7372,17 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-help-tips h4 {
   margin: 0 0 0.5rem 0;
-  color: #1e293b;
+  color: #111827;
   font-weight: 600;
 }
 
 .techpack-help-tip {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #cbd5e1;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
-  color: #475569;
+  color: #374151;
   font-weight: 500;
 }
 
@@ -7395,8 +7396,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
   border-radius: 12px;
   margin-bottom: 1.5rem;
 }
@@ -7408,10 +7409,10 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  background: #6d28d9;
   border-radius: 12px;
   color: white;
-  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .techpack-lab-dip-intro-content {
@@ -7435,8 +7436,8 @@ UNIFIED COLOR PICKER STYLING
 .techpack-lab-dip-section {
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
 }
 
@@ -7483,7 +7484,7 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  background: #6d28d9;
   color: white;
   border-radius: 50%;
   font-weight: 600;
@@ -7514,8 +7515,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #6d28d9;
+  background: #fafafa;
+  border: 1px solid #d1d5db;
   border-radius: 10px;
   margin-bottom: 1.5rem;
 }
@@ -7527,10 +7528,10 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  background: #6d28d9;
   border-radius: 10px;
   color: white;
-  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .techpack-tip-content {
@@ -7554,8 +7555,8 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-lab-dip-visual {
   padding: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid #cbd5e1;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
 }
 
@@ -7623,10 +7624,42 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  background: #6d28d9;
   border-radius: 8px;
   color: white;
-  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-quick-reference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.techpack-reference-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+}
+
+.techpack-reference-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.techpack-reference-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+  line-height: 1.4;
 }
 
 /* Responsive Design */
