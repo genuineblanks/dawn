@@ -217,9 +217,9 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         </div>
 
         <!-- Row 2.5: Delivery Information (Sample & Bulk only) - JavaScript controlled via #delivery-row -->
-        <div id="delivery-row">
+        <div id="delivery-row" style="display: none;">
           <!-- For Sample Request: Delivery Address | Production Type -->
-          <div class="techpack-form__row techpack-form__row--delivery-sample" id="delivery-row-sample">
+          <div class="techpack-form__row techpack-form__row--delivery-sample" id="delivery-row-sample" style="display: none;">
             <!-- Delivery Address (first column) -->
             <div class="techpack-form__group techpack-form__group--required">
               <label class="techpack-form__label">Delivery Address</label>
@@ -261,7 +261,7 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           </div>
 
           <!-- For Bulk Request: Delivery Address (full width with side-by-side options) -->
-          <div class="techpack-form__row" id="delivery-row-bulk">
+          <div class="techpack-form__row" id="delivery-row-bulk" style="display: none;">
             <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
               <label class="techpack-form__label">Delivery Address</label>
               <div class="techpack-delivery-options techpack-delivery-options--horizontal">
@@ -449,7 +449,7 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         </div>
 
         <!-- Row 2.7: Shipping Options (Bulk only) - JavaScript controlled via #shipping-section -->
-        <div class="techpack-shipping-section" id="shipping-section">
+        <div class="techpack-shipping-section" id="shipping-section" style="display: none;">
           <!-- Shipping Method and Insurance Row (2-column layout) -->
           <div class="techpack-form__row techpack-form__row--shipping-insurance">
             <!-- Shipping Method -->
@@ -523,7 +523,7 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         </div>
 
         <!-- Row 2.8: Production Type (Bulk only - above Project Details) -->
-        <div class="techpack-form__row" id="production-type-bulk-row">
+        <div class="techpack-form__row" id="production-type-bulk-row" style="display: none;">
           <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
             <label for="production-type-bulk" class="techpack-form__label">Production Type</label>
             <select
