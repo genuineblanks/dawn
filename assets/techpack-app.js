@@ -8767,25 +8767,25 @@
 
     // Toggle delivery sections based on submission type
     toggleDeliverySections(type) {
-      const deliverySection = document.getElementById('delivery-section');
+      const deliveryRow = document.getElementById('delivery-row');
       const shippingSection = document.getElementById('shipping-section');
       
-      if (!deliverySection || !shippingSection) {
+      if (!deliveryRow || !shippingSection) {
         debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
         return;
       }
       
       switch(type) {
         case 'quotation':
-          deliverySection.style.display = 'none';
+          deliveryRow.style.display = 'none';
           shippingSection.style.display = 'none';
           break;
         case 'sample-request':
-          deliverySection.style.display = 'block';
+          deliveryRow.style.display = 'grid';
           shippingSection.style.display = 'none';
           break;
         case 'bulk-order-request':
-          deliverySection.style.display = 'block';
+          deliveryRow.style.display = 'grid';
           shippingSection.style.display = 'block';
           break;
       }
