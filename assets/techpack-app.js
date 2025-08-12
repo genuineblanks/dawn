@@ -1863,12 +1863,17 @@
       
       this.refreshStep3Interface();
       
+      // IMMEDIATE: Calculate progress right away to show correct minimum
+      if (window.quantityCalculator) {
+        quantityCalculator.calculateAndUpdateProgress();
+      }
+      
       // CRITICAL: Sync existing garment data with DOM after interface refresh
       setTimeout(() => {
         this.syncStep3GarmentData();
         this.validateStep3();
         
-        // Initialize progress bar calculation
+        // Re-calculate progress bar after DOM sync for accuracy
         if (window.quantityCalculator) {
           quantityCalculator.calculateAndUpdateProgress();
         }
