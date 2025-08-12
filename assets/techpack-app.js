@@ -8510,11 +8510,18 @@
         // Check if client is new (not registered)
         const isNewClient = !state.formData.isRegisteredClient;
         
-        // Show/hide registration notice based on client type
+        // Show appropriate notice based on client type
         const registrationNotice = document.getElementById('registration-notice');
+        const newClientNotice = document.getElementById('new-client-notice');
+        
         if (registrationNotice) {
-          // Show notice for NEW clients, not registered ones
-          registrationNotice.style.display = isNewClient ? 'flex' : 'none';
+          // Show registration verification warning for REGISTERED clients
+          registrationNotice.style.display = state.formData.isRegisteredClient ? 'flex' : 'none';
+        }
+        
+        if (newClientNotice) {
+          // Show new client info notice for NEW clients
+          newClientNotice.style.display = isNewClient ? 'flex' : 'none';
         }
         
         // Handle submission options based on client type

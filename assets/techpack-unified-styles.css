@@ -601,21 +601,21 @@ SUBMISSION TYPE MODAL
 ===========================================
 */
 
-/* Registration Notice Banner - Updated for New Clients */
+/* Registration Verification Notice Banner - For REGISTERED Clients (Yellow Warning) */
 .techpack-registration-notice {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  border: 1px solid #3b82f6;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
   border-radius: 12px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
 }
 
 .techpack-registration-notice__icon {
-  color: #2563eb;
+  color: #d97706;
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
@@ -627,18 +627,55 @@ SUBMISSION TYPE MODAL
 .techpack-registration-notice__title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1e40af;
+  color: #92400e;
   margin: 0 0 0.5rem 0;
 }
 
 .techpack-registration-notice__message {
+  font-size: 0.8125rem;
+  color: #a16207;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* New Client Notice Banner - For NEW Clients (Blue Info) */
+.techpack-new-client-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 1px solid #3b82f6;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.techpack-new-client-notice__icon {
+  color: #2563eb;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.techpack-new-client-notice__content {
+  flex: 1;
+}
+
+.techpack-new-client-notice__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e40af;
+  margin: 0 0 0.5rem 0;
+}
+
+.techpack-new-client-notice__message {
   font-size: 0.8125rem;
   color: #1e3a8a;
   line-height: 1.5;
   margin: 0;
 }
 
-.techpack-registration-notice__message strong {
+.techpack-new-client-notice__message strong {
   color: #2563eb;
   font-weight: 600;
 }
