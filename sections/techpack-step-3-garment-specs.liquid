@@ -2,7 +2,7 @@
 Tech-Pack Step 3: Garment Specifications Section
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v=1.8.52" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v=1.8.53" media="print" onload="this.media='all'">
 <noscript>{{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}</noscript>
 
 <section id="techpack-step-3" class="techpack-step" data-step="3" style="display: none;">
@@ -47,35 +47,42 @@ Tech-Pack Step 3: Garment Specifications Section
         </button>
       </div>
 
-      <div class="techpack-quantity-tracker">
-        <div class="techpack-quantity-tracker__content">
-          <span class="techpack-quantity-tracker__label">Total Quantity:</span>
-          <span class="techpack-quantity-tracker__value" id="total-quantity">0</span>
-          <span class="techpack-quantity-tracker__minimum">
-            / <span id="min-text">75 minimum</span>
-          </span>
+      <!-- Garment Specifications Section -->
+      <div class="techpack-unified-section">
+        <div class="techpack-unified-header">
+          <h3 class="techpack-unified-title">Garment Specifications</h3>
         </div>
-        <div class="techpack-quantity-tracker__bar">
-          <div class="techpack-quantity-tracker__fill" id="quantity-progress" style="width: 0%"></div>
+
+        <div class="techpack-quantity-tracker">
+          <div class="techpack-quantity-tracker__content">
+            <span class="techpack-quantity-tracker__label">Total Quantity:</span>
+            <span class="techpack-quantity-tracker__value" id="total-quantity">0</span>
+            <span class="techpack-quantity-tracker__minimum">
+              / <span id="min-text">75 minimum</span>
+            </span>
+          </div>
+          <div class="techpack-quantity-tracker__bar">
+            <div class="techpack-quantity-tracker__fill" id="quantity-progress" style="width: 0%"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="techpack-garments" id="garments-container">
-        <!-- Garments will be dynamically added here -->
-      </div>
+        <div class="techpack-garments" id="garments-container">
+          <!-- Garments will be dynamically added here -->
+        </div>
 
-      <button type="button" class="techpack-btn techpack-btn--secondary techpack-btn--add-garment" id="add-garment">
+        <button type="button" class="techpack-btn techpack-btn--secondary techpack-btn--add-garment" id="add-garment">
         <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
           <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
         </svg>
         Add Garment
-      </button>
+        </button>
+      </div>
 
       <!-- Global Lab Dip Management Section -->
-      <div class="techpack-global-lab-dips">
-        <div class="techpack-section-header">
-          <h3 class="techpack-section-title">Lab Dip Swatches</h3>
-          <span class="techpack-section-badge">€25 each · Optional</span>
+      <div class="techpack-global-lab-dips techpack-unified-section">
+        <div class="techpack-section-header techpack-unified-header">
+          <h3 class="techpack-section-title techpack-unified-title">Lab Dip Swatches</h3>
+          <span class="techpack-section-badge techpack-unified-badge">€25 each · Optional</span>
         </div>
         <p class="techpack-section-description">Create color swatches that can be assigned to any garment or received as separate fabric samples for accuracy confirmation.</p>
         
