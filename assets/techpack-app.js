@@ -8513,6 +8513,8 @@
         // Show appropriate notice based on client type
         const registrationNotice = document.getElementById('registration-notice');
         const newClientNotice = document.getElementById('new-client-notice');
+        const submissionDescription = document.getElementById('submission-description');
+        const submissionNote = document.getElementById('submission-note');
         
         if (registrationNotice) {
           // Show registration verification warning for REGISTERED clients
@@ -8522,6 +8524,15 @@
         if (newClientNotice) {
           // Show new client info notice for NEW clients
           newClientNotice.style.display = isNewClient ? 'flex' : 'none';
+        }
+        
+        // Hide description and note for new clients
+        if (submissionDescription) {
+          submissionDescription.style.display = isNewClient ? 'none' : 'block';
+        }
+        
+        if (submissionNote) {
+          submissionNote.style.display = isNewClient ? 'none' : 'flex';
         }
         
         // Handle submission options based on client type
