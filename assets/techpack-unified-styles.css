@@ -7892,17 +7892,17 @@ UNIFIED COLOR PICKER STYLING
   }
 }
 
-/* Bulk Order - Production Type and Insurance (2-column layout) */
-.techpack-form__row--bulk-production-insurance {
+/* Bulk Order - Horizontal shipping options (3-column layout) */
+.techpack-form__row--shipping-horizontal {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 
-/* Responsive adjustments for bulk production insurance layout */
+/* Responsive adjustments for shipping horizontal layout */
 @media (max-width: 1024px) {
-  .techpack-form__row--bulk-production-insurance {
+  .techpack-form__row--shipping-horizontal {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -7913,7 +7913,7 @@ UNIFIED COLOR PICKER STYLING
     grid-template-columns: 1fr;
   }
   
-  .techpack-form__row--bulk-production-insurance {
+  .techpack-form__row--shipping-horizontal {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -8033,23 +8033,4 @@ UNIFIED COLOR PICKER STYLING
   color: var(--techpack-text-muted);
   margin-top: 0.25rem;
   font-style: italic;
-}
-
-/* Conditional visibility classes for form types */
-.techpack-sample-only {
-  display: none;
-}
-
-.techpack-bulk-only {
-  display: none;
-}
-
-/* Show sample elements when sample form is active */
-.form-type-sample .techpack-sample-only {
-  display: block;
-}
-
-/* Show bulk elements when bulk form is active */
-.form-type-bulk .techpack-bulk-only {
-  display: block;
 }
