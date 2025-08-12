@@ -1,0 +1,411 @@
+{% comment %}
+TechPack v2 Step 2: Visual Drag-Drop File Upload with Thumbnails
+Enhanced with image previews, visual categorization, and premium UI
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-v2-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}" media="print" onload="this.media='all'">
+<noscript>{{ 'techpack-v2-styles.css' | asset_url | stylesheet_tag }}</noscript>
+
+<section id="techpack-v2-step-2" class="techpack-v2-step" data-step="2" style="display: none;">
+  <div class="techpack-v2-container">
+    <!-- Enhanced Progress Bar -->
+    <div class="techpack-v2-progress">
+      <div class="techpack-v2-progress-track">
+        <div class="techpack-v2-progress-fill" style="width: 50%"></div>
+      </div>
+      <div class="techpack-v2-progress-steps">
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--completed">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--completed">✓</div>
+          <div class="techpack-v2-progress-step-label">Client Info</div>
+        </div>
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--active">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--active">2</div>
+          <div class="techpack-v2-progress-step-label">File Upload</div>
+        </div>
+        <div class="techpack-v2-progress-step">
+          <div class="techpack-v2-progress-step-circle">3</div>
+          <div class="techpack-v2-progress-step-label">Garment Builder</div>
+        </div>
+        <div class="techpack-v2-progress-step">
+          <div class="techpack-v2-progress-step-circle">4</div>
+          <div class="techpack-v2-progress-step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-v2-content">
+      <div class="techpack-v2-step-header">
+        <h2 class="techpack-v2-step-title">File Upload</h2>
+        <p class="techpack-v2-step-subtitle">Visual drag-drop interface with instant file previews and categorization</p>
+      </div>
+
+      <!-- Visual File Upload Section -->
+      <div class="techpack-v2-upload-section">
+        <!-- Enhanced Drop Zone -->
+        <div class="techpack-v2-upload-zone" id="upload-zone-v2">
+          <div class="techpack-v2-upload-zone-content" id="upload-zone-content-v2">
+            <div class="techpack-v2-upload-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <rect x="15" y="25" width="50" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M25 35l15 10 15-10" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M40 45V20" stroke="currentColor" stroke-width="2"/>
+                <circle cx="40" cy="20" r="3" fill="currentColor"/>
+                <path d="M30 15h20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="techpack-v2-upload-text">
+              <h3 class="techpack-v2-upload-title">Drop files here or click to browse</h3>
+              <p class="techpack-v2-upload-subtitle">Support for PDF, AI, PNG, JPG, ZIP files up to 10MB each</p>
+            </div>
+            <button type="button" class="techpack-v2-btn techpack-v2-btn--primary techpack-v2-upload-btn" id="browse-files-v2">
+              <svg class="techpack-v2-btn-icon" width="20" height="20" viewBox="0 0 20 20">
+                <path d="M10 3v14m-7-7h14" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Browse Files
+            </button>
+          </div>
+          
+          <!-- Upload Progress Overlay -->
+          <div class="techpack-v2-upload-progress" id="upload-progress-v2" style="display: none;">
+            <div class="techpack-v2-progress-circle">
+              <svg width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="25" stroke="currentColor" stroke-width="3" fill="none" opacity="0.2"/>
+                <circle cx="30" cy="30" r="25" stroke="currentColor" stroke-width="3" fill="none" 
+                        stroke-dasharray="157" stroke-dashoffset="157" class="techpack-v2-progress-circle-bar" id="progress-circle-v2"/>
+              </svg>
+              <div class="techpack-v2-progress-text" id="progress-text-v2">0%</div>
+            </div>
+            <p class="techpack-v2-upload-status" id="upload-status-v2">Uploading files...</p>
+          </div>
+        </div>
+
+        <!-- File Input -->
+        <input 
+          type="file" 
+          id="file-input-v2" 
+          class="techpack-v2-file-input" 
+          multiple 
+          accept=".pdf,.ai,.png,.jpg,.jpeg,.zip"
+          style="display: none;"
+        >
+
+        <!-- File Upload Stats -->
+        <div class="techpack-v2-upload-stats" id="upload-stats-v2">
+          <div class="techpack-v2-stat">
+            <div class="techpack-v2-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm12 2v2H4V6h12zM4 14v-2h12v2H4z"/>
+              </svg>
+            </div>
+            <span class="techpack-v2-stat-value" id="file-count-v2">0</span>
+            <span class="techpack-v2-stat-label">Files</span>
+          </div>
+          <div class="techpack-v2-stat">
+            <div class="techpack-v2-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+              </svg>
+            </div>
+            <span class="techpack-v2-stat-value" id="file-size-v2">0 MB</span>
+            <span class="techpack-v2-stat-label">Total Size</span>
+          </div>
+          <div class="techpack-v2-stat">
+            <div class="techpack-v2-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <span class="techpack-v2-stat-value" id="file-limit-v2">{{ section.settings.max_files | default: 10 }}</span>
+            <span class="techpack-v2-stat-label">Max Files</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual File Management -->
+      <div class="techpack-v2-files-section" id="files-section-v2" style="display: none;">
+        <div class="techpack-v2-files-header">
+          <h3 class="techpack-v2-files-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/>
+              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Uploaded Files
+          </h3>
+          <div class="techpack-v2-files-actions">
+            <button type="button" class="techpack-v2-btn techpack-v2-btn--small techpack-v2-btn--ghost" id="clear-all-files-v2">
+              <svg class="techpack-v2-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M6 2L4 4H1v2h14V4h-3L10 2H6zM3 8v6a2 2 0 002 2h6a2 2 0 002-2V8H3z" fill="currentColor"/>
+              </svg>
+              Clear All
+            </button>
+            <button type="button" class="techpack-v2-btn techpack-v2-btn--small techpack-v2-btn--secondary" id="add-more-files-v2">
+              <svg class="techpack-v2-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M8 3v10m-5-5h10" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Add More
+            </button>
+          </div>
+        </div>
+
+        <!-- Files Grid -->
+        <div class="techpack-v2-files-grid" id="files-grid-v2">
+          <!-- File cards will be inserted here dynamically -->
+        </div>
+      </div>
+
+      <!-- Visual File Categorization -->
+      <div class="techpack-v2-categorization-section" id="categorization-section-v2" style="display: none;">
+        <div class="techpack-v2-categorization-header">
+          <h3 class="techpack-v2-categorization-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            File Categorization
+          </h3>
+          <p class="techpack-v2-categorization-subtitle">Categorize your files to help us process your submission efficiently</p>
+        </div>
+
+        <!-- Category Cards -->
+        <div class="techpack-v2-category-grid">
+          <div class="techpack-v2-category-card" data-category="collection-techpack">
+            <div class="techpack-v2-category-visual">
+              <div class="techpack-v2-category-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <rect x="6" y="4" width="20" height="24" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M10 8h8M10 12h6M10 16h10M10 20h4" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="24" cy="8" r="4" fill="currentColor" opacity="0.2"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-category-badge" id="badge-collection-techpack">0</div>
+            </div>
+            <div class="techpack-v2-category-content">
+              <h4 class="techpack-v2-category-name">Collection Tech-Pack</h4>
+              <p class="techpack-v2-category-description">Complete technical specification documents for entire collections</p>
+            </div>
+          </div>
+
+          <div class="techpack-v2-category-card" data-category="single-garment-techpack">
+            <div class="techpack-v2-category-visual">
+              <div class="techpack-v2-category-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M16 4L8 8v16a2 2 0 002 2h12a2 2 0 002-2V8l-8-4z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 14h8M12 18h6" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="24" cy="10" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-category-badge" id="badge-single-garment-techpack">0</div>
+            </div>
+            <div class="techpack-v2-category-content">
+              <h4 class="techpack-v2-category-name">Single Garment Tech-Pack</h4>
+              <p class="techpack-v2-category-description">Individual garment specifications and technical drawings</p>
+            </div>
+          </div>
+
+          <div class="techpack-v2-category-card" data-category="design-reference">
+            <div class="techpack-v2-category-visual">
+              <div class="techpack-v2-category-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <rect x="6" y="6" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M26 18l-5-5-8 8" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="22" cy="10" r="3" fill="currentColor" opacity="0.3"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-category-badge" id="badge-design-reference">0</div>
+            </div>
+            <div class="techpack-v2-category-content">
+              <h4 class="techpack-v2-category-name">Design Reference Files</h4>
+              <p class="techpack-v2-category-description">Inspiration images, mood boards, and design references</p>
+            </div>
+          </div>
+
+          <div class="techpack-v2-category-card" data-category="accessories-reference">
+            <div class="techpack-v2-category-visual">
+              <div class="techpack-v2-category-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="2"/>
+                  <path d="M16 4v4M28 16h-4M16 28v-4M4 16h4" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                  <circle cx="24" cy="8" r="2" fill="currentColor" opacity="0.4"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-category-badge" id="badge-accessories-reference">0</div>
+            </div>
+            <div class="techpack-v2-category-content">
+              <h4 class="techpack-v2-category-name">Accessories Reference</h4>
+              <p class="techpack-v2-category-description">Hardware, trims, labels, and accessory specifications</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categorization Progress -->
+        <div class="techpack-v2-categorization-progress" id="categorization-progress-v2">
+          <div class="techpack-v2-progress-info">
+            <span class="techpack-v2-progress-label">Categorization Progress</span>
+            <span class="techpack-v2-progress-count" id="categorized-count-v2">0 of 0 files categorized</span>
+          </div>
+          <div class="techpack-v2-progress-bar">
+            <div class="techpack-v2-progress-bar-fill" id="categorization-progress-bar-v2" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="techpack-v2-form-actions">
+        <button type="button" class="techpack-v2-btn techpack-v2-btn--secondary" id="step-2-back-v2">
+          <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+            <path d="M12 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          Previous
+        </button>
+        <div class="techpack-v2-form-actions-info" id="form-actions-info-v2">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" opacity="0.5">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5v3" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="8" cy="11" r="1" fill="currentColor"/>
+          </svg>
+          Upload and categorize files to continue
+        </div>
+        <button type="button" class="techpack-v2-btn techpack-v2-btn--primary" id="step-2-next-v2" disabled>
+          Continue to Garment Builder
+          <svg class="techpack-v2-btn-icon" width="20" height="20" viewBox="0 0 20 20">
+            <path d="M8 6l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- File Card Template -->
+<template id="file-card-template-v2">
+  <div class="techpack-v2-file-card" data-file-id="">
+    <div class="techpack-v2-file-preview">
+      <div class="techpack-v2-file-thumbnail" id="file-thumbnail">
+        <!-- Thumbnail or file type icon will be inserted here -->
+      </div>
+      <div class="techpack-v2-file-overlay">
+        <button type="button" class="techpack-v2-file-remove" aria-label="Remove file" title="Remove file">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="techpack-v2-file-info">
+      <div class="techpack-v2-file-name" title=""></div>
+      <div class="techpack-v2-file-details">
+        <span class="techpack-v2-file-size"></span>
+        <span class="techpack-v2-file-type"></span>
+      </div>
+    </div>
+    <div class="techpack-v2-file-category">
+      <select class="techpack-v2-category-select" data-category-select>
+        <option value="">Select category...</option>
+        <option value="collection-techpack">Collection Tech-Pack</option>
+        <option value="single-garment-techpack">Single Garment Tech-Pack</option>
+        <option value="design-reference">Design Reference Files</option>
+        <option value="accessories-reference">Accessories Reference</option>
+      </select>
+    </div>
+    <div class="techpack-v2-file-status">
+      <div class="techpack-v2-status-indicator techpack-v2-status-indicator--pending" title="Awaiting categorization">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- File Type Icon Templates -->
+<template id="file-icon-pdf-v2">
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect x="8" y="4" width="24" height="32" rx="2" fill="#DC2626" opacity="0.1"/>
+    <rect x="8" y="4" width="24" height="32" rx="2" stroke="#DC2626" stroke-width="2"/>
+    <path d="M22 4v8h10" stroke="#DC2626" stroke-width="2"/>
+    <text x="20" y="26" text-anchor="middle" fill="#DC2626" font-size="8" font-weight="bold">PDF</text>
+  </svg>
+</template>
+
+<template id="file-icon-ai-v2">
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect x="8" y="4" width="24" height="32" rx="2" fill="#F59E0B" opacity="0.1"/>
+    <rect x="8" y="4" width="24" height="32" rx="2" stroke="#F59E0B" stroke-width="2"/>
+    <path d="M22 4v8h10" stroke="#F59E0B" stroke-width="2"/>
+    <text x="20" y="26" text-anchor="middle" fill="#F59E0B" font-size="8" font-weight="bold">AI</text>
+  </svg>
+</template>
+
+<template id="file-icon-image-v2">
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect x="8" y="6" width="24" height="28" rx="2" fill="#10B981" opacity="0.1"/>
+    <rect x="8" y="6" width="24" height="28" rx="2" stroke="#10B981" stroke-width="2"/>
+    <circle cx="14" cy="14" r="2" fill="#10B981"/>
+    <path d="M32 24l-6-6-8 8-4-4-6 6" stroke="#10B981" stroke-width="2"/>
+  </svg>
+</template>
+
+<template id="file-icon-zip-v2">
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <rect x="8" y="4" width="24" height="32" rx="2" fill="#8B5CF6" opacity="0.1"/>
+    <rect x="8" y="4" width="24" height="32" rx="2" stroke="#8B5CF6" stroke-width="2"/>
+    <path d="M22 4v8h10" stroke="#8B5CF6" stroke-width="2"/>
+    <rect x="16" y="18" width="8" height="6" rx="1" stroke="#8B5CF6" stroke-width="1.5"/>
+    <text x="20" y="30" text-anchor="middle" fill="#8B5CF6" font-size="8" font-weight="bold">ZIP</text>
+  </svg>
+</template>
+
+{% schema %}
+{
+  "name": "TechPack v2 Step 2",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Visual File Upload Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "File Upload"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Visual drag-drop interface with instant file previews and categorization"
+    },
+    {
+      "type": "number",
+      "id": "max_file_size",
+      "label": "Max File Size (MB)",
+      "default": 10
+    },
+    {
+      "type": "number",
+      "id": "max_files",
+      "label": "Max Number of Files",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_file_thumbnails",
+      "label": "Show File Thumbnails",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_file_categorization",
+      "label": "Enable File Categorization",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack v2 Step 2"
+    }
+  ]
+}
+{% endschema %}

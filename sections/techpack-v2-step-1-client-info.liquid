@@ -1,0 +1,757 @@
+{% comment %}
+TechPack v2 Step 1: Image-Based Client Information & Visual Verification
+Enhanced with visual cards, image-based selections, and premium UI
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-v2-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+
+<section id="techpack-v2-step-0" class="techpack-v2-step" data-step="0" style="display: block;">
+  <div class="techpack-v2-entrance-container">
+    <!-- Enhanced Hero Section -->
+    <div class="techpack-v2-entrance-hero">
+      <div class="techpack-v2-hero-visual">
+        <div class="techpack-v2-hero-icon">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <rect x="10" y="15" width="60" height="50" rx="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M10 25h60M25 15v10M40 15v10M55 15v10" stroke="currentColor" stroke-width="2"/>
+            <circle cx="20" cy="35" r="3" fill="currentColor"/>
+            <circle cx="35" cy="35" r="3" fill="currentColor"/>
+            <circle cx="50" cy="35" r="3" fill="currentColor"/>
+            <circle cx="65" cy="35" r="3" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <div class="techpack-v2-hero-content">
+        <h1 class="techpack-v2-hero-title">
+          TechPack v2 Professional Submission
+        </h1>
+        <p class="techpack-v2-hero-subtitle">
+          Visual garment specification system with live preview and real-time pricing
+        </p>
+      </div>
+    </div>
+
+    <!-- Visual Requirements Section -->
+    <div class="techpack-v2-requirements">
+      <h2 class="techpack-v2-section-title">What You Need to Get Started</h2>
+      <p class="techpack-v2-section-subtitle">Ensure you have these essentials for a smooth visual submission process</p>
+      
+      <div class="techpack-v2-requirements-grid">
+        <div class="techpack-v2-requirement-card">
+          <div class="techpack-v2-requirement-visual">
+            <div class="techpack-v2-requirement-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M6 4h16l4 4v20a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/>
+                <path d="M22 4v6h6" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 16h12M10 20h8" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="techpack-v2-requirement-badge techpack-v2-badge--required">Required</div>
+          </div>
+          <div class="techpack-v2-requirement-content">
+            <h3 class="techpack-v2-requirement-title">TechPack / Design Files</h3>
+            <p class="techpack-v2-requirement-description">Upload your design specifications, technical drawings, or concept sketches for visual review</p>
+            <div class="techpack-v2-requirement-formats">
+              <span class="techpack-v2-format-tag">PDF</span>
+              <span class="techpack-v2-format-tag">AI</span>
+              <span class="techpack-v2-format-tag">PNG</span>
+              <span class="techpack-v2-format-tag">JPG</span>
+              <span class="techpack-v2-format-tag">ZIP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="techpack-v2-requirement-card">
+          <div class="techpack-v2-requirement-visual">
+            <div class="techpack-v2-requirement-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M8 6h12l4 4v14a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 6v4h4" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="14" r="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 20h8" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="techpack-v2-requirement-badge techpack-v2-badge--optional">Optional</div>
+          </div>
+          <div class="techpack-v2-requirement-content">
+            <h3 class="techpack-v2-requirement-title">Fitting Measurements</h3>
+            <p class="techpack-v2-requirement-description">Provide body measurements or select from our visual sizing patterns</p>
+            <div class="techpack-v2-requirement-formats">
+              <span class="techpack-v2-format-tag">Size Chart</span>
+              <span class="techpack-v2-format-tag">Custom Measurements</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="techpack-v2-requirement-card">
+          <div class="techpack-v2-requirement-visual">
+            <div class="techpack-v2-requirement-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect x="6" y="8" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 12h8M10 16h6M10 20h10" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="22" cy="12" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="techpack-v2-requirement-badge techpack-v2-badge--assisted">Expert Help</div>
+          </div>
+          <div class="techpack-v2-requirement-content">
+            <h3 class="techpack-v2-requirement-title">Visual Specifications</h3>
+            <p class="techpack-v2-requirement-description">Garment dimensions and specs (our experts provide visual assistance)</p>
+            <div class="techpack-v2-requirement-formats">
+              <span class="techpack-v2-format-tag">Spec Sheet</span>
+              <span class="techpack-v2-format-tag">Visual Guide</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="techpack-v2-requirement-card">
+          <div class="techpack-v2-requirement-visual">
+            <div class="techpack-v2-requirement-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+                <circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="2"/>
+                <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                <path d="M16 4v4M28 16h-4M16 28v-4M4 16h4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="techpack-v2-requirement-badge techpack-v2-badge--optional">Optional</div>
+          </div>
+          <div class="techpack-v2-requirement-content">
+            <h3 class="techpack-v2-requirement-title">Color & Material Preferences</h3>
+            <p class="techpack-v2-requirement-description">Fabric swatches, color codes, and visual material references</p>
+            <div class="techpack-v2-requirement-formats">
+              <span class="techpack-v2-format-tag">Fabric Swatches</span>
+              <span class="techpack-v2-format-tag">Pantone Codes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual CTA Section -->
+    <div class="techpack-v2-entrance-cta">
+      <div class="techpack-v2-cta-content">
+        <h2 class="techpack-v2-cta-title">Ready to Start Your Visual TechPack?</h2>
+        
+        <button type="button" class="techpack-v2-btn-hero" id="open-client-modal-v2">
+          <div class="techpack-v2-btn-hero-content">
+            <div class="techpack-v2-btn-hero-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <span class="techpack-v2-btn-hero-text">Begin Visual TechPack Submission</span>
+          </div>
+          <div class="techpack-v2-btn-hero-shimmer"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="techpack-v2-step-1" class="techpack-v2-step" data-step="1" style="display: none;">
+  <div class="techpack-v2-container">
+    <!-- Enhanced Progress Bar -->
+    <div class="techpack-v2-progress">
+      <div class="techpack-v2-progress-track">
+        <div class="techpack-v2-progress-fill" style="width: 25%"></div>
+      </div>
+      <div class="techpack-v2-progress-steps">
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--active">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--active">1</div>
+          <div class="techpack-v2-progress-step-label">Client Info</div>
+        </div>
+        <div class="techpack-v2-progress-step">
+          <div class="techpack-v2-progress-step-circle">2</div>
+          <div class="techpack-v2-progress-step-label">File Upload</div>
+        </div>
+        <div class="techpack-v2-progress-step">
+          <div class="techpack-v2-progress-step-circle">3</div>
+          <div class="techpack-v2-progress-step-label">Garment Builder</div>
+        </div>
+        <div class="techpack-v2-progress-step">
+          <div class="techpack-v2-progress-step-circle">4</div>
+          <div class="techpack-v2-progress-step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-v2-content">
+      <div class="techpack-v2-step-header">
+        <h2 class="techpack-v2-step-title">Client Information</h2>
+        <p class="techpack-v2-step-subtitle" id="client-info-subtitle-v2">Provide your business details with our visual interface</p>
+      </div>
+
+      <form class="techpack-v2-form" autocomplete="off" novalidate>
+        <!-- Visual Form Layout -->
+        <div class="techpack-v2-form-section">
+          <div class="techpack-v2-form-grid">
+            <!-- Contact Information -->
+            <div class="techpack-v2-form-card">
+              <div class="techpack-v2-form-card-header">
+                <div class="techpack-v2-form-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="techpack-v2-form-card-title">Contact Information</h3>
+              </div>
+              <div class="techpack-v2-form-card-content">
+                <div class="techpack-v2-form-row">
+                  <div class="techpack-v2-form-group techpack-v2-form-group--required">
+                    <label for="client-name-v2" class="techpack-v2-form-label">Contact Name</label>
+                    <input
+                      type="text"
+                      id="client-name-v2"
+                      name="clientName"
+                      class="techpack-v2-form-input"
+                      required
+                      data-validate="required"
+                      placeholder="Full name of primary contact"
+                    >
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                  </div>
+                  <div class="techpack-v2-form-group techpack-v2-form-group--required">
+                    <label for="company-name-v2" class="techpack-v2-form-label">Business/Brand Name</label>
+                    <input
+                      type="text"
+                      id="company-name-v2"
+                      name="companyName"
+                      class="techpack-v2-form-input"
+                      required
+                      data-validate="required"
+                      placeholder="Registered business or brand name"
+                    >
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                  </div>
+                </div>
+                <div class="techpack-v2-form-row">
+                  <div class="techpack-v2-form-group techpack-v2-form-group--required">
+                    <label for="email-v2" class="techpack-v2-form-label">Business Email Address</label>
+                    <input
+                      type="email"
+                      id="email-v2"
+                      name="email"
+                      class="techpack-v2-form-input"
+                      required
+                      data-validate="email"
+                      placeholder="contact@company.com"
+                    >
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                  </div>
+                  <div class="techpack-v2-form-group">
+                    <label for="phone-v2" class="techpack-v2-form-label">
+                      Business Phone <span class="techpack-v2-form-optional">(optional)</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone-v2"
+                      name="phone"
+                      class="techpack-v2-form-input"
+                      placeholder="+1 234 567 8901"
+                      maxlength="20"
+                      data-validate="phone"
+                    >
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Location with Visual Country Selector -->
+            <div class="techpack-v2-form-card">
+              <div class="techpack-v2-form-card-header">
+                <div class="techpack-v2-form-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M2 12h20" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="techpack-v2-form-card-title">Business Location</h3>
+              </div>
+              <div class="techpack-v2-form-card-content">
+                <div class="techpack-v2-form-row">
+                  <div class="techpack-v2-form-group techpack-v2-form-group--required techpack-v2-form-group--full">
+                    <label for="country-v2" class="techpack-v2-form-label">Country/Region</label>
+                    <div class="techpack-v2-country-selector">
+                      <input
+                        type="text"
+                        id="country-v2"
+                        name="country"
+                        class="techpack-v2-form-input techpack-v2-country-input"
+                        required
+                        data-validate="required"
+                        autocomplete="off"
+                        placeholder="Select your business location"
+                        readonly
+                      >
+                      <div class="techpack-v2-country-flag" id="country-flag-v2"></div>
+                      <div class="techpack-v2-country-toggle" id="country-toggle-v2">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M5 7l5 5 5-5H5z"/>
+                        </svg>
+                      </div>
+                      <div class="techpack-v2-country-dropdown" id="country-dropdown-v2"></div>
+                    </div>
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                  </div>
+                </div>
+                <div class="techpack-v2-form-row">
+                  <div class="techpack-v2-form-group" id="vat-ein-group-v2">
+                    <label for="vat-ein-v2" class="techpack-v2-form-label" id="vat-ein-label-v2">
+                      VAT/EIN Number <span class="techpack-v2-form-status" id="vat-ein-status-v2">(required for new businesses)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="vat-ein-v2"
+                      name="vatEin"
+                      class="techpack-v2-form-input"
+                      data-validate="vat-ein"
+                      placeholder="VAT: GB123456789 or EIN: 12-3456789"
+                    >
+                    <div class="techpack-v2-form-error" role="alert"></div>
+                    <div class="techpack-v2-form-help" id="vat-ein-help-v2">
+                      Required to verify your business registration status
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual Production Type Selection -->
+            <div class="techpack-v2-form-card techpack-v2-form-card--full">
+              <div class="techpack-v2-form-card-header">
+                <div class="techpack-v2-form-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L3 7v11a2 2 0 002 2h14a2 2 0 002-2V7l-9-5z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="techpack-v2-form-card-title">Production Type</h3>
+                <span class="techpack-v2-form-required-badge">Required</span>
+              </div>
+              <div class="techpack-v2-form-card-content">
+                <div class="techpack-v2-production-options">
+                  <div class="techpack-v2-production-option" data-production-type="custom-production">
+                    <input type="radio" name="productionType" value="custom-production" id="custom-production-v2" class="techpack-v2-production-radio">
+                    <label for="custom-production-v2" class="techpack-v2-production-label">
+                      <div class="techpack-v2-production-visual">
+                        <div class="techpack-v2-production-icon">
+                          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <rect x="4" y="10" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 14h6M8 18h8M8 22h4" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="20" cy="6" r="3" stroke="currentColor" stroke-width="2"/>
+                            <path d="M20 9v5" stroke="currentColor" stroke-width="1.5"/>
+                          </svg>
+                        </div>
+                        <div class="techpack-v2-production-badge">75+ Min Qty</div>
+                      </div>
+                      <div class="techpack-v2-production-content">
+                        <h4 class="techpack-v2-production-title">Custom Production</h4>
+                        <p class="techpack-v2-production-description">Complete custom manufacturing from raw materials with your specifications</p>
+                        <div class="techpack-v2-production-features">
+                          <span class="techpack-v2-feature-tag">Custom Fabrics</span>
+                          <span class="techpack-v2-feature-tag">Any Colors</span>
+                          <span class="techpack-v2-feature-tag">Full Customization</span>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+
+                  <div class="techpack-v2-production-option" data-production-type="our-blanks">
+                    <input type="radio" name="productionType" value="our-blanks" id="our-blanks-v2" class="techpack-v2-production-radio">
+                    <label for="our-blanks-v2" class="techpack-v2-production-label">
+                      <div class="techpack-v2-production-visual">
+                        <div class="techpack-v2-production-icon">
+                          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <rect x="6" y="8" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M10 12h8M10 16h6" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="22" cy="6" r="2" fill="currentColor"/>
+                            <circle cx="22" cy="26" r="2" fill="currentColor"/>
+                            <path d="M24 8v16" stroke="currentColor" stroke-width="1.5"/>
+                          </svg>
+                        </div>
+                        <div class="techpack-v2-production-badge">20+ Min Qty</div>
+                      </div>
+                      <div class="techpack-v2-production-content">
+                        <h4 class="techpack-v2-production-title">Our Blanks</h4>
+                        <p class="techpack-v2-production-description">Use our premium quality blank garments with decoration and branding</p>
+                        <div class="techpack-v2-production-features">
+                          <span class="techpack-v2-feature-tag">Premium Blanks</span>
+                          <span class="techpack-v2-feature-tag">Faster Turnaround</span>
+                          <span class="techpack-v2-feature-tag">Lower MOQ</span>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="techpack-v2-form-error" role="alert"></div>
+              </div>
+            </div>
+
+            <!-- Project Notes -->
+            <div class="techpack-v2-form-card techpack-v2-form-card--full">
+              <div class="techpack-v2-form-card-header">
+                <div class="techpack-v2-form-card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/>
+                    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="techpack-v2-form-card-title">Project Details</h3>
+                <span class="techpack-v2-form-optional-badge">Optional</span>
+              </div>
+              <div class="techpack-v2-form-card-content">
+                <div class="techpack-v2-form-group">
+                  <label for="notes-v2" class="techpack-v2-form-label">Additional Information</label>
+                  <textarea
+                    id="notes-v2"
+                    name="notes"
+                    class="techpack-v2-form-textarea"
+                    rows="4"
+                    placeholder="Describe your project requirements, quantities, specific materials, timeline, or any other important details..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Action Bar -->
+        <div class="techpack-v2-form-actions">
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--secondary" id="step-1-back-v2">
+            <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M12 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Back
+          </button>
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--ghost" id="change-submission-type-v2">
+            <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M4 12l4 4 4-4m6-6l-4-4-4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Change Submission Type
+          </button>
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--primary" id="step-1-next-v2">
+            Continue to Upload
+            <svg class="techpack-v2-btn-icon" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8 6l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Enhanced Client Verification Modal -->
+<div class="techpack-v2-modal" id="client-verification-modal-v2" style="display: none;">
+  <div class="techpack-v2-modal-backdrop"></div>
+  <div class="techpack-v2-modal-content techpack-v2-modal-content--verification">
+    <div class="techpack-v2-modal-header">
+      <h3 class="techpack-v2-modal-title">Visual Client Verification</h3>
+      <button type="button" class="techpack-v2-modal-close" id="close-client-modal-v2">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M18 6L6 18m0-12l12 12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="techpack-v2-modal-body">
+      <div class="techpack-v2-client-verification">
+        <!-- Visual Process Overview -->
+        <div class="techpack-v2-process-overview">
+          <h4 class="techpack-v2-process-title">How TechPack v2 Works</h4>
+          <div class="techpack-v2-process-steps">
+            <div class="techpack-v2-process-step">
+              <div class="techpack-v2-process-visual">
+                <div class="techpack-v2-process-number">1</div>
+                <div class="techpack-v2-process-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 12h6" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="techpack-v2-process-content">
+                <strong>Visual Specification</strong>
+                <p>Use image cards to build your garment with live preview</p>
+              </div>
+            </div>
+            <div class="techpack-v2-process-step">
+              <div class="techpack-v2-process-visual">
+                <div class="techpack-v2-process-number">2</div>
+                <div class="techpack-v2-process-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="techpack-v2-process-content">
+                <strong>Real-time Pricing</strong>
+                <p>See live pricing updates as you make selections</p>
+              </div>
+            </div>
+            <div class="techpack-v2-process-step">
+              <div class="techpack-v2-process-visual">
+                <div class="techpack-v2-process-number">3</div>
+                <div class="techpack-v2-process-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="techpack-v2-process-content">
+                <strong>Professional Quote</strong>
+                <p>Receive detailed quote within 24-48 hours</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="techpack-v2-modal-divider"></div>
+        
+        <p class="techpack-v2-verification-description">
+          Please select your client status to continue with the visual tech-pack submission process.
+        </p>
+        
+        <div class="techpack-v2-verification-options">
+          <button type="button" class="techpack-v2-verification-option" id="registration-yes-btn-v2" data-registration="yes">
+            <div class="techpack-v2-option-visual">
+              <div class="techpack-v2-option-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                  <circle cx="16" cy="10" r="4" fill="currentColor"/>
+                  <path d="M6 26c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="24" cy="8" r="3" fill="currentColor" opacity="0.6"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-option-badge techpack-v2-badge--verified">Registered</div>
+            </div>
+            <div class="techpack-v2-option-content">
+              <h4 class="techpack-v2-option-title">Yes, I'm a Registered Client</h4>
+              <p class="techpack-v2-option-description">
+                I have worked with Genuine Blanks before and am registered in your system
+              </p>
+            </div>
+            <div class="techpack-v2-option-shimmer"></div>
+          </button>
+          
+          <button type="button" class="techpack-v2-verification-option" id="registration-no-btn-v2" data-registration="no">
+            <div class="techpack-v2-option-visual">
+              <div class="techpack-v2-option-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                  <circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M16 2v6m0 8v6m-6-6h6m6 0h-6" stroke="currentColor" stroke-width="2"/>
+                  <path d="M26 16c0-5.5-4.5-10-10-10S6 10.5 6 16s4.5 10 10 10 10-4.5 10-10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-option-badge techpack-v2-badge--new">New</div>
+            </div>
+            <div class="techpack-v2-option-content">
+              <h4 class="techpack-v2-option-title">No, I'm a New Client</h4>
+              <p class="techpack-v2-option-description">
+                This is my first time working with Genuine Blanks
+              </p>
+            </div>
+            <div class="techpack-v2-option-shimmer"></div>
+          </button>
+        </div>
+        
+        <!-- Registration Warning -->
+        <div class="techpack-v2-warning" id="registration-warning-v2" style="display: none;">
+          <div class="techpack-v2-warning-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M12 9v3m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <div class="techpack-v2-warning-content">
+            <h5 class="techpack-v2-warning-title">Registration Verification Required</h5>
+            <p class="techpack-v2-warning-message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected. Please ensure you have worked with us before selecting this option.
+            </p>
+          </div>
+        </div>
+        
+        <div class="techpack-v2-verification-note">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M10 6v4l2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>VAT is only required for European countries</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Visual Submission Type Selection Modal -->
+<div class="techpack-v2-modal techpack-v2-modal--submission-type" id="submission-type-modal-v2" style="display: none;">
+  <div class="techpack-v2-modal-backdrop"></div>
+  <div class="techpack-v2-modal-content techpack-v2-modal-content--submission">
+    <div class="techpack-v2-modal-header">
+      <h3 class="techpack-v2-modal-title">Choose Your Submission Type</h3>
+      <button type="button" class="techpack-v2-modal-close" id="close-submission-modal-v2">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M18 6L6 18m0-12l12 12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="techpack-v2-modal-body">
+      <div class="techpack-v2-submission-selection">
+        <!-- Registration Notice -->
+        <div class="techpack-v2-registration-notice" id="registration-notice-v2" style="display: none;">
+          <div class="techpack-v2-registration-notice-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M12 9v3m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <div class="techpack-v2-registration-notice-content">
+            <h5 class="techpack-v2-registration-notice-title">Registration Verification Required</h5>
+            <p class="techpack-v2-registration-notice-message">
+              We will verify your registration status during processing. If you're not registered in our system, 
+              your submission will be automatically rejected.
+            </p>
+          </div>
+        </div>
+        
+        <p class="techpack-v2-submission-description">
+          Select the type of submission that best matches your current needs. Each option features our enhanced visual interface.
+        </p>
+        
+        <div class="techpack-v2-submission-options">
+          <!-- Garment Quotation Option -->
+          <button type="button" class="techpack-v2-submission-option" id="quotation-btn-v2" data-submission-type="quotation">
+            <div class="techpack-v2-submission-visual">
+              <div class="techpack-v2-submission-icon">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <path d="M15 20l4 4 8-8m8 4c0 11-9 20-20 20S0 31 0 20 9 0 20 0s20 9 20 20z" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="30" cy="10" r="6" fill="currentColor" opacity="0.1"/>
+                  <text x="30" y="15" text-anchor="middle" fill="currentColor" font-size="8" font-weight="bold">€</text>
+                </svg>
+              </div>
+              <div class="techpack-v2-submission-badge techpack-v2-badge--fast">Fast</div>
+            </div>
+            <div class="techpack-v2-submission-content">
+              <h4 class="techpack-v2-submission-title">Visual Garment Quotation</h4>
+              <p class="techpack-v2-submission-description">Get pricing estimates using our image card builder across different garment types</p>
+              <div class="techpack-v2-submission-features">
+                <span class="techpack-v2-feature-tag">💰 Real-time Pricing</span>
+                <span class="techpack-v2-feature-tag">📊 Visual Breakdown</span>
+                <span class="techpack-v2-feature-tag">⚡ Instant Results</span>
+              </div>
+            </div>
+            <div class="techpack-v2-submission-shimmer"></div>
+          </button>
+          
+          <!-- Sample Request Option -->
+          <button type="button" class="techpack-v2-submission-option" id="sample-btn-v2" data-submission-type="sample-request">
+            <div class="techpack-v2-submission-visual">
+              <div class="techpack-v2-submission-icon">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <rect x="8" y="12" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 16h8M12 20h6M12 24h10" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="30" cy="10" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M28 10l2 2 4-4" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <div class="techpack-v2-submission-badge techpack-v2-badge--premium">Premium</div>
+            </div>
+            <div class="techpack-v2-submission-content">
+              <h4 class="techpack-v2-submission-title">Visual Sample Request</h4>
+              <p class="techpack-v2-submission-description">Create physical prototypes with live preview to validate design and quality</p>
+              <div class="techpack-v2-submission-features">
+                <span class="techpack-v2-feature-tag">🧵 Physical Samples</span>
+                <span class="techpack-v2-feature-tag">👁️ Live Preview</span>
+                <span class="techpack-v2-feature-tag">📏 Fit Validation</span>
+              </div>
+            </div>
+            <div class="techpack-v2-submission-shimmer"></div>
+          </button>
+          
+          <!-- Bulk Order Option -->
+          <button type="button" class="techpack-v2-submission-option" id="bulk-btn-v2" data-submission-type="bulk-order-request">
+            <div class="techpack-v2-submission-visual">
+              <div class="techpack-v2-submission-icon">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <path d="M35 26V14a3 3 0 00-1.5-2.6l-11-6.3a3 3 0 00-3 0l-11 6.3A3 3 0 007 14v12a3 3 0 001.5 2.6l11 6.3a3 3 0 003 0l11-6.3A3 3 0 0035 26z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M7.4 11.6L20 18.5l12.6-6.9M20 36.5V18.5" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="30" cy="8" r="4" fill="currentColor" opacity="0.1"/>
+                  <text x="30" y="12" text-anchor="middle" fill="currentColor" font-size="6" font-weight="bold">BULK</text>
+                </svg>
+              </div>
+              <div class="techpack-v2-submission-badge techpack-v2-badge--production">Production</div>
+            </div>
+            <div class="techpack-v2-submission-content">
+              <h4 class="techpack-v2-submission-title">Visual Bulk Order Request</h4>
+              <p class="techpack-v2-submission-description">Full-scale manufacturing with image-based specification and quantity management</p>
+              <div class="techpack-v2-submission-features">
+                <span class="techpack-v2-feature-tag">🏭 Full Production</span>
+                <span class="techpack-v2-feature-tag">📦 Large Quantities</span>
+                <span class="techpack-v2-feature-tag">🚚 Direct Delivery</span>
+              </div>
+            </div>
+            <div class="techpack-v2-submission-shimmer"></div>
+          </button>
+        </div>
+        
+        <div class="techpack-v2-submission-note">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M10 6v4l2 2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>You can change your submission type at any time during the visual process</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Load TechPack v2 Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'techpack-v2-app.js' | asset_url }}?v=2.0.0" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "TechPack v2 Step 1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Visual Client Information Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Client Information"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Visual client verification and business details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_production_images",
+      "label": "Show Production Type Images",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_flags",
+      "label": "Enable Country Flag Icons",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack v2 Step 1"
+    }
+  ]
+}
+{% endschema %}
