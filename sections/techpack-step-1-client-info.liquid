@@ -244,33 +244,27 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 
             <!-- Production Type for Sample Requests (second column) -->
             <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Production Type</label>
-              <div class="techpack-production-type-options">
-                <label class="techpack-production-type-option">
-                  <input type="radio" name="productionType" value="custom-production" required>
-                  <span class="techpack-production-type-option__content">
-                    <strong>Custom Production</strong>
-                    <small>Design and manufacture your unique garments</small>
-                  </span>
-                </label>
-                <label class="techpack-production-type-option">
-                  <input type="radio" name="productionType" value="our-blanks" required checked>
-                  <span class="techpack-production-type-option__content">
-                    <strong>Our Blanks</strong>
-                    <small>Use our existing blank garment styles</small>
-                  </span>
-                </label>
-              </div>
+              <label for="production-type-sample" class="techpack-form__label">Production Type</label>
+              <select
+                id="production-type-sample"
+                name="productionType"
+                class="techpack-form__select"
+                required
+                data-validate="required"
+              >
+                <option value="">Select production type...</option>
+                <option value="custom-production">Custom Production</option>
+                <option value="our-blanks">Our Blanks</option>
+              </select>
               <div class="techpack-form__error" role="alert"></div>
             </div>
           </div>
 
-          <!-- For Bulk Request: Delivery Address | Production Type (2-column layout) -->
-          <div class="techpack-form__row techpack-form__row--delivery-sample" id="delivery-row-bulk" style="display: none;">
-            <!-- Delivery Address (first column) -->
-            <div class="techpack-form__group techpack-form__group--required">
+          <!-- For Bulk Request: Delivery Address (full width with side-by-side options) -->
+          <div class="techpack-form__row" id="delivery-row-bulk" style="display: none;">
+            <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
               <label class="techpack-form__label">Delivery Address</label>
-              <div class="techpack-delivery-options">
+              <div class="techpack-delivery-options techpack-delivery-options--horizontal">
                 <label class="techpack-delivery-option">
                   <input type="radio" name="deliveryAddress" value="company" checked>
                   <span class="techpack-delivery-option__content">
@@ -283,28 +277,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
                   <span class="techpack-delivery-option__content">
                     <strong>Different Address</strong>
                     <small>Specify alternative delivery location</small>
-                  </span>
-                </label>
-              </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <!-- Production Type for Bulk Requests (second column) -->
-            <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Production Type</label>
-              <div class="techpack-production-type-options">
-                <label class="techpack-production-type-option">
-                  <input type="radio" name="productionTypeBulk" value="custom-production" required>
-                  <span class="techpack-production-type-option__content">
-                    <strong>Custom Production</strong>
-                    <small>Design and manufacture your unique garments</small>
-                  </span>
-                </label>
-                <label class="techpack-production-type-option">
-                  <input type="radio" name="productionTypeBulk" value="our-blanks" required checked>
-                  <span class="techpack-production-type-option__content">
-                    <strong>Our Blanks</strong>
-                    <small>Use our existing blank garment styles</small>
                   </span>
                 </label>
               </div>
@@ -550,6 +522,24 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           </div>
         </div>
 
+        <!-- Row 2.8: Production Type (Bulk only - above Project Details) -->
+        <div class="techpack-form__row" id="production-type-bulk-row" style="display: none;">
+          <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+            <label for="production-type-bulk" class="techpack-form__label">Production Type</label>
+            <select
+              id="production-type-bulk"
+              name="productionType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
+            >
+              <option value="">Select production type...</option>
+              <option value="custom-production">Custom Production</option>
+              <option value="our-blanks">Our Blanks</option>
+            </select>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
 
         <!-- Row 3: Phone Number - Country -->
         <div class="techpack-form__row">

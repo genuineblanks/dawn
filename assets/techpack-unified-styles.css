@@ -8054,8 +8054,7 @@ UNIFIED COLOR PICKER STYLING
 .techpack-shipping-method,
 .techpack-insurance-option {
   display: flex;
-  align-items: center; /* Center all content vertically */
-  justify-content: flex-start; /* Keep left alignment */
+  align-items: center; /* Changed from flex-start to center for proper radio button alignment */
   gap: 0.75rem;
   padding: 0.875rem;
   border: 2px solid #f1f5f9;
@@ -8072,36 +8071,27 @@ UNIFIED COLOR PICKER STYLING
   background: #f8fafc;
 }
 
-/* Radio input centering */
-.techpack-shipping-method input[type="radio"],
-.techpack-insurance-option input[type="radio"] {
-  margin: 0;
-  flex-shrink: 0;
-  /* Radio button is now centered by parent container */
-}
-
 .techpack-shipping-method__content,
 .techpack-insurance-option__content {
   flex: 1;
   display: flex;
-  align-items: center; /* Center content within the span */
+  align-items: center;
   gap: 0.75rem;
-  min-height: 48px; /* Ensure minimum height for content */
+  /* Ensure content fills available space */
+  height: 100%;
 }
 
 .techpack-shipping-method__icon,
 .techpack-insurance-option__icon {
   font-size: 1.5rem;
   flex-shrink: 0;
-  /* Icon centers with the content container */
+  /* Icon is now centered with the main container */
 }
 
 .techpack-shipping-method__text,
 .techpack-insurance-option__text {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center text content vertically */
+  /* Content is already centered by parent container */
 }
 
 .techpack-shipping-method__text strong,

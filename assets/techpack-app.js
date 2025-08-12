@@ -821,14 +821,10 @@
     
     // Get production type from form if not provided
     if (!productionType) {
-      // Check for radio buttons (sample uses "productionType", bulk uses "productionTypeBulk")
-      var productionRadioSample = document.querySelector('input[name="productionType"]:checked');
-      var productionRadioBulk = document.querySelector('input[name="productionTypeBulk"]:checked');
+      // Check for radio buttons first (sample request), then select dropdown (bulk request)
+      var productionRadio = document.querySelector('input[name="productionType"]:checked');
       var productionSelect = document.querySelector('#production-type, #production-type-bulk, select[name="productionType"]');
-      
-      productionType = productionRadioSample ? productionRadioSample.value : 
-                      (productionRadioBulk ? productionRadioBulk.value : 
-                      (productionSelect ? productionSelect.value : 'our-blanks'));
+      productionType = productionRadio ? productionRadio.value : (productionSelect ? productionSelect.value : 'our-blanks');
     }
     
     if (productionType === 'our-blanks') {
@@ -8779,6 +8775,7 @@
       // Separate rows for different form types
       const deliveryRowSample = document.getElementById('delivery-row-sample');
       const deliveryRowBulk = document.getElementById('delivery-row-bulk');
+      const productionTypeBulkRow = document.getElementById('production-type-bulk-row');
       
       if (!deliveryRow || !shippingSection) {
         debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
@@ -8788,6 +8785,7 @@
       // First, hide all conditional elements to prevent duplicates
       if (deliveryRowSample) deliveryRowSample.style.display = 'none';
       if (deliveryRowBulk) deliveryRowBulk.style.display = 'none';
+      if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
       
       switch(type) {
         case 'quotation':
@@ -8806,8 +8804,9 @@
         case 'bulk-order-request':
           deliveryRow.style.display = 'block';
           shippingSection.style.display = 'block';
-          // Show only bulk delivery row (now includes production type)
+          // Show only bulk delivery row and production type
           if (deliveryRowBulk) deliveryRowBulk.style.display = 'grid';
+          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'grid';
           break;
       }
       
@@ -8815,7 +8814,8 @@
         deliveryRowVisible: deliveryRow.style.display !== 'none',
         shippingSectionVisible: shippingSection.style.display !== 'none',
         sampleRowVisible: deliveryRowSample?.style.display === 'grid',
-        bulkRowVisible: deliveryRowBulk?.style.display === 'grid'
+        bulkRowVisible: deliveryRowBulk?.style.display === 'grid',
+        productionTypeBulkVisible: productionTypeBulkRow?.style.display === 'grid'
       });
     }
 
@@ -9800,16 +9800,15 @@
 
     // EXISTING: Keep your exact setupProductionTypeListener method
     setupProductionTypeListener() {
-      // Handle radio buttons for both sample and bulk requests
-      const productionTypeRadiosSample = document.querySelectorAll('input[name="productionType"]');
-      const productionTypeRadiosBulk = document.querySelectorAll('input[name="productionTypeBulk"]');
+      // Handle both radio buttons (sample request) and select dropdown (bulk request)
+      const productionTypeRadios = document.querySelectorAll('input[name="productionType"]');
       const productionTypeSelects = document.querySelectorAll('#production-type, #production-type-bulk, select[name="productionType"]');
       
-      // Set up sample radio button listeners
-      productionTypeRadiosSample.forEach(radio => {
+      // Set up radio button listeners
+      productionTypeRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
           const selectedType = e.target.value;
-          debugSystem.log('Production type changed (sample radio)', { type: selectedType });
+          debugSystem.log('Production type changed (radio)', { type: selectedType });
           
           if (state.formData.clientInfo) {
             state.formData.clientInfo.productionType = selectedType;
@@ -9821,23 +9820,7 @@
         });
       });
       
-      // Set up bulk radio button listeners
-      productionTypeRadiosBulk.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          const selectedType = e.target.value;
-          debugSystem.log('Production type changed (bulk radio)', { type: selectedType });
-          
-          if (state.formData.clientInfo) {
-            state.formData.clientInfo.productionType = selectedType;
-          }
-          
-          if (state.currentStep === 3) {
-            stepManager.refreshStep3Interface();
-          }
-        });
-      });
-      
-      // Set up select dropdown listeners (fallback)
+      // Set up select dropdown listeners
       productionTypeSelects.forEach(select => {
         select.addEventListener('change', (e) => {
           const selectedType = e.target.value;
@@ -10006,7 +9989,6 @@
         phone: document.getElementById('phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
-                       document.querySelector('input[name="productionTypeBulk"]:checked')?.value ||
                        document.getElementById('production-type')?.value || 
                        document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
@@ -11011,7 +10993,6 @@ setupInitialization();
                document.getElementById('business-phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
-                       document.querySelector('input[name="productionTypeBulk"]:checked')?.value ||
                        document.getElementById('production-type')?.value || 
                        document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
