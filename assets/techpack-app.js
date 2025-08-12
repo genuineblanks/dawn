@@ -821,10 +821,14 @@
     
     // Get production type from form if not provided
     if (!productionType) {
-      // Check for radio buttons first (sample request), then select dropdown (bulk request)
-      var productionRadio = document.querySelector('input[name="productionType"]:checked');
+      // Check for radio buttons (sample uses "productionType", bulk uses "productionTypeBulk")
+      var productionRadioSample = document.querySelector('input[name="productionType"]:checked');
+      var productionRadioBulk = document.querySelector('input[name="productionTypeBulk"]:checked');
       var productionSelect = document.querySelector('#production-type, #production-type-bulk, select[name="productionType"]');
-      productionType = productionRadio ? productionRadio.value : (productionSelect ? productionSelect.value : 'our-blanks');
+      
+      productionType = productionRadioSample ? productionRadioSample.value : 
+                      (productionRadioBulk ? productionRadioBulk.value : 
+                      (productionSelect ? productionSelect.value : 'our-blanks'));
     }
     
     if (productionType === 'our-blanks') {
@@ -9800,15 +9804,16 @@
 
     // EXISTING: Keep your exact setupProductionTypeListener method
     setupProductionTypeListener() {
-      // Handle both radio buttons (sample request) and select dropdown (bulk request)
-      const productionTypeRadios = document.querySelectorAll('input[name="productionType"]');
+      // Handle radio buttons for both sample and bulk requests
+      const productionTypeRadiosSample = document.querySelectorAll('input[name="productionType"]');
+      const productionTypeRadiosBulk = document.querySelectorAll('input[name="productionTypeBulk"]');
       const productionTypeSelects = document.querySelectorAll('#production-type, #production-type-bulk, select[name="productionType"]');
       
-      // Set up radio button listeners
-      productionTypeRadios.forEach(radio => {
+      // Set up sample radio button listeners
+      productionTypeRadiosSample.forEach(radio => {
         radio.addEventListener('change', (e) => {
           const selectedType = e.target.value;
-          debugSystem.log('Production type changed (radio)', { type: selectedType });
+          debugSystem.log('Production type changed (sample radio)', { type: selectedType });
           
           if (state.formData.clientInfo) {
             state.formData.clientInfo.productionType = selectedType;
@@ -9820,7 +9825,23 @@
         });
       });
       
-      // Set up select dropdown listeners
+      // Set up bulk radio button listeners
+      productionTypeRadiosBulk.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const selectedType = e.target.value;
+          debugSystem.log('Production type changed (bulk radio)', { type: selectedType });
+          
+          if (state.formData.clientInfo) {
+            state.formData.clientInfo.productionType = selectedType;
+          }
+          
+          if (state.currentStep === 3) {
+            stepManager.refreshStep3Interface();
+          }
+        });
+      });
+      
+      // Set up select dropdown listeners (fallback)
       productionTypeSelects.forEach(select => {
         select.addEventListener('change', (e) => {
           const selectedType = e.target.value;
@@ -9989,6 +10010,7 @@
         phone: document.getElementById('phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
+                       document.querySelector('input[name="productionTypeBulk"]:checked')?.value ||
                        document.getElementById('production-type')?.value || 
                        document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
@@ -10993,6 +11015,7 @@ setupInitialization();
                document.getElementById('business-phone')?.value || '',
         country: document.getElementById('country')?.value || '',
         productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
+                       document.querySelector('input[name="productionTypeBulk"]:checked')?.value ||
                        document.getElementById('production-type')?.value || 
                        document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
