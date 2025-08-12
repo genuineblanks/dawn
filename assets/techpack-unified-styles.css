@@ -5207,6 +5207,16 @@ DELIVERY SECTIONS - SAMPLE & BULK REQUESTS
 /* Delivery Options Section */
 .techpack-delivery-section {
   width: 100%;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Delivery and shipping groups within the email column */
+.techpack-delivery-group,
+.techpack-shipping-group,
+.techpack-insurance-group {
+  margin-top: 1rem;
 }
 
 .techpack-delivery-options {

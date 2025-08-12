@@ -181,8 +181,10 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           </div>
         </div>
 
-        <!-- Row 2: Email Address - VAT/EIN Number -->
+        <!-- Row 2: Business Email + Delivery Sections -->
         <div class="techpack-form__row">
+          <div class="techpack-form__spacer"></div>
+          
           <div class="techpack-form__group techpack-form__group--required">
             <label for="email" class="techpack-form__label">Business Email Address</label>
             <input
@@ -195,288 +197,248 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
               placeholder="contact@company.com"
             >
             <div class="techpack-form__error" role="alert"></div>
-          </div>
 
-          <div class="techpack-form__group" id="vat-ein-group">
-            <label for="vat-ein" class="techpack-form__label" id="vat-ein-label">
-              VAT/EIN Number <span class="techpack-form__label-status" id="vat-ein-status">(required for new businesses)</span>
-            </label>
-            <input
-              type="text"
-              id="vat-ein"
-              name="vatEin"
-              class="techpack-form__input"
-              data-validate="vat-ein"
-              placeholder="VAT: GB123456789 or EIN: 12-3456789"
-            >
-            <div class="techpack-form__error" role="alert"></div>
-            <div class="techpack-form__help" id="vat-ein-help">
-              Required to verify your business registration status
-            </div>
-          </div>
-        </div>
-
-        <!-- Row 2.5: Delivery Information (Sample & Bulk only) -->
-        <div class="techpack-form__row" id="delivery-row" style="display: none;">
-          <div class="techpack-form__spacer"></div>
-          
-          <div class="techpack-delivery-section">
-            <!-- Delivery Address Selection -->
-            <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Delivery Address</label>
-              <div class="techpack-delivery-options">
-                <label class="techpack-delivery-option">
-                  <input type="radio" name="deliveryAddress" value="company" checked>
-                  <span class="techpack-delivery-option__content">
-                    <strong>Company Address</strong>
-                    <small>Use business location from above</small>
-                  </span>
-                </label>
-                <label class="techpack-delivery-option">
-                  <input type="radio" name="deliveryAddress" value="different">
-                  <span class="techpack-delivery-option__content">
-                    <strong>Different Address</strong>
-                    <small>Specify alternative delivery location</small>
-                  </span>
-                </label>
-              </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Row 2.6: Different Address Form (conditional) -->
-        <div class="techpack-different-address" id="different-address-form" style="display: none;">
-          <!-- Contact Info Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-contact-name" class="techpack-form__label">Contact Name</label>
-              <input
-                type="text"
-                id="delivery-contact-name"
-                name="deliveryContactName"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="Full name of contact person"
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-phone" class="techpack-form__label">Contact Phone</label>
-              <input
-                type="tel"
-                id="delivery-phone"
-                name="deliveryPhone"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="+1 234 567 8901"
-                maxlength="20"
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-
-          <!-- Address Lines Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-address-1" class="techpack-form__label">Address Line 1</label>
-              <input
-                type="text"
-                id="delivery-address-1"
-                name="deliveryAddress1"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="Street address, building, etc."
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <div class="techpack-form__group">
-              <label for="delivery-address-2" class="techpack-form__label">
-                Address Line 2 <span class="techpack-form__label-status">(optional)</span>
-              </label>
-              <input
-                type="text"
-                id="delivery-address-2"
-                name="deliveryAddress2"
-                class="techpack-form__input"
-                placeholder="Apartment, suite, unit, etc."
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-
-          <!-- City & State Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-city" class="techpack-form__label">City</label>
-              <input
-                type="text"
-                id="delivery-city"
-                name="deliveryCity"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="City name"
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-state" class="techpack-form__label">State/Province/Region</label>
-              <input
-                type="text"
-                id="delivery-state"
-                name="deliveryState"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="State, province, or region"
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-
-          <!-- Postal Code & Country Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-postal" class="techpack-form__label">Postal Code</label>
-              <input
-                type="text"
-                id="delivery-postal"
-                name="deliveryPostal"
-                class="techpack-form__input"
-                data-validate="required-if-different"
-                placeholder="ZIP or postal code"
-              >
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="delivery-country" class="techpack-form__label">Country</label>
-              <div class="techpack-enhanced-country-wrapper">
-                <input
-                  type="text"
-                  id="delivery-country"
-                  name="deliveryCountry"
-                  class="techpack-form__input techpack-enhanced-country-input"
-                  data-validate="required-if-different"
-                  autocomplete="off"
-                  placeholder="Select delivery country"
-                  readonly
-                >
-                <div class="techpack-enhanced-country-flag" id="delivery-country-flag"></div>
-                <div class="techpack-enhanced-country-toggle" id="delivery-country-toggle">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M4 6l4 4 4-4H4z"/>
-                  </svg>
+            <!-- DELIVERY SECTIONS (Sample & Bulk only) - Integrated into right column -->
+            <div class="techpack-delivery-section" id="delivery-section" style="display: none;">
+              <!-- Delivery Address Selection -->
+              <div class="techpack-form__group techpack-form__group--required techpack-delivery-group">
+                <label class="techpack-form__label">Delivery Address</label>
+                <div class="techpack-delivery-options">
+                  <label class="techpack-delivery-option">
+                    <input type="radio" name="deliveryAddress" value="company" checked>
+                    <span class="techpack-delivery-option__content">
+                      <strong>Company Address</strong>
+                      <small>Use business location from above</small>
+                    </span>
+                  </label>
+                  <label class="techpack-delivery-option">
+                    <input type="radio" name="deliveryAddress" value="different">
+                    <span class="techpack-delivery-option__content">
+                      <strong>Different Address</strong>
+                      <small>Specify alternative delivery location</small>
+                    </span>
+                  </label>
                 </div>
-                <div class="techpack-enhanced-country-dropdown" id="delivery-country-dropdown">
-                  <div class="techpack-enhanced-country-search">
+                <div class="techpack-form__error" role="alert"></div>
+              </div>
+
+              <!-- Different Address Form (conditional) -->
+              <div class="techpack-different-address" id="different-address-form" style="display: none;">
+                <!-- Contact Info -->
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-contact-name" class="techpack-form__label">Contact Name</label>
+                  <input
+                    type="text"
+                    id="delivery-contact-name"
+                    name="deliveryContactName"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="Full name of contact person"
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-phone" class="techpack-form__label">Contact Phone</label>
+                  <input
+                    type="tel"
+                    id="delivery-phone"
+                    name="deliveryPhone"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="+1 234 567 8901"
+                    maxlength="20"
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <!-- Address Lines -->
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-address-1" class="techpack-form__label">Address Line 1</label>
+                  <input
+                    type="text"
+                    id="delivery-address-1"
+                    name="deliveryAddress1"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="Street address, building, etc."
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <div class="techpack-form__group">
+                  <label for="delivery-address-2" class="techpack-form__label">
+                    Address Line 2 <span class="techpack-form__label-status">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="delivery-address-2"
+                    name="deliveryAddress2"
+                    class="techpack-form__input"
+                    placeholder="Apartment, suite, unit, etc."
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <!-- City & State -->
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-city" class="techpack-form__label">City</label>
+                  <input
+                    type="text"
+                    id="delivery-city"
+                    name="deliveryCity"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="City name"
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-state" class="techpack-form__label">State/Province/Region</label>
+                  <input
+                    type="text"
+                    id="delivery-state"
+                    name="deliveryState"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="State, province, or region"
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <!-- Postal Code & Country -->
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-postal" class="techpack-form__label">Postal Code</label>
+                  <input
+                    type="text"
+                    id="delivery-postal"
+                    name="deliveryPostal"
+                    class="techpack-form__input"
+                    data-validate="required-if-different"
+                    placeholder="ZIP or postal code"
+                  >
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <div class="techpack-form__group techpack-form__group--required">
+                  <label for="delivery-country" class="techpack-form__label">Country</label>
+                  <div class="techpack-enhanced-country-wrapper">
                     <input
                       type="text"
-                      class="techpack-enhanced-country-search-input"
-                      placeholder="Search countries..."
-                      id="delivery-country-search"
+                      id="delivery-country"
+                      name="deliveryCountry"
+                      class="techpack-form__input techpack-enhanced-country-input"
+                      data-validate="required-if-different"
+                      autocomplete="off"
+                      placeholder="Select delivery country"
+                      readonly
                     >
+                    <div class="techpack-enhanced-country-flag" id="delivery-country-flag"></div>
+                    <div class="techpack-enhanced-country-toggle" id="delivery-country-toggle">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M4 6l4 4 4-4H4z"/>
+                      </svg>
+                    </div>
+                    <div class="techpack-enhanced-country-dropdown" id="delivery-country-dropdown">
+                      <div class="techpack-enhanced-country-search">
+                        <input
+                          type="text"
+                          class="techpack-enhanced-country-search-input"
+                          placeholder="Search countries..."
+                          id="delivery-country-search"
+                        >
+                      </div>
+                      <div class="techpack-enhanced-country-list" id="delivery-country-list"></div>
+                    </div>
                   </div>
-                  <div class="techpack-enhanced-country-list" id="delivery-country-list"></div>
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
+
+                <!-- Delivery Notes -->
+                <div class="techpack-form__group">
+                  <label for="delivery-notes" class="techpack-form__label">
+                    Delivery Notes <span class="techpack-form__label-status">(optional, max 140 characters)</span>
+                  </label>
+                  <textarea
+                    id="delivery-notes"
+                    name="deliveryNotes"
+                    class="techpack-form__textarea"
+                    rows="3"
+                    maxlength="140"
+                    placeholder="Special delivery instructions, gate codes, best delivery times, etc."
+                  ></textarea>
+                  <div class="techpack-form__char-count">
+                    <span id="delivery-notes-count">0</span>/140 characters
+                  </div>
+                  <div class="techpack-form__error" role="alert"></div>
                 </div>
               </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
 
-          <!-- Delivery Notes Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__group techpack-form__group--full">
-              <label for="delivery-notes" class="techpack-form__label">
-                Delivery Notes <span class="techpack-form__label-status">(optional, max 140 characters)</span>
-              </label>
-              <textarea
-                id="delivery-notes"
-                name="deliveryNotes"
-                class="techpack-form__textarea"
-                rows="3"
-                maxlength="140"
-                placeholder="Special delivery instructions, gate codes, best delivery times, etc."
-              ></textarea>
-              <div class="techpack-form__char-count">
-                <span id="delivery-notes-count">0</span>/140 characters
-              </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-        </div>
+              <!-- SHIPPING SECTIONS (Bulk only) - Also integrated into right column -->
+              <div class="techpack-shipping-section" id="shipping-section" style="display: none;">
+                <!-- Shipping Method -->
+                <div class="techpack-form__group techpack-form__group--required techpack-shipping-group">
+                  <label class="techpack-form__label">Preferred Shipping Method</label>
+                  <div class="techpack-shipping-methods">
+                    <label class="techpack-shipping-method">
+                      <input type="radio" name="shippingMethod" value="air">
+                      <span class="techpack-shipping-method__content">
+                        <div class="techpack-shipping-method__icon">✈️</div>
+                        <div class="techpack-shipping-method__text">
+                          <strong>Air Freight</strong>
+                          <small>Faster + Expensive</small>
+                          <div class="techpack-shipping-method__details">5-10 business days</div>
+                        </div>
+                      </span>
+                    </label>
+                    <label class="techpack-shipping-method">
+                      <input type="radio" name="shippingMethod" value="sea">
+                      <span class="techpack-shipping-method__content">
+                        <div class="techpack-shipping-method__icon">🚢</div>
+                        <div class="techpack-shipping-method__text">
+                          <strong>Sea Freight</strong>
+                          <small>Slower + Cheaper</small>
+                          <div class="techpack-shipping-method__details">20-40 business days</div>
+                        </div>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
 
-        <!-- Row 2.7: Shipping Options (Bulk only) -->
-        <div class="techpack-shipping-section" id="shipping-section" style="display: none;">
-          <!-- Shipping Method Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__spacer"></div>
-            
-            <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Preferred Shipping Method</label>
-              <div class="techpack-shipping-methods">
-                <label class="techpack-shipping-method">
-                  <input type="radio" name="shippingMethod" value="air">
-                  <span class="techpack-shipping-method__content">
-                    <div class="techpack-shipping-method__icon">✈️</div>
-                    <div class="techpack-shipping-method__text">
-                      <strong>Air Freight</strong>
-                      <small>Faster + Expensive</small>
-                      <div class="techpack-shipping-method__details">5-10 business days</div>
-                    </div>
-                  </span>
-                </label>
-                <label class="techpack-shipping-method">
-                  <input type="radio" name="shippingMethod" value="sea">
-                  <span class="techpack-shipping-method__content">
-                    <div class="techpack-shipping-method__icon">🚢</div>
-                    <div class="techpack-shipping-method__text">
-                      <strong>Sea Freight</strong>
-                      <small>Slower + Cheaper</small>
-                      <div class="techpack-shipping-method__details">20-40 business days</div>
-                    </div>
-                  </span>
-                </label>
+                <!-- Insurance -->
+                <div class="techpack-form__group techpack-form__group--required techpack-insurance-group">
+                  <label class="techpack-form__label">Shipping Insurance</label>
+                  <div class="techpack-insurance-options">
+                    <label class="techpack-insurance-option">
+                      <input type="radio" name="insurance" value="yes">
+                      <span class="techpack-insurance-option__content">
+                        <div class="techpack-insurance-option__icon">🛡️</div>
+                        <div class="techpack-insurance-option__text">
+                          <strong>Yes, add insurance</strong>
+                          <small>2-6% of invoice value</small>
+                        </div>
+                      </span>
+                    </label>
+                    <label class="techpack-insurance-option">
+                      <input type="radio" name="insurance" value="no">
+                      <span class="techpack-insurance-option__content">
+                        <div class="techpack-insurance-option__icon">⚠️</div>
+                        <div class="techpack-insurance-option__text">
+                          <strong>No insurance</strong>
+                          <small>No protection coverage</small>
+                        </div>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="techpack-form__help">
+                    <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
+                    Without insurance, there's no protection for lost goods during shipping.
+                  </div>
+                  <div class="techpack-form__error" role="alert"></div>
+                </div>
               </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-          </div>
-
-          <!-- Insurance Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__spacer"></div>
-            
-            <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Shipping Insurance</label>
-              <div class="techpack-insurance-options">
-                <label class="techpack-insurance-option">
-                  <input type="radio" name="insurance" value="yes">
-                  <span class="techpack-insurance-option__content">
-                    <div class="techpack-insurance-option__icon">🛡️</div>
-                    <div class="techpack-insurance-option__text">
-                      <strong>Yes, add insurance</strong>
-                      <small>2-6% of invoice value</small>
-                    </div>
-                  </span>
-                </label>
-                <label class="techpack-insurance-option">
-                  <input type="radio" name="insurance" value="no">
-                  <span class="techpack-insurance-option__content">
-                    <div class="techpack-insurance-option__icon">⚠️</div>
-                    <div class="techpack-insurance-option__text">
-                      <strong>No insurance</strong>
-                      <small>No protection coverage</small>
-                    </div>
-                  </span>
-                </label>
-              </div>
-              <div class="techpack-form__help">
-                <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
-                Without insurance, there's no protection for lost goods during shipping.
-              </div>
-              <div class="techpack-form__error" role="alert"></div>
             </div>
           </div>
         </div>
