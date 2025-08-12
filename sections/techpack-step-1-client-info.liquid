@@ -217,75 +217,71 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         </div>
 
         <!-- Row 2.5: Delivery Information (Sample & Bulk only) - JavaScript controlled via #delivery-row -->
-        <div class="techpack-form__row techpack-form__row--delivery" id="delivery-row">
-          <!-- Delivery Address (always first column) -->
-          <div class="techpack-form__group techpack-form__group--required">
-            <label class="techpack-form__label">Delivery Address</label>
-            <div class="techpack-delivery-options">
-              <label class="techpack-delivery-option">
-                <input type="radio" name="deliveryAddress" value="company" checked>
-                <span class="techpack-delivery-option__content">
-                  <strong>Company Address</strong>
-                  <small>Use business location from above</small>
-                </span>
-              </label>
-              <label class="techpack-delivery-option">
-                <input type="radio" name="deliveryAddress" value="different">
-                <span class="techpack-delivery-option__content">
-                  <strong>Different Address</strong>
-                  <small>Specify alternative delivery location</small>
-                </span>
-              </label>
+        <div id="delivery-row">
+          <!-- For Sample Request: Delivery Address | Production Type -->
+          <div class="techpack-form__row techpack-form__row--delivery-sample" id="delivery-row-sample">
+            <!-- Delivery Address (first column) -->
+            <div class="techpack-form__group techpack-form__group--required">
+              <label class="techpack-form__label">Delivery Address</label>
+              <div class="techpack-delivery-options">
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="company" checked>
+                  <span class="techpack-delivery-option__content">
+                    <strong>Company Address</strong>
+                    <small>Use business location from above</small>
+                  </span>
+                </label>
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="different">
+                  <span class="techpack-delivery-option__content">
+                    <strong>Different Address</strong>
+                    <small>Specify alternative delivery location</small>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
             </div>
-            <div class="techpack-form__error" role="alert"></div>
+
+            <!-- Production Type for Sample Requests (second column) -->
+            <div class="techpack-form__group techpack-form__group--required">
+              <label for="production-type-sample" class="techpack-form__label">Production Type</label>
+              <select
+                id="production-type-sample"
+                name="productionType"
+                class="techpack-form__select"
+                required
+                data-validate="required"
+              >
+                <option value="">Select production type...</option>
+                <option value="custom-production">Custom Production</option>
+                <option value="our-blanks">Our Blanks</option>
+              </select>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
           </div>
 
-          <!-- Second column content varies by form type -->
-          <!-- Production Type for Sample Requests -->
-          <div class="techpack-form__group techpack-form__group--required" id="delivery-production-type">
-            <label for="production-type-sample" class="techpack-form__label">Production Type</label>
-            <select
-              id="production-type-sample"
-              name="productionType"
-              class="techpack-form__select"
-              required
-              data-validate="required"
-            >
-              <option value="">Select production type...</option>
-              <option value="custom-production">Custom Production</option>
-              <option value="our-blanks">Our Blanks</option>
-            </select>
-            <div class="techpack-form__error" role="alert"></div>
-          </div>
-
-          <!-- Shipping Method for Bulk Orders -->
-          <div class="techpack-form__group techpack-form__group--required" id="delivery-shipping-method">
-            <label class="techpack-form__label">Preferred Shipping Method</label>
-            <div class="techpack-shipping-methods">
-              <label class="techpack-shipping-method">
-                <input type="radio" name="shippingMethod" value="air">
-                <span class="techpack-shipping-method__content">
-                  <div class="techpack-shipping-method__icon">✈️</div>
-                  <div class="techpack-shipping-method__text">
-                    <strong>Air Freight</strong>
-                    <small>Faster + Expensive</small>
-                    <div class="techpack-shipping-method__details">5-10 business days</div>
-                  </div>
-                </span>
-              </label>
-              <label class="techpack-shipping-method">
-                <input type="radio" name="shippingMethod" value="sea">
-                <span class="techpack-shipping-method__content">
-                  <div class="techpack-shipping-method__icon">🚢</div>
-                  <div class="techpack-shipping-method__text">
-                    <strong>Sea Freight</strong>
-                    <small>Slower + Cheaper</small>
-                    <div class="techpack-shipping-method__details">20-40 business days</div>
-                  </div>
-                </span>
-              </label>
+          <!-- For Bulk Request: Delivery Address (full width with side-by-side options) -->
+          <div class="techpack-form__row" id="delivery-row-bulk">
+            <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+              <label class="techpack-form__label">Delivery Address</label>
+              <div class="techpack-delivery-options techpack-delivery-options--horizontal">
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="company" checked>
+                  <span class="techpack-delivery-option__content">
+                    <strong>Company Address</strong>
+                    <small>Use business location from above</small>
+                  </span>
+                </label>
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="different">
+                  <span class="techpack-delivery-option__content">
+                    <strong>Different Address</strong>
+                    <small>Specify alternative delivery location</small>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
             </div>
-            <div class="techpack-form__error" role="alert"></div>
           </div>
         </div>
 
@@ -454,22 +450,35 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 
         <!-- Row 2.7: Shipping Options (Bulk only) - JavaScript controlled via #shipping-section -->
         <div class="techpack-shipping-section" id="shipping-section">
-          <!-- Production Type and Insurance Row (2-column layout) -->
-          <div class="techpack-form__row techpack-form__row--bulk-production-insurance">
-            <!-- Production Type (for bulk layout) -->
+          <!-- Shipping Method and Insurance Row (2-column layout) -->
+          <div class="techpack-form__row techpack-form__row--shipping-insurance">
+            <!-- Shipping Method -->
             <div class="techpack-form__group techpack-form__group--required">
-              <label for="production-type-bulk" class="techpack-form__label">Production Type</label>
-              <select
-                id="production-type-bulk"
-                name="productionType"
-                class="techpack-form__select"
-                required
-                data-validate="required"
-              >
-                <option value="">Select production type...</option>
-                <option value="custom-production">Custom Production</option>
-                <option value="our-blanks">Our Blanks</option>
-              </select>
+              <label class="techpack-form__label">Preferred Shipping Method</label>
+              <div class="techpack-shipping-methods">
+                <label class="techpack-shipping-method">
+                  <input type="radio" name="shippingMethod" value="air">
+                  <span class="techpack-shipping-method__content">
+                    <div class="techpack-shipping-method__icon">✈️</div>
+                    <div class="techpack-shipping-method__text">
+                      <strong>Air Freight</strong>
+                      <small>Faster + Expensive</small>
+                      <div class="techpack-shipping-method__details">5-10 business days</div>
+                    </div>
+                  </span>
+                </label>
+                <label class="techpack-shipping-method">
+                  <input type="radio" name="shippingMethod" value="sea">
+                  <span class="techpack-shipping-method__content">
+                    <div class="techpack-shipping-method__icon">🚢</div>
+                    <div class="techpack-shipping-method__text">
+                      <strong>Sea Freight</strong>
+                      <small>Slower + Cheaper</small>
+                      <div class="techpack-shipping-method__details">20-40 business days</div>
+                    </div>
+                  </span>
+                </label>
+              </div>
               <div class="techpack-form__error" role="alert"></div>
             </div>
 
@@ -505,11 +514,30 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           <!-- Insurance Help Text Row -->
           <div class="techpack-form__row">
             <div class="techpack-form__group techpack-form__group--full">
-              <div class="techpack-form__help">
+              <div class="techpack-form__help techpack-form__help--insurance">
                 <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
                 Without insurance, there's no protection for lost goods during shipping.
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Row 2.8: Production Type (Bulk only - above Project Details) -->
+        <div class="techpack-form__row" id="production-type-bulk-row">
+          <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+            <label for="production-type-bulk" class="techpack-form__label">Production Type</label>
+            <select
+              id="production-type-bulk"
+              name="productionType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
+            >
+              <option value="">Select production type...</option>
+              <option value="custom-production">Custom Production</option>
+              <option value="our-blanks">Our Blanks</option>
+            </select>
+            <div class="techpack-form__error" role="alert"></div>
           </div>
         </div>
 

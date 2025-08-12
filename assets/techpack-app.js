@@ -8770,9 +8770,10 @@
       const deliveryRow = document.getElementById('delivery-row');
       const shippingSection = document.getElementById('shipping-section');
       
-      // Second column elements in delivery row
-      const deliveryProductionType = document.getElementById('delivery-production-type');
-      const deliveryShippingMethod = document.getElementById('delivery-shipping-method');
+      // Separate rows for different form types
+      const deliveryRowSample = document.getElementById('delivery-row-sample');
+      const deliveryRowBulk = document.getElementById('delivery-row-bulk');
+      const productionTypeBulkRow = document.getElementById('production-type-bulk-row');
       
       if (!deliveryRow || !shippingSection) {
         debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
@@ -8783,33 +8784,34 @@
         case 'quotation':
           deliveryRow.style.display = 'none';
           shippingSection.style.display = 'none';
-          // Hide both second column options
-          if (deliveryProductionType) deliveryProductionType.style.display = 'none';
-          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'none';
+          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
           break;
           
         case 'sample-request':
-          deliveryRow.style.display = 'grid';
+          deliveryRow.style.display = 'block';
           shippingSection.style.display = 'none';
-          // Show Production Type, hide Shipping Method for sample requests
-          if (deliveryProductionType) deliveryProductionType.style.display = 'block';
-          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'none';
+          // Show sample delivery row, hide bulk-specific elements
+          if (deliveryRowSample) deliveryRowSample.style.display = 'grid';
+          if (deliveryRowBulk) deliveryRowBulk.style.display = 'none';
+          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
           break;
           
         case 'bulk-order-request':
-          deliveryRow.style.display = 'grid';
+          deliveryRow.style.display = 'block';
           shippingSection.style.display = 'block';
-          // Show Shipping Method, hide Production Type for bulk requests (it's in shipping section)
-          if (deliveryProductionType) deliveryProductionType.style.display = 'none';
-          if (deliveryShippingMethod) deliveryShippingMethod.style.display = 'block';
+          // Show bulk delivery row, hide sample-specific elements
+          if (deliveryRowSample) deliveryRowSample.style.display = 'none';
+          if (deliveryRowBulk) deliveryRowBulk.style.display = 'grid';
+          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'grid';
           break;
       }
       
       debugSystem.log(`Delivery sections toggled for: ${type}`, {
         deliveryRowVisible: deliveryRow.style.display !== 'none',
         shippingSectionVisible: shippingSection.style.display !== 'none',
-        productionTypeVisible: deliveryProductionType?.style.display !== 'none',
-        shippingMethodVisible: deliveryShippingMethod?.style.display !== 'none'
+        sampleRowVisible: deliveryRowSample?.style.display === 'grid',
+        bulkRowVisible: deliveryRowBulk?.style.display === 'grid',
+        productionTypeBulkVisible: productionTypeBulkRow?.style.display === 'grid'
       });
     }
 

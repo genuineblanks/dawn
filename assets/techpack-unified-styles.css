@@ -7880,42 +7880,72 @@ UNIFIED COLOR PICKER STYLING
    ========================================== */
 
 /* Sample Request - Delivery row with horizontal alignment */
-.techpack-form__row--delivery {
-  grid-template-columns: 1fr 1fr;
-  align-items: start;
-}
-
-/* Remove spacer styling for delivery row on desktop */
-@media (min-width: 769px) {
-  .techpack-form__row--delivery .techpack-form__spacer {
-    display: none;
-  }
-}
-
-/* Bulk Order - Production Type and Insurance (2-column layout) */
-.techpack-form__row--bulk-production-insurance {
+.techpack-form__row--delivery-sample {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 
-/* Responsive adjustments for bulk production insurance layout */
+/* Bulk Request - Delivery address horizontal options */
+.techpack-delivery-options--horizontal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Bulk Request - Shipping and Insurance (2-column layout) */
+.techpack-form__row--shipping-insurance {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Insurance help text styling */
+.techpack-form__help--insurance {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  color: var(--techpack-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.techpack-form__help--insurance strong {
+  color: var(--techpack-text);
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
 @media (max-width: 1024px) {
-  .techpack-form__row--bulk-production-insurance {
+  .techpack-form__row--shipping-insurance {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .techpack-delivery-options--horizontal {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 
 @media (max-width: 768px) {
-  .techpack-form__row--delivery {
-    grid-template-columns: 1fr;
-  }
-  
-  .techpack-form__row--bulk-production-insurance {
+  .techpack-form__row--delivery-sample {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .techpack-form__row--shipping-insurance {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .techpack-delivery-options--horizontal {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 
