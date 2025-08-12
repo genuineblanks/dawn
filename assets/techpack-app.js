@@ -2767,14 +2767,16 @@
     }
 
     refreshStep3Interface() {
-      const productionType = state.formData.clientInfo.productionType || 'custom-production';
+      // Read production type directly from DOM to match getMinimumQuantity() behavior
+      const productionSelect = document.querySelector('#production-type, select[name="productionType"]');
+      const productionType = productionSelect ? productionSelect.value : 'custom-production';
       const garments = document.querySelectorAll('.techpack-garment');
       
       garments.forEach(garment => {
         this.updateGarmentInterface(garment, productionType);
       });
       
-      debugSystem.log('Step 3 interface refreshed', { productionType });
+      debugSystem.log('Step 3 interface refreshed', { productionType, source: 'DOM' });
     }
 
     updateGarmentInterface(garment, productionType) {
