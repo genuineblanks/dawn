@@ -7996,6 +7996,53 @@ UNIFIED COLOR PICKER STYLING
   line-height: 1.3;
 }
 
+/* Production Type Options - Match Delivery Address Styling */
+.techpack-production-type-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.techpack-production-type-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 2px solid #f1f5f9;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.techpack-production-type-option:hover {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.techpack-production-type-option input[type="radio"]:checked + .techpack-production-type-option__content {
+  color: var(--techpack-primary);
+}
+
+.techpack-production-type-option__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-production-type-option__content strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text);
+}
+
+.techpack-production-type-option__content small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.3;
+}
+
 /* Shipping method and insurance options styling consistency */
 .techpack-shipping-methods,
 .techpack-insurance-options {
@@ -8007,7 +8054,7 @@ UNIFIED COLOR PICKER STYLING
 .techpack-shipping-method,
 .techpack-insurance-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* Changed from flex-start to center for proper radio button alignment */
   gap: 0.75rem;
   padding: 0.875rem;
   border: 2px solid #f1f5f9;
@@ -8038,18 +8085,13 @@ UNIFIED COLOR PICKER STYLING
 .techpack-insurance-option__icon {
   font-size: 1.5rem;
   flex-shrink: 0;
-  /* Align icon to top for consistent positioning */
-  align-self: flex-start;
-  margin-top: 0.125rem;
+  /* Icon is now centered with the main container */
 }
 
 .techpack-shipping-method__text,
 .techpack-insurance-option__text {
   flex: 1;
-  /* Use flexbox to distribute content evenly */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* Content is already centered by parent container */
 }
 
 .techpack-shipping-method__text strong,
