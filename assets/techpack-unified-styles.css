@@ -5284,49 +5284,38 @@ UNIFIED COLOR PICKER STYLING
   align-items: center !important;
 }
 
-/* Clean Color Picker/Manual Code Toggle Buttons */
+/* Input mode toggle buttons */
 .techpack-input-mode-toggle {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  display: flex !important;
+  gap: 0.5rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .techpack-mode-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  outline: none;
-  user-select: none;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 0.875rem !important;
+  background: var(--techpack-bg) !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 6px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  color: var(--techpack-text-secondary) !important;
+  cursor: pointer !important;
+  transition: var(--techpack-hover-transition) !important;
 }
 
 .techpack-mode-btn:hover {
-  background: #f8fafc;
-  border-color: #d1d5db;
-  color: #374151;
-  transform: none;
+  background: #f8fafc !important;
+  border-color: var(--techpack-border-dark) !important;
+  color: var(--techpack-text) !important;
 }
 
 .techpack-mode-btn--active {
-  background: var(--techpack-primary);
-  border-color: var(--techpack-primary);
-  color: white;
-  font-weight: 600;
-}
-
-.techpack-mode-btn--active:hover {
-  background: var(--techpack-primary-hover);
-  border-color: var(--techpack-primary-hover);
-  color: white;
+  background: var(--techpack-primary) !important;
+  border-color: var(--techpack-primary) !important;
+  color: white !important;
 }
 
 /* Manual entry group unified styling */
@@ -5402,227 +5391,6 @@ UNIFIED COLOR PICKER STYLING
     width: 28px !important;
     height: 28px !important;
   }
-}
-
-/* 
-===========================================
-SOPHISTICATED NAVIGATE TO LABDIP BUTTON
-===========================================
-*/
-
-/* Transform the old clunky "Create Lab Dip Swatches" into elegant "Navigate to LabDip" button */
-.techpack-navigate-labdip-btn {
-  /* Override default dimensions for compact, refined look */
-  padding: 0.5rem 1rem !important;
-  min-width: auto !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
-  gap: 0.375rem !important;
-  
-  /* Matte black styling */
-  background: var(--techpack-primary) !important;
-  border-color: var(--techpack-primary) !important;
-  color: white !important;
-  
-  /* Modern aesthetics */
-  border-radius: 6px !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  
-  /* Smooth transitions */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  transform-origin: center !important;
-  
-  /* Clean typography */
-  letter-spacing: 0.025em !important;
-  text-transform: none !important;
-}
-
-/* Sophisticated hover state */
-.techpack-navigate-labdip-btn:hover {
-  background: var(--techpack-primary-hover) !important;
-  border-color: var(--techpack-primary-hover) !important;
-  
-  /* Elegant scale effect */
-  transform: scale(1.02) translateY(-1px) !important;
-  
-  /* Enhanced shadow with subtle glow */
-  box-shadow: 
-    0 8px 16px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
-}
-
-/* Smooth active/click state */
-.techpack-navigate-labdip-btn:active {
-  transform: scale(0.98) translateY(0) !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-  transition: all 0.1s ease !important;
-}
-
-/* Enhanced focus state for accessibility */
-.techpack-navigate-labdip-btn:focus,
-.techpack-navigate-labdip-btn:focus-visible {
-  outline: 2px solid var(--techpack-primary) !important;
-  outline-offset: 2px !important;
-  box-shadow: 
-    0 8px 16px rgba(0, 0, 0, 0.15),
-    0 0 0 3px rgba(26, 26, 26, 0.2) !important;
-}
-
-/* Sophisticated icon animations */
-.techpack-navigate-labdip-btn svg {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  transform-origin: center !important;
-}
-
-/* Icon slides right on hover with bounce */
-.techpack-navigate-labdip-btn:hover svg {
-  transform: translateX(2px) !important;
-}
-
-/* Brief rotation on click for feedback */
-.techpack-navigate-labdip-btn:active svg {
-  transform: translateX(2px) rotate(45deg) !important;
-  transition: transform 0.1s ease !important;
-}
-
-/* Subtle pulse animation for better visibility */
-@keyframes navigate-pulse {
-  0%, 100% { 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(26, 26, 26, 0.4); 
-  }
-  50% { 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 4px rgba(26, 26, 26, 0.1); 
-  }
-}
-
-.techpack-navigate-labdip-btn:focus {
-  animation: navigate-pulse 2s infinite !important;
-}
-
-/* Mobile-responsive behavior */
-@media (max-width: 768px) {
-  .techpack-navigate-labdip-btn {
-    padding: 0.625rem 1.125rem !important;
-    font-size: 0.8125rem !important;
-    gap: 0.5rem !important;
-    
-    /* Ensure minimum touch target size */
-    min-height: 44px !important;
-  }
-  
-  .techpack-navigate-labdip-btn svg {
-    width: 16px !important;
-    height: 16px !important;
-  }
-}
-
-/* Disable hover effects on touch devices for better mobile experience */
-@media (hover: none) and (pointer: coarse) {
-  .techpack-navigate-labdip-btn:hover {
-    transform: none !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    background: var(--techpack-primary) !important;
-  }
-  
-  .techpack-navigate-labdip-btn:hover svg {
-    transform: none !important;
-  }
-  
-  /* Keep active states for touch feedback */
-  .techpack-navigate-labdip-btn:active {
-    transform: scale(0.95) !important;
-    transition: all 0.1s ease !important;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .techpack-navigate-labdip-btn {
-    border: 2px solid currentColor !important;
-  }
-}
-
-/* Reduced motion accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .techpack-navigate-labdip-btn,
-  .techpack-navigate-labdip-btn svg {
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  .techpack-navigate-labdip-btn:hover {
-    transform: none !important;
-  }
-  
-  .techpack-navigate-labdip-btn:active {
-    transform: none !important;
-  }
-}
-
-/* 
-===========================================
-Z-INDEX FIXES - CRITICAL FOR DROPDOWNS/MODALS
-===========================================
-*/
-
-/* Fix assign menu and dropdown z-index issues */
-.techpack-lab-dip-global-item__actions,
-.techpack-lab-dip-assignment-dropdown,
-.techpack-assign-dropdown,
-.techpack-dropdown-menu,
-[data-dropdown],
-[data-modal] {
-  position: relative;
-  z-index: 1000;
-}
-
-/* Dropdown containers need higher z-index */
-.techpack-lab-dip-global-item__actions .dropdown-menu,
-.techpack-lab-dip-global-item__actions .assign-menu,
-.techpack-assignment-dropdown,
-.fabric-swatch-actions {
-  position: absolute;
-  z-index: 1001;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  min-width: 180px;
-}
-
-/* Global override for any popup/modal elements */
-.popup,
-.modal,
-.dropdown,
-.popover,
-[role="dialog"],
-[role="menu"],
-[role="listbox"] {
-  z-index: 999 !important;
-}
-
-/* Specific fix for fabric swatch assign functionality */
-.techpack-lab-dip-global-item {
-  position: relative;
-  z-index: 1;
-}
-
-.techpack-lab-dip-global-item:hover,
-.techpack-lab-dip-global-item.active {
-  z-index: 100;
-}
-
-/* Ensure any overlay or backdrop appears correctly */
-.overlay,
-.backdrop,
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 998;
 }
 
 /* CTA Section */
