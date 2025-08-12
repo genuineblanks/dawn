@@ -8507,13 +8507,43 @@
     showSubmissionTypeModal() {
       const submissionModal = document.querySelector('#submission-type-modal');
       if (submissionModal) {
+        // Check if client is new (not registered)
+        const isNewClient = !state.formData.isRegisteredClient;
+        
         // Show/hide registration notice based on client type
         const registrationNotice = document.getElementById('registration-notice');
         if (registrationNotice) {
-          if (state.formData.isRegisteredClient) {
-            registrationNotice.style.display = 'flex';
-          } else {
-            registrationNotice.style.display = 'none';
+          // Show notice for NEW clients, not registered ones
+          registrationNotice.style.display = isNewClient ? 'flex' : 'none';
+        }
+        
+        // Handle submission options based on client type
+        const sampleBtn = document.getElementById('sample-btn');
+        const bulkBtn = document.getElementById('bulk-btn');
+        
+        if (isNewClient) {
+          // Disable sample and bulk options for new clients
+          if (sampleBtn) {
+            sampleBtn.classList.add('techpack-submission-option--disabled');
+            sampleBtn.setAttribute('data-disabled', 'true');
+            sampleBtn.style.pointerEvents = 'none';
+          }
+          if (bulkBtn) {
+            bulkBtn.classList.add('techpack-submission-option--disabled');
+            bulkBtn.setAttribute('data-disabled', 'true');
+            bulkBtn.style.pointerEvents = 'none';
+          }
+        } else {
+          // Enable all options for registered clients
+          if (sampleBtn) {
+            sampleBtn.classList.remove('techpack-submission-option--disabled');
+            sampleBtn.removeAttribute('data-disabled');
+            sampleBtn.style.pointerEvents = 'auto';
+          }
+          if (bulkBtn) {
+            bulkBtn.classList.remove('techpack-submission-option--disabled');
+            bulkBtn.removeAttribute('data-disabled');
+            bulkBtn.style.pointerEvents = 'auto';
           }
         }
         
@@ -8526,6 +8556,13 @@
 
     // Handle submission type selection
     selectSubmissionType(type) {
+      // Check if trying to select a disabled option
+      const button = event?.target?.closest('.techpack-submission-option');
+      if (button && button.getAttribute('data-disabled') === 'true') {
+        debugSystem.log('⚠️ Cannot select disabled option');
+        return;
+      }
+      
       state.formData.requestType = type;
       
       // Trigger global lab dip visibility check when request type changes
