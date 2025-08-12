@@ -821,8 +821,10 @@
     
     // Get production type from form if not provided
     if (!productionType) {
-      var productionSelect = document.querySelector('#production-type, select[name="productionType"]');
-      productionType = productionSelect ? productionSelect.value : 'our-blanks';
+      // Check for radio buttons first (sample request), then select dropdown (bulk request)
+      var productionRadio = document.querySelector('input[name="productionType"]:checked');
+      var productionSelect = document.querySelector('#production-type, #production-type-bulk, select[name="productionType"]');
+      productionType = productionRadio ? productionRadio.value : (productionSelect ? productionSelect.value : 'our-blanks');
     }
     
     if (productionType === 'our-blanks') {
@@ -9798,20 +9800,40 @@
 
     // EXISTING: Keep your exact setupProductionTypeListener method
     setupProductionTypeListener() {
-      const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
-      if (!productionTypeSelect) return;
-
-      productionTypeSelect.addEventListener('change', (e) => {
-        const selectedType = e.target.value;
-        debugSystem.log('Production type changed', { type: selectedType });
-        
-        if (state.formData.clientInfo) {
-          state.formData.clientInfo.productionType = selectedType;
-        }
-        
-        if (state.currentStep === 3) {
-          stepManager.refreshStep3Interface();
-        }
+      // Handle both radio buttons (sample request) and select dropdown (bulk request)
+      const productionTypeRadios = document.querySelectorAll('input[name="productionType"]');
+      const productionTypeSelects = document.querySelectorAll('#production-type, #production-type-bulk, select[name="productionType"]');
+      
+      // Set up radio button listeners
+      productionTypeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const selectedType = e.target.value;
+          debugSystem.log('Production type changed (radio)', { type: selectedType });
+          
+          if (state.formData.clientInfo) {
+            state.formData.clientInfo.productionType = selectedType;
+          }
+          
+          if (state.currentStep === 3) {
+            stepManager.refreshStep3Interface();
+          }
+        });
+      });
+      
+      // Set up select dropdown listeners
+      productionTypeSelects.forEach(select => {
+        select.addEventListener('change', (e) => {
+          const selectedType = e.target.value;
+          debugSystem.log('Production type changed (select)', { type: selectedType });
+          
+          if (state.formData.clientInfo) {
+            state.formData.clientInfo.productionType = selectedType;
+          }
+          
+          if (state.currentStep === 3) {
+            stepManager.refreshStep3Interface();
+          }
+        });
       });
     }
 
@@ -9966,7 +9988,9 @@
         vatEin: document.getElementById('vat-ein')?.value || '',
         phone: document.getElementById('phone')?.value || '',
         country: document.getElementById('country')?.value || '',
-        productionType: document.getElementById('production-type')?.value || '',
+        productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
+                       document.getElementById('production-type')?.value || 
+                       document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
@@ -10940,7 +10964,9 @@ setupInitialization();
       vatEin: document.getElementById('vat-ein')?.value || '',
       phone: document.getElementById('phone')?.value || '',
       country: document.getElementById('country')?.value || '',
-      productionType: document.getElementById('production-type')?.value || '',
+      productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
+                     document.getElementById('production-type')?.value || 
+                     document.getElementById('production-type-bulk')?.value || '',
       requestType: document.getElementById('request-type')?.value || '',
       notes: document.getElementById('notes')?.value || ''
     };
@@ -10966,7 +10992,9 @@ setupInitialization();
         phone: document.getElementById('phone')?.value || 
                document.getElementById('business-phone')?.value || '',
         country: document.getElementById('country')?.value || '',
-        productionType: document.getElementById('production-type')?.value || '',
+        productionType: document.querySelector('input[name="productionType"]:checked')?.value || 
+                       document.getElementById('production-type')?.value || 
+                       document.getElementById('production-type-bulk')?.value || '',
         requestType: document.getElementById('request-type')?.value || '',
         notes: document.getElementById('notes')?.value || ''
       };
