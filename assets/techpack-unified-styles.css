@@ -5189,6 +5189,245 @@ LEGACY OVERRIDE RULES
   padding: var(--techpack-section-padding) !important;
 }
 
+/* 
+===========================================
+UNIFIED COLOR PICKER STYLING
+===========================================
+*/
+
+/* Override the elaborate color picker styling with clean unified design */
+.techpack-professional-color-picker-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  padding: 1.25rem !important;
+  background: #f8fafc !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.techpack-color-picker-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.techpack-color-preview-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.techpack-color-picker__input {
+  width: 48px !important;
+  height: 48px !important;
+  border: 2px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: var(--techpack-hover-transition) !important;
+}
+
+.techpack-color-picker__input:hover {
+  border-color: var(--techpack-border-dark) !important;
+  transform: scale(1.05) !important;
+}
+
+.techpack-color-picker__preview {
+  width: 48px !important;
+  height: 48px !important;
+  border: 2px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+  background: #000000 !important;
+  transition: var(--techpack-hover-transition) !important;
+}
+
+/* Auto Pantone section unified styling */
+.techpack-auto-pantone-section {
+  flex: 1 !important;
+  min-width: 200px !important;
+}
+
+.techpack-pantone-result {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.875rem 1rem !important;
+  background: var(--techpack-bg) !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: var(--techpack-hover-transition) !important;
+}
+
+.techpack-pantone-result:hover {
+  background: #f8fafc !important;
+  border-color: var(--techpack-border-dark) !important;
+}
+
+.techpack-pantone-circle {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--techpack-border) !important;
+  flex-shrink: 0 !important;
+}
+
+.techpack-pantone-info {
+  flex: 1 !important;
+}
+
+.techpack-pantone-code {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  color: var(--techpack-text) !important;
+  margin-bottom: 0.125rem !important;
+}
+
+.techpack-pantone-note {
+  font-size: 0.8125rem !important;
+  color: var(--techpack-text-secondary) !important;
+  font-weight: 400 !important;
+}
+
+/* Pantone placeholder unified styling */
+.techpack-pantone-placeholder {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.875rem 1rem !important;
+  background: var(--techpack-bg) !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+  color: var(--techpack-text-secondary) !important;
+}
+
+.techpack-pantone-placeholder-icon {
+  font-size: 1.5rem !important;
+  flex-shrink: 0 !important;
+}
+
+.techpack-pantone-placeholder-text {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+/* Add button section unified styling */
+.techpack-add-button-section {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Input mode toggle buttons */
+.techpack-input-mode-toggle {
+  display: flex !important;
+  gap: 0.5rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.techpack-mode-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 0.875rem !important;
+  background: var(--techpack-bg) !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 6px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  color: var(--techpack-text-secondary) !important;
+  cursor: pointer !important;
+  transition: var(--techpack-hover-transition) !important;
+}
+
+.techpack-mode-btn:hover {
+  background: #f8fafc !important;
+  border-color: var(--techpack-border-dark) !important;
+  color: var(--techpack-text) !important;
+}
+
+.techpack-mode-btn--active {
+  background: var(--techpack-primary) !important;
+  border-color: var(--techpack-primary) !important;
+  color: white !important;
+}
+
+/* Manual entry group unified styling */
+.techpack-manual-entry-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 1.25rem !important;
+  background: #f8fafc !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 8px !important;
+}
+
+.techpack-manual-entry-group input {
+  flex: 1 !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid var(--techpack-border) !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  background: var(--techpack-bg) !important;
+}
+
+.techpack-manual-entry-group input:focus {
+  outline: none !important;
+  border-color: var(--techpack-primary) !important;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .techpack-professional-color-picker-group {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+  }
+  
+  .techpack-color-picker-section {
+    justify-content: center !important;
+  }
+  
+  .techpack-auto-pantone-section {
+    min-width: auto !important;
+  }
+  
+  .techpack-add-button-section {
+    justify-content: center !important;
+  }
+  
+  .techpack-manual-entry-group {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+  }
+  
+  .techpack-manual-entry-group input {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .techpack-professional-color-picker-group {
+    padding: 0.875rem !important;
+  }
+  
+  .techpack-color-picker__input,
+  .techpack-color-picker__preview {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .techpack-pantone-circle {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
 /* CTA Section */
 .techpack-entrance-cta {
   text-align: center;
@@ -7215,6 +7454,4 @@ LEGACY OVERRIDE RULES
     width: 36px;
     height: 36px;
   }
-}
-
 }
