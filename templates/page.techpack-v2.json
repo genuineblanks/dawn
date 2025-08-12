@@ -1,0 +1,154 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_main": {
+          "type": "heading",
+          "settings": {
+            "heading": "TechPack v2 - Professional Garment Specification System",
+            "heading_size": "h1"
+          }
+        },
+        "text_description": {
+          "type": "text",
+          "settings": {
+            "text": "<h5><strong>Next-generation visual interface with image-based selections and live preview.<br/></strong>Experience our enhanced workflow with intuitive image cards, real-time pricing updates, and comprehensive garment visualization.</h5><h5>Complete your TechPack submission using our <strong>visual selection system</strong> with live preview functionality. This eliminates ambiguities, reduces errors, and ensures perfect communication during production.</h5>"
+          }
+        },
+        "button_templates": {
+          "type": "button",
+          "settings": {
+            "button_label": "Download TechPack Templates",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": ["heading_main", "text_description", "button_templates"],
+      "disabled": true,
+      "custom_css": [],
+      "name": "TechPack v2 Introduction",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "step_1_v2": {
+      "type": "techpack-v2-step-1-client-info",
+      "settings": {
+        "step_title": "Client Information",
+        "step_subtitle": "Visual client verification and business details",
+        "show_production_images": true,
+        "enable_country_flags": true
+      }
+    },
+    "step_2_v2": {
+      "type": "techpack-v2-step-2-file-upload",
+      "settings": {
+        "step_title": "File Upload",
+        "step_subtitle": "Visual drag-drop interface with file previews",
+        "max_file_size": 10,
+        "max_files": 10,
+        "show_file_thumbnails": true,
+        "enable_file_categorization": true
+      }
+    },
+    "step_3_v2": {
+      "type": "techpack-v2-step-3-garment-specs",
+      "settings": {
+        "step_title": "Garment Specifications",
+        "step_subtitle": "Image-based garment builder with live preview",
+        "minimum_quantity": 75,
+        "enable_live_preview": true,
+        "show_fabric_swatches": true,
+        "enable_decoration_overlay": true
+      }
+    },
+    "step_4_v2": {
+      "type": "techpack-v2-step-4-review-submit",
+      "settings": {
+        "step_title": "Review & Submit",
+        "step_subtitle": "Visual review with comprehensive summary",
+        "submission_email": "office@genuineblanks.com",
+        "response_time_text": "You will receive a detailed quote within 1-5 business days depending on project complexity.",
+        "show_visual_summary": true,
+        "enable_pricing_breakdown": true
+      }
+    },
+    "faq_v2": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_visual_interface": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What's new in TechPack v2?",
+            "icon": "none",
+            "row_content": "<p>TechPack v2 features a completely visual interface with image-based selections, live preview functionality, and real-time pricing updates. All garment types, fabrics, colors, and decorations are now selected through intuitive image cards.</p>",
+            "page": ""
+          }
+        },
+        "faq_live_preview": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How does the live preview system work?",
+            "icon": "none",
+            "row_content": "<p>As you make selections, the live preview automatically updates to show your garment with chosen colors, decorations, and placement. Decoration areas are overlaid with accurate sizing based on your specifications.</p>",
+            "page": ""
+          }
+        },
+        "faq_pricing": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do I see pricing in real-time?",
+            "icon": "none",
+            "row_content": "<p>Yes! TechPack v2 includes live pricing updates as you make selections. You'll see itemized costs for base garments, decorations, fabrics, and any add-ons with automatic total calculations.</p>",
+            "page": ""
+          }
+        },
+        "faq_mobile": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Is the v2 system mobile-optimized?",
+            "icon": "none",
+            "row_content": "<p>Absolutely! The image card interface is fully responsive with touch-optimized interactions, swipeable sections, and mobile-specific layouts for size grids and decoration placement.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": ["faq_visual_interface", "faq_live_preview", "faq_pricing", "faq_mobile"],
+      "disabled": true,
+      "settings": {
+        "caption": "",
+        "heading": "TechPack v2 - Frequently Asked Questions",
+        "heading_size": "h2",
+        "heading_alignment": "center",
+        "layout": "row",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": ["rich_text_intro", "step_1_v2", "step_2_v2", "step_3_v2", "step_4_v2", "faq_v2"]
+}
