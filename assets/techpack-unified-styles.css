@@ -7874,3 +7874,163 @@ UNIFIED COLOR PICKER STYLING
     height: 36px;
   }
 }
+
+/* ===========================================
+   HORIZONTAL LAYOUT FIXES FOR SAMPLE REQUEST AND BULK ORDER
+   ========================================== */
+
+/* Sample Request - Delivery row with horizontal alignment */
+.techpack-form__row--delivery {
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+/* Remove spacer styling for delivery row on desktop */
+@media (min-width: 769px) {
+  .techpack-form__row--delivery .techpack-form__spacer {
+    display: none;
+  }
+}
+
+/* Bulk Order - Horizontal shipping options (3-column layout) */
+.techpack-form__row--shipping-horizontal {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Responsive adjustments for shipping horizontal layout */
+@media (max-width: 1024px) {
+  .techpack-form__row--shipping-horizontal {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .techpack-form__row--delivery {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-form__row--shipping-horizontal {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Ensure proper spacing for delivery options in both layouts */
+.techpack-delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.techpack-delivery-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 2px solid #f1f5f9;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.techpack-delivery-option:hover {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.techpack-delivery-option input[type="radio"]:checked + .techpack-delivery-option__content {
+  color: var(--techpack-primary);
+}
+
+.techpack-delivery-option__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.techpack-delivery-option__content strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text);
+}
+
+.techpack-delivery-option__content small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.3;
+}
+
+/* Shipping method and insurance options styling consistency */
+.techpack-shipping-methods,
+.techpack-insurance-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.techpack-shipping-method,
+.techpack-insurance-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 2px solid #f1f5f9;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.techpack-shipping-method:hover,
+.techpack-insurance-option:hover {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.techpack-shipping-method__content,
+.techpack-insurance-option__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.techpack-shipping-method__icon,
+.techpack-insurance-option__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.techpack-shipping-method__text,
+.techpack-insurance-option__text {
+  flex: 1;
+}
+
+.techpack-shipping-method__text strong,
+.techpack-insurance-option__text strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--techpack-text);
+  margin-bottom: 0.25rem;
+}
+
+.techpack-shipping-method__text small,
+.techpack-insurance-option__text small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--techpack-text-secondary);
+  line-height: 1.3;
+}
+
+.techpack-shipping-method__details {
+  font-size: 0.75rem;
+  color: var(--techpack-text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
