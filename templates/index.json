@@ -156,7 +156,7 @@
       "settings": {
         "image": "shopify://shop_images/Front_Page_3_Image.jpg",
         "banner_heading": "for startups and scaling brands.",
-        "banner_paragraph": "Product development.  Sampling. Production. All streamlined.",
+        "banner_paragraph": "Custom Product development.  Sampling. Production.",
         "banner_subtext1": "OVERSIZED COLLECTION",
         "banner_link_url1": "",
         "banner_subtext2": "RELAXED COLLECTION",
@@ -264,7 +264,7 @@
         "dynamic_class": "",
         "section_height": 100,
         "min_height": 600,
-        "bg_image": "shopify://shop_images/techtecwallpaper2.jpg",
+        "bg_image": "shopify://shop_images/techtecwallpaper3.jpg",
         "overlay_color": "#6e6e6e",
         "overlay_opacity": 10,
         "text_color": "#ffffff",
