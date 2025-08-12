@@ -8014,6 +8014,8 @@ UNIFIED COLOR PICKER STYLING
   border-radius: 8px;
   transition: all 0.2s ease;
   cursor: pointer;
+  /* Uniform height for consistent appearance */
+  min-height: 80px;
 }
 
 .techpack-shipping-method:hover,
@@ -8028,17 +8030,26 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  /* Ensure content fills available space */
+  height: 100%;
 }
 
 .techpack-shipping-method__icon,
 .techpack-insurance-option__icon {
   font-size: 1.5rem;
   flex-shrink: 0;
+  /* Align icon to top for consistent positioning */
+  align-self: flex-start;
+  margin-top: 0.125rem;
 }
 
 .techpack-shipping-method__text,
 .techpack-insurance-option__text {
   flex: 1;
+  /* Use flexbox to distribute content evenly */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .techpack-shipping-method__text strong,

@@ -8780,27 +8780,29 @@
         return;
       }
       
+      // First, hide all conditional elements to prevent duplicates
+      if (deliveryRowSample) deliveryRowSample.style.display = 'none';
+      if (deliveryRowBulk) deliveryRowBulk.style.display = 'none';
+      if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
+      
       switch(type) {
         case 'quotation':
           deliveryRow.style.display = 'none';
           shippingSection.style.display = 'none';
-          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
+          // All conditional elements already hidden above
           break;
           
         case 'sample-request':
           deliveryRow.style.display = 'block';
           shippingSection.style.display = 'none';
-          // Show sample delivery row, hide bulk-specific elements
+          // Show only sample delivery row
           if (deliveryRowSample) deliveryRowSample.style.display = 'grid';
-          if (deliveryRowBulk) deliveryRowBulk.style.display = 'none';
-          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
           break;
           
         case 'bulk-order-request':
           deliveryRow.style.display = 'block';
           shippingSection.style.display = 'block';
-          // Show bulk delivery row, hide sample-specific elements
-          if (deliveryRowSample) deliveryRowSample.style.display = 'none';
+          // Show only bulk delivery row and production type
           if (deliveryRowBulk) deliveryRowBulk.style.display = 'grid';
           if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'grid';
           break;
