@@ -217,31 +217,28 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
         </div>
 
         <!-- Row 2.5: Delivery Information (Sample & Bulk only) -->
-        <div class="techpack-form__row" id="delivery-row" style="display: none;">
+        <div class="techpack-form__row techpack-form__row--delivery" id="delivery-row" style="display: none;">
           <div class="techpack-form__spacer"></div>
           
-          <div class="techpack-delivery-section">
-            <!-- Delivery Address Selection -->
-            <div class="techpack-form__group techpack-form__group--required">
-              <label class="techpack-form__label">Delivery Address</label>
-              <div class="techpack-delivery-options">
-                <label class="techpack-delivery-option">
-                  <input type="radio" name="deliveryAddress" value="company" checked>
-                  <span class="techpack-delivery-option__content">
-                    <strong>Company Address</strong>
-                    <small>Use business location from above</small>
-                  </span>
-                </label>
-                <label class="techpack-delivery-option">
-                  <input type="radio" name="deliveryAddress" value="different">
-                  <span class="techpack-delivery-option__content">
-                    <strong>Different Address</strong>
-                    <small>Specify alternative delivery location</small>
-                  </span>
-                </label>
-              </div>
-              <div class="techpack-form__error" role="alert"></div>
+          <div class="techpack-form__group techpack-form__group--required">
+            <label class="techpack-form__label">Delivery Address</label>
+            <div class="techpack-delivery-options">
+              <label class="techpack-delivery-option">
+                <input type="radio" name="deliveryAddress" value="company" checked>
+                <span class="techpack-delivery-option__content">
+                  <strong>Company Address</strong>
+                  <small>Use business location from above</small>
+                </span>
+              </label>
+              <label class="techpack-delivery-option">
+                <input type="radio" name="deliveryAddress" value="different">
+                <span class="techpack-delivery-option__content">
+                  <strong>Different Address</strong>
+                  <small>Specify alternative delivery location</small>
+                </span>
+              </label>
             </div>
+            <div class="techpack-form__error" role="alert"></div>
           </div>
         </div>
 
@@ -410,10 +407,31 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 
         <!-- Row 2.7: Shipping Options (Bulk only) -->
         <div class="techpack-shipping-section" id="shipping-section" style="display: none;">
-          <!-- Shipping Method Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__spacer"></div>
+          <!-- Horizontal Shipping Options Row -->
+          <div class="techpack-form__row techpack-form__row--shipping-horizontal">
+            <!-- Delivery Address (repeat for bulk) -->
+            <div class="techpack-form__group techpack-form__group--required">
+              <label class="techpack-form__label">Delivery Address</label>
+              <div class="techpack-delivery-options">
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="company" checked>
+                  <span class="techpack-delivery-option__content">
+                    <strong>Company Address</strong>
+                    <small>Use business location from above</small>
+                  </span>
+                </label>
+                <label class="techpack-delivery-option">
+                  <input type="radio" name="deliveryAddress" value="different">
+                  <span class="techpack-delivery-option__content">
+                    <strong>Different Address</strong>
+                    <small>Specify alternative delivery location</small>
+                  </span>
+                </label>
+              </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
             
+            <!-- Shipping Method -->
             <div class="techpack-form__group techpack-form__group--required">
               <label class="techpack-form__label">Preferred Shipping Method</label>
               <div class="techpack-shipping-methods">
@@ -442,12 +460,8 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
               </div>
               <div class="techpack-form__error" role="alert"></div>
             </div>
-          </div>
 
-          <!-- Insurance Row -->
-          <div class="techpack-form__row">
-            <div class="techpack-form__spacer"></div>
-            
+            <!-- Insurance -->
             <div class="techpack-form__group techpack-form__group--required">
               <label class="techpack-form__label">Shipping Insurance</label>
               <div class="techpack-insurance-options">
@@ -472,11 +486,17 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
                   </span>
                 </label>
               </div>
+              <div class="techpack-form__error" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Insurance Help Text Row -->
+          <div class="techpack-form__row">
+            <div class="techpack-form__group techpack-form__group--full">
               <div class="techpack-form__help">
                 <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
                 Without insurance, there's no protection for lost goods during shipping.
               </div>
-              <div class="techpack-form__error" role="alert"></div>
             </div>
           </div>
         </div>
