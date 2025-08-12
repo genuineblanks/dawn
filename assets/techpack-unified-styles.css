@@ -5625,6 +5625,298 @@ Z-INDEX FIXES - CRITICAL FOR DROPDOWNS/MODALS
   z-index: 998;
 }
 
+/* 
+===========================================
+ENHANCED ASSIGN BUTTON & DROPDOWN FIXES
+===========================================
+*/
+
+/* Make Assign Button Much Larger and More Prominent */
+.techpack-assignment-btn {
+  /* Enhanced sizing for better visibility */
+  padding: 0.75rem 1.25rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  min-width: 120px !important;
+  
+  /* Professional matte black styling */
+  background: var(--techpack-primary) !important;
+  color: white !important;
+  border: 1px solid var(--techpack-primary) !important;
+  
+  /* Modern aesthetics */
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  
+  /* Smooth transitions */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* Better typography */
+  letter-spacing: 0.025em !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+.techpack-assignment-btn:hover {
+  background: var(--techpack-primary-hover) !important;
+  border-color: var(--techpack-primary-hover) !important;
+  color: white !important;
+  
+  /* Subtle lift effect */
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.techpack-assignment-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.techpack-assignment-btn svg {
+  width: 14px !important;
+  height: 14px !important;
+  transition: transform 0.2s ease !important;
+}
+
+.techpack-assignment-btn--open {
+  background: var(--techpack-primary-hover) !important;
+}
+
+.techpack-assignment-btn--open svg {
+  transform: rotate(180deg) !important;
+}
+
+/* Fix Dropdown Menu Z-Index and Visibility Issues */
+.techpack-assignment-dropdown {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.techpack-assignment-menu {
+  /* Critical z-index fix - ensure menu appears above everything */
+  position: absolute !important;
+  z-index: 9999 !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  
+  /* Enhanced dimensions and spacing */
+  min-width: 220px !important;
+  max-width: 280px !important;
+  
+  /* High contrast styling for visibility */
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  
+  /* Strong shadow for separation */
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  
+  /* Animation and visibility */
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-10px) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* Ensure it appears above all content */
+  backdrop-filter: blur(1px) !important;
+}
+
+.techpack-assignment-menu--open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+/* Enhanced menu sections */
+.techpack-assignment-menu__section {
+  padding: 0.75rem 0 !important;
+}
+
+.techpack-assignment-menu__section:not(:last-child) {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.techpack-assignment-menu__header {
+  padding: 0.5rem 1rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  background: #f8fafc !important;
+  margin: 0 !important;
+}
+
+/* Enhanced menu items */
+.techpack-assignment-menu__item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  color: #1e293b !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border: none !important;
+  background: none !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.techpack-assignment-menu__item:hover {
+  background: #f8fafc !important;
+  color: var(--techpack-primary) !important;
+  transform: translateX(2px) !important;
+}
+
+.techpack-assignment-menu__item--selected {
+  background: rgba(26, 26, 26, 0.05) !important;
+  color: var(--techpack-primary) !important;
+  font-weight: 600 !important;
+}
+
+.techpack-assignment-menu__item svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Enhanced notes section */
+.techpack-assignment-menu__note {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  color: #64748b !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.5 !important;
+  background: #f8fafc !important;
+  margin: 0.5rem 1rem !important;
+  border-radius: 6px !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+.techpack-assignment-menu__note svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  margin-top: 1px !important;
+  color: #94a3b8 !important;
+}
+
+/* Mobile Optimization for Assign Button & Menu */
+@media (max-width: 768px) {
+  .techpack-assignment-btn {
+    padding: 0.875rem 1rem !important;
+    font-size: 0.8125rem !important;
+    min-width: 100px !important;
+    
+    /* Ensure proper touch target */
+    min-height: 44px !important;
+  }
+  
+  .techpack-assignment-menu {
+    /* Better mobile positioning */
+    left: 0 !important;
+    right: auto !important;
+    min-width: 200px !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .techpack-assignment-menu__item {
+    padding: 1rem !important;
+    font-size: 0.9375rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .techpack-assignment-btn {
+    padding: 1rem 0.875rem !important;
+    font-size: 0.8125rem !important;
+    min-width: 90px !important;
+  }
+  
+  .techpack-assignment-menu {
+    min-width: 180px !important;
+  }
+  
+  .techpack-assignment-menu__item {
+    padding: 0.875rem !important;
+  }
+}
+
+/* Accessibility Improvements */
+.techpack-assignment-btn:focus,
+.techpack-assignment-btn:focus-visible {
+  outline: 2px solid var(--techpack-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(26, 26, 26, 0.2) !important;
+}
+
+.techpack-assignment-menu__item:focus,
+.techpack-assignment-menu__item:focus-visible {
+  outline: 2px solid var(--techpack-primary) !important;
+  outline-offset: -2px !important;
+  background: rgba(26, 26, 26, 0.05) !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .techpack-assignment-btn {
+    border: 2px solid currentColor !important;
+  }
+  
+  .techpack-assignment-menu {
+    border: 3px solid #000000 !important;
+  }
+  
+  .techpack-assignment-menu__item {
+    border-bottom: 1px solid #000000 !important;
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .techpack-assignment-btn,
+  .techpack-assignment-menu,
+  .techpack-assignment-menu__item {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .techpack-assignment-btn:hover {
+    transform: none !important;
+  }
+  
+  .techpack-assignment-menu__item:hover {
+    transform: none !important;
+  }
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .techpack-assignment-btn:hover {
+    transform: none !important;
+    background: var(--techpack-primary) !important;
+  }
+  
+  .techpack-assignment-menu__item:hover {
+    transform: none !important;
+  }
+  
+  /* Keep active states for touch feedback */
+  .techpack-assignment-btn:active {
+    transform: scale(0.98) !important;
+    transition: all 0.1s ease !important;
+  }
+}
+
 /* CTA Section */
 .techpack-entrance-cta {
   text-align: center;
