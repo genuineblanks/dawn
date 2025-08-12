@@ -4953,6 +4953,52 @@
       });
     }
 
+    // NEW METHOD: Clear all garments (for production type changes)
+    clearAllGarments() {
+      const garments = document.querySelectorAll('.techpack-garment');
+      if (garments.length === 0) return;
+      
+      debugSystem.log('Clearing all garments', { count: garments.length });
+      
+      // Remove each garment from DOM
+      garments.forEach((garment) => {
+        garment.remove();
+      });
+      
+      // Clear state data
+      state.formData.garments = [];
+      
+      // Clean up sample data
+      if (window.sampleManager && window.sampleManager.perGarmentSamples) {
+        window.sampleManager.perGarmentSamples.clear();
+        debugSystem.log('Cleared all sample data');
+      }
+      
+      // Clean up lab dip data  
+      if (window.globalLabDipManager) {
+        // Reset lab dip assignments
+        if (window.globalLabDipManager.assignments) {
+          window.globalLabDipManager.assignments.clear();
+        }
+        debugSystem.log('Cleared all lab dip assignments');
+      }
+      
+      // Reset garment counter
+      state.counters.garment = 0;
+      state.counters.colorway = 0;
+      
+      // Update progress and validation
+      if (window.quantityCalculator) {
+        quantityCalculator.calculateAndUpdateProgress();
+      }
+      
+      if (state.currentStep === 3) {
+        stepManager.validateStep3();
+      }
+      
+      debugSystem.log('All garments cleared successfully');
+    }
+
     // NEW METHOD: Renumber garments after deletion
     renumberGarments() {
       const garments = document.querySelectorAll('.techpack-garment');
@@ -8468,7 +8514,21 @@
         'production-type'
       ];
 
-      requiredFields.forEach(fieldId => {
+      // Add delivery fields for sample/bulk requests
+      const deliveryFields = [
+        'delivery-contact-name',
+        'delivery-phone',
+        'delivery-address-1',
+        'delivery-city',
+        'delivery-state',
+        'delivery-postal',
+        'delivery-country'
+      ];
+
+      // Combine all fields
+      const allFields = [...requiredFields, ...deliveryFields];
+
+      allFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field) {
           // Add event listeners for real-time validation
@@ -8506,7 +8566,7 @@
         });
       });
 
-      debugSystem.log('Step 1 real-time validation setup completed (including radio buttons)');
+      debugSystem.log('Step 1 real-time validation setup completed (including radio buttons and delivery fields)');
       
       // Initialize Next button as disabled until all fields are valid
       const nextBtn = document.getElementById('step-1-next');
@@ -9815,14 +9875,46 @@
     setupProductionTypeListener() {
       const productionTypeSelect = document.querySelector('#production-type, select[name="productionType"]');
       if (!productionTypeSelect) return;
+      
+      // Track previous production type for change detection
+      let previousProductionType = productionTypeSelect.value;
 
       productionTypeSelect.addEventListener('change', (e) => {
         const selectedType = e.target.value;
-        debugSystem.log('Production type changed', { type: selectedType });
+        const hasActualChange = previousProductionType && previousProductionType !== selectedType;
         
+        debugSystem.log('Production type changed', { 
+          previousType: previousProductionType,
+          newType: selectedType,
+          hasActualChange 
+        });
+        
+        // If there's an actual change and garments exist, ask for confirmation
+        if (hasActualChange) {
+          const existingGarments = document.querySelectorAll('.techpack-garment');
+          if (existingGarments.length > 0) {
+            const confirmed = confirm(
+              `Changing production type will reset all garments in Step 3. Continue?`
+            );
+            
+            if (confirmed) {
+              this.clearAllGarments();
+              debugSystem.log('Garments cleared due to production type change');
+            } else {
+              // Revert the selection
+              productionTypeSelect.value = previousProductionType;
+              return;
+            }
+          }
+        }
+        
+        // Update state
         if (state.formData.clientInfo) {
           state.formData.clientInfo.productionType = selectedType;
         }
+        
+        // Update previous type for next change detection
+        previousProductionType = selectedType;
         
         if (state.currentStep === 3) {
           stepManager.refreshStep3Interface();
