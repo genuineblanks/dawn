@@ -3,25 +3,25 @@
 
 /* CSS Custom Properties - Premium Luxury Palette */
 :root {
-  /* Primary Colors - Professional Dark Grey System */
-  --techpack-primary: #374151;
-  --techpack-primary-hover: #4b5563;
+  /* Primary Colors - Matte Black System */
+  --techpack-primary: #1a1a1a;
+  --techpack-primary-hover: #2d2d2d;
   --techpack-primary-light: #f8f9fa;
-  --techpack-primary-dark: #1f2937;
+  --techpack-primary-dark: #000000;
   
   /* Secondary & Neutral Colors - Refined Grey Scale */
   --techpack-secondary: #6b7280;
   --techpack-success: #059669;
   --techpack-error: #dc2626;
   --techpack-warning: #6b7280;
-  --techpack-info: #374151;
+  --techpack-info: #1a1a1a;
   
   /* Background Colors - Pure & Clean */
   --techpack-bg: #ffffff;
   --techpack-bg-secondary: #f9fafb;
   --techpack-bg-tertiary: #f3f4f6;
   --techpack-bg-accent: #f1f3f4;
-  --techpack-bg-dark: #374151;
+  --techpack-bg-dark: #1a1a1a;
   
   /* Border & Divider Colors - Ultra Subtle */
   --techpack-border: #e5e7eb;
