@@ -8487,7 +8487,19 @@
         }
       });
 
-      debugSystem.log('Step 1 real-time validation setup completed');
+      // Add event listeners for radio button groups (bulk request fields)
+      const radioGroups = ['shippingMethod', 'insurance', 'deliveryAddress'];
+      radioGroups.forEach(groupName => {
+        const radioButtons = step1Form.querySelectorAll(`input[name="${groupName}"]`);
+        radioButtons.forEach(radio => {
+          radio.addEventListener('change', () => {
+            // Immediate validation when radio selection changes
+            stepManager.validateStep1();
+          });
+        });
+      });
+
+      debugSystem.log('Step 1 real-time validation setup completed (including radio buttons)');
       
       // Initialize Next button as disabled until all fields are valid
       const nextBtn = document.getElementById('step-1-next');
@@ -8773,7 +8785,6 @@
       // Separate rows for different form types
       const deliveryRowSample = document.getElementById('delivery-row-sample');
       const deliveryRowBulk = document.getElementById('delivery-row-bulk');
-      const productionTypeBulkRow = document.getElementById('production-type-bulk-row');
       
       if (!deliveryRow || !shippingSection) {
         debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
@@ -8783,7 +8794,6 @@
       // First, hide all conditional elements to prevent duplicates
       if (deliveryRowSample) deliveryRowSample.style.display = 'none';
       if (deliveryRowBulk) deliveryRowBulk.style.display = 'none';
-      if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'none';
       
       switch(type) {
         case 'quotation':
@@ -8802,9 +8812,8 @@
         case 'bulk-order-request':
           deliveryRow.style.display = 'block';
           shippingSection.style.display = 'block';
-          // Show only bulk delivery row and production type
+          // Show bulk delivery row
           if (deliveryRowBulk) deliveryRowBulk.style.display = 'grid';
-          if (productionTypeBulkRow) productionTypeBulkRow.style.display = 'grid';
           break;
       }
       
@@ -8812,8 +8821,7 @@
         deliveryRowVisible: deliveryRow.style.display !== 'none',
         shippingSectionVisible: shippingSection.style.display !== 'none',
         sampleRowVisible: deliveryRowSample?.style.display === 'grid',
-        bulkRowVisible: deliveryRowBulk?.style.display === 'grid',
-        productionTypeBulkVisible: productionTypeBulkRow?.style.display === 'grid'
+        bulkRowVisible: deliveryRowBulk?.style.display === 'grid'
       });
     }
 
