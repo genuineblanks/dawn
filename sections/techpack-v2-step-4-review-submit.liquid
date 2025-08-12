@@ -1,0 +1,460 @@
+{% comment %}
+TechPack v2 Step 4: Visual Review & Submit with Image Summaries
+Enhanced review interface with visual representations and pricing breakdown
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-v2-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}" media="print" onload="this.media='all'">
+<noscript>{{ 'techpack-v2-styles.css' | asset_url | stylesheet_tag }}</noscript>
+
+<section id="techpack-v2-step-4" class="techpack-v2-step" data-step="4" style="display: none;">
+  <div class="techpack-v2-container">
+    <!-- Enhanced Progress Bar -->
+    <div class="techpack-v2-progress">
+      <div class="techpack-v2-progress-track">
+        <div class="techpack-v2-progress-fill" style="width: 100%"></div>
+      </div>
+      <div class="techpack-v2-progress-steps">
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--completed">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--completed">✓</div>
+          <div class="techpack-v2-progress-step-label">Client Info</div>
+        </div>
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--completed">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--completed">✓</div>
+          <div class="techpack-v2-progress-step-label">File Upload</div>
+        </div>
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--completed">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--completed">✓</div>
+          <div class="techpack-v2-progress-step-label">Garment Builder</div>
+        </div>
+        <div class="techpack-v2-progress-step techpack-v2-progress-step--active">
+          <div class="techpack-v2-progress-step-circle techpack-v2-progress-step-circle--active">4</div>
+          <div class="techpack-v2-progress-step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-v2-content">
+      <div class="techpack-v2-step-header">
+        <h2 class="techpack-v2-step-title">Review & Submit</h2>
+        <p class="techpack-v2-step-subtitle">Visual review of your complete garment specification with pricing breakdown</p>
+      </div>
+
+      <!-- Final Pricing Display -->
+      <div class="techpack-v2-final-pricing" id="final-pricing-v2">
+        <div class="techpack-v2-final-price-main">
+          <div class="techpack-v2-final-price-header">
+            <h3 class="techpack-v2-final-price-title">Total Estimated Cost</h3>
+            <button type="button" class="techpack-v2-final-price-toggle" id="toggle-final-breakdown-v2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              <span>Show Details</span>
+            </button>
+          </div>
+          <div class="techpack-v2-final-price-value" id="final-total-price-v2">€0.00</div>
+        </div>
+        <div class="techpack-v2-final-price-breakdown" id="final-price-breakdown-v2" style="display: none;">
+          <div class="techpack-v2-breakdown-section">
+            <h4 class="techpack-v2-breakdown-title">Cost Breakdown</h4>
+            <div class="techpack-v2-breakdown-items" id="final-breakdown-items-v2">
+              <!-- Breakdown items will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Review Sections -->
+      <div class="techpack-v2-review">
+        <!-- Client Information Review -->
+        <div class="techpack-v2-review-section">
+          <div class="techpack-v2-review-section-header">
+            <div class="techpack-v2-review-section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="techpack-v2-review-section-title">Client Information</h3>
+            <button type="button" class="techpack-v2-review-edit-btn" data-edit-step="1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M12 4l-8 8v2h2l8-8-2-2z" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="techpack-v2-review-section-content" id="review-client-content-v2">
+            <div class="techpack-v2-review-cards">
+              <div class="techpack-v2-review-card">
+                <h4 class="techpack-v2-review-card-title">Contact Details</h4>
+                <div class="techpack-v2-review-card-content" id="client-contact-review-v2">
+                  <!-- Populated by JavaScript -->
+                </div>
+              </div>
+              <div class="techpack-v2-review-card">
+                <h4 class="techpack-v2-review-card-title">Business Information</h4>
+                <div class="techpack-v2-review-card-content" id="client-business-review-v2">
+                  <!-- Populated by JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Files Review -->
+        <div class="techpack-v2-review-section">
+          <div class="techpack-v2-review-section-header">
+            <div class="techpack-v2-review-section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/>
+                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="techpack-v2-review-section-title">Uploaded Files</h3>
+            <button type="button" class="techpack-v2-review-edit-btn" data-edit-step="2">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M12 4l-8 8v2h2l8-8-2-2z" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="techpack-v2-review-section-content" id="review-files-content-v2">
+            <div class="techpack-v2-files-summary" id="files-summary-v2">
+              <!-- File thumbnails and categories will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Garment Specification Review -->
+        <div class="techpack-v2-review-section">
+          <div class="techpack-v2-review-section-header">
+            <div class="techpack-v2-review-section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L3 7v11a2 2 0 002 2h14a2 2 0 002-2V7l-9-5z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="techpack-v2-review-section-title">Garment Specification</h3>
+            <button type="button" class="techpack-v2-review-edit-btn" data-edit-step="3">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M12 4l-8 8v2h2l8-8-2-2z" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+          <div class="techpack-v2-review-section-content" id="review-garment-content-v2">
+            <div class="techpack-v2-garment-summary">
+              <!-- Visual Garment Preview -->
+              <div class="techpack-v2-garment-preview-card">
+                <div class="techpack-v2-garment-preview-image" id="garment-preview-final-v2">
+                  <!-- Final garment preview with decorations -->
+                </div>
+                <div class="techpack-v2-garment-preview-details" id="garment-preview-details-v2">
+                  <!-- Garment details will be populated here -->
+                </div>
+              </div>
+
+              <!-- Specification Cards -->
+              <div class="techpack-v2-spec-cards">
+                <div class="techpack-v2-spec-card">
+                  <h4 class="techpack-v2-spec-card-title">Base Garment</h4>
+                  <div class="techpack-v2-spec-card-content" id="base-garment-spec-v2">
+                    <!-- Base garment specs -->
+                  </div>
+                </div>
+
+                <div class="techpack-v2-spec-card">
+                  <h4 class="techpack-v2-spec-card-title">Materials</h4>
+                  <div class="techpack-v2-spec-card-content" id="materials-spec-v2">
+                    <!-- Fabric and material specs -->
+                  </div>
+                </div>
+
+                <div class="techpack-v2-spec-card">
+                  <h4 class="techpack-v2-spec-card-title">Colorways</h4>
+                  <div class="techpack-v2-spec-card-content" id="colorways-spec-v2">
+                    <!-- Colorway visual summary -->
+                  </div>
+                </div>
+
+                <div class="techpack-v2-spec-card">
+                  <h4 class="techpack-v2-spec-card-title">Quantities</h4>
+                  <div class="techpack-v2-spec-card-content" id="quantities-spec-v2">
+                    <!-- Size/quantity breakdown -->
+                  </div>
+                </div>
+
+                <div class="techpack-v2-spec-card" id="decoration-spec-card-v2" style="display: none;">
+                  <h4 class="techpack-v2-spec-card-title">Decoration</h4>
+                  <div class="techpack-v2-spec-card-content" id="decoration-spec-v2">
+                    <!-- Decoration details -->
+                  </div>
+                </div>
+
+                <div class="techpack-v2-spec-card" id="addons-spec-card-v2" style="display: none;">
+                  <h4 class="techpack-v2-spec-card-title">Add-ons</h4>
+                  <div class="techpack-v2-spec-card-content" id="addons-spec-v2">
+                    <!-- Add-ons summary -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary & Next Steps -->
+        <div class="techpack-v2-review-section">
+          <div class="techpack-v2-review-section-header">
+            <div class="techpack-v2-review-section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="techpack-v2-review-section-title">Summary & Next Steps</h3>
+          </div>
+          <div class="techpack-v2-review-section-content">
+            <div class="techpack-v2-summary-cards">
+              <div class="techpack-v2-summary-card">
+                <div class="techpack-v2-summary-card-icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+                    <path d="M16 8v8l4 4" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="techpack-v2-summary-card-content">
+                  <h4 class="techpack-v2-summary-card-title">Response Time</h4>
+                  <p class="techpack-v2-summary-card-text">{{ section.settings.response_time_text | default: "You will receive a detailed quote within 1-5 business days depending on project complexity." }}</p>
+                </div>
+              </div>
+
+              <div class="techpack-v2-summary-card">
+                <div class="techpack-v2-summary-card-icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M28 12a4 4 0 00-8 0c0 1.5 1 2.5 2 3l2 2v3h4v-3l2-2c1-.5 2-1.5 2-3z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M24 24h4M24 28h4" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="techpack-v2-summary-card-content">
+                  <h4 class="techpack-v2-summary-card-title">What Happens Next</h4>
+                  <div class="techpack-v2-next-steps">
+                    <div class="techpack-v2-next-step">
+                      <span class="techpack-v2-step-number">1</span>
+                      <span>We review your specifications</span>
+                    </div>
+                    <div class="techpack-v2-next-step">
+                      <span class="techpack-v2-step-number">2</span>
+                      <span>Detailed quote is prepared</span>
+                    </div>
+                    <div class="techpack-v2-next-step">
+                      <span class="techpack-v2-step-number">3</span>
+                      <span>You receive email with pricing</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="techpack-v2-summary-card">
+                <div class="techpack-v2-summary-card-icon">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M4 12l4-8 4 8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M20 12l4-8 4 8" stroke="currentColor" stroke-width="2"/>
+                    <rect x="2" y="12" width="28" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 20h16M8 24h12" stroke="currentColor" stroke-width="1.5"/>
+                  </svg>
+                </div>
+                <div class="techpack-v2-summary-card-content">
+                  <h4 class="techpack-v2-summary-card-title">Quality Guarantee</h4>
+                  <p class="techpack-v2-summary-card-text">All specifications are reviewed by our expert team to ensure manufacturability and quality standards.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Actions -->
+      <div class="techpack-v2-submit-section">
+        <div class="techpack-v2-submit-disclaimer">
+          <div class="techpack-v2-disclaimer-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8v4l2 2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="techpack-v2-disclaimer-content">
+            <h4 class="techpack-v2-disclaimer-title">Submission Confirmation</h4>
+            <p class="techpack-v2-disclaimer-text">
+              By submitting this TechPack, you confirm that all information is accurate and complete. 
+              Our team will contact you at <strong id="contact-email-v2">{{ section.settings.submission_email | default: "office@genuineblanks.com" }}</strong> 
+              with a detailed quote.
+            </p>
+          </div>
+        </div>
+
+        <div class="techpack-v2-form-actions">
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--secondary" id="step-4-back-v2">
+            <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M12 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Previous
+          </button>
+          
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--ghost" id="export-json-v2">
+            <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M6 2L2 6v8a2 2 0 002 2h8a2 2 0 002-2V6L10 2H6z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M10 2v6h6" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Export JSON
+          </button>
+
+          <button type="button" class="techpack-v2-btn techpack-v2-btn--primary techpack-v2-btn--submit" id="step-4-submit-v2">
+            <svg class="techpack-v2-btn-icon" width="20" height="20" viewBox="0 0 20 20">
+              <path d="M3 8l6 6 8-8" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            Submit TechPack v2
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Success Modal -->
+<div class="techpack-v2-modal" id="success-modal-v2" style="display: none;">
+  <div class="techpack-v2-modal-backdrop"></div>
+  <div class="techpack-v2-modal-content techpack-v2-modal-content--success">
+    <div class="techpack-v2-modal-header">
+      <h3 class="techpack-v2-modal-title">Submission Successful!</h3>
+      <button type="button" class="techpack-v2-modal-close" id="close-success-modal-v2">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M18 6L6 18m0-12l12 12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="techpack-v2-modal-body">
+      <div class="techpack-v2-success">
+        <div class="techpack-v2-success-icon">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="35" fill="currentColor" opacity="0.1"/>
+            <circle cx="40" cy="40" r="25" stroke="currentColor" stroke-width="3"/>
+            <path d="M30 40l8 8 16-16" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h4 class="techpack-v2-success-title">Your TechPack v2 has been submitted!</h4>
+        <p class="techpack-v2-success-message">
+          Thank you for using our enhanced visual submission system. Our team has received your comprehensive 
+          garment specifications and will review them shortly. You'll receive a detailed quote within 
+          1-5 business days at <strong id="success-email-v2"></strong>.
+        </p>
+        <div class="techpack-v2-success-details">
+          <div class="techpack-v2-success-detail">
+            <span class="techpack-v2-success-detail-label">Reference ID:</span>
+            <span class="techpack-v2-success-detail-value" id="submission-reference-v2"></span>
+          </div>
+          <div class="techpack-v2-success-detail">
+            <span class="techpack-v2-success-detail-label">Submission Type:</span>
+            <span class="techpack-v2-success-detail-value" id="submission-type-v2"></span>
+          </div>
+          <div class="techpack-v2-success-detail">
+            <span class="techpack-v2-success-detail-label">Total Items:</span>
+            <span class="techpack-v2-success-detail-value" id="total-items-v2"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="techpack-v2-modal-footer">
+      <button type="button" class="techpack-v2-btn techpack-v2-btn--primary" id="close-and-reset-v2">
+        <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M10 4v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Start New TechPack v2
+      </button>
+      <button type="button" class="techpack-v2-btn techpack-v2-btn--ghost" id="download-summary-v2">
+        <svg class="techpack-v2-btn-icon techpack-v2-btn-icon--left" width="20" height="20" viewBox="0 0 20 20">
+          <path d="M6 8l4 4 4-4M6 2v10" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        Download Summary
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="techpack-v2-loading" id="loading-overlay-v2" style="display: none;">
+  <div class="techpack-v2-loading-backdrop"></div>
+  <div class="techpack-v2-loading-content">
+    <div class="techpack-v2-loading-spinner">
+      <svg width="60" height="60" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="25" stroke="currentColor" stroke-width="4" fill="none" opacity="0.2"/>
+        <circle cx="30" cy="30" r="25" stroke="currentColor" stroke-width="4" fill="none" 
+                stroke-dasharray="157" stroke-dashoffset="157" class="techpack-v2-loading-circle"/>
+      </svg>
+    </div>
+    <div class="techpack-v2-loading-text">
+      <h4 class="techpack-v2-loading-title">Submitting your TechPack v2...</h4>
+      <p class="techpack-v2-loading-subtitle" id="loading-status-text-v2">Preparing submission data...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Contact Form (Fallback) -->
+<form id="fallback-contact-form-v2" style="display: none;" action="{{ routes.contact_url }}" method="post">
+  <input type="hidden" name="form_type" value="contact">
+  <input type="hidden" name="utf8" value="✓">
+  <input type="hidden" name="contact[name]" id="fallback-name-v2">
+  <input type="hidden" name="contact[email]" id="fallback-email-v2">
+  <input type="hidden" name="contact[subject]" value="TechPack v2 Submission">
+  <textarea name="contact[body]" id="fallback-body-v2" style="display: none;"></textarea>
+</form>
+
+{% schema %}
+{
+  "name": "TechPack v2 Step 4",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Visual Review & Submit Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Review & Submit"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Visual review of your complete garment specification with pricing breakdown"
+    },
+    {
+      "type": "text",
+      "id": "submission_email",
+      "label": "Submission Email",
+      "default": "office@genuineblanks.com"
+    },
+    {
+      "type": "text",
+      "id": "response_time_text",
+      "label": "Response Time Text",
+      "default": "You will receive a detailed quote within 1-5 business days depending on project complexity."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_visual_summary",
+      "label": "Show Visual Garment Summary",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pricing_breakdown",
+      "label": "Enable Detailed Pricing Breakdown",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack v2 Step 4"
+    }
+  ]
+}
+{% endschema %}
