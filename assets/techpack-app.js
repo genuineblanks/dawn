@@ -2057,17 +2057,74 @@
           }
         }
       }
+
+      // DELIVERY VALIDATION - Only for sample and bulk requests
+      const requestType = state.formData.requestType;
+      if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+        
+        // Check if delivery address is set to "different"
+        const deliveryAddress = data.deliveryAddress || 'company'; // Default to company
+        
+        if (deliveryAddress === 'different') {
+          // Validate delivery fields when different address is selected
+          const deliveryRequiredFields = [
+            { name: 'deliveryContactName', label: 'Delivery contact name' },
+            { name: 'deliveryPhone', label: 'Delivery phone number' },
+            { name: 'deliveryAddress1', label: 'Delivery address line 1' },
+            { name: 'deliveryCity', label: 'Delivery city' },
+            { name: 'deliveryState', label: 'Delivery state/province' },
+            { name: 'deliveryPostal', label: 'Delivery postal code' },
+            { name: 'deliveryCountry', label: 'Delivery country' }
+          ];
+
+          deliveryRequiredFields.forEach(field => {
+            if (!data[field.name] || !data[field.name].trim()) {
+              isValid = false;
+              errors[field.name] = `${field.label} is required`;
+            }
+          });
+
+          // Validate delivery phone format
+          if (data.deliveryPhone && !Utils.validatePhone(data.deliveryPhone)) {
+            isValid = false;
+            errors.deliveryPhone = 'Please enter a valid phone number';
+          }
+        }
+
+        // Validate shipping method for bulk requests
+        if (requestType === 'bulk-order-request') {
+          if (!data.shippingMethod) {
+            isValid = false;
+            errors.shippingMethod = 'Please select a shipping method';
+          }
+
+          if (!data.insurance) {
+            isValid = false;
+            errors.insurance = 'Please select insurance preference';
+          }
+        }
+      }
     
-      // Display errors for all fields - UNCHANGED from your code
+      // Display errors for all fields - ENHANCED for radio groups
       Object.keys(errors).forEach(fieldName => {
         const field = form.querySelector(`[name="${fieldName}"]`);
         if (field) {
           this.displayFieldError(field, false, errors[fieldName]);
+        } else {
+          // Handle radio button groups
+          this.displayRadioGroupError(fieldName, errors[fieldName]);
         }
       });
     
-      // Clear errors for valid fields - ENHANCED to handle both client types
-      const allFieldNames = ['clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'notes'];
+      // Clear errors for valid fields - ENHANCED to handle both client types and delivery fields
+      const allFieldNames = [
+        'clientName', 'companyName', 'email', 'phone', 'vatEin', 'country', 'productionType', 'notes',
+        // Delivery fields
+        'deliveryContactName', 'deliveryPhone', 'deliveryAddress1', 'deliveryAddress2', 
+        'deliveryCity', 'deliveryState', 'deliveryPostal', 'deliveryCountry', 'deliveryNotes',
+        // Shipping fields
+        'shippingMethod', 'insurance'
+      ];
       allFieldNames.forEach(fieldName => {
         if (!errors[fieldName]) {
           const fieldElement = form.querySelector(`[name="${fieldName}"]`);
@@ -2099,6 +2156,72 @@
       }
     
       return isValid;
+    }
+
+    // Display error for radio button groups
+    displayRadioGroupError(fieldName, errorMessage) {
+      let errorContainer = null;
+      
+      // Find the appropriate error container based on field name
+      if (fieldName === 'shippingMethod') {
+        errorContainer = document.querySelector('.techpack-shipping-methods + .techpack-form__error');
+        if (!errorContainer) {
+          const shippingMethods = document.querySelector('.techpack-shipping-methods');
+          if (shippingMethods && shippingMethods.parentNode) {
+            errorContainer = shippingMethods.parentNode.querySelector('.techpack-form__error');
+          }
+        }
+      } else if (fieldName === 'insurance') {
+        errorContainer = document.querySelector('.techpack-insurance-options + .techpack-form__error');
+        if (!errorContainer) {
+          const insuranceOptions = document.querySelector('.techpack-insurance-options');
+          if (insuranceOptions && insuranceOptions.parentNode) {
+            errorContainer = insuranceOptions.parentNode.querySelector('.techpack-form__error');
+          }
+        }
+      } else if (fieldName === 'deliveryAddress') {
+        errorContainer = document.querySelector('.techpack-delivery-options + .techpack-form__error');
+        if (!errorContainer) {
+          const deliveryOptions = document.querySelector('.techpack-delivery-options');
+          if (deliveryOptions && deliveryOptions.parentNode) {
+            errorContainer = deliveryOptions.parentNode.querySelector('.techpack-form__error');
+          }
+        }
+      }
+      
+      if (errorContainer) {
+        errorContainer.textContent = errorMessage;
+        errorContainer.style.display = 'block';
+        
+        // Add error styling to parent container
+        const parentGroup = errorContainer.parentNode;
+        if (parentGroup) {
+          parentGroup.classList.add('techpack-form__group--error');
+        }
+      }
+    }
+
+    // Clear radio group errors
+    clearRadioGroupError(fieldName) {
+      this.displayRadioGroupError(fieldName, '');
+      
+      // Remove error styling
+      let parentGroup = null;
+      if (fieldName === 'shippingMethod') {
+        parentGroup = document.querySelector('.techpack-shipping-methods')?.parentNode;
+      } else if (fieldName === 'insurance') {
+        parentGroup = document.querySelector('.techpack-insurance-options')?.parentNode;
+      } else if (fieldName === 'deliveryAddress') {
+        parentGroup = document.querySelector('.techpack-delivery-options')?.parentNode;
+      }
+      
+      if (parentGroup) {
+        parentGroup.classList.remove('techpack-form__group--error');
+        const errorContainer = parentGroup.querySelector('.techpack-form__error');
+        if (errorContainer) {
+          errorContainer.style.display = 'none';
+        }
+      }
     }
 
     validateStep2() {
@@ -8627,6 +8750,9 @@
           break;
       }
 
+      // Show/hide delivery sections based on submission type
+      this.toggleDeliverySections(type);
+
       // Set data attribute on Step 3 section for CSS targeting
       const step3Section = document.getElementById('techpack-step-3');
       if (step3Section) {
@@ -8637,6 +8763,242 @@
       if (window.sampleManager && typeof window.sampleManager.checkRequestType === 'function') {
         window.sampleManager.checkRequestType();
       }
+    }
+
+    // Toggle delivery sections based on submission type
+    toggleDeliverySections(type) {
+      const deliveryRow = document.getElementById('delivery-row');
+      const shippingSection = document.getElementById('shipping-section');
+      
+      if (!deliveryRow || !shippingSection) {
+        debugSystem.log('⚠️ Delivery sections not found in DOM', null, 'warn');
+        return;
+      }
+      
+      switch(type) {
+        case 'quotation':
+          deliveryRow.style.display = 'none';
+          shippingSection.style.display = 'none';
+          break;
+        case 'sample-request':
+          deliveryRow.style.display = 'grid';
+          shippingSection.style.display = 'none';
+          break;
+        case 'bulk-order-request':
+          deliveryRow.style.display = 'grid';
+          shippingSection.style.display = 'block';
+          break;
+      }
+      
+      debugSystem.log(`Delivery sections toggled for: ${type}`);
+    }
+
+    // Initialize delivery form interactions
+    initDeliveryForm() {
+      // Delivery address selection
+      const deliveryRadios = document.querySelectorAll('input[name="deliveryAddress"]');
+      deliveryRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          this.handleDeliveryAddressChange(e.target.value);
+        });
+      });
+
+      // Different address form toggle
+      this.handleDeliveryAddressChange('company'); // Default to company address
+
+      // Enhanced country selector for delivery
+      this.initEnhancedCountrySelector('delivery-country');
+
+      // Character counting for delivery notes
+      this.initDeliveryNotesCounter();
+
+      debugSystem.log('Delivery form interactions initialized');
+    }
+
+    // Handle delivery address selection change
+    handleDeliveryAddressChange(value) {
+      const differentAddressForm = document.getElementById('different-address-form');
+      
+      if (differentAddressForm) {
+        if (value === 'different') {
+          differentAddressForm.style.display = 'block';
+          this.setDeliveryFieldsRequired(true);
+        } else {
+          differentAddressForm.style.display = 'none';
+          this.setDeliveryFieldsRequired(false);
+          this.clearDeliveryFields();
+        }
+      }
+    }
+
+    // Set delivery fields as required or optional
+    setDeliveryFieldsRequired(required) {
+      const deliveryFields = document.querySelectorAll('[data-validate="required-if-different"]');
+      deliveryFields.forEach(field => {
+        if (required) {
+          field.setAttribute('required', 'required');
+          field.dataset.validate = 'required';
+        } else {
+          field.removeAttribute('required');
+          field.dataset.validate = 'optional';
+        }
+      });
+    }
+
+    // Clear delivery fields when switching to company address
+    clearDeliveryFields() {
+      const deliveryFields = [
+        'delivery-contact-name',
+        'delivery-phone',
+        'delivery-address-1',
+        'delivery-address-2',
+        'delivery-city',
+        'delivery-state',
+        'delivery-postal',
+        'delivery-country',
+        'delivery-notes'
+      ];
+
+      deliveryFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          field.value = '';
+          // Clear any validation errors
+          const errorDiv = field.parentNode.querySelector('.techpack-form__error');
+          if (errorDiv) {
+            errorDiv.textContent = '';
+            field.classList.remove('techpack-form__input--error');
+          }
+        }
+      });
+
+      // Clear country selector
+      const countryFlag = document.getElementById('delivery-country-flag');
+      if (countryFlag) countryFlag.innerHTML = '';
+    }
+
+    // Initialize character counter for delivery notes
+    initDeliveryNotesCounter() {
+      const deliveryNotes = document.getElementById('delivery-notes');
+      const counter = document.getElementById('delivery-notes-count');
+      
+      if (deliveryNotes && counter) {
+        deliveryNotes.addEventListener('input', () => {
+          const count = deliveryNotes.value.length;
+          counter.textContent = count;
+          
+          // Visual feedback for approaching limit
+          if (count > 120) {
+            counter.style.color = '#dc2626'; // Red
+          } else if (count > 100) {
+            counter.style.color = '#f59e0b'; // Orange
+          } else {
+            counter.style.color = '#6b7280'; // Gray
+          }
+        });
+      }
+    }
+
+    // Enhanced country selector with flags and search
+    initEnhancedCountrySelector(baseId) {
+      const input = document.getElementById(baseId);
+      const dropdown = document.getElementById(`${baseId}-dropdown`);
+      const toggle = document.getElementById(`${baseId}-toggle`);
+      const flag = document.getElementById(`${baseId}-flag`);
+      const searchInput = document.getElementById(`${baseId}-search`);
+      const list = document.getElementById(`${baseId}-list`);
+
+      if (!input || !dropdown || !toggle || !list) {
+        debugSystem.log(`⚠️ Enhanced country selector elements not found for ${baseId}`, null, 'warn');
+        return;
+      }
+
+      // Country data with flags (subset - expand as needed)
+      const countries = [
+        { name: 'United States', code: 'US', flag: '🇺🇸' },
+        { name: 'United Kingdom', code: 'GB', flag: '🇬🇧' },
+        { name: 'Canada', code: 'CA', flag: '🇨🇦' },
+        { name: 'Australia', code: 'AU', flag: '🇦🇺' },
+        { name: 'Germany', code: 'DE', flag: '🇩🇪' },
+        { name: 'France', code: 'FR', flag: '🇫🇷' },
+        { name: 'Spain', code: 'ES', flag: '🇪🇸' },
+        { name: 'Italy', code: 'IT', flag: '🇮🇹' },
+        { name: 'Netherlands', code: 'NL', flag: '🇳🇱' },
+        { name: 'Portugal', code: 'PT', flag: '🇵🇹' },
+        { name: 'Brazil', code: 'BR', flag: '🇧🇷' },
+        { name: 'Mexico', code: 'MX', flag: '🇲🇽' },
+        { name: 'Japan', code: 'JP', flag: '🇯🇵' },
+        { name: 'South Korea', code: 'KR', flag: '🇰🇷' },
+        { name: 'China', code: 'CN', flag: '🇨🇳' },
+        { name: 'India', code: 'IN', flag: '🇮🇳' },
+        // Add more countries as needed
+      ];
+
+      let filteredCountries = [...countries];
+
+      // Render country list
+      const renderCountries = (countriesToRender) => {
+        list.innerHTML = countriesToRender.map(country => 
+          `<div class="techpack-enhanced-country-item" data-country="${country.name}" data-code="${country.code}" data-flag="${country.flag}">
+            <span class="techpack-enhanced-country-flag-emoji">${country.flag}</span>
+            <span class="techpack-enhanced-country-name">${country.name}</span>
+          </div>`
+        ).join('');
+      };
+
+      // Initial render
+      renderCountries(filteredCountries);
+
+      // Toggle dropdown
+      const toggleDropdown = () => {
+        const isVisible = dropdown.style.display === 'block';
+        dropdown.style.display = isVisible ? 'none' : 'block';
+        if (!isVisible && searchInput) {
+          setTimeout(() => searchInput.focus(), 50);
+        }
+      };
+
+      // Event listeners
+      toggle.addEventListener('click', toggleDropdown);
+      input.addEventListener('click', toggleDropdown);
+
+      // Search functionality
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          filteredCountries = countries.filter(country => 
+            country.name.toLowerCase().includes(searchTerm)
+          );
+          renderCountries(filteredCountries);
+        });
+      }
+
+      // Country selection
+      list.addEventListener('click', (e) => {
+        const countryItem = e.target.closest('.techpack-enhanced-country-item');
+        if (countryItem) {
+          const countryName = countryItem.dataset.country;
+          const countryFlag = countryItem.dataset.flag;
+          
+          input.value = countryName;
+          flag.innerHTML = countryFlag;
+          dropdown.style.display = 'none';
+          
+          // Clear search
+          if (searchInput) {
+            searchInput.value = '';
+            filteredCountries = [...countries];
+            renderCountries(filteredCountries);
+          }
+        }
+      });
+
+      // Close dropdown on outside click
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest(`#${baseId}-wrapper`) && !e.target.closest('.techpack-enhanced-country-wrapper')) {
+          dropdown.style.display = 'none';
+        }
+      });
     }
 
     // Handle change submission type - preserves Step 1 data, resets everything else
@@ -9041,7 +9403,10 @@
         state.currentStep = stepNumber;
         
         // EXISTING: Keep your exact step-specific logic
-        if (stepNumber === 2) {
+        if (stepNumber === 1) {
+          // Initialize delivery form for Step 1
+          this.initDeliveryForm();
+        } else if (stepNumber === 2) {
           stepManager.syncStep2DOM();
         } else if (stepNumber === 3) {
           stepManager.refreshStep3Interface();
@@ -10213,7 +10578,10 @@
         state.currentStep = stepNumber;
         
         // EXISTING: Keep your exact step-specific logic
-        if (stepNumber === 2) {
+        if (stepNumber === 1) {
+          // Initialize delivery form for Step 1
+          this.initDeliveryForm();
+        } else if (stepNumber === 2) {
           stepManager.syncStep2DOM();
         } else if (stepNumber === 3) {
           stepManager.refreshStep3Interface();

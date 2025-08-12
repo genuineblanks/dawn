@@ -5194,6 +5194,372 @@ ENHANCED HOVER EFFECTS
 
 /* 
 ===========================================
+DELIVERY SECTIONS - SAMPLE & BULK REQUESTS
+===========================================
+*/
+
+/* Form spacer for alignment */
+.techpack-form__spacer {
+  display: block;
+  width: 100%;
+}
+
+/* Delivery Options Section */
+.techpack-delivery-section {
+  width: 100%;
+}
+
+.techpack-delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.techpack-delivery-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.techpack-delivery-option:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: #fafafa;
+}
+
+.techpack-delivery-option input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--techpack-primary);
+}
+
+.techpack-delivery-option input[type="radio"]:checked + .techpack-delivery-option__content {
+  color: var(--techpack-primary);
+}
+
+.techpack-delivery-option__content {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.techpack-delivery-option__content strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.9375rem;
+}
+
+.techpack-delivery-option__content small {
+  color: #6b7280;
+  font-size: 0.8125rem;
+}
+
+/* Different Address Form */
+.techpack-different-address {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Character Counter */
+.techpack-form__char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* Enhanced Country Selector */
+.techpack-enhanced-country-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.techpack-enhanced-country-input {
+  padding-right: 4rem !important;
+  cursor: pointer;
+}
+
+.techpack-enhanced-country-flag {
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  pointer-events: none;
+}
+
+.techpack-enhanced-country-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.techpack-enhanced-country-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 300px;
+  overflow: hidden;
+  display: none;
+}
+
+.techpack-enhanced-country-search {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fafafa;
+}
+
+.techpack-enhanced-country-search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: white;
+}
+
+.techpack-enhanced-country-search-input:focus {
+  outline: none;
+  border-color: var(--techpack-primary);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.techpack-enhanced-country-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.techpack-enhanced-country-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.techpack-enhanced-country-item:hover {
+  background: #f3f4f6;
+}
+
+.techpack-enhanced-country-flag-emoji {
+  font-size: 1.125rem;
+  width: 24px;
+  text-align: center;
+}
+
+.techpack-enhanced-country-name {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+/* Shipping Methods Section */
+.techpack-shipping-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.techpack-shipping-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.techpack-shipping-method {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.techpack-shipping-method:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: #fafafa;
+}
+
+.techpack-shipping-method input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--techpack-primary);
+}
+
+.techpack-shipping-method input[type="radio"]:checked + .techpack-shipping-method__content {
+  color: var(--techpack-primary);
+}
+
+.techpack-shipping-method__content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.techpack-shipping-method__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.techpack-shipping-method__text {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.techpack-shipping-method__text strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.125rem;
+}
+
+.techpack-shipping-method__text small {
+  color: #6b7280;
+  font-size: 0.8125rem;
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.techpack-shipping-method__details {
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Insurance Options Section */
+.techpack-insurance-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.techpack-insurance-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.techpack-insurance-option:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: #fafafa;
+}
+
+.techpack-insurance-option input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--techpack-primary);
+}
+
+.techpack-insurance-option input[type="radio"]:checked + .techpack-insurance-option__content {
+  color: var(--techpack-primary);
+}
+
+.techpack-insurance-option__content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.techpack-insurance-option__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.techpack-insurance-option__text {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.techpack-insurance-option__text strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.125rem;
+}
+
+.techpack-insurance-option__text small {
+  color: #6b7280;
+  font-size: 0.8125rem;
+}
+
+/* Mobile Optimizations for Delivery Sections */
+@media (max-width: 768px) {
+  .techpack-delivery-options,
+  .techpack-shipping-methods,
+  .techpack-insurance-options {
+    gap: 0.5rem;
+  }
+  
+  .techpack-delivery-option,
+  .techpack-shipping-method,
+  .techpack-insurance-option {
+    padding: 0.75rem;
+  }
+  
+  .techpack-shipping-method__content,
+  .techpack-insurance-option__content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .techpack-shipping-method__icon,
+  .techpack-insurance-option__icon {
+    font-size: 1.25rem;
+  }
+  
+  .techpack-enhanced-country-dropdown {
+    max-height: 250px;
+  }
+  
+  .techpack-enhanced-country-list {
+    max-height: 170px;
+  }
+}
+
+/* 
+===========================================
 LEGACY OVERRIDE RULES
 ===========================================
 */
