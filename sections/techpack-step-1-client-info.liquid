@@ -218,12 +218,11 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
 
         <!-- Row 2.5: Delivery Information (Sample & Bulk only) - JavaScript controlled via #delivery-row -->
         <div id="delivery-row" style="display: none;">
-          <!-- For Sample Request: Delivery Address | Production Type -->
-          <div class="techpack-form__row techpack-form__row--delivery-sample" id="delivery-row-sample" style="display: none;">
-            <!-- Delivery Address (first column) -->
-            <div class="techpack-form__group techpack-form__group--required">
+          <!-- For Sample Request: Delivery Address (Full Width) -->
+          <div class="techpack-form__row" id="delivery-row-sample" style="display: none;">
+            <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
               <label class="techpack-form__label">Delivery Address</label>
-              <div class="techpack-delivery-options">
+              <div class="techpack-delivery-options techpack-delivery-options--horizontal">
                 <label class="techpack-delivery-option">
                   <input type="radio" name="deliveryAddress" value="company" checked>
                   <span class="techpack-delivery-option__content">
@@ -239,23 +238,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
                   </span>
                 </label>
               </div>
-              <div class="techpack-form__error" role="alert"></div>
-            </div>
-
-            <!-- Production Type for Sample Requests (second column) -->
-            <div class="techpack-form__group techpack-form__group--required">
-              <label for="production-type-sample" class="techpack-form__label">Production Type</label>
-              <select
-                id="production-type-sample"
-                name="productionType"
-                class="techpack-form__select"
-                required
-                data-validate="required"
-              >
-                <option value="">Select production type...</option>
-                <option value="custom-production">Custom Production</option>
-                <option value="our-blanks">Our Blanks</option>
-              </select>
               <div class="techpack-form__error" role="alert"></div>
             </div>
           </div>
@@ -522,24 +504,6 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           </div>
         </div>
 
-        <!-- Row 2.8: Production Type (Bulk only - above Project Details) -->
-        <div class="techpack-form__row" id="production-type-bulk-row" style="display: none;">
-          <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
-            <label for="production-type-bulk" class="techpack-form__label">Production Type</label>
-            <select
-              id="production-type-bulk"
-              name="productionType"
-              class="techpack-form__select"
-              required
-              data-validate="required"
-            >
-              <option value="">Select production type...</option>
-              <option value="custom-production">Custom Production</option>
-              <option value="our-blanks">Our Blanks</option>
-            </select>
-            <div class="techpack-form__error" role="alert"></div>
-          </div>
-        </div>
 
         <!-- Row 3: Phone Number - Country -->
         <div class="techpack-form__row">
@@ -584,6 +548,24 @@ Tech-Pack Pre-Step: Client Registration Check - Premium Design
           </div>
         </div>
 
+        <!-- Row 3.5: Production Type (All Form Types) -->
+        <div class="techpack-form__row">
+          <div class="techpack-form__group techpack-form__group--required techpack-form__group--full">
+            <label for="production-type" class="techpack-form__label">Production Type</label>
+            <select
+              id="production-type"
+              name="productionType"
+              class="techpack-form__select"
+              required
+              data-validate="required"
+            >
+              <option value="">Select production type...</option>
+              <option value="custom-production">Custom Production</option>
+              <option value="our-blanks">Our Blanks</option>
+            </select>
+            <div class="techpack-form__error" role="alert"></div>
+          </div>
+        </div>
 
         <!-- Row 4: Additional Notes (Full Width) -->
         <div class="techpack-form__row">
