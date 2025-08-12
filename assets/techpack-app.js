@@ -15668,15 +15668,15 @@ setupInitialization();
           `;
         }
 
-        // Store read status
-        sessionStorage.setItem('step-3-warning-read', 'true');
+        // Store read status in memory (resets on page refresh)
+        window.step3WarningRead = true;
         
         debugSystem.log('Step 3 warning marked as read');
       }
     },
 
     checkReadStatus() {
-      const isRead = sessionStorage.getItem('step-3-warning-read') === 'true';
+      const isRead = window.step3WarningRead === true;
       if (isRead) {
         this.markAsRead();
       }
