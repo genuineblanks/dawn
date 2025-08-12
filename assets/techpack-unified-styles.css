@@ -7259,8 +7259,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-  border: 1px solid #f87171;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #6d28d9;
   border-radius: 12px;
   margin-bottom: 2rem;
 }
@@ -7269,19 +7269,19 @@ UNIFIED COLOR PICKER STYLING
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  color: #dc2626;
+  color: #6d28d9;
 }
 
 .techpack-alert-content h4 {
   margin: 0 0 0.5rem 0;
-  color: #991b1b;
+  color: #1e293b;
   font-weight: 700;
   font-size: 1rem;
 }
 
 .techpack-alert-content p {
   margin: 0;
-  color: #7f1d1d;
+  color: #475569;
   font-weight: 500;
 }
 
@@ -7348,8 +7348,8 @@ UNIFIED COLOR PICKER STYLING
 }
 
 .techpack-help-warning {
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #6d28d9;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1.5rem;
@@ -7357,13 +7357,13 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-help-warning h4 {
   margin: 0 0 0.5rem 0;
-  color: #92400e;
+  color: #1e293b;
   font-weight: 600;
 }
 
 .techpack-help-tips {
-  background: #ecfdf5;
-  border: 1px solid #10b981;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
@@ -7371,17 +7371,17 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-help-tips h4 {
   margin: 0 0 0.5rem 0;
-  color: #047857;
+  color: #1e293b;
   font-weight: 600;
 }
 
 .techpack-help-tip {
-  background: #ecfdf5;
-  border: 1px solid #10b981;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 1rem;
   margin-top: 1rem;
-  color: #047857;
+  color: #475569;
   font-weight: 500;
 }
 
@@ -7395,8 +7395,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 1px solid #0ea5e9;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
   margin-bottom: 1.5rem;
 }
@@ -7408,10 +7408,10 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
   border-radius: 12px;
   color: white;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
 }
 
 .techpack-lab-dip-intro-content {
@@ -7420,14 +7420,14 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-lab-dip-title {
   margin: 0 0 0.5rem 0;
-  color: #0c4a6e;
+  color: #1e293b;
   font-weight: 700;
   font-size: 1.125rem;
 }
 
 .techpack-lab-dip-description {
   margin: 0;
-  color: #0369a1;
+  color: #475569;
   font-weight: 500;
   line-height: 1.5;
 }
@@ -7451,7 +7451,7 @@ UNIFIED COLOR PICKER STYLING
 }
 
 .techpack-lab-dip-section-title svg {
-  color: #6366f1;
+  color: #6d28d9;
 }
 
 .techpack-lab-dip-points {
@@ -7472,8 +7472,8 @@ UNIFIED COLOR PICKER STYLING
 }
 
 .techpack-lab-dip-point:hover {
-  border-color: #6366f1;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+  border-color: #6d28d9;
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.1);
 }
 
 .techpack-point-number {
@@ -7483,7 +7483,7 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
   color: white;
   border-radius: 50%;
   font-weight: 600;
@@ -7514,8 +7514,8 @@ UNIFIED COLOR PICKER STYLING
   align-items: flex-start;
   gap: 1rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border: 1px solid #f59e0b;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #6d28d9;
   border-radius: 10px;
   margin-bottom: 1.5rem;
 }
@@ -7527,10 +7527,10 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
   border-radius: 10px;
   color: white;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
 }
 
 .techpack-tip-content {
@@ -7539,14 +7539,14 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-tip-content h6 {
   margin: 0 0 0.5rem 0;
-  color: #92400e;
+  color: #1e293b;
   font-weight: 700;
   font-size: 1rem;
 }
 
 .techpack-tip-content p {
   margin: 0;
-  color: #78350f;
+  color: #475569;
   font-weight: 500;
   line-height: 1.5;
   font-size: 0.875rem;
@@ -7554,8 +7554,8 @@ UNIFIED COLOR PICKER STYLING
 
 .techpack-lab-dip-visual {
   padding: 1.25rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border: 1px solid #22c55e;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
   border-radius: 10px;
 }
 
@@ -7564,13 +7564,13 @@ UNIFIED COLOR PICKER STYLING
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #15803d;
+  color: #1e293b;
   font-weight: 600;
   font-size: 0.875rem;
 }
 
 .techpack-visual-header svg {
-  color: #16a34a;
+  color: #6d28d9;
 }
 
 .techpack-visual-content {
@@ -7593,19 +7593,19 @@ UNIFIED COLOR PICKER STYLING
   height: 48px;
   border-radius: 8px;
   border: 2px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .techpack-color-swatch span,
 .techpack-color-result span {
   font-size: 0.75rem;
-  color: #166534;
+  color: #475569;
   font-weight: 500;
   text-align: center;
 }
 
 .techpack-visual-arrow {
-  color: #16a34a;
+  color: #6d28d9;
   font-weight: 700;
   font-size: 1.25rem;
 }
@@ -7623,10 +7623,10 @@ UNIFIED COLOR PICKER STYLING
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
   border-radius: 8px;
   color: white;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
 }
 
 /* Responsive Design */
