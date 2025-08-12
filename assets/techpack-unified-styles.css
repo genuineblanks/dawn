@@ -7212,6 +7212,179 @@ UNIFIED COLOR PICKER STYLING
   margin-bottom: 0;
 }
 
+/* Warning and Success States for Help Button */
+.techpack-help-btn--warning {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: 1px solid #dc2626;
+  color: white;
+  font-weight: 600;
+  animation: pulse-warning 2s infinite;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.techpack-help-btn--warning:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-color: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.techpack-help-btn--success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: 1px solid #059669;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.techpack-help-btn--success:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-color: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* Modal Content Styling */
+.techpack-critical-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #f87171;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.techpack-alert-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: #dc2626;
+}
+
+.techpack-alert-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: #991b1b;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.techpack-alert-content p {
+  margin: 0;
+  color: #7f1d1d;
+  font-weight: 500;
+}
+
+.techpack-production-options,
+.techpack-sample-options {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.techpack-production-option,
+.techpack-sample-option {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.techpack-production-option h5,
+.techpack-sample-option h5 {
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.techpack-production-option p,
+.techpack-sample-option p {
+  margin: 0 0 0.5rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.techpack-workflow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.techpack-workflow-step {
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  border-radius: 6px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.techpack-config-items {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.techpack-config-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.techpack-config-item h5 {
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.techpack-help-warning {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.techpack-help-warning h4 {
+  margin: 0 0 0.5rem 0;
+  color: #92400e;
+  font-weight: 600;
+}
+
+.techpack-help-tips {
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.techpack-help-tips h4 {
+  margin: 0 0 0.5rem 0;
+  color: #047857;
+  font-weight: 600;
+}
+
+.techpack-help-tip {
+  background: #ecfdf5;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #047857;
+  font-weight: 500;
+}
+
 /* Help Modal Styling */
 .techpack-modal--help .techpack-modal__content {
   max-width: 800px;

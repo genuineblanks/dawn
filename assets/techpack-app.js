@@ -8964,34 +8964,43 @@
     setupLabDipInfoModal() {
       const infoBtn = document.getElementById('lab-dip-info-btn');
       const modal = document.getElementById('lab-dip-info-modal');
-      const modalBackdrop = document.getElementById('lab-dip-info-modal-backdrop');
       const closeBtn = document.getElementById('lab-dip-info-modal-close');
 
-      if (!infoBtn || !modal || !modalBackdrop) {
+      if (!infoBtn || !modal) {
         debugSystem.log('Lab dip info modal elements not found, skipping setup');
         return;
       }
 
       // Show modal when info button is clicked
       infoBtn.addEventListener('click', () => {
-        modalBackdrop.style.display = 'flex';
-        setTimeout(() => modalBackdrop.classList.add('active'), 10);
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
         debugSystem.log('Lab dip info modal opened');
       });
 
       // Hide modal when close button is clicked
       closeBtn.addEventListener('click', () => {
-        modalBackdrop.classList.remove('active');
-        setTimeout(() => modalBackdrop.style.display = 'none', 300);
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
         debugSystem.log('Lab dip info modal closed');
       });
 
-      // Hide modal when backdrop is clicked
-      modalBackdrop.addEventListener('click', (e) => {
-        if (e.target === modalBackdrop) {
-          modalBackdrop.classList.remove('active');
-          setTimeout(() => modalBackdrop.style.display = 'none', 300);
+      // Hide modal when clicking backdrop
+      const backdrop = modal.querySelector('.techpack-modal__backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', () => {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
           debugSystem.log('Lab dip info modal closed via backdrop');
+        });
+      }
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+          debugSystem.log('Lab dip info modal closed via Escape');
         }
       });
     }
@@ -15506,6 +15515,7 @@ setupInitialization();
   const helpSystem = {
     init() {
       this.bindHelpEvents();
+      this.checkReadStatus();
     },
 
     bindHelpEvents() {
@@ -15541,6 +15551,12 @@ setupInitialization();
     showHelpModal() {
       const modal = document.getElementById('step-3-help-modal');
       if (modal) {
+        // Determine request type and show appropriate content
+        this.updateModalContent();
+        
+        // Mark as read and update button appearance
+        this.markAsRead();
+        
         // Use CSS .active class instead of inline styles
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -15571,6 +15587,98 @@ setupInitialization();
         }
 
         debugSystem.log('Help modal closed');
+      }
+    },
+
+    updateModalContent() {
+      // Get current request type
+      const requestType = this.getCurrentRequestType();
+      
+      // Hide all content sections
+      const quotationContent = document.querySelector('.techpack-content-quotation');
+      const sampleContent = document.querySelector('.techpack-content-sample');
+      const bulkContent = document.querySelector('.techpack-content-bulk');
+
+      if (quotationContent) quotationContent.style.display = 'none';
+      if (sampleContent) sampleContent.style.display = 'none';
+      if (bulkContent) bulkContent.style.display = 'none';
+
+      // Show appropriate content based on request type
+      switch (requestType) {
+        case 'quotation':
+          if (quotationContent) quotationContent.style.display = 'block';
+          break;
+        case 'sample-request':
+          if (sampleContent) sampleContent.style.display = 'block';
+          break;
+        case 'bulk-order-request':
+          if (bulkContent) bulkContent.style.display = 'block';
+          break;
+        default:
+          // Default to sample content if unknown
+          if (sampleContent) sampleContent.style.display = 'block';
+          break;
+      }
+
+      debugSystem.log('Modal content updated for request type:', requestType);
+    },
+
+    getCurrentRequestType() {
+      // Try to get request type from state if available
+      if (window.techpackApp && window.techpackApp.state && window.techpackApp.state.formData.requestType) {
+        return window.techpackApp.state.formData.requestType;
+      }
+
+      // Fallback: try to get from form element
+      const requestTypeSelect = document.getElementById('request-type');
+      if (requestTypeSelect) {
+        return requestTypeSelect.value;
+      }
+
+      // Another fallback: check URL or session storage
+      const storedType = sessionStorage.getItem('techpack-request-type');
+      if (storedType) {
+        return storedType;
+      }
+
+      // Default fallback
+      return 'sample-request';
+    },
+
+    markAsRead() {
+      const helpBtn = document.getElementById('step-3-help-btn');
+      if (helpBtn) {
+        // Update button appearance
+        helpBtn.classList.remove('techpack-help-btn--warning');
+        helpBtn.classList.add('techpack-help-btn--success');
+        helpBtn.setAttribute('data-read-status', 'read');
+        
+        // Update button text and icon
+        const span = helpBtn.querySelector('span');
+        const svg = helpBtn.querySelector('svg');
+        
+        if (span) {
+          span.textContent = '✅ You\'ve read and understood Step 3 — proceed confidently';
+        }
+        
+        if (svg) {
+          svg.innerHTML = `
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m9 12 2 2 4-4"/>
+          `;
+        }
+
+        // Store read status
+        sessionStorage.setItem('step-3-warning-read', 'true');
+        
+        debugSystem.log('Step 3 warning marked as read');
+      }
+    },
+
+    checkReadStatus() {
+      const isRead = sessionStorage.getItem('step-3-warning-read') === 'true';
+      if (isRead) {
+        this.markAsRead();
       }
     }
   };
