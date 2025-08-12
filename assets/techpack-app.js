@@ -254,11 +254,19 @@
         warningElement = document.createElement('div');
         warningElement.className = 'techpack-custom-color-restriction-warning';
         warningElement.innerHTML = `
-          <div class="techpack-sample-warning-restriction">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"/>
-            </svg>
-            Custom colors are only available for 100% cotton fabrics. This option is not available for the selected fabric type.
+          <div class="techpack-comprehensive-warning-box">
+            <div class="techpack-warning-header">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+              </svg>
+              <h4>Custom Color Restriction</h4>
+            </div>
+            <div class="techpack-warning-content">
+              <p><strong>Custom colorways are only available for cotton garments.</strong> For non-cotton fabrics, custom colors can only be produced in bulk orders after color approval.</p>
+              <div class="techpack-swatch-exception">
+                <strong>Fabric Swatch Option:</strong> You may still order a fabric swatch in your chosen color for non-cotton fabrics. Receiving the final garment in that custom color is only possible via a bulk order after the color has been approved and the fabric custom-produced.
+              </div>
+            </div>
           </div>
         `;
         customColorSection.appendChild(warningElement);
