@@ -2,7 +2,8 @@
 Tech-Pack Step 3: Garment Specifications Section
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v=1.8.53" media="print" onload="this.media='all'">
+{{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v=1.8.55" media="print" onload="this.media='all'">
 <noscript>{{ 'techpack-unified-styles.css' | asset_url | stylesheet_tag }}</noscript>
 
 <section id="techpack-step-3" class="techpack-step" data-step="3" style="display: none;">
@@ -414,7 +415,20 @@ Tech-Pack Step 3: Garment Specifications Section
           <div class="techpack-form__error" role="alert"></div>
         </div>
 
-        <div class="techpack-form__group techpack-form__group--required">
+        <!-- Sample Selection for Bulk Orders -->
+        <div class="techpack-form__group techpack-form__group--required" style="display: none;" data-field-type="sample-reference">
+          <label class="techpack-form__label">Sample Selection</label>
+          <select class="techpack-form__select" name="sampleReference" required>
+            <option value="">Choose garment type first</option>
+            <option value="approved-sample">Approved Sample – As Is (exact repeat of last approved sample)</option>
+            <option value="approved-with-changes">Approved Sample – With Changes (based on last approved, with modifications)</option>
+            <option value="new-sample-version">New Sample Version – Follow Techpack Exactly (for reworks or updated production runs)</option>
+          </select>
+          <div class="techpack-form__error" role="alert"></div>
+        </div>
+
+        <!-- Fabric Type for Quotation/Sample Requests -->
+        <div class="techpack-form__group techpack-form__group--required" style="display: block;" data-field-type="fabric-type">
           <label class="techpack-form__label">Fabric Type</label>
           <select class="techpack-form__select" name="fabricType" required>
             <option value="" selected>Select fabric type...</option>
