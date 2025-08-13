@@ -2326,6 +2326,48 @@
       return isValid;
     }
 
+    // Handle switching between Fabric Type and Sample Reference fields based on request type
+    handleFabricFieldSwitching(requestType) {
+      const fabricTypeField = document.getElementById('fabric-type-field');
+      const sampleReferenceField = document.getElementById('sample-reference-field');
+      
+      if (!fabricTypeField || !sampleReferenceField) {
+        debugSystem.log('Fabric field switching: Required fields not found', {
+          fabricTypeField: !!fabricTypeField,
+          sampleReferenceField: !!sampleReferenceField
+        });
+        return;
+      }
+
+      if (requestType === 'bulk-order-request') {
+        // Show Sample Reference field, hide Fabric Type field
+        fabricTypeField.style.display = 'none';
+        sampleReferenceField.style.display = 'block';
+        
+        // Update field requirements
+        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
+        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
+        
+        if (fabricSelect) fabricSelect.required = false;
+        if (sampleReferenceSelect) sampleReferenceSelect.required = true;
+        
+        debugSystem.log('🔄 Switched to Sample Reference field for bulk order request');
+      } else {
+        // Show Fabric Type field, hide Sample Reference field (for quotation and sample-request)
+        fabricTypeField.style.display = 'block';
+        sampleReferenceField.style.display = 'none';
+        
+        // Update field requirements
+        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
+        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
+        
+        if (fabricSelect) fabricSelect.required = true;
+        if (sampleReferenceSelect) sampleReferenceSelect.required = false;
+        
+        debugSystem.log('🔄 Switched to Fabric Type field for quotation/sample request');
+      }
+    }
+
     // Sync DOM form values to state to preserve user selections
     syncDOMToState() {
       const garmentElements = document.querySelectorAll('.techpack-garment');
@@ -2692,17 +2734,18 @@
           if (garmentTypeError) garmentTypeError.textContent = '';
         }
 
-        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
-        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
+        // For bulk orders, validate sample reference instead of fabric type
+        const sampleReferenceSelect = document.querySelector('select[name="sampleReference"]');
+        const sampleReferenceGroup = sampleReferenceSelect?.closest('.techpack-form__group');
+        const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
         
-        if (!fabricSelect?.value) {
+        if (!sampleReferenceSelect?.value) {
           isValid = false;
-          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = 'Please select a fabric type';
+          if (sampleReferenceGroup) sampleReferenceGroup.classList.add('techpack-form__group--error');
+          if (sampleReferenceError) sampleReferenceError.textContent = 'Please select a sample reference';
         } else {
-          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = '';
+          if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
+          if (sampleReferenceError) sampleReferenceError.textContent = '';
         }
 
         const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
@@ -2805,7 +2848,13 @@
         this.updateGarmentInterface(garment, productionType);
       });
       
-      debugSystem.log('Step 3 interface refreshed', { productionType, source: 'DOM' });
+      // Handle fabric field switching based on request type
+      const requestType = state.formData.requestType;
+      if (requestType) {
+        this.handleFabricFieldSwitching(requestType);
+      }
+      
+      debugSystem.log('Step 3 interface refreshed', { productionType, requestType, source: 'DOM' });
     }
 
     updateGarmentInterface(garment, productionType) {
@@ -8974,6 +9023,9 @@
       if (window.globalLabDipManager && window.globalLabDipManager.checkVisibility) {
         setTimeout(() => window.globalLabDipManager.checkVisibility(), 50);
       }
+      
+      // Handle fabric type vs sample reference field switching based on request type
+      this.handleFabricFieldSwitching(type);
       
       const submissionModal = document.querySelector('#submission-type-modal');
       
