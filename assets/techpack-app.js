@@ -3932,6 +3932,7 @@
       // Check if we have unselected garment types (indicated by -1)
       if (minimumRequired === -1) {
         // Show "Calculating..." state
+        debugSystem.log('🔄 SHOWING CALCULATING STATE', { totalQuantity, minimumRequired });
         this.updateTotalQuantityDisplay(totalQuantity, -1, []);
         this.updateQuantityProgressBar(0);
         
@@ -3946,6 +3947,13 @@
       // FIXED: Get detailed garment breakdown for better messaging
       const garmentDetails = this.getGarmentDetails();
       const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
+      
+      debugSystem.log('🔄 UPDATING DISPLAY WITH CALCULATED VALUES', { 
+        totalQuantity, 
+        minimumRequired, 
+        percentage, 
+        garmentDetails 
+      });
       
       this.updateTotalQuantityDisplay(totalQuantity, minimumRequired, garmentDetails);
       this.updateStatusMessage(totalQuantity, minimumRequired, percentage, garmentDetails);
@@ -4006,22 +4014,33 @@
     }
 
     updateTotalQuantityDisplay(totalQuantity, minimumRequired, colorwayCount) {
+      debugSystem.log('🎨 UPDATE TOTAL QUANTITY DISPLAY CALLED', { 
+        totalQuantity, 
+        minimumRequired, 
+        colorwayCount 
+      });
+      
       const totalQuantityElement = document.querySelector('#total-quantity, .total-quantity-value, .techpack-total-quantity');
       if (totalQuantityElement) {
+        debugSystem.log('🎨 FOUND TOTAL QUANTITY ELEMENT', { element: totalQuantityElement });
         if (minimumRequired === -1) {
           // Show 0% when calculating
+          debugSystem.log('🎨 SETTING TO 0% (calculating)');
           totalQuantityElement.textContent = '0%';
         } else {
           const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
           const currentPercentage = parseInt(totalQuantityElement.textContent) || 0;
+          debugSystem.log('🎨 ANIMATING PERCENTAGE', { currentPercentage, newPercentage: Math.round(percentage) });
           Utils.animateNumber(currentPercentage, Math.round(percentage), totalQuantityElement, '%');
         }
       }
       
       const minTextElement = document.querySelector('#min-text, .total-quantity-text, [data-quantity-text]');
       if (minTextElement) {
+        debugSystem.log('🎨 FOUND MIN TEXT ELEMENT', { element: minTextElement, currentText: minTextElement.textContent });
         if (minimumRequired === -1) {
           // Already handled in calculateAndUpdateProgress
+          debugSystem.log('🎨 SKIPPING MIN TEXT UPDATE (calculating state)');
           return;
         }
         
@@ -4029,13 +4048,21 @@
         const singleMinimum = getMinimumQuantity(1);
         const newText = colorwayCount === 1 ? `/ ${singleMinimum} minimum` : `/ ${minimumRequired} minimum`;
         
+        debugSystem.log('🎨 MIN TEXT UPDATE', { singleMinimum, newText, currentText: minTextElement.textContent });
+        
         if (minTextElement.textContent !== newText) {
+          debugSystem.log('🎨 UPDATING MIN TEXT', { from: minTextElement.textContent, to: newText });
           minTextElement.style.opacity = '0.5';
           setTimeout(() => {
             minTextElement.textContent = newText;
             minTextElement.style.opacity = '1';
+            debugSystem.log('🎨 MIN TEXT UPDATED TO:', newText);
           }, 150);
+        } else {
+          debugSystem.log('🎨 MIN TEXT UNCHANGED (same as current)');
         }
+      } else {
+        debugSystem.log('🎨 MIN TEXT ELEMENT NOT FOUND');
       }
       
       const quantityCounter = document.querySelector('.quantity-counter, .total-items');
@@ -4858,8 +4885,30 @@
           this.updateSampleTypeVisibility(garment);
           
           // CRITICAL: Recalculate quantities and progress when garment type changes
-          quantityCalculator.calculateAndUpdateProgress();
+          debugSystem.log('🎯 GARMENT TYPE CHANGED', { 
+            garmentId, 
+            newType: garmentTypeSelect.value,
+            beforeUpdate: {
+              minRequired: quantityCalculator.calculateMinimumRequired(),
+              totalQuantity: quantityCalculator.getTotalQuantityFromAllColorways()
+            }
+          });
+          
+          const progressResult = quantityCalculator.calculateAndUpdateProgress();
           quantityCalculator.updateColorwayValidationMessages();
+          
+          // EXPLICIT DISPLAY REFRESH: Ensure display updates after DOM changes
+          setTimeout(() => {
+            debugSystem.log('🔄 EXPLICIT DISPLAY REFRESH AFTER GARMENT TYPE CHANGE');
+            const refreshResult = quantityCalculator.calculateAndUpdateProgress();
+            debugSystem.log('🔄 REFRESH RESULT', { refreshResult });
+          }, 50);
+          
+          debugSystem.log('🎯 AFTER GARMENT TYPE UPDATE', { 
+            progressResult,
+            minRequired: quantityCalculator.calculateMinimumRequired(),
+            totalQuantity: quantityCalculator.getTotalQuantityFromAllColorways()
+          });
           
           stepManager.validateStep3();
           
