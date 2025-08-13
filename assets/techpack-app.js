@@ -4794,9 +4794,13 @@
       // Trigger change event to update validations and summaries
       fabricSelect.dispatchEvent(new Event('change', { bubbles: true }));
       
+      // Get option count for logging
+      const optionCount = fabricSelect.options.length - 1; // Subtract placeholder option
+      
       debugSystem.log('Fabric options updated', { 
         garmentType, 
-        optionCount: fabricOptions.length,
+        productionType,
+        optionCount,
         preservedSelection: fabricSelect.value 
       });
     }
