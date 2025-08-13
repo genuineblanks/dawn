@@ -3861,6 +3861,7 @@
     // FIXED: Calculate minimum based on EACH GARMENT individually with Our Blanks minimums
     calculateMinimumRequired() {
       let totalMinimum = 0;
+      let hasUnselectedGarments = false;
       
       // Get all garments and calculate minimum for each
       const garments = document.querySelectorAll('.techpack-garment');
@@ -3869,6 +3870,13 @@
         const colorwaysInGarment = garment.querySelectorAll('.techpack-colorway');
         const colorwayCount = colorwaysInGarment.length;
         const garmentType = getGarmentTypeFromElement(garment);
+        
+        // Check if garment type is not selected yet
+        if (!garmentType) {
+          hasUnselectedGarments = true;
+          return; // Skip this garment in calculation
+        }
+        
         const minimumPerColorway = getMinimumQuantity(colorwayCount, null, garmentType);
         
         if (colorwayCount === 1) {
@@ -3879,6 +3887,11 @@
           totalMinimum += colorwayCount * minimumPerColorway;
         }
       });
+      
+      // If there are unselected garments, return -1 to indicate "calculating"
+      if (hasUnselectedGarments) {
+        return -1;
+      }
       
       // Ensure at least the single colorway minimum for the production type (use heavy garment minimum as fallback)
       const fallbackMinimum = getMinimumQuantity(1);
@@ -3915,6 +3928,20 @@
       
       const totalQuantity = this.getTotalQuantityFromAllColorways();
       const minimumRequired = this.calculateMinimumRequired();
+      
+      // Check if we have unselected garment types (indicated by -1)
+      if (minimumRequired === -1) {
+        // Show "Calculating..." state
+        this.updateTotalQuantityDisplay(totalQuantity, -1, []);
+        this.updateQuantityProgressBar(0);
+        
+        // Update minimum text to indicate calculation in progress
+        const minText = document.getElementById('min-text');
+        if (minText) minText.textContent = 'Calculating minimum...';
+        
+        debugSystem.log('Garment types not fully selected - showing calculating state');
+        return 0;
+      }
       
       // FIXED: Get detailed garment breakdown for better messaging
       const garmentDetails = this.getGarmentDetails();
@@ -3981,13 +4008,23 @@
     updateTotalQuantityDisplay(totalQuantity, minimumRequired, colorwayCount) {
       const totalQuantityElement = document.querySelector('#total-quantity, .total-quantity-value, .techpack-total-quantity');
       if (totalQuantityElement) {
-        const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
-        const currentPercentage = parseInt(totalQuantityElement.textContent) || 0;
-        Utils.animateNumber(currentPercentage, Math.round(percentage), totalQuantityElement, '%');
+        if (minimumRequired === -1) {
+          // Show 0% when calculating
+          totalQuantityElement.textContent = '0%';
+        } else {
+          const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
+          const currentPercentage = parseInt(totalQuantityElement.textContent) || 0;
+          Utils.animateNumber(currentPercentage, Math.round(percentage), totalQuantityElement, '%');
+        }
       }
       
       const minTextElement = document.querySelector('#min-text, .total-quantity-text, [data-quantity-text]');
       if (minTextElement) {
+        if (minimumRequired === -1) {
+          // Already handled in calculateAndUpdateProgress
+          return;
+        }
+        
         // For min text, use heavy garment minimum as baseline (user will see actual requirements in validation cards)
         const singleMinimum = getMinimumQuantity(1);
         const newText = colorwayCount === 1 ? `/ ${singleMinimum} minimum` : `/ ${minimumRequired} minimum`;
@@ -4044,7 +4081,6 @@
           const colorwayId = colorway.dataset.colorwayId;
           const colorwayTotal = this.updateColorwayTotal(colorwayId);
           const garmentType = getGarmentTypeFromElement(colorway);
-          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
           
           const container = this.createValidationContainer(colorway);
           
@@ -4054,6 +4090,24 @@
             existingQuantityCard.remove();
           }
           
+          // Check if garment type is not selected yet
+          if (!garmentType) {
+            const title = "Quantity Status";
+            const message = "Select garment type to see minimum requirements";
+            
+            const card = this.createValidationCard('info', title, message, 0);
+            card.setAttribute('data-validation', 'quantity');
+            container.appendChild(card);
+            
+            // Reset colorway total styling
+            const totalEl = colorway.querySelector('.techpack-colorway__total-value');
+            if (totalEl) {
+              totalEl.style.cssText = '';
+            }
+            return;
+          }
+          
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
           const progress = Math.min((colorwayTotal / requiredPerColorway) * 100, 100);
           
           if (colorwayTotal < requiredPerColorway) {
@@ -4487,6 +4541,9 @@
       }
       
       debugSystem.log('Garment added', { garmentId });
+      
+      // Trigger calculation update for new garment
+      quantityCalculator.calculateAndUpdateProgress();
     }
     
     // IMMEDIATE FIX: Fix radio button IDs for a single garment right after creation
@@ -4799,6 +4856,10 @@
           
           // Check if sample type section should be shown/hidden
           this.updateSampleTypeVisibility(garment);
+          
+          // CRITICAL: Recalculate quantities and progress when garment type changes
+          quantityCalculator.calculateAndUpdateProgress();
+          quantityCalculator.updateColorwayValidationMessages();
           
           stepManager.validateStep3();
           
