@@ -4017,36 +4017,38 @@
           const colorwayTotal = this.updateColorwayTotal(colorwayId);
           const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
           
-          let warningEl = colorway.querySelector('.colorway-minimum-warning');
-          if (!warningEl) {
-            warningEl = this.createColorwayWarningElement(colorway);
+          const container = this.createValidationContainer(colorway);
+          
+          // Clear existing quantity validation cards
+          const existingQuantityCard = container.querySelector('[data-validation="quantity"]');
+          if (existingQuantityCard) {
+            existingQuantityCard.remove();
           }
+          
+          const progress = Math.min((colorwayTotal / requiredPerColorway) * 100, 100);
           
           if (colorwayTotal < requiredPerColorway) {
             const remaining = requiredPerColorway - colorwayTotal;
-            let message;
+            const title = "Quantity Status";
+            const message = colorwayCountInGarment === 1 
+              ? `Need ${remaining} more units (${requiredPerColorway} minimum)`
+              : `Need ${remaining} more units (${requiredPerColorway} per colorway)`;
             
-            if (colorwayCountInGarment === 1) {
-              const singleMinimum = getMinimumQuantity(1);
-              message = `⚠️ Need ${remaining} more units (${singleMinimum} minimum for single colorway)`;
-            } else {
-              const multipleMinimum = getMinimumQuantity(2);
-              message = `⚠️ Need ${remaining} more units (${multipleMinimum} minimum per colorway when multiple colorways)`;
-            }
-            
-            warningEl.innerHTML = message;
-            warningEl.style.display = 'block';
-            warningEl.className = 'colorway-minimum-warning warning';
+            const card = this.createValidationCard('error', title, message, progress);
+            card.setAttribute('data-validation', 'quantity');
+            container.appendChild(card);
             
             const totalEl = colorway.querySelector('.techpack-colorway__total-value');
             if (totalEl) {
               totalEl.style.cssText = 'color: #ef4444 !important; font-weight: bold !important; background: #fef2f2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fecaca;';
             }
           } else {
-            const minimumText = getMinimumQuantity(colorwayCountInGarment);
-            warningEl.style.display = 'block';
-            warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units (Min: ${minimumText} ${colorwayCountInGarment === 1 ? 'for single colorway' : 'per colorway'})`;
-            warningEl.className = 'colorway-minimum-warning success';
+            const title = "Quantity Status";
+            const message = `${colorwayTotal} units (${requiredPerColorway} minimum met)`;
+            
+            const card = this.createValidationCard('success', title, message, progress);
+            card.setAttribute('data-validation', 'quantity');
+            container.appendChild(card);
             
             const totalEl = colorway.querySelector('.techpack-colorway__total-value');
             if (totalEl) {
@@ -4057,24 +4059,43 @@
       });
     }
 
-    createColorwayWarningElement(colorway) {
-      const warningEl = document.createElement('div');
-      warningEl.className = 'colorway-minimum-warning';
-      warningEl.style.cssText = `
-        padding: 0.75rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin-top: 0.75rem;
-        transition: all 0.3s ease;
-      `;
+    // Create unified validation container for colorway
+    createValidationContainer(colorway) {
+      let container = colorway.querySelector('.techpack-validation-grid');
+      if (!container) {
+        container = document.createElement('div');
+        container.className = 'techpack-validation-grid';
+        
+        const sizeGrid = colorway.querySelector('.techpack-size-grid');
+        if (sizeGrid) {
+          sizeGrid.insertAdjacentElement('afterend', container);
+        }
+      }
+      return container;
+    }
+
+    // Create individual validation card
+    createValidationCard(type, title, message, progress = null) {
+      const card = document.createElement('div');
+      card.className = `techpack-validation-card techpack-validation-card--${type}`;
       
-      const sizeGrid = colorway.querySelector('.techpack-size-grid');
-      if (sizeGrid) {
-        sizeGrid.insertAdjacentElement('afterend', warningEl);
+      let html = `<span class="techpack-validation-card__title">${title}</span>${message}`;
+      
+      if (progress !== null) {
+        html += `
+          <div class="techpack-validation-card__progress">
+            <div class="techpack-validation-card__progress-fill" style="width: ${progress}%"></div>
+          </div>
+        `;
       }
       
-      return warningEl;
+      card.innerHTML = html;
+      return card;
+    }
+
+    // Legacy function for compatibility
+    createColorwayWarningElement(colorway) {
+      return this.createValidationContainer(colorway);
     }
 
     updateQuantityProgressBar(percentage) {
@@ -4220,49 +4241,38 @@
         }
       });
       
-      // Update size distribution warning
-      let warningEl = colorway.querySelector('.size-distribution-warning');
-      if (!warningEl) {
-        warningEl = this.createSizeWarningElement(colorway);
+      // Update size distribution validation
+      const container = this.createValidationContainer(colorway);
+      
+      // Clear existing size validation cards
+      const existingSizeCard = container.querySelector('[data-validation="sizes"]');
+      if (existingSizeCard) {
+        existingSizeCard.remove();
       }
       
       if (activeSizes > maxAllowedSizes) {
-        warningEl.style.display = 'block';
-        warningEl.innerHTML = `⚠️ Too many sizes! With ${colorwayTotal} units, you can use maximum ${maxAllowedSizes} sizes.`;
-        warningEl.className = 'size-distribution-warning warning';
-      } else if (colorwayTotal < requiredPerColorway) {
-        warningEl.style.display = 'block';
-        const productionType = state.formData.clientInfo.productionType || 'custom-production';
-        const productionLabel = productionType === 'our-blanks' ? 'Our Blanks' : 'Custom Production';
-        warningEl.innerHTML = `📊 Need ${requiredPerColorway - colorwayTotal} more units (${requiredPerColorway} minimum for ${productionLabel}). Current: ${activeSizes} sizes, Max allowed: ${maxAllowedSizes} sizes.`;
-        warningEl.className = 'size-distribution-warning info';
-      } else {
-        warningEl.style.display = 'block';
-        const productionType = state.formData.clientInfo.productionType || 'custom-production';
-        const productionLabel = productionType === 'our-blanks' ? 'Our Blanks' : 'Custom Production';
-        warningEl.innerHTML = `✅ Perfect! ${colorwayTotal} units across ${activeSizes} sizes (Min: ${requiredPerColorway} for ${productionLabel}, Max sizes: ${maxAllowedSizes}).`;
-        warningEl.className = 'size-distribution-warning success';
+        const title = "Size Distribution";
+        const message = `Reduce to ${maxAllowedSizes} sizes maximum (currently ${activeSizes} sizes)`;
+        
+        const card = this.createValidationCard('warning', title, message);
+        card.setAttribute('data-validation', 'sizes');
+        container.appendChild(card);
+      } else if (activeSizes > 0) {
+        const title = "Size Distribution";
+        const message = `Using ${activeSizes}/${maxAllowedSizes} sizes (based on ${colorwayTotal} units)`;
+        
+        const progress = (activeSizes / maxAllowedSizes) * 100;
+        const cardType = activeSizes === maxAllowedSizes ? 'warning' : 'success';
+        
+        const card = this.createValidationCard(cardType, title, message, progress);
+        card.setAttribute('data-validation', 'sizes');
+        container.appendChild(card);
       }
     }
 
+    // Legacy function for compatibility  
     createSizeWarningElement(colorway) {
-      const warningEl = document.createElement('div');
-      warningEl.className = 'size-distribution-warning';
-      warningEl.style.cssText = `
-        padding: 0.75rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin-top: 0.75rem;
-        transition: all 0.3s ease;
-      `;
-      
-      const sizeGrid = colorway.querySelector('.techpack-size-grid');
-      if (sizeGrid) {
-        sizeGrid.insertAdjacentElement('afterend', warningEl);
-      }
-      
-      return warningEl;
+      return this.createValidationContainer(colorway);
     }
   }
 

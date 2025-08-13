@@ -6365,7 +6365,137 @@ UNIFIED COLOR PICKER STYLING
 }
 
 /* ===============================================
-   ERROR MESSAGES
+   UNIFIED VALIDATION SYSTEM
+   =============================================== */
+
+/* Main validation container */
+.techpack-validation-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Individual validation cards */
+.techpack-validation-card {
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  border: 1px solid;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Success state */
+.techpack-validation-card--success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(16, 185, 129, 0.06) 100%);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: #166534;
+}
+
+.techpack-validation-card--success::before {
+  content: "✅";
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Warning state */
+.techpack-validation-card--warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(251, 191, 36, 0.06) 100%);
+  border-color: rgba(245, 158, 11, 0.2);
+  color: #92400e;
+}
+
+.techpack-validation-card--warning::before {
+  content: "⚠️";
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Error state */
+.techpack-validation-card--error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(248, 113, 113, 0.06) 100%);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #991b1b;
+}
+
+.techpack-validation-card--error::before {
+  content: "❌";
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Info state */
+.techpack-validation-card--info {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(96, 165, 250, 0.06) 100%);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #1e40af;
+}
+
+.techpack-validation-card--info::before {
+  content: "ℹ️";
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Validation card titles */
+.techpack-validation-card__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+/* Validation card progress bars */
+.techpack-validation-card__progress {
+  margin-top: 0.5rem;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.techpack-validation-card__progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.techpack-validation-card--success .techpack-validation-card__progress-fill {
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+}
+
+.techpack-validation-card--warning .techpack-validation-card__progress-fill {
+  background: linear-gradient(90deg, #f59e0b 0%, #eab308 100%);
+}
+
+.techpack-validation-card--error .techpack-validation-card__progress-fill {
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+}
+
+/* Hover effects */
+.techpack-validation-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .techpack-validation-grid {
+    gap: 0.5rem;
+  }
+  
+  .techpack-validation-card {
+    padding: 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ===============================================
+   LEGACY ERROR MESSAGES (Keep for compatibility)
    =============================================== */
 
 .techpack-error-message {
