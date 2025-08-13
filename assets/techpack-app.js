@@ -5106,7 +5106,10 @@
     
     // Simple function to show/hide fields based on request type
     updateGarmentFieldsForRequestType(garment) {
-      const requestType = state.formData.requestType;
+      // Get request type from Step 3 data attribute (where it's actually stored)
+      const step3Section = document.getElementById('techpack-step-3');
+      const requestType = step3Section?.getAttribute('data-request-type');
+      
       const fabricField = garment.querySelector('[data-field-type="fabric-type"]');
       const sampleField = garment.querySelector('[data-field-type="sample-reference"]');
       
@@ -5114,6 +5117,8 @@
         debugSystem.log('Warning: Could not find garment fields to update');
         return;
       }
+      
+      debugSystem.log('Updating garment fields for request type:', requestType);
       
       if (requestType === 'bulk-order-request') {
         // Bulk order: Show sample selection, hide fabric type
