@@ -5887,6 +5887,31 @@ UNIFIED COLOR PICKER STYLING
   stroke: white !important;
 }
 
+/* Mode Button Focus States - Fix black appearance when clicked */
+.techpack-mode-btn:focus {
+  outline: none !important; /* Remove browser default outline */
+}
+
+.techpack-mode-btn:focus-visible {
+  outline: none !important; /* Override global focus-visible rule */
+}
+
+/* Preserve active state styling when button has focus */
+.techpack-mode-btn--active:focus,
+.techpack-mode-btn--active:focus-visible {
+  background: var(--techpack-primary) !important;
+  color: white !important;
+  border-color: var(--techpack-primary) !important;
+}
+
+/* Focus styling for inactive buttons */
+.techpack-mode-btn:focus:not(.techpack-mode-btn--active),
+.techpack-mode-btn:focus-visible:not(.techpack-mode-btn--active) {
+  background: #f8fafc !important;
+  color: #374151 !important;
+  border-color: var(--techpack-border-dark) !important;
+}
+
 /* Manual entry group unified styling */
 .techpack-manual-entry-group {
   display: flex !important;
