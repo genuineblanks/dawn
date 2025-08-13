@@ -9891,6 +9891,11 @@
           const step3Section = document.getElementById('techpack-step-3');
           if (step3Section) {
             step3Section.setAttribute('data-request-type', requestTypeSelect.value);
+            console.log('🔄 FIELD VISIBILITY DEBUG: Set data-request-type to:', requestTypeSelect.value);
+            console.log('🔄 FIELD VISIBILITY DEBUG: Step3 section:', step3Section);
+            console.log('🔄 FIELD VISIBILITY DEBUG: Data attribute set:', step3Section.getAttribute('data-request-type'));
+          } else {
+            console.log('❌ FIELD VISIBILITY ERROR: Step 3 section not found!');
           }
           
           // Update all existing colorways when request type changes
@@ -9917,15 +9922,23 @@
       const requestTypeSelect = document.getElementById('request-type');
       const step3Section = document.getElementById('techpack-step-3');
       
+      console.log('🔍 INIT DEBUG: Request type select:', requestTypeSelect);
+      console.log('🔍 INIT DEBUG: Step 3 section:', step3Section);
+      
       if (requestTypeSelect && step3Section) {
         // Set initial data attribute based on current selection
         if (requestTypeSelect.value) {
           step3Section.setAttribute('data-request-type', requestTypeSelect.value);
+          console.log('🔍 INIT DEBUG: Set initial data-request-type to:', requestTypeSelect.value);
+        } else {
+          console.log('🔍 INIT DEBUG: No initial request type value');
         }
         
         debugSystem.log('Initialized request type data attribute', { 
           requestType: requestTypeSelect.value 
         });
+      } else {
+        console.log('❌ INIT ERROR: Missing elements - requestTypeSelect:', !!requestTypeSelect, 'step3Section:', !!step3Section);
       }
     }
 

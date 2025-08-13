@@ -1,22 +1,22 @@
 /* TECHPACK UNIFIED STYLES - Single Source of Truth */
 /* Clean, consistent black/grey/white design that works perfectly on desktop and mobile */
 
-/* REQUEST TYPE FIELD VISIBILITY */
+/* REQUEST TYPE FIELD VISIBILITY - UPDATED */
 /* Default: Show quotation/sample fields, hide bulk fields */
-.techpack-field-bulk-only {
+.techpack-garment .techpack-field-bulk-only {
   display: none !important;
 }
 
-.techpack-field-quotation-sample {
+.techpack-garment .techpack-field-quotation-sample {
   display: block !important;
 }
 
 /* When bulk order is selected: Show bulk fields, hide quotation/sample fields */
-[data-request-type="bulk-order-request"] .techpack-field-bulk-only {
+#techpack-step-3[data-request-type="bulk-order-request"] .techpack-garment .techpack-field-bulk-only {
   display: block !important;
 }
 
-[data-request-type="bulk-order-request"] .techpack-field-quotation-sample {
+#techpack-step-3[data-request-type="bulk-order-request"] .techpack-garment .techpack-field-quotation-sample {
   display: none !important;
 }
 
