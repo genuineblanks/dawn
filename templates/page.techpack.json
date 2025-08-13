@@ -85,6 +85,22 @@
         "response_time_text": "You will receive a detailed quote within 1-5 business days depending on project complexity."
       }
     },
+    "lab_dips_step_1": {
+      "type": "lab-dips-step-1-service-selection",
+      "settings": {}
+    },
+    "lab_dips_step_2": {
+      "type": "lab-dips-step-2-file-upload",
+      "settings": {}
+    },
+    "lab_dips_step_3a": {
+      "type": "lab-dips-step-3a-swatches",
+      "settings": {}
+    },
+    "lab_dips_step_3b": {
+      "type": "lab-dips-step-3b-accessories",
+      "settings": {}
+    },
     "collapsible_content_CDzwFj": {
       "type": "collapsible-content",
       "blocks": {
@@ -155,6 +171,10 @@
     "step_2",
     "step_3",
     "step_4",
+    "lab_dips_step_1",
+    "lab_dips_step_2",
+    "lab_dips_step_3a",
+    "lab_dips_step_3b",
     "collapsible_content_CDzwFj"
   ]
 }
