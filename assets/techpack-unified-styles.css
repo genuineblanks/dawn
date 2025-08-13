@@ -3516,6 +3516,9 @@ button:disabled.techpack-btn {
 .techpack-mode-btn svg {
   width: 16px;
   height: 16px;
+  fill: currentColor;
+  stroke: currentColor;
+  transition: all 0.2s ease;
 }
 
 /* Input Mode Containers */
@@ -4572,6 +4575,10 @@ UNIFIED DESIGN SYSTEM - STEP 3 COMPLETE
   --techpack-heading-color: #1e293b;
   --techpack-heading-spacing: -0.025em;
   
+  /* Transition System */
+  --techpack-transition-smooth: 0.3s ease;
+  --techpack-transition-fast: 0.2s ease;
+  
   /* Badge & Status System */
   --techpack-badge-padding: 0.25rem 0.75rem;
   --techpack-badge-radius: 6px;
@@ -5071,8 +5078,38 @@ UNIFIED QUANTITY TRACKER
   height: 100%;
   background: linear-gradient(90deg, var(--techpack-success) 0%, var(--techpack-primary) 100%);
   border-radius: 4px;
-  transition: width 0.3s ease;
+  transition: width var(--techpack-transition-smooth, 0.3s ease), background-color var(--techpack-transition-fast, 0.2s ease);
   position: relative;
+}
+
+/* Quantity Progress Bar Animation States */
+.techpack-quantity-tracker__fill.quantity-progress-low {
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+}
+
+.techpack-quantity-tracker__fill.quantity-progress-medium {
+  background: linear-gradient(90deg, #f59e0b 0%, #eab308 100%);
+}
+
+.techpack-quantity-tracker__fill.quantity-progress-high {
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+}
+
+.techpack-quantity-tracker__fill.quantity-complete {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  animation: quantity-complete-pulse 2s ease-in-out infinite;
+}
+
+@keyframes quantity-complete-pulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); 
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1); 
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); 
+  }
 }
 
 /* 
@@ -5828,7 +5865,7 @@ UNIFIED COLOR PICKER STYLING
   border-radius: 6px !important;
   font-size: 0.8125rem !important;
   font-weight: 500 !important;
-  color: var(--techpack-text-secondary) !important;
+  color: #64748b !important; /* Darker grey for better icon visibility */
   cursor: pointer !important;
   transition: var(--techpack-hover-transition) !important;
 }
@@ -5836,13 +5873,18 @@ UNIFIED COLOR PICKER STYLING
 .techpack-mode-btn:hover {
   background: #f8fafc !important;
   border-color: var(--techpack-border-dark) !important;
-  color: var(--techpack-text) !important;
+  color: #374151 !important; /* Darker on hover for better contrast */
 }
 
 .techpack-mode-btn--active {
   background: var(--techpack-primary) !important;
   border-color: var(--techpack-primary) !important;
   color: white !important;
+}
+
+.techpack-mode-btn--active svg {
+  fill: white !important;
+  stroke: white !important;
 }
 
 /* Manual entry group unified styling */
