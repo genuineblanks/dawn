@@ -5080,6 +5080,7 @@ UNIFIED QUANTITY TRACKER
   border-radius: 4px;
   transition: width var(--techpack-transition-smooth, 0.3s ease), background-color var(--techpack-transition-fast, 0.2s ease);
   position: relative;
+  display: block !important; /* Fix: Override display:none that was hiding the progress bar */
 }
 
 /* Quantity Progress Bar Animation States */
