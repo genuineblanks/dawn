@@ -4827,27 +4827,6 @@
         preservedSelection: fabricSelect.value 
       });
     }
-    
-    // Update sample reference field based on selected garment type
-    updateSampleReferenceOptions(garmentType, sampleReferenceSelect) {
-      if (!sampleReferenceSelect) return;
-      
-      // Handle empty garment type
-      if (!garmentType) {
-        sampleReferenceSelect.disabled = true;
-        sampleReferenceSelect.value = '';
-        debugSystem.log('Sample reference dropdown disabled - no garment type selected');
-        return;
-      }
-      
-      // Re-enable sample reference select if it was disabled
-      sampleReferenceSelect.disabled = false;
-      
-      debugSystem.log('Sample reference field enabled', { 
-        garmentType,
-        currentValue: sampleReferenceSelect.value 
-      });
-    }
 
     // Check if all prerequisites are met and show/hide sample type selection accordingly
     updateSampleTypeVisibility(garment) {
@@ -4929,10 +4908,6 @@
           const fabricSelect = garment.querySelector('select[name="fabricType"]');
           this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, true);
           
-          // Update sample reference options/state based on garment type
-          const sampleReferenceSelect = garment.querySelector('select[name="sampleReference"]');
-          this.updateSampleReferenceOptions(garmentTypeSelect.value, sampleReferenceSelect);
-          
           // Check if sample type section should be shown/hidden
           this.updateSampleTypeVisibility(garment);
           
@@ -4998,35 +4973,6 @@
               window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
             }
           }
-        });
-      }
-      
-      // Sample reference select
-      const sampleReferenceSelect = garment.querySelector('select[name="sampleReference"]');
-      if (sampleReferenceSelect) {
-        sampleReferenceSelect.addEventListener('change', () => {
-          const garmentData = state.formData.garments.find(g => g.id === garmentId);
-          if (garmentData) {
-            garmentData.sampleReference = sampleReferenceSelect.value;
-          }
-          
-          // Clear validation errors immediately when value is selected
-          const sampleReferenceGroup = sampleReferenceSelect.closest('.techpack-form__group');
-          const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
-          
-          if (sampleReferenceSelect.value) {
-            // Value selected - clear errors
-            if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
-            if (sampleReferenceError) sampleReferenceError.textContent = '';
-          }
-          
-          // Trigger validation to update form state
-          stepManager.validateStep3();
-          
-          debugSystem.log('Sample reference changed', { 
-            garmentId, 
-            value: sampleReferenceSelect.value 
-          });
         });
       }
 
@@ -5205,12 +5151,6 @@
         const sampleSelect = sampleField.querySelector('select[name="sampleReference"]');
         if (fabricSelect) fabricSelect.required = false;
         if (sampleSelect) sampleSelect.required = true;
-        
-        // Initialize sample reference field based on garment type selection
-        const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
-        if (sampleSelect && garmentTypeSelect) {
-          this.updateSampleReferenceOptions(garmentTypeSelect.value, sampleSelect);
-        }
         
         debugSystem.log('Bulk order mode: Showing sample selection field');
       } else {
