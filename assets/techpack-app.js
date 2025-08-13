@@ -9025,7 +9025,9 @@
       }
       
       // Handle fabric type vs sample reference field switching based on request type
-      this.handleFabricFieldSwitching(type);
+      if (stepManager && stepManager.handleFabricFieldSwitching) {
+        stepManager.handleFabricFieldSwitching(type);
+      }
       
       const submissionModal = document.querySelector('#submission-type-modal');
       
