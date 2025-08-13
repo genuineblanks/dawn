@@ -2692,17 +2692,18 @@
           if (garmentTypeError) garmentTypeError.textContent = '';
         }
 
-        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
-        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
-        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
+        // For bulk orders, validate sample reference instead of fabric type
+        const sampleReferenceSelect = garmentElement.querySelector('select[name="sampleReference"]');
+        const sampleReferenceGroup = sampleReferenceSelect?.closest('.techpack-form__group');
+        const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
         
-        if (!fabricSelect?.value) {
+        if (!sampleReferenceSelect?.value) {
           isValid = false;
-          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = 'Please select a fabric type';
+          if (sampleReferenceGroup) sampleReferenceGroup.classList.add('techpack-form__group--error');
+          if (sampleReferenceError) sampleReferenceError.textContent = 'Please select a sample selection';
         } else {
-          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
-          if (fabricError) fabricError.textContent = '';
+          if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
+          if (sampleReferenceError) sampleReferenceError.textContent = '';
         }
 
         const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
@@ -4511,6 +4512,9 @@
       const productionType = state.formData.clientInfo.productionType || 'custom-production';
       stepManager.updateGarmentInterface(garment, productionType);
       
+      // Control field visibility based on request type
+      this.updateFieldVisibilityForRequestType(garment);
+      
       // Add to state
       state.formData.garments.push({
         id: garmentId,
@@ -5089,6 +5093,48 @@
         }
         
         debugSystem.log('Cleared main sample type error');
+      }
+    }
+    
+    // Control field visibility based on request type
+    updateFieldVisibilityForRequestType(garment) {
+      const requestType = state.formData.requestType;
+      
+      // Get the field elements
+      const fabricTypeField = garment.querySelector('#fabric-type-field');
+      const sampleReferenceField = garment.querySelector('#sample-reference-field');
+      
+      if (!fabricTypeField || !sampleReferenceField) {
+        debugSystem.log('⚠️ Field elements not found for request type visibility control');
+        return;
+      }
+      
+      if (requestType === 'bulk-order-request') {
+        // BULK ORDER: Show sample reference, hide fabric type
+        fabricTypeField.style.display = 'none';
+        sampleReferenceField.style.display = 'block';
+        
+        // Enable/disable the select elements
+        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
+        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
+        
+        if (fabricSelect) fabricSelect.disabled = true;
+        if (sampleReferenceSelect) sampleReferenceSelect.disabled = false;
+        
+        debugSystem.log('🔄 Bulk order mode: Showing sample reference, hiding fabric type', { garmentId: garment.dataset.garmentId });
+      } else {
+        // QUOTATION/SAMPLE REQUEST: Show fabric type, hide sample reference  
+        fabricTypeField.style.display = 'block';
+        sampleReferenceField.style.display = 'none';
+        
+        // Enable/disable the select elements
+        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
+        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
+        
+        if (fabricSelect) fabricSelect.disabled = false;
+        if (sampleReferenceSelect) sampleReferenceSelect.disabled = true;
+        
+        debugSystem.log(`🔄 ${requestType || 'Default'} mode: Showing fabric type, hiding sample reference`, { garmentId: garment.dataset.garmentId });
       }
     }
 
@@ -9889,6 +9935,12 @@
           const existingColorways = document.querySelectorAll('.techpack-colorway');
           existingColorways.forEach(colorway => {
             garmentManager.handleSizeGridBasedOnRequestType(colorway);
+          });
+          
+          // Update field visibility for all existing garments
+          const existingGarments = document.querySelectorAll('.techpack-garment');
+          existingGarments.forEach(garment => {
+            garmentManager.updateFieldVisibilityForRequestType(garment);
           });
           
           // Recalculate quantities and progress
