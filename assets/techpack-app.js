@@ -11265,6 +11265,15 @@
       a.download = `techpack-export-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
+    },
+    
+    // Lab Dips workflow methods
+    showLabDipsStep(stepId) {
+      return formInitializer.showLabDipsStep(stepId);
+    },
+    
+    showSubmissionTypeModal() {
+      return formInitializer.showSubmissionTypeModal();
     }
   };
 
