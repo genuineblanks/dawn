@@ -14424,11 +14424,11 @@ setupInitialization();
         const requestType = window.techpackApp?.state?.formData?.requestType || state?.formData?.requestType || '';
         
         if (globalLabDipContainer) {
-          // Show ONLY for sample-request and bulk-order-request, hide for quotation and empty state
-          const shouldShow = requestType === 'sample-request' || requestType === 'bulk-order-request';
+          // Show ONLY for sample-request, hide for bulk-order-request and quotation
+          const shouldShow = requestType === 'sample-request';
           globalLabDipContainer.style.display = shouldShow ? 'block' : 'none';
           
-          debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}"`);
+          debugSystem.log(`🎯 Global Lab Dip visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}" (bulk orders use colorway Lab Dip system)`);
         } else {
           debugSystem.log('⚠️ Global Lab Dip container not found');
         }
@@ -15866,6 +15866,7 @@ setupInitialization();
       
       if (bestMatch) {
         this.updateColorwayPantoneDisplay(colorwayId, bestMatch.code, bestMatch.hex);
+        this.showColorwayQuantityInputs(colorwayId);
         debugSystem.log('🎨 Colorway Pantone matched:', bestMatch);
       }
     }
@@ -15949,6 +15950,7 @@ setupInitialization();
       const pantoneMatch = this.findPantoneByCode(pantoneCode.trim());
       if (pantoneMatch) {
         this.updateColorwayManualPreview(colorwayId, pantoneMatch.code, pantoneMatch.hex);
+        this.showColorwayQuantityInputs(colorwayId);
         debugSystem.log('✅ Manual Pantone found:', pantoneMatch);
         // Clear any previous errors
         this.clearColorwayError(colorwayId);
@@ -15962,6 +15964,7 @@ setupInitialization();
     // Find Pantone by code in the comprehensive database
     findPantoneByCode(searchCode) {
       if (!this.garmentManager?.findClosestPantoneColors) {
+        debugSystem.log('❌ GarmentManager not available for Pantone search');
         return null;
       }
 
@@ -15970,27 +15973,59 @@ setupInitialization();
       const dummyColors = this.garmentManager.findClosestPantoneColors('#000000', 2500);
       
       if (!dummyColors || !dummyColors.length) {
+        debugSystem.log('❌ No Pantone database found');
         return null;
       }
 
-      // Search for exact or partial match
+      debugSystem.log('🔍 Searching Pantone database:', { 
+        searchCode, 
+        databaseSize: dummyColors.length 
+      });
+
+      // Normalize search input - handle multiple formats
       const normalizedSearch = searchCode.toUpperCase().trim();
       
-      // First try exact match
-      let match = dummyColors.find(color => 
-        color.code && color.code.toUpperCase().includes(normalizedSearch)
-      );
+      // Multiple search patterns to try
+      const searchPatterns = [
+        normalizedSearch, // Exact as entered: "18-1664 TPX"
+        normalizedSearch.replace(/\s*(TPX|TCX)\s*$/i, ''), // Remove TPX/TCX: "18-1664"
+        normalizedSearch.replace(/^(\d+-\d+).*/, '$1'), // Extract just number: "18-1664"
+        normalizedSearch.replace(/[^0-9-]/g, ''), // Numbers and dashes only: "18-1664"
+      ];
 
-      // If no exact match, try partial match on code only
-      if (!match) {
-        match = dummyColors.find(color => {
-          if (!color.code) return false;
-          const codeOnly = color.code.split(' - ')[1] || color.code;
-          return codeOnly.toUpperCase().includes(normalizedSearch);
-        });
+      debugSystem.log('🔍 Search patterns:', searchPatterns);
+
+      // Try each pattern
+      for (const pattern of searchPatterns) {
+        if (!pattern || pattern.length < 3) continue;
+
+        // 1. Try exact match in full code
+        let match = dummyColors.find(color => 
+          color.code && color.code.toUpperCase().includes(pattern)
+        );
+
+        // 2. Try match in code part only (after " - ")
+        if (!match) {
+          match = dummyColors.find(color => {
+            if (!color.code) return false;
+            const codeParts = color.code.split(' - ');
+            const codeOnly = codeParts[1] || codeParts[0]; // Get part after " - " or full code
+            return codeOnly.toUpperCase().includes(pattern);
+          });
+        }
+
+        if (match) {
+          debugSystem.log('✅ Pantone match found:', { 
+            pattern, 
+            match: match.code,
+            hex: match.hex 
+          });
+          return match;
+        }
       }
 
-      return match || null;
+      debugSystem.log('❌ No Pantone match found for:', normalizedSearch);
+      return null;
     }
 
     // Update manual preview for colorway
@@ -16039,6 +16074,40 @@ setupInitialization();
       if (errorElement) {
         errorElement.style.display = 'none';
         errorElement.innerHTML = '';
+      }
+    }
+
+    // Show quantity inputs (size grid) for specific colorway
+    showColorwayQuantityInputs(colorwayId) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const sizeGrid = colorway.querySelector('.techpack-size-grid[data-requires-pantone="true"]');
+      if (sizeGrid) {
+        sizeGrid.style.display = 'block';
+        debugSystem.log('📊 Size grid shown for colorway:', colorwayId);
+        
+        // Update colorway status
+        this.updateColorwayStatus(colorwayId, 'Enter quantities below');
+        
+        // Trigger validation and calculations
+        setTimeout(() => {
+          if (window.quantityCalculator) {
+            window.quantityCalculator.calculateAndUpdateProgress();
+            window.quantityCalculator.updateColorwayValidationMessages();
+          }
+        }, 100);
+      }
+    }
+
+    // Update colorway status message
+    updateColorwayStatus(colorwayId, message) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const statusElement = colorway.querySelector('.techpack-colorway__status');
+      if (statusElement) {
+        statusElement.textContent = message;
       }
     }
   }
