@@ -4827,6 +4827,27 @@
         preservedSelection: fabricSelect.value 
       });
     }
+    
+    // Update sample reference field based on selected garment type
+    updateSampleReferenceOptions(garmentType, sampleReferenceSelect) {
+      if (!sampleReferenceSelect) return;
+      
+      // Handle empty garment type
+      if (!garmentType) {
+        sampleReferenceSelect.disabled = true;
+        sampleReferenceSelect.value = '';
+        debugSystem.log('Sample reference dropdown disabled - no garment type selected');
+        return;
+      }
+      
+      // Re-enable sample reference select if it was disabled
+      sampleReferenceSelect.disabled = false;
+      
+      debugSystem.log('Sample reference field enabled', { 
+        garmentType,
+        currentValue: sampleReferenceSelect.value 
+      });
+    }
 
     // Check if all prerequisites are met and show/hide sample type selection accordingly
     updateSampleTypeVisibility(garment) {
@@ -4908,6 +4929,10 @@
           const fabricSelect = garment.querySelector('select[name="fabricType"]');
           this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, true);
           
+          // Update sample reference options/state based on garment type
+          const sampleReferenceSelect = garment.querySelector('select[name="sampleReference"]');
+          this.updateSampleReferenceOptions(garmentTypeSelect.value, sampleReferenceSelect);
+          
           // Check if sample type section should be shown/hidden
           this.updateSampleTypeVisibility(garment);
           
@@ -4973,6 +4998,35 @@
               window.sampleManager.updateGarmentSampleSummary(garment, sampleData);
             }
           }
+        });
+      }
+      
+      // Sample reference select
+      const sampleReferenceSelect = garment.querySelector('select[name="sampleReference"]');
+      if (sampleReferenceSelect) {
+        sampleReferenceSelect.addEventListener('change', () => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            garmentData.sampleReference = sampleReferenceSelect.value;
+          }
+          
+          // Clear validation errors immediately when value is selected
+          const sampleReferenceGroup = sampleReferenceSelect.closest('.techpack-form__group');
+          const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
+          
+          if (sampleReferenceSelect.value) {
+            // Value selected - clear errors
+            if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
+            if (sampleReferenceError) sampleReferenceError.textContent = '';
+          }
+          
+          // Trigger validation to update form state
+          stepManager.validateStep3();
+          
+          debugSystem.log('Sample reference changed', { 
+            garmentId, 
+            value: sampleReferenceSelect.value 
+          });
         });
       }
 
@@ -5151,6 +5205,12 @@
         const sampleSelect = sampleField.querySelector('select[name="sampleReference"]');
         if (fabricSelect) fabricSelect.required = false;
         if (sampleSelect) sampleSelect.required = true;
+        
+        // Initialize sample reference field based on garment type selection
+        const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
+        if (sampleSelect && garmentTypeSelect) {
+          this.updateSampleReferenceOptions(garmentTypeSelect.value, sampleSelect);
+        }
         
         debugSystem.log('Bulk order mode: Showing sample selection field');
       } else {
@@ -12536,6 +12596,56 @@ setupInitialization();
           const labDipId = e.target.dataset.labDipId;
           this.selectLabDipForCustom(labDipId);
         }
+
+        // ===============================================
+        // COLORWAY-SPECIFIC LAB DIP EVENT HANDLING
+        // ===============================================
+
+        // Colorway mode toggle buttons
+        if (e.target.hasAttribute('data-colorway-color-picker-mode')) {
+          const colorway = e.target.closest('.techpack-colorway');
+          const colorwayId = colorway?.dataset.colorwayId;
+          if (colorwayId) {
+            window.globalLabDipManager?.switchColorwayInputMode(colorwayId, 'color-picker');
+          }
+        }
+
+        if (e.target.hasAttribute('data-colorway-manual-mode')) {
+          const colorway = e.target.closest('.techpack-colorway');
+          const colorwayId = colorway?.dataset.colorwayId;
+          if (colorwayId) {
+            window.globalLabDipManager?.switchColorwayInputMode(colorwayId, 'manual-entry');
+          }
+        }
+      });
+
+      // Colorway color picker and manual entry handling
+      document.addEventListener('change', (e) => {
+        // Colorway color picker changes
+        if (e.target.hasAttribute('data-colorway-color-picker')) {
+          const colorway = e.target.closest('.techpack-colorway');
+          const colorwayId = colorway?.dataset.colorwayId;
+          if (colorwayId) {
+            window.globalLabDipManager?.handleColorwayColorChange(colorwayId, e.target.value);
+            // Clear any previous errors
+            window.globalLabDipManager?.clearColorwayError(colorwayId);
+          }
+        }
+      });
+
+      // Colorway manual Pantone entry handling
+      document.addEventListener('input', (e) => {
+        if (e.target.hasAttribute('data-colorway-manual-pantone')) {
+          const colorway = e.target.closest('.techpack-colorway');
+          const colorwayId = colorway?.dataset.colorwayId;
+          if (colorwayId) {
+            // Debounce the input to avoid excessive API calls
+            clearTimeout(e.target.colorwayTimeout);
+            e.target.colorwayTimeout = setTimeout(() => {
+              window.globalLabDipManager?.handleColorwayManualEntry(colorwayId, e.target.value);
+            }, 500);
+          }
+        }
       });
       
       
@@ -15734,6 +15844,163 @@ setupInitialization();
           ? 'Lab dip swatches only (stock fabric garment + separate swatches)'
           : 'Custom color dyeing (garment dyed to lab dip color)'
       };
+    }
+
+    // ===============================================
+    // COLORWAY-SPECIFIC LAB DIP FUNCTIONALITY
+    // ===============================================
+    
+    // Handle colorway color picker changes
+    handleColorwayColorChange(colorwayId, color) {
+      debugSystem.log('🎨 Colorway color change:', { colorwayId, color });
+      
+      if (!color || color === '#000000') {
+        this.resetColorwayPantoneDisplay(colorwayId);
+        return;
+      }
+
+      // Find best Pantone match using existing logic
+      const bestMatch = this.garmentManager?.findBestPantoneMatch(color);
+      if (bestMatch) {
+        this.updateColorwayPantoneDisplay(colorwayId, bestMatch.code, bestMatch.hex);
+        debugSystem.log('🎨 Colorway Pantone matched:', bestMatch);
+      }
+    }
+
+    // Switch input mode for specific colorway
+    switchColorwayInputMode(colorwayId, mode) {
+      debugSystem.log('🔄 Switching colorway input mode:', { colorwayId, mode });
+      
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const colorPickerBtn = colorway.querySelector('[data-colorway-color-picker-mode]');
+      const manualBtn = colorway.querySelector('[data-colorway-manual-mode]');
+      const colorPickerInput = colorway.querySelector('[data-colorway-color-picker-input]');
+      const manualInput = colorway.querySelector('[data-colorway-manual-entry-input]');
+
+      if (mode === 'color-picker') {
+        colorPickerBtn?.classList.add('techpack-mode-btn--active');
+        manualBtn?.classList.remove('techpack-mode-btn--active');
+        colorPickerInput?.classList.add('techpack-input-mode--active');
+        manualInput?.classList.remove('techpack-input-mode--active');
+      } else {
+        colorPickerBtn?.classList.remove('techpack-mode-btn--active');
+        manualBtn?.classList.add('techpack-mode-btn--active');
+        colorPickerInput?.classList.remove('techpack-input-mode--active');
+        manualInput?.classList.add('techpack-input-mode--active');
+      }
+    }
+
+    // Update Pantone display for specific colorway
+    updateColorwayPantoneDisplay(colorwayId, pantoneCode, hexColor) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const pantoneDisplay = colorway.querySelector('[data-colorway-pantone-display]');
+      const pantonePlaceholder = colorway.querySelector('[data-colorway-pantone-placeholder]');
+      const pantoneCircle = colorway.querySelector('[data-colorway-pantone-circle]');
+      const pantoneCodeElement = colorway.querySelector('[data-colorway-pantone-code]');
+
+      if (pantoneDisplay && pantonePlaceholder && pantoneCircle && pantoneCodeElement) {
+        pantoneDisplay.style.display = 'block';
+        pantonePlaceholder.style.display = 'none';
+        
+        pantoneCircle.style.backgroundColor = hexColor;
+        pantoneCodeElement.textContent = pantoneCode;
+
+        // Store the selected color data on the colorway element
+        colorway.dataset.selectedPantone = pantoneCode;
+        colorway.dataset.selectedHex = hexColor;
+      }
+    }
+
+    // Reset Pantone display for specific colorway
+    resetColorwayPantoneDisplay(colorwayId) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const pantoneDisplay = colorway.querySelector('[data-colorway-pantone-display]');
+      const pantonePlaceholder = colorway.querySelector('[data-colorway-pantone-placeholder]');
+
+      if (pantoneDisplay && pantonePlaceholder) {
+        pantoneDisplay.style.display = 'none';
+        pantonePlaceholder.style.display = 'block';
+      }
+
+      // Clear stored data
+      delete colorway.dataset.selectedPantone;
+      delete colorway.dataset.selectedHex;
+    }
+
+    // Handle manual Pantone entry for colorway
+    handleColorwayManualEntry(colorwayId, pantoneCode) {
+      debugSystem.log('📝 Colorway manual entry:', { colorwayId, pantoneCode });
+      
+      if (!pantoneCode || !pantoneCode.trim()) {
+        this.resetColorwayPantoneDisplay(colorwayId);
+        return;
+      }
+
+      // Validate and find Pantone in database
+      const pantoneMatch = this.garmentManager?.findPantoneByCode(pantoneCode.trim().toUpperCase());
+      if (pantoneMatch) {
+        this.updateColorwayManualPreview(colorwayId, pantoneMatch.code, pantoneMatch.hex);
+        debugSystem.log('✅ Manual Pantone found:', pantoneMatch);
+      } else {
+        // Show error for invalid Pantone
+        this.showColorwayError(colorwayId, 'Invalid Pantone code. Please use format like "18-1664 TPX"');
+        debugSystem.log('❌ Invalid Pantone code:', pantoneCode);
+      }
+    }
+
+    // Update manual preview for colorway
+    updateColorwayManualPreview(colorwayId, pantoneCode, hexColor) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const preview = colorway.querySelector('[data-colorway-manual-preview]');
+      const circle = colorway.querySelector('[data-colorway-manual-circle]');
+      const text = colorway.querySelector('[data-colorway-manual-text]');
+
+      if (preview && circle && text) {
+        preview.style.display = 'flex';
+        circle.style.backgroundColor = hexColor;
+        text.textContent = pantoneCode;
+
+        // Store the selected color data
+        colorway.dataset.selectedPantone = pantoneCode;
+        colorway.dataset.selectedHex = hexColor;
+      }
+    }
+
+    // Show error for specific colorway
+    showColorwayError(colorwayId, message) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const errorElement = colorway.querySelector('.techpack-colorway-validation-error');
+      if (errorElement) {
+        errorElement.style.display = 'flex';
+        errorElement.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
+          </svg>
+          <span>${message}</span>
+        `;
+      }
+    }
+
+    // Clear error for specific colorway
+    clearColorwayError(colorwayId) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const errorElement = colorway.querySelector('.techpack-colorway-validation-error');
+      if (errorElement) {
+        errorElement.style.display = 'none';
+        errorElement.innerHTML = '';
+      }
     }
   }
 
