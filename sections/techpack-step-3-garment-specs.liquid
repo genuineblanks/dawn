@@ -635,77 +635,42 @@ Tech-Pack Step 3: Garment Specifications Section
 <!-- Colorway Template -->
 <template id="colorway-template">
   <div class="techpack-colorway" data-colorway-id="">
-    <!-- Clean Colorway Header with Integrated Lab Dip System -->
-    <div class="techpack-colorway__header">
-      <div class="techpack-colorway__title">
-        <span class="techpack-colorway__label">Colorway</span>
-        <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
-          <svg width="16" height="16" viewBox="0 0 16 16">
-            <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-    
-    <!-- Integrated Lab Dip Color Selection System -->
-    <div class="techpack-colorway__color-system">
-      <div class="techpack-colorway-input-mode-toggle">
-        <button type="button" class="techpack-mode-btn techpack-mode-btn--active" data-mode="color-picker" data-colorway-color-picker-mode>
-          <svg width="14" height="14" viewBox="0 0 16 16">
-            <path d="M12.83 2.17a4 4 0 0 0-5.66 0L4.2 5.14a1 1 0 0 0-.29.71v4.29a1 1 0 0 0 1 1h4.29a1 1 0 0 0 .71-.29l2.97-2.97a4 4 0 0 0 0-5.66z"/>
-            <path d="M8.5 12.5L15 6l-3-3-6.5 6.5"/>
-          </svg>
-          Color Picker
-        </button>
-        <button type="button" class="techpack-mode-btn" data-mode="manual-entry" data-colorway-manual-mode>
-          <svg width="14" height="14" viewBox="0 0 16 16">
-            <path d="M1 4h14M1 8h14M1 12h8"/>
-          </svg>
-          Manual Code
-        </button>
+    <!-- Perfect Single Line Layout: Color → Sample → Pantone → X -->
+    <div class="techpack-colorway__header-line">
+      <!-- Column 1: Color Picker -->
+      <div class="techpack-colorway__color">
+        <label class="techpack-form__label">Color</label>
+        <input type="color" class="techpack-color-picker__input" value="#000000" data-color-picker>
       </div>
       
-      <!-- Color Picker Mode -->
-      <div class="techpack-input-mode techpack-input-mode--active" data-colorway-color-picker-input>
-        <div class="techpack-colorway-color-picker-group">
-          <div class="techpack-color-picker-section">
-            <div class="techpack-color-preview-wrapper">
-              <input type="color" class="techpack-color-picker__input" value="#000000" data-colorway-color-picker>
-              <div class="techpack-color-picker__preview" data-colorway-color-preview></div>
-            </div>
-          </div>
-          
-          <div class="techpack-auto-pantone-section">
-            <div class="techpack-auto-pantone-display" data-colorway-pantone-display style="display: none;">
-              <div class="techpack-pantone-result">
-                <div class="techpack-pantone-circle" data-colorway-pantone-circle></div>
-                <div class="techpack-pantone-info">
-                  <div class="techpack-pantone-code" data-colorway-pantone-code>Select a color</div>
-                  <div class="techpack-pantone-note">Auto-matched from 2,310+ colors</div>
-                </div>
-              </div>
-            </div>
-            <div class="techpack-pantone-placeholder" data-colorway-pantone-placeholder>
-              <div class="techpack-pantone-placeholder-icon">🎨</div>
-              <div class="techpack-pantone-placeholder-text">Pick a color to see Pantone match</div>
-            </div>
+      <!-- Column 3: Pantone Options (Takes remaining space) -->
+      <div class="techpack-colorway__pantone">
+        <label class="techpack-form__label">
+          PANTONE Options <span class="techpack-form__required">*</span>
+        </label>
+        <div class="techpack-pantone-buttons" style="display: none;">
+          <div class="techpack-pantone-grid">
+            <button type="button" class="techpack-btn techpack-btn--pantone-compact" data-pantone-index="0" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="techpack-pantone-circle" style="background-color: var(--pantone-hex)"></div>
+              <span class="techpack-pantone-text">Select color</span>
+              <div class="techpack-pantone-radio"></div>
+            </button>
+            <button type="button" class="techpack-btn techpack-btn--pantone-compact" data-pantone-index="1" data-pantone-code="" data-pantone-hex="" style="--pantone-hex: #000000;">
+              <div class="techpack-pantone-circle" style="background-color: var(--pantone-hex)"></div>
+              <span class="techpack-pantone-text">Select color</span>
+              <div class="techpack-pantone-radio"></div>
+            </button>
           </div>
         </div>
+        <div class="techpack-pantone-validation-message" style="display: none;"></div>
       </div>
       
-      <!-- Manual Entry Mode -->
-      <div class="techpack-input-mode" data-colorway-manual-entry-input>
-        <div class="techpack-colorway-manual-entry-group">
-          <input type="text" class="techpack-form__input techpack-form__input--compact" placeholder="Enter Pantone code (e.g., 18-1664 TPX)" data-colorway-manual-pantone>
-          <div class="techpack-manual-color-preview" data-colorway-manual-preview style="display: none;">
-            <div class="techpack-pantone-circle" data-colorway-manual-circle></div>
-            <span class="techpack-pantone-text" data-colorway-manual-text></span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Validation Error Display -->
-      <div class="techpack-colorway-validation-error" style="display: none;"></div>
+      <!-- Column 4: Remove Button (Original position) -->
+      <button type="button" class="techpack-colorway__remove" aria-label="Remove colorway">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path d="M12 4L4 12m0-8l8 8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
     </div>
 
     <div class="techpack-size-grid" style="display: none;" data-requires-pantone="true">
@@ -721,19 +686,19 @@ Tech-Pack Step 3: Garment Specifications Section
       </div>
       <div class="techpack-size-grid__row">
         <div class="techpack-size-grid__label">Qty</div>
-        <input type="number" class="techpack-size-grid__input" name="qty-xxs" min="0" value="0" data-size="xxs" data-size-label="XXS">
-        <input type="number" class="techpack-size-grid__input" name="qty-xs" min="0" value="0" data-size="xs" data-size-label="XS">
-        <input type="number" class="techpack-size-grid__input" name="qty-s" min="0" value="0" data-size="s" data-size-label="S">
-        <input type="number" class="techpack-size-grid__input" name="qty-m" min="0" value="0" data-size="m" data-size-label="M">
-        <input type="number" class="techpack-size-grid__input" name="qty-l" min="0" value="0" data-size="l" data-size-label="L">
-        <input type="number" class="techpack-size-grid__input" name="qty-xl" min="0" value="0" data-size="xl" data-size-label="XL">
-        <input type="number" class="techpack-size-grid__input" name="qty-xxl" min="0" value="0" data-size="xxl" data-size-label="XXL">
+        <input type="number" class="techpack-size-grid__input" name="qty-xxs" min="0" value="0" data-size="xxs">
+        <input type="number" class="techpack-size-grid__input" name="qty-xs" min="0" value="0" data-size="xs">
+        <input type="number" class="techpack-size-grid__input" name="qty-s" min="0" value="0" data-size="s">
+        <input type="number" class="techpack-size-grid__input" name="qty-m" min="0" value="0" data-size="m">
+        <input type="number" class="techpack-size-grid__input" name="qty-l" min="0" value="0" data-size="l">
+        <input type="number" class="techpack-size-grid__input" name="qty-xl" min="0" value="0" data-size="xl">
+        <input type="number" class="techpack-size-grid__input" name="qty-xxl" min="0" value="0" data-size="xxl">
       </div>
     </div>
 
     <div class="techpack-colorway__total">
-      <span class="techpack-colorway__total-value">0 units</span>
-      <span class="techpack-colorway__status">Select color and enter quantities above</span>
+      <span class="techpack-colorway__total-label">Colorway Total:</span>
+      <span class="techpack-colorway__total-value">0</span>
     </div>
   </div>
 </template>
