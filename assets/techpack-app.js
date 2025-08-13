@@ -15860,7 +15860,10 @@ setupInitialization();
       }
 
       // Find best Pantone match using existing logic
-      const bestMatch = this.garmentManager?.findBestPantoneMatch(color);
+      const closestPantones = this.garmentManager?.findClosestPantoneColors ? 
+        this.garmentManager.findClosestPantoneColors(color, 1) : [];
+      const bestMatch = closestPantones && closestPantones.length > 0 ? closestPantones[0] : null;
+      
       if (bestMatch) {
         this.updateColorwayPantoneDisplay(colorwayId, bestMatch.code, bestMatch.hex);
         debugSystem.log('🎨 Colorway Pantone matched:', bestMatch);
@@ -15942,16 +15945,52 @@ setupInitialization();
         return;
       }
 
-      // Validate and find Pantone in database
-      const pantoneMatch = this.garmentManager?.findPantoneByCode(pantoneCode.trim().toUpperCase());
+      // Search for Pantone in the comprehensive database
+      const pantoneMatch = this.findPantoneByCode(pantoneCode.trim());
       if (pantoneMatch) {
         this.updateColorwayManualPreview(colorwayId, pantoneMatch.code, pantoneMatch.hex);
         debugSystem.log('✅ Manual Pantone found:', pantoneMatch);
+        // Clear any previous errors
+        this.clearColorwayError(colorwayId);
       } else {
         // Show error for invalid Pantone
         this.showColorwayError(colorwayId, 'Invalid Pantone code. Please use format like "18-1664 TPX"');
         debugSystem.log('❌ Invalid Pantone code:', pantoneCode);
       }
+    }
+
+    // Find Pantone by code in the comprehensive database
+    findPantoneByCode(searchCode) {
+      if (!this.garmentManager?.findClosestPantoneColors) {
+        return null;
+      }
+
+      // Get all Pantone colors by doing a dummy search and extracting the database
+      // This is a workaround to access the internal database
+      const dummyColors = this.garmentManager.findClosestPantoneColors('#000000', 2500);
+      
+      if (!dummyColors || !dummyColors.length) {
+        return null;
+      }
+
+      // Search for exact or partial match
+      const normalizedSearch = searchCode.toUpperCase().trim();
+      
+      // First try exact match
+      let match = dummyColors.find(color => 
+        color.code && color.code.toUpperCase().includes(normalizedSearch)
+      );
+
+      // If no exact match, try partial match on code only
+      if (!match) {
+        match = dummyColors.find(color => {
+          if (!color.code) return false;
+          const codeOnly = color.code.split(' - ')[1] || color.code;
+          return codeOnly.toUpperCase().includes(normalizedSearch);
+        });
+      }
+
+      return match || null;
     }
 
     // Update manual preview for colorway
