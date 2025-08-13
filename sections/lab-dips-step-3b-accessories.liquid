@@ -1,0 +1,1033 @@
+{% comment %}
+Lab Dips & Brand Accessories - Step 3B: Brand Accessories Catalog
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+
+<section id="lab-dips-step-3b" class="techpack-step" data-step="3b" style="display: none;">
+  <div class="techpack-container">
+    
+    <!-- Progress Bar for Lab Dips Workflow -->
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 100%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step--completed">1</div>
+          <div class="techpack-progress__step-label">Service Selection</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step--completed">2</div>
+          <div class="techpack-progress__step-label">Brand Assets</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">3</div>
+          <div class="techpack-progress__step-label">Accessories</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="techpack-content">
+      
+      <!-- Header -->
+      <div class="techpack-step-header">
+        <h2 class="techpack-step-title">Brand Accessories Catalog</h2>
+        <p class="techpack-step-subtitle">Choose your accessories, materials, and quantities</p>
+      </div>
+
+      <!-- Order Type Selection -->
+      <div class="techpack-order-type-selection">
+        <div class="techpack-section-header">
+          <h3 class="techpack-section-title">Order Type</h3>
+          <p class="techpack-section-description">Choose between sample orders or bulk production</p>
+        </div>
+
+        <div class="techpack-order-type-toggle">
+          <div class="techpack-toggle-option">
+            <input type="radio" id="sample-order" name="order-type" value="sample" class="techpack-toggle-radio">
+            <label for="sample-order" class="techpack-toggle-card">
+              <div class="techpack-toggle-card__content">
+                <div class="techpack-toggle-card__icon">📦</div>
+                <div class="techpack-toggle-card__text">
+                  <h4>Sample Order</h4>
+                  <p>1 unit per item for testing</p>
+                  <div class="techpack-toggle-card__price">Perfect for prototyping</div>
+                </div>
+              </div>
+              <div class="techpack-toggle-selection-indicator">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+            </label>
+          </div>
+
+          <div class="techpack-toggle-option">
+            <input type="radio" id="bulk-order" name="order-type" value="bulk" class="techpack-toggle-radio">
+            <label for="bulk-order" class="techpack-toggle-card">
+              <div class="techpack-toggle-card__content">
+                <div class="techpack-toggle-card__icon">🏭</div>
+                <div class="techpack-toggle-card__text">
+                  <h4>Bulk Order</h4>
+                  <p>Production quantities</p>
+                  <div class="techpack-toggle-card__price">With minimum order quantities</div>
+                </div>
+              </div>
+              <div class="techpack-toggle-selection-indicator">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessories Catalog -->
+      <div class="techpack-accessories-catalog" id="accessories-catalog" style="display: none;">
+        <div class="techpack-section-header">
+          <h3 class="techpack-section-title">Select Your Accessories</h3>
+          <p class="techpack-section-description">Choose the accessories you need for your brand</p>
+        </div>
+
+        <div class="techpack-accessories-grid">
+          
+          <!-- Neck Label -->
+          <div class="techpack-accessory-card" data-accessory="neck-label">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">🏷️</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Neck Label</h4>
+                <p class="techpack-accessory-description">Brand tag inside the neckline</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="500" style="display: none;">
+                  Minimum: 500 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="polyester">Polyester</option>
+                  <option value="satin">Satin</option>
+                  <option value="woven">Woven</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#000000">
+                  <span class="techpack-color-label">Black</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Hang-tag -->
+          <div class="techpack-accessory-card" data-accessory="hang-tag">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">🏷️</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Hang-tag</h4>
+                <p class="techpack-accessory-description">Brand tag attached to garment</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="500" style="display: none;">
+                  Minimum: 500 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="cardstock">Cardstock</option>
+                  <option value="kraft-paper">Kraft Paper</option>
+                  <option value="plastic">Plastic</option>
+                  <option value="premium-paper">Premium Paper</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#ffffff">
+                  <span class="techpack-color-label">White</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Zippers -->
+          <div class="techpack-accessory-card" data-accessory="zippers">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">🔗</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Zippers</h4>
+                <p class="techpack-accessory-description">Custom branded zippers</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="500" style="display: none;">
+                  Minimum: 500 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="metal">Metal</option>
+                  <option value="plastic">Plastic</option>
+                  <option value="coil">Coil</option>
+                  <option value="brass">Brass</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#c0c0c0">
+                  <span class="techpack-color-label">Silver</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Side-tag Label -->
+          <div class="techpack-accessory-card" data-accessory="side-tag-label">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">📄</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Side-tag Label</h4>
+                <p class="techpack-accessory-description">Side seam brand label</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="500" style="display: none;">
+                  Minimum: 500 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="polyester">Polyester</option>
+                  <option value="woven">Woven</option>
+                  <option value="printed">Printed</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#000000">
+                  <span class="techpack-color-label">Black</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cardbox -->
+          <div class="techpack-accessory-card" data-accessory="cardbox">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">📦</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Cardbox</h4>
+                <p class="techpack-accessory-description">Custom shipping boxes</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="200" style="display: none;">
+                  Minimum: 200 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="corrugated">Corrugated</option>
+                  <option value="kraft-cardboard">Kraft Cardboard</option>
+                  <option value="premium-cardboard">Premium Cardboard</option>
+                  <option value="eco-friendly">Eco-friendly</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#d4af37">
+                  <span class="techpack-color-label">Kraft</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Wash-care Label -->
+          <div class="techpack-accessory-card" data-accessory="wash-care-label">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">🧼</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Wash-care Label</h4>
+                <p class="techpack-accessory-description">Care instruction labels</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="500" style="display: none;">
+                  Minimum: 500 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="polyester">Polyester</option>
+                  <option value="nylon">Nylon</option>
+                  <option value="satin">Satin</option>
+                  <option value="tyvek">Tyvek</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#ffffff">
+                  <span class="techpack-color-label">White</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Frosted Bag -->
+          <div class="techpack-accessory-card" data-accessory="frosted-bag">
+            <div class="techpack-accessory-header">
+              <div class="techpack-accessory-icon">👜</div>
+              <div class="techpack-accessory-info">
+                <h4 class="techpack-accessory-title">Frosted Bag</h4>
+                <p class="techpack-accessory-description">Premium packaging bags</p>
+                <div class="techpack-accessory-minimum" data-bulk-minimum="1000" style="display: none;">
+                  Minimum: 1000 units
+                </div>
+              </div>
+              <div class="techpack-accessory-toggle">
+                <label class="techpack-toggle-switch">
+                  <input type="checkbox" class="techpack-accessory-checkbox">
+                  <span class="techpack-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="techpack-accessory-options" style="display: none;">
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Material</label>
+                <select class="techpack-accessory-select" data-option="material">
+                  <option value="">Select material</option>
+                  <option value="ldpe">LDPE</option>
+                  <option value="biodegradable">Biodegradable Plastic</option>
+                  <option value="premium-frosted">Premium Frosted</option>
+                  <option value="eco-plastic">Eco Plastic</option>
+                </select>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Color</label>
+                <div class="techpack-color-selector">
+                  <input type="color" class="techpack-color-input" data-option="color" value="#f0f0f0">
+                  <span class="techpack-color-label">Frosted Clear</span>
+                </div>
+              </div>
+              <div class="techpack-accessory-option-group">
+                <label class="techpack-accessory-label">Quantity</label>
+                <input type="number" class="techpack-quantity-input" data-option="quantity" min="1" value="1">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="techpack-accessories-summary" id="accessories-summary" style="display: none;">
+        <div class="techpack-section-header">
+          <h3 class="techpack-section-title">Order Summary</h3>
+          <p class="techpack-section-description">Review your selected accessories</p>
+        </div>
+
+        <div class="techpack-summary-content" id="summary-content">
+          <!-- Summary will be populated here -->
+        </div>
+
+        <div class="techpack-order-total">
+          <div class="techpack-order-total-content">
+            <div class="techpack-order-total-row">
+              <span class="techpack-order-total-label">Order Type:</span>
+              <span class="techpack-order-total-value" id="order-type-display">-</span>
+            </div>
+            <div class="techpack-order-total-row">
+              <span class="techpack-order-total-label">Total Items:</span>
+              <span class="techpack-order-total-value" id="total-items">0</span>
+            </div>
+            <div class="techpack-order-total-row techpack-order-total-row--note">
+              <span class="techpack-order-total-note">Contact for pricing and delivery estimates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="techpack-step-navigation">
+        <button type="button" class="techpack-btn techpack-btn--secondary" id="accessories-back-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Back
+        </button>
+        
+        <button type="button" class="techpack-btn techpack-btn--primary techpack-btn--large" id="submit-accessories-order-btn" disabled>
+          Submit Accessories Order
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* Brand Accessories Specific Styles */
+.techpack-order-type-selection {
+  margin: 2rem 0;
+}
+
+.techpack-order-type-toggle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.techpack-toggle-option {
+  position: relative;
+}
+
+.techpack-toggle-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.techpack-toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.techpack-toggle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-toggle-radio:checked + .techpack-toggle-card {
+  border-color: var(--techpack-primary, #007bff);
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));
+}
+
+.techpack-toggle-card__content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.techpack-toggle-card__icon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.techpack-toggle-card__text h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-toggle-card__text p {
+  font-size: 0.9rem;
+  color: var(--techpack-text-secondary, #6c757d);
+  margin-bottom: 0.25rem;
+}
+
+.techpack-toggle-card__price {
+  font-size: 0.8rem;
+  color: var(--techpack-text-tertiary, #8b949e);
+}
+
+.techpack-toggle-selection-indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.3;
+}
+
+.techpack-toggle-radio:checked + .techpack-toggle-card .techpack-toggle-selection-indicator {
+  border-color: var(--techpack-primary, #007bff);
+  background: var(--techpack-primary, #007bff);
+  color: white;
+  opacity: 1;
+}
+
+/* Accessories Catalog */
+.techpack-accessories-catalog {
+  margin: 2rem 0;
+}
+
+.techpack-accessories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.techpack-accessory-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.techpack-accessory-card--selected {
+  border-color: var(--techpack-primary, #007bff);
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0.02));
+}
+
+.techpack-accessory-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.techpack-accessory-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.techpack-accessory-info {
+  flex: 1;
+}
+
+.techpack-accessory-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-accessory-description {
+  font-size: 0.85rem;
+  color: var(--techpack-text-secondary, #6c757d);
+  margin-bottom: 0.5rem;
+}
+
+.techpack-accessory-minimum {
+  font-size: 0.75rem;
+  color: var(--techpack-primary, #007bff);
+  font-weight: 500;
+}
+
+/* Toggle Switch */
+.techpack-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.techpack-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.techpack-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.techpack-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .techpack-toggle-slider {
+  background-color: var(--techpack-primary, #007bff);
+}
+
+input:checked + .techpack-toggle-slider:before {
+  transform: translateX(22px);
+}
+
+/* Accessory Options */
+.techpack-accessory-options {
+  animation: slideDown 0.3s ease;
+}
+
+.techpack-accessory-option-group {
+  margin-bottom: 1rem;
+}
+
+.techpack-accessory-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--techpack-text-primary, #2c3e50);
+  margin-bottom: 0.5rem;
+}
+
+.techpack-accessory-select,
+.techpack-quantity-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--techpack-text-primary, #2c3e50);
+  font-size: 0.9rem;
+}
+
+.techpack-color-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.techpack-color-input {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.techpack-color-label {
+  font-size: 0.9rem;
+  color: var(--techpack-text-secondary, #6c757d);
+}
+
+/* Order Summary */
+.techpack-accessories-summary {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.techpack-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.techpack-summary-item:last-child {
+  border-bottom: none;
+}
+
+.techpack-summary-item-info h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-summary-item-info p {
+  font-size: 0.8rem;
+  color: var(--techpack-text-secondary, #6c757d);
+}
+
+.techpack-summary-item-quantity {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--techpack-primary, #007bff);
+}
+
+.techpack-order-total {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.techpack-order-total-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.techpack-order-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.techpack-order-total-row--note {
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.techpack-order-total-label {
+  color: var(--techpack-text-secondary, #6c757d);
+}
+
+.techpack-order-total-value {
+  font-weight: 600;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-order-total-note {
+  font-size: 0.8rem;
+  color: var(--techpack-text-tertiary, #8b949e);
+  font-style: italic;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .techpack-order-type-toggle {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-accessories-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-toggle-card__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 200px; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Elements
+  const orderTypeRadios = document.querySelectorAll('input[name="order-type"]');
+  const accessoriesCatalog = document.getElementById('accessories-catalog');
+  const accessoryCards = document.querySelectorAll('.techpack-accessory-card');
+  const accessoriesSummary = document.getElementById('accessories-summary');
+  const summaryContent = document.getElementById('summary-content');
+  const orderTypeDisplay = document.getElementById('order-type-display');
+  const totalItems = document.getElementById('total-items');
+  const submitOrderBtn = document.getElementById('submit-accessories-order-btn');
+  const backBtn = document.getElementById('accessories-back-btn');
+  
+  let selectedOrderType = '';
+  let selectedAccessories = {};
+  
+  // Minimum quantities by accessory type for bulk orders
+  const minimumQuantities = {
+    'neck-label': 500,
+    'hang-tag': 500,
+    'zippers': 500,
+    'side-tag-label': 500,
+    'cardbox': 200,
+    'wash-care-label': 500,
+    'frosted-bag': 1000
+  };
+
+  // Order type selection
+  orderTypeRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      if (this.checked) {
+        selectedOrderType = this.value;
+        accessoriesCatalog.style.display = 'block';
+        updateMinimumDisplays();
+        updateQuantityInputs();
+        updateOrderSummary();
+      }
+    });
+  });
+
+  function updateMinimumDisplays() {
+    accessoryCards.forEach(card => {
+      const minimumDiv = card.querySelector('.techpack-accessory-minimum');
+      if (selectedOrderType === 'bulk') {
+        minimumDiv.style.display = 'block';
+      } else {
+        minimumDiv.style.display = 'none';
+      }
+    });
+  }
+
+  function updateQuantityInputs() {
+    accessoryCards.forEach(card => {
+      const quantityInput = card.querySelector('.techpack-quantity-input');
+      const accessoryType = card.dataset.accessory;
+      
+      if (selectedOrderType === 'sample') {
+        quantityInput.value = 1;
+        quantityInput.setAttribute('readonly', true);
+      } else {
+        quantityInput.removeAttribute('readonly');
+        const minimum = minimumQuantities[accessoryType] || 1;
+        quantityInput.min = minimum;
+        if (parseInt(quantityInput.value) < minimum) {
+          quantityInput.value = minimum;
+        }
+      }
+    });
+  }
+
+  // Accessory selection
+  accessoryCards.forEach(card => {
+    const checkbox = card.querySelector('.techpack-accessory-checkbox');
+    const options = card.querySelector('.techpack-accessory-options');
+    const accessoryType = card.dataset.accessory;
+    
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        options.style.display = 'block';
+        card.classList.add('techpack-accessory-card--selected');
+        
+        // Initialize accessory data
+        selectedAccessories[accessoryType] = {
+          name: card.querySelector('.techpack-accessory-title').textContent,
+          material: '',
+          color: '#000000',
+          colorName: 'Black',
+          quantity: selectedOrderType === 'sample' ? 1 : (minimumQuantities[accessoryType] || 1)
+        };
+        
+        // Set up option listeners
+        setupAccessoryOptionListeners(card, accessoryType);
+        
+      } else {
+        options.style.display = 'none';
+        card.classList.remove('techpack-accessory-card--selected');
+        delete selectedAccessories[accessoryType];
+      }
+      
+      updateOrderSummary();
+    });
+  });
+
+  function setupAccessoryOptionListeners(card, accessoryType) {
+    const materialSelect = card.querySelector('[data-option="material"]');
+    const colorInput = card.querySelector('[data-option="color"]');
+    const colorLabel = card.querySelector('.techpack-color-label');
+    const quantityInput = card.querySelector('[data-option="quantity"]');
+    
+    materialSelect.addEventListener('change', function() {
+      selectedAccessories[accessoryType].material = this.value;
+      updateOrderSummary();
+    });
+    
+    colorInput.addEventListener('input', function() {
+      const color = this.value;
+      selectedAccessories[accessoryType].color = color;
+      selectedAccessories[accessoryType].colorName = getColorName(color);
+      colorLabel.textContent = selectedAccessories[accessoryType].colorName;
+      updateOrderSummary();
+    });
+    
+    quantityInput.addEventListener('input', function() {
+      let quantity = parseInt(this.value) || 1;
+      
+      // Enforce minimums for bulk orders
+      if (selectedOrderType === 'bulk') {
+        const minimum = minimumQuantities[accessoryType] || 1;
+        if (quantity < minimum) {
+          quantity = minimum;
+          this.value = minimum;
+        }
+      } else {
+        quantity = 1;
+        this.value = 1;
+      }
+      
+      selectedAccessories[accessoryType].quantity = quantity;
+      updateOrderSummary();
+    });
+  }
+
+  function getColorName(hex) {
+    // Simple color name mapping
+    const colorNames = {
+      '#000000': 'Black',
+      '#ffffff': 'White',
+      '#c0c0c0': 'Silver',
+      '#d4af37': 'Kraft',
+      '#f0f0f0': 'Frosted Clear'
+    };
+    return colorNames[hex.toLowerCase()] || hex;
+  }
+
+  function updateOrderSummary() {
+    const accessoryCount = Object.keys(selectedAccessories).length;
+    
+    if (accessoryCount === 0) {
+      accessoriesSummary.style.display = 'none';
+      submitOrderBtn.disabled = true;
+      return;
+    }
+    
+    accessoriesSummary.style.display = 'block';
+    submitOrderBtn.disabled = false;
+    
+    // Update order type display
+    orderTypeDisplay.textContent = selectedOrderType === 'sample' ? 'Sample Order' : 'Bulk Order';
+    
+    // Generate summary content
+    let summaryHTML = '';
+    let totalItemCount = 0;
+    
+    Object.entries(selectedAccessories).forEach(([type, data]) => {
+      totalItemCount += data.quantity;
+      summaryHTML += `
+        <div class="techpack-summary-item">
+          <div class="techpack-summary-item-info">
+            <h5>${data.name}</h5>
+            <p>${data.material || 'Material not selected'} • ${data.colorName}</p>
+          </div>
+          <div class="techpack-summary-item-quantity">${data.quantity}</div>
+        </div>
+      `;
+    });
+    
+    summaryContent.innerHTML = summaryHTML;
+    totalItems.textContent = totalItemCount;
+  }
+
+  // Navigation
+  backBtn.addEventListener('click', function() {
+    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+      detail: { step: 'lab-dips-step-2' }
+    }));
+  });
+
+  submitOrderBtn.addEventListener('click', function() {
+    if (Object.keys(selectedAccessories).length === 0) return;
+    
+    // Store order data
+    if (window.techPackState) {
+      window.techPackState.formData.brandAccessories = {
+        orderType: selectedOrderType,
+        accessories: selectedAccessories
+      };
+    }
+    
+    // Generate summary for confirmation
+    const accessoryNames = Object.values(selectedAccessories).map(a => a.name).join(', ');
+    const totalItemCount = Object.values(selectedAccessories).reduce((sum, a) => sum + a.quantity, 0);
+    
+    alert(`Brand Accessories Order Submitted!\n\nOrder Type: ${selectedOrderType === 'sample' ? 'Sample' : 'Bulk'}\nAccessories: ${accessoryNames}\nTotal Items: ${totalItemCount}\n\nYou will receive a quote and delivery estimate via email shortly.`);
+    
+    // Navigate back to submission type or reset workflow
+    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+      detail: { step: 'submission-type-selection' }
+    }));
+  });
+});
+</script>
