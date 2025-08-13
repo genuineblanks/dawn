@@ -2347,15 +2347,18 @@ MOBILE RESPONSIVE (768px and below)
     .techpack-size-grid__input::before {
       content: attr(data-size-label);
       position: absolute;
-      top: -8px;
+      top: -12px;
       left: 12px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--techpack-text-secondary);
+      color: var(--techpack-text);
       background: var(--techpack-bg);
-      padding: 0 4px;
+      padding: 2px 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      border-radius: 4px;
+      border: 1px solid var(--techpack-border);
+      z-index: 1;
     }
     
     .techpack-size-grid__input:focus {
@@ -2367,9 +2370,10 @@ MOBILE RESPONSIVE (768px and below)
     }
     
     .techpack-size-grid__input:not([value="0"]):not([value=""]) {
-      background: rgba(34, 197, 94, 0.05);
-      border-color: rgba(34, 197, 94, 0.3);
+      background: var(--techpack-bg);
+      border-color: var(--techpack-border-dark);
       color: var(--techpack-text);
+      font-weight: 600;
     }
   }
   
@@ -2438,12 +2442,12 @@ MOBILE RESPONSIVE (768px and below)
     transition: transform 0.1s ease;
   }
   
-  /* Better visual feedback when values are entered */
+  /* Clean visual feedback when values are entered */
   .techpack-size-grid__input:not([value="0"]):not([value=""]) {
-    background: rgba(243, 244, 246, 0.8);
-    border-color: rgba(156, 163, 175, 0.4);
+    background: var(--techpack-bg);
+    border-color: var(--techpack-border-dark);
     color: var(--techpack-text);
-    font-weight: 700;
+    font-weight: 600;
   }
   
   /* Prevent zoom on form inputs */

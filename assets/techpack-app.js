@@ -4381,21 +4381,12 @@
         existingSizeCard.remove();
       }
       
-      if (activeSizes > maxAllowedSizes) {
+      // Only show size distribution warnings after minimum quantities are met
+      if (colorwayTotal >= requiredPerColorway && activeSizes > maxAllowedSizes) {
         const title = "Size Distribution";
         const message = `Reduce to ${maxAllowedSizes} sizes maximum (currently ${activeSizes} sizes)`;
         
         const card = this.createValidationCard('warning', title, message);
-        card.setAttribute('data-validation', 'sizes');
-        container.appendChild(card);
-      } else if (activeSizes > 0) {
-        const title = "Size Distribution";
-        const message = `Using ${activeSizes}/${maxAllowedSizes} sizes (based on ${colorwayTotal} units)`;
-        
-        const progress = (activeSizes / maxAllowedSizes) * 100;
-        const cardType = activeSizes === maxAllowedSizes ? 'warning' : 'success';
-        
-        const card = this.createValidationCard(cardType, title, message, progress);
         card.setAttribute('data-validation', 'sizes');
         container.appendChild(card);
       }
@@ -15949,15 +15940,17 @@ setupInitialization();
       // Search for Pantone in the comprehensive database
       const pantoneMatch = this.findPantoneByCode(pantoneCode.trim());
       if (pantoneMatch) {
+        // Found in database - show preview with color
         this.updateColorwayManualPreview(colorwayId, pantoneMatch.code, pantoneMatch.hex);
         this.showColorwayQuantityInputs(colorwayId);
         debugSystem.log('✅ Manual Pantone found:', pantoneMatch);
-        // Clear any previous errors
         this.clearColorwayError(colorwayId);
       } else {
-        // Show error for invalid Pantone
-        this.showColorwayError(colorwayId, 'Invalid Pantone code. Please use format like "18-1664 TPX"');
-        debugSystem.log('❌ Invalid Pantone code:', pantoneCode);
+        // Not found in database - allow user input anyway, show without color preview
+        this.updateColorwayManualPreviewNoColor(colorwayId, pantoneCode.trim());
+        this.showColorwayQuantityInputs(colorwayId);
+        debugSystem.log('📝 Manual Pantone not in database, allowing user input:', pantoneCode);
+        this.clearColorwayError(colorwayId);
       }
     }
 
@@ -16028,7 +16021,7 @@ setupInitialization();
       return null;
     }
 
-    // Update manual preview for colorway
+    // Update manual preview for colorway (with color)
     updateColorwayManualPreview(colorwayId, pantoneCode, hexColor) {
       const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
       if (!colorway) return;
@@ -16040,11 +16033,32 @@ setupInitialization();
       if (preview && circle && text) {
         preview.style.display = 'flex';
         circle.style.backgroundColor = hexColor;
+        circle.style.display = 'block';
         text.textContent = pantoneCode;
 
         // Store the selected color data
         colorway.dataset.selectedPantone = pantoneCode;
         colorway.dataset.selectedHex = hexColor;
+      }
+    }
+
+    // Update manual preview for colorway (without color - not in database)
+    updateColorwayManualPreviewNoColor(colorwayId, pantoneCode) {
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (!colorway) return;
+
+      const preview = colorway.querySelector('[data-colorway-manual-preview]');
+      const circle = colorway.querySelector('[data-colorway-manual-circle]');
+      const text = colorway.querySelector('[data-colorway-manual-text]');
+
+      if (preview && circle && text) {
+        preview.style.display = 'flex';
+        circle.style.display = 'none'; // Hide color circle for unknown colors
+        text.textContent = `${pantoneCode} (Custom)`;
+
+        // Store the selected color data (without hex)
+        colorway.dataset.selectedPantone = pantoneCode;
+        delete colorway.dataset.selectedHex;
       }
     }
 
