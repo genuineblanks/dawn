@@ -2326,74 +2326,6 @@
       return isValid;
     }
 
-    // Handle switching between Fabric Type and Sample Reference fields based on request type
-    handleFabricFieldSwitching(requestType) {
-      debugSystem.log('🚀 FABRIC FIELD SWITCHING CALLED', { 
-        requestType, 
-        timestamp: new Date().toISOString() 
-      });
-
-      const fabricTypeField = document.getElementById('fabric-type-field');
-      const sampleReferenceField = document.getElementById('sample-reference-field');
-      
-      debugSystem.log('🔍 FIELD ELEMENTS CHECK', {
-        fabricTypeFieldExists: !!fabricTypeField,
-        sampleReferenceFieldExists: !!sampleReferenceField,
-        fabricTypeFieldDisplay: fabricTypeField?.style.display,
-        sampleReferenceFieldDisplay: sampleReferenceField?.style.display
-      });
-      
-      if (!fabricTypeField || !sampleReferenceField) {
-        debugSystem.log('❌ FABRIC FIELD SWITCHING FAILED: Required fields not found', {
-          fabricTypeField: !!fabricTypeField,
-          sampleReferenceField: !!sampleReferenceField
-        });
-        return;
-      }
-
-      if (requestType === 'bulk-order-request') {
-        debugSystem.log('📦 BULK ORDER: Switching to Sample Reference field');
-        
-        // Show Sample Reference field, hide Fabric Type field
-        fabricTypeField.style.display = 'none';
-        sampleReferenceField.style.display = 'block';
-        
-        // Update field requirements
-        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
-        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
-        
-        if (fabricSelect) fabricSelect.required = false;
-        if (sampleReferenceSelect) sampleReferenceSelect.required = true;
-        
-        debugSystem.log('✅ BULK ORDER FIELD SWITCH COMPLETE', {
-          fabricFieldDisplay: fabricTypeField.style.display,
-          sampleReferenceFieldDisplay: sampleReferenceField.style.display,
-          fabricRequired: fabricSelect?.required,
-          sampleReferenceRequired: sampleReferenceSelect?.required
-        });
-      } else {
-        debugSystem.log('📄 QUOTATION/SAMPLE: Switching to Fabric Type field', { requestType });
-        
-        // Show Fabric Type field, hide Sample Reference field (for quotation and sample-request)
-        fabricTypeField.style.display = 'block';
-        sampleReferenceField.style.display = 'none';
-        
-        // Update field requirements
-        const fabricSelect = fabricTypeField.querySelector('select[name="fabricType"]');
-        const sampleReferenceSelect = sampleReferenceField.querySelector('select[name="sampleReference"]');
-        
-        if (fabricSelect) fabricSelect.required = true;
-        if (sampleReferenceSelect) sampleReferenceSelect.required = false;
-        
-        debugSystem.log('✅ QUOTATION/SAMPLE FIELD SWITCH COMPLETE', {
-          fabricFieldDisplay: fabricTypeField.style.display,
-          sampleReferenceFieldDisplay: sampleReferenceField.style.display,
-          fabricRequired: fabricSelect?.required,
-          sampleReferenceRequired: sampleReferenceSelect?.required
-        });
-      }
-    }
-
     // Sync DOM form values to state to preserve user selections
     syncDOMToState() {
       const garmentElements = document.querySelectorAll('.techpack-garment');
@@ -2760,18 +2692,17 @@
           if (garmentTypeError) garmentTypeError.textContent = '';
         }
 
-        // For bulk orders, validate sample reference instead of fabric type
-        const sampleReferenceSelect = document.querySelector('select[name="sampleReference"]');
-        const sampleReferenceGroup = sampleReferenceSelect?.closest('.techpack-form__group');
-        const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
+        const fabricSelect = garmentElement.querySelector('select[name="fabricType"]');
+        const fabricGroup = fabricSelect?.closest('.techpack-form__group');
+        const fabricError = fabricGroup?.querySelector('.techpack-form__error');
         
-        if (!sampleReferenceSelect?.value) {
+        if (!fabricSelect?.value) {
           isValid = false;
-          if (sampleReferenceGroup) sampleReferenceGroup.classList.add('techpack-form__group--error');
-          if (sampleReferenceError) sampleReferenceError.textContent = 'Please select a sample reference';
+          if (fabricGroup) fabricGroup.classList.add('techpack-form__group--error');
+          if (fabricError) fabricError.textContent = 'Please select a fabric type';
         } else {
-          if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
-          if (sampleReferenceError) sampleReferenceError.textContent = '';
+          if (fabricGroup) fabricGroup.classList.remove('techpack-form__group--error');
+          if (fabricError) fabricError.textContent = '';
         }
 
         const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
@@ -2874,20 +2805,7 @@
         this.updateGarmentInterface(garment, productionType);
       });
       
-      // Handle fabric field switching based on request type - with slight delay to ensure DOM updates are complete
-      const requestType = state.formData.requestType;
-      if (requestType) {
-        // Immediate call
-        this.handleFabricFieldSwitching(requestType);
-        
-        // Delayed call to ensure any other updates don't override our field switching
-        setTimeout(() => {
-          debugSystem.log('🔄 DELAYED FIELD SWITCHING CALL');
-          this.handleFabricFieldSwitching(requestType);
-        }, 100);
-      }
-      
-      debugSystem.log('Step 3 interface refreshed', { productionType, requestType, source: 'DOM' });
+      debugSystem.log('Step 3 interface refreshed', { productionType, source: 'DOM' });
     }
 
     updateGarmentInterface(garment, productionType) {
@@ -2895,21 +2813,7 @@
       const fabricTypeSelect = garment.querySelector('select[name="fabricType"]');
       const fabricLabel = garment.querySelector('select[name="fabricType"]').closest('.techpack-form__group').querySelector('.techpack-form__label');
 
-      if (!garmentTypeSelect) return;
-
-      // Check if this is a bulk order request - skip fabric field manipulation for bulk orders
-      const requestType = state.formData.requestType;
-      const shouldSkipFabricUpdates = requestType === 'bulk-order-request';
-      
-      debugSystem.log('🔧 UPDATE GARMENT INTERFACE', {
-        productionType,
-        requestType,
-        shouldSkipFabricUpdates,
-        garmentTypeExists: !!garmentTypeSelect,
-        fabricTypeExists: !!fabricTypeSelect
-      });
-
-      if (!shouldSkipFabricUpdates && (!fabricTypeSelect || !fabricLabel)) return;
+      if (!garmentTypeSelect || !fabricTypeSelect || !fabricLabel) return;
 
       if (productionType === 'our-blanks') {
         garmentTypeSelect.innerHTML = `
@@ -2921,15 +2825,12 @@
           <option value="Sweatpants">Sweatpants</option>
         `;
         
-        // Only update fabric fields if not a bulk order
-        if (!shouldSkipFabricUpdates) {
-          fabricLabel.textContent = 'Collection Type';
-          fabricTypeSelect.innerHTML = `
-            <option value="">Select collection type...</option>
-            <option value="Oversized Luxury Collection">Oversized Luxury Collection</option>
-            <option value="Relaxed High-End Collection">Relaxed High-End Collection</option>
-          `;
-        }
+        fabricLabel.textContent = 'Collection Type';
+        fabricTypeSelect.innerHTML = `
+          <option value="">Select collection type...</option>
+          <option value="Oversized Luxury Collection">Oversized Luxury Collection</option>
+          <option value="Relaxed High-End Collection">Relaxed High-End Collection</option>
+        `;
       } else {
         garmentTypeSelect.innerHTML = `
           <option value="">Select garment type...</option>
@@ -2948,36 +2849,26 @@
           <option value="Other">Other (Specify in Notes)</option>
         `;
         
-        // Only update fabric fields if not a bulk order
-        if (!shouldSkipFabricUpdates) {
-          fabricLabel.textContent = 'Fabric Type';
-          fabricTypeSelect.innerHTML = `
-            <option value="">Select fabric type...</option>
-            <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
-            <option value="French Terry 100% Organic Cotton">French Terry 100% Organic Cotton</option>
-            <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
-            <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
-            <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
-            <option value="100% Polyester">100% Polyester</option>
-            <option value="100% Linen">100% Linen</option>
-            <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
-            <option value="Jersey Knit">Jersey Knit</option>
-            <option value="Pique">Pique</option>
-            <option value="Canvas">Canvas</option>
-            <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
-          `;
-        }
+        fabricLabel.textContent = 'Fabric Type';
+        fabricTypeSelect.innerHTML = `
+          <option value="">Select fabric type...</option>
+          <option value="Fleece 100% Organic Cotton">Fleece 100% Organic Cotton</option>
+          <option value="French Terry 100% Organic Cotton">French Terry 100% Organic Cotton</option>
+          <option value="Cotton/Polyester Blend (50/50)">Cotton/Polyester Blend (50/50)</option>
+          <option value="Cotton/Polyester Blend (70/30)">Cotton/Polyester Blend (70/30)</option>
+          <option value="Cotton/Polyester Blend (80/20)">Cotton/Polyester Blend (80/20)</option>
+          <option value="100% Polyester">100% Polyester</option>
+          <option value="100% Linen">100% Linen</option>
+          <option value="Cotton/Linen Blend">Cotton/Linen Blend</option>
+          <option value="Jersey Knit">Jersey Knit</option>
+          <option value="Pique">Pique</option>
+          <option value="Canvas">Canvas</option>
+          <option value="Custom Fabric">Custom Fabric (Specify in Notes)</option>
+        `;
       }
 
       garmentTypeSelect.value = '';
-      if (!shouldSkipFabricUpdates && fabricTypeSelect) {
-        fabricTypeSelect.value = '';
-      }
-      
-      debugSystem.log('✅ GARMENT INTERFACE UPDATE COMPLETE', {
-        skippedFabricUpdates: shouldSkipFabricUpdates,
-        productionType
-      });
+      fabricTypeSelect.value = '';
     }
 
     getColorwayCount() {
@@ -4914,40 +4805,6 @@
       });
     }
 
-    // Handle Sample Reference field enabling/disabling based on garment type selection
-    updateSampleReferenceOptions(garmentType) {
-      const requestType = state.formData.requestType;
-      
-      // Only handle this for bulk orders
-      if (requestType !== 'bulk-order-request') {
-        debugSystem.log('🚫 SAMPLE REFERENCE UPDATE SKIPPED: Not a bulk order', { requestType });
-        return;
-      }
-
-      const sampleReferenceSelect = document.querySelector('select[name="sampleReference"]');
-      if (!sampleReferenceSelect) {
-        debugSystem.log('❌ Sample Reference select not found');
-        return;
-      }
-
-      if (!garmentType) {
-        // Disable and show placeholder when no garment type selected
-        sampleReferenceSelect.innerHTML = '<option value="">Choose garment type first</option>';
-        sampleReferenceSelect.disabled = true;
-        debugSystem.log('🔒 Sample Reference disabled - no garment type selected');
-      } else {
-        // Enable and populate options when garment type is selected
-        sampleReferenceSelect.disabled = false;
-        sampleReferenceSelect.innerHTML = `
-          <option value="">Select Sample Reference for Bulk Order...</option>
-          <option value="approved-sample">✅ Approved Sample (exact repeat of last approved sample)</option>
-          <option value="approved-with-changes">🔄 Approved Sample w/ changes (based on last approved, w/ small modifications)</option>
-          <option value="new-sample-version">📋 New Sample Version - Follow Techpack exactly (for reworks or updated production runs)</option>
-        `;
-        debugSystem.log('🔓 Sample Reference enabled for garment type:', garmentType);
-      }
-    }
-
     // Check if all prerequisites are met and show/hide sample type selection accordingly
     updateSampleTypeVisibility(garment) {
       const sampleTypeSection = garment.querySelector('.techpack-sample-type-selection');
@@ -5027,9 +4884,6 @@
           // Update fabric options based on new garment type
           const fabricSelect = garment.querySelector('select[name="fabricType"]');
           this.updateFabricOptions(garmentTypeSelect.value, fabricSelect, true);
-          
-          // Handle Sample Reference field for bulk orders
-          this.updateSampleReferenceOptions(garmentTypeSelect.value);
           
           // Check if sample type section should be shown/hidden
           this.updateSampleTypeVisibility(garment);
@@ -9119,11 +8973,6 @@
       // Trigger global lab dip visibility check when request type changes
       if (window.globalLabDipManager && window.globalLabDipManager.checkVisibility) {
         setTimeout(() => window.globalLabDipManager.checkVisibility(), 50);
-      }
-      
-      // Handle fabric type vs sample reference field switching based on request type
-      if (stepManager && stepManager.handleFabricFieldSwitching) {
-        stepManager.handleFabricFieldSwitching(type);
       }
       
       const submissionModal = document.querySelector('#submission-type-modal');
