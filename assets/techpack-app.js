@@ -5000,6 +5000,35 @@
           }
         });
       }
+      
+      // Sample reference select
+      const sampleReferenceSelect = garment.querySelector('select[name="sampleReference"]');
+      if (sampleReferenceSelect) {
+        sampleReferenceSelect.addEventListener('change', () => {
+          const garmentData = state.formData.garments.find(g => g.id === garmentId);
+          if (garmentData) {
+            garmentData.sampleReference = sampleReferenceSelect.value;
+          }
+          
+          // Clear validation errors immediately when value is selected
+          const sampleReferenceGroup = sampleReferenceSelect.closest('.techpack-form__group');
+          const sampleReferenceError = sampleReferenceGroup?.querySelector('.techpack-form__error');
+          
+          if (sampleReferenceSelect.value) {
+            // Value selected - clear errors
+            if (sampleReferenceGroup) sampleReferenceGroup.classList.remove('techpack-form__group--error');
+            if (sampleReferenceError) sampleReferenceError.textContent = '';
+          }
+          
+          // Trigger validation to update form state
+          stepManager.validateStep3();
+          
+          debugSystem.log('Sample reference changed', { 
+            garmentId, 
+            value: sampleReferenceSelect.value 
+          });
+        });
+      }
 
       // Sample type radio buttons (stock vs custom)
       this.setupSampleTypeEventListeners(garment, garmentId);
