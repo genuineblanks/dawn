@@ -6,14 +6,19 @@
   const CONFIG = {
     MIN_ORDER_QUANTITY_SINGLE_COLORWAY: 30, // For "Our Blanks" with 1 colorway
     MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY: 20, // For "Our Blanks" with 2+ colorways per colorway
-    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" (unchanged)
-    MIN_COLORWAY_QUANTITY: 50, // Legacy - kept for compatibility
+    MIN_ORDER_QUANTITY_CUSTOM: 75, // For "Custom Production" heavy garments - 1 colorway
+    MIN_COLORWAY_QUANTITY: 50, // For "Custom Production" heavy garments - 2+ colorways per colorway
+    MIN_ORDER_QUANTITY_CUSTOM_LIGHT: 100, // For "Custom Production" light garments - 1 colorway  
+    MIN_COLORWAY_QUANTITY_LIGHT: 75, // For "Custom Production" light garments - 2+ colorways per colorway
     MAX_FILES: 10,
     MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
     VALID_FILE_TYPES: ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.zip'],
     ANIMATION_DURATION: 400,
     DEBOUNCE_DELAY: 300,
     MIN_DELIVERY_WEEKS: 6,
+    
+    // Light Garment Types (higher minimums for custom production)
+    LIGHT_GARMENT_TYPES: ['T-Shirt', 'Shorts', 'Tank Top', 'Polo Shirt', 'Shirt', 'Long Sleeve T-Shirt'],
     
     // Fabric Type Mapping Configuration
     FABRIC_TYPE_MAPPING: {
@@ -814,8 +819,20 @@
     }
   };
 
-  // Utility function to get minimum quantity based on production type and colorway count
-  function getMinimumQuantity(colorwayCount, productionType) {
+  // Helper function to get garment type from DOM element
+  function getGarmentTypeFromElement(element) {
+    const garment = element.closest('.techpack-garment');
+    const garmentTypeSelect = garment?.querySelector('select[name="garmentType"]');
+    return garmentTypeSelect?.value || null;
+  }
+
+  // Check if a garment type is considered a light garment (higher minimums)
+  function isLightGarment(garmentType) {
+    return garmentType && CONFIG.LIGHT_GARMENT_TYPES.includes(garmentType);
+  }
+
+  // Utility function to get minimum quantity based on production type, colorway count, and garment type
+  function getMinimumQuantity(colorwayCount, productionType, garmentType = null) {
     // Set defaults
     colorwayCount = colorwayCount || 1;
     
@@ -826,10 +843,16 @@
     }
     
     if (productionType === 'our-blanks') {
+      // Our Blanks production - same minimums for all garments
       return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_SINGLE_COLORWAY : CONFIG.MIN_ORDER_QUANTITY_MULTIPLE_COLORWAY;
     }
     
-    // Custom production uses the old minimums
+    // Custom production - check if light garment (higher minimums)
+    if (isLightGarment(garmentType)) {
+      return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_CUSTOM_LIGHT : CONFIG.MIN_COLORWAY_QUANTITY_LIGHT;
+    }
+    
+    // Custom production - heavy garments (existing minimums)
     return colorwayCount === 1 ? CONFIG.MIN_ORDER_QUANTITY_CUSTOM : CONFIG.MIN_COLORWAY_QUANTITY;
   }
 
@@ -2703,7 +2726,8 @@
           debugSystem.log(`Garment ${index + 1}: No colorways defined`, null, 'error');
         } else {
           const colorwayCountInGarment = colorwaysInGarment.length;
-          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+          const garmentType = getGarmentTypeFromElement(garmentElement);
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
     
           colorwaysInGarment.forEach((colorway) => {
             const qtyInputs = colorway.querySelectorAll('.techpack-size-grid__input');
@@ -3844,18 +3868,19 @@
       garments.forEach(garment => {
         const colorwaysInGarment = garment.querySelectorAll('.techpack-colorway');
         const colorwayCount = colorwaysInGarment.length;
-        const minimumPerColorway = getMinimumQuantity(colorwayCount);
+        const garmentType = getGarmentTypeFromElement(garment);
+        const minimumPerColorway = getMinimumQuantity(colorwayCount, null, garmentType);
         
         if (colorwayCount === 1) {
-          // Single colorway minimum (30 for Our Blanks, 75 for Custom)
+          // Single colorway minimum (varies by garment type for custom production)
           totalMinimum += minimumPerColorway;
         } else {
-          // Multiple colorways minimum per colorway (20 for Our Blanks, 50 for Custom)
+          // Multiple colorways minimum per colorway (varies by garment type for custom production)
           totalMinimum += colorwayCount * minimumPerColorway;
         }
       });
       
-      // Ensure at least the single colorway minimum for the production type
+      // Ensure at least the single colorway minimum for the production type (use heavy garment minimum as fallback)
       const fallbackMinimum = getMinimumQuantity(1);
       return Math.max(totalMinimum, fallbackMinimum);
     }
@@ -3963,6 +3988,7 @@
       
       const minTextElement = document.querySelector('#min-text, .total-quantity-text, [data-quantity-text]');
       if (minTextElement) {
+        // For min text, use heavy garment minimum as baseline (user will see actual requirements in validation cards)
         const singleMinimum = getMinimumQuantity(1);
         const newText = colorwayCount === 1 ? `/ ${singleMinimum} minimum` : `/ ${minimumRequired} minimum`;
         
@@ -3996,9 +4022,11 @@
         const remaining = minimumRequired - totalQuantity;
         
         if (colorwayCount === 1) {
+          // For status message, use heavy garment minimum as baseline (specific requirements shown in validation cards)
           const singleMinimum = getMinimumQuantity(1);
           messageElement.textContent = `Need ${remaining} more units (${singleMinimum} minimum for single colorway)`;
         } else {
+          // For status message, use heavy garment minimum as baseline (specific requirements shown in validation cards)
           const multipleMinimum = getMinimumQuantity(2);
           messageElement.textContent = `Need ${remaining} more units (${colorwayCount} colorways × ${multipleMinimum} each)`;
         }
@@ -4015,7 +4043,8 @@
         colorwaysInGarment.forEach(colorway => {
           const colorwayId = colorway.dataset.colorwayId;
           const colorwayTotal = this.updateColorwayTotal(colorwayId);
-          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+          const garmentType = getGarmentTypeFromElement(colorway);
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
           
           const container = this.createValidationContainer(colorway);
           
@@ -4209,7 +4238,8 @@
       // FIXED: Get colorway count for THIS garment only and use correct minimums
       const garment = colorway.closest('.techpack-garment');
       const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
-      const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+      const garmentType = getGarmentTypeFromElement(colorway);
+      const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
       
       const activeSizes = Array.from(qtyInputs).filter(input => parseInt(input.value) || 0 > 0).length;
       const maxAllowedSizes = this.getMaxAllowedSizes(colorwayTotal);
@@ -5336,7 +5366,8 @@
           const colorwayTotal = quantityCalculator.updateColorwayTotal(colorwayId);
           const garment = colorway.closest('.techpack-garment');
           const colorwayCountInGarment = garment.querySelectorAll('.techpack-colorway').length;
-          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment);
+          const garmentType = getGarmentTypeFromElement(garment);
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
           
           // Only validate step if we're close to or above minimum to avoid interference
           if (colorwayTotal >= requiredPerColorway * 0.8) {
