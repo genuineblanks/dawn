@@ -9028,6 +9028,7 @@
       const quotationBtn = document.querySelector('#quotation-btn');
       const sampleBtn = document.querySelector('#sample-btn');
       const bulkBtn = document.querySelector('#bulk-btn');
+      const labDipsBtn = document.querySelector('#lab-dips-accessories-btn');
       
       if (!modal || !openBtn) {
         debugSystem.log('❌ Modal elements not found, skipping modal setup', null, 'error');
@@ -9091,6 +9092,10 @@
       bulkBtn?.addEventListener('click', () => {
         this.selectSubmissionType('bulk-order-request');
       });
+
+      labDipsBtn?.addEventListener('click', () => {
+        this.selectSubmissionType('lab-dips-accessories');
+      });
     }
 
     // Show submission type selection modal
@@ -9128,9 +9133,10 @@
         // Handle submission options based on client type
         const sampleBtn = document.getElementById('sample-btn');
         const bulkBtn = document.getElementById('bulk-btn');
+        const labDipsBtn = document.getElementById('lab-dips-accessories-btn');
         
         if (isNewClient) {
-          // Disable sample and bulk options for new clients
+          // Disable sample, bulk, and lab dips options for new clients
           if (sampleBtn) {
             sampleBtn.classList.add('techpack-submission-option--disabled');
             sampleBtn.setAttribute('data-disabled', 'true');
@@ -9140,6 +9146,11 @@
             bulkBtn.classList.add('techpack-submission-option--disabled');
             bulkBtn.setAttribute('data-disabled', 'true');
             bulkBtn.style.pointerEvents = 'none';
+          }
+          if (labDipsBtn) {
+            labDipsBtn.classList.add('techpack-submission-option--disabled');
+            labDipsBtn.setAttribute('data-disabled', 'true');
+            labDipsBtn.style.pointerEvents = 'none';
           }
         } else {
           // Enable all options for registered clients
@@ -9152,6 +9163,11 @@
             bulkBtn.classList.remove('techpack-submission-option--disabled');
             bulkBtn.removeAttribute('data-disabled');
             bulkBtn.style.pointerEvents = 'auto';
+          }
+          if (labDipsBtn) {
+            labDipsBtn.classList.remove('techpack-submission-option--disabled');
+            labDipsBtn.removeAttribute('data-disabled');
+            labDipsBtn.style.pointerEvents = 'auto';
           }
         }
         
@@ -9184,6 +9200,14 @@
       this.hideModal(submissionModal);
       
       setTimeout(() => {
+        // Special routing for Lab Dips & Brand Accessories
+        if (type === 'lab-dips-accessories') {
+          this.showLabDipsStep('lab-dips-step-1');
+          debugSystem.log(`Lab Dips workflow started: ${type}`);
+          return;
+        }
+        
+        // Standard routing for regular techpack submissions
         // Configure Step 1 based on client type BEFORE showing it
         if (state.formData.isRegisteredClient) {
           this.configureStep1ForRegisteredClient();
@@ -9214,6 +9238,9 @@
           break;
         case 'bulk-order-request':
           if (subtitle) subtitle.textContent = 'Submit your details for bulk production planning';
+          break;
+        case 'lab-dips-accessories':
+          // Lab Dips workflow uses its own UI system, no subtitle needed
           break;
       }
 
@@ -9949,6 +9976,25 @@
         debugSystem.log('Showing step', { stepNumber });
       } else {
         debugSystem.log('Target step not found', { stepNumber }, 'error');
+      }
+    }
+
+    // Show Lab Dips workflow steps
+    showLabDipsStep(stepId) {
+      // Hide all regular techpack steps
+      const techpackSteps = document.querySelectorAll('.techpack-step');
+      techpackSteps.forEach(step => {
+        step.style.display = 'none';
+      });
+      
+      // Show the requested lab dips step
+      const targetStep = document.querySelector(`#${stepId}`);
+      if (targetStep) {
+        targetStep.style.display = 'block';
+        state.currentLabDipsStep = stepId;
+        debugSystem.log(`Showing Lab Dips step: ${stepId}`);
+      } else {
+        debugSystem.log(`Lab Dips step not found: ${stepId}`, null, 'error');
       }
     }
 
@@ -11226,6 +11272,30 @@
   window.garmentManager = garmentManager;
 
 // ENHANCED: Robust initialization with multiple readiness checks and error handling
+// Initialize Lab Dips workflow navigation
+const initializeLabDipsNavigation = () => {
+  // Listen for custom navigation events from lab dips steps
+  window.addEventListener('techpack:navigateToStep', (event) => {
+    const { step } = event.detail;
+    debugSystem.log(`Lab Dips navigation event: ${step}`);
+    
+    // Handle navigation to different steps
+    if (step === 'submission-type-selection') {
+      // Go back to submission type modal
+      if (window.techpackApp && window.techpackApp.showSubmissionTypeModal) {
+        window.techpackApp.showSubmissionTypeModal();
+      }
+    } else if (step.startsWith('lab-dips-step-')) {
+      // Navigate within lab dips workflow
+      if (window.techpackApp && window.techpackApp.showLabDipsStep) {
+        window.techpackApp.showLabDipsStep(step);
+      }
+    }
+  });
+  
+  debugSystem.log('✅ Lab Dips navigation initialized');
+};
+
 const initializeTechPackApp = () => {
   if (state.isInitialized) {
     debugSystem.log('⚠️ TechPack app already initialized, skipping...', null, 'warn');
@@ -11243,6 +11313,10 @@ const initializeTechPackApp = () => {
 
   try {
     formInitializer.init();
+    
+    // Initialize Lab Dips workflow navigation
+    initializeLabDipsNavigation();
+    
     state.isInitialized = true;
     debugSystem.log('✅ TechPack app initialization completed successfully', null, 'success');
   } catch (error) {
