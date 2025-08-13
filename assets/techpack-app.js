@@ -1853,13 +1853,24 @@
     }
 
     initializeStep3() {
-      // Update existing garments for request type
+      // Recreate existing garments with updated template if they exist
       const existingGarments = document.querySelectorAll('.techpack-garment');
-      existingGarments.forEach(garment => {
-        if (window.garmentManager) {
-          window.garmentManager.updateGarmentFieldsForRequestType(garment);
+      if (existingGarments.length > 0 && window.garmentManager) {
+        // Check if garments have the sample field - if not, recreate them
+        const firstGarment = existingGarments[0];
+        const hasSampleField = firstGarment.querySelector('[name="sampleReference"]');
+        
+        if (!hasSampleField) {
+          debugSystem.log('Garments missing sample field, recreating with updated template');
+          window.garmentManager.recreateAllGarmentsForTemplate();
+          return; // Exit early, garments will be created with proper template
+        } else {
+          // Garments have proper template, just update field visibility
+          existingGarments.forEach(garment => {
+            window.garmentManager.updateGarmentFieldsForRequestType(garment);
+          });
         }
-      });
+      }
       
       // Create required garments based on file count
       const currentGarments = document.querySelectorAll('.techpack-garment').length;
@@ -5110,11 +5121,21 @@
       const step3Section = document.getElementById('techpack-step-3');
       const requestType = step3Section?.getAttribute('data-request-type');
       
-      const fabricField = garment.querySelector('[data-field-type="fabric-type"]');
-      const sampleField = garment.querySelector('[data-field-type="sample-reference"]');
+      // Find fields by their select names, then get parent form group
+      const fabricField = garment.querySelector('[name="fabricType"]')?.closest('.techpack-form__group');
+      const sampleField = garment.querySelector('[name="sampleReference"]')?.closest('.techpack-form__group');
+      
+      debugSystem.log('Field search results:', {
+        requestType,
+        fabricField: !!fabricField,
+        sampleField: !!sampleField
+      });
       
       if (!fabricField || !sampleField) {
-        debugSystem.log('Warning: Could not find garment fields to update');
+        debugSystem.log('Warning: Could not find garment fields to update', {
+          fabricFound: !!fabricField,
+          sampleFound: !!sampleField
+        });
         return;
       }
       
@@ -5145,6 +5166,31 @@
         
         debugSystem.log('Quotation/Sample mode: Showing fabric type field');
       }
+    }
+    
+    // Function to recreate all garments with updated template
+    recreateAllGarmentsForTemplate() {
+      const existingGarments = document.querySelectorAll('.techpack-garment');
+      const garmentCount = existingGarments.length;
+      
+      if (garmentCount === 0) return;
+      
+      debugSystem.log('Recreating garments with updated template', { count: garmentCount });
+      
+      // Remove all existing garments
+      existingGarments.forEach(garment => garment.remove());
+      
+      // Clear garment state
+      if (state.formData.garments) {
+        state.formData.garments = [];
+      }
+      
+      // Recreate garments (they will use the updated template)
+      for (let i = 0; i < garmentCount; i++) {
+        this.addGarment();
+      }
+      
+      debugSystem.log('Garments recreated successfully');
     }
 
     removeGarment(garmentId) {
