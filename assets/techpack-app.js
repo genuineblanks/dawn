@@ -1853,6 +1853,14 @@
     }
 
     initializeStep3() {
+      // Update existing garments for request type
+      const existingGarments = document.querySelectorAll('.techpack-garment');
+      existingGarments.forEach(garment => {
+        if (window.garmentManager) {
+          window.garmentManager.updateGarmentFieldsForRequestType(garment);
+        }
+      });
+      
       // Create required garments based on file count
       const currentGarments = document.querySelectorAll('.techpack-garment').length;
       const requiredGarments = state.formData.requiredGarmentCount || 1;
@@ -4512,6 +4520,9 @@
       const productionType = state.formData.clientInfo.productionType || 'custom-production';
       stepManager.updateGarmentInterface(garment, productionType);
       
+      // Update fields based on request type (bulk order vs quotation/sample)
+      this.updateGarmentFieldsForRequestType(garment);
+      
       // Add to state
       state.formData.garments.push({
         id: garmentId,
@@ -5090,6 +5101,44 @@
         }
         
         debugSystem.log('Cleared main sample type error');
+      }
+    }
+    
+    // Simple function to show/hide fields based on request type
+    updateGarmentFieldsForRequestType(garment) {
+      const requestType = state.formData.requestType;
+      const fabricField = garment.querySelector('[data-field-type="fabric-type"]');
+      const sampleField = garment.querySelector('[data-field-type="sample-reference"]');
+      
+      if (!fabricField || !sampleField) {
+        debugSystem.log('Warning: Could not find garment fields to update');
+        return;
+      }
+      
+      if (requestType === 'bulk-order-request') {
+        // Bulk order: Show sample selection, hide fabric type
+        fabricField.style.display = 'none';
+        sampleField.style.display = 'block';
+        
+        // Update required attributes
+        const fabricSelect = fabricField.querySelector('select[name="fabricType"]');
+        const sampleSelect = sampleField.querySelector('select[name="sampleReference"]');
+        if (fabricSelect) fabricSelect.required = false;
+        if (sampleSelect) sampleSelect.required = true;
+        
+        debugSystem.log('Bulk order mode: Showing sample selection field');
+      } else {
+        // Quotation/Sample: Show fabric type, hide sample selection
+        fabricField.style.display = 'block';
+        sampleField.style.display = 'none';
+        
+        // Update required attributes
+        const fabricSelect = fabricField.querySelector('select[name="fabricType"]');
+        const sampleSelect = sampleField.querySelector('select[name="sampleReference"]');
+        if (fabricSelect) fabricSelect.required = true;
+        if (sampleSelect) sampleSelect.required = false;
+        
+        debugSystem.log('Quotation/Sample mode: Showing fabric type field');
       }
     }
 
