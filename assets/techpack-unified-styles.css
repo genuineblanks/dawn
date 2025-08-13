@@ -1445,210 +1445,7 @@ COLORWAYS SECTION
   margin-bottom: 0.75rem;
 }
 
-/* CLEAN COLORWAY SYSTEM - INTEGRATED LAB DIP DESIGN */
-
-.techpack-colorway__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--techpack-border);
-}
-
-.techpack-colorway__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.techpack-colorway__label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--techpack-text);
-}
-
-.techpack-colorway__remove {
-  background: none;
-  border: none;
-  color: var(--techpack-text-secondary);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.techpack-colorway__remove:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--techpack-error);
-}
-
-/* Colorway Color Selection System */
-.techpack-colorway__color-system {
-  margin-bottom: 1.5rem;
-}
-
-.techpack-colorway-input-mode-toggle {
-  display: flex;
-  gap: 0;
-  margin-bottom: 1rem;
-  background: var(--techpack-bg-secondary);
-  border-radius: 6px;
-  padding: 2px;
-  border: 1px solid var(--techpack-border);
-}
-
-.techpack-colorway-input-mode-toggle .techpack-mode-btn {
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: none;
-  background: transparent;
-  color: var(--techpack-text-secondary);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.375rem;
-}
-
-.techpack-colorway-input-mode-toggle .techpack-mode-btn--active {
-  background: var(--techpack-bg);
-  color: var(--techpack-text);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.techpack-colorway-input-mode-toggle .techpack-mode-btn:hover:not(.techpack-mode-btn--active) {
-  color: var(--techpack-text);
-  background: rgba(0, 0, 0, 0.05);
-}
-
-/* Colorway Color Picker Group */
-.techpack-colorway-color-picker-group {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.875rem;
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border);
-  border-radius: 6px;
-}
-
-.techpack-colorway-color-picker-group .techpack-color-picker-section {
-  flex-shrink: 0;
-}
-
-.techpack-colorway-color-picker-group .techpack-auto-pantone-section {
-  flex: 1;
-}
-
-/* Manual Entry Group */
-.techpack-colorway-manual-entry-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem;
-  background: var(--techpack-bg);
-  border: 1px solid var(--techpack-border);
-  border-radius: 6px;
-}
-
-.techpack-colorway-manual-entry-group .techpack-form__input {
-  flex: 1;
-  margin: 0;
-}
-
-.techpack-manual-color-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--techpack-bg-secondary);
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.techpack-manual-color-preview .techpack-pantone-circle {
-  width: 20px;
-  height: 20px;
-}
-
-.techpack-manual-color-preview .techpack-pantone-text {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--techpack-text);
-}
-
-/* Colorway Validation Error */
-.techpack-colorway-validation-error {
-  margin-top: 0.75rem;
-  padding: 0.75rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 6px;
-  color: var(--techpack-error);
-  font-size: 0.875rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Mobile Responsiveness for Colorway System */
-@media (max-width: 768px) {
-  .techpack-colorway-color-picker-group {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-  
-  .techpack-colorway-manual-entry-group {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-  
-  .techpack-manual-color-preview {
-    justify-content: center;
-  }
-}
-
-/* Hide inactive input modes */
-.techpack-input-mode:not(.techpack-input-mode--active) {
-  display: none;
-}
-
-/* Enhanced Colorway Total Display */
-.techpack-colorway__status {
-  color: var(--techpack-text-secondary);
-  font-size: 0.8125rem;
-  font-style: italic;
-}
-
-/* Mobile optimization for colorway totals */
-@media (max-width: 768px) {
-  .techpack-colorway__total {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .techpack-colorway__total-value {
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  
-  .techpack-colorway__status {
-    font-size: 0.75rem;
-  }
-}
+/* Legacy styles removed - using compact layout now */
 
 .techpack-color-picker {
   display: flex;
@@ -2080,7 +1877,14 @@ MOBILE RESPONSIVE (768px and below)
     border-color: var(--techpack-primary);
   }
   
-  /* Old colorway layout removed - using new integrated Lab Dip system */
+  /* PERFECT SINGLE LINE COLORWAY LAYOUT */
+  
+  .techpack-colorway__header-line {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
+  }
   
   /* Column 1: Color Picker */
   .techpack-colorway__color {
@@ -2298,89 +2102,6 @@ MOBILE RESPONSIVE (768px and below)
     }
   }
   
-  /* MOBILE-FRIENDLY SIZE GRID SYSTEM */
-  
-  /* Desktop: Horizontal Grid (default) */
-  .techpack-size-grid__header,
-  .techpack-size-grid__row {
-    display: grid;
-    grid-template-columns: 60px repeat(7, minmax(55px, 1fr));
-    min-width: 450px;
-  }
-  
-  /* Mobile: Responsive Card Layout */
-  @media (max-width: 768px) {
-    .techpack-size-grid {
-      min-width: auto;
-      overflow: visible;
-    }
-    
-    .techpack-size-grid__header {
-      display: none; /* Hide header row on mobile */
-    }
-    
-    .techpack-size-grid__row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      padding: 0.75rem;
-      min-width: auto;
-    }
-    
-    .techpack-size-grid__row .techpack-size-grid__label:first-child {
-      display: none; /* Hide "Qty" label on mobile */
-    }
-    
-    /* Mobile Size Input Cards */
-    .techpack-size-grid__input {
-      position: relative;
-      min-height: 56px;
-      font-size: 16px;
-      font-weight: 600;
-      text-align: center;
-      border: 2px solid var(--techpack-border);
-      border-radius: 8px;
-      background: var(--techpack-bg);
-      transition: all 0.2s ease;
-    }
-    
-    .techpack-size-grid__input::before {
-      content: attr(data-size-label);
-      position: absolute;
-      top: -8px;
-      left: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--techpack-text-secondary);
-      background: var(--techpack-bg);
-      padding: 0 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .techpack-size-grid__input:focus {
-      border-color: var(--techpack-primary);
-      background: #f9fafb;
-      transform: scale(1.02);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .techpack-size-grid__input:not([value="0"]):not([value=""]) {
-      background: rgba(34, 197, 94, 0.05);
-      border-color: rgba(34, 197, 94, 0.3);
-      color: var(--techpack-text);
-    }
-  }
-  
-  /* Extra Small Mobile: Single Column */
-  @media (max-width: 480px) {
-    .techpack-size-grid__row {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-  }
-  
   /* Conditional Size Grid Animation */
   .techpack-size-grid[data-requires-pantone="true"] {
     transition: opacity 0.3s ease, max-height 0.3s ease;
@@ -2393,8 +2114,14 @@ MOBILE RESPONSIVE (768px and below)
   }
   
   .techpack-size-grid[data-requires-pantone="true"][style*="display: block"] {
-    max-height: 500px; /* Increased for mobile cards */
+    max-height: 200px;
     opacity: 1;
+  }
+  
+  .techpack-size-grid__header,
+  .techpack-size-grid__row {
+    grid-template-columns: 60px repeat(7, minmax(55px, 1fr));
+    min-width: 450px;
   }
   
   .techpack-size-grid__label {
