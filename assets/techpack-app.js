@@ -3930,6 +3930,56 @@
       return total;
     }
 
+    // NEW: Calculate progress based on individual colorway compliance
+    calculateComplianceBasedProgress() {
+      const garments = document.querySelectorAll('.techpack-garment');
+      let totalColorways = 0;
+      let compliantColorways = 0;
+      
+      garments.forEach(garment => {
+        const colorways = garment.querySelectorAll('.techpack-colorway');
+        const garmentType = getGarmentTypeFromElement(garment);
+        
+        // Skip if garment type not selected yet
+        if (!garmentType) {
+          return;
+        }
+        
+        colorways.forEach(colorway => {
+          totalColorways++;
+          
+          // Get colorway total
+          const colorwayId = colorway.dataset.colorwayId;
+          const colorwayTotal = this.updateColorwayTotal(colorwayId);
+          
+          // Get required minimum for this colorway
+          const colorwayCountInGarment = colorways.length;
+          const requiredPerColorway = getMinimumQuantity(colorwayCountInGarment, null, garmentType);
+          
+          // Check if this colorway meets its minimum
+          if (colorwayTotal >= requiredPerColorway) {
+            compliantColorways++;
+          }
+        });
+      });
+      
+      // If no colorways exist yet, return 0
+      if (totalColorways === 0) {
+        return 0;
+      }
+      
+      // Calculate compliance percentage
+      const percentage = (compliantColorways / totalColorways) * 100;
+      
+      debugSystem.log('🎯 Compliance-based progress calculated:', {
+        totalColorways,
+        compliantColorways,
+        percentage: percentage.toFixed(1) + '%'
+      });
+      
+      return Math.min(percentage, 100);
+    }
+
     calculateAndUpdateProgress() {
       // Check if this is a sample request - samples don't need quantity minimums
       const requestType = document.getElementById('request-type')?.value;
@@ -3966,7 +4016,8 @@
       
       // FIXED: Get detailed garment breakdown for better messaging
       const garmentDetails = this.getGarmentDetails();
-      const percentage = Math.min((totalQuantity / minimumRequired) * 100, 100);
+      // NEW: Calculate percentage based on individual colorway compliance
+      const percentage = this.calculateComplianceBasedProgress();
       
       debugSystem.log('🔄 UPDATING DISPLAY WITH CALCULATED VALUES', { 
         totalQuantity, 
