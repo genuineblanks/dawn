@@ -1,0 +1,389 @@
+{% comment %}
+Lab Dips & Brand Accessories - Step 2: File Upload
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+
+<section id="lab-dips-step-2" class="techpack-step" data-step="2" style="display: none;">
+  <div class="techpack-container">
+    
+    <!-- Progress Bar for Lab Dips Workflow -->
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 66%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step--completed">1</div>
+          <div class="techpack-progress__step-label">Service Selection</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">2</div>
+          <div class="techpack-progress__step-label">Brand Assets</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Accessories</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="techpack-content">
+      <h2 class="techpack-title">Brand Asset Upload</h2>
+      <p class="techpack-subtitle">Upload your brand files for accessories and packaging customization</p>
+
+      <!-- File Requirements Section -->
+      <div class="techpack-file-requirements">
+        <h3 class="techpack-file-requirements__title">What You Need to Upload</h3>
+        <div class="techpack-file-requirements__grid">
+          
+          <div class="techpack-requirement-card">
+            <div class="techpack-requirement-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 1v6m5.66-.34-3 5.19M18.36 7l-5.19 3m-.34-5.66L18 12l-5.19 3M23 12h-6m-.34 5.66L12 23l-3-5.19M12 23v-6m-5.66.34l3-5.19M5.64 17l5.19-3m.34 5.66L6 12l5.19-3M1 12h6m.34-5.66L12 1l3 5.19" stroke="currentColor" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="techpack-requirement-card__content">
+              <h4 class="techpack-requirement-card__title">Brand Logos</h4>
+              <p class="techpack-requirement-card__description">Vector files (AI, EPS, SVG) or high-resolution PNG</p>
+              <div class="techpack-requirement-card__formats">AI, EPS, SVG, PNG</div>
+            </div>
+            <div class="techpack-requirement-card__status">
+              <div class="techpack-status-indicator techpack-status-indicator--required">Required</div>
+            </div>
+          </div>
+
+          <div class="techpack-requirement-card">
+            <div class="techpack-requirement-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+                <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="techpack-requirement-card__content">
+              <h4 class="techpack-requirement-card__title">Artwork Files</h4>
+              <p class="techpack-requirement-card__description">Graphics for hang-tags, labels, and packaging</p>
+              <div class="techpack-requirement-card__formats">AI, PDF, EPS, PSD</div>
+            </div>
+            <div class="techpack-requirement-card__status">
+              <div class="techpack-status-indicator techpack-status-indicator--optional">Optional</div>
+            </div>
+          </div>
+
+          <div class="techpack-requirement-card">
+            <div class="techpack-requirement-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="techpack-requirement-card__content">
+              <h4 class="techpack-requirement-card__title">Style Guidelines</h4>
+              <p class="techpack-requirement-card__description">Brand guidelines, color specs, typography</p>
+              <div class="techpack-requirement-card__formats">PDF, DOC, AI</div>
+            </div>
+            <div class="techpack-requirement-card__status">
+              <div class="techpack-status-indicator techpack-status-indicator--optional">Optional</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Upload Zone -->
+      <div class="techpack-upload">
+        <div class="techpack-upload__zone" id="lab-dips-upload-zone">
+          <div class="techpack-upload__content">
+            <svg class="techpack-upload__icon" width="48" height="48" viewBox="0 0 48 48">
+              <path d="M24 8v24m-8-8l8-8 8 8" stroke="currentColor" stroke-width="2" fill="none"/>
+              <rect x="8" y="32" width="32" height="8" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <h3 class="techpack-upload__title">Drag & Drop Brand Files Here</h3>
+            <p class="techpack-upload__subtitle">or click to browse</p>
+            <p class="techpack-upload__info">AI, EPS, SVG, PNG, PDF, PSD • Max 15MB per file • Up to 15 files</p>
+          </div>
+          <input type="file" id="lab-dips-file-input" class="techpack-upload__input" multiple 
+                 accept=".ai,.eps,.svg,.png,.jpg,.jpeg,.pdf,.psd,.doc,.docx">
+        </div>
+
+        <!-- File List -->
+        <div class="techpack-upload__files" id="lab-dips-file-list" style="display: none;">
+          <h4 class="techpack-upload__files-title">Uploaded Files</h4>
+          <div class="techpack-upload__files-container" id="lab-dips-files-container">
+            <!-- Uploaded files will be displayed here -->
+          </div>
+        </div>
+
+        <!-- Upload Notes -->
+        <div class="techpack-upload__notes">
+          <div class="techpack-note-card">
+            <div class="techpack-note-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 16v-4m0-4h.01" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="techpack-note-card__content">
+              <h5>Important Notes</h5>
+              <ul>
+                <li>Vector files (AI, EPS, SVG) ensure the best quality for production</li>
+                <li>Include color specifications (Pantone codes) in your style guide</li>
+                <li>High-resolution files (300 DPI minimum) for raster images</li>
+                <li>All text should be converted to outlines in vector files</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="techpack-step-navigation">
+        <button type="button" class="techpack-btn techpack-btn--secondary" id="lab-dips-step2-back-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Back
+        </button>
+        
+        <button type="button" class="techpack-btn techpack-btn--primary" id="lab-dips-step2-continue-btn">
+          Continue to Accessories
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* Lab Dips File Upload Specific Styles */
+.techpack-file-requirements {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.techpack-file-requirements__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--techpack-text-primary, #2c3e50);
+  text-align: center;
+}
+
+.techpack-file-requirements__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* Upload Notes */
+.techpack-upload__notes {
+  margin-top: 1.5rem;
+}
+
+.techpack-note-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.techpack-note-card__icon {
+  color: var(--techpack-primary, #007bff);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.techpack-note-card__content h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-note-card__content ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.85rem;
+  color: var(--techpack-text-secondary, #6c757d);
+  line-height: 1.5;
+}
+
+.techpack-note-card__content li {
+  margin-bottom: 0.25rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .techpack-file-requirements__grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .techpack-note-card {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadZone = document.getElementById('lab-dips-upload-zone');
+  const fileInput = document.getElementById('lab-dips-file-input');
+  const fileList = document.getElementById('lab-dips-file-list');
+  const filesContainer = document.getElementById('lab-dips-files-container');
+  const continueBtn = document.getElementById('lab-dips-step2-continue-btn');
+  const backBtn = document.getElementById('lab-dips-step2-back-btn');
+  
+  let uploadedFiles = [];
+
+  // Handle drag and drop
+  uploadZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadZone.classList.add('techpack-upload__zone--dragover');
+  });
+
+  uploadZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('techpack-upload__zone--dragover');
+  });
+
+  uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('techpack-upload__zone--dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  // Handle click to browse
+  uploadZone.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function() {
+    handleFiles(this.files);
+  });
+
+  function handleFiles(files) {
+    for (let file of files) {
+      if (validateFile(file)) {
+        uploadedFiles.push(file);
+        displayFile(file);
+      }
+    }
+    
+    if (uploadedFiles.length > 0) {
+      fileList.style.display = 'block';
+    }
+  }
+
+  function validateFile(file) {
+    const maxSize = 15 * 1024 * 1024; // 15MB
+    const allowedTypes = [
+      'application/illustrator', 'application/postscript', 'image/svg+xml',
+      'image/png', 'image/jpeg', 'application/pdf', 'image/vnd.adobe.photoshop',
+      'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    if (file.size > maxSize) {
+      alert(`File "${file.name}" is too large. Maximum size is 15MB.`);
+      return false;
+    }
+    
+    // Basic file type validation
+    const fileName = file.name.toLowerCase();
+    const validExtensions = ['.ai', '.eps', '.svg', '.png', '.jpg', '.jpeg', '.pdf', '.psd', '.doc', '.docx'];
+    const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+    
+    if (!hasValidExtension) {
+      alert(`File type not supported for "${file.name}".`);
+      return false;
+    }
+    
+    return true;
+  }
+
+  function displayFile(file) {
+    const fileElement = document.createElement('div');
+    fileElement.className = 'techpack-file-item';
+    fileElement.innerHTML = `
+      <div class="techpack-file-item__info">
+        <div class="techpack-file-item__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="techpack-file-item__details">
+          <div class="techpack-file-item__name">${file.name}</div>
+          <div class="techpack-file-item__size">${formatFileSize(file.size)}</div>
+        </div>
+      </div>
+      <button type="button" class="techpack-file-item__remove" onclick="removeFile(this, '${file.name}')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+          <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    `;
+    
+    filesContainer.appendChild(fileElement);
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Make removeFile global so it can be called from onclick
+  window.removeFile = function(button, fileName) {
+    // Remove from uploadedFiles array
+    uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+    
+    // Remove from DOM
+    button.closest('.techpack-file-item').remove();
+    
+    // Hide file list if no files
+    if (uploadedFiles.length === 0) {
+      fileList.style.display = 'none';
+    }
+  };
+
+  // Navigation handlers
+  continueBtn.addEventListener('click', function() {
+    // Store uploaded files in techpack state
+    if (window.techPackState) {
+      window.techPackState.formData.labDipsBrandFiles = uploadedFiles;
+    }
+    
+    // Navigate to Step 3B (Brand Accessories)
+    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+      detail: { step: 'lab-dips-step-3b' }
+    }));
+  });
+
+  backBtn.addEventListener('click', function() {
+    // Go back to service selection
+    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+      detail: { step: 'lab-dips-step-1' }
+    }));
+  });
+});
+</script>

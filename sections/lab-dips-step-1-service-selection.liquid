@@ -1,0 +1,430 @@
+{% comment %}
+Lab Dips & Brand Accessories - Step 1: Service Selection
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+
+<section id="lab-dips-step-1" class="techpack-step" data-step="1" style="display: none;">
+  <div class="techpack-step-container">
+    <!-- Header -->
+    <div class="techpack-step-header">
+      <h2 class="techpack-step-title">
+        Choose Your Service
+      </h2>
+      <p class="techpack-step-subtitle">
+        Select the type of service that best matches your current needs
+      </p>
+    </div>
+
+    <!-- Service Selection -->
+    <div class="techpack-service-selection">
+      <div class="techpack-service-options">
+        
+        <!-- Lab Dip Swatches Option -->
+        <div class="techpack-service-option">
+          <input type="radio" id="lab-dip-swatches" name="service-type" value="lab-dip-swatches" class="techpack-service-radio">
+          <label for="lab-dip-swatches" class="techpack-service-card techpack-glass-card">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 1v6m5.66-.34-3 5.19M18.36 7l-5.19 3m-.34-5.66L18 12l-5.19 3M23 12h-6m-.34 5.66L12 23l-3-5.19M12 23v-6m-5.66.34l3-5.19M5.64 17l5.19-3m.34 5.66L6 12l5.19-3M1 12h6m.34-5.66L12 1l3 5.19" stroke="currentColor" stroke-width="1"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h3 class="techpack-service-card__title">Lab Dip Swatches</h3>
+                <p class="techpack-service-card__description">Order fabric swatches for color matching and material approval</p>
+                <div class="techpack-service-card__features">
+                  <span class="techpack-service-feature">🎨 Perfect color matching</span>
+                  <span class="techpack-service-feature">💰 25€ per swatch</span>
+                  <span class="techpack-service-feature">⚡ 1-2 weeks delivery</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+            <div class="techpack-service-selection-indicator">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+          </label>
+        </div>
+
+        <!-- Brand Accessories Option -->
+        <div class="techpack-service-option">
+          <input type="radio" id="brand-accessories" name="service-type" value="brand-accessories" class="techpack-service-radio">
+          <label for="brand-accessories" class="techpack-service-card techpack-glass-card">
+            <div class="techpack-glass-card__content">
+              <div class="techpack-glass-card__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M20.38 8.53l-1.45-1.45C18.21 6.36 17.41 6 16.54 6H13V4c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10.54c0-.87-.36-1.67-1.08-2.29z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 8v8m4-4H8" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-glass-card__text">
+                <h3 class="techpack-service-card__title">Brand Accessories</h3>
+                <p class="techpack-service-card__description">Custom labels, hang-tags, packaging and branding elements</p>
+                <div class="techpack-service-card__features">
+                  <span class="techpack-service-feature">🏷️ Custom labels & hang-tags</span>
+                  <span class="techpack-service-feature">📦 Packaging solutions</span>
+                  <span class="techpack-service-feature">🎯 Brand consistency</span>
+                </div>
+              </div>
+            </div>
+            <div class="techpack-glass-card__shimmer"></div>
+            <div class="techpack-service-selection-indicator">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Service Details Section -->
+    <div class="techpack-service-details" id="service-details" style="display: none;">
+      
+      <!-- Lab Dip Swatches Details -->
+      <div class="techpack-service-detail" id="lab-dip-details" style="display: none;">
+        <div class="techpack-info-card">
+          <h4 class="techpack-info-card__title">Lab Dip Swatches Service</h4>
+          <div class="techpack-info-card__content">
+            <div class="techpack-info-grid">
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">💰</div>
+                <div class="techpack-info-text">
+                  <h5>Pricing</h5>
+                  <p>25€ per swatch</p>
+                </div>
+              </div>
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">⏱️</div>
+                <div class="techpack-info-text">
+                  <h5>Delivery Time</h5>
+                  <p>1-2 weeks</p>
+                </div>
+              </div>
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">🎨</div>
+                <div class="techpack-info-text">
+                  <h5>What You Get</h5>
+                  <p>Physical fabric swatches for color and material approval</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand Accessories Details -->
+      <div class="techpack-service-detail" id="brand-accessories-details" style="display: none;">
+        <div class="techpack-info-card">
+          <h4 class="techpack-info-card__title">Brand Accessories Service</h4>
+          <div class="techpack-info-card__content">
+            <div class="techpack-info-grid">
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">🏷️</div>
+                <div class="techpack-info-text">
+                  <h5>Available Items</h5>
+                  <p>Labels, hang-tags, zippers, packaging</p>
+                </div>
+              </div>
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">📦</div>
+                <div class="techpack-info-text">
+                  <h5>Order Types</h5>
+                  <p>Sample (1 unit) or Bulk (with minimums)</p>
+                </div>
+              </div>
+              <div class="techpack-info-item">
+                <div class="techpack-info-icon">🎯</div>
+                <div class="techpack-info-text">
+                  <h5>Customization</h5>
+                  <p>Materials, colors, and quantities</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="techpack-step-navigation">
+      <button type="button" class="techpack-btn techpack-btn--secondary" id="lab-dips-back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Back
+      </button>
+      
+      <button type="button" class="techpack-btn techpack-btn--primary" id="lab-dips-continue-btn" disabled>
+        Continue
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Registration Check (same as existing) -->
+    <div class="techpack-registration-check" style="display: none;">
+      <!-- This will be shown for non-registered users -->
+      <div class="techpack-warning-card">
+        <div class="techpack-warning-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="techpack-warning-card__content">
+          <h4>Registration Required</h4>
+          <p>To access Lab Dips & Brand Accessories services, you need to be a registered client. Please complete the registration process first.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+/* Service Selection Specific Styles */
+.techpack-service-selection {
+  margin: 2rem 0;
+}
+
+.techpack-service-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.techpack-service-option {
+  position: relative;
+}
+
+.techpack-service-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.techpack-service-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  min-height: 200px;
+}
+
+.techpack-service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.techpack-service-radio:checked + .techpack-service-card {
+  border-color: var(--techpack-primary, #007bff);
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.05), rgba(0, 123, 255, 0.02));
+}
+
+.techpack-service-selection-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.techpack-service-radio:checked + .techpack-service-card .techpack-service-selection-indicator {
+  opacity: 1;
+  border-color: var(--techpack-primary, #007bff);
+  background: var(--techpack-primary, #007bff);
+  color: white;
+}
+
+.techpack-service-card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-service-card__description {
+  font-size: 0.95rem;
+  color: var(--techpack-text-secondary, #6c757d);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.techpack-service-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.techpack-service-feature {
+  font-size: 0.875rem;
+  color: var(--techpack-text-tertiary, #8b949e);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Service Details */
+.techpack-service-details {
+  margin: 2rem 0;
+  animation: fadeIn 0.3s ease;
+}
+
+.techpack-info-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.techpack-info-card__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.techpack-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.techpack-info-icon {
+  font-size: 1.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.techpack-info-text h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--techpack-text-primary, #2c3e50);
+}
+
+.techpack-info-text p {
+  font-size: 0.85rem;
+  color: var(--techpack-text-secondary, #6c757d);
+  line-height: 1.4;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .techpack-service-options {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .techpack-service-card {
+    min-height: 160px;
+  }
+  
+  .techpack-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const serviceRadios = document.querySelectorAll('.techpack-service-radio');
+  const serviceDetails = document.getElementById('service-details');
+  const labDipDetails = document.getElementById('lab-dip-details');
+  const accessoriesDetails = document.getElementById('brand-accessories-details');
+  const continueBtn = document.getElementById('lab-dips-continue-btn');
+  
+  serviceRadios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      if (this.checked) {
+        // Show service details
+        serviceDetails.style.display = 'block';
+        
+        // Hide all detail sections
+        labDipDetails.style.display = 'none';
+        accessoriesDetails.style.display = 'none';
+        
+        // Show relevant detail section
+        if (this.value === 'lab-dip-swatches') {
+          labDipDetails.style.display = 'block';
+        } else if (this.value === 'brand-accessories') {
+          accessoriesDetails.style.display = 'block';
+        }
+        
+        // Enable continue button
+        continueBtn.disabled = false;
+        
+        // Store selection for next steps
+        if (window.techPackState) {
+          window.techPackState.formData.labDipsServiceType = this.value;
+        }
+      }
+    });
+  });
+  
+  // Handle continue button
+  continueBtn.addEventListener('click', function() {
+    const selectedService = document.querySelector('.techpack-service-radio:checked');
+    if (selectedService) {
+      // Navigate to appropriate next step based on selection
+      if (selectedService.value === 'lab-dip-swatches') {
+        // Go directly to lab dip swatches interface (Step 3A)
+        window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+          detail: { step: 'lab-dips-step-3a' }
+        }));
+      } else if (selectedService.value === 'brand-accessories') {
+        // Go to file upload step (Step 2)
+        window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+          detail: { step: 'lab-dips-step-2' }
+        }));
+      }
+    }
+  });
+  
+  // Handle back button
+  document.getElementById('lab-dips-back-btn').addEventListener('click', function() {
+    // Go back to submission type selection
+    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+      detail: { step: 'submission-type-selection' }
+    }));
+  });
+});
+</script>
