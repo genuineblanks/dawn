@@ -8876,7 +8876,6 @@
       
       // Setup lab dip information modal
       this.setupLabDipInfoModal();
-      this.setupDesignSampleInfoModal();
       
       // EXISTING: Keep all your existing setup methods
       this.setupPhoneFormatting();
