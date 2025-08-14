@@ -291,9 +291,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the interface
     init() {
-      this.setupEventListeners();
-      this.loadPopularColors();
-      this.updatePreview();
+      try {
+        console.log('Initializing Lab Dip Swatch Manager...');
+        this.setupEventListeners();
+        this.loadPopularColors();
+        this.updatePreview();
+        console.log('Lab Dip Swatch Manager initialized successfully');
+      } catch (error) {
+        console.error('Error initializing Lab Dip Swatch Manager:', error);
+      }
     },
     
     // Setup all event listeners
@@ -331,62 +337,107 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle color picker change
     handleColorChange(color) {
-      this.selectedColor = color;
-      this.elements.hexInput.value = color;
-      this.updatePreview();
-      this.findPantoneMatch(color);
+      try {
+        this.selectedColor = color;
+        if (this.elements.hexInput) {
+          this.elements.hexInput.value = color;
+        }
+        this.updatePreview();
+        this.findPantoneMatch(color);
+      } catch (error) {
+        console.error('Error handling color change:', error);
+      }
     },
     
     // Handle hex input change
     handleHexInput(value) {
-      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-        this.selectedColor = value;
-        this.elements.colorPicker.value = value;
-        this.updatePreview();
-        this.findPantoneMatch(value);
+      try {
+        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+          this.selectedColor = value;
+          if (this.elements.colorPicker) {
+            this.elements.colorPicker.value = value;
+          }
+          this.updatePreview();
+          this.findPantoneMatch(value);
+        }
+      } catch (error) {
+        console.error('Error handling hex input:', error);
       }
     },
     
     // Update color preview
     updatePreview() {
-      this.elements.previewSwatch.style.background = this.selectedColor;
+      try {
+        if (this.elements.previewSwatch) {
+          this.elements.previewSwatch.style.background = this.selectedColor;
+        }
+      } catch (error) {
+        console.error('Error updating preview:', error);
+      }
     },
     
-    // Find closest Pantone match (simulated)
+    // Find closest Pantone match using existing techpack system
     findPantoneMatch(color) {
-      // Simulate Pantone matching with realistic codes
-      const pantoneDatabase = {
-        '#2563eb': { code: 'PANTONE 2728 C', name: 'Electric Blue' },
-        '#dc2626': { code: 'PANTONE 18-1664 TPX', name: 'Fiery Red' },
-        '#16a34a': { code: 'PANTONE 354 C', name: 'Emerald Green' },
-        '#ca8a04': { code: 'PANTONE 7555 C', name: 'Golden Yellow' },
-        '#9333ea': { code: 'PANTONE 2665 C', name: 'Royal Purple' },
-        '#000000': { code: 'PANTONE Black C', name: 'Pure Black' },
-        '#ffffff': { code: 'PANTONE White', name: 'Pure White' }
-      };
-      
-      // Find closest match or generate a plausible code
-      let pantone = pantoneDatabase[color];
-      if (!pantone) {
-        // Generate realistic Pantone code based on color
-        const r = parseInt(color.substring(1, 3), 16);
-        const g = parseInt(color.substring(3, 5), 16);
-        const b = parseInt(color.substring(5, 7), 16);
+      try {
+        // Use the existing techpack findClosestPantoneColors method if available
+        if (window.garmentManager && typeof window.garmentManager.findClosestPantoneColors === 'function') {
+          const closestPantones = window.garmentManager.findClosestPantoneColors(color, 1);
+          if (closestPantones && closestPantones.length > 0) {
+            const pantone = closestPantones[0];
+            this.selectedPantone = {
+              code: pantone.code,
+              name: this.getColorName(color)
+            };
+            
+            if (this.elements.pantoneCode) {
+              this.elements.pantoneCode.textContent = pantone.code;
+            }
+            if (this.elements.pantoneName) {
+              this.elements.pantoneName.textContent = this.selectedPantone.name;
+            }
+            return;
+          }
+        }
         
-        const colorNum = Math.floor((r + g + b) / 3 * 30);
-        pantone = {
-          code: `PANTONE ${14 + Math.floor(colorNum / 100)}-${1000 + colorNum} TPX`,
-          name: this.getColorName(r, g, b)
+        // Fallback: basic color name generation
+        this.selectedPantone = {
+          code: 'PANTONE Custom',
+          name: this.getColorName(color)
+        };
+        
+        if (this.elements.pantoneCode) {
+          this.elements.pantoneCode.textContent = this.selectedPantone.code;
+        }
+        if (this.elements.pantoneName) {
+          this.elements.pantoneName.textContent = this.selectedPantone.name;
+        }
+      } catch (error) {
+        console.error('Error finding Pantone match:', error);
+        // Safe fallback
+        this.selectedPantone = {
+          code: 'PANTONE Error',
+          name: 'Color Match Error'
         };
       }
-      
-      this.selectedPantone = pantone;
-      this.elements.pantoneCode.textContent = pantone.code;
-      this.elements.pantoneName.textContent = pantone.name;
     },
     
     // Get descriptive color name
-    getColorName(r, g, b) {
+    getColorName(color) {
+      // Handle both hex color and RGB values
+      let r, g, b;
+      if (typeof color === 'string' && color.startsWith('#')) {
+        r = parseInt(color.substring(1, 3), 16);
+        g = parseInt(color.substring(3, 5), 16);
+        b = parseInt(color.substring(5, 7), 16);
+      } else if (typeof r === 'number') {
+        // Legacy support for separate r,g,b parameters
+        r = arguments[0];
+        g = arguments[1];
+        b = arguments[2];
+      } else {
+        return 'Custom Color';
+      }
+      
       const brightness = (r + g + b) / 3;
       const maxChannel = Math.max(r, g, b);
       
@@ -459,21 +510,29 @@ document.addEventListener('DOMContentLoaded', function() {
       this.elements.pantoneInput.value = '';
     },
     
-    // Get color from Pantone code (simplified simulation)
+    // Get color from Pantone code using techpack system
     getColorFromPantone(code) {
-      // Simple hash-based color generation for demo
+      // Try to find exact Pantone match in techpack system
+      if (window.garmentManager && window.garmentManager.pantoneColors) {
+        const pantoneData = window.garmentManager.pantoneColors[code.toUpperCase()];
+        if (pantoneData && pantoneData.hex) {
+          return pantoneData.hex;
+        }
+      }
+      
+      // Fallback: generate color from hash for unknown codes
       let hash = 0;
       for (let i = 0; i < code.length; i++) {
         hash = code.charCodeAt(i) + ((hash << 5) - hash);
       }
       
-      const r = (hash & 0xFF0000) >> 16;
-      const g = (hash & 0x00FF00) >> 8;
-      const b = hash & 0x0000FF;
+      const r = Math.abs(hash & 0xFF);
+      const g = Math.abs((hash >> 8) & 0xFF);
+      const b = Math.abs((hash >> 16) & 0xFF);
       
       return '#' + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
+        const hex = x.toString(16).padStart(2, '0');
+        return hex;
       }).join('');
     },
     
