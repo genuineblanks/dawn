@@ -10002,3 +10002,228 @@ RESPONSIVE DESIGN ADJUSTMENTS
     padding: 1.25rem;
   }
 }
+
+/* 
+===========================================
+DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
+===========================================
+*/
+
+/* Design Sample Navigation Button (matches Lab Dip nav button) */
+.techpack-design-sample-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #f8fafc;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.75rem;
+  text-decoration: none;
+}
+
+.techpack-design-sample-nav-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  color: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-design-sample-nav-btn:active {
+  transform: translateY(0);
+  background: #d1d5db;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.techpack-design-sample-nav-btn svg {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+}
+
+.techpack-design-sample-nav-btn:hover svg {
+  transform: translateX(1px);
+}
+
+/* Professional Assigned Design Samples Display */
+.techpack-assigned-design-samples-display {
+  padding: 1rem 0;
+}
+
+.techpack-assigned-design-samples-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Individual Design Sample Card */
+.techpack-assigned-design-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 60px;
+}
+
+.techpack-assigned-design-card:hover {
+  border-color: #9ca3af;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.techpack-design-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.techpack-design-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 6px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.techpack-design-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0; /* Allow text truncation */
+}
+
+.techpack-design-card-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.techpack-design-card-type {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Unassign Button for Design Sample Cards */
+.techpack-assigned-design-card .techpack-unassign-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.techpack-assigned-design-card:hover .techpack-unassign-btn {
+  opacity: 1;
+}
+
+.techpack-assigned-design-card .techpack-unassign-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.techpack-assigned-design-card .techpack-unassign-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Design Sample Assignment Container Styling */
+.techpack-design-sample-assignment-container {
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.75rem;
+}
+
+/* Design Sample Empty State Styling (matches Lab Dip styling) */
+.techpack-design-sample-unified-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.techpack-design-sample-unified-empty-state .techpack-empty-state-content {
+  max-width: 300px;
+}
+
+.techpack-design-sample-unified-empty-state .techpack-empty-icon {
+  color: #d1d5db;
+  margin: 0 auto 1rem auto;
+}
+
+.techpack-design-sample-unified-empty-state .techpack-empty-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.techpack-design-sample-unified-empty-state .techpack-empty-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design for Design Sample Cards */
+@media (max-width: 768px) {
+  .techpack-assigned-design-card {
+    padding: 0.75rem;
+    min-height: 50px;
+  }
+  
+  .techpack-design-card-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .techpack-design-card-name {
+    font-size: 0.85rem;
+  }
+  
+  .techpack-design-card-type {
+    font-size: 0.7rem;
+  }
+  
+  .techpack-assigned-design-card .techpack-unassign-btn {
+    width: 20px;
+    height: 20px;
+  }
+}
