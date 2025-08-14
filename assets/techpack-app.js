@@ -16875,6 +16875,13 @@ setupInitialization();
     toggleDesignSampleAssignmentMenu(button, menu, designSampleId) {
       const isOpen = button.classList.contains('techpack-assignment-btn--open');
       
+      debugSystem.log('🎨 Design Sample menu toggle:', {
+        designSampleId,
+        isOpen,
+        buttonClasses: button.className,
+        menuClasses: menu.className
+      });
+      
       // Close all other menus
       document.querySelectorAll('.techpack-assignment-btn--open').forEach(btn => {
         btn.classList.remove('techpack-assignment-btn--open');
