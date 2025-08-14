@@ -92,15 +92,16 @@
 .lab-dips-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--lab-text-primary);
+  color: var(--lab-accent) !important;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .lab-dips-subtitle {
   font-size: 1rem;
-  color: var(--lab-text-secondary);
+  color: var(--lab-text-secondary) !important;
   font-weight: 400;
   max-width: 600px;
   margin: 0 auto;
@@ -1269,4 +1270,155 @@
   cursor: not-allowed;
   background: var(--lab-bg-accent);
   color: var(--lab-text-muted);
+}
+
+/* Progress bar and container dark theme fixes */
+.techpack-progress {
+  background: var(--lab-bg-secondary) !important;
+  padding: 16px 24px;
+  border-radius: var(--lab-radius-md);
+  margin-bottom: 24px;
+  border: 1px solid var(--lab-border);
+}
+
+.techpack-progress__steps {
+  background: transparent !important;
+}
+
+.techpack-progress__step-label {
+  color: var(--lab-text-secondary) !important;
+  font-size: 0.75rem;
+}
+
+.techpack-progress__step-circle {
+  background: var(--lab-bg-accent) !important;
+  color: var(--lab-text-primary) !important;
+  border: 2px solid var(--lab-border) !important;
+}
+
+.techpack-progress__step-circle--active {
+  background: var(--lab-accent) !important;
+  color: var(--lab-primary) !important;
+  border-color: var(--lab-accent) !important;
+}
+
+.techpack-progress__step--completed .techpack-progress__step-circle {
+  background: var(--lab-accent) !important;
+  color: var(--lab-primary) !important;
+}
+
+.techpack-container {
+  background: var(--lab-bg-primary) !important;
+  min-height: 100vh;
+}
+
+/* ============================================
+   STRATEGIC CSS OVERRIDES FOR LAB DIPS UNIFICATION
+   High specificity to override techpack white backgrounds
+   ============================================ */
+
+/* Override forced white backgrounds for lab-dips step only */
+#lab-dips-step-3a.techpack-step {
+  background: var(--lab-bg-primary) !important;
+  min-height: 100vh !important;
+}
+
+#lab-dips-step-3a .techpack-container {
+  background: var(--lab-bg-primary) !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+#lab-dips-step-3a .techpack-content {
+  background: transparent !important;
+  padding: 1rem 2rem !important;
+  flex: 1;
+}
+
+/* Progress bar overrides */
+#lab-dips-step-3a .techpack-progress {
+  background: var(--lab-bg-secondary) !important;
+  padding: 16px 24px !important;
+  border-radius: var(--lab-radius-md);
+  margin: 16px 24px 24px 24px;
+  border: 1px solid var(--lab-border);
+}
+
+#lab-dips-step-3a .techpack-progress__bar {
+  background: var(--lab-bg-tertiary) !important;
+  border-radius: var(--lab-radius-sm);
+  height: 4px;
+  margin-bottom: 16px;
+}
+
+#lab-dips-step-3a .techpack-progress__fill {
+  background: var(--lab-accent) !important;
+  height: 100%;
+  border-radius: var(--lab-radius-sm);
+}
+
+/* Header spacing fixes */
+#lab-dips-step-3a .lab-dips-header {
+  text-align: center;
+  margin-bottom: 24px !important;
+  position: relative;
+  padding: 0;
+}
+
+/* Ensure title is visible */
+#lab-dips-step-3a .lab-dips-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--lab-accent) !important;
+  margin-bottom: 8px !important;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+#lab-dips-step-3a .lab-dips-subtitle {
+  font-size: 1rem;
+  color: var(--lab-text-secondary) !important;
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto 0 auto !important;
+  line-height: 1.5;
+}
+
+/* Global body override for lab dips page - highest specificity */
+body:has(#lab-dips-step-3a),
+html:has(#lab-dips-step-3a) {
+  background: var(--lab-bg-primary) !important;
+}
+
+/* Shopify section overrides for lab dips */
+.shopify-section:has(#lab-dips-step-3a),
+.main-content:has(#lab-dips-step-3a),
+.page-content:has(#lab-dips-step-3a) {
+  background: var(--lab-bg-primary) !important;
+}
+
+/* Alternative selector for broader browser support */
+body.lab-dips-active,
+html.lab-dips-active {
+  background: var(--lab-bg-primary) !important;
+}
+
+.lab-dips-active .shopify-section,
+.lab-dips-active .main-content,
+.lab-dips-active .page-content {
+  background: var(--lab-bg-primary) !important;
+}
+
+/* Fix any remaining white spaces around the section */
+#lab-dips-step-3a.techpack-step::before,
+#lab-dips-step-3a.techpack-step::after {
+  display: none;
+}
+
+/* Remove any default margins that create white space */
+#lab-dips-step-3a.techpack-step {
+  margin: 0 !important;
+  padding: 0 !important;
 }
