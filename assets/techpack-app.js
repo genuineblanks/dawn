@@ -16333,6 +16333,19 @@ setupInitialization();
       this.handleRequestTypeVisibility();
       
       debugSystem.log('🎨 GlobalDesignSampleManager initialized with garmentManager:', !!this.garmentManager);
+      
+      // TEMPORARY DEBUG: Force Design Sample section to be visible for testing
+      setTimeout(() => {
+        const designSampleContainer = document.querySelector('.techpack-global-design-samples');
+        if (designSampleContainer) {
+          designSampleContainer.style.display = 'block';
+          designSampleContainer.style.visibility = 'visible';
+          designSampleContainer.style.opacity = '1';
+          debugSystem.log('🎨 DEBUG: Forced Design Sample section to be visible');
+        } else {
+          debugSystem.log('🎨 ERROR: Design Sample container not found for debug override');
+        }
+      }, 2000);
     }
     
     // Initialize event listeners
@@ -16416,19 +16429,41 @@ setupInitialization();
       const checkVisibility = () => {
         const requestType = window.techpackApp?.state?.formData?.requestType || state?.formData?.requestType || '';
         
+        debugSystem.log('🎨 Design Sample visibility check:', {
+          hasContainer: !!globalDesignSampleContainer,
+          requestType: requestType,
+          shouldShow: requestType === 'sample-request'
+        });
+        
         if (globalDesignSampleContainer) {
           const shouldShow = requestType === 'sample-request';
           globalDesignSampleContainer.style.display = shouldShow ? 'block' : 'none';
           
+          debugSystem.log(`🎨 Design Sample visibility: ${shouldShow ? 'SHOW' : 'HIDE'} for request type: "${requestType}"`);
+          
           if (shouldShow) {
             this.renderGlobalDesignSampleList();
           }
+        } else {
+          debugSystem.log('⚠️ Design Sample container not found - attempting to show fallback');
+          // Fallback: try to find and show the container
+          setTimeout(() => {
+            const fallbackContainer = document.querySelector('.techpack-global-design-samples');
+            if (fallbackContainer) {
+              fallbackContainer.style.display = 'block';
+              debugSystem.log('✅ Design Sample fallback container found and shown');
+              this.renderGlobalDesignSampleList();
+            }
+          }, 200);
         }
       };
       
       this.checkVisibility = checkVisibility;
       
+      // Multiple attempts to ensure visibility is set correctly
       setTimeout(checkVisibility, 100);
+      setTimeout(checkVisibility, 500);
+      setTimeout(checkVisibility, 1000);
       
       // Listen for request type changes
       document.addEventListener('techpack:requestTypeChanged', checkVisibility);

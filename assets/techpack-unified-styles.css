@@ -9561,21 +9561,51 @@ DESIGN SAMPLES & LAB DIPS SPLIT LAYOUT
 /* Container for the 50/50 split layout */
 .techpack-samples-lab-dips-container {
   margin-top: 2rem;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* 50/50 Grid Layout */
 .techpack-samples-lab-dips-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1.5rem !important;
+  align-items: start !important;
+}
+
+/* CRITICAL: Override original Lab Dips margin when in grid layout */
+.techpack-samples-lab-dips-grid .techpack-global-lab-dips {
+  margin-top: 0 !important;
+}
+
+/* CRITICAL: Ensure Design Samples section is always visible when in grid */
+.techpack-samples-lab-dips-grid .techpack-global-design-samples {
+  display: block !important;
+  margin-top: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+}
+
+/* DEBUG: Add border to verify grid is working - REMOVE AFTER TESTING */
+.techpack-samples-lab-dips-grid {
+  border: 2px dashed red !important;
+}
+
+.techpack-samples-lab-dips-grid .techpack-global-design-samples {
+  border: 2px dashed blue !important;
+}
+
+.techpack-samples-lab-dips-grid .techpack-global-lab-dips {
+  border: 2px dashed green !important;
 }
 
 /* Responsive: Stack on mobile */
 @media (max-width: 768px) {
   .techpack-samples-lab-dips-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
 }
 
