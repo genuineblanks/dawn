@@ -17098,15 +17098,44 @@ setupInitialization();
         menu.style.maxHeight = '300px';
         menu.style.overflowY = 'auto';
         
-        // DEBUG: Add high visibility styles to make menu VERY visible
-        menu.style.backgroundColor = '#ff0000 !important'; // Bright red background
-        menu.style.border = '5px solid #00ff00 !important'; // Bright green border  
-        menu.style.boxShadow = '0 0 20px #ff00ff !important'; // Bright magenta shadow
-        menu.style.display = 'block !important';
-        menu.style.visibility = 'visible !important';
-        menu.style.opacity = '1 !important';
+        // DEBUG: Add high visibility styles using setProperty with important flag
+        menu.style.setProperty('background-color', '#ff0000', 'important');
+        menu.style.setProperty('border', '5px solid #00ff00', 'important'); 
+        menu.style.setProperty('box-shadow', '0 0 20px #ff00ff', 'important');
+        menu.style.setProperty('display', 'block', 'important');
+        menu.style.setProperty('visibility', 'visible', 'important');
+        menu.style.setProperty('opacity', '1', 'important');
+        menu.style.setProperty('width', '300px', 'important');
+        menu.style.setProperty('height', 'auto', 'important');
+        menu.style.setProperty('min-height', '100px', 'important');
         
-        console.log('🚨 [DEBUG] Applied high visibility styles to menu');
+        // Also inject global CSS as backup
+        const debugStyleId = 'design-sample-debug-styles';
+        if (!document.getElementById(debugStyleId)) {
+          const style = document.createElement('style');
+          style.id = debugStyleId;
+          style.innerHTML = `
+            .techpack-assignment-menu[data-design-sample-id] {
+              background-color: #ff0000 !important;
+              border: 5px solid #00ff00 !important;
+              box-shadow: 0 0 20px #ff00ff !important;
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+              width: 300px !important;
+              min-height: 100px !important;
+              z-index: 999999 !important;
+            }
+            .techpack-assignment-menu--open[data-design-sample-id] {
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          `;
+          document.head.appendChild(style);
+        }
+        
+        console.log('🚨 [DEBUG] Applied high visibility styles using setProperty + CSS injection');
         
         console.log('🎨 [DEBUG] Menu positioned with styles:', {
           position: menu.style.position,

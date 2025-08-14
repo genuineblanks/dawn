@@ -10262,3 +10262,209 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
     height: 20px;
   }
 }
+
+/* ============================================
+   ENHANCED PROFESSIONAL THEME - WHITE + GREYS
+   Modern, clean interface for techpack app
+   ============================================ */
+
+/* Enhanced Progress Bar Styling */
+.techpack-progress {
+  background: var(--techpack-grey-50);
+  border: 1px solid var(--techpack-grey-200);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.techpack-progress__bar {
+  background: var(--techpack-grey-200);
+  border-radius: 6px;
+  height: 6px;
+  margin-bottom: 20px;
+}
+
+.techpack-progress__fill {
+  background: linear-gradient(90deg, var(--techpack-blue), var(--techpack-accent));
+  border-radius: 6px;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.techpack-progress__steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.techpack-progress__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.techpack-progress__step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--techpack-grey-300);
+  border: 2px solid var(--techpack-grey-300);
+  color: var(--techpack-grey-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.techpack-progress__step-circle--active {
+  background: var(--techpack-blue);
+  border-color: var(--techpack-blue);
+  color: white;
+}
+
+.techpack-progress__step--completed .techpack-progress__step-circle {
+  background: var(--techpack-green);
+  border-color: var(--techpack-green);
+  color: white;
+}
+
+.techpack-progress__step-label {
+  font-size: 0.75rem;
+  color: var(--techpack-grey-500);
+  font-weight: 500;
+  text-align: center;
+}
+
+.techpack-progress__step--active .techpack-progress__step-label {
+  color: var(--techpack-blue);
+  font-weight: 600;
+}
+
+/* Enhanced Container Styling */
+.techpack-container {
+  background: var(--techpack-white);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  margin: 16px;
+  overflow: hidden;
+}
+
+/* Enhanced Content Area */
+.techpack-content {
+  padding: 32px;
+  background: var(--techpack-white);
+}
+
+/* Professional Form Styling */
+.techpack-field input,
+.techpack-field textarea,
+.techpack-field select {
+  background: var(--techpack-white);
+  border: 1.5px solid var(--techpack-grey-200);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.9375rem;
+  color: var(--techpack-grey-700);
+  transition: all 0.2s ease;
+}
+
+.techpack-field input:focus,
+.techpack-field textarea:focus,
+.techpack-field select:focus {
+  outline: none;
+  border-color: var(--techpack-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.techpack-field label {
+  color: var(--techpack-grey-700);
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Professional Button Styling */
+.techpack-nav-btn,
+.techpack-submit-btn,
+.techpack-btn {
+  background: linear-gradient(135deg, var(--techpack-grey-600), var(--techpack-grey-700));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.techpack-nav-btn:hover,
+.techpack-submit-btn:hover,
+.techpack-btn:hover {
+  background: linear-gradient(135deg, var(--techpack-grey-700), var(--techpack-grey-800));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.techpack-nav-btn--primary {
+  background: linear-gradient(135deg, var(--techpack-blue), #2563eb);
+}
+
+.techpack-nav-btn--primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+/* Enhanced Cards */
+.techpack-card {
+  background: var(--techpack-white);
+  border: 1px solid var(--techpack-grey-200);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.techpack-card:hover {
+  border-color: var(--techpack-grey-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Professional Typography */
+.techpack-title {
+  color: var(--techpack-grey-800);
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.techpack-subtitle {
+  color: var(--techpack-grey-500);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.techpack-section-title {
+  color: var(--techpack-grey-700);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Enhanced Navigation */
+.techpack-navigation {
+  background: var(--techpack-grey-50);
+  border-top: 1px solid var(--techpack-grey-200);
+  padding: 20px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
