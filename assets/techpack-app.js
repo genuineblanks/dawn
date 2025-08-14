@@ -12766,12 +12766,18 @@ setupInitialization();
         // Design Sample assignment button
         if (e.target.classList.contains('techpack-assignment-btn') && e.target.dataset.designSampleId) {
           const designSampleId = e.target.dataset.designSampleId;
-          const assignmentMenu = e.target.parentElement.querySelector('.techpack-assignment-menu');
+          // First try to find menu in original location, then in body
+          let assignmentMenu = e.target.parentElement.querySelector('.techpack-assignment-menu');
+          if (!assignmentMenu) {
+            // Menu might have been moved to body, find it by data attribute
+            assignmentMenu = document.querySelector(`.techpack-assignment-menu[data-design-sample-id="${designSampleId}"]`);
+          }
           
           debugSystem.log('🎨 Design Sample assignment button clicked:', {
             designSampleId,
             buttonElement: e.target,
-            menuElement: assignmentMenu
+            menuElement: assignmentMenu,
+            menuFoundInBody: !e.target.parentElement.querySelector('.techpack-assignment-menu') && !!assignmentMenu
           });
           
           if (window.globalDesignSampleManager && assignmentMenu) {
