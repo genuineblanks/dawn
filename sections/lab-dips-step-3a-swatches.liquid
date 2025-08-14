@@ -37,19 +37,33 @@ Premium Professional Interface
       <!-- Service Info Cards -->
       <div class="lab-service-cards">
         <div class="lab-service-card">
-          <div class="lab-service-icon">💰</div>
+          <div class="lab-service-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
           <div class="lab-service-title">25€ per swatch</div>
-          <div class="lab-service-description">Premium quality fabric samples with exact color matching</div>
+          <div class="lab-service-description">Premium quality fabric samples</div>
         </div>
         <div class="lab-service-card">
-          <div class="lab-service-icon">⚡</div>
+          <div class="lab-service-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
           <div class="lab-service-title">1-2 weeks delivery</div>
-          <div class="lab-service-description">Fast turnaround for your approval process</div>
+          <div class="lab-service-description">Fast turnaround time</div>
         </div>
         <div class="lab-service-card">
-          <div class="lab-service-icon">🎨</div>
+          <div class="lab-service-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+            </svg>
+          </div>
           <div class="lab-service-title">Pantone Precision</div>
-          <div class="lab-service-description">Industry-standard color matching system</div>
+          <div class="lab-service-description">Industry-standard matching</div>
         </div>
       </div>
 
@@ -137,30 +151,20 @@ Premium Professional Interface
         </div>
       </div>
 
-      <!-- Swatch Table Section -->
-      <div class="lab-swatch-table-section" id="lab-swatch-table-section" style="display: none;">
-        <div class="lab-table-header">
-          <h2 class="lab-table-title">Your Selected Swatches</h2>
-          <span class="lab-table-count" id="lab-swatch-count">0 swatches</span>
+      <!-- Cart-Style Swatch Display -->
+      <div class="lab-swatch-cart-section" id="lab-swatch-cart-section" style="display: none;">
+        <div class="lab-cart-header">
+          <h2 class="lab-cart-title">Your Swatches</h2>
+          <div class="lab-cart-summary-badge" id="lab-swatch-count">0 items</div>
         </div>
 
-        <table class="lab-swatch-table" id="lab-swatch-table">
-          <thead>
-            <tr>
-              <th>Color Preview</th>
-              <th>Pantone Code</th>
-              <th>Type</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="lab-swatch-tbody">
-            <!-- Swatches will be added here dynamically -->
-          </tbody>
-        </table>
+        <!-- Swatch Items Container -->
+        <div class="lab-cart-items" id="lab-cart-items">
+          <!-- Items will be added here dynamically -->
+        </div>
 
         <!-- Empty State -->
-        <div class="lab-table-empty" id="lab-empty-state">
+        <div class="lab-cart-empty" id="lab-empty-state">
           <svg class="lab-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
             <circle cx="12" cy="12" r="10"/>
             <path d="M12 6v6l4 2"/>
@@ -265,9 +269,9 @@ document.addEventListener('DOMContentLoaded', function() {
       pantoneInput: document.getElementById('lab-pantone-input'),
       addManualBtn: document.getElementById('lab-add-manual-btn'),
       
-      // Table elements
-      tableSection: document.getElementById('lab-swatch-table-section'),
-      swatchTbody: document.getElementById('lab-swatch-tbody'),
+      // Cart elements
+      cartSection: document.getElementById('lab-swatch-cart-section'),
+      cartItems: document.getElementById('lab-cart-items'),
       emptyState: document.getElementById('lab-empty-state'),
       swatchCount: document.getElementById('lab-swatch-count'),
       
@@ -494,45 +498,51 @@ document.addEventListener('DOMContentLoaded', function() {
       this.updateSummary();
     },
     
-    // Render swatches table
+    // Render swatches in cart style
     renderSwatches() {
       const hasSwatches = this.swatches.length > 0;
       
       // Show/hide sections
-      this.elements.tableSection.style.display = 'block';
+      this.elements.cartSection.style.display = 'block';
       this.elements.orderSummary.style.display = hasSwatches ? 'block' : 'none';
       this.elements.emptyState.style.display = hasSwatches ? 'none' : 'block';
-      this.elements.swatchCount.textContent = `${this.swatches.length} swatch${this.swatches.length !== 1 ? 'es' : ''}`;
+      this.elements.swatchCount.textContent = `${this.swatches.length} ${this.swatches.length !== 1 ? 'items' : 'item'}`;
       
       if (hasSwatches) {
-        this.elements.swatchTbody.innerHTML = this.swatches.map(swatch => `
-          <tr class="lab-swatch-added">
-            <td data-label="Color">
-              <div class="lab-table-color">
-                <div class="lab-table-color-preview" style="background: ${swatch.color}"></div>
-                <span class="lab-table-color-hex">${swatch.color}</span>
-              </div>
-            </td>
-            <td data-label="Pantone">
-              <span class="lab-table-pantone">${swatch.pantone}</span>
-            </td>
-            <td data-label="Type">
-              <span class="lab-table-type">${swatch.type}</span>
-            </td>
-            <td data-label="Price">
-              <span class="lab-table-price">${swatch.price}€</span>
-            </td>
-            <td data-label="Actions">
-              <div class="lab-table-actions">
-                <button type="button" class="lab-table-action-btn" onclick="LabDipSwatchManager.removeSwatch(${swatch.id})">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 6L6 18M6 6l12 12"/>
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
+        this.elements.cartItems.innerHTML = this.swatches.map((swatch, index) => `
+          <div class="lab-cart-item">
+            <div class="lab-cart-item-color">
+              <div class="lab-cart-color-circle" style="background: ${swatch.color}"></div>
+            </div>
+            <div class="lab-cart-item-details">
+              <div class="lab-cart-item-name">${swatch.pantone}</div>
+              <div class="lab-cart-item-type">Color Picker</div>
+            </div>
+            <div class="lab-cart-item-assign">
+              <select class="lab-cart-assign-select">
+                <option value="">Assign</option>
+                <option value="fabric">Fabric Swatch</option>
+                <option value="garment1">Garment 1</option>
+                <option value="garment2">Garment 2</option>
+              </select>
+            </div>
+            <div class="lab-cart-item-remove">
+              <button type="button" class="lab-cart-remove-btn" onclick="LabDipSwatchManager.removeSwatch(${swatch.id})">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         `).join('');
+        
+        // Add divider and count at the bottom
+        this.elements.cartItems.innerHTML += `
+          <div class="lab-cart-footer">
+            <div class="lab-cart-footer-count">${this.swatches.length}</div>
+          </div>
+        `;
       }
     },
     
