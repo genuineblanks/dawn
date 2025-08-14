@@ -1272,8 +1272,8 @@
   color: var(--lab-text-muted);
 }
 
-/* Progress bar and container dark theme fixes */
-.techpack-progress {
+/* Progress bar and container dark theme fixes - SCOPED TO LAB DIPS ONLY */
+#lab-dips-step-3a .techpack-progress {
   background: var(--lab-bg-secondary) ;
   padding: 16px 24px;
   border-radius: var(--lab-radius-md);
@@ -1281,35 +1281,34 @@
   border: 1px solid var(--lab-border);
 }
 
-.techpack-progress__steps {
+#lab-dips-step-3a .techpack-progress__steps {
   background: transparent ;
 }
 
-.techpack-progress__step-label {
+#lab-dips-step-3a .techpack-progress__step-label {
   color: var(--lab-text-secondary) ;
   font-size: 0.75rem;
 }
 
-.techpack-progress__step-circle {
+#lab-dips-step-3a .techpack-progress__step-circle {
   background: var(--lab-bg-accent) ;
   color: var(--lab-text-primary) ;
   border: 2px solid var(--lab-border) ;
 }
 
-.techpack-progress__step-circle--active {
+#lab-dips-step-3a .techpack-progress__step-circle--active {
   background: var(--lab-accent) ;
   color: var(--lab-primary) ;
   border-color: var(--lab-accent) ;
 }
 
-.techpack-progress__step--completed .techpack-progress__step-circle {
+#lab-dips-step-3a .techpack-progress__step--completed .techpack-progress__step-circle {
   background: var(--lab-accent) ;
   color: var(--lab-primary) ;
 }
 
-.techpack-container {
+#lab-dips-step-3a .techpack-container {
   background: var(--lab-bg-primary) ;
-  min-height: 100vh;
 }
 
 /* ============================================
