@@ -50,56 +50,36 @@ Tech-Pack Step 2: File Upload Section
 
         <div class="techpack-upload__files" id="uploaded-files"></div>
 
-        <button type="button" class="techpack-btn techpack-btn--secondary" id="add-more-files">
-          <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
-            <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          Add More Files
-        </button>
-      </div>
-
-      <!-- Measurement Requirements Section (Quotation & Sample only) -->
-      <div class="techpack-measurement-requirements" id="measurement-requirements" style="display: none;">
-        <div class="techpack-measurement-requirements__header">
-          <h3 class="techpack-measurement-requirements__title">Measurement Requirements</h3>
-          <p class="techpack-measurement-requirements__subtitle">Please confirm which measurements are included in your tech pack files</p>
-        </div>
-
-        <div class="techpack-measurement-requirements__content">
-          <div class="techpack-measurement-requirements__checkboxes">
-            <label class="techpack-measurement-checkbox">
-              <input type="checkbox" id="fit-measurements" name="fitMeasurements" class="techpack-measurement-checkbox__input">
-              <div class="techpack-measurement-checkbox__custom">
-                <svg class="techpack-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
-                  <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <div class="techpack-measurement-checkbox__content">
-                <div class="techpack-measurement-checkbox__title">Fit Measurements</div>
-                <div class="techpack-measurement-checkbox__description">Body measurements or size charts for proper garment fitting</div>
-              </div>
-            </label>
-
-            <label class="techpack-measurement-checkbox">
-              <input type="checkbox" id="design-measurements" name="designMeasurements" class="techpack-measurement-checkbox__input">
-              <div class="techpack-measurement-checkbox__custom">
-                <svg class="techpack-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
-                  <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </div>
-              <div class="techpack-measurement-checkbox__content">
-                <div class="techpack-measurement-checkbox__title">Design Measurements</div>
-                <div class="techpack-measurement-checkbox__description">Garment specifications and technical measurements</div>
-              </div>
-            </label>
-          </div>
-
-          <div class="techpack-measurement-requirements__info">
-            <svg class="techpack-measurement-requirements__info-icon" width="16" height="16" viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              <path d="M8 5.5V8.5m0 2v.01" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <!-- File Actions Row -->
+        <div class="techpack-file-actions">
+          <button type="button" class="techpack-btn techpack-btn--secondary" id="add-more-files">
+            <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
             </svg>
-            <span class="techpack-measurement-requirements__info-text">These requirements affect pricing accuracy and sample development timeline</span>
+            Add More Files
+          </button>
+
+          <!-- Compact Measurement Requirements (Quotation & Sample only) -->
+          <div class="techpack-measurement-compact" id="measurement-requirements" style="display: none;">
+            <span class="techpack-measurement-compact__label">Measurements:</span>
+            <div class="techpack-measurement-compact__options">
+              <label class="techpack-compact-checkbox">
+                <input type="checkbox" id="fit-measurements" name="fitMeasurements">
+                <span class="techpack-compact-checkbox__mark"></span>
+                <span class="techpack-compact-checkbox__text">Fit</span>
+              </label>
+              <label class="techpack-compact-checkbox">
+                <input type="checkbox" id="design-measurements" name="designMeasurements">
+                <span class="techpack-compact-checkbox__mark"></span>
+                <span class="techpack-compact-checkbox__text">Design</span>
+              </label>
+            </div>
+            <div class="techpack-measurement-compact__info" title="These requirements affect pricing accuracy and sample development timeline">
+              <svg width="14" height="14" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M8 5.5V8.5m0 2v.01" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
