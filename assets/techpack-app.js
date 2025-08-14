@@ -5183,6 +5183,17 @@
         const handler = () => {
           debugSystem.log(`Stock color changed to: ${radio.value} for garment ${garmentId}`);
           
+          // Immediately clear stock color validation error when selection is made
+          const garment = radio.closest('.techpack-garment');
+          const sampleSection = garment?.querySelector('.techpack-garment-samples');
+          const stockCard = sampleSection?.querySelector('.techpack-sample-card[data-sample-type="stock"]');
+          const stockOptions = stockCard?.querySelector('.techpack-sample-options');
+          const stockError = stockOptions?.querySelector('.techpack-stock-color-error');
+          if (stockError) {
+            stockError.style.display = 'none';
+            debugSystem.log(`Stock color error cleared immediately for garment ${garmentId}`);
+          }
+          
           // Trigger validation to check if stock color selection is complete
           stepManager.validateStep3();
         };

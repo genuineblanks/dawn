@@ -1321,6 +1321,8 @@
 #lab-dips-step-3a.techpack-step {
   background: var(--lab-bg-primary) !important;
   min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 #lab-dips-step-3a .techpack-container {
@@ -1386,30 +1388,16 @@
   line-height: 1.5;
 }
 
-/* Global body override for lab dips page - highest specificity */
-body:has(#lab-dips-step-3a),
-html:has(#lab-dips-step-3a) {
-  background: var(--lab-bg-primary) !important;
-}
+/* Targeted lab dips section styling only - no global overrides */
 
-/* Shopify section overrides for lab dips */
+/* Override parent containers only when they contain lab dips step */
 .shopify-section:has(#lab-dips-step-3a),
 .main-content:has(#lab-dips-step-3a),
 .page-content:has(#lab-dips-step-3a) {
   background: var(--lab-bg-primary) !important;
 }
 
-/* Alternative selector for broader browser support */
-body.lab-dips-active,
-html.lab-dips-active {
-  background: var(--lab-bg-primary) !important;
-}
-
-.lab-dips-active .shopify-section,
-.lab-dips-active .main-content,
-.lab-dips-active .page-content {
-  background: var(--lab-bg-primary) !important;
-}
+/* Additional overrides handled by the main selector above */
 
 /* Fix any remaining white spaces around the section */
 #lab-dips-step-3a.techpack-step::before,
@@ -1417,8 +1405,4 @@ html.lab-dips-active {
   display: none;
 }
 
-/* Remove any default margins that create white space */
-#lab-dips-step-3a.techpack-step {
-  margin: 0 !important;
-  padding: 0 !important;
-}
+/* End of lab dips premium styles */
