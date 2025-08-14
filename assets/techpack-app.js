@@ -16903,7 +16903,28 @@ setupInitialization();
         button.classList.add('techpack-assignment-btn--open');
         menu.classList.add('techpack-assignment-menu--open');
         
-        debugSystem.log('🎨 Design Sample assignment menu opened:', { designSampleId });
+        // Move menu to document.body to escape stacking context and position it
+        if (!menu.dataset.movedToBody) {
+          menu.dataset.movedToBody = 'true';
+          document.body.appendChild(menu);
+        }
+        
+        // Position the menu relative to the button
+        const buttonRect = button.getBoundingClientRect();
+        menu.style.position = 'fixed';
+        menu.style.top = `${buttonRect.bottom + 4}px`;
+        menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
+        menu.style.right = 'auto';
+        menu.style.zIndex = '999999';
+        
+        debugSystem.log('🎨 Design Sample assignment menu opened:', { 
+          designSampleId, 
+          buttonRect, 
+          menuPosition: { 
+            top: menu.style.top, 
+            left: menu.style.left 
+          } 
+        });
       } else {
         debugSystem.log('🎨 Design Sample assignment menu closed:', { designSampleId });
       }
