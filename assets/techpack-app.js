@@ -2755,19 +2755,12 @@
           if (fabricError) fabricError.textContent = '';
         }
 
-        // Validate printing methods
-        const printingCheckboxes = garmentElement.querySelectorAll('input[name="printingMethods[]"]:checked');
+        // SAMPLE REQUEST: Printing methods are not required for sample requests
+        // Clear any existing printing method errors since they're optional for samples
         const printingGroup = garmentElement.querySelector('.techpack-form__checkboxes')?.closest('.techpack-form__group');
         const printingError = printingGroup?.querySelector('.techpack-form__error');
-        
-        if (printingCheckboxes.length === 0) {
-          isValid = false;
-          if (printingGroup) printingGroup.classList.add('techpack-form__group--error');
-          if (printingError) printingError.textContent = 'Please select at least one printing method';
-        } else {
-          if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
-          if (printingError) printingError.textContent = '';
-        }
+        if (printingGroup) printingGroup.classList.remove('techpack-form__group--error');
+        if (printingError) printingError.textContent = '';
 
         // SAMPLE-SPECIFIC: Validate sample type selection
         const sampleSection = garmentElement.querySelector('.techpack-garment-samples[data-sample-request-only]');
@@ -5196,17 +5189,16 @@
         return;
       }
       
-      // Check prerequisites: garment type, fabric type, and at least one printing method
+      // Check prerequisites: for sample requests, only require garment type and fabric type
       const garmentTypeSelect = garment.querySelector('select[name="garmentType"]');
       const fabricTypeSelect = garment.querySelector('select[name="fabricType"]');
-      const printingMethodCheckboxes = garment.querySelectorAll('input[name="printingMethods[]"]:checked');
       
       const hasGarmentType = garmentTypeSelect && garmentTypeSelect.value.trim() !== '';
       const hasFabricType = fabricTypeSelect && fabricTypeSelect.value.trim() !== '';
-      const hasPrintingMethod = printingMethodCheckboxes.length > 0;
       
-      // Show sample type selection only if all prerequisites are met
-      if (hasGarmentType && hasFabricType && hasPrintingMethod) {
+      // For sample requests, show sample type selection when garment type and fabric type are selected
+      // Printing methods are not required for sample requests
+      if (hasGarmentType && hasFabricType) {
         sampleTypeSection.style.display = 'block';
         // Add smooth transition if not already visible
         if (sampleTypeSection.style.opacity === '0' || !sampleTypeSection.style.opacity) {
@@ -5225,8 +5217,7 @@
         
         debugSystem.log('Sample type selection shown - all prerequisites met', {
           garmentType: garmentTypeSelect.value,
-          fabricType: fabricTypeSelect.value,
-          printingMethods: printingMethodCheckboxes.length
+          fabricType: fabricTypeSelect.value
         });
       } else {
         sampleTypeSection.style.display = 'none';
@@ -5237,8 +5228,7 @@
         });
         debugSystem.log('Sample type selection hidden - prerequisites not met', {
           hasGarmentType,
-          hasFabricType,
-          hasPrintingMethod: hasPrintingMethod
+          hasFabricType
         });
       }
     }
@@ -5414,8 +5404,10 @@
             printingError.textContent = '';
           }
           
-          // Check if sample type section should be shown/hidden
-          this.updateSampleTypeVisibility(garment);
+          // Check if sample type section should be shown/hidden (only relevant for non-sample requests)
+          if (state.formData.requestType !== 'sample-request') {
+            this.updateSampleTypeVisibility(garment);
+          }
           
           // Validate with debounce to prevent interference
           debouncedValidation();
@@ -14214,6 +14206,7 @@ setupInitialization();
       const quantityTracker = document.querySelector('.techpack-quantity-tracker');
       const colorwaysSections = document.querySelectorAll('.techpack-colorways');
       const bulkOnlyElements = document.querySelectorAll('[data-bulk-request-only]');
+      const printingMethodsSections = document.querySelectorAll('[data-hide-for-sample-request]');
       
       if (requestType === 'sample-request') {
         // SAMPLE REQUEST MODE: Show sample options, hide bulk elements
@@ -14236,6 +14229,11 @@ setupInitialization();
         // Hide bulk-only elements
         bulkOnlyElements.forEach(element => {
           element.style.display = 'none';
+        });
+        
+        // Hide printing methods sections (not required for sample requests)
+        printingMethodsSections.forEach(section => {
+          section.style.display = 'none';
         });
         
         if (subtitle) subtitle.textContent = 'Choose sample options for each garment and provide garment details';
@@ -14268,6 +14266,11 @@ setupInitialization();
           element.style.display = 'block';
         });
         
+        // Show printing methods sections (required for bulk orders)
+        printingMethodsSections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
         if (subtitle) subtitle.textContent = 'Define your garment details and quantity requirements';
         
         debugSystem.log('Bulk request mode - full interface active', {
@@ -14296,6 +14299,11 @@ setupInitialization();
         // Hide bulk-only elements
         bulkOnlyElements.forEach(element => {
           element.style.display = 'none';
+        });
+        
+        // Show printing methods sections (required for quotations)
+        printingMethodsSections.forEach(section => {
+          section.style.display = 'block';
         });
         
         if (subtitle) subtitle.textContent = 'Provide garment specifications to receive pricing estimates';
