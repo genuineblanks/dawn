@@ -1,8 +1,9 @@
 {% comment %}
 Lab Dips & Brand Accessories - Step 3A: Lab Dip Swatches
+Premium Professional Interface
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'techpack-unified-styles.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
+<link rel="stylesheet" href="{{ 'lab-dips-premium.css' | asset_url }}?v={{ 'now' | date: '%s' }}">
 
 <section id="lab-dips-step-3a" class="techpack-step" data-step="3a" style="display: none;">
   <div class="techpack-container">
@@ -27,97 +28,90 @@ Lab Dips & Brand Accessories - Step 3A: Lab Dip Swatches
     <!-- Content -->
     <div class="techpack-content">
       
-      <!-- Header -->
-      <div class="techpack-step-header">
-        <h2 class="techpack-step-title">Lab Dip Swatches</h2>
-        <p class="techpack-step-subtitle">Order fabric swatches for perfect color matching and material approval</p>
+      <!-- Premium Header -->
+      <div class="lab-dips-header">
+        <h1 class="lab-dips-title">Lab Dip Swatches</h1>
+        <p class="lab-dips-subtitle">Professional color matching service for perfect fabric reproduction</p>
       </div>
 
-      <!-- Service Info -->
-      <div class="techpack-service-info-banner">
-        <div class="techpack-service-info-content">
-          <div class="techpack-service-info-item">
-            <div class="techpack-service-info-icon">💰</div>
-            <div class="techpack-service-info-text">
-              <strong>25€ per swatch</strong>
-              <span>High-quality fabric samples</span>
-            </div>
-          </div>
-          <div class="techpack-service-info-item">
-            <div class="techpack-service-info-icon">⚡</div>
-            <div class="techpack-service-info-text">
-              <strong>1-2 weeks delivery</strong>
-              <span>Fast turnaround time</span>
-            </div>
-          </div>
-          <div class="techpack-service-info-item">
-            <div class="techpack-service-info-icon">🎨</div>
-            <div class="techpack-service-info-text">
-              <strong>Perfect color matching</strong>
-              <span>Pantone color system</span>
-            </div>
-          </div>
+      <!-- Service Info Cards -->
+      <div class="lab-service-cards">
+        <div class="lab-service-card">
+          <div class="lab-service-icon">💰</div>
+          <div class="lab-service-title">25€ per swatch</div>
+          <div class="lab-service-description">Premium quality fabric samples with exact color matching</div>
+        </div>
+        <div class="lab-service-card">
+          <div class="lab-service-icon">⚡</div>
+          <div class="lab-service-title">1-2 weeks delivery</div>
+          <div class="lab-service-description">Fast turnaround for your approval process</div>
+        </div>
+        <div class="lab-service-card">
+          <div class="lab-service-icon">🎨</div>
+          <div class="lab-service-title">Pantone Precision</div>
+          <div class="lab-service-description">Industry-standard color matching system</div>
         </div>
       </div>
 
-      <!-- Color Selection System -->
-      <div class="techpack-lab-dip-selection-system">
-        <div class="techpack-section-header">
-          <h3 class="techpack-section-title">Create Lab Dip Swatches</h3>
-          <p class="techpack-section-description">Choose colors using our professional color picker or enter specific Pantone codes</p>
-        </div>
-
-        <!-- Color Input Mode Toggle -->
-        <div class="techpack-input-mode-toggle">
-          <button type="button" class="techpack-mode-btn techpack-mode-btn--active" data-mode="color-picker" id="swatch-color-picker-mode">
-            <svg width="16" height="16" viewBox="0 0 16 16">
-              <path d="M12.83 2.17a4 4 0 0 0-5.66 0L4.2 5.14a1 1 0 0 0-.29.71v4.29a1 1 0 0 0 1 1h4.29a1 1 0 0 0 .71-.29l2.97-2.97a4 4 0 0 0 0-5.66z"/>
-              <path d="M8.5 12.5L15 6l-3-3-6.5 6.5"/>
-            </svg>
-            Color Picker
-          </button>
-          <button type="button" class="techpack-mode-btn" data-mode="manual-entry" id="swatch-manual-entry-mode">
-            <svg width="16" height="16" viewBox="0 0 16 16">
-              <path d="M1 4h14M1 8h14M1 12h8"/>
-            </svg>
-            Manual Code
-          </button>
+      <!-- Color Studio Section -->
+      <div class="lab-color-studio">
+        <div class="lab-studio-header">
+          <div class="lab-studio-title">
+            Color Studio
+            <span class="lab-studio-badge">Professional</span>
+          </div>
+          <div class="lab-mode-toggle">
+            <button type="button" class="lab-mode-btn active" data-mode="picker" id="lab-picker-mode">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2v20M2 12h20"/>
+              </svg>
+              Color Picker
+            </button>
+            <button type="button" class="lab-mode-btn" data-mode="manual" id="lab-manual-mode">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+              Pantone Code
+            </button>
+          </div>
         </div>
 
         <!-- Color Picker Mode -->
-        <div class="techpack-input-mode techpack-input-mode--active" id="swatch-color-picker-input">
-          <div class="techpack-swatch-color-picker-group">
-            <!-- Color Input and Preview -->
-            <div class="techpack-color-picker-section">
-              <div class="techpack-color-preview-wrapper">
-                <input type="color" id="swatch-color-picker" class="techpack-color-picker__input" value="#FF0000">
-                <div class="techpack-color-picker__preview" id="swatch-color-preview"></div>
-              </div>
-              <div class="techpack-color-picker-label">Pick your color</div>
-            </div>
-            
-            <!-- Auto-Selected Pantone Display -->
-            <div class="techpack-auto-pantone-section">
-              <div class="techpack-auto-pantone-display" id="swatch-auto-pantone-display" style="display: none;">
-                <div class="techpack-pantone-result">
-                  <div class="techpack-pantone-circle" id="swatch-auto-pantone-circle"></div>
-                  <div class="techpack-pantone-info">
-                    <div class="techpack-pantone-code" id="swatch-auto-pantone-code">Select a color</div>
-                    <div class="techpack-pantone-note">Auto-matched from 2,310+ colors</div>
-                  </div>
+        <div class="lab-color-mode lab-color-picker-mode" id="lab-picker-section">
+          <div class="lab-color-picker-layout">
+            <!-- Left: Color Selection Tools -->
+            <div class="lab-picker-section">
+              <div class="lab-color-input-group">
+                <div class="lab-color-input-label">Select Your Color</div>
+                <div class="lab-color-picker-wrapper">
+                  <input type="color" id="lab-color-picker" class="lab-color-input" value="#2563eb">
+                  <input type="text" id="lab-hex-input" class="lab-color-hex-input" placeholder="#000000" value="#2563eb">
                 </div>
               </div>
-              <div class="techpack-pantone-placeholder" id="swatch-pantone-placeholder">
-                <div class="techpack-pantone-placeholder-icon">🎨</div>
-                <div class="techpack-pantone-placeholder-text">Pick a color to see Pantone match</div>
+              
+              <!-- Quick Color Palette -->
+              <div class="lab-quick-colors">
+                <div class="lab-color-input-label">Popular Colors</div>
+                <div class="lab-quick-color-grid" id="lab-quick-colors">
+                  <!-- Will be populated by JavaScript -->
+                </div>
               </div>
             </div>
-            
-            <!-- Add Button -->
-            <div class="techpack-add-button-section">
-              <button type="button" id="add-swatch-color" class="techpack-btn techpack-btn--primary" disabled>
-                <svg width="14" height="14" viewBox="0 0 16 16">
-                  <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+
+            <!-- Right: Live Preview -->
+            <div class="lab-preview-section">
+              <div class="lab-preview-swatch" id="lab-preview-swatch"></div>
+              <div class="lab-pantone-display">
+                <div class="lab-pantone-code" id="lab-pantone-code">PANTONE 2728 C</div>
+                <div class="lab-pantone-name" id="lab-pantone-name">Electric Blue</div>
+                <div class="lab-pantone-match">Best match from 2,310+ colors</div>
+              </div>
+              <button type="button" class="lab-add-btn" id="lab-add-color-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
                 Add Swatch (25€)
               </button>
@@ -126,68 +120,114 @@ Lab Dips & Brand Accessories - Step 3A: Lab Dip Swatches
         </div>
 
         <!-- Manual Entry Mode -->
-        <div class="techpack-input-mode" id="swatch-manual-entry-input">
-          <div class="techpack-manual-entry-group">
-            <input type="text" id="swatch-manual-pantone-code" class="techpack-form__input techpack-form__input--compact" placeholder="Enter Pantone code (e.g., 18-1664 TPX)">
-            <button type="button" id="add-swatch-manual" class="techpack-btn techpack-btn--primary">
-              <svg width="14" height="14" viewBox="0 0 16 16">
-                <path d="M8 2v12m-6-6h12" stroke="currentColor" stroke-width="2"/>
+        <div class="lab-color-mode lab-manual-entry" id="lab-manual-section">
+          <div class="lab-manual-input-group">
+            <div class="lab-manual-input-wrapper">
+              <label class="lab-manual-label" for="lab-pantone-input">Enter Pantone Code</label>
+              <input type="text" id="lab-pantone-input" class="lab-manual-input" placeholder="e.g., 18-1664 TPX or PANTONE 2728 C">
+            </div>
+            <button type="button" class="lab-add-btn" id="lab-add-manual-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
               Add Swatch (25€)
             </button>
           </div>
         </div>
-
       </div>
 
-      <!-- Swatch Cart Summary -->
-      <div class="techpack-swatch-cart" id="swatch-cart" style="display: none;">
-        <div class="techpack-section-header">
-          <h3 class="techpack-section-title">Your Lab Dip Swatches</h3>
-          <p class="techpack-section-description">Review your selected swatches before submitting your order</p>
+      <!-- Swatch Table Section -->
+      <div class="lab-swatch-table-section" id="lab-swatch-table-section" style="display: none;">
+        <div class="lab-table-header">
+          <h2 class="lab-table-title">Your Selected Swatches</h2>
+          <span class="lab-table-count" id="lab-swatch-count">0 swatches</span>
         </div>
 
-        <div class="techpack-swatch-list" id="swatch-list">
-          <!-- Swatches will be populated here -->
-        </div>
+        <table class="lab-swatch-table" id="lab-swatch-table">
+          <thead>
+            <tr>
+              <th>Color Preview</th>
+              <th>Pantone Code</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="lab-swatch-tbody">
+            <!-- Swatches will be added here dynamically -->
+          </tbody>
+        </table>
 
-        <!-- Order Summary -->
-        <div class="techpack-order-summary">
-          <div class="techpack-order-summary-content">
-            <div class="techpack-order-summary-row">
-              <span class="techpack-order-summary-label">Swatches:</span>
-              <span class="techpack-order-summary-value" id="swatch-count">0</span>
-            </div>
-            <div class="techpack-order-summary-row">
-              <span class="techpack-order-summary-label">Price per swatch:</span>
-              <span class="techpack-order-summary-value">25€</span>
-            </div>
-            <div class="techpack-order-summary-row techpack-order-summary-row--total">
-              <span class="techpack-order-summary-label">Total:</span>
-              <span class="techpack-order-summary-value" id="swatch-total">0€</span>
-            </div>
-            <div class="techpack-order-summary-row">
-              <span class="techpack-order-summary-label">Delivery:</span>
-              <span class="techpack-order-summary-value">1-2 weeks</span>
-            </div>
+        <!-- Empty State -->
+        <div class="lab-table-empty" id="lab-empty-state">
+          <svg class="lab-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          <div class="lab-empty-text">No swatches added yet</div>
+          <div class="lab-empty-hint">Use the color studio above to add your first swatch</div>
+        </div>
+      </div>
+
+      <!-- Order Summary Section -->
+      <div class="lab-order-summary" id="lab-order-summary" style="display: none;">
+        <div class="lab-summary-header">
+          <h3 class="lab-summary-title">Order Summary</h3>
+          <span class="lab-summary-badge" id="lab-summary-count">0</span>
+        </div>
+        
+        <div class="lab-summary-content">
+          <div class="lab-summary-row">
+            <span class="lab-summary-label">Swatches:</span>
+            <span class="lab-summary-value" id="lab-summary-swatches">0</span>
+          </div>
+          <div class="lab-summary-row">
+            <span class="lab-summary-label">Price per swatch:</span>
+            <span class="lab-summary-value">25€</span>
+          </div>
+          <div class="lab-summary-divider"></div>
+          <div class="lab-summary-row">
+            <span class="lab-summary-label">Subtotal:</span>
+            <span class="lab-summary-value" id="lab-summary-subtotal">0€</span>
+          </div>
+          <div class="lab-summary-row">
+            <span class="lab-summary-label">Production time:</span>
+            <span class="lab-summary-value">1-2 weeks</span>
+          </div>
+          <div class="lab-summary-divider"></div>
+          <div class="lab-summary-total">
+            <span class="lab-summary-label">Total:</span>
+            <span class="lab-summary-value" id="lab-summary-total">0€</span>
           </div>
         </div>
 
+        <!-- Color Grid Preview -->
+        <div class="lab-summary-colors" id="lab-summary-colors">
+          <!-- Color previews will be added here -->
+        </div>
+
+        <button type="button" class="lab-submit-btn" id="lab-submit-order" disabled>
+          Submit Lab Dip Order
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-7-7l7 7-7 7"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Navigation -->
-      <div class="techpack-step-navigation">
-        <button type="button" class="techpack-btn techpack-btn--secondary" id="swatch-back-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2"/>
+      <div class="lab-navigation">
+        <button type="button" class="lab-nav-btn lab-nav-btn--back" id="lab-back-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m15 18-6-6 6-6"/>
           </svg>
           Back
         </button>
         
-        <button type="button" class="techpack-btn techpack-btn--primary techpack-btn--large" id="submit-swatch-order-btn" disabled>
-          Submit Lab Dip Order
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14m-7-7 7 7-7 7" stroke="currentColor" stroke-width="2"/>
+        <button type="button" class="lab-nav-btn lab-nav-btn--next" id="lab-continue-btn" disabled>
+          Review Order
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14m-7-7l7 7-7 7"/>
           </svg>
         </button>
       </div>
@@ -196,395 +236,447 @@ Lab Dips & Brand Accessories - Step 3A: Lab Dip Swatches
   </div>
 </section>
 
-<style>
-/* Lab Dip Swatches Specific Styles */
-.techpack-service-info-banner {
-  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));
-  border: 1px solid rgba(0, 123, 255, 0.2);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.techpack-service-info-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.techpack-service-info-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.techpack-service-info-icon {
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.techpack-service-info-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-}
-
-.techpack-service-info-text strong {
-  font-weight: 600;
-  color: var(--techpack-text-primary, #2c3e50);
-  font-size: 0.9rem;
-}
-
-.techpack-service-info-text span {
-  color: var(--techpack-text-secondary, #6c757d);
-  font-size: 0.8rem;
-}
-
-/* Color Selection System */
-.techpack-lab-dip-selection-system {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.techpack-swatch-color-picker-group {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1.5rem;
-  align-items: center;
-  max-width: 800px;
-}
-
-.techpack-color-picker-label {
-  font-size: 0.85rem;
-  color: var(--techpack-text-secondary, #6c757d);
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-/* Swatch Cart */
-.techpack-swatch-cart {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.techpack-swatch-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.techpack-swatch-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 1rem;
-  text-align: center;
-  position: relative;
-}
-
-.techpack-swatch-color-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: 0 auto 0.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.techpack-swatch-code {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--techpack-text-primary, #2c3e50);
-  margin-bottom: 0.25rem;
-}
-
-.techpack-swatch-price {
-  font-size: 0.75rem;
-  color: var(--techpack-text-secondary, #6c757d);
-}
-
-.techpack-swatch-remove {
-  position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  transition: all 0.2s ease;
-}
-
-.techpack-swatch-remove:hover {
-  background: rgba(220, 53, 69, 0.2);
-}
-
-/* Order Summary */
-.techpack-order-summary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.techpack-order-summary-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.techpack-order-summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.techpack-order-summary-row--total {
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.techpack-order-summary-label {
-  color: var(--techpack-text-secondary, #6c757d);
-}
-
-.techpack-order-summary-value {
-  color: var(--techpack-text-primary, #2c3e50);
-  font-weight: 500;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .techpack-service-info-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .techpack-swatch-color-picker-group {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .techpack-swatch-list {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-}
-
-/* Animation */
-@keyframes swatchAdded {
-  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.techpack-swatch-item {
-  animation: swatchAdded 0.3s ease;
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Elements
-  const colorPickerModeBtn = document.getElementById('swatch-color-picker-mode');
-  const manualEntryModeBtn = document.getElementById('swatch-manual-entry-mode');
-  const colorPickerInput = document.getElementById('swatch-color-picker-input');
-  const manualEntryInput = document.getElementById('swatch-manual-entry-input');
-  
-  const colorPicker = document.getElementById('swatch-color-picker');
-  const colorPreview = document.getElementById('swatch-color-preview');
-  const addColorBtn = document.getElementById('add-swatch-color');
-  const addManualBtn = document.getElementById('add-swatch-manual');
-  const manualInput = document.getElementById('swatch-manual-pantone-code');
-  
-  const autoPantoneDisplay = document.getElementById('swatch-auto-pantone-display');
-  const pantoneCircle = document.getElementById('swatch-auto-pantone-circle');
-  const pantoneCode = document.getElementById('swatch-auto-pantone-code');
-  const pantonePlaceholder = document.getElementById('swatch-pantone-placeholder');
-  
-  const swatchCart = document.getElementById('swatch-cart');
-  const swatchList = document.getElementById('swatch-list');
-  const swatchCount = document.getElementById('swatch-count');
-  const swatchTotal = document.getElementById('swatch-total');
-  const submitOrderBtn = document.getElementById('submit-swatch-order-btn');
-  const backBtn = document.getElementById('swatch-back-btn');
-  
-  let swatches = [];
-  let currentSwatchPrice = 25; // 25€ per swatch
-
-  // Mode toggle functionality
-  colorPickerModeBtn.addEventListener('click', () => switchMode('color-picker'));
-  manualEntryModeBtn.addEventListener('click', () => switchMode('manual-entry'));
-
-  function switchMode(mode) {
-    // Toggle button states
-    colorPickerModeBtn.classList.toggle('techpack-mode-btn--active', mode === 'color-picker');
-    manualEntryModeBtn.classList.toggle('techpack-mode-btn--active', mode === 'manual-entry');
+  // Initialize Lab Dip Swatches Interface
+  const LabDipSwatchManager = {
+    swatches: [],
+    currentPrice: 25,
+    selectedColor: '#2563eb',
+    selectedPantone: null,
     
-    // Toggle input sections
-    colorPickerInput.classList.toggle('techpack-input-mode--active', mode === 'color-picker');
-    manualEntryInput.classList.toggle('techpack-input-mode--active', mode === 'manual-entry');
-  }
-
-  // Color picker functionality
-  colorPicker.addEventListener('input', function() {
-    const color = this.value;
-    colorPreview.style.backgroundColor = color;
+    // DOM Elements
+    elements: {
+      // Mode toggles
+      pickerModeBtn: document.getElementById('lab-picker-mode'),
+      manualModeBtn: document.getElementById('lab-manual-mode'),
+      pickerSection: document.getElementById('lab-picker-section'),
+      manualSection: document.getElementById('lab-manual-section'),
+      
+      // Color picker elements
+      colorPicker: document.getElementById('lab-color-picker'),
+      hexInput: document.getElementById('lab-hex-input'),
+      previewSwatch: document.getElementById('lab-preview-swatch'),
+      pantoneCode: document.getElementById('lab-pantone-code'),
+      pantoneName: document.getElementById('lab-pantone-name'),
+      addColorBtn: document.getElementById('lab-add-color-btn'),
+      
+      // Manual entry elements
+      pantoneInput: document.getElementById('lab-pantone-input'),
+      addManualBtn: document.getElementById('lab-add-manual-btn'),
+      
+      // Table elements
+      tableSection: document.getElementById('lab-swatch-table-section'),
+      swatchTbody: document.getElementById('lab-swatch-tbody'),
+      emptyState: document.getElementById('lab-empty-state'),
+      swatchCount: document.getElementById('lab-swatch-count'),
+      
+      // Summary elements
+      orderSummary: document.getElementById('lab-order-summary'),
+      summaryCount: document.getElementById('lab-summary-count'),
+      summarySwatches: document.getElementById('lab-summary-swatches'),
+      summarySubtotal: document.getElementById('lab-summary-subtotal'),
+      summaryTotal: document.getElementById('lab-summary-total'),
+      summaryColors: document.getElementById('lab-summary-colors'),
+      submitBtn: document.getElementById('lab-submit-order'),
+      
+      // Navigation
+      backBtn: document.getElementById('lab-back-btn'),
+      continueBtn: document.getElementById('lab-continue-btn')
+    },
     
-    // Simulate Pantone matching (you would replace with actual API)
-    findPantoneMatch(color);
+    // Initialize the interface
+    init() {
+      this.setupEventListeners();
+      this.loadPopularColors();
+      this.updatePreview();
+    },
     
-    addColorBtn.disabled = false;
-  });
-
-  function findPantoneMatch(color) {
-    // Simulate finding closest Pantone color
-    // In real implementation, this would call the GlobalLabDipManager
-    setTimeout(() => {
-      const mockPantoneCode = generateMockPantoneCode(color);
-      showPantoneMatch(mockPantoneCode, color);
-    }, 200);
-  }
-
-  function generateMockPantoneCode(color) {
-    // Simple mock - in real app use actual Pantone database
-    const r = parseInt(color.substring(1, 3), 16);
-    const g = parseInt(color.substring(3, 5), 16);
-    const b = parseInt(color.substring(5, 7), 16);
-    const code = `${Math.floor(r/10)}-${Math.floor(g/10)}${Math.floor(b/10)} TPX`;
-    return code;
-  }
-
-  function showPantoneMatch(code, color) {
-    pantonePlaceholder.style.display = 'none';
-    autoPantoneDisplay.style.display = 'block';
-    pantoneCircle.style.backgroundColor = color;
-    pantoneCode.textContent = code;
-  }
-
-  // Add swatch functionality
-  addColorBtn.addEventListener('click', function() {
-    const color = colorPicker.value;
-    const code = pantoneCode.textContent;
-    addSwatch(code, color);
-  });
-
-  addManualBtn.addEventListener('click', function() {
-    const code = manualInput.value.trim();
-    if (code) {
-      addSwatch(code, '#888888'); // Default color for manual entry
-      manualInput.value = '';
-    }
-  });
-
-  manualInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      addManualBtn.click();
-    }
-  });
-
-  function addSwatch(code, color) {
-    // Check for duplicates
-    if (swatches.some(swatch => swatch.code === code)) {
-      alert('This swatch is already in your order.');
-      return;
-    }
-
-    const swatch = {
-      id: Date.now(),
-      code: code,
-      color: color,
-      price: currentSwatchPrice
-    };
-
-    swatches.push(swatch);
-    renderSwatches();
-    updateOrderSummary();
+    // Setup all event listeners
+    setupEventListeners() {
+      // Mode toggle
+      this.elements.pickerModeBtn.addEventListener('click', () => this.switchMode('picker'));
+      this.elements.manualModeBtn.addEventListener('click', () => this.switchMode('manual'));
+      
+      // Color picker events
+      this.elements.colorPicker.addEventListener('input', (e) => this.handleColorChange(e.target.value));
+      this.elements.hexInput.addEventListener('input', (e) => this.handleHexInput(e.target.value));
+      this.elements.addColorBtn.addEventListener('click', () => this.addSwatchFromPicker());
+      
+      // Manual entry events
+      this.elements.addManualBtn.addEventListener('click', () => this.addSwatchFromManual());
+      this.elements.pantoneInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.addSwatchFromManual();
+      });
+      
+      // Navigation
+      this.elements.backBtn.addEventListener('click', () => this.navigateBack());
+      this.elements.continueBtn.addEventListener('click', () => this.reviewOrder());
+      this.elements.submitBtn.addEventListener('click', () => this.submitOrder());
+    },
     
-    // Show cart if first swatch
-    if (swatches.length === 1) {
-      swatchCart.style.display = 'block';
-    }
-  }
-
-  function renderSwatches() {
-    swatchList.innerHTML = swatches.map(swatch => `
-      <div class="techpack-swatch-item">
-        <button type="button" class="techpack-swatch-remove" onclick="removeSwatch(${swatch.id})">×</button>
-        <div class="techpack-swatch-color-circle" style="background-color: ${swatch.color}"></div>
-        <div class="techpack-swatch-code">${swatch.code}</div>
-        <div class="techpack-swatch-price">${swatch.price}€</div>
-      </div>
-    `).join('');
-  }
-
-  window.removeSwatch = function(id) {
-    swatches = swatches.filter(swatch => swatch.id !== id);
-    renderSwatches();
-    updateOrderSummary();
+    // Switch between color picker and manual entry modes
+    switchMode(mode) {
+      const isPicker = mode === 'picker';
+      
+      this.elements.pickerModeBtn.classList.toggle('active', isPicker);
+      this.elements.manualModeBtn.classList.toggle('active', !isPicker);
+      this.elements.pickerSection.style.display = isPicker ? 'block' : 'none';
+      this.elements.manualSection.style.display = isPicker ? 'none' : 'block';
+    },
     
-    if (swatches.length === 0) {
-      swatchCart.style.display = 'none';
+    // Handle color picker change
+    handleColorChange(color) {
+      this.selectedColor = color;
+      this.elements.hexInput.value = color;
+      this.updatePreview();
+      this.findPantoneMatch(color);
+    },
+    
+    // Handle hex input change
+    handleHexInput(value) {
+      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        this.selectedColor = value;
+        this.elements.colorPicker.value = value;
+        this.updatePreview();
+        this.findPantoneMatch(value);
+      }
+    },
+    
+    // Update color preview
+    updatePreview() {
+      this.elements.previewSwatch.style.background = this.selectedColor;
+    },
+    
+    // Find closest Pantone match (simulated)
+    findPantoneMatch(color) {
+      // Simulate Pantone matching with realistic codes
+      const pantoneDatabase = {
+        '#2563eb': { code: 'PANTONE 2728 C', name: 'Electric Blue' },
+        '#dc2626': { code: 'PANTONE 18-1664 TPX', name: 'Fiery Red' },
+        '#16a34a': { code: 'PANTONE 354 C', name: 'Emerald Green' },
+        '#ca8a04': { code: 'PANTONE 7555 C', name: 'Golden Yellow' },
+        '#9333ea': { code: 'PANTONE 2665 C', name: 'Royal Purple' },
+        '#000000': { code: 'PANTONE Black C', name: 'Pure Black' },
+        '#ffffff': { code: 'PANTONE White', name: 'Pure White' }
+      };
+      
+      // Find closest match or generate a plausible code
+      let pantone = pantoneDatabase[color];
+      if (!pantone) {
+        // Generate realistic Pantone code based on color
+        const r = parseInt(color.substring(1, 3), 16);
+        const g = parseInt(color.substring(3, 5), 16);
+        const b = parseInt(color.substring(5, 7), 16);
+        
+        const colorNum = Math.floor((r + g + b) / 3 * 30);
+        pantone = {
+          code: `PANTONE ${14 + Math.floor(colorNum / 100)}-${1000 + colorNum} TPX`,
+          name: this.getColorName(r, g, b)
+        };
+      }
+      
+      this.selectedPantone = pantone;
+      this.elements.pantoneCode.textContent = pantone.code;
+      this.elements.pantoneName.textContent = pantone.name;
+    },
+    
+    // Get descriptive color name
+    getColorName(r, g, b) {
+      const brightness = (r + g + b) / 3;
+      const maxChannel = Math.max(r, g, b);
+      
+      if (brightness < 50) return 'Deep Shadow';
+      if (brightness > 200) return 'Bright Light';
+      
+      if (r === maxChannel && r > g + 30) return 'Vibrant Red';
+      if (g === maxChannel && g > b + 30) return 'Fresh Green';
+      if (b === maxChannel && b > r + 30) return 'Ocean Blue';
+      
+      return 'Custom Blend';
+    },
+    
+    // Load popular colors
+    loadPopularColors() {
+      const popularColors = [
+        '#000000', '#ffffff', '#dc2626', '#ea580c', '#facc15',
+        '#16a34a', '#0ea5e9', '#2563eb', '#7c3aed', '#c026d3'
+      ];
+      
+      const container = document.getElementById('lab-quick-colors');
+      if (container) {
+        container.innerHTML = popularColors.map(color => `
+          <button type="button" class="lab-quick-color" style="background: ${color}" 
+                  data-color="${color}" title="${color}"></button>
+        `).join('');
+        
+        container.querySelectorAll('.lab-quick-color').forEach(btn => {
+          btn.addEventListener('click', () => this.handleColorChange(btn.dataset.color));
+        });
+      }
+    },
+    
+    // Add swatch from color picker
+    addSwatchFromPicker() {
+      if (!this.selectedPantone) {
+        this.findPantoneMatch(this.selectedColor);
+      }
+      
+      this.addSwatch({
+        id: Date.now(),
+        color: this.selectedColor,
+        pantone: this.selectedPantone.code,
+        name: this.selectedPantone.name,
+        type: 'Color Picker',
+        price: this.currentPrice
+      });
+    },
+    
+    // Add swatch from manual entry
+    addSwatchFromManual() {
+      const pantoneCode = this.elements.pantoneInput.value.trim();
+      if (!pantoneCode) {
+        alert('Please enter a Pantone code');
+        return;
+      }
+      
+      // Generate a color based on the Pantone code (simplified)
+      const color = this.getColorFromPantone(pantoneCode);
+      
+      this.addSwatch({
+        id: Date.now(),
+        color: color,
+        pantone: pantoneCode.toUpperCase(),
+        name: 'Custom Pantone',
+        type: 'Manual Entry',
+        price: this.currentPrice
+      });
+      
+      this.elements.pantoneInput.value = '';
+    },
+    
+    // Get color from Pantone code (simplified simulation)
+    getColorFromPantone(code) {
+      // Simple hash-based color generation for demo
+      let hash = 0;
+      for (let i = 0; i < code.length; i++) {
+        hash = code.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      
+      const r = (hash & 0xFF0000) >> 16;
+      const g = (hash & 0x00FF00) >> 8;
+      const b = hash & 0x0000FF;
+      
+      return '#' + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      }).join('');
+    },
+    
+    // Add swatch to the list
+    addSwatch(swatch) {
+      // Check for duplicates
+      if (this.swatches.some(s => s.pantone === swatch.pantone)) {
+        this.showToast('This swatch is already in your order', 'warning');
+        return;
+      }
+      
+      this.swatches.push(swatch);
+      this.renderSwatches();
+      this.updateSummary();
+      this.showToast('Swatch added successfully!', 'success');
+    },
+    
+    // Remove swatch
+    removeSwatch(id) {
+      this.swatches = this.swatches.filter(s => s.id !== id);
+      this.renderSwatches();
+      this.updateSummary();
+    },
+    
+    // Render swatches table
+    renderSwatches() {
+      const hasSwatches = this.swatches.length > 0;
+      
+      // Show/hide sections
+      this.elements.tableSection.style.display = 'block';
+      this.elements.orderSummary.style.display = hasSwatches ? 'block' : 'none';
+      this.elements.emptyState.style.display = hasSwatches ? 'none' : 'block';
+      this.elements.swatchCount.textContent = `${this.swatches.length} swatch${this.swatches.length !== 1 ? 'es' : ''}`;
+      
+      if (hasSwatches) {
+        this.elements.swatchTbody.innerHTML = this.swatches.map(swatch => `
+          <tr class="lab-swatch-added">
+            <td data-label="Color">
+              <div class="lab-table-color">
+                <div class="lab-table-color-preview" style="background: ${swatch.color}"></div>
+                <span class="lab-table-color-hex">${swatch.color}</span>
+              </div>
+            </td>
+            <td data-label="Pantone">
+              <span class="lab-table-pantone">${swatch.pantone}</span>
+            </td>
+            <td data-label="Type">
+              <span class="lab-table-type">${swatch.type}</span>
+            </td>
+            <td data-label="Price">
+              <span class="lab-table-price">${swatch.price}€</span>
+            </td>
+            <td data-label="Actions">
+              <div class="lab-table-actions">
+                <button type="button" class="lab-table-action-btn" onclick="LabDipSwatchManager.removeSwatch(${swatch.id})">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+    },
+    
+    // Update order summary
+    updateSummary() {
+      const count = this.swatches.length;
+      const total = count * this.currentPrice;
+      
+      this.elements.summaryCount.textContent = count;
+      this.elements.summarySwatches.textContent = count;
+      this.elements.summarySubtotal.textContent = `${total}€`;
+      this.elements.summaryTotal.textContent = `${total}€`;
+      
+      // Update color grid
+      this.elements.summaryColors.innerHTML = this.swatches.map(swatch => `
+        <div class="lab-summary-color" style="background: ${swatch.color}" 
+             title="${swatch.pantone}"></div>
+      `).join('');
+      
+      // Enable/disable buttons
+      const hasSwatches = count > 0;
+      this.elements.submitBtn.disabled = !hasSwatches;
+      this.elements.continueBtn.disabled = !hasSwatches;
+    },
+    
+    // Show toast notification
+    showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `lab-success-toast lab-toast-${type}`;
+      toast.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        ${message}
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    },
+    
+    // Navigation functions
+    navigateBack() {
+      window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+        detail: { step: 'lab-dips-step-1' }
+      }));
+    },
+    
+    reviewOrder() {
+      // Show review modal or navigate to review step
+      this.submitOrder();
+    },
+    
+    submitOrder() {
+      if (this.swatches.length === 0) return;
+      
+      // Store order data
+      if (window.techPackState) {
+        window.techPackState.formData.labDipSwatches = this.swatches;
+        window.techPackState.formData.labDipOrderTotal = this.swatches.length * this.currentPrice;
+      }
+      
+      // Show success message
+      const orderDetails = `
+        Order Summary:
+        • ${this.swatches.length} Lab Dip Swatches
+        • Total: ${this.swatches.length * this.currentPrice}€
+        • Delivery: 1-2 weeks
+        
+        Swatches ordered:
+        ${this.swatches.map(s => `- ${s.pantone}`).join('\n')}
+        
+        You will receive a confirmation email shortly.
+      `;
+      
+      alert(orderDetails);
+      
+      // Reset and navigate back
+      this.swatches = [];
+      this.renderSwatches();
+      this.updateSummary();
+      
+      window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
+        detail: { step: 'submission-type-selection' }
+      }));
     }
   };
-
-  function updateOrderSummary() {
-    const count = swatches.length;
-    const total = count * currentSwatchPrice;
-    
-    swatchCount.textContent = count;
-    swatchTotal.textContent = `${total}€`;
-    
-    submitOrderBtn.disabled = count === 0;
-  }
-
-  // Navigation
-  backBtn.addEventListener('click', function() {
-    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
-      detail: { step: 'lab-dips-step-1' }
-    }));
-  });
-
-  submitOrderBtn.addEventListener('click', function() {
-    if (swatches.length === 0) return;
-    
-    // Store order data
-    if (window.techPackState) {
-      window.techPackState.formData.labDipSwatches = swatches;
-      window.techPackState.formData.labDipOrderTotal = swatches.length * currentSwatchPrice;
-    }
-    
-    // Show success message and complete workflow
-    alert(`Lab Dip Order Submitted!\n\n${swatches.length} swatches ordered\nTotal: ${swatches.length * currentSwatchPrice}€\nDelivery: 1-2 weeks\n\nYou will receive a confirmation email shortly.`);
-    
-    // Navigate back to submission type or reset workflow
-    window.dispatchEvent(new CustomEvent('techpack:navigateToStep', {
-      detail: { step: 'submission-type-selection' }
-    }));
-  });
-
-  // Initialize color preview
-  colorPreview.style.backgroundColor = colorPicker.value;
+  
+  // Initialize the manager
+  window.LabDipSwatchManager = LabDipSwatchManager;
+  LabDipSwatchManager.init();
 });
 </script>
+
+<style>
+/* Quick Colors Grid */
+.lab-quick-colors {
+  margin-top: 20px;
+}
+
+.lab-quick-color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.lab-quick-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lab-quick-color:hover {
+  transform: scale(1.1);
+  border-color: var(--lab-primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Toast Styles */
+.lab-toast-warning {
+  background: var(--lab-warning) !important;
+}
+
+.lab-toast-error {
+  background: var(--lab-danger) !important;
+}
+
+/* Responsive adjustments for quick colors */
+@media (max-width: 768px) {
+  .lab-quick-color-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .lab-quick-color {
+    width: 100%;
+    height: 40px;
+  }
+}
+</style>
