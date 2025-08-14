@@ -16881,26 +16881,56 @@ setupInitialization();
       `;
     }
     
-    // Get available garments for assignment
+    // Get available garments for assignment - FIXED: Use working Lab Dip approach
     getAvailableGarments() {
-      const garments = [];
-      const garmentElements = document.querySelectorAll('.techpack-garment[data-garment-id]');
+      // Scan DOM for actual garment data using same approach as Lab Dips
+      const garmentElements = document.querySelectorAll('.techpack-garment');
+      const availableGarments = [];
       
-      garmentElements.forEach(garmentElement => {
-        const garmentId = garmentElement.dataset.garmentId;
-        const garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent || 'Unknown';
-        const garmentType = garmentElement.querySelector('select[name="garmentType"]')?.value || 'Unknown Type';
-        
-        if (garmentId) {
-          garments.push({
-            id: garmentId,
-            name: `Garment ${garmentNumber} - ${garmentType}`,
-            element: garmentElement
-          });
-        }
+      debugSystem.log('🎨 [DEBUG] Design Sample getAvailableGarments scanning:', {
+        foundElements: garmentElements.length,
+        selector: '.techpack-garment'
       });
       
-      return garments;
+      garmentElements.forEach((garmentElement, index) => {
+        const garmentId = garmentElement.dataset.garmentId;
+        
+        // Primary: Try to get from DOM element, Fallback: Use array index + 1
+        let garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent;
+        if (!garmentNumber || garmentNumber.trim() === '' || garmentNumber === '?') {
+          garmentNumber = (index + 1).toString();
+          debugSystem.log(`🔢 [DEBUG] Using fallback garment number for Design Sample: ${garmentNumber}`);
+        }
+        
+        const garmentTypeSelect = garmentElement.querySelector('select[name="garmentType"]');
+        const selectedType = garmentTypeSelect?.value || garmentTypeSelect?.options[garmentTypeSelect.selectedIndex]?.text || 'Unknown Type';
+        
+        // Create descriptive name: "Garment 1 - T-Shirt"
+        const garmentName = selectedType && selectedType !== 'Select garment type...' && selectedType !== '' 
+          ? `Garment ${garmentNumber} - ${selectedType}`
+          : `Garment ${garmentNumber}`;
+        
+        // Add garment to available list (Design Samples work with ALL garments, unlike Lab Dips)
+        availableGarments.push({
+          id: garmentId || `garment-${index + 1}`, // Ensure we always have an ID
+          name: garmentName,
+          element: garmentElement
+        });
+        
+        debugSystem.log(`🎨 [DEBUG] Added garment for Design Sample assignment:`, {
+          id: garmentId || `garment-${index + 1}`,
+          name: garmentName,
+          garmentNumber,
+          selectedType
+        });
+      });
+      
+      debugSystem.log('🎨 [DEBUG] Design Sample available garments:', {
+        totalFound: availableGarments.length,
+        garments: availableGarments.map(g => ({ id: g.id, name: g.name }))
+      });
+      
+      return availableGarments;
     }
     
     // Get garment sample type (stock-color or custom-color)
@@ -17067,6 +17097,16 @@ setupInitialization();
         menu.style.zIndex = '999999';
         menu.style.maxHeight = '300px';
         menu.style.overflowY = 'auto';
+        
+        // DEBUG: Add high visibility styles to make menu VERY visible
+        menu.style.backgroundColor = '#ff0000 !important'; // Bright red background
+        menu.style.border = '5px solid #00ff00 !important'; // Bright green border  
+        menu.style.boxShadow = '0 0 20px #ff00ff !important'; // Bright magenta shadow
+        menu.style.display = 'block !important';
+        menu.style.visibility = 'visible !important';
+        menu.style.opacity = '1 !important';
+        
+        console.log('🚨 [DEBUG] Applied high visibility styles to menu');
         
         console.log('🎨 [DEBUG] Menu positioned with styles:', {
           position: menu.style.position,

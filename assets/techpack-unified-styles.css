@@ -40,8 +40,29 @@ CSS CUSTOM PROPERTIES - UNIFIED COLOR SYSTEM
 */
 
 :root {
-  /* Unified design system specific variables - all core variables inherited from techpack-app.css */
+  /* Enhanced Professional White + Grey Theme System */
   --techpack-accent: #374151;
+  
+  /* Professional Grey Scale - Clean & Modern */
+  --techpack-white: #ffffff;
+  --techpack-grey-50: #f9fafb;    /* Lightest background */
+  --techpack-grey-100: #f3f4f6;   /* Subtle background */
+  --techpack-grey-200: #e5e7eb;   /* Light borders, dividers */
+  --techpack-grey-300: #d1d5db;   /* Medium borders */
+  --techpack-grey-400: #9ca3af;   /* Placeholder text */
+  --techpack-grey-500: #6b7280;   /* Secondary text */
+  --techpack-grey-600: #4b5563;   /* Primary text */
+  --techpack-grey-700: #374151;   /* Headers, emphasis */
+  --techpack-grey-800: #1f2937;   /* Dark text */
+  --techpack-grey-900: #111827;   /* Darkest elements */
+  
+  /* Professional Accent Colors */
+  --techpack-blue: #3b82f6;       /* Primary actions */
+  --techpack-blue-light: #dbeafe;  /* Light blue backgrounds */
+  --techpack-green: #10b981;      /* Success states */
+  --techpack-green-light: #d1fae5; /* Success backgrounds */
+  --techpack-amber: #f59e0b;      /* Warning states */
+  --techpack-red: #ef4444;        /* Error states */
 }
 
 /* 
