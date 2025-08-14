@@ -4552,6 +4552,16 @@
         }))
       });
       
+      // DEBUG: Check if Design Sample sections exist
+      const stockDesignSection = garment.querySelector('.techpack-stock-design-samples');
+      const customDesignSection = garment.querySelector('.techpack-custom-design-samples');
+      console.log('🎨 [DEBUG] Design Sample sections in cloned garment:', {
+        stockDesignSection: !!stockDesignSection,
+        customDesignSection: !!customDesignSection,
+        stockHTML: stockDesignSection ? stockDesignSection.outerHTML.substring(0, 200) : 'NOT FOUND',
+        customHTML: customDesignSection ? customDesignSection.outerHTML.substring(0, 200) : 'NOT FOUND'
+      });
+      
       // Set the garment number based on current count of garments, not counter
       const currentGarmentCount = document.querySelectorAll('.techpack-garment').length + 1;
       garment.querySelector('.techpack-garment__number').textContent = currentGarmentCount;
@@ -17005,6 +17015,33 @@ setupInitialization();
         
         // Position the menu relative to the button
         const buttonRect = button.getBoundingClientRect();
+        const menuWidth = 250;
+        const menuHeight = 300; // Approximate max height
+        const spacing = 4;
+        
+        // Calculate position with viewport boundaries
+        let menuTop = buttonRect.bottom + spacing;
+        let menuLeft = buttonRect.right - menuWidth;
+        
+        // Check if menu would go off bottom of screen
+        if (menuTop + menuHeight > window.innerHeight) {
+          // Position above button instead
+          menuTop = buttonRect.top - menuHeight - spacing;
+          console.log('📍 [DEBUG] Menu would go off-screen bottom, positioning above button');
+        }
+        
+        // Check if menu would go off right edge
+        if (menuLeft + menuWidth > window.innerWidth) {
+          menuLeft = window.innerWidth - menuWidth - 10;
+          console.log('📍 [DEBUG] Menu would go off-screen right, adjusting left position');
+        }
+        
+        // Check if menu would go off left edge
+        if (menuLeft < 10) {
+          menuLeft = 10;
+          console.log('📍 [DEBUG] Menu would go off-screen left, adjusting to minimum');
+        }
+        
         console.log('📐 [DEBUG] Positioning menu:', {
           buttonRect: {
             top: buttonRect.top,
@@ -17014,15 +17051,22 @@ setupInitialization();
             width: buttonRect.width,
             height: buttonRect.height
           },
-          calculatedTop: buttonRect.bottom + 4,
-          calculatedLeft: buttonRect.right - 250
+          calculatedTop: menuTop,
+          calculatedLeft: menuLeft,
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            scrollY: window.scrollY
+          }
         });
         
         menu.style.position = 'fixed';
-        menu.style.top = `${buttonRect.bottom + 4}px`;
-        menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
+        menu.style.top = `${menuTop}px`;
+        menu.style.left = `${menuLeft}px`;
         menu.style.right = 'auto';
         menu.style.zIndex = '999999';
+        menu.style.maxHeight = '300px';
+        menu.style.overflowY = 'auto';
         
         console.log('🎨 [DEBUG] Menu positioned with styles:', {
           position: menu.style.position,

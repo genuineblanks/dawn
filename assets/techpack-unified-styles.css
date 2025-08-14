@@ -10166,10 +10166,22 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
 /* Design Sample Assignment Container Styling */
 .techpack-design-sample-assignment-container {
   background: #fafbfc;
-  border: 1px solid #e5e7eb;
+  border: 3px solid #ff0000 !important; /* DEBUG: RED BORDER */
   border-radius: 8px;
   padding: 1rem;
   margin-top: 0.75rem;
+  min-height: 100px !important; /* DEBUG: Ensure minimum height */
+  display: block !important; /* DEBUG: Force display */
+}
+
+/* DEBUG: Make Design Sample sections very visible */
+.techpack-stock-design-samples,
+.techpack-custom-design-samples {
+  border: 3px solid #00ff00 !important; /* DEBUG: GREEN BORDER */
+  background: #ffff00 !important; /* DEBUG: YELLOW BACKGROUND */
+  padding: 10px !important;
+  margin: 10px 0 !important;
+  display: block !important; /* Force display */
 }
 
 /* Design Sample Empty State Styling (matches Lab Dip styling) */

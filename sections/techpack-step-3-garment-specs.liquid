@@ -639,6 +639,45 @@ Tech-Pack Step 3: Garment Specifications Section
                   Random Stock Color (we choose)
                 </label>
               </div>
+              
+              <!-- Design Sample Assignment Display for Stock Color Garments ONLY -->
+              <div class="techpack-form__group techpack-stock-design-samples" style="margin-top: 20px;">
+                <label class="techpack-form__label">Design Applications on Stock Fabric for <span class="garment-name-placeholder">this garment</span></label>
+                <div class="techpack-form__help-text" style="font-size: 0.85rem; color: #6b7280; margin-bottom: 0.75rem;">
+                  Apply your designs (embroidery, prints, etc.) to this stock color garment
+                </div>
+                
+                <div class="techpack-design-sample-assignment-container techpack-stock-context" id="stock-design-samples-GARMENT_ID">
+                  <!-- Empty State (shown when no designs assigned) -->
+                  <div class="techpack-design-sample-unified-empty-state" data-design-empty-state="stock">
+                    <div class="techpack-empty-state-content">
+                      <svg class="techpack-empty-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                      <h4 class="techpack-empty-title">No Design Applications Assigned</h4>
+                      <p class="techpack-empty-description">Add your designs (embroidery, screen print, digital print) to this stock fabric garment</p>
+                      <button type="button" class="techpack-design-sample-nav-btn" data-scroll-to-design-samples>
+                        <svg width="10" height="10" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" fill="none">
+                          <path d="M5 12l6-6-6-6"/>
+                        </svg>
+                        Go to Design Samples
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <!-- Assigned State (shown when designs are assigned) -->
+                  <div class="techpack-assigned-design-samples-display" data-design-assigned-state="stock" style="display: none;">
+                    <div class="techpack-assigned-status-header">
+                      <span class="techpack-assigned-design-count">0</span> design applications assigned
+                    </div>
+                    <div class="techpack-assigned-design-samples-grid" data-assigned-design-samples-list="stock">
+                      <!-- Professional design sample cards will be inserted here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div class="techpack-sample-note">
                 <svg width="16" height="16" viewBox="0 0 16 16">
                   <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
@@ -698,6 +737,44 @@ Tech-Pack Step 3: Garment Specifications Section
                   
                   <!-- Legacy support for existing JavaScript -->
                   <div class="techpack-lab-dip-selection" style="display: none;"></div>
+                </div>
+
+                <!-- Design Sample Assignment Display for Custom Color Garments -->
+                <div class="techpack-form__group techpack-custom-design-samples" style="margin-top: 20px;">
+                  <label class="techpack-form__label">Design Applications on Custom Color for <span class="garment-name-placeholder">this garment</span></label>
+                  <div class="techpack-form__help-text" style="font-size: 0.85rem; color: #6b7280; margin-bottom: 0.75rem;">
+                    Apply your designs on your custom dyed fabric (requires Lab Dips above for color approval)
+                  </div>
+                  
+                  <div class="techpack-design-sample-assignment-container techpack-custom-context" id="custom-design-samples-GARMENT_ID">
+                    <!-- Empty State (shown when no designs assigned) -->
+                    <div class="techpack-design-sample-unified-empty-state" data-design-empty-state="custom">
+                      <div class="techpack-empty-state-content">
+                        <svg class="techpack-empty-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <h4 class="techpack-empty-title">No Design Applications on Custom Color</h4>
+                        <p class="techpack-empty-description">Add design applications to be applied on your custom dyed fabric</p>
+                        <button type="button" class="techpack-design-sample-nav-btn" data-scroll-to-design-samples>
+                          <svg width="10" height="10" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M5 12l6-6-6-6"/>
+                          </svg>
+                          Go to Design Samples
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <!-- Assigned State (shown when designs are assigned) -->
+                    <div class="techpack-assigned-design-samples-display" data-design-assigned-state="custom" style="display: none;">
+                      <div class="techpack-assigned-status-header">
+                        <span class="techpack-assigned-design-count">0</span> design applications on custom color
+                      </div>
+                      <div class="techpack-assigned-design-samples-grid" data-assigned-design-samples-list="custom">
+                        <!-- Professional design sample cards will be inserted here -->
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 
                 <div class="techpack-form__error" role="alert"></div>
