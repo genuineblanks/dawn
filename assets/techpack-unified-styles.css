@@ -10163,15 +10163,15 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
   box-shadow: 0 1px 2px rgba(239, 68, 68, 0.2);
 }
 
-/* Design Sample Assignment Container Styling */
+/* Design Sample Assignment Container Styling - Match Lab Dip style */
 .techpack-design-sample-assignment-container {
   background: #fafbfc;
-  border: 3px solid #ff0000 !important; /* DEBUG: RED BORDER */
-  border-radius: 8px;
-  padding: 1rem;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
   margin-top: 0.75rem;
-  min-height: 100px !important; /* DEBUG: Ensure minimum height */
-  display: block !important; /* DEBUG: Force display */
+  min-height: 100px;
+  display: block;
 }
 
 /* Design Sample sections styling */
