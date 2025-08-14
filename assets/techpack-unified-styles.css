@@ -4310,7 +4310,9 @@ button:disabled.techpack-btn {
 }
 
 .techpack-assignment-menu--open {
-  display: block;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .techpack-assignment-menu__section {

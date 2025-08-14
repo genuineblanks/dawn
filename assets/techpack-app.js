@@ -16910,7 +16910,27 @@ setupInitialization();
     
     // Toggle Design Sample assignment menu
     toggleDesignSampleAssignmentMenu(button, menu, designSampleId) {
+      console.log('🚀 [DEBUG] toggleDesignSampleAssignmentMenu CALLED:', { 
+        designSampleId, 
+        buttonExists: !!button, 
+        menuExists: !!menu 
+      });
+      
+      if (!button || !menu) {
+        console.error('❌ [DEBUG] Missing button or menu elements:', { button, menu });
+        return;
+      }
+      
       const isOpen = button.classList.contains('techpack-assignment-btn--open');
+      console.log('🔍 [DEBUG] Current menu state:', {
+        designSampleId,
+        isOpen,
+        buttonClasses: button.className,
+        menuClasses: menu.className,
+        buttonRect: button.getBoundingClientRect(),
+        menuInDOM: document.contains(menu),
+        menuParent: menu.parentElement?.tagName
+      });
       
       debugSystem.log('🎨 Design Sample menu toggle:', {
         designSampleId,
@@ -16920,16 +16940,28 @@ setupInitialization();
       });
       
       // Close all other menus
-      document.querySelectorAll('.techpack-assignment-btn--open').forEach(btn => {
+      const openButtons = document.querySelectorAll('.techpack-assignment-btn--open');
+      const openMenus = document.querySelectorAll('.techpack-assignment-menu--open');
+      console.log('🧹 [DEBUG] Closing other menus:', { 
+        openButtonsCount: openButtons.length, 
+        openMenusCount: openMenus.length 
+      });
+      
+      openButtons.forEach(btn => {
+        console.log('🚫 [DEBUG] Closing button:', btn.dataset.designSampleId);
         btn.classList.remove('techpack-assignment-btn--open');
       });
-      document.querySelectorAll('.techpack-assignment-menu--open').forEach(menu => {
+      openMenus.forEach(menu => {
+        console.log('🚫 [DEBUG] Closing menu:', menu.dataset.designSampleId);
         menu.classList.remove('techpack-assignment-menu--open');
       });
       
       if (!isOpen) {
+        console.log('📂 [DEBUG] Opening menu for:', designSampleId);
+        
         // Rebuild menu with current garments before opening
         if (designSampleId && this.globalDesignSamples.has(designSampleId)) {
+          console.log('🔄 [DEBUG] Rebuilding menu content...');
           const designSample = this.globalDesignSamples.get(designSampleId);
           
           // Update menu content with current data
@@ -16940,29 +16972,77 @@ setupInitialization();
           
           // Replace old menu with new one
           if (menu && newMenu) {
+            console.log('✅ [DEBUG] Menu content updated');
             menu.innerHTML = newMenu.innerHTML;
+          } else {
+            console.error('❌ [DEBUG] Failed to update menu content:', { menu: !!menu, newMenu: !!newMenu });
           }
+        } else {
+          console.error('❌ [DEBUG] Design sample not found or invalid ID:', { 
+            designSampleId, 
+            hasDesignSample: this.globalDesignSamples.has(designSampleId) 
+          });
         }
         
+        console.log('🎯 [DEBUG] Adding open classes...');
         button.classList.add('techpack-assignment-btn--open');
         menu.classList.add('techpack-assignment-menu--open');
         
+        console.log('📋 [DEBUG] Classes after adding:', {
+          buttonClasses: button.className,
+          menuClasses: menu.className
+        });
+        
         // Move menu to document.body to escape stacking context and position it
         if (!menu.dataset.movedToBody) {
+          console.log('📦 [DEBUG] Moving menu to document.body...');
           menu.dataset.movedToBody = 'true';
           document.body.appendChild(menu);
+          console.log('✅ [DEBUG] Menu moved to body, parent now:', menu.parentElement?.tagName);
+        } else {
+          console.log('📍 [DEBUG] Menu already in document.body');
         }
         
         // Position the menu relative to the button
         const buttonRect = button.getBoundingClientRect();
+        console.log('📐 [DEBUG] Positioning menu:', {
+          buttonRect: {
+            top: buttonRect.top,
+            bottom: buttonRect.bottom,
+            left: buttonRect.left,
+            right: buttonRect.right,
+            width: buttonRect.width,
+            height: buttonRect.height
+          },
+          calculatedTop: buttonRect.bottom + 4,
+          calculatedLeft: buttonRect.right - 250
+        });
+        
         menu.style.position = 'fixed';
         menu.style.top = `${buttonRect.bottom + 4}px`;
         menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
         menu.style.right = 'auto';
         menu.style.zIndex = '999999';
         
+        console.log('🎨 [DEBUG] Menu positioned with styles:', {
+          position: menu.style.position,
+          top: menu.style.top,
+          left: menu.style.left,
+          zIndex: menu.style.zIndex,
+          display: getComputedStyle(menu).display,
+          visibility: getComputedStyle(menu).visibility,
+          opacity: getComputedStyle(menu).opacity
+        });
+        
         // Check if menu content exists
         const menuItems = menu.querySelectorAll('.techpack-assignment-menu__item');
+        console.log('🔍 [DEBUG] Menu content validation:', {
+          hasItems: menuItems.length > 0,
+          itemCount: menuItems.length,
+          menuInnerHTML: menu.innerHTML.substring(0, 300) + '...',
+          computedDisplay: getComputedStyle(menu).display,
+          hasOpenClass: menu.classList.contains('techpack-assignment-menu--open')
+        });
         
         debugSystem.log('🎨 Design Sample assignment menu opened:', { 
           designSampleId, 
@@ -16993,19 +17073,38 @@ setupInitialization();
           }
         });
       } else {
+        console.log('🚫 [DEBUG] Closing menu for:', designSampleId);
         debugSystem.log('🎨 Design Sample assignment menu closed:', { designSampleId });
       }
+      
+      console.log('✅ [DEBUG] toggleDesignSampleAssignmentMenu COMPLETED for:', designSampleId);
     }
     
     // Handle Design Sample assignment menu actions
     handleDesignSampleAssignmentMenuAction(designSampleId, garmentId) {
+      console.log('🎯 [DEBUG] handleDesignSampleAssignmentMenuAction CALLED:', { 
+        designSampleId, 
+        garmentId 
+      });
+      
       const designSample = this.globalDesignSamples.get(designSampleId);
       if (!designSample) {
+        console.error('❌ [DEBUG] Design Sample not found:', designSampleId);
         debugSystem.log('❌ Design Sample not found for assignment:', designSampleId);
         return;
       }
       
+      console.log('🔍 [DEBUG] Design Sample found:', {
+        name: designSample.name,
+        type: designSample.type,
+        assignmentsCount: designSample.assignments ? designSample.assignments.size : 0
+      });
+      
       const isCurrentlyAssigned = designSample.assignments && designSample.assignments.has(garmentId);
+      console.log('📋 [DEBUG] Assignment status:', { 
+        isCurrentlyAssigned,
+        hasAssignments: !!designSample.assignments 
+      });
       
       debugSystem.log('🎨 Design Sample assignment action:', {
         designSampleId,
@@ -17015,19 +17114,44 @@ setupInitialization();
       });
       
       if (isCurrentlyAssigned) {
+        console.log('➖ [DEBUG] Unassigning design sample from garment...');
         // Unassign the design sample from this garment
         this.unassignFromGarment(designSampleId, garmentId);
       } else {
+        console.log('➕ [DEBUG] Assigning design sample to garment...');
         // Assign the design sample to this garment
         this.assignToGarment(designSampleId, garmentId);
       }
       
       // Close the menu after action
+      console.log('🚫 [DEBUG] Closing menu after assignment action...');
       const assignmentButton = document.querySelector(`[data-design-sample-id="${designSampleId}"].techpack-assignment-btn`);
-      const assignmentMenu = assignmentButton?.parentElement?.querySelector('.techpack-assignment-menu');
       
-      if (assignmentButton) assignmentButton.classList.remove('techpack-assignment-btn--open');
-      if (assignmentMenu) assignmentMenu.classList.remove('techpack-assignment-menu--open');
+      // Find the menu - first try parent element, then body
+      let assignmentMenu = assignmentButton?.parentElement?.querySelector('.techpack-assignment-menu');
+      if (!assignmentMenu) {
+        // Menu might have been moved to body, find it by data attribute
+        assignmentMenu = document.querySelector(`.techpack-assignment-menu[data-design-sample-id="${designSampleId}"]`);
+      }
+      
+      console.log('🔍 [DEBUG] Menu close elements:', {
+        assignmentButton: !!assignmentButton,
+        assignmentMenu: !!assignmentMenu,
+        menuFoundInParent: !!assignmentButton?.parentElement?.querySelector('.techpack-assignment-menu'),
+        menuFoundInBody: !!document.querySelector(`.techpack-assignment-menu[data-design-sample-id="${designSampleId}"]`),
+        buttonSelector: `[data-design-sample-id="${designSampleId}"].techpack-assignment-btn`
+      });
+      
+      if (assignmentButton) {
+        console.log('🚫 [DEBUG] Removing open class from button');
+        assignmentButton.classList.remove('techpack-assignment-btn--open');
+      }
+      if (assignmentMenu) {
+        console.log('🚫 [DEBUG] Removing open class from menu');
+        assignmentMenu.classList.remove('techpack-assignment-menu--open');
+      }
+      
+      console.log('✅ [DEBUG] handleDesignSampleAssignmentMenuAction COMPLETED');
     }
     
     // Setup click outside handler to close assignment menus
@@ -17064,10 +17188,20 @@ setupInitialization();
       }
       
       // Find the Design Sample assignment elements (both stock and custom versions)
-      const designEmptyStates = garment.querySelectorAll('[data-design-empty-state]');
-      const assignedDesignSamplesDisplays = garment.querySelectorAll('.techpack-assigned-design-samples-display');
+      const stockEmptyState = garment.querySelector('[data-design-empty-state="stock"]');
+      const customEmptyState = garment.querySelector('[data-design-empty-state="custom"]');
+      const stockAssignedDisplay = garment.querySelector('[data-design-assigned-state="stock"]');
+      const customAssignedDisplay = garment.querySelector('[data-design-assigned-state="custom"]');
       
-      if (designEmptyStates.length === 0 || assignedDesignSamplesDisplays.length === 0) {
+      console.log('🔍 [DEBUG] Design Sample elements found:', {
+        stockEmptyState: !!stockEmptyState,
+        customEmptyState: !!customEmptyState,
+        stockAssignedDisplay: !!stockAssignedDisplay,
+        customAssignedDisplay: !!customAssignedDisplay
+      });
+      
+      // Check if we have at least one valid combination
+      if ((!stockEmptyState && !customEmptyState) || (!stockAssignedDisplay && !customAssignedDisplay)) {
         debugSystem.log('❌ Design Sample assignment elements not found for garment:', garmentId);
         return;
       }
@@ -17086,48 +17220,88 @@ setupInitialization();
       
       debugSystem.log(`🎨 Garment ${garmentId}: Found ${assignedDesignSamples.length} assigned design samples`, assignedDesignSamples);
       
-      // Update all Design Sample display containers in this garment
-      designEmptyStates.forEach((emptyState, index) => {
-        const assignedDisplay = assignedDesignSamplesDisplays[index];
-        if (!assignedDisplay) return;
-        
-        if (assignedDesignSamples.length === 0) {
-          // Show empty state
-          emptyState.style.display = 'flex';
-          assignedDisplay.style.display = 'none';
-        } else {
-          // Show assigned design samples
-          emptyState.style.display = 'none';
-          assignedDisplay.style.display = 'block';
-          
-          // Update count in header
-          const countSpan = assignedDisplay.querySelector('.techpack-assigned-design-count');
-          if (countSpan) {
-            countSpan.textContent = assignedDesignSamples.length;
-          }
-          
-          // Clear existing design sample cards
-          const designGrid = assignedDisplay.querySelector('.techpack-assigned-design-samples-grid');
-          if (designGrid) {
-            designGrid.innerHTML = '';
-            
-            // Create professional design sample cards for each assigned design sample
-            assignedDesignSamples.forEach((designSample) => {
-              const designCard = this.createDesignSampleCard(designSample, garmentId);
-              if (designCard) {
-                designGrid.appendChild(designCard);
-              }
-            });
-          }
-        }
+      // Update Stock Color Design Sample display (if present)
+      if (stockEmptyState && stockAssignedDisplay) {
+        console.log('🏪 [DEBUG] Updating Stock Color Design Sample display');
+        this.updateDesignSampleDisplaySection(
+          stockEmptyState, 
+          stockAssignedDisplay, 
+          assignedDesignSamples, 
+          garmentId, 
+          'stock'
+        );
+      }
+      
+      // Update Custom Color Design Sample display (if present)  
+      if (customEmptyState && customAssignedDisplay) {
+        console.log('🎨 [DEBUG] Updating Custom Color Design Sample display');
+        this.updateDesignSampleDisplaySection(
+          customEmptyState, 
+          customAssignedDisplay, 
+          assignedDesignSamples, 
+          garmentId, 
+          'custom'
+        );
+      }
+    }
+
+    // Helper method to update a specific Design Sample display section
+    updateDesignSampleDisplaySection(emptyState, assignedDisplay, assignedDesignSamples, garmentId, context) {
+      console.log(`📋 [DEBUG] updateDesignSampleDisplaySection for ${context}:`, {
+        assignedCount: assignedDesignSamples.length,
+        context,
+        garmentId
       });
+      
+      if (assignedDesignSamples.length === 0) {
+        // Show empty state
+        console.log(`📭 [DEBUG] Showing empty state for ${context}`);
+        emptyState.style.display = 'flex';
+        assignedDisplay.style.display = 'none';
+      } else {
+        // Show assigned design samples
+        console.log(`📚 [DEBUG] Showing ${assignedDesignSamples.length} assigned samples for ${context}`);
+        emptyState.style.display = 'none';
+        assignedDisplay.style.display = 'block';
+        
+        // Update count in header
+        const countSpan = assignedDisplay.querySelector('.techpack-assigned-design-count');
+        if (countSpan) {
+          countSpan.textContent = assignedDesignSamples.length;
+          console.log(`🔢 [DEBUG] Updated ${context} count to ${assignedDesignSamples.length}`);
+        }
+        
+        // Clear existing design sample cards
+        const designGrid = assignedDisplay.querySelector('.techpack-assigned-design-samples-grid');
+        if (designGrid) {
+          designGrid.innerHTML = '';
+          console.log(`🧹 [DEBUG] Cleared existing ${context} cards`);
+          
+          // Create professional design sample cards for each assigned design sample
+          assignedDesignSamples.forEach((designSample, index) => {
+            const designCard = this.createDesignSampleCard(designSample, garmentId, context);
+            if (designCard) {
+              designGrid.appendChild(designCard);
+              console.log(`➕ [DEBUG] Added ${context} card ${index + 1}:`, designSample.name);
+            }
+          });
+        }
+      }
     }
 
     // Create a professional design sample card for garment displays
-    createDesignSampleCard(designSample, garmentId) {
+    createDesignSampleCard(designSample, garmentId, context = 'default') {
+      console.log(`🎨 [DEBUG] Creating design sample card:`, { 
+        name: designSample.name, 
+        type: designSample.type, 
+        context, 
+        garmentId 
+      });
+      
       const card = document.createElement('div');
-      card.className = 'techpack-assigned-design-card';
+      card.className = `techpack-assigned-design-card techpack-design-card-${context}`;
       card.dataset.designSampleId = designSample.id;
+      card.dataset.context = context;
       
       card.innerHTML = `
         <div class="techpack-design-card-header">
