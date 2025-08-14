@@ -17033,109 +17033,19 @@ setupInitialization();
           menuClasses: menu.className
         });
         
-        // Move menu to document.body to escape stacking context and position it
+        // Move menu to document.body to escape stacking context (simple Lab Dip approach)
         if (!menu.dataset.movedToBody) {
-          console.log('📦 [DEBUG] Moving menu to document.body...');
           menu.dataset.movedToBody = 'true';
           document.body.appendChild(menu);
-          console.log('✅ [DEBUG] Menu moved to body, parent now:', menu.parentElement?.tagName);
-        } else {
-          console.log('📍 [DEBUG] Menu already in document.body');
         }
         
-        // Position the menu relative to the button
+        // Always update position when opening (in case of scroll) - exact Lab Dip approach
         const buttonRect = button.getBoundingClientRect();
-        const menuWidth = 250;
-        const menuHeight = 300; // Approximate max height
-        const spacing = 4;
-        
-        // Calculate position with viewport boundaries
-        let menuTop = buttonRect.bottom + spacing;
-        let menuLeft = buttonRect.right - menuWidth;
-        
-        // Check if menu would go off bottom of screen
-        if (menuTop + menuHeight > window.innerHeight) {
-          // Position above button instead
-          menuTop = buttonRect.top - menuHeight - spacing;
-          console.log('📍 [DEBUG] Menu would go off-screen bottom, positioning above button');
-        }
-        
-        // Check if menu would go off right edge
-        if (menuLeft + menuWidth > window.innerWidth) {
-          menuLeft = window.innerWidth - menuWidth - 10;
-          console.log('📍 [DEBUG] Menu would go off-screen right, adjusting left position');
-        }
-        
-        // Check if menu would go off left edge
-        if (menuLeft < 10) {
-          menuLeft = 10;
-          console.log('📍 [DEBUG] Menu would go off-screen left, adjusting to minimum');
-        }
-        
-        console.log('📐 [DEBUG] Positioning menu:', {
-          buttonRect: {
-            top: buttonRect.top,
-            bottom: buttonRect.bottom,
-            left: buttonRect.left,
-            right: buttonRect.right,
-            width: buttonRect.width,
-            height: buttonRect.height
-          },
-          calculatedTop: menuTop,
-          calculatedLeft: menuLeft,
-          viewport: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            scrollY: window.scrollY
-          }
-        });
-        
         menu.style.position = 'fixed';
-        menu.style.top = `${menuTop}px`;
-        menu.style.left = `${menuLeft}px`;
+        menu.style.top = `${buttonRect.bottom + 4}px`;
+        menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
         menu.style.right = 'auto';
-        menu.style.zIndex = '999999';
-        menu.style.maxHeight = '300px';
-        menu.style.overflowY = 'auto';
         
-        // DEBUG: Add high visibility styles using setProperty with important flag
-        menu.style.setProperty('background-color', '#ff0000', 'important');
-        menu.style.setProperty('border', '5px solid #00ff00', 'important'); 
-        menu.style.setProperty('box-shadow', '0 0 20px #ff00ff', 'important');
-        menu.style.setProperty('display', 'block', 'important');
-        menu.style.setProperty('visibility', 'visible', 'important');
-        menu.style.setProperty('opacity', '1', 'important');
-        menu.style.setProperty('width', '300px', 'important');
-        menu.style.setProperty('height', 'auto', 'important');
-        menu.style.setProperty('min-height', '100px', 'important');
-        
-        // Also inject global CSS as backup
-        const debugStyleId = 'design-sample-debug-styles';
-        if (!document.getElementById(debugStyleId)) {
-          const style = document.createElement('style');
-          style.id = debugStyleId;
-          style.innerHTML = `
-            .techpack-assignment-menu[data-design-sample-id] {
-              background-color: #ff0000 !important;
-              border: 5px solid #00ff00 !important;
-              box-shadow: 0 0 20px #ff00ff !important;
-              display: block !important;
-              visibility: visible !important;
-              opacity: 1 !important;
-              width: 300px !important;
-              min-height: 100px !important;
-              z-index: 999999 !important;
-            }
-            .techpack-assignment-menu--open[data-design-sample-id] {
-              display: block !important;
-              visibility: visible !important;
-              opacity: 1 !important;
-            }
-          `;
-          document.head.appendChild(style);
-        }
-        
-        console.log('🚨 [DEBUG] Applied high visibility styles using setProperty + CSS injection');
         
         console.log('🎨 [DEBUG] Menu positioned with styles:', {
           position: menu.style.position,
@@ -17278,10 +17188,7 @@ setupInitialization();
         }
       });
 
-      // Add scroll event listener to close menus when scrolling
-      document.addEventListener('scroll', () => {
-        this.closeAllDesignSampleAssignmentMenus();
-      });
+      // Removed scroll event listener - it was causing duplicate menus
     }
 
     // Update a single garment's Design Sample assignment display
