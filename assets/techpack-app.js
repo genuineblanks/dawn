@@ -17047,87 +17047,22 @@ setupInitialization();
         menu.style.right = 'auto';
         menu.style.zIndex = '999999';
         
-        // CSS DEBUGGING - Force menu visibility AND FIXED POSITIONING
-        menu.style.setProperty('background-color', '#ff0000', 'important');
-        menu.style.setProperty('border', '3px solid #00ff00', 'important');
+        // ESSENTIAL MENU VISIBILITY - Keep the important styles but make them normal colors
+        menu.style.setProperty('background-color', '#ffffff', 'important');
+        menu.style.setProperty('border', '2px solid #e5e7eb', 'important');
+        menu.style.setProperty('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)', 'important');
         menu.style.setProperty('display', 'block', 'important');
         menu.style.setProperty('visibility', 'visible', 'important');
         menu.style.setProperty('opacity', '1', 'important');
         menu.style.setProperty('width', '250px', 'important');
         menu.style.setProperty('height', 'auto', 'important');
-        
-        // FORCE POSITION FIXED - this is the key issue!
         menu.style.setProperty('position', 'fixed', 'important');
         menu.style.setProperty('z-index', '999999', 'important');
-        
-        // Log computed styles for debugging
-        const computedStyles = getComputedStyle(menu);
-        console.log('🐛 [CSS DEBUG] Menu computed styles:', {
-          display: computedStyles.display,
-          visibility: computedStyles.visibility,
-          opacity: computedStyles.opacity,
-          backgroundColor: computedStyles.backgroundColor,
-          border: computedStyles.border,
-          position: computedStyles.position,
-          top: computedStyles.top,
-          left: computedStyles.left,
-          zIndex: computedStyles.zIndex,
-          width: computedStyles.width,
-          height: computedStyles.height
-        });
-        
-        // Log menu classes and attributes
-        console.log('🐛 [CSS DEBUG] Menu element info:', {
-          className: menu.className,
-          id: menu.id,
-          tagName: menu.tagName,
-          innerHTML: menu.innerHTML.length + ' chars',
-          parentElement: menu.parentElement?.tagName,
-          inDocument: document.contains(menu)
-        });
-        
-        // CRITICAL DEBUG: Check if position: fixed is actually applied
-        console.log('🚨 [POSITION DEBUG] Position analysis:', {
-          setPosition: menu.style.position,
-          computedPosition: computedStyles.position,
-          setTop: menu.style.top,
-          computedTop: computedStyles.top,
-          setLeft: menu.style.left,
-          computedLeft: computedStyles.left,
-          isInBody: menu.parentElement === document.body,
-          parentTag: menu.parentElement?.tagName,
-          bodyContains: document.body.contains(menu)
-        });
-        
-        // Check for CSS conflicts
-        console.log('🔍 [CSS CONFLICTS] Checking for overrides:', {
-          hasTransform: computedStyles.transform !== 'none',
-          transform: computedStyles.transform,
-          overflow: computedStyles.overflow,
-          position: computedStyles.position,
-          willChange: computedStyles.willChange
-        });
+        menu.style.setProperty('border-radius', '4px', 'important');
         
         
-        console.log('🎨 [DEBUG] Menu positioned with styles:', {
-          position: menu.style.position,
-          top: menu.style.top,
-          left: menu.style.left,
-          zIndex: menu.style.zIndex,
-          display: getComputedStyle(menu).display,
-          visibility: getComputedStyle(menu).visibility,
-          opacity: getComputedStyle(menu).opacity
-        });
         
-        // Check if menu content exists
-        const menuItems = menu.querySelectorAll('.techpack-assignment-menu__item');
-        console.log('🔍 [DEBUG] Menu content validation:', {
-          hasItems: menuItems.length > 0,
-          itemCount: menuItems.length,
-          menuInnerHTML: menu.innerHTML.substring(0, 300) + '...',
-          computedDisplay: getComputedStyle(menu).display,
-          hasOpenClass: menu.classList.contains('techpack-assignment-menu--open')
-        });
+        
         
         debugSystem.log('🎨 Design Sample assignment menu opened:', { 
           designSampleId, 
