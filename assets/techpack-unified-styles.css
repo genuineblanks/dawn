@@ -1,19 +1,6 @@
 /* TECHPACK UNIFIED STYLES - Single Source of Truth */
 /* Clean, consistent black/grey/white design that works perfectly on desktop and mobile */
 
-/* SAMPLE CARD DESIGN SYSTEM - Custom Properties */
-:root {
-  --sample-card-border-radius: 16px;
-  --sample-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --sample-card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --sample-card-shadow-selected: 0 20px 25px -5px rgba(30, 41, 59, 0.1), 0 10px 10px -5px rgba(30, 41, 59, 0.04);
-  --sample-meta-fast-bg: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-  --sample-meta-fast-border: #bbf7d0;
-  --sample-meta-fast-text: #166534;
-  --sample-meta-custom-bg: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
-  --sample-meta-custom-border: #bfdbfe;
-  --sample-meta-custom-text: #1e40af;
-}
 
 /* REQUEST TYPE FIELD VISIBILITY - UPDATED */
 /* Default: Show quotation/sample fields, hide bulk fields */
@@ -2921,21 +2908,6 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 .techpack-sample-type-selection {
   margin-bottom: 2rem;
   display: none; /* Hidden by default, shown by JavaScript when prerequisites are met */
-  position: relative;
-}
-
-/* Container for the sample cards grid */
-.techpack-sample-type-selection > div {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .techpack-sample-type-selection > div {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 /* Section titles with futuristic styling */
@@ -2960,20 +2932,15 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
   border-radius: 1px;
 }
 
-/* Modern Sample Cards with Beautiful Design */
+/* Simple Working Sample Cards */
 .techpack-sample-card {
   position: relative;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: #ffffff;
   border: 2px solid #e2e8f0;
-  border-radius: var(--sample-card-border-radius);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--sample-card-shadow);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 280px;
-  cursor: pointer;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .techpack-sample-card--error {
@@ -2992,10 +2959,9 @@ SAMPLE REQUEST INTERFACE - FUTURISTIC DESIGN
 }
 
 .techpack-sample-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sample-card-shadow-hover);
-  border-color: #94a3b8;
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #cbd5e1;
 }
 
 .techpack-sample-card:hover::before {
@@ -3374,33 +3340,30 @@ button:disabled.techpack-btn {
   flex-shrink: 0;
 }
 
-/* Selected state with elegant modern styling */
+/* Selected state */
 .techpack-sample-card:has(.techpack-sample-radio:checked) {
-  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  background: #f8fafc;
   border-color: #1e293b;
   border-width: 2px;
-  box-shadow: var(--sample-card-shadow-selected), 0 0 0 1px rgba(59, 130, 246, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .techpack-sample-card:has(.techpack-sample-radio:checked)::after {
   content: '✓';
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 26px;
-  height: 26px;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  background: #1e293b;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   z-index: 2;
-  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.3);
-  animation: scaleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @keyframes scaleIn {
@@ -3408,14 +3371,11 @@ button:disabled.techpack-btn {
   100% { transform: scale(1); }
 }
 
-/* Card header with improved spacing */
+/* Card header */
 .techpack-sample-card-header {
   padding: 1.5rem;
   position: relative;
   z-index: 2;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Hide native radio button */
@@ -3431,16 +3391,13 @@ button:disabled.techpack-btn {
   user-select: none;
 }
 
-/* Card title with better typography */
+/* Card title */
 .techpack-sample-card-title {
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 0.75rem 0;
+  color: #334155;
+  margin: 0 0 0.5rem 0;
   line-height: 1.3;
-  letter-spacing: -0.01em;
-  font-family: var(--techpack-font-family);
-  padding-right: 3rem; /* Space for checkmark */
 }
 
 /* Selected card title gets darker color */
@@ -3448,58 +3405,32 @@ button:disabled.techpack-btn {
   color: #1e293b;
 }
 
-/* Meta information (timing and price) with color coding */
+/* Meta information (timing and price) */
 .techpack-sample-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-  color: #166534;
-  border: 1px solid #bbf7d0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.375rem 0.75rem;
-  border-radius: 20px;
-  margin-bottom: 0.75rem;
-  font-family: var(--techpack-font-family);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Custom color sample gets different styling */
-.techpack-sample-card[data-sample-type="custom"] .techpack-sample-meta {
-  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
-  color: #1e40af;
-  border-color: #bfdbfe;
-}
-
-/* Add small icon before meta text */
-.techpack-sample-meta::before {
-  content: '⚡';
-  font-size: 0.75rem;
-}
-
-.techpack-sample-card[data-sample-type="custom"] .techpack-sample-meta::before {
-  content: '🎨';
-}
-
-/* Description text with better readability */
-.techpack-sample-description {
-  color: #475569;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin: 0 0 0.75rem 0;
-  flex: 1;
-}
-
-/* Subtitle with better visual hierarchy */
-.techpack-sample-subtitle {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.08);
   color: #64748b;
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+/* Description text */
+.techpack-sample-description {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+/* Subtitle */
+.techpack-sample-subtitle {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-style: italic;
   margin: 0;
-  font-weight: 500;
-  opacity: 0.8;
 }
 
 /* Expandable options section */
@@ -7505,39 +7436,12 @@ UNIFIED COLOR PICKER STYLING
    ========================================== */
 
 @media (max-width: 768px) {
-  /* Mobile grid layout - stack cards */
-  .techpack-sample-type-selection > div {
-    grid-template-columns: 1fr !important;
-    gap: 1rem;
-  }
-
-  /* Reduce padding on mobile */
   .techpack-sample-card-header {
     padding: 1.25rem 1rem;
   }
 
   .techpack-sample-options {
     padding: 1.25rem 1rem;
-  }
-
-  /* Smaller cards on mobile */
-  .techpack-sample-card {
-    min-height: 240px;
-  }
-
-  /* Adjust title size */
-  .techpack-sample-card-title {
-    font-size: 1rem;
-    padding-right: 2.5rem;
-  }
-
-  /* Adjust checkmark position */
-  .techpack-sample-card:has(.techpack-sample-radio:checked)::after {
-    top: 16px;
-    right: 16px;
-    width: 22px;
-    height: 22px;
-    font-size: 12px;
   }
 
   .techpack-lab-dips-section {
@@ -7631,7 +7535,6 @@ UNIFIED COLOR PICKER STYLING
 }
 
 @media (max-width: 480px) {
-  /* Very small screens - ultra compact */
   .techpack-sample-card-header {
     padding: 1rem 0.75rem;
   }
@@ -7640,18 +7543,8 @@ UNIFIED COLOR PICKER STYLING
     padding: 1rem 0.75rem;
   }
 
-  /* Even smaller cards on very small screens */
-  .techpack-sample-card {
-    min-height: 220px;
-  }
-
   .techpack-sample-card-title {
-    font-size: 0.95rem;
-  }
-
-  .techpack-sample-meta {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
+    font-size: 1rem;
   }
 
   .techpack-lab-dips-section {

@@ -515,7 +515,10 @@ document.addEventListener('DOMContentLoaded', function() {
               <div class="lab-cart-color-circle" style="background: ${swatch.color}"></div>
             </div>
             <div class="lab-cart-item-details">
-              <div class="lab-cart-item-name">${swatch.pantone}</div>
+              <div class="lab-cart-item-name">
+                <div class="lab-cart-color-preview" style="background: ${swatch.color}"></div>
+                ${swatch.pantone}
+              </div>
               <div class="lab-cart-item-type">Color Picker</div>
             </div>
             <div class="lab-cart-item-assign">
@@ -641,32 +644,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Quick Colors Grid */
+/* Quick Colors Grid - Dark Theme */
 .lab-quick-colors {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .lab-quick-color-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .lab-quick-color {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 2px solid transparent;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid var(--lab-dark-border);
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .lab-quick-color:hover {
-  transform: scale(1.1);
-  border-color: var(--lab-primary);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: none;
+  border-color: var(--lab-dark-text-tertiary);
+  box-shadow: 0 0 0 2px rgba(163, 163, 163, 0.3);
 }
 
 /* Toast Styles */
