@@ -4082,6 +4082,7 @@ button:disabled.techpack-btn {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
   position: relative;
+  z-index: 999997;
 }
 
 /* Non-selected items - more muted/greyish appearance */
@@ -4216,7 +4217,7 @@ button:disabled.techpack-btn {
 
 .techpack-assignment-dropdown {
   position: relative;
-  z-index: 10001;
+  z-index: 999998;
 }
 
 .techpack-assignment-btn {
@@ -4261,7 +4262,7 @@ button:disabled.techpack-btn {
   border: 1px solid rgba(229, 231, 235, 0.8);
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  z-index: 10001;
+  z-index: 999999;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
@@ -4529,7 +4530,7 @@ button:disabled.techpack-btn {
     bottom: 20px;
     left: 20px;
     right: 20px;
-    z-index: 10003;
+    z-index: 999999;
     max-width: none;
   }
 }
