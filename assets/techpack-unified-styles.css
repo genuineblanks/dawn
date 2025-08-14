@@ -4523,8 +4523,8 @@ button:disabled.techpack-btn {
     bottom: 20px;
     left: 20px;
     right: 20px;
-    z-index: 100;
-    max-width: none;
+    width: auto;
+    z-index: 999;
   }
 }
 
