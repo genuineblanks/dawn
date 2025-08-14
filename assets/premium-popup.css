@@ -1,0 +1,313 @@
+/* ==============================================
+   PREMIUM POPUP STYLES - GENUINEBLANKS LUXURY DESIGN
+   ============================================== */
+
+/* CSS Custom Properties - Matching TechPack System */
+:root {
+  --popup-primary: #000000;
+  --popup-primary-hover: #1a1a1a;
+  --popup-secondary: #6b7280;
+  --popup-bg: #ffffff;
+  --popup-bg-overlay: rgba(0, 0, 0, 0.1);
+  --popup-border: #e5e7eb;
+  --popup-text: #111827;
+  --popup-text-secondary: #6b7280;
+  --popup-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --popup-transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --popup-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ==============================================
+   POPUP OVERLAY & CONTAINER
+   ============================================== */
+
+.premium-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--popup-bg-overlay);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 8999;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--popup-transition);
+  pointer-events: none;
+}
+
+.premium-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.premium-popup {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 800px;
+  background: var(--popup-bg);
+  border-radius: 24px 24px 0 0;
+  box-shadow: var(--popup-shadow);
+  transition: var(--popup-transition);
+  z-index: 10000;
+  margin: 0 1rem;
+  overflow: hidden;
+}
+
+.premium-popup.active {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==============================================
+   POPUP CONTENT STRUCTURE
+   ============================================== */
+
+.premium-popup__content {
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.premium-popup__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--popup-transition);
+  color: var(--popup-text-secondary);
+}
+
+.premium-popup__close:hover {
+  background: var(--popup-border);
+  color: var(--popup-text);
+  transform: scale(1.1);
+}
+
+.premium-popup__close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ==============================================
+   TYPOGRAPHY - MATCHING LUXURY SYSTEM
+   ============================================== */
+
+.premium-popup__title {
+  font-family: var(--popup-font-family);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--popup-text);
+  margin-bottom: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.premium-popup__subtitle {
+  font-family: var(--popup-font-family);
+  font-size: 1rem;
+  color: var(--popup-text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==============================================
+   PREMIUM BUTTON STYLING
+   ============================================== */
+
+.premium-popup__cta {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: var(--popup-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 0;
+  font-family: var(--popup-font-family);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: var(--popup-transition);
+  border: 2px solid var(--popup-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-popup__cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.premium-popup__cta:hover {
+  background: transparent;
+  color: var(--popup-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.premium-popup__cta:hover::before {
+  left: 100%;
+}
+
+.premium-popup__cta:active {
+  transform: translateY(0);
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+@media screen and (max-width: 768px) {
+  .premium-popup {
+    margin: 0;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .premium-popup__content {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+  
+  .premium-popup__title {
+    font-size: 1.5rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .premium-popup__subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.3px;
+  }
+  
+  .premium-popup__cta {
+    padding: 1rem 2rem;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .premium-popup__content {
+    padding: 1.5rem 1rem 1rem;
+  }
+  
+  .premium-popup__title {
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+  }
+  
+  .premium-popup__subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.2px;
+  }
+  
+  .premium-popup__cta {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* ==============================================
+   ANIMATION ENHANCEMENTS
+   ============================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.premium-popup.active .premium-popup__title {
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.premium-popup.active .premium-popup__subtitle {
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.premium-popup.active .premium-popup__cta {
+  animation: fadeInUp 0.8s ease 0.6s both;
+}
+
+/* ==============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-popup-overlay,
+  .premium-popup,
+  .premium-popup__close,
+  .premium-popup__cta {
+    transition: none;
+  }
+  
+  .premium-popup.active .premium-popup__title,
+  .premium-popup.active .premium-popup__subtitle,
+  .premium-popup.active .premium-popup__cta {
+    animation: none;
+  }
+}
+
+/* Focus states for accessibility */
+.premium-popup__close:focus,
+.premium-popup__cta:focus {
+  outline: 2px solid var(--popup-primary);
+  outline-offset: 2px;
+}
+
+/* ==============================================
+   PREMIUM VISUAL ENHANCEMENTS
+   ============================================== */
+
+.premium-popup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--popup-primary), var(--popup-secondary), var(--popup-primary));
+}
+
+/* Subtle texture overlay */
+.premium-popup__content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+  pointer-events: none;
+}
