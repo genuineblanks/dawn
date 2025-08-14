@@ -92,7 +92,7 @@
 .lab-dips-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--lab-accent) !important;
+  color: var(--lab-accent) ;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -101,7 +101,7 @@
 
 .lab-dips-subtitle {
   font-size: 1rem;
-  color: var(--lab-text-secondary) !important;
+  color: var(--lab-text-secondary) ;
   font-weight: 400;
   max-width: 600px;
   margin: 0 auto;
@@ -1274,7 +1274,7 @@
 
 /* Progress bar and container dark theme fixes */
 .techpack-progress {
-  background: var(--lab-bg-secondary) !important;
+  background: var(--lab-bg-secondary) ;
   padding: 16px 24px;
   border-radius: var(--lab-radius-md);
   margin-bottom: 24px;
@@ -1282,33 +1282,33 @@
 }
 
 .techpack-progress__steps {
-  background: transparent !important;
+  background: transparent ;
 }
 
 .techpack-progress__step-label {
-  color: var(--lab-text-secondary) !important;
+  color: var(--lab-text-secondary) ;
   font-size: 0.75rem;
 }
 
 .techpack-progress__step-circle {
-  background: var(--lab-bg-accent) !important;
-  color: var(--lab-text-primary) !important;
-  border: 2px solid var(--lab-border) !important;
+  background: var(--lab-bg-accent) ;
+  color: var(--lab-text-primary) ;
+  border: 2px solid var(--lab-border) ;
 }
 
 .techpack-progress__step-circle--active {
-  background: var(--lab-accent) !important;
-  color: var(--lab-primary) !important;
-  border-color: var(--lab-accent) !important;
+  background: var(--lab-accent) ;
+  color: var(--lab-primary) ;
+  border-color: var(--lab-accent) ;
 }
 
 .techpack-progress__step--completed .techpack-progress__step-circle {
-  background: var(--lab-accent) !important;
-  color: var(--lab-primary) !important;
+  background: var(--lab-accent) ;
+  color: var(--lab-primary) ;
 }
 
 .techpack-container {
-  background: var(--lab-bg-primary) !important;
+  background: var(--lab-bg-primary) ;
   min-height: 100vh;
 }
 
@@ -1319,46 +1319,46 @@
 
 /* Override forced white backgrounds for lab-dips step only */
 #lab-dips-step-3a.techpack-step {
-  background: var(--lab-bg-primary) !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  background: var(--lab-bg-primary);
+  margin: 0;
+  padding: 0;
 }
 
 #lab-dips-step-3a .techpack-container {
-  background: var(--lab-bg-primary) !important;
+  background: var(--lab-bg-primary);
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 !important;
-  min-height: auto !important;
-  height: auto !important;
+  padding: 0;
+  min-height: auto;
+  height: auto;
 }
 
 #lab-dips-step-3a .techpack-content {
-  background: transparent !important;
-  padding: 1rem 2rem !important;
-  flex: none !important;
-  min-height: auto !important;
-  height: auto !important;
+  background: transparent;
+  padding: 1rem 2rem;
+  flex: none;
+  min-height: auto;
+  height: auto;
 }
 
 /* Progress bar overrides */
 #lab-dips-step-3a .techpack-progress {
-  background: var(--lab-bg-secondary) !important;
-  padding: 16px 24px !important;
+  background: var(--lab-bg-secondary);
+  padding: 16px 24px;
   border-radius: var(--lab-radius-md);
   margin: 16px 24px 24px 24px;
   border: 1px solid var(--lab-border);
 }
 
 #lab-dips-step-3a .techpack-progress__bar {
-  background: var(--lab-bg-tertiary) !important;
+  background: var(--lab-bg-tertiary);
   border-radius: var(--lab-radius-sm);
   height: 4px;
   margin-bottom: 16px;
 }
 
 #lab-dips-step-3a .techpack-progress__fill {
-  background: var(--lab-accent) !important;
+  background: var(--lab-accent);
   height: 100%;
   border-radius: var(--lab-radius-sm);
 }
@@ -1366,7 +1366,7 @@
 /* Header spacing fixes */
 #lab-dips-step-3a .lab-dips-header {
   text-align: center;
-  margin-bottom: 24px !important;
+  margin-bottom: 24px;
   position: relative;
   padding: 0;
 }
@@ -1375,8 +1375,8 @@
 #lab-dips-step-3a .lab-dips-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--lab-accent) !important;
-  margin-bottom: 8px !important;
+  color: var(--lab-accent);
+  margin-bottom: 8px;
   letter-spacing: -0.02em;
   line-height: 1.2;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -1384,10 +1384,10 @@
 
 #lab-dips-step-3a .lab-dips-subtitle {
   font-size: 1rem;
-  color: var(--lab-text-secondary) !important;
+  color: var(--lab-text-secondary);
   font-weight: 400;
   max-width: 600px;
-  margin: 0 auto 0 auto !important;
+  margin: 0 auto 0 auto;
   line-height: 1.5;
 }
 
