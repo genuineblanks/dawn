@@ -8876,6 +8876,7 @@
       
       // Setup lab dip information modal
       this.setupLabDipInfoModal();
+      this.setupDesignSampleInfoModal();
       
       // EXISTING: Keep all your existing setup methods
       this.setupPhoneFormatting();
@@ -12762,6 +12763,43 @@ setupInitialization();
             }
           }
         }
+        
+        // Design Sample assignment button
+        if (e.target.classList.contains('techpack-assignment-btn') && e.target.dataset.designSampleId) {
+          const designSampleId = e.target.dataset.designSampleId;
+          const assignmentMenu = e.target.parentElement.querySelector('.techpack-assignment-menu');
+          
+          debugSystem.log('🎨 Design Sample assignment button clicked:', {
+            designSampleId,
+            buttonElement: e.target,
+            menuElement: assignmentMenu
+          });
+          
+          if (window.globalDesignSampleManager && assignmentMenu) {
+            window.globalDesignSampleManager.toggleDesignSampleAssignmentMenu(e.target, assignmentMenu, designSampleId);
+          }
+          e.stopPropagation();
+        }
+        
+        // Design Sample assignment menu item clicks
+        if (e.target.closest('.techpack-assignment-menu[data-design-sample-id]') && 
+            e.target.closest('.techpack-assignment-menu__item[data-garment-id]')) {
+          const menuItem = e.target.closest('.techpack-assignment-menu__item');
+          const assignmentMenu = e.target.closest('.techpack-assignment-menu');
+          const designSampleId = assignmentMenu.dataset.designSampleId;
+          const garmentId = menuItem.dataset.garmentId;
+          
+          debugSystem.log('🎨 Design Sample assignment menu item clicked:', {
+            designSampleId,
+            garmentId,
+            menuItem
+          });
+          
+          if (window.globalDesignSampleManager) {
+            window.globalDesignSampleManager.handleDesignSampleAssignmentMenuAction(designSampleId, garmentId);
+          }
+          e.stopPropagation();
+        }
 
         // ===============================================
         // COLORWAY-SPECIFIC LAB DIP EVENT HANDLING
@@ -16334,18 +16372,8 @@ setupInitialization();
       
       debugSystem.log('🎨 GlobalDesignSampleManager initialized with garmentManager:', !!this.garmentManager);
       
-      // TEMPORARY DEBUG: Force Design Sample section to be visible for testing
-      setTimeout(() => {
-        const designSampleContainer = document.querySelector('.techpack-global-design-samples');
-        if (designSampleContainer) {
-          designSampleContainer.style.display = 'block';
-          designSampleContainer.style.visibility = 'visible';
-          designSampleContainer.style.opacity = '1';
-          debugSystem.log('🎨 DEBUG: Forced Design Sample section to be visible');
-        } else {
-          debugSystem.log('🎨 ERROR: Design Sample container not found for debug override');
-        }
-      }, 2000);
+      // Add click outside handler to close assignment menus
+      this.setupClickOutsideHandler();
     }
     
     // Initialize event listeners
@@ -16375,31 +16403,8 @@ setupInitialization();
         validateInputs();
       }
       
-      // Design sample info modal
-      const infoButton = document.getElementById('design-sample-info-btn');
-      const infoModal = document.getElementById('design-sample-info-modal');
-      const closeButton = document.getElementById('design-sample-info-modal-close');
-      
-      if (infoButton && infoModal) {
-        infoButton.addEventListener('click', () => {
-          infoModal.style.display = 'block';
-        });
-      }
-      
-      if (closeButton && infoModal) {
-        closeButton.addEventListener('click', () => {
-          infoModal.style.display = 'none';
-        });
-      }
-      
-      // Backdrop click to close
-      if (infoModal) {
-        infoModal.addEventListener('click', (e) => {
-          if (e.target === infoModal) {
-            infoModal.style.display = 'none';
-          }
-        });
-      }
+      // Design sample info modal - handled globally now
+      debugSystem.log('🎨 Design sample modal handled by global setup');
     }
     
     // Protect button from being re-disabled by validation systems
@@ -16738,6 +16743,17 @@ setupInitialization();
             <div class="techpack-lab-dip-item__source">${designSample.type}</div>
             ${assignmentInfo}
           </div>
+          <div class="techpack-lab-dip-item__assignment">
+            <div class="techpack-assignment-dropdown">
+              <button type="button" class="techpack-assignment-btn" data-design-sample-id="${designSample.id}">
+                Assign
+                <svg viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </button>
+              ${this.createDesignSampleAssignmentMenu(designSample.id, designSample)}
+            </div>
+          </div>
           <div class="techpack-lab-dip-item__actions">
             <button type="button" class="techpack-lab-dip-item__remove" aria-label="Remove design sample" title="Remove" onclick="window.globalDesignSampleManager?.removeGlobalDesignSample('${designSample.id}')">
               <svg width="14" height="14" viewBox="0 0 16 16">
@@ -16770,6 +16786,179 @@ setupInitialization();
       }).join(', ');
       
       return `<div class="techpack-lab-dip-item__assignment">Assigned to: Garment ${garmentNumbers}</div>`;
+    }
+    
+    // Create assignment menu for Design Samples (can assign to ALL garments, unlike Lab Dips)
+    createDesignSampleAssignmentMenu(designSampleId, designSample) {
+      // Get available garments - ALL garments, not just cotton ones
+      const availableGarments = this.getAvailableGarments();
+      
+      let garmentItems = '';
+      if (availableGarments.length > 0) {
+        garmentItems = availableGarments.map(garment => {
+          const isAssigned = designSample && designSample.assignments && designSample.assignments.has(garment.id);
+          const itemClass = isAssigned ? 'techpack-assignment-menu__item--selected' : '';
+          
+          // Get sample type for this garment to show appropriate label
+          const sampleType = this.getGarmentSampleType(garment.id);
+          const sampleTypeLabel = sampleType === 'custom-color' ? 'Custom' : 'Stock';
+          
+          return `
+            <div class="techpack-assignment-menu__item ${itemClass}" 
+                 data-action="toggle-garment" data-garment-id="${garment.id}"
+                 title="Assign design to ${garment.name} (${sampleTypeLabel} Color)">
+              <div class="techpack-assignment-menu__item-content">
+                <div class="techpack-assignment-menu__item-info">
+                  <div class="techpack-assignment-menu__item-name">${garment.name}</div>
+                  <div class="techpack-assignment-menu__item-type">${sampleTypeLabel} Color Sample</div>
+                </div>
+                <div class="techpack-assignment-menu__item-status">
+                  ${isAssigned ? '✓' : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        garmentItems = '<div class="techpack-assignment-menu__empty">No garments available</div>';
+      }
+      
+      return `
+        <div class="techpack-assignment-menu" data-design-sample-id="${designSampleId}">
+          <div class="techpack-assignment-menu__header">
+            <span>ASSIGN TO GARMENTS</span>
+          </div>
+          <div class="techpack-assignment-menu__items">
+            ${garmentItems}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Get available garments for assignment
+    getAvailableGarments() {
+      const garments = [];
+      const garmentElements = document.querySelectorAll('.techpack-garment[data-garment-id]');
+      
+      garmentElements.forEach(garmentElement => {
+        const garmentId = garmentElement.dataset.garmentId;
+        const garmentNumber = garmentElement.querySelector('.techpack-garment__number')?.textContent || 'Unknown';
+        const garmentType = garmentElement.querySelector('select[name="garmentType"]')?.value || 'Unknown Type';
+        
+        if (garmentId) {
+          garments.push({
+            id: garmentId,
+            name: `Garment ${garmentNumber} - ${garmentType}`,
+            element: garmentElement
+          });
+        }
+      });
+      
+      return garments;
+    }
+    
+    // Get garment sample type (stock-color or custom-color)
+    getGarmentSampleType(garmentId) {
+      const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garmentElement) return 'unknown';
+      
+      // Check which sample type is selected for this garment
+      const stockColorRadio = garmentElement.querySelector('input[value="stock-color"]:checked');
+      const customColorRadio = garmentElement.querySelector('input[value="custom-color"]:checked');
+      
+      if (stockColorRadio) return 'stock-color';
+      if (customColorRadio) return 'custom-color';
+      
+      return 'unknown';
+    }
+    
+    // Toggle Design Sample assignment menu
+    toggleDesignSampleAssignmentMenu(button, menu, designSampleId) {
+      const isOpen = button.classList.contains('techpack-assignment-btn--open');
+      
+      // Close all other menus
+      document.querySelectorAll('.techpack-assignment-btn--open').forEach(btn => {
+        btn.classList.remove('techpack-assignment-btn--open');
+      });
+      document.querySelectorAll('.techpack-assignment-menu--open').forEach(menu => {
+        menu.classList.remove('techpack-assignment-menu--open');
+      });
+      
+      if (!isOpen) {
+        // Rebuild menu with current garments before opening
+        if (designSampleId && this.globalDesignSamples.has(designSampleId)) {
+          const designSample = this.globalDesignSamples.get(designSampleId);
+          
+          // Update menu content with current data
+          const updatedMenuHTML = this.createDesignSampleAssignmentMenu(designSampleId, designSample);
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = updatedMenuHTML;
+          const newMenu = tempDiv.firstElementChild;
+          
+          // Replace old menu with new one
+          if (menu && newMenu) {
+            menu.innerHTML = newMenu.innerHTML;
+          }
+        }
+        
+        button.classList.add('techpack-assignment-btn--open');
+        menu.classList.add('techpack-assignment-menu--open');
+        
+        debugSystem.log('🎨 Design Sample assignment menu opened:', { designSampleId });
+      } else {
+        debugSystem.log('🎨 Design Sample assignment menu closed:', { designSampleId });
+      }
+    }
+    
+    // Handle Design Sample assignment menu actions
+    handleDesignSampleAssignmentMenuAction(designSampleId, garmentId) {
+      const designSample = this.globalDesignSamples.get(designSampleId);
+      if (!designSample) {
+        debugSystem.log('❌ Design Sample not found for assignment:', designSampleId);
+        return;
+      }
+      
+      const isCurrentlyAssigned = designSample.assignments && designSample.assignments.has(garmentId);
+      
+      debugSystem.log('🎨 Design Sample assignment action:', {
+        designSampleId,
+        garmentId,
+        isCurrentlyAssigned,
+        action: isCurrentlyAssigned ? 'unassign' : 'assign'
+      });
+      
+      if (isCurrentlyAssigned) {
+        // Unassign the design sample from this garment
+        this.unassignFromGarment(designSampleId, garmentId);
+      } else {
+        // Assign the design sample to this garment
+        this.assignToGarment(designSampleId, garmentId);
+      }
+      
+      // Close the menu after action
+      const assignmentButton = document.querySelector(`[data-design-sample-id="${designSampleId}"].techpack-assignment-btn`);
+      const assignmentMenu = assignmentButton?.parentElement?.querySelector('.techpack-assignment-menu');
+      
+      if (assignmentButton) assignmentButton.classList.remove('techpack-assignment-btn--open');
+      if (assignmentMenu) assignmentMenu.classList.remove('techpack-assignment-menu--open');
+    }
+    
+    // Setup click outside handler to close assignment menus
+    setupClickOutsideHandler() {
+      document.addEventListener('click', (e) => {
+        // Check if click is outside all Design Sample assignment dropdowns
+        const isInsideAssignmentDropdown = e.target.closest('.techpack-assignment-dropdown[data-design-sample-id], .techpack-assignment-menu[data-design-sample-id]');
+        
+        if (!isInsideAssignmentDropdown) {
+          // Close all Design Sample assignment menus
+          document.querySelectorAll('.techpack-assignment-btn[data-design-sample-id].techpack-assignment-btn--open').forEach(btn => {
+            btn.classList.remove('techpack-assignment-btn--open');
+          });
+          document.querySelectorAll('.techpack-assignment-menu[data-design-sample-id].techpack-assignment-menu--open').forEach(menu => {
+            menu.classList.remove('techpack-assignment-menu--open');
+          });
+        }
+      });
     }
   }
 
@@ -17036,5 +17225,59 @@ setupInitialization();
     });
     console.log('✅ Force fixed all garment radio IDs immediately');
   };
+
+  // Setup Design Sample Information Modal (Global Setup)
+  function setupDesignSampleInfoModal() {
+    const infoBtn = document.getElementById('design-sample-info-btn');
+    const modal = document.getElementById('design-sample-info-modal');
+    const closeBtn = document.getElementById('design-sample-info-modal-close');
+    
+    if (!infoBtn || !modal) {
+      debugSystem.log('Design sample info modal elements not found, skipping setup');
+      return;
+    }
+    
+    // Show modal when info button is clicked
+    infoBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      debugSystem.log('Design sample info modal opened');
+    });
+    
+    // Hide modal when close button is clicked
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        debugSystem.log('Design sample info modal closed');
+      });
+    }
+    
+    // Hide modal when clicking backdrop
+    const backdrop = modal.querySelector('.techpack-modal__backdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        debugSystem.log('Design sample info modal closed via backdrop');
+      });
+    }
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        debugSystem.log('Design sample info modal closed via Escape');
+      }
+    });
+    
+    debugSystem.log('Design sample info modal setup complete');
+  }
+
+  // Initialize Design Sample Modal
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(setupDesignSampleInfoModal, 1000);
+  });
 
 })();

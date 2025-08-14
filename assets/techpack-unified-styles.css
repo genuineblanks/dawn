@@ -9588,18 +9588,7 @@ DESIGN SAMPLES & LAB DIPS SPLIT LAYOUT
   position: relative !important;
 }
 
-/* DEBUG: Add border to verify grid is working - REMOVE AFTER TESTING */
-.techpack-samples-lab-dips-grid {
-  border: 2px dashed red !important;
-}
-
-.techpack-samples-lab-dips-grid .techpack-global-design-samples {
-  border: 2px dashed blue !important;
-}
-
-.techpack-samples-lab-dips-grid .techpack-global-lab-dips {
-  border: 2px dashed green !important;
-}
+/* Debug borders removed - grid is working correctly */
 
 /* Responsive: Stack on mobile */
 @media (max-width: 768px) {
@@ -9963,6 +9952,13 @@ DESIGN SAMPLE MODAL STYLES
 
 .techpack-visual-header svg {
   color: #6b7280;
+}
+
+/* Modal Active State for Design Sample Modal */
+#design-sample-info-modal.active {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* 
