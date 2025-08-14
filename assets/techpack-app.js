@@ -16929,14 +16929,40 @@ setupInitialization();
         menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
         menu.style.right = 'auto';
         menu.style.zIndex = '999999';
+        menu.style.display = 'block'; // Force display
+        menu.style.visibility = 'visible'; // Force visibility
+        menu.style.opacity = '1'; // Force opacity
+        
+        // Check if menu content exists
+        const menuItems = menu.querySelectorAll('.techpack-assignment-menu__item');
         
         debugSystem.log('🎨 Design Sample assignment menu opened:', { 
           designSampleId, 
-          buttonRect, 
+          buttonRect: {
+            top: buttonRect.top,
+            bottom: buttonRect.bottom,
+            left: buttonRect.left,
+            right: buttonRect.right,
+            width: buttonRect.width,
+            height: buttonRect.height
+          },
           menuPosition: { 
             top: menu.style.top, 
-            left: menu.style.left 
-          } 
+            left: menu.style.left,
+            zIndex: menu.style.zIndex,
+            display: menu.style.display,
+            visibility: menu.style.visibility
+          },
+          menuContent: {
+            hasItems: menuItems.length > 0,
+            itemCount: menuItems.length,
+            menuHTML: menu.innerHTML.substring(0, 200) + '...'
+          },
+          screenInfo: {
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            scrollY: window.scrollY
+          }
         });
       } else {
         debugSystem.log('🎨 Design Sample assignment menu closed:', { designSampleId });
