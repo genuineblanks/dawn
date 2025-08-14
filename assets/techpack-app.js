@@ -3308,6 +3308,9 @@
         }
       });
 
+      // Show/hide measurement requirements based on request type
+      this.handleMeasurementRequirementsVisibility();
+
       if (nextBtn) nextBtn.disabled = !isValid;
       
       // Store the required garment count for step 3
@@ -3337,6 +3340,201 @@
         requiredGarments: state.formData.requiredGarmentCount,
         fileTypes: state.formData.files.map(f => ({ name: f.file.name, type: f.type }))
       });
+    }
+
+    // Handle measurement requirements visibility and validation
+    handleMeasurementRequirementsVisibility() {
+      const measurementSection = document.getElementById('measurement-requirements');
+      const requestType = state.formData.requestType;
+      
+      if (!measurementSection) return;
+      
+      // Show for quotation and sample requests only
+      if (requestType === 'quotation' || requestType === 'sample-request') {
+        measurementSection.style.display = 'block';
+        
+        // Setup checkbox event listeners if not already setup
+        const fitMeasurements = document.getElementById('fit-measurements');
+        const designMeasurements = document.getElementById('design-measurements');
+        
+        if (fitMeasurements && !fitMeasurements.hasAttribute('data-listener-attached')) {
+          fitMeasurements.addEventListener('change', () => {
+            state.formData.fitMeasurements = fitMeasurements.checked;
+          });
+          fitMeasurements.setAttribute('data-listener-attached', 'true');
+        }
+        
+        if (designMeasurements && !designMeasurements.hasAttribute('data-listener-attached')) {
+          designMeasurements.addEventListener('change', () => {
+            state.formData.designMeasurements = designMeasurements.checked;
+          });
+          designMeasurements.setAttribute('data-listener-attached', 'true');
+        }
+        
+        debugSystem.log('Measurement requirements section shown for:', requestType);
+      } else {
+        measurementSection.style.display = 'none';
+        debugSystem.log('Measurement requirements section hidden for:', requestType);
+      }
+    }
+
+    // Validate measurement requirements and show warnings if needed
+    validateMeasurementRequirements() {
+      const requestType = state.formData.requestType;
+      
+      // Only validate for quotation and sample requests
+      if (requestType !== 'quotation' && requestType !== 'sample-request') {
+        return { isValid: true, canProceed: true };
+      }
+      
+      const fitMeasurements = document.getElementById('fit-measurements')?.checked || false;
+      const designMeasurements = document.getElementById('design-measurements')?.checked || false;
+      
+      // Store checkbox states
+      state.formData.fitMeasurements = fitMeasurements;
+      state.formData.designMeasurements = designMeasurements;
+      
+      if (requestType === 'sample-request') {
+        // Sample requests: Must have at least one measurement type
+        if (!fitMeasurements && !designMeasurements) {
+          this.showMeasurementWarning('sample-blocking');
+          return { isValid: false, canProceed: false };
+        }
+      } else if (requestType === 'quotation') {
+        // Quotation requests: Show warning but allow proceeding
+        if (!fitMeasurements && !designMeasurements) {
+          this.showMeasurementWarning('quotation-warning');
+          return { isValid: false, canProceed: true };
+        } else if (!fitMeasurements || !designMeasurements) {
+          // Show specific warning based on what's missing
+          const missingType = !fitMeasurements ? 'fit' : 'design';
+          this.showMeasurementWarning('quotation-partial', missingType);
+          return { isValid: false, canProceed: true };
+        }
+      }
+      
+      return { isValid: true, canProceed: true };
+    }
+
+    // Show measurement warning modal with different messages based on type
+    showMeasurementWarning(warningType, missingType = null) {
+      const modal = document.getElementById('measurement-warning-modal');
+      const title = document.getElementById('warning-modal-title');
+      const message = document.getElementById('warning-modal-message');
+      const details = document.getElementById('warning-modal-details');
+      const cancelBtn = document.getElementById('warning-modal-cancel');
+      const proceedBtn = document.getElementById('warning-modal-proceed');
+      
+      if (!modal) return;
+      
+      // Configure modal content based on warning type
+      switch (warningType) {
+        case 'sample-blocking':
+          title.textContent = 'Measurements Required for Sample Request';
+          message.textContent = 'Sample requests require at least one type of measurement to proceed. Please add fit measurements and/or design measurements to your tech pack before continuing.';
+          details.innerHTML = `
+            <div class="techpack-measurement-warning-modal__requirement">
+              <strong>Required for Sample Production:</strong>
+              <ul>
+                <li>Fit Measurements - Body measurements or size charts for proper garment fitting</li>
+                <li>Design Measurements - Garment specifications and technical measurements</li>
+              </ul>
+              <p><em>At least one type is required to create accurate samples.</em></p>
+            </div>
+          `;
+          cancelBtn.textContent = 'Add Measurements to Tech Pack';
+          proceedBtn.style.display = 'none';
+          break;
+          
+        case 'quotation-warning':
+          title.textContent = 'Pricing Accuracy Notice';
+          message.textContent = 'Without measurements in your tech pack, pricing estimates may fluctuate significantly. We recommend including measurements for more accurate quotes.';
+          details.innerHTML = `
+            <div class="techpack-measurement-warning-modal__requirement">
+              <strong>Impact on Pricing:</strong>
+              <ul>
+                <li>Fit & Design Measurements help us provide precise material calculations</li>
+                <li>Without measurements, quotes are based on average industry standards</li>
+                <li>Final pricing may vary by 15-30% once measurements are provided</li>
+              </ul>
+            </div>
+          `;
+          cancelBtn.textContent = 'Go Back & Add Measurements';
+          proceedBtn.textContent = 'Continue with Estimated Pricing';
+          proceedBtn.style.display = 'inline-flex';
+          break;
+          
+        case 'quotation-partial':
+          const missingTypeText = missingType === 'fit' ? 'Fit Measurements' : 'Design Measurements';
+          const availableTypeText = missingType === 'fit' ? 'Design Measurements' : 'Fit Measurements';
+          
+          title.textContent = 'Incomplete Measurement Information';
+          message.textContent = `You have ${availableTypeText} but are missing ${missingTypeText}. This may affect pricing accuracy for your quotation.`;
+          details.innerHTML = `
+            <div class="techpack-measurement-warning-modal__requirement">
+              <strong>Missing ${missingTypeText}:</strong>
+              <p>${missingType === 'fit' ? 
+                'Body measurements or size charts help us calculate material requirements more precisely.' : 
+                'Garment specifications and technical measurements ensure accurate construction estimates.'
+              }</p>
+              <p><em>Pricing may vary by 10-20% once complete measurements are provided.</em></p>
+            </div>
+          `;
+          cancelBtn.textContent = 'Add Missing Measurements';
+          proceedBtn.textContent = 'Continue with Partial Information';
+          proceedBtn.style.display = 'inline-flex';
+          break;
+      }
+      
+      // Setup event listeners
+      this.setupWarningModalEventListeners(modal, warningType);
+      
+      // Show modal
+      modal.style.display = 'flex';
+      
+      debugSystem.log('Measurement warning shown:', { warningType, missingType });
+    }
+
+    // Setup event listeners for warning modal
+    setupWarningModalEventListeners(modal, warningType) {
+      const cancelBtn = document.getElementById('warning-modal-cancel');
+      const proceedBtn = document.getElementById('warning-modal-proceed');
+      const backdrop = modal.querySelector('.techpack-measurement-warning-modal__backdrop');
+      
+      // Remove existing listeners to prevent duplicates
+      const newCancelBtn = cancelBtn.cloneNode(true);
+      const newProceedBtn = proceedBtn.cloneNode(true);
+      const newBackdrop = backdrop.cloneNode(true);
+      
+      cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+      proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
+      backdrop.parentNode.replaceChild(newBackdrop, backdrop);
+      
+      // Add new listeners
+      newCancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      
+      newProceedBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        // For quotation warnings, allow proceeding to step 3
+        if (warningType === 'quotation-warning' || warningType === 'quotation-partial') {
+          stepManager.navigateToStep(3);
+        }
+      });
+      
+      newBackdrop.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      
+      // Close on Escape key
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          modal.style.display = 'none';
+          document.removeEventListener('keydown', handleEscape);
+        }
+      };
+      document.addEventListener('keydown', handleEscape);
     }
 
     // Upload file to Google Drive automatically
@@ -9243,6 +9441,11 @@
         
         // Update UI based on submission type
         this.updateUIForSubmissionType(type);
+        
+        // Update measurement requirements visibility for Step 2
+        if (window.fileUploadManager && fileUploadManager.handleMeasurementRequirementsVisibility) {
+          fileUploadManager.handleMeasurementRequirementsVisibility();
+        }
       }, 300);
     }
 
@@ -10451,7 +10654,13 @@
       }
       if (step2Next) {
         step2Next.addEventListener('click', () => {
-          stepManager.navigateToStep(3);
+          // Validate measurement requirements before proceeding
+          const measurementValidation = fileUploadManager.validateMeasurementRequirements();
+          
+          if (measurementValidation.canProceed) {
+            stepManager.navigateToStep(3);
+          }
+          // If can't proceed, the warning is already shown by validateMeasurementRequirements
         });
       }
 

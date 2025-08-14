@@ -10239,3 +10239,342 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
   }
 }
 
+/* 
+===========================================
+MEASUREMENT REQUIREMENTS SECTION - STEP 2
+===========================================
+*/
+
+.techpack-measurement-requirements {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.techpack-measurement-requirements__header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.techpack-measurement-requirements__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.techpack-measurement-requirements__subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.techpack-measurement-requirements__content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.techpack-measurement-requirements__checkboxes {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.techpack-measurement-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.techpack-measurement-checkbox:hover {
+  border-color: #374151;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.techpack-measurement-checkbox__input {
+  display: none;
+}
+
+.techpack-measurement-checkbox__custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.techpack-measurement-checkbox__input:checked + .techpack-measurement-checkbox__custom {
+  background: #374151;
+  border-color: #374151;
+}
+
+.techpack-measurement-checkbox__check {
+  color: #ffffff;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+}
+
+.techpack-measurement-checkbox__input:checked + .techpack-measurement-checkbox__custom .techpack-measurement-checkbox__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.techpack-measurement-checkbox__content {
+  flex: 1;
+}
+
+.techpack-measurement-checkbox__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.techpack-measurement-checkbox__description {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.techpack-measurement-requirements__info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #92400e;
+}
+
+.techpack-measurement-requirements__info-icon {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.techpack-measurement-requirements__info-text {
+  line-height: 1.4;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .techpack-measurement-requirements {
+    margin-top: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .techpack-measurement-requirements__title {
+    font-size: 1rem;
+  }
+  
+  .techpack-measurement-checkbox {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .techpack-measurement-checkbox__custom {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .techpack-measurement-checkbox__title {
+    font-size: 0.85rem;
+  }
+  
+  .techpack-measurement-checkbox__description {
+    font-size: 0.75rem;
+  }
+  
+  .techpack-measurement-requirements__info {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+}
+
+/* 
+===========================================
+MEASUREMENT WARNING MODAL
+===========================================
+*/
+
+.techpack-measurement-warning-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.techpack-measurement-warning-modal__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.techpack-measurement-warning-modal__content {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.techpack-measurement-warning-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.techpack-measurement-warning-modal__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: #f59e0b;
+}
+
+.techpack-measurement-warning-modal__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.techpack-measurement-warning-modal__body {
+  padding: 1.5rem;
+}
+
+.techpack-measurement-warning-modal__message {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.techpack-measurement-warning-modal__details {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.techpack-measurement-warning-modal__requirement strong {
+  color: #374151;
+  font-weight: 600;
+}
+
+.techpack-measurement-warning-modal__requirement ul {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.techpack-measurement-warning-modal__requirement li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.techpack-measurement-warning-modal__requirement p {
+  margin: 0.75rem 0 0 0;
+  line-height: 1.4;
+}
+
+.techpack-measurement-warning-modal__requirement em {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.techpack-measurement-warning-modal__actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.techpack-measurement-warning-modal__actions .techpack-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .techpack-measurement-warning-modal {
+    padding: 0.75rem;
+  }
+  
+  .techpack-measurement-warning-modal__content {
+    max-width: none;
+  }
+  
+  .techpack-measurement-warning-modal__header {
+    padding: 1rem 1rem 0.75rem 1rem;
+  }
+  
+  .techpack-measurement-warning-modal__title {
+    font-size: 1rem;
+  }
+  
+  .techpack-measurement-warning-modal__body {
+    padding: 1rem;
+  }
+  
+  .techpack-measurement-warning-modal__message {
+    font-size: 0.85rem;
+  }
+  
+  .techpack-measurement-warning-modal__details {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .techpack-measurement-warning-modal__actions {
+    flex-direction: column;
+    padding: 0.75rem 1rem 1rem 1rem;
+  }
+  
+  .techpack-measurement-warning-modal__actions .techpack-btn {
+    flex: none;
+  }
+}
+

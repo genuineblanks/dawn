@@ -58,6 +58,52 @@ Tech-Pack Step 2: File Upload Section
         </button>
       </div>
 
+      <!-- Measurement Requirements Section (Quotation & Sample only) -->
+      <div class="techpack-measurement-requirements" id="measurement-requirements" style="display: none;">
+        <div class="techpack-measurement-requirements__header">
+          <h3 class="techpack-measurement-requirements__title">Measurement Requirements</h3>
+          <p class="techpack-measurement-requirements__subtitle">Please confirm which measurements are included in your tech pack files</p>
+        </div>
+
+        <div class="techpack-measurement-requirements__content">
+          <div class="techpack-measurement-requirements__checkboxes">
+            <label class="techpack-measurement-checkbox">
+              <input type="checkbox" id="fit-measurements" name="fitMeasurements" class="techpack-measurement-checkbox__input">
+              <div class="techpack-measurement-checkbox__custom">
+                <svg class="techpack-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-measurement-checkbox__content">
+                <div class="techpack-measurement-checkbox__title">Fit Measurements</div>
+                <div class="techpack-measurement-checkbox__description">Body measurements or size charts for proper garment fitting</div>
+              </div>
+            </label>
+
+            <label class="techpack-measurement-checkbox">
+              <input type="checkbox" id="design-measurements" name="designMeasurements" class="techpack-measurement-checkbox__input">
+              <div class="techpack-measurement-checkbox__custom">
+                <svg class="techpack-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-measurement-checkbox__content">
+                <div class="techpack-measurement-checkbox__title">Design Measurements</div>
+                <div class="techpack-measurement-checkbox__description">Garment specifications and technical measurements</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="techpack-measurement-requirements__info">
+            <svg class="techpack-measurement-requirements__info-icon" width="16" height="16" viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M8 5.5V8.5m0 2v.01" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+            <span class="techpack-measurement-requirements__info-text">These requirements affect pricing accuracy and sample development timeline</span>
+          </div>
+        </div>
+      </div>
+
       <div class="techpack-form__actions">
         <button type="button" class="techpack-btn techpack-btn--ghost" id="step-2-prev">
           <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
@@ -96,10 +142,10 @@ Tech-Pack Step 2: File Upload Section
       <label class="techpack-file__tag-label">File Type (Required)</label>
       <select class="techpack-file__tag-select" required>
         <option value="">⚠️ SELECT FILE TYPE (REQUIRED)</option>
-        <option value="Collection">Collection Tech-Pack</option>
-        <option value="Single">Single Garment Tech-Pack</option>
-        <option value="Design">Design Reference Files</option>
-        <option value="Accessories">Accessories Reference Files</option>
+        <option value="Collection">📁 Collection Tech-Pack</option>
+        <option value="Single">📄 Single Garment Tech-Pack</option>
+        <option value="Design">🎨 Design Reference Files</option>
+        <option value="Accessories">🏷️ Accessories Reference Files</option>
       </select>
       <div class="techpack-form__error" role="alert"></div>
     </div>
@@ -117,6 +163,40 @@ Tech-Pack Step 2: File Upload Section
     </div>
   </div>
 </template>
+
+<!-- Measurement Warning Modal -->
+<div class="techpack-measurement-warning-modal" id="measurement-warning-modal" style="display: none;">
+  <div class="techpack-measurement-warning-modal__backdrop"></div>
+  <div class="techpack-measurement-warning-modal__content">
+    <div class="techpack-measurement-warning-modal__header">
+      <div class="techpack-measurement-warning-modal__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill="currentColor"/>
+        </svg>
+      </div>
+      <h3 class="techpack-measurement-warning-modal__title" id="warning-modal-title">Missing Measurements</h3>
+    </div>
+    
+    <div class="techpack-measurement-warning-modal__body">
+      <p class="techpack-measurement-warning-modal__message" id="warning-modal-message">
+        <!-- Dynamic message content -->
+      </p>
+      
+      <div class="techpack-measurement-warning-modal__details" id="warning-modal-details">
+        <!-- Dynamic details content -->
+      </div>
+    </div>
+    
+    <div class="techpack-measurement-warning-modal__actions">
+      <button type="button" class="techpack-btn techpack-btn--ghost" id="warning-modal-cancel">
+        Go Back & Add Measurements
+      </button>
+      <button type="button" class="techpack-btn techpack-btn--primary" id="warning-modal-proceed" style="display: none;">
+        Continue Anyway
+      </button>
+    </div>
+  </div>
+</div>
 
 {% schema %}
 {
