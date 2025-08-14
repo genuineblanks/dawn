@@ -9443,8 +9443,8 @@
         this.updateUIForSubmissionType(type);
         
         // Update measurement requirements visibility for Step 2
-        if (fileManager && fileManager.handleMeasurementRequirementsVisibility) {
-          fileManager.handleMeasurementRequirementsVisibility();
+        if (stepManager && stepManager.handleMeasurementRequirementsVisibility) {
+          stepManager.handleMeasurementRequirementsVisibility();
         }
       }, 300);
     }
@@ -10655,7 +10655,7 @@
       if (step2Next) {
         step2Next.addEventListener('click', () => {
           // Validate measurement requirements before proceeding
-          const measurementValidation = fileManager.validateMeasurementRequirements();
+          const measurementValidation = stepManager.validateMeasurementRequirements();
           
           if (measurementValidation.canProceed) {
             stepManager.navigateToStep(3);
