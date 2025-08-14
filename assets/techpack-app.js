@@ -17047,7 +17047,7 @@ setupInitialization();
         menu.style.right = 'auto';
         menu.style.zIndex = '999999';
         
-        // CSS DEBUGGING - Force menu visibility
+        // CSS DEBUGGING - Force menu visibility AND FIXED POSITIONING
         menu.style.setProperty('background-color', '#ff0000', 'important');
         menu.style.setProperty('border', '3px solid #00ff00', 'important');
         menu.style.setProperty('display', 'block', 'important');
@@ -17055,6 +17055,10 @@ setupInitialization();
         menu.style.setProperty('opacity', '1', 'important');
         menu.style.setProperty('width', '250px', 'important');
         menu.style.setProperty('height', 'auto', 'important');
+        
+        // FORCE POSITION FIXED - this is the key issue!
+        menu.style.setProperty('position', 'fixed', 'important');
+        menu.style.setProperty('z-index', '999999', 'important');
         
         // Log computed styles for debugging
         const computedStyles = getComputedStyle(menu);
@@ -17080,6 +17084,28 @@ setupInitialization();
           innerHTML: menu.innerHTML.length + ' chars',
           parentElement: menu.parentElement?.tagName,
           inDocument: document.contains(menu)
+        });
+        
+        // CRITICAL DEBUG: Check if position: fixed is actually applied
+        console.log('🚨 [POSITION DEBUG] Position analysis:', {
+          setPosition: menu.style.position,
+          computedPosition: computedStyles.position,
+          setTop: menu.style.top,
+          computedTop: computedStyles.top,
+          setLeft: menu.style.left,
+          computedLeft: computedStyles.left,
+          isInBody: menu.parentElement === document.body,
+          parentTag: menu.parentElement?.tagName,
+          bodyContains: document.body.contains(menu)
+        });
+        
+        // Check for CSS conflicts
+        console.log('🔍 [CSS CONFLICTS] Checking for overrides:', {
+          hasTransform: computedStyles.transform !== 'none',
+          transform: computedStyles.transform,
+          overflow: computedStyles.overflow,
+          position: computedStyles.position,
+          willChange: computedStyles.willChange
         });
         
         
