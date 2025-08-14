@@ -17045,6 +17045,42 @@ setupInitialization();
         menu.style.top = `${buttonRect.bottom + 4}px`;
         menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
         menu.style.right = 'auto';
+        menu.style.zIndex = '999999';
+        
+        // CSS DEBUGGING - Force menu visibility
+        menu.style.setProperty('background-color', '#ff0000', 'important');
+        menu.style.setProperty('border', '3px solid #00ff00', 'important');
+        menu.style.setProperty('display', 'block', 'important');
+        menu.style.setProperty('visibility', 'visible', 'important');
+        menu.style.setProperty('opacity', '1', 'important');
+        menu.style.setProperty('width', '250px', 'important');
+        menu.style.setProperty('height', 'auto', 'important');
+        
+        // Log computed styles for debugging
+        const computedStyles = getComputedStyle(menu);
+        console.log('🐛 [CSS DEBUG] Menu computed styles:', {
+          display: computedStyles.display,
+          visibility: computedStyles.visibility,
+          opacity: computedStyles.opacity,
+          backgroundColor: computedStyles.backgroundColor,
+          border: computedStyles.border,
+          position: computedStyles.position,
+          top: computedStyles.top,
+          left: computedStyles.left,
+          zIndex: computedStyles.zIndex,
+          width: computedStyles.width,
+          height: computedStyles.height
+        });
+        
+        // Log menu classes and attributes
+        console.log('🐛 [CSS DEBUG] Menu element info:', {
+          className: menu.className,
+          id: menu.id,
+          tagName: menu.tagName,
+          innerHTML: menu.innerHTML.length + ' chars',
+          parentElement: menu.parentElement?.tagName,
+          inDocument: document.contains(menu)
+        });
         
         
         console.log('🎨 [DEBUG] Menu positioned with styles:', {
