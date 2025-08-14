@@ -2289,6 +2289,8 @@
     // Handle measurement requirements visibility and validation
     handleMeasurementRequirementsVisibility() {
       const measurementSection = document.getElementById('measurement-requirements');
+      const designPlacementCheckbox = document.getElementById('design-placement-checkbox');
+      const validationWarning = document.getElementById('measurement-validation-warning');
       const requestType = state.formData.requestType;
       
       if (!measurementSection) return;
@@ -2297,9 +2299,20 @@
       if (requestType === 'quotation' || requestType === 'sample-request') {
         measurementSection.style.display = 'block';
         
+        // Show design placement measurements only for sample requests
+        if (designPlacementCheckbox) {
+          designPlacementCheckbox.style.display = requestType === 'sample-request' ? 'flex' : 'none';
+        }
+        
+        // Show validation warning only for sample requests
+        if (validationWarning) {
+          validationWarning.style.display = requestType === 'sample-request' ? 'flex' : 'none';
+        }
+        
         // Setup checkbox event listeners if not already setup
         const fitMeasurements = document.getElementById('fit-measurements');
         const designMeasurements = document.getElementById('design-measurements');
+        const designPlacementMeasurements = document.getElementById('design-placement-measurements');
         
         if (fitMeasurements && !fitMeasurements.hasAttribute('data-listener-attached')) {
           fitMeasurements.addEventListener('change', () => {
@@ -2313,6 +2326,13 @@
             state.formData.designMeasurements = designMeasurements.checked;
           });
           designMeasurements.setAttribute('data-listener-attached', 'true');
+        }
+        
+        if (designPlacementMeasurements && !designPlacementMeasurements.hasAttribute('data-listener-attached')) {
+          designPlacementMeasurements.addEventListener('change', () => {
+            state.formData.designPlacementMeasurements = designPlacementMeasurements.checked;
+          });
+          designPlacementMeasurements.setAttribute('data-listener-attached', 'true');
         }
         
         debugSystem.log('Measurement requirements section shown for:', requestType);
@@ -2333,16 +2353,28 @@
       
       const fitMeasurements = document.getElementById('fit-measurements')?.checked || false;
       const designMeasurements = document.getElementById('design-measurements')?.checked || false;
+      const designPlacementMeasurements = document.getElementById('design-placement-measurements')?.checked || false;
       
       // Store checkbox states
       state.formData.fitMeasurements = fitMeasurements;
       state.formData.designMeasurements = designMeasurements;
+      state.formData.designPlacementMeasurements = designPlacementMeasurements;
       
       if (requestType === 'sample-request') {
-        // Sample requests: Must have at least one measurement type
-        if (!fitMeasurements && !designMeasurements) {
-          this.showMeasurementWarning('sample-blocking');
+        // Sample requests: Fit Measurements are REQUIRED
+        if (!fitMeasurements) {
+          this.showMeasurementWarning('sample-fit-required');
           return { isValid: false, canProceed: false };
+        }
+        
+        // Show warning for missing optional measurements but allow proceeding
+        const missingOptional = [];
+        if (!designMeasurements) missingOptional.push('design');
+        if (!designPlacementMeasurements) missingOptional.push('placement');
+        
+        if (missingOptional.length > 0) {
+          this.showMeasurementWarning('sample-optional-missing', missingOptional);
+          return { isValid: false, canProceed: true };
         }
       } else if (requestType === 'quotation') {
         // Quotation requests: Show warning but allow proceeding
@@ -2373,21 +2405,50 @@
       
       // Configure modal content based on warning type
       switch (warningType) {
-        case 'sample-blocking':
-          title.textContent = 'Measurements Required for Sample Request';
-          message.textContent = 'Sample requests require at least one type of measurement to proceed. Please add fit measurements and/or design measurements to your tech pack before continuing.';
+        case 'sample-fit-required':
+          title.textContent = 'Fit Measurements Required for Sample Request';
+          message.textContent = 'Sample requests require fit measurements to proceed. Please add fit measurements to your tech pack before continuing.';
           details.innerHTML = `
             <div class="techpack-measurement-warning-modal__requirement">
               <strong>Required for Sample Production:</strong>
               <ul>
-                <li>Fit Measurements - Body measurements or size charts for proper garment fitting</li>
-                <li>Design Measurements - Garment specifications and technical measurements</li>
+                <li>Fit Measurements - Body measurements or size charts are mandatory for proper garment fitting</li>
               </ul>
-              <p><em>At least one type is required to create accurate samples.</em></p>
+              <p><em>Sample production cannot proceed without fit measurements.</em></p>
             </div>
           `;
-          cancelBtn.textContent = 'Add Measurements to Tech Pack';
+          cancelBtn.textContent = 'Add Fit Measurements to Tech Pack';
           proceedBtn.style.display = 'none';
+          break;
+        
+        case 'sample-optional-missing':
+          const missingTypes = missingType || [];
+          let missingText = '';
+          let disclaimerText = '';
+          
+          if (missingTypes.includes('design') && missingTypes.includes('placement')) {
+            missingText = 'Design & Design Placement Measurements';
+            disclaimerText = 'We will create the design and placement according to our standards. You cannot hold us responsible for design specifications or placement positioning.';
+          } else if (missingTypes.includes('design')) {
+            missingText = 'Design Measurements';
+            disclaimerText = 'We will create the design according to our standards. You cannot hold us responsible for design specifications.';
+          } else if (missingTypes.includes('placement')) {
+            missingText = 'Design Placement Measurements';
+            disclaimerText = 'We will position design elements according to our standards. You cannot hold us responsible for placement positioning.';
+          }
+          
+          title.textContent = 'Optional Measurements Missing';
+          message.textContent = `You are missing ${missingText}. You can proceed, but please note our policy:`;
+          details.innerHTML = `
+            <div class="techpack-measurement-warning-modal__requirement">
+              <strong>Important Disclaimer:</strong>
+              <p>${disclaimerText}</p>
+              <p><em>By proceeding, you acknowledge and accept this responsibility policy.</em></p>
+            </div>
+          `;
+          cancelBtn.textContent = 'Add Missing Measurements';
+          proceedBtn.textContent = 'Proceed with Disclaimer';
+          proceedBtn.style.display = 'inline-flex';
           break;
           
         case 'quotation-warning':
@@ -2457,6 +2518,8 @@
       // Add new listeners
       newCancelBtn.addEventListener('click', () => {
         modal.style.display = 'none';
+        // Navigate back to Step 2 so user can add measurements
+        stepManager.navigateToStep(2);
       });
       
       newProceedBtn.addEventListener('click', () => {

@@ -92,6 +92,19 @@ Tech-Pack Step 2: File Upload Section
                 <div class="techpack-measurement-checkbox__description">Garment specifications and technical measurements</div>
               </div>
             </label>
+
+            <label class="techpack-measurement-checkbox" id="design-placement-checkbox" style="display: none;">
+              <input type="checkbox" id="design-placement-measurements" name="designPlacementMeasurements" class="techpack-measurement-checkbox__input">
+              <div class="techpack-measurement-checkbox__custom">
+                <svg class="techpack-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="techpack-measurement-checkbox__content">
+                <div class="techpack-measurement-checkbox__title">Design Placement Measurements</div>
+                <div class="techpack-measurement-checkbox__description">Print/embroidery placement specifications and positioning details</div>
+              </div>
+            </label>
           </div>
 
           <div class="techpack-measurement-requirements__info">
@@ -100,6 +113,16 @@ Tech-Pack Step 2: File Upload Section
               <path d="M8 5.5V8.5m0 2v.01" stroke="currentColor" stroke-width="1.5" fill="none"/>
             </svg>
             <span class="techpack-measurement-requirements__info-text">These requirements affect pricing accuracy and sample development timeline</span>
+          </div>
+
+          <div class="techpack-measurement-requirements__warning" id="measurement-validation-warning" style="display: none;">
+            <svg class="techpack-measurement-requirements__warning-icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+              <path d="M8 6a1 1 0 011 1v2a1 1 0 11-2 0V7a1 1 0 011-1zm0 6a1 1 0 100-2 1 1 0 000 2z" fill="white"/>
+            </svg>
+            <span class="techpack-measurement-requirements__warning-text">
+              <strong>Important:</strong> Requests with false measurement claims will be rejected. Only check boxes for measurements actually included in your tech pack files.
+            </span>
           </div>
         </div>
       </div>
