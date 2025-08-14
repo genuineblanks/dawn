@@ -4,32 +4,35 @@
    CSS VARIABLES & DESIGN SYSTEM
    ============================================ */
 :root {
-  /* Unified Dark Theme - Professional Grey Scale */
-  --lab-primary: #1a1a1a;
-  --lab-primary-dark: #000000;
-  --lab-primary-light: #2d2d2d;
-  --lab-secondary: #6b7280;
-  --lab-accent: #ffffff;
-  --lab-success: #22c55e;
-  --lab-warning: #f59e0b;
-  --lab-danger: #ef4444;
+  /* Focused Dark Workspace Theme - Deeper Greys + Black */
+  --lab-primary: #111827;        /* Deep black primary */
+  --lab-primary-dark: #000000;   /* Pure black */
+  --lab-primary-light: #1f2937;  /* Dark charcoal */
+  --lab-secondary: #6b7280;      /* Medium grey */
+  --lab-accent: #f3f4f6;         /* Light grey accent */
+  --lab-success: #10b981;        /* Refined success green */
+  --lab-warning: #f59e0b;        /* Professional warning */
+  --lab-danger: #ef4444;         /* Clean error red */
   
-  /* Unified Dark Backgrounds - Balanced Grey Scale */
-  --lab-bg-primary: #1a1a1a;     /* Page background */
-  --lab-bg-secondary: #2a2a2a;   /* Section backgrounds */
-  --lab-bg-tertiary: #3a3a3a;    /* Card backgrounds */
-  --lab-bg-accent: #4a4a4a;      /* Interactive elements */
+  /* Deep Dark Backgrounds - Focused Workspace */
+  --lab-bg-primary: #111827;     /* Deep black background */
+  --lab-bg-secondary: #1f2937;   /* Charcoal sections */
+  --lab-bg-tertiary: #374151;    /* Medium grey cards */
+  --lab-bg-accent: #4b5563;      /* Interactive grey */
+  --lab-bg-hover: #6b7280;       /* Hover state grey */
   
-  /* Unified Text Colors */
-  --lab-text-primary: #ffffff;
-  --lab-text-secondary: #e5e5e5;
-  --lab-text-tertiary: #a3a3a3;
-  --lab-text-muted: #737373;
+  /* Enhanced Text Hierarchy */
+  --lab-text-primary: #f9fafb;   /* Nearly white primary text */
+  --lab-text-secondary: #e5e7eb; /* Light grey secondary */
+  --lab-text-tertiary: #d1d5db;  /* Medium light grey */
+  --lab-text-muted: #9ca3af;     /* Subtle muted text */
+  --lab-text-disabled: #6b7280;  /* Disabled state */
   
-  /* Unified Borders */
-  --lab-border: #404040;
-  --lab-border-light: #333333;
-  --lab-border-accent: #555555;
+  /* Refined Border System */
+  --lab-border: #4b5563;         /* Primary borders */
+  --lab-border-light: #374151;   /* Subtle borders */
+  --lab-border-accent: #6b7280;  /* Emphasis borders */
+  --lab-border-focus: #9ca3af;   /* Focus state borders */
   
   /* Updated Shadows for Dark Theme */
   --lab-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
@@ -1400,4 +1403,81 @@
   display: none;
 }
 
-/* End of lab dips premium styles */
+/* ============================================
+   ENHANCED FOCUS STATES & INTERACTIONS
+   Deeper workspace engagement
+   ============================================ */
+
+/* Enhanced Color Input Focus */
+#lab-dips-step-3a .lab-color-input:focus {
+  outline: none;
+  border-color: var(--lab-border-focus);
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
+}
+
+/* Enhanced Button Hover States */
+#lab-dips-step-3a .lab-add-btn:hover {
+  background: var(--lab-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#lab-dips-step-3a .lab-nav-btn:hover {
+  background: var(--lab-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Mode Toggle Focus */
+#lab-dips-step-3a .lab-mode-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--lab-border-focus);
+}
+
+/* Enhanced Swatch Hover Effects */
+#lab-dips-step-3a .lab-cart-item:hover {
+  background: var(--lab-bg-tertiary);
+  border-color: var(--lab-border-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Color Preview Glow */
+#lab-dips-step-3a .lab-preview-swatch {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 
+              inset 0 0 20px rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--lab-border-accent);
+}
+
+/* Enhanced Quick Color Interactions */
+#lab-dips-step-3a .lab-quick-color:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px var(--lab-border-focus);
+}
+
+/* Enhanced Progress Elements */
+#lab-dips-step-3a .techpack-progress {
+  backdrop-filter: blur(10px);
+  background: var(--lab-bg-secondary);
+  border: 1px solid var(--lab-border-light);
+}
+
+#lab-dips-step-3a .techpack-progress__fill {
+  background: linear-gradient(90deg, var(--lab-accent), var(--lab-text-secondary));
+  box-shadow: 0 0 10px rgba(243, 244, 246, 0.3);
+}
+
+/* Enhanced Navigation Styling */
+#lab-dips-step-3a .lab-navigation {
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--lab-border-light);
+}
+
+/* Professional Toast Notifications */
+.lab-success-toast {
+  background: linear-gradient(135deg, var(--lab-success), #059669);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+}
+
+/* End of enhanced lab dips premium styles */
