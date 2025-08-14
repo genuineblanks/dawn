@@ -3422,7 +3422,6 @@ button:disabled.techpack-btn {
 .techpack-sample-radio {
   position: absolute;
   opacity: 0;
-  pointer-events: none;
 }
 
 /* Card label - clickable area */
