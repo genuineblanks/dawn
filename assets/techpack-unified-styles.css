@@ -4265,7 +4265,7 @@ button:disabled.techpack-btn {
   border: 2px solid #e5e7eb;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 999;
+  z-index: 9999;
   display: none;
 }
 
@@ -5136,7 +5136,7 @@ UNIFIED CATEGORY STYLING
   background: var(--techpack-card-bg);
   border: var(--techpack-card-border);
   border-radius: var(--techpack-card-radius);
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--techpack-card-shadow);
 }
 
