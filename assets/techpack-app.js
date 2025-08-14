@@ -2304,9 +2304,9 @@
           designPlacementCheckbox.style.display = requestType === 'sample-request' ? 'flex' : 'none';
         }
         
-        // Show validation warning only for sample requests
+        // Initialize red warning as hidden - it will show when checkboxes are selected
         if (validationWarning) {
-          validationWarning.style.display = requestType === 'sample-request' ? 'flex' : 'none';
+          validationWarning.style.display = 'none';
         }
         
         // Setup checkbox event listeners if not already setup
@@ -2317,6 +2317,7 @@
         if (fitMeasurements && !fitMeasurements.hasAttribute('data-listener-attached')) {
           fitMeasurements.addEventListener('change', () => {
             state.formData.fitMeasurements = fitMeasurements.checked;
+            this.updateRedWarningVisibility();
           });
           fitMeasurements.setAttribute('data-listener-attached', 'true');
         }
@@ -2324,6 +2325,7 @@
         if (designMeasurements && !designMeasurements.hasAttribute('data-listener-attached')) {
           designMeasurements.addEventListener('change', () => {
             state.formData.designMeasurements = designMeasurements.checked;
+            this.updateRedWarningVisibility();
           });
           designMeasurements.setAttribute('data-listener-attached', 'true');
         }
@@ -2331,6 +2333,7 @@
         if (designPlacementMeasurements && !designPlacementMeasurements.hasAttribute('data-listener-attached')) {
           designPlacementMeasurements.addEventListener('change', () => {
             state.formData.designPlacementMeasurements = designPlacementMeasurements.checked;
+            this.updateRedWarningVisibility();
           });
           designPlacementMeasurements.setAttribute('data-listener-attached', 'true');
         }
@@ -2340,6 +2343,24 @@
         measurementSection.style.display = 'none';
         debugSystem.log('Measurement requirements section hidden for:', requestType);
       }
+    }
+
+    // Update red warning visibility based on checkbox selections
+    updateRedWarningVisibility() {
+      const validationWarning = document.getElementById('measurement-validation-warning');
+      const requestType = state.formData.requestType;
+      
+      if (!validationWarning || requestType !== 'sample-request') return;
+      
+      const fitMeasurements = document.getElementById('fit-measurements')?.checked || false;
+      const designMeasurements = document.getElementById('design-measurements')?.checked || false;
+      const designPlacementMeasurements = document.getElementById('design-placement-measurements')?.checked || false;
+      
+      // Show red warning only if at least one box is checked
+      const anyChecked = fitMeasurements || designMeasurements || designPlacementMeasurements;
+      validationWarning.style.display = anyChecked ? 'flex' : 'none';
+      
+      debugSystem.log('Red warning visibility updated:', { anyChecked, requestType });
     }
 
     // Validate measurement requirements and show warnings if needed

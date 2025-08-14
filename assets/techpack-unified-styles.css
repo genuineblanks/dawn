@@ -10301,7 +10301,10 @@ MEASUREMENT REQUIREMENTS SECTION - STEP 2
 }
 
 .techpack-measurement-checkbox__input {
-  display: none;
+  display: none !important;
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .techpack-measurement-checkbox__custom {
