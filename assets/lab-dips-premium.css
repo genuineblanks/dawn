@@ -4,43 +4,39 @@
    CSS VARIABLES & DESIGN SYSTEM
    ============================================ */
 :root {
-  /* Matching TechPack's neutral matte aesthetic */
+  /* Unified Dark Theme - Professional Grey Scale */
   --lab-primary: #1a1a1a;
   --lab-primary-dark: #000000;
   --lab-primary-light: #2d2d2d;
   --lab-secondary: #6b7280;
-  --lab-accent: #374151;
-  --lab-success: #059669;
-  --lab-warning: #6b7280;
-  --lab-danger: #dc2626;
+  --lab-accent: #ffffff;
+  --lab-success: #22c55e;
+  --lab-warning: #f59e0b;
+  --lab-danger: #ef4444;
   
-  --lab-bg-primary: #ffffff;
-  --lab-bg-secondary: #f9fafb;
-  --lab-bg-tertiary: #f3f4f6;
-  --lab-bg-glass: rgba(255, 255, 255, 0.95);
+  /* Unified Dark Backgrounds - Balanced Grey Scale */
+  --lab-bg-primary: #1a1a1a;     /* Page background */
+  --lab-bg-secondary: #2a2a2a;   /* Section backgrounds */
+  --lab-bg-tertiary: #3a3a3a;    /* Card backgrounds */
+  --lab-bg-accent: #4a4a4a;      /* Interactive elements */
   
-  /* Dark luxury theme for Color Studio */
-  --lab-dark-bg-primary: #0a0a0a;
-  --lab-dark-bg-secondary: #111111;
-  --lab-dark-bg-tertiary: #1a1a1a;
-  --lab-dark-text-primary: #f5f5f5;
-  --lab-dark-text-secondary: #a3a3a3;
-  --lab-dark-text-tertiary: #737373;
-  --lab-dark-border: #262626;
-  --lab-dark-border-light: #1f1f1f;
+  /* Unified Text Colors */
+  --lab-text-primary: #ffffff;
+  --lab-text-secondary: #e5e5e5;
+  --lab-text-tertiary: #a3a3a3;
+  --lab-text-muted: #737373;
   
-  --lab-text-primary: #111827;
-  --lab-text-secondary: #6b7280;
-  --lab-text-tertiary: #9ca3af;
-  --lab-text-muted: #d1d5db;
+  /* Unified Borders */
+  --lab-border: #404040;
+  --lab-border-light: #333333;
+  --lab-border-accent: #555555;
   
-  --lab-border: #e5e7eb;
-  --lab-border-light: #f3f4f6;
-  --lab-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
-  --lab-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
-  --lab-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06);
-  --lab-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
-  --lab-shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.4);
+  /* Updated Shadows for Dark Theme */
+  --lab-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --lab-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --lab-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --lab-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  --lab-shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.6);
   
   --lab-radius-sm: 2px;
   --lab-radius-md: 4px;
@@ -55,10 +51,11 @@
    SECTION CONTAINER & LAYOUT
    ============================================ */
 #lab-dips-step-3a {
-  background: #ffffff;
+  background: var(--lab-bg-primary);
   min-height: 100vh;
   position: relative;
   overflow: visible;
+  color: var(--lab-text-primary);
 }
 
 #lab-dips-step-3a .techpack-container {
@@ -76,7 +73,7 @@
    ============================================ */
 .lab-dips-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   position: relative;
 }
 
@@ -88,13 +85,13 @@
   transform: translateX(-50%);
   width: 40px;
   height: 2px;
-  background: var(--lab-primary);
+  background: var(--lab-accent);
   border-radius: var(--lab-radius-full);
 }
 
 .lab-dips-title {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--lab-text-primary);
   margin-bottom: 12px;
   letter-spacing: -0.02em;
@@ -102,12 +99,12 @@
 }
 
 .lab-dips-subtitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--lab-text-secondary);
   font-weight: 400;
   max-width: 600px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* ============================================
@@ -121,17 +118,17 @@
 }
 
 .lab-service-card {
-  background: var(--lab-bg-primary);
+  background: var(--lab-bg-tertiary);
   border: 1px solid var(--lab-border);
-  border-radius: var(--lab-radius-sm);
-  padding: 8px 12px;
+  border-radius: var(--lab-radius-md);
+  padding: 12px 16px;
   position: relative;
   overflow: hidden;
   transition: var(--lab-transition);
-  box-shadow: none;
+  box-shadow: var(--lab-shadow-sm);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .lab-service-card::before {
@@ -139,8 +136,9 @@
 }
 
 .lab-service-card:hover {
-  background: var(--lab-bg-secondary);
-  border-color: var(--lab-border);
+  background: var(--lab-bg-accent);
+  border-color: var(--lab-border-accent);
+  box-shadow: var(--lab-shadow-md);
 }
 
 .lab-service-card:hover::before {
@@ -148,42 +146,43 @@
 }
 
 .lab-service-icon {
-  width: 16px;
-  height: 16px;
-  background: transparent;
-  border-radius: 0;
+  width: 18px;
+  height: 18px;
+  background: var(--lab-bg-accent);
+  border-radius: var(--lab-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
   margin-bottom: 0;
-  color: var(--lab-text-secondary);
+  color: var(--lab-text-primary);
   flex-shrink: 0;
+  padding: 2px;
 }
 
 .lab-service-title {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--lab-text-primary);
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .lab-service-description {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: var(--lab-text-tertiary);
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 /* ============================================
    COLOR STUDIO SECTION - DARK LUXURY THEME
    ============================================ */
 .lab-color-studio {
-  background: var(--lab-dark-bg-primary);
-  border: 1px solid var(--lab-dark-border);
-  border-radius: var(--lab-radius-md);
-  padding: 24px;
+  background: var(--lab-bg-secondary);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-lg);
+  padding: 28px;
   margin-bottom: 32px;
-  box-shadow: var(--lab-shadow-dark);
+  box-shadow: var(--lab-shadow-lg);
 }
 
 .lab-studio-header {
@@ -192,45 +191,45 @@
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--lab-dark-border);
+  border-bottom: 1px solid var(--lab-border);
 }
 
 .lab-studio-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--lab-dark-text-primary);
+  color: var(--lab-text-primary);
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .lab-studio-badge {
-  background: var(--lab-dark-bg-tertiary);
-  color: var(--lab-dark-text-secondary);
+  background: var(--lab-bg-tertiary);
+  color: var(--lab-text-secondary);
   padding: 4px 8px;
   border-radius: var(--lab-radius-sm);
   font-size: 0.6875rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border);
 }
 
 /* Mode Toggle Buttons */
 .lab-mode-toggle {
   display: flex;
   gap: 6px;
-  background: var(--lab-dark-bg-secondary);
+  background: var(--lab-bg-tertiary);
   padding: 4px;
   border-radius: var(--lab-radius-sm);
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border);
 }
 
 .lab-mode-btn {
   padding: 6px 12px;
   border: none;
   background: transparent;
-  color: var(--lab-dark-text-secondary);
+  color: var(--lab-text-secondary);
   font-size: 0.8125rem;
   font-weight: 500;
   border-radius: var(--lab-radius-sm);
@@ -242,14 +241,14 @@
 }
 
 .lab-mode-btn.active {
-  background: var(--lab-dark-bg-tertiary);
-  color: var(--lab-dark-text-primary);
-  box-shadow: none;
+  background: var(--lab-bg-accent);
+  color: var(--lab-text-primary);
+  box-shadow: var(--lab-shadow-sm);
 }
 
 .lab-mode-btn:hover:not(.active) {
-  color: var(--lab-dark-text-primary);
-  background: var(--lab-dark-bg-tertiary);
+  color: var(--lab-text-primary);
+  background: var(--lab-bg-accent);
 }
 
 /* Color Picker Layout */
@@ -268,16 +267,16 @@
 
 /* Color Input Area */
 .lab-color-input-group {
-  background: var(--lab-dark-bg-secondary);
+  background: var(--lab-bg-tertiary);
   border-radius: var(--lab-radius-md);
-  padding: 16px;
-  border: 1px solid var(--lab-dark-border);
+  padding: 18px;
+  border: 1px solid var(--lab-border);
 }
 
 .lab-color-input-label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--lab-dark-text-primary);
+  color: var(--lab-text-primary);
   text-transform: uppercase;
   letter-spacing: 0.025em;
   margin-bottom: 12px;
@@ -293,49 +292,51 @@
 .lab-color-input {
   width: 60px;
   height: 60px;
-  border-radius: var(--lab-radius-sm);
-  border: 1px solid var(--lab-dark-border);
+  border-radius: var(--lab-radius-md);
+  border: 2px solid var(--lab-border);
   cursor: pointer;
   transition: var(--lab-transition);
-  background: var(--lab-dark-bg-primary);
+  background: var(--lab-bg-primary);
+  box-shadow: var(--lab-shadow-sm);
 }
 
 .lab-color-input:hover {
   transform: none;
-  border-color: var(--lab-dark-text-tertiary);
-  box-shadow: 0 0 0 1px rgba(163, 163, 163, 0.2);
+  border-color: var(--lab-accent);
+  box-shadow: var(--lab-shadow-md), 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .lab-color-hex-input {
   flex: 1;
   padding: 10px 12px;
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border);
   border-radius: var(--lab-radius-sm);
   font-size: 0.8125rem;
   font-weight: 500;
-  background: var(--lab-dark-bg-primary);
-  color: var(--lab-dark-text-primary);
+  background: var(--lab-bg-primary);
+  color: var(--lab-text-primary);
   transition: var(--lab-transition);
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
 .lab-color-hex-input:focus {
   outline: none;
-  border-color: var(--lab-dark-text-tertiary);
-  box-shadow: 0 0 0 1px rgba(163, 163, 163, 0.3);
+  border-color: var(--lab-accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Live Preview Section */
 .lab-preview-section {
-  background: var(--lab-dark-bg-secondary);
+  background: var(--lab-bg-tertiary);
   border-radius: var(--lab-radius-md);
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 240px;
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border);
+  box-shadow: var(--lab-shadow-sm);
 }
 
 .lab-preview-swatch {
@@ -343,11 +344,11 @@
   height: 80px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--lab-shadow-lg);
   margin-bottom: 16px;
   position: relative;
   transition: var(--lab-transition);
-  border: 2px solid var(--lab-dark-border);
+  border: 3px solid var(--lab-accent);
 }
 
 .lab-preview-swatch::after {
@@ -366,24 +367,24 @@
 .lab-pantone-code {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--lab-dark-text-primary);
+  color: var(--lab-text-primary);
   margin-bottom: 6px;
   padding: 6px 10px;
-  background: var(--lab-dark-bg-tertiary);
+  background: var(--lab-bg-accent);
   border-radius: var(--lab-radius-sm);
   display: inline-block;
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border-accent);
 }
 
 .lab-pantone-name {
   font-size: 0.8125rem;
-  color: var(--lab-dark-text-secondary);
+  color: var(--lab-text-secondary);
   margin-bottom: 4px;
 }
 
 .lab-pantone-match {
   font-size: 0.6875rem;
-  color: var(--lab-dark-text-tertiary);
+  color: var(--lab-text-tertiary);
 }
 
 /* Manual Entry Mode */
@@ -409,49 +410,50 @@
   display: block;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--lab-dark-text-primary);
+  color: var(--lab-text-primary);
   margin-bottom: 6px;
 }
 
 .lab-manual-input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid var(--lab-dark-border);
+  border: 1px solid var(--lab-border);
   border-radius: var(--lab-radius-sm);
   font-size: 0.8125rem;
   font-weight: 500;
-  background: var(--lab-dark-bg-primary);
-  color: var(--lab-dark-text-primary);
+  background: var(--lab-bg-primary);
+  color: var(--lab-text-primary);
   transition: var(--lab-transition);
 }
 
 .lab-manual-input:focus {
   outline: none;
-  border-color: var(--lab-dark-text-tertiary);
-  box-shadow: 0 0 0 1px rgba(163, 163, 163, 0.3);
+  border-color: var(--lab-accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Add to Cart Button */
 .lab-add-btn {
-  padding: 8px 16px;
-  background: var(--lab-primary);
-  color: white;
+  padding: 10px 18px;
+  background: var(--lab-accent);
+  color: var(--lab-primary);
   border: none;
-  border-radius: var(--lab-radius-sm);
+  border-radius: var(--lab-radius-md);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: var(--lab-transition);
   display: flex;
   align-items: center;
   gap: 6px;
-  box-shadow: none;
+  box-shadow: var(--lab-shadow-sm);
   white-space: nowrap;
 }
 
 .lab-add-btn:hover:not(:disabled) {
-  background: var(--lab-primary-light);
-  transform: none;
+  background: var(--lab-text-secondary);
+  box-shadow: var(--lab-shadow-md);
+  transform: translateY(-1px);
 }
 
 .lab-add-btn:disabled {
@@ -1040,11 +1042,12 @@
    CART-STYLE SWATCH DISPLAY
    ============================================ */
 .lab-swatch-cart-section {
-  background: var(--lab-bg-primary);
+  background: var(--lab-bg-secondary);
   border: 1px solid var(--lab-border);
-  border-radius: var(--lab-radius-md);
+  border-radius: var(--lab-radius-lg);
   padding: 24px;
   margin-bottom: 32px;
+  box-shadow: var(--lab-shadow-md);
 }
 
 .lab-cart-header {
@@ -1067,6 +1070,7 @@
   border-radius: var(--lab-radius-sm);
   font-size: 0.75rem;
   font-weight: 500;
+  border: 1px solid var(--lab-border);
 }
 
 /* Cart Items */
@@ -1078,16 +1082,19 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
-  background: var(--lab-bg-secondary);
-  border: 1px solid var(--lab-border-light);
+  padding: 14px;
+  background: var(--lab-bg-tertiary);
+  border: 1px solid var(--lab-border);
   border-radius: var(--lab-radius-md);
   margin-bottom: 8px;
   transition: var(--lab-transition);
+  box-shadow: var(--lab-shadow-sm);
 }
 
 .lab-cart-item:hover {
-  background: var(--lab-bg-tertiary);
+  background: var(--lab-bg-accent);
+  border-color: var(--lab-border-accent);
+  box-shadow: var(--lab-shadow-md);
 }
 
 .lab-cart-item-color {
@@ -1098,8 +1105,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--lab-border);
-  box-shadow: var(--lab-shadow-sm);
+  border: 2px solid var(--lab-accent);
+  box-shadow: var(--lab-shadow-md);
 }
 
 .lab-cart-item-details {
@@ -1128,7 +1135,7 @@
   border: 1px solid var(--lab-border);
   border-radius: var(--lab-radius-sm);
   background: var(--lab-bg-primary);
-  color: var(--lab-text-secondary);
+  color: var(--lab-text-primary);
   font-size: 0.75rem;
   cursor: pointer;
   min-width: 100px;
@@ -1136,7 +1143,8 @@
 
 .lab-cart-assign-select:focus {
   outline: none;
-  border-color: var(--lab-primary);
+  border-color: var(--lab-accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .lab-cart-item-remove {
@@ -1158,14 +1166,14 @@
 }
 
 .lab-cart-remove-btn:hover {
-  background: var(--lab-bg-tertiary);
+  background: var(--lab-bg-accent);
   color: var(--lab-danger);
 }
 
 .lab-cart-footer {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--lab-border);
+  border-top: 1px solid var(--lab-border-accent);
   display: flex;
   justify-content: flex-end;
 }
@@ -1176,11 +1184,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--lab-primary);
-  color: white;
+  background: var(--lab-accent);
+  color: var(--lab-primary);
   border-radius: 50%;
   font-size: 0.875rem;
   font-weight: 600;
+  box-shadow: var(--lab-shadow-sm);
 }
 
 /* Empty state for cart */
@@ -1218,6 +1227,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 1px solid var(--lab-border);
+  border: 2px solid var(--lab-accent);
   flex-shrink: 0;
+  box-shadow: var(--lab-shadow-sm);
 }
