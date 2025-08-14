@@ -16390,6 +16390,16 @@ setupInitialization();
         statusElement.textContent = message;
       }
     }
+
+    // Helper method to close all Lab Dip assignment menus
+    closeAllAssignmentMenus() {
+      document.querySelectorAll('.techpack-assignment-btn[data-lab-dip-id].techpack-assignment-btn--open').forEach(btn => {
+        btn.classList.remove('techpack-assignment-btn--open');
+      });
+      document.querySelectorAll('.techpack-assignment-menu[data-lab-dip-id].techpack-assignment-menu--open').forEach(menu => {
+        menu.classList.remove('techpack-assignment-menu--open');
+      });
+    }
   }
 
   // Global Design Sample Manager Class
@@ -17060,9 +17070,8 @@ setupInitialization();
         menu.style.setProperty('z-index', '999999', 'important');
         menu.style.setProperty('border-radius', '4px', 'important');
         
-        
-        
-        
+        // Query menu items after content update for debug logging
+        const menuItems = menu.querySelectorAll('.techpack-assignment-menu__item');
         
         debugSystem.log('🎨 Design Sample assignment menu opened:', { 
           designSampleId, 
@@ -17184,8 +17193,20 @@ setupInitialization();
           this.closeAllDesignSampleAssignmentMenus();
         }
       });
-
-      // Removed scroll event listener - it was causing duplicate menus
+      
+      // Add scroll event listener to close menus when scrolling
+      let scrollTimer = null;
+      window.addEventListener('scroll', () => {
+        // Use debouncing to avoid excessive calls
+        if (scrollTimer) clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+          this.closeAllDesignSampleAssignmentMenus();
+          // Also close Lab Dip assignment menus if they exist
+          if (window.globalLabDipManager && typeof window.globalLabDipManager.closeAllAssignmentMenus === 'function') {
+            window.globalLabDipManager.closeAllAssignmentMenus();
+          }
+        }, 50);
+      }, { passive: true });
     }
 
     // Update a single garment's Design Sample assignment display
