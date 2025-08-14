@@ -4265,7 +4265,7 @@ button:disabled.techpack-btn {
   border: 2px solid #e5e7eb;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 9999;
+  z-index: 99999;
   display: none;
 }
 
@@ -4524,7 +4524,7 @@ button:disabled.techpack-btn {
     left: 20px;
     right: 20px;
     width: auto;
-    z-index: 999;
+    z-index: 99999;
   }
 }
 
