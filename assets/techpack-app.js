@@ -12732,6 +12732,36 @@ setupInitialization();
           const labDipId = e.target.dataset.labDipId;
           this.selectLabDipForCustom(labDipId);
         }
+        
+        // Design Sample buttons
+        if (e.target.id === 'add-design-sample') {
+          debugSystem.log('🎨 ADD DESIGN SAMPLE button clicked!', { 
+            isDisabled: e.target.disabled,
+            hasDisabledClass: e.target.classList.contains('disabled'),
+            globalManager: !!window.globalDesignSampleManager,
+            buttonShouldBeEnabled: window.globalDesignSampleManager?.buttonShouldBeEnabled,
+            buttonElement: e.target,
+            buttonClasses: e.target.className
+          });
+          if (!e.target.disabled) {
+            debugSystem.log('✅ Design Sample button click proceeding - not disabled');
+            window.globalDesignSampleManager?.addDesignSampleFromInput();
+          } else {
+            debugSystem.log('❌ Design Sample button click blocked - button is disabled');
+          }
+        }
+        
+        // Remove design sample (uses same class as lab dip for styling)
+        if (e.target.classList.contains('techpack-lab-dip-item__remove')) {
+          const designSampleItem = e.target.closest('[data-design-sample-id]');
+          if (designSampleItem) {
+            const designSampleId = designSampleItem.dataset.designSampleId;
+            if (designSampleId) {
+              debugSystem.log('🗑️ Removing design sample:', designSampleId);
+              window.globalDesignSampleManager?.removeGlobalDesignSample(designSampleId);
+            }
+          }
+        }
 
         // ===============================================
         // COLORWAY-SPECIFIC LAB DIP EVENT HANDLING
@@ -15569,6 +15599,19 @@ setupInitialization();
         
         button.classList.add('techpack-assignment-btn--open');
         menu.classList.add('techpack-assignment-menu--open');
+        
+        // Move menu to document.body to escape stacking context and position it
+        if (!menu.dataset.movedToBody) {
+          menu.dataset.movedToBody = 'true';
+          document.body.appendChild(menu);
+        }
+        
+        // Always update position when opening (in case of scroll)
+        const buttonRect = button.getBoundingClientRect();
+        menu.style.position = 'fixed';
+        menu.style.top = `${buttonRect.bottom + 4}px`;
+        menu.style.left = `${buttonRect.right - 250}px`; // Align right edge
+        menu.style.right = 'auto';
       }
     }
     
@@ -16271,6 +16314,430 @@ setupInitialization();
     }
   }
 
+  // Global Design Sample Manager Class
+  class GlobalDesignSampleManager {
+    constructor(garmentManager = null) {
+      // Global design sample data structure
+      this.globalDesignSamples = new Map(); // id -> { name, type, source, assignments, status }
+      this.garmentAssignments = new Map(); // garmentId -> Set of design sample IDs
+      this.fabricDesignSamples = new Set(); // design sample IDs marked as fabric design samples only
+      
+      // Direct reference to garmentManager for integration
+      this.garmentManager = garmentManager;
+      
+      // Button state protection
+      this.buttonShouldBeEnabled = false;
+      
+      this.initializeEventListeners();
+      this.initializeExistingData();
+      this.handleRequestTypeVisibility();
+      
+      debugSystem.log('🎨 GlobalDesignSampleManager initialized with garmentManager:', !!this.garmentManager);
+    }
+    
+    // Initialize event listeners
+    initializeEventListeners() {
+      // Design name input validation
+      const designNameInput = document.getElementById('design-sample-name');
+      const designTypeSelect = document.getElementById('design-sample-type');
+      const addButton = document.getElementById('add-design-sample');
+      
+      if (designNameInput && designTypeSelect && addButton) {
+        const validateInputs = () => {
+          const hasName = designNameInput.value.trim() !== '';
+          const hasType = designTypeSelect.value !== '';
+          
+          this.buttonShouldBeEnabled = hasName && hasType;
+          addButton.disabled = !this.buttonShouldBeEnabled;
+          
+          if (this.buttonShouldBeEnabled) {
+            this.protectButtonState();
+          }
+        };
+        
+        designNameInput.addEventListener('input', validateInputs);
+        designTypeSelect.addEventListener('change', validateInputs);
+        
+        // Initial validation
+        validateInputs();
+      }
+      
+      // Design sample info modal
+      const infoButton = document.getElementById('design-sample-info-btn');
+      const infoModal = document.getElementById('design-sample-info-modal');
+      const closeButton = document.getElementById('design-sample-info-modal-close');
+      
+      if (infoButton && infoModal) {
+        infoButton.addEventListener('click', () => {
+          infoModal.style.display = 'block';
+        });
+      }
+      
+      if (closeButton && infoModal) {
+        closeButton.addEventListener('click', () => {
+          infoModal.style.display = 'none';
+        });
+      }
+      
+      // Backdrop click to close
+      if (infoModal) {
+        infoModal.addEventListener('click', (e) => {
+          if (e.target === infoModal) {
+            infoModal.style.display = 'none';
+          }
+        });
+      }
+    }
+    
+    // Protect button from being re-disabled by validation systems
+    protectButtonState() {
+      if (!this.buttonShouldBeEnabled) return;
+      
+      const checkInterval = setInterval(() => {
+        const addButton = document.getElementById('add-design-sample');
+        if (addButton && this.buttonShouldBeEnabled && (addButton.disabled || addButton.classList.contains('disabled'))) {
+          addButton.disabled = false;
+          addButton.classList.remove('disabled');
+          debugSystem.log('🛡️ Re-enabled design sample button - was disabled by external code');
+        }
+        
+        if (!this.buttonShouldBeEnabled) {
+          clearInterval(checkInterval);
+        }
+      }, 100);
+      
+      setTimeout(() => clearInterval(checkInterval), 30000);
+    }
+    
+    // Handle request type visibility - only show for sample requests
+    handleRequestTypeVisibility() {
+      const globalDesignSampleContainer = document.querySelector('.techpack-global-design-samples');
+      
+      const checkVisibility = () => {
+        const requestType = window.techpackApp?.state?.formData?.requestType || state?.formData?.requestType || '';
+        
+        if (globalDesignSampleContainer) {
+          const shouldShow = requestType === 'sample-request';
+          globalDesignSampleContainer.style.display = shouldShow ? 'block' : 'none';
+          
+          if (shouldShow) {
+            this.renderGlobalDesignSampleList();
+          }
+        }
+      };
+      
+      this.checkVisibility = checkVisibility;
+      
+      setTimeout(checkVisibility, 100);
+      
+      // Listen for request type changes
+      document.addEventListener('techpack:requestTypeChanged', checkVisibility);
+    }
+    
+    // Initialize with existing data
+    initializeExistingData() {
+      this.renderGlobalDesignSampleList();
+      debugSystem.log('🔄 Initialized design sample data');
+    }
+    
+    // Add design sample from input form
+    addDesignSampleFromInput() {
+      const designNameInput = document.getElementById('design-sample-name');
+      const designTypeSelect = document.getElementById('design-sample-type');
+      
+      const designName = designNameInput?.value?.trim();
+      const designType = designTypeSelect?.value;
+      
+      if (!designName || !designType) {
+        debugSystem.log('Design sample validation failed: missing name or type');
+        return;
+      }
+      
+      // Generate unique ID
+      const id = `design-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Create design sample object
+      const designSample = {
+        id: id,
+        name: designName,
+        type: designType,
+        source: 'manual-entry',
+        assignments: new Set(),
+        status: 'unassigned'
+      };
+      
+      // Add to global collection
+      this.globalDesignSamples.set(id, designSample);
+      
+      // Update fabric design samples set (initially unassigned)
+      this.fabricDesignSamples.add(id);
+      
+      // Clear inputs
+      designNameInput.value = '';
+      designTypeSelect.value = '';
+      
+      // Re-validate inputs to disable button
+      this.buttonShouldBeEnabled = false;
+      const addButton = document.getElementById('add-design-sample');
+      if (addButton) addButton.disabled = true;
+      
+      // Render updated list
+      this.renderGlobalDesignSampleList();
+      
+      debugSystem.log('🎨 Added design sample:', designSample);
+    }
+    
+    // Remove design sample
+    removeGlobalDesignSample(designSampleId) {
+      if (!this.globalDesignSamples.has(designSampleId)) return;
+      
+      // Clean up all assignments
+      this.cleanupAllAssignments(designSampleId);
+      
+      // Remove from global collection
+      this.globalDesignSamples.delete(designSampleId);
+      this.fabricDesignSamples.delete(designSampleId);
+      
+      // Render updated list
+      this.renderGlobalDesignSampleList();
+      
+      debugSystem.log('🗑️ Removed design sample:', designSampleId);
+    }
+    
+    // Clean up all assignments for a design sample
+    cleanupAllAssignments(designSampleId) {
+      // Remove from garment assignments
+      this.garmentAssignments.forEach((designSampleIds, garmentId) => {
+        if (designSampleIds.has(designSampleId)) {
+          designSampleIds.delete(designSampleId);
+          if (designSampleIds.size === 0) {
+            this.garmentAssignments.delete(garmentId);
+          }
+        }
+      });
+      
+      // Update the design sample's assignments
+      const designSample = this.globalDesignSamples.get(designSampleId);
+      if (designSample) {
+        designSample.assignments.clear();
+        designSample.status = 'unassigned';
+      }
+    }
+    
+    // Clean up assignments for removed garment
+    cleanupGarmentAssignments(garmentId) {
+      const assignedDesignSamples = this.garmentAssignments.get(garmentId);
+      if (!assignedDesignSamples) return;
+      
+      // Update each assigned design sample
+      assignedDesignSamples.forEach(designSampleId => {
+        const designSample = this.globalDesignSamples.get(designSampleId);
+        if (designSample) {
+          designSample.assignments.delete(garmentId);
+          
+          // Update status
+          if (designSample.assignments.size === 0) {
+            designSample.status = 'unassigned';
+            this.fabricDesignSamples.add(designSampleId);
+          } else {
+            designSample.status = 'assigned';
+            this.fabricDesignSamples.delete(designSampleId);
+          }
+        }
+      });
+      
+      // Remove garment from assignments map
+      this.garmentAssignments.delete(garmentId);
+      
+      // Re-render to reflect changes
+      this.renderGlobalDesignSampleList();
+      
+      debugSystem.log('🧹 Cleaned up design sample assignments for garment:', garmentId);
+    }
+    
+    // Assign design sample to garment
+    assignToGarment(designSampleId, garmentId) {
+      const designSample = this.globalDesignSamples.get(designSampleId);
+      if (!designSample) return;
+      
+      // Add to garment assignments
+      if (!this.garmentAssignments.has(garmentId)) {
+        this.garmentAssignments.set(garmentId, new Set());
+      }
+      this.garmentAssignments.get(garmentId).add(designSampleId);
+      
+      // Update design sample assignments
+      designSample.assignments.add(garmentId);
+      designSample.status = 'assigned';
+      
+      // Remove from fabric design samples
+      this.fabricDesignSamples.delete(designSampleId);
+      
+      // Re-render to reflect changes
+      this.renderGlobalDesignSampleList();
+      
+      debugSystem.log('✅ Assigned design sample to garment:', { designSampleId, garmentId });
+    }
+    
+    // Unassign design sample from garment
+    unassignFromGarment(designSampleId, garmentId) {
+      const designSample = this.globalDesignSamples.get(designSampleId);
+      if (!designSample) return;
+      
+      // Remove from garment assignments
+      const garmentDesignSamples = this.garmentAssignments.get(garmentId);
+      if (garmentDesignSamples) {
+        garmentDesignSamples.delete(designSampleId);
+        if (garmentDesignSamples.size === 0) {
+          this.garmentAssignments.delete(garmentId);
+        }
+      }
+      
+      // Update design sample assignments
+      designSample.assignments.delete(garmentId);
+      
+      // Update status
+      if (designSample.assignments.size === 0) {
+        designSample.status = 'unassigned';
+        this.fabricDesignSamples.add(designSampleId);
+      }
+      
+      // Re-render to reflect changes
+      this.renderGlobalDesignSampleList();
+      
+      debugSystem.log('❌ Unassigned design sample from garment:', { designSampleId, garmentId });
+    }
+    
+    // Render the global design sample list
+    renderGlobalDesignSampleList() {
+      this.updateAssignmentSummary();
+      this.updateCategorizedSections();
+    }
+    
+    // Update assignment summary dashboard
+    updateAssignmentSummary() {
+      const assignmentSummary = document.getElementById('design-assignment-summary');
+      const assignedCountEl = document.getElementById('design-assigned-count');
+      const fabricSampleCountEl = document.getElementById('design-fabric-sample-count');
+      
+      if (!assignmentSummary || !assignedCountEl || !fabricSampleCountEl) return;
+      
+      const assignedCount = Array.from(this.globalDesignSamples.values()).filter(ds => ds.status === 'assigned').length;
+      const fabricSampleCount = this.fabricDesignSamples.size;
+      
+      assignedCountEl.textContent = assignedCount;
+      fabricSampleCountEl.textContent = fabricSampleCount;
+      
+      // Show/hide summary based on whether there are any design samples
+      const hasDesignSamples = this.globalDesignSamples.size > 0;
+      assignmentSummary.style.display = hasDesignSamples ? 'block' : 'none';
+    }
+    
+    // Update categorized sections
+    updateCategorizedSections() {
+      this.updateAssignedSection();
+      this.updateFabricSampleSection();
+      this.updateEmptyState();
+    }
+    
+    // Update assigned design samples section
+    updateAssignedSection() {
+      const assignedCategory = document.getElementById('design-assigned-category');
+      const assignedList = document.getElementById('design-assigned-list');
+      const assignedCategoryCount = document.getElementById('design-assigned-category-count');
+      
+      if (!assignedCategory || !assignedList || !assignedCategoryCount) return;
+      
+      const assignedDesignSamples = Array.from(this.globalDesignSamples.values()).filter(ds => ds.status === 'assigned');
+      
+      assignedCategoryCount.textContent = assignedDesignSamples.length;
+      
+      if (assignedDesignSamples.length > 0) {
+        assignedList.innerHTML = assignedDesignSamples.map(designSample => this.createDesignSampleItem(designSample, true)).join('');
+        assignedCategory.style.display = 'block';
+      } else {
+        assignedCategory.style.display = 'none';
+      }
+    }
+    
+    // Update fabric design sample section
+    updateFabricSampleSection() {
+      const fabricSampleCategory = document.getElementById('design-fabric-sample-category');
+      const fabricSampleList = document.getElementById('design-fabric-sample-list');
+      const fabricSampleCategoryCount = document.getElementById('design-fabric-sample-category-count');
+      
+      if (!fabricSampleCategory || !fabricSampleList || !fabricSampleCategoryCount) return;
+      
+      const fabricDesignSamples = Array.from(this.globalDesignSamples.values()).filter(ds => this.fabricDesignSamples.has(ds.id));
+      
+      fabricSampleCategoryCount.textContent = fabricDesignSamples.length;
+      
+      if (fabricDesignSamples.length > 0) {
+        fabricSampleList.innerHTML = fabricDesignSamples.map(designSample => this.createDesignSampleItem(designSample, false)).join('');
+        fabricSampleCategory.style.display = 'block';
+      } else {
+        fabricSampleCategory.style.display = 'none';
+      }
+    }
+    
+    // Update empty state
+    updateEmptyState() {
+      const emptyState = document.getElementById('design-sample-empty');
+      if (!emptyState) return;
+      
+      const hasDesignSamples = this.globalDesignSamples.size > 0;
+      emptyState.style.display = hasDesignSamples ? 'none' : 'block';
+    }
+    
+    // Create design sample item HTML
+    createDesignSampleItem(designSample, isAssigned) {
+      const assignmentInfo = isAssigned ? this.getAssignmentInfo(designSample) : '';
+      
+      return `
+        <div class="techpack-lab-dip-item" data-design-sample-id="${designSample.id}">
+          <div class="techpack-lab-dip-item__visual">
+            <div class="techpack-lab-dip-item__badge" data-source="design">${this.getDesignTypeIcon(designSample.type)}</div>
+          </div>
+          <div class="techpack-lab-dip-item__info">
+            <div class="techpack-lab-dip-item__code">${designSample.name}</div>
+            <div class="techpack-lab-dip-item__source">${designSample.type}</div>
+            ${assignmentInfo}
+          </div>
+          <div class="techpack-lab-dip-item__actions">
+            <button type="button" class="techpack-lab-dip-item__remove" aria-label="Remove design sample" title="Remove" onclick="window.globalDesignSampleManager?.removeGlobalDesignSample('${designSample.id}')">
+              <svg width="14" height="14" viewBox="0 0 16 16">
+                <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Get design type icon
+    getDesignTypeIcon(type) {
+      const icons = {
+        'Embroidery': '🧵',
+        'Screen Print': '🖨️', 
+        'Digital Print': '💻',
+        'Other': '🎨'
+      };
+      return icons[type] || '🎨';
+    }
+    
+    // Get assignment information for assigned design samples
+    getAssignmentInfo(designSample) {
+      if (designSample.assignments.size === 0) return '';
+      
+      const garmentNumbers = Array.from(designSample.assignments).map(garmentId => {
+        const garmentElement = document.querySelector(`[data-garment-id="${garmentId}"]`);
+        return garmentElement?.querySelector('.techpack-garment__number')?.textContent || garmentId;
+      }).join(', ');
+      
+      return `<div class="techpack-lab-dip-item__assignment">Assigned to: Garment ${garmentNumbers}</div>`;
+    }
+  }
+
   // Initialize Sample Manager
   const sampleManager = new SampleManager();
   
@@ -16282,6 +16749,12 @@ setupInitialization();
   
   // Make it globally available
   window.globalLabDipManager = globalLabDipManager;
+  
+  // Initialize Global Design Sample Manager with garmentManager reference
+  const globalDesignSampleManager = new GlobalDesignSampleManager(garmentManager);
+  
+  // Make it globally available
+  window.globalDesignSampleManager = globalDesignSampleManager;
 
   // Integrate with existing step navigation - FIXED to use proper validation flow
   const originalValidateStep = window.validateStep;

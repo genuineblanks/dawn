@@ -4299,15 +4299,13 @@ button:disabled.techpack-btn {
 
 /* Assignment Dropdown Menu */
 .techpack-assignment-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
+  position: fixed;
   width: 250px;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 99999;
+  z-index: 999999;
   display: none;
 }
 
@@ -9550,6 +9548,431 @@ UNIFIED COLOR PICKER STYLING
   }
   
   .techpack-production-option {
+    padding: 1.25rem;
+  }
+}
+
+/* 
+===========================================
+DESIGN SAMPLES & LAB DIPS SPLIT LAYOUT
+===========================================
+*/
+
+/* Container for the 50/50 split layout */
+.techpack-samples-lab-dips-container {
+  margin-top: 2rem;
+}
+
+/* 50/50 Grid Layout */
+.techpack-samples-lab-dips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Responsive: Stack on mobile */
+@media (max-width: 768px) {
+  .techpack-samples-lab-dips-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* 
+===========================================
+DESIGN SAMPLE SYSTEM STYLES
+===========================================
+*/
+
+/* Design Sample Section Styling (mirrors lab dips) */
+.techpack-global-design-samples {
+  margin-top: 0; /* Remove margin since it's in grid */
+  padding: 1.75rem;
+  background: #ffffff;
+  border: 2px solid #f1f5f9;
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 16px rgba(71, 85, 105, 0.08),
+    0 1px 3px rgba(71, 85, 105, 0.04);
+}
+
+.techpack-global-design-samples .techpack-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.techpack-global-design-samples .techpack-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+/* Design Input System */
+.techpack-design-sample-input-system {
+  margin-bottom: 1.5rem;
+}
+
+.techpack-design-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-design-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.techpack-design-name-section,
+.techpack-design-type-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.techpack-design-input-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+/* Design Sample List with Smart Categorization */
+.techpack-design-sample-global-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Assignment Summary Dashboard (same as lab dips) */
+.techpack-design-sample-assignment-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.techpack-design-sample-assignment-summary .techpack-assignment-summary__header {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.techpack-design-sample-assignment-summary .techpack-assignment-summary__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Categorized Design Sample Sections */
+.techpack-design-sample-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-design-sample-category {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.techpack-design-sample-category .techpack-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.techpack-design-sample-category .techpack-category-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.techpack-design-sample-category .techpack-category-title svg {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+}
+
+.techpack-design-sample-category .techpack-category-count {
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.techpack-design-sample-category .techpack-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Empty State */
+.techpack-design-sample-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: #9ca3af;
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+}
+
+.techpack-design-sample-empty .techpack-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.techpack-design-sample-empty .techpack-empty-state svg {
+  width: 20px;
+  height: 20px;
+  color: #d1d5db;
+}
+
+.techpack-design-sample-empty .techpack-empty-state span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 
+===========================================
+DESIGN SAMPLE MODAL STYLES
+===========================================
+*/
+
+/* Design Sample Modal Specific Styling */
+.techpack-design-sample-explanation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.techpack-design-sample-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.techpack-design-sample-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.techpack-design-sample-intro-content {
+  flex: 1;
+}
+
+.techpack-design-sample-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.techpack-design-sample-description {
+  font-size: 0.9375rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Design Sample Section */
+.techpack-design-sample-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-design-sample-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.techpack-design-sample-section-title svg {
+  color: #6366f1;
+}
+
+.techpack-design-sample-points {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.techpack-design-sample-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+}
+
+.techpack-point-number {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #6366f1;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.techpack-point-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.techpack-point-content strong {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.techpack-point-content span {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Design Sample Tip */
+.techpack-design-sample-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.techpack-tip-icon {
+  flex-shrink: 0;
+  color: #d97706;
+}
+
+.techpack-tip-content h6 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 0.25rem 0;
+}
+
+.techpack-tip-content p {
+  font-size: 0.8125rem;
+  color: #a16207;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Design Sample Visual Guide */
+.techpack-design-sample-visual {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.techpack-visual-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.techpack-visual-header svg {
+  color: #6b7280;
+}
+
+/* 
+===========================================
+RESPONSIVE DESIGN ADJUSTMENTS
+===========================================
+*/
+
+@media (max-width: 768px) {
+  /* Adjust grid layouts for mobile */
+  .techpack-design-input-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .techpack-design-sample-assignment-summary .techpack-assignment-summary__stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .techpack-design-sample-intro {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .techpack-design-sample-point {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .techpack-design-sample-tip {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  /* Reduce padding on mobile */
+  .techpack-global-design-samples {
     padding: 1.25rem;
   }
 }
