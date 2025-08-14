@@ -40,29 +40,8 @@ CSS CUSTOM PROPERTIES - UNIFIED COLOR SYSTEM
 */
 
 :root {
-  /* Enhanced Professional White + Grey Theme System */
+  /* Unified design system specific variables - all core variables inherited from techpack-app.css */
   --techpack-accent: #374151;
-  
-  /* Professional Grey Scale - Clean & Modern */
-  --techpack-white: #ffffff;
-  --techpack-grey-50: #f9fafb;    /* Lightest background */
-  --techpack-grey-100: #f3f4f6;   /* Subtle background */
-  --techpack-grey-200: #e5e7eb;   /* Light borders, dividers */
-  --techpack-grey-300: #d1d5db;   /* Medium borders */
-  --techpack-grey-400: #9ca3af;   /* Placeholder text */
-  --techpack-grey-500: #6b7280;   /* Secondary text */
-  --techpack-grey-600: #4b5563;   /* Primary text */
-  --techpack-grey-700: #374151;   /* Headers, emphasis */
-  --techpack-grey-800: #1f2937;   /* Dark text */
-  --techpack-grey-900: #111827;   /* Darkest elements */
-  
-  /* Professional Accent Colors */
-  --techpack-blue: #3b82f6;       /* Primary actions */
-  --techpack-blue-light: #dbeafe;  /* Light blue backgrounds */
-  --techpack-green: #10b981;      /* Success states */
-  --techpack-green-light: #d1fae5; /* Success backgrounds */
-  --techpack-amber: #f59e0b;      /* Warning states */
-  --techpack-red: #ef4444;        /* Error states */
 }
 
 /* 
@@ -10195,14 +10174,11 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
   display: block !important; /* DEBUG: Force display */
 }
 
-/* DEBUG: Make Design Sample sections very visible */
+/* Design Sample sections styling */
 .techpack-stock-design-samples,
 .techpack-custom-design-samples {
-  border: 3px solid #00ff00 !important; /* DEBUG: GREEN BORDER */
-  background: #ffff00 !important; /* DEBUG: YELLOW BACKGROUND */
-  padding: 10px !important;
-  margin: 10px 0 !important;
-  display: block !important; /* Force display */
+  display: block;
+  margin: 16px 0;
 }
 
 /* Design Sample Empty State Styling (matches Lab Dip styling) */
@@ -10262,3 +10238,4 @@ DESIGN SAMPLE ASSIGNMENT CARDS - GARMENT DISPLAY
     height: 20px;
   }
 }
+
