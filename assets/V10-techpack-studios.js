@@ -4587,23 +4587,34 @@ class V10_ModalManager {
   updateFormForSubmissionType(submissionType) {
     console.log(`🔄 Updating form for submission type: ${submissionType}`);
     
+    // Update client status badge
+    const statusBadge = document.getElementById('v10-client-status-badge');
+    if (statusBadge) {
+      statusBadge.textContent = this.currentClientType === 'new' ? 'New Client' : 'Registered Client';
+      statusBadge.style.background = this.currentClientType === 'new' 
+        ? 'linear-gradient(135deg, #f59e0b, #d97706)' 
+        : 'linear-gradient(135deg, #10b981, #059669)';
+    }
+    
     // Update subtitle based on submission type
     const subtitle = document.getElementById('v10-client-info-subtitle');
     if (subtitle) {
       const subtitles = {
-        'quotation': 'Please provide your business details to receive pricing estimates',
-        'sample-request': 'Please provide your business details for sample production',
-        'bulk-order-request': 'Please provide your business details for bulk order processing',
-        'lab-dips-accessories': 'Please provide your business details for lab dip and accessory orders'
+        'quotation': 'Enter your information to begin pricing development',
+        'sample-request': 'Enter your information to begin sample development',
+        'bulk-order-request': 'Enter your information to begin bulk order processing',
+        'lab-dips-accessories': 'Enter your information to begin lab dip and accessory orders'
       };
       subtitle.textContent = subtitles[submissionType] || subtitles['quotation'];
     }
     
     // Show/hide conditional sections
+    const deliveryAddressField = document.getElementById('v10-delivery-address-field');
     const deliverySection = document.getElementById('v10-delivery-section');
     const shippingSection = document.getElementById('v10-shipping-section');
     
     // Hide all conditional sections first
+    if (deliveryAddressField) deliveryAddressField.style.display = 'none';
     if (deliverySection) deliverySection.style.display = 'none';
     if (shippingSection) shippingSection.style.display = 'none';
     
@@ -4614,16 +4625,16 @@ class V10_ModalManager {
         break;
         
       case 'sample-request':
-        // Show delivery section for samples
-        if (deliverySection) {
-          deliverySection.style.display = 'block';
+        // Show delivery address field for samples
+        if (deliveryAddressField) {
+          deliveryAddressField.style.display = 'block';
         }
         break;
         
       case 'bulk-order-request':
-        // Show both delivery and shipping sections for bulk orders
-        if (deliverySection) {
-          deliverySection.style.display = 'block';
+        // Show delivery address field and shipping sections for bulk orders
+        if (deliveryAddressField) {
+          deliveryAddressField.style.display = 'block';
         }
         if (shippingSection) {
           shippingSection.style.display = 'block';
@@ -4631,9 +4642,9 @@ class V10_ModalManager {
         break;
         
       case 'lab-dips-accessories':
-        // Show delivery section for lab dips/accessories
-        if (deliverySection) {
-          deliverySection.style.display = 'block';
+        // Show delivery address field for lab dips/accessories
+        if (deliveryAddressField) {
+          deliveryAddressField.style.display = 'block';
         }
         break;
     }
@@ -4676,7 +4687,7 @@ class V10_ModalManager {
     const deliveryRadios = document.querySelectorAll('input[name="deliveryAddress"]');
     const differentAddressForm = document.getElementById('v10-different-address-form');
     
-    if (!deliveryRadios.length || !differentAddressForm) return;
+    if (!deliveryRadios.length) return;
     
     // Remove existing listeners
     deliveryRadios.forEach(radio => {
@@ -4687,6 +4698,9 @@ class V10_ModalManager {
     deliveryRadios.forEach(radio => {
       radio.addEventListener('change', this.handleDeliveryAddressChange.bind(this));
     });
+    
+    // Setup professional validation for all enhanced form fields
+    this.setupProfessionalValidation();
     
     // Initial state
     this.handleDeliveryAddressChange();
@@ -4700,18 +4714,152 @@ class V10_ModalManager {
       if (selectedValue === 'different') {
         differentAddressForm.style.display = 'block';
         // Add animation class for smooth transition
-        differentAddressForm.classList.add('v10-form-animate-in');
+        setTimeout(() => {
+          differentAddressForm.classList.add('v10-form-animate-in');
+        }, 50);
       } else {
-        differentAddressForm.style.display = 'none';
         differentAddressForm.classList.remove('v10-form-animate-in');
+        setTimeout(() => {
+          differentAddressForm.style.display = 'none';
+        }, 300);
         
         // Clear different address fields when hidden
         const inputs = differentAddressForm.querySelectorAll('input, textarea');
         inputs.forEach(input => {
           input.value = '';
+          this.clearFieldValidation(input);
         });
       }
     }
+  }
+  
+  setupProfessionalValidation() {
+    const enhancedInputs = document.querySelectorAll('.v10-form-input-enhanced');
+    
+    enhancedInputs.forEach(input => {
+      // Remove existing listeners
+      input.removeEventListener('blur', this.handleFieldValidation);
+      input.removeEventListener('input', this.handleFieldInput);
+      
+      // Add professional validation listeners
+      input.addEventListener('blur', this.handleFieldValidation.bind(this));
+      input.addEventListener('input', this.handleFieldInput.bind(this));
+    });
+  }
+  
+  handleFieldValidation(event) {
+    const field = event.target;
+    const fieldContainer = field.closest('.v10-form-field');
+    const validationType = field.getAttribute('data-validate');
+    
+    if (!fieldContainer || !validationType) return;
+    
+    const value = field.value.trim();
+    let isValid = true;
+    let message = '';
+    let messageType = 'success';
+    
+    // Validation logic
+    switch (validationType) {
+      case 'required':
+        if (!value) {
+          isValid = false;
+          message = `${this.getFieldLabel(field)} is required`;
+          messageType = 'error';
+        } else {
+          message = `${this.getFieldLabel(field)} looks good`;
+          messageType = 'success';
+        }
+        break;
+        
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) {
+          isValid = false;
+          message = 'Email address is required';
+          messageType = 'error';
+        } else if (!emailRegex.test(value)) {
+          isValid = false;
+          message = 'Please enter a valid email address';
+          messageType = 'error';
+        } else {
+          message = 'Email address is valid';
+          messageType = 'success';
+        }
+        break;
+        
+      case 'required-if-different':
+        const isDifferentAddress = document.querySelector('input[name="deliveryAddress"]:checked')?.value === 'different';
+        if (isDifferentAddress && !value) {
+          isValid = false;
+          message = `${this.getFieldLabel(field)} is required for different address`;
+          messageType = 'error';
+        } else if (value) {
+          message = `${this.getFieldLabel(field)} looks good`;
+          messageType = 'success';
+        }
+        break;
+    }
+    
+    this.showValidationMessage(fieldContainer, messageType, message, isValid);
+  }
+  
+  handleFieldInput(event) {
+    const field = event.target;
+    const fieldContainer = field.closest('.v10-form-field');
+    
+    // Clear error state on input
+    if (fieldContainer && fieldContainer.classList.contains('v10-form-field--error')) {
+      this.clearFieldValidation(field);
+    }
+  }
+  
+  showValidationMessage(fieldContainer, type, message, isValid) {
+    const validationMessage = fieldContainer.querySelector('.v10-validation-message');
+    
+    if (!validationMessage) return;
+    
+    // Update field state
+    fieldContainer.classList.remove('v10-form-field--success', 'v10-form-field--error', 'v10-form-field--warning');
+    validationMessage.classList.remove('v10-validation-message--success', 'v10-validation-message--error', 'v10-validation-message--warning');
+    
+    if (message) {
+      fieldContainer.classList.add(`v10-form-field--${type}`);
+      validationMessage.classList.add(`v10-validation-message--${type}`);
+      
+      const icon = this.getValidationIcon(type);
+      validationMessage.innerHTML = `${icon}<span>${message}</span>`;
+      validationMessage.style.display = 'flex';
+    } else {
+      validationMessage.style.display = 'none';
+    }
+  }
+  
+  clearFieldValidation(field) {
+    const fieldContainer = field.closest('.v10-form-field');
+    const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
+    
+    if (fieldContainer) {
+      fieldContainer.classList.remove('v10-form-field--success', 'v10-form-field--error', 'v10-form-field--warning');
+    }
+    
+    if (validationMessage) {
+      validationMessage.style.display = 'none';
+    }
+  }
+  
+  getFieldLabel(field) {
+    const label = field.closest('.v10-form-field')?.querySelector('.v10-form-label-enhanced');
+    return label ? label.textContent.replace(' *', '').toLowerCase() : 'field';
+  }
+  
+  getValidationIcon(type) {
+    const icons = {
+      success: '<svg class="v10-validation-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm3.5 6L7 10.5 4.5 8l1-1L7 8.5l3.5-3.5 1 1z"/></svg>',
+      error: '<svg class="v10-validation-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/></svg>',
+      warning: '<svg class="v10-validation-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/></svg>'
+    };
+    return icons[type] || '';
   }
   
   setupCharacterCounter() {
