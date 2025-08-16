@@ -385,6 +385,7 @@ class V10_GarmentStudio {
     if (this.garmentsContainer) {
       this.garmentsContainer.addEventListener('click', (e) => this.handleGarmentActions(e));
       this.garmentsContainer.addEventListener('change', (e) => this.handleGarmentChanges(e));
+      this.garmentsContainer.addEventListener('click', (e) => this.handleCompactClicks(e));
     }
 
     this.eventListenersAttached = true;
@@ -529,6 +530,13 @@ class V10_GarmentStudio {
         return;
       }
 
+      // Initialize compact interface
+      try {
+        this.initializeCompactInterface(clone);
+      } catch (compactError) {
+        console.error('❌ Error initializing compact interface:', compactError);
+      }
+
       // Update status
       try {
         this.updateGarmentStatus(garmentData.id);
@@ -669,6 +677,21 @@ class V10_GarmentStudio {
     }
   }
 
+  handleCompactClicks(e) {
+    // Handle compact interface clicks
+    if (e.target.closest('.selection-placeholder')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const widget = e.target.closest('.compact-selection-widget');
+      this.toggleSelection(widget);
+    } else if (e.target.closest('.change-selection-btn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
+      this.toggleSelection(widget);
+    }
+  }
+
   handleGarmentChanges(e) {
     const garmentCard = e.target.closest('.garment-card');
     if (!garmentCard) return;
@@ -677,16 +700,27 @@ class V10_GarmentStudio {
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentData) return;
 
-    // Handle garment type change
+    // Handle garment type change (compact and regular)
     if (e.target.name.includes('garmentType')) {
       garmentData.type = e.target.value;
       this.populateFabricOptions(garmentCard, e.target.value);
       garmentData.fabricType = ''; // Reset fabric selection
+      
+      // Handle compact interface selection update
+      if (e.target.closest('.compact-radio-card')) {
+        this.updateCompactSelection('garment', e.target.value, garmentCard);
+        this.enableFabricSelection(garmentCard);
+      }
     }
 
-    // Handle fabric type change
+    // Handle fabric type change (compact and regular)
     if (e.target.name.includes('fabricType')) {
       garmentData.fabricType = e.target.value;
+      
+      // Handle compact interface selection update
+      if (e.target.closest('.compact-radio-card')) {
+        this.updateCompactSelection('fabric', e.target.value, garmentCard);
+      }
     }
 
     // Handle sample type change
@@ -939,6 +973,165 @@ class V10_GarmentStudio {
       isValid: errors.length === 0,
       errors
     };
+  }
+
+  // ==============================================
+  // COMPACT INTERFACE METHODS
+  // ==============================================
+
+  toggleSelection(selectionWidget) {
+    if (!selectionWidget) return;
+
+    const garmentCard = selectionWidget.closest('.garment-card');
+    const isGarmentType = selectionWidget.closest('.compact-selection-section') === garmentCard.querySelector('.garment-fabric-split-container').firstElementChild;
+    
+    const collapsed = selectionWidget.querySelector('.compact-selection-widget');
+    const expanded = selectionWidget.closest('.compact-selection-section').querySelector('.selection-expanded');
+    const placeholder = selectionWidget.querySelector('.selection-placeholder');
+    
+    if (expanded.style.display === 'none' || !expanded.style.display) {
+      // Show expanded state
+      collapsed.style.display = 'none';
+      expanded.style.display = 'block';
+      placeholder.classList.add('expanded');
+      
+      // Close other expanded selections in this garment card
+      this.closeOtherSelections(garmentCard, selectionWidget);
+    } else {
+      // Show collapsed state
+      collapsed.style.display = 'block';
+      expanded.style.display = 'none';
+      placeholder.classList.remove('expanded');
+    }
+  }
+
+  closeOtherSelections(garmentCard, exceptWidget) {
+    const allWidgets = garmentCard.querySelectorAll('.compact-selection-widget');
+    allWidgets.forEach(widget => {
+      if (widget !== exceptWidget) {
+        const section = widget.closest('.compact-selection-section');
+        const collapsed = widget;
+        const expanded = section.querySelector('.selection-expanded');
+        const placeholder = widget.querySelector('.selection-placeholder');
+        
+        collapsed.style.display = 'block';
+        if (expanded) expanded.style.display = 'none';
+        if (placeholder) placeholder.classList.remove('expanded');
+      }
+    });
+  }
+
+  updateCompactSelection(type, value, garmentCard) {
+    if (type === 'garment') {
+      const garmentIcon = this.getGarmentIcon(value);
+      const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
+      const selectedName = garmentCard.querySelector('#garment-selected-name');
+      const placeholder = garmentCard.querySelector('#garment-placeholder');
+      const display = garmentCard.querySelector('#garment-display');
+      
+      if (selectedIcon) selectedIcon.textContent = garmentIcon;
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+      }, 300);
+      
+    } else if (type === 'fabric') {
+      const selectedIcon = garmentCard.querySelector('#fabric-selected-icon');
+      const selectedName = garmentCard.querySelector('#fabric-selected-name');
+      const placeholder = garmentCard.querySelector('#fabric-placeholder');
+      const display = garmentCard.querySelector('#fabric-display');
+      
+      if (selectedIcon) selectedIcon.textContent = '🧵';
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+      }, 300);
+    }
+  }
+
+  enableFabricSelection(garmentCard) {
+    const fabricSection = garmentCard.querySelector('.compact-selection-section[data-show-for]');
+    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    
+    if (fabricSection && this.shouldShowSection(fabricSection)) {
+      // Make fabric selection available
+      if (fabricCollapsed) {
+        fabricCollapsed.style.opacity = '1';
+        fabricCollapsed.style.pointerEvents = 'auto';
+      }
+      if (fabricPlaceholder) {
+        fabricPlaceholder.style.cursor = 'pointer';
+        fabricPlaceholder.querySelector('.placeholder-text').textContent = 'Select fabric type';
+      }
+    }
+  }
+
+  getGarmentIcon(garmentType) {
+    const iconMap = {
+      'Zip-Up Hoodie': '🧥',
+      'Hoodie': '👕',
+      'T-Shirt': '👔',
+      'Sweatshirt': '🧥',
+      'Sweatpants': '👖',
+      'Shorts': '🩳',
+      'Long Sleeve T-Shirt': '👕',
+      'Shirt': '👔',
+      'Polo Shirt': '👕',
+      'Tank Top': '🎽',
+      'Hat/Cap': '🧢',
+      'Beanie': '🧿',
+      'Other': '✨'
+    };
+    return iconMap[garmentType] || '👕';
+  }
+
+  shouldShowSection(section) {
+    const showFor = section.getAttribute('data-show-for');
+    if (!showFor) return true;
+    
+    const requestType = V10_State.requestType;
+    const allowedTypes = showFor.split(',').map(type => type.trim());
+    
+    // Map request types to match the data-show-for attribute
+    const typeMap = {
+      'quotation': 'quotation',
+      'sample-request': 'sample',
+      'bulk-order-request': 'bulk'
+    };
+    
+    const mappedType = typeMap[requestType] || requestType;
+    return allowedTypes.includes(mappedType);
+  }
+
+  initializeCompactInterface(garmentCard) {
+    // Set up initial states
+    const garmentExpanded = garmentCard.querySelector('#garment-expanded');
+    const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
+    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    
+    if (garmentExpanded) garmentExpanded.style.display = 'none';
+    if (fabricExpanded) fabricExpanded.style.display = 'none';
+    
+    // Initially disable fabric selection until garment is chosen
+    if (fabricCollapsed) {
+      fabricCollapsed.style.opacity = '0.6';
+      fabricCollapsed.style.pointerEvents = 'none';
+    }
+    
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.cursor = 'not-allowed';
+      fabricPlaceholder.querySelector('.placeholder-text').textContent = 'Select garment first';
+    }
   }
 }
 

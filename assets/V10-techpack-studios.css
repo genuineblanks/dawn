@@ -1449,6 +1449,243 @@
 }
 
 /* ==============================================
+   COMPACT GARMENT & FABRIC SELECTION INTERFACE
+   ============================================== */
+
+.garment-fabric-split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-xl);
+  margin-bottom: var(--v10-space-2xl);
+}
+
+.compact-selection-section {
+  /* No margins - controlled by parent grid gap */
+}
+
+.compact-selection-widget {
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-lg);
+  transition: var(--v10-transition);
+  overflow: hidden;
+  min-height: 60px;
+}
+
+.compact-selection-widget:hover {
+  border-color: var(--v10-accent-blue);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+/* Selection Placeholder */
+.selection-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-lg);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--v10-transition);
+}
+
+.selection-placeholder:hover {
+  background: var(--v10-bg-secondary);
+}
+
+.selection-placeholder .placeholder-icon {
+  font-size: 1.25rem;
+  margin-right: var(--v10-space-md);
+}
+
+.selection-placeholder .placeholder-text {
+  flex: 1;
+  font-weight: 500;
+  color: var(--v10-text-secondary);
+}
+
+.selection-placeholder .placeholder-arrow {
+  color: var(--v10-text-muted);
+  transition: transform 0.3s var(--v10-transition);
+}
+
+.selection-placeholder.expanded .placeholder-arrow {
+  transform: rotate(180deg);
+}
+
+/* Selection Display (When Selected) */
+.selection-display {
+  padding: var(--v10-space-lg);
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--v10-space-md);
+  padding: var(--v10-space-sm) var(--v10-space-md);
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid var(--v10-accent-green);
+  border-radius: var(--v10-radius-md);
+}
+
+.selected-item .selected-icon {
+  font-size: 1.25rem;
+  margin-right: var(--v10-space-md);
+}
+
+.selected-item .selected-name {
+  font-weight: 600;
+  color: var(--v10-accent-green);
+  flex: 1;
+}
+
+.change-selection-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-xs);
+  width: 100%;
+  padding: var(--v10-space-sm) var(--v10-space-md);
+  background: transparent;
+  border: 1px solid var(--v10-border-medium);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.change-selection-btn:hover {
+  background: var(--v10-bg-secondary);
+  border-color: var(--v10-accent-blue);
+  color: var(--v10-accent-blue);
+}
+
+.change-selection-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Selection Expanded State */
+.selection-expanded {
+  padding: var(--v10-space-lg);
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-accent-blue);
+  border-radius: var(--v10-radius-lg);
+  box-shadow: var(--v10-shadow-lg);
+}
+
+/* Compact Radio Grid */
+.compact-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--v10-space-sm);
+}
+
+/* Compact Radio Cards */
+.compact-radio-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: var(--v10-radius-md);
+  overflow: hidden;
+  transition: var(--v10-transition);
+}
+
+.compact-radio-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.compact-radio-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v10-space-md) var(--v10-space-sm);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-md);
+  text-align: center;
+  transition: var(--v10-transition);
+  min-height: 70px;
+}
+
+.compact-radio-card__icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--v10-space-xs);
+  display: block;
+}
+
+.compact-radio-card__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  line-height: 1.2;
+}
+
+.compact-radio-card:hover .compact-radio-card__content {
+  background: var(--v10-bg-tertiary);
+  border-color: var(--v10-accent-blue);
+  transform: translateY(-1px);
+}
+
+.compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: var(--v10-accent-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.compact-radio-card input[type="radio"]:checked + .compact-radio-card__content .compact-radio-card__name {
+  color: var(--v10-accent-blue);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .garment-fabric-split-container {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-lg);
+  }
+  
+  .compact-radio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: var(--v10-space-xs);
+  }
+  
+  .compact-radio-card__content {
+    padding: var(--v10-space-sm);
+    min-height: 60px;
+  }
+  
+  .compact-radio-card__icon {
+    font-size: 1.25rem;
+  }
+  
+  .compact-radio-card__name {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .selection-placeholder {
+    padding: var(--v10-space-md);
+  }
+  
+  .selection-display {
+    padding: var(--v10-space-md);
+  }
+  
+  .selection-expanded {
+    padding: var(--v10-space-md);
+  }
+  
+  .compact-radio-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==============================================
    SAMPLE TYPE CARDS
    ============================================== */
 
