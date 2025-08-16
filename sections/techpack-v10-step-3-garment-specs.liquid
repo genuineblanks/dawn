@@ -499,23 +499,6 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
         </div>
       </div>
     </div>
-    
-    <!-- Step Navigation -->
-    <div class="v10-step-actions">
-      <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-step-3-back">
-        <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
-          <path d="M10 12l-4-4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-        </svg>
-        Back to Files
-      </button>
-      
-      <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-step-3-next" disabled>
-        Continue to Review
-        <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
-          <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
-        </svg>
-      </button>
-    </div>
   </div>
 
 </section>
@@ -736,6 +719,74 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
             </div>
           </div>
         </div>
+
+        <!-- Sample Reference - Right Side (for bulk orders) -->
+        <div class="compact-selection-section" data-show-for="bulk">
+          <div class="selection-header">
+            <h5>Sample Reference</h5>
+            <button type="button" class="selection-help" data-help="sample-reference">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="sample-reference-collapsed">
+            <div class="selection-placeholder" id="sample-reference-placeholder">
+              <span class="placeholder-icon">📋</span>
+              <span class="placeholder-text">Select sample reference</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="sample-reference-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="sample-reference-selected-icon">📋</span>
+                <span class="selected-name" id="sample-reference-selected-name">Approved Sample – As Is</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-sample-reference-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Sample Reference
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="sample-reference-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="sample-reference-grid">
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="approved-sample">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">✅</span>
+                  <span class="compact-radio-card__name">Approved Sample – As Is</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="approved-with-changes">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🔄</span>
+                  <span class="compact-radio-card__name">Approved Sample – With Changes</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="new-sample-version">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">📋</span>
+                  <span class="compact-radio-card__name">New Sample Version</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Sample Type Selection (for sample requests only) -->
@@ -787,42 +838,6 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
         </div>
       </div>
 
-      <!-- Sample Reference Selection (for bulk orders) -->
-      <div class="selection-section" data-show-for="bulk">
-        <div class="selection-header">
-          <h5>Sample Reference</h5>
-          <button type="button" class="selection-help" data-help="sample-reference">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-          </button>
-        </div>
-        <div class="sample-reference-selection">
-          <label class="sample-reference-card">
-            <input type="radio" name="sampleReference" value="approved-sample">
-            <span class="sample-reference-card__content">
-              <span class="sample-reference-card__title">Approved Sample – As Is</span>
-              <span class="sample-reference-card__description">Exact repeat of last approved sample</span>
-            </span>
-          </label>
-          <label class="sample-reference-card">
-            <input type="radio" name="sampleReference" value="approved-with-changes">
-            <span class="sample-reference-card__content">
-              <span class="sample-reference-card__title">Approved Sample – With Changes</span>
-              <span class="sample-reference-card__description">Based on approved sample with modifications</span>
-            </span>
-          </label>
-          <label class="sample-reference-card">
-            <input type="radio" name="sampleReference" value="new-sample-version">
-            <span class="sample-reference-card__content">
-              <span class="sample-reference-card__title">New Sample Version</span>
-              <span class="sample-reference-card__description">Follow TechPack exactly for reworks/updates</span>
-            </span>
-          </label>
-        </div>
-      </div>
 
       <!-- Assigned Items Display (for sample requests) -->
       <div class="assigned-items" data-show-for="sample">
