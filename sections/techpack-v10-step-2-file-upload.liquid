@@ -39,11 +39,6 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 
     <!-- Upload Studio -->
     <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h2 class="v10-studio-title">Document Upload</h2>
-        <p class="v10-studio-subtitle">Drag and drop your files or click to browse</p>
-      </div>
-
       <div class="v10-upload-zone" id="techpack-v10-upload-zone">
         <div class="v10-upload-content">
           <div class="v10-upload-icon">
@@ -76,84 +71,51 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
     </div>
 
     <!-- Measurement Requirements Studio (Conditional) -->
-    <div class="v10-studio-card" id="techpack-v10-measurement-studio" style="display: none;">
+    <div class="v10-studio-card v10-measurement-compact" id="techpack-v10-measurement-studio" style="display: none;">
       <div class="v10-studio-header">
         <h2 class="v10-studio-title">Measurement Requirements</h2>
         <p class="v10-studio-subtitle">Confirm which measurements are included in your tech pack files</p>
       </div>
 
-      <div class="v10-measurement-grid">
-        <label class="v10-measurement-card">
-          <input type="checkbox" name="fit_measurements" class="v10-measurement-input">
-          <div class="v10-measurement-content">
-            <div class="v10-measurement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M16 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H16M8 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H8M8 4V20M16 4V20M8 12H16" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="v10-measurement-info">
-              <h3 class="v10-measurement-title">Fit Measurements</h3>
-              <p class="v10-measurement-description">Body measurements or size charts for proper garment fitting</p>
-            </div>
-            <div class="v10-measurement-checkbox">
-              <svg class="v10-measurement-check" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-            </div>
+      <div class="v10-measurement-list">
+        <label class="v10-measurement-item">
+          <div class="v10-measurement-text">
+            <strong>Fit Measurements</strong>
+            <span>Body measurements or size charts</span>
+          </div>
+          <input type="checkbox" id="techpack-v10-fit-measurements" name="fit_measurements" class="v10-measurement-checkbox-input">
+          <div class="v10-measurement-checkbox-custom">
+            <svg class="v10-measurement-checkmark" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
           </div>
         </label>
 
-        <label class="v10-measurement-card">
-          <input type="checkbox" name="design_measurements" class="v10-measurement-input">
-          <div class="v10-measurement-content">
-            <div class="v10-measurement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M3 3V21H21V3H3Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M9 9H15M9 13H15M9 17H13" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="v10-measurement-info">
-              <h3 class="v10-measurement-title">Design Measurements</h3>
-              <p class="v10-measurement-description">Garment specifications and technical measurements</p>
-            </div>
-            <div class="v10-measurement-checkbox">
-              <svg class="v10-measurement-check" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-            </div>
+        <label class="v10-measurement-item">
+          <div class="v10-measurement-text">
+            <strong>Design Measurements</strong>
+            <span>Garment specifications</span>
+          </div>
+          <input type="checkbox" id="techpack-v10-design-measurements" name="design_measurements" class="v10-measurement-checkbox-input">
+          <div class="v10-measurement-checkbox-custom">
+            <svg class="v10-measurement-checkmark" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
           </div>
         </label>
 
-        <label class="v10-measurement-card" id="techpack-v10-design-placement-card" style="display: none;">
-          <input type="checkbox" name="design_placement_measurements" class="v10-measurement-input">
-          <div class="v10-measurement-content">
-            <div class="v10-measurement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L22 7L12 12L2 7L12 2Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M2 17L12 22L22 17M2 12L12 17L22 12" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="v10-measurement-info">
-              <h3 class="v10-measurement-title">Design Placement</h3>
-              <p class="v10-measurement-description">Print/embroidery placement specifications and positioning details</p>
-            </div>
-            <div class="v10-measurement-checkbox">
-              <svg class="v10-measurement-check" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-            </div>
+        <label class="v10-measurement-item" id="techpack-v10-design-placement-item" style="display: none;">
+          <div class="v10-measurement-text">
+            <strong>Design Placement</strong>
+            <span>Logo and graphic positioning</span>
+          </div>
+          <input type="checkbox" id="techpack-v10-placement-measurements" name="design_placement_measurements" class="v10-measurement-checkbox-input">
+          <div class="v10-measurement-checkbox-custom">
+            <svg class="v10-measurement-checkmark" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
           </div>
         </label>
-      </div>
-
-      <div class="v10-measurement-info-box">
-        <div class="v10-info-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </div>
-        <p class="v10-info-text">These requirements affect pricing accuracy and sample development timeline</p>
       </div>
 
       <div class="v10-measurement-warning" id="techpack-v10-measurement-warning" style="display: none;">
@@ -274,6 +236,40 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
         Go Back & Add Measurements
       </button>
       <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-warning-proceed" style="display: none;">
+        Continue Anyway
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Measurement Confirmation Modal -->
+<div class="v10-modal-overlay" id="techpack-v10-measurement-modal" style="display: none;">
+  <div class="v10-modal v10-modal--measurement">
+    <div class="v10-modal-header">
+      <div class="v10-modal-icon v10-modal-icon--warning">
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+          <path d="M12 9V13M12 17H12.01" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <h3 class="v10-modal-title" id="v10-measurement-modal-title">Missing Measurements</h3>
+    </div>
+    
+    <div class="v10-modal-body">
+      <p class="v10-modal-message" id="v10-measurement-modal-message">
+        <!-- Dynamic message content -->
+      </p>
+      
+      <div class="v10-modal-details" id="v10-measurement-modal-details">
+        <!-- Dynamic details content -->
+      </div>
+    </div>
+    
+    <div class="v10-modal-actions">
+      <button type="button" class="v10-btn v10-btn--ghost" id="v10-measurement-modal-back">
+        Go Back & Add Measurements
+      </button>
+      <button type="button" class="v10-btn v10-btn--primary" id="v10-measurement-modal-proceed" style="display: none;">
         Continue Anyway
       </button>
     </div>
