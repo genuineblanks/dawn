@@ -4040,13 +4040,33 @@ class V10_FileManager {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     if (!measurementStudio) return;
     
-    const checkboxes = measurementStudio.querySelectorAll('input[type="checkbox"]');
+    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
+    const warningBox = document.getElementById('techpack-v10-measurement-warning');
+    
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
+        this.updateMeasurementWarning();
         this.validateMeasurements();
         this.saveData();
       });
     });
+  }
+
+  updateMeasurementWarning() {
+    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
+    const warningBox = document.getElementById('techpack-v10-measurement-warning');
+    
+    if (!measurementStudio || !warningBox) return;
+    
+    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
+    const hasCheckedBoxes = Array.from(checkboxes).some(cb => cb.checked);
+    
+    if (hasCheckedBoxes) {
+      warningBox.style.display = 'flex';
+      warningBox.style.animation = 'slideDown 0.3s ease-out';
+    } else {
+      warningBox.style.display = 'none';
+    }
   }
 
   setupNavigation() {
@@ -4054,9 +4074,16 @@ class V10_FileManager {
     const backBtn = document.getElementById('techpack-v10-step-2-back');
     
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
         if (this.validateStep()) {
-          this.proceedToStep3();
+          // Check if measurement confirmation is needed
+          if (this.needsMeasurementConfirmation()) {
+            this.showMeasurementConfirmationModal();
+          } else {
+            this.proceedToStep3();
+          }
         }
       });
     }
@@ -4064,6 +4091,132 @@ class V10_FileManager {
     if (backBtn) {
       backBtn.addEventListener('click', () => {
         this.goBackToStep1();
+      });
+    }
+    
+    // Setup measurement confirmation modal handlers
+    this.setupMeasurementModal();
+  }
+
+  needsMeasurementConfirmation() {
+    const clientData = window.v10ClientManager?.getClientData() || {};
+    const requestType = clientData.submission_type;
+    
+    // Only show confirmation for quotation and sample requests
+    if (requestType !== 'quotation' && requestType !== 'sample-request') {
+      return false;
+    }
+    
+    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
+    if (!measurementStudio || measurementStudio.style.display === 'none') {
+      return false;
+    }
+    
+    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
+    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+    
+    // Show confirmation if no measurements are selected or only some are selected
+    return checkedBoxes.length < checkboxes.length;
+  }
+
+  showMeasurementConfirmationModal() {
+    const modal = document.getElementById('techpack-v10-measurement-modal');
+    const title = document.getElementById('v10-measurement-modal-title');
+    const message = document.getElementById('v10-measurement-modal-message');
+    const details = document.getElementById('v10-measurement-modal-details');
+    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    
+    if (!modal) return;
+    
+    const clientData = window.v10ClientManager?.getClientData() || {};
+    const requestType = clientData.submission_type;
+    
+    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
+    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
+    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+    const uncheckedBoxes = Array.from(checkboxes).filter(cb => !cb.checked);
+    
+    // Configure modal content based on situation
+    if (checkedBoxes.length === 0) {
+      // No measurements selected
+      title.textContent = 'No Measurements Selected';
+      message.textContent = `Your ${requestType === 'quotation' ? 'quotation' : 'sample request'} indicates no measurement data is included. This may affect pricing accuracy and development timeline.`;
+      
+      details.innerHTML = `
+        <div class="v10-modal-warning-list">
+          <h4>Missing Requirements:</h4>
+          <ul>
+            ${uncheckedBoxes.map(cb => {
+              const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
+              return `<li>${label}</li>`;
+            }).join('')}
+          </ul>
+        </div>
+      `;
+      
+      proceedBtn.style.display = 'inline-flex';
+      proceedBtn.textContent = 'Continue Without Measurements';
+    } else {
+      // Some measurements missing
+      title.textContent = 'Incomplete Measurements';
+      message.textContent = `You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.`;
+      
+      details.innerHTML = `
+        <div class="v10-modal-status-grid">
+          <div class="v10-modal-status-section">
+            <h4 class="v10-modal-status-title v10-modal-status-title--included">Included:</h4>
+            <ul class="v10-modal-status-list">
+              ${checkedBoxes.map(cb => {
+                const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
+                return `<li>${label}</li>`;
+              }).join('')}
+            </ul>
+          </div>
+          <div class="v10-modal-status-section">
+            <h4 class="v10-modal-status-title v10-modal-status-title--missing">Missing:</h4>
+            <ul class="v10-modal-status-list">
+              ${uncheckedBoxes.map(cb => {
+                const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
+                return `<li>${label}</li>`;
+              }).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      
+      proceedBtn.style.display = 'inline-flex';
+      proceedBtn.textContent = 'Confirm & Continue';
+    }
+    
+    modal.style.display = 'flex';
+  }
+
+  setupMeasurementModal() {
+    const modal = document.getElementById('techpack-v10-measurement-modal');
+    const backBtn = document.getElementById('v10-measurement-modal-back');
+    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    
+    if (!modal) return;
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+    
+    // Go back to add measurements
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+    }
+    
+    // Proceed anyway
+    if (proceedBtn) {
+      proceedBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        this.proceedToStep3();
       });
     }
   }

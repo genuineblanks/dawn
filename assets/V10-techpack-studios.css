@@ -4587,6 +4587,310 @@
   transition: all 0.3s ease;
 }
 
+/* ==============================================
+   V10 FILE UPLOAD COMPACT MEASUREMENTS
+   ============================================== */
+
+/* Compact Measurement Requirements */
+.v10-measurement-compact .v10-measurement-list {
+  background: linear-gradient(135deg, rgba(44, 44, 44, 0.02), rgba(58, 58, 58, 0.04));
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-lg);
+  margin-top: var(--v10-space-md);
+}
+
+.v10-measurement-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-md) 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--v10-border-light);
+  transition: all 0.3s ease;
+}
+
+.v10-measurement-item:last-child {
+  border-bottom: none;
+}
+
+.v10-measurement-item:hover {
+  background: linear-gradient(135deg, rgba(44, 44, 44, 0.03), rgba(58, 58, 58, 0.06));
+  margin: 0 calc(-1 * var(--v10-space-md));
+  padding-left: var(--v10-space-md);
+  padding-right: var(--v10-space-md);
+  border-radius: var(--v10-radius-md);
+}
+
+.v10-measurement-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-xs);
+}
+
+.v10-measurement-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  letter-spacing: 0.01em;
+}
+
+.v10-measurement-text span {
+  font-size: 13px;
+  color: var(--v10-text-secondary);
+  line-height: 1.4;
+}
+
+/* Custom Checkbox Styling */
+.v10-measurement-checkbox-input {
+  display: none;
+}
+
+.v10-measurement-checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--v10-accent-secondary);
+  border-radius: var(--v10-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: var(--v10-space-lg);
+}
+
+.v10-measurement-checkbox-input:checked + .v10-measurement-checkbox-custom {
+  background: linear-gradient(135deg, var(--v10-accent-primary), var(--v10-accent-secondary));
+  border-color: var(--v10-accent-primary);
+}
+
+.v10-measurement-checkmark {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  stroke: white;
+}
+
+.v10-measurement-checkbox-input:checked + .v10-measurement-checkbox-custom .v10-measurement-checkmark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Enhanced Warning Box */
+.v10-measurement-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-md);
+  padding: var(--v10-space-lg);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.04));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--v10-radius-md);
+  margin-top: var(--v10-space-lg);
+  animation: slideInWarning 0.3s ease-out;
+}
+
+@keyframes slideInWarning {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.v10-measurement-warning .v10-warning-icon {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.v10-measurement-warning .v10-warning-text {
+  font-size: 13px;
+  color: var(--v10-text-primary);
+  line-height: 1.5;
+}
+
+.v10-measurement-warning .v10-warning-text strong {
+  font-weight: 600;
+}
+
+/* Measurement Modal Styling */
+.v10-modal--measurement .v10-modal-icon--warning {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.1));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--v10-space-lg);
+  color: #f59e0b;
+}
+
+.v10-modal--measurement .v10-modal-details {
+  background: linear-gradient(135deg, rgba(44, 44, 44, 0.02), rgba(58, 58, 58, 0.04));
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-lg);
+  margin-top: var(--v10-space-lg);
+}
+
+.v10-modal--measurement .v10-modal-details strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-md);
+}
+
+.v10-modal--measurement .v10-modal-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.v10-modal--measurement .v10-modal-details li {
+  position: relative;
+  padding-left: var(--v10-space-xl);
+  margin-bottom: var(--v10-space-sm);
+  font-size: 14px;
+  color: var(--v10-text-secondary);
+  line-height: 1.5;
+}
+
+.v10-modal--measurement .v10-modal-details li:before {
+  content: "•";
+  position: absolute;
+  left: var(--v10-space-md);
+  color: var(--v10-accent-primary);
+  font-weight: bold;
+}
+
+.v10-modal--measurement .v10-modal-details p {
+  font-size: 13px;
+  color: var(--v10-text-secondary);
+  font-style: italic;
+  margin-top: var(--v10-space-md);
+}
+
+/* Measurement Modal Status Grid */
+.v10-modal-status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-xl);
+  margin-top: var(--v10-space-lg);
+}
+
+.v10-modal-status-section {
+  padding: var(--v10-space-lg);
+  border-radius: var(--v10-radius-md);
+}
+
+.v10-modal-status-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 var(--v10-space-md) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-sm);
+}
+
+.v10-modal-status-title--included {
+  color: #059669;
+}
+
+.v10-modal-status-title--included:before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: #059669;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.v10-modal-status-title--missing {
+  color: var(--v10-accent-tertiary);
+}
+
+.v10-modal-status-title--missing:before {
+  content: "!";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: var(--v10-accent-tertiary);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.v10-modal-status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.v10-modal-status-list li {
+  position: relative;
+  padding: var(--v10-space-xs) 0;
+  font-size: 13px;
+  color: var(--v10-text-secondary);
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.v10-modal-status-list li:last-child {
+  border-bottom: none;
+}
+
+.v10-modal-warning-list h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0 0 var(--v10-space-md) 0;
+}
+
+.v10-modal-warning-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.v10-modal-warning-list li {
+  position: relative;
+  padding: var(--v10-space-xs) 0 var(--v10-space-xs) var(--v10-space-lg);
+  font-size: 13px;
+  color: var(--v10-text-secondary);
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.v10-modal-warning-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--v10-accent-tertiary);
+  font-weight: 700;
+}
+
+.v10-modal-warning-list li:last-child {
+  border-bottom: none;
+}
+
+/* Mobile responsiveness for status grid */
+@media (max-width: 640px) {
+  .v10-modal-status-grid {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-lg);
+  }
+}
+
 /* Mobile Responsive Professional Layout */
 @media (max-width: 768px) {
   .v10-form-section {
