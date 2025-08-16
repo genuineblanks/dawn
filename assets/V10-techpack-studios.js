@@ -2606,13 +2606,9 @@ class V10_TechPackSystem {
   }
 
   setupAutoValidation() {
-    // Re-validate whenever state changes
-    const originalSave = V10_State.save.bind(V10_State);
-    V10_State.save = () => {
-      originalSave();
-      this.validationManager.revalidate();
-      this.standaloneManager.updateDisplay();
-    };
+    // Auto-validation is handled by individual form change events
+    // No persistent state saving - validation occurs on demand
+    console.log('🔄 Auto-validation setup completed (in-memory mode)');
   }
 
   showHelpModal() {
