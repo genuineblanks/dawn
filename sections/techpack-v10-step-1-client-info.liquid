@@ -148,94 +148,227 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
     <!-- Header -->
     <div class="v10-step-header">
-      <h1 class="v10-step-title">Client Information</h1>
-      <p class="v10-step-subtitle" id="v10-client-info-subtitle">Please provide your business details</p>
+      <div class="v10-step-title-wrapper">
+        <h1 class="v10-step-title">Client Information</h1>
+        <span class="v10-client-status-badge" id="v10-client-status-badge">Registered Client</span>
+      </div>
+      <p class="v10-step-subtitle" id="v10-client-info-subtitle">Enter your information to begin sample development</p>
     </div>
 
     <!-- Client Details Studio -->
     <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h2 class="v10-studio-title">Contact Information</h2>
-        <p class="v10-studio-subtitle">Your primary contact details for this project</p>
+      <div class="v10-form-section">
+        <!-- Business/Brand Name -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            BUSINESS/BRAND NAME *
+            <input 
+              type="text" 
+              name="company_name" 
+              class="v10-form-input-enhanced" 
+              required 
+              placeholder="Registered business or brand name"
+              data-validate="required"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Business Email Address -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            BUSINESS EMAIL ADDRESS *
+            <input 
+              type="email" 
+              name="email" 
+              class="v10-form-input-enhanced" 
+              required 
+              placeholder="contact@company.com"
+              data-validate="email"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
+          <label class="v10-form-label-enhanced">DELIVERY ADDRESS *</label>
+          <div class="v10-delivery-options-enhanced">
+            <label class="v10-delivery-option-enhanced">
+              <input type="radio" name="deliveryAddress" value="company" checked>
+              <span class="v10-delivery-option-content-enhanced">
+                <div class="v10-delivery-option-icon">🏢</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Company Address</strong>
+                  <small>Use business location from above</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-delivery-option-enhanced">
+              <input type="radio" name="deliveryAddress" value="different">
+              <span class="v10-delivery-option-content-enhanced">
+                <div class="v10-delivery-option-icon">📍</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Different Address</strong>
+                  <small>Specify alternative delivery location</small>
+                </div>
+              </span>
+            </label>
+          </div>
+          
+          <!-- Critical Delivery Warning -->
+          <div class="v10-warning-box-enhanced">
+            <div class="v10-warning-icon">⚠️</div>
+            <div class="v10-warning-content">
+              <strong>Critical: Delivery address cannot be changed once order processing begins.</strong> Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div class="v10-form-grid">
-        <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label">
-            Contact Name *
-            <input type="text" name="client_name" class="v10-form-input" required placeholder="Full name of primary contact">
+    <!-- Different Address Form (conditional) -->
+    <div class="v10-studio-card v10-different-address-card" id="v10-different-address-form" style="display: none;">
+      <div class="v10-form-section">
+        <!-- Contact Info Row -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            CONTACT NAME *
+            <input
+              type="text"
+              name="deliveryContactName"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="Full name of contact person"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            CONTACT PHONE *
+            <input
+              type="tel"
+              name="deliveryPhone"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="+1 234 567 8901"
+              maxlength="20"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Address Lines -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            ADDRESS LINE 1 *
+            <input
+              type="text"
+              name="deliveryAddress1"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="Street address, building, etc."
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            ADDRESS LINE 2
+            <input
+              type="text"
+              name="deliveryAddress2"
+              class="v10-form-input-enhanced"
+              placeholder="Apartment, suite, unit, etc."
+            >
           </label>
         </div>
 
-        <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label">
-            Business/Brand Name *
-            <input type="text" name="company_name" class="v10-form-input" required placeholder="Registered business or brand name">
+        <!-- City & State -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            CITY *
+            <input
+              type="text"
+              name="deliveryCity"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="City name"
+            >
           </label>
+          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
-        <div class="v10-form-group">
-          <label class="v10-form-label">
-            Business Email Address *
-            <input type="email" name="email" class="v10-form-input" required placeholder="contact@company.com">
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            STATE/PROVINCE *
+            <input
+              type="text"
+              name="deliveryState"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="State, province, or region"
+            >
           </label>
+          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
-        <div class="v10-form-group">
-          <label class="v10-form-label">
-            Business Phone
-            <input type="tel" name="phone" class="v10-form-input" placeholder="+1 234 567 8901">
+        <!-- Postal & Country -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            POSTAL CODE *
+            <input
+              type="text"
+              name="deliveryPostal"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="ZIP or postal code"
+            >
           </label>
+          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
-        <div class="v10-form-group">
-          <label class="v10-form-label">
-            Business Location *
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            COUNTRY *
             <div class="v10-enhanced-country-wrapper">
               <input
                 type="text"
-                id="v10-country"
-                name="country"
-                class="v10-form-input v10-enhanced-country-input"
-                required
+                id="v10-delivery-country"
+                name="deliveryCountry"
+                class="v10-form-input-enhanced v10-enhanced-country-input"
+                data-validate="required-if-different"
                 autocomplete="off"
-                placeholder="Select your country"
+                placeholder="Select delivery country"
                 readonly
               >
-              <div class="v10-enhanced-country-flag" id="v10-country-flag"></div>
-              <div class="v10-enhanced-country-toggle" id="v10-country-toggle">
+              <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag"></div>
+              <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M4 6l4 4 4-4H4z"/>
                 </svg>
               </div>
-              <div class="v10-enhanced-country-dropdown" id="v10-country-dropdown">
+              <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown">
                 <div class="v10-enhanced-country-search">
                   <input
                     type="text"
                     class="v10-enhanced-country-search-input"
                     placeholder="Search countries..."
-                    id="v10-country-search"
+                    id="v10-delivery-country-search"
                   >
                 </div>
-                <div class="v10-enhanced-country-list" id="v10-country-list"></div>
+                <div class="v10-enhanced-country-list" id="v10-delivery-country-list"></div>
               </div>
             </div>
           </label>
-        </div>
-
-        <div class="v10-form-group">
-          <label class="v10-form-label">
-            Project Details
-            <textarea
-              name="notes"
-              class="v10-form-textarea"
-              rows="4"
-              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
-            ></textarea>
-          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
         </div>
       </div>
     </div>
+
 
     <!-- Delivery Information Studio (Sample/Bulk Only) -->
     <div class="v10-studio-card" id="v10-delivery-section" style="display: none;">
