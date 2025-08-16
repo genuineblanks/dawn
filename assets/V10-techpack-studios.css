@@ -3787,51 +3787,55 @@
   justify-content: center;
   padding: var(--v10-space-4xl);
   text-align: center;
-  background: var(--v10-bg-secondary);
-  border: 2px dashed var(--v10-border-medium);
-  border-radius: var(--v10-radius-lg);
+  background: linear-gradient(135deg, var(--v10-bg-secondary), var(--v10-bg-tertiary));
+  border: 2px dashed var(--v10-accent-primary);
+  border-radius: var(--v10-radius-xl);
   margin: var(--v10-space-xl) 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .quantity-empty-state .empty-icon {
-  color: var(--v10-text-muted);
+  color: var(--v10-accent-primary);
   margin-bottom: var(--v10-space-lg);
 }
 
 .quantity-empty-state h4 {
-  color: var(--v10-text-primary);
+  color: var(--v10-accent-highlight);
   margin: 0 0 var(--v10-space-md) 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .quantity-empty-state p {
   color: var(--v10-text-secondary);
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .garment-quantity-form {
   background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-lg);
+  border: 2px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-xl);
   margin-bottom: var(--v10-space-xl);
-  box-shadow: var(--v10-shadow-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: var(--v10-transition);
 }
 
 .garment-quantity-form:hover {
-  box-shadow: var(--v10-shadow-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .quantity-form-header {
-  background: var(--v10-bg-secondary);
-  padding: var(--v10-space-lg) var(--v10-space-xl);
-  border-bottom: 1px solid var(--v10-border-light);
+  background: linear-gradient(135deg, var(--v10-accent-highlight), var(--v10-accent-primary));
+  padding: var(--v10-space-xl) var(--v10-space-2xl);
+  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: var(--v10-text-light);
 }
 
 .quantity-form-title {
@@ -3843,17 +3847,18 @@
 .quantity-form-number {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--v10-text-primary);
-  background: var(--v10-bg-primary);
+  color: var(--v10-accent-highlight);
+  background: var(--v10-text-light);
   padding: var(--v10-space-xs) var(--v10-space-sm);
   border-radius: var(--v10-radius-sm);
-  border: 1px solid var(--v10-border-medium);
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .quantity-form-type {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--v10-text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--v10-text-light);
 }
 
 .quantity-form-reference {
@@ -3864,11 +3869,12 @@
 .reference-badge {
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--v10-text-secondary);
-  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-light);
+  background: rgba(255, 255, 255, 0.2);
   padding: var(--v10-space-xs) var(--v10-space-md);
   border-radius: var(--v10-radius-md);
-  border: 1px solid var(--v10-border-medium);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .quantity-form-content {
@@ -3918,23 +3924,26 @@
 .quantity-input {
   width: 100%;
   padding: var(--v10-space-sm) var(--v10-space-md);
-  border: 1px solid var(--v10-border-medium);
+  border: 2px solid var(--v10-border-light);
   border-radius: var(--v10-radius-md);
   font-size: 1rem;
+  font-weight: 500;
   background: var(--v10-bg-primary);
   color: var(--v10-text-primary);
   transition: var(--v10-transition);
-  height: 40px;
+  height: 44px;
 }
 
 .quantity-input:focus {
   outline: none;
-  border-color: var(--v10-accent-primary);
-  box-shadow: 0 0 0 3px rgba(45, 52, 54, 0.1);
+  border-color: var(--v10-accent-highlight);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .quantity-input:hover:not(:focus) {
-  border-color: var(--v10-border-dark);
+  border-color: var(--v10-accent-primary);
+  background: rgba(0, 0, 0, 0.01);
 }
 
 .size-quantity-total {
@@ -3954,17 +3963,18 @@
 }
 
 .total-value {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--v10-accent-primary);
-  background: rgba(45, 52, 54, 0.1);
+  color: var(--v10-text-light);
+  background: linear-gradient(135deg, var(--v10-accent-highlight), var(--v10-accent-primary));
   padding: var(--v10-space-sm) var(--v10-space-md);
   border-radius: var(--v10-radius-md);
   text-align: center;
-  min-height: 40px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Responsive Design for Quantity Forms */
@@ -4080,16 +4090,27 @@
    BLACK ACCENT ENHANCEMENTS
    ============================================== */
 
-/* Studio tabs with black accents */
+/* Studio tabs with enhanced black styling */
 .studio-tab--active {
   background: var(--v10-accent-highlight) !important;
   color: var(--v10-text-light) !important;
-  border-color: var(--v10-accent-highlight) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.studio-tab--active .studio-tab__icon {
+  background: var(--v10-accent-highlight) !important;
+  color: var(--v10-text-light) !important;
+}
+
+.studio-tab--active .studio-tab__title,
+.studio-tab--active .studio-tab__subtitle {
+  color: var(--v10-text-light) !important;
 }
 
 .studio-tab:hover:not(.studio-tab--active) {
-  background: var(--v10-accent-primary);
-  color: var(--v10-text-light);
+  background: var(--v10-bg-primary);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 /* Garment card headers */
@@ -4140,12 +4161,7 @@
   box-shadow: var(--v10-shadow-lg);
 }
 
-/* Form elements with black accents */
-.quantity-form-number {
-  background: var(--v10-accent-highlight);
-  color: var(--v10-text-light);
-  border: 1px solid var(--v10-accent-highlight);
-}
+/* Form elements with black accents - removed duplicate rule */
 
 /* Compact radio cards selected state */
 .compact-radio-card input:checked + .compact-radio-card__content {
