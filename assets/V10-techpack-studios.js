@@ -3084,6 +3084,9 @@ class V10_TechPackSystem {
       helpBtn.addEventListener('click', () => this.showHelpModal());
     }
 
+    // Setup help system for all help buttons
+    this.setupHelpSystem();
+
     // Auto-save on window unload
     window.addEventListener('beforeunload', () => {
       });
@@ -3149,6 +3152,314 @@ class V10_TechPackSystem {
       helpBtn.classList.remove('techpack-help-btn--warning');
       helpBtn.classList.add('techpack-help-btn--success');
       helpBtn.querySelector('span').textContent = 'GUIDE READ';
+    }
+  }
+
+  setupHelpSystem() {
+    // Add event listeners to all help buttons with data-help attribute
+    document.querySelectorAll('[data-help]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const helpTopic = e.target.closest('[data-help]').dataset.help;
+        this.showTopicHelp(helpTopic);
+      });
+    });
+
+    // Add event listeners to studio help buttons
+    document.querySelectorAll('.studio-help-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const helpTopic = button.dataset.help;
+        if (helpTopic) {
+          this.showTopicHelp(helpTopic);
+        }
+      });
+    });
+
+    console.log('🔧 Help system initialized for all help buttons');
+  }
+
+  showTopicHelp(topic) {
+    // Create or get help modal
+    let modal = document.getElementById('topic-help-modal');
+    if (!modal) {
+      modal = this.createTopicHelpModal();
+      document.body.appendChild(modal);
+    }
+
+    // Load content for the specific topic
+    this.loadTopicHelpContent(modal, topic);
+
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Bind close events
+    this.bindTopicHelpModalEvents(modal);
+  }
+
+  createTopicHelpModal() {
+    const modal = document.createElement('div');
+    modal.id = 'topic-help-modal';
+    modal.className = 'techpack-modal techpack-modal--help';
+    modal.innerHTML = `
+      <div class="techpack-modal__backdrop"></div>
+      <div class="techpack-modal__content techpack-modal__content--help">
+        <div class="techpack-modal__header">
+          <h3 class="techpack-modal__title" id="topic-help-title">Help Guide</h3>
+          <button type="button" class="techpack-modal__close" id="close-topic-help-modal">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="techpack-modal__body">
+          <div class="help-content" id="topic-help-content">
+            <!-- Topic-specific content will be loaded here -->
+          </div>
+        </div>
+      </div>
+    `;
+    return modal;
+  }
+
+  bindTopicHelpModalEvents(modal) {
+    // Close button
+    const closeBtn = modal.querySelector('.techpack-modal__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+
+    // Close on backdrop click
+    const backdrop = modal.querySelector('.techpack-modal__backdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  loadTopicHelpContent(modal, topic) {
+    const titleElement = modal.querySelector('#topic-help-title');
+    const contentElement = modal.querySelector('#topic-help-content');
+    const requestType = V10_State.requestType;
+
+    const helpTopics = {
+      'garment-studio': {
+        title: 'Garment Studio Guide',
+        content: `
+          <h4>Purpose</h4>
+          <p>Configure garment specifications for your collection. This is where you define what types of clothing items you want to create and their basic specifications.</p>
+          
+          <h4>How to Use</h4>
+          <ol>
+            <li><strong>Add Garments:</strong> Click "Add Another Garment" to create new garment entries</li>
+            <li><strong>Select Garment Type:</strong> Choose from our available garment types (T-Shirt, Hoodie, Sweatshirt, etc.)</li>
+            <li><strong>Configure Specifications:</strong> Based on your request type:
+              <ul>
+                ${requestType === 'quotation' ? '<li>Select fabric type for pricing calculations</li>' : ''}
+                ${requestType === 'sample-request' ? '<li>Select fabric type and sample type (blank, custom design, etc.)</li>' : ''}
+                ${requestType === 'bulk-order-request' ? '<li>Select sample reference (approved sample, with changes, or new version)</li>' : ''}
+              </ul>
+            </li>
+            <li><strong>Review Completeness:</strong> Ensure all garments show "Complete" status before proceeding</li>
+          </ol>
+          
+          <h4>Tips</h4>
+          <ul>
+            <li>Each garment can be configured independently with different specifications</li>
+            <li>Use descriptive names if you have multiple similar garments</li>
+            <li>The system will validate that all required fields are completed</li>
+          </ul>
+        `
+      },
+      'design-studio': {
+        title: 'Design Studio Guide',
+        content: `
+          <h4>Purpose</h4>
+          <p>Create design samples and lab dips for color/design validation. This studio helps you communicate your visual requirements clearly to our production team.</p>
+          
+          <h4>How to Use</h4>
+          <ol>
+            <li><strong>Upload Design Samples:</strong> Add images of your designs, logos, graphics, or reference materials</li>
+            <li><strong>Create Lab Dips:</strong> Define specific colors that need to be matched precisely</li>
+            <li><strong>Assign to Garments:</strong> Link your design samples and lab dips to specific garments from the Garment Studio</li>
+            <li><strong>Add Details:</strong> Include specific instructions about placement, sizing, or techniques</li>
+          </ol>
+          
+          <h4>Best Practices</h4>
+          <ul>
+            <li>Upload high-resolution images (300 DPI minimum) for best results</li>
+            <li>Include Pantone color codes when available for lab dips</li>
+            <li>Provide multiple angle views for complex designs</li>
+            <li>Be specific about design placement and sizing requirements</li>
+          </ul>
+          
+          <h4>File Types Accepted</h4>
+          <p>JPG, PNG, PDF, AI, EPS, PSD - Maximum 10MB per file</p>
+        `
+      },
+      'quantities-studio': {
+        title: 'Quantities Studio Guide',
+        content: `
+          <h4>Purpose</h4>
+          <p>Specify production quantities by size for each garment. This ensures we produce the exact quantities you need in each size.</p>
+          
+          <h4>How to Use</h4>
+          <ol>
+            <li><strong>Review Garments:</strong> All garments with complete specifications will appear here</li>
+            <li><strong>Enter Quantities:</strong> Input the number of units needed for each size (XS, S, M, L, XL, XXL)</li>
+            <li><strong>Monitor Totals:</strong> Watch the individual garment totals and overall production quantity</li>
+            <li><strong>Meet Minimums:</strong> Ensure total quantity meets the minimum requirement (75 units)</li>
+          </ol>
+          
+          <h4>Requirements</h4>
+          <ul>
+            <li>Minimum total order: 75 units across all garments and sizes</li>
+            <li>Quantities can be distributed across different sizes as needed</li>
+            <li>Each garment must have at least 1 unit in any size</li>
+          </ul>
+          
+          <h4>Tips</h4>
+          <ul>
+            <li>Consider your target market when distributing sizes</li>
+            <li>Medium and Large typically represent 60-70% of most orders</li>
+            <li>Factor in potential shrinkage when determining quantities</li>
+          </ul>
+        `
+      },
+      'garment-types': {
+        title: 'Garment Types Guide',
+        content: `
+          <h4>Available Garment Types</h4>
+          <ul>
+            <li><strong>T-Shirt:</strong> Classic short-sleeve tee, versatile for all designs</li>
+            <li><strong>Long Sleeve T-Shirt:</strong> Extended sleeve version with same fit as t-shirt</li>
+            <li><strong>Hoodie:</strong> Pullover with hood, front pocket, and relaxed fit</li>
+            <li><strong>Zip-Up Hoodie:</strong> Full-zip version with hood and pockets</li>
+            <li><strong>Sweatshirt:</strong> Pullover without hood, crew neck style</li>
+            <li><strong>Sweatpants:</strong> Matching bottoms for complete sets</li>
+            <li><strong>Shorts:</strong> Summer-weight bottoms, various lengths available</li>
+            <li><strong>Tank Top:</strong> Sleeveless option for warm weather</li>
+            <li><strong>Polo Shirt:</strong> Collared shirt with button placket</li>
+            <li><strong>Hat/Cap:</strong> Headwear options including snapback and fitted styles</li>
+            <li><strong>Beanie:</strong> Knit winter headwear</li>
+          </ul>
+          
+          <h4>Choosing the Right Type</h4>
+          <p>Consider your brand's style, target market, and intended use when selecting garment types. Each type has different fabric options and customization possibilities.</p>
+        `
+      },
+      'fabric-types': {
+        title: 'Fabric Types Guide',
+        content: `
+          <h4>Available Fabric Options</h4>
+          <p>Fabric options vary by garment type. Here are our most common compositions:</p>
+          
+          <ul>
+            <li><strong>100% Cotton:</strong> Natural, breathable, classic feel - best for traditional looks</li>
+            <li><strong>Cotton/Polyester Blends:</strong> Balanced performance, reduced shrinkage, easier care</li>
+            <li><strong>100% Polyester:</strong> Moisture-wicking, durable, vibrant colors</li>
+            <li><strong>Tri-Blend:</strong> Cotton/Poly/Rayon mix for ultra-soft feel</li>
+            <li><strong>French Terry:</strong> Lightweight with textured inside, perfect for hoodies</li>
+            <li><strong>Fleece:</strong> Warm, insulating fabric for winter garments</li>
+          </ul>
+          
+          <h4>Fabric Considerations</h4>
+          <ul>
+            <li><strong>Print Compatibility:</strong> Different fabrics work better with specific printing methods</li>
+            <li><strong>Shrinkage:</strong> 100% cotton may shrink more than blends</li>
+            <li><strong>Feel:</strong> Cotton feels more natural, polyester more technical</li>
+            <li><strong>Durability:</strong> Blends often last longer with frequent washing</li>
+          </ul>
+        `
+      },
+      'sample-reference': {
+        title: 'Sample Reference Guide',
+        content: `
+          <h4>Sample Reference Options</h4>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>✅ Approved Sample – As Is</h5>
+            <p>Use this when you want to produce exactly the same as a previously approved sample with no changes whatsoever.</p>
+            <strong>Best for:</strong> Repeat orders, proven designs, consistent production
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>🔄 Approved Sample – With Changes</h5>
+            <p>Use this when you have an approved sample but want to make modifications like different colors, sizing adjustments, or minor design changes.</p>
+            <strong>Best for:</strong> Seasonal updates, color variations, minor improvements
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>📋 New Sample Version</h5>
+            <p>Use this for completely new designs or major revisions that require fresh sample development.</p>
+            <strong>Best for:</strong> New designs, significant changes, first-time orders
+          </div>
+          
+          <h4>Important Notes</h4>
+          <ul>
+            <li>Reference samples must be available for our team to review</li>
+            <li>Changes from approved samples may affect timeline and cost</li>
+            <li>Include detailed notes about any modifications needed</li>
+          </ul>
+        `
+      },
+      'sample-types': {
+        title: 'Sample Types Guide',
+        content: `
+          <h4>Sample Type Options</h4>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>🧩 Blank Sample</h5>
+            <p>Plain garment without any customization - perfect for testing fit, fabric, and construction quality.</p>
+            <strong>Timeline:</strong> 3-5 business days
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>🎨 Custom Design Sample</h5>
+            <p>Fully customized sample with your designs, colors, and specifications applied.</p>
+            <strong>Timeline:</strong> 7-10 business days
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h5>🌈 Color Matching Sample</h5>
+            <p>Sample focused on achieving precise color matching to your specifications or Pantone codes.</p>
+            <strong>Timeline:</strong> 5-7 business days
+          </div>
+          
+          <h4>Choosing the Right Sample Type</h4>
+          <ul>
+            <li><strong>Start with blank samples</strong> if you're unsure about fit or fabric</li>
+            <li><strong>Use custom design samples</strong> to see your complete vision realized</li>
+            <li><strong>Order color matching samples</strong> when exact color is critical</li>
+            <li>You can order multiple sample types for the same garment</li>
+          </ul>
+        `
+      }
+    };
+
+    const topicData = helpTopics[topic];
+    if (topicData) {
+      titleElement.textContent = topicData.title;
+      contentElement.innerHTML = topicData.content;
+    } else {
+      titleElement.textContent = 'Help Guide';
+      contentElement.innerHTML = '<p>Help content for this topic is being developed. Please contact support if you need assistance.</p>';
     }
   }
 
@@ -4274,6 +4585,8 @@ class V10_ModalManager {
   }
 
   updateFormForSubmissionType(submissionType) {
+    console.log(`🔄 Updating form for submission type: ${submissionType}`);
+    
     // Update subtitle based on submission type
     const subtitle = document.getElementById('v10-client-info-subtitle');
     if (subtitle) {
@@ -4285,6 +4598,54 @@ class V10_ModalManager {
       };
       subtitle.textContent = subtitles[submissionType] || subtitles['quotation'];
     }
+    
+    // Show/hide conditional sections
+    const deliverySection = document.getElementById('v10-delivery-section');
+    const shippingSection = document.getElementById('v10-shipping-section');
+    
+    // Hide all conditional sections first
+    if (deliverySection) deliverySection.style.display = 'none';
+    if (shippingSection) shippingSection.style.display = 'none';
+    
+    // Show sections based on submission type
+    switch (submissionType) {
+      case 'quotation':
+        // Only show base form for quotations
+        break;
+        
+      case 'sample-request':
+        // Show delivery section for samples
+        if (deliverySection) {
+          deliverySection.style.display = 'block';
+        }
+        break;
+        
+      case 'bulk-order-request':
+        // Show both delivery and shipping sections for bulk orders
+        if (deliverySection) {
+          deliverySection.style.display = 'block';
+        }
+        if (shippingSection) {
+          shippingSection.style.display = 'block';
+        }
+        break;
+        
+      case 'lab-dips-accessories':
+        // Show delivery section for lab dips/accessories
+        if (deliverySection) {
+          deliverySection.style.display = 'block';
+        }
+        break;
+    }
+    
+    // Setup delivery address toggle functionality
+    this.setupDeliveryAddressToggle();
+    
+    // Setup character counter for delivery notes
+    this.setupCharacterCounter();
+    
+    // Setup enhanced country dropdowns
+    this.setupEnhancedCountryDropdowns();
 
     // Update conditional sections if client manager exists
     if (window.v10ClientManager) {
@@ -4309,6 +4670,171 @@ class V10_ModalManager {
         Change from ${submissionNames[submissionType] || 'Current Selection'}
       `;
     }
+  }
+
+  setupDeliveryAddressToggle() {
+    const deliveryRadios = document.querySelectorAll('input[name="deliveryAddress"]');
+    const differentAddressForm = document.getElementById('v10-different-address-form');
+    
+    if (!deliveryRadios.length || !differentAddressForm) return;
+    
+    // Remove existing listeners
+    deliveryRadios.forEach(radio => {
+      radio.removeEventListener('change', this.handleDeliveryAddressChange);
+    });
+    
+    // Add new listeners
+    deliveryRadios.forEach(radio => {
+      radio.addEventListener('change', this.handleDeliveryAddressChange.bind(this));
+    });
+    
+    // Initial state
+    this.handleDeliveryAddressChange();
+  }
+  
+  handleDeliveryAddressChange() {
+    const selectedValue = document.querySelector('input[name="deliveryAddress"]:checked')?.value;
+    const differentAddressForm = document.getElementById('v10-different-address-form');
+    
+    if (differentAddressForm) {
+      if (selectedValue === 'different') {
+        differentAddressForm.style.display = 'block';
+        // Add animation class for smooth transition
+        differentAddressForm.classList.add('v10-form-animate-in');
+      } else {
+        differentAddressForm.style.display = 'none';
+        differentAddressForm.classList.remove('v10-form-animate-in');
+        
+        // Clear different address fields when hidden
+        const inputs = differentAddressForm.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+          input.value = '';
+        });
+      }
+    }
+  }
+  
+  setupCharacterCounter() {
+    const deliveryNotesTextarea = document.querySelector('textarea[name="deliveryNotes"]');
+    const counterElement = document.getElementById('v10-delivery-notes-count');
+    
+    if (!deliveryNotesTextarea || !counterElement) return;
+    
+    // Remove existing listener
+    deliveryNotesTextarea.removeEventListener('input', this.updateCharacterCount);
+    
+    // Add new listener
+    deliveryNotesTextarea.addEventListener('input', this.updateCharacterCount.bind(this));
+    
+    // Initial count
+    this.updateCharacterCount();
+  }
+  
+  updateCharacterCount() {
+    const deliveryNotesTextarea = document.querySelector('textarea[name="deliveryNotes"]');
+    const counterElement = document.getElementById('v10-delivery-notes-count');
+    
+    if (deliveryNotesTextarea && counterElement) {
+      const currentLength = deliveryNotesTextarea.value.length;
+      counterElement.textContent = currentLength;
+      
+      // Add visual feedback when approaching limit
+      const parent = counterElement.closest('.v10-char-count');
+      if (currentLength > 120) {
+        parent?.classList.add('v10-char-count--warning');
+      } else {
+        parent?.classList.remove('v10-char-count--warning');
+      }
+    }
+  }
+  
+  setupEnhancedCountryDropdowns() {
+    // Setup main country dropdown
+    this.setupCountryDropdown('v10-country', 'v10-country-dropdown', 'v10-country-list', 'v10-country-search');
+    
+    // Setup delivery country dropdown
+    this.setupCountryDropdown('v10-delivery-country', 'v10-delivery-country-dropdown', 'v10-delivery-country-list', 'v10-delivery-country-search');
+  }
+  
+  setupCountryDropdown(inputId, dropdownId, listId, searchId) {
+    const input = document.getElementById(inputId);
+    const dropdown = document.getElementById(dropdownId);
+    const list = document.getElementById(listId);
+    const search = document.getElementById(searchId);
+    const toggle = document.getElementById(inputId.replace('country', 'country-toggle'));
+    
+    if (!input || !dropdown || !list || !search) return;
+    
+    // Country data (simplified version)
+    const countries = [
+      { name: "United States", code: "US", flag: "🇺🇸" },
+      { name: "Canada", code: "CA", flag: "🇨🇦" },
+      { name: "United Kingdom", code: "GB", flag: "🇬🇧" },
+      { name: "Germany", code: "DE", flag: "🇩🇪" },
+      { name: "France", code: "FR", flag: "🇫🇷" },
+      { name: "Spain", code: "ES", flag: "🇪🇸" },
+      { name: "Italy", code: "IT", flag: "🇮🇹" },
+      { name: "Netherlands", code: "NL", flag: "🇳🇱" },
+      { name: "Australia", code: "AU", flag: "🇦🇺" },
+      { name: "Portugal", code: "PT", flag: "🇵🇹" }
+    ];
+    
+    // Populate country list
+    this.populateCountryList(countries, list, input, dropdown);
+    
+    // Setup toggle functionality
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      });
+    }
+    
+    // Setup search functionality
+    search.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const filteredCountries = countries.filter(country => 
+        country.name.toLowerCase().includes(searchTerm)
+      );
+      this.populateCountryList(filteredCountries, list, input, dropdown);
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && !input.contains(e.target) && !toggle?.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  }
+  
+  populateCountryList(countries, list, input, dropdown) {
+    list.innerHTML = '';
+    
+    countries.forEach(country => {
+      const item = document.createElement('div');
+      item.className = 'v10-country-item';
+      item.innerHTML = `
+        <span class="v10-country-flag">${country.flag}</span>
+        <span class="v10-country-name">${country.name}</span>
+      `;
+      
+      item.addEventListener('click', () => {
+        input.value = country.name;
+        input.setAttribute('data-country-code', country.code);
+        
+        // Update flag display if exists
+        const flagElement = document.getElementById(input.id.replace('country', 'country-flag'));
+        if (flagElement) {
+          flagElement.textContent = country.flag;
+        }
+        
+        dropdown.style.display = 'none';
+        
+        // Trigger change event
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      
+      list.appendChild(item);
+    });
   }
 
   openModal(modalId) {
