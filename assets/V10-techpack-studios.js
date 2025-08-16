@@ -169,6 +169,7 @@ const V10_State = {
   garments: new Map(),
   labDips: new Map(),
   designSamples: new Map(),
+  totalQuantity: 0, // Total production quantity across all garments
   assignments: {
     labDips: new Map(), // labDipId -> Set of garmentIds
     designs: new Map()  // designId -> Set of garmentIds
@@ -295,6 +296,11 @@ class V10_StudioNavigator {
       container.style.display = isActive ? 'block' : 'none';
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
+
+    // Special handling for quantity studio
+    if (studioName === 'quantities') {
+      this.populateQuantityStudio();
+    }
 
     // Auto-save
 
@@ -752,9 +758,14 @@ class V10_GarmentStudio {
       garmentData.sampleType = e.target.value;
     }
 
-    // Handle sample reference change
+    // Handle sample reference change (bulk orders)
     if (e.target.name.includes('sampleReference')) {
       garmentData.sampleReference = e.target.value;
+      
+      // Handle compact interface selection update
+      if (e.target.closest('.compact-radio-card')) {
+        this.updateCompactSelection('sampleReference', e.target.value, garmentCard);
+      }
     }
 
     // Update garment status
@@ -1088,6 +1099,23 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
       }, 300);
+      
+    } else if (type === 'sampleReference') {
+      const sampleReferenceIcon = this.getSampleReferenceIcon(value);
+      const selectedIcon = garmentCard.querySelector('#sample-reference-selected-icon');
+      const selectedName = garmentCard.querySelector('#sample-reference-selected-name');
+      const placeholder = garmentCard.querySelector('#sample-reference-placeholder');
+      const display = garmentCard.querySelector('#sample-reference-display');
+      
+      if (selectedIcon) selectedIcon.textContent = sampleReferenceIcon;
+      if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(value);
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
+      }, 300);
     }
   }
 
@@ -1128,15 +1156,36 @@ class V10_GarmentStudio {
     return iconMap[garmentType] || '👕';
   }
 
+  getSampleReferenceIcon(referenceType) {
+    const iconMap = {
+      'approved-sample': '✅',
+      'approved-with-changes': '🔄',
+      'new-sample-version': '📋'
+    };
+    return iconMap[referenceType] || '📋';
+  }
+
+  getSampleReferenceDisplayName(referenceType) {
+    const nameMap = {
+      'approved-sample': 'Approved Sample – As Is',
+      'approved-with-changes': 'Approved Sample – With Changes', 
+      'new-sample-version': 'New Sample Version'
+    };
+    return nameMap[referenceType] || referenceType;
+  }
+
 
   initializeCompactInterface(garmentCard) {
     // Set up initial states
     const garmentExpanded = garmentCard.querySelector('#garment-expanded');
     const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    const sampleReferenceExpanded = garmentCard.querySelector('#sample-reference-expanded');
+    const sampleReferenceCollapsed = garmentCard.querySelector('#sample-reference-collapsed');
     
     if (garmentExpanded) garmentExpanded.style.display = 'none';
     if (fabricExpanded) fabricExpanded.style.display = 'none';
+    if (sampleReferenceExpanded) sampleReferenceExpanded.style.display = 'none';
     
     // Initially disable fabric selection until garment is chosen
     if (fabricCollapsed) {
@@ -1152,6 +1201,214 @@ class V10_GarmentStudio {
         placeholderText.textContent = 'Select garment first';
       }
     }
+    
+    // Sample reference is always enabled for bulk orders
+    if (sampleReferenceCollapsed) {
+      sampleReferenceCollapsed.style.opacity = '1';
+      sampleReferenceCollapsed.style.pointerEvents = 'auto';
+    }
+  }
+
+  populateQuantityStudio() {
+    const container = document.getElementById('garment-quantities-container');
+    if (!container) {
+      console.error('❌ Quantity container not found');
+      return;
+    }
+
+    // Clear existing content
+    container.innerHTML = '';
+
+    // Get all garments that have both type and sample reference selected
+    const completedGarments = Array.from(V10_State.garments.values()).filter(garment => 
+      garment.type && garment.sampleReference
+    );
+
+    if (completedGarments.length === 0) {
+      container.innerHTML = `
+        <div class="quantity-empty-state">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h4>No Garments Ready for Quantities</h4>
+          <p>Configure garment types and sample references in the Garment Studio first.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Generate quantity forms for each completed garment
+    completedGarments.forEach(garment => {
+      const quantityForm = this.createQuantityForm(garment);
+      container.appendChild(quantityForm);
+    });
+
+    // Update total quantity display
+    this.updateTotalQuantity();
+
+    console.log(`📊 Populated quantity studio with ${completedGarments.length} garment(s)`);
+  }
+
+  createQuantityForm(garment) {
+    const formElement = document.createElement('div');
+    formElement.className = 'garment-quantity-form';
+    formElement.dataset.garmentId = garment.id;
+
+    formElement.innerHTML = `
+      <div class="quantity-form-header">
+        <div class="quantity-form-title">
+          <span class="quantity-form-number">Garment ${garment.number}</span>
+          <span class="quantity-form-type">${garment.type}</span>
+        </div>
+        <div class="quantity-form-reference">
+          <span class="reference-badge">${this.getSampleReferenceDisplayName(garment.sampleReference)}</span>
+        </div>
+      </div>
+      
+      <div class="quantity-form-content">
+        <div class="size-quantity-grid">
+          <div class="size-quantity-header">
+            <span>Size</span>
+            <span>Quantity</span>
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">XS</label>
+            <input type="number" name="qty-xs" min="0" value="0" class="quantity-input" data-size="XS">
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">S</label>
+            <input type="number" name="qty-s" min="0" value="0" class="quantity-input" data-size="S">
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">M</label>
+            <input type="number" name="qty-m" min="0" value="0" class="quantity-input" data-size="M">
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">L</label>
+            <input type="number" name="qty-l" min="0" value="0" class="quantity-input" data-size="L">
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">XL</label>
+            <input type="number" name="qty-xl" min="0" value="0" class="quantity-input" data-size="XL">
+          </div>
+          
+          <div class="size-quantity-row">
+            <label class="size-label">XXL</label>
+            <input type="number" name="qty-xxl" min="0" value="0" class="quantity-input" data-size="XXL">
+          </div>
+          
+          <div class="size-quantity-total">
+            <span class="total-label">Garment Total:</span>
+            <span class="total-value" id="garment-total-${garment.id}">0</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add event listeners for quantity inputs
+    const quantityInputs = formElement.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(input => {
+      input.addEventListener('input', (e) => {
+        this.updateGarmentTotal(garment.id);
+        this.updateTotalQuantity();
+        this.saveQuantityData(garment.id);
+      });
+    });
+
+    // Load existing quantity data if available
+    this.loadQuantityData(garment.id, formElement);
+
+    return formElement;
+  }
+
+  updateGarmentTotal(garmentId) {
+    const form = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!form) return;
+
+    const inputs = form.querySelectorAll('.quantity-input');
+    let total = 0;
+    inputs.forEach(input => {
+      total += parseInt(input.value) || 0;
+    });
+
+    const totalElement = form.querySelector(`#garment-total-${garmentId}`);
+    if (totalElement) {
+      totalElement.textContent = total;
+    }
+
+    return total;
+  }
+
+  updateTotalQuantity() {
+    const allGarmentTotals = document.querySelectorAll('[id^="garment-total-"]');
+    let grandTotal = 0;
+    
+    allGarmentTotals.forEach(totalElement => {
+      grandTotal += parseInt(totalElement.textContent) || 0;
+    });
+
+    // Update the total quantity display
+    const totalQuantityElement = document.getElementById('total-production-quantity');
+    if (totalQuantityElement) {
+      totalQuantityElement.textContent = grandTotal;
+    }
+
+    // Update progress bar
+    const progressBar = document.getElementById('production-quantity-progress');
+    if (progressBar) {
+      const percentage = Math.min((grandTotal / 75) * 100, 100);
+      progressBar.style.width = `${percentage}%`;
+    }
+
+    // Store in state
+    V10_State.totalQuantity = grandTotal;
+
+    console.log(`📊 Updated total quantity: ${grandTotal}`);
+  }
+
+  saveQuantityData(garmentId) {
+    const form = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!form) return;
+
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment) return;
+
+    const quantities = {};
+    const inputs = form.querySelectorAll('.quantity-input');
+    inputs.forEach(input => {
+      const size = input.dataset.size;
+      const qty = parseInt(input.value) || 0;
+      quantities[size] = qty;
+    });
+
+    garment.quantities = quantities;
+    console.log(`💾 Saved quantities for garment ${garment.number}:`, quantities);
+  }
+
+  loadQuantityData(garmentId, formElement) {
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment || !garment.quantities) return;
+
+    const inputs = formElement.querySelectorAll('.quantity-input');
+    inputs.forEach(input => {
+      const size = input.dataset.size;
+      if (garment.quantities[size]) {
+        input.value = garment.quantities[size];
+      }
+    });
+
+    // Update totals
+    this.updateGarmentTotal(garmentId);
   }
 }
 
@@ -1867,7 +2124,11 @@ class V10_ValidationManager {
       const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
 
       // Additional validation for bulk orders
-      // TODO: Add quantity validation when quantity studio is implemented
+      // Check quantity requirements for bulk orders
+      const totalQuantity = V10_State.totalQuantity || 0;
+      if (totalQuantity < 75) {
+        errors.push(`Minimum quantity is 75 units (currently: ${totalQuantity})`);
+      }
 
       return {
         isValid: errors.length === 0,
@@ -2779,7 +3040,7 @@ class V10_TechPackSystem {
 
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        if (this.validateStep()) {
+        if (this.validateStep().isValid) {
           this.proceedToStep4();
         }
       });
@@ -2791,17 +3052,23 @@ class V10_TechPackSystem {
 
     if (legacyPrevBtn) {
       legacyPrevBtn.addEventListener('click', () => {
+        // Try window.stepManager first, fallback to direct navigation
         if (window.stepManager) {
           window.stepManager.navigateToStep(2);
+        } else {
+          this.goBackToStep2();
         }
       });
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
+    if (legacyNextBtn) {
+      legacyNextBtn.addEventListener('click', () => {
         if (this.validationManager.validateStep().isValid) {
+          // Try window.stepManager first, fallback to direct navigation
           if (window.stepManager) {
             window.stepManager.navigateToStep(4);
+          } else {
+            this.proceedToStep4();
           }
         }
       });
