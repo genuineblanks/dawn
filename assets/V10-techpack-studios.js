@@ -299,7 +299,11 @@ class V10_StudioNavigator {
 
     // Special handling for quantity studio
     if (studioName === 'quantities') {
-      this.populateQuantityStudio();
+      if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
+        window.v10GarmentStudio.populateQuantityStudio();
+      } else {
+        console.warn('⚠️ Garment studio not available for quantity population');
+      }
     }
 
     // Auto-save
