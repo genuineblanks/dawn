@@ -3811,17 +3811,18 @@ class V10_ClientManager {
   }
 
   validateField(field) {
-    const errorElement = field.parentNode.querySelector('.v10-form-error');
+    const fieldContainer = field.closest('.v10-form-field');
+    const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
     
     if (field.hasAttribute('required') && !field.value.trim()) {
-      this.showFieldError(field, 'This field is required');
+      this.showFieldError(field, 'Required');
       return false;
     }
     
     if (field.type === 'email' && field.value) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(field.value)) {
-        this.showFieldError(field, 'Please enter a valid email address');
+        this.showFieldError(field, 'Valid email required');
         return false;
       }
     }
@@ -4910,34 +4911,41 @@ class V10_ModalManager {
     const value = field.value.trim();
     let isValid = true;
     let message = '';
-    let messageType = 'success';
+    let messageType = 'error';
     
-    // Validation logic
+    // Error-only validation logic
     switch (validationType) {
       case 'required':
         if (!value) {
           isValid = false;
-          message = `${this.getFieldLabel(field)} is required`;
+          message = 'Required';
           messageType = 'error';
-        } else {
-          message = `${this.getFieldLabel(field)} looks good`;
-          messageType = 'success';
         }
         break;
         
       case 'email':
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Smart email validation - check for proper domain
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+        const commonDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 'icloud.com'];
+        
         if (!value) {
           isValid = false;
-          message = 'Email address is required';
+          message = 'Required';
           messageType = 'error';
         } else if (!emailRegex.test(value)) {
           isValid = false;
-          message = 'Please enter a valid email address';
+          message = 'Valid email required';
           messageType = 'error';
         } else {
-          message = 'Email address is valid';
-          messageType = 'success';
+          const domain = value.split('@')[1];
+          if (domain && (commonDomains.includes(domain) || domain.includes('.'))) {
+            // Valid email, clear any errors
+            message = '';
+          } else {
+            isValid = false;
+            message = 'Valid email required';
+            messageType = 'error';
+          }
         }
         break;
         
@@ -4945,11 +4953,8 @@ class V10_ModalManager {
         const isDifferentAddress = document.querySelector('input[name="deliveryAddress"]:checked')?.value === 'different';
         if (isDifferentAddress && !value) {
           isValid = false;
-          message = `${this.getFieldLabel(field)} is required for different address`;
+          message = 'Required';
           messageType = 'error';
-        } else if (value) {
-          message = `${this.getFieldLabel(field)} looks good`;
-          messageType = 'success';
         }
         break;
     }
@@ -4972,18 +4977,18 @@ class V10_ModalManager {
     
     if (!validationMessage) return;
     
-    // Update field state
-    fieldContainer.classList.remove('v10-form-field--success', 'v10-form-field--error', 'v10-form-field--warning');
-    validationMessage.classList.remove('v10-validation-message--success', 'v10-validation-message--error', 'v10-validation-message--warning');
+    // Clear all validation states
+    fieldContainer.classList.remove('v10-form-field--error', 'v10-form-field--warning');
+    validationMessage.classList.remove('v10-validation-message--error', 'v10-validation-message--warning');
     
-    if (message) {
+    // Only show error messages
+    if (message && !isValid) {
       fieldContainer.classList.add(`v10-form-field--${type}`);
       validationMessage.classList.add(`v10-validation-message--${type}`);
-      
-      const icon = this.getValidationIcon(type);
-      validationMessage.innerHTML = `${icon}<span>${message}</span>`;
-      validationMessage.style.display = 'flex';
+      validationMessage.textContent = message;
+      validationMessage.style.display = 'block';
     } else {
+      // Hide validation message when field is valid
       validationMessage.style.display = 'none';
     }
   }
@@ -4993,7 +4998,7 @@ class V10_ModalManager {
     const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
     
     if (fieldContainer) {
-      fieldContainer.classList.remove('v10-form-field--success', 'v10-form-field--error', 'v10-form-field--warning');
+      fieldContainer.classList.remove('v10-form-field--error', 'v10-form-field--warning');
     }
     
     if (validationMessage) {
