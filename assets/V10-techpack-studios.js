@@ -3241,7 +3241,10 @@ class V10_ModalManager {
     // Hero button to open client verification modal
     const heroBtn = document.getElementById('v10-open-client-modal');
     if (heroBtn) {
-      heroBtn.addEventListener('click', () => {
+      heroBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Hero button clicked, opening modal');
         this.openModal('client-verification');
       });
     }
@@ -3249,6 +3252,8 @@ class V10_ModalManager {
     // Modal close buttons
     document.querySelectorAll('.v10-modal-close').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const modal = e.target.closest('.v10-modal-overlay');
         if (modal) {
           this.closeModal(modal);
@@ -3256,13 +3261,11 @@ class V10_ModalManager {
       });
     });
 
-    // Modal overlay clicks (close modal)
-    document.querySelectorAll('.v10-modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          this.closeModal(overlay);
-        }
-      });
+    // Modal overlay clicks (close modal) - using event delegation
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('v10-modal-overlay')) {
+        this.closeModal(e.target);
+      }
     });
 
     // Escape key to close modals
@@ -3439,20 +3442,28 @@ class V10_ModalManager {
   }
 
   openModal(modalId) {
+    console.log('openModal called with ID:', modalId);
     const modal = this.modals.get(modalId) || document.getElementById(`v10-${modalId}-modal`);
-    if (!modal) return;
+    console.log('Modal element found:', modal);
+    
+    if (!modal) {
+      console.error('Modal not found:', modalId);
+      return;
+    }
 
     // Close other modals first
     this.closeAllModals();
     
     // Show modal with animation
     modal.style.display = 'flex';
+    console.log('Modal display set to flex');
     
     // Trigger reflow for animation
     modal.offsetHeight;
     
     // Add active class for transition
     modal.classList.add('active');
+    console.log('Modal active class added');
     
     // Prevent body scrolling
     document.body.style.overflow = 'hidden';
@@ -3462,6 +3473,7 @@ class V10_ModalManager {
   }
 
   closeModal(modalOrId) {
+    console.log('closeModal called with:', modalOrId);
     let modal;
     
     if (typeof modalOrId === 'string') {
@@ -3470,14 +3482,20 @@ class V10_ModalManager {
       modal = modalOrId;
     }
     
-    if (!modal) return;
+    if (!modal) {
+      console.log('No modal to close');
+      return;
+    }
 
+    console.log('Closing modal:', modal.id);
+    
     // Remove active class for transition
     modal.classList.remove('active');
     
     // Hide after transition
     setTimeout(() => {
       modal.style.display = 'none';
+      console.log('Modal hidden:', modal.id);
       
       // Restore body scrolling if no modals are open
       const openModals = document.querySelectorAll('.v10-modal-overlay.active');
