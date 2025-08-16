@@ -580,23 +580,20 @@ class V10_GarmentStudio {
       }
 
       const fabricGrid = element.querySelector('#fabric-type-grid');
-      if (!fabricGrid || !garmentType) {
-        console.warn('populateFabricOptions: missing fabricGrid or garmentType');
+      if (!fabricGrid) {
+        console.warn('populateFabricOptions: missing fabricGrid in element');
+        return;
+      }
+
+      if (!garmentType) {
+        console.warn('populateFabricOptions: missing garmentType');
         return;
       }
 
       // Find garment card - could be the element itself or nested inside
-      let garmentCard = null;
-      
-      try {
-        if (element.classList && element.classList.contains('garment-card')) {
-          garmentCard = element;
-        } else {
-          garmentCard = element.querySelector('.garment-card');
-        }
-      } catch (classError) {
-        console.error('Error checking element classList:', classError);
-        garmentCard = element.querySelector('.garment-card');
+      let garmentCard = element;
+      if (!element.classList || !element.classList.contains('garment-card')) {
+        garmentCard = element.closest('.garment-card');
       }
 
       if (!garmentCard || !garmentCard.dataset || !garmentCard.dataset.garmentId) {
@@ -607,7 +604,13 @@ class V10_GarmentStudio {
       const garmentId = garmentCard.dataset.garmentId;
       const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
       
-      // Check if this is in the compact interface or regular interface
+      if (fabrics.length === 0) {
+        console.warn(`No fabric options found for garment type: ${garmentType}`);
+        fabricGrid.innerHTML = '<p class="no-fabrics">No fabric options available for this garment type.</p>';
+        return;
+      }
+      
+      // Check if this is in the compact interface
       const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
       
       if (isCompactInterface) {
@@ -632,9 +635,9 @@ class V10_GarmentStudio {
         `).join('');
       }
       
-      console.log(`🧵 Populated ${fabrics.length} fabric options for ${garmentType} (compact: ${isCompactInterface})`);
+      console.log(`✅ Populated ${fabrics.length} fabric options for ${garmentType} (compact: ${isCompactInterface})`);
     } catch (error) {
-      console.error('Error in populateFabricOptions:', error);
+      console.error('❌ Error in populateFabricOptions:', error);
       return;
     }
   }
@@ -1089,28 +1092,20 @@ class V10_GarmentStudio {
   }
 
   enableFabricSelection(garmentCard) {
-    const fabricSection = garmentCard.querySelector('.compact-selection-section[data-show-for]');
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
     
-    console.log('🧵 Enabling fabric selection:', { fabricSection, fabricCollapsed, fabricPlaceholder });
-    
-    if (fabricSection && this.shouldShowSection(fabricSection)) {
-      // Make fabric selection available
-      if (fabricCollapsed) {
-        fabricCollapsed.style.opacity = '1';
-        fabricCollapsed.style.pointerEvents = 'auto';
-        console.log('✅ Fabric selection enabled');
+    // Make fabric selection available
+    if (fabricCollapsed) {
+      fabricCollapsed.style.opacity = '1';
+      fabricCollapsed.style.pointerEvents = 'auto';
+    }
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.cursor = 'pointer';
+      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      if (placeholderText) {
+        placeholderText.textContent = 'Select fabric type';
       }
-      if (fabricPlaceholder) {
-        fabricPlaceholder.style.cursor = 'pointer';
-        const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
-        if (placeholderText) {
-          placeholderText.textContent = 'Select fabric type';
-        }
-      }
-    } else {
-      console.warn('⚠️ Fabric section not found or not allowed for current request type');
     }
   }
 
@@ -1133,23 +1128,6 @@ class V10_GarmentStudio {
     return iconMap[garmentType] || '👕';
   }
 
-  shouldShowSection(section) {
-    const showFor = section.getAttribute('data-show-for');
-    if (!showFor) return true;
-    
-    const requestType = V10_State.requestType;
-    const allowedTypes = showFor.split(',').map(type => type.trim());
-    
-    // Map request types to match the data-show-for attribute
-    const typeMap = {
-      'quotation': 'quotation',
-      'sample-request': 'sample',
-      'bulk-order-request': 'bulk'
-    };
-    
-    const mappedType = typeMap[requestType] || requestType;
-    return allowedTypes.includes(mappedType);
-  }
 
   initializeCompactInterface(garmentCard) {
     // Set up initial states
