@@ -983,17 +983,27 @@ class V10_GarmentStudio {
     if (!selectionWidget) return;
 
     const garmentCard = selectionWidget.closest('.garment-card');
-    const isGarmentType = selectionWidget.closest('.compact-selection-section') === garmentCard.querySelector('.garment-fabric-split-container').firstElementChild;
+    if (!garmentCard) {
+      console.error('❌ No garment card found for selection widget');
+      return;
+    }
     
-    const collapsed = selectionWidget.querySelector('.compact-selection-widget');
-    const expanded = selectionWidget.closest('.compact-selection-section').querySelector('.selection-expanded');
+    // selectionWidget IS the compact-selection-widget, so we work with it directly
+    const collapsed = selectionWidget; // This is the compact-selection-widget itself
+    const section = selectionWidget.closest('.compact-selection-section');
+    const expanded = section ? section.querySelector('.selection-expanded') : null;
     const placeholder = selectionWidget.querySelector('.selection-placeholder');
+    
+    if (!expanded) {
+      console.error('❌ No expanded section found');
+      return;
+    }
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
       // Show expanded state
       collapsed.style.display = 'none';
       expanded.style.display = 'block';
-      placeholder.classList.add('expanded');
+      if (placeholder) placeholder.classList.add('expanded');
       
       // Close other expanded selections in this garment card
       this.closeOtherSelections(garmentCard, selectionWidget);
@@ -1001,7 +1011,7 @@ class V10_GarmentStudio {
       // Show collapsed state
       collapsed.style.display = 'block';
       expanded.style.display = 'none';
-      placeholder.classList.remove('expanded');
+      if (placeholder) placeholder.classList.remove('expanded');
     }
   }
 
@@ -1011,7 +1021,7 @@ class V10_GarmentStudio {
       if (widget !== exceptWidget) {
         const section = widget.closest('.compact-selection-section');
         const collapsed = widget;
-        const expanded = section.querySelector('.selection-expanded');
+        const expanded = section ? section.querySelector('.selection-expanded') : null;
         const placeholder = widget.querySelector('.selection-placeholder');
         
         collapsed.style.display = 'block';
@@ -2970,8 +2980,26 @@ class V10_TechPackSystem {
   // Public API
   setRequestType(type) {
     this.navigator.setRequestType(type);
+    this.updateGlobalSectionVisibility(type);
     this.validationManager.revalidate();
     this.standaloneManager.updateDisplay();
+  }
+
+  updateGlobalSectionVisibility(requestType) {
+    // Update all sections with data-show-for attributes globally
+    document.querySelectorAll('[data-show-for]').forEach(section => {
+      const showFor = section.dataset.showFor.split(',').map(type => type.trim());
+      const shouldShow = showFor.some(type => {
+        if (type === 'quotation') return requestType === 'quotation';
+        if (type === 'sample') return requestType === 'sample-request';
+        if (type === 'bulk') return requestType === 'bulk-order-request';
+        return false;
+      });
+      
+      section.style.display = shouldShow ? 'block' : 'none';
+    });
+    
+    console.log(`🔄 Global section visibility updated for request type: ${requestType}`);
   }
 
   getOrderSummary() {
@@ -3927,6 +3955,12 @@ class V10_ModalManager {
       window.v10ClientManager.saveData();
     }
     
+    // Update TechPack System with request type (for studio navigation)
+    if (window.v10TechPackSystem) {
+      window.v10TechPackSystem.setRequestType(submissionType);
+      console.log(`🔄 TechPack System updated with request type: ${submissionType}`);
+    }
+    
     // Show the actual form and hide landing page
     this.showClientForm();
     this.updateFormForSubmissionType(submissionType);
@@ -4126,59 +4160,91 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     console.log('🚀 V10 TechPack Studios - Initializing System...');
 
-    // Initialize Modal System first (required for landing page workflow)
-    try {
-      if (document.getElementById('techpack-v10-landing') || 
-          document.getElementById('v10-client-verification-modal') ||
-          document.getElementById('v10-submission-type-modal')) {
-        window.v10ModalManager = new V10_ModalManager();
-        console.log('✅ Modal Manager initialized');
-      }
-    } catch (modalError) {
-      console.error('❌ Error initializing Modal Manager:', modalError);
-    }
-    
-    // Initialize Step 1 if present
-    try {
-      if (document.getElementById('techpack-v10-step-1')) {
-        window.v10ClientManager = new V10_ClientManager();
-        console.log('✅ Client Manager initialized');
-      }
-    } catch (clientError) {
-      console.error('❌ Error initializing Client Manager:', clientError);
-    }
-    
-    // Initialize Step 2 if present
-    try {
-      if (document.getElementById('techpack-v10-step-2')) {
-        window.v10FileManager = new V10_FileManager();
-        console.log('✅ File Manager initialized');
-      }
-    } catch (fileError) {
-      console.error('❌ Error initializing File Manager:', fileError);
-    }
-    
-    // Initialize Step 3 when explicitly requested
-    try {
-      if (document.getElementById('techpack-v10-step-3')) {
-        // Only initialize if we're actually on step 3 or explicitly requested
-        let currentStep = '1';
-        try {
-          currentStep = sessionStorage.getItem('v10_current_step') || '1';
-        } catch (storageError) {
-          console.warn('Warning: Cannot access sessionStorage, using default step');
+    // Phase 1: Initialize core managers in dependency order
+    const initializeCore = async () => {
+      // Initialize Modal System first (required for landing page workflow)
+      try {
+        if (document.getElementById('techpack-v10-landing') || 
+            document.getElementById('v10-client-verification-modal') ||
+            document.getElementById('v10-submission-type-modal')) {
+          window.v10ModalManager = new V10_ModalManager();
+          console.log('✅ Modal Manager initialized');
         }
-        
-        if (currentStep === '3' || window.location.hash === '#step3') {
+      } catch (modalError) {
+        console.error('❌ Error initializing Modal Manager:', modalError);
+      }
+      
+      // Initialize Step 1 if present
+      try {
+        if (document.getElementById('techpack-v10-step-1')) {
+          window.v10ClientManager = new V10_ClientManager();
+          console.log('✅ Client Manager initialized');
+        }
+      } catch (clientError) {
+        console.error('❌ Error initializing Client Manager:', clientError);
+      }
+      
+      // Initialize Step 2 if present
+      try {
+        if (document.getElementById('techpack-v10-step-2')) {
+          window.v10FileManager = new V10_FileManager();
+          console.log('✅ File Manager initialized');
+        }
+      } catch (fileError) {
+        console.error('❌ Error initializing File Manager:', fileError);
+      }
+    };
+
+    // Phase 2: Initialize TechPack System with proper dependencies
+    const initializeTechPack = () => {
+      try {
+        if (document.getElementById('techpack-v10-step-3')) {
           window.v10TechPackSystem = new V10_TechPackSystem();
           console.log('✅ TechPack System initialized');
+          
+          // Get request type from multiple sources with fallback
+          let requestType = V10_State.requestType;
+          
+          if (!requestType && window.v10ClientManager) {
+            requestType = window.v10ClientManager.currentRequestType;
+          }
+          
+          if (!requestType) {
+            try {
+              requestType = sessionStorage.getItem('v10_request_type') || 'quotation';
+            } catch (storageError) {
+              requestType = 'quotation';
+            }
+          }
+          
+          // Ensure request type is set and system is properly configured
+          V10_State.requestType = requestType;
+          window.v10TechPackSystem.setRequestType(requestType);
+          console.log(`🎯 Request type configured: ${requestType}`);
+          
+          return true;
         }
+        return false;
+      } catch (techpackError) {
+        console.error('❌ Error initializing TechPack System:', techpackError);
+        return false;
       }
-    } catch (techpackError) {
-      console.error('❌ Error initializing TechPack System:', techpackError);
-    }
+    };
 
-    console.log('🎯 V10 TechPack Studios - Initialization Complete');
+    // Execute initialization phases
+    initializeCore().then(() => {
+      // Small delay to ensure DOM is fully ready
+      setTimeout(() => {
+        const techPackInitialized = initializeTechPack();
+        
+        if (techPackInitialized) {
+          console.log('🎯 V10 TechPack Studios - Full System Initialized');
+        } else {
+          console.log('🎯 V10 TechPack Studios - Core System Initialized');
+        }
+      }, 50);
+    });
+
   } catch (error) {
     console.error('💥 Fatal error during V10 initialization:', error);
   }
