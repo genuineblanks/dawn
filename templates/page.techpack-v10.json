@@ -1,0 +1,145 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_intro_v10": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_main_v10": {
+          "type": "heading",
+          "settings": {
+            "heading": "TechPack V10 - Premium Studio Experience",
+            "heading_size": "h1"
+          }
+        },
+        "text_description_v10": {
+          "type": "text",
+          "settings": {
+            "text": "<h5><strong>Experience our most advanced TechPack system with premium studio design.<br/></strong>Clean monochrome interface, glass morphism effects, and intelligent workflow that adapts to your request type for the ultimate professional experience.</h5><h5>Complete your submission using our <strong>studio-quality interface</strong> with auto-save functionality, context-aware validation, and seamless step transitions.</h5>"
+          }
+        },
+        "button_templates_v10": {
+          "type": "button",
+          "settings": {
+            "button_label": "Download TechPack Templates",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": ["heading_main_v10", "text_description_v10", "button_templates_v10"],
+      "disabled": true,
+      "custom_css": [],
+      "name": "TechPack V10 Introduction",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "step_1_v10": {
+      "type": "techpack-v10-step-1-client-info",
+      "settings": {
+        "step_title": "Client Information",
+        "step_subtitle": "Premium studio-style client verification and business details setup"
+      }
+    },
+    "step_2_v10": {
+      "type": "techpack-v10-step-2-file-upload",
+      "settings": {
+        "step_title": "File Upload",
+        "step_subtitle": "Professional drag & drop interface with intelligent file classification",
+        "max_file_size": 10,
+        "max_files": 10
+      }
+    },
+    "step_3_v10": {
+      "type": "techpack-v10-step-3-garment-specs",
+      "settings": {
+        "step_title": "Garment Specifications",
+        "step_subtitle": "Studio-quality garment builder with intelligent assignment system",
+        "minimum_quantity": 75
+      }
+    },
+    "step_4_v10": {
+      "type": "techpack-v10-step-4-review",
+      "settings": {
+        "step_title": "Review & Submit",
+        "step_subtitle": "Premium review interface with comprehensive cost breakdown",
+        "submission_email": "office@genuineblanks.com",
+        "response_time_text": "You will receive a detailed quote within 1-5 business days depending on project complexity."
+      }
+    },
+    "faq_v10": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_studio_interface": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What makes TechPack V10 different?",
+            "icon": "none",
+            "row_content": "<p>TechPack V10 features a premium studio-quality interface with monochrome design, glass morphism effects, and intelligent workflow that adapts based on your request type. It includes auto-save functionality, context-aware validation, and seamless transitions.</p>",
+            "page": ""
+          }
+        },
+        "faq_request_types": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How does the adaptive workflow work?",
+            "icon": "none",
+            "row_content": "<p>The system automatically shows or hides sections based on your request type. Quotations show basic workflow, Sample Requests include delivery and measurement requirements, and Bulk Orders focus on production specifications.</p>",
+            "page": ""
+          }
+        },
+        "faq_studio_design": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is the studio design approach?",
+            "icon": "none",
+            "row_content": "<p>V10 uses a professional monochrome color palette (white/grey/dark grey) with glass morphism effects, radio card grids instead of dropdowns, and studio-quality spacing and typography for a premium experience.</p>",
+            "page": ""
+          }
+        },
+        "faq_performance": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Is V10 optimized for performance?",
+            "icon": "none",
+            "row_content": "<p>Yes! V10 includes auto-save functionality with localStorage backup, intelligent state management, mobile-first responsive design, and optimized asset loading for fast performance across all devices.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": ["faq_studio_interface", "faq_request_types", "faq_studio_design", "faq_performance"],
+      "disabled": true,
+      "settings": {
+        "caption": "",
+        "heading": "TechPack V10 - Frequently Asked Questions",
+        "heading_size": "h2",
+        "heading_alignment": "center",
+        "layout": "row",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": ["rich_text_intro_v10", "step_1_v10", "step_2_v10", "step_3_v10", "step_4_v10", "faq_v10"]
+}
