@@ -191,27 +191,332 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-form-group">
           <label class="v10-form-label">
             Business Location *
-            <select name="country" class="v10-form-select" required>
-              <option value="">Select your country</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="GB">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="DE">Germany</option>
-              <option value="FR">France</option>
-              <option value="IT">Italy</option>
-              <option value="ES">Spain</option>
-              <option value="NL">Netherlands</option>
-              <option value="other">Other Country</option>
-            </select>
+            <div class="v10-enhanced-country-wrapper">
+              <input
+                type="text"
+                id="v10-country"
+                name="country"
+                class="v10-form-input v10-enhanced-country-input"
+                required
+                autocomplete="off"
+                placeholder="Select your country"
+                readonly
+              >
+              <div class="v10-enhanced-country-flag" id="v10-country-flag"></div>
+              <div class="v10-enhanced-country-toggle" id="v10-country-toggle">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </div>
+              <div class="v10-enhanced-country-dropdown" id="v10-country-dropdown">
+                <div class="v10-enhanced-country-search">
+                  <input
+                    type="text"
+                    class="v10-enhanced-country-search-input"
+                    placeholder="Search countries..."
+                    id="v10-country-search"
+                  >
+                </div>
+                <div class="v10-enhanced-country-list" id="v10-country-list"></div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Project Details
+            <textarea
+              name="notes"
+              class="v10-form-textarea"
+              rows="4"
+              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+            ></textarea>
           </label>
         </div>
       </div>
     </div>
 
-    <!-- Conditional Sections based on submission type -->
-    <div class="v10-conditional-sections" id="v10-conditional-sections">
-      <!-- Will be populated by JavaScript based on submission type -->
+    <!-- Delivery Information Studio (Sample/Bulk Only) -->
+    <div class="v10-studio-card" id="v10-delivery-section" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Delivery Information</h2>
+        <p class="v10-studio-subtitle">Where should we send your order?</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <div class="v10-form-group v10-form-group--full">
+          <label class="v10-form-label">Delivery Address *</label>
+          <div class="v10-delivery-options">
+            <label class="v10-delivery-option">
+              <input type="radio" name="deliveryAddress" value="company" checked>
+              <span class="v10-delivery-option-content">
+                <div class="v10-delivery-option-icon">🏢</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Company Address</strong>
+                  <small>Use business location from above</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-delivery-option">
+              <input type="radio" name="deliveryAddress" value="different">
+              <span class="v10-delivery-option-content">
+                <div class="v10-delivery-option-icon">📍</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Different Address</strong>
+                  <small>Specify alternative delivery location</small>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Delivery Warning -->
+      <div class="v10-warning-box">
+        <div class="v10-warning-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+            <path d="M10 7V11M10 13H10.01" stroke="white" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="v10-warning-content">
+          <strong>⚠️ Critical: Delivery address cannot be changed once order processing begins.</strong>
+          Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+        </div>
+      </div>
+
+      <!-- Different Address Form (conditional) -->
+      <div class="v10-different-address-form" id="v10-different-address-form" style="display: none;">
+        <div class="v10-form-grid">
+          <!-- Contact Info Row -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Contact Name *
+              <input
+                type="text"
+                name="deliveryContactName"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="Full name of contact person"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Contact Phone *
+              <input
+                type="tel"
+                name="deliveryPhone"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="+1 234 567 8901"
+                maxlength="20"
+              >
+            </label>
+          </div>
+
+          <!-- Address Lines -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Address Line 1 *
+              <input
+                type="text"
+                name="deliveryAddress1"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="Street address, building, etc."
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Address Line 2
+              <input
+                type="text"
+                name="deliveryAddress2"
+                class="v10-form-input"
+                placeholder="Apartment, suite, unit, etc."
+              >
+            </label>
+          </div>
+
+          <!-- City & State -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              City *
+              <input
+                type="text"
+                name="deliveryCity"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="City name"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              State/Province *
+              <input
+                type="text"
+                name="deliveryState"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="State, province, or region"
+              >
+            </label>
+          </div>
+
+          <!-- Postal & Country -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Postal Code *
+              <input
+                type="text"
+                name="deliveryPostal"
+                class="v10-form-input"
+                data-validate="required-if-different"
+                placeholder="ZIP or postal code"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Country *
+              <div class="v10-enhanced-country-wrapper">
+                <input
+                  type="text"
+                  id="v10-delivery-country"
+                  name="deliveryCountry"
+                  class="v10-form-input v10-enhanced-country-input"
+                  data-validate="required-if-different"
+                  autocomplete="off"
+                  placeholder="Select delivery country"
+                  readonly
+                >
+                <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag"></div>
+                <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 6l4 4 4-4H4z"/>
+                  </svg>
+                </div>
+                <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown">
+                  <div class="v10-enhanced-country-search">
+                    <input
+                      type="text"
+                      class="v10-enhanced-country-search-input"
+                      placeholder="Search countries..."
+                      id="v10-delivery-country-search"
+                    >
+                  </div>
+                  <div class="v10-enhanced-country-list" id="v10-delivery-country-list"></div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Delivery Notes -->
+          <div class="v10-form-group v10-form-group--full">
+            <label class="v10-form-label">
+              Delivery Notes (optional, max 140 characters)
+              <textarea
+                name="deliveryNotes"
+                class="v10-form-textarea"
+                rows="3"
+                maxlength="140"
+                placeholder="Special delivery instructions, gate codes, best delivery times, etc."
+              ></textarea>
+            </label>
+            <div class="v10-char-count">
+              <span id="v10-delivery-notes-count">0</span>/140 characters
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Options Studio (Bulk Only) -->
+    <div class="v10-studio-card" id="v10-shipping-section" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Shipping & Insurance</h2>
+        <p class="v10-studio-subtitle">Choose your preferred shipping method and protection level</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <!-- Shipping Method -->
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">Preferred Shipping Method *</label>
+          <div class="v10-shipping-methods">
+            <label class="v10-shipping-method">
+              <input type="radio" name="shippingMethod" value="air">
+              <span class="v10-shipping-method-content">
+                <div class="v10-shipping-method-icon">✈️</div>
+                <div class="v10-shipping-method-text">
+                  <strong>Air Freight</strong>
+                  <small>Faster + Expensive</small>
+                  <div class="v10-shipping-method-details">5-10 business days</div>
+                </div>
+              </span>
+            </label>
+            <label class="v10-shipping-method">
+              <input type="radio" name="shippingMethod" value="sea">
+              <span class="v10-shipping-method-content">
+                <div class="v10-shipping-method-icon">🚢</div>
+                <div class="v10-shipping-method-text">
+                  <strong>Sea Freight</strong>
+                  <small>Slower + Cheaper</small>
+                  <div class="v10-shipping-method-details">20-40 business days</div>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">Shipping Insurance *</label>
+          <div class="v10-insurance-options">
+            <label class="v10-insurance-option">
+              <input type="radio" name="insurance" value="yes">
+              <span class="v10-insurance-option-content">
+                <div class="v10-insurance-option-icon">🛡️</div>
+                <div class="v10-insurance-option-text">
+                  <strong>Yes, add insurance</strong>
+                  <small>2-6% of invoice value</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-insurance-option">
+              <input type="radio" name="insurance" value="no">
+              <span class="v10-insurance-option-content">
+                <div class="v10-insurance-option-icon">⚠️</div>
+                <div class="v10-insurance-option-text">
+                  <strong>No insurance</strong>
+                  <small>No protection coverage</small>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insurance Help Text -->
+      <div class="v10-help-box">
+        <div class="v10-help-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5V8M8 10H8.01" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="v10-help-content">
+          <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
+          Without insurance, there's no protection for lost goods during shipping.
+        </div>
+      </div>
     </div>
 
     <!-- Action Buttons -->
