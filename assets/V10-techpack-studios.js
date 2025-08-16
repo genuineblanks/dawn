@@ -3451,8 +3451,8 @@ class V10_ModalManager {
       return;
     }
 
-    // Close other modals first
-    this.closeAllModals();
+    // Close other modals first (but not the one we're opening)
+    this.closeOtherModals(modal);
     
     // Show modal with animation
     modal.style.display = 'flex';
@@ -3503,6 +3503,14 @@ class V10_ModalManager {
         document.body.style.overflow = '';
       }
     }, 300);
+  }
+
+  closeOtherModals(exceptModal) {
+    document.querySelectorAll('.v10-modal-overlay').forEach(modal => {
+      if (modal !== exceptModal) {
+        this.closeModal(modal);
+      }
+    });
   }
 
   closeAllModals() {
