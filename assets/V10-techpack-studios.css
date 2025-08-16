@@ -750,7 +750,7 @@
 
 .v10-studio-header {
   margin-bottom: var(--v10-space-2xl);
-  text-align: center;
+  text-align: left;
 }
 
 .v10-studio-title {
@@ -801,8 +801,8 @@
 }
 
 .v10-btn--primary:hover:not(:disabled) {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: #374151;
+  border-color: #374151;
   box-shadow: var(--v10-shadow-md);
 }
 
@@ -2146,11 +2146,6 @@
   background: var(--v10-accent-primary);
 }
 
-.add-fabric-swatch-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: var(--v10-shadow-md);
-}
 
 .add-fabric-design-btn {
   background: var(--v10-accent-highlight);
@@ -4267,16 +4262,6 @@
 }
 
 /* Add garment button */
-.add-garment-btn {
-  border: 2px dashed var(--v10-accent-primary);
-  color: var(--v10-accent-primary);
-}
-
-.add-garment-btn:hover {
-  background: var(--v10-accent-primary);
-  color: var(--v10-text-light);
-  border-color: var(--v10-accent-primary);
-}
 
 /* Studio badges */
 .studio-header__badge--professional {
@@ -4417,7 +4402,7 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: #374151;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   line-height: 1.4;
 }
 
@@ -4457,8 +4442,8 @@
 .v10-form-input-enhanced:focus,
 .v10-form-textarea-enhanced:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #374151;
+  box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
 }
 
 .v10-form-input-enhanced::placeholder,
@@ -4541,8 +4526,8 @@
 }
 
 .v10-delivery-option-enhanced input[type="radio"]:checked + .v10-delivery-option-content-enhanced {
-  border-color: #6366f1;
-  background: #f0f4ff;
+  border-color: #374151;
+  background: #f8f9fa;
 }
 
 /* Professional Warning Box */
@@ -4685,7 +4670,10 @@
 
 /* Custom Checkbox Styling */
 .v10-measurement-checkbox-input {
-  display: none;
+  display: none !important;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .v10-measurement-checkbox-custom {
@@ -5109,14 +5097,14 @@
 
 .v10-delivery-option-text strong {
   display: block;
-  font-size: var(--v10-text-base);
+  font-size: 12px;
   font-weight: 600;
   color: var(--v10-text-primary);
   margin-bottom: var(--v10-space-xs);
 }
 
 .v10-delivery-option-text small {
-  font-size: var(--v10-text-sm);
+  font-size: 11px;
   color: var(--v10-text-secondary);
 }
 
@@ -5215,8 +5203,8 @@
 }
 
 .v10-shipping-method input[type="radio"]:checked + .v10-shipping-method-content {
-  border-color: #6366f1;
-  background: #f0f4ff;
+  border-color: #374151;
+  background: #f8f9fa;
 }
 
 .v10-shipping-method-icon {
@@ -5281,8 +5269,8 @@
 }
 
 .v10-insurance-option input[type="radio"]:checked + .v10-insurance-option-content {
-  border-color: #6366f1;
-  background: #f0f4ff;
+  border-color: #374151;
+  background: #f8f9fa;
 }
 
 .v10-insurance-option-icon {
