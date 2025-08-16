@@ -289,7 +289,11 @@ class V10_StudioNavigator {
 
     // Update studio containers
     document.querySelectorAll('.studio-container').forEach(container => {
-      container.classList.toggle('studio-container--active', container.id === `${studioName}-studio`);
+      const isActive = container.id === `${studioName}-studio`;
+      container.classList.toggle('studio-container--active', isActive);
+      // Override inline display style when switching studios
+      container.style.display = isActive ? 'block' : 'none';
+      console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
 
     // Auto-save
@@ -603,15 +607,32 @@ class V10_GarmentStudio {
       const garmentId = garmentCard.dataset.garmentId;
       const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
       
-      fabricGrid.innerHTML = fabrics.map(fabric => `
-        <label class="radio-card">
-          <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
-          <span class="radio-card__content">
-            <span class="radio-card__icon">🧵</span>
-            <span class="radio-card__name">${fabric}</span>
-          </span>
-        </label>
-      `).join('');
+      // Check if this is in the compact interface or regular interface
+      const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
+      
+      if (isCompactInterface) {
+        fabricGrid.innerHTML = fabrics.map(fabric => `
+          <label class="compact-radio-card">
+            <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
+            <span class="compact-radio-card__content">
+              <span class="compact-radio-card__icon">🧵</span>
+              <span class="compact-radio-card__name">${fabric}</span>
+            </span>
+          </label>
+        `).join('');
+      } else {
+        fabricGrid.innerHTML = fabrics.map(fabric => `
+          <label class="radio-card">
+            <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
+            <span class="radio-card__content">
+              <span class="radio-card__icon">🧵</span>
+              <span class="radio-card__name">${fabric}</span>
+            </span>
+          </label>
+        `).join('');
+      }
+      
+      console.log(`🧵 Populated ${fabrics.length} fabric options for ${garmentType} (compact: ${isCompactInterface})`);
     } catch (error) {
       console.error('Error in populateFabricOptions:', error);
       return;
@@ -1072,16 +1093,24 @@ class V10_GarmentStudio {
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
     
+    console.log('🧵 Enabling fabric selection:', { fabricSection, fabricCollapsed, fabricPlaceholder });
+    
     if (fabricSection && this.shouldShowSection(fabricSection)) {
       // Make fabric selection available
       if (fabricCollapsed) {
         fabricCollapsed.style.opacity = '1';
         fabricCollapsed.style.pointerEvents = 'auto';
+        console.log('✅ Fabric selection enabled');
       }
       if (fabricPlaceholder) {
         fabricPlaceholder.style.cursor = 'pointer';
-        fabricPlaceholder.querySelector('.placeholder-text').textContent = 'Select fabric type';
+        const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+        if (placeholderText) {
+          placeholderText.textContent = 'Select fabric type';
+        }
       }
+    } else {
+      console.warn('⚠️ Fabric section not found or not allowed for current request type');
     }
   }
 
@@ -1140,7 +1169,10 @@ class V10_GarmentStudio {
     const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
     if (fabricPlaceholder) {
       fabricPlaceholder.style.cursor = 'not-allowed';
-      fabricPlaceholder.querySelector('.placeholder-text').textContent = 'Select garment first';
+      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      if (placeholderText) {
+        placeholderText.textContent = 'Select garment first';
+      }
     }
   }
 }
