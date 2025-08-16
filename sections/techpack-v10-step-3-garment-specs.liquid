@@ -548,127 +548,193 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
 
     <div class="garment-card__content">
       
-      <!-- Garment Type Selection -->
-      <div class="selection-section">
-        <div class="selection-header">
-          <h5>Garment Type</h5>
-          <button type="button" class="selection-help" data-help="garment-types">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-          </button>
+      <!-- Compact Garment & Fabric Selection Split -->
+      <div class="garment-fabric-split-container">
+        
+        <!-- Garment Type - Left Side -->
+        <div class="compact-selection-section">
+          <div class="selection-header">
+            <h5>Garment Type</h5>
+            <button type="button" class="selection-help" data-help="garment-types">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="garment-collapsed">
+            <div class="selection-placeholder" id="garment-placeholder">
+              <span class="placeholder-icon">👕</span>
+              <span class="placeholder-text">Select garment type</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="garment-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="garment-selected-icon">👕</span>
+                <span class="selected-name" id="garment-selected-name">T-Shirt</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-garment-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Garment Type
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="garment-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="garment-type-grid">
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Zip-Up Hoodie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🧥</span>
+                  <span class="compact-radio-card__name">Zip-Up Hoodie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Hoodie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__name">Hoodie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="T-Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👔</span>
+                  <span class="compact-radio-card__name">T-Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Sweatshirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🧥</span>
+                  <span class="compact-radio-card__name">Sweatshirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Sweatpants">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👖</span>
+                  <span class="compact-radio-card__name">Sweatpants</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Shorts">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🩳</span>
+                  <span class="compact-radio-card__name">Shorts</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Long Sleeve T-Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__name">Long Sleeve</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👔</span>
+                  <span class="compact-radio-card__name">Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Polo Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__name">Polo Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Tank Top">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🎽</span>
+                  <span class="compact-radio-card__name">Tank Top</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Hat/Cap">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🧢</span>
+                  <span class="compact-radio-card__name">Hat/Cap</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Beanie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🧿</span>
+                  <span class="compact-radio-card__name">Beanie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Other">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">✨</span>
+                  <span class="compact-radio-card__name">Other</span>
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="radio-grid" id="garment-type-grid">
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Zip-Up Hoodie">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🧥</span>
-              <span class="radio-card__name">Zip-Up Hoodie</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Hoodie">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👕</span>
-              <span class="radio-card__name">Hoodie</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="T-Shirt">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👔</span>
-              <span class="radio-card__name">T-Shirt</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Sweatshirt">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🧥</span>
-              <span class="radio-card__name">Sweatshirt</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Sweatpants">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👖</span>
-              <span class="radio-card__name">Sweatpants</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Shorts">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🩳</span>
-              <span class="radio-card__name">Shorts</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Long Sleeve T-Shirt">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👕</span>
-              <span class="radio-card__name">Long Sleeve</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Shirt">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👔</span>
-              <span class="radio-card__name">Shirt</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Polo Shirt">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">👕</span>
-              <span class="radio-card__name">Polo Shirt</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Tank Top">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🎽</span>
-              <span class="radio-card__name">Tank Top</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Hat/Cap">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🧢</span>
-              <span class="radio-card__name">Hat/Cap</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Beanie">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">🧿</span>
-              <span class="radio-card__name">Beanie</span>
-            </span>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="garmentType" value="Other">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">✨</span>
-              <span class="radio-card__name">Other</span>
-            </span>
-          </label>
-        </div>
-      </div>
 
-      <!-- Fabric Type Selection (for quotation/sample) -->
-      <div class="selection-section" data-show-for="quotation,sample">
-        <div class="selection-header">
-          <h5>Fabric Type</h5>
-          <button type="button" class="selection-help" data-help="fabric-types">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-          </button>
-        </div>
-        <div class="radio-grid" id="fabric-type-grid">
-          <!-- Fabric options will be populated dynamically based on garment type -->
+        <!-- Fabric Type - Right Side (for quotation/sample) -->
+        <div class="compact-selection-section" data-show-for="quotation,sample">
+          <div class="selection-header">
+            <h5>Fabric Type</h5>
+            <button type="button" class="selection-help" data-help="fabric-types">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="fabric-collapsed">
+            <div class="selection-placeholder" id="fabric-placeholder">
+              <span class="placeholder-icon">🧵</span>
+              <span class="placeholder-text">Select fabric type</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="fabric-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="fabric-selected-icon">🧵</span>
+                <span class="selected-name" id="fabric-selected-name">100% Cotton</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-fabric-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Fabric Type
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="fabric-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="fabric-type-grid">
+              <!-- Fabric options will be populated dynamically based on garment type -->
+            </div>
+          </div>
         </div>
       </div>
 
