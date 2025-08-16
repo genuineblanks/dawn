@@ -159,8 +159,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       <div class="v10-form-section">
         <!-- Business/Brand Name -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            BUSINESS/BRAND NAME *
+          <label class="v10-form-label-enhanced required">
+            BUSINESS/BRAND NAME
             <input 
               type="text" 
               name="company_name" 
@@ -175,8 +175,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Business Email Address -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            BUSINESS EMAIL ADDRESS *
+          <label class="v10-form-label-enhanced required">
+            BUSINESS EMAIL ADDRESS
             <input 
               type="email" 
               name="email" 
@@ -191,7 +191,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Delivery Address -->
         <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
-          <label class="v10-form-label-enhanced">DELIVERY ADDRESS *</label>
+          <label class="v10-form-label-enhanced required">DELIVERY ADDRESS</label>
           <div class="v10-delivery-options-enhanced">
             <label class="v10-delivery-option-enhanced">
               <input type="radio" name="deliveryAddress" value="company" checked>
@@ -226,13 +226,39 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
 
+    <!-- Project Details Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Project Details</h2>
+        <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
+      </div>
+      
+      <div class="v10-form-section">
+        <div class="v10-form-field v10-form-field--full">
+          <label class="v10-form-label-enhanced">
+            PROJECT DESCRIPTION
+            <textarea
+              name="project_details"
+              class="v10-form-textarea-enhanced"
+              rows="4"
+              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+              maxlength="500"
+            ></textarea>
+          </label>
+          <div class="v10-char-count">
+            <span id="v10-project-details-count">0</span>/500 characters
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Different Address Form (conditional) -->
     <div class="v10-studio-card v10-different-address-card" id="v10-different-address-form" style="display: none;">
       <div class="v10-form-section">
         <!-- Contact Info Row -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            CONTACT NAME *
+          <label class="v10-form-label-enhanced required">
+            CONTACT NAME
             <input
               type="text"
               name="deliveryContactName"
@@ -245,8 +271,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            CONTACT PHONE *
+          <label class="v10-form-label-enhanced required">
+            CONTACT PHONE
             <input
               type="tel"
               name="deliveryPhone"
@@ -261,8 +287,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Address Lines -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            ADDRESS LINE 1 *
+          <label class="v10-form-label-enhanced required">
+            ADDRESS LINE 1
             <input
               type="text"
               name="deliveryAddress1"
@@ -288,8 +314,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- City & State -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            CITY *
+          <label class="v10-form-label-enhanced required">
+            CITY
             <input
               type="text"
               name="deliveryCity"
@@ -302,8 +328,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            STATE/PROVINCE *
+          <label class="v10-form-label-enhanced required">
+            STATE/PROVINCE
             <input
               type="text"
               name="deliveryState"
@@ -317,8 +343,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Postal & Country -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            POSTAL CODE *
+          <label class="v10-form-label-enhanced required">
+            POSTAL CODE
             <input
               type="text"
               name="deliveryPostal"
@@ -331,8 +357,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced">
-            COUNTRY *
+          <label class="v10-form-label-enhanced required">
+            COUNTRY
             <div class="v10-enhanced-country-wrapper">
               <input
                 type="text"
@@ -581,7 +607,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       <div class="v10-form-grid">
         <!-- Shipping Method -->
         <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label">Preferred Shipping Method *</label>
+          <label class="v10-form-label required">Preferred Shipping Method</label>
           <div class="v10-shipping-methods">
             <label class="v10-shipping-method">
               <input type="radio" name="shippingMethod" value="air">
@@ -608,7 +634,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Insurance -->
         <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label">Shipping Insurance *</label>
+          <label class="v10-form-label required">Shipping Insurance</label>
           <div class="v10-insurance-options">
             <label class="v10-insurance-option">
               <input type="radio" name="insurance" value="yes">
