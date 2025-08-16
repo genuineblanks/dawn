@@ -2604,7 +2604,7 @@ class V10_ClientManager {
   }
 
   setupFormValidation() {
-    const form = document.getElementById('techpack-v10-step-1');
+    const form = document.getElementById('techpack-v10-client-form');
     if (!form) return;
 
     const inputs = form.querySelectorAll('input, select, textarea');
@@ -2726,8 +2726,15 @@ class V10_ClientManager {
   }
 
   validateForm() {
-    const form = document.getElementById('techpack-v10-step-1');
-    if (!form) return false;
+    const form = document.getElementById('techpack-v10-client-form');
+    if (!form) {
+      // If form doesn't exist yet, just check if request type is selected
+      const nextBtn = document.getElementById('techpack-v10-step-1-next');
+      if (nextBtn) {
+        nextBtn.disabled = !this.currentRequestType;
+      }
+      return !!this.currentRequestType;
+    }
     
     let isValid = true;
     const requiredFields = form.querySelectorAll('input[required], select[required]');
@@ -2754,8 +2761,17 @@ class V10_ClientManager {
   }
 
   saveData() {
-    const form = document.getElementById('techpack-v10-step-1');
-    if (!form) return;
+    const form = document.getElementById('techpack-v10-client-form');
+    if (!form) {
+      // Fallback: if form doesn't exist yet, just save the submission type
+      const data = { submission_type: this.currentRequestType };
+      localStorage.setItem('v10_step1_data', JSON.stringify(data));
+      if (window.V10_State) {
+        V10_State.clientInfo = data;
+        V10_State.save();
+      }
+      return;
+    }
     
     const formData = new FormData(form);
     const data = {};
@@ -3244,7 +3260,6 @@ class V10_ModalManager {
       heroBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Hero button clicked, opening modal');
         this.openModal('client-verification');
       });
     }
@@ -3400,6 +3415,15 @@ class V10_ModalManager {
     if (formSection) {
       formSection.style.display = 'block';
       formSection.scrollIntoView({ behavior: 'smooth' });
+      
+      // Initialize client manager if not already done
+      if (!window.v10ClientManager) {
+        window.v10ClientManager = new V10_ClientManager();
+      } else {
+        // Re-setup form validation now that form is visible
+        window.v10ClientManager.setupFormValidation();
+        window.v10ClientManager.validateForm();
+      }
     }
   }
 
@@ -3442,9 +3466,7 @@ class V10_ModalManager {
   }
 
   openModal(modalId) {
-    console.log('openModal called with ID:', modalId);
     const modal = this.modals.get(modalId) || document.getElementById(`v10-${modalId}-modal`);
-    console.log('Modal element found:', modal);
     
     if (!modal) {
       console.error('Modal not found:', modalId);
@@ -3456,14 +3478,12 @@ class V10_ModalManager {
     
     // Show modal with animation
     modal.style.display = 'flex';
-    console.log('Modal display set to flex');
     
     // Trigger reflow for animation
     modal.offsetHeight;
     
     // Add active class for transition
     modal.classList.add('active');
-    console.log('Modal active class added');
     
     // Prevent body scrolling
     document.body.style.overflow = 'hidden';
@@ -3473,7 +3493,6 @@ class V10_ModalManager {
   }
 
   closeModal(modalOrId) {
-    console.log('closeModal called with:', modalOrId);
     let modal;
     
     if (typeof modalOrId === 'string') {
@@ -3482,12 +3501,7 @@ class V10_ModalManager {
       modal = modalOrId;
     }
     
-    if (!modal) {
-      console.log('No modal to close');
-      return;
-    }
-
-    console.log('Closing modal:', modal.id);
+    if (!modal) return;
     
     // Remove active class for transition
     modal.classList.remove('active');
@@ -3495,7 +3509,6 @@ class V10_ModalManager {
     // Hide after transition
     setTimeout(() => {
       modal.style.display = 'none';
-      console.log('Modal hidden:', modal.id);
       
       // Restore body scrolling if no modals are open
       const openModals = document.querySelectorAll('.v10-modal-overlay.active');
