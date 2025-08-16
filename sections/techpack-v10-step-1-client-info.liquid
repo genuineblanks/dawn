@@ -1,0 +1,413 @@
+{% comment %}
+TechPack V10 Step 1: Client Information - Premium Studio Design
+{% endcomment %}
+
+{{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
+
+<section id="techpack-v10-step-1" class="v10-techpack-step" data-step="1">
+  <div class="v10-techpack-container">
+    <!-- Progress Indicator -->
+    <div class="v10-progress-indicator">
+      <div class="v10-progress-bar">
+        <div class="v10-progress-fill" style="width: 25%"></div>
+      </div>
+      <div class="v10-progress-steps">
+        <div class="v10-progress-step v10-progress-step--active">
+          <div class="v10-progress-circle">1</div>
+          <span class="v10-progress-label">Client Info</span>
+        </div>
+        <div class="v10-progress-step">
+          <div class="v10-progress-circle">2</div>
+          <span class="v10-progress-label">Files</span>
+        </div>
+        <div class="v10-progress-step">
+          <div class="v10-progress-circle">3</div>
+          <span class="v10-progress-label">Garments</span>
+        </div>
+        <div class="v10-progress-step">
+          <div class="v10-progress-circle">4</div>
+          <span class="v10-progress-label">Review</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="v10-step-header">
+      <h1 class="v10-step-title">Client Information</h1>
+      <p class="v10-step-subtitle">Let's start by setting up your request details and contact information</p>
+    </div>
+
+    <!-- Request Type Selection Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Request Type</h2>
+        <p class="v10-studio-subtitle">Choose your project type to customize the workflow</p>
+      </div>
+
+      <div class="v10-radio-grid v10-radio-grid--request-types">
+        <label class="v10-radio-card" data-request-type="quotation">
+          <input type="radio" name="submission_type" value="quotation" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <div class="v10-radio-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 11H15M9 15H15M17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="v10-radio-card-title">Quotation Request</h3>
+            <p class="v10-radio-card-description">Get pricing for your project without commitment</p>
+            <div class="v10-radio-card-features">
+              <span class="v10-feature-tag">Free quotes</span>
+              <span class="v10-feature-tag">No minimums</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="v10-radio-card" data-request-type="sample-request">
+          <input type="radio" name="submission_type" value="sample-request" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <div class="v10-radio-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M7 21L3 17V7L7 3H17L21 7V17L17 21H7Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="v10-radio-card-title">Sample Request</h3>
+            <p class="v10-radio-card-description">Order samples to test quality and fit</p>
+            <div class="v10-radio-card-features">
+              <span class="v10-feature-tag">Quality testing</span>
+              <span class="v10-feature-tag">Fast turnaround</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="v10-radio-card" data-request-type="bulk-order-request">
+          <input type="radio" name="submission_type" value="bulk-order-request" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <div class="v10-radio-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="v10-radio-card-title">Bulk Order</h3>
+            <p class="v10-radio-card-description">Place large quantity orders for production</p>
+            <div class="v10-radio-card-features">
+              <span class="v10-feature-tag">Volume pricing</span>
+              <span class="v10-feature-tag">Production ready</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="v10-radio-card" data-request-type="lab-dips-accessories">
+          <input type="radio" name="submission_type" value="lab-dips-accessories" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <div class="v10-radio-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M6 2L3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6L18 2H6Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 11V17M9 14H15" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="v10-radio-card-title">Lab Dips & Accessories</h3>
+            <p class="v10-radio-card-description">Color matching and accessory development</p>
+            <div class="v10-radio-card-features">
+              <span class="v10-feature-tag">Color matching</span>
+              <span class="v10-feature-tag">Accessories</span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Client Details Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Contact Information</h2>
+        <p class="v10-studio-subtitle">Your primary contact details for this project</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            First Name *
+            <input type="text" name="first_name" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            Last Name *
+            <input type="text" name="last_name" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Email Address *
+            <input type="email" name="email" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Phone Number *
+            <input type="tel" name="phone" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Company Name
+            <input type="text" name="company" class="v10-form-input">
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Job Title
+            <input type="text" name="job_title" class="v10-form-input">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business Details Studio -->
+    <div class="v10-studio-card" id="business-details-studio">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Business Details</h2>
+        <p class="v10-studio-subtitle">Help us understand your business and requirements</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Business Type *
+            <select name="business_type" class="v10-form-select" required>
+              <option value="">Select business type</option>
+              <option value="startup">Startup / New Brand</option>
+              <option value="established">Established Brand</option>
+              <option value="retailer">Retailer</option>
+              <option value="designer">Fashion Designer</option>
+              <option value="manufacturer">Manufacturer</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Country *
+            <select name="country" class="v10-form-select" required>
+              <option value="">Select your country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="IT">Italy</option>
+              <option value="ES">Spain</option>
+              <option value="NL">Netherlands</option>
+              <option value="other">Other Country</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--full" id="project-description-group">
+          <label class="v10-form-label">
+            Project Description
+            <textarea name="project_description" class="v10-form-textarea" rows="4" placeholder="Tell us about your project, goals, and any specific requirements..."></textarea>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery Address Studio (Conditional) -->
+    <div class="v10-studio-card" id="delivery-address-studio" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Delivery Address</h2>
+        <p class="v10-studio-subtitle">Where should we ship your order?</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Full Name *
+            <input type="text" name="delivery_name" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Address Line 1 *
+            <input type="text" name="delivery_address_1" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group">
+          <label class="v10-form-label">
+            Address Line 2
+            <input type="text" name="delivery_address_2" class="v10-form-input">
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            City *
+            <input type="text" name="delivery_city" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            State/Province *
+            <input type="text" name="delivery_state" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            Postal Code *
+            <input type="text" name="delivery_postal" class="v10-form-input" required>
+          </label>
+        </div>
+
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label">
+            Country *
+            <select name="delivery_country" class="v10-form-select" required>
+              <option value="">Select country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Studio (Conditional) -->
+    <div class="v10-studio-card" id="timeline-studio" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Project Timeline</h2>
+        <p class="v10-studio-subtitle">When do you need this completed?</p>
+      </div>
+
+      <div class="v10-radio-grid v10-radio-grid--timeline">
+        <label class="v10-radio-card v10-radio-card--compact">
+          <input type="radio" name="timeline" value="asap" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <h3 class="v10-radio-card-title">ASAP</h3>
+            <p class="v10-radio-card-description">Rush order pricing may apply</p>
+          </div>
+        </label>
+
+        <label class="v10-radio-card v10-radio-card--compact">
+          <input type="radio" name="timeline" value="2-weeks" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <h3 class="v10-radio-card-title">2 Weeks</h3>
+            <p class="v10-radio-card-description">Standard timeline</p>
+          </div>
+        </label>
+
+        <label class="v10-radio-card v10-radio-card--compact">
+          <input type="radio" name="timeline" value="1-month" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <h3 class="v10-radio-card-title">1 Month</h3>
+            <p class="v10-radio-card-description">Flexible timeline</p>
+          </div>
+        </label>
+
+        <label class="v10-radio-card v10-radio-card--compact">
+          <input type="radio" name="timeline" value="flexible" class="v10-radio-input">
+          <div class="v10-radio-card-content">
+            <h3 class="v10-radio-card-title">Flexible</h3>
+            <p class="v10-radio-card-description">No rush needed</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="v10-step-actions">
+      <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-step-1-back" disabled>
+        <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        Previous
+      </button>
+      
+      <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-step-1-next" disabled>
+        Continue to Files
+        <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Client Verification Modal -->
+<div class="v10-modal-overlay" id="techpack-v10-client-verification-modal" style="display: none;">
+  <div class="v10-modal">
+    <div class="v10-modal-header">
+      <h3 class="v10-modal-title">Client Verification</h3>
+      <button type="button" class="v10-modal-close" id="techpack-v10-close-verification-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="v10-modal-body">
+      <div class="v10-verification-status" id="techpack-v10-verification-content">
+        <div class="v10-verification-loading">
+          <div class="v10-spinner"></div>
+          <p>Checking your registration status...</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="v10-modal-actions" id="techpack-v10-verification-actions" style="display: none;">
+      <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-register-new">
+        Register New Account
+      </button>
+      <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-continue-existing">
+        Continue with Existing Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Load TechPack V10 Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v=10.0.0" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "TechPack V10 Step 1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Client Information Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Client Information"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Premium studio-style client verification and business details setup"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V10 Step 1"
+    }
+  ]
+}
+{% endschema %}
