@@ -5,6 +5,11 @@
 // GLOBAL CONFIGURATION
 // ==============================================
 
+// Prevent multiple script loading
+if (typeof window.V10_CONFIG !== 'undefined') {
+  console.log('V10 TechPack Studios already loaded, skipping initialization');
+} else {
+
 const V10_CONFIG = {
   // Fabric Type Mapping (from original system)
   FABRIC_TYPE_MAPPING: {
@@ -3578,3 +3583,5 @@ window.V10_FileManager = V10_FileManager;
 window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
+
+} // End of guard clause
