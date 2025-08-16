@@ -3612,9 +3612,8 @@
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--v10-space-xl);
-  text-align: center;
 }
 
 .v10-glass-card-icon {
@@ -3631,7 +3630,6 @@
 
 .v10-glass-card-text {
   flex: 1;
-  text-align: center;
 }
 
 .v10-glass-card-title {
@@ -4043,13 +4041,12 @@
   opacity: 0.8;
 }
 
-/* Update glass card features layout - center aligned like original */
+/* Update glass card features layout */
 .v10-glass-card-features {
   display: flex;
   flex-wrap: wrap;
   gap: var(--v10-space-sm);
   margin-top: var(--v10-space-md);
-  justify-content: center; /* Center the feature items */
 }
 
 /* Legacy v10-feature-tag styling (for backwards compatibility) */
