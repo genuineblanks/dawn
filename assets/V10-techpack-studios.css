@@ -22,10 +22,10 @@
   --v10-text-muted: #868e96;
   --v10-text-light: #ffffff;
   
-  --v10-accent-primary: #2d3436;
-  --v10-accent-secondary: #636e72;
-  --v10-accent-tertiary: #868e96;
-  --v10-accent-highlight: #1a1a1a;
+  --v10-accent-primary: #1a1a1a;
+  --v10-accent-secondary: #2d3436;
+  --v10-accent-tertiary: #636e72;
+  --v10-accent-highlight: #000000;
   
   /* Shadows - Studio Quality */
   --v10-shadow-xs: 0 1px 2px 0 rgba(45, 52, 54, 0.05);
@@ -4000,4 +4000,239 @@
     text-align: left;
     height: 44px;
   }
+}
+
+/* ==============================================
+   ORIGINAL STYLE FEATURE ITEMS (COLORED)
+   ============================================== */
+
+.v10-feature-item {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-right: var(--v10-space-md);
+  margin-bottom: var(--v10-space-xs);
+  padding: 0;
+  background: none;
+  border: none;
+  gap: var(--v10-space-xs);
+  transition: var(--v10-transition);
+}
+
+.v10-feature-item:last-child {
+  margin-right: 0;
+}
+
+/* Color variations matching original design */
+.v10-feature-item--success {
+  color: #16a34a; /* Green */
+}
+
+.v10-feature-item--warning {
+  color: #ea580c; /* Orange */
+}
+
+.v10-feature-item--error {
+  color: #dc2626; /* Red */
+}
+
+.v10-feature-item--info {
+  color: #2563eb; /* Blue */
+}
+
+.v10-feature-item--primary {
+  color: var(--v10-text-primary);
+}
+
+/* Hover effects */
+.v10-feature-item:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+/* Update glass card features layout */
+.v10-glass-card-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--v10-space-sm);
+  margin-top: var(--v10-space-md);
+}
+
+/* Legacy v10-feature-tag styling (for backwards compatibility) */
+.v10-feature-tag {
+  display: inline-block;
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+  padding: var(--v10-space-xs) var(--v10-space-md);
+  border-radius: var(--v10-radius-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-right: var(--v10-space-sm);
+  margin-bottom: var(--v10-space-xs);
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .v10-feature-item {
+    font-size: 0.8rem;
+    margin-bottom: var(--v10-space-sm);
+  }
+  
+  .v10-glass-card-features {
+    flex-direction: column;
+    gap: var(--v10-space-xs);
+  }
+}
+
+/* ==============================================
+   BLACK ACCENT ENHANCEMENTS
+   ============================================== */
+
+/* Studio tabs with black accents */
+.studio-tab--active {
+  background: var(--v10-accent-highlight) !important;
+  color: var(--v10-text-light) !important;
+  border-color: var(--v10-accent-highlight) !important;
+}
+
+.studio-tab:hover:not(.studio-tab--active) {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+}
+
+/* Garment card headers */
+.garment-card__header {
+  background: linear-gradient(135deg, var(--v10-accent-primary), var(--v10-accent-secondary));
+  color: var(--v10-text-light);
+  border-bottom: 2px solid var(--v10-accent-highlight);
+}
+
+.garment-card__number {
+  background: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+  border: 1px solid var(--v10-accent-highlight);
+}
+
+/* Status indicators with black accent */
+.status-indicator--complete {
+  background: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+}
+
+/* Progress steps with black accent */
+.techpack-progress__step-circle--active {
+  background: var(--v10-accent-highlight);
+  border-color: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+}
+
+.techpack-progress__step-circle--completed {
+  background: var(--v10-accent-primary);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+}
+
+/* Primary buttons with black accent */
+.v10-btn--primary,
+.techpack-btn--primary {
+  background: var(--v10-accent-highlight);
+  border-color: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+}
+
+.v10-btn--primary:hover,
+.techpack-btn--primary:hover {
+  background: var(--v10-accent-primary);
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
+}
+
+/* Form elements with black accents */
+.quantity-form-number {
+  background: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+  border: 1px solid var(--v10-accent-highlight);
+}
+
+/* Compact radio cards selected state */
+.compact-radio-card input:checked + .compact-radio-card__content {
+  background: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+  border-color: var(--v10-accent-highlight);
+}
+
+/* Collection item actions */
+.collection-item__assign,
+.collection-item__remove {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+  border: 1px solid var(--v10-accent-primary);
+}
+
+.collection-item__assign:hover,
+.collection-item__remove:hover {
+  background: var(--v10-accent-highlight);
+  border-color: var(--v10-accent-highlight);
+  transform: scale(1.1);
+}
+
+/* Help buttons and info elements */
+.techpack-help-btn,
+.studio-help-btn,
+.selection-help {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+  border: 1px solid var(--v10-accent-primary);
+}
+
+.techpack-help-btn:hover,
+.studio-help-btn:hover,
+.selection-help:hover {
+  background: var(--v10-accent-highlight);
+  border-color: var(--v10-accent-highlight);
+  transform: translateY(-1px);
+}
+
+/* Modal close buttons */
+.techpack-modal__close {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+  border: 1px solid var(--v10-accent-primary);
+}
+
+.techpack-modal__close:hover {
+  background: var(--v10-accent-highlight);
+  border-color: var(--v10-accent-highlight);
+  transform: rotate(90deg);
+}
+
+/* Add garment button */
+.add-garment-btn {
+  border: 2px dashed var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+}
+
+.add-garment-btn:hover {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+  border-color: var(--v10-accent-primary);
+}
+
+/* Studio badges */
+.studio-header__badge--professional {
+  background: var(--v10-accent-highlight);
+  color: var(--v10-text-light);
+}
+
+.studio-header__badge--creative {
+  background: var(--v10-accent-primary);
+  color: var(--v10-text-light);
+}
+
+.studio-header__badge--production {
+  background: var(--v10-accent-secondary);
+  color: var(--v10-text-light);
 }
