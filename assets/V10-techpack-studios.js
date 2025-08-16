@@ -154,6 +154,12 @@ const V10_CONFIG = {
 };
 
 // ==============================================
+// UTILITY FUNCTIONS
+// ==============================================
+
+// V10_Utils will be defined later with complete functionality
+
+// ==============================================
 // GLOBAL STATE MANAGEMENT
 // ==============================================
 
@@ -170,19 +176,35 @@ const V10_State = {
   
   // Auto-save to sessionStorage
   save() {
-    const stateData = {
-      requestType: this.requestType,
-      currentStudio: this.currentStudio,
-      garments: Array.from(this.garments.entries()),
-      labDips: Array.from(this.labDips.entries()),
-      designSamples: Array.from(this.designSamples.entries()),
-      assignments: {
-        labDips: Array.from(this.assignments.labDips.entries()).map(([id, set]) => [id, Array.from(set)]),
-        designs: Array.from(this.assignments.designs.entries()).map(([id, set]) => [id, Array.from(set)])
+    try {
+      const stateData = {
+        requestType: this.requestType,
+        currentStudio: this.currentStudio,
+        garments: Array.from(this.garments?.entries() || []),
+        labDips: Array.from(this.labDips?.entries() || []),
+        designSamples: Array.from(this.designSamples?.entries() || []),
+        assignments: {
+          labDips: Array.from(this.assignments?.labDips?.entries() || []).map(([id, set]) => [id, Array.from(set || [])]),
+          designs: Array.from(this.assignments?.designs?.entries() || []).map(([id, set]) => [id, Array.from(set || [])])
+        }
+      };
+      
+      try {
+        sessionStorage.setItem('v10-techpack-state', JSON.stringify(stateData));
+        console.log('✅ V10 State saved');
+      } catch (storageError) {
+        console.error('❌ Failed to save to sessionStorage:', storageError);
+        // Try localStorage as fallback
+        try {
+          localStorage.setItem('v10-techpack-state-backup', JSON.stringify(stateData));
+          console.log('✅ V10 State saved to localStorage backup');
+        } catch (localStorageError) {
+          console.error('❌ Failed to save to localStorage backup:', localStorageError);
+        }
       }
-    };
-    sessionStorage.setItem('v10-techpack-state', JSON.stringify(stateData));
-    console.log('✅ V10 State saved');
+    } catch (error) {
+      console.error('❌ Error preparing state data for save:', error);
+    }
   },
 
   // Load from sessionStorage
@@ -242,7 +264,17 @@ const V10_Utils = {
   },
 
   // Format currency
-  formatCurrency: (amount) => `€${amount}`,
+  formatCurrency: (amount) => {
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount);
+    } catch (error) {
+      console.error('Error formatting currency:', error);
+      return `$${amount}`;
+    }
+  },
 
   // Debounce function
   debounce: (func, wait) => {
@@ -257,9 +289,24 @@ const V10_Utils = {
     };
   },
 
+  // Sanitize filename for safe processing
+  sanitizeFilename: (filename) => {
+    try {
+      return filename.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
+    } catch (error) {
+      console.error('Error sanitizing filename:', error);
+      return 'file';
+    }
+  },
+
   // Check if fabric allows custom colors
   allowsCustomColor: (fabricType) => {
-    return V10_CONFIG.COTTON_FABRICS.some(cotton => fabricType.includes(cotton.split(' ')[0]));
+    try {
+      return V10_CONFIG.COTTON_FABRICS.some(cotton => fabricType.includes(cotton.split(' ')[0]));
+    } catch (error) {
+      console.error('Error checking fabric custom color capability:', error);
+      return false;
+    }
   }
 };
 
@@ -455,15 +502,23 @@ class V10_GarmentStudio {
     });
   }
 
-  populateFabricOptions(clone, garmentType) {
-    const fabricGrid = clone.querySelector('#fabric-type-grid');
+  populateFabricOptions(element, garmentType) {
+    const fabricGrid = element.querySelector('#fabric-type-grid');
     if (!fabricGrid || !garmentType) return;
 
+    // Find garment card - could be the element itself or nested inside
+    let garmentCard = element.classList.contains('garment-card') ? element : element.querySelector('.garment-card');
+    if (!garmentCard || !garmentCard.dataset || !garmentCard.dataset.garmentId) {
+      console.error('Cannot find garment card with valid dataset');
+      return;
+    }
+
+    const garmentId = garmentCard.dataset.garmentId;
     const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
     
     fabricGrid.innerHTML = fabrics.map(fabric => `
       <label class="radio-card">
-        <input type="radio" name="fabricType-${clone.querySelector('.garment-card').dataset.garmentId}" value="${fabric}">
+        <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
         <span class="radio-card__content">
           <span class="radio-card__icon">🧵</span>
           <span class="radio-card__name">${fabric}</span>
@@ -1396,21 +1451,40 @@ class V10_ValidationManager {
   }
 
   validateStep() {
-    const requestType = V10_State.requestType;
-    const validation = this.getValidationForRequestType(requestType);
-    
-    // Update next button
-    if (this.nextBtn) {
-      this.nextBtn.disabled = !validation.isValid;
-      
-      if (!validation.isValid && validation.errors.length > 0) {
-        this.nextBtn.title = validation.errors.join(', ');
-      } else {
-        this.nextBtn.title = '';
+    try {
+      const requestType = V10_State?.requestType;
+      if (!requestType) {
+        console.warn('No request type selected for validation');
+        return { isValid: false, errors: ['No request type selected'] };
       }
-    }
+      
+      const validation = this.getValidationForRequestType(requestType);
+      if (!validation) {
+        console.error('Validation function returned null/undefined');
+        return { isValid: false, errors: ['Validation error'] };
+      }
+      
+      // Update next button - try both IDs for compatibility
+      try {
+        const nextBtn = this.nextBtn || document.getElementById('techpack-v10-step-3-next');
+        if (nextBtn) {
+          nextBtn.disabled = !validation.isValid;
+          
+          if (!validation.isValid && Array.isArray(validation.errors) && validation.errors.length > 0) {
+            nextBtn.title = validation.errors.join(', ');
+          } else {
+            nextBtn.title = '';
+          }
+        }
+      } catch (buttonError) {
+        console.error('Error updating next button:', buttonError);
+      }
 
-    return validation;
+      return validation;
+    } catch (error) {
+      console.error('Error in validateStep:', error);
+      return { isValid: false, errors: ['Validation error occurred'] };
+    }
   }
 
   getValidationForRequestType(requestType) {
@@ -1427,59 +1501,103 @@ class V10_ValidationManager {
   }
 
   validateQuotation() {
-    // Check if garment studio is available
-    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
-      return { isValid: true, errors: [] }; // Return valid if not ready yet
+    try {
+      // Check if garment studio is available
+      if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+        console.warn('Garment studio not ready for validation');
+        return { isValid: true, errors: [] }; // Return valid if not ready yet
+      }
+      
+      const garmentValidation = window.v10GarmentStudio.validateGarments();
+      return garmentValidation || { isValid: false, errors: ['Validation failed'] };
+    } catch (error) {
+      console.error('Error validating quotation:', error);
+      return { isValid: false, errors: ['Validation error occurred'] };
     }
-    
-    const garmentValidation = window.v10GarmentStudio.validateGarments();
-    return garmentValidation;
   }
 
   validateSampleRequest() {
-    // Check if garment studio is available
-    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
-      return { isValid: true, errors: [] }; // Return valid if not ready yet
-    }
-    
-    const garmentValidation = window.v10GarmentStudio.validateGarments();
-    const errors = [...garmentValidation.errors];
-
-    // Additional validation for sample requests
-    const garments = window.v10GarmentStudio.getAllGarments();
-    garments.forEach((garment, index) => {
-      if (garment.sampleType === 'custom' && garment.assignedLabDips.size === 0) {
-        errors.push(`Garment ${index + 1}: Custom color sample requires Lab Dip assignment`);
+    try {
+      // Check if garment studio is available
+      if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+        console.warn('Garment studio not ready for validation');
+        return { isValid: true, errors: [] }; // Return valid if not ready yet
       }
-    });
+      
+      const garmentValidation = window.v10GarmentStudio.validateGarments();
+      if (!garmentValidation) {
+        return { isValid: false, errors: ['Validation failed'] };
+      }
+      
+      const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
 
-    return {
-      isValid: errors.length === 0,
-      errors
-    };
+      // Additional validation for sample requests
+      try {
+        if (typeof window.v10GarmentStudio.getAllGarments === 'function') {
+          const garments = window.v10GarmentStudio.getAllGarments();
+          if (Array.isArray(garments)) {
+            garments.forEach((garment, index) => {
+              if (garment && garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size === 0) {
+                errors.push(`Garment ${index + 1}: Custom color sample requires Lab Dip assignment`);
+              }
+            });
+          }
+        }
+      } catch (garmentError) {
+        console.error('Error validating garment assignments:', garmentError);
+      }
+
+      return {
+        isValid: errors.length === 0,
+        errors
+      };
+    } catch (error) {
+      console.error('Error validating sample request:', error);
+      return { isValid: false, errors: ['Validation error occurred'] };
+    }
   }
 
   validateBulkOrder() {
-    // Check if garment studio is available
-    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
-      return { isValid: true, errors: [] }; // Return valid if not ready yet
+    try {
+      // Check if garment studio is available
+      if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+        console.warn('Garment studio not ready for validation');
+        return { isValid: true, errors: [] }; // Return valid if not ready yet
+      }
+      
+      const garmentValidation = window.v10GarmentStudio.validateGarments();
+      if (!garmentValidation) {
+        return { isValid: false, errors: ['Validation failed'] };
+      }
+      
+      const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
+
+      // Additional validation for bulk orders
+      // TODO: Add quantity validation when quantity studio is implemented
+
+      return {
+        isValid: errors.length === 0,
+        errors
+      };
+    } catch (error) {
+      console.error('Error validating bulk order:', error);
+      return { isValid: false, errors: ['Validation error occurred'] };
     }
-    
-    const garmentValidation = window.v10GarmentStudio.validateGarments();
-    const errors = [...garmentValidation.errors];
-
-    // Additional validation for bulk orders
-    // TODO: Add quantity validation when quantity studio is implemented
-
-    return {
-      isValid: errors.length === 0,
-      errors
-    };
   }
 
   // Call this method whenever form data changes
   revalidate() {
-    setTimeout(() => this.validateStep(), 100);
+    try {
+      setTimeout(() => {
+        try {
+          this.validateStep();
+        } catch (validateError) {
+          console.error('Error during revalidation:', validateError);
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Error setting up revalidation:', error);
+    }
   }
 }
 
@@ -2334,12 +2452,30 @@ class V10_TechPackSystem {
   }
 
   bindGlobalEvents() {
-    // Previous/Next buttons
-    const prevBtn = document.getElementById('step-3-prev');
-    const nextBtn = document.getElementById('step-3-next');
+    // Step 3 Navigation buttons
+    const backBtn = document.getElementById('techpack-v10-step-3-back');
+    const nextBtn = document.getElementById('techpack-v10-step-3-next');
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        this.goBackToStep2();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (this.validateStep()) {
+          this.proceedToStep4();
+        }
+      });
+    }
+
+    // Legacy navigation (keep for compatibility)
+    const legacyPrevBtn = document.getElementById('step-3-prev');
+    const legacyNextBtn = document.getElementById('step-3-next');
+
+    if (legacyPrevBtn) {
+      legacyPrevBtn.addEventListener('click', () => {
         if (window.stepManager) {
           window.stepManager.navigateToStep(2);
         }
@@ -2571,6 +2707,72 @@ class V10_TechPackSystem {
       V10_State.clear();
       location.reload();
     }
+  }
+
+  // Navigation Methods
+  goBackToStep2() {
+    const step2 = document.getElementById('techpack-v10-step-2');
+    const step3 = document.getElementById('techpack-v10-step-3');
+    
+    if (step2 && step3) {
+      step3.style.display = 'none';
+      step2.style.display = 'block';
+      
+      // Update current step
+      sessionStorage.setItem('v10_current_step', '2');
+      
+      // Scroll to step 2
+      step2.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  proceedToStep4() {
+    try {
+      const step3 = document.getElementById('techpack-v10-step-3');
+      const step4 = document.getElementById('techpack-v10-step-4');
+      
+      if (!step3 || !step4) {
+        console.error('Cannot find step 3 or step 4 elements');
+        return false;
+      }
+
+      step3.style.display = 'none';
+      step4.style.display = 'block';
+      
+      // Update current step
+      try {
+        sessionStorage.setItem('v10_current_step', '4');
+      } catch (storageError) {
+        console.error('Error updating session storage:', storageError);
+      }
+      
+      // Initialize review manager if not already done
+      if (!window.v10ReviewManager) {
+        try {
+          window.v10ReviewManager = new V10_ReviewManager();
+        } catch (managerError) {
+          console.error('Error initializing review manager:', managerError);
+        }
+      }
+      
+      // Scroll to step 4
+      try {
+        step4.scrollIntoView({ behavior: 'smooth' });
+      } catch (scrollError) {
+        console.error('Error scrolling to step 4:', scrollError);
+        // Fallback: simple scroll
+        step4.scrollIntoView();
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error proceeding to step 4:', error);
+      return false;
+    }
+  }
+
+  validateStep() {
+    return this.validationManager.validateStep();
   }
 }
 
@@ -3616,30 +3818,64 @@ class V10_ModalManager {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Modal System first (required for landing page workflow)
-  if (document.getElementById('techpack-v10-landing') || 
-      document.getElementById('v10-client-verification-modal') ||
-      document.getElementById('v10-submission-type-modal')) {
-    window.v10ModalManager = new V10_ModalManager();
-  }
-  
-  // Initialize Step 1 if present
-  if (document.getElementById('techpack-v10-step-1')) {
-    window.v10ClientManager = new V10_ClientManager();
-  }
-  
-  // Initialize Step 2 if present
-  if (document.getElementById('techpack-v10-step-2')) {
-    window.v10FileManager = new V10_FileManager();
-  }
-  
-  // Initialize Step 3 when explicitly requested
-  if (document.getElementById('techpack-v10-step-3')) {
-    // Only initialize if we're actually on step 3 or explicitly requested
-    const currentStep = sessionStorage.getItem('v10_current_step') || '1';
-    if (currentStep === '3' || window.location.hash === '#step3') {
-      window.v10TechPackSystem = new V10_TechPackSystem();
+  try {
+    console.log('🚀 V10 TechPack Studios - Initializing System...');
+
+    // Initialize Modal System first (required for landing page workflow)
+    try {
+      if (document.getElementById('techpack-v10-landing') || 
+          document.getElementById('v10-client-verification-modal') ||
+          document.getElementById('v10-submission-type-modal')) {
+        window.v10ModalManager = new V10_ModalManager();
+        console.log('✅ Modal Manager initialized');
+      }
+    } catch (modalError) {
+      console.error('❌ Error initializing Modal Manager:', modalError);
     }
+    
+    // Initialize Step 1 if present
+    try {
+      if (document.getElementById('techpack-v10-step-1')) {
+        window.v10ClientManager = new V10_ClientManager();
+        console.log('✅ Client Manager initialized');
+      }
+    } catch (clientError) {
+      console.error('❌ Error initializing Client Manager:', clientError);
+    }
+    
+    // Initialize Step 2 if present
+    try {
+      if (document.getElementById('techpack-v10-step-2')) {
+        window.v10FileManager = new V10_FileManager();
+        console.log('✅ File Manager initialized');
+      }
+    } catch (fileError) {
+      console.error('❌ Error initializing File Manager:', fileError);
+    }
+    
+    // Initialize Step 3 when explicitly requested
+    try {
+      if (document.getElementById('techpack-v10-step-3')) {
+        // Only initialize if we're actually on step 3 or explicitly requested
+        let currentStep = '1';
+        try {
+          currentStep = sessionStorage.getItem('v10_current_step') || '1';
+        } catch (storageError) {
+          console.warn('Warning: Cannot access sessionStorage, using default step');
+        }
+        
+        if (currentStep === '3' || window.location.hash === '#step3') {
+          window.v10TechPackSystem = new V10_TechPackSystem();
+          console.log('✅ TechPack System initialized');
+        }
+      }
+    } catch (techpackError) {
+      console.error('❌ Error initializing TechPack System:', techpackError);
+    }
+
+    console.log('🎯 V10 TechPack Studios - Initialization Complete');
+  } catch (error) {
+    console.error('💥 Fatal error during V10 initialization:', error);
   }
 });
 
