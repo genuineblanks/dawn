@@ -3205,11 +3205,356 @@ class V10_FileManager {
 }
 
 // ==============================================
+// V10 MODAL SYSTEM
+// ==============================================
+
+class V10_ModalManager {
+  constructor() {
+    this.currentClientType = null;
+    this.currentSubmissionType = null;
+    this.modals = new Map();
+    
+    this.init();
+  }
+
+  init() {
+    this.initializeModals();
+    this.setupEventListeners();
+    this.setupModalInteractions();
+  }
+
+  initializeModals() {
+    // Register all modals
+    const clientModal = document.getElementById('v10-client-verification-modal');
+    const submissionModal = document.getElementById('v10-submission-type-modal');
+    
+    if (clientModal) this.modals.set('client-verification', clientModal);
+    if (submissionModal) this.modals.set('submission-type', submissionModal);
+  }
+
+  setupEventListeners() {
+    // Hero button to open client verification modal
+    const heroBtn = document.getElementById('v10-open-client-modal');
+    if (heroBtn) {
+      heroBtn.addEventListener('click', () => {
+        this.openModal('client-verification');
+      });
+    }
+
+    // Modal close buttons
+    document.querySelectorAll('.v10-modal-close').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const modal = e.target.closest('.v10-modal-overlay');
+        if (modal) {
+          this.closeModal(modal);
+        }
+      });
+    });
+
+    // Modal overlay clicks (close modal)
+    document.querySelectorAll('.v10-modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          this.closeModal(overlay);
+        }
+      });
+    });
+
+    // Escape key to close modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeAllModals();
+      }
+    });
+  }
+
+  setupModalInteractions() {
+    // Client type selection
+    const registeredBtn = document.getElementById('v10-registered-client');
+    const newClientBtn = document.getElementById('v10-new-client');
+
+    if (registeredBtn) {
+      registeredBtn.addEventListener('click', () => {
+        this.selectClientType('registered');
+      });
+    }
+
+    if (newClientBtn) {
+      newClientBtn.addEventListener('click', () => {
+        this.selectClientType('new');
+      });
+    }
+
+    // Submission type selection
+    const submissionBtns = document.querySelectorAll('.v10-submission-option');
+    submissionBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const submissionType = btn.getAttribute('data-submission-type');
+        if (submissionType && !btn.disabled) {
+          this.selectSubmissionType(submissionType);
+        }
+      });
+    });
+
+    // Change submission type button
+    const changeSubmissionBtn = document.getElementById('techpack-v10-change-submission');
+    if (changeSubmissionBtn) {
+      changeSubmissionBtn.addEventListener('click', () => {
+        this.openModal('submission-type');
+      });
+    }
+  }
+
+  selectClientType(clientType) {
+    this.currentClientType = clientType;
+    this.closeModal('client-verification');
+    
+    // Update submission modal for client type
+    this.updateSubmissionModalForClientType(clientType);
+    this.openModal('submission-type');
+  }
+
+  updateSubmissionModalForClientType(clientType) {
+    const registrationNotice = document.getElementById('v10-registration-notice');
+    const registrationWarning = document.getElementById('v10-registration-warning');
+    const submissionDescription = document.getElementById('v10-submission-description');
+    
+    // Submission buttons
+    const quotationBtn = document.getElementById('v10-quotation-btn');
+    const sampleBtn = document.getElementById('v10-sample-btn');
+    const bulkBtn = document.getElementById('v10-bulk-btn');
+    const labDipsBtn = document.getElementById('v10-lab-dips-btn');
+
+    if (clientType === 'new') {
+      // Show notice for new clients
+      if (registrationNotice) registrationNotice.style.display = 'flex';
+      if (registrationWarning) registrationWarning.style.display = 'none';
+      
+      // Update description
+      if (submissionDescription) {
+        submissionDescription.innerHTML = 'As a new client, you can start with a Garment Quotation to understand our process and pricing. Once we establish our partnership, you\'ll have access to all submission types.';
+      }
+      
+      // Enable only quotation, disable others
+      if (quotationBtn) quotationBtn.disabled = false;
+      if (sampleBtn) sampleBtn.disabled = true;
+      if (bulkBtn) bulkBtn.disabled = true;
+      if (labDipsBtn) labDipsBtn.disabled = true;
+      
+    } else if (clientType === 'registered') {
+      // Show warning for registered clients
+      if (registrationNotice) registrationNotice.style.display = 'none';
+      if (registrationWarning) registrationWarning.style.display = 'flex';
+      
+      // Update description
+      if (submissionDescription) {
+        submissionDescription.innerHTML = 'Select the type of submission that best matches your current needs. Each option is tailored to different stages of your garment development process.';
+      }
+      
+      // Enable all options
+      if (quotationBtn) quotationBtn.disabled = false;
+      if (sampleBtn) sampleBtn.disabled = false;
+      if (bulkBtn) bulkBtn.disabled = false;
+      if (labDipsBtn) labDipsBtn.disabled = false;
+    }
+  }
+
+  selectSubmissionType(submissionType) {
+    this.currentSubmissionType = submissionType;
+    this.closeModal('submission-type');
+    
+    // Update global state
+    if (window.V10_State) {
+      V10_State.requestType = submissionType;
+      V10_State.clientType = this.currentClientType;
+      V10_State.save();
+    }
+    
+    // Save to client manager if available
+    if (window.v10ClientManager) {
+      window.v10ClientManager.currentRequestType = submissionType;
+      window.v10ClientManager.saveData();
+    }
+    
+    // Show the actual form and hide landing page
+    this.showClientForm();
+    this.updateFormForSubmissionType(submissionType);
+  }
+
+  showClientForm() {
+    const landingSection = document.getElementById('techpack-v10-landing');
+    const formSection = document.getElementById('techpack-v10-step-1');
+    
+    if (landingSection) {
+      landingSection.style.display = 'none';
+    }
+    
+    if (formSection) {
+      formSection.style.display = 'block';
+      formSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  updateFormForSubmissionType(submissionType) {
+    // Update subtitle based on submission type
+    const subtitle = document.getElementById('v10-client-info-subtitle');
+    if (subtitle) {
+      const subtitles = {
+        'quotation': 'Please provide your business details to receive pricing estimates',
+        'sample-request': 'Please provide your business details for sample production',
+        'bulk-order-request': 'Please provide your business details for bulk order processing',
+        'lab-dips-accessories': 'Please provide your business details for lab dip and accessory orders'
+      };
+      subtitle.textContent = subtitles[submissionType] || subtitles['quotation'];
+    }
+
+    // Update conditional sections if client manager exists
+    if (window.v10ClientManager) {
+      window.v10ClientManager.currentRequestType = submissionType;
+      window.v10ClientManager.updateConditionalSections();
+      window.v10ClientManager.validateForm();
+    }
+
+    // Update change submission button text
+    const changeBtn = document.getElementById('techpack-v10-change-submission');
+    if (changeBtn) {
+      const submissionNames = {
+        'quotation': 'Garment Quotation',
+        'sample-request': 'Sample Request',
+        'bulk-order-request': 'Bulk Order Request',
+        'lab-dips-accessories': 'Lab Dips & Accessories'
+      };
+      changeBtn.innerHTML = `
+        <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M8 1L3 6h2v6h6V6h2L8 1z" fill="currentColor"/>
+        </svg>
+        Change from ${submissionNames[submissionType] || 'Current Selection'}
+      `;
+    }
+  }
+
+  openModal(modalId) {
+    const modal = this.modals.get(modalId) || document.getElementById(`v10-${modalId}-modal`);
+    if (!modal) return;
+
+    // Close other modals first
+    this.closeAllModals();
+    
+    // Show modal with animation
+    modal.style.display = 'flex';
+    
+    // Trigger reflow for animation
+    modal.offsetHeight;
+    
+    // Add active class for transition
+    modal.classList.add('active');
+    
+    // Prevent body scrolling
+    document.body.style.overflow = 'hidden';
+    
+    // Focus management
+    this.trapFocus(modal);
+  }
+
+  closeModal(modalOrId) {
+    let modal;
+    
+    if (typeof modalOrId === 'string') {
+      modal = this.modals.get(modalOrId) || document.getElementById(`v10-${modalOrId}-modal`);
+    } else {
+      modal = modalOrId;
+    }
+    
+    if (!modal) return;
+
+    // Remove active class for transition
+    modal.classList.remove('active');
+    
+    // Hide after transition
+    setTimeout(() => {
+      modal.style.display = 'none';
+      
+      // Restore body scrolling if no modals are open
+      const openModals = document.querySelectorAll('.v10-modal-overlay.active');
+      if (openModals.length === 0) {
+        document.body.style.overflow = '';
+      }
+    }, 300);
+  }
+
+  closeAllModals() {
+    document.querySelectorAll('.v10-modal-overlay').forEach(modal => {
+      this.closeModal(modal);
+    });
+  }
+
+  trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    
+    if (focusableElements.length === 0) return;
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    
+    // Focus first element
+    firstElement.focus();
+    
+    // Tab trap
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    });
+  }
+
+  // Public API
+  getCurrentClientType() {
+    return this.currentClientType;
+  }
+
+  getCurrentSubmissionType() {
+    return this.currentSubmissionType;
+  }
+
+  resetWorkflow() {
+    this.currentClientType = null;
+    this.currentSubmissionType = null;
+    this.closeAllModals();
+    
+    // Show landing page, hide form
+    const landingSection = document.getElementById('techpack-v10-landing');
+    const formSection = document.getElementById('techpack-v10-step-1');
+    
+    if (landingSection) landingSection.style.display = 'block';
+    if (formSection) formSection.style.display = 'none';
+  }
+}
+
+// ==============================================
 // INITIALIZATION
 // ==============================================
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Modal System first (required for landing page workflow)
+  if (document.getElementById('techpack-v10-landing') || 
+      document.getElementById('v10-client-verification-modal') ||
+      document.getElementById('v10-submission-type-modal')) {
+    window.v10ModalManager = new V10_ModalManager();
+  }
+  
   // Initialize Step 1 if present
   if (document.getElementById('techpack-v10-step-1')) {
     window.v10ClientManager = new V10_ClientManager();
@@ -3230,5 +3575,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.V10_TechPackSystem = V10_TechPackSystem;
 window.V10_ClientManager = V10_ClientManager;
 window.V10_FileManager = V10_FileManager;
+window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
