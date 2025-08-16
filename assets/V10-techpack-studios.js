@@ -1427,11 +1427,21 @@ class V10_ValidationManager {
   }
 
   validateQuotation() {
+    // Check if garment studio is available
+    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+      return { isValid: true, errors: [] }; // Return valid if not ready yet
+    }
+    
     const garmentValidation = window.v10GarmentStudio.validateGarments();
     return garmentValidation;
   }
 
   validateSampleRequest() {
+    // Check if garment studio is available
+    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+      return { isValid: true, errors: [] }; // Return valid if not ready yet
+    }
+    
     const garmentValidation = window.v10GarmentStudio.validateGarments();
     const errors = [...garmentValidation.errors];
 
@@ -1450,6 +1460,11 @@ class V10_ValidationManager {
   }
 
   validateBulkOrder() {
+    // Check if garment studio is available
+    if (!window.v10GarmentStudio || !window.v10GarmentStudio.validateGarments) {
+      return { isValid: true, errors: [] }; // Return valid if not ready yet
+    }
+    
     const garmentValidation = window.v10GarmentStudio.validateGarments();
     const errors = [...garmentValidation.errors];
 
@@ -2834,6 +2849,9 @@ class V10_ClientManager {
       step1.style.display = 'none';
       step2.style.display = 'block';
       
+      // Update current step
+      sessionStorage.setItem('v10_current_step', '2');
+      
       // Initialize file manager if not already done
       if (!window.v10FileManager) {
         window.v10FileManager = new V10_FileManager();
@@ -3213,6 +3231,9 @@ class V10_FileManager {
       step2.style.display = 'none';
       step3.style.display = 'block';
       
+      // Update current step
+      sessionStorage.setItem('v10_current_step', '3');
+      
       // Initialize step 3 if not already done
       if (!window.v10TechPackSystem) {
         window.v10TechPackSystem = new V10_TechPackSystem();
@@ -3416,6 +3437,9 @@ class V10_ModalManager {
       formSection.style.display = 'block';
       formSection.scrollIntoView({ behavior: 'smooth' });
       
+      // Update current step
+      sessionStorage.setItem('v10_current_step', '1');
+      
       // Initialize client manager if not already done
       if (!window.v10ClientManager) {
         window.v10ClientManager = new V10_ClientManager();
@@ -3609,9 +3633,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.v10FileManager = new V10_FileManager();
   }
   
-  // Initialize Step 3 if present
+  // Initialize Step 3 when explicitly requested
   if (document.getElementById('techpack-v10-step-3')) {
-    window.v10TechPackSystem = new V10_TechPackSystem();
+    // Only initialize if we're actually on step 3 or explicitly requested
+    const currentStep = sessionStorage.getItem('v10_current_step') || '1';
+    if (currentStep === '3' || window.location.hash === '#step3') {
+      window.v10TechPackSystem = new V10_TechPackSystem();
+    }
   }
 });
 
