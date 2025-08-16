@@ -174,71 +174,15 @@ const V10_State = {
     designs: new Map()  // designId -> Set of garmentIds
   },
   
-  // Auto-save to sessionStorage
-  save() {
-    try {
-      const stateData = {
-        requestType: this.requestType,
-        currentStudio: this.currentStudio,
-        garments: Array.from(this.garments?.entries() || []),
-        labDips: Array.from(this.labDips?.entries() || []),
-        designSamples: Array.from(this.designSamples?.entries() || []),
-        assignments: {
-          labDips: Array.from(this.assignments?.labDips?.entries() || []).map(([id, set]) => [id, Array.from(set || [])]),
-          designs: Array.from(this.assignments?.designs?.entries() || []).map(([id, set]) => [id, Array.from(set || [])])
-        }
-      };
-      
-      try {
-        sessionStorage.setItem('v10-techpack-state', JSON.stringify(stateData));
-        console.log('✅ V10 State saved');
-      } catch (storageError) {
-        console.error('❌ Failed to save to sessionStorage:', storageError);
-        // Try localStorage as fallback
-        try {
-          localStorage.setItem('v10-techpack-state-backup', JSON.stringify(stateData));
-          console.log('✅ V10 State saved to localStorage backup');
-        } catch (localStorageError) {
-          console.error('❌ Failed to save to localStorage backup:', localStorageError);
-        }
-      }
-    } catch (error) {
-      console.error('❌ Error preparing state data for save:', error);
-    }
-  },
-
-  // Load from sessionStorage
-  load() {
-    try {
-      const saved = sessionStorage.getItem('v10-techpack-state');
-      if (saved) {
-        const stateData = JSON.parse(saved);
-        this.requestType = stateData.requestType;
-        this.currentStudio = stateData.currentStudio || 'garment';
-        this.garments = new Map(stateData.garments || []);
-        this.labDips = new Map(stateData.labDips || []);
-        this.designSamples = new Map(stateData.designSamples || []);
-        this.assignments.labDips = new Map(
-          (stateData.assignments?.labDips || []).map(([id, arr]) => [id, new Set(arr)])
-        );
-        this.assignments.designs = new Map(
-          (stateData.assignments?.designs || []).map(([id, arr]) => [id, new Set(arr)])
-        );
-        console.log('✅ V10 State loaded');
-      }
-    } catch (error) {
-      console.warn('Failed to load V10 state:', error);
-    }
-  },
-
-  // Clear all data
+  // Clear all data (in-memory only, no persistence)
   clear() {
+    this.requestType = null;
+    this.currentStudio = 'garment';
     this.garments.clear();
     this.labDips.clear();
     this.designSamples.clear();
     this.assignments.labDips.clear();
     this.assignments.designs.clear();
-    sessionStorage.removeItem('v10-techpack-state');
     console.log('🗑️ V10 State cleared');
   }
 };
@@ -349,7 +293,6 @@ class V10_StudioNavigator {
     });
 
     // Auto-save
-    V10_State.save();
 
     console.log(`🎛️ Switched to ${studioName} studio`);
   }
@@ -399,18 +342,40 @@ class V10_StudioNavigator {
 
 class V10_GarmentStudio {
   constructor() {
+    // Singleton pattern - prevent multiple instances
+    if (V10_GarmentStudio.instance) {
+      return V10_GarmentStudio.instance;
+    }
+    
     this.garmentsContainer = document.getElementById('garments-container');
     this.addGarmentBtn = document.getElementById('add-garment');
     this.garmentCounter = 0;
+    this.eventListenersAttached = false;
+    
+    V10_GarmentStudio.instance = this;
     this.init();
   }
 
   init() {
+    // Prevent multiple initialization
+    if (this.initialized) {
+      return;
+    }
+    
     this.bindEvents();
-    this.loadExistingGarments();
+    // Start with a fresh garment instead of loading from storage
+    this.addGarment();
+    
+    this.initialized = true;
+    console.log('✅ V10_GarmentStudio initialized');
   }
 
   bindEvents() {
+    // Prevent duplicate event listeners
+    if (this.eventListenersAttached) {
+      return;
+    }
+
     // Add garment button
     if (this.addGarmentBtn) {
       this.addGarmentBtn.addEventListener('click', () => this.addGarment());
@@ -421,35 +386,68 @@ class V10_GarmentStudio {
       this.garmentsContainer.addEventListener('click', (e) => this.handleGarmentActions(e));
       this.garmentsContainer.addEventListener('change', (e) => this.handleGarmentChanges(e));
     }
+
+    this.eventListenersAttached = true;
+    console.log('✅ V10_GarmentStudio events bound');
+  }
+
+  // Static method to get instance
+  static getInstance() {
+    return V10_GarmentStudio.instance;
+  }
+
+  // Cleanup method
+  destroy() {
+    this.eventListenersAttached = false;
+    this.initialized = false;
+    V10_GarmentStudio.instance = null;
+    console.log('🗑️ V10_GarmentStudio destroyed');
   }
 
   addGarment(data = null) {
-    const garmentId = data?.id || V10_Utils.generateId('garment');
-    this.garmentCounter++;
+    try {
+      const garmentId = data?.id || V10_Utils.generateId('garment');
+      const garmentNumber = this.getNextGarmentNumber();
 
-    const garmentData = {
-      id: garmentId,
-      number: this.garmentCounter,
-      type: data?.type || '',
-      fabricType: data?.fabricType || '',
-      sampleType: data?.sampleType || '', // For sample requests
-      sampleReference: data?.sampleReference || '', // For bulk orders
-      assignedLabDips: new Set(data?.assignedLabDips || []),
-      assignedDesigns: new Set(data?.assignedDesigns || []),
-      isComplete: false
-    };
+      const garmentData = {
+        id: garmentId,
+        number: garmentNumber,
+        type: data?.type || '',
+        fabricType: data?.fabricType || '',
+        sampleType: data?.sampleType || '', // For sample requests
+        sampleReference: data?.sampleReference || '', // For bulk orders
+        assignedLabDips: new Set(data?.assignedLabDips || []),
+        assignedDesigns: new Set(data?.assignedDesigns || []),
+        isComplete: false
+      };
 
-    // Store in state
-    V10_State.garments.set(garmentId, garmentData);
+      // Store in state
+      V10_State.garments.set(garmentId, garmentData);
 
-    // Create UI
-    this.renderGarment(garmentData);
+      // Create UI
+      this.renderGarment(garmentData);
 
-    // Auto-save
-    V10_State.save();
+      console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
+      return garmentId;
+    } catch (error) {
+      console.error('Error adding garment:', error);
+      return null;
+    }
+  }
 
-    console.log(`➕ Added garment: ${garmentId}`);
-    return garmentId;
+  // Get the next available garment number (fills gaps)
+  getNextGarmentNumber() {
+    const existingNumbers = Array.from(V10_State.garments.values()).map(g => g.number).sort((a, b) => a - b);
+    
+    // Find the first gap in the sequence
+    for (let i = 1; i <= existingNumbers.length + 1; i++) {
+      if (!existingNumbers.includes(i)) {
+        return i;
+      }
+    }
+    
+    // Fallback: return next number after the highest
+    return existingNumbers.length + 1;
   }
 
   renderGarment(garmentData) {
@@ -661,8 +659,12 @@ class V10_GarmentStudio {
     const garmentId = garmentCard.dataset.garmentId;
 
     if (e.target.closest('.garment-card__remove')) {
+      e.preventDefault();
+      e.stopPropagation();
       this.removeGarment(garmentId);
     } else if (e.target.closest('.garment-card__duplicate')) {
+      e.preventDefault();
+      e.stopPropagation();
       this.duplicateGarment(garmentId);
     }
   }
@@ -701,7 +703,6 @@ class V10_GarmentStudio {
     this.updateGarmentStatus(garmentId);
 
     // Auto-save
-    V10_State.save();
   }
 
   updateGarmentStatus(garmentId) {
@@ -799,23 +800,38 @@ class V10_GarmentStudio {
   }
 
   removeGarment(garmentId) {
-    if (confirm('Remove this garment? This action cannot be undone.')) {
-      // Remove from state
-      V10_State.garments.delete(garmentId);
-
-      // Clean up assignments
-      this.cleanupAssignments(garmentId);
-
-      // Remove from UI
-      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-      if (garmentCard) {
-        garmentCard.remove();
+    try {
+      // Prevent multiple calls during processing
+      if (this.removing) {
+        return;
       }
+      this.removing = true;
+      
+      if (confirm('Remove this garment? This action cannot be undone.')) {
+        // Remove from state
+        V10_State.garments.delete(garmentId);
 
-      // Auto-save
-      V10_State.save();
+        // Clean up assignments
+        this.cleanupAssignments(garmentId);
 
-      console.log(`🗑️ Removed garment: ${garmentId}`);
+        // Remove from UI
+        const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+        if (garmentCard) {
+          garmentCard.remove();
+        }
+
+        console.log(`🗑️ Removed garment: ${garmentId}`);
+        
+        // If no garments left, add a new one
+        if (V10_State.garments.size === 0) {
+          console.log('No garments left, adding fresh garment');
+          this.addGarment();
+        }
+      }
+    } catch (error) {
+      console.error('Error removing garment:', error);
+    } finally {
+      this.removing = false;
     }
   }
 
@@ -858,7 +874,6 @@ class V10_GarmentStudio {
     V10_State.assignments.labDips.get(labDipId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
-    V10_State.save();
   }
 
   unassignLabDip(garmentId, labDipId) {
@@ -872,7 +887,6 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
-    V10_State.save();
   }
 
   assignDesign(garmentId, designId) {
@@ -887,7 +901,6 @@ class V10_GarmentStudio {
     V10_State.assignments.designs.get(designId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
-    V10_State.save();
   }
 
   unassignDesign(garmentId, designId) {
@@ -901,35 +914,8 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
-    V10_State.save();
   }
 
-  loadExistingGarments() {
-    try {
-      // Load garments from state
-      if (V10_State && V10_State.garments && V10_State.garments.size > 0) {
-        V10_State.garments.forEach((garmentData, garmentId) => {
-          try {
-            this.garmentCounter = Math.max(this.garmentCounter, garmentData.number || 0);
-            this.renderGarment(garmentData);
-          } catch (garmentError) {
-            console.error(`Error loading garment ${garmentId}:`, garmentError);
-          }
-        });
-      } else {
-        // Add first garment if none exist
-        this.addGarment();
-      }
-    } catch (error) {
-      console.error('Error loading existing garments:', error);
-      // Fallback: try to add first garment
-      try {
-        this.addGarment();
-      } catch (addError) {
-        console.error('Error adding fallback garment:', addError);
-      }
-    }
-  }
 
   getAllGarments() {
     return Array.from(V10_State.garments.values());
@@ -1282,7 +1268,6 @@ class V10_DesignStudio {
     if (pantoneDisplay) pantoneDisplay.style.display = 'none';
 
     // Auto-save
-    V10_State.save();
 
     console.log(`🎨 Added lab dip: ${labDipId}`);
   }
@@ -1328,7 +1313,6 @@ class V10_DesignStudio {
     if (fileInput) fileInput.value = '';
 
     // Auto-save
-    V10_State.save();
 
     console.log(`✨ Added design sample: ${designId}`);
   }
@@ -1426,8 +1410,7 @@ class V10_DesignStudio {
       if (item) item.remove();
 
       this.updateCollectionCounts();
-      V10_State.save();
-
+  
       console.log(`🗑️ Removed lab dip: ${labDipId}`);
     }
   }
@@ -1451,8 +1434,7 @@ class V10_DesignStudio {
       if (item) item.remove();
 
       this.updateCollectionCounts();
-      V10_State.save();
-
+  
       console.log(`🗑️ Removed design sample: ${designId}`);
     }
   }
@@ -2466,7 +2448,6 @@ class V10_ReviewManager {
   }
 
   saveDraft() {
-    V10_State.save();
     
     // Show temporary success message
     const saveDraftBtn = document.getElementById('save-draft-btn');
@@ -2516,21 +2497,30 @@ class V10_ReviewManager {
 
 class V10_TechPackSystem {
   constructor() {
+    // Singleton pattern - prevent multiple instances
+    if (V10_TechPackSystem.instance) {
+      return V10_TechPackSystem.instance;
+    }
+
     this.navigator = null;
     this.garmentStudio = null;
     this.designStudio = null;
     this.validationManager = null;
     this.standaloneManager = null;
     this.reviewManager = null;
+    this.initialized = false;
     
+    V10_TechPackSystem.instance = this;
     this.init();
   }
 
   init() {
-    // Load saved state
-    V10_State.load();
+    // Prevent multiple initialization
+    if (this.initialized) {
+      return;
+    }
 
-    // Initialize subsystems
+    // Initialize subsystems (no need to load state since we removed persistence)
     this.navigator = new V10_StudioNavigator();
     this.garmentStudio = new V10_GarmentStudio();
     this.designStudio = new V10_DesignStudio();
@@ -2547,7 +2537,20 @@ class V10_TechPackSystem {
     // Set up auto-validation
     this.setupAutoValidation();
 
+    this.initialized = true;
     console.log('🚀 V10 TechPack System initialized');
+  }
+
+  // Static method to get instance
+  static getInstance() {
+    return V10_TechPackSystem.instance;
+  }
+
+  // Cleanup method
+  destroy() {
+    this.initialized = false;
+    V10_TechPackSystem.instance = null;
+    console.log('🗑️ V10_TechPackSystem destroyed');
   }
 
   bindGlobalEvents() {
@@ -2599,8 +2602,7 @@ class V10_TechPackSystem {
 
     // Auto-save on window unload
     window.addEventListener('beforeunload', () => {
-      V10_State.save();
-    });
+      });
   }
 
   setupAutoValidation() {
@@ -2912,8 +2914,7 @@ class V10_ClientManager {
           // Update global state
           if (window.V10_State) {
             V10_State.requestType = e.target.value;
-            V10_State.save();
-          }
+                  }
         }
       });
     });
@@ -3084,8 +3085,7 @@ class V10_ClientManager {
       localStorage.setItem('v10_step1_data', JSON.stringify(data));
       if (window.V10_State) {
         V10_State.clientInfo = data;
-        V10_State.save();
-      }
+          }
       return;
     }
     
@@ -3104,8 +3104,7 @@ class V10_ClientManager {
     // Update global state if available
     if (window.V10_State) {
       V10_State.clientInfo = data;
-      V10_State.save();
-    }
+      }
   }
 
   loadSavedData() {
@@ -3471,8 +3470,7 @@ class V10_FileManager {
     // Update global state if available
     if (window.V10_State) {
       V10_State.fileData = data;
-      V10_State.save();
-    }
+      }
   }
 
   getMeasurementData() {
@@ -3732,8 +3730,7 @@ class V10_ModalManager {
     if (window.V10_State) {
       V10_State.requestType = submissionType;
       V10_State.clientType = this.currentClientType;
-      V10_State.save();
-    }
+      }
     
     // Save to client manager if available
     if (window.v10ClientManager) {
