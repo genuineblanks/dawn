@@ -5377,6 +5377,7 @@ const V10TechpackForm = {
     this.setupFileUpload();
     this.setupCountryDropdown();
     this.updateStepDisplay();
+    this.initializeGarmentStudio();
   },
 
   nextStep() {
@@ -5385,6 +5386,7 @@ const V10TechpackForm = {
         this.currentStep++;
         this.updateStepDisplay();
         this.showStep(this.currentStep);
+        this.updateProgressBar();
       }
     }
   },
@@ -5394,6 +5396,7 @@ const V10TechpackForm = {
       this.currentStep--;
       this.updateStepDisplay();
       this.showStep(this.currentStep);
+      this.updateProgressBar();
     }
   },
 
@@ -5411,10 +5414,271 @@ const V10TechpackForm = {
   },
 
   updateStepDisplay() {
-    document.querySelectorAll('.v10-step').forEach((step, index) => {
-      step.classList.toggle('active', index + 1 === this.currentStep);
-      step.classList.toggle('completed', index + 1 < this.currentStep);
+    // Update V10 progress system
+    document.querySelectorAll('.techpack-progress__step').forEach((step, index) => {
+      const stepNum = index + 1;
+      step.classList.toggle('techpack-progress__step--active', stepNum === this.currentStep);
+      step.classList.toggle('techpack-progress__step--completed', stepNum < this.currentStep);
+      
+      const circle = step.querySelector('.techpack-progress__step-circle');
+      if (circle) {
+        circle.classList.toggle('techpack-progress__step-circle--active', stepNum === this.currentStep);
+        circle.classList.toggle('techpack-progress__step-circle--completed', stepNum < this.currentStep);
+        
+        if (stepNum < this.currentStep) {
+          circle.textContent = '✓';
+        } else {
+          circle.textContent = stepNum;
+        }
+      }
     });
+  },
+
+  updateProgressBar() {
+    const progressFill = document.querySelector('.techpack-progress__fill');
+    if (progressFill) {
+      const percentage = (this.currentStep / this.totalSteps) * 100;
+      progressFill.style.width = `${percentage}%`;
+    }
+  },
+
+  initializeGarmentStudio() {
+    // Initialize the existing V10 Garment Studio if available
+    try {
+      if (window.V10_GarmentStudio && typeof window.V10_GarmentStudio === 'function') {
+        this.garmentStudio = new V10_GarmentStudio();
+        console.log('✅ V10_GarmentStudio integrated successfully');
+      } else {
+        console.log('⚠️ V10_GarmentStudio not available, using fallback');
+        this.setupFallbackGarmentHandling();
+      }
+    } catch (error) {
+      console.error('❌ Error initializing V10_GarmentStudio:', error);
+      this.setupFallbackGarmentHandling();
+    }
+  },
+
+  setupFallbackGarmentHandling() {
+    // Fallback garment handling if V10_GarmentStudio is not available
+    const addGarmentBtn = document.getElementById('add-garment');
+    if (addGarmentBtn) {
+      addGarmentBtn.addEventListener('click', () => {
+        this.addGarmentFallback();
+      });
+    }
+  },
+
+  addGarmentFallback() {
+    const garmentContainer = document.getElementById('garments-container');
+    const template = document.getElementById('V10-garment-template');
+    
+    if (garmentContainer && template) {
+      const garmentCount = garmentContainer.children.length + 1;
+      const garmentClone = template.content.cloneNode(true);
+      
+      // Update garment number
+      const garmentNumber = garmentClone.querySelector('.garment-card__number');
+      if (garmentNumber) {
+        garmentNumber.textContent = `Garment ${garmentCount}`;
+      }
+      
+      // Add unique IDs
+      const garmentCard = garmentClone.querySelector('.garment-card');
+      if (garmentCard) {
+        garmentCard.setAttribute('data-garment-id', `garment-${Date.now()}`);
+      }
+      
+      // Add event listeners to the new garment card
+      this.setupGarmentCardEvents(garmentClone);
+      
+      garmentContainer.appendChild(garmentClone);
+      
+      // Enable next step button when at least one garment is added
+      this.updateNextStepButton();
+      
+      console.log(`✅ Added garment ${garmentCount}`);
+    }
+  },
+
+  setupGarmentCardEvents(garmentCard) {
+    // Remove garment button
+    const removeBtn = garmentCard.querySelector('.garment-card__remove');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', (e) => {
+        const card = e.target.closest('.garment-card');
+        if (card) {
+          card.remove();
+          this.updateNextStepButton();
+          this.renumberGarments();
+        }
+      });
+    }
+
+    // Duplicate garment button
+    const duplicateBtn = garmentCard.querySelector('.garment-card__duplicate');
+    if (duplicateBtn) {
+      duplicateBtn.addEventListener('click', (e) => {
+        const card = e.target.closest('.garment-card');
+        if (card) {
+          this.duplicateGarment(card);
+        }
+      });
+    }
+
+    // Garment type selection
+    const garmentPlaceholder = garmentCard.querySelector('#garment-placeholder');
+    if (garmentPlaceholder) {
+      garmentPlaceholder.addEventListener('click', () => {
+        this.showGarmentSelection(garmentCard);
+      });
+    }
+
+    // Fabric type selection
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    if (fabricPlaceholder) {
+      fabricPlaceholder.addEventListener('click', () => {
+        this.showFabricSelection(garmentCard);
+      });
+    }
+
+    // Radio button changes
+    const radioInputs = garmentCard.querySelectorAll('input[type="radio"]');
+    radioInputs.forEach(radio => {
+      radio.addEventListener('change', () => {
+        this.updateSelectionDisplay(garmentCard, radio);
+      });
+    });
+  },
+
+  showGarmentSelection(garmentCard) {
+    const collapsed = garmentCard.querySelector('#garment-collapsed');
+    const expanded = garmentCard.querySelector('#garment-expanded');
+    
+    if (collapsed) collapsed.style.display = 'none';
+    if (expanded) expanded.style.display = 'block';
+  },
+
+  showFabricSelection(garmentCard) {
+    const collapsed = garmentCard.querySelector('#fabric-collapsed');
+    const expanded = garmentCard.querySelector('#fabric-expanded');
+    
+    if (collapsed) collapsed.style.display = 'none';
+    if (expanded) expanded.style.display = 'block';
+  },
+
+  updateSelectionDisplay(garmentCard, radioInput) {
+    const isGarmentType = radioInput.name === 'garmentType';
+    const sectionName = isGarmentType ? 'garment' : 'fabric';
+    
+    const collapsed = garmentCard.querySelector(`#${sectionName}-collapsed`);
+    const expanded = garmentCard.querySelector(`#${sectionName}-expanded`);
+    const display = garmentCard.querySelector(`#${sectionName}-display`);
+    const selectedIcon = garmentCard.querySelector(`#${sectionName}-selected-icon`);
+    const selectedName = garmentCard.querySelector(`#${sectionName}-selected-name`);
+    
+    if (radioInput.checked) {
+      const cardContent = radioInput.closest('.compact-radio-card__content');
+      const icon = cardContent?.querySelector('.compact-radio-card__icon')?.textContent;
+      const name = cardContent?.querySelector('.compact-radio-card__name')?.textContent;
+      
+      if (selectedIcon) selectedIcon.textContent = icon || '';
+      if (selectedName) selectedName.textContent = name || '';
+      
+      if (collapsed) collapsed.style.display = 'block';
+      if (expanded) expanded.style.display = 'none';
+      if (display) display.style.display = 'flex';
+      
+      // Update status
+      this.updateGarmentStatus(garmentCard);
+    }
+  },
+
+  updateGarmentStatus(garmentCard) {
+    const garmentTypeSelected = garmentCard.querySelector('input[name="garmentType"]:checked');
+    const fabricTypeSelected = garmentCard.querySelector('input[name="fabricType"]:checked');
+    const statusIndicator = garmentCard.querySelector('.status-indicator');
+    
+    if (statusIndicator) {
+      if (garmentTypeSelected && fabricTypeSelected) {
+        statusIndicator.textContent = 'Complete';
+        statusIndicator.className = 'status-indicator status-indicator--complete';
+      } else {
+        statusIndicator.textContent = 'Incomplete';
+        statusIndicator.className = 'status-indicator status-indicator--incomplete';
+      }
+    }
+  },
+
+  duplicateGarment(originalCard) {
+    const garmentContainer = document.getElementById('garments-container');
+    const template = document.getElementById('V10-garment-template');
+    
+    if (garmentContainer && template) {
+      const garmentCount = garmentContainer.children.length + 1;
+      const garmentClone = template.content.cloneNode(true);
+      
+      // Update garment number
+      const garmentNumber = garmentClone.querySelector('.garment-card__number');
+      if (garmentNumber) {
+        garmentNumber.textContent = `Garment ${garmentCount}`;
+      }
+      
+      // Copy selections from original
+      const originalGarmentType = originalCard.querySelector('input[name="garmentType"]:checked');
+      const originalFabricType = originalCard.querySelector('input[name="fabricType"]:checked');
+      
+      if (originalGarmentType) {
+        const newGarmentType = garmentClone.querySelector(`input[name="garmentType"][value="${originalGarmentType.value}"]`);
+        if (newGarmentType) newGarmentType.checked = true;
+      }
+      
+      if (originalFabricType) {
+        const newFabricType = garmentClone.querySelector(`input[name="fabricType"][value="${originalFabricType.value}"]`);
+        if (newFabricType) newFabricType.checked = true;
+      }
+      
+      // Add unique IDs
+      const garmentCard = garmentClone.querySelector('.garment-card');
+      if (garmentCard) {
+        garmentCard.setAttribute('data-garment-id', `garment-${Date.now()}`);
+      }
+      
+      // Setup events and append
+      this.setupGarmentCardEvents(garmentClone);
+      garmentContainer.appendChild(garmentClone);
+      
+      // Update displays for copied selections
+      if (originalGarmentType || originalFabricType) {
+        setTimeout(() => {
+          const newCard = garmentContainer.lastElementChild;
+          if (originalGarmentType) this.updateSelectionDisplay(newCard, newCard.querySelector('input[name="garmentType"]:checked'));
+          if (originalFabricType) this.updateSelectionDisplay(newCard, newCard.querySelector('input[name="fabricType"]:checked'));
+        }, 10);
+      }
+      
+      this.updateNextStepButton();
+      console.log(`✅ Duplicated garment as ${garmentCount}`);
+    }
+  },
+
+  renumberGarments() {
+    const garmentCards = document.querySelectorAll('.garment-card');
+    garmentCards.forEach((card, index) => {
+      const numberElement = card.querySelector('.garment-card__number');
+      if (numberElement) {
+        numberElement.textContent = `Garment ${index + 1}`;
+      }
+    });
+  },
+
+  updateNextStepButton() {
+    const nextBtn = document.querySelector('.techpack-btn--primary[onclick*="nextStep"]');
+    const garmentCount = document.getElementById('garments-container')?.children.length || 0;
+    
+    if (nextBtn && this.currentStep === 3) {
+      nextBtn.disabled = garmentCount === 0;
+      nextBtn.classList.toggle('disabled', garmentCount === 0);
+    }
   },
 
   validateCurrentStep() {
@@ -5541,8 +5805,10 @@ const V10TechpackForm = {
 
   addGarment() {
     // Use existing V10 garment functionality if available
-    if (window.V10_GarmentStudio && typeof window.V10_GarmentStudio.addGarment === 'function') {
-      window.V10_GarmentStudio.addGarment();
+    if (this.garmentStudio && typeof this.garmentStudio.addGarment === 'function') {
+      this.garmentStudio.addGarment();
+    } else {
+      this.addGarmentFallback();
     }
   },
 

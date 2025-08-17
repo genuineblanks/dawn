@@ -5705,6 +5705,96 @@
     width: 100% !important;
   }
   
+/* Status indicators for garments */
+.status-indicator {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-indicator--incomplete {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.status-indicator--complete {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+/* Selection placeholders and displays */
+.selection-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selection-placeholder:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.selection-display {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f0f9ff;
+  border: 2px solid #38bdf8;
+  border-radius: 8px;
+}
+
+.change-selection-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.change-selection-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .selection-placeholder,
+  .selected-item {
+    padding: 10px 12px;
+  }
+  
+  .change-selection-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
 /* Mobile - using existing V10 btn-group */
   
   .v10-garment-header {
