@@ -62,10 +62,10 @@
   /* Core Light Theme Colors - Clean Financial Dashboard Style */
   --v10-bg-primary: #ffffff;          /* Clean white background */
   --v10-bg-secondary: #f8f9fa;        /* Light gray panels */
-  --v10-bg-tertiary: #e9ecef;         /* Subtle elevated surfaces */
+  --v10-bg-tertiary: transparent;     /* Transparent - no unnecessary backgrounds */
   --v10-bg-card: #ffffff;             /* White card backgrounds */
   --v10-bg-modal: #ffffff;            /* White modal backgrounds */
-  --v10-bg-input: #ffffff;            /* White input backgrounds */
+  --v10-bg-input: #f8f9fa;            /* Light gray input backgrounds for visibility */
   --v10-bg-hover: #f8f9fa;            /* Light hover states */
   --v10-bg-active: #e9ecef;           /* Light active states */
 
