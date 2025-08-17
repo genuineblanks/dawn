@@ -2908,15 +2908,15 @@ class V10_ReviewManager {
       `;
     }
 
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
+    }
 
-    // Bind close event
-    const closeBtn = document.getElementById('success-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+    // Bind close event to continue button
+    const continueBtn = document.getElementById('success-continue');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        window.v10ModalManager.closeModal(modal);
         
         // Clear state and redirect or refresh
         V10_State.clear();
@@ -3100,46 +3100,20 @@ class V10_TechPackSystem {
 
   showHelpModal() {
     const modal = document.getElementById('step-3-help-modal');
-    if (modal) {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+    if (modal && window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
       
       // Load help content based on request type
       this.loadHelpContent();
-      
-      // Bind close events
-      this.bindHelpModalEvents(modal);
     }
   }
 
-  bindHelpModalEvents(modal) {
-    // Close button
-    const closeBtn = modal.querySelector('.techpack-modal__close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.hideHelpModal());
-    }
-
-    // Backdrop click
-    const backdrop = modal.querySelector('.techpack-modal__backdrop');
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.hideHelpModal());
-    }
-
-    // Escape key
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        this.hideHelpModal();
-        document.removeEventListener('keydown', handleEscape);
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-  }
+  // Removed - now handled by unified V10_ModalManager
 
   hideHelpModal() {
     const modal = document.getElementById('step-3-help-modal');
-    if (modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
+    if (modal && window.v10ModalManager) {
+      window.v10ModalManager.closeModal(modal);
       
       // Mark help as read
       this.markHelpAsRead();
@@ -3177,6 +3151,12 @@ class V10_TechPackSystem {
         }
       });
     });
+
+    // Setup close functionality for the main help modal
+    const helpCloseBtn = document.getElementById('close-help-modal');
+    if (helpCloseBtn) {
+      helpCloseBtn.addEventListener('click', () => this.hideHelpModal());
+    }
 
     console.log('🔧 Help system initialized for all help buttons');
   }
@@ -4189,7 +4169,9 @@ class V10_FileManager {
       proceedBtn.textContent = 'Confirm & Continue';
     }
     
-    modal.style.display = 'flex';
+    if (window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
+    }
   }
 
   setupMeasurementModal() {
@@ -4199,24 +4181,21 @@ class V10_FileManager {
     
     if (!modal) return;
     
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-    
     // Go back to add measurements
     if (backBtn) {
       backBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
+        if (window.v10ModalManager) {
+          window.v10ModalManager.closeModal(modal);
+        }
       });
     }
     
     // Proceed anyway
     if (proceedBtn) {
       proceedBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
+        if (window.v10ModalManager) {
+          window.v10ModalManager.closeModal(modal);
+        }
         this.proceedToStep3();
       });
     }

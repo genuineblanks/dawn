@@ -107,7 +107,6 @@
 .v10-techpack-step *,
 [id^="techpack-v10"] *,
 .v10-modal-overlay *,
-.techpack-modal *,
 [class^="v10-"] * {
   box-sizing: border-box;
 }
@@ -115,7 +114,6 @@
 .v10-techpack-step,
 [id^="techpack-v10"],
 .v10-modal-overlay,
-.techpack-modal,
 [class^="v10-"] {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--v10-text-base);
@@ -129,38 +127,37 @@
 /* V10 TechPack scoped headings */
 .v10-techpack-step h1, .v10-techpack-step h2, .v10-techpack-step h3, .v10-techpack-step h4, .v10-techpack-step h5, .v10-techpack-step h6,
 [id^="techpack-v10"] h1, [id^="techpack-v10"] h2, [id^="techpack-v10"] h3, [id^="techpack-v10"] h4, [id^="techpack-v10"] h5, [id^="techpack-v10"] h6,
-.v10-modal-overlay h1, .v10-modal-overlay h2, .v10-modal-overlay h3, .v10-modal-overlay h4, .v10-modal-overlay h5, .v10-modal-overlay h6,
-.techpack-modal h1, .techpack-modal h2, .techpack-modal h3, .techpack-modal h4, .techpack-modal h5, .techpack-modal h6 {
+.v10-modal-overlay h1, .v10-modal-overlay h2, .v10-modal-overlay h3, .v10-modal-overlay h4, .v10-modal-overlay h5, .v10-modal-overlay h6 {
   margin: 0;
   font-weight: 600;
   line-height: 1.2;
   color: var(--v10-text-primary);
 }
 
-.v10-techpack-step h1, [id^="techpack-v10"] h1, .v10-modal-overlay h1, .techpack-modal h1 { font-size: var(--v10-text-4xl); }
-.v10-techpack-step h2, [id^="techpack-v10"] h2, .v10-modal-overlay h2, .techpack-modal h2 { font-size: var(--v10-text-3xl); }
-.v10-techpack-step h3, [id^="techpack-v10"] h3, .v10-modal-overlay h3, .techpack-modal h3 { font-size: var(--v10-text-2xl); }
-.v10-techpack-step h4, [id^="techpack-v10"] h4, .v10-modal-overlay h4, .techpack-modal h4 { font-size: var(--v10-text-xl); }
-.v10-techpack-step h5, [id^="techpack-v10"] h5, .v10-modal-overlay h5, .techpack-modal h5 { font-size: var(--v10-text-lg); }
-.v10-techpack-step h6, [id^="techpack-v10"] h6, .v10-modal-overlay h6, .techpack-modal h6 { font-size: var(--v10-text-base); }
+.v10-techpack-step h1, [id^="techpack-v10"] h1, .v10-modal-overlay h1 { font-size: var(--v10-text-4xl); }
+.v10-techpack-step h2, [id^="techpack-v10"] h2, .v10-modal-overlay h2 { font-size: var(--v10-text-3xl); }
+.v10-techpack-step h3, [id^="techpack-v10"] h3, .v10-modal-overlay h3 { font-size: var(--v10-text-2xl); }
+.v10-techpack-step h4, [id^="techpack-v10"] h4, .v10-modal-overlay h4 { font-size: var(--v10-text-xl); }
+.v10-techpack-step h5, [id^="techpack-v10"] h5, .v10-modal-overlay h5 { font-size: var(--v10-text-lg); }
+.v10-techpack-step h6, [id^="techpack-v10"] h6, .v10-modal-overlay h6 { font-size: var(--v10-text-base); }
 
-.v10-techpack-step p, [id^="techpack-v10"] p, .v10-modal-overlay p, .techpack-modal p {
+.v10-techpack-step p, [id^="techpack-v10"] p, .v10-modal-overlay p {
   margin: 0 0 var(--v10-space-4) 0;
   color: var(--v10-text-secondary);
 }
 
 /* V10 TechPack scoped links and form elements */
-.v10-techpack-step a, [id^="techpack-v10"] a, .v10-modal-overlay a, .techpack-modal a {
+.v10-techpack-step a, [id^="techpack-v10"] a, .v10-modal-overlay a {
   color: var(--v10-accent-primary);
   text-decoration: none;
   transition: var(--v10-transition-fast);
 }
 
-.v10-techpack-step a:hover, [id^="techpack-v10"] a:hover, .v10-modal-overlay a:hover, .techpack-modal a:hover {
+.v10-techpack-step a:hover, [id^="techpack-v10"] a:hover, .v10-modal-overlay a:hover {
   color: var(--v10-accent-secondary);
 }
 
-.v10-techpack-step button, [id^="techpack-v10"] button, .v10-modal-overlay button, .techpack-modal button {
+.v10-techpack-step button, [id^="techpack-v10"] button, .v10-modal-overlay button {
   cursor: pointer;
   border: none;
   background: none;
@@ -170,7 +167,7 @@
 .v10-techpack-step input, .v10-techpack-step textarea, .v10-techpack-step select,
 [id^="techpack-v10"] input, [id^="techpack-v10"] textarea, [id^="techpack-v10"] select,
 .v10-modal-overlay input, .v10-modal-overlay textarea, .v10-modal-overlay select,
-.techpack-modal input, .techpack-modal textarea, .techpack-modal select {
+.v10-modal-overlay input, .v10-modal-overlay textarea, .v10-modal-overlay select {
   font-family: inherit;
   font-size: var(--v10-text-base);
 }
@@ -908,8 +905,7 @@
    MODAL SYSTEM WITH GLASS MORPHISM
    ============================================== */
 
-.v10-modal-overlay,
-.techpack-modal {
+.v10-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -930,16 +926,12 @@
 .v10-modal-overlay[style*="block"], 
 .v10-modal-overlay:not([style*="none"]),
 .v10-modal-overlay.show,
-.techpack-modal[style*="block"],
-.techpack-modal:not([style*="none"]),
-.techpack-modal.show,
-.techpack-modal--help {
+.v10-modal-overlay.active {
   opacity: 1;
   visibility: visible;
 }
 
-.v10-modal,
-.techpack-modal__content {
+.v10-modal {
   background: var(--v10-glass-bg);
   backdrop-filter: var(--v10-backdrop-blur);
   border: 1px solid var(--v10-glass-border);
