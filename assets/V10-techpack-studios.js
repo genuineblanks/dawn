@@ -540,16 +540,21 @@ class V10_GarmentStudio {
       if (this.garmentsContainer) {
         this.garmentsContainer.appendChild(clone);
         console.log('✅ Garment added to container');
+        
+        // Initialize compact interface AFTER adding to DOM
+        try {
+          const addedGarmentCard = this.garmentsContainer.querySelector(`[data-garment-id="${garmentData.id}"]`);
+          if (addedGarmentCard) {
+            this.initializeCompactInterface(addedGarmentCard);
+          } else {
+            console.error('❌ Could not find added garment card in DOM');
+          }
+        } catch (compactError) {
+          console.error('❌ Error initializing compact interface:', compactError);
+        }
       } else {
         console.error('❌ Garments container not found');
         return;
-      }
-
-      // Initialize compact interface
-      try {
-        this.initializeCompactInterface(clone);
-      } catch (compactError) {
-        console.error('❌ Error initializing compact interface:', compactError);
       }
 
       // Update status
@@ -709,6 +714,10 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       this.duplicateGarment(garmentId);
+    } else if (e.target.closest('.garment-summary__edit-btn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.expandGarmentForEdit(garmentId);
     } else if (e.target.closest('.sample-type-card')) {
       // Handle sample type card clicks
       e.preventDefault();
@@ -826,8 +835,84 @@ class V10_GarmentStudio {
       statusIndicator.className = `status-indicator ${isComplete ? 'status-indicator--complete' : 'status-indicator--incomplete'}`;
     }
 
+    // Handle garment collapse/expand based on completion status
+    this.updateGarmentCollapsedState(garmentCard, garmentData, isComplete);
+
     // Update assigned items display
     this.updateAssignedDisplay(garmentId);
+  }
+
+  updateGarmentCollapsedState(garmentCard, garmentData, isComplete) {
+    const summaryContainer = garmentCard.querySelector('.garment-card__summary');
+    const contentContainer = garmentCard.querySelector('.garment-card__content');
+    
+    if (!summaryContainer || !contentContainer) return;
+
+    if (isComplete) {
+      // Show summary, hide content
+      summaryContainer.style.display = 'block';
+      contentContainer.style.display = 'none';
+      
+      // Update summary content
+      this.updateGarmentSummary(garmentCard, garmentData);
+    } else {
+      // Show content, hide summary
+      summaryContainer.style.display = 'none';
+      contentContainer.style.display = 'block';
+    }
+  }
+
+  updateGarmentSummary(garmentCard, garmentData) {
+    const typeSpan = garmentCard.querySelector('.garment-summary__type');
+    const fabricSpan = garmentCard.querySelector('.garment-summary__fabric');
+    const statusSpan = garmentCard.querySelector('.garment-summary__status');
+    
+    if (typeSpan && garmentData.type) {
+      typeSpan.textContent = garmentData.type;
+    }
+    
+    if (fabricSpan && garmentData.fabricType) {
+      fabricSpan.textContent = garmentData.fabricType;
+    }
+    
+    if (statusSpan) {
+      // Generate status message based on request type and sample type
+      let statusMessage = 'Complete';
+      
+      if (V10_State.requestType === 'sample-request' && garmentData.sampleType) {
+        switch (garmentData.sampleType) {
+          case 'as-per-techpack':
+            statusMessage = 'Complete';
+            break;
+          case 'stock-fabric-color':
+            statusMessage = 'Complete - Add a design (optional)';
+            break;
+          case 'custom-color-pantone':
+            statusMessage = 'Complete - Needs to assign color on Design studio & design (optional)';
+            break;
+          default:
+            statusMessage = 'Complete';
+        }
+      }
+      
+      statusSpan.textContent = statusMessage;
+    }
+  }
+
+  expandGarmentForEdit(garmentId) {
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!garmentCard) return;
+
+    const summaryContainer = garmentCard.querySelector('.garment-card__summary');
+    const contentContainer = garmentCard.querySelector('.garment-card__content');
+    
+    if (summaryContainer && contentContainer) {
+      // Hide summary, show content for editing
+      summaryContainer.style.display = 'none';
+      contentContainer.style.display = 'block';
+      
+      console.log(`✏️ Expanded garment ${garmentId} for editing`);
+    }
   }
 
   updateAssignedDisplay(garmentId) {
@@ -903,7 +988,31 @@ class V10_GarmentStudio {
       }
       this.removing = true;
       
-      if (confirm('Remove this garment? This action cannot be undone.')) {
+      // Check if garment has assignments
+      const garmentData = V10_State.garments.get(garmentId);
+      const hasAssignments = garmentData && 
+        (garmentData.assignedLabDips.size > 0 || garmentData.assignedDesigns.size > 0);
+      
+      let shouldDelete = true;
+      
+      if (hasAssignments) {
+        // Build confirmation message showing what will be lost
+        let message = 'This garment has assignments that will be lost:\n\n';
+        
+        if (garmentData.assignedLabDips.size > 0) {
+          message += `• ${garmentData.assignedLabDips.size} assigned color(s)\n`;
+        }
+        
+        if (garmentData.assignedDesigns.size > 0) {
+          message += `• ${garmentData.assignedDesigns.size} assigned design(s)\n`;
+        }
+        
+        message += '\nRemove this garment? This action cannot be undone.';
+        shouldDelete = confirm(message);
+      }
+      // If no assignments, delete immediately without confirmation
+      
+      if (shouldDelete) {
         // Remove from state
         V10_State.garments.delete(garmentId);
 
@@ -1252,7 +1361,7 @@ class V10_GarmentStudio {
 
 
   initializeCompactInterface(garmentCard) {
-    // Set up initial states
+    // Set up initial states - use querySelector on the garmentCard to find within this specific garment
     const garmentExpanded = garmentCard.querySelector('#garment-expanded');
     const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
     const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
@@ -1693,24 +1802,23 @@ class V10_DesignStudio {
 
     // Create modal with garment list
     const modal = this.createGarmentSelectorModal(garments, type);
-    document.body.appendChild(modal);
+    window.v10ModalManager.openModal(modal);
   }
 
   createGarmentSelectorModal(garments, type) {
     const modal = document.createElement('div');
-    modal.className = 'techpack-modal techpack-modal--selector';
+    modal.className = 'v10-modal-overlay';
     modal.innerHTML = `
-      <div class="techpack-modal__backdrop"></div>
-      <div class="techpack-modal__content">
-        <div class="techpack-modal__header">
-          <h3>Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'} to Garment</h3>
-          <button type="button" class="techpack-modal__close">
+      <div class="v10-modal">
+        <div class="v10-modal-header">
+          <h3 class="v10-modal-title">Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'} to Garment</h3>
+          <button type="button" class="v10-modal-close">
             <svg width="20" height="20" viewBox="0 0 20 20">
               <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
             </svg>
           </button>
         </div>
-        <div class="techpack-modal__body">
+        <div class="v10-modal-body">
           <div class="garment-selector">
             ${garments.map(garment => `
               <label class="garment-selector__option">
@@ -1722,9 +1830,9 @@ class V10_DesignStudio {
               </label>
             `).join('')}
           </div>
-          <div class="modal-actions">
-            <button type="button" class="techpack-btn techpack-btn--ghost modal-cancel">Cancel</button>
-            <button type="button" class="techpack-btn techpack-btn--primary modal-confirm" disabled>
+          <div class="v10-modal-actions">
+            <button type="button" class="v10-btn v10-btn--ghost modal-cancel">Cancel</button>
+            <button type="button" class="v10-btn v10-btn--primary modal-confirm" disabled>
               Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'}
             </button>
           </div>
@@ -1733,17 +1841,16 @@ class V10_DesignStudio {
     `;
 
     // Bind modal events
-    const backdrop = modal.querySelector('.techpack-modal__backdrop');
-    const closeBtn = modal.querySelector('.techpack-modal__close');
+    const closeBtn = modal.querySelector('.v10-modal-close');
     const cancelBtn = modal.querySelector('.modal-cancel');
     const confirmBtn = modal.querySelector('.modal-confirm');
     const radioInputs = modal.querySelectorAll('input[name="target-garment"]');
 
     const closeModal = () => {
-      modal.remove();
+      window.v10ModalManager.closeModal();
     };
 
-    backdrop.addEventListener('click', closeModal);
+    // V10 modal system handles backdrop clicks automatically
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
 
