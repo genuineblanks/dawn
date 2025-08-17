@@ -230,7 +230,7 @@ body[class*="techpack"] *,
 
 .v10-techpack-step {
   min-height: 100vh;
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-secondary);
   padding: var(--v10-space-8) 0;
 }
 
@@ -2196,7 +2196,7 @@ body[class*="techpack"] *,
   align-items: center;
   gap: var(--v10-space-3);
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-secondary);
   border-radius: var(--v10-radius-sm);
   cursor: pointer;
@@ -4367,13 +4367,13 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 }
 
 .studio-toggle__btn--active {
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   color: var(--v10-text-inverse);
   box-shadow: var(--v10-shadow-sm);
 }
 
 .studio-toggle__btn--active:hover {
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   color: var(--v10-text-inverse);
 }
 
@@ -4530,7 +4530,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   padding: var(--v10-space-3);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-secondary);
   color: var(--v10-text-primary);
   font-size: var(--v10-text-sm);
 }
@@ -4648,7 +4648,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   padding: var(--v10-space-3);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-secondary);
   color: var(--v10-text-primary);
   font-size: var(--v10-text-sm);
 }
@@ -4682,7 +4682,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .design-type-option input[type="radio"]:checked + .design-type-card {
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   border-color: var(--v10-border-accent);
 }
 
@@ -4713,7 +4713,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   justify-content: center;
   gap: var(--v10-space-2);
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -4862,7 +4862,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 
 /* Modal Container */
 .v10-modal {
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-secondary);
   border-radius: var(--v10-radius-lg);
   max-width: 600px;
   width: 100%;
