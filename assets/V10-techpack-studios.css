@@ -3829,6 +3829,13 @@ body[class*="techpack"] *,
   background: var(--v10-accent-warning);
   border-color: var(--v10-accent-warning);
   color: white;
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-1);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .garment-card__finalize:hover {
@@ -3836,6 +3843,22 @@ body[class*="techpack"] *,
   border-color: var(--v10-accent-success);
   color: white;
   transform: translateY(-1px);
+}
+
+.garment-card__finalize:active {
+  background: var(--v10-accent-success);
+  border-color: var(--v10-accent-success);
+  transform: translateY(0);
+}
+
+.garment-card__finalize svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+.garment-card__finalize span {
+  line-height: 1;
 }
 
 .collection-item {

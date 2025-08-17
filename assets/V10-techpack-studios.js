@@ -860,6 +860,15 @@ class V10_GarmentStudio {
     
     if (!summaryContainer || !contentContainer) return;
 
+    // Don't auto-collapse if in edit mode - keep form open for editing
+    if (garmentData.isInEditMode) {
+      console.log(`🔒 Garment ${garmentData.id} in edit mode - keeping form open`);
+      summaryContainer.style.display = 'none';
+      contentContainer.style.display = 'block';
+      return;
+    }
+
+    // Normal auto-collapse behavior for new garments
     if (isComplete) {
       // Show summary, hide content
       summaryContainer.style.display = 'block';
@@ -867,10 +876,12 @@ class V10_GarmentStudio {
       
       // Update summary content
       this.updateGarmentSummary(garmentCard, garmentData);
+      console.log(`✅ Garment ${garmentData.id} auto-collapsed (complete)`);
     } else {
       // Show content, hide summary
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
+      console.log(`📝 Garment ${garmentData.id} showing form (incomplete)`);
     }
   }
 
@@ -2016,8 +2027,8 @@ class V10_DesignStudio {
     }
   }
 
-  showGarmentSelector(type) {
-    console.log(`🔄 showGarmentSelector called with type: ${type}`);
+  showGarmentSelector(type, itemId = null) {
+    console.log(`🔄 showGarmentSelector called with type: ${type}, itemId: ${itemId}`);
     
     // Check if modal manager exists
     if (!window.v10ModalManager) {
@@ -2037,7 +2048,7 @@ class V10_DesignStudio {
     try {
       // Create modal with garment list
       console.log('🔄 Creating garment selector modal...');
-      const modal = this.createGarmentSelectorModal(garments, type);
+      const modal = this.createGarmentSelectorModal(garments, type, itemId);
       
       if (!modal) {
         console.error('❌ Failed to create modal');
@@ -2077,8 +2088,8 @@ class V10_DesignStudio {
     }
   }
 
-  createGarmentSelectorModal(garments, type) {
-    console.log(`🔄 createGarmentSelectorModal: ${type}, ${garments.length} garments`);
+  createGarmentSelectorModal(garments, type, itemId = null) {
+    console.log(`🔄 createGarmentSelectorModal: ${type}, ${garments.length} garments, itemId: ${itemId}`);
     
     try {
       const modal = document.createElement('div');
@@ -2122,7 +2133,7 @@ class V10_DesignStudio {
     const radioInputs = modal.querySelectorAll('input[name="target-garment"]');
 
     const closeModal = () => {
-      window.v10ModalManager.closeModal();
+      window.v10ModalManager.closeModal(modal);
     };
 
     // V10 modal system handles backdrop clicks automatically
@@ -2138,15 +2149,35 @@ class V10_DesignStudio {
 
     // Handle confirm
     confirmBtn.addEventListener('click', () => {
-      const selectedGarment = Array.from(radioInputs).find(r => r.checked)?.value;
-      if (selectedGarment) {
-        if (type === 'labdip') {
-          this.addLabDip(false, selectedGarment);
-        } else {
-          this.addDesignSample(false, selectedGarment);
+      try {
+        const selectedGarment = Array.from(radioInputs).find(r => r.checked)?.value;
+        if (selectedGarment) {
+          if (itemId) {
+            // Assign existing item to garment
+            if (type === 'labdip') {
+              console.log(`✅ Assigning existing lab dip ${itemId} to garment ${selectedGarment}`);
+              window.v10GarmentStudio.assignLabDip(selectedGarment, itemId);
+            } else {
+              console.log(`✅ Assigning existing design ${itemId} to garment ${selectedGarment}`);
+              window.v10GarmentStudio.assignDesign(selectedGarment, itemId);
+            }
+          } else {
+            // Create new item and assign to garment (current behavior for "Add to Garment" from forms)
+            if (type === 'labdip') {
+              this.addLabDip(false, selectedGarment);
+            } else {
+              this.addDesignSample(false, selectedGarment);
+            }
+          }
+          console.log(`📋 ${type} assignment completed, closing modal`);
         }
+      } catch (error) {
+        console.error(`❌ Error during ${type} assignment:`, error);
+      } finally {
+        // Always try to close the modal
+        console.log('🔄 Attempting to close modal...');
+        closeModal();
       }
-      closeModal();
     });
 
     console.log('✅ Modal DOM created successfully');
@@ -2281,7 +2312,7 @@ class V10_DesignStudio {
     const removeBtn = clone.querySelector('.collection-item__remove');
 
     if (assignBtn) {
-      assignBtn.addEventListener('click', () => this.showGarmentSelector('labdip'));
+      assignBtn.addEventListener('click', () => this.showGarmentSelector('labdip', labDipData.id));
     }
 
     if (removeBtn) {
@@ -2318,7 +2349,7 @@ class V10_DesignStudio {
     const removeBtn = clone.querySelector('.collection-item__remove');
 
     if (assignBtn) {
-      assignBtn.addEventListener('click', () => this.showGarmentSelector('design'));
+      assignBtn.addEventListener('click', () => this.showGarmentSelector('design', designData.id));
     }
 
     if (removeBtn) {
