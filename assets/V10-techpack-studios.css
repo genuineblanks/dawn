@@ -3558,21 +3558,27 @@ body[class*="techpack"] *,
 }
 
 .sample-type-selection {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--v10-space-3);
+  display: grid !important;
+  grid-template-columns: 33.33% 33.33% 33.33% !important;
+  gap: var(--v10-space-3) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 
 .sample-type-card {
-  position: relative;
-  cursor: pointer;
-  display: block;
-  background: var(--v10-surface-elevated);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4);
-  transition: var(--v10-transition);
+  position: relative !important;
+  cursor: pointer !important;
+  display: block !important;
+  background: var(--v10-surface-elevated) !important;
+  border: 1px solid var(--v10-border-primary) !important;
+  border-radius: var(--v10-radius-md) !important;
+  padding: var(--v10-space-4) !important;
+  transition: var(--v10-transition) !important;
+  min-width: 0 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
 .sample-type-card input[type="radio"] {
