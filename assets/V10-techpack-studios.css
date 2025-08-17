@@ -6,10 +6,10 @@
    ============================================== */
 
 :root {
-  /* V10 Studio Color System */
-  --v10-bg-primary: #ffffff;
-  --v10-bg-secondary: #f8f9fa;
-  --v10-bg-tertiary: #f1f3f4;
+  /* V10 Studio Color System - Unified Grey Interface */
+  --v10-bg-primary: #f1f3f4;      /* Main background & selected tab */
+  --v10-bg-secondary: #f8f9fa;    /* Unselected tab - lighter */
+  --v10-bg-tertiary: #e9ecef;     /* Even lighter accents */
   --v10-bg-dark: #2d3436;
   --v10-bg-darker: #1a1a1a;
   
@@ -723,7 +723,7 @@
 
 .v10-techpack-step {
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--v10-bg-primary);
   padding: 40px 0;
 }
 
@@ -731,7 +731,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  background: #ffffff;
+  background: var(--v10-bg-primary);
 }
 
 @media (max-width: 768px) {
@@ -1081,7 +1081,7 @@
   align-items: center;
   gap: var(--v10-space-md);
   padding: var(--v10-space-lg) var(--v10-space-xl);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-secondary);
   border: none;
   border-radius: 0;
   cursor: pointer;
@@ -1092,12 +1092,12 @@
 }
 
 .studio-tab:hover {
-  background: var(--v10-bg-secondary);
+  background: var(--v10-bg-tertiary);
   box-shadow: none;
 }
 
 .studio-tab--active {
-  background: var(--v10-bg-secondary);
+  background: var(--v10-bg-primary);
   box-shadow: none;
   color: var(--v10-text-primary);
 }
@@ -3021,7 +3021,7 @@
 .techpack-progress {
   margin-bottom: var(--v10-space-2xl);
   padding: var(--v10-space-xl);
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.8), rgba(241, 243, 244, 0.6));
+  background: linear-gradient(135deg, rgba(248, 249, 250, 0.95), rgba(241, 243, 244, 0.8));
   border-radius: 0;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(233, 236, 239, 0.5);
@@ -3029,7 +3029,29 @@
     0 8px 32px rgba(45, 52, 54, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  min-height: 120px;
+}
+
+/* Ensure progress bar is visible over any backgrounds */
+.techpack-progress * {
+  position: relative;
+}
+
+/* Header Integration Styles */
+.shopify-section--header + section .techpack-progress,
+.site-header + section .techpack-progress,
+header + section .techpack-progress {
+  margin-top: var(--v10-space-2xl);
+}
+
+/* Force visibility of progress elements */
+.techpack-progress__bar,
+.techpack-progress__fill,
+.techpack-progress__steps {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Progress Header with Statistics */
@@ -3094,31 +3116,34 @@
 
 /* Lava Flow Progress Bar */
 .techpack-progress__bar {
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(90deg, #f1f3f4, #e9ecef);
-  border-radius: 0;
-  margin-bottom: var(--v10-space-xl);
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: linear-gradient(90deg, #e9ecef, #dee2e6);
+  border-radius: 2px;
+  transform: translateY(-50%);
+  z-index: 1;
   overflow: hidden;
-  position: relative;
   box-shadow: 
-    inset 0 2px 4px rgba(45, 52, 54, 0.1),
-    0 1px 2px rgba(255, 255, 255, 0.5);
+    inset 0 1px 2px rgba(45, 52, 54, 0.1),
+    0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .techpack-progress__fill {
   height: 100%;
   background: linear-gradient(90deg, 
-    #9ca3af 0%, 
-    #d1d5db 50%, 
-    #e5e7eb 100%
+    #6b7280 0%, 
+    #9ca3af 50%, 
+    #d1d5db 100%
   );
-  border-radius: 0;
+  border-radius: 2px;
   transition: width 0.8s ease-in-out;
   position: relative;
   box-shadow: 
-    0 0 10px rgba(156, 163, 175, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 0 8px rgba(107, 114, 128, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Removed complex animations - keeping it simple */
@@ -3129,20 +3154,9 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-}
-
-/* Connection Lines Between Steps */
-.techpack-progress__steps::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 5%;
-  right: 5%;
-  height: 2px;
-  background: linear-gradient(90deg, #e9ecef, #dee2e6);
-  transform: translateY(-50%);
-  z-index: 1;
-  border-radius: 0;
+  z-index: 2;
+  padding: 2rem 0;
+  margin-top: 1rem;
 }
 
 /* Enhanced Step Circles */
@@ -4616,44 +4630,44 @@
 
 /* Studio tabs with enhanced dark grey styling */
 .studio-tab--active {
-  background: var(--v10-accent-highlight) !important;
-  color: var(--v10-text-light) !important;
+  background: var(--v10-bg-primary) !important;
+  color: var(--v10-text-primary) !important;
   border: none !important;
-  box-shadow: 0 4px 12px rgba(28, 28, 28, 0.15) !important;
+  box-shadow: none !important;
 }
 
 .studio-tab--active .studio-tab__icon {
-  background: var(--v10-accent-highlight) !important;
-  color: var(--v10-text-light) !important;
-  border-color: var(--v10-accent-highlight) !important;
+  background: var(--v10-bg-tertiary) !important;
+  color: var(--v10-text-primary) !important;
+  border-color: transparent !important;
 }
 
 .studio-tab--active .studio-tab__title,
 .studio-tab--active .studio-tab__subtitle {
-  color: var(--v10-text-light) !important;
+  color: var(--v10-text-primary) !important;
 }
 
 /* Fix for the specific styling bug - override all conflicting styles */
 .studio-tab.studio-tab--active {
-  background: var(--v10-accent-highlight) !important;
-  color: var(--v10-text-light) !important;
+  background: var(--v10-bg-primary) !important;
+  color: var(--v10-text-primary) !important;
 }
 
 .studio-tab.studio-tab--active .studio-tab__icon {
-  background: var(--v10-accent-highlight) !important;
-  color: var(--v10-text-light) !important;
+  background: var(--v10-bg-tertiary) !important;
+  color: var(--v10-text-primary) !important;
 }
 
 .studio-tab.studio-tab--active .studio-tab__title {
-  color: var(--v10-text-light) !important;
+  color: var(--v10-text-primary) !important;
 }
 
 .studio-tab.studio-tab--active .studio-tab__subtitle {
-  color: var(--v10-text-light) !important;
+  color: var(--v10-text-primary) !important;
 }
 
 .studio-tab:hover:not(.studio-tab--active) {
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   box-shadow: none;
 }
 
