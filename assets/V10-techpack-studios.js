@@ -5,7 +5,7 @@
 // DEBUG LOGGING SYSTEM
 // ==============================================
 
-const V10_DEBUG = {
+const V10_DEBUG = window.V10_DEBUG || {
   enabled: true,
   
   log: function(category, message, data = null) {
@@ -123,6 +123,9 @@ const V10_DEBUG = {
     return conflicts;
   }
 };
+
+// Assign to window to prevent redeclaration errors
+window.V10_DEBUG = V10_DEBUG;
 
 // Global debug commands available in console
 window.V10_DEBUG_COMMANDS = {
@@ -4425,15 +4428,11 @@ class V10_FileManager {
       proceedBtn.textContent = 'Confirm & Continue';
     }
     
-    if (window.v10ModalManager) {
-      console.log('🔧 Opening measurement modal via v10ModalManager');
-      window.v10ModalManager.openModal(modal);
-    } else {
-      console.error('❌ v10ModalManager not available, using fallback');
-      modal.style.display = 'flex';
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+    // Use fallback approach since this modal has a different ID pattern
+    console.log('🔧 Opening measurement modal via fallback method');
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
 
   setupMeasurementModal() {

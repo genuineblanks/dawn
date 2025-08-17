@@ -8,6 +8,8 @@
    ============================================== */
 
 /* Debug mode - add this class to body to enable visual debugging */
+/* DISABLED - Uncomment if needed for debugging */
+/*
 .v10-debug-mode .v10-techpack-step,
 .v10-debug-mode [id^="techpack-v10"],
 .v10-debug-mode .v10-modal-overlay,
@@ -32,6 +34,7 @@
 }
 
 /* Color debugging - shows which elements have problematic backgrounds */
+/*
 .v10-debug-colors [style*="background-color: var(--v10-bg"] {
   border: 3px solid lime !important;
 }
@@ -39,6 +42,7 @@
 .v10-debug-colors [style*="background: var(--v10-bg"] {
   border: 3px solid orange !important;
 }
+*/
 
 /* Quick debug toggle button */
 .v10-debug-toggle {
@@ -235,7 +239,7 @@
 
 .v10-techpack-step {
   min-height: 100vh;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   padding: var(--v10-space-8) 0;
 }
 
@@ -252,7 +256,7 @@
 }
 
 .techpack-content {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-12);
   /* box-shadow removed */
@@ -278,7 +282,7 @@
 .simple-progress-bar {
   width: 100%;
   height: 6px;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   margin-bottom: var(--v10-space-8);
   overflow: hidden;
@@ -355,7 +359,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   color: var(--v10-text-primary);
   display: flex;
@@ -386,7 +390,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   transition: var(--v10-transition);
 }
 
@@ -559,7 +563,7 @@
 }
 
 .v10-requirement-card {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -580,7 +584,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
@@ -633,7 +637,7 @@
 }
 
 .v10-status-badge--optional {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   border: 1px solid rgba(163, 163, 163, 0.2);
 }
@@ -774,13 +778,13 @@
 }
 
 .v10-btn--secondary {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* border-color removed */
 }
 
 .v10-btn--secondary:hover:not(:disabled) {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   /* border-color removed */
   transform: translateY(-1px);
 }
@@ -792,7 +796,7 @@
 }
 
 .v10-btn--ghost:hover:not(:disabled) {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* border-color removed */
 }
@@ -1049,7 +1053,7 @@
 
 .v10-modal-close:hover,
 .techpack-modal__close:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* border-color removed */
 }
@@ -1194,7 +1198,7 @@
   align-items: center;
   gap: var(--v10-space-4);
   padding: var(--v10-space-5);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   cursor: pointer;
@@ -1213,7 +1217,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
@@ -1372,7 +1376,7 @@
   width: 56px;
   height: 56px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
@@ -1408,7 +1412,7 @@
 .v10-feature-item {
   font-size: var(--v10-text-base);
   color: var(--v10-text-primary);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   padding: var(--v10-space-1) var(--v10-space-2);
   border-radius: var(--v10-radius-md);
   border: 1px solid rgba(163, 163, 163, 0.2);
@@ -1464,7 +1468,7 @@
    ============================================== */
 
 .v10-studio-card {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-8);
@@ -1559,7 +1563,7 @@
 .v10-form-textarea-enhanced {
   width: 100%;
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -1577,7 +1581,7 @@
 .v10-form-textarea-enhanced:focus {
   /* border-color removed */
   /* box-shadow removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-form-input-enhanced:invalid,
@@ -1631,7 +1635,7 @@
   width: 20px;
   height: 20px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1662,7 +1666,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   /* box-shadow removed */
@@ -1685,7 +1689,7 @@
 .v10-enhanced-country-search-input {
   width: 100%;
   padding: var(--v10-space-2) var(--v10-space-3);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -1713,7 +1717,7 @@
 }
 
 .v10-enhanced-country-option:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-enhanced-country-option:last-child {
@@ -1724,7 +1728,7 @@
   width: 20px;
   height: 20px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1761,7 +1765,7 @@
   align-items: center;
   gap: var(--v10-space-4);
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
@@ -1784,7 +1788,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   flex-shrink: 0;
 }
@@ -1896,7 +1900,7 @@
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-12);
   text-align: center;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   transition: var(--v10-transition);
   cursor: pointer;
   position: relative;
@@ -1981,7 +1985,7 @@
   align-items: center;
   gap: var(--v10-space-4);
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
@@ -1995,7 +1999,7 @@
   width: 40px;
   height: 40px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
@@ -2035,7 +2039,7 @@
 
 .v10-file-type {
   padding: var(--v10-space-1) var(--v10-space-2);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   font-size: var(--v10-text-base);
@@ -2113,7 +2117,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   cursor: pointer;
@@ -2122,7 +2126,7 @@
 
 .v10-measurement-item:hover {
   /* border-color removed */
-  background: rgba(163, 163, 163, 0.05);
+  /* background: rgba(163, 163, 163, 0.05); - REMOVED: causing hover persistence */
 }
 
 .v10-measurement-text {
@@ -2154,12 +2158,17 @@
   height: 24px;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--v10-transition);
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.v10-measurement-checkbox-custom:hover {
+  border-color: var(--v10-border-primary);
 }
 
 .v10-measurement-checkbox-input:checked + .v10-measurement-checkbox-custom {
@@ -2190,7 +2199,7 @@
 .studio-tabs {
   display: flex;
   gap: var(--v10-space-2);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   padding: var(--v10-space-2);
   border-radius: var(--v10-radius-md);
   border: 1px solid var(--v10-border-primary);
@@ -2201,7 +2210,7 @@
   align-items: center;
   gap: var(--v10-space-3);
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   cursor: pointer;
@@ -2212,13 +2221,13 @@
 }
 
 .studio-tab:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   /* border-color removed */
   opacity: 0.8;
 }
 
 .studio-tab--active {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   /* border-color removed */
   /* box-shadow removed */
   opacity: 1;
@@ -2367,7 +2376,7 @@
 }
 
 .studio-help-btn:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* border-color removed */
 }
@@ -2420,7 +2429,7 @@
 }
 
 .compact-selection-widget {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   overflow: hidden;
@@ -2434,7 +2443,7 @@
 .selection-placeholder {
   padding: var(--v10-space-6);
   text-align: center;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-bottom: 1px solid var(--v10-border-primary);
 }
 
@@ -2451,7 +2460,7 @@
 
 .selection-display {
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-bottom: 1px solid var(--v10-border-primary);
   display: none;
 }
@@ -2462,7 +2471,7 @@
 
 .selection-expanded {
   padding: var(--v10-space-6);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   display: none;
 }
 
@@ -2511,7 +2520,7 @@
   align-items: center;
   gap: var(--v10-space-3);
   padding: var(--v10-space-5);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
@@ -2535,7 +2544,7 @@
   width: 40px;
   height: 40px;
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
@@ -2626,7 +2635,7 @@
 }
 
 .review-card {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   overflow: hidden;
@@ -2649,7 +2658,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--v10-space-4) var(--v10-space-6);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-bottom: 1px solid var(--v10-border-primary);
 }
 
@@ -2683,7 +2692,7 @@
 }
 
 .review-card__edit:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* border-color removed */
 }
@@ -2702,7 +2711,7 @@
 }
 
 .review-detail-section {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   overflow: hidden;
@@ -2711,7 +2720,7 @@
 
 .review-section-header {
   padding: var(--v10-space-4) var(--v10-space-6);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-bottom: 1px solid var(--v10-border-primary);
 }
 
@@ -2727,7 +2736,7 @@
 }
 
 .cost-summary {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   overflow: hidden;
@@ -2956,7 +2965,7 @@
 .v10-form-input {
   width: 100%;
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -2972,13 +2981,13 @@
 .v10-form-input:focus {
   /* border-color removed */
   /* box-shadow removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-form-textarea {
   width: 100%;
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -2998,13 +3007,13 @@
 .v10-form-textarea:focus {
   /* border-color removed */
   /* box-shadow removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-form-select {
   width: 100%;
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -3023,11 +3032,11 @@
 .v10-form-select:focus {
   /* border-color removed */
   /* box-shadow removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-form-select option {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   padding: var(--v10-space-2);
 }
@@ -3041,7 +3050,7 @@
 .v10-file-type-select {
   width: 100%;
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -3060,18 +3069,18 @@
 .v10-file-type-select:focus {
   /* border-color removed */
   /* box-shadow removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .v10-file-type-select option {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   padding: var(--v10-space-2);
 }
 
 .v10-file-type-select option[value=""] {
   color: var(--v10-text-primary);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 /* File upload card styling */
@@ -3213,7 +3222,7 @@
   align-items: center;
   gap: var(--v10-space-4);
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
@@ -3241,7 +3250,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   flex-shrink: 0;
 }
@@ -3808,7 +3817,7 @@
 }
 
 .garment-card {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -3819,7 +3828,7 @@
 }
 
 .collection-item {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -3851,7 +3860,7 @@
 }
 
 .quantity-tracker {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
@@ -3885,7 +3894,7 @@
 .size-quantity-input input {
   width: 100%;
   padding: var(--v10-space-2) var(--v10-space-3);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -4338,7 +4347,7 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 /* Studio Toggle Container */
 .studio-toggle {
   display: flex;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: 2px;
@@ -4364,18 +4373,18 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 }
 
 .studio-toggle__btn:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
 }
 
 .studio-toggle__btn--active {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   /* box-shadow removed */
 }
 
 .studio-toggle__btn--active:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
 }
 
@@ -4407,7 +4416,7 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 
 /* Color Selection Area */
 .color-selection-area {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -4422,7 +4431,7 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 
 /* Design Input Area */
 .design-input-area {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -4438,7 +4447,7 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 /* Collection Containers */
 .labdips-collection,
 .designs-collection {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -4520,7 +4529,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   height: 60px;
   border-radius: var(--v10-radius-md);
   border: 1px solid var(--v10-border-primary);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .pantone-code-input {
@@ -4532,7 +4541,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   padding: var(--v10-space-3);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   font-size: var(--v10-text-base);
 }
@@ -4567,7 +4576,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .popular-color:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .popular-color__swatch {
@@ -4587,7 +4596,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .auto-pantone-display {
   margin-bottom: var(--v10-space-4);
   padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   border: 1px solid var(--v10-border-primary);
 }
@@ -4650,7 +4659,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   padding: var(--v10-space-3);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
   font-size: var(--v10-text-base);
 }
@@ -4677,14 +4686,14 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   align-items: center;
   gap: var(--v10-space-1);
   padding: var(--v10-space-3);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
 }
 
 .design-type-option input[type="radio"]:checked + .design-type-card {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   /* border-color removed */
 }
 
@@ -4715,7 +4724,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   justify-content: center;
   gap: var(--v10-space-2);
   padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
@@ -4728,7 +4737,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .add-to-garment-btn:hover,
 .add-fabric-swatch-btn:hover,
 .add-fabric-design-btn:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   /* border-color removed */
 }
 
@@ -4743,14 +4752,14 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
   text-align: center;
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   cursor: pointer;
   transition: var(--v10-transition);
 }
 
 .file-upload-area:hover {
   /* border-color removed */
-  background: var(--v10-bg-tertiary);
+  background: transparent;
 }
 
 .file-upload-content {
@@ -4864,7 +4873,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 
 /* Modal Container */
 .v10-modal {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border-radius: var(--v10-radius-md);
   max-width: 600px;
   width: 100%;
@@ -4907,7 +4916,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 .v10-modal-icon--help {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
 }
 
@@ -4926,7 +4935,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 .v10-modal-close:hover {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   color: var(--v10-text-primary);
 }
 
@@ -4957,7 +4966,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 .v10-modal-details {
-  background: var(--v10-bg-tertiary);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
