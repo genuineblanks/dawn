@@ -45,6 +45,10 @@
   --v10-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --v10-transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
+  /* Unified Design System - Premium Gradients */
+  --v10-gradient-subtle: linear-gradient(135deg, var(--v10-bg-primary) 0%, var(--v10-bg-secondary) 100%);
+  --v10-gradient-header: linear-gradient(135deg, var(--v10-bg-secondary) 0%, var(--v10-bg-tertiary) 100%);
+  
   /* Spacing */
   --v10-space-xs: 0.25rem;
   --v10-space-sm: 0.5rem;
@@ -735,11 +739,11 @@
 }
 
 .v10-studio-card {
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-xl);
+  background: var(--v10-gradient-subtle);
+  border: none;
+  border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-2xl);
-  margin-bottom: var(--v10-space-2xl);
+  margin-bottom: var(--v10-space-xl);
   box-shadow: var(--v10-shadow-xs);
   transition: var(--v10-transition);
 }
@@ -1138,10 +1142,10 @@
 .studio-container {
   display: none;
   background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
+  border: none;
   border-radius: var(--v10-radius-xl);
   overflow: hidden;
-  box-shadow: var(--v10-shadow-lg);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .studio-container--active {
@@ -1153,8 +1157,8 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--v10-space-xl) var(--v10-space-2xl);
-  background: var(--v10-bg-secondary);
-  border-bottom: 1px solid var(--v10-border-light);
+  background: var(--v10-gradient-header);
+  border-bottom: none;
 }
 
 .studio-header__content {
@@ -1276,26 +1280,27 @@
 }
 
 .garment-card {
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-xl);
+  background: var(--v10-gradient-subtle);
+  border: none;
+  border-radius: var(--v10-radius-lg);
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: var(--v10-shadow-xs);
+  box-shadow: none;
+  margin-bottom: var(--v10-space-xl);
 }
 
 .garment-card:hover {
-  box-shadow: var(--v10-shadow-sm);
-  border-color: var(--v10-border-medium);
+  box-shadow: var(--v10-shadow-xs);
+  transform: translateY(-1px);
 }
 
 .garment-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--v10-space-xl) var(--v10-space-2xl);
-  background: var(--v10-bg-secondary);
-  border-bottom: 1px solid var(--v10-border-light);
+  padding: var(--v10-space-lg) var(--v10-space-xl);
+  background: var(--v10-bg-tertiary);
+  border-bottom: none;
   color: var(--v10-text-primary);
 }
 
@@ -1378,6 +1383,7 @@
 
 .garment-card__content {
   padding: var(--v10-space-xl);
+  background: var(--v10-bg-primary);
 }
 
 /* ==============================================
@@ -1498,17 +1504,19 @@
 }
 
 .compact-selection-widget {
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-lg);
+  background: var(--v10-bg-secondary);
+  border: none;
+  border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
   overflow: hidden;
   min-height: 60px;
+  box-shadow: var(--v10-shadow-xs);
 }
 
 .compact-selection-widget:hover {
-  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-tertiary);
   box-shadow: var(--v10-shadow-sm);
+  transform: translateY(-1px);
 }
 
 /* Selection Placeholder */
@@ -1744,21 +1752,22 @@
   display: block;
   padding: var(--v10-space-xl);
   background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-lg);
+  border: none;
+  border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
+  box-shadow: var(--v10-shadow-xs);
 }
 
 .sample-type-card:hover .sample-type-card__content {
-  border-color: var(--v10-border-medium);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   box-shadow: var(--v10-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .sample-type-card input[type="radio"]:checked + .sample-type-card__content {
-  border-color: var(--v10-bg-dark);
   background: var(--v10-bg-primary);
   box-shadow: var(--v10-shadow-md);
+  position: relative;
 }
 
 .sample-type-card__header {
@@ -2645,6 +2654,15 @@
   
   .garment-card__content {
     padding: var(--v10-space-lg);
+  }
+  
+  /* Unified design mobile adjustments */
+  .garment-card {
+    margin-bottom: var(--v10-space-md);
+  }
+  
+  .studio-container {
+    border-radius: var(--v10-radius-lg);
   }
   
   .radio-grid {
@@ -4826,7 +4844,7 @@
 }
 
 .garment-card + .garment-card {
-  margin-top: var(--v10-space-2xl);
+  margin-top: var(--v10-space-lg);
 }
 
 /* ==============================================
