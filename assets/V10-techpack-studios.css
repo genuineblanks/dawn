@@ -5343,463 +5343,211 @@
   }
 }
 
-/* ===== TECHPACK UPLOAD SYSTEM ===== */
-/* Only adding missing classes, not duplicating existing ones */
+/* ===== MISSING TECHPACK SYSTEM CSS ===== */
+/* Adding missing classes that were in deleted techpack-app.css */
 
-/* Main upload container */
-.v10-techpack-upload-container {
-  max-width: 900px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+/* Progress Bar System */
+.techpack-progress {
+  margin-bottom: var(--v10-space-2xl);
+}
+
+.techpack-progress__bar {
+  width: 100%;
+  height: 6px;
+  background: var(--v10-bg-secondary);
+  border-radius: 3px;
+  margin-bottom: var(--v10-space-xl);
   overflow: hidden;
 }
 
-/* Step content (different from existing v10-step) */
-.v10-step-content {
-  display: none;
-  animation: fadeIn 0.5s ease-in;
+.techpack-progress__fill {
+  height: 100%;
+  background: var(--v10-accent-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
-.v10-step-content.active {
-  display: block;
+.techpack-progress__steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Form layout - using existing V10 classes */
-
-/* File upload zone */
-.v10-file-upload {
-  border: 2px dashed #cbd5e0;
-  border-radius: 15px;
-  padding: 50px;
+.techpack-progress__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v10-space-sm);
+  flex: 1;
   text-align: center;
-  background: #f7fafc;
-  cursor: pointer;
+}
+
+.techpack-progress__step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--v10-bg-secondary);
+  color: var(--v10-text-secondary);
+  border: 2px solid var(--v10-border-light);
   transition: all 0.3s ease;
 }
 
-.v10-file-upload:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
+.techpack-progress__step-circle--active {
+  background: var(--v10-accent-primary);
+  color: white;
+  border-color: var(--v10-accent-primary);
 }
 
-.v10-file-upload.dragover {
-  background: #e2e8f0;
-  border-color: #718096;
-  transform: scale(1.02);
+.techpack-progress__step-circle--completed {
+  background: var(--v10-accent-highlight);
+  color: white;
+  border-color: var(--v10-accent-highlight);
 }
 
-.v10-file-icon {
-  font-size: 3em;
-  color: #374151;
-  margin-bottom: 15px;
-}
-
-.v10-file-upload-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 0 0 8px 0;
-}
-
-.v10-file-upload-subtitle {
-  color: #6b7280;
-  margin: 0 0 16px 0;
-  font-weight: 400;
-}
-
-.v10-file-upload-info {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin: 0;
+.techpack-progress__step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--v10-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* File list */
-.v10-file-list {
-  margin-top: 20px;
+.techpack-progress__step--active .techpack-progress__step-label {
+  color: var(--v10-accent-primary);
+  font-weight: 600;
 }
 
-.v10-file-item {
+.techpack-progress__step--completed .techpack-progress__step-label {
+  color: var(--v10-accent-highlight);
+  font-weight: 600;
+}
+
+/* Container System */
+.techpack-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--v10-space-2xl);
+}
+
+.techpack-content {
+  background: var(--v10-bg-primary);
+  border-radius: var(--v10-radius-xl);
+  padding: var(--v10-space-2xl);
+  box-shadow: var(--v10-shadow-lg);
+}
+
+/* Headers */
+.techpack-header-with-help {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 15px 20px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  border: 1px solid #e2e8f0;
+  align-items: flex-start;
+  margin-bottom: var(--v10-space-2xl);
 }
 
-.v10-remove-file {
-  background: #374151;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
+.techpack-header-content {
+  flex: 1;
 }
 
-.v10-remove-file:hover {
-  background: #1f2937;
-  transform: scale(1.1);
+.techpack-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--v10-text-primary);
+  margin: 0 0 var(--v10-space-sm) 0;
 }
 
-/* Garments section */
-.v10-garments-section {
-  background: #f7fafc;
-  padding: 30px;
-  border-radius: 15px;
-  margin: 25px 0;
-  border: 1px solid #e2e8f0;
+.techpack-subtitle {
+  font-size: 0.8rem;
+  color: var(--v10-text-secondary);
+  margin: 0;
+  line-height: 1.5;
 }
 
-.v10-garment-item {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.v10-garment-header {
+/* Help Buttons */
+.techpack-help-btn {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.v10-garment-title {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #2d3748;
-}
-
-.v10-remove-garment {
-  background: #374151;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.v10-remove-garment:hover {
-  background: #1f2937;
-  transform: scale(1.1);
-}
-
-/* Button groups - using existing V10 classes */
-
-/* Date input wrapper */
-.v10-date-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.v10-date-input {
-  width: 100%;
-  padding-right: 60px;
-  box-sizing: border-box;
-}
-
-.v10-date-hint {
-  position: absolute;
-  top: 50%;
-  right: 35px;
-  transform: translateY(-50%);
+  gap: var(--v10-space-sm);
+  padding: var(--v10-space-sm) var(--v10-space-lg);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
   font-size: 12px;
-  color: #6c757d;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.v10-date-input:focus + .v10-date-hint {
-  color: #adb5bd;
-}
-
-/* Searchable select */
-.v10-searchable-select {
-  position: relative;
-}
-
-.v10-searchable-select input {
-  padding-right: 40px !important;
-}
-
-.v10-dropdown-arrow {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: #6b7280;
-  font-size: 12px;
-}
-
-.v10-dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-  display: none;
-}
-
-.v10-dropdown-item {
-  padding: 12px 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: 14px;
-}
-
-.v10-dropdown-item:hover {
-  background-color: #f7fafc;
-}
-
-.v10-dropdown-item.highlighted {
-  background-color: #edf2f7;
-}
-
-/* Success message */
-.v10-success-message {
-  text-align: center;
-  padding: 50px;
-}
-
-.v10-success-icon {
-  font-size: 4em;
-  color: #374151;
-  margin-bottom: 25px;
-}
-
-.v10-success-title {
-  font-size: 1.5em;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 20px;
-}
-
-.v10-success-text {
-  color: #6b7280;
-  margin-bottom: 10px;
-}
-
-/* Color and size inputs */
-.v10-color-quantity-section {
-  margin-top: 20px;
-}
-
-.v10-color-item {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 15px;
-  align-items: center;
-  background: #f7fafc;
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-}
-
-.v10-color-picker {
-  width: 50px;
-  height: 40px;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.v10-size-input {
-  width: 70px !important;
-  padding: 8px !important;
-  text-align: center;
-  font-size: 14px !important;
-}
-
-/* Printing options */
-.v10-printing-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.v10-printing-options label {
-  background: #edf2f7;
-  border: 2px solid #cbd5e0;
-  border-radius: 8px;
-  padding: 10px 15px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.v10-printing-options input[type="checkbox"] {
-  display: none;
-}
-
-.v10-printing-options input[type="checkbox"]:checked + span,
-.v10-printing-options label:has(input:checked) {
-  background: #374151;
-  color: white;
-  border-color: #374151;
-}
-
-/* Summary cards */
-.v10-summary-card {
-  background: white;
-  border-radius: 12px;
-  padding: 25px;
-  margin-bottom: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.v10-summary-title {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 15px;
-  font-size: 1.1em;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .v10-techpack-upload-container {
-    margin: 10px;
-    border-radius: 15px;
-  }
-  
-/* Mobile form - using existing V10 responsive classes */
-  
-  .v10-color-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  
-  .v10-size-input {
-    width: 100% !important;
-  }
-  
-/* Status indicators for garments */
-.status-indicator {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.status-indicator--incomplete {
+.techpack-help-btn:hover {
+  background: var(--v10-bg-tertiary);
+  border-color: var(--v10-border-medium);
+  color: var(--v10-text-primary);
+}
+
+.techpack-help-btn--warning {
   background: #fef3c7;
+  border-color: #fbbf24;
   color: #92400e;
-  border: 1px solid #fbbf24;
 }
 
-.status-indicator--complete {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #10b981;
+.techpack-help-btn--warning:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
 }
 
-/* Selection placeholders and displays */
-.selection-placeholder {
+/* Form Actions */
+.techpack-form__actions {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: #f8f9fa;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.selection-placeholder:hover {
-  background: #edf2f7;
-  border-color: #cbd5e0;
-}
-
-.selection-display {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.selected-item {
-  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #f0f9ff;
-  border: 2px solid #38bdf8;
-  border-radius: 8px;
+  margin-top: var(--v10-space-2xl);
+  gap: var(--v10-space-lg);
 }
 
-.change-selection-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: transparent;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  color: #6b7280;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.change-selection-btn:hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
-  color: #374151;
-}
-
-/* Mobile responsiveness */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .selection-placeholder,
-  .selected-item {
-    padding: 10px 12px;
+  .techpack-container {
+    padding: var(--v10-space-lg);
   }
   
-  .change-selection-btn {
-    font-size: 11px;
-    padding: 4px 8px;
+  .techpack-content {
+    padding: var(--v10-space-lg);
+  }
+  
+  .techpack-header-with-help {
+    flex-direction: column;
+    gap: var(--v10-space-lg);
+    align-items: stretch;
+  }
+  
+  .techpack-progress__steps {
+    gap: var(--v10-space-sm);
+  }
+  
+  .techpack-progress__step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .techpack-progress__step-label {
+    font-size: 10px;
+  }
+  
+  .techpack-form__actions {
+    flex-direction: column;
+    gap: var(--v10-space-md);
+  }
+  
+  .techpack-form__actions .techpack-btn {
+    width: 100%;
   }
 }
 
-/* Mobile - using existing V10 btn-group */
-  
-  .v10-garment-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-}
