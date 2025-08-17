@@ -6,14 +6,14 @@
    ============================================== */
 
 :root {
-  /* V10 Studio Color System - Pure Neutral Grey Interface */
-  --v10-bg-primary: #1a1a1a;      /* Pure dark grey main background */
-  --v10-bg-secondary: #2a2a2a;    /* Pure medium grey for cards */
-  --v10-bg-tertiary: #3a3a3a;     /* Pure lighter grey for hover */
-  --v10-bg-quaternary: #4a4a4a;   /* Pure lightest grey for active */
+  /* V10 Studio Color System - Balanced Professional Interface */
+  --v10-bg-primary: #2a2a2a;      /* Moderate dark background */
+  --v10-bg-secondary: #ffffff;    /* White for content cards */
+  --v10-bg-tertiary: #f8f9fa;     /* Light grey for hover */
+  --v10-bg-quaternary: #e9ecef;   /* Lighter grey for active */
   --v10-bg-light: #f8f9fa;        /* Light grey for inputs */
   --v10-bg-white: #ffffff;        /* White for form fields */
-  --v10-bg-dark: #0f0f0f;         /* Pure darkest accent */
+  --v10-bg-dark: #1a1a1a;         /* Dark accent for buttons */
   --v10-bg-darker: #151515;
   
   
@@ -22,10 +22,11 @@
   --v10-border-dark: #b0b0b0;
   
   --v10-text-primary: #ffffff;    /* White text on dark bg */
-  --v10-text-secondary: #d1d5db;  /* Light grey text */
+  --v10-text-secondary: #d1d5db;  /* Light grey text on dark */
   --v10-text-muted: #9ca3af;      /* Muted grey text */
-  --v10-text-light: #ffffff;
-  --v10-text-dark: #1a1a1a;       /* Pure dark text for light bg */
+  --v10-text-light: #ffffff;      /* White text */
+  --v10-text-dark: #212529;       /* Dark text for light backgrounds */
+  --v10-text-medium: #495057;     /* Medium grey text for light bg */
   
   --v10-accent-primary: #2a2a2a;
   --v10-accent-secondary: #3a3a3a;
@@ -806,25 +807,25 @@
 }
 
 .v10-btn--primary {
-  background: var(--v10-accent-primary);
-  color: white;
-  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-dark);
+  color: var(--v10-text-light);
+  border-color: var(--v10-bg-dark);
 }
 
 .v10-btn--primary:hover:not(:disabled) {
-  background: #374151;
-  border-color: #374151;
+  background: var(--v10-bg-darker);
+  border-color: var(--v10-bg-darker);
   box-shadow: none;
 }
 
 .v10-btn--ghost {
-  background: transparent;
-  color: var(--v10-text-primary);
+  background: var(--v10-bg-white);
+  color: var(--v10-text-dark);
   border-color: var(--v10-border-medium);
 }
 
 .v10-btn--ghost:hover:not(:disabled) {
-  background: var(--v10-bg-secondary);
+  background: var(--v10-bg-tertiary);
   border-color: var(--v10-border-dark);
 }
 
@@ -1086,7 +1087,7 @@
   align-items: center;
   gap: var(--v10-space-md);
   padding: var(--v10-space-lg) var(--v10-space-xl);
-  background: var(--v10-bg-light);
+  background: var(--v10-bg-tertiary);
   color: var(--v10-text-dark);
   border: none;
   border-radius: 0;
@@ -1106,7 +1107,7 @@
 .studio-tab--active {
   background: var(--v10-bg-secondary);
   box-shadow: none;
-  color: var(--v10-text-primary);
+  color: var(--v10-text-dark);
 }
 
 .studio-tab__icon {
@@ -1115,9 +1116,9 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: var(--v10-bg-tertiary);
+  background: var(--v10-bg-quaternary);
   border-radius: 0;
-  color: var(--v10-text-secondary);
+  color: var(--v10-text-medium);
   transition: var(--v10-transition);
 }
 
@@ -1300,14 +1301,13 @@
 
 .garment-card {
   background: var(--v10-bg-secondary);
-  border: none;
+  border: 1px solid var(--v10-border-light);
   border-radius: 0;
   overflow: visible;
   transition: all 0.3s ease;
   box-shadow: none;
-  margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: var(--v10-space-xl);
+  margin-bottom: var(--v10-space-lg);
+  padding: var(--v10-space-xl);
 }
 
 .garment-card:hover {
@@ -1319,10 +1319,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--v10-space-lg) 0;
+  padding: 0 0 var(--v10-space-lg) 0;
   background: transparent;
-  border-bottom: none;
-  color: var(--v10-text-primary);
+  border-bottom: 1px solid var(--v10-border-light);
+  color: var(--v10-text-dark);
+  margin-bottom: var(--v10-space-lg);
 }
 
 .garment-card__title {
@@ -1334,8 +1335,8 @@
 .garment-card__number {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--v10-text-primary);
-  background: var(--v10-bg-primary);
+  color: var(--v10-text-dark);
+  background: var(--v10-bg-tertiary);
   padding: var(--v10-space-xs) var(--v10-space-sm);
   border-radius: 0;
   border: none;
@@ -1608,10 +1609,10 @@
   gap: var(--v10-space-xs);
   width: 100%;
   padding: var(--v10-space-sm) var(--v10-space-md);
-  background: transparent;
-  border: 1px solid var(--v10-accent-secondary);
+  background: var(--v10-bg-white);
+  border: 1px solid var(--v10-border-medium);
   border-radius: 0;
-  color: var(--v10-accent-primary);
+  color: var(--v10-text-dark);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -1619,10 +1620,10 @@
 }
 
 .change-selection-btn:hover {
-  background: linear-gradient(135deg, var(--v10-accent-primary), var(--v10-accent-secondary));
-  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-dark);
+  border-color: var(--v10-bg-dark);
   color: var(--v10-text-light);
-  box-shadow: 0 2px 6px rgba(44, 44, 44, 0.2);
+  box-shadow: none;
 }
 
 .change-selection-btn svg {
@@ -1772,8 +1773,8 @@
 .sample-type-card__content {
   display: block;
   padding: var(--v10-space-xl);
-  background: var(--v10-bg-secondary);
-  border: none;
+  background: var(--v10-bg-white);
+  border: 1px solid var(--v10-border-light);
   border-radius: 0;
   transition: var(--v10-transition);
   box-shadow: none;
@@ -1781,13 +1782,13 @@
 
 .sample-type-card:hover .sample-type-card__content {
   border-color: var(--v10-border-medium);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   box-shadow: none;
 }
 
 .sample-type-card input[type="radio"]:checked + .sample-type-card__content {
   border-color: var(--v10-bg-dark);
-  background: var(--v10-bg-primary);
+  background: var(--v10-bg-tertiary);
   box-shadow: none;
 }
 
@@ -1801,26 +1802,26 @@
 .sample-type-card__title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--v10-text-primary);
+  color: var(--v10-text-dark);
 }
 
 .sample-type-card__price {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--v10-accent-primary);
+  color: var(--v10-text-dark);
 }
 
 .sample-type-card__description {
   display: block;
   font-size: 0.875rem;
-  color: var(--v10-text-secondary);
+  color: var(--v10-text-medium);
   margin-bottom: var(--v10-space-xs);
 }
 
 .sample-type-card__details {
   display: block;
   font-size: 0.8125rem;
-  color: var(--v10-text-muted);
+  color: var(--v10-text-medium);
 }
 
 /* ==============================================
@@ -3024,17 +3025,13 @@
    FUTURISTIC PROGRESS BAR SYSTEM
    ============================================== */
 
-/* Clean Rectangular Progress Container */
-.techpack-progress {
+/* Simple Progress Container */
+.simple-progress-container {
   margin-bottom: 2rem;
   padding: 1.5rem 2rem;
   background: #ffffff;
-  border-radius: 0;
   border: 1px solid #e5e7eb;
-  box-shadow: none;
-  backdrop-filter: none;
   position: relative;
-  min-height: 80px;
 }
 
 /* Progress Header with Statistics */
@@ -3703,6 +3700,23 @@
 
 .v10-btn-hero:active {
   transform: translateY(0);
+}
+
+/* Fix for buttons getting stuck in hover state - Reset transforms on click */
+.v10-btn--primary:active,
+.techpack-btn--primary:active,
+.add-garment-btn:active,
+.add-to-garment-btn:active,
+.add-fabric-design-btn:active,
+.studio-help-btn:active,
+.techpack-help-btn:active,
+.selection-help:active,
+.v10-glass-card:active,
+.garment-quantity-form:active,
+.compact-selection-widget:active,
+.compact-radio-card:active,
+.v10-requirement-card:active {
+  transform: translateY(0) !important;
 }
 
 .v10-btn-hero-content {
@@ -4584,10 +4598,10 @@
    BLACK ACCENT ENHANCEMENTS
    ============================================== */
 
-/* Studio tabs with enhanced dark grey styling */
+/* Studio tabs with balanced styling */
 .studio-tab--active {
   background: var(--v10-bg-secondary) !important;
-  color: var(--v10-text-primary) !important;
+  color: var(--v10-text-dark) !important;
   border: none !important;
   box-shadow: none !important;
 }
@@ -4600,13 +4614,13 @@
 
 .studio-tab--active .studio-tab__title,
 .studio-tab--active .studio-tab__subtitle {
-  color: var(--v10-text-primary) !important;
+  color: var(--v10-text-dark) !important;
 }
 
 /* Fix for the specific styling bug - override all conflicting styles */
 .studio-tab.studio-tab--active {
   background: var(--v10-bg-secondary) !important;
-  color: var(--v10-text-primary) !important;
+  color: var(--v10-text-dark) !important;
 }
 
 .studio-tab.studio-tab--active .studio-tab__icon {
@@ -4615,15 +4629,15 @@
 }
 
 .studio-tab.studio-tab--active .studio-tab__title {
-  color: var(--v10-text-primary) !important;
+  color: var(--v10-text-dark) !important;
 }
 
 .studio-tab.studio-tab--active .studio-tab__subtitle {
-  color: var(--v10-text-primary) !important;
+  color: var(--v10-text-dark) !important;
 }
 
 .studio-tab:hover:not(.studio-tab--active) {
-  background: var(--v10-bg-tertiary);
+  background: var(--v10-bg-white);
   box-shadow: none;
 }
 
