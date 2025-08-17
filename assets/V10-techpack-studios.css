@@ -503,67 +503,46 @@
   margin-bottom: var(--v10-space-12);
 }
 
-/* 4-Badge Grid Layout - Desktop */
 .v10-requirements-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--v10-space-6);
-  max-width: 1200px;
-  margin: 0 auto var(--v10-space-12) auto;
+  margin-bottom: var(--v10-space-12);
 }
 
-/* Premium Requirement Cards with Lighter Interior */
 .v10-requirement-card {
-  background: linear-gradient(135deg, var(--v10-surface-card) 0%, rgba(60, 60, 60, 0.8) 100%);
+  background: var(--v10-bg-card);
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-xl);
+  border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
   gap: var(--v10-space-4);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  backdrop-filter: blur(10px);
-  overflow: hidden;
-}
-
-.v10-requirement-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(163, 163, 163, 0.08) 0%, rgba(212, 212, 212, 0.04) 100%);
-  pointer-events: none;
+  transition: var(--v10-transition);
+  backdrop-filter: var(--v10-backdrop-blur);
 }
 
 .v10-requirement-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--v10-accent-primary);
-  box-shadow: 0 8px 32px rgba(163, 163, 163, 0.15);
+  border-color: var(--v10-border-focus);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
 }
 
 .v10-requirement-icon {
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, var(--v10-accent-primary) 0%, var(--v10-accent-secondary) 100%);
-  border-radius: var(--v10-radius-full);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--v10-radius-md);
+  background: rgba(163, 163, 163, 0.1);
+  border: 1px solid rgba(163, 163, 163, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--v10-text-primary);
-  box-shadow: 0 4px 14px rgba(163, 163, 163, 0.2);
-  position: relative;
-  z-index: 2;
+  color: var(--v10-accent-primary);
   flex-shrink: 0;
 }
 
 .v10-requirement-content {
-  position: relative;
-  z-index: 2;
+  flex: 1;
 }
 
 .v10-requirement-title {
@@ -574,54 +553,47 @@
 }
 
 .v10-requirement-description {
-  font-size: var(--v10-text-sm);
+  font-size: var(--v10-text-base);
   color: var(--v10-text-secondary);
   margin-bottom: var(--v10-space-3);
   line-height: 1.5;
 }
 
 .v10-requirement-formats {
-  font-size: var(--v10-text-xs);
-  color: var(--v10-accent-primary);
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-muted);
   font-weight: 500;
-  margin-bottom: var(--v10-space-4);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .v10-requirement-status {
-  position: relative;
-  z-index: 2;
+  flex-shrink: 0;
 }
 
-/* Status Badges with Lighter Interior */
 .v10-status-badge {
-  display: inline-block;
   padding: var(--v10-space-1) var(--v10-space-3);
-  border-radius: var(--v10-radius-full);
+  border-radius: var(--v10-radius-sm);
   font-size: var(--v10-text-xs);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid;
+  letter-spacing: 0.05em;
 }
 
 .v10-status-badge--required {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.06) 100%);
+  background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .v10-status-badge--optional {
-  background: linear-gradient(135deg, rgba(163, 163, 163, 0.15) 0%, rgba(163, 163, 163, 0.08) 100%);
+  background: rgba(163, 163, 163, 0.1);
   color: var(--v10-accent-primary);
-  border-color: rgba(163, 163, 163, 0.3);
+  border: 1px solid rgba(163, 163, 163, 0.2);
 }
 
 .v10-status-badge--assisted {
-  background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(107, 114, 128, 0.08) 100%);
+  background: rgba(107, 114, 128, 0.1);
   color: var(--v10-accent-success);
-  border-color: rgba(107, 114, 128, 0.3);
+  border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 .v10-status-badge {
@@ -676,55 +648,19 @@
   margin-bottom: var(--v10-space-8);
 }
 
-/* Mobile Responsive - Vertical Layout */
 @media (max-width: 768px) {
+  .v10-landing-title {
+    font-size: var(--v10-text-3xl);
+  }
+  
   .v10-requirements-grid {
     grid-template-columns: 1fr;
     gap: var(--v10-space-4);
-    padding: 0 var(--v10-space-4);
-  }
-  
-  .v10-landing-title {
-    font-size: 2.5rem;
-  }
-  
-  .v10-landing-subtitle {
-    font-size: var(--v10-text-lg);
-  }
-  
-  .v10-btn-hero {
-    font-size: var(--v10-text-base);
-    padding: var(--v10-space-3) var(--v10-space-6);
-  }
-  
-  .v10-btn-template {
-    font-size: var(--v10-text-sm);
-    padding: var(--v10-space-2) var(--v10-space-5);
   }
   
   .v10-requirement-card {
-    padding: var(--v10-space-5);
+    padding: var(--v10-space-4);
   }
-  
-  .v10-landing-hero {
-    padding: var(--v10-space-8) 0 var(--v10-space-6) 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .v10-landing-title {
-    font-size: 2rem;
-  }
-  
-  .v10-section-title {
-    font-size: var(--v10-text-xl);
-  }
-  
-  .v10-requirement-icon {
-    width: 56px;
-    height: 56px;
-  }
-}
 }
 
 /* ==============================================
@@ -1082,7 +1018,8 @@
   max-height: calc(90vh - 120px);
 }
 
-.v10-modal-actions {
+.v10-modal-actions,
+.techpack-modal__actions {
   display: flex;
   gap: var(--v10-space-3);
   justify-content: flex-end;
@@ -3979,6 +3916,374 @@
 /* ==============================================
    PRINT STYLES
    ============================================== */
+
+/* ==============================================
+   LANDING PAGE PREMIUM STYLING - ISOLATED
+   ============================================== */
+
+/* Landing-specific styling to avoid affecting other pages */
+#techpack-v10-landing {
+  /* Premium gradient title styling */
+  .v10-landing-title-premium {
+    background: linear-gradient(135deg, 
+      #ffffff 0%, 
+      #e5e5e5 25%, 
+      #d4d4d4 50%, 
+      #a3a3a3 75%, 
+      #888888 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: premium-gradient-shift 4s ease-in-out infinite;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: var(--v10-space-6);
+  }
+
+  /* Premium gradient animation */
+  @keyframes premium-gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Premium subtitle styling */
+  .v10-landing-subtitle-premium {
+    color: var(--v10-text-secondary);
+    font-size: var(--v10-text-xl);
+    text-align: center;
+    margin-bottom: var(--v10-space-12);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Premium requirements grid - 4 columns on desktop */
+  .v10-requirements-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--v10-space-6);
+    margin-bottom: var(--v10-space-12);
+  }
+
+  /* Premium requirement cards with lighter interiors */
+  .v10-requirement-card-premium {
+    background: linear-gradient(135deg, 
+      var(--v10-bg-card) 0%, 
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    border: 1px solid var(--v10-border-primary);
+    border-radius: var(--v10-radius-lg);
+    padding: var(--v10-space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--v10-space-4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: var(--v10-backdrop-blur);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .v10-requirement-card-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1) 0%, 
+      rgba(255, 255, 255, 0.05) 50%, 
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .v10-requirement-card-premium:hover::before {
+    opacity: 1;
+  }
+
+  .v10-requirement-card-premium:hover {
+    transform: translateY(-2px);
+    border-color: var(--v10-border-focus);
+    box-shadow: var(--v10-shadow-lg);
+  }
+
+  /* Premium requirement icon styling */
+  .v10-requirement-icon-premium {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, 
+      var(--v10-accent-primary) 0%, 
+      var(--v10-accent-secondary) 100%
+    );
+    border-radius: var(--v10-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--v10-bg-primary);
+    margin-bottom: var(--v10-space-3);
+  }
+
+  .v10-requirement-icon-premium svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Premium requirement content */
+  .v10-requirement-content-premium {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--v10-space-2);
+  }
+
+  .v10-requirement-title-premium {
+    font-size: var(--v10-text-lg);
+    font-weight: 600;
+    color: var(--v10-text-primary);
+    margin: 0;
+  }
+
+  .v10-requirement-description-premium {
+    font-size: var(--v10-text-sm);
+    color: var(--v10-text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .v10-requirement-formats-premium {
+    font-size: var(--v10-text-xs);
+    color: var(--v10-accent-primary);
+    font-weight: 500;
+    margin-top: var(--v10-space-2);
+  }
+
+  /* Premium status badges with lighter interiors */
+  .v10-status-badge-premium {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--v10-space-1) var(--v10-space-3);
+    border-radius: var(--v10-radius-md);
+    font-size: var(--v10-text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: var(--v10-space-3);
+  }
+
+  .v10-status-badge-premium--required {
+    background: linear-gradient(135deg, 
+      rgba(239, 68, 68, 0.2) 0%, 
+      rgba(239, 68, 68, 0.1) 100%
+    );
+    color: var(--v10-accent-error);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .v10-status-badge-premium--optional {
+    background: linear-gradient(135deg, 
+      rgba(245, 158, 11, 0.2) 0%, 
+      rgba(245, 158, 11, 0.1) 100%
+    );
+    color: var(--v10-accent-warning);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .v10-status-badge-premium--assisted {
+    background: linear-gradient(135deg, 
+      rgba(107, 114, 128, 0.2) 0%, 
+      rgba(107, 114, 128, 0.1) 100%
+    );
+    color: var(--v10-accent-success);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+  }
+
+  /* Premium CTA section styling */
+  .v10-landing-cta-premium {
+    text-align: center;
+    margin-top: var(--v10-space-16);
+  }
+
+  .v10-cta-title-premium {
+    font-size: var(--v10-text-2xl);
+    font-weight: 600;
+    color: var(--v10-text-primary);
+    margin-bottom: var(--v10-space-8);
+  }
+
+  /* Premium button container */
+  .v10-landing-buttons-premium {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--v10-space-4);
+    margin-bottom: var(--v10-space-8);
+  }
+
+  /* New "Get our techpack templates" button */
+  .v10-btn-templates-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--v10-space-3);
+    padding: var(--v10-space-4) var(--v10-space-8);
+    background: linear-gradient(135deg, 
+      rgba(163, 163, 163, 0.1) 0%, 
+      rgba(163, 163, 163, 0.05) 100%
+    );
+    border: 1px solid var(--v10-border-primary);
+    border-radius: var(--v10-radius-lg);
+    color: var(--v10-text-secondary);
+    font-size: var(--v10-text-base);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: var(--v10-backdrop-blur);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .v10-btn-templates-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.1) 50%, 
+      transparent 100%
+    );
+    transition: left 0.6s ease;
+  }
+
+  .v10-btn-templates-premium:hover::before {
+    left: 100%;
+  }
+
+  .v10-btn-templates-premium:hover {
+    border-color: var(--v10-border-focus);
+    color: var(--v10-text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--v10-shadow-md);
+  }
+
+  .v10-btn-templates-premium svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Premium "ACCESS STUDIO" hero button */
+  .v10-btn-hero-premium {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--v10-space-3);
+    padding: var(--v10-space-6) var(--v10-space-12);
+    background: linear-gradient(135deg, 
+      var(--v10-accent-primary) 0%, 
+      var(--v10-accent-secondary) 100%
+    );
+    border: none;
+    border-radius: var(--v10-radius-lg);
+    color: var(--v10-bg-primary);
+    font-size: var(--v10-text-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--v10-shadow-lg);
+  }
+
+  .v10-btn-hero-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.2) 0%, 
+      rgba(255, 255, 255, 0.1) 50%, 
+      rgba(255, 255, 255, 0.2) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .v10-btn-hero-premium:hover::before {
+    opacity: 1;
+  }
+
+  .v10-btn-hero-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--v10-shadow-xl);
+  }
+
+  .v10-btn-hero-premium:active {
+    transform: translateY(0);
+  }
+
+  .v10-btn-hero-premium svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Mobile responsive design */
+  @media (max-width: 768px) {
+    .v10-requirements-grid-premium {
+      grid-template-columns: 1fr;
+      gap: var(--v10-space-4);
+    }
+
+    .v10-landing-title-premium {
+      font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .v10-landing-subtitle-premium {
+      font-size: var(--v10-text-lg);
+      padding: 0 var(--v10-space-4);
+    }
+
+    .v10-requirement-card-premium {
+      padding: var(--v10-space-5);
+    }
+
+    .v10-btn-hero-premium {
+      padding: var(--v10-space-5) var(--v10-space-10);
+      font-size: var(--v10-text-base);
+    }
+
+    .v10-btn-templates-premium {
+      padding: var(--v10-space-3) var(--v10-space-6);
+      font-size: var(--v10-text-sm);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .v10-landing-buttons-premium {
+      width: 100%;
+      padding: 0 var(--v10-space-4);
+    }
+
+    .v10-btn-hero-premium,
+    .v10-btn-templates-premium {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
 
 @media print {
   .v10-modal-overlay,
