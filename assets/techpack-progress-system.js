@@ -27,10 +27,16 @@ class TechPackProgressSystem {
   }
 
   detectCurrentStep() {
-    // Detect current step from the visible progress bar
-    const progressBar = document.querySelector('.techpack-progress[data-step]');
-    if (progressBar) {
-      this.currentStep = parseInt(progressBar.dataset.step) || 1;
+    // Detect current step from the VISIBLE step section, not just any progress bar
+    const visibleStep = document.querySelector('.v10-techpack-step:not([style*="display: none"]) .techpack-progress[data-step]');
+    if (visibleStep) {
+      this.currentStep = parseInt(visibleStep.dataset.step) || 1;
+    } else {
+      // Fallback: check if we're in the client form section
+      const clientSection = document.querySelector('#techpack-v10-step-1:not([style*="display: none"])');
+      if (clientSection) {
+        this.currentStep = 1;
+      }
     }
   }
 
@@ -119,24 +125,33 @@ class TechPackProgressSystem {
     const avgTimePerStep = this.calculateAverageStepTime();
     const estimatedTimeRemaining = remainingSteps * avgTimePerStep;
 
-    // Update progress percentage
-    document.querySelectorAll('.techpack-progress__percentage').forEach(el => {
-      this.animateNumber(el, progress);
-    });
+    // Only update visible progress bars
+    const visibleProgressBars = document.querySelectorAll('.v10-techpack-step:not([style*="display: none"]) .techpack-progress');
+    
+    visibleProgressBars.forEach(progressBar => {
+      // Update progress percentage
+      const percentageEl = progressBar.querySelector('.techpack-progress__percentage');
+      if (percentageEl) {
+        this.animateNumber(percentageEl, progress);
+      }
 
-    // Update progress bar fill
-    document.querySelectorAll('.techpack-progress__fill').forEach(el => {
-      el.style.width = `${progress}%`;
-    });
+      // Update progress bar fill
+      const fillEl = progressBar.querySelector('.techpack-progress__fill');
+      if (fillEl) {
+        fillEl.style.width = `${progress}%`;
+      }
 
-    // Update ETA
-    document.querySelectorAll('.techpack-progress__eta').forEach(el => {
-      el.textContent = this.formatETA(estimatedTimeRemaining);
-    });
+      // Update ETA
+      const etaEl = progressBar.querySelector('.techpack-progress__eta');
+      if (etaEl) {
+        etaEl.textContent = this.formatETA(estimatedTimeRemaining);
+      }
 
-    // Update timeline
-    document.querySelectorAll('.techpack-progress__timeline span').forEach(el => {
-      el.textContent = this.formatElapsedTime();
+      // Update timeline
+      const timelineEl = progressBar.querySelector('.techpack-progress__timeline span');
+      if (timelineEl) {
+        timelineEl.textContent = this.formatElapsedTime();
+      }
     });
 
     // Update step states
@@ -144,31 +159,38 @@ class TechPackProgressSystem {
   }
 
   updateStepStates() {
-    document.querySelectorAll('.techpack-progress__step').forEach((step, index) => {
-      const stepNumber = index + 1;
-      const circle = step.querySelector('.techpack-progress__step-circle');
-      const label = step.querySelector('.techpack-progress__step-label');
+    // Only update progress bars in visible step sections
+    const visibleProgressBars = document.querySelectorAll('.v10-techpack-step:not([style*="display: none"]) .techpack-progress');
+    
+    visibleProgressBars.forEach(progressBar => {
+      const steps = progressBar.querySelectorAll('.techpack-progress__step');
       
-      // Reset classes but preserve original content
-      step.className = 'techpack-progress__step';
-      circle.className = 'techpack-progress__step-circle';
-      
-      if (stepNumber < this.currentStep) {
-        // Completed step
-        step.classList.add('techpack-progress__step--completed');
-        circle.classList.add('techpack-progress__step-circle--completed');
-        if (circle.innerHTML !== '✓') {
-          circle.innerHTML = '✓';
+      steps.forEach((step, index) => {
+        const stepNumber = index + 1; // Always 1, 2, 3, 4
+        const circle = step.querySelector('.techpack-progress__step-circle');
+        const label = step.querySelector('.techpack-progress__step-label');
+        
+        // Reset classes but preserve original content
+        step.className = 'techpack-progress__step';
+        circle.className = 'techpack-progress__step-circle';
+        
+        if (stepNumber < this.currentStep) {
+          // Completed step
+          step.classList.add('techpack-progress__step--completed');
+          circle.classList.add('techpack-progress__step-circle--completed');
+          if (circle.innerHTML !== '✓') {
+            circle.innerHTML = '✓';
+          }
+        } else if (stepNumber === this.currentStep) {
+          // Active step
+          step.classList.add('techpack-progress__step--active');
+          circle.classList.add('techpack-progress__step-circle--active');
+          circle.innerHTML = stepNumber.toString();
+        } else {
+          // Pending step - keep original number (1, 2, 3, 4)
+          circle.innerHTML = stepNumber.toString();
         }
-      } else if (stepNumber === this.currentStep) {
-        // Active step
-        step.classList.add('techpack-progress__step--active');
-        circle.classList.add('techpack-progress__step-circle--active');
-        circle.innerHTML = stepNumber.toString();
-      } else {
-        // Pending step - keep original number
-        circle.innerHTML = stepNumber.toString();
-      }
+      });
     });
   }
 
@@ -290,9 +312,14 @@ class TechPackProgressSystem {
   }
 
   updateTimeline() {
-    // Update timeline display
-    document.querySelectorAll('.techpack-progress__timeline span').forEach(el => {
-      el.textContent = this.formatElapsedTime();
+    // Update timeline display only for visible progress bars
+    const visibleProgressBars = document.querySelectorAll('.v10-techpack-step:not([style*="display: none"]) .techpack-progress');
+    
+    visibleProgressBars.forEach(progressBar => {
+      const timelineEl = progressBar.querySelector('.techpack-progress__timeline span');
+      if (timelineEl) {
+        timelineEl.textContent = this.formatElapsedTime();
+      }
     });
   }
 
@@ -313,15 +340,26 @@ class TechPackProgressSystem {
       try {
         const data = JSON.parse(saved);
         
-        // Only restore if less than 24 hours old
-        if (new Date().getTime() - data.lastUpdate < 86400000) {
+        // Only restore if less than 24 hours old and we're actually in the workflow
+        const isInWorkflow = document.querySelector('.v10-techpack-step:not([style*="display: none"])');
+        if (new Date().getTime() - data.lastUpdate < 86400000 && isInWorkflow) {
           this.currentStep = data.currentStep || 1;
           this.startTime = new Date(data.startTime);
           this.stepTimes = data.stepTimes || {};
+        } else {
+          // Reset timer if we're starting fresh
+          this.startTime = new Date();
+          this.stepTimes = {};
         }
       } catch (e) {
         console.warn('Could not restore progress:', e);
+        this.startTime = new Date();
+        this.stepTimes = {};
       }
+    } else {
+      // First time, set current time
+      this.startTime = new Date();
+      this.stepTimes = {};
     }
   }
 
@@ -339,6 +377,15 @@ class TechPackProgressSystem {
   // Public API methods
   setStep(step) {
     this.updateStep(step);
+  }
+
+  startWorkflow() {
+    // Reset timer when workflow actually begins (not on page load)
+    this.startTime = new Date();
+    this.stepTimes = {};
+    this.currentStep = 1;
+    this.updateDisplay();
+    this.saveProgress();
   }
 
   getProgress() {
@@ -395,20 +442,37 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = tooltipStyles;
 document.head.appendChild(styleSheet);
 
-// Initialize the progress system when DOM is ready - but only once
+// Initialize the progress system when DOM is ready - but only if progress bars exist
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    if (!window.techpackProgress) {
+    // Only initialize if there are actual progress bars on the page
+    const progressBars = document.querySelectorAll('.techpack-progress');
+    if (progressBars.length > 0 && !window.techpackProgress) {
       window.techpackProgress = new TechPackProgressSystem();
     }
   });
 } else {
-  if (!window.techpackProgress) {
+  // Only initialize if there are actual progress bars on the page
+  const progressBars = document.querySelectorAll('.techpack-progress');
+  if (progressBars.length > 0 && !window.techpackProgress) {
     window.techpackProgress = new TechPackProgressSystem();
   }
 }
 
 // Export for use in other scripts
 window.TechPackProgressSystem = TechPackProgressSystem;
+
+// Global function to manually initialize or restart progress system
+window.initTechPackProgress = function() {
+  if (window.techpackProgress) {
+    window.techpackProgress.startWorkflow();
+  } else {
+    const progressBars = document.querySelectorAll('.techpack-progress');
+    if (progressBars.length > 0) {
+      window.techpackProgress = new TechPackProgressSystem();
+      window.techpackProgress.startWorkflow();
+    }
+  }
+};
 
 } // End of duplicate prevention check
