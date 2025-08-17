@@ -786,6 +786,7 @@ class V10_GarmentStudio {
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', e.target.value, garmentCard);
+        this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
       }
     }
@@ -934,13 +935,12 @@ class V10_GarmentStudio {
   }
 
   showFinalizeEditButton(garmentCard) {
-    const finalizeSection = garmentCard.querySelector('.finalize-edit-section');
-    if (finalizeSection) {
-      finalizeSection.style.display = 'block';
+    const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+    if (finalizeBtn) {
+      finalizeBtn.style.display = 'block';
       
       // Bind click handler if not already bound
-      const finalizeBtn = finalizeSection.querySelector('.finalize-edit-btn');
-      if (finalizeBtn && !finalizeBtn.dataset.bound) {
+      if (!finalizeBtn.dataset.bound) {
         finalizeBtn.dataset.bound = 'true';
         finalizeBtn.addEventListener('click', () => {
           const garmentId = garmentCard.dataset.garmentId;
@@ -959,9 +959,9 @@ class V10_GarmentStudio {
     garmentData.isInEditMode = false;
     
     // Hide finalize edit button
-    const finalizeSection = garmentCard.querySelector('.finalize-edit-section');
-    if (finalizeSection) {
-      finalizeSection.style.display = 'none';
+    const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+    if (finalizeBtn) {
+      finalizeBtn.style.display = 'none';
     }
     
     // Update the garment's completion status and UI
@@ -1420,6 +1420,27 @@ class V10_GarmentStudio {
         placeholderText.textContent = 'Select fabric type';
       }
     }
+  }
+
+  resetFabricSelection(garmentCard) {
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    const fabricDisplay = garmentCard.querySelector('#fabric-display');
+    const fabricSelectedName = garmentCard.querySelector('#fabric-selected-name');
+    
+    // Clear any displayed fabric selection and show placeholder
+    if (fabricSelectedName) {
+      fabricSelectedName.textContent = '';
+    }
+    
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.display = 'flex';
+    }
+    
+    if (fabricDisplay) {
+      fabricDisplay.style.display = 'none';
+    }
+    
+    console.log('🔄 Reset fabric selection to placeholder state');
   }
 
   updateSelectionDependencies(garmentCard) {
