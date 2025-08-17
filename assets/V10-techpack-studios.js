@@ -4121,30 +4121,13 @@ class V10_FileManager {
   }
 
   showMeasurementConfirmationModal() {
-    // First, close any other modals that might be open
-    const helpModal = document.getElementById('step-3-help-modal');
-    if (helpModal) {
-      helpModal.classList.remove('active');
-      helpModal.style.display = 'none';
-    }
-    
-    // Close any other V10 modals
-    document.querySelectorAll('.v10-modal-overlay, .techpack-modal').forEach(m => {
-      m.classList.remove('active');
-      m.style.display = 'none';
-    });
-    
     const modal = document.getElementById('techpack-v10-measurement-modal');
     const title = document.getElementById('v10-measurement-modal-title');
     const message = document.getElementById('v10-measurement-modal-message');
     const details = document.getElementById('v10-measurement-modal-details');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
     
-    console.log('🔍 Debug: Looking for measurement modal:', modal);
-    if (!modal) {
-      console.error('❌ Measurement modal not found!');
-      return;
-    }
+    if (!modal) return;
     
     const clientData = window.v10ClientManager?.getClientData() || {};
     const requestType = clientData.submission_type;
@@ -4206,18 +4189,7 @@ class V10_FileManager {
       proceedBtn.textContent = 'Confirm & Continue';
     }
     
-    console.log('🔍 Debug: About to show measurement modal', modal);
-    console.log('🔍 Debug: Modal content:', { title, message, details, proceedBtn });
-    
-    // Ensure modal is properly displayed
     modal.style.display = 'flex';
-    modal.style.zIndex = '10000';
-    modal.classList.add('active');
-    
-    // Prevent body scroll
-    document.body.style.overflow = 'hidden';
-    
-    console.log('✅ Debug: Measurement modal shown');
   }
 
   setupMeasurementModal() {
@@ -4227,41 +4199,27 @@ class V10_FileManager {
     
     if (!modal) return;
     
-    const closeModal = () => {
-      modal.style.display = 'none';
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-      console.log('🔍 Debug: Measurement modal closed');
-    };
-    
     // Close modal when clicking outside
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
-        closeModal();
+        modal.style.display = 'none';
       }
     });
     
     // Go back to add measurements
     if (backBtn) {
       backBtn.addEventListener('click', () => {
-        closeModal();
+        modal.style.display = 'none';
       });
     }
     
     // Proceed anyway
     if (proceedBtn) {
       proceedBtn.addEventListener('click', () => {
-        closeModal();
+        modal.style.display = 'none';
         this.proceedToStep3();
       });
     }
-    
-    // Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.style.display === 'flex') {
-        closeModal();
-      }
-    });
   }
 
   updateConditionalSections() {
