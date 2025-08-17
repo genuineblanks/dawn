@@ -968,7 +968,7 @@ body[class*="techpack"] *,
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--v10-z-modal-backdrop);
+  z-index: var(--v10-z-modal-backdrop, 1040);
   padding: var(--v10-space-4);
   opacity: 0;
   visibility: hidden;
@@ -3215,6 +3215,17 @@ body[class*="techpack"] *,
   border-color: var(--v10-accent-primary);
 }
 
+.compact-selection-section--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+  background: var(--v10-bg-secondary);
+}
+
+.compact-selection-section--disabled:hover {
+  border-color: var(--v10-border-primary);
+}
+
 .selection-header {
   display: flex;
   justify-content: space-between;
@@ -3414,6 +3425,25 @@ body[class*="techpack"] *,
   margin-bottom: var(--v10-space-4);
 }
 
+.selection-section--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.selection-section--disabled .sample-type-card {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.selection-section--disabled .sample-type-card:hover {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+}
+
 .sample-type-selection {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -3489,6 +3519,19 @@ body[class*="techpack"] *,
   display: block;
   color: var(--v10-text-secondary);
   font-size: var(--v10-text-xs);
+}
+
+.sample-type-card--disabled {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sample-type-card--disabled:hover {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
 }
 
 /* Assigned Items */
@@ -4816,7 +4859,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--v10-z-modal);
+  z-index: var(--v10-z-modal, 1050);
   padding: var(--v10-space-4);
   opacity: 0;
   visibility: hidden;

@@ -564,6 +564,16 @@ class V10_GarmentStudio {
       } catch (statusError) {
         console.error('❌ Error updating garment status:', statusError);
       }
+
+      // Initialize selection dependencies (fabric and sample type disabled initially)
+      try {
+        const addedGarmentCard = document.querySelector(`[data-garment-id="${garmentData.id}"]`);
+        if (addedGarmentCard) {
+          this.updateSelectionDependencies(addedGarmentCard);
+        }
+      } catch (dependencyError) {
+        console.error('❌ Error initializing dependencies:', dependencyError);
+      }
     } catch (error) {
       console.error('❌ Error rendering garment:', error);
     }
@@ -1313,10 +1323,23 @@ class V10_GarmentStudio {
         const section = widget.closest('.compact-selection-section');
         const expanded = section ? section.querySelector('.selection-expanded') : null;
         const placeholder = widget.querySelector('.selection-placeholder');
+        const selectedDisplay = section ? section.querySelector('.selection-display') : null;
         
-        // Hide expanded options and show placeholder
+        // Hide expanded options
         if (expanded) expanded.style.display = 'none';
-        if (placeholder) placeholder.style.display = 'flex';
+        
+        // Check if this widget has a selection before showing placeholder
+        const hasSelection = selectedDisplay && selectedDisplay.querySelector('.selected-name')?.textContent.trim();
+        
+        if (hasSelection) {
+          // Keep selected display visible if there's a selection
+          if (placeholder) placeholder.style.display = 'none';
+          if (selectedDisplay) selectedDisplay.style.display = 'block';
+        } else {
+          // Show placeholder only if no selection exists
+          if (placeholder) placeholder.style.display = 'flex';
+          if (selectedDisplay) selectedDisplay.style.display = 'none';
+        }
       }
     });
   }
@@ -1338,6 +1361,8 @@ class V10_GarmentStudio {
       // Auto-collapse after selection
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+        // Update dependencies after garment type selection
+        this.updateSelectionDependencies(garmentCard);
       }, 300);
       
     } else if (type === 'fabric') {
@@ -1355,6 +1380,8 @@ class V10_GarmentStudio {
       // Auto-collapse after selection
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+        // Update dependencies after fabric type selection
+        this.updateSelectionDependencies(garmentCard);
       }, 300);
       
     } else if (type === 'sampleReference') {
@@ -1393,6 +1420,109 @@ class V10_GarmentStudio {
         placeholderText.textContent = 'Select fabric type';
       }
     }
+  }
+
+  updateSelectionDependencies(garmentCard) {
+    const garmentId = garmentCard.dataset.garmentId;
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentData) return;
+
+    // Get all selection sections
+    const fabricSection = garmentCard.querySelector('.compact-selection-section[data-show-for*="quotation"], .compact-selection-section[data-show-for*="sample"]');
+    const sampleTypeSection = garmentCard.querySelector('.selection-section[data-show-for="sample"]');
+
+    // Check selection states
+    const hasGarmentType = !!garmentData.type;
+    const hasFabricType = !!garmentData.fabricType;
+
+    console.log('🔄 Updating selection dependencies:', {
+      garmentId,
+      hasGarmentType,
+      hasFabricType,
+      garmentType: garmentData.type,
+      fabricType: garmentData.fabricType
+    });
+
+    // Update fabric type dependency (depends on garment type)
+    if (fabricSection) {
+      if (hasGarmentType) {
+        // Enable fabric selection
+        fabricSection.classList.remove('compact-selection-section--disabled');
+        this.enableSelectionSection(fabricSection);
+      } else {
+        // Disable fabric selection
+        fabricSection.classList.add('compact-selection-section--disabled');
+        this.disableSelectionSection(fabricSection, 'Select garment type first');
+      }
+    }
+
+    // Update sample type dependency (depends on fabric type)
+    if (sampleTypeSection) {
+      if (hasGarmentType && hasFabricType) {
+        // Enable sample type selection
+        sampleTypeSection.classList.remove('selection-section--disabled');
+        this.enableSampleTypeSection(sampleTypeSection);
+      } else {
+        // Disable sample type selection
+        sampleTypeSection.classList.add('selection-section--disabled');
+        this.disableSampleTypeSection(sampleTypeSection, hasFabricType ? 'Select garment type first' : 'Select fabric type first');
+      }
+    }
+  }
+
+  enableSelectionSection(section) {
+    const widget = section.querySelector('.compact-selection-widget');
+    const placeholder = section.querySelector('.placeholder-text');
+    
+    if (widget) {
+      widget.style.opacity = '1';
+      widget.style.pointerEvents = 'auto';
+      widget.style.cursor = 'pointer';
+    }
+    
+    if (placeholder && placeholder.dataset.originalText) {
+      placeholder.textContent = placeholder.dataset.originalText;
+    }
+  }
+
+  disableSelectionSection(section, disabledText) {
+    const widget = section.querySelector('.compact-selection-widget');
+    const placeholder = section.querySelector('.placeholder-text');
+    
+    if (widget) {
+      widget.style.opacity = '0.5';
+      widget.style.pointerEvents = 'none';
+      widget.style.cursor = 'not-allowed';
+    }
+    
+    if (placeholder) {
+      if (!placeholder.dataset.originalText) {
+        placeholder.dataset.originalText = placeholder.textContent;
+      }
+      placeholder.textContent = disabledText;
+    }
+  }
+
+  enableSampleTypeSection(section) {
+    const sampleCards = section.querySelectorAll('.sample-type-card');
+    
+    sampleCards.forEach(card => {
+      card.classList.remove('sample-type-card--disabled');
+      card.style.opacity = '1';
+      card.style.pointerEvents = 'auto';
+      card.style.cursor = 'pointer';
+    });
+  }
+
+  disableSampleTypeSection(section, disabledText) {
+    const sampleCards = section.querySelectorAll('.sample-type-card');
+    
+    sampleCards.forEach(card => {
+      card.classList.add('sample-type-card--disabled');
+      card.style.opacity = '0.5';
+      card.style.pointerEvents = 'none';
+      card.style.cursor = 'not-allowed';
+    });
   }
 
   getGarmentIcon(garmentType) {
@@ -1893,9 +2023,33 @@ class V10_DesignStudio {
         return;
       }
       
+      // Add debugging for modal state
+      console.log('📊 Modal DOM state check:', {
+        isInDocument: document.body.contains(modal),
+        className: modal.className,
+        style: modal.style.cssText,
+        parentNode: modal.parentNode?.tagName
+      });
+      
       console.log('✅ Modal created, opening with V10 Modal Manager...');
-      window.v10ModalManager.openModal(modal);
-      console.log('✅ Modal opened successfully');
+      
+      // Add small delay to ensure DOM is ready
+      setTimeout(() => {
+        window.v10ModalManager.openModal(modal);
+        
+        // Check modal state after opening attempt
+        setTimeout(() => {
+          console.log('📊 Modal state after opening:', {
+            display: modal.style.display,
+            classList: Array.from(modal.classList),
+            visibility: window.getComputedStyle(modal).visibility,
+            opacity: window.getComputedStyle(modal).opacity,
+            zIndex: window.getComputedStyle(modal).zIndex
+          });
+        }, 100);
+        
+        console.log('✅ Modal opened successfully');
+      }, 10);
     } catch (error) {
       console.error('❌ Error in showGarmentSelector:', error);
       alert('Error opening garment selector. Please try again.');
@@ -1975,6 +2129,11 @@ class V10_DesignStudio {
     });
 
     console.log('✅ Modal DOM created successfully');
+    
+    // Append modal to document body
+    document.body.appendChild(modal);
+    console.log('📄 Modal appended to DOM');
+    
     return modal;
     
     } catch (error) {
