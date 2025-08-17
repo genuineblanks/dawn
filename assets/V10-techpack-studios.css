@@ -2446,25 +2446,7 @@ body[class*="techpack"] *,
 
 /* Removed duplicate CSS rules with wrong class names (dash instead of underscore) */
 
-.change-selection-btn {
-  width: 100%;
-  padding: var(--v10-space-3);
-  background: transparent;
-  border: 1px dashed var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  color: var(--v10-text-secondary);
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--v10-transition);
-  margin-top: var(--v10-space-4);
-}
-
-.change-selection-btn:hover {
-  border-color: var(--v10-accent-primary);
-  color: var(--v10-accent-primary);
-  background: rgba(163, 163, 163, 0.05);
-}
+/* Removed duplicate change-selection-btn rules - using the correct ones below */
 
 @media (max-width: 768px) {
   .compact-radio-grid {
@@ -3332,14 +3314,18 @@ body[class*="techpack"] *,
 .change-selection-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-1);
   background: transparent;
-  border: none;
+  border: 1px dashed var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
   color: var(--v10-accent-primary);
   font-size: var(--v10-text-xs);
   cursor: pointer;
-  padding: 2px 0;
+  padding: var(--v10-space-2);
   transition: var(--v10-transition);
+  margin-top: var(--v10-space-2);
+  width: 100%;
 }
 
 .change-selection-btn:hover {
@@ -3348,19 +3334,14 @@ body[class*="techpack"] *,
 
 /* Selection Expanded (dropdown options) */
 .selection-expanded {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: var(--v10-glass-bg);
-  backdrop-filter: var(--v10-backdrop-blur);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  box-shadow: var(--v10-glass-shadow);
-  max-height: 300px;
-  overflow-y: auto;
+  position: relative;
   width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-top: var(--v10-space-3);
+  max-height: 250px;
+  overflow-y: auto;
 }
 
 /* Compact Radio Grid */

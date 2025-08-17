@@ -1039,18 +1039,16 @@ class V10_GarmentStudio {
     }
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
-      // Show expanded state
-      collapsed.style.display = 'none';
+      // Show expanded state - keep the widget visible, just show options inside
       expanded.style.display = 'block';
-      if (placeholder) placeholder.classList.add('expanded');
+      if (placeholder) placeholder.style.display = 'none'; // Hide placeholder to show expanded options
       
       // Close other expanded selections in this garment card
       this.closeOtherSelections(garmentCard, selectionWidget);
     } else {
-      // Show collapsed state
-      collapsed.style.display = 'block';
+      // Show collapsed state - hide options and show placeholder
       expanded.style.display = 'none';
-      if (placeholder) placeholder.classList.remove('expanded');
+      if (placeholder) placeholder.style.display = 'flex'; // Show placeholder again
     }
   }
 
@@ -1059,13 +1057,12 @@ class V10_GarmentStudio {
     allWidgets.forEach(widget => {
       if (widget !== exceptWidget) {
         const section = widget.closest('.compact-selection-section');
-        const collapsed = widget;
         const expanded = section ? section.querySelector('.selection-expanded') : null;
         const placeholder = widget.querySelector('.selection-placeholder');
         
-        collapsed.style.display = 'block';
+        // Hide expanded options and show placeholder
         if (expanded) expanded.style.display = 'none';
-        if (placeholder) placeholder.classList.remove('expanded');
+        if (placeholder) placeholder.style.display = 'flex';
       }
     });
   }
