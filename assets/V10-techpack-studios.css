@@ -4,6 +4,57 @@
    ==================================================== */
 
 /* ==============================================
+   DEBUG SYSTEM - TEMPORARY VISUAL DEBUGGING
+   ============================================== */
+
+/* Debug mode - add this class to body to enable visual debugging */
+.v10-debug-mode .v10-techpack-step,
+.v10-debug-mode [id^="techpack-v10"],
+.v10-debug-mode .v10-modal-overlay,
+.v10-debug-mode .v10-modal {
+  outline: 2px solid red !important;
+  position: relative !important;
+}
+
+.v10-debug-mode .v10-techpack-step::before,
+.v10-debug-mode [id^="techpack-v10"]::before,
+.v10-debug-mode .v10-modal::before {
+  content: 'DEBUG: ' attr(class) ' | BG: var(--v10-bg-primary)' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  background: yellow !important;
+  color: black !important;
+  font-size: 10px !important;
+  padding: 2px !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+}
+
+/* Color debugging - shows which elements have problematic backgrounds */
+.v10-debug-colors [style*="background-color: var(--v10-bg"] {
+  border: 3px solid lime !important;
+}
+
+.v10-debug-colors [style*="background: var(--v10-bg"] {
+  border: 3px solid orange !important;
+}
+
+/* Quick debug toggle button */
+.v10-debug-toggle {
+  position: fixed !important;
+  top: 10px !important;
+  right: 10px !important;
+  z-index: 99999 !important;
+  background: red !important;
+  color: white !important;
+  padding: 5px 10px !important;
+  cursor: pointer !important;
+  border: none !important;
+  font-size: 12px !important;
+}
+
+/* ==============================================
    CSS CUSTOM PROPERTIES - DARK THEME SYSTEM
    ============================================== */
 

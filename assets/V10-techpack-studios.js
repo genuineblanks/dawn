@@ -2,6 +2,185 @@
 /* Complete rewrite with studio-based architecture */
 
 // ==============================================
+// DEBUG LOGGING SYSTEM
+// ==============================================
+
+const V10_DEBUG = {
+  enabled: true,
+  
+  log: function(category, message, data = null) {
+    if (!this.enabled) return;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const formattedMessage = `[${timestamp}] [${category}] ${message}`;
+    
+    if (data) {
+      console.log(formattedMessage, data);
+    } else {
+      console.log(formattedMessage);
+    }
+  },
+  
+  logColorDebug: function(element, context = '') {
+    if (!element) return;
+    
+    const computed = window.getComputedStyle(element);
+    const colorData = {
+      element: element.tagName + (element.className ? '.' + element.className.split(' ').join('.') : ''),
+      context: context,
+      backgroundColor: computed.backgroundColor,
+      color: computed.color,
+      cssVariables: {
+        v10BgPrimary: computed.getPropertyValue('--v10-bg-primary'),
+        v10BgSecondary: computed.getPropertyValue('--v10-bg-secondary'),
+        v10TextPrimary: computed.getPropertyValue('--v10-text-primary'),
+        colorSchemeBg: computed.getPropertyValue('--color-scheme-5-background'),
+        colorForeground: computed.getPropertyValue('--color-foreground'),
+      },
+      position: computed.position,
+      zIndex: computed.zIndex,
+      width: computed.width,
+      height: computed.height
+    };
+    
+    this.log('COLOR-DEBUG', `Element analysis: ${context}`, colorData);
+    return colorData;
+  },
+  
+  logLayoutDebug: function(element, context = '') {
+    if (!element) return;
+    
+    const computed = window.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    
+    const layoutData = {
+      element: element.tagName + (element.className ? '.' + element.className.split(' ').join('.') : ''),
+      context: context,
+      dimensions: {
+        width: rect.width,
+        height: rect.height,
+        computedWidth: computed.width,
+        computedHeight: computed.height
+      },
+      positioning: {
+        position: computed.position,
+        top: computed.top,
+        left: computed.left,
+        zIndex: computed.zIndex
+      },
+      spacing: {
+        margin: computed.margin,
+        padding: computed.padding
+      },
+      display: {
+        display: computed.display,
+        flexDirection: computed.flexDirection,
+        justifyContent: computed.justifyContent,
+        alignItems: computed.alignItems
+      }
+    };
+    
+    this.log('LAYOUT-DEBUG', `Layout analysis: ${context}`, layoutData);
+    return layoutData;
+  },
+  
+  checkConflictingStyles: function(element) {
+    if (!element) return;
+    
+    const computed = window.getComputedStyle(element);
+    const conflicts = [];
+    
+    // Check for conflicting background colors
+    const bgColor = computed.backgroundColor;
+    const v10BgPrimary = computed.getPropertyValue('--v10-bg-primary');
+    const colorSchemeBg = computed.getPropertyValue('--color-scheme-5-background');
+    
+    if (bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+      conflicts.push({
+        property: 'background-color',
+        value: bgColor,
+        source: 'computed'
+      });
+    }
+    
+    if (v10BgPrimary) {
+      conflicts.push({
+        property: '--v10-bg-primary',
+        value: v10BgPrimary,
+        source: 'V10 theme'
+      });
+    }
+    
+    if (colorSchemeBg) {
+      conflicts.push({
+        property: '--color-scheme-5-background',
+        value: colorSchemeBg,
+        source: 'Global theme'
+      });
+    }
+    
+    this.log('CSS-CONFLICT', `Style conflicts detected`, conflicts);
+    return conflicts;
+  }
+};
+
+// Global debug commands available in console
+window.V10_DEBUG_COMMANDS = {
+  analyzeElement: function(selector) {
+    const element = document.querySelector(selector);
+    if (!element) {
+      console.log('Element not found:', selector);
+      return;
+    }
+    
+    V10_DEBUG.logColorDebug(element, `Manual analysis: ${selector}`);
+    V10_DEBUG.logLayoutDebug(element, `Manual analysis: ${selector}`);
+    V10_DEBUG.checkConflictingStyles(element);
+  },
+  
+  analyzePage: function() {
+    V10_DEBUG.log('PAGE-ANALYSIS', 'Starting full page analysis');
+    
+    // Analyze main containers
+    const containers = [
+      '.v10-techpack-step',
+      '.v10-modal',
+      '.v10-modal-overlay',
+      '[id^="techpack-v10"]',
+      '.garments-grid',
+      '.v10-step'
+    ];
+    
+    containers.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach((element, index) => {
+        V10_DEBUG.logColorDebug(element, `${selector}[${index}]`);
+      });
+    });
+  },
+  
+  checkColorInheritance: function(selector) {
+    const element = document.querySelector(selector);
+    if (!element) return;
+    
+    let current = element;
+    const chain = [];
+    
+    while (current && current !== document.body) {
+      const computed = window.getComputedStyle(current);
+      chain.push({
+        element: current.tagName + (current.className ? '.' + current.className.split(' ').slice(0,2).join('.') : ''),
+        backgroundColor: computed.backgroundColor,
+        color: computed.color
+      });
+      current = current.parentElement;
+    }
+    
+    V10_DEBUG.log('BACKGROUND-TRACE', `Color inheritance chain for ${selector}`, chain);
+  }
+};
+
+// ==============================================
 // GLOBAL CONFIGURATION
 // ==============================================
 
@@ -2873,11 +3052,18 @@ class V10_ReviewManager {
   }
 
   showSuccessModal() {
+    console.log('🔧 showSuccessModal() called');
     const modal = document.getElementById('success-modal');
     const successMessage = document.getElementById('success-message');
     const successDetails = document.getElementById('success-details');
     
-    if (!modal) return;
+    console.log('🔧 Success modal elements:', {modal: !!modal, message: !!successMessage, details: !!successDetails});
+    console.log('🔧 v10ModalManager exists:', !!window.v10ModalManager);
+    
+    if (!modal) {
+      console.error('❌ Success modal not found');
+      return;
+    }
 
     const requestType = V10_State.requestType;
     const messages = {
@@ -2909,19 +3095,36 @@ class V10_ReviewManager {
     }
 
     if (window.v10ModalManager) {
+      console.log('🔧 Opening success modal via v10ModalManager');
       window.v10ModalManager.openModal(modal);
+    } else {
+      console.error('❌ v10ModalManager not available, using fallback');
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
     // Bind close event to continue button
     const continueBtn = document.getElementById('success-continue');
+    console.log('🔧 Success continue button:', continueBtn);
     if (continueBtn) {
+      console.log('🔧 Adding click listener to success continue button');
       continueBtn.addEventListener('click', () => {
-        window.v10ModalManager.closeModal(modal);
+        console.log('🔧 Success continue button clicked');
+        if (window.v10ModalManager) {
+          window.v10ModalManager.closeModal(modal);
+        } else {
+          modal.style.display = 'none';
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
         
         // Clear state and redirect or refresh
         V10_State.clear();
         window.location.reload();
       });
+    } else {
+      console.error('❌ Success continue button not found');
     }
   }
 
@@ -3099,24 +3302,57 @@ class V10_TechPackSystem {
   }
 
   showHelpModal() {
+    console.log('🔧 showHelpModal() called');
     const modal = document.getElementById('step-3-help-modal');
+    console.log('🔧 Help modal element:', modal);
+    console.log('🔧 v10ModalManager exists:', !!window.v10ModalManager);
+    
     if (modal && window.v10ModalManager) {
+      console.log('🔧 Opening help modal via v10ModalManager');
       window.v10ModalManager.openModal(modal);
       
       // Load help content based on request type
+      console.log('🔧 Loading help content');
       this.loadHelpContent();
+    } else {
+      console.error('❌ Help modal failed - modal:', !!modal, 'modalManager:', !!window.v10ModalManager);
+      
+      // Fallback to direct modal opening
+      if (modal) {
+        console.log('🔧 Fallback: opening modal directly');
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        this.loadHelpContent();
+      }
     }
   }
 
   // Removed - now handled by unified V10_ModalManager
 
   hideHelpModal() {
+    console.log('🔧 hideHelpModal() called');
     const modal = document.getElementById('step-3-help-modal');
+    console.log('🔧 Help modal element:', modal);
+    console.log('🔧 v10ModalManager exists:', !!window.v10ModalManager);
+    
     if (modal && window.v10ModalManager) {
+      console.log('🔧 Closing help modal via v10ModalManager');
       window.v10ModalManager.closeModal(modal);
       
       // Mark help as read
       this.markHelpAsRead();
+    } else {
+      console.error('❌ Hide help modal failed - modal:', !!modal, 'modalManager:', !!window.v10ModalManager);
+      
+      // Fallback to direct modal closing
+      if (modal) {
+        console.log('🔧 Fallback: closing modal directly');
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        this.markHelpAsRead();
+      }
     }
   }
 
@@ -3154,8 +3390,15 @@ class V10_TechPackSystem {
 
     // Setup close functionality for the main help modal
     const helpCloseBtn = document.getElementById('close-help-modal');
+    console.log('🔧 Help close button element:', helpCloseBtn);
     if (helpCloseBtn) {
-      helpCloseBtn.addEventListener('click', () => this.hideHelpModal());
+      console.log('🔧 Adding click listener to help close button');
+      helpCloseBtn.addEventListener('click', () => {
+        console.log('🔧 Help close button clicked');
+        this.hideHelpModal();
+      });
+    } else {
+      console.error('❌ Help close button not found');
     }
 
     console.log('🔧 Help system initialized for all help buttons');
@@ -4101,13 +4344,26 @@ class V10_FileManager {
   }
 
   showMeasurementConfirmationModal() {
+    console.log('🔧 showMeasurementConfirmationModal() called');
     const modal = document.getElementById('techpack-v10-measurement-modal');
     const title = document.getElementById('v10-measurement-modal-title');
     const message = document.getElementById('v10-measurement-modal-message');
     const details = document.getElementById('v10-measurement-modal-details');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
     
-    if (!modal) return;
+    console.log('🔧 Measurement modal elements:', {
+      modal: !!modal, 
+      title: !!title, 
+      message: !!message, 
+      details: !!details, 
+      proceedBtn: !!proceedBtn
+    });
+    console.log('🔧 v10ModalManager exists:', !!window.v10ModalManager);
+    
+    if (!modal) {
+      console.error('❌ Measurement modal not found');
+      return;
+    }
     
     const clientData = window.v10ClientManager?.getClientData() || {};
     const requestType = clientData.submission_type;
@@ -4170,34 +4426,66 @@ class V10_FileManager {
     }
     
     if (window.v10ModalManager) {
+      console.log('🔧 Opening measurement modal via v10ModalManager');
       window.v10ModalManager.openModal(modal);
+    } else {
+      console.error('❌ v10ModalManager not available, using fallback');
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
   }
 
   setupMeasurementModal() {
+    console.log('🔧 setupMeasurementModal() called');
     const modal = document.getElementById('techpack-v10-measurement-modal');
     const backBtn = document.getElementById('v10-measurement-modal-back');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
     
-    if (!modal) return;
+    console.log('🔧 Measurement modal setup elements:', {
+      modal: !!modal, 
+      backBtn: !!backBtn, 
+      proceedBtn: !!proceedBtn
+    });
+    
+    if (!modal) {
+      console.error('❌ Measurement modal not found in setup');
+      return;
+    }
     
     // Go back to add measurements
     if (backBtn) {
+      console.log('🔧 Adding click listener to measurement back button');
       backBtn.addEventListener('click', () => {
+        console.log('🔧 Measurement back button clicked');
         if (window.v10ModalManager) {
           window.v10ModalManager.closeModal(modal);
+        } else {
+          modal.style.display = 'none';
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
         }
       });
+    } else {
+      console.error('❌ Measurement back button not found');
     }
     
     // Proceed anyway
     if (proceedBtn) {
+      console.log('🔧 Adding click listener to measurement proceed button');
       proceedBtn.addEventListener('click', () => {
+        console.log('🔧 Measurement proceed button clicked');
         if (window.v10ModalManager) {
           window.v10ModalManager.closeModal(modal);
+        } else {
+          modal.style.display = 'none';
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
         }
         this.proceedToStep3();
       });
+    } else {
+      console.error('❌ Measurement proceed button not found');
     }
   }
 
@@ -5126,12 +5414,19 @@ class V10_ModalManager {
   }
 
   openModal(modalId) {
+    V10_DEBUG.log('MODAL-BEHAVIOR', `Attempting to open modal: ${modalId}`);
+    
     const modal = this.modals.get(modalId) || document.getElementById(`v10-${modalId}-modal`);
     
     if (!modal) {
+      V10_DEBUG.log('MODAL-BEHAVIOR', `❌ Modal not found: ${modalId}`);
       console.error('Modal not found:', modalId);
       return;
     }
+
+    V10_DEBUG.log('MODAL-BEHAVIOR', `✅ Modal found: ${modalId}`);
+    V10_DEBUG.logColorDebug(modal, `Before opening modal: ${modalId}`);
+    V10_DEBUG.logLayoutDebug(modal, `Before opening modal: ${modalId}`);
 
     // Close other modals first (but not the one we're opening)
     this.closeOtherModals(modal);
@@ -5144,6 +5439,16 @@ class V10_ModalManager {
     
     // Add active class for transition
     modal.classList.add('active');
+    
+    V10_DEBUG.log('MODAL-BEHAVIOR', `Modal opened and active class added: ${modalId}`);
+    V10_DEBUG.logColorDebug(modal, `After opening modal: ${modalId}`);
+    
+    // Check modal contents for styling issues
+    const modalContent = modal.querySelector('.v10-modal, .modal-content, [class*="modal"]');
+    if (modalContent) {
+      V10_DEBUG.logColorDebug(modalContent, `Modal content: ${modalId}`);
+      V10_DEBUG.checkConflictingStyles(modalContent);
+    }
     
     // Prevent body scrolling
     document.body.style.overflow = 'hidden';
@@ -5254,16 +5559,101 @@ class V10_ModalManager {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     console.log('🚀 V10 TechPack Studios - Initializing System...');
+    
+    // DEBUGGING: Initial page analysis
+    V10_DEBUG.log('INIT', 'Starting TechPack V10 initialization');
+    V10_DEBUG.log('INIT', 'Available debug commands:', Object.keys(window.V10_DEBUG_COMMANDS));
+    
+    // Analyze initial page state
+    setTimeout(() => {
+      V10_DEBUG.log('PAGE-ANALYSIS', 'Analyzing initial page state');
+      
+      // Check for main containers
+      const mainContainers = [
+        '#techpack-v10-landing',
+        '.v10-techpack-step',
+        '.v10-modal-overlay',
+        '[id^="techpack-v10"]'
+      ];
+      
+      mainContainers.forEach(selector => {
+        const element = document.querySelector(selector);
+        if (element) {
+          V10_DEBUG.logColorDebug(element, `Main container: ${selector}`);
+          V10_DEBUG.logLayoutDebug(element, `Main container: ${selector}`);
+          V10_DEBUG.checkConflictingStyles(element);
+        }
+      });
+      
+      // Check for CSS variable inheritance
+      const bodyStyles = window.getComputedStyle(document.body);
+      V10_DEBUG.log('CSS-VARIABLES', 'Global CSS variables on body', {
+        v10BgPrimary: bodyStyles.getPropertyValue('--v10-bg-primary'),
+        v10BgSecondary: bodyStyles.getPropertyValue('--v10-bg-secondary'),
+        v10TextPrimary: bodyStyles.getPropertyValue('--v10-text-primary'),
+        colorSchemeBg: bodyStyles.getPropertyValue('--color-scheme-5-background'),
+        colorForeground: bodyStyles.getPropertyValue('--color-foreground'),
+      });
+      
+      // Add debug toggle button
+      const debugButton = document.createElement('button');
+      debugButton.textContent = 'DEBUG';
+      debugButton.className = 'v10-debug-toggle';
+      debugButton.onclick = function() {
+        document.body.classList.toggle('v10-debug-mode');
+        document.body.classList.toggle('v10-debug-colors');
+        console.log('Debug mode toggled. Available commands:', Object.keys(window.V10_DEBUG_COMMANDS));
+      };
+      document.body.appendChild(debugButton);
+      
+      // Add global event listeners for debugging
+      document.addEventListener('click', function(e) {
+        if (e.target.matches('button, [role="button"], .btn, [class*="button"]')) {
+          V10_DEBUG.log('BUTTON-CLICKS', `Button clicked: ${e.target.textContent?.trim() || e.target.className}`, {
+            element: e.target.tagName + (e.target.className ? '.' + e.target.className.split(' ').join('.') : ''),
+            textContent: e.target.textContent?.trim(),
+            id: e.target.id
+          });
+          
+          V10_DEBUG.logColorDebug(e.target, 'Button click');
+        }
+      });
+      
+      document.addEventListener('input', function(e) {
+        if (e.target.matches('input, select, textarea')) {
+          V10_DEBUG.log('FORM-INTERACTION', `Form field changed: ${e.target.name || e.target.id}`, {
+            type: e.target.type,
+            value: e.target.value,
+            name: e.target.name,
+            id: e.target.id
+          });
+        }
+      });
+      
+    }, 500);
+    
 
     // Phase 1: Initialize core managers in dependency order
     const initializeCore = async () => {
-      // Initialize Modal System first (required for landing page workflow)
+      // Initialize Modal System first (required for all modal functionality)
       try {
-        if (document.getElementById('techpack-v10-landing') || 
+        // Check if we have any modal on the page
+        const hasModals = document.querySelector('.v10-modal-overlay, [id*="modal"]');
+        console.log('🔧 Checking for modals on page:', !!hasModals);
+        
+        if (hasModals || 
+            document.getElementById('techpack-v10-landing') || 
             document.getElementById('v10-client-verification-modal') ||
-            document.getElementById('v10-submission-type-modal')) {
+            document.getElementById('v10-submission-type-modal') ||
+            document.getElementById('step-3-help-modal') ||
+            document.getElementById('success-modal') ||
+            document.getElementById('techpack-v10-measurement-modal')) {
+          
+          console.log('🔧 Initializing V10_ModalManager');
           window.v10ModalManager = new V10_ModalManager();
-          console.log('✅ Modal Manager initialized');
+          console.log('✅ Modal Manager initialized successfully');
+        } else {
+          console.log('⚠️ No modals found on page, skipping modal manager initialization');
         }
       } catch (modalError) {
         console.error('❌ Error initializing Modal Manager:', modalError);
