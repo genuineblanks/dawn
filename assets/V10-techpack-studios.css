@@ -3559,8 +3559,14 @@ body[class*="techpack"] *,
 
 .sample-type-selection {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--v10-space-3);
+}
+
+@media (max-width: 768px) {
+  .sample-type-selection {
+    grid-template-columns: 1fr;
+  }
 }
 
 .sample-type-card {
