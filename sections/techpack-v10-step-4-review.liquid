@@ -312,28 +312,34 @@ TechPack V10 Step 4: Premium Review & Submit
   </div>
 
   <!-- Success Modal -->
-  <div class="techpack-modal techpack-modal--success" id="success-modal" style="display: none;">
-    <div class="techpack-modal__backdrop"></div>
-    <div class="techpack-modal__content techpack-modal__content--success">
-      <div class="success-icon">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-          <polyline points="22,4 12,14.01 9,11.01"/>
-        </svg>
+  <div class="v10-modal-overlay" id="success-modal" style="display: none;">
+    <div class="v10-modal v10-modal--success">
+      <div class="v10-modal-header">
+        <div class="v10-modal-icon v10-modal-icon--success">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22,4 12,14.01 9,11.01"/>
+          </svg>
+        </div>
+        <h3 class="v10-modal-title">Request Submitted Successfully!</h3>
+        <button type="button" class="v10-modal-close" id="success-close">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
       </div>
-      <div class="success-content">
-        <h3 class="success-title">Request Submitted Successfully!</h3>
-        <p class="success-message" id="success-message">
+      <div class="v10-modal-body">
+        <p class="v10-modal-message" id="success-message">
           <!-- Populated by JavaScript -->
         </p>
-        <div class="success-details" id="success-details">
+        <div class="v10-modal-details" id="success-details">
           <!-- Populated by JavaScript -->
         </div>
-        <div class="success-actions">
-          <button type="button" class="techpack-btn techpack-btn--primary" id="success-close">
-            Continue
-          </button>
-        </div>
+      </div>
+      <div class="v10-modal-actions">
+        <button type="button" class="v10-btn v10-btn--primary" id="success-continue">
+          Continue
+        </button>
       </div>
     </div>
   </div>
