@@ -1200,7 +1200,6 @@ body[class*="techpack"] *,
 
 .v10-client-option:hover {
   border-color: var(--v10-accent-primary);
-  background: rgba(163, 163, 163, 0.1);
   transform: translateY(-1px);
 }
 
