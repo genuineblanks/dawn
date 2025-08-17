@@ -4893,6 +4893,44 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   padding: var(--v10-space-8);
 }
 
+/* Measurement Modal Specific Styles */
+.v10-modal--measurement {
+  max-width: 500px;
+}
+
+.v10-modal-message {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+  line-height: 1.6;
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-modal-details {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-modal-details h4 {
+  margin: 0 0 var(--v10-space-3) 0;
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+}
+
+.v10-modal-details ul {
+  margin: 0;
+  padding-left: var(--v10-space-5);
+  color: var(--v10-text-secondary);
+}
+
+.v10-modal-details li {
+  margin-bottom: var(--v10-space-1);
+  font-size: var(--v10-text-sm);
+}
+
 /* Mobile Modal Styles */
 @media (max-width: 768px) {
   .v10-modal-overlay {
