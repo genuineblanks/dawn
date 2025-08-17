@@ -3567,33 +3567,24 @@ body[class*="techpack"] *,
 .sample-type-card {
   position: relative;
   cursor: pointer;
-  display: flex;
-}
-
-.sample-type-card input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.sample-type-card__content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: var(--v10-space-4);
+  display: block;
   background: var(--v10-surface-elevated);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
   transition: var(--v10-transition);
 }
 
-.sample-type-card:hover .sample-type-card__content {
+.sample-type-card input[type="radio"] {
+  display: none;
+}
+
+.sample-type-card:hover {
   border-color: var(--v10-accent-primary);
   background: var(--v10-surface-hover);
 }
 
-.sample-type-card input[type="radio"]:checked + .sample-type-card__content {
+.sample-type-card.selected {
   border-color: var(--v10-accent-primary);
   background: var(--v10-surface-selected);
   box-shadow: 0 2px 8px rgba(163, 163, 163, 0.1);

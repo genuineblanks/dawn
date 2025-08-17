@@ -807,39 +807,33 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
           </button>
         </div>
         <div class="sample-type-selection">
-          <label class="sample-type-card">
-            <input type="radio" name="sampleType" value="stock">
-            <span class="sample-type-card__content">
-              <div class="sample-type-card__header">
-                <span class="sample-type-card__title">Stock Fabric Color</span>
-                <span class="sample-type-card__price">€35</span>
-              </div>
-              <span class="sample-type-card__description">Quick validation • 1-2 weeks</span>
-              <span class="sample-type-card__details">Black, off-white, or random stock color</span>
-            </span>
-          </label>
-          <label class="sample-type-card">
-            <input type="radio" name="sampleType" value="custom">
-            <span class="sample-type-card__content">
-              <div class="sample-type-card__header">
-                <span class="sample-type-card__title">Custom Color (Pantone)</span>
-                <span class="sample-type-card__price">€65</span>
-              </div>
-              <span class="sample-type-card__description">Exact color match • 3 weeks</span>
-              <span class="sample-type-card__details">Requires Lab Dip assignment</span>
-            </span>
-          </label>
-          <label class="sample-type-card">
-            <input type="radio" name="sampleType" value="techpack">
-            <span class="sample-type-card__content">
-              <div class="sample-type-card__header">
-                <span class="sample-type-card__title">As Per TechPack</span>
-                <span class="sample-type-card__price">Premium</span>
-              </div>
-              <span class="sample-type-card__description">Exact TechPack specifications</span>
-              <span class="sample-type-card__details">Higher cost, comprehensive sample</span>
-            </span>
-          </label>
+          <div class="sample-type-card" data-value="stock">
+            <input type="radio" name="sampleType" value="stock" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">Stock Fabric Color</span>
+              <span class="sample-type-card__price">€35</span>
+            </div>
+            <span class="sample-type-card__description">Quick validation • 1-2 weeks</span>
+            <span class="sample-type-card__details">Black, off-white, or random stock color</span>
+          </div>
+          <div class="sample-type-card" data-value="custom">
+            <input type="radio" name="sampleType" value="custom" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">Custom Color (Pantone)</span>
+              <span class="sample-type-card__price">€65</span>
+            </div>
+            <span class="sample-type-card__description">Exact color match • 3 weeks</span>
+            <span class="sample-type-card__details">Requires Lab Dip assignment</span>
+          </div>
+          <div class="sample-type-card" data-value="techpack">
+            <input type="radio" name="sampleType" value="techpack" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">As Per TechPack</span>
+              <span class="sample-type-card__price">Premium</span>
+            </div>
+            <span class="sample-type-card__description">Exact TechPack specifications</span>
+            <span class="sample-type-card__details">Higher cost, comprehensive sample</span>
+          </div>
         </div>
       </div>
 
