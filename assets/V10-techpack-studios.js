@@ -431,7 +431,8 @@ class V10_GarmentStudio {
         sampleReference: data?.sampleReference || '', // For bulk orders
         assignedLabDips: new Set(data?.assignedLabDips || []),
         assignedDesigns: new Set(data?.assignedDesigns || []),
-        isComplete: false
+        isComplete: false,
+        isInEditMode: false
       };
 
       // Store in state
@@ -901,18 +902,62 @@ class V10_GarmentStudio {
 
   expandGarmentForEdit(garmentId) {
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!garmentCard) return;
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentCard || !garmentData) return;
 
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
     if (summaryContainer && contentContainer) {
+      // Set edit mode flag
+      garmentData.isInEditMode = true;
+      
       // Hide summary, show content for editing
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
       
+      // Show finalize edit button
+      this.showFinalizeEditButton(garmentCard);
+      
       console.log(`✏️ Expanded garment ${garmentId} for editing`);
     }
+  }
+
+  showFinalizeEditButton(garmentCard) {
+    const finalizeSection = garmentCard.querySelector('.finalize-edit-section');
+    if (finalizeSection) {
+      finalizeSection.style.display = 'block';
+      
+      // Bind click handler if not already bound
+      const finalizeBtn = finalizeSection.querySelector('.finalize-edit-btn');
+      if (finalizeBtn && !finalizeBtn.dataset.bound) {
+        finalizeBtn.dataset.bound = 'true';
+        finalizeBtn.addEventListener('click', () => {
+          const garmentId = garmentCard.dataset.garmentId;
+          this.finalizeGarmentEdit(garmentId);
+        });
+      }
+    }
+  }
+
+  finalizeGarmentEdit(garmentId) {
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentCard || !garmentData) return;
+
+    // Clear edit mode flag
+    garmentData.isInEditMode = false;
+    
+    // Hide finalize edit button
+    const finalizeSection = garmentCard.querySelector('.finalize-edit-section');
+    if (finalizeSection) {
+      finalizeSection.style.display = 'none';
+    }
+    
+    // Update the garment's completion status and UI
+    this.updateGarmentStatus(garmentId);
+    
+    console.log(`✅ Finalized edit for garment ${garmentId}`);
   }
 
   updateAssignedDisplay(garmentId) {
@@ -1196,13 +1241,18 @@ class V10_GarmentStudio {
   // ==============================================
 
   toggleSelection(selectionWidget) {
-    if (!selectionWidget) return;
+    if (!selectionWidget) {
+      console.log('❌ toggleSelection: no selectionWidget provided');
+      return;
+    }
 
     const garmentCard = selectionWidget.closest('.garment-card');
     if (!garmentCard) {
       console.error('❌ No garment card found for selection widget');
       return;
     }
+    
+    console.log('🔄 toggleSelection called for:', selectionWidget.id || 'unnamed widget');
     
     // selectionWidget IS the compact-selection-widget, so we work with it directly
     const collapsed = selectionWidget; // This is the compact-selection-widget itself
@@ -1213,6 +1263,13 @@ class V10_GarmentStudio {
     // Find the selected display to toggle it
     const selectedDisplay = section ? section.querySelector('.selection-display') : null;
     
+    console.log('🔍 Found elements:', {
+      expanded: !!expanded,
+      placeholder: !!placeholder, 
+      selectedDisplay: !!selectedDisplay,
+      expandedDisplay: expanded?.style.display
+    });
+    
     if (!expanded) {
       console.error('❌ No expanded section found');
       return;
@@ -1220,6 +1277,7 @@ class V10_GarmentStudio {
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
       // Show expanded state (show dropdown options)
+      console.log('📂 Expanding selection...');
       expanded.style.display = 'block';
       if (placeholder) placeholder.style.display = 'none'; // Hide placeholder to show expanded options
       if (selectedDisplay) selectedDisplay.style.display = 'none'; // Hide selected display when choosing
@@ -1227,9 +1285,24 @@ class V10_GarmentStudio {
       // Close other expanded selections in this garment card
       this.closeOtherSelections(garmentCard, selectionWidget);
     } else {
-      // Show collapsed state - hide options and show placeholder or selected display
+      // Show collapsed state - hide options and determine what to show
+      console.log('📁 Collapsing selection...');
       expanded.style.display = 'none';
-      if (placeholder) placeholder.style.display = 'flex'; // Show placeholder again
+      
+      // Check if there's a selected item to display
+      const hasSelection = selectedDisplay && selectedDisplay.querySelector('.selected-name')?.textContent.trim();
+      
+      if (hasSelection) {
+        // Show selected display if there's a selection
+        console.log('✅ Showing selected display');
+        if (placeholder) placeholder.style.display = 'none';
+        if (selectedDisplay) selectedDisplay.style.display = 'block';
+      } else {
+        // Show placeholder if no selection
+        console.log('📝 Showing placeholder');
+        if (placeholder) placeholder.style.display = 'flex';
+        if (selectedDisplay) selectedDisplay.style.display = 'none';
+      }
     }
   }
 
