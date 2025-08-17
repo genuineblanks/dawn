@@ -8,7 +8,19 @@ TechPack V10 Step 4: Premium Review & Submit
   <div class="techpack-container">
     
     <!-- Progress Bar -->
-    <div class="techpack-progress">
+    <div class="techpack-progress" data-step="4" data-progress="100">
+      <div class="techpack-progress__header">
+        <div class="techpack-progress__stats">
+          <div class="techpack-progress__percentage">100%</div>
+          <div class="techpack-progress__eta">Almost done!</div>
+        </div>
+        <div class="techpack-progress__timeline">
+          <svg class="techpack-progress__timeline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Started 6 min ago</span>
+        </div>
+      </div>
       <div class="techpack-progress__bar">
         <div class="techpack-progress__fill" style="width: 100%"></div>
       </div>
@@ -264,17 +276,17 @@ TechPack V10 Step 4: Premium Review & Submit
             </div>
 
             <!-- Action Buttons -->
-            <div class="submit-buttons">
-              <button type="button" class="techpack-btn techpack-btn--ghost" id="step-4-prev">
-                <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+            <div class="v10-step-actions">
+              <button type="button" class="v10-btn v10-btn--ghost" id="step-4-prev">
+                <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
                   <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
                 </svg>
                 Previous
               </button>
               
               <div class="submit-primary-actions">
-                <button type="button" class="techpack-btn techpack-btn--secondary" id="save-draft-btn">
-                  <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button type="button" class="v10-btn v10-btn--secondary" id="save-draft-btn">
+                  <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                     <polyline points="17,21 17,13 7,13 7,21"/>
                     <polyline points="7,3 7,8 15,8"/>
@@ -282,8 +294,8 @@ TechPack V10 Step 4: Premium Review & Submit
                   Save Draft
                 </button>
                 
-                <button type="button" class="techpack-btn techpack-btn--primary techpack-btn--large" id="submit-request-btn">
-                  <svg class="techpack-btn__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
+                  <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="22" y1="2" x2="11" y2="13"/>
                     <polygon points="22,2 15,22 11,13 2,9 22,2"/>
                   </svg>
@@ -913,6 +925,7 @@ TechPack V10 Step 4: Premium Review & Submit
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'techpack-progress-system.js' | asset_url }}?v=1.0.0" defer="defer"></script>
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}?v=10.0.0" defer="defer"></script>
 
 {% schema %}

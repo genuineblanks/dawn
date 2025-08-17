@@ -8,7 +8,19 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
   <div class="techpack-container">
     
     <!-- Progress Bar -->
-    <div class="techpack-progress">
+    <div class="techpack-progress" data-step="3" data-progress="75">
+      <div class="techpack-progress__header">
+        <div class="techpack-progress__stats">
+          <div class="techpack-progress__percentage">75%</div>
+          <div class="techpack-progress__eta">~2 min remaining</div>
+        </div>
+        <div class="techpack-progress__timeline">
+          <svg class="techpack-progress__timeline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Started 4 min ago</span>
+        </div>
+      </div>
       <div class="techpack-progress__bar">
         <div class="techpack-progress__fill" style="width: 75%"></div>
       </div>
@@ -463,16 +475,16 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
       </div>
 
       <!-- Navigation -->
-      <div class="techpack-form__actions">
-        <button type="button" class="techpack-btn techpack-btn--ghost" id="step-3-prev">
-          <svg class="techpack-btn__icon techpack-btn__icon--left" width="16" height="16" viewBox="0 0 16 16">
+      <div class="v10-step-actions">
+        <button type="button" class="v10-btn v10-btn--ghost" id="step-3-prev">
+          <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
             <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
           Previous
         </button>
-        <button type="button" class="techpack-btn techpack-btn--primary" id="step-3-next" disabled>
+        <button type="button" class="v10-btn v10-btn--primary" id="step-3-next" disabled>
           Next Step
-          <svg class="techpack-btn__icon" width="16" height="16" viewBox="0 0 16 16">
+          <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
             <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
         </button>
@@ -919,6 +931,7 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'techpack-progress-system.js' | asset_url }}?v=1.0.0" defer="defer"></script>
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}?v=10.0.0" defer="defer"></script>
 
 {% schema %}
