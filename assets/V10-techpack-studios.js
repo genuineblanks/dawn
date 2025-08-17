@@ -377,8 +377,6 @@ class V10_GarmentStudio {
     }
     
     this.bindEvents();
-    // Start with a fresh garment instead of loading from storage
-    this.addGarment();
     
     this.initialized = true;
     console.log('✅ V10_GarmentStudio initialized');
@@ -441,6 +439,9 @@ class V10_GarmentStudio {
 
       // Create UI
       this.renderGarment(garmentData);
+
+      // Renumber all garments to ensure sequential order
+      this.renumberGarments();
 
       console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
       return garmentId;
@@ -917,6 +918,9 @@ class V10_GarmentStudio {
 
         console.log(`🗑️ Removed garment: ${garmentId}`);
         
+        // Renumber remaining garments
+        this.renumberGarments();
+        
         // If no garments left, add a new one
         if (V10_State.garments.size === 0) {
           console.log('No garments left, adding fresh garment');
@@ -943,6 +947,48 @@ class V10_GarmentStudio {
 
     this.addGarment(duplicateData);
     console.log(`📋 Duplicated garment: ${garmentId}`);
+  }
+
+  renumberGarments() {
+    try {
+      const garmentCards = this.garmentsContainer.querySelectorAll('.garment-card');
+      let updatedCount = 0;
+      
+      garmentCards.forEach((garmentCard, index) => {
+        const newNumber = index + 1;
+        const garmentId = garmentCard.dataset.garmentId;
+        
+        // Update the display number in the card
+        const numberElement = garmentCard.querySelector('.garment-card__number');
+        if (numberElement) {
+          const oldText = numberElement.textContent;
+          const newText = `Garment ${newNumber}`;
+          
+          if (oldText !== newText) {
+            numberElement.textContent = newText;
+            updatedCount++;
+            console.log(`🔢 Updated garment display: "${oldText}" → "${newText}"`);
+          }
+        }
+        
+        // Update the number in state data
+        if (garmentId && V10_State.garments.has(garmentId)) {
+          const garmentData = V10_State.garments.get(garmentId);
+          const oldNumber = garmentData.number;
+          
+          if (oldNumber !== newNumber) {
+            garmentData.number = newNumber;
+            console.log(`🔢 Updated garment state: ${garmentId} number ${oldNumber} → ${newNumber}`);
+          }
+        }
+      });
+      
+      if (updatedCount > 0) {
+        console.log(`✅ Renumbered ${updatedCount} garments`);
+      }
+    } catch (error) {
+      console.error('Error renumbering garments:', error);
+    }
   }
 
   cleanupAssignments(garmentId) {
@@ -1066,17 +1112,15 @@ class V10_GarmentStudio {
     if (expanded.style.display === 'none' || !expanded.style.display) {
       // Show expanded state (show dropdown options)
       expanded.style.display = 'block';
-      collapsed.style.display = 'block'; // Show the dropdown selector again
       if (placeholder) placeholder.style.display = 'none'; // Hide placeholder to show expanded options
       if (selectedDisplay) selectedDisplay.style.display = 'none'; // Hide selected display when choosing
       
       // Close other expanded selections in this garment card
       this.closeOtherSelections(garmentCard, selectionWidget);
     } else {
-      // Show collapsed state - hide options and show placeholder
+      // Show collapsed state - hide options and show placeholder or selected display
       expanded.style.display = 'none';
       if (placeholder) placeholder.style.display = 'flex'; // Show placeholder again
-      if (selectedDisplay) selectedDisplay.style.display = 'none'; // Ensure selected display is hidden when no selection
     }
   }
 
@@ -1108,7 +1152,6 @@ class V10_GarmentStudio {
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
-      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -1126,7 +1169,6 @@ class V10_GarmentStudio {
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
-      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -1145,7 +1187,6 @@ class V10_GarmentStudio {
       if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(value);
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
-      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
