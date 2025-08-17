@@ -4478,7 +4478,6 @@ class V10_FileManager {
   setupUploadZone() {
     const uploadZone = document.getElementById('techpack-v10-upload-zone');
     const fileInput = document.getElementById('techpack-v10-file-input');
-    const addMoreBtn = document.getElementById('techpack-v10-add-more-files');
     
     if (!uploadZone || !fileInput) return;
     
@@ -4504,13 +4503,6 @@ class V10_FileManager {
       uploadZone.classList.remove('v10-upload-zone--dragover');
       this.handleFiles(e.dataTransfer.files);
     });
-    
-    // Add more files button
-    if (addMoreBtn) {
-      addMoreBtn.addEventListener('click', () => {
-        fileInput.click();
-      });
-    }
   }
 
   setupMeasurementRequirements() {
@@ -4702,7 +4694,7 @@ class V10_FileManager {
     const requestType = clientData.submission_type;
     
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
-    const designPlacementCard = document.getElementById('techpack-v10-design-placement-card');
+    const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
     
     // Show measurement requirements for quotation and sample requests
     if (measurementStudio) {
@@ -4714,11 +4706,11 @@ class V10_FileManager {
     }
     
     // Show design placement for sample requests only
-    if (designPlacementCard) {
+    if (designPlacementItem) {
       if (requestType === 'sample-request') {
-        designPlacementCard.style.display = 'block';
+        designPlacementItem.style.display = 'block';
       } else {
-        designPlacementCard.style.display = 'none';
+        designPlacementItem.style.display = 'none';
       }
     }
   }
@@ -4738,7 +4730,6 @@ class V10_FileManager {
       }
     });
     
-    this.updateAddMoreButton();
     this.validateStep();
   }
 
@@ -4813,21 +4804,10 @@ class V10_FileManager {
       fileCard.remove();
     }
     
-    this.updateAddMoreButton();
     this.validateStep();
     this.saveData();
   }
 
-  updateAddMoreButton() {
-    const addMoreBtn = document.getElementById('techpack-v10-add-more-files');
-    if (!addMoreBtn) return;
-    
-    if (this.uploadedFiles.size > 0 && this.uploadedFiles.size < this.maxFiles) {
-      addMoreBtn.style.display = 'block';
-    } else {
-      addMoreBtn.style.display = 'none';
-    }
-  }
 
   validateMeasurements() {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
