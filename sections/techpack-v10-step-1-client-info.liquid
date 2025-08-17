@@ -3,7 +3,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 {% endcomment %}
 
 <link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
-<link href="{{ 'simple-progress-bar.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <style>
   .v10-techpack-landing {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
@@ -148,10 +147,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="simple-progress-fill" style="width: 25%"></div>
       </div>
       <div class="simple-progress-steps">
-        <div class="simple-step active" data-step="1"><span>Client Info</span></div>
-        <div class="simple-step" data-step="2"><span>Files</span></div>
-        <div class="simple-step" data-step="3"><span>Garments</span></div>
-        <div class="simple-step" data-step="4"><span>Review</span></div>
+        <div class="simple-step active">
+          <div class="simple-step-circle">1</div>
+          <span>Client Info</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">2</div>
+          <span>Files</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">3</div>
+          <span>Garments</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">4</div>
+          <span>Review</span>
+        </div>
       </div>
     </div>
 

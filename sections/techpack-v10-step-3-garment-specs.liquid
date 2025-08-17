@@ -3,7 +3,6 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
 {% endcomment %}
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
-{{ 'simple-progress-bar.css' | asset_url | stylesheet_tag }}
 
 <section id="techpack-v10-step-3" class="v10-techpack-step" data-step="3" style="display: none;">
   <div class="techpack-container">
@@ -14,10 +13,22 @@ TechPack V10 Step 3: Premium Studio-Based Garment Specifications
         <div class="simple-progress-fill" style="width: 75%"></div>
       </div>
       <div class="simple-progress-steps">
-        <div class="simple-step completed" data-step="1"><span>Client Info</span></div>
-        <div class="simple-step completed" data-step="2"><span>File Upload</span></div>
-        <div class="simple-step active" data-step="3"><span>Design Studios</span></div>
-        <div class="simple-step" data-step="4"><span>Review</span></div>
+        <div class="simple-step completed">
+          <div class="simple-step-circle">✓</div>
+          <span>Client Info</span>
+        </div>
+        <div class="simple-step completed">
+          <div class="simple-step-circle">✓</div>
+          <span>File Upload</span>
+        </div>
+        <div class="simple-step active">
+          <div class="simple-step-circle">3</div>
+          <span>Design Studios</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">4</div>
+          <span>Review</span>
+        </div>
       </div>
     </div>
 
