@@ -3744,6 +3744,9 @@
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: var(--v10-space-2);
+  width: 100%;
+  min-width: 0;
+  flex: 1;
 }
 
 .collection-grid {
