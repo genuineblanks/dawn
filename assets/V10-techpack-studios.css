@@ -4787,50 +4787,6 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* 
 ===========================================
-BLACK BACKGROUND FIXES
-===========================================
-*/
-
-/* Remove unwanted black backgrounds from common elements */
-div:not(.v10-modal-overlay):not(.overlay):not(.backdrop),
-span, p, h1, h2, h3, h4, h5, h6,
-.notification, .alert, .warning, .notice,
-.text, .content, .message, .title {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-/* Force proper notification styling */
-.v10-registration-notice,
-.v10-registration-warning,
-.v10-warning-box-enhanced,
-.v10-notice-content,
-.v10-warning-content {
-  background: rgba(245, 158, 11, 0.1) !important;
-  border: 1px solid rgba(245, 158, 11, 0.2) !important;
-}
-
-/* Ensure warning notices have correct background */
-.v10-registration-notice {
-  background: rgba(107, 114, 128, 0.1) !important;
-  border: 1px solid rgba(107, 114, 128, 0.2) !important;
-}
-
-/* Universal black background prevention for text containers */
-*:not(.v10-modal-overlay):not(.overlay):not(.backdrop):not(.modal-backdrop) {
-  background-color: transparent;
-}
-
-/* Remove any inherited black backgrounds on text elements */
-[class*="text"]:not([class*="background"]),
-[class*="title"]:not([class*="background"]),
-[class*="message"]:not([class*="background"]),
-[class*="content"]:not([class*="background"]) {
-  background: transparent !important;
-}
-
-/* 
-===========================================
 MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 ===========================================
 */
