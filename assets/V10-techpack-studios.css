@@ -4,6 +4,52 @@
    ==================================================== */
 
 /* ==============================================
+   RESET GLOBAL BLACK COLOR SCHEME FOR TECHPACK V10
+   ============================================== */
+
+/* Override the global black color scheme specifically for TechPack V10 elements */
+.techpack-v10,
+.v10-step,
+[class*="v10-"],
+.techpack-step,
+.techpack-container,
+.v10-modal,
+.v10-modal *,
+.garments-grid,
+.garments-grid *,
+body[class*="techpack"] *,
+.page-techpack-v10 *,
+[id*="techpack"] *,
+[id*="v10"] * {
+  /* Reset problematic global color variables to normal Shopify values */
+  --color-scheme-5-background: transparent !important;
+  --color-scheme-5-button-label: inherit !important;
+  --color-foreground: var(--color-base-text, 18, 18, 18) !important;
+  
+  /* Ensure backgrounds are not forced to black */
+  background-color: transparent;
+  
+  /* Ensure text colors use theme defaults */
+  color: inherit;
+}
+
+/* Additional specific resets for common TechPack elements */
+.v10-step input,
+.v10-step button,
+.v10-step select,
+.v10-step textarea,
+.techpack-step input,
+.techpack-step button,
+.techpack-step select,
+.techpack-step textarea {
+  /* Reset form element colors */
+  --color-scheme-5-background: transparent !important;
+  --color-foreground: var(--color-base-text, 18, 18, 18) !important;
+  background-color: transparent;
+  color: inherit;
+}
+
+/* ==============================================
    CSS CUSTOM PROPERTIES - DARK THEME SYSTEM
    ============================================== */
 
