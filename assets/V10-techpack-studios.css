@@ -3559,19 +3559,15 @@ body[class*="techpack"] *,
 
 .sample-type-selection {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   gap: var(--v10-space-3);
 }
 
-@media (max-width: 768px) {
-  .sample-type-selection {
-    grid-template-columns: 1fr;
-  }
-}
 
 .sample-type-card {
   position: relative;
   cursor: pointer;
+  display: flex;
 }
 
 .sample-type-card input[type="radio"] {
@@ -3582,7 +3578,9 @@ body[class*="techpack"] *,
 }
 
 .sample-type-card__content {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: var(--v10-space-4);
   background: var(--v10-surface-elevated);
   border: 1px solid var(--v10-border-primary);
