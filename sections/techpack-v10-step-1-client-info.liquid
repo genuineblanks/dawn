@@ -6,7 +6,34 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
 <!-- Landing Page Section -->
 <section id="techpack-v10-landing" class="v10-techpack-landing">
-  <div class="v10-techpack-container">
+  <div class="techpack-container">
+    
+    <!-- Progress Bar -->
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 25%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">2</div>
+          <div class="techpack-progress__step-label">Files</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Garments</div>
+        </div>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
     <!-- Hero Section -->
     <div class="v10-landing-hero">
       <div class="v10-landing-hero-content">
@@ -114,37 +141,41 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </button>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
 <!-- Client Information Form Section (Hidden until workflow completes) -->
 <section id="techpack-v10-step-1" class="v10-techpack-step" data-step="1" style="display: none;">
-  <div class="v10-techpack-container">
-    <form id="techpack-v10-client-form" class="v10-client-form">
-    <!-- Progress Indicator -->
-    <div class="v10-progress-indicator">
-      <div class="v10-progress-bar">
-        <div class="v10-progress-fill" style="width: 25%"></div>
+  <div class="techpack-container">
+    
+    <!-- Progress Bar -->
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 25%"></div>
       </div>
-      <div class="v10-progress-steps">
-        <div class="v10-progress-step v10-progress-step--active">
-          <div class="v10-progress-circle">1</div>
-          <span class="v10-progress-label">Client Info</span>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
+          <div class="techpack-progress__step-label">Client Info</div>
         </div>
-        <div class="v10-progress-step">
-          <div class="v10-progress-circle">2</div>
-          <span class="v10-progress-label">Files</span>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">2</div>
+          <div class="techpack-progress__step-label">Files</div>
         </div>
-        <div class="v10-progress-step">
-          <div class="v10-progress-circle">3</div>
-          <span class="v10-progress-label">Garments</span>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Garments</div>
         </div>
-        <div class="v10-progress-step">
-          <div class="v10-progress-circle">4</div>
-          <span class="v10-progress-label">Review</span>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
         </div>
       </div>
     </div>
+
+    <div class="techpack-content">
+    <form id="techpack-v10-client-form" class="v10-client-form">
 
     <!-- Header -->
     <div class="v10-step-header">
@@ -226,31 +257,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
 
-    <!-- Project Details Studio -->
-    <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h2 class="v10-studio-title">Project Details</h2>
-        <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
-      </div>
-      
-      <div class="v10-form-section">
-        <div class="v10-form-field v10-form-field--full">
-          <label class="v10-form-label-enhanced">
-            PROJECT DESCRIPTION
-            <textarea
-              name="project_details"
-              class="v10-form-textarea-enhanced"
-              rows="4"
-              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
-              maxlength="500"
-            ></textarea>
-          </label>
-          <div class="v10-char-count">
-            <span id="v10-project-details-count">0</span>/500 characters
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Different Address Form (conditional) -->
     <div class="v10-studio-card v10-different-address-card" id="v10-different-address-form" style="display: none;">
@@ -404,7 +410,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
       <div class="v10-form-grid">
         <div class="v10-form-group v10-form-group--full">
-          <label class="v10-form-label">Delivery Address *</label>
+          <label class="v10-form-label required">Delivery Address</label>
           <div class="v10-delivery-options">
             <label class="v10-delivery-option">
               <input type="radio" name="deliveryAddress" value="company" checked>
@@ -449,8 +455,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-form-grid">
           <!-- Contact Info Row -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              Contact Name *
+            <label class="v10-form-label required">
+              Contact Name
               <input
                 type="text"
                 name="deliveryContactName"
@@ -462,8 +468,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              Contact Phone *
+            <label class="v10-form-label required">
+              Contact Phone
               <input
                 type="tel"
                 name="deliveryPhone"
@@ -477,8 +483,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- Address Lines -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              Address Line 1 *
+            <label class="v10-form-label required">
+              Address Line 1
               <input
                 type="text"
                 name="deliveryAddress1"
@@ -503,8 +509,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- City & State -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              City *
+            <label class="v10-form-label required">
+              City
               <input
                 type="text"
                 name="deliveryCity"
@@ -516,8 +522,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              State/Province *
+            <label class="v10-form-label required">
+              State/Province
               <input
                 type="text"
                 name="deliveryState"
@@ -530,8 +536,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- Postal & Country -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              Postal Code *
+            <label class="v10-form-label required">
+              Postal Code
               <input
                 type="text"
                 name="deliveryPostal"
@@ -543,12 +549,12 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label">
-              Country *
+            <label class="v10-form-label required">
+              COUNTRY
               <div class="v10-enhanced-country-wrapper">
                 <input
                   type="text"
-                  id="v10-delivery-country"
+                  id="v10-delivery-country-alt"
                   name="deliveryCountry"
                   class="v10-form-input v10-enhanced-country-input"
                   data-validate="required-if-different"
@@ -556,22 +562,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
                   placeholder="Select delivery country"
                   readonly
                 >
-                <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag"></div>
-                <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle">
+                <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag-alt"></div>
+                <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle-alt">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                     <path d="M4 6l4 4 4-4H4z"/>
                   </svg>
                 </div>
-                <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown">
+                <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown-alt">
                   <div class="v10-enhanced-country-search">
                     <input
                       type="text"
                       class="v10-enhanced-country-search-input"
                       placeholder="Search countries..."
-                      id="v10-delivery-country-search"
+                      id="v10-delivery-country-search-alt"
                     >
                   </div>
-                  <div class="v10-enhanced-country-list" id="v10-delivery-country-list"></div>
+                  <div class="v10-enhanced-country-list" id="v10-delivery-country-list-alt"></div>
                 </div>
               </div>
             </label>
@@ -675,6 +681,32 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
 
+    <!-- Project Details Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Project Details</h2>
+        <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
+      </div>
+      
+      <div class="v10-form-section">
+        <div class="v10-form-field v10-form-field--full">
+          <label class="v10-form-label-enhanced">
+            PROJECT DESCRIPTION
+            <textarea
+              name="project_details"
+              class="v10-form-textarea-enhanced"
+              rows="4"
+              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+              maxlength="500"
+            ></textarea>
+          </label>
+          <div class="v10-char-count">
+            <span id="v10-project-details-count">0</span>/500 characters
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Action Buttons -->
     <div class="v10-step-actions">
       <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-change-submission">
@@ -692,6 +724,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </button>
     </div>
     </form>
+    </div>
   </div>
 </section>
 

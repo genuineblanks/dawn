@@ -5,36 +5,41 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
 <section id="techpack-v10-step-2" class="v10-techpack-step" data-step="2" style="display: none;">
-  <div class="v10-techpack-container">
-    <!-- Progress Indicator -->
-    <div class="v10-progress-indicator">
-      <div class="v10-progress-bar">
-        <div class="v10-progress-fill" style="width: 50%"></div>
+  <div class="techpack-container">
+    
+    <!-- Progress Bar -->
+    <div class="techpack-progress">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 50%"></div>
       </div>
-      <div class="v10-progress-steps">
-        <div class="v10-progress-step v10-progress-step--completed">
-          <div class="v10-progress-circle">1</div>
-          <span class="v10-progress-label">Client Info</span>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
+          <div class="techpack-progress__step-label">Client Info</div>
         </div>
-        <div class="v10-progress-step v10-progress-step--active">
-          <div class="v10-progress-circle">2</div>
-          <span class="v10-progress-label">Files</span>
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">2</div>
+          <div class="techpack-progress__step-label">Files</div>
         </div>
-        <div class="v10-progress-step">
-          <div class="v10-progress-circle">3</div>
-          <span class="v10-progress-label">Garments</span>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">3</div>
+          <div class="techpack-progress__step-label">Garments</div>
         </div>
-        <div class="v10-progress-step">
-          <div class="v10-progress-circle">4</div>
-          <span class="v10-progress-label">Review</span>
+        <div class="techpack-progress__step">
+          <div class="techpack-progress__step-circle">4</div>
+          <div class="techpack-progress__step-label">Review</div>
         </div>
       </div>
     </div>
 
+    <div class="techpack-content">
+
     <!-- Header -->
-    <div class="v10-step-header">
-      <h1 class="v10-step-title">File Upload</h1>
-      <p class="v10-step-subtitle">Upload your tech pack files, designs, and reference materials</p>
+    <div class="techpack-header-with-help">
+      <div class="techpack-header-content">
+        <h2 class="techpack-title">File Upload</h2>
+        <p class="techpack-subtitle">Upload your tech pack files, designs, and reference materials</p>
+      </div>
     </div>
 
     <!-- Upload Studio -->
@@ -160,6 +165,7 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
           <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
         </svg>
       </button>
+    </div>
     </div>
   </div>
 </section>
