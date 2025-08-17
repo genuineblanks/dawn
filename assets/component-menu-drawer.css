@@ -352,10 +352,10 @@ details[open].menu-opening > .menu-drawer__submenu {
 
 /* GLOBAL BLUE COLOR ELIMINATION - ENTIRE WEBSITE */
 * {
-  --color-scheme-5-background: #000000 !important;
-  --color-scheme-5-button-label: #ffffff !important;
+  --color-scheme-5-background: #000000;
+  --color-scheme-5-button-label: #ffffff;
   /* Override the problematic --color-foreground variable globally */
-  --color-foreground: 0, 0, 0 !important; /* RGB values for black */
+  --color-foreground: 0, 0, 0; /* RGB values for black */
 }
 
 /* GLOBAL FOCUS OUTLINE ELIMINATION - PROFESSIONAL STYLING */
@@ -367,12 +367,12 @@ details[open].menu-opening > .menu-drawer__submenu {
 .focus-inset:active,
 *:focus-visible,
 *:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
+  outline: none;
+  box-shadow: none;
+  border: none;
   /* Professional subtle focus styling */
-  background-color: rgba(0, 0, 0, 0.05) !important;
-  transition: background-color 0.2s ease !important;
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
 }
 
 /* COMPREHENSIVE INTERACTIVE ELEMENT OVERRIDE */
@@ -400,11 +400,11 @@ details:focus-visible,
 .header__menu-item:focus-visible,
 .list-menu__item:focus,
 .list-menu__item:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: rgba(0, 0, 0, 0.2) !important;
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.2);
   /* Professional subtle background change */
-  background-color: rgba(0, 0, 0, 0.03) !important;
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /* COMPONENT-SPECIFIC OVERRIDES */
@@ -415,28 +415,28 @@ details:focus-visible,
 .component-interactive-tabs *:focus-visible,
 [class*="component-"] *:focus,
 [class*="component-"] *:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: rgba(0, 0, 0, 0.2) !important;
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 /* BROWSER DEFAULT OVERRIDES */
 /* Remove browser default focus styles completely */
 *::-moz-focus-inner {
-  border: 0 !important;
-  outline: none !important;
+  border: 0;
+  outline: none;
 }
 
 *:focus {
-  -moz-outline: none !important;
-  -webkit-outline: none !important;
-  outline: none !important;
+  -moz-outline: none;
+  -webkit-outline: none;
+  outline: none;
 }
 
 /* Webkit specific overrides */
 *:focus:not(:focus-visible) {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
 }
 
 /* ABSOLUTE FINAL OVERRIDE - NUCLEAR OPTION */
@@ -445,64 +445,64 @@ details:focus-visible,
 *::before,
 *::after {
   /* Prevent any blue outlines from any source */
-  outline-color: transparent !important;
+  outline-color: transparent;
   /* Override any CSS variables that could cause blue */
-  --outline-color: transparent !important;
-  --focus-color: rgba(0, 0, 0, 0.1) !important;
+  --outline-color: transparent;
+  --focus-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Force override inline styles that might contain blue */
 *[style*="outline"],
 *[style*="box-shadow"] {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Override any remaining blue colors globally */
 [style*="#334fb4"],
 [style*="rgb(51, 79, 180)"],
 [style*="rgba(51, 79, 180"] {
-  background-color: transparent !important;
-  color: #000000 !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
+  background-color: transparent;
+  color: #000000;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 @media screen and (max-width: 749px) {
   .menu-drawer.country-selector-open {
-    transform: none !important;
-    filter: none !important;
-    transition: none !important;
+    transform: none;
+    filter: none;
+    transition: none;
   }
   
   /* Professional Mobile Menu Redesign */
   .menu-drawer {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
-    border-right: none !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-right: none;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.15), 
-                0 20px 40px rgba(0, 0, 0, 0.1) !important;
-    border-radius: 0 25px 25px 0 !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+                0 20px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 0 25px 25px 0;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     /* Ensure solid background - override any transparency */
-    background-color: #ffffff !important;
-    opacity: 1 !important;
+    background-color: #ffffff;
+    opacity: 1;
   }
   
   .menu-drawer__navigation {
-    padding: 2rem 0 3rem 0 !important;
+    padding: 2rem 0 3rem 0;
   }
   
   /* Force vertical layout for mobile menu */
   .menu-drawer__menu {
-    display: block !important;
-    padding: 1rem 0 !important;
+    display: block;
+    padding: 1rem 0;
   }
   
   .menu-drawer__menu li {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
+    display: block;
+    width: 100%;
+    margin: 0;
     position: relative;
   }
   
@@ -521,19 +521,19 @@ details:focus-visible,
   }
   
   .menu-drawer__menu-item {
-    display: block !important;
-    width: 100% !important;
-    padding: 1.8rem 3rem !important;
-    font-size: 1.6rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.05em !important;
-    text-transform: uppercase !important;
-    color: #2c2c2c !important;
-    background: transparent !important;
-    border-left: 4px solid transparent !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    display: block;
+    width: 100%;
+    padding: 1.8rem 3rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #2c2c2c;
+    background: transparent;
+    border-left: 4px solid transparent;
+    border-radius: 0;
+    margin: 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
   }
@@ -569,11 +569,11 @@ details:focus-visible,
   
   .menu-drawer__menu-item:hover,
   .menu-drawer__menu-item:focus {
-    color: #000000 !important;
-    background: rgba(0, 0, 0, 0.02) !important;
-    border-left-color: #000000 !important;
-    transform: translateX(8px) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    color: #000000;
+    background: rgba(0, 0, 0, 0.02);
+    border-left-color: #000000;
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
   
   .menu-drawer__menu-item:hover::before,
@@ -590,12 +590,12 @@ details:focus-visible,
   .menu-drawer__menu-item--active {
     background: linear-gradient(90deg, 
       rgba(0, 0, 0, 0.12) 0%, 
-      rgba(0, 0, 0, 0.06) 100%) !important;
-    border-left-color: #000000 !important;
-    color: #000000 !important;
-    font-weight: 700 !important;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15) !important;
-    transform: translateX(8px) !important;
+      rgba(0, 0, 0, 0.06) 100%);
+    border-left-color: #000000;
+    color: #000000;
+    font-weight: 700;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    transform: translateX(8px);
   }
   
   .menu-drawer__menu-item--active::before {
@@ -611,70 +611,70 @@ details:focus-visible,
   .menu-drawer__utility-links {
     background: linear-gradient(135deg, 
       rgba(248, 249, 250, 0.9) 0%, 
-      rgba(240, 242, 247, 0.8) 100%) !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
-    padding: 2.5rem 3rem !important;
-    margin-top: auto !important;
+      rgba(240, 242, 247, 0.8) 100%);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 2.5rem 3rem;
+    margin-top: auto;
   }
   
   .menu-drawer__account {
-    padding: 1.2rem 0 !important;
-    font-size: 1.5rem !important;
-    font-weight: 600 !important;
-    color: #4a4a4a !important;
-    transition: all 0.3s ease !important;
+    padding: 1.2rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    transition: all 0.3s ease;
   }
   
   .menu-drawer__account:hover {
-    color: #000000 !important;
-    transform: translateX(4px) !important;
+    color: #000000;
+    transform: translateX(4px);
   }
   
   /* Social links enhancement */
   .menu-drawer .list-social {
-    margin-top: 1.5rem !important;
-    gap: 0.5rem !important;
+    margin-top: 1.5rem;
+    gap: 0.5rem;
   }
   
   .menu-drawer .list-social__link {
-    padding: 1rem !important;
-    background: rgba(255, 255, 255, 0.6) !important;
-    border-radius: 12px !important;
-    transition: all 0.3s ease !important;
-    color: #666 !important;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    color: #666;
   }
   
   .menu-drawer .list-social__link:hover {
-    background: #000000 !important;
-    color: white !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    background: #000000;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
   
   /* ===== LUXURY STYLING FOR MOBILE MENU ===== */
   
   /* Menu Items - Optimized for Mobile Touch */
   .menu-drawer__menu-item {
-    display: block !important;
-    width: 100% !important;
-    padding: 2rem 3rem !important;
-    min-height: 44px !important; /* iOS touch target minimum */
-    font-size: 1.6rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.08rem !important;
-    text-transform: none !important;
-    color: #333333 !important;
-    background: transparent !important;
-    border-left: 4px solid transparent !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    transition: all 0.2s ease !important; /* Faster response */
+    display: block;
+    width: 100%;
+    padding: 2rem 3rem;
+    min-height: 44px; /* iOS touch target minimum */
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.08rem;
+    text-transform: none;
+    color: #333333;
+    background: transparent;
+    border-left: 4px solid transparent;
+    border-radius: 0;
+    margin: 0;
+    transition: all 0.2s ease; /* Faster response */
     position: relative;
     overflow: hidden;
-    text-decoration: none !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    -webkit-tap-highlight-color: transparent !important; /* Remove iOS tap highlight */
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
   }
   
   /* Simplified hover effect for better performance */
@@ -699,12 +699,12 @@ details:focus-visible,
   .menu-drawer__menu-item:hover,
   .menu-drawer__menu-item:focus,
   .menu-drawer__menu-item:active {
-    color: #000000 !important;
-    background: rgba(0, 0, 0, 0.05) !important;
-    border-left-color: transparent !important;
-    transform: none !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: none !important;
+    color: #000000;
+    background: rgba(0, 0, 0, 0.05);
+    border-left-color: transparent;
+    transform: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: none;
   }
   
   .menu-drawer__menu-item:hover::before,
@@ -715,12 +715,12 @@ details:focus-visible,
   
   /* Active State */
   .menu-drawer__menu-item--active {
-    color: #000000 !important;
-    background: transparent !important;
-    border-left-color: transparent !important;
-    border-bottom: 1px solid #333333 !important;
-    font-weight: 500 !important;
-    transform: translateY(-1px) !important;
+    color: #000000;
+    background: transparent;
+    border-left-color: transparent;
+    border-bottom: 1px solid #333333;
+    font-weight: 500;
+    transform: translateY(-1px);
   }
   
   .menu-drawer__menu-item--active::before {
@@ -745,39 +745,39 @@ details:focus-visible,
   
   /* Learn More Button - Optimized for Touch */
   .menu-drawer__learn-more-button {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    padding: 2rem 3rem !important;
-    min-height: 44px !important;
-    font-size: 1.6rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.08rem !important;
-    text-transform: uppercase !important;
-    color: #333333 !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2rem 3rem;
+    min-height: 44px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    color: #333333;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin: 0;
     cursor: pointer;
-    transition: all 0.2s ease !important;
+    transition: all 0.2s ease;
     position: relative;
-    text-decoration: none !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     text-align: left;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
   }
   
   /* Learn More Hover Effects - Clean Style */
   .menu-drawer__learn-more-button:hover,
   .menu-drawer__learn-more-button:focus {
-    color: #000000 !important;
-    background: rgba(0, 0, 0, 0.03) !important;
-    outline: none !important;
-    box-shadow: none !important;
+    color: #000000;
+    background: rgba(0, 0, 0, 0.03);
+    outline: none;
+    box-shadow: none;
   }
   
   /* COMPREHENSIVE BLUE SHADOW AND FOCUS REMOVAL */
@@ -801,21 +801,21 @@ details:focus-visible,
   details summary:active,
   .link.focus-inset:focus,
   .link.focus-inset:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: rgba(0, 0, 0, 0.08) !important;
-    color: #000000 !important;
-    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background: rgba(0, 0, 0, 0.08);
+    color: #000000;
+    -webkit-tap-highlight-color: transparent;
   }
   
   /* Override any system focus styles */
   .menu-drawer *:focus,
   .menu-drawer *:focus-visible,
   .menu-drawer *:active {
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-tap-highlight-color: transparent !important;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
   }
   
   /* COMPREHENSIVE BLUE HIGHLIGHT REMOVAL - ALL SOURCES */
@@ -827,13 +827,13 @@ details:focus-visible,
   .menu-drawer *,
   .menu-drawer .menu-drawer__menu-item,
   .menu-drawer .learn-more-submenu-item {
-    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-focus-ring-color: transparent !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    -webkit-appearance: none !important;
-    outline-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-focus-ring-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    outline-color: transparent;
   }
 
   /* Override any system or browser focus styles */
@@ -850,30 +850,30 @@ details:focus-visible,
   .menu-drawer summary:active,
   .menu-drawer li:focus,
   .menu-drawer li:active {
-    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-focus-ring-color: transparent !important;
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: transparent !important;
-    background-color: rgba(0, 0, 0, 0.05) !important;
-    color: #000000 !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-focus-ring-color: transparent;
+    outline: none;
+    box-shadow: none;
+    border-color: transparent;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #000000;
   }
 
   /* ELIMINATE ALL POSSIBLE BLUE COLORS FROM MOBILE MENU */
   .menu-drawer *,
   .menu-drawer *::before,
   .menu-drawer *::after {
-    --color-accent: #000000 !important;
-    --color-button: #000000 !important;
-    --color-button-text: #ffffff !important;
+    --color-accent: #000000;
+    --color-button: #000000;
+    --color-button-text: #ffffff;
     /* Override any CSS variables that might contain blue */
-    --color-base-accent-1: #000000 !important;
-    --color-base-accent-2: #000000 !important;
-    --button-primary-bg: #000000 !important;
-    --button-primary-color: #ffffff !important;
+    --color-base-accent-1: #000000;
+    --color-base-accent-2: #000000;
+    --button-primary-bg: #000000;
+    --button-primary-color: #ffffff;
     /* Prevent any inherit of blue colors */
-    border-color: transparent !important;
+    border-color: transparent;
   }
 
   /* Force override any blue that might come from parent elements or theme */
@@ -884,9 +884,9 @@ details:focus-visible,
   .menu-drawer button,
   .menu-drawer summary {
     /* Remove any possible blue backgrounds */
-    background-image: none !important;
+    background-image: none;
     /* Override any blue colors */
-    color: inherit !important;
+    color: inherit;
   }
 
   /* Additional safety net - override specific selectors that might have blue */
@@ -894,10 +894,10 @@ details:focus-visible,
   .menu-drawer__menu-item[style*="51, 79, 180"],
   .menu-drawer *[style*="334fb4"],
   .menu-drawer *[style*="51, 79, 180"] {
-    background: transparent !important;
-    color: #000000 !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
+    background: transparent;
+    color: #000000;
+    border-color: transparent;
+    box-shadow: none;
   }
   
   /* Learn More Text */
@@ -981,34 +981,34 @@ details:focus-visible,
   
   /* Learn More Submenu Items - Clean Style */
   .learn-more-submenu-item {
-    display: block !important;
-    width: 100% !important;
-    padding: 1.2rem 3rem !important;
-    font-size: 1.4rem !important;
-    font-weight: 400 !important;
-    letter-spacing: 0.02em !important;
-    text-transform: none !important;
-    color: #666666 !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
+    display: block;
+    width: 100%;
+    padding: 1.2rem 3rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: #666666;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin: 0;
     cursor: pointer;
-    transition: all 0.2s ease !important;
+    transition: all 0.2s ease;
     position: relative;
-    text-decoration: none !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   }
   
   .learn-more-submenu-item:hover,
   .learn-more-submenu-item:focus {
-    color: #333333 !important;
-    background: rgba(0, 0, 0, 0.02) !important;
+    color: #333333;
+    background: rgba(0, 0, 0, 0.02);
   }
   
   /* Last submenu item */
   .learn-more-submenu-list li:last-child .learn-more-submenu-item {
-    border-bottom: none !important;
+    border-bottom: none;
   }
 }
