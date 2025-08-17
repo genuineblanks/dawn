@@ -3,32 +3,21 @@ TechPack V10 Step 4: Premium Review & Submit
 {% endcomment %}
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
+{{ 'simple-progress-bar.css' | asset_url | stylesheet_tag }}
 
 <section id="techpack-v10-step-4" class="v10-techpack-step" data-step="4" style="display: none;">
   <div class="techpack-container">
     
     <!-- Simple Progress Bar -->
-    <div class="techpack-progress" data-step="4">
-      <div class="techpack-progress__bar">
-        <div class="techpack-progress__fill" style="width: 100%"></div>
+    <div class="simple-progress-container">
+      <div class="simple-progress-bar">
+        <div class="simple-progress-fill" style="width: 100%"></div>
       </div>
-      <div class="techpack-progress__steps">
-        <div class="techpack-progress__step techpack-progress__step--completed">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
-          <div class="techpack-progress__step-label">Client Info</div>
-        </div>
-        <div class="techpack-progress__step techpack-progress__step--completed">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
-          <div class="techpack-progress__step-label">File Upload</div>
-        </div>
-        <div class="techpack-progress__step techpack-progress__step--completed">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
-          <div class="techpack-progress__step-label">Design Studios</div>
-        </div>
-        <div class="techpack-progress__step techpack-progress__step--active">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">4</div>
-          <div class="techpack-progress__step-label">Review</div>
-        </div>
+      <div class="simple-progress-steps">
+        <div class="simple-step completed">✓<span>Client Info</span></div>
+        <div class="simple-step completed">✓<span>File Upload</span></div>
+        <div class="simple-step completed">✓<span>Design Studios</span></div>
+        <div class="simple-step active">4<span>Review</span></div>
       </div>
     </div>
 

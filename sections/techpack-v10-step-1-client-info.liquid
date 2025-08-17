@@ -3,6 +3,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 {% endcomment %}
 
 <link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<link href="{{ 'simple-progress-bar.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <style>
   .v10-techpack-landing {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
@@ -142,27 +143,15 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   <div class="techpack-container">
     
     <!-- Simple Progress Bar -->
-    <div class="techpack-progress" data-step="1">
-      <div class="techpack-progress__bar">
-        <div class="techpack-progress__fill" style="width: 25%"></div>
+    <div class="simple-progress-container">
+      <div class="simple-progress-bar">
+        <div class="simple-progress-fill" style="width: 25%"></div>
       </div>
-      <div class="techpack-progress__steps">
-        <div class="techpack-progress__step techpack-progress__step--active">
-          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">1</div>
-          <div class="techpack-progress__step-label">Client Info</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">2</div>
-          <div class="techpack-progress__step-label">Files</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">3</div>
-          <div class="techpack-progress__step-label">Garments</div>
-        </div>
-        <div class="techpack-progress__step">
-          <div class="techpack-progress__step-circle">4</div>
-          <div class="techpack-progress__step-label">Review</div>
-        </div>
+      <div class="simple-progress-steps">
+        <div class="simple-step active">1<span>Client Info</span></div>
+        <div class="simple-step">2<span>Files</span></div>
+        <div class="simple-step">3<span>Garments</span></div>
+        <div class="simple-step">4<span>Review</span></div>
       </div>
     </div>
 
