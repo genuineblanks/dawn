@@ -165,9 +165,15 @@ body[class*="techpack"] *,
   font-size: var(--v10-text-base);
   line-height: 1.6;
   color: var(--v10-text-primary);
-  background-color: var(--v10-bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apply background only to main container elements, not all v10- classes */
+.v10-techpack-step,
+[id^="techpack-v10"],
+.v10-modal-overlay {
+  background-color: var(--v10-bg-primary);
 }
 
 /* V10 TechPack scoped headings */
