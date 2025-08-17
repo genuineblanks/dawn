@@ -5125,11 +5125,20 @@ class V10_ModalManager {
     });
   }
 
-  openModal(modalId) {
-    const modal = this.modals.get(modalId) || document.getElementById(`v10-${modalId}-modal`);
+  openModal(modalIdOrElement) {
+    let modal;
+    
+    // Handle both string IDs and DOM elements
+    if (typeof modalIdOrElement === 'string') {
+      // String ID case (existing functionality)
+      modal = this.modals.get(modalIdOrElement) || document.getElementById(`v10-${modalIdOrElement}-modal`);
+    } else if (modalIdOrElement && modalIdOrElement.nodeType === 1) {
+      // DOM element case (what measurement modal needs)
+      modal = modalIdOrElement;
+    }
     
     if (!modal) {
-      console.error('Modal not found:', modalId);
+      console.error('Modal not found:', modalIdOrElement);
       return;
     }
 

@@ -1194,19 +1194,37 @@ body[class*="techpack"] *,
   display: flex;
   align-items: center;
   gap: var(--v10-space-4);
-  padding: var(--v10-space-5);
-  background: var(--v10-bg-tertiary);
-  border: 2px solid var(--v10-border-primary);
+  padding: var(--v10-space-6);
+  background: var(--v10-glass-bg);
+  backdrop-filter: var(--v10-backdrop-blur);
+  border: 2px solid var(--v10-glass-border);
   border-radius: var(--v10-radius-lg);
   cursor: pointer;
   transition: var(--v10-transition);
   text-align: left;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .v10-client-option:hover {
   border-color: var(--v10-accent-primary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-glass-shadow);
+}
+
+.v10-client-option-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  z-index: 1;
+}
+
+.v10-client-option:hover .v10-client-option-shimmer {
+  animation: shimmer 1.5s ease-in-out;
 }
 
 .v10-client-option-icon {
@@ -1220,10 +1238,14 @@ body[class*="techpack"] *,
   justify-content: center;
   color: var(--v10-accent-primary);
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .v10-client-option-content {
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .v10-client-option-title {
