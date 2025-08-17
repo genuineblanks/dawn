@@ -3561,9 +3561,6 @@ body[class*="techpack"] *,
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--v10-space-3);
-  /* DEBUG: Add background to confirm this CSS is loading */
-  background: red !important;
-  border: 5px solid blue !important;
 }
 
 
@@ -3576,9 +3573,6 @@ body[class*="techpack"] *,
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
   transition: var(--v10-transition);
-  /* DEBUG: Add green background to confirm cards are styled */
-  background: green !important;
-  border: 3px solid yellow !important;
 }
 
 .sample-type-card input[type="radio"] {
@@ -3847,9 +3841,8 @@ body[class*="techpack"] *,
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   transition: var(--v10-transition);
-  flex: 0 0 320px;
-  min-width: 320px;
-  max-width: 400px;
+  width: 100%;
+  max-width: none;
 }
 
 .collection-item {
