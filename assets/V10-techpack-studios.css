@@ -3572,7 +3572,6 @@ body[class*="techpack"] *,
 .sample-type-card {
   position: relative;
   cursor: pointer;
-  display: block;
 }
 
 .sample-type-card input[type="radio"] {
