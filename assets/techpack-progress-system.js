@@ -3,6 +3,9 @@
  * Advanced progress bar with lava flow animations, particle effects, and state management
  */
 
+// Prevent duplicate class declaration
+if (typeof window.TechPackProgressSystem === 'undefined') {
+
 class TechPackProgressSystem {
   constructor() {
     this.currentStep = 1;
@@ -15,10 +18,20 @@ class TechPackProgressSystem {
   }
 
   init() {
+    this.detectCurrentStep();
     this.bindEvents();
     this.loadProgress();
     this.updateDisplay();
     this.startParticleSystem();
+    this.startTimerUpdates();
+  }
+
+  detectCurrentStep() {
+    // Detect current step from the visible progress bar
+    const progressBar = document.querySelector('.techpack-progress[data-step]');
+    if (progressBar) {
+      this.currentStep = parseInt(progressBar.dataset.step) || 1;
+    }
   }
 
   bindEvents() {
@@ -136,7 +149,7 @@ class TechPackProgressSystem {
       const circle = step.querySelector('.techpack-progress__step-circle');
       const label = step.querySelector('.techpack-progress__step-label');
       
-      // Reset classes
+      // Reset classes but preserve original content
       step.className = 'techpack-progress__step';
       circle.className = 'techpack-progress__step-circle';
       
@@ -144,15 +157,17 @@ class TechPackProgressSystem {
         // Completed step
         step.classList.add('techpack-progress__step--completed');
         circle.classList.add('techpack-progress__step-circle--completed');
-        circle.innerHTML = '✓';
+        if (circle.innerHTML !== '✓') {
+          circle.innerHTML = '✓';
+        }
       } else if (stepNumber === this.currentStep) {
         // Active step
         step.classList.add('techpack-progress__step--active');
         circle.classList.add('techpack-progress__step-circle--active');
-        circle.innerHTML = stepNumber;
+        circle.innerHTML = stepNumber.toString();
       } else {
-        // Pending step
-        circle.innerHTML = stepNumber;
+        // Pending step - keep original number
+        circle.innerHTML = stepNumber.toString();
       }
     });
   }
@@ -267,6 +282,20 @@ class TechPackProgressSystem {
     });
   }
 
+  startTimerUpdates() {
+    // Update timer every 10 seconds
+    setInterval(() => {
+      this.updateTimeline();
+    }, 10000);
+  }
+
+  updateTimeline() {
+    // Update timeline display
+    document.querySelectorAll('.techpack-progress__timeline span').forEach(el => {
+      el.textContent = this.formatElapsedTime();
+    });
+  }
+
   saveProgress() {
     const progressData = {
       currentStep: this.currentStep,
@@ -366,14 +395,20 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = tooltipStyles;
 document.head.appendChild(styleSheet);
 
-// Initialize the progress system when DOM is ready
+// Initialize the progress system when DOM is ready - but only once
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    window.techpackProgress = new TechPackProgressSystem();
+    if (!window.techpackProgress) {
+      window.techpackProgress = new TechPackProgressSystem();
+    }
   });
 } else {
-  window.techpackProgress = new TechPackProgressSystem();
+  if (!window.techpackProgress) {
+    window.techpackProgress = new TechPackProgressSystem();
+  }
 }
 
 // Export for use in other scripts
 window.TechPackProgressSystem = TechPackProgressSystem;
+
+} // End of duplicate prevention check

@@ -3106,6 +3106,7 @@
     transparent 100%
   );
   animation: lavaFlow 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Particle Trail Effect */
@@ -3190,6 +3191,7 @@
     0 0 20px rgba(156, 163, 175, 0.3),
     0 6px 20px rgba(45, 52, 54, 0.15);
   animation: activePulse 2s ease-in-out infinite;
+  will-change: box-shadow, transform;
 }
 
 /* Completed Step Glow */
@@ -3202,6 +3204,7 @@
     0 0 25px rgba(107, 114, 128, 0.4),
     0 8px 25px rgba(45, 52, 54, 0.2);
   animation: completedGlow 3s ease-in-out infinite;
+  will-change: box-shadow, transform;
 }
 
 /* Orbit Particles for Active Step */
