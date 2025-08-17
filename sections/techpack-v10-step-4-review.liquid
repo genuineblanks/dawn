@@ -1,0 +1,957 @@
+{% comment %}
+TechPack V10 Step 4: Premium Review & Submit
+{% endcomment %}
+
+{{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
+
+<section id="techpack-v10-step-4" class="v10-techpack-step" data-step="4" style="display: none;">
+  <div class="techpack-container">
+    
+    <!-- Simple Progress Bar -->
+    <div class="techpack-progress" data-step="4">
+      <div class="techpack-progress__bar">
+        <div class="techpack-progress__fill" style="width: 100%"></div>
+      </div>
+      <div class="techpack-progress__steps">
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
+          <div class="techpack-progress__step-label">Client Info</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
+          <div class="techpack-progress__step-label">File Upload</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--completed">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--completed">✓</div>
+          <div class="techpack-progress__step-label">Design Studios</div>
+        </div>
+        <div class="techpack-progress__step techpack-progress__step--active">
+          <div class="techpack-progress__step-circle techpack-progress__step-circle--active">4</div>
+          <div class="techpack-progress__step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      
+      <!-- Header -->
+      <div class="techpack-header-with-help">
+        <div class="techpack-header-content">
+          <h2 class="techpack-title">Review & Submit</h2>
+          <p class="techpack-subtitle" id="step-4-subtitle">Review your specifications and submit your request</p>
+        </div>
+        <div class="review-status-indicator" id="review-status">
+          <span class="review-status__text">Ready to Submit</span>
+          <div class="review-status__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22,4 12,14.01 9,11.01"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-container">
+        
+        <!-- Review Summary Cards -->
+        <div class="review-summary-grid">
+          
+          <!-- Client Information Card -->
+          <div class="review-card">
+            <div class="review-card__header">
+              <div class="review-card__title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Client Information</span>
+              </div>
+              <button type="button" class="review-card__edit" data-edit-step="1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="review-card__content" id="review-client-info">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Uploaded Files Card -->
+          <div class="review-card">
+            <div class="review-card__header">
+              <div class="review-card__title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14,2 14,8 20,8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+                <span>Uploaded Files</span>
+              </div>
+              <button type="button" class="review-card__edit" data-edit-step="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="review-card__content" id="review-uploaded-files">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Request Type Card -->
+          <div class="review-card review-card--highlight">
+            <div class="review-card__header">
+              <div class="review-card__title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 11H1v3h8v3l8-5-8-5v3z"/>
+                </svg>
+                <span>Request Type</span>
+              </div>
+            </div>
+            <div class="review-card__content" id="review-request-type">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Detailed Review Sections -->
+        <div class="review-details">
+          
+          <!-- Garment Specifications Section -->
+          <div class="review-section">
+            <div class="review-section__header">
+              <div class="review-section__title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                  <line x1="16" y1="8" x2="2" y2="22"/>
+                  <line x1="17.5" y1="15" x2="9" y2="15"/>
+                </svg>
+                <h3>Garment Specifications</h3>
+              </div>
+              <button type="button" class="review-section__edit" data-edit-step="3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Garments
+              </button>
+            </div>
+            <div class="review-section__content">
+              <div class="review-garments-grid" id="review-garments">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Lab Dips Section (Sample Requests Only) -->
+          <div class="review-section" id="review-labdips-section" style="display: none;">
+            <div class="review-section__header">
+              <div class="review-section__title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6"/>
+                </svg>
+                <h3>Lab Dip Color Swatches</h3>
+              </div>
+              <button type="button" class="review-section__edit" data-edit-step="3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Colors
+              </button>
+            </div>
+            <div class="review-section__content">
+              <div class="review-labdips-container">
+                <div class="review-labdips-assigned" id="review-labdips-assigned">
+                  <!-- Assigned lab dips -->
+                </div>
+                <div class="review-labdips-standalone" id="review-labdips-standalone">
+                  <!-- Standalone fabric swatches -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Design Samples Section (Sample Requests Only) -->
+          <div class="review-section" id="review-designs-section" style="display: none;">
+            <div class="review-section__header">
+              <div class="review-section__title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <h3>Design Sample Applications</h3>
+              </div>
+              <button type="button" class="review-section__edit" data-edit-step="3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Designs
+              </button>
+            </div>
+            <div class="review-section__content">
+              <div class="review-designs-container">
+                <div class="review-designs-assigned" id="review-designs-assigned">
+                  <!-- Assigned design samples -->
+                </div>
+                <div class="review-designs-standalone" id="review-designs-standalone">
+                  <!-- Standalone fabric design samples -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantities Section (Bulk Orders Only) -->
+          <div class="review-section" id="review-quantities-section" style="display: none;">
+            <div class="review-section__header">
+              <div class="review-section__title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <h3>Production Quantities</h3>
+              </div>
+              <button type="button" class="review-section__edit" data-edit-step="3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Quantities
+              </button>
+            </div>
+            <div class="review-section__content">
+              <div class="review-quantities-container" id="review-quantities">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Cost Summary -->
+        <div class="cost-summary" id="cost-summary">
+          <div class="cost-summary__header">
+            <h3>Cost Summary</h3>
+            <span class="cost-summary__badge" id="cost-summary-badge">Estimated</span>
+          </div>
+          <div class="cost-summary__content">
+            <div class="cost-breakdown" id="cost-breakdown">
+              <!-- Populated by JavaScript -->
+            </div>
+            <div class="cost-summary__total">
+              <span class="cost-total__label">Total Cost:</span>
+              <span class="cost-total__value" id="total-cost">€0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Actions -->
+        <div class="submit-actions">
+          <div class="submit-actions__content">
+            
+            <!-- Request Type Specific Messages -->
+            <div class="submit-message" id="submit-message">
+              <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="v10-step-actions">
+              <button type="button" class="v10-btn v10-btn--ghost" id="step-4-prev">
+                <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                Previous
+              </button>
+              
+              <div class="submit-primary-actions">
+                <button type="button" class="v10-btn v10-btn--secondary" id="save-draft-btn">
+                  <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17,21 17,13 7,13 7,21"/>
+                    <polyline points="7,3 7,8 15,8"/>
+                  </svg>
+                  Save Draft
+                </button>
+                
+                <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
+                  <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                  </svg>
+                  Submit Request
+                </button>
+              </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="terms-agreement">
+              <label class="terms-checkbox">
+                <input type="checkbox" id="terms-agreement" required>
+                <span class="checkmark"></span>
+                <span class="terms-text">
+                  I agree to the <a href="#" target="_blank">Terms & Conditions</a> and confirm that all information provided is accurate
+                </span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="techpack-modal techpack-modal--success" id="success-modal" style="display: none;">
+    <div class="techpack-modal__backdrop"></div>
+    <div class="techpack-modal__content techpack-modal__content--success">
+      <div class="success-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <div class="success-content">
+        <h3 class="success-title">Request Submitted Successfully!</h3>
+        <p class="success-message" id="success-message">
+          <!-- Populated by JavaScript -->
+        </p>
+        <div class="success-details" id="success-details">
+          <!-- Populated by JavaScript -->
+        </div>
+        <div class="success-actions">
+          <button type="button" class="techpack-btn techpack-btn--primary" id="success-close">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Review Garment Card Template -->
+<template id="review-garment-template">
+  <div class="review-garment-card">
+    <div class="review-garment-card__header">
+      <div class="review-garment-card__title">
+        <span class="garment-number">Garment 1</span>
+        <span class="garment-type">Hoodie</span>
+      </div>
+      <div class="review-garment-card__status">
+        <span class="status-badge status-badge--complete">Complete</span>
+      </div>
+    </div>
+    <div class="review-garment-card__content">
+      <div class="review-garment-detail">
+        <span class="detail-label">Fabric:</span>
+        <span class="detail-value">100% Organic Cotton</span>
+      </div>
+      <div class="review-garment-detail">
+        <span class="detail-label">Sample Type:</span>
+        <span class="detail-value">Stock Color</span>
+      </div>
+      <div class="review-garment-assigned">
+        <!-- Assigned items will be inserted here -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Review Lab Dip Template -->
+<template id="review-labdip-template">
+  <div class="review-item">
+    <div class="review-item__visual">
+      <div class="review-item__color" style="background-color: #000000;"></div>
+    </div>
+    <div class="review-item__content">
+      <span class="review-item__name">PANTONE 19-4052 TPX</span>
+      <span class="review-item__cost">€25</span>
+    </div>
+    <div class="review-item__assignment">
+      <span class="assignment-type">Assigned to Garment 1</span>
+    </div>
+  </div>
+</template>
+
+<!-- Review Design Template -->
+<template id="review-design-template">
+  <div class="review-item">
+    <div class="review-item__visual">
+      <div class="review-item__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="review-item__content">
+      <span class="review-item__name">Logo Front</span>
+      <span class="review-item__type">Embroidery</span>
+      <span class="review-item__cost">€15</span>
+    </div>
+    <div class="review-item__assignment">
+      <span class="assignment-type">Assigned to Garment 1</span>
+    </div>
+  </div>
+</template>
+
+<style>
+/* Additional styles for Step 4 Review */
+.review-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.review-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--v10-space-xl);
+  margin-bottom: var(--v10-space-3xl);
+}
+
+.review-card {
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-lg);
+  overflow: hidden;
+  transition: var(--v10-transition);
+}
+
+.review-card--highlight {
+  border-color: var(--v10-accent-blue);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1);
+}
+
+.review-card:hover {
+  box-shadow: var(--v10-shadow-md);
+}
+
+.review-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-lg) var(--v10-space-xl);
+  background: var(--v10-bg-secondary);
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.review-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-md);
+  color: var(--v10-text-primary);
+  font-weight: 600;
+}
+
+.review-card__edit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--v10-border-medium);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.review-card__edit:hover {
+  background: var(--v10-accent-blue);
+  color: var(--v10-text-light);
+  border-color: var(--v10-accent-blue);
+}
+
+.review-card__content {
+  padding: var(--v10-space-xl);
+}
+
+.review-section {
+  margin-bottom: var(--v10-space-3xl);
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-lg);
+  overflow: hidden;
+}
+
+.review-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-xl) var(--v10-space-2xl);
+  background: var(--v10-bg-secondary);
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.review-section__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-lg);
+}
+
+.review-section__title h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+
+.review-section__edit {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-sm);
+  padding: var(--v10-space-sm) var(--v10-space-lg);
+  background: transparent;
+  border: 1px solid var(--v10-border-medium);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.review-section__edit:hover {
+  background: var(--v10-accent-blue);
+  color: var(--v10-text-light);
+  border-color: var(--v10-accent-blue);
+}
+
+.review-section__content {
+  padding: var(--v10-space-2xl);
+}
+
+.review-garments-grid {
+  display: grid;
+  gap: var(--v10-space-lg);
+}
+
+.review-garment-card {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-md);
+  overflow: hidden;
+}
+
+.review-garment-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-lg);
+  background: var(--v10-bg-primary);
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.review-garment-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-lg);
+}
+
+.garment-number {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.garment-type {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--v10-text-primary);
+}
+
+.status-badge {
+  padding: var(--v10-space-xs) var(--v10-space-md);
+  border-radius: var(--v10-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge--complete {
+  background: #d1edff;
+  color: #0c5460;
+}
+
+.review-garment-card__content {
+  padding: var(--v10-space-lg);
+}
+
+.review-garment-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--v10-space-sm);
+  font-size: 0.875rem;
+}
+
+.detail-label {
+  color: var(--v10-text-secondary);
+  font-weight: 500;
+}
+
+.detail-value {
+  color: var(--v10-text-primary);
+  font-weight: 600;
+}
+
+.cost-summary {
+  background: var(--v10-bg-primary);
+  border: 2px solid var(--v10-accent-blue);
+  border-radius: var(--v10-radius-lg);
+  margin-bottom: var(--v10-space-3xl);
+  overflow: hidden;
+}
+
+.cost-summary__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-xl) var(--v10-space-2xl);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.cost-summary__header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+
+.cost-summary__badge {
+  padding: var(--v10-space-sm) var(--v10-space-lg);
+  background: var(--v10-accent-blue);
+  color: var(--v10-text-light);
+  border-radius: var(--v10-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cost-summary__content {
+  padding: var(--v10-space-2xl);
+}
+
+.cost-breakdown {
+  margin-bottom: var(--v10-space-xl);
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--v10-space-lg) 0;
+  border-bottom: 1px solid var(--v10-border-light);
+}
+
+.cost-item:last-child {
+  border-bottom: none;
+}
+
+.cost-item__description {
+  font-size: 0.875rem;
+  color: var(--v10-text-secondary);
+}
+
+.cost-item__amount {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.cost-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--v10-space-xl);
+  border-top: 2px solid var(--v10-border-medium);
+}
+
+.cost-total__label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.cost-total__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--v10-accent-blue);
+}
+
+.submit-actions {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-2xl);
+}
+
+.submit-message {
+  margin-bottom: var(--v10-space-xl);
+  padding: var(--v10-space-lg);
+  background: var(--v10-bg-primary);
+  border-radius: var(--v10-radius-md);
+  border-left: 4px solid var(--v10-accent-blue);
+}
+
+.submit-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--v10-space-xl);
+}
+
+.submit-primary-actions {
+  display: flex;
+  gap: var(--v10-space-lg);
+}
+
+.techpack-btn--large {
+  padding: var(--v10-space-lg) var(--v10-space-2xl);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.terms-agreement {
+  text-align: center;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-md);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--v10-text-secondary);
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--v10-border-medium);
+  border-radius: var(--v10-radius-sm);
+  position: relative;
+  transition: var(--v10-transition);
+}
+
+.terms-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.terms-checkbox input[type="checkbox"]:checked + .checkmark {
+  background: var(--v10-accent-blue);
+  border-color: var(--v10-accent-blue);
+}
+
+.terms-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.terms-text a {
+  color: var(--v10-accent-blue);
+  text-decoration: none;
+}
+
+.terms-text a:hover {
+  text-decoration: underline;
+}
+
+.review-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-md);
+  padding: var(--v10-space-md) var(--v10-space-lg);
+  background: #d1edff;
+  border: 1px solid #0c5460;
+  border-radius: var(--v10-radius-md);
+  color: #0c5460;
+}
+
+.review-status__icon {
+  color: #0c5460;
+}
+
+.review-status__text {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Success Modal Styles */
+.techpack-modal--success .techpack-modal__content {
+  max-width: 500px;
+  text-align: center;
+}
+
+.success-icon {
+  margin-bottom: var(--v10-space-xl);
+  color: var(--v10-accent-green);
+}
+
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--v10-text-primary);
+  margin: 0 0 var(--v10-space-lg) 0;
+}
+
+.success-message {
+  font-size: 1rem;
+  color: var(--v10-text-secondary);
+  margin: 0 0 var(--v10-space-xl) 0;
+  line-height: 1.6;
+}
+
+.success-details {
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-lg);
+  margin-bottom: var(--v10-space-xl);
+  text-align: left;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-lg);
+  padding: var(--v10-space-lg);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-light);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-md);
+}
+
+.review-item__visual {
+  flex-shrink: 0;
+}
+
+.review-item__color {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--v10-radius-sm);
+  border: 1px solid var(--v10-border-medium);
+}
+
+.review-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--v10-bg-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+}
+
+.review-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-xs);
+}
+
+.review-item__name {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.review-item__type,
+.review-item__cost {
+  font-size: 0.875rem;
+  color: var(--v10-text-secondary);
+}
+
+.review-item__assignment {
+  flex-shrink: 0;
+}
+
+.assignment-type {
+  font-size: 0.75rem;
+  color: var(--v10-text-muted);
+  background: var(--v10-bg-primary);
+  padding: var(--v10-space-xs) var(--v10-space-sm);
+  border-radius: var(--v10-radius-sm);
+}
+
+@media (max-width: 768px) {
+  .review-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .submit-buttons {
+    flex-direction: column;
+    gap: var(--v10-space-lg);
+  }
+  
+  .submit-primary-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+
+<!-- Load TechPack V10 Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v=10.0.0" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "TechPack V10 Step 4",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Review & Submit Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Review & Submit"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Premium review interface with comprehensive cost breakdown"
+    },
+    {
+      "type": "text",
+      "id": "submission_email",
+      "label": "Submission Email",
+      "default": "office@genuineblanks.com"
+    },
+    {
+      "type": "text",
+      "id": "response_time_text", 
+      "label": "Response Time Text",
+      "default": "You will receive a detailed quote within 1-5 business days depending on project complexity."
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V10 Step 4"
+    }
+  ]
+}
+{% endschema %}
