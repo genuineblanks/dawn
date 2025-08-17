@@ -3649,7 +3649,9 @@ body[class*="techpack"] *,
 /* Service Type Cards - Disabled State */
 .service-type-card.disabled,
 .studio-tab.disabled,
-.sample-type-card.disabled {
+.sample-type-card.disabled,
+.v10-glass-card:disabled,
+.v10-submission-option:disabled {
   background: #2a2a2a !important;
   border-color: #3a3a3a !important;
   opacity: 0.5;
@@ -3659,7 +3661,9 @@ body[class*="techpack"] *,
 }
 
 .service-type-card.disabled .service-type-card__icon,
-.studio-tab.disabled .studio-tab__icon {
+.studio-tab.disabled .studio-tab__icon,
+.v10-glass-card:disabled .v10-glass-card-icon,
+.v10-submission-option:disabled .v10-glass-card-icon {
   background: #3a3a3a !important;
   color: #6b7280 !important;
 }
@@ -3667,11 +3671,17 @@ body[class*="techpack"] *,
 .service-type-card.disabled .service-type-card__title,
 .service-type-card.disabled .service-type-card__description,
 .studio-tab.disabled .studio-tab__title,
-.studio-tab.disabled .studio-tab__subtitle {
+.studio-tab.disabled .studio-tab__subtitle,
+.v10-glass-card:disabled .v10-glass-card-title,
+.v10-glass-card:disabled .v10-glass-card-description,
+.v10-submission-option:disabled .v10-glass-card-title,
+.v10-submission-option:disabled .v10-glass-card-description {
   color: #6b7280 !important;
 }
 
-.service-type-card.disabled .service-type-card__features {
+.service-type-card.disabled .service-type-card__features,
+.v10-glass-card:disabled .v10-glass-card-features,
+.v10-submission-option:disabled .v10-glass-card-features {
   opacity: 0.4;
 }
 
@@ -3757,10 +3767,13 @@ body[class*="techpack"] *,
   box-shadow: none !important;
 }
 
-.service-type-card.disabled:hover {
+.service-type-card.disabled:hover,
+.v10-glass-card:disabled:hover,
+.v10-submission-option:disabled:hover {
   background: #2a2a2a !important;
   border-color: #3a3a3a !important;
   transform: none !important;
+  box-shadow: none !important;
 }
 
 .assigned-section {
@@ -3817,10 +3830,9 @@ body[class*="techpack"] *,
 /* Additional Component Styles */
 .garments-grid {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
-  overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: var(--v10-space-2);
   width: 100%;
