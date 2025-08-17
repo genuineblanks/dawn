@@ -3340,15 +3340,22 @@ body[class*="techpack"] *,
   border: none;
   border-radius: 0;
   margin-top: var(--v10-space-3);
-  max-height: 250px;
-  overflow-y: auto;
+  overflow: visible;
 }
 
-/* Compact Radio Grid */
+/* Compact Radio Grid - Fixed for 3-column layout */
 .compact-radio-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-2);
+}
+
+@media (max-width: 768px) {
+  .compact-radio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--v10-space-2);
+  }
 }
 
 .compact-radio-card {
@@ -3422,6 +3429,17 @@ body[class*="techpack"] *,
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
   transition: var(--v10-transition);
+}
+
+.sample-type-card:hover {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-surface-hover);
+}
+
+.sample-type-card.selected {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-surface-selected);
+  box-shadow: 0 2px 8px rgba(163, 163, 163, 0.1);
 }
 
 .sample-type-card input[type="radio"] {
