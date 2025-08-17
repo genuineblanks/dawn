@@ -708,6 +708,28 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       this.duplicateGarment(garmentId);
+    } else if (e.target.closest('.sample-type-card')) {
+      // Handle sample type card clicks
+      e.preventDefault();
+      e.stopPropagation();
+      const sampleCard = e.target.closest('.sample-type-card');
+      const radioInput = sampleCard.querySelector('input[type="radio"]');
+      if (radioInput && !radioInput.checked) {
+        // Clear other selections in the same group
+        const allSampleCards = garmentCard.querySelectorAll('.sample-type-card');
+        allSampleCards.forEach(card => {
+          card.classList.remove('selected');
+          const radio = card.querySelector('input[type="radio"]');
+          if (radio) radio.checked = false;
+        });
+        
+        // Select this card
+        sampleCard.classList.add('selected');
+        radioInput.checked = true;
+        
+        // Trigger change event to notify existing handlers
+        radioInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     }
   }
 
@@ -1033,15 +1055,20 @@ class V10_GarmentStudio {
     const expanded = section ? section.querySelector('.selection-expanded') : null;
     const placeholder = selectionWidget.querySelector('.selection-placeholder');
     
+    // Find the selected display to toggle it
+    const selectedDisplay = section ? section.querySelector('.selection-display') : null;
+    
     if (!expanded) {
       console.error('❌ No expanded section found');
       return;
     }
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
-      // Show expanded state - keep the widget visible, just show options inside
+      // Show expanded state (show dropdown options)
       expanded.style.display = 'block';
+      collapsed.style.display = 'block'; // Show the dropdown selector again
       if (placeholder) placeholder.style.display = 'none'; // Hide placeholder to show expanded options
+      if (selectedDisplay) selectedDisplay.style.display = 'none'; // Hide selected display when choosing
       
       // Close other expanded selections in this garment card
       this.closeOtherSelections(garmentCard, selectionWidget);
@@ -1049,6 +1076,7 @@ class V10_GarmentStudio {
       // Show collapsed state - hide options and show placeholder
       expanded.style.display = 'none';
       if (placeholder) placeholder.style.display = 'flex'; // Show placeholder again
+      if (selectedDisplay) selectedDisplay.style.display = 'none'; // Ensure selected display is hidden when no selection
     }
   }
 
@@ -1074,11 +1102,13 @@ class V10_GarmentStudio {
       const selectedName = garmentCard.querySelector('#garment-selected-name');
       const placeholder = garmentCard.querySelector('#garment-placeholder');
       const display = garmentCard.querySelector('#garment-display');
+      const collapsed = garmentCard.querySelector('#garment-collapsed');
       
       if (selectedIcon) selectedIcon.textContent = garmentIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
+      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -1090,11 +1120,13 @@ class V10_GarmentStudio {
       const selectedName = garmentCard.querySelector('#fabric-selected-name');
       const placeholder = garmentCard.querySelector('#fabric-placeholder');
       const display = garmentCard.querySelector('#fabric-display');
+      const collapsed = garmentCard.querySelector('#fabric-collapsed');
       
       if (selectedIcon) selectedIcon.textContent = '🧵';
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
+      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -1107,11 +1139,13 @@ class V10_GarmentStudio {
       const selectedName = garmentCard.querySelector('#sample-reference-selected-name');
       const placeholder = garmentCard.querySelector('#sample-reference-placeholder');
       const display = garmentCard.querySelector('#sample-reference-display');
+      const collapsed = garmentCard.querySelector('#sample-reference-collapsed');
       
       if (selectedIcon) selectedIcon.textContent = sampleReferenceIcon;
       if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(value);
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
+      if (collapsed) collapsed.style.display = 'none'; // Hide the dropdown selector
       
       // Auto-collapse after selection
       setTimeout(() => {
