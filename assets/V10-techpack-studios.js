@@ -881,13 +881,13 @@ class V10_GarmentStudio {
       
       if (V10_State.requestType === 'sample-request' && garmentData.sampleType) {
         switch (garmentData.sampleType) {
-          case 'as-per-techpack':
+          case 'techpack':
             statusMessage = 'Complete';
             break;
-          case 'stock-fabric-color':
+          case 'stock':
             statusMessage = 'Complete - Add a design (optional)';
             break;
-          case 'custom-color-pantone':
+          case 'custom':
             statusMessage = 'Complete - Needs to assign color on Design studio & design (optional)';
             break;
           default:
@@ -1793,21 +1793,48 @@ class V10_DesignStudio {
   }
 
   showGarmentSelector(type) {
+    console.log(`🔄 showGarmentSelector called with type: ${type}`);
+    
+    // Check if modal manager exists
+    if (!window.v10ModalManager) {
+      console.error('❌ V10 Modal Manager not found');
+      alert('Modal system not available. Please refresh the page.');
+      return;
+    }
+
     const garments = Array.from(V10_State.garments.values()).filter(g => g.isComplete);
+    console.log(`📊 Found ${garments.length} complete garments:`, garments);
     
     if (garments.length === 0) {
       alert('Please complete at least one garment specification first.');
       return;
     }
 
-    // Create modal with garment list
-    const modal = this.createGarmentSelectorModal(garments, type);
-    window.v10ModalManager.openModal(modal);
+    try {
+      // Create modal with garment list
+      console.log('🔄 Creating garment selector modal...');
+      const modal = this.createGarmentSelectorModal(garments, type);
+      
+      if (!modal) {
+        console.error('❌ Failed to create modal');
+        return;
+      }
+      
+      console.log('✅ Modal created, opening with V10 Modal Manager...');
+      window.v10ModalManager.openModal(modal);
+      console.log('✅ Modal opened successfully');
+    } catch (error) {
+      console.error('❌ Error in showGarmentSelector:', error);
+      alert('Error opening garment selector. Please try again.');
+    }
   }
 
   createGarmentSelectorModal(garments, type) {
-    const modal = document.createElement('div');
-    modal.className = 'v10-modal-overlay';
+    console.log(`🔄 createGarmentSelectorModal: ${type}, ${garments.length} garments`);
+    
+    try {
+      const modal = document.createElement('div');
+      modal.className = 'v10-modal-overlay';
     modal.innerHTML = `
       <div class="v10-modal">
         <div class="v10-modal-header">
@@ -1874,7 +1901,13 @@ class V10_DesignStudio {
       closeModal();
     });
 
+    console.log('✅ Modal DOM created successfully');
     return modal;
+    
+    } catch (error) {
+      console.error('❌ Error creating garment selector modal:', error);
+      return null;
+    }
   }
 
   addLabDip(isFabricSwatch = false, targetGarmentId = null) {
