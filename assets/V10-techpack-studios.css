@@ -3845,6 +3845,74 @@ body[class*="techpack"] *,
   max-width: none;
 }
 
+/* Garment Card Header Layout */
+.garment-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--v10-space-4);
+}
+
+.garment-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+}
+
+.garment-card__number {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-lg);
+}
+
+.garment-card__status {
+  display: flex;
+  align-items: center;
+}
+
+.status-indicator {
+  padding: 4px 8px;
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  font-weight: 500;
+}
+
+.status-indicator--incomplete {
+  background: var(--v10-surface-warning);
+  color: var(--v10-text-warning);
+  border: 1px solid var(--v10-border-warning);
+}
+
+.garment-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+.garment-card__duplicate,
+.garment-card__remove {
+  padding: var(--v10-space-2);
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  color: var(--v10-text-secondary);
+}
+
+.garment-card__duplicate:hover,
+.garment-card__remove:hover {
+  background: var(--v10-surface-hover);
+  border-color: var(--v10-border-hover);
+  color: var(--v10-text-primary);
+}
+
+.garment-card__remove:hover {
+  background: var(--v10-surface-error);
+  border-color: var(--v10-border-error);
+  color: var(--v10-text-error);
+}
+
 .collection-item {
   background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-primary);
