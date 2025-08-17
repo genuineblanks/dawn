@@ -5060,6 +5060,9 @@ class V10_ModalManager {
     
     // Setup delivery country dropdown
     this.setupCountryDropdown('v10-delivery-country', 'v10-delivery-country-dropdown', 'v10-delivery-country-list', 'v10-delivery-country-search');
+    
+    // Setup alternate delivery country dropdown
+    this.setupCountryDropdown('v10-delivery-country-alt', 'v10-delivery-country-dropdown-alt', 'v10-delivery-country-list-alt', 'v10-delivery-country-search-alt');
   }
   
   setupCountryDropdown(inputId, dropdownId, listId, searchId) {
@@ -5363,6 +5366,194 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// V10 TechPack Form - Multi-step Navigation
+const V10TechpackForm = {
+  currentStep: 1,
+  totalSteps: 4,
+
+  init() {
+    console.log('🎯 V10TechpackForm initialized');
+    this.setupDateInput();
+    this.setupFileUpload();
+    this.setupCountryDropdown();
+    this.updateStepDisplay();
+  },
+
+  nextStep() {
+    if (this.validateCurrentStep()) {
+      if (this.currentStep < this.totalSteps) {
+        this.currentStep++;
+        this.updateStepDisplay();
+        this.showStep(this.currentStep);
+      }
+    }
+  },
+
+  prevStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.updateStepDisplay();
+      this.showStep(this.currentStep);
+    }
+  },
+
+  showStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.v10-step-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    
+    // Show current step
+    const currentContent = document.querySelector(`.v10-step-content[data-step="${step}"]`);
+    if (currentContent) {
+      currentContent.classList.add('active');
+    }
+  },
+
+  updateStepDisplay() {
+    document.querySelectorAll('.v10-step').forEach((step, index) => {
+      step.classList.toggle('active', index + 1 === this.currentStep);
+      step.classList.toggle('completed', index + 1 < this.currentStep);
+    });
+  },
+
+  validateCurrentStep() {
+    const currentContent = document.querySelector(`.v10-step-content[data-step="${this.currentStep}"]`);
+    if (!currentContent) return true;
+
+    const requiredInputs = currentContent.querySelectorAll('input[required], select[required], textarea[required]');
+    let isValid = true;
+
+    requiredInputs.forEach(input => {
+      const errorElement = input.parentNode.querySelector('.v10-validation-message');
+      
+      if (!input.value.trim()) {
+        this.showError(input, 'This field is required');
+        isValid = false;
+      } else if (input.type === 'email' && !this.isValidEmail(input.value)) {
+        this.showError(input, 'Please enter a valid email address');
+        isValid = false;
+      } else {
+        this.clearError(input);
+      }
+    });
+
+    return isValid;
+  },
+
+  showError(input, message) {
+    this.clearError(input);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'v10-validation-message';
+    errorDiv.textContent = message;
+    errorDiv.style.color = '#374151';
+    errorDiv.style.fontSize = '12px';
+    errorDiv.style.marginTop = '4px';
+    input.parentNode.appendChild(errorDiv);
+    input.style.borderColor = '#374151';
+  },
+
+  clearError(input) {
+    const errorElement = input.parentNode.querySelector('.v10-validation-message');
+    if (errorElement) {
+      errorElement.remove();
+    }
+    input.style.borderColor = '';
+  },
+
+  isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  },
+
+  setupDateInput() {
+    const dateInput = document.getElementById('v10Deadline');
+    if (dateInput) {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dateInput.min = tomorrow.toISOString().split('T')[0];
+    }
+  },
+
+  setupFileUpload() {
+    const fileInput = document.getElementById('v10TechpackFiles');
+    const fileList = document.getElementById('v10FileList');
+    const uploadZone = document.querySelector('.v10-file-upload');
+
+    if (!fileInput || !fileList || !uploadZone) return;
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      fileInput.files = e.dataTransfer.files;
+      this.handleFiles(fileInput.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+      this.handleFiles(fileInput.files);
+    });
+  },
+
+  handleFiles(files) {
+    const fileList = document.getElementById('v10FileList');
+    if (!fileList) return;
+
+    fileList.innerHTML = '';
+    Array.from(files).forEach((file, index) => {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'v10-file-item';
+      fileItem.innerHTML = `
+        <span>${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+        <button type="button" class="v10-remove-file" onclick="V10TechpackForm.removeFile(${index})">×</button>
+      `;
+      fileList.appendChild(fileItem);
+    });
+  },
+
+  removeFile(index) {
+    const fileInput = document.getElementById('v10TechpackFiles');
+    if (!fileInput) return;
+
+    const dt = new DataTransfer();
+    Array.from(fileInput.files).forEach((file, i) => {
+      if (i !== index) dt.items.add(file);
+    });
+    fileInput.files = dt.files;
+    this.handleFiles(fileInput.files);
+  },
+
+  setupCountryDropdown() {
+    // Use existing V10 country functionality if available
+    if (window.V10_ClientManager && typeof window.V10_ClientManager.initializeCountryDropdown === 'function') {
+      window.V10_ClientManager.initializeCountryDropdown('v10Country');
+    }
+  },
+
+  addGarment() {
+    // Use existing V10 garment functionality if available
+    if (window.V10_GarmentStudio && typeof window.V10_GarmentStudio.addGarment === 'function') {
+      window.V10_GarmentStudio.addGarment();
+    }
+  },
+
+  resetForm() {
+    this.currentStep = 1;
+    document.getElementById('v10TechpackForm').reset();
+    this.updateStepDisplay();
+    this.showStep(1);
+  }
+};
+
 // Export for global access
 window.V10_TechPackSystem = V10_TechPackSystem;
 window.V10_ClientManager = V10_ClientManager;
@@ -5370,5 +5561,6 @@ window.V10_FileManager = V10_FileManager;
 window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
+window.V10TechpackForm = V10TechpackForm;
 
 } // End of guard clause
