@@ -36,16 +36,23 @@ Enhanced with Visual Studio Guide System
 
     <div class="techpack-content">
       
-      <!-- Header with Help -->
-      <div class="techpack-header-with-help">
-        <div class="techpack-header-content">
-          <h2 class="techpack-title">Garment Specifications</h2>
-          <p class="techpack-subtitle" id="step-3-subtitle">Configure your garment specifications using our professional studios</p>
+      <!-- Step 3 Control Bar -->
+      <div class="step3-control-bar">
+        <!-- Quick Guide Button (Left) -->
+        <div class="step3-control-left">
+          <button type="button" class="techpack-help-btn techpack-help-btn--secondary quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+            <span>QUICK GUIDE</span>
+          </button>
         </div>
         
-        <div class="techpack-header-actions">
-          <!-- Theme Toggle Button -->
-          <div class="v10-theme-toggle v10-theme-toggle--header">
+        <!-- Theme Toggle Buttons (Center) -->
+        <div class="step3-control-center">
+          <div class="v10-theme-toggle">
             <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
               ☀️ Light
             </button>
@@ -55,15 +62,8 @@ Enhanced with Visual Studio Guide System
           </div>
         </div>
         
-        <div class="techpack-help-buttons">
-          <button type="button" class="techpack-help-btn techpack-help-btn--secondary quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-            <span>QUICK GUIDE</span>
-          </button>
+        <!-- Visual Studio Guide Button (Right) -->
+        <div class="step3-control-right">
           <button type="button" class="techpack-help-btn techpack-help-btn--primary visual-guide-trigger" id="step-3-help-btn" aria-label="Open Visual Studio Guide - Interactive help for understanding the workflow">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
@@ -128,8 +128,11 @@ Enhanced with Visual Studio Guide System
       <div class="studio-container studio-container--active" id="garment-studio">
         <div class="studio-header">
           <div class="studio-header__content">
-            <h3 class="studio-header__title">Garment Studio</h3>
-            <span class="studio-header__badge studio-header__badge--professional">PROFESSIONAL</span>
+            <h3 class="studio-header__title">Garment Specifications</h3>
+            <span class="studio-header__badge studio-header__badge--incomplete" id="garment-completion-badge">INCOMPLETE</span>
+          </div>
+          <div class="studio-header__subtitle" id="garment-subtitle">
+            Configure production specifications and quantities
           </div>
           <button type="button" class="studio-help-btn" data-help="garment-studio">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
