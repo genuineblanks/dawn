@@ -199,12 +199,26 @@ Enhanced with Visual Studio Guide System
 
                 <!-- Color Picker Input -->
                 <div class="color-picker-section">
-                  <div class="color-picker-wrapper">
-                    <input type="color" id="lab-dip-color-picker" class="color-picker-input" value="#2563eb">
-                    <div class="color-picker-preview" id="lab-dip-color-preview"></div>
+                  <div class="color-picker-left">
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="lab-dip-color-picker" class="color-picker-input" value="#2563eb">
+                      <div class="color-picker-preview" id="lab-dip-color-preview"></div>
+                    </div>
+                    <div class="pantone-code-input">
+                      <input type="text" id="manual-pantone-code" class="pantone-input" placeholder="Or enter Pantone code (e.g., 19-4052 TPX)">
+                    </div>
                   </div>
-                  <div class="pantone-code-input">
-                    <input type="text" id="manual-pantone-code" class="pantone-input" placeholder="Or enter Pantone code (e.g., 19-4052 TPX)">
+                  <div class="pantone-display-right">
+                    <!-- Auto Pantone Display will be moved here -->
+                    <div class="auto-pantone-display" id="auto-pantone-display" style="display: none;">
+                      <div class="pantone-result">
+                        <div class="pantone-circle" id="auto-pantone-circle"></div>
+                        <div class="pantone-info">
+                          <div class="pantone-code" id="auto-pantone-code">PANTONE 19-4052 TPX</div>
+                          <div class="pantone-note">Auto-matched from 2,310+ colors</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -212,43 +226,19 @@ Enhanced with Visual Studio Guide System
                 <div class="popular-colors-section">
                   <h5>Popular Colors</h5>
                   <div class="popular-colors-grid">
-                    <div class="popular-color" data-color="#000000" data-pantone="19-4007 TPX">
-                      <div class="popular-color__swatch" style="background-color: #000000;"></div>
-                      <span class="popular-color__name">Black</span>
-                    </div>
-                    <div class="popular-color" data-color="#ffffff" data-pantone="11-4001 TPX">
-                      <div class="popular-color__swatch" style="background-color: #ffffff;"></div>
-                      <span class="popular-color__name">White</span>
-                    </div>
-                    <div class="popular-color" data-color="#dc2626" data-pantone="18-1664 TPX">
-                      <div class="popular-color__swatch" style="background-color: #dc2626;"></div>
-                      <span class="popular-color__name">Red</span>
-                    </div>
-                    <div class="popular-color" data-color="#2563eb" data-pantone="19-4052 TPX">
-                      <div class="popular-color__swatch" style="background-color: #2563eb;"></div>
-                      <span class="popular-color__name">Blue</span>
-                    </div>
-                    <div class="popular-color" data-color="#16a34a" data-pantone="17-6153 TPX">
-                      <div class="popular-color__swatch" style="background-color: #16a34a;"></div>
-                      <span class="popular-color__name">Green</span>
-                    </div>
-                    <div class="popular-color" data-color="#eab308" data-pantone="13-0859 TPX">
-                      <div class="popular-color__swatch" style="background-color: #eab308;"></div>
-                      <span class="popular-color__name">Yellow</span>
-                    </div>
+                    <div class="popular-color-circle" data-color="#000000" data-pantone="19-4007 TPX" style="background-color: #000000;" title="Black"></div>
+                    <div class="popular-color-circle" data-color="#ffffff" data-pantone="11-4001 TPX" style="background-color: #ffffff; border: 1px solid #e5e7eb;" title="White"></div>
+                    <div class="popular-color-circle" data-color="#dc2626" data-pantone="18-1664 TPX" style="background-color: #dc2626;" title="Red"></div>
+                    <div class="popular-color-circle" data-color="#2563eb" data-pantone="19-4052 TPX" style="background-color: #2563eb;" title="Blue"></div>
+                    <div class="popular-color-circle" data-color="#16a34a" data-pantone="17-6153 TPX" style="background-color: #16a34a;" title="Green"></div>
+                    <div class="popular-color-circle" data-color="#eab308" data-pantone="13-0859 TPX" style="background-color: #eab308;" title="Yellow"></div>
+                    <div class="popular-color-circle" data-color="#f97316" data-pantone="16-1164 TPX" style="background-color: #f97316;" title="Orange"></div>
+                    <div class="popular-color-circle" data-color="#8b5cf6" data-pantone="18-3838 TPX" style="background-color: #8b5cf6;" title="Purple"></div>
+                    <div class="popular-color-circle" data-color="#ec4899" data-pantone="17-2034 TPX" style="background-color: #ec4899;" title="Pink"></div>
+                    <div class="popular-color-circle" data-color="#6b7280" data-pantone="18-4005 TPX" style="background-color: #6b7280;" title="Gray"></div>
                   </div>
                 </div>
 
-                <!-- Auto Pantone Display -->
-                <div class="auto-pantone-display" id="auto-pantone-display" style="display: none;">
-                  <div class="pantone-result">
-                    <div class="pantone-circle" id="auto-pantone-circle"></div>
-                    <div class="pantone-info">
-                      <div class="pantone-code" id="auto-pantone-code">PANTONE 19-4052 TPX</div>
-                      <div class="pantone-note">Auto-matched from 2,310+ colors</div>
-                    </div>
-                  </div>
-                </div>
 
                 <!-- Add Lab Dip Actions -->
                 <div class="add-labdip-actions">

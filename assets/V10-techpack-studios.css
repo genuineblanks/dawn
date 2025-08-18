@@ -3778,8 +3778,8 @@ body[class*="techpack"] *,
 }
 
 .collection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
 }
@@ -4037,7 +4037,6 @@ body[class*="techpack"] *,
   }
   
   .collection-grid {
-    grid-template-columns: 1fr;
     gap: var(--v10-space-3);
   }
   
@@ -4587,7 +4586,19 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Color Picker Section */
 .color-picker-section {
+  display: flex;
+  gap: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
+  align-items: flex-start;
+}
+
+.color-picker-left {
+  flex: 1;
+}
+
+.pantone-display-right {
+  flex: 0 0 300px;
+  min-height: 120px;
 }
 
 .color-picker-wrapper {
@@ -4642,8 +4653,25 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 .popular-colors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: var(--v10-space-2);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--v10-space-3);
+  max-width: 300px;
+}
+
+.popular-color-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-self: center;
+}
+
+.popular-color-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .popular-color {
@@ -4895,7 +4923,23 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 250px;
+  }
+  
+  .popular-color-circle {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .color-picker-section {
+    flex-direction: column;
+    gap: var(--v10-space-4);
+  }
+  
+  .pantone-display-right {
+    flex: 1;
+    min-height: auto;
   }
   
   .add-labdip-actions,
@@ -4915,7 +4959,13 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 200px;
+  }
+  
+  .popular-color-circle {
+    width: 30px;
+    height: 30px;
   }
   
   .color-picker-wrapper {
