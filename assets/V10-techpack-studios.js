@@ -7588,7 +7588,7 @@ class V10_FileManager {
     // Set modal content
     if (title) title.textContent = 'Incomplete Measurements';
     if (message) {
-      message.textContent = "You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.";
+      message.textContent = "Some measurements are missing from your submission. Please review the requirements below and add the missing measurements for more accurate results.";
     }
     
     // Generate simple text for included and missing measurements

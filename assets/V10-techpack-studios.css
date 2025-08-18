@@ -877,6 +877,30 @@ body[class*="techpack"] *,
   color: #111827;
 }
 
+/* Measurement checkbox status badges */
+.v10-measurement-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: var(--v10-space-2);
+}
+
+.v10-measurement-status--required {
+  background: rgba(34, 197, 94, 0.1);
+  color: #059669;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.v10-measurement-status--optional {
+  background: rgba(251, 146, 60, 0.1);
+  color: #ea580c;
+  border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
 .v10-btn--success {
   background: var(--v10-accent-success);
   color: white;
@@ -1154,6 +1178,18 @@ body[class*="techpack"] *,
   padding: var(--v10-space-6);
   border-top: 1px solid var(--v10-border-primary);
   background: var(--v10-bg-modal);
+}
+
+/* Center button when only one is visible (I Understand case) */
+.v10-modal-actions:has(.v10-btn:only-child),
+.techpack-modal__actions:has(.v10-btn:only-child) {
+  justify-content: center;
+}
+
+.v10-modal-actions .v10-btn:only-child,
+.techpack-modal__actions .v10-btn:only-child {
+  width: 100%;
+  max-width: 300px;
 }
 
 .v10-modal-icon {
@@ -4048,14 +4084,17 @@ body[class*="techpack"] *,
 /* Lab Dip Collection Item Layout: Color Circle (left) + Content (center) + Actions (right) */
 .collection-item__visual {
   flex: 0 0 auto;
+  display: block;
 }
 
 .collection-item__color {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 2px solid var(--v10-border-primary);
   flex-shrink: 0;
+  display: block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .collection-item__content {
@@ -4911,80 +4950,6 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   padding: var(--v10-space-6);
 }
 
-/* Lab Dip Collection Item Styles */
-#labdips-grid .collection-item {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-3);
-  background: var(--v10-bg-tertiary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  transition: all 0.2s ease;
-}
-
-#labdips-grid .collection-item:hover {
-  border-color: var(--v10-accent-primary);
-  background: rgba(163, 163, 163, 0.05);
-}
-
-#labdips-grid .collection-item__visual {
-  flex-shrink: 0;
-}
-
-#labdips-grid .collection-item__color {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid var(--v10-border-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#labdips-grid .collection-item__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--v10-space-1);
-}
-
-#labdips-grid .collection-item__name {
-  font-weight: 600;
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-base);
-}
-
-#labdips-grid .collection-item__type {
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-}
-
-#labdips-grid .collection-item__actions {
-  display: flex;
-  gap: var(--v10-space-2);
-}
-
-#labdips-grid .collection-item__assign,
-#labdips-grid .collection-item__remove {
-  padding: var(--v10-space-2);
-  background: transparent;
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-#labdips-grid .collection-item__assign:hover {
-  border-color: var(--v10-accent-primary);
-  color: var(--v10-accent-primary);
-  background: rgba(163, 163, 163, 0.05);
-}
-
-#labdips-grid .collection-item__remove:hover {
-  border-color: var(--v10-accent-danger);
-  color: var(--v10-accent-danger);
-  background: rgba(220, 38, 38, 0.05);
-}
 
 .collection-header {
   display: flex;
@@ -5039,13 +5004,9 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Color Picker Section */
 .color-picker-section {
   display: flex;
-  gap: var(--v10-space-4);
+  gap: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
-  align-items: stretch;
-  background: var(--v10-bg-tertiary);
-  padding: var(--v10-space-4);
-  border-radius: var(--v10-radius-lg);
-  border: 1px solid var(--v10-border-primary);
+  align-items: flex-start;
 }
 
 .color-picker-left {
@@ -5056,14 +5017,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .pantone-display-right {
-  flex: 0 0 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--v10-bg-secondary);
-  border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4);
-  border: 1px solid var(--v10-border-primary);
+  flex: 0 0 auto;
+  min-width: 200px;
 }
 
 .color-picker-wrapper {
@@ -5107,7 +5062,6 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Popular Colors Grid */
 .popular-colors-section {
   margin-bottom: var(--v10-space-6);
-  min-height: 140px !important; /* Ensure container has height */
 }
 
 .popular-colors-section h5 {
@@ -5118,16 +5072,15 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .popular-colors-grid {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 40px) !important; /* Fixed height rows */
+  grid-template-rows: repeat(2, 40px);
   gap: var(--v10-space-3);
-  max-width: 300px;
-  min-height: 90px !important; /* Ensure minimum height */
+  max-width: 280px;
+  margin: 0 auto;
 }
 
 .popular-color-circle {
-  display: block !important; /* Force display */
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -5135,7 +5088,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   justify-self: center;
-  visibility: visible !important; /* Force visibility */
+  align-self: center;
 }
 
 .popular-color-circle:hover {
@@ -5173,9 +5126,11 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Auto Pantone Display */
 .auto-pantone-display {
-  background: transparent;
-  padding: 0;
-  border: none;
+  margin-bottom: var(--v10-space-4);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-tertiary);
+  border-radius: var(--v10-radius-md);
+  border: 1px solid var(--v10-border-primary);
 }
 
 .pantone-result {
@@ -5289,38 +5244,43 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .add-labdip-actions,
 .add-design-actions {
   display: flex;
-  flex-direction: column;
-  gap: var(--v10-space-2);
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-6);
 }
 
 .add-to-garment-btn,
 .add-fabric-swatch-btn,
 .add-fabric-design-btn {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--v10-space-2);
-  padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
+  padding: var(--v10-space-4) var(--v10-space-5);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
+  border-radius: var(--v10-radius-lg);
   color: var(--v10-text-primary);
   font-size: var(--v10-text-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: var(--v10-transition);
+  transition: all 0.3s ease;
 }
 
-.add-to-garment-btn:hover,
+.add-to-garment-btn:hover:not(:disabled),
 .add-fabric-swatch-btn:hover,
 .add-fabric-design-btn:hover {
-  background: var(--v10-bg-secondary);
-  border-color: var(--v10-border-accent);
+  background: var(--v10-accent-primary);
+  border-color: var(--v10-accent-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(163, 163, 163, 0.2);
 }
 
 .add-to-garment-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* File Upload Area */
@@ -5411,6 +5371,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   
   .add-labdip-actions,
   .add-design-actions {
+    flex-direction: column;
     gap: var(--v10-space-3);
   }
 }
