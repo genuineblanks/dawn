@@ -5338,7 +5338,8 @@ class V10_FileManager {
       
       // Try multiple times to find elements if they're not immediately available
       let step2 = document.getElementById('techpack-v10-step-2');
-      let step3 = document.getElementById('techpack-v10-step-3');
+      // Use working selector for step 3 since getElementById doesn't work due to Shopify section wrapping
+      let step3 = document.querySelector('section[data-step="3"]') || document.querySelector('.v10-techpack-step[data-step="3"]');
       
       // Enhanced debug current DOM state
       console.log('🔍 Step element search:', {
@@ -5398,7 +5399,7 @@ class V10_FileManager {
           const tryFind = () => {
             retryCount++;
             step2 = document.getElementById('techpack-v10-step-2');
-            step3 = document.getElementById('techpack-v10-step-3');
+            step3 = document.querySelector('section[data-step="3"]') || document.querySelector('.v10-techpack-step[data-step="3"]');
             
             console.log(`🔄 Retry ${retryCount}/${maxRetries}:`, {
               step2Found: !!step2,
@@ -5417,7 +5418,7 @@ class V10_FileManager {
             } else {
               // If step 3 still not found, try to trigger its loading
               this.ensureStep3Loaded().then(() => {
-                step3 = document.getElementById('techpack-v10-step-3');
+                step3 = document.querySelector('section[data-step="3"]') || document.querySelector('.v10-techpack-step[data-step="3"]');
                 if (step2 && step3) {
                   this.executeStepTransition(step2, step3);
                   resolve(true);
