@@ -1020,8 +1020,8 @@ class V10_GarmentStudio {
       const garmentTypeInput = clone.querySelector(`input[value="${garmentData.type}"]`);
       if (garmentTypeInput) {
         garmentTypeInput.checked = true;
-        // Update visual display for garment selection widget
-        this.updateGarmentSelectionDisplay(clone, 'garment', garmentData.type);
+        // Update the visual display to show selected garment instead of placeholder
+        this.updateCompactSelection('garment', garmentData.type, clone);
       }
     }
 
@@ -1030,8 +1030,8 @@ class V10_GarmentStudio {
       const fabricTypeInput = clone.querySelector(`input[value="${garmentData.fabricType}"]`);
       if (fabricTypeInput) {
         fabricTypeInput.checked = true;
-        // Update visual display for fabric selection widget
-        this.updateGarmentSelectionDisplay(clone, 'fabric', garmentData.fabricType);
+        // Update the visual display to show selected fabric instead of placeholder
+        this.updateCompactSelection('fabric', garmentData.fabricType, clone);
       }
     }
 
@@ -1045,35 +1045,6 @@ class V10_GarmentStudio {
     if (garmentData.sampleReference) {
       const sampleRefInput = clone.querySelector(`input[value="${garmentData.sampleReference}"]`);
       if (sampleRefInput) sampleRefInput.checked = true;
-    }
-  }
-
-  updateGarmentSelectionDisplay(clone, type, value) {
-    // This function handles visual display updates for garment/fabric selection widgets only
-    // It's separate from updateCompactSelection to avoid conflicts with lab dip system
-    
-    if (type === 'garment') {
-      const garmentIcon = this.getGarmentIcon(value);
-      const selectedIcon = clone.querySelector('#garment-selected-icon');
-      const selectedName = clone.querySelector('#garment-selected-name');
-      const placeholder = clone.querySelector('#garment-placeholder');
-      const display = clone.querySelector('#garment-display');
-      
-      if (selectedIcon) selectedIcon.textContent = garmentIcon;
-      if (selectedName) selectedName.textContent = value;
-      if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'flex';
-      
-    } else if (type === 'fabric') {
-      const selectedIcon = clone.querySelector('#fabric-selected-icon');
-      const selectedName = clone.querySelector('#fabric-selected-name');
-      const placeholder = clone.querySelector('#fabric-placeholder');
-      const display = clone.querySelector('#fabric-display');
-      
-      if (selectedIcon) selectedIcon.textContent = '🧵';
-      if (selectedName) selectedName.textContent = value;
-      if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'flex';
     }
   }
 
@@ -2284,11 +2255,8 @@ class V10_DesignStudio {
   }
 
   init() {
-    // Add a small delay to ensure DOM is fully ready
-    setTimeout(() => {
-      this.bindEvents();
-      this.loadExistingItems();
-    }, 100);
+    this.bindEvents();
+    this.loadExistingItems();
   }
 
   bindEvents() {
@@ -2333,9 +2301,6 @@ class V10_DesignStudio {
     const pantoneCode = document.getElementById('auto-pantone-code');
 
     if (colorPicker && colorPreview) {
-      // Initialize preview with current color picker value
-      colorPreview.style.backgroundColor = colorPicker.value;
-      
       colorPicker.addEventListener('input', (e) => {
         const hex = e.target.value;
         colorPreview.style.backgroundColor = hex;
@@ -2374,9 +2339,7 @@ class V10_DesignStudio {
     }
 
     // Popular colors
-    const popularColorCircles = document.querySelectorAll('.popular-color-circle');
-    
-    popularColorCircles.forEach((colorBtn, index) => {
+    document.querySelectorAll('.popular-color-circle').forEach(colorBtn => {
       colorBtn.addEventListener('click', (e) => {
         const hex = colorBtn.dataset.color;
         const pantone = colorBtn.dataset.pantone;
@@ -4974,15 +4937,7 @@ class V10_FileManager {
         e.preventDefault();
         
         if (this.validateStep()) {
-          const result = this.proceedToStep3();
-          // Handle both synchronous and asynchronous returns
-          if (result && typeof result.then === 'function') {
-            result.then(success => {
-              if (!success) {
-                console.error('Failed to proceed to step 3');
-              }
-            });
-          }
+          this.proceedToStep3();
         }
       });
     }
@@ -5157,67 +5112,10 @@ class V10_FileManager {
     
     if (requestType === 'sample-request') {
       const fitMeasurementsCheckbox = document.getElementById('techpack-v10-fit-measurements');
-      const isChecked = fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
-      
-      if (!isChecked) {
-        // Show modal warning for unchecked required measurements
-        this.showMeasurementRequirementModal();
-        return false;
-      }
-      
-      return true;
+      return fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
     }
     
     return true;
-  }
-
-  showMeasurementRequirementModal() {
-    // Find or create the measurement requirement modal
-    let modal = document.getElementById('techpack-v10-measurement-requirement-modal');
-    
-    if (!modal) {
-      // Create the modal if it doesn't exist
-      modal = document.createElement('div');
-      modal.id = 'techpack-v10-measurement-requirement-modal';
-      modal.className = 'v10-modal v10-modal--warning';
-      modal.innerHTML = `
-        <div class="v10-modal__backdrop"></div>
-        <div class="v10-modal__container">
-          <div class="v10-modal__header">
-            <h3>⚠️ Measurement Requirements</h3>
-          </div>
-          <div class="v10-modal__content">
-            <p><strong>Fit Measurements are required for sample requests.</strong></p>
-            <p>Please select "Fit Measurements" to proceed to the next step. This ensures we can create a sample that fits your specifications.</p>
-          </div>
-          <div class="v10-modal__actions">
-            <button type="button" class="v10-btn v10-btn--primary" id="measurement-modal-understand">
-              I Understand
-            </button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      
-      // Bind close event
-      const understandBtn = modal.querySelector('#measurement-modal-understand');
-      if (understandBtn) {
-        understandBtn.addEventListener('click', () => {
-          if (window.v10ModalManager) {
-            window.v10ModalManager.closeModal(modal);
-          } else {
-            modal.style.display = 'none';
-          }
-        });
-      }
-    }
-    
-    // Open the modal
-    if (window.v10ModalManager) {
-      window.v10ModalManager.openModal(modal);
-    } else {
-      modal.style.display = 'block';
-    }
   }
 
   validateStep() {
@@ -5334,176 +5232,40 @@ class V10_FileManager {
 
   proceedToStep3() {
     try {
-      console.log('🚀 Attempting to proceed to step 3...');
+      const step2 = document.getElementById('techpack-v10-step-2');
+      const step3 = document.getElementById('techpack-v10-step-3');
       
-      // Try multiple times to find elements if they're not immediately available
-      let step2 = document.getElementById('techpack-v10-step-2');
-      let step3 = document.getElementById('techpack-v10-step-3');
-      
-      // Enhanced debug current DOM state
-      console.log('🔍 Step element search:', {
-        step2Found: !!step2,
-        step3Found: !!step3,
-        allStepSections: document.querySelectorAll('[id*="techpack-v10-step"]').length,
-        allSectionIds: Array.from(document.querySelectorAll('[id*="techpack-v10-step"]')).map(el => el.id),
-        allTechpackSections: document.querySelectorAll('[id*="techpack"]').length,
-        allTechpackIds: Array.from(document.querySelectorAll('[id*="techpack"]')).map(el => el.id)
-      });
-      
-      // Deep dive into step 3 specifically
-      const step3Attempts = [
-        document.getElementById('techpack-v10-step-3'),
-        document.querySelector('#techpack-v10-step-3'),
-        document.querySelector('section[id="techpack-v10-step-3"]'),
-        document.querySelector('.v10-techpack-step[data-step="3"]'),
-        document.querySelector('section[data-step="3"]')
-      ];
-      
-      console.log('🔍 Step 3 detection attempts:', {
-        byId: !!step3Attempts[0],
-        byQuerySelector: !!step3Attempts[1],  
-        bySection: !!step3Attempts[2],
-        byClass: !!step3Attempts[3],
-        byDataStep: !!step3Attempts[4],
-        actualElement: step3Attempts.find(el => el) || 'NONE_FOUND'
-      });
-      
-      // Check if step 3 exists but is hidden by CSS
-      if (step3Attempts[0]) {
-        const step3El = step3Attempts[0];
-        console.log('🔍 Step 3 element found but checking visibility:', {
-          displayStyle: step3El.style.display,
-          computedDisplay: window.getComputedStyle(step3El).display,
-          isVisible: step3El.offsetParent !== null,
-          hasActiveClass: step3El.classList.contains('active'),
-          allClasses: Array.from(step3El.classList),
-          parentElement: step3El.parentElement ? step3El.parentElement.tagName : 'NO_PARENT'
-        });
-      } else {
-        console.log('🔍 Step 3 element not found in DOM - checking if it exists anywhere:', {
-          anyStep3: document.querySelector('[id*="step-3"], [id*="step_3"]'),
-          anyV10Elements: document.querySelectorAll('[id*="v10"]').length,
-          bodyChildren: document.body.children.length
-        });
-      }
-      
-      // If elements not found, wait briefly and try again
       if (!step2 || !step3) {
-        console.warn('⚠️ Step elements not found on first attempt, waiting...');
-        
-        return new Promise((resolve) => {
-          let retryCount = 0;
-          const maxRetries = 3;
-          
-          const tryFind = () => {
-            retryCount++;
-            step2 = document.getElementById('techpack-v10-step-2');
-            step3 = document.getElementById('techpack-v10-step-3');
-            
-            console.log(`🔄 Retry ${retryCount}/${maxRetries}:`, {
-              step2Found: !!step2,
-              step3Found: !!step3,
-              allSectionIds: Array.from(document.querySelectorAll('[id*="techpack-v10-step"]')).map(el => el.id)
-            });
-            
-            if (step2 && step3) {
-              this.executeStepTransition(step2, step3);
-              resolve(true);
-              return;
-            }
-            
-            if (retryCount < maxRetries) {
-              setTimeout(tryFind, 100);
-            } else {
-              // If step 3 still not found, try to trigger its loading
-              this.ensureStep3Loaded().then(() => {
-                step3 = document.getElementById('techpack-v10-step-3');
-                if (step2 && step3) {
-                  this.executeStepTransition(step2, step3);
-                  resolve(true);
-                } else {
-                  console.error('❌ Cannot find step elements after all retries', {
-                    step2Found: !!step2,
-                    step3Found: !!step3,
-                    allSections: document.querySelectorAll('[id*="techpack-v10-step"]').length
-                  });
-                  resolve(false);
-                }
-              });
-            }
-          };
-          
-          setTimeout(tryFind, 50);
-        });
+        console.error('Cannot find step 2 or step 3 elements');
+        return false;
+      }
+
+      step2.style.display = 'none';
+      step3.style.display = 'block';
+      
+      // Update current step
+      try {
+        sessionStorage.setItem('v10_current_step', '3');
+      } catch (storageError) {
+        console.error('Error updating session storage:', storageError);
       }
       
-      this.executeStepTransition(step2, step3);
-      return true;
+      // Initialize step 3 if not already done
+      if (!window.v10TechPackSystem) {
+        try {
+          window.v10TechPackSystem = new V10_TechPackSystem();
+          console.log('✅ TechPack System initialized successfully');
+        } catch (systemError) {
+          console.error('❌ Error initializing TechPack System:', systemError);
+          return false;
+        }
+      }
       
+      return true;
     } catch (error) {
       console.error('❌ Error proceeding to step 3:', error);
       return false;
     }
-  }
-
-  ensureStep3Loaded() {
-    return new Promise((resolve) => {
-      console.log('🔧 Attempting to ensure step 3 is loaded...');
-      
-      // Check if step 3 section exists but might be hidden or not rendered
-      const step3Section = document.getElementById('techpack-v10-step-3');
-      
-      if (step3Section) {
-        console.log('✅ Step 3 section found, making sure it\'s accessible');
-        // Make sure it's visible to DOM queries
-        if (step3Section.style.display === 'none') {
-          step3Section.style.display = 'block';
-        }
-        resolve();
-        return;
-      }
-      
-      // If step 3 doesn't exist, there might be an issue with the template
-      // Try to trigger section loading by dispatching events or checking if sections need to load
-      console.warn('⚠️ Step 3 section not found, checking for dynamic loading...');
-      
-      // Look for any section loading mechanisms
-      const event = new CustomEvent('techpack-step-load', { detail: { step: 3 } });
-      document.dispatchEvent(event);
-      
-      // Wait a bit for any dynamic loading
-      setTimeout(() => {
-        resolve();
-      }, 200);
-    });
-  }
-
-  executeStepTransition(step2, step3) {
-    console.log('🔄 Executing step transition...');
-    
-    step2.style.display = 'none';
-    step3.style.display = 'block';
-    
-    // Update current step
-    try {
-      sessionStorage.setItem('v10_current_step', '3');
-    } catch (storageError) {
-      console.error('Error updating session storage:', storageError);
-    }
-    
-    // Initialize step 3 if not already done
-    if (!window.v10TechPackSystem) {
-      try {
-        window.v10TechPackSystem = new V10_TechPackSystem();
-        console.log('✅ TechPack System initialized successfully');
-      } catch (systemError) {
-        console.error('❌ Error initializing TechPack System:', systemError);
-        return false;
-      }
-    }
-    
-    console.log('✅ Step transition completed successfully');
-    return true;
   }
 
   getFileData() {
