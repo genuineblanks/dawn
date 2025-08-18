@@ -411,7 +411,7 @@ const V10_Utils = {
     const shouldRestrict = V10_Utils.shouldRestrictCustomColor(garmentElement);
     
     // Find the custom color/custom sample sections within this garment
-    const customSampleCards = garmentElement.querySelectorAll('.sample-type-card[data-sample-type*="custom"]');
+    const customSampleCards = garmentElement.querySelectorAll('.sample-type-card[data-value="custom"]');
     
     customSampleCards.forEach(customCard => {
       const customRadio = customCard.querySelector('input[type="radio"]');
@@ -1079,6 +1079,13 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       const sampleCard = e.target.closest('.sample-type-card');
+      
+      // Check if the card is restricted
+      if (sampleCard.classList.contains('sample-type-card--restricted')) {
+        console.log('⚠️ Sample type restricted for this fabric type');
+        return; // Don't allow selection of restricted options
+      }
+      
       const radioInput = sampleCard.querySelector('input[type="radio"]');
       if (radioInput && !radioInput.checked) {
         // Clear other selections in the same group
@@ -1127,6 +1134,7 @@ class V10_GarmentStudio {
       garmentData.type = e.target.value;
       this.populateFabricOptions(garmentCard, e.target.value);
       garmentData.fabricType = ''; // Reset fabric selection
+      garmentData.sampleType = ''; // Reset sample selection
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
@@ -1134,11 +1142,15 @@ class V10_GarmentStudio {
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
       }
+      
+      // Reset sample type selection
+      this.resetSampleTypeSelection(garmentCard);
     }
 
     // Handle fabric type change (compact and regular)
     if (e.target.name.includes('fabricType')) {
       garmentData.fabricType = e.target.value;
+      garmentData.sampleType = ''; // Reset sample selection when fabric changes
       
       // Update fabric restrictions when fabric type changes
       setTimeout(() => {
@@ -1149,6 +1161,9 @@ class V10_GarmentStudio {
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('fabric', e.target.value, garmentCard);
       }
+      
+      // Reset sample type selection
+      this.resetSampleTypeSelection(garmentCard);
     }
 
     // Handle sample type change
@@ -1819,6 +1834,30 @@ class V10_GarmentStudio {
     console.log('🔄 Reset fabric selection to placeholder state');
   }
 
+  resetSampleTypeSelection(garmentCard) {
+    // Clear all sample type radio button selections
+    const sampleTypeRadios = garmentCard.querySelectorAll('input[name*="sampleType"]');
+    sampleTypeRadios.forEach(radio => {
+      radio.checked = false;
+    });
+    
+    // Remove selected state from sample type cards
+    const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
+    sampleTypeCards.forEach(card => {
+      card.classList.remove('selected');
+    });
+    
+    // Remove any restriction classes (they'll be re-applied when needed)
+    sampleTypeCards.forEach(card => {
+      card.classList.remove('sample-type-card--restricted');
+      card.style.opacity = '';
+      card.style.pointerEvents = '';
+      card.style.cursor = '';
+    });
+    
+    console.log('🔄 Reset sample type selection');
+  }
+
   updateSelectionDependencies(garmentCard) {
     const garmentId = garmentCard.dataset.garmentId;
     const garmentData = V10_State.garments.get(garmentId);
@@ -2292,7 +2331,7 @@ class V10_DesignStudio {
     }
 
     // Popular colors
-    document.querySelectorAll('.popular-color').forEach(colorBtn => {
+    document.querySelectorAll('.popular-color-circle').forEach(colorBtn => {
       colorBtn.addEventListener('click', (e) => {
         const hex = colorBtn.dataset.color;
         const pantone = colorBtn.dataset.pantone;
@@ -5017,8 +5056,36 @@ class V10_FileManager {
 
 
   updateConditionalSections() {
-    const clientData = window.v10ClientManager?.getClientData() || {};
-    const requestType = clientData.submission_type;
+    // Get request type from multiple sources with fallback
+    let requestType = null;
+    
+    // Try client manager first
+    if (window.v10ClientManager) {
+      const clientData = window.v10ClientManager.getClientData() || {};
+      requestType = clientData.submission_type;
+    }
+    
+    // Fallback to global state
+    if (!requestType && V10_State.requestType) {
+      requestType = V10_State.requestType;
+    }
+    
+    // Fallback to session storage
+    if (!requestType) {
+      try {
+        requestType = sessionStorage.getItem('v10_request_type');
+      } catch (error) {
+        console.warn('Could not access session storage:', error);
+      }
+    }
+    
+    // Fallback to URL parameters
+    if (!requestType) {
+      const urlParams = new URLSearchParams(window.location.search);
+      requestType = urlParams.get('request_type');
+    }
+    
+    console.log('🔄 FileManager updateConditionalSections - Request type:', requestType);
     
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
@@ -5027,8 +5094,10 @@ class V10_FileManager {
     if (measurementStudio) {
       if (requestType === 'sample-request') {
         measurementStudio.style.display = 'block';
+        console.log('✅ Showing measurement studio for sample request');
       } else {
         measurementStudio.style.display = 'none';
+        console.log('🔒 Hiding measurement studio for request type:', requestType);
       }
     }
     

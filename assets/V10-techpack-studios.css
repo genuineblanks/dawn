@@ -3591,6 +3591,31 @@ body[class*="techpack"] *,
   border-color: var(--v10-border-primary) !important;
 }
 
+/* Restricted Sample Type Card (for fabric restrictions) */
+.sample-type-card--restricted {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sample-type-card--restricted:hover {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+}
+
+.sample-type-card--restricted .sample-type-card__title,
+.sample-type-card--restricted .sample-type-card__description,
+.sample-type-card--restricted .sample-type-card__details {
+  color: var(--v10-text-disabled);
+}
+
+.sample-type-card--restricted .sample-type-card__price {
+  background: var(--v10-border-secondary);
+  color: var(--v10-text-disabled);
+}
+
 /* Assigned Items */
 .assigned-items {
   margin-top: var(--v10-space-6);
