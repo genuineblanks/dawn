@@ -4710,27 +4710,31 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   min-width: 80px;
   justify-content: center;
   font-family: inherit;
+  opacity: 0.6;
 }
 
 .v10-theme-btn:hover {
   background: var(--v10-bg-hover);
   color: var(--v10-text-primary);
+  opacity: 0.8;
 }
 
 .v10-theme-btn--active {
   background: var(--v10-bg-tertiary);
   color: var(--v10-text-primary);
   box-shadow: var(--v10-shadow-sm);
+  opacity: 1;
 }
 
 .v10-theme-btn--active:hover {
   background: var(--v10-bg-tertiary);
   color: var(--v10-text-primary);
+  opacity: 1;
 }
 
 /* Theme transition animations */
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
 }
 
 /* Mobile adjustments */
@@ -4756,6 +4760,86 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
     align-self: flex-end;
     margin-left: 0;
   }
+}
+
+/* ==============================================
+   STEP 3 CONTROL BAR
+   ============================================== */
+
+.step3-control-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--v10-space-8);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  gap: var(--v10-space-4);
+}
+
+.step3-control-left,
+.step3-control-right {
+  display: flex;
+  align-items: center;
+}
+
+.step3-control-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Mobile responsiveness for control bar */
+@media (max-width: 768px) {
+  .step3-control-bar {
+    flex-direction: column;
+    gap: var(--v10-space-3);
+  }
+  
+  .step3-control-center {
+    order: -1;
+    flex: none;
+  }
+  
+  .step3-control-left,
+  .step3-control-right {
+    justify-content: center;
+  }
+}
+
+/* ==============================================
+   COMPLETION BADGES
+   ============================================== */
+
+.studio-header__badge--complete {
+  background: #10b981;
+  color: white;
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.studio-header__badge--incomplete {
+  background: #f59e0b;
+  color: white;
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.studio-header__subtitle {
+  margin-top: var(--v10-space-2);
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-muted);
+  font-style: italic;
 }
 
 /* Design Mode Containers */
