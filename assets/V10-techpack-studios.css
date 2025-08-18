@@ -2432,6 +2432,13 @@ body[class*="techpack"] *,
   border-color: var(--v10-accent-primary);
 }
 
+/* Help Button Container */
+.techpack-help-buttons {
+  display: flex;
+  gap: var(--v10-space-3);
+  align-items: center;
+}
+
 .techpack-help-btn {
   display: flex;
   align-items: center;
@@ -2449,6 +2456,18 @@ body[class*="techpack"] *,
 
 .techpack-help-btn:hover {
   background: rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Secondary Button Style (Quick Guide) */
+.techpack-help-btn--secondary {
+  background: rgba(163, 163, 163, 0.1);
+  border-color: rgba(163, 163, 163, 0.2);
+  color: var(--v10-accent-primary);
+}
+
+.techpack-help-btn--secondary:hover {
+  background: rgba(163, 163, 163, 0.2);
   transform: translateY(-1px);
 }
 
