@@ -4086,27 +4086,6 @@ class V10_TechPackSystem {
     console.log('🔄 Auto-validation setup completed (in-memory mode)');
   }
 
-  showHelpModal() {
-    const modal = document.getElementById('step-3-help-modal');
-    if (modal && window.v10ModalManager) {
-      window.v10ModalManager.openModal(modal);
-      
-      // Load help content based on request type
-      this.loadHelpContent();
-    }
-  }
-
-  // Removed - now handled by unified V10_ModalManager
-
-  hideHelpModal() {
-    const modal = document.getElementById('step-3-help-modal');
-    if (modal && window.v10ModalManager) {
-      window.v10ModalManager.closeModal(modal);
-      
-      // Mark help as read
-      this.markHelpAsRead();
-    }
-  }
 
   markHelpAsRead() {
     const helpBtn = document.getElementById('step-3-help-btn');
@@ -4431,111 +4410,6 @@ class V10_TechPackSystem {
     }
   }
 
-  loadHelpContent() {
-    const helpContent = document.getElementById('help-content');
-    const requestType = V10_State.requestType;
-    
-    if (!helpContent) return;
-
-    const content = {
-      'quotation': `
-        <h4>Quotation Request Guide</h4>
-        <p>Configure garment specifications to receive accurate pricing without any payment required.</p>
-        
-        <h4>What You'll Do:</h4>
-        <ul>
-          <li><strong>Garment Studio:</strong> Select garment types and fabric options</li>
-          <li><strong>Add Multiple Garments:</strong> Configure different products in one request</li>
-          <li><strong>Complete Specifications:</strong> The more details you provide, the more accurate your quote</li>
-        </ul>
-
-        <h4>What You'll Receive:</h4>
-        <ul>
-          <li>Detailed pricing breakdown within 24-48 hours</li>
-          <li>Minimum quantity requirements</li>
-          <li>Production timeline estimates</li>
-          <li>Shipping cost calculations</li>
-        </ul>
-
-        <h4>Pro Tips:</h4>
-        <ul>
-          <li>Select premium fabrics for best quality results</li>
-          <li>Consider multiple fabric options to compare pricing</li>
-          <li>Note any special requirements in your uploaded files</li>
-        </ul>
-      `,
-      'sample-request': `
-        <h4>Sample Request Guide</h4>
-        <p>Use our professional Design Studios to create the perfect samples for approval before production.</p>
-        
-        <h4>Studio System:</h4>
-        <ul>
-          <li><strong>Garment Studio:</strong> Configure garment specifications and sample types</li>
-          <li><strong>Design Studio:</strong> Toggle between Lab Dips (colors) and Design Samples</li>
-          <li><strong>Assignment System:</strong> Assign colors and designs to specific garments</li>
-        </ul>
-
-        <h4>Sample Types:</h4>
-        <ul>
-          <li><strong>Stock Color Sample (€35):</strong> Quick 1-2 week turnaround in black, off-white, or random stock color</li>
-          <li><strong>Custom Color Sample (€65):</strong> Exact Pantone match in 3 weeks - requires Lab Dip assignment</li>
-          <li><strong>As Per TechPack (Premium):</strong> Complete specifications as uploaded - comprehensive but higher cost</li>
-        </ul>
-
-        <h4>Lab Dips & Design Samples:</h4>
-        <ul>
-          <li><strong>Lab Dips (€25 each):</strong> Physical color swatches - assign to garments or order as fabric swatches</li>
-          <li><strong>Design Samples (€15 each):</strong> Design applications on fabric - specify embroidery, screen print, etc.</li>
-          <li><strong>Smart Assignment:</strong> Items not assigned to garments become standalone fabric samples</li>
-        </ul>
-
-        <h4>Pro Tips:</h4>
-        <ul>
-          <li>Start with stock samples for fit validation before investing in custom colors</li>
-          <li>Use our Pantone matching system for exact color reproduction</li>
-          <li>Assign designs to both stock and custom samples to see different applications</li>
-          <li>Fabric-only swatches are perfect for color approval before bulk production</li>
-        </ul>
-      `,
-      'bulk-order-request': `
-        <h4>Bulk Order Request Guide</h4>
-        <p>Place your production order based on approved samples with exact quantities and specifications.</p>
-        
-        <h4>Requirements:</h4>
-        <ul>
-          <li><strong>Minimum Order:</strong> 75 units total across all garments</li>
-          <li><strong>Approved Samples:</strong> Reference previously approved samples for consistency</li>
-          <li><strong>Size Breakdown:</strong> Specify exact quantities per size (XXS-XXL)</li>
-          <li><strong>Color Specifications:</strong> Use approved Pantone codes or lab dip references</li>
-        </ul>
-
-        <h4>Sample Reference Options:</h4>
-        <ul>
-          <li><strong>Approved Sample – As Is:</strong> Exact repeat of last approved sample</li>
-          <li><strong>Approved Sample – With Changes:</strong> Based on approved sample with modifications</li>
-          <li><strong>New Sample Version:</strong> Follow TechPack exactly for reworks or updated production runs</li>
-        </ul>
-
-        <h4>Production Process:</h4>
-        <ul>
-          <li><strong>Order Review:</strong> 24-hour confirmation and deposit arrangement</li>
-          <li><strong>50% Deposit:</strong> Required to begin production</li>
-          <li><strong>Production Timeline:</strong> 2-4 weeks depending on quantity and complexity</li>
-          <li><strong>Quality Control:</strong> Pre-production sample approval</li>
-        </ul>
-
-        <h4>Pro Tips:</h4>
-        <ul>
-          <li>Reference your most recent approved sample to avoid confusion</li>
-          <li>Consider standard size runs (more S/M/L, fewer XXS/XXL) for cost efficiency</li>
-          <li>Plan production timeline around your launch dates</li>
-          <li>Communicate any deadline requirements in your uploaded files</li>
-        </ul>
-      `
-    };
-
-    helpContent.innerHTML = content[requestType] || content['sample-request'];
-  }
 
   // Public API
   setRequestType(type) {

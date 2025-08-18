@@ -8,6 +8,86 @@
  * ------------------------------------------------------------
  */
 {
+  "techpack": {
+    "quick_guide": {
+      "title": "Quick Guide",
+      "subtitle": "Simple 3-step process overview",
+      "process_title": "How It Works",
+      "process_subtitle": "Create your garment sample in 3 simple steps",
+      "step_1_title": "Choose Your Garment",
+      "step_1_desc": "Select the type of garment you want to create from our available options.",
+      "step_2_title": "Pick Your Sample Type",
+      "step_2_desc": "Choose from Stock Color (€35), Custom Color (€65), or TechPack specifications.",
+      "step_3_title": "Add Optional Extras",
+      "step_3_desc": "Include lab dips for color matching or design samples for logos and prints.",
+      "sample_types_title": "Sample Types Quick Reference",
+      "stock_title": "Stock Color",
+      "stock_desc": "Fast 1-2 weeks • Black/White/Random",
+      "custom_title": "Custom Color",
+      "custom_desc": "3 weeks • Exact Pantone match",
+      "techpack_title": "TechPack",
+      "techpack_desc": "4-5 weeks • Full specifications",
+      "tips_title": "Quick Tips",
+      "tip_1": "Start with Stock Color for quick prototyping",
+      "tip_2": "Custom colors require cotton fabrics only",
+      "tip_3": "Lab dips show exact color before sampling",
+      "need_more_help": "Need More Help?",
+      "start_creating": "Start Creating"
+    },
+    "visual_guide": {
+      "title": "Visual Studio Guide",
+      "subtitle": "Master the techpack workflow with interactive guidance",
+      "overview": "Overview",
+      "workflow": "Workflow",
+      "examples": "Examples",
+      "calculator": "Calculator",
+      "process_title": "Complete Techpack Process",
+      "process_subtitle": "From concept to production - understand every step",
+      "step_1_title": "Add Garment",
+      "step_1_desc": "Select the type of garment you want to create",
+      "step_2_title": "Choose Fabric",
+      "step_2_desc": "Pick the perfect fabric for your garment type",
+      "step_3_title": "Sample Method",
+      "step_3_desc": "Decide how you want your sample created",
+      "step_4_title": "Customize",
+      "step_4_desc": "Add colors, designs, and finishing touches",
+      "sample_paths_title": "Three Sample Paths",
+      "sample_paths_desc": "Each path offers different benefits, timelines, and requirements",
+      "try_mode": "Try It Mode",
+      "start_workflow": "Start Workflow",
+      "open_guide": "Open Visual Studio Guide",
+      "open_button": "VISUAL STUDIO GUIDE",
+      "schema_name": "TechPack Visual Studio Guide",
+      "schema_description": "Interactive guide for creating garment samples through the TechPack studio system"
+    },
+    "sample_types": {
+      "stock": {
+        "title": "Stock Fabric Color",
+        "price": "€35",
+        "description": "Quick validation with available fabric colors",
+        "timeline": "1-2 weeks delivery"
+      },
+      "custom": {
+        "title": "Custom Color (Pantone)",
+        "price": "€65",
+        "description": "Exact color match using Pantone system",
+        "timeline": "3 weeks delivery"
+      },
+      "techpack": {
+        "title": "As Per TechPack",
+        "price": "Premium",
+        "description": "Complete sample following exact TechPack specifications",
+        "timeline": "4-5 weeks delivery"
+      }
+    },
+    "requirements": {
+      "design_optional": "Design Optional",
+      "stock_colors": "Black/White/Random",
+      "labdip_required": "Lab Dip Required",
+      "full_specs": "Full Specifications",
+      "comprehensive": "Comprehensive Sample"
+    }
+  },
   "general": {
     "password_page": {
       "login_form_heading": "Enter store using password:",
