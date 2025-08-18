@@ -1,6 +1,8 @@
 /* ================================================
    V10 Visual Studio Guide - Interactive JavaScript
-   ================================================ */
+   ================================================ 
+   Cache refresh: 2025-01-16 - Fixed duplicate button issue
+   */
 
 // Prevent multiple initialization
 if (typeof window.V10VisualGuide !== 'undefined') {
@@ -26,9 +28,36 @@ window.V10VisualGuide = class {
   }
 
   init() {
+    this.removeDuplicateContainers();
     this.bindEvents();
     this.setupModalHTML();
     console.log('V10 Visual Studio Guide initialized');
+  }
+
+  removeDuplicateContainers() {
+    // Remove any problematic visual-guide-trigger-container elements
+    // These may be created by cached versions or legacy code
+    const duplicateContainers = document.querySelectorAll('.visual-guide-trigger-container');
+    duplicateContainers.forEach(container => {
+      console.log('Removing duplicate Visual Studio Guide container:', container);
+      container.remove();
+    });
+    
+    // Ensure only the properly integrated button remains
+    const triggerButtons = document.querySelectorAll('.visual-guide-trigger');
+    console.log(`Found ${triggerButtons.length} Visual Studio Guide trigger buttons`);
+    
+    // Keep only the one with the proper ID (the correctly integrated one)
+    triggerButtons.forEach(button => {
+      if (!button.id || button.id !== 'step-3-help-btn') {
+        // If button doesn't have the correct ID and isn't properly integrated, check if it should be removed
+        const parentContainer = button.closest('.visual-guide-trigger-container');
+        if (parentContainer) {
+          console.log('Removing improperly placed trigger button:', button);
+          parentContainer.remove();
+        }
+      }
+    });
   }
 
   bindEvents() {
@@ -51,8 +80,18 @@ window.V10VisualGuide = class {
   setupModalHTML() {
     // Create modal element if it doesn't exist
     if (!document.getElementById('visual-guide-modal')) {
-      const modalHTML = this.generateModalHTML();
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      // Try to use template first (preferred approach)
+      const template = document.getElementById('visual-guide-modal-template');
+      if (template) {
+        const templateClone = template.content.cloneNode(true);
+        document.body.appendChild(templateClone);
+        console.log('Modal created from template');
+      } else {
+        // Fallback to generated HTML if no template found
+        const modalHTML = this.generateModalHTML();
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        console.log('Modal created from generated HTML (fallback)');
+      }
       this.bindModalEvents();
     }
   }
