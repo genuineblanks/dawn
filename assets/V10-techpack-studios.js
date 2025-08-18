@@ -1018,13 +1018,21 @@ class V10_GarmentStudio {
     // Set garment type
     if (garmentData.type) {
       const garmentTypeInput = clone.querySelector(`input[value="${garmentData.type}"]`);
-      if (garmentTypeInput) garmentTypeInput.checked = true;
+      if (garmentTypeInput) {
+        garmentTypeInput.checked = true;
+        // Update the visual display to show selected garment instead of placeholder
+        this.updateCompactSelection('garment', garmentData.type, clone);
+      }
     }
 
     // Set fabric type
     if (garmentData.fabricType) {
       const fabricTypeInput = clone.querySelector(`input[value="${garmentData.fabricType}"]`);
-      if (fabricTypeInput) fabricTypeInput.checked = true;
+      if (fabricTypeInput) {
+        fabricTypeInput.checked = true;
+        // Update the visual display to show selected fabric instead of placeholder
+        this.updateCompactSelection('fabric', garmentData.fabricType, clone);
+      }
     }
 
     // Set sample type (for sample requests)
@@ -4473,6 +4481,12 @@ class V10_TechPackSystem {
       // Update current step
       sessionStorage.setItem('v10_current_step', '2');
       
+      // Ensure file manager and conditional sections are updated
+      if (window.v10FileManager) {
+        window.v10FileManager.updateConditionalSections();
+        console.log('🔄 Step 2: Refreshed conditional sections after back navigation');
+      }
+      
       // Scroll to step 2
       step2.scrollIntoView({ behavior: 'smooth' });
     }
@@ -4808,6 +4822,15 @@ class V10_ClientManager {
       if (!window.v10FileManager) {
         window.v10FileManager = new V10_FileManager();
       }
+      
+      // Ensure conditional sections are updated after file manager initialization
+      // Use timeout to ensure client data is available
+      setTimeout(() => {
+        if (window.v10FileManager) {
+          window.v10FileManager.updateConditionalSections();
+          console.log('🔄 Step 2: Refreshed conditional sections after navigation');
+        }
+      }, 100);
     }
   }
 
