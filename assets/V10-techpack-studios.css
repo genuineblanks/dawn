@@ -5055,7 +5055,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .pantone-display-right {
   flex: 1;
   display: flex;
-  justify-content: flex-end;
+  justify-content: stretch;
 }
 
 .color-picker-wrapper {
@@ -5183,6 +5183,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   background: transparent;
   padding: 0;
   border: none;
+  width: 100%;
+  flex: 1;
 }
 
 .pantone-result {
@@ -5191,6 +5193,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   gap: var(--v10-space-3);
   padding: var(--v10-space-3);
   background: var(--v10-bg-secondary);
+  width: 100%;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   transition: all 0.2s ease;
