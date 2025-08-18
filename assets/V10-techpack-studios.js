@@ -7264,9 +7264,12 @@ class V10_FileManager {
     
     if (nextBtn) {
       nextBtn.addEventListener('click', (e) => {
+        console.log('🖱️ V10 Step 2 Next button clicked');
         e.preventDefault();
         
+        console.log('📋 Calling validateStep()...');
         if (this.validateStep()) {
+          console.log('✅ validateStep returned true, proceeding to step 3');
           const result = this.proceedToStep3();
           // Handle both synchronous and asynchronous returns
           if (result && typeof result.then === 'function') {
@@ -7276,6 +7279,8 @@ class V10_FileManager {
               }
             });
           }
+        } else {
+          console.log('❌ validateStep returned false, staying on step 2');
         }
       });
     }
@@ -7441,39 +7446,71 @@ class V10_FileManager {
 
 
   validateMeasurements() {
+    console.log('📏 V10 validateMeasurements() called');
+    
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
-    if (!measurementStudio || measurementStudio.style.display === 'none') return true;
+    console.log('🎨 Measurement studio element:', measurementStudio);
+    console.log('👁️ Measurement studio display:', measurementStudio?.style.display);
+    
+    if (!measurementStudio || measurementStudio.style.display === 'none') {
+      console.log('⏭️ Measurement studio hidden, skipping validation');
+      return true;
+    }
     
     // For sample requests, Fit Measurements is REQUIRED
     const clientData = window.v10ClientManager?.getClientData() || {};
     const requestType = clientData.submission_type;
+    console.log('📋 Request type:', requestType);
+    console.log('👤 Client data:', clientData);
     
     if (requestType === 'sample-request') {
       const fitMeasurementsCheckbox = document.getElementById('techpack-v10-fit-measurements');
+      console.log('✅ Fit measurements checkbox element:', fitMeasurementsCheckbox);
+      console.log('☑️ Fit measurements checked:', fitMeasurementsCheckbox?.checked);
+      
       const isChecked = fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
       
       if (!isChecked) {
-        // Show modal warning for unchecked required measurements
+        console.log('🚨 Fit measurements required but not checked, showing modal...');
         this.showMeasurementRequirementModal();
         return false;
+      } else {
+        console.log('✅ Fit measurements checked, validation passed');
+        return true;
       }
-      
-      return true;
     }
     
+    console.log('⏭️ Not a sample request, skipping measurement validation');
     return true;
   }
 
   showMeasurementRequirementModal() {
-    const modal = document.getElementById('techpack-v10-measurement-modal');
-    if (!modal) return;
+    console.log('🔔 V10 showMeasurementRequirementModal() called');
     
+    const modal = document.getElementById('techpack-v10-measurement-modal');
+    console.log('📦 Modal element found:', !!modal);
+    console.log('📦 Modal element:', modal);
+    
+    if (!modal) {
+      console.log('❌ Modal element not found, aborting');
+      return;
+    }
+    
+    console.log('📝 Setting modal content...');
     // Set content for the existing modal
     const title = document.getElementById('v10-measurement-modal-title');
     const message = document.getElementById('v10-measurement-modal-message');
     const details = document.getElementById('v10-measurement-modal-details');
     const backBtn = document.getElementById('v10-measurement-modal-back');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    
+    console.log('🔍 Modal elements found:', {
+      title: !!title,
+      message: !!message, 
+      details: !!details,
+      backBtn: !!backBtn,
+      proceedBtn: !!proceedBtn
+    });
     
     if (title) title.textContent = 'Fit Measurements Required';
     if (message) message.textContent = 'Sample requests require fit measurements to proceed. Please select "Fit Measurements" to continue.';
@@ -7488,6 +7525,7 @@ class V10_FileManager {
     
     // Set up event listeners
     const closeModal = () => {
+      console.log('🚪 Closing modal...');
       modal.style.display = 'none';
     };
     
@@ -7503,28 +7541,38 @@ class V10_FileManager {
       newCloseBtn.addEventListener('click', closeModal);
     }
     
+    console.log('🎭 Showing modal with display: flex');
     // Show the modal with proper overlay
     modal.style.display = 'flex';
+    console.log('✅ Modal display set, current style:', modal.style.display);
+    console.log('🎯 Modal visibility:', window.getComputedStyle(modal).display);
   }
 
   validateStep() {
+    console.log('🔍 V10 validateStep() called');
     let isValid = true;
     
     // Check if files are uploaded
+    console.log(`📁 Files uploaded: ${this.uploadedFiles.size}`);
     if (this.uploadedFiles.size === 0) {
+      console.log('❌ No files uploaded');
       isValid = false;
     }
     
     // Check if all files have types assigned
     for (let fileData of this.uploadedFiles.values()) {
       if (!fileData.type) {
+        console.log('❌ File missing type:', fileData);
         isValid = false;
         break;
       }
     }
     
     // Validate measurements if required
-    if (!this.validateMeasurements()) {
+    console.log('🔍 Calling validateMeasurements()...');
+    const measurementValid = this.validateMeasurements();
+    console.log(`📏 validateMeasurements returned: ${measurementValid}`);
+    if (!measurementValid) {
       isValid = false;
     }
     
@@ -7534,6 +7582,7 @@ class V10_FileManager {
       nextBtn.disabled = !isValid;
     }
     
+    console.log(`✅ validateStep final result: ${isValid}`);
     return isValid;
   }
 

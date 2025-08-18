@@ -486,10 +486,13 @@ body[class*="techpack"] *,
    ============================================== */
 
 .v10-step-header {
-  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: var(--v10-space-12);
   padding: 0;
   background: transparent;
+  gap: var(--v10-space-6);
 }
 
 .v10-step-title-wrapper {
@@ -532,6 +535,7 @@ body[class*="techpack"] *,
   align-items: flex-start;
   margin-bottom: var(--v10-space-12);
   gap: var(--v10-space-6);
+  flex-wrap: wrap;
 }
 
 .techpack-header-content {
@@ -4664,9 +4668,6 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
    ============================================== */
 
 .v10-theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   display: flex;
   align-items: center;
   gap: 0;
@@ -4674,9 +4675,23 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: 2px;
-  z-index: var(--v10-z-fixed);
   box-shadow: var(--v10-shadow-lg);
   transition: var(--v10-transition);
+  flex-shrink: 0;
+}
+
+/* Floating version for landing page */
+.v10-theme-toggle--floating {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: var(--v10-z-fixed);
+}
+
+/* Header integrated version */
+.v10-theme-toggle--header {
+  position: static;
+  margin-left: auto;
 }
 
 .v10-theme-btn {
@@ -4720,15 +4735,26 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .v10-theme-toggle {
+  .v10-theme-toggle--floating {
     top: 10px;
     right: 10px;
   }
   
   .v10-theme-btn {
-    min-width: 70px;
+    min-width: 60px;
     padding: var(--v10-space-1) var(--v10-space-2);
     font-size: var(--v10-text-xs);
+  }
+  
+  .v10-step-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-theme-toggle--header {
+    align-self: flex-end;
+    margin-left: 0;
   }
 }
 
