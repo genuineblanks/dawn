@@ -145,6 +145,57 @@ body[class*="techpack"] *,
   --v10-z-tooltip: 1070;
 }
 
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  /* Core Dark Theme Colors - Financial Dashboard Theme */
+  --v10-bg-primary: #1a1a1a;          /* Primary dark background */
+  --v10-bg-secondary: #2a2a2a;        /* Secondary dark panels */
+  --v10-bg-tertiary: #333333;         /* Elevated surfaces */
+  --v10-bg-card: #2a2a2a;             /* Card backgrounds */
+  --v10-bg-modal: #1f1f1f;            /* Modal backgrounds */
+  --v10-bg-input: #333333;            /* Input backgrounds */
+  --v10-bg-hover: #404040;            /* Hover states */
+  --v10-bg-active: #4a4a4a;           /* Active states */
+
+  /* Glass Morphism Effects */
+  --v10-glass-bg: rgba(42, 42, 42, 0.8);
+  --v10-glass-border: rgba(255, 255, 255, 0.1);
+  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --v10-backdrop-blur: blur(12px);
+
+  /* Text Colors - High Contrast for Dark Background */
+  --v10-text-primary: #ffffff;        /* Primary white text */
+  --v10-text-secondary: #e5e5e5;      /* Secondary light text */
+  --v10-text-muted: #b3b3b3;          /* Muted grey text */
+  --v10-text-disabled: #666666;       /* Disabled text */
+  --v10-text-success: #6b7280;        /* Success text - muted grey-green */
+  --v10-text-warning: #f59e0b;        /* Warning text */
+  --v10-text-error: #ef4444;          /* Error text */
+
+  /* Border Colors */
+  --v10-border-primary: #404040;      /* Primary borders */
+  --v10-border-secondary: #333333;    /* Secondary borders */
+  --v10-border-focus: #a3a3a3;        /* Focus borders - light grey */
+  --v10-border-success: #6b7280;      /* Success borders - muted grey-green */
+  --v10-border-warning: #f59e0b;      /* Warning borders */
+  --v10-border-error: #ef4444;        /* Error borders */
+
+  /* Accent Colors */
+  --v10-accent-primary: #a3a3a3;      /* Primary accent - light grey */
+  --v10-accent-secondary: #d4d4d4;    /* Secondary accent - lighter grey */
+  --v10-accent-success: #22c55e;      /* Success accent - proper green */
+  --v10-accent-warning: #f59e0b;      /* Warning accent */
+  --v10-accent-error: #ef4444;        /* Error accent */
+
+  /* Shadows - Dark Theme Optimized */
+  --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --v10-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --v10-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --v10-shadow-focus: 0 0 0 3px rgba(163, 163, 163, 0.3);
+}
+
 /* ==============================================
    GLOBAL RESET & BASE STYLES
    ============================================== */
@@ -4586,6 +4637,79 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 .studio-toggle__btn--active:hover {
   background: var(--v10-bg-tertiary);
   color: var(--v10-text-inverse);
+}
+
+/* ==============================================
+   THEME TOGGLE BUTTONS
+   ============================================== */
+
+.v10-theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: 2px;
+  z-index: var(--v10-z-fixed);
+  box-shadow: var(--v10-shadow-lg);
+  transition: var(--v10-transition);
+}
+
+.v10-theme-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  min-width: 80px;
+  justify-content: center;
+  font-family: inherit;
+}
+
+.v10-theme-btn:hover {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
+}
+
+.v10-theme-btn--active {
+  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-primary);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-theme-btn--active:hover {
+  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-primary);
+}
+
+/* Theme transition animations */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .v10-theme-toggle {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .v10-theme-btn {
+    min-width: 70px;
+    padding: var(--v10-space-1) var(--v10-space-2);
+    font-size: var(--v10-text-xs);
+  }
 }
 
 /* Design Mode Containers */

@@ -7325,11 +7325,11 @@ class V10_FileManager {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
     
-    // Show measurement requirements for sample requests ONLY
+    // Show measurement requirements for sample requests AND quotations
     if (measurementStudio) {
-      if (requestType === 'sample-request') {
+      if (requestType === 'sample-request' || requestType === 'quotation') {
         measurementStudio.style.display = 'block';
-        console.log('✅ Showing measurement studio for sample request');
+        console.log('✅ Showing measurement studio for:', requestType);
       } else {
         measurementStudio.style.display = 'none';
         console.log('🔒 Hiding measurement studio for request type:', requestType);
@@ -8555,6 +8555,93 @@ class V10_ModalManager {
 }
 
 // ==============================================
+// THEME TOGGLE SYSTEM
+// ==============================================
+
+const V10_ThemeManager = {
+  // Initialize theme from localStorage or default to light
+  init() {
+    // Get saved theme or default to light
+    const savedTheme = localStorage.getItem('v10-theme') || 'light';
+    this.setTheme(savedTheme);
+    
+    // Initialize all toggle buttons
+    this.initializeToggles();
+    
+    console.log(`🎨 Theme initialized: ${savedTheme}`);
+  },
+  
+  // Set theme on document body
+  setTheme(theme) {
+    // Apply theme to body
+    document.body.setAttribute('data-theme', theme);
+    
+    // Update all toggle buttons
+    this.updateToggles(theme);
+    
+    // Save to localStorage
+    localStorage.setItem('v10-theme', theme);
+  },
+  
+  // Initialize all theme toggle buttons
+  initializeToggles() {
+    // Find all theme toggles on the page
+    const toggles = document.querySelectorAll('.v10-theme-toggle');
+    
+    toggles.forEach(toggle => {
+      // Remove any existing listeners
+      const lightBtn = toggle.querySelector('.v10-theme-btn--light');
+      const darkBtn = toggle.querySelector('.v10-theme-btn--dark');
+      
+      if (lightBtn && darkBtn) {
+        // Clone to remove existing listeners
+        const newLightBtn = lightBtn.cloneNode(true);
+        const newDarkBtn = darkBtn.cloneNode(true);
+        
+        lightBtn.replaceWith(newLightBtn);
+        darkBtn.replaceWith(newDarkBtn);
+        
+        // Add new listeners
+        newLightBtn.addEventListener('click', () => {
+          this.setTheme('light');
+        });
+        
+        newDarkBtn.addEventListener('click', () => {
+          this.setTheme('dark');
+        });
+      }
+    });
+  },
+  
+  // Update toggle button states
+  updateToggles(theme) {
+    const toggles = document.querySelectorAll('.v10-theme-toggle');
+    
+    toggles.forEach(toggle => {
+      const lightBtn = toggle.querySelector('.v10-theme-btn--light');
+      const darkBtn = toggle.querySelector('.v10-theme-btn--dark');
+      
+      if (lightBtn && darkBtn) {
+        if (theme === 'light') {
+          lightBtn.classList.add('v10-theme-btn--active');
+          darkBtn.classList.remove('v10-theme-btn--active');
+        } else {
+          darkBtn.classList.add('v10-theme-btn--active');
+          lightBtn.classList.remove('v10-theme-btn--active');
+        }
+      }
+    });
+  },
+  
+  // Toggle between themes
+  toggle() {
+    const currentTheme = document.body.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    this.setTheme(newTheme);
+  }
+};
+
+// ==============================================
 // INITIALIZATION
 // ==============================================
 
@@ -8562,6 +8649,9 @@ class V10_ModalManager {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     console.log('🚀 V10 TechPack Studios - Initializing System...');
+    
+    // Initialize theme manager first
+    V10_ThemeManager.init();
 
     // Phase 1: Initialize core managers in dependency order
     const initializeCore = async () => {
@@ -8666,5 +8756,6 @@ window.V10_FileManager = V10_FileManager;
 window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
+window.V10_ThemeManager = V10_ThemeManager;
 
 } // End of guard clause
