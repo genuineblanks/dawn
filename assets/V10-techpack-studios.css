@@ -4771,24 +4771,30 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--v10-space-8);
-  padding: var(--v10-space-4);
+  padding: var(--v10-space-3) var(--v10-space-4);
   background: var(--v10-bg-secondary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  gap: var(--v10-space-4);
+  gap: var(--v10-space-2);
+  min-height: 48px;
 }
 
 .step3-control-left,
 .step3-control-right {
   display: flex;
   align-items: center;
+  flex: 1;
+}
+
+.step3-control-right {
+  justify-content: flex-end;
 }
 
 .step3-control-center {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 /* Mobile responsiveness for control bar */
@@ -4835,11 +4841,13 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   letter-spacing: 0.05em;
 }
 
-.studio-header__subtitle {
-  margin-top: var(--v10-space-2);
+.studio-subtitle {
+  margin: var(--v10-space-4) 0;
+  padding: 0 var(--v10-space-6);
   font-size: var(--v10-text-sm);
   color: var(--v10-text-muted);
   font-style: italic;
+  text-align: left;
 }
 
 /* Design Mode Containers */

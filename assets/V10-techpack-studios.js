@@ -7487,7 +7487,8 @@ class V10_FileManager {
   showMeasurementRequirementModal() {
     console.log('🔔 V10 showMeasurementRequirementModal() called');
     
-    const modal = document.getElementById('techpack-v10-measurement-modal');
+    // Use the FIRST modal that was working
+    const modal = document.getElementById('techpack-v10-measurement-warning-modal');
     console.log('📦 Modal element found:', !!modal);
     console.log('📦 Modal element:', modal);
     
@@ -7497,12 +7498,12 @@ class V10_FileManager {
     }
     
     console.log('📝 Setting modal content...');
-    // Set content for the existing modal
-    const title = document.getElementById('v10-measurement-modal-title');
-    const message = document.getElementById('v10-measurement-modal-message');
-    const details = document.getElementById('v10-measurement-modal-details');
-    const backBtn = document.getElementById('v10-measurement-modal-back');
-    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    // Set content for the working modal
+    const title = document.getElementById('techpack-v10-warning-title');
+    const message = document.getElementById('techpack-v10-warning-message');
+    const details = document.getElementById('techpack-v10-warning-details');
+    const backBtn = document.getElementById('techpack-v10-warning-back');
+    const proceedBtn = document.getElementById('techpack-v10-warning-proceed');
     
     console.log('🔍 Modal elements found:', {
       title: !!title,
@@ -7530,11 +7531,13 @@ class V10_FileManager {
     };
     
     // Remove existing listeners and add new ones
-    const newBackBtn = backBtn.cloneNode(true);
-    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-    newBackBtn.addEventListener('click', closeModal);
+    if (backBtn) {
+      const newBackBtn = backBtn.cloneNode(true);
+      backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+      newBackBtn.addEventListener('click', closeModal);
+    }
     
-    const closeBtn = document.getElementById('v10-close-measurement-modal');
+    const closeBtn = document.getElementById('v10-close-warning-modal');
     if (closeBtn) {
       const newCloseBtn = closeBtn.cloneNode(true);
       closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
@@ -8685,6 +8688,93 @@ const V10_ThemeManager = {
 };
 
 // ==============================================
+// GARMENT COMPLETION BADGE SYSTEM
+// ==============================================
+
+const V10_BadgeManager = {
+  // Update garment completion badge
+  updateGarmentCompletionBadge() {
+    const badge = document.getElementById('garment-completion-badge');
+    if (!badge) return;
+    
+    // Get all garment cards
+    const garmentCards = document.querySelectorAll('.garment-card');
+    
+    if (garmentCards.length === 0) {
+      // No garments = incomplete
+      this.setBadgeIncomplete(badge);
+      return;
+    }
+    
+    // Check completion status of all garments
+    let allComplete = true;
+    
+    garmentCards.forEach(card => {
+      const completeIndicator = card.querySelector('[class*="complete"], .garment-complete, .status-complete');
+      const completeText = card.textContent || card.innerText;
+      
+      // Check if garment has "Complete" status
+      const hasCompleteIndicator = completeIndicator || completeText.toLowerCase().includes('complete');
+      
+      if (!hasCompleteIndicator) {
+        allComplete = false;
+      }
+    });
+    
+    // Update badge based on completion status
+    if (allComplete) {
+      this.setBadgeComplete(badge);
+    } else {
+      this.setBadgeIncomplete(badge);
+    }
+  },
+  
+  // Set badge to complete state
+  setBadgeComplete(badge) {
+    badge.textContent = 'COMPLETE';
+    badge.className = 'studio-header__badge studio-header__badge--complete';
+  },
+  
+  // Set badge to incomplete state
+  setBadgeIncomplete(badge) {
+    badge.textContent = 'INCOMPLETE';
+    badge.className = 'studio-header__badge studio-header__badge--incomplete';
+  },
+  
+  // Initialize badge checking
+  init() {
+    // Initial check
+    this.updateGarmentCompletionBadge();
+    
+    // Set up observers for dynamic updates
+    this.observeGarmentChanges();
+  },
+  
+  // Observe changes to garment container
+  observeGarmentChanges() {
+    const garmentContainer = document.getElementById('garment-studio');
+    if (!garmentContainer) return;
+    
+    // Create observer to watch for changes
+    const observer = new MutationObserver(() => {
+      // Debounce the update to avoid excessive calls
+      clearTimeout(this.updateTimeout);
+      this.updateTimeout = setTimeout(() => {
+        this.updateGarmentCompletionBadge();
+      }, 100);
+    });
+    
+    // Observe changes to the garment container
+    observer.observe(garmentContainer, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
+};
+
+// ==============================================
 // INITIALIZATION
 // ==============================================
 
@@ -8695,6 +8785,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize theme manager first
     V10_ThemeManager.init();
+    
+    // Initialize badge manager
+    V10_BadgeManager.init();
 
     // Phase 1: Initialize core managers in dependency order
     const initializeCore = async () => {
@@ -8800,5 +8893,6 @@ window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
 window.V10_ThemeManager = V10_ThemeManager;
+window.V10_BadgeManager = V10_BadgeManager;
 
 } // End of guard clause
