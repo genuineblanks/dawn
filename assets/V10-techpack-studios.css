@@ -1,6 +1,6 @@
 /* ====================================================
-   V10 TECHPACK STUDIOS - DARK FINANCIAL DASHBOARD THEME
-   Inspired by modern financial dashboard interfaces
+   V10 TECHPACK STUDIOS - LIGHT PROFESSIONAL THEME
+   Clean and modern professional interface design
    ==================================================== */
 
 /* ==============================================
@@ -50,57 +50,57 @@ body[class*="techpack"] *,
 }
 
 /* ==============================================
-   CSS CUSTOM PROPERTIES - DARK THEME SYSTEM
+   CSS CUSTOM PROPERTIES - LIGHT THEME SYSTEM
    ============================================== */
 
 :root {
-  /* Core Dark Theme Colors - Matching Financial Dashboard */
-  --v10-bg-primary: #1a1a1a;          /* Primary dark background */
-  --v10-bg-secondary: #2a2a2a;        /* Secondary dark panels */
-  --v10-bg-tertiary: #333333;         /* Elevated surfaces */
-  --v10-bg-card: #2a2a2a;             /* Card backgrounds */
-  --v10-bg-modal: #1f1f1f;            /* Modal backgrounds */
-  --v10-bg-input: #333333;            /* Input backgrounds */
-  --v10-bg-hover: #404040;            /* Hover states */
-  --v10-bg-active: #4a4a4a;           /* Active states */
+  /* Core Light Theme Colors - Clean Professional Dashboard */
+  --v10-bg-primary: #ffffff;          /* Primary white background */
+  --v10-bg-secondary: #f9fafb;        /* Secondary light grey panels */
+  --v10-bg-tertiary: #ffffff;         /* Elevated surfaces */
+  --v10-bg-card: #ffffff;             /* Card backgrounds */
+  --v10-bg-modal: #ffffff;            /* Modal backgrounds */
+  --v10-bg-input: #f3f4f6;            /* Input backgrounds */
+  --v10-bg-hover: #f9fafb;            /* Hover states */
+  --v10-bg-active: #e5e7eb;           /* Active states */
 
   /* Glass Morphism Effects */
-  --v10-glass-bg: rgba(42, 42, 42, 0.8);
-  --v10-glass-border: rgba(255, 255, 255, 0.1);
-  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --v10-glass-bg: rgba(255, 255, 255, 0.8);
+  --v10-glass-border: rgba(0, 0, 0, 0.1);
+  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   --v10-backdrop-blur: blur(12px);
 
-  /* Text Colors - High Contrast for Accessibility */
-  --v10-text-primary: #ffffff;        /* Primary white text */
-  --v10-text-secondary: #e5e5e5;      /* Secondary light text */
-  --v10-text-muted: #b3b3b3;          /* Muted grey text */
-  --v10-text-disabled: #666666;       /* Disabled text */
-  --v10-text-success: #6b7280;        /* Success text - muted grey-green */
-  --v10-text-warning: #f59e0b;        /* Warning text */
-  --v10-text-error: #ef4444;          /* Error text */
+  /* Text Colors - High Contrast for Light Background */
+  --v10-text-primary: #111827;        /* Primary dark text */
+  --v10-text-secondary: #4b5563;      /* Secondary grey text */
+  --v10-text-muted: #6b7280;          /* Muted grey text */
+  --v10-text-disabled: #9ca3af;       /* Disabled text */
+  --v10-text-success: #059669;        /* Success text - green */
+  --v10-text-warning: #d97706;        /* Warning text */
+  --v10-text-error: #dc2626;          /* Error text */
 
   /* Border Colors */
-  --v10-border-primary: #404040;      /* Primary borders */
-  --v10-border-secondary: #333333;    /* Secondary borders */
-  --v10-border-focus: #a3a3a3;        /* Focus borders - light grey */
-  --v10-border-success: #6b7280;      /* Success borders - muted grey-green */
+  --v10-border-primary: #e5e7eb;      /* Primary borders */
+  --v10-border-secondary: #f3f4f6;    /* Secondary borders */
+  --v10-border-focus: #6b7280;        /* Focus borders - grey */
+  --v10-border-success: #10b981;      /* Success borders - green */
   --v10-border-warning: #f59e0b;      /* Warning borders */
   --v10-border-error: #ef4444;        /* Error borders */
 
   /* Accent Colors */
-  --v10-accent-primary: #a3a3a3;      /* Primary accent - light grey */
-  --v10-accent-secondary: #d4d4d4;    /* Secondary accent - lighter grey */
-  --v10-accent-success: #22c55e;      /* Success accent - proper green */
+  --v10-accent-primary: #4b5563;      /* Primary accent - dark grey */
+  --v10-accent-secondary: #6b7280;    /* Secondary accent - medium grey */
+  --v10-accent-success: #10b981;      /* Success accent - green */
   --v10-accent-warning: #f59e0b;      /* Warning accent */
   --v10-accent-error: #ef4444;        /* Error accent */
 
-  /* Shadows - Dark Theme Optimized */
-  --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --v10-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --v10-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-  --v10-shadow-focus: 0 0 0 3px rgba(163, 163, 163, 0.3);
+  /* Shadows - Light Theme Optimized */
+  --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --v10-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --v10-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --v10-shadow-focus: 0 0 0 3px rgba(107, 114, 128, 0.3);
 
   /* Border Radius - Square Design */
   --v10-radius-sm: 2px;
