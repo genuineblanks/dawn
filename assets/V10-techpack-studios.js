@@ -1,6 +1,6 @@
 /* V10 TechPack Studios - Advanced Studio Management System */
 /* Complete rewrite with studio-based architecture */
-/* Cache refresh: 2025-01-16 - Fixed light mode modal styling - white backgrounds */
+/* Cache refresh: 2025-01-16 - Fixed dark mode Step 1 seamless background */
 
 // ==============================================
 // GLOBAL CONFIGURATION

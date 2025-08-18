@@ -151,7 +151,7 @@ body[class*="techpack"] *,
   /* Core Dark Theme Colors - Financial Dashboard Theme */
   --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
   --v10-bg-secondary: #2d2d2d;        /* Secondary dark panels - more contrast */
-  --v10-bg-tertiary: #383838;         /* Elevated surfaces - lighter for better separation */
+  --v10-bg-tertiary: #1e1e1e;         /* Elevated surfaces - same as primary for seamless look */
   --v10-bg-card: #2d2d2d;             /* Card backgrounds */
   --v10-bg-modal: #262626;            /* Modal backgrounds */
   --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
@@ -198,15 +198,6 @@ body[class*="techpack"] *,
 }
 
 /* Dark Theme Specific Element Overrides */
-[data-theme="dark"] .v10-studio-card {
-  background: var(--v10-bg-tertiary) !important;
-  border-color: var(--v10-border-primary) !important;
-}
-
-[data-theme="dark"] .techpack-content {
-  background: var(--v10-bg-secondary) !important;
-  border-color: var(--v10-border-primary) !important;
-}
 
 [data-theme="dark"] .v10-form-section {
   background: transparent !important;
@@ -5395,14 +5386,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 /* Modal Header */
-.v10-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--v10-space-6);
-  border-bottom: 1px solid var(--v10-border-primary);
-}
-
 .v10-modal-title {
   margin: 0;
   color: var(--v10-text-primary);
@@ -5799,15 +5782,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   color: var(--v10-text-secondary);
   font-size: var(--v10-text-sm);
 }
-
-.v10-modal-actions {
-  display: flex;
-  gap: var(--v10-space-3);
-  justify-content: flex-end;
-  padding-top: var(--v10-space-4);
-  border-top: 1px solid var(--v10-border-primary);
-}
-
 
 @media print {
   .v10-modal-overlay,
