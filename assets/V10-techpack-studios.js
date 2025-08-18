@@ -1020,8 +1020,8 @@ class V10_GarmentStudio {
       const garmentTypeInput = clone.querySelector(`input[value="${garmentData.type}"]`);
       if (garmentTypeInput) {
         garmentTypeInput.checked = true;
-        // Update the visual display to show selected garment instead of placeholder
-        this.updateCompactSelection('garment', garmentData.type, clone);
+        // Update visual display for garment selection widget
+        this.updateGarmentSelectionDisplay(clone, 'garment', garmentData.type);
       }
     }
 
@@ -1030,8 +1030,8 @@ class V10_GarmentStudio {
       const fabricTypeInput = clone.querySelector(`input[value="${garmentData.fabricType}"]`);
       if (fabricTypeInput) {
         fabricTypeInput.checked = true;
-        // Update the visual display to show selected fabric instead of placeholder
-        this.updateCompactSelection('fabric', garmentData.fabricType, clone);
+        // Update visual display for fabric selection widget
+        this.updateGarmentSelectionDisplay(clone, 'fabric', garmentData.fabricType);
       }
     }
 
@@ -1045,6 +1045,35 @@ class V10_GarmentStudio {
     if (garmentData.sampleReference) {
       const sampleRefInput = clone.querySelector(`input[value="${garmentData.sampleReference}"]`);
       if (sampleRefInput) sampleRefInput.checked = true;
+    }
+  }
+
+  updateGarmentSelectionDisplay(clone, type, value) {
+    // This function handles visual display updates for garment/fabric selection widgets only
+    // It's separate from updateCompactSelection to avoid conflicts with lab dip system
+    
+    if (type === 'garment') {
+      const garmentIcon = this.getGarmentIcon(value);
+      const selectedIcon = clone.querySelector('#garment-selected-icon');
+      const selectedName = clone.querySelector('#garment-selected-name');
+      const placeholder = clone.querySelector('#garment-placeholder');
+      const display = clone.querySelector('#garment-display');
+      
+      if (selectedIcon) selectedIcon.textContent = garmentIcon;
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'flex';
+      
+    } else if (type === 'fabric') {
+      const selectedIcon = clone.querySelector('#fabric-selected-icon');
+      const selectedName = clone.querySelector('#fabric-selected-name');
+      const placeholder = clone.querySelector('#fabric-placeholder');
+      const display = clone.querySelector('#fabric-display');
+      
+      if (selectedIcon) selectedIcon.textContent = '🧵';
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'flex';
     }
   }
 
@@ -2255,8 +2284,11 @@ class V10_DesignStudio {
   }
 
   init() {
-    this.bindEvents();
-    this.loadExistingItems();
+    // Add a small delay to ensure DOM is fully ready
+    setTimeout(() => {
+      this.bindEvents();
+      this.loadExistingItems();
+    }, 100);
   }
 
   bindEvents() {
@@ -2301,6 +2333,9 @@ class V10_DesignStudio {
     const pantoneCode = document.getElementById('auto-pantone-code');
 
     if (colorPicker && colorPreview) {
+      // Initialize preview with current color picker value
+      colorPreview.style.backgroundColor = colorPicker.value;
+      
       colorPicker.addEventListener('input', (e) => {
         const hex = e.target.value;
         colorPreview.style.backgroundColor = hex;
@@ -2339,7 +2374,9 @@ class V10_DesignStudio {
     }
 
     // Popular colors
-    document.querySelectorAll('.popular-color-circle').forEach(colorBtn => {
+    const popularColorCircles = document.querySelectorAll('.popular-color-circle');
+    
+    popularColorCircles.forEach((colorBtn, index) => {
       colorBtn.addEventListener('click', (e) => {
         const hex = colorBtn.dataset.color;
         const pantone = colorBtn.dataset.pantone;
