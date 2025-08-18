@@ -7465,52 +7465,46 @@ class V10_FileManager {
   }
 
   showMeasurementRequirementModal() {
-    // Find or create the measurement requirement modal
-    let modal = document.getElementById('techpack-v10-measurement-requirement-modal');
+    const modal = document.getElementById('techpack-v10-measurement-modal');
+    if (!modal) return;
     
-    if (!modal) {
-      // Create the modal if it doesn't exist
-      modal = document.createElement('div');
-      modal.id = 'techpack-v10-measurement-requirement-modal';
-      modal.className = 'v10-modal v10-modal--warning';
-      modal.innerHTML = `
-        <div class="v10-modal__backdrop"></div>
-        <div class="v10-modal__container">
-          <div class="v10-modal__header">
-            <h3>⚠️ Measurement Requirements</h3>
-          </div>
-          <div class="v10-modal__content">
-            <p><strong>Fit Measurements are required for sample requests.</strong></p>
-            <p>Please select "Fit Measurements" to proceed to the next step. This ensures we can create a sample that fits your specifications.</p>
-          </div>
-          <div class="v10-modal__actions">
-            <button type="button" class="v10-btn v10-btn--primary" id="measurement-modal-understand">
-              I Understand
-            </button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      
-      // Bind close event
-      const understandBtn = modal.querySelector('#measurement-modal-understand');
-      if (understandBtn) {
-        understandBtn.addEventListener('click', () => {
-          if (window.v10ModalManager) {
-            window.v10ModalManager.closeModal(modal);
-          } else {
-            modal.style.display = 'none';
-          }
-        });
-      }
+    // Set content for the existing modal
+    const title = document.getElementById('v10-measurement-modal-title');
+    const message = document.getElementById('v10-measurement-modal-message');
+    const details = document.getElementById('v10-measurement-modal-details');
+    const backBtn = document.getElementById('v10-measurement-modal-back');
+    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    
+    if (title) title.textContent = 'Fit Measurements Required';
+    if (message) message.textContent = 'Sample requests require fit measurements to proceed. Please select "Fit Measurements" to continue.';
+    if (details) details.innerHTML = '<p><strong>Required:</strong> Body measurements or size charts are mandatory for proper garment fitting.</p>';
+    
+    // Hide proceed button, only show back button
+    if (proceedBtn) proceedBtn.style.display = 'none';
+    if (backBtn) {
+      backBtn.style.display = 'inline-flex';
+      backBtn.textContent = 'I Understand';
     }
     
-    // Open the modal
-    if (window.v10ModalManager) {
-      window.v10ModalManager.openModal(modal);
-    } else {
-      modal.style.display = 'block';
+    // Set up event listeners
+    const closeModal = () => {
+      modal.style.display = 'none';
+    };
+    
+    // Remove existing listeners and add new ones
+    const newBackBtn = backBtn.cloneNode(true);
+    backBtn.parentNode.replaceChild(newBackBtn, backBtn);
+    newBackBtn.addEventListener('click', closeModal);
+    
+    const closeBtn = document.getElementById('v10-close-measurement-modal');
+    if (closeBtn) {
+      const newCloseBtn = closeBtn.cloneNode(true);
+      closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+      newCloseBtn.addEventListener('click', closeModal);
     }
+    
+    // Show the modal with proper overlay
+    modal.style.display = 'flex';
   }
 
   validateStep() {

@@ -148,19 +148,19 @@ body[class*="techpack"] *,
 /* Dark Theme Variables */
 [data-theme="dark"] {
   /* Core Dark Theme Colors - Financial Dashboard Theme */
-  --v10-bg-primary: #1a1a1a;          /* Primary dark background */
-  --v10-bg-secondary: #2a2a2a;        /* Secondary dark panels */
-  --v10-bg-tertiary: #333333;         /* Elevated surfaces */
-  --v10-bg-card: #2a2a2a;             /* Card backgrounds */
-  --v10-bg-modal: #1f1f1f;            /* Modal backgrounds */
-  --v10-bg-input: #333333;            /* Input backgrounds */
-  --v10-bg-hover: #404040;            /* Hover states */
-  --v10-bg-active: #4a4a4a;           /* Active states */
+  --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
+  --v10-bg-secondary: #2d2d2d;        /* Secondary dark panels - more contrast */
+  --v10-bg-tertiary: #383838;         /* Elevated surfaces - lighter for better separation */
+  --v10-bg-card: #2d2d2d;             /* Card backgrounds */
+  --v10-bg-modal: #262626;            /* Modal backgrounds */
+  --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
+  --v10-bg-hover: #454545;            /* Hover states */
+  --v10-bg-active: #525252;           /* Active states */
 
   /* Glass Morphism Effects */
-  --v10-glass-bg: rgba(42, 42, 42, 0.8);
+  --v10-glass-bg: rgba(56, 56, 56, 0.8);
   --v10-glass-border: rgba(255, 255, 255, 0.1);
-  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   --v10-backdrop-blur: blur(12px);
 
   /* Text Colors - High Contrast for Dark Background */
@@ -173,10 +173,10 @@ body[class*="techpack"] *,
   --v10-text-error: #ef4444;          /* Error text */
 
   /* Border Colors */
-  --v10-border-primary: #404040;      /* Primary borders */
-  --v10-border-secondary: #333333;    /* Secondary borders */
-  --v10-border-focus: #a3a3a3;        /* Focus borders - light grey */
-  --v10-border-success: #6b7280;      /* Success borders - muted grey-green */
+  --v10-border-primary: #4a4a4a;      /* Primary borders - lighter for visibility */
+  --v10-border-secondary: #404040;    /* Secondary borders */
+  --v10-border-focus: #6b7280;        /* Focus borders - subtle grey */
+  --v10-border-success: #10b981;      /* Success borders - green */
   --v10-border-warning: #f59e0b;      /* Warning borders */
   --v10-border-error: #ef4444;        /* Error borders */
 
@@ -194,6 +194,25 @@ body[class*="techpack"] *,
   --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
   --v10-shadow-focus: 0 0 0 3px rgba(163, 163, 163, 0.3);
+}
+
+/* Dark Theme Specific Element Overrides */
+[data-theme="dark"] .v10-studio-card {
+  background: var(--v10-bg-tertiary) !important;
+  border-color: var(--v10-border-primary) !important;
+}
+
+[data-theme="dark"] .techpack-content {
+  background: var(--v10-bg-secondary) !important;
+  border-color: var(--v10-border-primary) !important;
+}
+
+[data-theme="dark"] .v10-form-section {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .v10-step-header {
+  background: transparent !important;
 }
 
 /* ==============================================
@@ -295,6 +314,7 @@ body[class*="techpack"] *,
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--v10-space-6);
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -4644,7 +4664,7 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
    ============================================== */
 
 .v10-theme-toggle {
-  position: fixed;
+  position: absolute;
   top: 20px;
   right: 20px;
   display: flex;
@@ -5687,7 +5707,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   
   .techpack-content {
     box-shadow: none !important;
-    border: 1px solid #000 !important;
+    border: 1px solid var(--v10-border-primary) !important;
   }
   
   .review-card {
