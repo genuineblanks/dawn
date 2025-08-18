@@ -4974,7 +4974,15 @@ class V10_FileManager {
         e.preventDefault();
         
         if (this.validateStep()) {
-          this.proceedToStep3();
+          const result = this.proceedToStep3();
+          // Handle both synchronous and asynchronous returns
+          if (result && typeof result.then === 'function') {
+            result.then(success => {
+              if (!success) {
+                console.error('Failed to proceed to step 3');
+              }
+            });
+          }
         }
       });
     }
@@ -5149,10 +5157,67 @@ class V10_FileManager {
     
     if (requestType === 'sample-request') {
       const fitMeasurementsCheckbox = document.getElementById('techpack-v10-fit-measurements');
-      return fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
+      const isChecked = fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
+      
+      if (!isChecked) {
+        // Show modal warning for unchecked required measurements
+        this.showMeasurementRequirementModal();
+        return false;
+      }
+      
+      return true;
     }
     
     return true;
+  }
+
+  showMeasurementRequirementModal() {
+    // Find or create the measurement requirement modal
+    let modal = document.getElementById('techpack-v10-measurement-requirement-modal');
+    
+    if (!modal) {
+      // Create the modal if it doesn't exist
+      modal = document.createElement('div');
+      modal.id = 'techpack-v10-measurement-requirement-modal';
+      modal.className = 'v10-modal v10-modal--warning';
+      modal.innerHTML = `
+        <div class="v10-modal__backdrop"></div>
+        <div class="v10-modal__container">
+          <div class="v10-modal__header">
+            <h3>⚠️ Measurement Requirements</h3>
+          </div>
+          <div class="v10-modal__content">
+            <p><strong>Fit Measurements are required for sample requests.</strong></p>
+            <p>Please select "Fit Measurements" to proceed to the next step. This ensures we can create a sample that fits your specifications.</p>
+          </div>
+          <div class="v10-modal__actions">
+            <button type="button" class="v10-btn v10-btn--primary" id="measurement-modal-understand">
+              I Understand
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Bind close event
+      const understandBtn = modal.querySelector('#measurement-modal-understand');
+      if (understandBtn) {
+        understandBtn.addEventListener('click', () => {
+          if (window.v10ModalManager) {
+            window.v10ModalManager.closeModal(modal);
+          } else {
+            modal.style.display = 'none';
+          }
+        });
+      }
+    }
+    
+    // Open the modal
+    if (window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
+    } else {
+      modal.style.display = 'block';
+    }
   }
 
   validateStep() {
@@ -5269,40 +5334,72 @@ class V10_FileManager {
 
   proceedToStep3() {
     try {
-      const step2 = document.getElementById('techpack-v10-step-2');
-      const step3 = document.getElementById('techpack-v10-step-3');
+      console.log('🚀 Attempting to proceed to step 3...');
       
+      // Try multiple times to find elements if they're not immediately available
+      let step2 = document.getElementById('techpack-v10-step-2');
+      let step3 = document.getElementById('techpack-v10-step-3');
+      
+      // If elements not found, wait briefly and try again
       if (!step2 || !step3) {
-        console.error('Cannot find step 2 or step 3 elements');
-        return false;
-      }
-
-      step2.style.display = 'none';
-      step3.style.display = 'block';
-      
-      // Update current step
-      try {
-        sessionStorage.setItem('v10_current_step', '3');
-      } catch (storageError) {
-        console.error('Error updating session storage:', storageError);
-      }
-      
-      // Initialize step 3 if not already done
-      if (!window.v10TechPackSystem) {
-        try {
-          window.v10TechPackSystem = new V10_TechPackSystem();
-          console.log('✅ TechPack System initialized successfully');
-        } catch (systemError) {
-          console.error('❌ Error initializing TechPack System:', systemError);
-          return false;
-        }
+        console.warn('⚠️ Step elements not found on first attempt, waiting...');
+        
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            step2 = document.getElementById('techpack-v10-step-2');
+            step3 = document.getElementById('techpack-v10-step-3');
+            
+            if (!step2 || !step3) {
+              console.error('❌ Cannot find step 2 or step 3 elements after wait', {
+                step2Found: !!step2,
+                step3Found: !!step3,
+                allSections: document.querySelectorAll('[id*="techpack-v10-step"]').length
+              });
+              resolve(false);
+              return;
+            }
+            
+            this.executeStepTransition(step2, step3);
+            resolve(true);
+          }, 50);
+        });
       }
       
+      this.executeStepTransition(step2, step3);
       return true;
+      
     } catch (error) {
       console.error('❌ Error proceeding to step 3:', error);
       return false;
     }
+  }
+
+  executeStepTransition(step2, step3) {
+    console.log('🔄 Executing step transition...');
+    
+    step2.style.display = 'none';
+    step3.style.display = 'block';
+    
+    // Update current step
+    try {
+      sessionStorage.setItem('v10_current_step', '3');
+    } catch (storageError) {
+      console.error('Error updating session storage:', storageError);
+    }
+    
+    // Initialize step 3 if not already done
+    if (!window.v10TechPackSystem) {
+      try {
+        window.v10TechPackSystem = new V10_TechPackSystem();
+        console.log('✅ TechPack System initialized successfully');
+      } catch (systemError) {
+        console.error('❌ Error initializing TechPack System:', systemError);
+        return false;
+      }
+    }
+    
+    console.log('✅ Step transition completed successfully');
+    return true;
   }
 
   getFileData() {
