@@ -1192,6 +1192,28 @@ body[class*="techpack"] *,
   max-width: 300px;
 }
 
+/* Enhanced styling for warning modal to match incomplete measurements modal */
+#techpack-v10-warning-modal .v10-modal {
+  backdrop-filter: blur(10px);
+  background: var(--v10-glass-bg);
+  border: 1px solid var(--v10-border-primary);
+  box-shadow: var(--v10-shadow-2xl);
+}
+
+#techpack-v10-warning-modal .v10-modal-header {
+  background: var(--v10-bg-modal);
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+#techpack-v10-warning-modal .v10-modal-body {
+  background: var(--v10-bg-modal);
+}
+
+#techpack-v10-warning-modal .v10-modal-actions {
+  background: var(--v10-bg-modal);
+  border-top: 1px solid var(--v10-border-primary);
+}
+
 .v10-modal-icon {
   width: 48px;
   height: 48px;
@@ -5007,29 +5029,33 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Color Picker Section */
 .color-picker-section {
   display: flex;
-  gap: var(--v10-space-6);
+  flex-direction: column;
+  gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
-  align-items: flex-start;
   background: var(--v10-bg-tertiary);
   padding: var(--v10-space-6);
   border-radius: var(--v10-radius-lg);
   border: 1px solid var(--v10-border-primary);
 }
 
-.color-picker-left {
-  flex: 1;
+.color-picker-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--v10-space-6);
+}
+
+.color-picker-left {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
   gap: var(--v10-space-3);
 }
 
 .pantone-display-right {
-  flex: 0 0 auto;
-  min-width: 280px;
-  background: var(--v10-bg-secondary);
-  padding: var(--v10-space-4);
-  border-radius: var(--v10-radius-md);
-  border: 1px solid var(--v10-border-primary);
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .color-picker-wrapper {
@@ -5050,16 +5076,18 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 .color-picker-preview {
   display: block !important;
-  width: 60px !important;
-  height: 60px !important;
-  border-radius: var(--v10-radius-md);
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
   border: 2px solid var(--v10-border-primary);
   background: var(--v10-bg-tertiary);
   visibility: visible !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .pantone-code-input {
-  margin-top: var(--v10-space-3);
+  width: 100%;
 }
 
 .pantone-input {
@@ -5082,7 +5110,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Popular Colors Grid */
 .popular-colors-section {
-  margin-bottom: var(--v10-space-6);
+  margin-bottom: var(--v10-space-4);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .popular-colors-section h5 {
@@ -5158,13 +5189,20 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   display: flex;
   align-items: center;
   gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: all 0.2s ease;
 }
 
 .pantone-circle {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   border: 2px solid var(--v10-border-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .pantone-info {
@@ -5266,7 +5304,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .add-design-actions {
   display: flex;
   gap: var(--v10-space-3);
-  margin-top: var(--v10-space-6);
+  margin-top: var(--v10-space-4);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .add-to-garment-btn,
