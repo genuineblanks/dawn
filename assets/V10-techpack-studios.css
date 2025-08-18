@@ -4911,6 +4911,81 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   padding: var(--v10-space-6);
 }
 
+/* Lab Dip Collection Item Styles */
+#labdips-grid .collection-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: all 0.2s ease;
+}
+
+#labdips-grid .collection-item:hover {
+  border-color: var(--v10-accent-primary);
+  background: rgba(163, 163, 163, 0.05);
+}
+
+#labdips-grid .collection-item__visual {
+  flex-shrink: 0;
+}
+
+#labdips-grid .collection-item__color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#labdips-grid .collection-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
+}
+
+#labdips-grid .collection-item__name {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+}
+
+#labdips-grid .collection-item__type {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+}
+
+#labdips-grid .collection-item__actions {
+  display: flex;
+  gap: var(--v10-space-2);
+}
+
+#labdips-grid .collection-item__assign,
+#labdips-grid .collection-item__remove {
+  padding: var(--v10-space-2);
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#labdips-grid .collection-item__assign:hover {
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+  background: rgba(163, 163, 163, 0.05);
+}
+
+#labdips-grid .collection-item__remove:hover {
+  border-color: var(--v10-accent-danger);
+  color: var(--v10-accent-danger);
+  background: rgba(220, 38, 38, 0.05);
+}
+
 .collection-header {
   display: flex;
   justify-content: space-between;
@@ -4964,18 +5039,31 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Color Picker Section */
 .color-picker-section {
   display: flex;
-  gap: var(--v10-space-6);
+  gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
-  align-items: flex-start;
+  align-items: stretch;
+  background: var(--v10-bg-tertiary);
+  padding: var(--v10-space-4);
+  border-radius: var(--v10-radius-lg);
+  border: 1px solid var(--v10-border-primary);
 }
 
 .color-picker-left {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
 }
 
 .pantone-display-right {
-  flex: 0 0 300px;
-  min-height: 120px;
+  flex: 0 0 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
+  border: 1px solid var(--v10-border-primary);
 }
 
 .color-picker-wrapper {
@@ -5019,6 +5107,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Popular Colors Grid */
 .popular-colors-section {
   margin-bottom: var(--v10-space-6);
+  min-height: 140px !important; /* Ensure container has height */
 }
 
 .popular-colors-section h5 {
@@ -5029,14 +5118,16 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .popular-colors-grid {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 40px) !important; /* Fixed height rows */
   gap: var(--v10-space-3);
   max-width: 300px;
+  min-height: 90px !important; /* Ensure minimum height */
 }
 
 .popular-color-circle {
+  display: block !important; /* Force display */
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -5044,6 +5135,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   justify-self: center;
+  visibility: visible !important; /* Force visibility */
 }
 
 .popular-color-circle:hover {
@@ -5081,11 +5173,9 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Auto Pantone Display */
 .auto-pantone-display {
-  margin-bottom: var(--v10-space-4);
-  padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
-  border-radius: var(--v10-radius-md);
-  border: 1px solid var(--v10-border-primary);
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 .pantone-result {
