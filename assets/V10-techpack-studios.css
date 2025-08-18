@@ -865,6 +865,18 @@ body[class*="techpack"] *,
   border-color: var(--v10-border-focus);
 }
 
+/* Light mode ghost button visibility fix */
+[data-theme="light"] .v10-btn--ghost {
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
+[data-theme="light"] .v10-btn--ghost:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #6b7280;
+  color: #111827;
+}
+
 .v10-btn--success {
   background: var(--v10-accent-success);
   color: white;
@@ -1138,7 +1150,7 @@ body[class*="techpack"] *,
 .techpack-modal__actions {
   display: flex;
   gap: var(--v10-space-3);
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: var(--v10-space-6);
   border-top: 1px solid var(--v10-border-primary);
   background: var(--v10-bg-modal);
