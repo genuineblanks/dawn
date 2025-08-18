@@ -1003,8 +1003,13 @@ body[class*="techpack"] *,
 .v10-modal-overlay.show .v10-modal,
 .techpack-modal:not([style*="none"]) .techpack-modal__content,
 .techpack-modal.show .techpack-modal__content,
-.techpack-modal--help .techpack-modal__content {
+.techpack-modal.active .techpack-modal__content {
   transform: scale(1);
+}
+
+/* Ensure design sample modal is hidden by default */
+#design-sample-info-modal:not(.active) {
+  display: none !important;
 }
 
 .v10-modal--verification {
