@@ -1,6 +1,6 @@
 /* V10 TechPack Studios - Advanced Studio Management System */
 /* Complete rewrite with studio-based architecture */
-/* Cache refresh: 2025-01-16 - Fixed validation timing - modals only on Next Step, not file selection */
+/* Cache refresh: 2025-01-16 - Fixed syntax error and validation timing - modals only on Next Step */
 
 // ==============================================
 // GLOBAL CONFIGURATION
@@ -7283,16 +7283,13 @@ class V10_FileManager {
         
         console.log('✅ All validation passed, proceeding to step 3');
         const result = this.proceedToStep3();
-          // Handle both synchronous and asynchronous returns
-          if (result && typeof result.then === 'function') {
-            result.then(success => {
-              if (!success) {
-                console.error('Failed to proceed to step 3');
-              }
-            });
-          }
-        } else {
-          console.log('❌ validateStep returned false, staying on step 2');
+        // Handle both synchronous and asynchronous returns
+        if (result && typeof result.then === 'function') {
+          result.then(success => {
+            if (!success) {
+              console.error('Failed to proceed to step 3');
+            }
+          });
         }
       });
     }
