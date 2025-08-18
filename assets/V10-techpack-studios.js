@@ -1,6 +1,6 @@
 /* V10 TechPack Studios - Advanced Studio Management System */
 /* Complete rewrite with studio-based architecture */
-/* Cache refresh: 2025-01-16 - Fixed measurement validation system - restored to working state */
+/* Cache refresh: 2025-01-16 - Fixed validation timing - modals only on Next Step, not file selection */
 
 // ==============================================
 // GLOBAL CONFIGURATION
@@ -7269,10 +7269,20 @@ class V10_FileManager {
         console.log('🖱️ V10 Step 2 Next button clicked');
         e.preventDefault();
         
-        console.log('📋 Calling validateStep()...');
-        if (this.validateStep()) {
-          console.log('✅ validateStep returned true, proceeding to step 3');
-          const result = this.proceedToStep3();
+        console.log('📋 Calling validateStep() for files...');
+        if (!this.validateStep()) {
+          console.log('❌ File validation failed, cannot proceed');
+          return;
+        }
+        
+        console.log('📋 Files valid, now calling validateMeasurements()...');
+        if (!this.validateMeasurements()) {
+          console.log('❌ Measurement validation failed, modal should be shown');
+          return;
+        }
+        
+        console.log('✅ All validation passed, proceeding to step 3');
+        const result = this.proceedToStep3();
           // Handle both synchronous and asynchronous returns
           if (result && typeof result.then === 'function') {
             result.then(success => {
@@ -7482,14 +7492,15 @@ class V10_FileManager {
       return false;
     }
     
-    // If some measurements are checked but others are missing, show incomplete modal
+    // If some measurements are checked but others are missing, use existing warning system
     const checkedCount = [fitChecked, designChecked, placementChecked].filter(Boolean).length;
     const totalCount = [fitCheckbox, designCheckbox, placementCheckbox].filter(el => el && el.offsetParent).length; // Only count visible checkboxes
     
     if (checkedCount > 0 && checkedCount < totalCount) {
-      console.log('⚠️ Some measurements missing, showing incomplete modal');
-      this.showIncompleteMeasurementModal(fitChecked, designChecked, placementChecked);
-      return false;
+      console.log('⚠️ Some measurements missing, using existing warning system');
+      // For now, allow proceeding - the existing warning box should handle this
+      // The user can see the warning and make their decision
+      return true;
     }
     
     console.log('✅ Measurement validation passed');
@@ -7563,141 +7574,6 @@ class V10_FileManager {
     console.log('🎯 Modal visibility:', window.getComputedStyle(modal).display);
   }
 
-  showIncompleteMeasurementModal(fitChecked, designChecked, placementChecked) {
-    console.log('🔔 V10 showIncompleteMeasurementModal() called');
-    
-    // Use the existing measurement modal
-    const modal = document.getElementById('techpack-v10-measurement-modal');
-    const title = document.getElementById('v10-measurement-modal-title');
-    const message = document.getElementById('v10-measurement-modal-message');
-    const details = document.getElementById('v10-measurement-modal-details');
-    const backBtn = document.getElementById('v10-measurement-modal-back');
-    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
-    
-    if (!modal) {
-      console.log('❌ Modal element not found, aborting');
-      return;
-    }
-    
-    // Set modal content
-    if (title) title.textContent = 'Incomplete Measurements';
-    if (message) {
-      message.textContent = "You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.";
-    }
-    
-    // Build included and missing lists with V10 styling
-    if (details) {
-      let detailsHTML = '';
-      
-      // Included measurements (green)
-      const included = [];
-      if (fitChecked) included.push({ name: 'Fit Measurements', desc: 'Body measurements or size charts' });
-      if (designChecked) included.push({ name: 'Design Measurements', desc: 'Garment specifications' });
-      if (placementChecked) included.push({ name: 'Design Placement', desc: 'Logo and graphic positioning' });
-      
-      if (included.length > 0) {
-        detailsHTML += `
-          <div class="v10-measurement-status">
-            <div class="v10-measurement-status-header v10-measurement-status-header--included">
-              <svg width="16" height="16" viewBox="0 0 16 16" class="v10-measurement-icon">
-                <circle cx="8" cy="8" r="8" fill="#10b981"/>
-                <path d="M5 8l2 2 4-4" stroke="white" stroke-width="2" fill="none"/>
-              </svg>
-              <span class="v10-measurement-status-title">Included:</span>
-            </div>
-            <div class="v10-measurement-list">`;
-        
-        included.forEach(item => {
-          detailsHTML += `
-              <div class="v10-measurement-item v10-measurement-item--included">
-                <strong>${item.name}</strong>
-                <span class="v10-measurement-desc">${item.desc}</span>
-              </div>`;
-        });
-        
-        detailsHTML += `</div></div>`;
-      }
-      
-      // Missing measurements (orange)
-      const missing = [];
-      if (!fitChecked) missing.push({ name: 'Fit Measurements', desc: 'Body measurements or size charts' });
-      if (!designChecked) missing.push({ name: 'Design Measurements', desc: 'Garment specifications' });
-      if (!placementChecked && document.getElementById('techpack-v10-placement-measurements')?.offsetParent) {
-        missing.push({ name: 'Design Placement', desc: 'Logo and graphic positioning' });
-      }
-      
-      if (missing.length > 0) {
-        detailsHTML += `
-          <div class="v10-measurement-status">
-            <div class="v10-measurement-status-header v10-measurement-status-header--missing">
-              <svg width="16" height="16" viewBox="0 0 16 16" class="v10-measurement-icon">
-                <circle cx="8" cy="8" r="8" fill="#f59e0b"/>
-                <path d="M8 4v4M8 10h.01" stroke="white" stroke-width="2"/>
-              </svg>
-              <span class="v10-measurement-status-title">Missing:</span>
-            </div>
-            <div class="v10-measurement-list">`;
-        
-        missing.forEach(item => {
-          detailsHTML += `
-              <div class="v10-measurement-item v10-measurement-item--missing">
-                <strong>${item.name}</strong>
-                <span class="v10-measurement-desc">${item.desc}</span>
-              </div>`;
-        });
-        
-        detailsHTML += `</div></div>`;
-      }
-      
-      details.innerHTML = detailsHTML;
-    }
-    
-    // Configure buttons
-    if (backBtn) {
-      backBtn.textContent = 'Go Back & Add Measurements';
-      backBtn.style.display = 'inline-flex';
-    }
-    if (proceedBtn) {
-      proceedBtn.textContent = 'Confirm & Continue';
-      proceedBtn.style.display = 'inline-flex';
-    }
-    
-    // Set up event listeners
-    const closeModal = () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    };
-    
-    // Remove existing listeners and add new ones
-    if (backBtn) {
-      const newBackBtn = backBtn.cloneNode(true);
-      backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-      newBackBtn.addEventListener('click', closeModal);
-    }
-    
-    if (proceedBtn) {
-      const newProceedBtn = proceedBtn.cloneNode(true);
-      proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
-      newProceedBtn.addEventListener('click', () => {
-        closeModal();
-        // Continue to next step
-        this.proceedToStep3();
-      });
-    }
-    
-    const closeBtn = document.getElementById('v10-close-measurement-modal');
-    if (closeBtn) {
-      const newCloseBtn = closeBtn.cloneNode(true);
-      closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
-      newCloseBtn.addEventListener('click', closeModal);
-    }
-    
-    // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    
-    console.log('✅ Incomplete measurement modal displayed');
-  }
 
 
   validateStep() {
@@ -7720,13 +7596,9 @@ class V10_FileManager {
       }
     }
     
-    // Validate measurements if required
-    console.log('🔍 Calling validateMeasurements()...');
-    const measurementValid = this.validateMeasurements();
-    console.log(`📏 validateMeasurements returned: ${measurementValid}`);
-    if (!measurementValid) {
-      isValid = false;
-    }
+    // Note: Measurement validation intentionally removed from validateStep()
+    // Measurements should only be validated when clicking "Next Step" button
+    // This prevents modals from appearing during file type selection
     
     // Update next button
     const nextBtn = document.getElementById('techpack-v10-step-2-next');
