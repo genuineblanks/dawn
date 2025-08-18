@@ -1,0 +1,453 @@
+{% comment %}
+  V10 Quick Guide Modal Component
+  Simplified modal for quick process overview
+{% endcomment %}
+
+<!-- Quick Guide Modal -->
+<div class="quick-guide-overlay" id="quick-guide-modal" style="display: none;">
+  <div class="quick-guide-modal">
+    <div class="quick-guide-header">
+      <div class="quick-guide-header-content">
+        <div class="quick-guide-header-text">
+          <h2>{{ 'techpack.quick_guide.title' | t | default: 'Quick Guide' }}</h2>
+          <p>{{ 'techpack.quick_guide.subtitle' | t | default: 'Simple 3-step process overview' }}</p>
+        </div>
+        <button type="button" class="quick-guide-close" id="close-quick-guide" aria-label="{{ 'general.accessibility.close' | t | default: 'Close' }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 5L5 15M5 5l10 10"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="quick-guide-body">
+      <!-- Simple Process Steps -->
+      <div class="quick-process-overview">
+        <div class="quick-process-title">
+          <h3>{{ 'techpack.quick_guide.process_title' | t | default: 'How It Works' }}</h3>
+          <p>{{ 'techpack.quick_guide.process_subtitle' | t | default: 'Create your garment sample in 3 simple steps' }}</p>
+        </div>
+        
+        <div class="quick-process-steps">
+          <div class="quick-step">
+            <div class="quick-step-number">1</div>
+            <div class="quick-step-content">
+              <h4>{{ 'techpack.quick_guide.step_1_title' | t | default: 'Choose Your Garment' }}</h4>
+              <p>{{ 'techpack.quick_guide.step_1_desc' | t | default: 'Select the type of garment you want to create from our available options.' }}</p>
+            </div>
+          </div>
+          
+          <div class="quick-step">
+            <div class="quick-step-number">2</div>
+            <div class="quick-step-content">
+              <h4>{{ 'techpack.quick_guide.step_2_title' | t | default: 'Pick Your Sample Type' }}</h4>
+              <p>{{ 'techpack.quick_guide.step_2_desc' | t | default: 'Choose from Stock Color (€35), Custom Color (€65), or TechPack specifications.' }}</p>
+            </div>
+          </div>
+          
+          <div class="quick-step">
+            <div class="quick-step-number">3</div>
+            <div class="quick-step-content">
+              <h4>{{ 'techpack.quick_guide.step_3_title' | t | default: 'Add Optional Extras' }}</h4>
+              <p>{{ 'techpack.quick_guide.step_3_desc' | t | default: 'Include lab dips for color matching or design samples for logos and prints.' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Types Quick Reference -->
+      <div class="quick-sample-types">
+        <h4>{{ 'techpack.quick_guide.sample_types_title' | t | default: 'Sample Types Quick Reference' }}</h4>
+        
+        <div class="quick-sample-grid">
+          <div class="quick-sample-card">
+            <div class="quick-sample-icon">🚀</div>
+            <div class="quick-sample-info">
+              <strong>{{ 'techpack.quick_guide.stock_title' | t | default: 'Stock Color' }}</strong>
+              <span class="quick-sample-price">€35</span>
+              <p>{{ 'techpack.quick_guide.stock_desc' | t | default: 'Fast 1-2 weeks • Black/White/Random' }}</p>
+            </div>
+          </div>
+          
+          <div class="quick-sample-card">
+            <div class="quick-sample-icon">🎨</div>
+            <div class="quick-sample-info">
+              <strong>{{ 'techpack.quick_guide.custom_title' | t | default: 'Custom Color' }}</strong>
+              <span class="quick-sample-price">€65</span>
+              <p>{{ 'techpack.quick_guide.custom_desc' | t | default: '3 weeks • Exact Pantone match' }}</p>
+            </div>
+          </div>
+          
+          <div class="quick-sample-card">
+            <div class="quick-sample-icon">📋</div>
+            <div class="quick-sample-info">
+              <strong>{{ 'techpack.quick_guide.techpack_title' | t | default: 'TechPack' }}</strong>
+              <span class="quick-sample-price">Premium</span>
+              <p>{{ 'techpack.quick_guide.techpack_desc' | t | default: '4-5 weeks • Full specifications' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Tips -->
+      <div class="quick-tips">
+        <h4>{{ 'techpack.quick_guide.tips_title' | t | default: 'Quick Tips' }}</h4>
+        <div class="quick-tips-list">
+          <div class="quick-tip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>{{ 'techpack.quick_guide.tip_1' | t | default: 'Start with Stock Color for quick prototyping' }}</span>
+          </div>
+          <div class="quick-tip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>{{ 'techpack.quick_guide.tip_2' | t | default: 'Custom colors require cotton fabrics only' }}</span>
+          </div>
+          <div class="quick-tip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>{{ 'techpack.quick_guide.tip_3' | t | default: 'Lab dips show exact color before sampling' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="quick-guide-actions">
+        <button type="button" class="quick-guide-btn quick-guide-btn-secondary" id="need-more-help">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <circle cx="12" cy="17" r="1"/>
+          </svg>
+          {{ 'techpack.quick_guide.need_more_help' | t | default: 'Need More Help?' }}
+        </button>
+        <button type="button" class="quick-guide-btn quick-guide-btn-primary" id="start-creating">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+          {{ 'techpack.quick_guide.start_creating' | t | default: 'Start Creating' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Guide Styles -->
+<style>
+/* Quick Guide Modal Overlay */
+.quick-guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.quick-guide-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Quick Guide Modal */
+.quick-guide-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 90vw;
+  max-width: 800px;
+  max-height: 90vh;
+  background: var(--v10-bg-modal, #1f1f1f);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.quick-guide-overlay.active .quick-guide-modal {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Quick Guide Header */
+.quick-guide-header {
+  background: linear-gradient(135deg, var(--v10-bg-secondary, #2a2a2a) 0%, var(--v10-bg-tertiary, #333333) 100%);
+  border-bottom: 1px solid var(--v10-border-primary, #404040);
+  padding: 24px;
+}
+
+.quick-guide-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.quick-guide-header-text h2 {
+  margin: 0 0 8px 0;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.quick-guide-header-text p {
+  margin: 0;
+  color: var(--v10-text-secondary, #e5e5e5);
+  font-size: 16px;
+}
+
+.quick-guide-close {
+  background: none;
+  border: none;
+  color: var(--v10-text-muted, #b3b3b3);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.quick-guide-close:hover {
+  background: var(--v10-bg-hover, #404040);
+  color: var(--v10-text-primary, #ffffff);
+}
+
+/* Quick Guide Body */
+.quick-guide-body {
+  padding: 24px;
+  max-height: calc(90vh - 140px);
+  overflow-y: auto;
+}
+
+/* Quick Process Overview */
+.quick-process-overview {
+  margin-bottom: 32px;
+}
+
+.quick-process-title {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.quick-process-title h3 {
+  margin: 0 0 8px 0;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.quick-process-title p {
+  margin: 0;
+  color: var(--v10-text-secondary, #e5e5e5);
+  font-size: 14px;
+}
+
+.quick-process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quick-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--v10-bg-card, #2a2a2a);
+  border-radius: 12px;
+  border: 1px solid var(--v10-border-secondary, #333333);
+}
+
+.quick-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--v10-accent-primary, #a3a3a3);
+  color: var(--v10-bg-primary, #1a1a1a);
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.quick-step-content h4 {
+  margin: 0 0 8px 0;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.quick-step-content p {
+  margin: 0;
+  color: var(--v10-text-secondary, #e5e5e5);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Quick Sample Types */
+.quick-sample-types {
+  margin-bottom: 32px;
+}
+
+.quick-sample-types h4 {
+  margin: 0 0 16px 0;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.quick-sample-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.quick-sample-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--v10-bg-card, #2a2a2a);
+  border: 1px solid var(--v10-border-secondary, #333333);
+  border-radius: 12px;
+}
+
+.quick-sample-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.quick-sample-info strong {
+  display: block;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.quick-sample-price {
+  display: inline-block;
+  background: var(--v10-accent-primary, #a3a3a3);
+  color: var(--v10-bg-primary, #1a1a1a);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.quick-sample-info p {
+  margin: 8px 0 0 0;
+  color: var(--v10-text-muted, #b3b3b3);
+  font-size: 12px;
+}
+
+/* Quick Tips */
+.quick-tips h4 {
+  margin: 0 0 16px 0;
+  color: var(--v10-text-primary, #ffffff);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.quick-tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quick-tip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--v10-text-secondary, #e5e5e5);
+  font-size: 14px;
+}
+
+.quick-tip svg {
+  color: var(--v10-accent-success, #22c55e);
+  flex-shrink: 0;
+}
+
+/* Quick Guide Actions */
+.quick-guide-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--v10-border-secondary, #333333);
+}
+
+.quick-guide-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.quick-guide-btn-secondary {
+  background: var(--v10-bg-tertiary, #333333);
+  color: var(--v10-text-secondary, #e5e5e5);
+}
+
+.quick-guide-btn-secondary:hover {
+  background: var(--v10-bg-hover, #404040);
+  color: var(--v10-text-primary, #ffffff);
+}
+
+.quick-guide-btn-primary {
+  background: var(--v10-accent-primary, #a3a3a3);
+  color: var(--v10-bg-primary, #1a1a1a);
+}
+
+.quick-guide-btn-primary:hover {
+  background: var(--v10-accent-secondary, #d4d4d4);
+  transform: translateY(-1px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .quick-guide-modal {
+    width: 95vw;
+    margin: 20px;
+  }
+  
+  .quick-guide-header,
+  .quick-guide-body {
+    padding: 20px;
+  }
+  
+  .quick-sample-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-guide-actions {
+    flex-direction: column;
+  }
+  
+  .quick-step {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
