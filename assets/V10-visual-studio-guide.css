@@ -1,0 +1,684 @@
+/* ===============================================
+   V10 Visual Studio Guide - Complete Styling
+   =============================================== */
+
+/* Base Modal & Overlay */
+.visual-guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.visual-guide-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.visual-guide-modal {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: hidden;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.visual-guide-overlay.active .visual-guide-modal {
+  transform: scale(1) translateY(0);
+}
+
+/* Modal Header */
+.visual-guide-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 32px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-guide-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.visual-guide-header-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.visual-guide-header-text h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.visual-guide-header-text p {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.visual-guide-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.visual-guide-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* Modal Body */
+.visual-guide-body {
+  padding: 40px;
+  overflow-y: auto;
+  max-height: calc(90vh - 200px);
+}
+
+/* Navigation Tabs */
+.guide-navigation {
+  display: flex;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 8px;
+  margin-bottom: 32px;
+  gap: 4px;
+}
+
+.guide-nav-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.guide-nav-tab.active {
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.guide-nav-tab:hover:not(.active) {
+  color: #475569;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Phase Content */
+.guide-phase {
+  display: none;
+}
+
+.guide-phase.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Process Flow Diagram */
+.process-flow-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.process-flow-title {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.process-flow-title h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.process-flow-title p {
+  color: #64748b;
+  margin: 0;
+  font-size: 16px;
+}
+
+.process-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.process-step {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  position: relative;
+}
+
+.process-step-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 32px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.process-step-icon:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.process-step.active .process-step-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.1);
+}
+
+.process-step-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.process-step-description {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Process Arrows */
+.process-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  right: -20px;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #e2e8f0 0%, transparent 100%);
+  z-index: 1;
+}
+
+/* Decision Tree */
+.decision-tree {
+  background: white;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.decision-tree-header {
+  background: #f1f5f9;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.decision-tree-header h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.decision-tree-header p {
+  color: #64748b;
+  margin: 0;
+  font-size: 14px;
+}
+
+.decision-tree-content {
+  padding: 24px;
+}
+
+.decision-branch {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.decision-branch:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+}
+
+.decision-branch.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.branch-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.branch-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.branch-price {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.branch-description {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0 0 8px 0;
+}
+
+.branch-timeline {
+  color: #059669;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.branch-requirements {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.requirement-tag {
+  display: inline-block;
+  background: #fef3c7;
+  color: #d97706;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 8px;
+  margin-bottom: 4px;
+}
+
+.requirement-tag.optional {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.requirement-tag.mandatory {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+/* Visual Examples Grid */
+.visual-examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.example-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.example-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
+}
+
+.example-image {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  position: relative;
+}
+
+.example-content {
+  padding: 20px;
+}
+
+.example-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.example-description {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.example-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.example-features li {
+  color: #059669;
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.example-features li::before {
+  content: '✓';
+  color: #059669;
+  font-weight: bold;
+}
+
+/* Cost Calculator */
+.cost-calculator {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #0ea5e9;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.calculator-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calculator-header h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin: 0 0 8px 0;
+}
+
+.calculator-header p {
+  color: #075985;
+  margin: 0;
+  font-size: 14px;
+}
+
+.cost-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cost-item {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cost-item-label {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.cost-item-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin: 0;
+}
+
+.total-cost {
+  background: #0ea5e9;
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.total-cost-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0 0 4px 0;
+}
+
+.total-cost-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Action Buttons */
+.guide-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.guide-btn {
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.guide-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.guide-btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 2px solid #e2e8f0;
+}
+
+.guide-btn-secondary:hover {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .visual-guide-modal {
+    margin: 10px;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+
+  .visual-guide-header {
+    padding: 24px 20px;
+  }
+
+  .visual-guide-header-text h2 {
+    font-size: 24px;
+  }
+
+  .visual-guide-body {
+    padding: 24px 20px;
+  }
+
+  .process-flow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .process-step:not(:last-child)::after {
+    display: none;
+  }
+
+  .process-step {
+    min-width: auto;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .guide-navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .guide-nav-tab {
+    padding: 12px 16px;
+  }
+
+  .visual-examples {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-actions {
+    flex-direction: column;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .visual-guide-overlay,
+  .visual-guide-modal,
+  .process-step-icon,
+  .decision-branch,
+  .example-card,
+  .guide-btn {
+    transition: none;
+  }
+
+  .guide-phase {
+    animation: none;
+  }
+}
+
+/* Focus States */
+.guide-nav-tab:focus,
+.decision-branch:focus,
+.guide-btn:focus,
+.visual-guide-close:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Dark Mode Support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .visual-guide-modal {
+    background: #1e293b;
+    color: #f1f5f9;
+  }
+
+  .process-step-icon {
+    background: #334155;
+    color: #f1f5f9;
+  }
+
+  .decision-tree {
+    background: #334155;
+    border-color: #475569;
+  }
+
+  .decision-tree-header {
+    background: #475569;
+    border-color: #64748b;
+  }
+
+  .example-card {
+    background: #334155;
+    border-color: #475569;
+  }
+
+  .cost-calculator {
+    background: #1e3a8a;
+    border-color: #3b82f6;
+  }
+}
