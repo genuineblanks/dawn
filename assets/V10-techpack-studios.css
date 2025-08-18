@@ -60,6 +60,7 @@ body[class*="techpack"] *,
   --v10-bg-tertiary: #ffffff;         /* Elevated surfaces */
   --v10-bg-card: #ffffff;             /* Card backgrounds */
   --v10-bg-modal: #ffffff;            /* Modal backgrounds */
+  --v10-glass-bg: #ffffff;            /* Glass morphism background */
   --v10-bg-input: #f3f4f6;            /* Input backgrounds */
   --v10-bg-hover: #f9fafb;            /* Hover states */
   --v10-bg-active: #e5e7eb;           /* Active states */
@@ -1103,7 +1104,7 @@ body[class*="techpack"] *,
   justify-content: space-between;
   padding: var(--v10-space-6);
   border-bottom: 1px solid var(--v10-border-primary);
-  background: rgba(42, 42, 42, 0.5);
+  background: var(--v10-bg-modal);
 }
 
 .v10-modal-title {
@@ -1149,7 +1150,7 @@ body[class*="techpack"] *,
   justify-content: flex-end;
   padding: var(--v10-space-6);
   border-top: 1px solid var(--v10-border-primary);
-  background: rgba(42, 42, 42, 0.3);
+  background: var(--v10-bg-modal);
 }
 
 .v10-modal-icon {
