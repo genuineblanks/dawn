@@ -15,8 +15,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 <!-- Landing Page Section -->
 <section id="techpack-v10-landing" class="v10-techpack-landing">
   <div class="techpack-container">
-    <!-- Theme Toggle Button -->
-    <div class="v10-theme-toggle">
+    <!-- Theme Toggle Button - Floating for Landing -->
+    <div class="v10-theme-toggle v10-theme-toggle--floating">
       <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
         ☀️ Light
       </button>
@@ -138,15 +138,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 <!-- Client Information Form Section (Hidden until workflow completes) -->
 <section id="techpack-v10-step-1" class="v10-techpack-step" data-step="1" style="display: none;">
   <div class="techpack-container">
-    <!-- Theme Toggle Button -->
-    <div class="v10-theme-toggle">
-      <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
-        ☀️ Light
-      </button>
-      <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
-        🌙 Dark
-      </button>
-    </div>
     
     <!-- Simple Progress Bar -->
     <div class="simple-progress-container">
@@ -178,10 +169,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
     <!-- Header -->
     <div class="v10-step-header">
-      <div class="v10-step-title-wrapper">
-        <h1 class="v10-step-title">Client Information <span class="v10-client-status-text">(Registered Client)</span></h1>
+      <div>
+        <div class="v10-step-title-wrapper">
+          <h1 class="v10-step-title">Client Information <span class="v10-client-status-text">(Registered Client)</span></h1>
+        </div>
+        <p class="v10-step-subtitle" id="v10-client-info-subtitle">Enter your information to begin sample development</p>
       </div>
-      <p class="v10-step-subtitle" id="v10-client-info-subtitle">Enter your information to begin sample development</p>
+      
+      <!-- Theme Toggle Button -->
+      <div class="v10-theme-toggle v10-theme-toggle--header">
+        <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+          ☀️ Light
+        </button>
+        <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+          🌙 Dark
+        </button>
+      </div>
     </div>
 
     <!-- Client Details Studio -->
