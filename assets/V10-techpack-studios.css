@@ -880,13 +880,14 @@ body[class*="techpack"] *,
 /* Measurement checkbox status badges */
 .v10-measurement-status {
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-left: var(--v10-space-2);
+  letter-spacing: 0.3px;
+  margin-left: var(--v10-space-1);
+  vertical-align: middle;
 }
 
 .v10-measurement-status--required {
@@ -1181,13 +1182,12 @@ body[class*="techpack"] *,
 }
 
 /* Center button when only one is visible (I Understand case) */
-.v10-modal-actions:has(.v10-btn:only-child),
-.techpack-modal__actions:has(.v10-btn:only-child) {
+/* Target the warning modal specifically when proceed button is hidden */
+#techpack-v10-warning-modal .v10-modal-actions {
   justify-content: center;
 }
 
-.v10-modal-actions .v10-btn:only-child,
-.techpack-modal__actions .v10-btn:only-child {
+#techpack-v10-warning-modal .v10-modal-actions .v10-btn {
   width: 100%;
   max-width: 300px;
 }
