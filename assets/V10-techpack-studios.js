@@ -5340,28 +5340,100 @@ class V10_FileManager {
       let step2 = document.getElementById('techpack-v10-step-2');
       let step3 = document.getElementById('techpack-v10-step-3');
       
+      // Enhanced debug current DOM state
+      console.log('🔍 Step element search:', {
+        step2Found: !!step2,
+        step3Found: !!step3,
+        allStepSections: document.querySelectorAll('[id*="techpack-v10-step"]').length,
+        allSectionIds: Array.from(document.querySelectorAll('[id*="techpack-v10-step"]')).map(el => el.id),
+        allTechpackSections: document.querySelectorAll('[id*="techpack"]').length,
+        allTechpackIds: Array.from(document.querySelectorAll('[id*="techpack"]')).map(el => el.id)
+      });
+      
+      // Deep dive into step 3 specifically
+      const step3Attempts = [
+        document.getElementById('techpack-v10-step-3'),
+        document.querySelector('#techpack-v10-step-3'),
+        document.querySelector('section[id="techpack-v10-step-3"]'),
+        document.querySelector('.v10-techpack-step[data-step="3"]'),
+        document.querySelector('section[data-step="3"]')
+      ];
+      
+      console.log('🔍 Step 3 detection attempts:', {
+        byId: !!step3Attempts[0],
+        byQuerySelector: !!step3Attempts[1],  
+        bySection: !!step3Attempts[2],
+        byClass: !!step3Attempts[3],
+        byDataStep: !!step3Attempts[4],
+        actualElement: step3Attempts.find(el => el) || 'NONE_FOUND'
+      });
+      
+      // Check if step 3 exists but is hidden by CSS
+      if (step3Attempts[0]) {
+        const step3El = step3Attempts[0];
+        console.log('🔍 Step 3 element found but checking visibility:', {
+          displayStyle: step3El.style.display,
+          computedDisplay: window.getComputedStyle(step3El).display,
+          isVisible: step3El.offsetParent !== null,
+          hasActiveClass: step3El.classList.contains('active'),
+          allClasses: Array.from(step3El.classList),
+          parentElement: step3El.parentElement ? step3El.parentElement.tagName : 'NO_PARENT'
+        });
+      } else {
+        console.log('🔍 Step 3 element not found in DOM - checking if it exists anywhere:', {
+          anyStep3: document.querySelector('[id*="step-3"], [id*="step_3"]'),
+          anyV10Elements: document.querySelectorAll('[id*="v10"]').length,
+          bodyChildren: document.body.children.length
+        });
+      }
+      
       // If elements not found, wait briefly and try again
       if (!step2 || !step3) {
         console.warn('⚠️ Step elements not found on first attempt, waiting...');
         
         return new Promise((resolve) => {
-          setTimeout(() => {
+          let retryCount = 0;
+          const maxRetries = 3;
+          
+          const tryFind = () => {
+            retryCount++;
             step2 = document.getElementById('techpack-v10-step-2');
             step3 = document.getElementById('techpack-v10-step-3');
             
-            if (!step2 || !step3) {
-              console.error('❌ Cannot find step 2 or step 3 elements after wait', {
-                step2Found: !!step2,
-                step3Found: !!step3,
-                allSections: document.querySelectorAll('[id*="techpack-v10-step"]').length
-              });
-              resolve(false);
+            console.log(`🔄 Retry ${retryCount}/${maxRetries}:`, {
+              step2Found: !!step2,
+              step3Found: !!step3,
+              allSectionIds: Array.from(document.querySelectorAll('[id*="techpack-v10-step"]')).map(el => el.id)
+            });
+            
+            if (step2 && step3) {
+              this.executeStepTransition(step2, step3);
+              resolve(true);
               return;
             }
             
-            this.executeStepTransition(step2, step3);
-            resolve(true);
-          }, 50);
+            if (retryCount < maxRetries) {
+              setTimeout(tryFind, 100);
+            } else {
+              // If step 3 still not found, try to trigger its loading
+              this.ensureStep3Loaded().then(() => {
+                step3 = document.getElementById('techpack-v10-step-3');
+                if (step2 && step3) {
+                  this.executeStepTransition(step2, step3);
+                  resolve(true);
+                } else {
+                  console.error('❌ Cannot find step elements after all retries', {
+                    step2Found: !!step2,
+                    step3Found: !!step3,
+                    allSections: document.querySelectorAll('[id*="techpack-v10-step"]').length
+                  });
+                  resolve(false);
+                }
+              });
+            }
+          };
+          
+          setTimeout(tryFind, 50);
         });
       }
       
@@ -5372,6 +5444,40 @@ class V10_FileManager {
       console.error('❌ Error proceeding to step 3:', error);
       return false;
     }
+  }
+
+  ensureStep3Loaded() {
+    return new Promise((resolve) => {
+      console.log('🔧 Attempting to ensure step 3 is loaded...');
+      
+      // Check if step 3 section exists but might be hidden or not rendered
+      const step3Section = document.querySelector('section[data-step="3"]') || 
+                          document.querySelector('.v10-techpack-step[data-step="3"]') ||
+                          document.querySelector('#techpack-v10-step-3');
+      
+      if (step3Section) {
+        console.log('✅ Step 3 section found, making sure it\'s accessible');
+        // Make sure it's visible to DOM queries
+        if (step3Section.style.display === 'none') {
+          step3Section.style.display = 'block';
+        }
+        resolve();
+        return;
+      }
+      
+      // If step 3 doesn't exist, there might be an issue with the template
+      // Try to trigger section loading by dispatching events or checking if sections need to load
+      console.warn('⚠️ Step 3 section not found, checking for dynamic loading...');
+      
+      // Look for any section loading mechanisms
+      const event = new CustomEvent('techpack-step-load', { detail: { step: 3 } });
+      document.dispatchEvent(event);
+      
+      // Wait a bit for any dynamic loading
+      setTimeout(() => {
+        resolve();
+      }, 200);
+    });
   }
 
   executeStepTransition(step2, step3) {
