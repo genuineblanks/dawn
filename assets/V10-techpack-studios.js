@@ -1,6 +1,6 @@
 /* V10 TechPack Studios - Advanced Studio Management System */
 /* Complete rewrite with studio-based architecture */
-/* Cache refresh: 2025-01-16 - Fixed syntax error and validation timing - modals only on Next Step */
+/* Cache refresh: 2025-01-16 - Added incomplete measurements modal - shows included/missing */
 
 // ==============================================
 // GLOBAL CONFIGURATION
@@ -7494,10 +7494,9 @@ class V10_FileManager {
     const totalCount = [fitCheckbox, designCheckbox, placementCheckbox].filter(el => el && el.offsetParent).length; // Only count visible checkboxes
     
     if (checkedCount > 0 && checkedCount < totalCount) {
-      console.log('⚠️ Some measurements missing, using existing warning system');
-      // For now, allow proceeding - the existing warning box should handle this
-      // The user can see the warning and make their decision
-      return true;
+      console.log('⚠️ Some measurements missing, showing incomplete modal');
+      this.showIncompleteMeasurementsModal(fitChecked, designChecked, placementChecked);
+      return false;
     }
     
     console.log('✅ Measurement validation passed');
@@ -7569,6 +7568,95 @@ class V10_FileManager {
     modal.style.display = 'flex';
     console.log('✅ Modal display set, current style:', modal.style.display);
     console.log('🎯 Modal visibility:', window.getComputedStyle(modal).display);
+  }
+
+  showIncompleteMeasurementsModal(fitChecked, designChecked, placementChecked) {
+    console.log('🔔 V10 showIncompleteMeasurementsModal() called');
+    
+    const modal = document.getElementById('techpack-v10-measurement-modal');
+    const title = document.getElementById('v10-measurement-modal-title');
+    const message = document.getElementById('v10-measurement-modal-message');
+    const details = document.getElementById('v10-measurement-modal-details');
+    const backBtn = document.getElementById('v10-measurement-modal-back');
+    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
+    
+    if (!modal) {
+      console.log('❌ Incomplete measurements modal not found');
+      return;
+    }
+    
+    // Set modal content
+    if (title) title.textContent = 'Incomplete Measurements';
+    if (message) {
+      message.textContent = "You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.";
+    }
+    
+    // Generate simple text for included and missing measurements
+    if (details) {
+      let content = '';
+      
+      // Included measurements
+      const included = [];
+      if (fitChecked) included.push('Fit Measurements');
+      if (designChecked) included.push('Design Measurements');  
+      if (placementChecked) included.push('Design Placement');
+      
+      if (included.length > 0) {
+        content += '<p><strong style="color: #10b981;">✓ Included:</strong> ' + included.join(', ') + '</p>';
+      }
+      
+      // Missing measurements
+      const missing = [];
+      if (!fitChecked) missing.push('Fit Measurements');
+      if (!designChecked) missing.push('Design Measurements');
+      if (!placementChecked && document.getElementById('techpack-v10-placement-measurements')?.offsetParent) {
+        missing.push('Design Placement');
+      }
+      
+      if (missing.length > 0) {
+        content += '<p><strong style="color: #f59e0b;">⚠ Missing:</strong> ' + missing.join(', ') + '</p>';
+      }
+      
+      details.innerHTML = content;
+    }
+    
+    // Configure buttons
+    if (backBtn) {
+      backBtn.style.display = 'inline-flex';
+      backBtn.textContent = 'Go Back & Add Measurements';
+    }
+    if (proceedBtn) {
+      proceedBtn.style.display = 'inline-flex';
+      proceedBtn.textContent = 'Continue Anyway';
+    }
+    
+    // Set up event listeners (basic)
+    const closeModal = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+    
+    // Simple event setup
+    if (backBtn) {
+      backBtn.onclick = closeModal;
+    }
+    if (proceedBtn) {
+      proceedBtn.onclick = () => {
+        closeModal();
+        this.proceedToStep3();
+      };
+    }
+    
+    const closeBtn = document.getElementById('v10-close-measurement-modal');
+    if (closeBtn) {
+      closeBtn.onclick = closeModal;
+    }
+    
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    console.log('✅ Incomplete measurements modal shown');
   }
 
 
