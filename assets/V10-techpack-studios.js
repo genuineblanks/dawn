@@ -938,10 +938,25 @@ class V10_GarmentStudio {
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
       
+      // Populate form with existing garment data
+      this.setGarmentValues(garmentCard, garmentData);
+      
+      // Ensure fabric options are populated if garment type exists
+      if (garmentData.type) {
+        this.populateFabricOptions(garmentCard, garmentData.type);
+      }
+      
+      // Update selection dependencies to enable/disable fields properly
+      this.updateSelectionDependencies(garmentId);
+      
       // Show finalize edit button
       this.showFinalizeEditButton(garmentCard);
       
-      console.log(`✏️ Expanded garment ${garmentId} for editing`);
+      console.log(`✏️ Expanded garment ${garmentId} for editing with data:`, {
+        type: garmentData.type,
+        fabricType: garmentData.fabricType,
+        sampleType: garmentData.sampleType
+      });
     }
   }
 
@@ -4530,6 +4545,7 @@ class V10_FileManager {
     const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
     const hasCheckedBoxes = Array.from(checkboxes).some(cb => cb.checked);
     
+    // Show warning when any measurement checkbox is checked
     if (hasCheckedBoxes) {
       warningBox.style.display = 'flex';
       warningBox.style.animation = 'slideDown 0.3s ease-out';
@@ -4547,12 +4563,7 @@ class V10_FileManager {
         e.preventDefault();
         
         if (this.validateStep()) {
-          // Check if measurement confirmation is needed
-          if (this.needsMeasurementConfirmation()) {
-            this.showMeasurementConfirmationModal();
-          } else {
-            this.proceedToStep3();
-          }
+          this.proceedToStep3();
         }
       });
     }
@@ -4562,132 +4573,10 @@ class V10_FileManager {
         this.goBackToStep1();
       });
     }
-    
-    // Setup measurement confirmation modal handlers
-    this.setupMeasurementModal();
   }
 
-  needsMeasurementConfirmation() {
-    const clientData = window.v10ClientManager?.getClientData() || {};
-    const requestType = clientData.submission_type;
-    
-    // Only show confirmation for quotation and sample requests
-    if (requestType !== 'quotation' && requestType !== 'sample-request') {
-      return false;
-    }
-    
-    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
-    if (!measurementStudio || measurementStudio.style.display === 'none') {
-      return false;
-    }
-    
-    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
-    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
-    
-    // Show confirmation if no measurements are selected or only some are selected
-    return checkedBoxes.length < checkboxes.length;
-  }
 
-  showMeasurementConfirmationModal() {
-    const modal = document.getElementById('techpack-v10-measurement-modal');
-    const title = document.getElementById('v10-measurement-modal-title');
-    const message = document.getElementById('v10-measurement-modal-message');
-    const details = document.getElementById('v10-measurement-modal-details');
-    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
-    
-    if (!modal) return;
-    
-    const clientData = window.v10ClientManager?.getClientData() || {};
-    const requestType = clientData.submission_type;
-    
-    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
-    const checkboxes = measurementStudio.querySelectorAll('.v10-measurement-checkbox-input');
-    const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
-    const uncheckedBoxes = Array.from(checkboxes).filter(cb => !cb.checked);
-    
-    // Configure modal content based on situation
-    if (checkedBoxes.length === 0) {
-      // No measurements selected
-      title.textContent = 'No Measurements Selected';
-      message.textContent = `Your ${requestType === 'quotation' ? 'quotation' : 'sample request'} indicates no measurement data is included. This may affect pricing accuracy and development timeline.`;
-      
-      details.innerHTML = `
-        <div class="v10-modal-warning-list">
-          <h4>Missing Requirements:</h4>
-          <ul>
-            ${uncheckedBoxes.map(cb => {
-              const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
-              return `<li>${label}</li>`;
-            }).join('')}
-          </ul>
-        </div>
-      `;
-      
-      proceedBtn.style.display = 'inline-flex';
-      proceedBtn.textContent = 'Continue Without Measurements';
-    } else {
-      // Some measurements missing
-      title.textContent = 'Incomplete Measurements';
-      message.textContent = `You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.`;
-      
-      details.innerHTML = `
-        <div class="v10-modal-status-grid">
-          <div class="v10-modal-status-section">
-            <h4 class="v10-modal-status-title v10-modal-status-title--included">Included:</h4>
-            <ul class="v10-modal-status-list">
-              ${checkedBoxes.map(cb => {
-                const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
-                return `<li>${label}</li>`;
-              }).join('')}
-            </ul>
-          </div>
-          <div class="v10-modal-status-section">
-            <h4 class="v10-modal-status-title v10-modal-status-title--missing">Missing:</h4>
-            <ul class="v10-modal-status-list">
-              ${uncheckedBoxes.map(cb => {
-                const label = cb.closest('.v10-measurement-item').querySelector('strong').textContent;
-                return `<li>${label}</li>`;
-              }).join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-      
-      proceedBtn.style.display = 'inline-flex';
-      proceedBtn.textContent = 'Confirm & Continue';
-    }
-    
-    if (window.v10ModalManager) {
-      window.v10ModalManager.openModal(modal);
-    }
-  }
 
-  setupMeasurementModal() {
-    const modal = document.getElementById('techpack-v10-measurement-modal');
-    const backBtn = document.getElementById('v10-measurement-modal-back');
-    const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
-    
-    if (!modal) return;
-    
-    // Go back to add measurements
-    if (backBtn) {
-      backBtn.addEventListener('click', () => {
-        if (window.v10ModalManager) {
-          window.v10ModalManager.closeModal(modal);
-        }
-      });
-    }
-    
-    // Proceed anyway
-    if (proceedBtn) {
-      proceedBtn.addEventListener('click', () => {
-        if (window.v10ModalManager) {
-          window.v10ModalManager.closeModal(modal);
-        }
-        this.proceedToStep3();
-      });
-    }
-  }
 
   updateConditionalSections() {
     const clientData = window.v10ClientManager?.getClientData() || {};
@@ -4696,9 +4585,9 @@ class V10_FileManager {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
     
-    // Show measurement requirements for quotation and sample requests
+    // Show measurement requirements for sample requests ONLY
     if (measurementStudio) {
-      if (requestType === 'quotation' || requestType === 'sample-request') {
+      if (requestType === 'sample-request') {
         measurementStudio.style.display = 'block';
       } else {
         measurementStudio.style.display = 'none';
@@ -4813,19 +4702,16 @@ class V10_FileManager {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     if (!measurementStudio || measurementStudio.style.display === 'none') return true;
     
-    const checkboxes = measurementStudio.querySelectorAll('input[type="checkbox"]');
-    const checked = Array.from(checkboxes).some(cb => cb.checked);
+    // For sample requests, Fit Measurements is REQUIRED
+    const clientData = window.v10ClientManager?.getClientData() || {};
+    const requestType = clientData.submission_type;
     
-    const warning = document.getElementById('techpack-v10-measurement-warning');
-    if (warning) {
-      if (!checked && this.uploadedFiles.size > 0) {
-        warning.style.display = 'flex';
-      } else {
-        warning.style.display = 'none';
-      }
+    if (requestType === 'sample-request') {
+      const fitMeasurementsCheckbox = document.getElementById('techpack-v10-fit-measurements');
+      return fitMeasurementsCheckbox && fitMeasurementsCheckbox.checked;
     }
     
-    return checked || this.uploadedFiles.size === 0;
+    return true;
   }
 
   validateStep() {

@@ -90,7 +90,7 @@ body[class*="techpack"] *,
   /* Accent Colors */
   --v10-accent-primary: #a3a3a3;      /* Primary accent - light grey */
   --v10-accent-secondary: #d4d4d4;    /* Secondary accent - lighter grey */
-  --v10-accent-success: #6b7280;      /* Success accent - muted grey-green */
+  --v10-accent-success: #22c55e;      /* Success accent - proper green */
   --v10-accent-warning: #f59e0b;      /* Warning accent */
   --v10-accent-error: #ef4444;        /* Error accent */
 
@@ -1930,9 +1930,40 @@ body[class*="techpack"] *,
 }
 
 .v10-upload-zone:hover,
-.v10-upload-zone.drag-over {
+.v10-upload-zone.drag-over,
+.v10-upload-zone--dragover {
   border-color: var(--v10-accent-primary);
-  background: rgba(163, 163, 163, 0.05);
+  background: rgba(163, 163, 163, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(163, 163, 163, 0.15);
+  transition: all 0.2s ease-in-out;
+}
+
+.v10-upload-zone--dragover {
+  border-style: solid;
+  border-width: 3px;
+  background: rgba(163, 163, 163, 0.1);
+  animation: dragPulse 1s ease-in-out infinite alternate;
+}
+
+.v10-upload-zone--dragover .v10-upload-title {
+  color: var(--v10-accent-primary);
+  font-weight: 600;
+}
+
+.v10-upload-zone--dragover .v10-upload-subtitle {
+  color: var(--v10-accent-primary);
+}
+
+@keyframes dragPulse {
+  0% { 
+    transform: scale(1) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(163, 163, 163, 0.15);
+  }
+  100% { 
+    transform: scale(1.02) translateY(-4px);
+    box-shadow: 0 12px 35px rgba(163, 163, 163, 0.25);
+  }
 }
 
 .v10-upload-content {
@@ -2199,6 +2230,13 @@ body[class*="techpack"] *,
 
 .v10-measurement-checkbox-input:checked + .v10-measurement-checkbox-custom .v10-measurement-checkmark {
   opacity: 1;
+}
+
+/* Fix for Design Placement measurement item layout */
+#techpack-v10-design-placement-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 /* ==============================================
@@ -3831,30 +3869,37 @@ body[class*="techpack"] *,
   color: white;
   display: flex;
   align-items: center;
-  gap: var(--v10-space-1);
-  padding: var(--v10-space-2) var(--v10-space-3);
-  font-size: var(--v10-text-xs);
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-3) var(--v10-space-4);
+  font-size: var(--v10-text-sm);
   font-weight: 600;
   white-space: nowrap;
+  border-radius: var(--v10-radius-md);
+  min-height: 40px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .garment-card__finalize:hover {
   background: var(--v10-accent-success);
   border-color: var(--v10-accent-success);
   color: white;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
 }
 
 .garment-card__finalize:active {
   background: var(--v10-accent-success);
   border-color: var(--v10-accent-success);
   transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.2);
 }
 
 .garment-card__finalize svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   stroke-width: 2.5;
+  flex-shrink: 0;
 }
 
 .garment-card__finalize span {
