@@ -5807,6 +5807,88 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   border-top: 1px solid var(--v10-border-primary);
 }
 
+/* ==============================================
+   MEASUREMENT MODAL STYLES  
+   ============================================== */
+
+.v10-measurement-status {
+  margin-bottom: 1.5rem;
+}
+
+.v10-measurement-status:last-child {
+  margin-bottom: 0;
+}
+
+.v10-measurement-status-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+.v10-measurement-status-header--included {
+  color: #10b981;
+}
+
+.v10-measurement-status-header--missing {
+  color: #f59e0b;
+}
+
+.v10-measurement-status-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.v10-measurement-icon {
+  flex-shrink: 0;
+}
+
+.v10-measurement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.v10-measurement-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: var(--v10-radius-md);
+  border: 1px solid var(--v10-border-primary);
+  background: var(--v10-bg-secondary);
+}
+
+.v10-measurement-item--included {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.v10-measurement-item--missing {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.v10-measurement-item strong {
+  color: var(--v10-text-primary);
+  font-weight: 600;
+}
+
+.v10-measurement-desc {
+  color: var(--v10-text-secondary);
+  font-size: 0.9rem;
+}
+
+.v10-measurement-item--included strong {
+  color: #10b981;
+}
+
+.v10-measurement-item--missing strong {
+  color: #f59e0b;
+}
+
 @media print {
   .v10-modal-overlay,
   .v10-btn,
