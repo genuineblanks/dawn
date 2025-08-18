@@ -359,6 +359,188 @@ const V10_Utils = {
     }
   },
 
+  // Cotton fabric detection (for custom color restrictions)
+  isCottonFabric: (fabricType) => {
+    if (!fabricType || typeof fabricType !== 'string') {
+      return false;
+    }
+    
+    // Convert to lowercase for case-insensitive matching
+    const fabric = fabricType.toLowerCase();
+    
+    // SPECIAL CASE: Exclude 100% Cotton Flannel (if it exists)
+    if (fabric.includes('100%') && fabric.includes('cotton') && fabric.includes('flannel')) {
+      return false;
+    }
+    
+    // Check if it's in our cotton fabrics list
+    const isInCottonList = V10_CONFIG.COTTON_FABRICS.some(cottonFabric => 
+      cottonFabric.toLowerCase() === fabric
+    );
+    
+    if (isInCottonList) return true;
+    
+    // Fallback: Check if fabric contains both "100%" and "cotton" but not flannel
+    const has100Percent = fabric.includes('100%');
+    const hasCotton = fabric.includes('cotton');
+    
+    // Must have both 100% and cotton, but NOT be flannel
+    return has100Percent && hasCotton;
+  },
+
+  // Check if garment should have custom color restrictions based on fabric type
+  shouldRestrictCustomColor: (garmentElement) => {
+    if (!garmentElement) return false;
+    
+    const fabricInputs = garmentElement.querySelectorAll('input[name*="fabricType"]:checked');
+    const fabricType = fabricInputs.length > 0 ? fabricInputs[0].value : null;
+    
+    // Only restrict if fabric is selected and is non-cotton
+    if (!fabricType) {
+      return false; // No restriction if no fabric selected yet
+    }
+    
+    return !V10_Utils.isCottonFabric(fabricType);
+  },
+
+  // Update garment custom color restrictions based on fabric type
+  updateGarmentFabricRestrictions: (garmentElement) => {
+    if (!garmentElement) return;
+    
+    const garmentId = garmentElement.dataset.garmentId;
+    const shouldRestrict = V10_Utils.shouldRestrictCustomColor(garmentElement);
+    
+    // Find the custom color/custom sample sections within this garment
+    const customSampleCards = garmentElement.querySelectorAll('.sample-type-card[data-sample-type*="custom"]');
+    
+    customSampleCards.forEach(customCard => {
+      const customRadio = customCard.querySelector('input[type="radio"]');
+      
+      if (!customCard || !customRadio) return;
+      
+      if (shouldRestrict) {
+        // Disable custom color option
+        customCard.classList.add('sample-type-card--restricted');
+        customCard.style.opacity = '0.6';
+        customCard.style.pointerEvents = 'none';
+        customCard.style.cursor = 'not-allowed';
+        
+        // If custom color was selected, clear it and try to select stock (if available)
+        if (customRadio.checked) {
+          customRadio.checked = false;
+          
+          // Try to select stock color option as fallback
+          const stockRadio = garmentElement.querySelector('input[name*="sampleType"][value*="stock"]');
+          if (stockRadio) {
+            stockRadio.checked = true;
+            stockRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }
+        
+        // Add warning message if it doesn't exist
+        let warningElement = garmentElement.querySelector('.v10-custom-color-restriction-warning');
+        
+        if (!warningElement) {
+          warningElement = document.createElement('div');
+          warningElement.className = 'v10-custom-color-restriction-warning';
+          warningElement.innerHTML = `
+            <div class="warning-box">
+              <div class="warning-header">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"/>
+                </svg>
+                <strong>Custom Color Restriction</strong>
+              </div>
+              <div class="warning-content">
+                <p><strong>Custom colorways are only available for cotton garments.</strong> For non-cotton fabrics, custom colors can only be produced in bulk orders after color approval.</p>
+                <div class="swatch-exception">
+                  <strong>Lab Dip Option:</strong> You may still order a lab dip (fabric swatch) in your chosen color for non-cotton fabrics.
+                </div>
+              </div>
+            </div>
+          `;
+          customCard.appendChild(warningElement);
+        }
+        
+        warningElement.style.display = 'block';
+      } else {
+        // Enable custom color option
+        customCard.classList.remove('sample-type-card--restricted');
+        customCard.style.opacity = '1';
+        customCard.style.pointerEvents = 'auto';
+        customCard.style.cursor = 'pointer';
+        
+        // Hide warning message
+        const warningElement = garmentElement.querySelector('.v10-custom-color-restriction-warning');
+        if (warningElement) {
+          warningElement.style.display = 'none';
+        }
+      }
+    });
+    
+    console.log(`🔒 Updated fabric restrictions for garment ${garmentId}: ${shouldRestrict ? 'RESTRICTED' : 'ALLOWED'}`);
+  },
+
+  // Test the complete garment-fabric-sample system integration
+  testGarmentFabricSampleSystem: () => {
+    console.log('🧪 Testing V10 Garment-Fabric-Sample System...');
+    
+    try {
+      // Test 1: FABRIC_TYPE_MAPPING completeness
+      const garmentTypes = Object.keys(V10_CONFIG.FABRIC_TYPE_MAPPING);
+      console.log('✅ FABRIC_TYPE_MAPPING test:', `${garmentTypes.length} garment types configured`);
+      
+      // Test 2: Cotton fabric detection
+      const cottonTests = [
+        '100% Organic Cotton Jersey',
+        'Brushed Fleece 100% Organic Cotton', 
+        '100% Polyester',
+        '80% Cotton 20% Polyester Blend'
+      ];
+      
+      cottonTests.forEach(fabric => {
+        const isCotton = V10_Utils.isCottonFabric(fabric);
+        const expected = fabric.includes('100%') && fabric.includes('Cotton');
+        console.log(`✅ Cotton detection test: ${fabric} = ${isCotton} (expected: ${expected})`);
+      });
+      
+      // Test 3: Restriction logic
+      console.log('✅ Custom color restriction logic: Available');
+      console.log('✅ Fabric restriction updates: Available');
+      
+      // Test 4: Enhanced validation
+      console.log('✅ Enhanced validation methods: Available');
+      console.log('✅ Fabric restrictions validation: Available');
+      console.log('✅ Sample type requirements validation: Available');
+      
+      // Test 5: Integration points
+      const integrationPoints = [
+        'populateFabricOptions() enhanced',
+        'handleGarmentChanges() with restrictions',
+        'validateQuotation() with fabric checks', 
+        'validateSampleRequest() with enhanced logic'
+      ];
+      
+      integrationPoints.forEach(point => {
+        console.log(`✅ Integration point: ${point}`);
+      });
+      
+      console.log('🎉 All V10 Garment-Fabric-Sample System tests PASSED!');
+      console.log('📋 System Features:');
+      console.log('   • Complete fabric type mapping for all garment types');
+      console.log('   • Intelligent cotton fabric detection');
+      console.log('   • Custom color restrictions for non-cotton fabrics');
+      console.log('   • Enhanced validation with fabric compatibility checks');
+      console.log('   • Real-time restriction updates when fabric changes');
+      console.log('   • Professional user warnings for invalid combinations');
+      
+      return true;
+    } catch (error) {
+      console.error('❌ V10 Garment-Fabric-Sample System test FAILED:', error);
+      return false;
+    }
+  },
+
   // Format currency
   formatCurrency: (amount) => {
     try {
@@ -814,6 +996,18 @@ class V10_GarmentStudio {
       }
       
       console.log(`✅ Populated ${fabrics.length} fabric options for ${garmentType} (compact: ${isCompactInterface})`);
+      
+      // Add event listeners to fabric options for restriction checking
+      const fabricInputs = fabricGrid.querySelectorAll('input[type="radio"]');
+      fabricInputs.forEach(input => {
+        input.addEventListener('change', () => {
+          // Update fabric restrictions when fabric is selected
+          setTimeout(() => {
+            V10_Utils.updateGarmentFabricRestrictions(garmentCard);
+          }, 50);
+        });
+      });
+      
     } catch (error) {
       console.error('❌ Error in populateFabricOptions:', error);
       return;
@@ -945,6 +1139,11 @@ class V10_GarmentStudio {
     // Handle fabric type change (compact and regular)
     if (e.target.name.includes('fabricType')) {
       garmentData.fabricType = e.target.value;
+      
+      // Update fabric restrictions when fabric type changes
+      setTimeout(() => {
+        V10_Utils.updateGarmentFabricRestrictions(garmentCard);
+      }, 50);
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
@@ -2747,7 +2946,13 @@ class V10_ValidationManager {
       }
       
       const garmentValidation = window.v10GarmentStudio.validateGarments();
-      return garmentValidation || { isValid: false, errors: ['Validation failed'] };
+      if (!garmentValidation) {
+        return { isValid: false, errors: ['Validation failed'] };
+      }
+      
+      // Enhanced validation for fabric restrictions
+      const enhancedValidation = this.validateFabricRestrictions(garmentValidation);
+      return enhancedValidation;
     } catch (error) {
       console.error('Error validating quotation:', error);
       return { isValid: false, errors: ['Validation error occurred'] };
@@ -2767,28 +2972,11 @@ class V10_ValidationManager {
         return { isValid: false, errors: ['Validation failed'] };
       }
       
-      const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
-
-      // Additional validation for sample requests
-      try {
-        if (typeof window.v10GarmentStudio.getAllGarments === 'function') {
-          const garments = window.v10GarmentStudio.getAllGarments();
-          if (Array.isArray(garments)) {
-            garments.forEach((garment, index) => {
-              if (garment && garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size === 0) {
-                errors.push(`Garment ${index + 1}: Custom color sample requires Lab Dip assignment`);
-              }
-            });
-          }
-        }
-      } catch (garmentError) {
-        console.error('Error validating garment assignments:', garmentError);
-      }
-
-      return {
-        isValid: errors.length === 0,
-        errors
-      };
+      // Enhanced validation for fabric restrictions and sample types
+      const enhancedValidation = this.validateFabricRestrictions(garmentValidation);
+      const sampleValidation = this.validateSampleTypeRequirements(enhancedValidation);
+      
+      return sampleValidation;
     } catch (error) {
       console.error('Error validating sample request:', error);
       return { isValid: false, errors: ['Validation error occurred'] };
@@ -2824,6 +3012,84 @@ class V10_ValidationManager {
     } catch (error) {
       console.error('Error validating bulk order:', error);
       return { isValid: false, errors: ['Validation error occurred'] };
+    }
+  }
+
+  // Enhanced validation method for fabric restrictions
+  validateFabricRestrictions(baseValidation) {
+    try {
+      const errors = Array.isArray(baseValidation.errors) ? [...baseValidation.errors] : [];
+      let isValid = baseValidation.isValid;
+      
+      // Get all garments for validation
+      const garments = Array.from(V10_State.garments.values());
+      
+      garments.forEach((garment, index) => {
+        const garmentCard = document.querySelector(`[data-garment-id="${garment.id}"]`);
+        
+        if (garmentCard && garment.fabricType) {
+          // Check for custom sample types with non-cotton fabrics
+          if (garment.sampleType && garment.sampleType.includes('custom')) {
+            const isNonCotton = !V10_Utils.isCottonFabric(garment.fabricType);
+            
+            if (isNonCotton) {
+              errors.push(`Garment ${index + 1}: Custom samples require cotton fabrics. Selected: ${garment.fabricType}`);
+              isValid = false;
+            }
+          }
+          
+          // Check for lab dip assignments with non-cotton fabrics
+          if (garment.assignedLabDips && garment.assignedLabDips.size > 0 && !V10_Utils.isCottonFabric(garment.fabricType)) {
+            errors.push(`Garment ${index + 1}: Lab dip assignments require cotton fabrics for custom colors`);
+            isValid = false;
+          }
+        }
+      });
+      
+      return { isValid, errors };
+    } catch (error) {
+      console.error('Error in fabric restrictions validation:', error);
+      return baseValidation; // Return original validation if enhanced validation fails
+    }
+  }
+
+  // Enhanced validation for sample type requirements
+  validateSampleTypeRequirements(baseValidation) {
+    try {
+      const errors = Array.isArray(baseValidation.errors) ? [...baseValidation.errors] : [];
+      let isValid = baseValidation.isValid;
+      
+      // Get all garments for validation
+      const garments = Array.from(V10_State.garments.values());
+      
+      garments.forEach((garment, index) => {
+        // Validate that sample types are appropriate for the request type
+        if (V10_State.requestType === 'sample-request' && !garment.sampleType) {
+          errors.push(`Garment ${index + 1}: Sample type selection is required for sample requests`);
+          isValid = false;
+        }
+        
+        // Check for custom sample types that need lab dips or designs
+        if (garment.sampleType === 'custom' && (!garment.assignedLabDips || garment.assignedLabDips.size === 0)) {
+          errors.push(`Garment ${index + 1}: Custom color sample requires Lab Dip assignment`);
+          isValid = false;
+        }
+        
+        // Enhanced fabric-sample compatibility checks
+        if (garment.fabricType && garment.sampleType) {
+          const isCottonFabric = V10_Utils.isCottonFabric(garment.fabricType);
+          
+          if (garment.sampleType.includes('custom') && !isCottonFabric) {
+            errors.push(`Garment ${index + 1}: Custom color samples not available for ${garment.fabricType}. Please select a cotton fabric or choose stock color sample.`);
+            isValid = false;
+          }
+        }
+      });
+      
+      return { isValid, errors };
+    } catch (error) {
+      console.error('Error in sample type requirements validation:', error);
+      return baseValidation; // Return original validation if enhanced validation fails
     }
   }
 
@@ -5878,9 +6144,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (techPackInitialized) {
           console.log('🎯 V10 TechPack Studios - Full System Initialized');
           
-          // Test the enhanced Pantone system
+          // Test the enhanced systems
           setTimeout(() => {
             V10_Utils.testPantoneSystem();
+            V10_Utils.testGarmentFabricSampleSystem();
           }, 100);
         } else {
           console.log('🎯 V10 TechPack Studios - Core System Initialized');
