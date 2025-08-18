@@ -1,5 +1,6 @@
 /* V10 TechPack Studios - Advanced Studio Management System */
 /* Complete rewrite with studio-based architecture */
+/* Cache refresh: 2025-01-16 - Fixed measurement validation system - restored to working state */
 
 // ==============================================
 // GLOBAL CONFIGURATION
@@ -7236,7 +7237,7 @@ class V10_FileManager {
         this.updateMeasurementWarning();
         // Note: validateMeasurements() intentionally removed from checkbox change
         // It should only run when clicking "Next Step" to prevent modal spam
-        this.saveData();
+        // Note: saveData() intentionally removed - measurement checkboxes should not be saved
       });
     });
   }
@@ -7463,24 +7464,36 @@ class V10_FileManager {
     const requestType = clientData.submission_type;
     console.log('📋 Request type:', requestType);
     
-    // Use comprehensive measurement validation
-    const validationResult = this.validateAllMeasurements(requestType);
+    // Check measurement checkboxes
+    const fitCheckbox = document.getElementById('techpack-v10-fit-measurements');
+    const designCheckbox = document.getElementById('techpack-v10-design-measurements');
+    const placementCheckbox = document.getElementById('techpack-v10-placement-measurements');
     
-    if (validationResult.hasRequiredMissing) {
-      // Required measurements missing - block with fit required modal
-      console.log('🚨 Required measurements missing, showing fit required modal');
+    const fitChecked = fitCheckbox && fitCheckbox.checked;
+    const designChecked = designCheckbox && designCheckbox.checked;
+    const placementChecked = placementCheckbox && placementCheckbox.checked;
+    
+    console.log('📊 Measurement status:', { fitChecked, designChecked, placementChecked });
+    
+    // For sample requests, fit measurements are required
+    if (requestType === 'sample-request' && !fitChecked) {
+      console.log('🚨 Fit measurements required for sample request');
       this.showMeasurementRequirementModal();
       return false;
-    } else if (validationResult.hasOptionalMissing && validationResult.included.length > 0) {
-      // Optional measurements missing but some included - show incomplete modal
-      console.log('⚠️ Optional measurements missing, showing incomplete modal');
-      this.showIncompleteMeasurementsModal(validationResult.included, validationResult.missing);
-      return false; // Return false to prevent automatic progression
-    } else {
-      // All good or no measurements required
-      console.log('✅ Measurement validation passed');
-      return true;
     }
+    
+    // If some measurements are checked but others are missing, show incomplete modal
+    const checkedCount = [fitChecked, designChecked, placementChecked].filter(Boolean).length;
+    const totalCount = [fitCheckbox, designCheckbox, placementCheckbox].filter(el => el && el.offsetParent).length; // Only count visible checkboxes
+    
+    if (checkedCount > 0 && checkedCount < totalCount) {
+      console.log('⚠️ Some measurements missing, showing incomplete modal');
+      this.showIncompleteMeasurementModal(fitChecked, designChecked, placementChecked);
+      return false;
+    }
+    
+    console.log('✅ Measurement validation passed');
+    return true;
   }
 
   showMeasurementRequirementModal() {
@@ -7550,94 +7563,38 @@ class V10_FileManager {
     console.log('🎯 Modal visibility:', window.getComputedStyle(modal).display);
   }
 
-  validateAllMeasurements(requestType) {
-    console.log('📏 V10 validateAllMeasurements() called for request type:', requestType);
+  showIncompleteMeasurementModal(fitChecked, designChecked, placementChecked) {
+    console.log('🔔 V10 showIncompleteMeasurementModal() called');
     
-    const measurements = {
-      fit: {
-        id: 'techpack-v10-fit-measurements',
-        name: 'Fit Measurements',
-        description: 'Body measurements or size charts',
-        required: requestType === 'sample-request'
-      },
-      design: {
-        id: 'techpack-v10-design-measurements', 
-        name: 'Design Measurements',
-        description: 'Garment specifications',
-        required: false
-      },
-      placement: {
-        id: 'techpack-v10-placement-measurements',
-        name: 'Design Placement', 
-        description: 'Logo and graphic positioning',
-        required: false
-      }
-    };
-
-    const included = [];
-    const missing = [];
-    let canProceed = true;
-    let hasRequiredMissing = false;
-
-    // Check each measurement type
-    Object.keys(measurements).forEach(key => {
-      const measurement = measurements[key];
-      const checkbox = document.getElementById(measurement.id);
-      const isChecked = checkbox && checkbox.checked;
-
-      if (isChecked) {
-        included.push(measurement);
-      } else {
-        missing.push(measurement);
-        if (measurement.required) {
-          hasRequiredMissing = true;
-          canProceed = false;
-        }
-      }
-    });
-
-    console.log('📊 Measurement analysis:', {
-      included: included.map(m => m.name),
-      missing: missing.map(m => m.name), 
-      canProceed,
-      hasRequiredMissing
-    });
-
-    return {
-      included,
-      missing,
-      canProceed,
-      hasRequiredMissing,
-      hasOptionalMissing: missing.length > 0 && !hasRequiredMissing
-    };
-  }
-
-  showIncompleteMeasurementsModal(included, missing) {
-    console.log('🔔 V10 showIncompleteMeasurementsModal() called');
-    
+    // Use the existing measurement modal
     const modal = document.getElementById('techpack-v10-measurement-modal');
     const title = document.getElementById('v10-measurement-modal-title');
     const message = document.getElementById('v10-measurement-modal-message');
     const details = document.getElementById('v10-measurement-modal-details');
     const backBtn = document.getElementById('v10-measurement-modal-back');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
-
+    
     if (!modal) {
-      console.error('❌ Incomplete measurements modal not found');
+      console.log('❌ Modal element not found, aborting');
       return;
     }
-
+    
     // Set modal content
     if (title) title.textContent = 'Incomplete Measurements';
     if (message) {
       message.textContent = "You've indicated some measurement data is included, but other measurements are missing. Please confirm this is correct.";
     }
-
-    // Build included and missing lists with vertical stacking
+    
+    // Build included and missing lists with V10 styling
     if (details) {
       let detailsHTML = '';
       
       // Included measurements (green)
+      const included = [];
+      if (fitChecked) included.push({ name: 'Fit Measurements', desc: 'Body measurements or size charts' });
+      if (designChecked) included.push({ name: 'Design Measurements', desc: 'Garment specifications' });
+      if (placementChecked) included.push({ name: 'Design Placement', desc: 'Logo and graphic positioning' });
+      
       if (included.length > 0) {
         detailsHTML += `
           <div class="v10-measurement-status">
@@ -7650,20 +7607,25 @@ class V10_FileManager {
             </div>
             <div class="v10-measurement-list">`;
         
-        included.forEach(measurement => {
+        included.forEach(item => {
           detailsHTML += `
               <div class="v10-measurement-item v10-measurement-item--included">
-                <strong>${measurement.name}</strong>
-                <span class="v10-measurement-desc">${measurement.description}</span>
+                <strong>${item.name}</strong>
+                <span class="v10-measurement-desc">${item.desc}</span>
               </div>`;
         });
         
-        detailsHTML += `
-            </div>
-          </div>`;
+        detailsHTML += `</div></div>`;
       }
-
+      
       // Missing measurements (orange)
+      const missing = [];
+      if (!fitChecked) missing.push({ name: 'Fit Measurements', desc: 'Body measurements or size charts' });
+      if (!designChecked) missing.push({ name: 'Design Measurements', desc: 'Garment specifications' });
+      if (!placementChecked && document.getElementById('techpack-v10-placement-measurements')?.offsetParent) {
+        missing.push({ name: 'Design Placement', desc: 'Logo and graphic positioning' });
+      }
+      
       if (missing.length > 0) {
         detailsHTML += `
           <div class="v10-measurement-status">
@@ -7676,22 +7638,20 @@ class V10_FileManager {
             </div>
             <div class="v10-measurement-list">`;
         
-        missing.forEach(measurement => {
+        missing.forEach(item => {
           detailsHTML += `
               <div class="v10-measurement-item v10-measurement-item--missing">
-                <strong>${measurement.name}</strong>
-                <span class="v10-measurement-desc">${measurement.description}</span>
+                <strong>${item.name}</strong>
+                <span class="v10-measurement-desc">${item.desc}</span>
               </div>`;
         });
         
-        detailsHTML += `
-            </div>
-          </div>`;
+        detailsHTML += `</div></div>`;
       }
-
+      
       details.innerHTML = detailsHTML;
     }
-
+    
     // Configure buttons
     if (backBtn) {
       backBtn.textContent = 'Go Back & Add Measurements';
@@ -7701,42 +7661,44 @@ class V10_FileManager {
       proceedBtn.textContent = 'Confirm & Continue';
       proceedBtn.style.display = 'inline-flex';
     }
-
+    
     // Set up event listeners
     const closeModal = () => {
       modal.style.display = 'none';
       document.body.style.overflow = '';
     };
-
+    
     // Remove existing listeners and add new ones
     if (backBtn) {
       const newBackBtn = backBtn.cloneNode(true);
       backBtn.parentNode.replaceChild(newBackBtn, backBtn);
       newBackBtn.addEventListener('click', closeModal);
     }
-
+    
     if (proceedBtn) {
       const newProceedBtn = proceedBtn.cloneNode(true);
       proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
       newProceedBtn.addEventListener('click', () => {
         closeModal();
+        // Continue to next step
         this.proceedToStep3();
       });
     }
-
+    
     const closeBtn = document.getElementById('v10-close-measurement-modal');
     if (closeBtn) {
       const newCloseBtn = closeBtn.cloneNode(true);
       closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
       newCloseBtn.addEventListener('click', closeModal);
     }
-
+    
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     
-    console.log('✅ Incomplete measurements modal displayed');
+    console.log('✅ Incomplete measurement modal displayed');
   }
+
 
   validateStep() {
     console.log('🔍 V10 validateStep() called');
