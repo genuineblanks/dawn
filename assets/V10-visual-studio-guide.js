@@ -829,13 +829,133 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = workflowStyles;
 document.head.appendChild(styleSheet);
 
+// Quick Guide Modal Class
+window.V10QuickGuide = class {
+  constructor() {
+    this.isOpen = false;
+    this.init();
+  }
+
+  init() {
+    this.bindEvents();
+    console.log('V10 Quick Guide initialized');
+  }
+
+  bindEvents() {
+    // Listen for quick guide trigger buttons
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('#step-3-quick-guide-btn, .quick-guide-trigger')) {
+        e.preventDefault();
+        this.open();
+      }
+    });
+
+    // ESC key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) {
+        this.close();
+      }
+    });
+
+    // Wait for modal to be rendered, then bind modal events
+    setTimeout(() => {
+      this.bindModalEvents();
+    }, 100);
+  }
+
+  bindModalEvents() {
+    const modal = document.getElementById('quick-guide-modal');
+    if (!modal) return;
+
+    // Close events
+    const closeBtn = modal.querySelector('#close-quick-guide');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.close());
+    }
+
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) this.close();
+    });
+
+    // Action buttons
+    const needMoreHelpBtn = modal.querySelector('#need-more-help');
+    if (needMoreHelpBtn) {
+      needMoreHelpBtn.addEventListener('click', () => this.openVisualGuide());
+    }
+
+    const startCreatingBtn = modal.querySelector('#start-creating');
+    if (startCreatingBtn) {
+      startCreatingBtn.addEventListener('click', () => this.startWorkflow());
+    }
+  }
+
+  open() {
+    this.isOpen = true;
+    const modal = document.getElementById('quick-guide-modal');
+    if (modal) {
+      modal.style.display = 'block';
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 10);
+      
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+      
+      // Focus management
+      const closeBtn = modal.querySelector('#close-quick-guide');
+      if (closeBtn) closeBtn.focus();
+    }
+  }
+
+  close() {
+    this.isOpen = false;
+    const modal = document.getElementById('quick-guide-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+      
+      // Restore body scroll
+      document.body.style.overflow = '';
+      
+      // Return focus to trigger button
+      const triggerBtn = document.getElementById('step-3-quick-guide-btn');
+      if (triggerBtn) triggerBtn.focus();
+    }
+  }
+
+  openVisualGuide() {
+    // Close quick guide and open visual guide
+    this.close();
+    setTimeout(() => {
+      if (window.V10VisualGuideInstance) {
+        window.V10VisualGuideInstance.open();
+      }
+    }, 300);
+  }
+
+  startWorkflow() {
+    this.close();
+    // Focus on the actual workflow
+    const addGarmentBtn = document.getElementById('add-garment');
+    if (addGarmentBtn) {
+      addGarmentBtn.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => addGarmentBtn.click(), 500);
+    }
+  }
+};
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     window.V10VisualGuideInstance = new window.V10VisualGuide();
+    window.V10QuickGuideInstance = new window.V10QuickGuide();
   });
 } else {
   window.V10VisualGuideInstance = new window.V10VisualGuide();
+  window.V10QuickGuideInstance = new window.V10QuickGuide();
 }
 
 } // End of prevent multiple loading check
