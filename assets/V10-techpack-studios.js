@@ -6693,17 +6693,39 @@ class V10_ReviewManager {
         const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
         console.log('🎯 Step 4: Edit button clicked, going to step:', step);
         
-        if (window.stepManager && window.stepManager.navigateToStep) {
-          window.stepManager.navigateToStep(step);
-        } else if (window.v10TechPackSystem && window.v10TechPackSystem.showStep) {
-          // Fallback to direct step navigation
-          window.v10TechPackSystem.showStep(step);
-        } else {
-          console.error('No step navigation system available');
-        }
+        // Use direct step navigation like existing system
+        this.goBackToStep(step);
       });
     });
     console.log('🎯 Step 4: Edit buttons bound:', document.querySelectorAll('[data-edit-step]').length);
+  }
+
+  goBackToStep(stepNumber) {
+    const step4 = document.getElementById('techpack-v10-step-4');
+    const targetStep = document.getElementById(`techpack-v10-step-${stepNumber}`);
+    
+    if (!step4 || !targetStep) {
+      console.error('Step elements not found for navigation');
+      return;
+    }
+    
+    console.log(`🎯 Step 4: Navigating back to step ${stepNumber}`);
+    
+    // Hide step 4
+    step4.style.display = 'none';
+    
+    // Show target step
+    targetStep.style.display = 'block';
+    
+    // Scroll to target step
+    targetStep.scrollIntoView({ behavior: 'smooth' });
+    
+    // Update session storage if available
+    try {
+      sessionStorage.setItem('v10_current_step', stepNumber.toString());
+    } catch (error) {
+      console.warn('Could not update session storage:', error);
+    }
   }
 
   populateReview() {
@@ -6739,109 +6761,16 @@ class V10_ReviewManager {
     // Check elements after population
     
     // Check if elements are actually populated and visible
-    const studioContainer = document.getElementById('review-studio');
     const clientInfo = document.getElementById('review-client-info');
     const garments = document.getElementById('review-garments');
     
     console.log('🎯 Step 4: Elements check:');
-    console.log('  - Studio container exists:', !!studioContainer);
-    
-    // COMPREHENSIVE DOM DEBUGGING
-    console.log('🔍 COMPREHENSIVE DOM DEBUG:');
-    
-    // Check if step 4 section exists and is visible
-    const step4Section = document.getElementById('techpack-v10-step-4');
-    console.log('  - Step 4 section exists:', !!step4Section);
-    console.log('  - Step 4 section display:', step4Section?.style.display);
-    
-    // Search for ANY element with 'studio' in the ID
-    const allElements = document.querySelectorAll('[id*="studio"]');
-    console.log('  - All elements with "studio" in ID:', allElements.length);
-    allElements.forEach((el, index) => {
-      console.log(`    ${index + 1}. ID: ${el.id}, Visible: ${el.style.display !== 'none'}`);
-    });
-    
-    // Search specifically within step 4
-    if (step4Section) {
-      const studiosInStep4 = step4Section.querySelectorAll('[id*="studio"]');
-      console.log('  - Studios inside Step 4:', studiosInStep4.length);
-      studiosInStep4.forEach((el, index) => {
-        console.log(`    Step4-${index + 1}. ID: ${el.id}, Classes: ${el.className}`);
-      });
-    }
-    
-    // Try different selectors for review studio
-    const reviewStudioClass = document.querySelector('.studio-container');
-    const reviewStudioInStep4 = step4Section?.querySelector('#review-studio');
-    const reviewStudioAnywhere = document.querySelector('#review-studio');
-    
-    console.log('  - Studio by class (.studio-container):', !!reviewStudioClass);
-    console.log('  - Studio in Step 4 (#review-studio):', !!reviewStudioInStep4);
-    console.log('  - Studio anywhere (#review-studio):', !!reviewStudioAnywhere);
-    
-    if (reviewStudioAnywhere) {
-      console.log('  - Found review-studio! Parent:', reviewStudioAnywhere.parentElement?.id);
-      console.log('  - Display style:', window.getComputedStyle(reviewStudioAnywhere).display);
-    }
+    console.log('  - Review cards populated successfully');
     
     console.log('  - Client info exists:', !!clientInfo);
     console.log('  - Client info content:', clientInfo?.innerHTML?.substring(0, 100));
     console.log('  - Garments exists:', !!garments);
     console.log('  - Garments content:', garments?.innerHTML?.substring(0, 100));
-    
-    // FORCE STUDIO STRUCTURE IF MISSING
-    if (!studioContainer && step4Section) {
-      console.log('🔧 CREATING MISSING STUDIO STRUCTURE...');
-      
-      // Find the techpack-content container in step 4
-      const techpackContent = step4Section.querySelector('.techpack-content');
-      if (techpackContent) {
-        // Create studio container structure
-        const studioHTML = `
-          <!-- Studio Container for Review -->
-          <div class="studio-container studio-container--active" id="review-studio">
-            <div class="studio-header">
-              <div class="studio-header__content">
-                <h3 class="studio-header__title">Review & Submit</h3>
-                <span class="studio-header__badge studio-header__badge--professional" id="review-completion-badge">READY</span>
-              </div>
-              <div class="studio-header__subtitle">
-                <p id="step-4-subtitle">Review your specifications and submit your request</p>
-              </div>
-            </div>
-            <div class="studio-content" id="studio-content-area">
-              <!-- Content will be moved here -->
-            </div>
-          </div>
-        `;
-        
-        // Find existing review cards and move them into studio structure
-        const existingCards = step4Section.querySelectorAll('.review-card, .review-summary-grid, #review-client-info, #review-garments');
-        
-        if (existingCards.length > 0) {
-          // Insert studio structure
-          techpackContent.insertAdjacentHTML('afterbegin', studioHTML);
-          
-          // Move existing content into studio
-          const newStudioContent = techpackContent.querySelector('#studio-content-area');
-          if (newStudioContent) {
-            // Create review summary grid
-            const reviewGrid = document.createElement('div');
-            reviewGrid.className = 'review-summary-grid';
-            newStudioContent.appendChild(reviewGrid);
-            
-            // Move existing cards into the grid
-            existingCards.forEach(card => {
-              if (card.parentElement && card.parentElement !== reviewGrid) {
-                reviewGrid.appendChild(card);
-              }
-            });
-            
-            console.log('✅ Studio structure created and content moved!');
-          }
-        }
-      }
-    }
   }
 
   populateClientInfo() {
