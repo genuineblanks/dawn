@@ -4459,6 +4459,12 @@ body[class*="techpack"] *,
   font-size: var(--v10-text-xs);
 }
 
+/* Hide assigned colors/designs sections in garment editing interface */
+.assigned-group,
+.assigned-label {
+  display: none !important;
+}
+
 .garment-quantity-form {
   margin-bottom: var(--v10-space-6);
 }

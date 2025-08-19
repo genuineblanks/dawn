@@ -241,8 +241,8 @@
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.8);
+  /* Remove backdrop-filter for better scroll performance */
 }
 
 .v10-modal-overlay.show,
@@ -315,15 +315,17 @@
    PREMIUM TERMS MODAL STYLING
    ==================================================== */
 
-/* Premium Terms Modal */
+/* Premium Terms Modal - Performance Optimized */
 .v10-terms-premium {
-  max-width: 900px;
-  max-height: 90vh;
+  max-width: 1200px;
+  max-height: 85vh;
   background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-xl);
+  border-radius: var(--v10-radius-lg);
   overflow: hidden;
-  box-shadow: var(--v10-shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25));
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  contain: layout style paint;
+  will-change: auto;
 }
 
 /* Enhanced Header */
@@ -408,25 +410,28 @@
   transform: scale(1.05);
 }
 
-/* Enhanced Modal Body */
+/* Enhanced Modal Body - Optimized */
 .v10-terms-body {
-  padding: var(--v10-space-8) var(--v10-space-6);
+  padding: var(--v10-space-4) var(--v10-space-6);
   overflow-y: auto;
-  max-height: calc(90vh - 200px);
+  max-height: calc(85vh - 180px);
   line-height: 1.6;
+  contain: layout;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Introduction Card */
+/* Introduction Card - Simplified */
 .v10-terms-intro-card {
   display: flex;
   align-items: flex-start;
-  gap: var(--v10-space-4);
-  background: linear-gradient(135deg, var(--v10-accent-primary), var(--v10-accent-secondary));
+  gap: var(--v10-space-3);
+  background: var(--v10-accent-primary);
   color: white;
-  padding: var(--v10-space-8);
-  border-radius: var(--v10-radius-xl);
-  margin-bottom: var(--v10-space-10);
-  box-shadow: var(--v10-shadow-2xl);
+  padding: var(--v10-space-5);
+  border-radius: var(--v10-radius-lg);
+  margin-bottom: var(--v10-space-6);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
@@ -457,12 +462,16 @@
   font-size: var(--v10-text-base);
 }
 
-/* Terms Sections */
+/* Terms Sections - Two Column Layout */
 .v10-terms-sections {
-  display: flex;
-  flex-direction: column;
-  gap: var(--v10-space-8);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-4) var(--v10-space-6);
   margin-top: var(--v10-space-4);
+}
+
+.v10-terms-section--full-width {
+  grid-column: 1 / -1;
 }
 
 .v10-terms-section {
@@ -483,12 +492,12 @@
   border-width: 2px;
 }
 
-/* Section Headers */
+/* Section Headers - Compact */
 .v10-terms-section-header {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-4);
-  padding: var(--v10-space-5) var(--v10-space-6);
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3) var(--v10-space-4);
   background: var(--v10-bg-hover);
   border-bottom: 1px solid var(--v10-border-primary);
 }
@@ -526,25 +535,25 @@
   opacity: 0.9;
 }
 
-/* Section Content */
+/* Section Content - Compact */
 .v10-terms-section-content {
-  padding: var(--v10-space-6);
+  padding: var(--v10-space-4);
 }
 
 .v10-terms-section-content p {
   color: var(--v10-text-secondary);
-  line-height: 1.7;
-  margin: 0 0 var(--v10-space-4) 0;
-  font-size: var(--v10-text-base);
+  line-height: 1.5;
+  margin: 0 0 var(--v10-space-2) 0;
+  font-size: var(--v10-text-sm);
 }
 
 .v10-terms-section-content p:last-child {
   margin-bottom: 0;
 }
 
-/* Enhanced Lists */
+/* Enhanced Lists - Compact */
 .v10-terms-list {
-  margin: var(--v10-space-4) 0;
+  margin: var(--v10-space-2) 0;
   padding: 0;
   list-style: none;
 }
@@ -552,11 +561,11 @@
 .v10-terms-list li {
   display: flex;
   align-items: flex-start;
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-2) 0;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-1) 0;
   color: var(--v10-text-primary);
-  line-height: 1.6;
-  font-size: var(--v10-text-base);
+  line-height: 1.4;
+  font-size: var(--v10-text-sm);
 }
 
 .v10-terms-list li::before {
@@ -569,16 +578,16 @@
   flex-shrink: 0;
 }
 
-/* Special Content Cards */
+/* Special Content Cards - Compact */
 .v10-terms-highlight {
   display: flex;
   align-items: flex-start;
-  gap: var(--v10-space-3);
+  gap: var(--v10-space-2);
   background: rgba(249, 115, 22, 0.1);
   border: 1px solid rgba(249, 115, 22, 0.3);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-5);
-  margin: var(--v10-space-4) 0;
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-3);
+  margin: var(--v10-space-2) 0;
   color: var(--v10-text-primary);
   position: relative;
   overflow: hidden;
@@ -589,17 +598,17 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
-  background: linear-gradient(180deg, #f97316, #ea580c);
+  background: #f97316;
 }
 
 .v10-terms-highlight-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   color: #f97316;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .v10-terms-highlight-content {
@@ -613,12 +622,12 @@
 .v10-terms-jurisdiction-card {
   display: flex;
   align-items: flex-start;
-  gap: var(--v10-space-3);
+  gap: var(--v10-space-2);
   background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-secondary);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-5);
-  margin: var(--v10-space-4) 0;
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-3);
+  margin: var(--v10-space-2) 0;
   position: relative;
   overflow: hidden;
 }
@@ -630,17 +639,17 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
-  background: linear-gradient(180deg, var(--v10-accent-primary), var(--v10-accent-secondary));
+  background: var(--v10-accent-primary);
 }
 
 .v10-terms-card-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   color: var(--v10-accent-primary);
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .v10-terms-card-content {
@@ -657,13 +666,32 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
-  background: linear-gradient(180deg, #ef4444, #dc2626);
+  background: #ef4444;
 }
 
 .v10-terms-warning-card .v10-terms-card-icon {
   color: #ef4444;
+}
+
+/* Custom Scrollbar - Performance Optimized */
+.v10-terms-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.v10-terms-body::-webkit-scrollbar-track {
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-sm);
+}
+
+.v10-terms-body::-webkit-scrollbar-thumb {
+  background: var(--v10-accent-primary);
+  border-radius: var(--v10-radius-sm);
+}
+
+.v10-terms-body::-webkit-scrollbar-thumb:hover {
+  background: var(--v10-accent-secondary);
 }
 
 .v10-terms-note {
@@ -684,25 +712,25 @@
 
 /* Agreement Section */
 .v10-terms-agreement {
-  margin-top: var(--v10-space-12);
-  padding-top: var(--v10-space-8);
-  border-top: 3px solid var(--v10-border-primary);
+  margin-top: var(--v10-space-4);
+  padding-top: var(--v10-space-4);
+  border-top: 2px solid var(--v10-border-primary);
 }
 
 .v10-terms-agreement-card {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-5);
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(75, 85, 99, 0.05));
+  gap: var(--v10-space-4);
+  background: rgba(5, 150, 105, 0.1);
   border: 2px solid rgba(5, 150, 105, 0.3);
-  border-radius: var(--v10-radius-xl);
-  padding: var(--v10-space-8);
-  text-align: center;
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-4);
+  text-align: left;
 }
 
 .v10-terms-agreement-icon {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   background: var(--v10-accent-success, #10b981);
   border-radius: var(--v10-radius-md);
   display: flex;
@@ -710,22 +738,22 @@
   justify-content: center;
   color: white;
   flex-shrink: 0;
-  box-shadow: var(--v10-shadow-md);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .v10-terms-agreement-text h4 {
-  font-size: var(--v10-text-xl);
-  font-weight: 700;
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-3) 0;
+  margin: 0 0 var(--v10-space-2) 0;
   letter-spacing: -0.025em;
 }
 
 .v10-terms-agreement-text p {
   margin: 0;
   color: var(--v10-text-secondary);
-  line-height: 1.7;
-  font-size: var(--v10-text-base);
+  line-height: 1.5;
+  font-size: var(--v10-text-sm);
 }
 
 /* Dark Theme Enhancements */
@@ -807,46 +835,69 @@
 /* Mobile Responsive Terms */
 @media (max-width: 768px) {
   .v10-terms-premium {
-    max-width: calc(100vw - 2rem);
-    margin: 1rem;
+    max-width: calc(100vw - 1rem);
+    margin: 0.5rem;
+    max-height: 90vh;
   }
   
   .v10-terms-header-content {
-    padding: var(--v10-space-4);
+    padding: var(--v10-space-3);
   }
   
   .v10-terms-brand {
-    gap: var(--v10-space-3);
+    gap: var(--v10-space-2);
   }
   
   .v10-terms-brand-icon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
   
   .v10-terms-brand-text h2.v10-terms-title {
-    font-size: var(--v10-text-xl);
+    font-size: var(--v10-text-lg);
   }
   
   .v10-terms-body {
-    padding: var(--v10-space-4);
+    padding: var(--v10-space-3);
+  }
+  
+  /* Mobile: Single column layout */
+  .v10-terms-sections {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-terms-section--full-width {
+    grid-column: 1;
   }
   
   .v10-terms-intro-card {
     flex-direction: column;
     text-align: center;
+    padding: var(--v10-space-3);
   }
   
   .v10-terms-section-header {
-    padding: var(--v10-space-3) var(--v10-space-4);
+    padding: var(--v10-space-2) var(--v10-space-3);
   }
   
   .v10-terms-section-content {
-    padding: var(--v10-space-4);
+    padding: var(--v10-space-3);
   }
   
   .v10-terms-agreement-card {
     flex-direction: column;
     text-align: center;
+    padding: var(--v10-space-3);
+  }
+  
+  /* Compact mobile elements */
+  .v10-terms-highlight,
+  .v10-terms-responsibility-card,
+  .v10-terms-warning-card,
+  .v10-terms-liability-card,
+  .v10-terms-jurisdiction-card {
+    padding: var(--v10-space-2);
+    margin: var(--v10-space-1) 0;
   }
 }
