@@ -11,30 +11,6 @@ if (typeof window.V10_CONFIG !== 'undefined') {
   console.log('V10 TechPack Studios already loaded, skipping initialization');
 } else {
 
-// DEBUG: Find elements with "Assigned Colors" or "Assigned Designs" text
-setTimeout(() => {
-  console.log('🔍 DEBUG: Searching for Assigned Colors/Designs elements...');
-  
-  // Find all elements containing the text
-  const allElements = document.getElementsByTagName('*');
-  for (let i = 0; i < allElements.length; i++) {
-    const element = allElements[i];
-    const text = element.textContent || element.innerText || '';
-    
-    if (text.includes('Assigned Colors') || text.includes('Assigned Designs')) {
-      console.log('🎯 FOUND ELEMENT:', {
-        element: element,
-        tagName: element.tagName,
-        className: element.className,
-        id: element.id,
-        textContent: text.substring(0, 100),
-        parentElement: element.parentElement,
-        outerHTML: element.outerHTML.substring(0, 200)
-      });
-    }
-  }
-}, 2000);
-
 const V10_CONFIG = {
   // Fabric Type Mapping (updated to match pricing table)
   FABRIC_TYPE_MAPPING: {
