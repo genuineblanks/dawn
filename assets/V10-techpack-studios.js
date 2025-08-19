@@ -3239,13 +3239,21 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
 
-    // Special handling for quantity studio
+    // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
-      if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
-        window.v10GarmentStudio.populateQuantityStudio();
-      } else {
-        console.warn('⚠️ Garment studio not available for quantity population');
+      // Clear any existing timeout to debounce rapid switches
+      if (this._quantityStudioTimeout) {
+        clearTimeout(this._quantityStudioTimeout);
       }
+      
+      // Debounce quantity studio population to prevent rapid execution
+      this._quantityStudioTimeout = setTimeout(() => {
+        if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
+          window.v10GarmentStudio.populateQuantityStudio();
+        } else {
+          console.warn('⚠️ Garment studio not available for quantity population');
+        }
+      }, 100); // 100ms debounce
     }
 
     // Auto-save
@@ -6407,24 +6415,71 @@ class V10_GarmentStudio {
     }
   }
 
+  cleanupQuantityStudioEventListeners() {
+    // Store references to event listeners that need cleanup
+    if (this._quantityEventListeners) {
+      this._quantityEventListeners.forEach(({element, event, handler}) => {
+        if (element && typeof element.removeEventListener === 'function') {
+          element.removeEventListener(event, handler);
+        }
+      });
+      this._quantityEventListeners = [];
+    }
+    
+    // Clone and replace elements with listeners to ensure cleanup
+    const elementsToCleanup = [
+      'sizes-mode',
+      'distribution-mode', 
+      'clear-all-quantities',
+      'apply-preset-btn'
+    ];
+    
+    elementsToCleanup.forEach(id => {
+      const element = document.getElementById(id);
+      if (element && element.parentNode) {
+        const newElement = element.cloneNode(true);
+        element.parentNode.replaceChild(newElement, element);
+      }
+    });
+    
+    console.log('🧹 Cleaned up quantity studio event listeners');
+  }
+
   populateQuantityStudio() {
+    // Performance monitoring
+    const startTime = performance.now();
+    
+    // Add singleton protection to prevent duplicate execution
+    if (this._populatingQuantityStudio) {
+      console.log('🔄 Quantity studio population already in progress, skipping...');
+      return;
+    }
+    this._populatingQuantityStudio = true;
+    
     const container = document.getElementById('garment-quantities-container');
     if (!container) {
       console.error('❌ Quantity container not found');
+      this._populatingQuantityStudio = false;
       return;
     }
     
-    // Clear existing content but preserve the structure
-    const validationSummary = container.querySelector('.quantity-validation-summary') || document.createElement('div');
+    // Clean up any existing event listeners before rebuilding
+    this.cleanupQuantityStudioEventListeners();
+    
+    // Clear existing content completely to prevent multiplication
+    container.innerHTML = '';
+    console.log('🧹 Cleared existing quantity studio content and event listeners');
+    
+    // Create fresh structure
+    const validationSummary = document.createElement('div');
     validationSummary.className = 'quantity-validation-summary';
     validationSummary.id = 'quantity-validation-summary';
     
-    const responsiveGrid = container.querySelector('.responsive-garment-grid') || document.createElement('div');
+    const responsiveGrid = document.createElement('div');
     responsiveGrid.className = 'responsive-garment-grid';
     responsiveGrid.id = 'responsive-garment-grid';
     
-    // Clear container and rebuild structure
-    container.innerHTML = '';
+    // Build clean structure
     container.appendChild(validationSummary);
     container.appendChild(responsiveGrid);
     
@@ -6512,7 +6567,18 @@ class V10_GarmentStudio {
     // Generate initial validation cards
     this.updateAllValidationCards();
     
-    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s) in responsive grid`);
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    
+    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s) in responsive grid (${duration.toFixed(2)}ms)`);
+    
+    // Warn about slow population
+    if (duration > 200) {
+      console.warn(`⚠️ Slow quantity studio population: ${duration.toFixed(2)}ms`);
+    }
+    
+    // Reset singleton protection flag
+    this._populatingQuantityStudio = false;
   }
 
   createEnhancedQuantityCard(garment, index) {
@@ -12608,14 +12674,34 @@ const V10_ThemeManager = {
   
   // Set theme on document body
   setTheme(theme) {
-    // Apply theme to body
+    // Performance monitoring
+    const startTime = performance.now();
+    
+    // Debounce rapid theme switching to improve performance
+    if (this._themeTimeout) {
+      clearTimeout(this._themeTimeout);
+    }
+    
+    // Immediate visual feedback - apply theme immediately
     document.body.setAttribute('data-theme', theme);
     
-    // Update all toggle buttons
-    this.updateToggles(theme);
-    
-    // Save to localStorage
-    localStorage.setItem('v10-theme', theme);
+    // Debounce the heavy operations
+    this._themeTimeout = setTimeout(() => {
+      // Update all toggle buttons
+      this.updateToggles(theme);
+      
+      // Save to localStorage
+      localStorage.setItem('v10-theme', theme);
+      
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+      console.log(`🎨 Theme switched to: ${theme} (${duration.toFixed(2)}ms)`);
+      
+      // Warn about slow theme switches
+      if (duration > 100) {
+        console.warn(`⚠️ Slow theme switch detected: ${duration.toFixed(2)}ms`);
+      }
+    }, 50); // 50ms debounce for smooth switching
   },
   
   // Initialize all theme toggle buttons

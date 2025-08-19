@@ -8,6 +8,18 @@
    RESPONSIVE GARMENT GRID SYSTEM
    ============================================ */
 
+/* Performance optimization for theme switching */
+.quantities-studio,
+.garment-quantities-grid,
+.responsive-garment-grid {
+  /* Smooth theme transitions without blocking */
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  /* Prevent layout thrashing during theme switch */
+  backface-visibility: hidden;
+  /* Use GPU for smoother transitions */
+  transform: translateZ(0);
+}
+
 .garment-quantities-grid {
   display: flex;
   flex-direction: column;
@@ -25,6 +37,10 @@
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 1fr;
+  /* CSS containment for performance optimization */
+  contain: layout style paint;
+  /* Optimize for theme switching */
+  will-change: auto;
 }
 
 /* Desktop: 2 garments per row */
@@ -48,6 +64,9 @@
 
 .garment-quantity-card {
   background: rgb(var(--color-background));
+  /* Performance optimization for theme switching */
+  contain: layout style paint;
+  transform: translateZ(0); /* Force hardware acceleration */
   border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 12px;
   padding: 1.5rem;
