@@ -51,7 +51,7 @@ const V10_CONFIG = {
     ],
     'T-Shirt': [
       '100% Organic Cotton Jersey',
-      '100% Cotton & Elastane',
+      '95% Cotton 5% Elastan',
       '80/20 Cotton-Poly',
       '50/50 Cotton-Poly',
       '100% Polyester',
@@ -59,7 +59,7 @@ const V10_CONFIG = {
     ],
     'Long Sleeve T-Shirt': [
       '100% Organic Cotton Jersey',
-      '100% Cotton & Elastane',
+      '95% Cotton 5% Elastan',
       '80/20 Cotton-Poly',
       '50/50 Cotton-Poly',
       '100% Polyester',
@@ -183,7 +183,7 @@ const V10_CONFIG = {
     },
     'T-Shirt': {
       '100% Organic Cotton Jersey': { stock: 60, custom: 80 },
-      '100% Cotton & Elastane': { stock: 60, custom: null }, // blend, no custom
+      '95% Cotton 5% Elastan': { stock: 60, custom: null }, // blend, no custom
       '80/20 Cotton-Poly': { stock: 40, custom: null },
       '50/50 Cotton-Poly': { stock: 30, custom: null },
       '100% Polyester': { stock: 20, custom: null },
@@ -191,7 +191,7 @@ const V10_CONFIG = {
     },
     'Long Sleeve T-Shirt': {
       '100% Organic Cotton Jersey': { stock: 80, custom: 100 },
-      '100% Cotton & Elastane': { stock: 80, custom: null }, // blend, no custom
+      '95% Cotton 5% Elastan': { stock: 80, custom: null }, // blend, no custom
       '80/20 Cotton-Poly': { stock: 60, custom: null },
       '50/50 Cotton-Poly': { stock: 50, custom: null },
       '100% Polyester': { stock: 40, custom: null },
@@ -2867,33 +2867,12 @@ const V10_Utils = {
           // Keep card enabled but show pending state
           customCard.style.opacity = '0.7';
         } else if (customPrice === null) {
-          // Custom not available for this fabric - show enhanced warning
+          // Custom not available for this fabric - disabled state
           priceElement.textContent = 'Not available';
           customCard.classList.remove('sample-type-card--disabled');
           customCard.classList.add('sample-type-card--warning');
           customCard.style.opacity = '0.85';
           customCard.style.pointerEvents = 'none';
-          
-          // Hide existing description and details
-          const descElement = customCard.querySelector('.sample-type-card__description');
-          const detailsElement = customCard.querySelector('.sample-type-card__details');
-          if (descElement) descElement.style.display = 'none';
-          if (detailsElement) detailsElement.style.display = 'none';
-          
-          // Add or update warning container
-          let warningContainer = customCard.querySelector('.sample-type-warning');
-          if (!warningContainer) {
-            warningContainer = document.createElement('div');
-            warningContainer.className = 'sample-type-warning';
-            warningContainer.innerHTML = `
-              <div class="warning-icon">⚠️</div>
-              <div class="warning-content">
-                <strong>Lab Dip Option:</strong> You may still order a lab dip (fabric swatch) in your desired color before production
-              </div>
-            `;
-            customCard.appendChild(warningContainer);
-          }
-          warningContainer.style.display = 'flex';
         } else {
           priceElement.textContent = `avg. ${V10_CONFIG.PRICING.CUSTOM_SAMPLE}€`;
         }
@@ -2968,9 +2947,9 @@ const V10_Utils = {
                 <strong>Custom Color Restriction</strong>
               </div>
               <div class="warning-content">
-                <p><strong>Custom colorways are only available for cotton garments.</strong> For non-cotton fabrics, custom colors can only be produced in bulk orders after color approval.</p>
+                <p><strong>Custom colors not available for sampling on this fabric.</strong></p>
                 <div class="swatch-exception">
-                  <strong>Lab Dip Option:</strong> You may still order a lab dip (fabric swatch) in your chosen color for non-cotton fabrics.
+                  <strong>Workflow:</strong> Assign lab dips to check colors in person, then we'll create a pre-production sample before committing to your bulk order.
                 </div>
               </div>
             </div>

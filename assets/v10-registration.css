@@ -196,6 +196,21 @@
   animation: v10-spin 1s linear infinite;
 }
 
+/* Disabled button state */
+.v10-btn-hero:disabled,
+.v10-btn-hero.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.v10-btn-hero:not(:disabled):not(.disabled) {
+  opacity: 1;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
 @keyframes v10-spin {
   to { transform: rotate(360deg); }
 }
@@ -233,6 +248,19 @@
 .v10-modal-overlay.show,
 .v10-modal-overlay[style*="flex"] {
   display: flex !important;
+}
+
+/* Clean initial form state */
+.v10-form-input-enhanced:not(.error):not(.success),
+.v10-form-select:not(.error):not(.success) {
+  border-color: var(--v10-border-primary);
+  box-shadow: none;
+}
+
+.v10-form-input-enhanced:focus:not(.error),
+.v10-form-select:focus:not(.error) {
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(var(--v10-accent-primary-rgb, 75, 85, 99), 0.1);
 }
 
 /* Responsive design */

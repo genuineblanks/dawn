@@ -4408,6 +4408,57 @@ body[class*="techpack"] *,
   margin-bottom: var(--v10-space-6);
 }
 
+/* Custom Color Restriction Warning - Greyed Styling */
+.v10-custom-color-restriction-warning .warning-box {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-3);
+  margin-top: var(--v10-space-3);
+}
+
+.v10-custom-color-restriction-warning .warning-header {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  margin-bottom: var(--v10-space-2);
+}
+
+.v10-custom-color-restriction-warning .warning-header svg {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.v10-custom-color-restriction-warning .warning-header strong {
+  color: #6b7280;
+  font-weight: 600;
+  font-size: var(--v10-text-sm);
+}
+
+.v10-custom-color-restriction-warning .warning-content p {
+  color: #9ca3af;
+  font-size: var(--v10-text-sm);
+  margin-bottom: var(--v10-space-2);
+  line-height: 1.4;
+}
+
+.v10-custom-color-restriction-warning .warning-content p strong {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.v10-custom-color-restriction-warning .swatch-exception {
+  background: rgba(245, 158, 11, 0.06);
+  border-radius: var(--v10-radius-sm);
+  padding: var(--v10-space-2);
+}
+
+.v10-custom-color-restriction-warning .swatch-exception strong {
+  color: #f59e0b;
+  font-weight: 600;
+  font-size: var(--v10-text-xs);
+}
+
 .garment-quantity-form {
   margin-bottom: var(--v10-space-6);
 }

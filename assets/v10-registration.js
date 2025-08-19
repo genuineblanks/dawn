@@ -34,6 +34,9 @@ const V10_Registration = {
       return;
     }
     
+    // Clean form state on initialization
+    this.initializeCleanState();
+    
     // Initialize form validation
     this.initializeFormValidation();
     
@@ -43,7 +46,36 @@ const V10_Registration = {
     // Initialize form enhancement
     this.initializeFormEnhancements();
     
+    // Set initial button state
+    this.updateSubmitButton();
+    
     console.log('🔐 V10 Registration system initialized');
+  },
+  
+  // Initialize clean form state
+  initializeCleanState() {
+    // Remove any existing validation classes and styles
+    const allInputs = this.form.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+      input.classList.remove('error', 'success');
+      input.style.borderColor = '';
+      input.style.boxShadow = '';
+      
+      // Remove any existing error messages
+      const errorElement = input.parentElement.querySelector('.v10-field-error');
+      if (errorElement) {
+        errorElement.remove();
+      }
+    });
+    
+    // Remove any existing submission messages
+    const existingMessages = this.form.querySelectorAll('.v10-success-message, .v10-submission-error');
+    existingMessages.forEach(message => message.remove());
+    
+    // Clear terms checkbox error if it exists
+    if (this.termsCheckbox) {
+      this.clearFieldError(this.termsCheckbox);
+    }
   },
   
   // Initialize form validation
@@ -528,12 +560,21 @@ const V10_Registration = {
   // Update submit button state
   updateSubmitButton() {
     const isTermsChecked = this.termsCheckbox?.checked;
-    const hasRequiredFields = Array.from(this.form.querySelectorAll('input[required]'))
-      .every(input => input.value.trim() !== '');
     
     if (this.submitButton) {
-      // Don't disable the button, let the user try to submit and then show validation
-      this.submitButton.disabled = false;
+      // Button is only enabled when terms are checked
+      this.submitButton.disabled = !isTermsChecked;
+      
+      // Visual feedback
+      if (isTermsChecked) {
+        this.submitButton.classList.remove('disabled');
+        this.submitButton.style.opacity = '1';
+        this.submitButton.style.cursor = 'pointer';
+      } else {
+        this.submitButton.classList.add('disabled');
+        this.submitButton.style.opacity = '0.5';
+        this.submitButton.style.cursor = 'not-allowed';
+      }
     }
   }
 };
