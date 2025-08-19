@@ -48,20 +48,21 @@ const V10_Registration = {
   
   // Initialize form validation
   initializeFormValidation() {
-    // Real-time validation on input
+    // Only clear errors on input, don't validate until submission attempt
     const inputs = this.form.querySelectorAll('input, select');
     inputs.forEach(input => {
-      input.addEventListener('blur', () => this.validateField(input));
+      // Only clear errors, don't validate on blur
       input.addEventListener('input', () => this.clearFieldError(input));
+      input.addEventListener('focus', () => this.clearFieldError(input));
     });
     
     // Form submission validation
     this.form.addEventListener('submit', (e) => this.handleSubmit(e));
     
-    // Terms checkbox validation
+    // Terms checkbox - only update button state, don't show validation errors
     if (this.termsCheckbox) {
       this.termsCheckbox.addEventListener('change', () => {
-        this.validateTermsCheckbox();
+        this.clearFieldError(this.termsCheckbox);
         this.updateSubmitButton();
       });
     }
@@ -77,7 +78,7 @@ const V10_Registration = {
       });
       
       // Close modal functionality
-      const closeButtons = this.termsModal.querySelectorAll('.v10-modal-close, .v10-terms-close');
+      const closeButtons = this.termsModal.querySelectorAll('.v10-terms-close-btn, .v10-terms-close');
       closeButtons.forEach(button => {
         button.addEventListener('click', () => this.hideTermsModal());
       });
@@ -223,7 +224,8 @@ const V10_Registration = {
   // Show field error
   showFieldError(field, message) {
     field.classList.add('error');
-    field.style.borderColor = 'var(--v10-reg-border-error)';
+    field.style.borderColor = '#f97316';
+    field.style.boxShadow = '0 0 0 3px rgba(249, 115, 22, 0.1)';
     
     // Remove existing error message
     const existingError = field.parentElement.querySelector('.v10-field-error');
@@ -236,10 +238,11 @@ const V10_Registration = {
     errorElement.className = 'v10-field-error';
     errorElement.textContent = message;
     errorElement.style.cssText = `
-      color: var(--v10-reg-border-error);
+      color: #f97316;
       font-size: 0.75rem;
       margin-top: 0.25rem;
       display: block;
+      font-weight: 500;
     `;
     
     field.parentElement.appendChild(errorElement);
@@ -344,14 +347,15 @@ const V10_Registration = {
     successMessage.className = 'v10-success-message';
     successMessage.innerHTML = `
       <div style="
-        background: var(--v10-reg-accent-orange-light);
-        border: 1px solid var(--v10-reg-accent-orange);
-        color: var(--v10-reg-accent-orange-dark);
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #059669;
         padding: 1rem;
-        border-radius: 6px;
+        border-radius: 8px;
         margin-bottom: 1rem;
         text-align: center;
         font-weight: 500;
+        box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.1);
       ">
         ✅ Registration successful! Redirecting to login...
       </div>
@@ -366,14 +370,15 @@ const V10_Registration = {
     errorMessage.className = 'v10-submission-error';
     errorMessage.innerHTML = `
       <div style="
-        background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #dc2626;
+        background: rgba(249, 115, 22, 0.1);
+        border: 1px solid rgba(249, 115, 22, 0.3);
+        color: #f97316;
         padding: 1rem;
-        border-radius: 6px;
+        border-radius: 8px;
         margin-bottom: 1rem;
         text-align: center;
         font-weight: 500;
+        box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);
       ">
         ❌ ${message}
       </div>
@@ -493,17 +498,17 @@ const V10_Registration = {
       case 0:
       case 1:
         strengthText = 'Weak';
-        strengthColor = '#ef4444';
+        strengthColor = '#f97316';
         break;
       case 2:
       case 3:
         strengthText = 'Medium';
-        strengthColor = '#f97316';
+        strengthColor = '#f59e0b';
         break;
       case 4:
       case 5:
         strengthText = 'Strong';
-        strengthColor = '#10b981';
+        strengthColor = '#059669';
         break;
     }
     
@@ -527,7 +532,8 @@ const V10_Registration = {
       .every(input => input.value.trim() !== '');
     
     if (this.submitButton) {
-      this.submitButton.disabled = !isTermsChecked || !hasRequiredFields;
+      // Don't disable the button, let the user try to submit and then show validation
+      this.submitButton.disabled = false;
     }
   }
 };
