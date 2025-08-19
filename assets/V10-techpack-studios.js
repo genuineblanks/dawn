@@ -3778,6 +3778,8 @@ class V10_GarmentStudio {
       const previousSampleType = garmentData.sampleType;
       garmentData.sampleType = e.target.value;
       
+      console.log(`🎯 Sample type changed for garment ${garmentId}: ${previousSampleType} → ${e.target.value}`);
+      
       // If changing from custom to another type, remove assigned lab dips
       if (previousSampleType === 'custom' && e.target.value !== 'custom') {
         if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
@@ -3789,6 +3791,9 @@ class V10_GarmentStudio {
           });
         }
       }
+      
+      // Immediate state synchronization - ensure DOM and state are in sync
+      this.syncGarmentStateWithDOM(garmentId);
       
       // Trigger status update and collapse logic immediately when sample type changes
       setTimeout(() => {
@@ -3803,6 +3808,16 @@ class V10_GarmentStudio {
       sampleTypeCards.forEach(card => {
         card.classList.remove('sample-type-card--required');
       });
+      
+      // Trigger immediate revalidation to ensure current selection is recognized
+      if (garmentData.isInEditMode) {
+        console.log(`🔄 Triggering immediate validation for edit mode`);
+        // Small delay to ensure DOM updates are complete
+        setTimeout(() => {
+          const currentlyValid = this.validateGarmentRequirements(garmentId);
+          console.log(`✅ Immediate validation result: ${currentlyValid ? 'VALID' : 'INVALID'}`);
+        }, 50);
+      }
     }
 
     // Handle sample reference change (bulk orders)
@@ -4188,11 +4203,17 @@ class V10_GarmentStudio {
     const requestType = V10_State.requestType;
     
     if (requestType === 'sample-request') {
+      // Get current DOM state as fallback for edit mode validation
+      const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
+      
+      // Use DOM state if available and different from stored state (edit mode scenario)
+      const currentSampleType = currentDOMState.sampleType || garmentData.sampleType;
+      
       // For sample requests: garment type, fabric type, and sample type required
-      const hasBasicRequirements = garmentData.type && garmentData.fabricType && garmentData.sampleType;
+      const hasBasicRequirements = garmentData.type && garmentData.fabricType && currentSampleType;
       
       // If custom sample type, also need lab dip assignment
-      if (garmentData.sampleType === 'custom') {
+      if (currentSampleType === 'custom') {
         return hasBasicRequirements && garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
       }
       
@@ -4203,6 +4224,71 @@ class V10_GarmentStudio {
     }
     
     return false;
+  }
+
+  // Helper method to get current DOM state for real-time validation during edit mode
+  getCurrentGarmentDOMState(garmentId) {
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!garmentCard) return {};
+
+    const state = {};
+    
+    // Get currently selected sample type from DOM
+    const selectedSampleTypeRadio = garmentCard.querySelector('input[name*="sampleType"]:checked');
+    if (selectedSampleTypeRadio) {
+      state.sampleType = selectedSampleTypeRadio.value;
+    }
+
+    // Get currently selected fabric type from DOM
+    const selectedFabricTypeRadio = garmentCard.querySelector('input[name*="fabricType"]:checked');
+    if (selectedFabricTypeRadio) {
+      state.fabricType = selectedFabricTypeRadio.value;
+    }
+
+    // Get currently selected garment type from DOM
+    const selectedGarmentTypeRadio = garmentCard.querySelector('input[name*="garmentType"]:checked');
+    if (selectedGarmentTypeRadio) {
+      state.garmentType = selectedGarmentTypeRadio.value;
+    }
+
+    return state;
+  }
+
+  // Synchronize garment state with current DOM selections
+  syncGarmentStateWithDOM(garmentId) {
+    const garmentData = V10_State.garments.get(garmentId);
+    const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
+    
+    if (!garmentData) return;
+    
+    let stateChanged = false;
+    
+    // Sync sample type
+    if (currentDOMState.sampleType && currentDOMState.sampleType !== garmentData.sampleType) {
+      console.log(`🔄 Syncing sample type: ${garmentData.sampleType} → ${currentDOMState.sampleType}`);
+      garmentData.sampleType = currentDOMState.sampleType;
+      stateChanged = true;
+    }
+    
+    // Sync fabric type
+    if (currentDOMState.fabricType && currentDOMState.fabricType !== garmentData.fabricType) {
+      console.log(`🔄 Syncing fabric type: ${garmentData.fabricType} → ${currentDOMState.fabricType}`);
+      garmentData.fabricType = currentDOMState.fabricType;
+      stateChanged = true;
+    }
+    
+    // Sync garment type
+    if (currentDOMState.garmentType && currentDOMState.garmentType !== garmentData.type) {
+      console.log(`🔄 Syncing garment type: ${garmentData.type} → ${currentDOMState.garmentType}`);
+      garmentData.type = currentDOMState.garmentType;
+      stateChanged = true;
+    }
+    
+    if (stateChanged) {
+      console.log(`✅ State synchronized for garment ${garmentId}`);
+    }
+    
+    return stateChanged;
   }
 
   highlightRequiredSampleTypes(garmentCard) {
@@ -4233,6 +4319,21 @@ class V10_GarmentStudio {
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentCard || !garmentData) return;
 
+    console.log(`🔄 Finalizing edit for garment ${garmentId}...`);
+    
+    // Ensure state is synchronized with current DOM selections before validation
+    this.syncGarmentStateWithDOM(garmentId);
+    
+    // Get current DOM state for validation logging
+    const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
+    console.log(`🔍 Current DOM state:`, currentDOMState);
+    console.log(`🔍 Current garment data:`, {
+      type: garmentData.type,
+      fabricType: garmentData.fabricType,
+      sampleType: garmentData.sampleType,
+      hasLabDips: garmentData.assignedLabDips?.size > 0
+    });
+
     // Validate requirements before allowing finalize
     if (!this.validateGarmentRequirements(garmentId)) {
       console.log('❌ Cannot finalize: Missing required fields');
@@ -4251,6 +4352,8 @@ class V10_GarmentStudio {
       
       return;
     }
+
+    console.log(`✅ Validation passed, finalizing garment ${garmentId}`);
 
     // Clear edit mode flag
     garmentData.isInEditMode = false;
