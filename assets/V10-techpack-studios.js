@@ -5285,165 +5285,328 @@ class V10_GarmentStudio {
       console.error('❌ Quantity container not found');
       return;
     }
-
+    
     // Clear existing content
     container.innerHTML = '';
-
-    // Get all garments that have both type and sample reference selected
+    
+    // Get all garments that have been configured in Garment Studio
     const completedGarments = Array.from(V10_State.garments.values()).filter(garment => 
-      garment.type && garment.sampleReference
+      garment.type && (garment.sampleReference || garment.fabricType)
     );
-
+    
     if (completedGarments.length === 0) {
       container.innerHTML = `
-        <div class="quantity-empty-state">
-          <div class="empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
+        <div class="quantities-instructions">
+          <div class="instructions-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4"/>
+              <path d="M12 8h.01"/>
             </svg>
           </div>
-          <h4>No Garments Ready for Quantities</h4>
-          <p>Configure garment types and sample references in the Garment Studio first.</p>
+          <div class="instructions-content">
+            <h5>No Garments Ready for Quantities</h5>
+            <ul>
+              <li>Configure garment types and specifications in the Garment Studio first</li>
+              <li>Each garment needs a type and fabric/sample reference</li>
+              <li>Return here to set quantities and size distributions</li>
+            </ul>
+            <button type="button" class="bulk-tool-btn bulk-tool-btn--primary" onclick="window.v10TechPackSystem?.navigator?.switchStudio('garment')" style="margin-top: 12px;">
+              Go to Garment Studio
+            </button>
+          </div>
         </div>
       `;
       return;
     }
-
-    // Generate quantity forms for each completed garment
-    completedGarments.forEach(garment => {
-      const quantityForm = this.createQuantityForm(garment);
-      container.appendChild(quantityForm);
+    
+    // Generate enhanced quantity cards for each garment
+    completedGarments.forEach((garment, index) => {
+      const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
+      container.appendChild(quantityCard);
     });
-
-    // Update total quantity display
-    this.updateTotalQuantity();
-
-    console.log(`📊 Populated quantity studio with ${completedGarments.length} garment(s)`);
+    
+    // Initialize all quantity studio features
+    this.initializeQuantityStudioFeatures();
+    
+    // Update totals and stats
+    this.updateAllQuantityStats();
+    
+    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s)`);
   }
 
-  createQuantityForm(garment) {
-    const formElement = document.createElement('div');
-    formElement.className = 'garment-quantity-form';
-    formElement.dataset.garmentId = garment.id;
+  createEnhancedQuantityCard(garment, index) {
+    // Get the template
+    const template = document.getElementById('V10-garment-quantity-template');
+    if (!template) {
+      console.error('❌ V10-garment-quantity-template not found');
+      return this.createFallbackQuantityCard(garment, index);
+    }
+    
+    // Clone the template
+    const cardElement = template.content.cloneNode(true);
+    const card = cardElement.querySelector('.garment-quantity-card');
+    
+    // Set garment ID
+    card.dataset.garmentId = garment.id;
+    
+    // Update garment information
+    const garmentType = card.querySelector('.garment-type');
+    const garmentFabric = card.querySelector('.garment-fabric');
+    const garmentTotalQuantity = card.querySelector('.quantity-summary__value');
+    const colorwayCount = card.querySelector('.colorway-count');
+    const sizeRange = card.querySelector('.size-range');
+    
+    if (garmentType) garmentType.textContent = garment.type || 'Unknown';
+    if (garmentFabric) garmentFabric.textContent = garment.fabricType || garment.sampleReference || '';
+    if (garmentTotalQuantity) garmentTotalQuantity.id = `garment-total-quantity-${garment.id}`;
+    if (colorwayCount) colorwayCount.textContent = '1 colorway';
+    if (sizeRange) sizeRange.textContent = 'XXS-3XL';
+    
+    // Get assigned lab dips for colorway indicators
+    const assignedLabDips = this.getAssignedLabDips(garment.id);
+    const colorwayIndicators = card.querySelector('#colorway-indicators');
+    if (colorwayIndicators && assignedLabDips.length > 0) {
+      colorwayIndicators.innerHTML = '';
+      assignedLabDips.forEach(labDip => {
+        const indicator = document.createElement('div');
+        indicator.className = 'colorway-indicator';
+        indicator.style.backgroundColor = labDip.color || '#000000';
+        indicator.title = labDip.pantoneCode || 'Unknown Color';
+        colorwayIndicators.appendChild(indicator);
+      });
+      if (colorwayCount) colorwayCount.textContent = `${assignedLabDips.length} colorway${assignedLabDips.length > 1 ? 's' : ''}`;
+    }
+    
+    // Set up size quantity inputs with enhanced functionality
+    const sizeInputs = card.querySelectorAll('.size-quantity-input');
+    sizeInputs.forEach(input => {
+      const size = input.dataset.size;
+      input.name = `qty-${size}-${garment.id}`;
+      input.id = `qty-${size}-${garment.id}`;
+      
+      // Add enhanced event listeners
+      input.addEventListener('input', (e) => {
+        this.updateGarmentQuantityTotals(garment.id);
+        this.updateAllQuantityStats();
+        this.updateSizeDistributionChart();
+        this.saveQuantityData(garment.id);
+      });
+      
+      input.addEventListener('focus', (e) => {
+        e.target.select(); // Select all text on focus
+      });
+    });
+    
+    // Set up quick action buttons
+    const applyPresetBtn = card.querySelector('#apply-preset-to-garment');
+    const clearQuantitiesBtn = card.querySelector('#clear-garment-quantities');
+    
+    if (applyPresetBtn) {
+      applyPresetBtn.addEventListener('click', () => {
+        this.showPresetMenuForGarment(garment.id);
+      });
+    }
+    
+    if (clearQuantitiesBtn) {
+      clearQuantitiesBtn.addEventListener('click', () => {
+        this.clearGarmentQuantities(garment.id);
+      });
+    }
+    
+    // Initialize distribution preview
+    this.updateDistributionPreview(card, garment.id);
+    
+    // Load existing quantity data
+    this.loadQuantityData(garment.id, card);
+    
+    return card;
+  }
 
-    formElement.innerHTML = `
-      <div class="quantity-form-header">
-        <div class="quantity-form-title">
-          <span class="quantity-form-number">Garment ${garment.number}</span>
-          <span class="quantity-form-type">${garment.type}</span>
+  createFallbackQuantityCard(garment, index) {
+    // Fallback if template is not found
+    const cardElement = document.createElement('div');
+    cardElement.className = 'garment-quantity-card';
+    cardElement.dataset.garmentId = garment.id;
+    
+    cardElement.innerHTML = `
+      <div class="garment-quantity-card__header">
+        <div class="garment-info">
+          <div class="garment-info__visual">
+            <div class="garment-info__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                <line x1="16" y1="8" x2="2" y2="22"/>
+                <line x1="17.5" y1="15" x2="9" y2="15"/>
+              </svg>
+            </div>
+          </div>
+          <div class="garment-info__content">
+            <h4 class="garment-info__title">
+              <span class="garment-type">${garment.type}</span>
+              <span class="garment-fabric">${garment.fabricType || garment.sampleReference}</span>
+            </h4>
+            <div class="garment-info__subtitle">
+              <span class="colorway-count">1 colorway</span>
+              <span class="size-range">XXS-3XL</span>
+            </div>
+          </div>
         </div>
-        <div class="quantity-form-reference">
-          <span class="reference-badge">${this.getSampleReferenceDisplayName(garment.sampleReference)}</span>
+        <div class="garment-quantity-summary">
+          <div class="quantity-summary__value" id="garment-total-quantity-${garment.id}">0</div>
+          <div class="quantity-summary__label">Total Units</div>
         </div>
       </div>
-      
-      <div class="quantity-form-content">
-        <div class="size-quantity-grid">
-          <div class="size-quantity-header">
-            <span>Size</span>
-            <span>Quantity</span>
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">XS</label>
-            <input type="number" name="qty-xs" min="0" value="0" class="quantity-input" data-size="XS">
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">S</label>
-            <input type="number" name="qty-s" min="0" value="0" class="quantity-input" data-size="S">
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">M</label>
-            <input type="number" name="qty-m" min="0" value="0" class="quantity-input" data-size="M">
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">L</label>
-            <input type="number" name="qty-l" min="0" value="0" class="quantity-input" data-size="L">
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">XL</label>
-            <input type="number" name="qty-xl" min="0" value="0" class="quantity-input" data-size="XL">
-          </div>
-          
-          <div class="size-quantity-row">
-            <label class="size-label">XXL</label>
-            <input type="number" name="qty-xxl" min="0" value="0" class="quantity-input" data-size="XXL">
-          </div>
-          
-          <div class="size-quantity-total">
-            <span class="total-label">Garment Total:</span>
-            <span class="total-value" id="garment-total-${garment.id}">0</span>
+      <div class="garment-quantity-card__content">
+        <div class="size-quantity-container">
+          <div class="size-quantity-grid single-colorway">
+            <div class="size-quantity-grid__header">
+              <div class="size-label">Size</div>
+              <div class="size-column">XXS</div>
+              <div class="size-column">XS</div>
+              <div class="size-column">S</div>
+              <div class="size-column">M</div>
+              <div class="size-column">L</div>
+              <div class="size-column">XL</div>
+              <div class="size-column">XXL</div>
+              <div class="size-column">3XL</div>
+            </div>
+            <div class="size-quantity-grid__row">
+              <div class="quantity-label">Qty</div>
+              <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" name="qty-xxs-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" name="qty-xs-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" name="qty-s-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" name="qty-m-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" name="qty-l-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" name="qty-xl-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" name="qty-xxl-${garment.id}">
+              <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" name="qty-3xl-${garment.id}">
+            </div>
           </div>
         </div>
       </div>
     `;
-
-    // Add event listeners for quantity inputs
-    const quantityInputs = formElement.querySelectorAll('.quantity-input');
-    quantityInputs.forEach(input => {
+    
+    // Add event listeners
+    const sizeInputs = cardElement.querySelectorAll('.size-quantity-input');
+    sizeInputs.forEach(input => {
       input.addEventListener('input', (e) => {
-        this.updateGarmentTotal(garment.id);
-        this.updateTotalQuantity();
+        this.updateGarmentQuantityTotals(garment.id);
+        this.updateAllQuantityStats();
         this.saveQuantityData(garment.id);
       });
     });
-
-    // Load existing quantity data if available
-    this.loadQuantityData(garment.id, formElement);
-
-    return formElement;
+    
+    return cardElement;
   }
 
-  updateGarmentTotal(garmentId) {
-    const form = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!form) return;
+  updateGarmentQuantityTotals(garmentId) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return 0;
 
-    const inputs = form.querySelectorAll('.quantity-input');
+    // Calculate total for this garment (support both old and new selectors)
+    const inputs = card.querySelectorAll('.size-quantity-input, .quantity-input');
     let total = 0;
     inputs.forEach(input => {
       total += parseInt(input.value) || 0;
     });
 
-    const totalElement = form.querySelector(`#garment-total-${garmentId}`);
+    // Update garment total display (support both old and new IDs)
+    const totalElement = card.querySelector(`#garment-total-quantity-${garmentId}, #garment-total-${garmentId}`);
     if (totalElement) {
       totalElement.textContent = total;
     }
 
+    // Update distribution preview for this garment
+    this.updateDistributionPreview(card, garmentId);
+
     return total;
   }
 
-  updateTotalQuantity() {
-    const allGarmentTotals = document.querySelectorAll('[id^="garment-total-"]');
+  updateAllQuantityStats() {
+    // Calculate totals
+    const allCards = document.querySelectorAll('.garment-quantity-card, .garment-quantity-form');
     let grandTotal = 0;
-    
-    allGarmentTotals.forEach(totalElement => {
-      grandTotal += parseInt(totalElement.textContent) || 0;
+    let garmentCount = 0;
+    let colorwayCount = 0;
+
+    allCards.forEach(card => {
+      const garmentId = card.dataset.garmentId;
+      const garmentTotal = this.updateGarmentQuantityTotals(garmentId);
+      grandTotal += garmentTotal;
+      garmentCount++;
+      
+      // Count colorways (for now assume 1 per garment, enhance later)
+      colorwayCount++;
     });
 
-    // Update the total quantity display
-    const totalQuantityElement = document.getElementById('total-production-quantity');
-    if (totalQuantityElement) {
-      totalQuantityElement.textContent = grandTotal;
-    }
-
+    // Update enhanced stats
+    this.updateQuantityStats(grandTotal, garmentCount, colorwayCount);
+    
     // Update progress bar
-    const progressBar = document.getElementById('production-quantity-progress');
-    if (progressBar) {
-      const percentage = Math.min((grandTotal / 75) * 100, 100);
-      progressBar.style.width = `${percentage}%`;
-    }
+    this.updateProgressBar(grandTotal);
+    
+    // Update size distribution chart if in distribution mode
+    this.updateSizeDistributionChart();
 
     // Store in state
     V10_State.totalQuantity = grandTotal;
 
-    console.log(`📊 Updated total quantity: ${grandTotal}`);
+    console.log(`📊 Updated all quantity stats: ${grandTotal} total units, ${garmentCount} garments`);
+    return grandTotal;
+  }
+
+  updateQuantityStats(totalUnits, garmentCount, colorwayCount) {
+    // Update individual stat displays
+    const totalElement = document.getElementById('total-production-quantity');
+    const garmentCountElement = document.getElementById('total-garments-count');
+    const colorwayCountElement = document.getElementById('total-colorways-count');
+    const progressStatusElement = document.getElementById('quantity-progress-status');
+    const progressPercentageElement = document.getElementById('quantity-progress-percentage');
+
+    if (totalElement) totalElement.textContent = totalUnits;
+    if (garmentCountElement) garmentCountElement.textContent = garmentCount;
+    if (colorwayCountElement) colorwayCountElement.textContent = colorwayCount;
+    
+    // Update progress status text
+    const minRequired = 75;
+    const percentage = Math.min((totalUnits / minRequired) * 100, 100);
+    
+    if (progressStatusElement) {
+      progressStatusElement.textContent = `${totalUnits} / ${minRequired} minimum units`;
+    }
+    
+    if (progressPercentageElement) {
+      progressPercentageElement.textContent = `${Math.round(percentage)}%`;
+    }
+  }
+
+  updateProgressBar(totalUnits) {
+    const progressBar = document.getElementById('production-quantity-progress');
+    if (!progressBar) return;
+
+    const minRequired = 75;
+    const percentage = Math.min((totalUnits / minRequired) * 100, 100);
+    progressBar.style.width = `${percentage}%`;
+    
+    // Update color based on progress
+    if (totalUnits >= minRequired) {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-accent-success) 0%, var(--v10-accent-success) 100%)';
+    } else if (totalUnits >= minRequired * 0.5) {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-border-warning) 0%, var(--v10-accent-primary) 100%)';
+    } else {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-accent-primary) 0%, var(--v10-accent-primary) 100%)';
+    }
+  }
+
+  // Legacy function for backward compatibility
+  updateGarmentTotal(garmentId) {
+    return this.updateGarmentQuantityTotals(garmentId);
+  }
+
+  // Legacy function for backward compatibility  
+  updateTotalQuantity() {
+    return this.updateAllQuantityStats();
   }
 
   saveQuantityData(garmentId) {
@@ -5479,6 +5642,261 @@ class V10_GarmentStudio {
 
     // Update totals
     this.updateGarmentTotal(garmentId);
+  }
+
+  // ==============================================
+  // ENHANCED QUANTITY STUDIO FUNCTIONALITY
+  // ==============================================
+
+  initializeQuantityStudioFeatures() {
+    // Initialize mode toggle functionality
+    this.initializeModeToggle();
+    
+    // Initialize bulk input tools
+    this.initializeBulkInputTools();
+    
+    // Initialize preset dropdown
+    this.initializePresetDropdown();
+    
+    console.log('✅ Initialized all quantity studio features');
+  }
+
+  initializeModeToggle() {
+    const sizesToggle = document.getElementById('sizes-mode');
+    const distributionToggle = document.getElementById('distribution-mode');
+    
+    if (sizesToggle) {
+      sizesToggle.addEventListener('click', () => this.switchQuantityMode('sizes'));
+    }
+    
+    if (distributionToggle) {
+      distributionToggle.addEventListener('click', () => this.switchQuantityMode('distribution'));
+    }
+  }
+
+  switchQuantityMode(mode) {
+    // Update toggle buttons
+    document.querySelectorAll('.studio-toggle__btn').forEach(btn => {
+      btn.classList.toggle('studio-toggle__btn--active', btn.dataset.mode === mode);
+    });
+    
+    // Update mode containers
+    document.querySelectorAll('.quantities-mode').forEach(container => {
+      container.classList.toggle('quantities-mode--active', container.id === `${mode}-mode-content`);
+    });
+    
+    // Update distribution chart when switching to distribution mode
+    if (mode === 'distribution') {
+      this.updateSizeDistributionChart();
+    }
+    
+    console.log(`🔄 Switched to ${mode} mode`);
+  }
+
+  initializeBulkInputTools() {
+    const clearAllBtn = document.getElementById('clear-all-quantities');
+    
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', () => {
+        this.clearAllQuantities();
+      });
+    }
+  }
+
+  initializePresetDropdown() {
+    const presetBtn = document.getElementById('apply-preset-btn');
+    const dropdownMenu = document.getElementById('preset-dropdown-menu');
+    
+    if (presetBtn && dropdownMenu) {
+      presetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        dropdownMenu.classList.remove('active');
+      });
+      
+      // Handle preset selection
+      dropdownMenu.querySelectorAll('.preset-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const preset = e.currentTarget.dataset.preset;
+          this.applyPresetToAllGarments(preset);
+          dropdownMenu.classList.remove('active');
+        });
+      });
+    }
+  }
+
+  clearAllQuantities() {
+    const allInputs = document.querySelectorAll('.size-quantity-input, .quantity-input');
+    allInputs.forEach(input => {
+      input.value = '0';
+    });
+    
+    this.updateAllQuantityStats();
+    
+    console.log('🧹 Cleared all quantities');
+  }
+
+  applyPresetToAllGarments(preset) {
+    const allCards = document.querySelectorAll('.garment-quantity-card, .garment-quantity-form');
+    
+    allCards.forEach(card => {
+      const garmentId = card.dataset.garmentId;
+      this.applyPresetToGarment(garmentId, preset);
+    });
+    
+    this.updateAllQuantityStats();
+    
+    console.log(`📊 Applied ${preset} preset to all garments`);
+  }
+
+  applyPresetToGarment(garmentId, preset) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    const sizeInputs = card.querySelectorAll('.size-quantity-input, .quantity-input');
+    const presets = this.getPresetDistributions();
+    
+    if (presets[preset]) {
+      const distribution = presets[preset];
+      sizeInputs.forEach((input, index) => {
+        if (index < distribution.length) {
+          input.value = distribution[index];
+        }
+      });
+    }
+    
+    this.updateGarmentQuantityTotals(garmentId);
+  }
+
+  getPresetDistributions() {
+    return {
+      'bell-curve': [2, 6, 8, 10, 8, 6, 2, 1], // XXS, XS, S, M, L, XL, XXL, 3XL
+      'medium-heavy': [3, 5, 8, 12, 8, 5, 3, 1],
+      'large-heavy': [2, 4, 6, 8, 12, 10, 8, 5],
+      'equal-split': [7, 7, 7, 7, 7, 7, 7, 7]
+    };
+  }
+
+  showPresetMenuForGarment(garmentId) {
+    // Create contextual preset menu for individual garment
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    // For now, use the same preset as global
+    this.applyPresetToGarment(garmentId, 'bell-curve');
+    this.updateAllQuantityStats();
+  }
+
+  clearGarmentQuantities(garmentId) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    const inputs = card.querySelectorAll('.size-quantity-input, .quantity-input');
+    inputs.forEach(input => {
+      input.value = '0';
+    });
+    
+    this.updateAllQuantityStats();
+  }
+
+  updateDistributionPreview(card, garmentId) {
+    const preview = card.querySelector('.size-distribution-preview');
+    if (!preview) return;
+    
+    const inputs = card.querySelectorAll('.size-quantity-input, .quantity-input');
+    const bars = preview.querySelectorAll('.dist-bar');
+    
+    // Calculate max value for scaling
+    let maxValue = 0;
+    inputs.forEach(input => {
+      maxValue = Math.max(maxValue, parseInt(input.value) || 0);
+    });
+    
+    // Update bars
+    inputs.forEach((input, index) => {
+      if (bars[index]) {
+        const value = parseInt(input.value) || 0;
+        const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+        bars[index].style.height = `${percentage}%`;
+      }
+    });
+  }
+
+  updateSizeDistributionChart() {
+    const chart = document.getElementById('size-distribution-chart');
+    if (!chart) return;
+    
+    const sizeBars = chart.querySelectorAll('.size-bar');
+    const sizes = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', '3xl'];
+    
+    // Calculate totals per size across all garments
+    const sizeTotals = {};
+    sizes.forEach(size => sizeTotals[size] = 0);
+    
+    const allCards = document.querySelectorAll('.garment-quantity-card, .garment-quantity-form');
+    allCards.forEach(card => {
+      sizes.forEach(size => {
+        const input = card.querySelector(`[data-size="${size}"]`);
+        if (input) {
+          sizeTotals[size] += parseInt(input.value) || 0;
+        }
+      });
+    });
+    
+    // Find max value for scaling
+    const maxValue = Math.max(...Object.values(sizeTotals));
+    
+    // Update chart bars
+    sizeBars.forEach((bar, index) => {
+      const size = sizes[index];
+      const value = sizeTotals[size] || 0;
+      const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+      
+      const fill = bar.querySelector('.size-bar__fill');
+      const valueDisplay = bar.querySelector('.size-bar__value');
+      
+      if (fill) fill.style.height = `${percentage}%`;
+      if (valueDisplay) valueDisplay.textContent = value;
+    });
+    
+    // Update analysis summary
+    const mostPopularSize = this.getMostPopularSize(sizeTotals);
+    const sizeSpread = Object.values(sizeTotals).filter(val => val > 0).length;
+    
+    const mostPopularElement = document.getElementById('most-popular-size');
+    const sizeSpreadElement = document.getElementById('size-spread');
+    
+    if (mostPopularElement) mostPopularElement.textContent = mostPopularSize.toUpperCase();
+    if (sizeSpreadElement) sizeSpreadElement.textContent = `${sizeSpread} sizes`;
+  }
+
+  getMostPopularSize(sizeTotals) {
+    let maxSize = 'M';
+    let maxValue = 0;
+    
+    for (const [size, value] of Object.entries(sizeTotals)) {
+      if (value > maxValue) {
+        maxValue = value;
+        maxSize = size;
+      }
+    }
+    
+    return maxSize;
+  }
+
+  getAssignedLabDips(garmentId) {
+    // Get lab dips assigned to this garment from design studio
+    if (window.v10DesignStudio && typeof window.v10DesignStudio.getLabDipsForGarment === 'function') {
+      return window.v10DesignStudio.getLabDipsForGarment(garmentId);
+    }
+    
+    // Fallback - return empty array
+    return [];
   }
 }
 
