@@ -4353,6 +4353,7 @@ class V10_GarmentStudio {
       // Update studio completion status after variant creation
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
       
       console.log(`🎨 Created color variant: ${newVariant.id} from ${originalGarmentId} with lab dip ${newLabDipId}`);
@@ -4443,6 +4444,7 @@ class V10_GarmentStudio {
         setTimeout(() => {
           this.updateStudioCompletion();
           this.updateDesignStudioTabStatus();
+          V10_BadgeManager.updateGarmentCompletionBadge();
           V10_BadgeManager.updateDesignCompletionBadge();
           console.log(`🔄 Forced comprehensive status update after color variant creation`);
         }, 100);
@@ -4472,6 +4474,7 @@ class V10_GarmentStudio {
     setTimeout(() => {
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
     }, 50);
   }
@@ -4496,6 +4499,7 @@ class V10_GarmentStudio {
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
+    V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -4514,6 +4518,7 @@ class V10_GarmentStudio {
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
+    V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -4531,6 +4536,7 @@ class V10_GarmentStudio {
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
+    V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -5601,9 +5607,27 @@ class V10_DesignStudio {
             if (type === 'labdip') {
               console.log(`✅ Assigning existing lab dip ${itemId} to garment ${selectedGarment}`);
               window.v10GarmentStudio.assignLabDip(selectedGarment, itemId);
+              
+              // Add delayed badge update to ensure assignment is fully processed
+              setTimeout(() => {
+                window.v10GarmentStudio.updateStudioCompletion();
+                window.v10GarmentStudio.updateDesignStudioTabStatus();
+                V10_BadgeManager.updateGarmentCompletionBadge();
+                V10_BadgeManager.updateDesignCompletionBadge();
+                console.log(`🔄 Modal assignment badge update completed for lab dip ${itemId}`);
+              }, 150);
             } else {
               console.log(`✅ Assigning existing design ${itemId} to garment ${selectedGarment}`);
               window.v10GarmentStudio.assignDesign(selectedGarment, itemId);
+              
+              // Add delayed badge update to ensure assignment is fully processed
+              setTimeout(() => {
+                window.v10GarmentStudio.updateStudioCompletion();
+                window.v10GarmentStudio.updateDesignStudioTabStatus();
+                V10_BadgeManager.updateGarmentCompletionBadge();
+                V10_BadgeManager.updateDesignCompletionBadge();
+                console.log(`🔄 Modal assignment badge update completed for design ${itemId}`);
+              }, 150);
             }
           } else {
             // Create new item and assign to garment (current behavior for "Add to Garment" from forms)
@@ -5828,6 +5852,7 @@ class V10_DesignStudio {
       // Update studio completion status after lab dip removal
       window.v10GarmentStudio.updateStudioCompletion();
       window.v10GarmentStudio.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
   
       console.log(`🗑️ Removed lab dip: ${labDipId}`);
