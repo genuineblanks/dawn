@@ -3778,7 +3778,20 @@ class V10_GarmentStudio {
 
     // Handle sample type change
     if (e.target.name.includes('sampleType')) {
+      const previousSampleType = garmentData.sampleType;
       garmentData.sampleType = e.target.value;
+      
+      // If changing from custom to another type, remove assigned lab dips
+      if (previousSampleType === 'custom' && e.target.value !== 'custom') {
+        if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
+          console.log(`🎨 Removing assigned lab dips from garment ${garmentId} due to sample type change from custom to ${e.target.value}`);
+          // Remove all assigned lab dips
+          const labDipIds = Array.from(garmentData.assignedLabDips);
+          labDipIds.forEach(labDipId => {
+            this.unassignLabDip(garmentId, labDipId);
+          });
+        }
+      }
       
       // Trigger status update and collapse logic immediately when sample type changes
       setTimeout(() => {
@@ -5956,11 +5969,10 @@ class V10_DesignStudio {
       designsEmpty.style.display = designCount === 0 ? 'block' : 'none';
     }
 
-    // Show/hide tip message based on lab dip count
+    // Show tip message always (removed lab dip count condition)
     if (labDipsTip) {
-      const shouldShowTip = labDipCount >= 2;
-      labDipsTip.style.display = shouldShowTip ? 'block' : 'none';
-      console.log(`💡 Tip message: ${shouldShowTip ? 'SHOWN' : 'HIDDEN'} (lab dip count: ${labDipCount})`);
+      labDipsTip.style.display = 'block'; // Always show
+      console.log(`💡 Tip message: SHOWN (lab dip count: ${labDipCount})`);
     }
   }
 
