@@ -6696,14 +6696,7 @@ class V10_ReviewManager {
     console.log('🎯 V10_State garments:', V10_State.garments.size);
     console.log('🎯 V10_State requestType:', V10_State.requestType);
     
-    // IMMEDIATE element check at start of function
-    const studioContainer = document.getElementById('review-studio');
-    const step4Container = document.getElementById('techpack-v10-step-4');
-    console.log('🚨 TIMING CHECK: populateReview() start');
-    console.log('  - Studio container exists:', !!studioContainer);
-    console.log('  - Step 4 container exists:', !!step4Container);
-    console.log('  - Step 4 display style:', step4Container?.style.display);
-    console.log('  - DOM ready state:', document.readyState);
+    // Element check at start of function
     
     // Ensure assignments structure exists (safety check)
     if (!V10_State.assignments) {
@@ -6725,16 +6718,7 @@ class V10_ReviewManager {
     
     console.log('🎯 Step 4: Review population completed');
     
-    // Add a small delay to check if studio container appears after DOM updates
-    setTimeout(() => {
-      const delayedStudioCheck = document.getElementById('review-studio');
-      console.log('🚨 DELAYED CHECK: After 100ms');
-      console.log('  - Studio container now exists:', !!delayedStudioCheck);
-      if (delayedStudioCheck) {
-        console.log('  - Studio container classes:', delayedStudioCheck.className);
-        console.log('  - Studio container display:', window.getComputedStyle(delayedStudioCheck).display);
-      }
-    }, 100);
+    // Check elements after population
     
     // Check if elements are actually populated and visible
     const studioContainer = document.getElementById('review-studio');
@@ -6743,41 +6727,6 @@ class V10_ReviewManager {
     
     console.log('🎯 Step 4: Elements check:');
     console.log('  - Studio container exists:', !!studioContainer);
-    console.log('  - Studio container classes:', studioContainer?.className);
-    
-    if (studioContainer) {
-      const computedStyle = window.getComputedStyle(studioContainer);
-      console.log('🎯 Step 4: Studio Container CSS Debug:');
-      console.log('  - Display:', computedStyle.display);
-      console.log('  - Visibility:', computedStyle.visibility);
-      console.log('  - Opacity:', computedStyle.opacity);
-      console.log('  - Height:', computedStyle.height);
-      console.log('  - Width:', computedStyle.width);
-      console.log('  - Position:', computedStyle.position);
-      console.log('  - Z-index:', computedStyle.zIndex);
-      console.log('  - Overflow:', computedStyle.overflow);
-      console.log('  - Background:', computedStyle.backgroundColor);
-      
-      // Check child elements
-      const studioHeader = studioContainer.querySelector('.studio-header');
-      const studioContent = studioContainer.querySelector('.studio-content');
-      const reviewGrid = studioContainer.querySelector('.review-summary-grid');
-      
-      console.log('🎯 Step 4: Child Elements Debug:');
-      console.log('  - Studio header exists:', !!studioHeader);
-      console.log('  - Studio header display:', studioHeader ? window.getComputedStyle(studioHeader).display : 'N/A');
-      console.log('  - Studio content exists:', !!studioContent);
-      console.log('  - Studio content display:', studioContent ? window.getComputedStyle(studioContent).display : 'N/A');
-      console.log('  - Review grid exists:', !!reviewGrid);
-      console.log('  - Review grid display:', reviewGrid ? window.getComputedStyle(reviewGrid).display : 'N/A');
-      
-      // Force add the --active class if missing
-      if (!studioContainer.classList.contains('studio-container--active')) {
-        console.log('🚨 Step 4: --active class missing! Adding it now...');
-        studioContainer.classList.add('studio-container--active');
-        console.log('🎯 Step 4: After adding --active class:', studioContainer.className);
-      }
-    }
     
     console.log('  - Client info exists:', !!clientInfo);
     console.log('  - Client info content:', clientInfo?.innerHTML?.substring(0, 100));
