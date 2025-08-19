@@ -8529,23 +8529,6 @@ class V10_FileManager {
   loadSavedFiles() {
     // Step 2 files no longer loaded from localStorage
     return;
-    
-    /* Disabled localStorage loading for Step 2
-    const savedData = localStorage.getItem('v10_step2_data');
-    if (!savedData) return;
-    
-    try {
-      const data = JSON.parse(savedData);
-      
-      // Note: Measurement checkboxes intentionally NOT restored
-      // User should start fresh with unchecked boxes on each app entry
-      // Only file upload data is restored
-      
-      this.validateStep();
-      
-    } catch (error) {
-      console.error('Error loading saved files:', error);
-    }
   }
 
   goBackToStep1() {
