@@ -2889,6 +2889,12 @@ body[class*="techpack"] *,
 .review-card--highlight {
   border-color: var(--v10-accent-primary);
   background: rgba(163, 163, 163, 0.05);
+  box-shadow: 0 0 0 1px rgba(163, 163, 163, 0.1);
+}
+
+.review-card--highlight .review-card__header {
+  background: rgba(163, 163, 163, 0.1);
+  border-bottom: 1px solid var(--v10-accent-primary);
 }
 
 .review-card__header {
@@ -3067,10 +3073,24 @@ body[class*="techpack"] *,
   line-height: 1.6;
 }
 
-/* Review Garment Cards */
+/* Review Garment Cards - 2 Column Layout */
 .review-garments-grid {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--v10-space-4);
+  align-items: start;
+}
+
+/* Single garment takes full width */
+.review-garments-grid.single-garment {
+  grid-template-columns: 1fr;
+}
+
+/* Responsive: Mobile single column */
+@media (max-width: 768px) {
+  .review-garments-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .review-garment-card {

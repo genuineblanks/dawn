@@ -5,6 +5,7 @@ Enhanced with Visual Studio Guide System
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 {{ 'V10-visual-studio-guide.css' | asset_url | stylesheet_tag }}
+{{ 'v10-quantity-responsive.css' | asset_url | stylesheet_tag }}
 
 <section id="techpack-v10-step-3" class="v10-techpack-step" data-step="3" style="display: none;">
   <div class="techpack-container">
@@ -533,9 +534,18 @@ Enhanced with Visual Studio Guide System
               </div>
             </div>
 
-            <!-- Garment Quantities Grid -->
+            <!-- Enhanced Garment Quantities Grid with Desktop 2-per-row Layout -->
             <div class="garment-quantities-grid" id="garment-quantities-container">
-              <!-- Quantity forms will be dynamically added here per garment -->
+              <!-- Validation Summary Cards -->
+              <div class="quantity-validation-summary" id="quantity-validation-summary">
+                <!-- Dynamic validation cards will be added here -->
+              </div>
+              
+              <!-- Responsive Garment Grid -->
+              <div class="responsive-garment-grid" id="responsive-garment-grid">
+                <!-- Quantity forms will be dynamically added here per garment -->
+                <!-- Desktop: 2 garments per row, Mobile: 1 garment per row -->
+              </div>
             </div>
 
             <!-- Add More Instructions -->
@@ -563,8 +573,18 @@ Enhanced with Visual Studio Guide System
           <!-- Distribution Analysis Mode -->
           <div class="quantities-mode" id="distribution-mode-content">
             
-            <!-- Distribution Charts & Analysis -->
-            <div class="distribution-analysis">
+            <!-- Aggregate Analytics Dashboard -->
+            <div id="aggregate-analytics-container">
+              <!-- Aggregate analytics dashboard will be rendered here via JavaScript -->
+            </div>
+            
+            <!-- Per-Garment Distribution Analytics -->
+            <div class="garment-analytics-container" id="garment-analytics-container">
+              <!-- Individual garment analytics charts will be rendered here via JavaScript -->
+            </div>
+            
+            <!-- Legacy Distribution Analysis (fallback) -->
+            <div class="distribution-analysis legacy-analysis" style="display: none;">
               <div class="analysis-header">
                 <h4>Size Distribution Analysis</h4>
                 <div class="analysis-summary" id="distribution-summary">
@@ -1164,9 +1184,20 @@ Enhanced with Visual Studio Guide System
   </div>
 </template>
 
-<!-- Enhanced Garment Quantity Card Template -->
+<!-- Enhanced Responsive Garment Quantity Card Template -->
 <template id="V10-garment-quantity-template">
   <div class="garment-quantity-card" data-garment-id="">
+    <!-- Validation Status Card -->
+    <div class="garment-validation-card" id="garment-validation-card">
+      <div class="validation-progress-bar">
+        <div class="validation-progress-fill" id="validation-progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="validation-status" id="validation-status">
+        <span class="validation-text">Select garment types to calculate minimums</span>
+        <span class="validation-percentage">0%</span>
+      </div>
+    </div>
+
     <div class="garment-quantity-card__header">
       <div class="garment-info">
         <div class="garment-info__visual">
@@ -1188,13 +1219,14 @@ Enhanced with Visual Studio Guide System
           </h4>
           <div class="garment-info__subtitle">
             <span class="colorway-count" id="colorway-count">1 colorway</span>
-            <span class="size-range" id="size-range">XS-XL</span>
+            <span class="minimum-required" id="minimum-required">Min: 75</span>
           </div>
         </div>
       </div>
       <div class="garment-quantity-summary">
         <div class="quantity-summary__value" id="garment-total-quantity">0</div>
         <div class="quantity-summary__label">Total Units</div>
+        <div class="quantity-summary__status" id="quantity-status">Insufficient</div>
       </div>
     </div>
 
@@ -1214,70 +1246,223 @@ Enhanced with Visual Studio Guide System
         </button>
       </div>
 
-      <!-- Size/Quantity Grid Container -->
+      <!-- Enhanced Size/Quantity Grid Container with TechPack Validation -->
       <div class="size-quantity-container">
         
-        <!-- Single Colorway Grid (default view) -->
-        <div class="size-quantity-grid single-colorway" id="single-colorway-grid">
-          <div class="size-quantity-grid__header">
-            <div class="size-label">Size</div>
-            <div class="size-column">XXS</div>
-            <div class="size-column">XS</div>
-            <div class="size-column">S</div>
-            <div class="size-column">M</div>
-            <div class="size-column">L</div>
-            <div class="size-column">XL</div>
-            <div class="size-column">XXL</div>
-            <div class="size-column">3XL</div>
+        <!-- Colorway Selection (shown when multiple colorways exist) -->
+        <div class="colorway-selector" id="colorway-selector" style="display: none;">
+          <div class="colorway-selector__header">
+            <span class="colorway-selector__title">Select Colorway:</span>
+            <span class="colorway-selector__count" id="active-colorway-count">1 of 1</span>
           </div>
-          <div class="size-quantity-grid__row">
-            <div class="quantity-label">Qty</div>
-            <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
-            <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" placeholder="0">
+          <div class="colorway-selector__tabs" id="colorway-selector-tabs">
+            <!-- Colorway tabs will be added here -->
           </div>
         </div>
 
-        <!-- Multi-Colorway Grids (shown when multiple colorways exist) -->
-        <div class="multi-colorway-grids" id="multi-colorway-grids" style="display: none;">
-          <!-- Multiple colorway grids will be added here -->
+        <!-- Responsive Size Distribution Grid -->
+        <div class="responsive-size-grid" id="responsive-size-grid">
+          <!-- Desktop: Horizontal layout with all sizes visible -->
+          <!-- Mobile: Compact vertical cards with smart sizing -->
+          
+          <div class="size-grid-header">
+            <div class="size-grid-title">
+              <span>Size Distribution</span>
+              <div class="size-distribution-limits" id="size-distribution-limits">
+                <span class="limit-text">Max 7 sizes for this quantity</span>
+                <button type="button" class="limit-help-btn" title="Size distribution guidelines">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <circle cx="12" cy="17" r="1"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="size-grid-actions">
+              <button type="button" class="preset-quick-btn" id="preset-quick-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Preset
+              </button>
+            </div>
+          </div>
+
+          <!-- Size Input Cards Grid -->
+          <div class="size-input-grid" id="size-input-grid">
+            <div class="size-input-card" data-size="xxs">
+              <div class="size-input-card__header">
+                <span class="size-label">XXS</span>
+                <span class="size-percentage" id="xxs-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xxs-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xs">
+              <div class="size-input-card__header">
+                <span class="size-label">XS</span>
+                <span class="size-percentage" id="xs-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xs-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="s">
+              <div class="size-input-card__header">
+                <span class="size-label">S</span>
+                <span class="size-percentage" id="s-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="s-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="m">
+              <div class="size-input-card__header">
+                <span class="size-label">M</span>
+                <span class="size-percentage" id="m-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="m-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="l">
+              <div class="size-input-card__header">
+                <span class="size-label">L</span>
+                <span class="size-percentage" id="l-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="l-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xl">
+              <div class="size-input-card__header">
+                <span class="size-label">XL</span>
+                <span class="size-percentage" id="xl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xxl">
+              <div class="size-input-card__header">
+                <span class="size-label">XXL</span>
+                <span class="size-percentage" id="xxl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xxl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="3xl">
+              <div class="size-input-card__header">
+                <span class="size-label">3XL</span>
+                <span class="size-percentage" id="3xl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="3xl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
 
-      <!-- Quick Actions Bar -->
+      <!-- Enhanced Actions & Validation Feedback -->
       <div class="quantity-actions">
-        <div class="quantity-actions__left">
-          <button type="button" class="quick-action-btn" id="apply-preset-to-garment">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-            Apply Preset
-          </button>
-          <button type="button" class="quick-action-btn" id="clear-garment-quantities">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18"/>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-            </svg>
-            Clear
-          </button>
+        <div class="quantity-actions__validation">
+          <div class="validation-messages" id="validation-messages">
+            <!-- Dynamic validation messages will appear here -->
+          </div>
         </div>
-        <div class="quantity-actions__right">
-          <div class="size-distribution-preview" id="size-distribution-preview">
-            <div class="distribution-bars">
-              <div class="dist-bar" data-size="xxs" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="xs" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="s" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="m" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="l" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="xl" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="xxl" style="height: 0%;"></div>
-              <div class="dist-bar" data-size="3xl" style="height: 0%;"></div>
+        
+        <div class="quantity-actions__controls">
+          <div class="quantity-actions__left">
+            <div class="preset-dropdown-wrapper">
+              <button type="button" class="quick-action-btn quick-action-btn--preset" id="apply-preset-to-garment">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Apply Preset
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="preset-dropdown-menu" id="garment-preset-menu">
+                <button type="button" class="preset-option" data-preset="bell-curve">
+                  <span class="preset-name">Bell Curve</span>
+                  <span class="preset-description">S-M-L focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="medium-heavy">
+                  <span class="preset-name">Medium Heavy</span>
+                  <span class="preset-description">M-L focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="large-heavy">
+                  <span class="preset-name">Large Heavy</span>
+                  <span class="preset-description">L-XL focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="equal-split">
+                  <span class="preset-name">Equal Split</span>
+                  <span class="preset-description">Even distribution</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="quick-action-btn" id="clear-garment-quantities">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              </svg>
+              Clear All
+            </button>
+          </div>
+          
+          <div class="quantity-actions__right">
+            <div class="quantity-summary-compact" id="quantity-summary-compact">
+              <div class="summary-item">
+                <span class="summary-label">Total:</span>
+                <span class="summary-value" id="garment-summary-total">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Required:</span>
+                <span class="summary-value" id="garment-summary-required">75</span>
+              </div>
+              <div class="summary-progress">
+                <div class="summary-progress-bar">
+                  <div class="summary-progress-fill" id="garment-summary-progress" style="width: 0%"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1338,6 +1523,44 @@ Enhanced with Visual Studio Guide System
       <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
       <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
       <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" placeholder="0">
+    </div>
+  </div>
+</template>
+
+<!-- Validation Message Card Template -->
+<template id="V10-validation-card-template">
+  <div class="validation-message" data-type="" data-garment-id="">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <!-- Icon will be populated by JavaScript based on validation type -->
+    </svg>
+    <span class="validation-message__text"></span>
+    <button type="button" class="validation-message__dismiss" title="Dismiss">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</template>
+
+<!-- Colorway Validation Card Template -->
+<template id="V10-colorway-validation-template">
+  <div class="colorway-validation-card" data-colorway-id="" data-garment-id="">
+    <div class="colorway-validation-header">
+      <div class="colorway-validation-visual">
+        <div class="colorway-validation-color" style="background-color: #000000;"></div>
+        <span class="colorway-validation-name">PANTONE 19-4052 TPX</span>
+      </div>
+      <div class="colorway-validation-status">
+        <span class="colorway-validation-progress">0%</span>
+        <div class="colorway-validation-indicator"></div>
+      </div>
+    </div>
+    <div class="colorway-validation-details">
+      <span class="colorway-validation-text">15 more units needed</span>
+      <div class="colorway-validation-bar">
+        <div class="colorway-validation-fill" style="width: 0%"></div>
+      </div>
     </div>
   </div>
 </template>

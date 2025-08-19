@@ -240,6 +240,64 @@ const V10_CONFIG = {
 // V10_Utils will be defined later with complete functionality
 
 // ==============================================
+// TECHPACK QUANTITY CONFIGURATION & BUSINESS RULES
+// ==============================================
+
+const V10_QUANTITY_CONFIG = {
+  // Production minimums (mapped from TechPack app constants)
+  minimums: {
+    ourBlanks: { single: 30, multiple: 20 },         // "Our Blanks" production
+    customHeavy: { single: 75, multiple: 50 },       // Custom production - heavy garments
+    customLight: { single: 100, multiple: 75 }       // Custom production - light garments
+  },
+  
+  // Light garment classification (higher minimums due to fabric costs)
+  lightGarments: [
+    'T-Shirt', 'Shorts', 'Tank Top', 'Polo Shirt', 
+    'Shirt', 'Long Sleeve T-Shirt'
+  ],
+  
+  // Size distribution limits (quantity -> max allowed sizes)
+  sizeDistribution: [
+    { min: 300, maxSizes: 7 },    // XXS-XXL (7 sizes)
+    { min: 150, maxSizes: 6 },    // XS-XXL (6 sizes)
+    { min: 75, maxSizes: 5 },     // S-XXL (5 sizes)
+    { min: 50, maxSizes: 4 },     // S-XL (4 sizes)
+    { min: 30, maxSizes: 3 },     // S-L (3 sizes)
+    { min: 20, maxSizes: 2 },     // M-L (2 sizes)
+    { min: 1, maxSizes: 1 }       // M only (1 size)
+  ],
+  
+  // Intelligent distribution presets
+  presets: {
+    'bell-curve': {
+      pattern: [2, 6, 8, 10, 8, 6, 2, 1],
+      name: 'Bell Curve (S,M,L focus)',
+      description: 'Standard retail distribution'
+    },
+    'medium-heavy': {
+      pattern: [3, 5, 8, 12, 8, 5, 3, 1],
+      name: 'Medium Heavy',
+      description: 'Medium size focus'
+    },
+    'large-heavy': {
+      pattern: [2, 4, 6, 8, 12, 10, 8, 5],
+      name: 'Large Heavy',
+      description: 'Large size focus'
+    },
+    'equal-split': {
+      pattern: [7, 7, 7, 7, 7, 7, 7, 7],
+      name: 'Equal Split',
+      description: 'Equal across all sizes'
+    }
+  },
+  
+  // Size configuration
+  sizeLabels: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
+  sizeKeys: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', '3xl']
+};
+
+// ==============================================
 // GLOBAL STATE MANAGEMENT
 // ==============================================
 
@@ -255,6 +313,17 @@ const V10_State = {
     designs: new Map()  // designId -> Set of garmentIds
   },
   
+  // Enhanced quantity management
+  quantities: {
+    garments: new Map(),        // garmentId -> { sizes: {}, total: 0, validation: {}, colorwayCount: 1 }
+    validation: new Map(),      // garmentId -> validation results
+    globalMinimum: 0,          // Total minimum required across all garments
+    globalTotal: 0,            // Total quantities entered
+    progressPercentage: 0,     // Overall progress towards minimums
+    validationCards: new Map(), // garmentId -> validation card elements
+    colorwayMinimums: new Map() // garmentId-colorwayId -> minimum required per colorway
+  },
+  
   // Clear all data (in-memory only, no persistence)
   clear() {
     this.requestType = null;
@@ -264,7 +333,14 @@ const V10_State = {
     this.designSamples.clear();
     this.assignments.labDips.clear();
     this.assignments.designs.clear();
-    console.log('🗑️ V10 State cleared');
+    this.quantities.garments.clear();
+    this.quantities.validation.clear();
+    this.quantities.validationCards.clear();
+    this.quantities.colorwayMinimums.clear();
+    this.quantities.globalMinimum = 0;
+    this.quantities.globalTotal = 0;
+    this.quantities.progressPercentage = 0;
+    console.log('🗑️ V10 State cleared (including quantities)');
   }
 };
 
@@ -3219,6 +3295,1058 @@ class V10_StudioNavigator {
 // ==============================================
 // GARMENT STUDIO MANAGER
 // ==============================================
+// QUANTITY CALCULATION & VALIDATION ENGINE
+// ==============================================
+
+class V10_QuantityCalculator {
+  constructor() {
+    this.config = V10_QUANTITY_CONFIG;
+    this.state = V10_State.quantities;
+  }
+
+  // ==============================================
+  // CORE MINIMUM CALCULATION LOGIC
+  // ==============================================
+
+  /**
+   * Get minimum quantity based on colorway count, production type, and garment type
+   * Core business logic from TechPack app
+   */
+  getMinimumQuantity(colorwayCount, productionType, garmentType) {
+    colorwayCount = colorwayCount || 1;
+    
+    // Our Blanks: Simple binary logic
+    if (productionType === 'our-blanks') {
+      return colorwayCount === 1 ? 
+        this.config.minimums.ourBlanks.single : 
+        this.config.minimums.ourBlanks.multiple;
+    }
+    
+    // Custom Production: Check if light garment (higher minimums)
+    if (this.isLightGarment(garmentType)) {
+      return colorwayCount === 1 ? 
+        this.config.minimums.customLight.single : 
+        this.config.minimums.customLight.multiple;
+    }
+    
+    // Custom Production: Heavy garments (default)
+    return colorwayCount === 1 ? 
+      this.config.minimums.customHeavy.single : 
+      this.config.minimums.customHeavy.multiple;
+  }
+
+  /**
+   * Determine if garment is classified as "light" (higher minimums)
+   */
+  isLightGarment(garmentType) {
+    return this.config.lightGarments.includes(garmentType);
+  }
+
+  /**
+   * Calculate total minimum required across all garments
+   */
+  calculateTotalMinimum(garments = null) {
+    const garmentsToCheck = garments || Array.from(V10_State.garments.values());
+    let totalMinimum = 0;
+    
+    garmentsToCheck.forEach(garment => {
+      const colorwayCount = this.getColorwayCount(garment.id);
+      const productionType = this.determineProductionType(garment);
+      const garmentMinimum = this.getMinimumQuantity(colorwayCount, productionType, garment.type);
+      
+      // For multiple colorways, multiply by colorway count
+      if (colorwayCount > 1) {
+        totalMinimum += garmentMinimum * colorwayCount;
+      } else {
+        totalMinimum += garmentMinimum;
+      }
+    });
+    
+    return totalMinimum;
+  }
+
+  // ==============================================
+  // SIZE DISTRIBUTION VALIDATION
+  // ==============================================
+
+  /**
+   * Get maximum allowed sizes based on quantity
+   */
+  getMaxAllowedSizes(quantity) {
+    for (const rule of this.config.sizeDistribution) {
+      if (quantity >= rule.min) {
+        return rule.maxSizes;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Validate size distribution for a garment
+   */
+  validateSizeDistribution(garmentId) {
+    const quantityData = this.state.garments.get(garmentId);
+    if (!quantityData) return { valid: true, warnings: [] };
+    
+    const totalQuantity = quantityData.total;
+    const activeSizes = Object.values(quantityData.sizes).filter(qty => qty > 0).length;
+    const maxAllowedSizes = this.getMaxAllowedSizes(totalQuantity);
+    
+    const warnings = [];
+    if (activeSizes > maxAllowedSizes) {
+      warnings.push({
+        type: 'size_distribution',
+        message: `Too many sizes (${activeSizes}) for quantity ${totalQuantity}. Maximum: ${maxAllowedSizes} sizes.`,
+        suggestion: `Increase quantity to ${this.getMinQuantityForSizes(activeSizes)} or reduce to ${maxAllowedSizes} sizes.`
+      });
+    }
+    
+    return {
+      valid: activeSizes <= maxAllowedSizes,
+      warnings: warnings,
+      activeSizes: activeSizes,
+      maxAllowedSizes: maxAllowedSizes
+    };
+  }
+
+  /**
+   * Get minimum quantity needed for a specific number of sizes
+   */
+  getMinQuantityForSizes(sizeCount) {
+    for (const rule of this.config.sizeDistribution) {
+      if (rule.maxSizes >= sizeCount) {
+        return rule.min;
+      }
+    }
+    return this.config.sizeDistribution[0].min; // Return highest threshold
+  }
+
+  // ==============================================
+  // COLORWAY & PRODUCTION TYPE LOGIC
+  // ==============================================
+
+  /**
+   * Get colorway count for a garment
+   */
+  getColorwayCount(garmentId) {
+    // Check assigned lab dips from Design Studio
+    const assignedLabDips = V10_State.assignments.labDips;
+    let colorwayCount = 0;
+    
+    assignedLabDips.forEach((garmentSet, labDipId) => {
+      if (garmentSet.has(garmentId)) {
+        colorwayCount++;
+      }
+    });
+    
+    // Default to 1 if no colorways assigned
+    return Math.max(colorwayCount, 1);
+  }
+
+  /**
+   * Determine production type based on garment data
+   */
+  determineProductionType(garment) {
+    // Check if garment has sample reference (indicates "Our Blanks")
+    if (garment.sampleReference && garment.sampleReference !== 'custom') {
+      return 'our-blanks';
+    }
+    
+    // Check fabric type or other indicators for custom production
+    // Default to custom production
+    return 'custom';
+  }
+
+  // ==============================================
+  // VALIDATION & PROGRESS TRACKING
+  // ==============================================
+
+  /**
+   * Calculate and update overall progress
+   */
+  calculateAndUpdateProgress() {
+    const garmentsArray = Array.from(V10_State.garments.values()).filter(garment => 
+      garment.type && (garment.sampleReference || garment.fabricType)
+    );
+    
+    if (garmentsArray.length === 0) {
+      this.updateQuantityStats(0, 0, 0, 0);
+      return 0;
+    }
+    
+    // Calculate total minimum required
+    const totalMinimumRequired = this.calculateTotalMinimum(garmentsArray);
+    
+    // Calculate current total quantity
+    let currentTotal = 0;
+    garmentsArray.forEach(garment => {
+      const quantityData = this.state.garments.get(garment.id);
+      if (quantityData) {
+        currentTotal += quantityData.total;
+      }
+    });
+    
+    // Calculate progress percentage
+    const progressPercentage = totalMinimumRequired > 0 ? 
+      Math.min((currentTotal / totalMinimumRequired) * 100, 100) : 0;
+    
+    // Update state
+    this.state.globalMinimum = totalMinimumRequired;
+    this.state.globalTotal = currentTotal;
+    this.state.progressPercentage = progressPercentage;
+    
+    // Update UI
+    this.updateQuantityStats(currentTotal, garmentsArray.length, this.getTotalColorwayCount(), totalMinimumRequired);
+    this.updateProgressBar(currentTotal, totalMinimumRequired);
+    
+    return progressPercentage;
+  }
+
+  /**
+   * Get total colorway count across all garments
+   */
+  getTotalColorwayCount() {
+    let totalColorways = 0;
+    V10_State.garments.forEach((garment, garmentId) => {
+      totalColorways += this.getColorwayCount(garmentId);
+    });
+    return totalColorways;
+  }
+
+  /**
+   * Update quantity statistics display
+   */
+  updateQuantityStats(totalUnits, garmentCount, colorwayCount, minimumRequired) {
+    const totalElement = document.getElementById('total-production-quantity');
+    const garmentCountElement = document.getElementById('total-garments-count');
+    const colorwayCountElement = document.getElementById('total-colorways-count');
+    const progressStatusElement = document.getElementById('quantity-progress-status');
+    const progressPercentageElement = document.getElementById('quantity-progress-percentage');
+
+    if (totalElement) totalElement.textContent = totalUnits;
+    if (garmentCountElement) garmentCountElement.textContent = garmentCount;
+    if (colorwayCountElement) colorwayCountElement.textContent = colorwayCount;
+    
+    const percentage = minimumRequired > 0 ? Math.min((totalUnits / minimumRequired) * 100, 100) : 0;
+    
+    if (progressStatusElement) {
+      progressStatusElement.textContent = `${totalUnits} / ${minimumRequired} minimum units`;
+    }
+    
+    if (progressPercentageElement) {
+      progressPercentageElement.textContent = `${Math.round(percentage)}%`;
+    }
+  }
+
+  /**
+   * Update progress bar visual state
+   */
+  updateProgressBar(totalUnits, minimumRequired) {
+    const progressBar = document.getElementById('production-quantity-progress');
+    if (!progressBar || minimumRequired === 0) return;
+
+    const percentage = Math.min((totalUnits / minimumRequired) * 100, 100);
+    progressBar.style.width = `${percentage}%`;
+    
+    // Update color based on progress
+    if (totalUnits >= minimumRequired) {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-accent-success) 0%, var(--v10-accent-success) 100%)';
+    } else if (totalUnits >= minimumRequired * 0.5) {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-border-warning) 0%, var(--v10-accent-primary) 100%)';
+    } else {
+      progressBar.style.background = 'linear-gradient(90deg, var(--v10-accent-primary) 0%, var(--v10-accent-primary) 100%)';
+    }
+  }
+
+  // ==============================================
+  // PRESET DISTRIBUTION SYSTEM
+  // ==============================================
+
+  /**
+   * Apply intelligent preset distribution to garment
+   */
+  applyPresetToGarment(garmentId, presetName, targetQuantity = null) {
+    const preset = this.config.presets[presetName];
+    if (!preset) {
+      console.error(`❌ Preset "${presetName}" not found`);
+      return;
+    }
+    
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment) {
+      console.error(`❌ Garment ${garmentId} not found`);
+      return;
+    }
+    
+    // Calculate intelligent target quantity if not provided
+    if (!targetQuantity) {
+      targetQuantity = this.calculateIntelligentTargetQuantity(garmentId);
+    }
+    
+    // Get smart distribution pattern
+    const distributionData = this.getSmartDistribution(garmentId, presetName, targetQuantity);
+    
+    // Apply distribution to garment
+    this.applyDistributionToGarment(garmentId, distributionData);
+    
+    console.log(`🎯 Applied intelligent ${presetName} preset to garment ${garmentId}: ${distributionData.total} units (target: ${targetQuantity})`);
+  }
+
+  /**
+   * Calculate intelligent target quantity based on garment minimums and context
+   */
+  calculateIntelligentTargetQuantity(garmentId) {
+    const garment = V10_State.garments.get(garmentId);
+    const colorwayCount = this.getColorwayCount(garmentId);
+    const productionType = this.determineProductionType(garment);
+    
+    // Get base minimum
+    const minimumRequired = this.getMinimumQuantity(colorwayCount, productionType, garment.type);
+    
+    // Add intelligent buffer based on garment type and production context
+    const intelligentBuffer = this.getIntelligentBuffer(garment.type, productionType, colorwayCount);
+    
+    // Target should be minimum + intelligent buffer, rounded to nice number
+    const targetQuantity = minimumRequired + intelligentBuffer;
+    
+    // Round to nearest 5 or 10 for better UX
+    return this.roundToNiceNumber(targetQuantity);
+  }
+
+  /**
+   * Get intelligent buffer based on context
+   */
+  getIntelligentBuffer(garmentType, productionType, colorwayCount) {
+    let buffer = 0;
+    
+    // Base buffer based on production type
+    if (productionType === 'our-blanks') {
+      buffer = 10; // Lower buffer for blank inventory
+    } else {
+      buffer = 25; // Higher buffer for custom production
+    }
+    
+    // Adjust for garment type complexity
+    if (this.isLightGarment(garmentType)) {
+      buffer += 15; // Light garments need more units for economies of scale
+    }
+    
+    // Adjust for colorway complexity
+    if (colorwayCount > 1) {
+      buffer += colorwayCount * 10; // More buffer for multiple colorways
+    }
+    
+    return buffer;
+  }
+
+  /**
+   * Round quantity to nice numbers for better UX
+   */
+  roundToNiceNumber(quantity) {
+    if (quantity <= 50) {
+      return Math.ceil(quantity / 5) * 5; // Round to nearest 5
+    } else if (quantity <= 200) {
+      return Math.ceil(quantity / 10) * 10; // Round to nearest 10
+    } else {
+      return Math.ceil(quantity / 25) * 25; // Round to nearest 25
+    }
+  }
+
+  /**
+   * Get smart distribution pattern based on context
+   */
+  getSmartDistribution(garmentId, presetName, targetQuantity) {
+    const preset = this.config.presets[presetName];
+    const basePattern = [...preset.pattern]; // Clone pattern
+    const sizeKeys = this.config.sizeKeys;
+    
+    // Calculate total pattern units
+    const patternTotal = basePattern.reduce((sum, qty) => sum + qty, 0);
+    
+    // Scale pattern to target quantity
+    const scaleFactor = targetQuantity / patternTotal;
+    const scaledPattern = basePattern.map(qty => Math.round(qty * scaleFactor));
+    
+    // Ensure we hit the exact target by adjusting the most common size
+    const scaledTotal = scaledPattern.reduce((sum, qty) => sum + qty, 0);
+    const difference = targetQuantity - scaledTotal;
+    
+    if (difference !== 0) {
+      // Find the size with highest quantity (usually M or L) and adjust
+      const maxIndex = scaledPattern.indexOf(Math.max(...scaledPattern));
+      scaledPattern[maxIndex] = Math.max(0, scaledPattern[maxIndex] + difference);
+    }
+    
+    // Convert to size object
+    const sizes = {};
+    sizeKeys.forEach((sizeKey, index) => {
+      sizes[sizeKey] = scaledPattern[index] || 0;
+    });
+    
+    return {
+      sizes,
+      total: Object.values(sizes).reduce((sum, qty) => sum + qty, 0),
+      presetName,
+      targetQuantity,
+      distribution: preset.name
+    };
+  }
+
+  /**
+   * Apply distribution data to garment
+   */
+  applyDistributionToGarment(garmentId, distributionData) {
+    // Initialize or get existing quantity data
+    let quantityData = this.state.garments.get(garmentId) || {
+      sizes: {},
+      total: 0,
+      validation: {},
+      colorwayCount: this.getColorwayCount(garmentId)
+    };
+    
+    // Update with new distribution
+    quantityData.sizes = { ...distributionData.sizes };
+    quantityData.total = distributionData.total;
+    quantityData.lastPreset = distributionData.presetName;
+    quantityData.appliedAt = Date.now();
+    
+    // Update state
+    this.state.garments.set(garmentId, quantityData);
+    
+    // Update UI with smooth animation
+    this.updateGarmentQuantityInputsWithAnimation(garmentId, quantityData.sizes);
+    
+    // Update validation and progress
+    this.calculateAndUpdateProgress();
+    
+    // Show preset success feedback
+    this.showPresetSuccessFeedback(garmentId, distributionData);
+  }
+
+  /**
+   * Update garment quantity inputs with smooth animation
+   */
+  updateGarmentQuantityInputsWithAnimation(garmentId, sizes) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    Object.entries(sizes).forEach(([sizeKey, quantity]) => {
+      const input = card.querySelector(`[data-size="${sizeKey}"]`);
+      if (input) {
+        // Animate value change
+        this.animateValueChange(input, parseInt(input.value) || 0, quantity);
+      }
+    });
+    
+    // Update garment total display with animation
+    const totalElement = card.querySelector(`#garment-total-quantity-${garmentId}, [id*="garment-total"]`);
+    if (totalElement) {
+      const currentTotal = parseInt(totalElement.textContent) || 0;
+      const newTotal = Object.values(sizes).reduce((sum, qty) => sum + (qty || 0), 0);
+      this.animateValueChange(totalElement, currentTotal, newTotal, true);
+    }
+  }
+
+  /**
+   * Animate value changes for better UX
+   */
+  animateValueChange(element, fromValue, toValue, isDisplay = false) {
+    const duration = 500;
+    const steps = 20;
+    const stepDuration = duration / steps;
+    const stepValue = (toValue - fromValue) / steps;
+    
+    let currentStep = 0;
+    
+    const animate = () => {
+      currentStep++;
+      const currentValue = Math.round(fromValue + (stepValue * currentStep));
+      
+      if (isDisplay) {
+        element.textContent = currentValue;
+      } else {
+        element.value = currentValue;
+        // Trigger input event for validation updates
+        element.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      
+      if (currentStep < steps && currentValue !== toValue) {
+        setTimeout(animate, stepDuration);
+      } else {
+        // Ensure final value is exact
+        if (isDisplay) {
+          element.textContent = toValue;
+        } else {
+          element.value = toValue;
+          element.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    };
+    
+    animate();
+  }
+
+  /**
+   * Show preset success feedback
+   */
+  showPresetSuccessFeedback(garmentId, distributionData) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    // Create success message
+    const successMessage = document.createElement('div');
+    successMessage.className = 'preset-success-message';
+    successMessage.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20,6 9,17 4,12"/>
+      </svg>
+      <span>Applied ${distributionData.distribution} (${distributionData.total} units)</span>
+    `;
+    
+    // Position and show message
+    card.style.position = 'relative';
+    successMessage.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #10b981;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 10;
+      animation: slideInFade 0.3s ease-out;
+    `;
+    
+    card.appendChild(successMessage);
+    
+    // Remove message after delay
+    setTimeout(() => {
+      successMessage.style.animation = 'slideOutFade 0.3s ease-out';
+      setTimeout(() => {
+        if (successMessage.parentNode) {
+          successMessage.remove();
+        }
+      }, 300);
+    }, 2000);
+  }
+
+  /**
+   * Update garment quantity inputs in UI
+   */
+  updateGarmentQuantityInputs(garmentId, sizes) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    Object.entries(sizes).forEach(([sizeKey, quantity]) => {
+      const input = card.querySelector(`[data-size="${sizeKey}"]`);
+      if (input) {
+        input.value = quantity || 0;
+      }
+    });
+    
+    // Update garment total display
+    const totalElement = card.querySelector(`#garment-total-quantity-${garmentId}, #garment-total-${garmentId}`);
+    if (totalElement) {
+      const total = Object.values(sizes).reduce((sum, qty) => sum + (qty || 0), 0);
+      totalElement.textContent = total;
+    }
+  }
+
+  // ==============================================
+  // DISTRIBUTION ANALYTICS & VISUAL CHARTS
+  // ==============================================
+
+  /**
+   * Generate comprehensive distribution analytics for a garment
+   */
+  generateDistributionAnalytics(garmentId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment || !garment.quantities) {
+      return null;
+    }
+
+    const quantities = garment.quantities;
+    const sizeKeys = Object.keys(quantities);
+    const sizeValues = Object.values(quantities).map(q => parseInt(q) || 0);
+    const totalQuantity = sizeValues.reduce((sum, qty) => sum + qty, 0);
+
+    if (totalQuantity === 0) {
+      return null;
+    }
+
+    // Calculate size distribution percentages
+    const sizeDistribution = sizeKeys.map((size, index) => ({
+      size: size.toUpperCase(),
+      quantity: sizeValues[index],
+      percentage: Math.round((sizeValues[index] / totalQuantity) * 100),
+      label: `${size.toUpperCase()}: ${sizeValues[index]} (${Math.round((sizeValues[index] / totalQuantity) * 100)}%)`
+    })).filter(item => item.quantity > 0);
+
+    // Identify distribution pattern
+    const pattern = this.identifyDistributionPattern(sizeValues, sizeKeys);
+    
+    // Calculate efficiency metrics
+    const metrics = this.calculateDistributionMetrics(garment, totalQuantity);
+
+    return {
+      garmentId,
+      totalQuantity,
+      activeSizes: sizeDistribution.length,
+      distribution: sizeDistribution,
+      pattern: pattern,
+      metrics: metrics,
+      recommendations: this.generateDistributionRecommendations(garment, pattern, metrics)
+    };
+  }
+
+  /**
+   * Identify the distribution pattern (Bell curve, Uniform, Skewed, etc.)
+   */
+  identifyDistributionPattern(quantities, sizeKeys) {
+    const activeQties = quantities.filter(q => q > 0);
+    const max = Math.max(...activeQties);
+    const min = Math.min(...activeQties);
+    const avg = activeQties.reduce((sum, q) => sum + q, 0) / activeQties.length;
+
+    // Find the index of the maximum quantity
+    const maxIndex = quantities.indexOf(max);
+    const middleIndex = Math.floor(quantities.length / 2);
+
+    // Determine pattern type
+    let patternType = 'uniform';
+    let confidence = 0;
+
+    // Bell curve detection (peak in middle sizes)
+    if (maxIndex >= 2 && maxIndex <= 4) { // M, L, XL range
+      const variation = Math.abs(max - min) / avg;
+      if (variation > 0.3) {
+        patternType = 'bell-curve';
+        confidence = Math.min(0.9, variation);
+      }
+    }
+
+    // Skewed distribution detection
+    if (maxIndex <= 1) { // Peak in small sizes
+      patternType = 'small-skewed';
+      confidence = 0.8;
+    } else if (maxIndex >= quantities.length - 2) { // Peak in large sizes
+      patternType = 'large-skewed';
+      confidence = 0.8;
+    }
+
+    // Uniform distribution (relatively even)
+    const coefficientOfVariation = this.calculateCoefficientOfVariation(activeQties);
+    if (coefficientOfVariation < 0.2) {
+      patternType = 'uniform';
+      confidence = 0.9;
+    }
+
+    return {
+      type: patternType,
+      confidence: Math.round(confidence * 100),
+      description: this.getPatternDescription(patternType),
+      peakSize: sizeKeys[maxIndex]?.toUpperCase() || 'Unknown'
+    };
+  }
+
+  /**
+   * Calculate coefficient of variation for distribution analysis
+   */
+  calculateCoefficientOfVariation(values) {
+    if (values.length === 0) return 0;
+    
+    const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+    const standardDeviation = Math.sqrt(variance);
+    
+    return mean > 0 ? standardDeviation / mean : 0;
+  }
+
+  /**
+   * Get human-readable description for distribution patterns
+   */
+  getPatternDescription(patternType) {
+    const descriptions = {
+      'bell-curve': 'Bell-shaped distribution focusing on core sizes (M, L)',
+      'small-skewed': 'Skewed toward smaller sizes (XS, S, M)',
+      'large-skewed': 'Skewed toward larger sizes (L, XL, XXL)',
+      'uniform': 'Even distribution across selected sizes',
+      'bimodal': 'Two peaks in distribution',
+      'custom': 'Custom distribution pattern'
+    };
+    
+    return descriptions[patternType] || 'Custom distribution pattern';
+  }
+
+  /**
+   * Calculate distribution efficiency and production metrics
+   */
+  calculateDistributionMetrics(garment, totalQuantity) {
+    const colorwayCount = this.getColorwayCount(garment.id);
+    const productionType = this.determineProductionType(garment);
+    const minimumRequired = this.getMinimumQuantity(colorwayCount, productionType, garment.type);
+    
+    // Production efficiency (how close to minimum requirements)
+    const efficiency = totalQuantity >= minimumRequired ? 100 : Math.round((totalQuantity / minimumRequired) * 100);
+    
+    // Size utilization (how many sizes are being used effectively)
+    const activeSizes = Object.values(garment.quantities || {}).filter(q => (parseInt(q) || 0) > 0).length;
+    const maxAllowedSizes = this.getMaxAllowedSizes(totalQuantity);
+    const sizeUtilization = Math.round((activeSizes / maxAllowedSizes) * 100);
+    
+    // Cost efficiency estimate (more sizes = higher setup costs)
+    const setupCostRatio = activeSizes > 4 ? 'high' : activeSizes > 2 ? 'medium' : 'low';
+    
+    // Distribution balance (how evenly distributed the quantities are)
+    const quantities = Object.values(garment.quantities || {}).map(q => parseInt(q) || 0).filter(q => q > 0);
+    const balance = quantities.length > 0 ? Math.round((1 - this.calculateCoefficientOfVariation(quantities)) * 100) : 0;
+
+    return {
+      efficiency,
+      sizeUtilization,
+      setupCostRatio,
+      balance,
+      minimumRequired,
+      surplusUnits: Math.max(0, totalQuantity - minimumRequired),
+      deficitUnits: Math.max(0, minimumRequired - totalQuantity),
+      activeSizeCount: activeSizes,
+      maxAllowedSizes
+    };
+  }
+
+  /**
+   * Generate intelligent recommendations based on analytics
+   */
+  generateDistributionRecommendations(garment, pattern, metrics) {
+    const recommendations = [];
+
+    // Efficiency recommendations
+    if (metrics.efficiency < 100) {
+      recommendations.push({
+        type: 'warning',
+        priority: 'high',
+        title: 'Below Minimum Requirement',
+        message: `Add ${metrics.deficitUnits} more units to meet production minimum`,
+        action: 'increase-quantity'
+      });
+    }
+
+    // Size distribution recommendations
+    if (metrics.sizeUtilization < 50 && metrics.activeSizeCount < 3) {
+      recommendations.push({
+        type: 'info',
+        priority: 'medium',
+        title: 'Consider More Sizes',
+        message: `You can add up to ${metrics.maxAllowedSizes - metrics.activeSizeCount} more sizes with this quantity`,
+        action: 'add-sizes'
+      });
+    }
+
+    if (metrics.activeSizeCount > metrics.maxAllowedSizes) {
+      recommendations.push({
+        type: 'error',
+        priority: 'high',
+        title: 'Too Many Sizes',
+        message: `Reduce to ${metrics.maxAllowedSizes} sizes or increase total quantity`,
+        action: 'reduce-sizes'
+      });
+    }
+
+    // Pattern-specific recommendations
+    if (pattern.type === 'uniform' && metrics.balance > 90) {
+      recommendations.push({
+        type: 'success',
+        priority: 'low',
+        title: 'Well-Balanced Distribution',
+        message: 'Your size distribution follows industry best practices',
+        action: 'maintain'
+      });
+    }
+
+    if (pattern.type === 'bell-curve' && pattern.confidence > 70) {
+      recommendations.push({
+        type: 'success',
+        priority: 'low',
+        title: 'Optimal Size Focus',
+        message: 'Bell curve distribution maximizes inventory turnover',
+        action: 'maintain'
+      });
+    }
+
+    // Cost optimization recommendations  
+    if (metrics.setupCostRatio === 'high' && metrics.efficiency < 120) {
+      recommendations.push({
+        type: 'warning',
+        priority: 'medium',
+        title: 'High Setup Costs',
+        message: 'Consider reducing sizes or increasing quantities to optimize costs',
+        action: 'optimize-costs'
+      });
+    }
+
+    return recommendations.sort((a, b) => {
+      const priorityOrder = { high: 3, medium: 2, low: 1 };
+      return priorityOrder[b.priority] - priorityOrder[a.priority];
+    });
+  }
+
+  /**
+   * Render distribution analytics chart for a garment
+   */
+  renderDistributionChart(garmentId, containerId = null) {
+    const analytics = this.generateDistributionAnalytics(garmentId);
+    if (!analytics) {
+      console.warn(`No analytics data available for garment ${garmentId}`);
+      return;
+    }
+
+    const container = containerId ? document.getElementById(containerId) : 
+      document.querySelector(`[data-garment-id="${garmentId}"] .distribution-chart-container`);
+    
+    if (!container) {
+      console.warn(`Chart container not found for garment ${garmentId}`);
+      return;
+    }
+
+    // Create chart HTML
+    const chartHTML = `
+      <div class="distribution-analytics-panel">
+        <div class="analytics-header">
+          <h4>Distribution Analytics</h4>
+          <div class="analytics-summary">
+            <span class="metric">
+              <strong>${analytics.totalQuantity}</strong> Total Units
+            </span>
+            <span class="metric">
+              <strong>${analytics.activeSizes}</strong> Active Sizes
+            </span>
+            <span class="metric efficiency-${analytics.metrics.efficiency >= 100 ? 'complete' : 'incomplete'}">
+              <strong>${analytics.metrics.efficiency}%</strong> Efficiency
+            </span>
+          </div>
+        </div>
+        
+        <div class="distribution-chart">
+          <div class="chart-bars">
+            ${analytics.distribution.map(item => `
+              <div class="chart-bar" data-size="${item.size}">
+                <div class="bar-fill" style="height: ${item.percentage}%" title="${item.label}"></div>
+                <div class="bar-label">${item.size}</div>
+                <div class="bar-value">${item.quantity}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="pattern-analysis">
+          <div class="pattern-info">
+            <span class="pattern-type">${analytics.pattern.type.replace('-', ' ').toUpperCase()}</span>
+            <span class="pattern-confidence">${analytics.pattern.confidence}% confidence</span>
+          </div>
+          <p class="pattern-description">${analytics.pattern.description}</p>
+        </div>
+        
+        ${analytics.recommendations.length > 0 ? `
+          <div class="analytics-recommendations">
+            <h5>Recommendations</h5>
+            ${analytics.recommendations.slice(0, 3).map(rec => `
+              <div class="recommendation recommendation--${rec.type}">
+                <div class="rec-header">
+                  <span class="rec-title">${rec.title}</span>
+                  <span class="rec-priority priority--${rec.priority}">${rec.priority}</span>
+                </div>
+                <p class="rec-message">${rec.message}</p>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    container.innerHTML = chartHTML;
+    
+    // Add animation after render
+    setTimeout(() => {
+      const bars = container.querySelectorAll('.bar-fill');
+      bars.forEach((bar, index) => {
+        setTimeout(() => {
+          bar.style.transform = 'scaleY(1)';
+          bar.style.opacity = '1';
+        }, index * 100);
+      });
+    }, 100);
+
+    console.log(`📊 Rendered distribution chart for garment ${garmentId}`);
+    return analytics;
+  }
+
+  /**
+   * Generate aggregate analytics across all garments
+   */
+  generateAggregateAnalytics() {
+    const allGarments = Array.from(V10_State.garments.values());
+    if (allGarments.length === 0) {
+      return null;
+    }
+
+    const analytics = allGarments.map(garment => 
+      this.generateDistributionAnalytics(garment.id)
+    ).filter(a => a !== null);
+
+    if (analytics.length === 0) {
+      return null;
+    }
+
+    // Aggregate totals
+    const totalUnits = analytics.reduce((sum, a) => sum + a.totalQuantity, 0);
+    const totalGarments = analytics.length;
+    const averageUnitsPerGarment = Math.round(totalUnits / totalGarments);
+    
+    // Most common patterns
+    const patterns = analytics.map(a => a.pattern.type);
+    const patternCounts = patterns.reduce((acc, pattern) => {
+      acc[pattern] = (acc[pattern] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const mostCommonPattern = Object.entries(patternCounts)
+      .sort(([,a], [,b]) => b - a)[0];
+
+    // Average efficiency
+    const avgEfficiency = Math.round(
+      analytics.reduce((sum, a) => sum + a.metrics.efficiency, 0) / analytics.length
+    );
+
+    // Size utilization summary
+    const avgSizeCount = Math.round(
+      analytics.reduce((sum, a) => sum + a.activeSizes, 0) / analytics.length
+    );
+
+    return {
+      totalUnits,
+      totalGarments,
+      averageUnitsPerGarment,
+      avgEfficiency,
+      avgSizeCount,
+      mostCommonPattern: {
+        type: mostCommonPattern[0],
+        count: mostCommonPattern[1],
+        percentage: Math.round((mostCommonPattern[1] / analytics.length) * 100)
+      },
+      garmentAnalytics: analytics,
+      overallHealth: this.calculateOverallHealth(analytics)
+    };
+  }
+
+  /**
+   * Calculate overall health score for the quantity distribution
+   */
+  calculateOverallHealth(analytics) {
+    if (analytics.length === 0) return 0;
+
+    // Weight different factors
+    const avgEfficiency = analytics.reduce((sum, a) => sum + a.metrics.efficiency, 0) / analytics.length;
+    const avgBalance = analytics.reduce((sum, a) => sum + a.metrics.balance, 0) / analytics.length;
+    const avgSizeUtilization = analytics.reduce((sum, a) => sum + a.metrics.sizeUtilization, 0) / analytics.length;
+
+    // Calculate weighted score
+    const healthScore = (
+      (avgEfficiency * 0.4) + // 40% weight on meeting minimums
+      (avgBalance * 0.3) + // 30% weight on distribution balance
+      (avgSizeUtilization * 0.3) // 30% weight on size optimization
+    );
+
+    return Math.min(100, Math.max(0, Math.round(healthScore)));
+  }
+
+  /**
+   * Render aggregate analytics dashboard
+   */
+  renderAggregateAnalytics(containerId = 'aggregate-analytics-container') {
+    const aggregate = this.generateAggregateAnalytics();
+    if (!aggregate) {
+      console.warn('No aggregate analytics data available');
+      return;
+    }
+
+    const container = document.getElementById(containerId);
+    if (!container) {
+      console.warn(`Aggregate analytics container '${containerId}' not found`);
+      return;
+    }
+
+    const dashboardHTML = `
+      <div class="aggregate-analytics-dashboard">
+        <div class="dashboard-header">
+          <h3>Quantity Distribution Summary</h3>
+          <div class="overall-health">
+            <div class="health-score health-score--${aggregate.overallHealth >= 80 ? 'excellent' : aggregate.overallHealth >= 60 ? 'good' : 'needs-improvement'}">
+              ${aggregate.overallHealth}/100
+            </div>
+            <span class="health-label">Overall Health</span>
+          </div>
+        </div>
+        
+        <div class="dashboard-metrics">
+          <div class="metric-card">
+            <div class="metric-value">${aggregate.totalUnits.toLocaleString()}</div>
+            <div class="metric-label">Total Units</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">${aggregate.totalGarments}</div>
+            <div class="metric-label">Garments</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">${aggregate.averageUnitsPerGarment}</div>
+            <div class="metric-label">Avg per Garment</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">${aggregate.avgEfficiency}%</div>
+            <div class="metric-label">Avg Efficiency</div>
+          </div>
+        </div>
+        
+        <div class="pattern-summary">
+          <h4>Distribution Patterns</h4>
+          <div class="pattern-breakdown">
+            <div class="dominant-pattern">
+              <span class="pattern-name">${aggregate.mostCommonPattern.type.replace('-', ' ').toUpperCase()}</span>
+              <span class="pattern-percentage">${aggregate.mostCommonPattern.percentage}% of garments</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="garment-analytics-grid">
+          ${aggregate.garmentAnalytics.map(analytics => `
+            <div class="garment-analytics-summary" data-garment-id="${analytics.garmentId}">
+              <div class="summary-header">
+                <span class="garment-name">Garment ${V10_State.garments.get(analytics.garmentId)?.number || '?'}</span>
+                <span class="efficiency-badge efficiency--${analytics.metrics.efficiency >= 100 ? 'complete' : 'incomplete'}">
+                  ${analytics.metrics.efficiency}%
+                </span>
+              </div>
+              <div class="summary-stats">
+                <span>${analytics.totalQuantity} units</span>
+                <span>${analytics.activeSizes} sizes</span>
+                <span>${analytics.pattern.type}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = dashboardHTML;
+    console.log('📊 Rendered aggregate analytics dashboard');
+    return aggregate;
+  }
+}
+
+// ==============================================
 
 class V10_GarmentStudio {
   constructor() {
@@ -3231,6 +4359,9 @@ class V10_GarmentStudio {
     this.addGarmentBtn = document.getElementById('add-garment');
     this.garmentCounter = 0;
     this.eventListenersAttached = false;
+    
+    // Initialize quantity calculator
+    this.quantityCalculator = new V10_QuantityCalculator();
     
     V10_GarmentStudio.instance = this;
     this.init();
@@ -5286,8 +6417,19 @@ class V10_GarmentStudio {
       return;
     }
     
-    // Clear existing content
+    // Clear existing content but preserve the structure
+    const validationSummary = container.querySelector('.quantity-validation-summary') || document.createElement('div');
+    validationSummary.className = 'quantity-validation-summary';
+    validationSummary.id = 'quantity-validation-summary';
+    
+    const responsiveGrid = container.querySelector('.responsive-garment-grid') || document.createElement('div');
+    responsiveGrid.className = 'responsive-garment-grid';
+    responsiveGrid.id = 'responsive-garment-grid';
+    
+    // Clear container and rebuild structure
     container.innerHTML = '';
+    container.appendChild(validationSummary);
+    container.appendChild(responsiveGrid);
     
     // Get all garments that have been configured in Garment Studio
     const completedGarments = Array.from(V10_State.garments.values()).filter(garment => 
@@ -5295,7 +6437,7 @@ class V10_GarmentStudio {
     );
     
     if (completedGarments.length === 0) {
-      container.innerHTML = `
+      responsiveGrid.innerHTML = `
         <div class="quantities-instructions">
           <div class="instructions-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5320,19 +6462,25 @@ class V10_GarmentStudio {
       return;
     }
     
-    // Generate enhanced quantity cards for each garment
+    // Generate enhanced quantity cards for each garment using responsive grid
     completedGarments.forEach((garment, index) => {
       const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
-      container.appendChild(quantityCard);
+      responsiveGrid.appendChild(quantityCard);
     });
     
     // Initialize all quantity studio features
     this.initializeQuantityStudioFeatures();
     
-    // Update totals and stats
-    this.updateAllQuantityStats();
+    // Initialize sophisticated validation system
+    this.initializeValidationSystem();
     
-    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s)`);
+    // Update totals and stats using new calculator
+    this.quantityCalculator.calculateAndUpdateProgress();
+    
+    // Generate initial validation cards
+    this.updateAllValidationCards();
+    
+    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s) in responsive grid`);
   }
 
   createEnhancedQuantityCard(garment, index) {
@@ -5350,22 +6498,84 @@ class V10_GarmentStudio {
     // Set garment ID
     card.dataset.garmentId = garment.id;
     
-    // Update garment information
+    // Initialize validation card
+    this.setupValidationCard(card, garment);
+    
+    // Update garment information in header
+    this.setupGarmentInfo(card, garment);
+    
+    // Setup colorway system
+    this.setupColorwaySystem(card, garment);
+    
+    // Set up responsive size input grid with enhanced functionality
+    this.setupResponsiveSizeInputs(card, garment);
+    
+    // Set up intelligent preset system
+    this.setupPresetSystem(card, garment);
+    
+    // Set up real-time validation feedback
+    this.setupRealTimeValidation(card, garment);
+    
+    // Initialize size distribution limits
+    this.setupSizeDistributionLimits(card, garment);
+    
+    // Load existing quantity data
+    this.loadQuantityData(garment.id, card);
+    
+    return card;
+  }
+
+  setupValidationCard(card, garment) {
+    const validationCard = card.querySelector('#garment-validation-card');
+    const progressFill = card.querySelector('#validation-progress-fill');
+    const validationStatus = card.querySelector('#validation-status');
+    
+    if (validationCard) {
+      validationCard.id = `validation-card-${garment.id}`;
+    }
+    if (progressFill) {
+      progressFill.id = `validation-progress-${garment.id}`;
+    }
+    if (validationStatus) {
+      validationStatus.id = `validation-status-${garment.id}`;
+    }
+  }
+
+  setupGarmentInfo(card, garment) {
     const garmentType = card.querySelector('.garment-type');
     const garmentFabric = card.querySelector('.garment-fabric');
-    const garmentTotalQuantity = card.querySelector('.quantity-summary__value');
-    const colorwayCount = card.querySelector('.colorway-count');
-    const sizeRange = card.querySelector('.size-range');
+    const garmentTotalQuantity = card.querySelector('#garment-total-quantity');
+    const colorwayCount = card.querySelector('#colorway-count');
+    const minimumRequired = card.querySelector('#minimum-required');
+    const quantityStatus = card.querySelector('#quantity-status');
     
     if (garmentType) garmentType.textContent = garment.type || 'Unknown';
     if (garmentFabric) garmentFabric.textContent = garment.fabricType || garment.sampleReference || '';
-    if (garmentTotalQuantity) garmentTotalQuantity.id = `garment-total-quantity-${garment.id}`;
-    if (colorwayCount) colorwayCount.textContent = '1 colorway';
-    if (sizeRange) sizeRange.textContent = 'XXS-3XL';
     
+    if (garmentTotalQuantity) {
+      garmentTotalQuantity.id = `garment-total-quantity-${garment.id}`;
+    }
+    
+    if (quantityStatus) {
+      quantityStatus.id = `quantity-status-${garment.id}`;
+      quantityStatus.className = 'quantity-summary__status quantity-summary__status--insufficient';
+    }
+    
+    // Calculate and display minimum required
+    const colorwayCountValue = this.quantityCalculator.getColorwayCount(garment.id);
+    const productionType = this.quantityCalculator.determineProductionType(garment);
+    const minimum = this.quantityCalculator.getMinimumQuantity(colorwayCountValue, productionType, garment.type);
+    
+    if (colorwayCount) colorwayCount.textContent = `${colorwayCountValue} colorway${colorwayCountValue > 1 ? 's' : ''}`;
+    if (minimumRequired) minimumRequired.textContent = `Min: ${minimum}`;
+  }
+
+  setupColorwaySystem(card, garment) {
     // Get assigned lab dips for colorway indicators
     const assignedLabDips = this.getAssignedLabDips(garment.id);
     const colorwayIndicators = card.querySelector('#colorway-indicators');
+    const colorwaySelector = card.querySelector('#colorway-selector');
+    
     if (colorwayIndicators && assignedLabDips.length > 0) {
       colorwayIndicators.innerHTML = '';
       assignedLabDips.forEach(labDip => {
@@ -5375,52 +6585,840 @@ class V10_GarmentStudio {
         indicator.title = labDip.pantoneCode || 'Unknown Color';
         colorwayIndicators.appendChild(indicator);
       });
-      if (colorwayCount) colorwayCount.textContent = `${assignedLabDips.length} colorway${assignedLabDips.length > 1 ? 's' : ''}`;
     }
     
-    // Set up size quantity inputs with enhanced functionality
+    // Show colorway selector if multiple colorways
+    if (colorwaySelector && assignedLabDips.length > 1) {
+      colorwaySelector.style.display = 'block';
+      this.setupColorwayTabs(colorwaySelector, assignedLabDips, garment.id);
+    }
+  }
+
+  setupResponsiveSizeInputs(card, garment) {
+    const sizeInputCards = card.querySelectorAll('.size-input-card');
     const sizeInputs = card.querySelectorAll('.size-quantity-input');
-    sizeInputs.forEach(input => {
+    
+    sizeInputs.forEach((input, index) => {
       const size = input.dataset.size;
       input.name = `qty-${size}-${garment.id}`;
       input.id = `qty-${size}-${garment.id}`;
       
-      // Add enhanced event listeners
+      const sizeCard = sizeInputCards[index];
+      const percentageElement = sizeCard?.querySelector(`#${size}-percentage`);
+      const barElement = sizeCard?.querySelector(`#${size}-bar`);
+      
+      // Enhanced event listeners with real-time feedback
       input.addEventListener('input', (e) => {
-        this.updateGarmentQuantityTotals(garment.id);
-        this.updateAllQuantityStats();
-        this.updateSizeDistributionChart();
+        const value = parseInt(e.target.value) || 0;
+        
+        // Update garment quantity data
+        this.updateGarmentQuantityFromInput(garment.id, size, value);
+        
+        // Update percentage and bar for this size
+        this.updateSizeCard(sizeCard, size, value, garment.id);
+        
+        // Update overall validation
+        this.updateGarmentValidation(garment.id);
+        
+        // Update colorway validation if multiple colorways
+        this.updateAllColorwayValidations();
+        
+        // Update global progress
+        this.quantityCalculator.calculateAndUpdateProgress();
+        
+        // Update size distribution validation
+        this.validateSizeDistribution(garment.id);
+        
+        // Save data
         this.saveQuantityData(garment.id);
       });
       
       input.addEventListener('focus', (e) => {
-        e.target.select(); // Select all text on focus
+        e.target.select();
+        // Highlight the size card
+        sizeCard?.classList.add('size-input-card--focused');
+      });
+      
+      input.addEventListener('blur', (e) => {
+        sizeCard?.classList.remove('size-input-card--focused');
       });
     });
-    
-    // Set up quick action buttons
+  }
+
+  setupPresetSystem(card, garment) {
     const applyPresetBtn = card.querySelector('#apply-preset-to-garment');
-    const clearQuantitiesBtn = card.querySelector('#clear-garment-quantities');
+    const presetMenu = card.querySelector('#garment-preset-menu');
+    const clearBtn = card.querySelector('#clear-garment-quantities');
     
     if (applyPresetBtn) {
-      applyPresetBtn.addEventListener('click', () => {
-        this.showPresetMenuForGarment(garment.id);
+      applyPresetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (presetMenu) {
+          presetMenu.classList.toggle('show');
+        }
       });
     }
     
-    if (clearQuantitiesBtn) {
-      clearQuantitiesBtn.addEventListener('click', () => {
+    if (presetMenu) {
+      const presetOptions = presetMenu.querySelectorAll('.preset-option');
+      presetOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const presetName = option.dataset.preset;
+          this.quantityCalculator.applyPresetToGarment(garment.id, presetName);
+          this.updateGarmentValidation(garment.id);
+          presetMenu.classList.remove('show');
+        });
+      });
+    }
+    
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
         this.clearGarmentQuantities(garment.id);
       });
     }
     
-    // Initialize distribution preview
-    this.updateDistributionPreview(card, garment.id);
+    // Close preset menu when clicking outside
+    document.addEventListener('click', () => {
+      presetMenu?.classList.remove('show');
+    });
+  }
+
+  setupRealTimeValidation(card, garment) {
+    const validationMessages = card.querySelector('#validation-messages');
+    if (validationMessages) {
+      validationMessages.id = `validation-messages-${garment.id}`;
+    }
     
-    // Load existing quantity data
-    this.loadQuantityData(garment.id, card);
+    const summaryElements = {
+      total: card.querySelector('#garment-summary-total'),
+      required: card.querySelector('#garment-summary-required'),
+      progress: card.querySelector('#garment-summary-progress')
+    };
+    
+    // Set IDs for summary elements
+    if (summaryElements.total) summaryElements.total.id = `summary-total-${garment.id}`;
+    if (summaryElements.required) summaryElements.required.id = `summary-required-${garment.id}`;
+    if (summaryElements.progress) summaryElements.progress.id = `summary-progress-${garment.id}`;
+  }
+
+  setupSizeDistributionLimits(card, garment) {
+    const limitsElement = card.querySelector('#size-distribution-limits');
+    const limitHelpBtn = card.querySelector('.limit-help-btn');
+    
+    if (limitsElement) {
+      limitsElement.id = `size-limits-${garment.id}`;
+    }
+    
+    if (limitHelpBtn) {
+      limitHelpBtn.addEventListener('click', () => {
+        this.showSizeDistributionHelp(garment.id);
+      });
+    }
+  }
+
+  // ==============================================
+  // SOPHISTICATED VALIDATION SYSTEM
+  // ==============================================
+
+  initializeValidationSystem() {
+    console.log('🔍 Initializing sophisticated validation system...');
+    
+    // Clear existing validation state
+    V10_State.quantities.validationCards.clear();
+    
+    // Set up global validation event handlers
+    this.setupGlobalValidationHandlers();
+    
+    console.log('✅ Validation system initialized');
+  }
+
+  setupGlobalValidationHandlers() {
+    // Real-time validation on any quantity input change
+    document.addEventListener('input', (e) => {
+      if (e.target.classList.contains('size-quantity-input')) {
+        const card = e.target.closest('.garment-quantity-card');
+        if (card) {
+          const garmentId = card.dataset.garmentId;
+          this.debouncedValidationUpdate(garmentId);
+        }
+      }
+    });
+  }
+
+  debouncedValidationUpdate(garmentId) {
+    // Debounce validation updates to avoid excessive calculations
+    clearTimeout(this.validationTimeouts?.[garmentId]);
+    this.validationTimeouts = this.validationTimeouts || {};
+    
+    this.validationTimeouts[garmentId] = setTimeout(() => {
+      this.updateGarmentValidation(garmentId);
+      this.updateAllValidationCards();
+    }, 150);
+  }
+
+  updateGarmentValidation(garmentId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment) return;
+
+    // Get current quantity data
+    const quantityData = V10_State.quantities.garments.get(garmentId) || { sizes: {}, total: 0 };
+    
+    // Calculate minimum required for this garment
+    const colorwayCount = this.quantityCalculator.getColorwayCount(garmentId);
+    const productionType = this.quantityCalculator.determineProductionType(garment);
+    const minimumRequired = this.quantityCalculator.getMinimumQuantity(colorwayCount, productionType, garment.type);
+    
+    // Calculate progress
+    const currentTotal = quantityData.total || 0;
+    const progress = minimumRequired > 0 ? Math.min((currentTotal / minimumRequired) * 100, 100) : 0;
+    
+    // Update validation card
+    this.updateValidationCard(garmentId, {
+      progress,
+      currentTotal,
+      minimumRequired,
+      status: this.getValidationStatus(progress, currentTotal, minimumRequired),
+      colorwayCount,
+      garmentType: garment.type
+    });
+    
+    // Update garment summary
+    this.updateGarmentSummary(garmentId, currentTotal, minimumRequired, progress);
+    
+    // Validate size distribution
+    this.validateSizeDistribution(garmentId);
+  }
+
+  updateValidationCard(garmentId, validationData) {
+    const { progress, currentTotal, minimumRequired, status } = validationData;
+    
+    // Update validation progress bar
+    const progressElement = document.getElementById(`validation-progress-${garmentId}`);
+    if (progressElement) {
+      progressElement.style.width = `${progress}%`;
+    }
+    
+    // Update validation status text
+    const statusElement = document.getElementById(`validation-status-${garmentId}`);
+    if (statusElement) {
+      const validationText = statusElement.querySelector('.validation-text');
+      const validationPercentage = statusElement.querySelector('.validation-percentage');
+      
+      if (validationText) {
+        validationText.textContent = this.getValidationMessage(status, currentTotal, minimumRequired);
+      }
+      if (validationPercentage) {
+        validationPercentage.textContent = `${Math.round(progress)}%`;
+      }
+    }
+  }
+
+  updateGarmentSummary(garmentId, currentTotal, minimumRequired, progress) {
+    // Update total quantity display
+    const totalElement = document.getElementById(`garment-total-quantity-${garmentId}`);
+    if (totalElement) {
+      totalElement.textContent = currentTotal;
+    }
+    
+    // Update quantity status
+    const statusElement = document.getElementById(`quantity-status-${garmentId}`);
+    if (statusElement) {
+      const status = this.getValidationStatus(progress, currentTotal, minimumRequired);
+      statusElement.textContent = this.getStatusText(status);
+      statusElement.className = `quantity-summary__status quantity-summary__status--${status}`;
+    }
+    
+    // Update compact summary
+    const summaryTotal = document.getElementById(`summary-total-${garmentId}`);
+    const summaryRequired = document.getElementById(`summary-required-${garmentId}`);
+    const summaryProgress = document.getElementById(`summary-progress-${garmentId}`);
+    
+    if (summaryTotal) summaryTotal.textContent = currentTotal;
+    if (summaryRequired) summaryRequired.textContent = minimumRequired;
+    if (summaryProgress) summaryProgress.style.width = `${progress}%`;
+  }
+
+  validateSizeDistribution(garmentId) {
+    const validation = this.quantityCalculator.validateSizeDistribution(garmentId);
+    const limitsElement = document.getElementById(`size-limits-${garmentId}`);
+    
+    if (limitsElement) {
+      const limitText = limitsElement.querySelector('.limit-text');
+      if (limitText) {
+        if (validation.valid) {
+          limitText.textContent = `Max ${validation.maxAllowedSizes} sizes for this quantity`;
+          limitText.style.color = 'var(--color-foreground-subtle)';
+        } else {
+          limitText.textContent = `⚠️ Too many sizes! Max ${validation.maxAllowedSizes} for ${validation.totalQuantity || 0} units`;
+          limitText.style.color = '#d97706';
+        }
+      }
+    }
+    
+    // Show/hide size input cards based on limits
+    this.updateSizeCardAvailability(garmentId, validation);
+  }
+
+  updateSizeCardAvailability(garmentId, validation) {
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) return;
+    
+    const sizeInputCards = card.querySelectorAll('.size-input-card');
+    const quantityData = V10_State.quantities.garments.get(garmentId);
+    const activeSizes = quantityData ? Object.values(quantityData.sizes).filter(qty => qty > 0).length : 0;
+    
+    sizeInputCards.forEach((sizeCard, index) => {
+      const input = sizeCard.querySelector('.size-quantity-input');
+      const currentValue = parseInt(input?.value) || 0;
+      
+      // If this size has quantity or we're under the limit, keep it enabled
+      if (currentValue > 0 || activeSizes < validation.maxAllowedSizes) {
+        sizeCard.classList.remove('size-input-card--disabled');
+        if (input) input.disabled = false;
+      } else {
+        sizeCard.classList.add('size-input-card--disabled');
+        if (input) input.disabled = true;
+      }
+    });
+  }
+
+  updateSizeCard(sizeCard, size, value, garmentId) {
+    if (!sizeCard) return;
+    
+    const quantityData = V10_State.quantities.garments.get(garmentId);
+    const total = quantityData ? quantityData.total : 0;
+    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+    
+    // Update percentage display
+    const percentageElement = sizeCard.querySelector(`#${size}-percentage`);
+    if (percentageElement) {
+      percentageElement.textContent = `${percentage}%`;
+    }
+    
+    // Update visual bar
+    const barElement = sizeCard.querySelector(`#${size}-bar`);
+    if (barElement) {
+      barElement.style.width = `${percentage}%`;
+    }
+    
+    // Update visual state
+    if (value > 0) {
+      sizeCard.classList.add('size-input-card--active');
+    } else {
+      sizeCard.classList.remove('size-input-card--active');
+    }
+  }
+
+  updateAllValidationCards() {
+    // Update global validation summary
+    this.updateGlobalValidationSummary();
+    
+    // Update per-garment validation messages
+    V10_State.garments.forEach((garment, garmentId) => {
+      this.updateValidationMessages(garmentId);
+    });
+  }
+
+  updateGlobalValidationSummary() {
+    const summaryContainer = document.getElementById('quantity-validation-summary');
+    if (!summaryContainer) return;
+    
+    const completedGarments = Array.from(V10_State.garments.values()).filter(garment => 
+      garment.type && (garment.sampleReference || garment.fabricType)
+    );
+    
+    if (completedGarments.length === 0) return;
+    
+    const globalValidation = this.calculateGlobalValidation(completedGarments);
+    this.renderGlobalValidationCards(summaryContainer, globalValidation);
+  }
+
+  calculateGlobalValidation(garments) {
+    const totalMinimum = this.quantityCalculator.calculateTotalMinimum(garments);
+    const totalCurrent = V10_State.quantities.globalTotal;
+    const progress = totalMinimum > 0 ? (totalCurrent / totalMinimum) * 100 : 0;
+    
+    const validation = {
+      totalMinimum,
+      totalCurrent,
+      progress: Math.min(progress, 100),
+      garmentCount: garments.length,
+      status: this.getValidationStatus(progress, totalCurrent, totalMinimum),
+      warnings: [],
+      colorwayCount: this.quantityCalculator.getTotalColorwayCount()
+    };
+    
+    // Add global warnings
+    if (totalCurrent < totalMinimum) {
+      validation.warnings.push({
+        type: 'insufficient_quantity',
+        message: `${totalMinimum - totalCurrent} more units needed to meet production minimums`,
+        level: 'error'
+      });
+    }
+    
+    return validation;
+  }
+
+  renderGlobalValidationCards(container, validation) {
+    container.innerHTML = '';
+    
+    if (validation.warnings.length > 0) {
+      validation.warnings.forEach(warning => {
+        const card = this.createValidationMessageCard(warning);
+        container.appendChild(card);
+      });
+    } else if (validation.progress >= 100) {
+      const successCard = this.createValidationMessageCard({
+        type: 'success',
+        message: `All minimums met! Ready for production with ${validation.totalCurrent} units`,
+        level: 'success'
+      });
+      container.appendChild(successCard);
+    }
+  }
+
+  createValidationMessageCard(message) {
+    const template = document.getElementById('V10-validation-card-template');
+    if (!template) {
+      // Fallback creation
+      const card = document.createElement('div');
+      card.className = `validation-message validation-message--${message.level}`;
+      card.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          ${this.getValidationIcon(message.level)}
+        </svg>
+        <span class="validation-message__text">${message.message}</span>
+      `;
+      return card;
+    }
+    
+    const cardElement = template.content.cloneNode(true);
+    const card = cardElement.querySelector('.validation-message');
+    
+    card.dataset.type = message.type;
+    card.className = `validation-message validation-message--${message.level}`;
+    
+    const textElement = card.querySelector('.validation-message__text');
+    if (textElement) {
+      textElement.textContent = message.message;
+    }
+    
+    const iconElement = card.querySelector('svg');
+    if (iconElement) {
+      iconElement.innerHTML = this.getValidationIcon(message.level);
+    }
     
     return card;
+  }
+
+  getValidationIcon(level) {
+    switch (level) {
+      case 'error':
+        return '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+      case 'warning':
+        return '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+      case 'success':
+        return '<polyline points="20,6 9,17 4,12"/>';
+      default:
+        return '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+    }
+  }
+
+  getValidationStatus(progress, current, required) {
+    if (current >= required) return 'complete';
+    if (progress >= 50) return 'progress';
+    return 'insufficient';
+  }
+
+  getValidationMessage(status, current, required) {
+    switch (status) {
+      case 'complete':
+        return 'Minimum requirements met!';
+      case 'progress':
+        return `${required - current} more units needed`;
+      case 'insufficient':
+        return `${required - current} units required for production`;
+      default:
+        return 'Select garment types to calculate minimums';
+    }
+  }
+
+  getStatusText(status) {
+    switch (status) {
+      case 'complete':
+        return 'Complete';
+      case 'progress':
+        return 'In Progress';
+      case 'insufficient':
+        return 'Insufficient';
+      default:
+        return 'Pending';
+    }
+  }
+
+  // ==============================================
+  // COLORWAY-BASED VALIDATION SYSTEM
+  // ==============================================
+
+  setupColorwayTabs(colorwaySelector, assignedLabDips, garmentId) {
+    const tabsContainer = colorwaySelector.querySelector('#colorway-selector-tabs');
+    const countElement = colorwaySelector.querySelector('#active-colorway-count');
+    
+    if (!tabsContainer) return;
+    
+    tabsContainer.innerHTML = '';
+    
+    // Update count display
+    if (countElement) {
+      countElement.textContent = `1 of ${assignedLabDips.length}`;
+    }
+    
+    // Create tabs for each colorway
+    assignedLabDips.forEach((labDip, index) => {
+      const tab = this.createColorwayTab(labDip, garmentId, index === 0);
+      tabsContainer.appendChild(tab);
+      
+      // Add click handler
+      tab.addEventListener('click', () => {
+        this.switchColorwayTab(garmentId, labDip.id, index);
+        if (countElement) {
+          countElement.textContent = `${index + 1} of ${assignedLabDips.length}`;
+        }
+      });
+    });
+    
+    // Initialize colorway-specific validation
+    this.initializeColorwayValidation(garmentId, assignedLabDips);
+  }
+
+  createColorwayTab(labDip, garmentId, isActive = false) {
+    const tab = document.createElement('button');
+    tab.className = `colorway-tab ${isActive ? 'colorway-tab--active' : ''}`;
+    tab.type = 'button';
+    tab.dataset.colorwayId = labDip.id;
+    tab.dataset.garmentId = garmentId;
+    
+    tab.innerHTML = `
+      <div class="colorway-tab__color" style="background-color: ${labDip.color || '#000000'};"></div>
+      <div class="colorway-tab__content">
+        <span class="colorway-tab__name">${labDip.pantoneCode || 'Unknown Color'}</span>
+        <span class="colorway-tab__quantity" id="colorway-quantity-${garmentId}-${labDip.id}">0 units</span>
+      </div>
+    `;
+    
+    return tab;
+  }
+
+  switchColorwayTab(garmentId, colorwayId, index) {
+    const selector = document.querySelector(`[data-garment-id="${garmentId}"] #colorway-selector`);
+    if (!selector) return;
+    
+    // Update active tab
+    const tabs = selector.querySelectorAll('.colorway-tab');
+    tabs.forEach(tab => {
+      tab.classList.toggle('colorway-tab--active', tab.dataset.colorwayId === colorwayId);
+    });
+    
+    // Switch to colorway-specific size inputs (if implemented)
+    this.updateSizeInputsForColorway(garmentId, colorwayId);
+    
+    // Update validation for active colorway
+    this.updateColorwayValidation(garmentId, colorwayId);
+  }
+
+  initializeColorwayValidation(garmentId, assignedLabDips) {
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment) return;
+    
+    // Initialize validation state for each colorway
+    assignedLabDips.forEach(labDip => {
+      const colorwayData = this.getColorwayQuantityData(garmentId, labDip.id);
+      this.updateColorwayTabQuantity(garmentId, labDip.id, colorwayData.total);
+    });
+    
+    // Create colorway validation cards
+    this.createColorwayValidationCards(garmentId, assignedLabDips);
+    
+    // Update per-colorway minimums
+    this.updateColorwayMinimums(garmentId, assignedLabDips);
+  }
+
+  getColorwayQuantityData(garmentId, colorwayId) {
+    // For now, we'll distribute total quantities evenly across colorways
+    // In a full implementation, this would track quantities per colorway
+    const quantityData = V10_State.quantities.garments.get(garmentId) || { sizes: {}, total: 0 };
+    const assignedLabDips = this.getAssignedLabDips(garmentId);
+    const colorwayCount = assignedLabDips.length;
+    
+    if (colorwayCount <= 1) {
+      return quantityData;
+    }
+    
+    // Distribute quantities evenly across colorways
+    const perColorwayTotal = Math.floor(quantityData.total / colorwayCount);
+    const perColorwaySizes = {};
+    
+    Object.entries(quantityData.sizes).forEach(([size, qty]) => {
+      perColorwaySizes[size] = Math.floor(qty / colorwayCount);
+    });
+    
+    return {
+      sizes: perColorwaySizes,
+      total: perColorwayTotal,
+      colorwayId: colorwayId
+    };
+  }
+
+  updateColorwayTabQuantity(garmentId, colorwayId, quantity) {
+    const quantityElement = document.getElementById(`colorway-quantity-${garmentId}-${colorwayId}`);
+    if (quantityElement) {
+      quantityElement.textContent = `${quantity} units`;
+    }
+  }
+
+  createColorwayValidationCards(garmentId, assignedLabDips) {
+    if (assignedLabDips.length <= 1) return; // Skip for single colorway
+    
+    const validationContainer = document.getElementById('quantity-validation-summary');
+    if (!validationContainer) return;
+    
+    // Create validation cards for each colorway
+    assignedLabDips.forEach(labDip => {
+      const validationCard = this.createColorwayValidationCard(garmentId, labDip);
+      validationContainer.appendChild(validationCard);
+    });
+  }
+
+  createColorwayValidationCard(garmentId, labDip) {
+    const template = document.getElementById('V10-colorway-validation-template');
+    if (!template) {
+      return this.createFallbackColorwayValidationCard(garmentId, labDip);
+    }
+    
+    const cardElement = template.content.cloneNode(true);
+    const card = cardElement.querySelector('.colorway-validation-card');
+    
+    // Set identifiers
+    card.dataset.colorwayId = labDip.id;
+    card.dataset.garmentId = garmentId;
+    card.id = `colorway-validation-${garmentId}-${labDip.id}`;
+    
+    // Update colorway visual information
+    const colorElement = card.querySelector('.colorway-validation-color');
+    const nameElement = card.querySelector('.colorway-validation-name');
+    const progressElement = card.querySelector('.colorway-validation-progress');
+    const textElement = card.querySelector('.colorway-validation-text');
+    const fillElement = card.querySelector('.colorway-validation-fill');
+    
+    if (colorElement) {
+      colorElement.style.backgroundColor = labDip.color || '#000000';
+    }
+    if (nameElement) {
+      nameElement.textContent = labDip.pantoneCode || 'Unknown Color';
+    }
+    
+    // Set IDs for dynamic updates
+    if (progressElement) {
+      progressElement.id = `colorway-progress-${garmentId}-${labDip.id}`;
+    }
+    if (textElement) {
+      textElement.id = `colorway-text-${garmentId}-${labDip.id}`;
+    }
+    if (fillElement) {
+      fillElement.id = `colorway-fill-${garmentId}-${labDip.id}`;
+    }
+    
+    // Initialize validation state
+    this.updateColorwayValidationCard(garmentId, labDip.id);
+    
+    return card;
+  }
+
+  createFallbackColorwayValidationCard(garmentId, labDip) {
+    const card = document.createElement('div');
+    card.className = 'colorway-validation-card colorway-validation-card--error';
+    card.dataset.colorwayId = labDip.id;
+    card.dataset.garmentId = garmentId;
+    card.id = `colorway-validation-${garmentId}-${labDip.id}`;
+    
+    card.innerHTML = `
+      <div class="colorway-validation-header">
+        <div class="colorway-validation-visual">
+          <div class="colorway-validation-color" style="background-color: ${labDip.color || '#000000'};"></div>
+          <span class="colorway-validation-name">${labDip.pantoneCode || 'Unknown Color'}</span>
+        </div>
+        <div class="colorway-validation-status">
+          <span class="colorway-validation-progress" id="colorway-progress-${garmentId}-${labDip.id}">0%</span>
+          <div class="colorway-validation-indicator"></div>
+        </div>
+      </div>
+      <div class="colorway-validation-details">
+        <span class="colorway-validation-text" id="colorway-text-${garmentId}-${labDip.id}">Calculating...</span>
+        <div class="colorway-validation-bar">
+          <div class="colorway-validation-fill" id="colorway-fill-${garmentId}-${labDip.id}" style="width: 0%"></div>
+        </div>
+      </div>
+    `;
+    
+    return card;
+  }
+
+  updateColorwayMinimums(garmentId, assignedLabDips) {
+    const garment = V10_State.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorwayCount = assignedLabDips.length;
+    const productionType = this.quantityCalculator.determineProductionType(garment);
+    
+    // Calculate per-colorway minimum
+    const minimumPerColorway = this.quantityCalculator.getMinimumQuantity(
+      colorwayCount, 
+      productionType, 
+      garment.type
+    );
+    
+    // Update minimum display in garment header
+    const minimumElement = document.querySelector(`[data-garment-id="${garmentId}"] #minimum-required`);
+    if (minimumElement && colorwayCount > 1) {
+      minimumElement.textContent = `Min: ${minimumPerColorway} per colorway (${minimumPerColorway * colorwayCount} total)`;
+    }
+    
+    // Store colorway minimums for validation
+    assignedLabDips.forEach(labDip => {
+      this.storeColorwayMinimum(garmentId, labDip.id, minimumPerColorway);
+    });
+  }
+
+  storeColorwayMinimum(garmentId, colorwayId, minimum) {
+    // Store in validation state for reference
+    const key = `${garmentId}-${colorwayId}`;
+    V10_State.quantities.colorwayMinimums.set(key, minimum);
+  }
+
+  getColorwayMinimum(garmentId, colorwayId) {
+    const key = `${garmentId}-${colorwayId}`;
+    return V10_State.quantities.colorwayMinimums?.get(key) || 0;
+  }
+
+  updateColorwayValidation(garmentId, colorwayId) {
+    const colorwayData = this.getColorwayQuantityData(garmentId, colorwayId);
+    const minimumRequired = this.getColorwayMinimum(garmentId, colorwayId);
+    const currentTotal = colorwayData.total;
+    const progress = minimumRequired > 0 ? Math.min((currentTotal / minimumRequired) * 100, 100) : 0;
+    
+    this.updateColorwayValidationCard(garmentId, colorwayId, {
+      currentTotal,
+      minimumRequired,
+      progress,
+      status: this.getValidationStatus(progress, currentTotal, minimumRequired)
+    });
+    
+    // Update tab quantity
+    this.updateColorwayTabQuantity(garmentId, colorwayId, currentTotal);
+  }
+
+  updateColorwayValidationCard(garmentId, colorwayId, validationData = null) {
+    if (!validationData) {
+      // Calculate validation data
+      const colorwayData = this.getColorwayQuantityData(garmentId, colorwayId);
+      const minimumRequired = this.getColorwayMinimum(garmentId, colorwayId);
+      const currentTotal = colorwayData.total;
+      const progress = minimumRequired > 0 ? Math.min((currentTotal / minimumRequired) * 100, 100) : 0;
+      
+      validationData = {
+        currentTotal,
+        minimumRequired,
+        progress,
+        status: this.getValidationStatus(progress, currentTotal, minimumRequired)
+      };
+    }
+    
+    const { currentTotal, minimumRequired, progress, status } = validationData;
+    
+    // Update progress percentage
+    const progressElement = document.getElementById(`colorway-progress-${garmentId}-${colorwayId}`);
+    if (progressElement) {
+      progressElement.textContent = `${Math.round(progress)}%`;
+    }
+    
+    // Update validation text
+    const textElement = document.getElementById(`colorway-text-${garmentId}-${colorwayId}`);
+    if (textElement) {
+      if (currentTotal >= minimumRequired) {
+        textElement.textContent = `${currentTotal}/${minimumRequired} units (Complete)`;
+      } else {
+        textElement.textContent = `${currentTotal}/${minimumRequired} units (${minimumRequired - currentTotal} more needed)`;
+      }
+    }
+    
+    // Update progress bar
+    const fillElement = document.getElementById(`colorway-fill-${garmentId}-${colorwayId}`);
+    if (fillElement) {
+      fillElement.style.width = `${progress}%`;
+    }
+    
+    // Update card status class
+    const card = document.getElementById(`colorway-validation-${garmentId}-${colorwayId}`);
+    if (card) {
+      card.className = `colorway-validation-card colorway-validation-card--${status}`;
+    }
+  }
+
+  updateSizeInputsForColorway(garmentId, colorwayId) {
+    // This would be used in advanced implementations where each colorway
+    // has separate size distributions. For now, we use shared size inputs
+    // but could be extended to show colorway-specific inputs
+    
+    console.log(`🎨 Switched to colorway ${colorwayId} for garment ${garmentId}`);
+    
+    // Future enhancement: Show different size grids per colorway
+    // For now, we update the visual feedback to reflect the active colorway
+    this.updateColorwayValidation(garmentId, colorwayId);
+  }
+
+  updateAllColorwayValidations() {
+    // Update validation for all colorways across all garments
+    V10_State.garments.forEach((garment, garmentId) => {
+      const assignedLabDips = this.getAssignedLabDips(garmentId);
+      if (assignedLabDips.length > 1) {
+        assignedLabDips.forEach(labDip => {
+          this.updateColorwayValidation(garmentId, labDip.id);
+        });
+      }
+    });
+  }
+
+  // Enhanced validation update to include colorway validation
+  updateValidationMessages(garmentId) {
+    const messagesContainer = document.getElementById(`validation-messages-${garmentId}`);
+    if (!messagesContainer) return;
+    
+    const assignedLabDips = this.getAssignedLabDips(garmentId);
+    const messages = [];
+    
+    // Check colorway-specific validation if multiple colorways
+    if (assignedLabDips.length > 1) {
+      assignedLabDips.forEach(labDip => {
+        const colorwayData = this.getColorwayQuantityData(garmentId, labDip.id);
+        const minimumRequired = this.getColorwayMinimum(garmentId, labDip.id);
+        
+        if (colorwayData.total < minimumRequired) {
+          messages.push({
+            type: 'colorway_insufficient',
+            level: 'warning',
+            message: `${labDip.pantoneCode}: ${minimumRequired - colorwayData.total} more units needed`
+          });
+        }
+      });
+    }
+    
+    // Clear and update messages
+    messagesContainer.innerHTML = '';
+    messages.forEach(message => {
+      const messageCard = this.createValidationMessageCard(message);
+      messagesContainer.appendChild(messageCard);
+    });
   }
 
   createFallbackQuantityCard(garment, index) {
@@ -5755,22 +7753,8 @@ class V10_GarmentStudio {
   }
 
   applyPresetToGarment(garmentId, preset) {
-    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!card) return;
-    
-    const sizeInputs = card.querySelectorAll('.size-quantity-input, .quantity-input');
-    const presets = this.getPresetDistributions();
-    
-    if (presets[preset]) {
-      const distribution = presets[preset];
-      sizeInputs.forEach((input, index) => {
-        if (index < distribution.length) {
-          input.value = distribution[index];
-        }
-      });
-    }
-    
-    this.updateGarmentQuantityTotals(garmentId);
+    // Use the new quantity calculator for preset application
+    this.quantityCalculator.applyPresetToGarment(garmentId, preset);
   }
 
   getPresetDistributions() {
@@ -5897,6 +7881,37 @@ class V10_GarmentStudio {
     
     // Fallback - return empty array
     return [];
+  }
+
+  /**
+   * Update quantity data when user inputs values
+   */
+  updateGarmentQuantityFromInput(garmentId, sizeKey, quantity) {
+    // Get or create quantity data
+    let quantityData = V10_State.quantities.garments.get(garmentId) || {
+      sizes: {},
+      total: 0,
+      validation: {},
+      colorwayCount: this.quantityCalculator.getColorwayCount(garmentId)
+    };
+    
+    // Update the specific size
+    quantityData.sizes[sizeKey] = quantity;
+    
+    // Recalculate total
+    quantityData.total = Object.values(quantityData.sizes).reduce((sum, qty) => sum + (qty || 0), 0);
+    
+    // Update state
+    V10_State.quantities.garments.set(garmentId, quantityData);
+    
+    // Update garment total display
+    const totalElement = document.querySelector(`#garment-total-quantity-${garmentId}, #garment-total-${garmentId}`);
+    if (totalElement) {
+      totalElement.textContent = quantityData.total;
+    }
+    
+    // Update distribution preview
+    this.updateDistributionPreview(document.querySelector(`[data-garment-id="${garmentId}"]`), garmentId);
   }
 }
 
@@ -7114,6 +9129,53 @@ class V10_ReviewManager {
       });
     });
     console.log('🎯 Step 4: Edit buttons bound:', document.querySelectorAll('[data-edit-step]').length);
+    
+    // Bind Terms & Conditions modal
+    this.bindTermsModal();
+  }
+
+  bindTermsModal() {
+    const termsLink = document.getElementById('terms-link');
+    const termsModal = document.getElementById('terms-modal');
+    
+    if (termsLink && termsModal) {
+      termsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openTermsModal();
+      });
+      
+      // Bind close buttons
+      const closeButtons = termsModal.querySelectorAll('.v10-modal-close, .modal-close');
+      closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.closeTermsModal();
+        });
+      });
+      
+      // Bind overlay click
+      const overlay = termsModal.querySelector('.v10-modal-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', () => {
+          this.closeTermsModal();
+        });
+      }
+    }
+  }
+
+  openTermsModal() {
+    const modal = document.getElementById('terms-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeTermsModal() {
+    const modal = document.getElementById('terms-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   }
 
   goBackToStep(stepNumber) {
@@ -7278,6 +9340,13 @@ class V10_ReviewManager {
     if (!template) return;
 
     container.innerHTML = '';
+    
+    // Add grid class based on garment count
+    if (garments.length === 1) {
+      container.classList.add('single-garment');
+    } else {
+      container.classList.remove('single-garment');
+    }
 
     garments.forEach(garment => {
       const clone = template.content.cloneNode(true);
@@ -7290,20 +9359,31 @@ class V10_ReviewManager {
       const contentDiv = clone.querySelector('.review-garment-card__content');
 
       if (numberSpan) numberSpan.textContent = `Garment ${garment.number}`;
-      if (typeSpan) typeSpan.textContent = garment.type || 'No type selected';
+      if (typeSpan) {
+        // Build full garment name like Step 3
+        const fullGarmentName = this.buildFullGarmentName(garment);
+        typeSpan.textContent = fullGarmentName;
+      }
       
-      // Update color circle and name
+      // Update color circle and name with debugging
+      console.log(`🎨 DEBUG: Garment ${garment.number} assignedLabDips:`, garment.assignedLabDips);
+      
       if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
         const firstLabDipId = Array.from(garment.assignedLabDips)[0];
         const labDip = V10_State.labDips.get(firstLabDipId);
         
+        console.log(`🎨 DEBUG: Found labDip:`, labDip);
+        
         if (labDip && colorCircle && colorNameText) {
-          colorCircle.style.backgroundColor = labDip.hex;
-          colorNameText.textContent = labDip.pantone;
+          const hexColor = labDip.hex || '#ccc';
+          colorCircle.style.backgroundColor = hexColor;
+          colorNameText.textContent = labDip.pantone || 'Unknown Color';
+          console.log(`🎨 DEBUG: Set color ${hexColor} for ${labDip.pantone}`);
         }
       } else {
         if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
         if (colorNameText) colorNameText.textContent = 'No color assigned';
+        console.log(`🎨 DEBUG: No lab dips assigned to garment ${garment.number}`);
       }
       
       if (statusBadge) {
@@ -7321,21 +9401,45 @@ class V10_ReviewManager {
     });
   }
 
+  buildFullGarmentName(garment) {
+    // Build full garment name like: "Hoodie with Design (pedro) - 18-1664 TPX 100% Organic Cotton Brushed Fleece"
+    const clientData = this.getClientData();
+    const clientName = clientData.name || clientData.firstName || 'Client';
+    
+    let name = garment.type || 'Unknown Garment';
+    
+    // Add assigned items info
+    const hasLabDips = garment.assignedLabDips && garment.assignedLabDips.size > 0;
+    const hasDesigns = garment.assignedDesigns && garment.assignedDesigns.size > 0;
+    
+    if (hasDesigns) {
+      name += ' with Design';
+    }
+    
+    // Add client name
+    name += ` (${clientName})`;
+    
+    // Add lab dip info and fabric type
+    if (hasLabDips) {
+      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
+      const labDip = V10_State.labDips.get(firstLabDipId);
+      if (labDip && labDip.pantone) {
+        name += ` - ${labDip.pantone}`;
+      }
+    }
+    
+    if (garment.fabricType) {
+      name += ` ${garment.fabricType}`;
+    }
+    
+    return name;
+  }
+
   buildGarmentDetails(garment) {
     const requestType = V10_State.requestType;
     let details = '';
 
-    // Fabric type (for quotation/sample)
-    if (garment.fabricType && ['quotation', 'sample-request'].includes(requestType)) {
-      details += `
-        <div class="review-garment-detail">
-          <span class="detail-label">Fabric:</span>
-          <span class="detail-value">${garment.fabricType}</span>
-        </div>
-      `;
-    }
-
-    // Sample type (for sample requests)
+    // Sample type (for sample requests) - this is the main detail to show
     if (garment.sampleType && requestType === 'sample-request') {
       const sampleTypeLabels = {
         'stock': 'Stock Color Sample (€35)',
@@ -7412,16 +9516,18 @@ class V10_ReviewManager {
       }
     });
 
-    // Render only standalone lab dips as fabric swatches
+    // Render only standalone lab dips using the working collection-item structure
     if (standaloneLabDips.length === 0) {
       standaloneContainer.innerHTML = '<p class="empty-message">No fabric swatches available</p>';
     } else {
       standaloneContainer.innerHTML = standaloneLabDips.map(labDip => `
-        <div class="review-fabric-swatch">
-          <div class="fabric-swatch-color" style="background-color: ${labDip.hex};"></div>
-          <div class="fabric-swatch-info">
-            <div class="fabric-swatch-name">${labDip.pantone}</div>
-            <div class="fabric-swatch-label">LAB DIP</div>
+        <div class="collection-item">
+          <div class="collection-item__visual">
+            <div class="collection-item__color" style="background-color: ${labDip.hex || '#ccc'};"></div>
+          </div>
+          <div class="collection-item__content">
+            <span class="collection-item__name">${labDip.pantone}</span>
+            <span class="collection-item__type">LAB DIP</span>
           </div>
         </div>
       `).join('');
@@ -7776,10 +9882,20 @@ class V10_ReviewManager {
 
   // Helper methods
   getClientData() {
-    // Get real client data from V10_State or form inputs
-    const clientData = {};
+    // Try to get from Step 1 client manager first
+    if (window.v10ClientManager) {
+      const realClientData = window.v10ClientManager.getClientData();
+      if (realClientData && Object.keys(realClientData).length > 0) {
+        return {
+          company: realClientData.company || realClientData.Company || 'Not provided',
+          name: realClientData.firstName || realClientData.name || realClientData.Name || 'Not provided',
+          email: realClientData.email || realClientData.Email || 'Not provided'
+        };
+      }
+    }
     
-    // Try to get from form inputs first
+    // Try to get from form inputs as fallback
+    const clientData = {};
     const companyInput = document.querySelector('input[name="company"], #company');
     const nameInput = document.querySelector('input[name="firstName"], #firstName');
     const emailInput = document.querySelector('input[name="email"], #email');
@@ -7788,19 +9904,41 @@ class V10_ReviewManager {
     if (nameInput) clientData.name = nameInput.value;
     if (emailInput) clientData.email = emailInput.value;
     
-    // If no form data, use default sample data
+    // If no real data, use default sample data
     return {
       company: clientData.company || 'Sample Company',
-      name: clientData.name || 'John Doe',
-      email: clientData.email || 'john@example.com'
+      name: clientData.name || 'John Doe', 
+      email: clientData.email || 'office@genuineblanks.com'
     };
   }
 
   getUploadedFiles() {
-    // Check for real uploaded files first (you can implement real file tracking later)
-    // For now, return sample data if there are garments (indicating user has progressed)
-    const garments = Array.from(V10_State.garments.values());
+    // Try to get from Step 2 file manager first
+    if (window.v10FileManager) {
+      const realFiles = window.v10FileManager.getUploadedFiles ? 
+        window.v10FileManager.getUploadedFiles() : [];
+      
+      if (realFiles && realFiles.length > 0) {
+        return realFiles;
+      }
+    }
     
+    // Try to get from localStorage/sessionStorage as fallback
+    try {
+      const storedFiles = localStorage.getItem('v10_uploaded_files') || 
+                         sessionStorage.getItem('v10_uploaded_files');
+      if (storedFiles) {
+        const parsedFiles = JSON.parse(storedFiles);
+        if (parsedFiles && parsedFiles.length > 0) {
+          return parsedFiles;
+        }
+      }
+    } catch (error) {
+      console.warn('Could not parse stored files:', error);
+    }
+    
+    // Fallback: if user has progressed to Step 4, show sample files
+    const garments = Array.from(V10_State.garments.values());
     if (garments.length > 0) {
       return [
         { name: 'TechPack_Design.pdf', size: 2048576, type: 'application/pdf' },
