@@ -317,7 +317,8 @@
 
 /* Premium Terms Modal - Performance Optimized */
 .v10-terms-premium {
-  max-width: 1200px;
+  width: 1200px !important;
+  max-width: 95vw !important;
   max-height: 85vh;
   background: var(--v10-bg-tertiary);
   border: 1px solid var(--v10-border-primary);
@@ -462,17 +463,38 @@
   font-size: var(--v10-text-base);
 }
 
-/* Terms Sections - Two Column Layout */
-.v10-terms-sections {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--v10-space-4) var(--v10-space-6);
+/* Terms Sections - Two Column Layout - FORCE GRID */
+.v10-terms-premium .v10-terms-sections {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: var(--v10-space-4) var(--v10-space-6) !important;
   margin-top: var(--v10-space-4);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.v10-terms-section--full-width {
-  grid-column: 1 / -1;
+.v10-terms-premium .v10-terms-section--full-width {
+  grid-column: 1 / -1 !important;
 }
+
+/* Flexbox Fallback for Grid Support Issues */
+.v10-terms-premium .v10-terms-sections.flexbox-fallback {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: var(--v10-space-4) !important;
+}
+
+.v10-terms-premium .v10-terms-sections.flexbox-fallback .v10-terms-section {
+  flex: 1 1 calc(50% - var(--v10-space-2)) !important;
+  min-width: calc(50% - var(--v10-space-2)) !important;
+}
+
+.v10-terms-premium .v10-terms-sections.flexbox-fallback .v10-terms-section--full-width {
+  flex: 1 1 100% !important;
+  min-width: 100% !important;
+}
+
+/* Clean production styles - debug outlines removed */
 
 .v10-terms-section {
   background: var(--v10-bg-secondary);
@@ -832,8 +854,21 @@
   background: var(--v10-accent-secondary);
 }
 
-/* Mobile Responsive Terms */
-@media (max-width: 768px) {
+/* Desktop Grid - Ensure it works on larger screens */
+@media (min-width: 992px) {
+  .v10-terms-premium .v10-terms-sections {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--v10-space-4) var(--v10-space-6) !important;
+  }
+  
+  .v10-terms-premium .v10-terms-section--full-width {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Tablet and Mobile Responsive Terms */
+@media (max-width: 991px) {
   .v10-terms-premium {
     max-width: calc(100vw - 1rem);
     margin: 0.5rem;
@@ -862,13 +897,14 @@
   }
   
   /* Mobile: Single column layout */
-  .v10-terms-sections {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
+  .v10-terms-premium .v10-terms-sections {
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-3) !important;
+    display: grid !important;
   }
   
-  .v10-terms-section--full-width {
-    grid-column: 1;
+  .v10-terms-premium .v10-terms-section--full-width {
+    grid-column: 1 !important;
   }
   
   .v10-terms-intro-card {

@@ -433,6 +433,11 @@ const V10_Registration = {
       this.termsModal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
       
+      // Force grid layout check and fallback
+      setTimeout(() => {
+        this.ensureGridLayout();
+      }, 100);
+      
       // Focus trap
       const focusableElements = this.termsModal.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -576,6 +581,45 @@ const V10_Registration = {
         this.submitButton.style.cursor = 'not-allowed';
       }
     }
+  },
+  
+  // Ensure grid layout is working properly
+  ensureGridLayout() {
+    const termsModal = document.getElementById('v10-terms-modal');
+    const sectionsContainer = termsModal?.querySelector('.v10-terms-sections');
+    
+    if (!sectionsContainer) return;
+    
+    // Check if grid is working by measuring container width vs section widths
+    const containerWidth = sectionsContainer.offsetWidth;
+    const sections = sectionsContainer.querySelectorAll('.v10-terms-section:not(.v10-terms-section--full-width)');
+    
+    if (sections.length >= 2) {
+      const firstSection = sections[0];
+      const secondSection = sections[1];
+      
+      // If sections are not side by side (same top position), grid isn't working
+      const firstTop = firstSection.offsetTop;
+      const secondTop = secondSection.offsetTop;
+      const sideBySide = Math.abs(firstTop - secondTop) < 10; // Allow 10px tolerance
+      
+      if (!sideBySide) {
+        console.log('Grid layout not working, applying flexbox fallback');
+        sectionsContainer.classList.add('flexbox-fallback');
+        
+        // Force layout recalculation
+        sectionsContainer.style.display = 'none';
+        sectionsContainer.offsetHeight; // Trigger reflow
+        sectionsContainer.style.display = '';
+      } else {
+        console.log('Grid layout working correctly');
+      }
+    }
+    
+    // Debug info
+    console.log('Modal width:', termsModal?.offsetWidth);
+    console.log('Container width:', containerWidth);
+    console.log('Number of sections:', sections.length);
   }
 };
 
