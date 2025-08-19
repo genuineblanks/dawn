@@ -4464,6 +4464,30 @@ body[class*="techpack"] *,
   display: none !important;
 }
 
+/* Fix mouse cursors for disabled sample type cards */
+.sample-type-card--restricted,
+.sample-type-card[style*="pointer-events: none"] {
+  cursor: not-allowed !important;
+}
+
+.sample-type-card--restricted *,
+.sample-type-card[style*="pointer-events: none"] * {
+  cursor: not-allowed !important;
+}
+
+/* Finalize Edit Button States */
+.garment-card__finalize--changed {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: white !important;
+}
+
+.garment-card__finalize--changed:hover {
+  background: #22c55e !important;
+  border-color: #22c55e !important;
+  color: white !important;
+}
+
 .garment-quantity-form {
   margin-bottom: var(--v10-space-6);
 }

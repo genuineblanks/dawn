@@ -3704,6 +3704,14 @@ class V10_GarmentStudio {
       e.stopPropagation();
       const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
       this.toggleSelection(widget);
+    } else if (e.target.closest('.compact-radio-card')) {
+      // Handle re-selection of already selected items
+      const radioInput = e.target.closest('.compact-radio-card').querySelector('input[type="radio"]');
+      if (radioInput && radioInput.checked) {
+        // Force trigger change event even if already selected
+        console.log('🔄 Re-selecting already selected option:', radioInput.value);
+        radioInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     }
   }
 
@@ -3734,6 +3742,9 @@ class V10_GarmentStudio {
       
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
+      
+      // Mark finalize button as changed
+      this.markEditButtonAsChanged(garmentCard);
     }
 
     // Handle fabric type change (compact and regular)
@@ -3755,6 +3766,9 @@ class V10_GarmentStudio {
       
       // Reset sample type selection
       this.resetSampleTypeSelection(garmentCard);
+      
+      // Mark finalize button as changed
+      this.markEditButtonAsChanged(garmentCard);
     }
 
     // Handle sample type change
@@ -3778,6 +3792,9 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.updateGarmentStatus(garmentId);
       }, 100);
+      
+      // Mark finalize button as changed
+      this.markEditButtonAsChanged(garmentCard);
     }
 
     // Handle sample reference change (bulk orders)
@@ -4147,6 +4164,14 @@ class V10_GarmentStudio {
     }
   }
 
+  markEditButtonAsChanged(garmentCard) {
+    const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+    if (finalizeBtn) {
+      finalizeBtn.classList.add('garment-card__finalize--changed');
+      console.log('🟠 Finalize button marked as changed');
+    }
+  }
+
   finalizeGarmentEdit(garmentId) {
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
     const garmentData = V10_State.garments.get(garmentId);
@@ -4155,10 +4180,11 @@ class V10_GarmentStudio {
     // Clear edit mode flag
     garmentData.isInEditMode = false;
     
-    // Hide finalize edit button
+    // Hide finalize edit button and reset its state
     const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
     if (finalizeBtn) {
       finalizeBtn.style.display = 'none';
+      finalizeBtn.classList.remove('garment-card__finalize--changed');
     }
     
     // Update the garment's completion status and UI
@@ -4702,10 +4728,24 @@ class V10_GarmentStudio {
     if (fabricPlaceholder) {
       fabricPlaceholder.style.cursor = 'pointer';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
+      
       if (placeholderText) {
         placeholderText.textContent = 'Select fabric type';
       }
+      
+      // Update icon to fabric icon instead of garment icon
+      if (placeholderIcon) {
+        placeholderIcon.innerHTML = this.getFabricPlaceholderIcon();
+      }
     }
+  }
+
+  getFabricPlaceholderIcon() {
+    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none"/>
+    </svg>`;
   }
 
   resetFabricSelection(garmentCard) {
