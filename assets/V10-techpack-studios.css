@@ -2694,56 +2694,7 @@ body[class*="techpack"] *,
   align-items: center;
 }
 
-.techpack-help-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-2) var(--v10-space-4);
-  background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: var(--v10-radius-md);
-  color: var(--v10-accent-warning);
-  font-size: var(--v10-text-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--v10-transition);
-}
-
-.techpack-help-btn:hover {
-  background: rgba(245, 158, 11, 0.2);
-  transform: translateY(-1px);
-}
-
-/* Secondary Button Style (Quick Guide) */
-.techpack-help-btn--secondary {
-  background: rgba(163, 163, 163, 0.1);
-  border-color: rgba(163, 163, 163, 0.2);
-  color: var(--v10-accent-primary);
-}
-
-.techpack-help-btn--secondary:hover {
-  background: rgba(163, 163, 163, 0.2);
-  transform: translateY(-1px);
-}
-
-.techpack-help-btn--warning {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.2);
-  color: var(--v10-accent-warning);
-}
-
-@media (max-width: 768px) {
-  .studio-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--v10-space-4);
-  }
-  
-  .techpack-help-btn {
-    align-self: stretch;
-    justify-content: center;
-  }
-}
+/* Old techpack-help-btn styles removed - replaced with unified controls */
 
 /* ==============================================
    COMPACT SELECTION INTERFACE - REMOVED DUPLICATES
@@ -5064,44 +5015,107 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
 
 .step3-control-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: var(--v10-space-8);
   padding: var(--v10-space-4);
   background: var(--v10-bg-secondary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  gap: var(--v10-space-4);
 }
 
-.step3-control-left,
-.step3-control-right {
+.v10-unified-controls {
   display: flex;
   align-items: center;
+  gap: 0;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: 2px;
+  box-shadow: var(--v10-shadow-lg);
+  transition: var(--v10-transition);
 }
 
-.step3-control-center {
+.v10-unified-btn {
   display: flex;
   align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  white-space: nowrap;
+  min-width: 120px;
   justify-content: center;
-  flex: 1;
 }
 
-/* Mobile responsiveness for control bar */
+.v10-unified-btn:hover {
+  background: var(--v10-bg-hover);
+  transform: translateY(-1px);
+}
+
+.v10-unified-btn--guide {
+  color: var(--v10-text-secondary);
+  border-right: 1px solid var(--v10-border-primary);
+}
+
+.v10-unified-btn--guide:hover {
+  background: rgba(163, 163, 163, 0.1);
+  color: var(--v10-text-primary);
+}
+
+.v10-unified-btn--visual {
+  color: #ea580c;
+  border-left: 1px solid var(--v10-border-primary);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.v10-unified-btn--visual:hover {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.v10-unified-theme-section {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 160px;
+}
+
+.v10-unified-theme-section .v10-theme-btn {
+  min-width: 80px;
+}
+
+/* Mobile responsiveness for unified control bar */
 @media (max-width: 768px) {
-  .step3-control-bar {
+  .v10-unified-controls {
     flex-direction: column;
-    gap: var(--v10-space-3);
+    gap: var(--v10-space-2);
+    width: 100%;
+    max-width: 300px;
   }
   
-  .step3-control-center {
+  .v10-unified-theme-section {
     order: -1;
-    flex: none;
+    min-width: auto;
+    width: 100%;
   }
   
-  .step3-control-left,
-  .step3-control-right {
+  .v10-unified-btn {
+    min-width: auto;
+    width: 100%;
     justify-content: center;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: 1px solid var(--v10-border-primary);
+  }
+  
+  .v10-unified-btn:last-child {
+    border-bottom: none;
   }
 }
 
