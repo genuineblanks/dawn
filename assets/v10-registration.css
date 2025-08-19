@@ -1,0 +1,540 @@
+/* ====================================================
+   V10 REGISTRATION - PREMIUM NEUTRAL THEME
+   Sophisticated grey tones with orange accents
+   ==================================================== */
+
+/* ==============================================
+   CSS CUSTOM PROPERTIES - PREMIUM NEUTRAL PALETTE
+   ============================================== */
+
+:root {
+  /* Premium Grey Scale - Light Mode */
+  --v10-reg-bg-primary: #f8f9fa;          /* Light grey background */
+  --v10-reg-bg-secondary: #f3f4f6;        /* Slightly darker grey */
+  --v10-reg-bg-tertiary: #ffffff;         /* White for cards */
+  --v10-reg-bg-card: #ffffff;             /* Card backgrounds */
+  --v10-reg-bg-input: #f9fafb;            /* Input backgrounds */
+  --v10-reg-bg-hover: #f3f4f6;            /* Hover states */
+  --v10-reg-bg-active: #e5e7eb;           /* Active states */
+  
+  /* Premium Orange Accent */
+  --v10-reg-accent-orange: #f97316;       /* Premium orange */
+  --v10-reg-accent-orange-dark: #ea580c;  /* Darker orange for hover */
+  --v10-reg-accent-orange-light: #fed7aa; /* Light orange for backgrounds */
+  
+  /* Neutral Text Colors */
+  --v10-reg-text-primary: #374151;        /* Dark grey text */
+  --v10-reg-text-secondary: #6b7280;      /* Medium grey text */
+  --v10-reg-text-muted: #9ca3af;          /* Light grey text */
+  --v10-reg-text-disabled: #d1d5db;       /* Disabled text */
+  
+  /* Border Colors */
+  --v10-reg-border-primary: #e5e7eb;      /* Light grey borders */
+  --v10-reg-border-secondary: #d1d5db;    /* Lighter borders */
+  --v10-reg-border-focus: #f97316;        /* Orange focus */
+  --v10-reg-border-error: #ef4444;        /* Error red */
+  
+  /* Shadows - Subtle depth */
+  --v10-reg-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --v10-reg-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --v10-reg-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --v10-reg-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --v10-reg-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --v10-reg-shadow-focus: 0 0 0 3px rgba(249, 115, 22, 0.2);
+  
+  /* Glass Morphism */
+  --v10-reg-glass-bg: rgba(255, 255, 255, 0.95);
+  --v10-reg-glass-border: rgba(0, 0, 0, 0.05);
+  --v10-reg-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --v10-reg-backdrop-blur: blur(10px);
+}
+
+/* Dark Theme Variables - Premium Dark Greys */
+[data-theme="dark"] {
+  /* Premium Dark Grey Scale */
+  --v10-reg-bg-primary: #1f2937;          /* Dark grey background */
+  --v10-reg-bg-secondary: #111827;        /* Darker grey */
+  --v10-reg-bg-tertiary: #374151;         /* Medium grey for cards */
+  --v10-reg-bg-card: #374151;             /* Card backgrounds */
+  --v10-reg-bg-input: #4b5563;            /* Input backgrounds */
+  --v10-reg-bg-hover: #4b5563;            /* Hover states */
+  --v10-reg-bg-active: #6b7280;           /* Active states */
+  
+  /* Premium Orange Accent (same in dark) */
+  --v10-reg-accent-orange: #f97316;       /* Premium orange */
+  --v10-reg-accent-orange-dark: #fb923c;  /* Lighter orange for dark mode */
+  --v10-reg-accent-orange-light: rgba(249, 115, 22, 0.1); /* Orange glow */
+  
+  /* Neutral Text Colors for Dark */
+  --v10-reg-text-primary: #f3f4f6;        /* Light grey text */
+  --v10-reg-text-secondary: #d1d5db;      /* Medium light grey */
+  --v10-reg-text-muted: #9ca3af;          /* Muted grey */
+  --v10-reg-text-disabled: #6b7280;       /* Disabled text */
+  
+  /* Border Colors for Dark */
+  --v10-reg-border-primary: #4b5563;      /* Grey borders */
+  --v10-reg-border-secondary: #6b7280;    /* Lighter grey borders */
+  --v10-reg-border-focus: #f97316;        /* Orange focus */
+  --v10-reg-border-error: #ef4444;        /* Error red */
+  
+  /* Shadows for Dark Theme */
+  --v10-reg-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --v10-reg-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --v10-reg-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --v10-reg-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --v10-reg-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --v10-reg-shadow-focus: 0 0 0 3px rgba(249, 115, 22, 0.3);
+  
+  /* Glass Morphism for Dark */
+  --v10-reg-glass-bg: rgba(55, 65, 81, 0.95);
+  --v10-reg-glass-border: rgba(255, 255, 255, 0.05);
+  --v10-reg-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ==============================================
+   REGISTRATION PAGE LAYOUT
+   ============================================== */
+
+.v10-registration-page {
+  min-height: 100vh;
+  background: var(--v10-reg-bg-primary);
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.v10-registration-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+/* Theme Toggle Buttons */
+.v10-theme-toggle-wrapper {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+  background: var(--v10-reg-glass-bg);
+  padding: 0.5rem;
+  border-radius: 50px;
+  backdrop-filter: var(--v10-reg-backdrop-blur);
+  border: 1px solid var(--v10-reg-glass-border);
+  box-shadow: var(--v10-reg-shadow-md);
+}
+
+.v10-theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--v10-reg-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v10-theme-btn:hover {
+  background: var(--v10-reg-bg-hover);
+  color: var(--v10-reg-text-primary);
+}
+
+.v10-theme-btn.active {
+  background: var(--v10-reg-accent-orange);
+  color: white;
+  border-color: var(--v10-reg-accent-orange);
+}
+
+[data-theme="light"] .v10-theme-btn--light,
+[data-theme="dark"] .v10-theme-btn--dark {
+  background: var(--v10-reg-accent-orange);
+  color: white;
+  border-color: var(--v10-reg-accent-orange);
+}
+
+/* Registration Card */
+.v10-registration-card {
+  background: var(--v10-reg-bg-card);
+  border-radius: 12px;
+  box-shadow: var(--v10-reg-shadow-xl);
+  border: 1px solid var(--v10-reg-border-primary);
+  overflow: hidden;
+  backdrop-filter: var(--v10-reg-backdrop-blur);
+}
+
+/* Header Section */
+.v10-registration-header {
+  background: linear-gradient(135deg, var(--v10-reg-bg-secondary) 0%, var(--v10-reg-bg-primary) 100%);
+  padding: 3rem 3rem;
+  text-align: center;
+  border-bottom: 1px solid var(--v10-reg-border-primary);
+  position: relative;
+}
+
+.v10-registration-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--v10-reg-accent-orange), transparent);
+}
+
+.v10-registration-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--v10-reg-text-primary);
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.025em;
+}
+
+.v10-registration-subtitle {
+  font-size: 1rem;
+  color: var(--v10-reg-text-secondary);
+  margin: 0;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Form Styles */
+.v10-registration-form {
+  padding: 3rem;
+}
+
+.v10-form-section {
+  margin-bottom: 2.5rem;
+}
+
+.v10-form-section:last-of-type {
+  margin-bottom: 2rem;
+}
+
+.v10-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--v10-reg-text-primary);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--v10-reg-border-primary);
+  position: relative;
+}
+
+.v10-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--v10-reg-accent-orange);
+}
+
+/* Form Grid */
+.v10-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.v10-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.v10-form-group--full {
+  grid-column: span 2;
+}
+
+.v10-form-group--half {
+  grid-column: span 1;
+}
+
+/* Form Labels */
+.v10-form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--v10-reg-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.v10-form-label.required::after {
+  content: ' *';
+  color: var(--v10-reg-accent-orange);
+  font-weight: 400;
+}
+
+/* Form Inputs */
+.v10-form-input,
+.v10-form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--v10-reg-bg-input);
+  border: 1px solid var(--v10-reg-border-primary);
+  border-radius: 6px;
+  color: var(--v10-reg-text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.v10-form-input::placeholder {
+  color: var(--v10-reg-text-muted);
+  font-size: 0.875rem;
+}
+
+.v10-form-input:focus,
+.v10-form-select:focus {
+  border-color: var(--v10-reg-accent-orange);
+  box-shadow: var(--v10-reg-shadow-focus);
+  background: var(--v10-reg-bg-card);
+}
+
+.v10-form-input:hover,
+.v10-form-select:hover {
+  border-color: var(--v10-reg-border-secondary);
+}
+
+/* Form Helper Text */
+.v10-form-helper {
+  font-size: 0.75rem;
+  color: var(--v10-reg-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Form Row for City/State/Postal */
+.v10-form-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.v10-form-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Select Styling */
+.v10-form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* Terms Section */
+.v10-terms-section {
+  background: var(--v10-reg-bg-secondary);
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--v10-reg-border-primary);
+}
+
+.v10-checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.v10-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--v10-reg-accent-orange);
+  cursor: pointer;
+}
+
+.v10-checkbox-label {
+  font-size: 0.875rem;
+  color: var(--v10-reg-text-primary);
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.v10-terms-link {
+  color: var(--v10-reg-accent-orange);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.v10-terms-link:hover {
+  color: var(--v10-reg-accent-orange-dark);
+}
+
+/* Form Actions */
+.v10-form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+/* Submit Button */
+.v10-btn--submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, var(--v10-reg-accent-orange) 0%, var(--v10-reg-accent-orange-dark) 100%);
+  color: white;
+  border: 1px solid var(--v10-reg-accent-orange);
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+}
+
+.v10-btn--submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.v10-btn--submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35);
+}
+
+.v10-btn--submit:hover::before {
+  left: 100%;
+}
+
+.v10-btn--submit:active {
+  transform: translateY(0);
+}
+
+.v10-btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Error Styles */
+.v10-form-errors {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.v10-error-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.v10-error-icon {
+  flex-shrink: 0;
+}
+
+.v10-error-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.v10-error-list li {
+  padding: 0.25rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .v10-registration-container {
+    padding: 1rem;
+  }
+  
+  .v10-theme-toggle-wrapper {
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .v10-registration-header {
+    padding: 2rem 1.5rem;
+  }
+  
+  .v10-registration-title {
+    font-size: 1.5rem;
+  }
+  
+  .v10-registration-form {
+    padding: 1.5rem;
+  }
+  
+  .v10-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .v10-form-group--half,
+  .v10-form-group--full {
+    grid-column: span 1;
+  }
+  
+  .v10-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .v10-btn--submit {
+    width: 100%;
+  }
+}
+
+/* Loading State */
+.v10-registration-form.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.v10-btn--submit.loading {
+  position: relative;
+}
+
+.v10-btn--submit.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid transparent;
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
