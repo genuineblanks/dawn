@@ -7974,7 +7974,8 @@ class V10_FileManager {
     this.setupUploadZone();
     this.setupMeasurementRequirements();
     this.setupNavigation();
-    this.loadSavedFiles();
+    // Step 2 files no longer loaded from localStorage
+    // this.loadSavedFiles();
     this.updateConditionalSections();
   }
 
@@ -8504,8 +8505,7 @@ class V10_FileManager {
       // User should start fresh with checkboxes on each app entry
     };
     
-    localStorage.setItem('v10_step2_data', JSON.stringify(data));
-    
+    // Step 2 data no longer saved to localStorage - only kept in memory
     // Update global state if available
     if (window.V10_State) {
       V10_State.fileData = data;
@@ -8527,6 +8527,10 @@ class V10_FileManager {
   }
 
   loadSavedFiles() {
+    // Step 2 files no longer loaded from localStorage
+    return;
+    
+    /* Disabled localStorage loading for Step 2
     const savedData = localStorage.getItem('v10_step2_data');
     if (!savedData) return;
     
@@ -8731,7 +8735,8 @@ class V10_FileManager {
   }
 
   getFileData() {
-    return JSON.parse(localStorage.getItem('v10_step2_data') || '{}');
+    // Return from global state instead of localStorage
+    return window.V10_State?.fileData || {};
   }
 }
 
