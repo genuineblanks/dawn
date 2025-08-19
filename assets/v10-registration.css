@@ -411,29 +411,27 @@
   transform: scale(1.05);
 }
 
-/* Enhanced Modal Body - Optimized */
+/* Enhanced Modal Body - Clean */
 .v10-terms-body {
-  padding: var(--v10-space-4) var(--v10-space-6);
+  padding: var(--v10-space-6);
   overflow-y: auto;
   max-height: calc(85vh - 180px);
-  line-height: 1.6;
+  line-height: 1.5;
   contain: layout;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  background: var(--v10-bg-primary);
 }
 
-/* Introduction Card - Simplified */
+/* Introduction Card - Centered & Simplified */
 .v10-terms-intro-card {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--v10-space-3);
+  display: block;
   background: var(--v10-accent-primary);
   color: white;
-  padding: var(--v10-space-5);
-  border-radius: var(--v10-radius-lg);
-  margin-bottom: var(--v10-space-6);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  text-align: left;
+  padding: var(--v10-space-4);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-4);
+  text-align: center;
 }
 
 .v10-terms-intro-icon {
@@ -463,18 +461,28 @@
   font-size: var(--v10-text-base);
 }
 
-/* Terms Sections - Two Column Layout - FORCE GRID */
+/* Terms Sections - Clean Two Column Layout */
 .v10-terms-premium .v10-terms-sections {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: var(--v10-space-4) var(--v10-space-6) !important;
-  margin-top: var(--v10-space-4);
+  gap: var(--v10-space-6) var(--v10-space-8) !important;
+  margin-top: var(--v10-space-6);
   width: 100%;
   box-sizing: border-box;
 }
 
 .v10-terms-premium .v10-terms-section--full-width {
   grid-column: 1 / -1 !important;
+  text-align: center;
+}
+
+.v10-terms-section--full-width .v10-terms-section-header {
+  justify-content: center;
+}
+
+.v10-terms-section--full-width .v10-terms-section-content {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* Flexbox Fallback for Grid Support Issues */
@@ -497,44 +505,32 @@
 /* Clean production styles - debug outlines removed */
 
 .v10-terms-section {
-  background: var(--v10-bg-secondary);
-  border-radius: var(--v10-radius-lg);
-  border: 1px solid var(--v10-border-primary);
-  overflow: hidden;
-  transition: var(--v10-transition);
+  background: transparent;
+  border-radius: var(--v10-radius-md);
+  border: none;
+  overflow: visible;
 }
 
-.v10-terms-section:hover {
-  border-color: var(--v10-border-focus);
-  box-shadow: var(--v10-shadow-sm);
-}
+/* Removed hover effects for cleaner look */
 
-.v10-terms-section--final {
-  border-color: var(--v10-accent-primary);
-  border-width: 2px;
-}
+/* Removed special final section styling */
 
-/* Section Headers - Compact */
+/* Section Headers - Simplified */
 .v10-terms-section-header {
   display: flex;
   align-items: center;
   gap: var(--v10-space-3);
-  padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-hover);
-  border-bottom: 1px solid var(--v10-border-primary);
+  padding: var(--v10-space-3) 0;
+  background: transparent;
+  border-bottom: 1px solid rgba(var(--v10-border-primary-rgb, 75, 85, 99), 0.2);
+  margin-bottom: var(--v10-space-3);
 }
 
 .v10-terms-section-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--v10-radius-md);
-  background: var(--v10-accent-primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--v10-accent-primary);
   flex-shrink: 0;
-  box-shadow: var(--v10-shadow-sm);
 }
 
 /* Icon Color Variations */
@@ -557,9 +553,9 @@
   opacity: 0.9;
 }
 
-/* Section Content - Compact */
+/* Section Content - Clean */
 .v10-terms-section-content {
-  padding: var(--v10-space-4);
+  padding: 0;
 }
 
 .v10-terms-section-content p {
@@ -573,57 +569,36 @@
   margin-bottom: 0;
 }
 
-/* Enhanced Lists - Compact */
+/* Clean Lists */
 .v10-terms-list {
   margin: var(--v10-space-2) 0;
-  padding: 0;
-  list-style: none;
+  padding-left: var(--v10-space-4);
+  list-style: disc;
 }
 
 .v10-terms-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--v10-space-2);
   padding: var(--v10-space-1) 0;
-  color: var(--v10-text-primary);
+  color: var(--v10-text-secondary);
   line-height: 1.4;
   font-size: var(--v10-text-sm);
 }
 
-.v10-terms-list li::before {
-  content: '•';
-  color: var(--v10-accent-primary);
-  font-weight: bold;
-  font-size: 1.2em;
-  line-height: 1;
-  margin-top: 2px;
-  flex-shrink: 0;
-}
+/* Removed complex bullet styling */
 
-/* Special Content Cards - Compact */
+/* Simplified Highlight Cards */
 .v10-terms-highlight {
   display: flex;
   align-items: flex-start;
   gap: var(--v10-space-2);
-  background: rgba(249, 115, 22, 0.1);
-  border: 1px solid rgba(249, 115, 22, 0.3);
-  border-radius: var(--v10-radius-md);
+  background: rgba(249, 115, 22, 0.05);
+  border-left: 3px solid #f97316;
+  border-radius: var(--v10-radius-sm);
   padding: var(--v10-space-3);
   margin: var(--v10-space-2) 0;
   color: var(--v10-text-primary);
-  position: relative;
-  overflow: hidden;
 }
 
-.v10-terms-highlight::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: #f97316;
-}
+/* Removed complex pseudo-elements */
 
 .v10-terms-highlight-icon {
   width: 18px;
@@ -642,56 +617,25 @@
 .v10-terms-warning-card,
 .v10-terms-liability-card,
 .v10-terms-jurisdiction-card {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--v10-space-2);
-  background: var(--v10-bg-tertiary);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: var(--v10-radius-md);
+  display: block;
+  background: rgba(var(--v10-bg-secondary-rgb, 55, 65, 81), 0.3);
+  border-radius: var(--v10-radius-sm);
   padding: var(--v10-space-3);
   margin: var(--v10-space-2) 0;
-  position: relative;
-  overflow: hidden;
 }
 
-.v10-terms-responsibility-card::before,
-.v10-terms-liability-card::before,
-.v10-terms-jurisdiction-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: var(--v10-accent-primary);
-}
+/* Removed complex pseudo-elements */
 
-.v10-terms-card-icon {
-  width: 18px;
-  height: 18px;
-  color: var(--v10-accent-primary);
-  flex-shrink: 0;
-  margin-top: 1px;
-}
+/* Simplified - removed separate card icons */
 
-.v10-terms-card-content {
-  flex: 1;
-}
+/* Simplified card content structure */
 
 .v10-terms-warning-card {
   background: rgba(239, 68, 68, 0.05);
   border-color: rgba(239, 68, 68, 0.2);
 }
 
-.v10-terms-warning-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: #ef4444;
-}
+/* Removed complex pseudo-elements */
 
 .v10-terms-warning-card .v10-terms-card-icon {
   color: #ef4444;
@@ -732,49 +676,51 @@
   margin: var(--v10-space-3) 0;
 }
 
-/* Agreement Section */
+/* Agreement Section - Centered */
 .v10-terms-agreement {
   margin-top: var(--v10-space-4);
   padding-top: var(--v10-space-4);
-  border-top: 2px solid var(--v10-border-primary);
+  border-top: 1px solid rgba(var(--v10-border-primary-rgb, 75, 85, 99), 0.2);
+  text-align: center;
 }
 
 .v10-terms-agreement-card {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-4);
-  background: rgba(5, 150, 105, 0.1);
-  border: 2px solid rgba(5, 150, 105, 0.3);
-  border-radius: var(--v10-radius-lg);
+  justify-content: center;
+  gap: var(--v10-space-3);
+  background: rgba(5, 150, 105, 0.05);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
-  text-align: left;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .v10-terms-agreement-icon {
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   background: var(--v10-accent-success, #10b981);
-  border-radius: var(--v10-radius-md);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .v10-terms-agreement-text h4 {
-  font-size: var(--v10-text-lg);
+  font-size: var(--v10-text-base);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-2) 0;
-  letter-spacing: -0.025em;
+  margin: 0;
 }
 
 .v10-terms-agreement-text p {
   margin: 0;
   color: var(--v10-text-secondary);
-  line-height: 1.5;
+  line-height: 1.4;
   font-size: var(--v10-text-sm);
 }
 
