@@ -4464,6 +4464,7 @@ class V10_GarmentStudio {
     V10_State.assignments.labDips.get(labDipId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
+    this.updateGarmentStatus(garmentId);
     
     // Update garment summary instantly
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
@@ -4491,6 +4492,7 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
+    this.updateGarmentStatus(garmentId);
     
     // Update garment summary instantly
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
@@ -4516,6 +4518,7 @@ class V10_GarmentStudio {
     V10_State.assignments.designs.get(designId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
+    this.updateGarmentStatus(garmentId);
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
@@ -4534,6 +4537,7 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
+    this.updateGarmentStatus(garmentId);
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
