@@ -6432,9 +6432,29 @@ class V10_GarmentStudio {
     container.appendChild(responsiveGrid);
     
     // Get all garments that have been configured in Garment Studio
-    const completedGarments = Array.from(V10_State.garments.values()).filter(garment => 
-      garment.type && (garment.sampleReference || garment.fabricType)
-    );
+    // For bulk orders, we only need the garment type to be selected
+    const requestType = V10_State.requestType;
+    const completedGarments = Array.from(V10_State.garments.values()).filter(garment => {
+      if (requestType === 'bulk-order-request') {
+        // For bulk orders, just need garment type
+        return garment.type;
+      } else {
+        // For samples, need type and either sample reference or fabric
+        return garment.type && (garment.sampleReference || garment.fabricType);
+      }
+    });
+    
+    // Debug logging to understand garment state
+    console.log(`📊 Populating Quantity Studio:`);
+    console.log(`   Request type: ${requestType}`);
+    console.log(`   Total garments in state: ${V10_State.garments.size}`);
+    console.log(`   Garments with type: ${Array.from(V10_State.garments.values()).filter(g => g.type).length}`);
+    console.log(`   Ready for quantities: ${completedGarments.length}`);
+    
+    // Log each garment's state for debugging
+    V10_State.garments.forEach((garment, id) => {
+      console.log(`   Garment ${garment.number || id}: type=${garment.type}, fabric=${garment.fabricType}, sample=${garment.sampleReference}`);
+    });
     
     if (completedGarments.length === 0) {
       responsiveGrid.innerHTML = `
@@ -6475,7 +6495,13 @@ class V10_GarmentStudio {
     this.initializeValidationSystem();
     
     // Update totals and stats using new calculator
-    this.quantityCalculator.calculateAndUpdateProgress();
+    if (this.quantityCalculator) {
+      this.quantityCalculator.calculateAndUpdateProgress();
+    } else {
+      console.warn('⚠️ Quantity calculator not initialized, attempting to create...');
+      this.quantityCalculator = new V10_QuantityCalculator();
+      this.quantityCalculator.calculateAndUpdateProgress();
+    }
     
     // Generate initial validation cards
     this.updateAllValidationCards();
@@ -6604,8 +6630,10 @@ class V10_GarmentStudio {
       input.id = `qty-${size}-${garment.id}`;
       
       const sizeCard = sizeInputCards[index];
-      const percentageElement = sizeCard?.querySelector(`#${size}-percentage`);
-      const barElement = sizeCard?.querySelector(`#${size}-bar`);
+      // Fix for 3xl IDs that start with numbers
+      const sizeIdPrefix = size === '3xl' ? 'threexl' : size;
+      const percentageElement = sizeCard?.querySelector(`#${sizeIdPrefix}-percentage`);
+      const barElement = sizeCard?.querySelector(`#${sizeIdPrefix}-bar`);
       
       // Enhanced event listeners with real-time feedback
       input.addEventListener('input', (e) => {
@@ -7673,26 +7701,43 @@ class V10_GarmentStudio {
   }
 
   switchQuantityMode(mode) {
+    console.log(`🔄 Attempting to switch to ${mode} mode`);
+    
     // Update toggle buttons
     document.querySelectorAll('.studio-toggle__btn').forEach(btn => {
-      btn.classList.toggle('studio-toggle__btn--active', btn.dataset.mode === mode);
+      const isActive = btn.dataset.mode === mode;
+      btn.classList.toggle('studio-toggle__btn--active', isActive);
+      console.log(`Button ${btn.dataset.mode}: ${isActive ? 'active' : 'inactive'}`);
     });
     
-    // Update mode containers
-    document.querySelectorAll('.quantities-mode').forEach(container => {
-      const isActive = container.id === `${mode}-mode-content`;
-      container.classList.toggle('quantities-mode--active', isActive);
-      container.style.display = isActive ? 'block' : 'none';
-    });
+    // Get mode containers
+    const sizesContent = document.getElementById('sizes-mode-content');
+    const distributionContent = document.getElementById('distribution-mode-content');
     
-    // Handle mode-specific functionality
-    if (mode === 'distribution') {
-      this.initializeDistributionAnalytics();
-    } else if (mode === 'sizes') {
+    // Update visibility based on mode
+    if (mode === 'sizes') {
+      if (sizesContent) {
+        sizesContent.style.display = 'block';
+        sizesContent.classList.add('quantities-mode--active');
+      }
+      if (distributionContent) {
+        distributionContent.style.display = 'none';
+        distributionContent.classList.remove('quantities-mode--active');
+      }
       this.hideLegacyCharts();
+    } else if (mode === 'distribution') {
+      if (sizesContent) {
+        sizesContent.style.display = 'none';
+        sizesContent.classList.remove('quantities-mode--active');
+      }
+      if (distributionContent) {
+        distributionContent.style.display = 'block';
+        distributionContent.classList.add('quantities-mode--active');
+      }
+      this.initializeDistributionAnalytics();
     }
     
-    console.log(`🔄 Switched to ${mode} mode`);
+    console.log(`✅ Successfully switched to ${mode} mode`);
   }
 
   /**
