@@ -4350,6 +4350,11 @@ class V10_GarmentStudio {
       this.updateAssignedDisplay(newVariant.id);
       this.updateGarmentStatus(newVariant.id);
       
+      // Update studio completion status after variant creation
+      this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateDesignCompletionBadge();
+      
       console.log(`🎨 Created color variant: ${newVariant.id} from ${originalGarmentId} with lab dip ${newLabDipId}`);
       return newVariant.id;
     }
@@ -4434,9 +4439,14 @@ class V10_GarmentStudio {
       const variantId = this.createColorVariant(garmentId, labDipId);
       
       if (variantId) {
-        // Update design studio tab and badge
-        window.v10GarmentStudio.updateDesignStudioTabStatus();
-        V10_BadgeManager.updateDesignCompletionBadge();
+        // Force comprehensive status update for all components
+        setTimeout(() => {
+          this.updateStudioCompletion();
+          this.updateDesignStudioTabStatus();
+          V10_BadgeManager.updateDesignCompletionBadge();
+          console.log(`🔄 Forced comprehensive status update after color variant creation`);
+        }, 100);
+        
         console.log(`✅ Created color variant ${variantId} with lab dip ${labDipId}`);
       }
       return;
@@ -4458,9 +4468,12 @@ class V10_GarmentStudio {
       this.updateGarmentSummary(garmentCard, garmentData);
     }
     
-    // Update design studio tab and badge
-    window.v10GarmentStudio.updateDesignStudioTabStatus();
-    V10_BadgeManager.updateDesignCompletionBadge();
+    // Force comprehensive status update for all components
+    setTimeout(() => {
+      this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateDesignCompletionBadge();
+    }, 50);
   }
 
   unassignLabDip(garmentId, labDipId) {
@@ -5811,6 +5824,11 @@ class V10_DesignStudio {
       if (item) item.remove();
 
       this.updateCollectionCounts();
+      
+      // Update studio completion status after lab dip removal
+      window.v10GarmentStudio.updateStudioCompletion();
+      window.v10GarmentStudio.updateDesignStudioTabStatus();
+      V10_BadgeManager.updateDesignCompletionBadge();
   
       console.log(`🗑️ Removed lab dip: ${labDipId}`);
     }
@@ -5868,7 +5886,9 @@ class V10_DesignStudio {
 
     // Show/hide tip message based on lab dip count
     if (labDipsTip) {
-      labDipsTip.style.display = labDipCount >= 2 ? 'block' : 'none';
+      const shouldShowTip = labDipCount >= 2;
+      labDipsTip.style.display = shouldShowTip ? 'block' : 'none';
+      console.log(`💡 Tip message: ${shouldShowTip ? 'SHOWN' : 'HIDDEN'} (lab dip count: ${labDipCount})`);
     }
   }
 
