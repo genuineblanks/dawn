@@ -6696,6 +6696,15 @@ class V10_ReviewManager {
     console.log('🎯 V10_State garments:', V10_State.garments.size);
     console.log('🎯 V10_State requestType:', V10_State.requestType);
     
+    // IMMEDIATE element check at start of function
+    const studioContainer = document.getElementById('review-studio');
+    const step4Container = document.getElementById('techpack-v10-step-4');
+    console.log('🚨 TIMING CHECK: populateReview() start');
+    console.log('  - Studio container exists:', !!studioContainer);
+    console.log('  - Step 4 container exists:', !!step4Container);
+    console.log('  - Step 4 display style:', step4Container?.style.display);
+    console.log('  - DOM ready state:', document.readyState);
+    
     // Ensure assignments structure exists (safety check)
     if (!V10_State.assignments) {
       V10_State.assignments = {
@@ -6715,6 +6724,17 @@ class V10_ReviewManager {
     this.updateSubmitMessage();
     
     console.log('🎯 Step 4: Review population completed');
+    
+    // Add a small delay to check if studio container appears after DOM updates
+    setTimeout(() => {
+      const delayedStudioCheck = document.getElementById('review-studio');
+      console.log('🚨 DELAYED CHECK: After 100ms');
+      console.log('  - Studio container now exists:', !!delayedStudioCheck);
+      if (delayedStudioCheck) {
+        console.log('  - Studio container classes:', delayedStudioCheck.className);
+        console.log('  - Studio container display:', window.getComputedStyle(delayedStudioCheck).display);
+      }
+    }, 100);
     
     // Check if elements are actually populated and visible
     const studioContainer = document.getElementById('review-studio');
