@@ -2722,6 +2722,10 @@ body[class*="techpack"] *,
   letter-spacing: 0.05em;
 }
 
+.studio-content {
+  padding: var(--v10-space-6);
+}
+
 .studio-header__badge--professional {
   background: rgba(163, 163, 163, 0.1);
   color: var(--v10-accent-primary);
