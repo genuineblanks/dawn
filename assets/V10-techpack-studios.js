@@ -3871,8 +3871,6 @@ class V10_GarmentStudio {
     // Handle garment collapse/expand based on completion status
     this.updateGarmentCollapsedState(garmentCard, garmentData, isComplete);
 
-    // Update assigned items display
-    this.updateAssignedDisplay(garmentId);
     
     // Check and update overall studio completion status
     this.updateStudioCompletion();
@@ -4213,84 +4211,6 @@ class V10_GarmentStudio {
     }, 150);
   }
 
-  updateAssignedDisplay(garmentId) {
-    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!garmentCard) return;
-
-    const garmentData = V10_State.garments.get(garmentId);
-    const assignedLabDips = garmentCard.querySelector('#assigned-labdips');
-    const assignedDesigns = garmentCard.querySelector('#assigned-designs');
-
-    // Update lab dips badges
-    if (assignedLabDips) {
-      assignedLabDips.innerHTML = Array.from(garmentData.assignedLabDips).map(labDipId => {
-        const labDip = V10_State.labDips.get(labDipId);
-        if (!labDip) return '';
-        
-        return `
-          <div class="assigned-badge assigned-badge--labdip">
-            <div class="assigned-badge__color" style="background-color: ${labDip.hex};"></div>
-            <span class="pantone-display" data-pantone="${labDip.pantone}">${labDip.pantone}</span>
-            <button type="button" class="assigned-badge__remove" data-remove-labdip="${labDipId}">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Update design badges
-    if (assignedDesigns) {
-      assignedDesigns.innerHTML = Array.from(garmentData.assignedDesigns).map(designId => {
-        const design = V10_State.designSamples.get(designId);
-        if (!design) return '';
-        
-        return `
-          <div class="assigned-badge assigned-badge--design">
-            <span>${design.name} (${design.type})</span>
-            <button type="button" class="assigned-badge__remove" data-remove-design="${designId}">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Bind remove events
-    garmentCard.querySelectorAll('[data-remove-labdip]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const labDipId = e.target.closest('[data-remove-labdip]').dataset.removeLabdip;
-        this.unassignLabDip(garmentId, labDipId);
-      });
-    });
-
-    garmentCard.querySelectorAll('[data-remove-design]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const designId = e.target.closest('[data-remove-design]').dataset.removeDesign;
-        this.unassignDesign(garmentId, designId);
-      });
-    });
-
-    // Update all Pantone displays with proper color names
-    garmentCard.querySelectorAll('.pantone-display').forEach(pantoneSpan => {
-      const pantoneCode = pantoneSpan.dataset.pantone;
-      if (pantoneCode) {
-        V10_Utils.getPantoneColorName(pantoneCode).then(colorDisplayName => {
-          if (colorDisplayName !== pantoneCode) {
-            pantoneSpan.textContent = colorDisplayName;
-          }
-        }).catch(error => {
-          console.warn('Failed to lookup Pantone name for badge:', error);
-        });
-      }
-    });
-  }
 
   removeGarment(garmentId) {
     try {
@@ -4522,7 +4442,6 @@ class V10_GarmentStudio {
     }
     V10_State.assignments.labDips.get(labDipId).add(garmentId);
 
-    this.updateAssignedDisplay(garmentId);
     this.updateGarmentStatus(garmentId);
     
     // Update garment summary instantly
@@ -4550,7 +4469,6 @@ class V10_GarmentStudio {
       V10_State.assignments.labDips.get(labDipId).delete(garmentId);
     }
 
-    this.updateAssignedDisplay(garmentId);
     this.updateGarmentStatus(garmentId);
     
     // Update garment summary instantly
@@ -4576,7 +4494,6 @@ class V10_GarmentStudio {
     }
     V10_State.assignments.designs.get(designId).add(garmentId);
 
-    this.updateAssignedDisplay(garmentId);
     this.updateGarmentStatus(garmentId);
     
     // Update design studio tab and badge
@@ -4595,7 +4512,6 @@ class V10_GarmentStudio {
       V10_State.assignments.designs.get(designId).delete(garmentId);
     }
 
-    this.updateAssignedDisplay(garmentId);
     this.updateGarmentStatus(garmentId);
     
     // Update design studio tab and badge
