@@ -3778,6 +3778,15 @@ class V10_GarmentStudio {
     // Handle sample type change
     if (e.target.name.includes('sampleType')) {
       garmentData.sampleType = e.target.value;
+      
+      // Trigger status update and collapse logic immediately when sample type changes
+      console.log(`🎨 Sample type changed to: ${e.target.value} for garment ${garmentId}`);
+      
+      // Force status update to evaluate completion and trigger collapse
+      setTimeout(() => {
+        this.updateGarmentStatus(garmentId);
+        console.log(`✅ Status updated after sample type change for garment ${garmentId}`);
+      }, 100);
     }
 
     // Handle sample reference change (bulk orders)
@@ -3830,6 +3839,7 @@ class V10_GarmentStudio {
     }
 
     // Handle garment collapse/expand based on completion status
+    console.log(`🔄 Updating collapse state for garment ${garmentId}: complete=${isComplete}, sampleType=${garmentData.sampleType}, hasLabDips=${garmentData.assignedLabDips?.size || 0}`);
     this.updateGarmentCollapsedState(garmentCard, garmentData, isComplete);
 
     // Update assigned items display
@@ -3935,7 +3945,19 @@ class V10_GarmentStudio {
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
-    if (!summaryContainer || !contentContainer) return;
+    console.log(`🔍 updateGarmentCollapsedState called for garment ${garmentData.id}:`, {
+      isComplete,
+      isInEditMode: garmentData.isInEditMode,
+      sampleType: garmentData.sampleType,
+      hasLabDips: garmentData.assignedLabDips?.size || 0,
+      hasSummaryContainer: !!summaryContainer,
+      hasContentContainer: !!contentContainer
+    });
+    
+    if (!summaryContainer || !contentContainer) {
+      console.warn(`⚠️ Missing containers for garment ${garmentData.id}`);
+      return;
+    }
 
     // Don't auto-collapse if in edit mode - keep form open for editing
     if (garmentData.isInEditMode) {
@@ -3945,20 +3967,23 @@ class V10_GarmentStudio {
       return;
     }
 
-    // Normal auto-collapse behavior for new garments
-    if (isComplete) {
+    // Normal auto-collapse behavior - collapse if complete OR if incomplete but basic info is filled
+    // This ensures custom samples without lab dips still collapse to show the warning message
+    const shouldCollapse = isComplete || (garmentData.type && garmentData.fabricType && garmentData.sampleType);
+    
+    if (shouldCollapse) {
       // Show summary, hide content
       summaryContainer.style.display = 'block';
       contentContainer.style.display = 'none';
       
       // Update summary content
       this.updateGarmentSummary(garmentCard, garmentData);
-      console.log(`✅ Garment ${garmentData.id} auto-collapsed (complete)`);
+      console.log(`✅ Garment ${garmentData.id} collapsed (complete: ${isComplete}, shouldCollapse: ${shouldCollapse})`);
     } else {
       // Show content, hide summary
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
-      console.log(`📝 Garment ${garmentData.id} showing form (incomplete)`);
+      console.log(`📝 Garment ${garmentData.id} showing form (incomplete, basic info missing)`);
     }
   }
 
@@ -4111,6 +4136,32 @@ class V10_GarmentStudio {
     
     // Update the garment's completion status and UI
     this.updateGarmentStatus(garmentId);
+    
+    // Force collapse state update after finalizing edit
+    // This ensures garments collapse properly regardless of completion status
+    setTimeout(() => {
+      const updatedGarmentData = V10_State.garments.get(garmentId);
+      const updatedGarmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      
+      if (updatedGarmentCard && updatedGarmentData) {
+        // Determine completion status for final collapse check
+        const requestType = V10_State.requestType || 'sample-request';
+        let isComplete = false;
+        
+        if (requestType === 'sample-request') {
+          const basicComplete = updatedGarmentData.type && updatedGarmentData.fabricType && updatedGarmentData.sampleType;
+          if (basicComplete && updatedGarmentData.sampleType === 'custom') {
+            isComplete = updatedGarmentData.assignedLabDips && updatedGarmentData.assignedLabDips.size > 0;
+          } else {
+            isComplete = basicComplete;
+          }
+        }
+        
+        // Force collapse regardless of completion status when finalizing edit
+        this.updateGarmentCollapsedState(updatedGarmentCard, updatedGarmentData, isComplete);
+        console.log(`🔄 Forced collapse update after finalize edit for garment ${garmentId}, complete: ${isComplete}`);
+      }
+    }, 150);
     
     console.log(`✅ Finalized edit for garment ${garmentId}`);
   }
