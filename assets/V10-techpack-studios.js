@@ -3795,8 +3795,9 @@ class V10_GarmentStudio {
         this.updateGarmentStatus(garmentId);
       }, 100);
       
-      // Mark finalize button as changed
+      // Mark finalize button as changed and clear any sample type highlighting
       this.markEditButtonAsChanged(garmentCard);
+      this.highlightRequiredSampleTypes(garmentCard); // This will clear highlights since sample type is now selected
     }
 
     // Handle sample reference change (bulk orders)
@@ -4168,16 +4169,91 @@ class V10_GarmentStudio {
 
   markEditButtonAsChanged(garmentCard) {
     const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+    const garmentId = garmentCard.dataset.garmentId;
+    const isValid = this.validateGarmentRequirements(garmentId);
+    
     if (finalizeBtn) {
       finalizeBtn.classList.add('garment-card__finalize--changed');
-      console.log('🟠 Finalize button marked as changed');
+      
+      if (isValid) {
+        finalizeBtn.classList.remove('garment-card__finalize--invalid');
+        finalizeBtn.classList.add('garment-card__finalize--valid');
+        console.log('🟠 Finalize button marked as changed and valid');
+      } else {
+        finalizeBtn.classList.remove('garment-card__finalize--valid');
+        finalizeBtn.classList.add('garment-card__finalize--invalid');
+        this.highlightRequiredSampleTypes(garmentCard);
+        console.log('🔴 Finalize button marked as changed but invalid');
+      }
     }
+  }
+
+  validateGarmentRequirements(garmentId) {
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentData) return false;
+
+    const requestType = V10_State.requestType;
+    
+    if (requestType === 'sample-request') {
+      // For sample requests: garment type, fabric type, and sample type required
+      const hasBasicRequirements = garmentData.type && garmentData.fabricType && garmentData.sampleType;
+      
+      // If custom sample type, also need lab dip assignment
+      if (garmentData.sampleType === 'custom') {
+        return hasBasicRequirements && garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+      }
+      
+      return hasBasicRequirements;
+    } else if (requestType === 'bulk-order-request') {
+      // For bulk orders: garment type and sample reference required
+      return garmentData.type && garmentData.sampleReference;
+    }
+    
+    return false;
+  }
+
+  highlightRequiredSampleTypes(garmentCard) {
+    const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
+    const garmentId = garmentCard.dataset.garmentId;
+    const garmentData = V10_State.garments.get(garmentId);
+    
+    if (!garmentData || garmentData.sampleType) {
+      // Remove highlights if sample type is already selected
+      sampleTypeCards.forEach(card => {
+        card.classList.remove('sample-type-card--required');
+      });
+      return;
+    }
+    
+    // Add red border to available sample type options
+    sampleTypeCards.forEach(card => {
+      if (!card.classList.contains('sample-type-card--restricted')) {
+        card.classList.add('sample-type-card--required');
+      }
+    });
+    
+    console.log('🔴 Highlighted required sample type selection');
   }
 
   finalizeGarmentEdit(garmentId) {
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentCard || !garmentData) return;
+
+    // Validate requirements before allowing finalize
+    if (!this.validateGarmentRequirements(garmentId)) {
+      console.log('❌ Cannot finalize: Missing required fields');
+      this.highlightRequiredSampleTypes(garmentCard);
+      // Flash the button to indicate invalid state
+      const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+      if (finalizeBtn) {
+        finalizeBtn.classList.add('garment-card__finalize--flash');
+        setTimeout(() => {
+          finalizeBtn.classList.remove('garment-card__finalize--flash');
+        }, 1000);
+      }
+      return;
+    }
 
     // Clear edit mode flag
     garmentData.isInEditMode = false;
@@ -4744,7 +4820,40 @@ class V10_GarmentStudio {
   }
 
   getFabricPlaceholderIcon() {
-    return '🧵';
+    // Return a generic fabric/textile icon for the placeholder
+    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2L8 6v4l4 4 4-4V6z"/><circle cx="12" cy="8" r="2"/><path d="M8 14v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4"/></svg>';
+  }
+
+  getGarmentIcon(garmentType) {
+    // Return appropriate SVG icon for each garment type
+    switch(garmentType) {
+      case 'T-Shirt':
+      case 'Long Sleeve T-Shirt':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
+      case 'Hoodie':
+      case 'Zip-Up Hoodie':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M7 3v4l5-4 5 4V3"/><path d="M7 15h10v6H7z"/></svg>';
+      case 'Sweatshirt':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 8.5l-2-1-1.5-6.5H6.5L5 7.5l-2 1L3 12l2 .5V21h14v-8.5l2-.5z"/></svg>';
+      case 'Tank Top':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4a4 4 0 0 1 10 0v2l4 1v14H3V7l4-1V4z"/></svg>';
+      case 'Polo Shirt':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/><path d="M8 7h8v2H8z"/></svg>';
+      case 'Shirt':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/><path d="M6 7h12v1H6z"/></svg>';
+      case 'Shorts':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 2h7l1.5 5-2 7H9l-2-7z"/><path d="M6 14v6h4v-6"/><path d="M14 14v6h4v-6"/></svg>';
+      case 'Sweatpants':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 2h7v5l-1 13H10L9 7z"/><path d="M6 15v6h4v-6"/><path d="M14 15v6h4v-6"/></svg>';
+      case 'Hat/Cap':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8 2 5 5 5 9c0 1 0 3 2 3h10c2 0 2-2 2-3 0-4-3-7-7-7z"/><path d="M5 12c-2 0-3 1-3 3h20c0-2-1-3-3-3"/></svg>';
+      case 'Beanie':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8.5 2 5.5 4.5 5.5 7.5S8.5 13 12 13s6.5-2.5 6.5-5.5S15.5 2 12 2z"/><path d="M5.5 11.5C3.5 11.5 2 13 2 15h20c0-2-1.5-3.5-3.5-3.5"/></svg>';
+      case 'Other':
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+      default:
+        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
+    }
   }
 
   resetFabricSelection(garmentCard) {
