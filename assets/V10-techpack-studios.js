@@ -6696,24 +6696,12 @@ class V10_ReviewManager {
     console.log('🎯 V10_State garments:', V10_State.garments.size);
     console.log('🎯 V10_State requestType:', V10_State.requestType);
     
-    // Ensure we have a request type set for testing
-    if (!V10_State.requestType) {
-      V10_State.requestType = 'sample';
-      console.log('🎯 Setting default request type: sample');
-    }
-    
-    // Add a test garment if none exist (for testing purposes)
-    if (V10_State.garments.size === 0) {
-      const testGarmentId = 'test-garment-1';
-      V10_State.garments.set(testGarmentId, {
-        id: testGarmentId,
-        number: 1,
-        type: 'T-Shirt',
-        fabric: '100% Organic Cotton',
-        sampleType: 'stock',
-        isComplete: true
-      });
-      console.log('🎯 Added test garment for review display');
+    // Ensure assignments structure exists (safety check)
+    if (!V10_State.assignments) {
+      V10_State.assignments = {
+        labDips: new Map(),
+        designs: new Map()
+      };
     }
     
     this.populateClientInfo();
@@ -6890,7 +6878,7 @@ class V10_ReviewManager {
       details += '<div class="review-garment-assigned">';
       
       // Assigned lab dips
-      if (garment.assignedLabDips.size > 0) {
+      if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
         details += '<div class="assigned-group">';
         details += '<span class="assigned-label">Colors:</span>';
         Array.from(garment.assignedLabDips).forEach(labDipId => {
@@ -6903,7 +6891,7 @@ class V10_ReviewManager {
       }
 
       // Assigned designs
-      if (garment.assignedDesigns.size > 0) {
+      if (garment.assignedDesigns && garment.assignedDesigns.size > 0) {
         details += '<div class="assigned-group">';
         details += '<span class="assigned-label">Designs:</span>';
         Array.from(garment.assignedDesigns).forEach(designId => {
