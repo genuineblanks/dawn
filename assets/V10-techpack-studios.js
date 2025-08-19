@@ -3230,6 +3230,7 @@ class V10_GarmentStudio {
     // Initial studio completion check
     setTimeout(() => {
       this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
     }, 100);
     
     this.initialized = true;
@@ -3300,6 +3301,7 @@ class V10_GarmentStudio {
 
       // Update studio completion status after adding garment
       this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
 
       console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
       return garmentId;
@@ -3769,7 +3771,15 @@ class V10_GarmentStudio {
     if (requestType === 'quotation') {
       isComplete = garmentData.type && garmentData.fabricType;
     } else if (requestType === 'sample-request') {
-      isComplete = garmentData.type && garmentData.fabricType && garmentData.sampleType;
+      // Basic completion: type, fabric, and sample type selected
+      const basicComplete = garmentData.type && garmentData.fabricType && garmentData.sampleType;
+      
+      // For custom samples, also require lab dip assignment
+      if (basicComplete && garmentData.sampleType === 'custom') {
+        isComplete = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+      } else {
+        isComplete = basicComplete;
+      }
     } else if (requestType === 'bulk-order-request') {
       isComplete = garmentData.type && garmentData.sampleReference;
     }
@@ -3790,7 +3800,8 @@ class V10_GarmentStudio {
     // Check and update overall studio completion status
     this.updateStudioCompletion();
     
-    // Update design studio completion badge
+    // Update design studio tab and badge
+    this.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -3830,6 +3841,55 @@ class V10_GarmentStudio {
       subtitleElement.textContent = `Incomplete (${completeCount}/${totalCount})`;
       garmentStudioTab.classList.add('studio-tab--incomplete');
       garmentStudioTab.classList.remove('studio-tab--complete');
+    }
+  }
+
+  // Update the Design Studio tab status indicator
+  updateDesignStudioTabStatus() {
+    const designStudioTab = document.getElementById('design-studio-tab');
+    if (!designStudioTab) return;
+
+    const subtitleElement = designStudioTab.querySelector('.studio-tab__subtitle');
+    if (!subtitleElement) return;
+
+    // Get all garments from state
+    const allGarments = Array.from(V10_State.garments.values());
+    
+    if (allGarments.length === 0) {
+      subtitleElement.textContent = 'Colors & samples';
+      designStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
+      return;
+    }
+    
+    // Count design requirements and fulfillments
+    let totalRequirements = 0;
+    let fulfilledRequirements = 0;
+    
+    allGarments.forEach(garment => {
+      // Check if garment has custom color requirement (needs lab dip)
+      if (garment.sampleType === 'custom') {
+        totalRequirements++;
+        if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+          fulfilledRequirements++;
+        }
+      }
+    });
+    
+    // Update tab based on completion status
+    if (totalRequirements === 0) {
+      // No design requirements = show default
+      subtitleElement.textContent = 'Colors & samples';
+      designStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
+    } else if (fulfilledRequirements === totalRequirements) {
+      // All requirements fulfilled = complete
+      subtitleElement.textContent = `Complete (${totalRequirements} assignments)`;
+      designStudioTab.classList.add('studio-tab--complete');
+      designStudioTab.classList.remove('studio-tab--incomplete');
+    } else {
+      // Some requirements unfulfilled = incomplete with fraction
+      subtitleElement.textContent = `Incomplete (${fulfilledRequirements}/${totalRequirements})`;
+      designStudioTab.classList.add('studio-tab--incomplete');
+      designStudioTab.classList.remove('studio-tab--complete');
     }
   }
 
@@ -3921,10 +3981,8 @@ class V10_GarmentStudio {
             const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
             if (hasLabDips) {
               statusMessage = 'Complete';
-              isComplete = true;
             } else {
               statusMessage = 'Color assignment required in Design Studio';
-              isComplete = false;
             }
             break;
           default:
@@ -4116,6 +4174,7 @@ class V10_GarmentStudio {
 
         // Update studio completion status after removal
         this.updateStudioCompletion();
+        this.updateDesignStudioTabStatus();
 
         // Remove from UI
         const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
@@ -4223,7 +4282,8 @@ class V10_GarmentStudio {
 
     this.updateAssignedDisplay(garmentId);
     
-    // Update design studio completion badge
+    // Update design studio tab and badge
+    window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -4239,7 +4299,8 @@ class V10_GarmentStudio {
 
     this.updateAssignedDisplay(garmentId);
     
-    // Update design studio completion badge
+    // Update design studio tab and badge
+    window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -4256,7 +4317,8 @@ class V10_GarmentStudio {
 
     this.updateAssignedDisplay(garmentId);
     
-    // Update design studio completion badge
+    // Update design studio tab and badge
+    window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
@@ -4272,7 +4334,8 @@ class V10_GarmentStudio {
 
     this.updateAssignedDisplay(garmentId);
     
-    // Update design studio completion badge
+    // Update design studio tab and badge
+    window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
   }
 
