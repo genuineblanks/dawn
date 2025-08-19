@@ -3101,6 +3101,44 @@ const V10_Utils = {
       console.error('Error checking fabric custom color capability:', error);
       return false;
     }
+  },
+
+  // Get Pantone color name from code using pantone-numbers.json
+  getPantoneColorName: async (pantoneCode) => {
+    try {
+      // Cache the pantone database to avoid repeated fetches
+      if (!window.V10_PANTONE_DATABASE) {
+        const response = await fetch('/assets/pantone-numbers.json');
+        if (!response.ok) {
+          console.warn('Could not load Pantone database:', response.statusText);
+          return pantoneCode; // Return original code if database unavailable
+        }
+        window.V10_PANTONE_DATABASE = await response.json();
+        console.log('✅ Pantone database loaded with', Object.keys(window.V10_PANTONE_DATABASE).length, 'colors');
+      }
+
+      // Remove common prefixes/suffixes and normalize the code
+      const normalizedCode = pantoneCode
+        .replace(/^(PANTONE\s*)?/i, '')
+        .replace(/\s*(TPX|TCX|C|U)$/i, '')
+        .trim();
+
+      // Look up the color in the database
+      const colorData = window.V10_PANTONE_DATABASE[normalizedCode];
+      if (colorData && colorData.name) {
+        // Capitalize the name properly
+        return colorData.name
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      }
+
+      // If not found, return the original code
+      return pantoneCode;
+    } catch (error) {
+      console.warn('Error looking up Pantone color name:', error);
+      return pantoneCode; // Return original code on error
+    }
   }
 };
 
@@ -3947,9 +3985,18 @@ class V10_GarmentStudio {
         colorCircle.style.backgroundColor = labDip.hex;
         colorCircle.style.display = 'inline-block';
         
-        // Show color name from pantone
-        colorName.textContent = labDip.pantone;
+        // Show color name from pantone (async lookup)
+        colorName.textContent = labDip.pantone; // Show code initially
         colorName.style.display = 'inline';
+        
+        // Async lookup for proper color name
+        V10_Utils.getPantoneColorName(labDip.pantone).then(colorDisplayName => {
+          if (colorDisplayName !== labDip.pantone) {
+            colorName.textContent = colorDisplayName;
+          }
+        }).catch(error => {
+          console.warn('Failed to lookup Pantone name:', error);
+        });
         
         // Ensure separator is visible
         if (separator) separator.style.display = 'inline';
@@ -4085,7 +4132,7 @@ class V10_GarmentStudio {
         return `
           <div class="assigned-badge assigned-badge--labdip">
             <div class="assigned-badge__color" style="background-color: ${labDip.hex};"></div>
-            <span>${labDip.pantone}</span>
+            <span class="pantone-display" data-pantone="${labDip.pantone}">${labDip.pantone}</span>
             <button type="button" class="assigned-badge__remove" data-remove-labdip="${labDipId}">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"/>
@@ -4130,6 +4177,20 @@ class V10_GarmentStudio {
         const designId = e.target.closest('[data-remove-design]').dataset.removeDesign;
         this.unassignDesign(garmentId, designId);
       });
+    });
+
+    // Update all Pantone displays with proper color names
+    garmentCard.querySelectorAll('.pantone-display').forEach(pantoneSpan => {
+      const pantoneCode = pantoneSpan.dataset.pantone;
+      if (pantoneCode) {
+        V10_Utils.getPantoneColorName(pantoneCode).then(colorDisplayName => {
+          if (colorDisplayName !== pantoneCode) {
+            pantoneSpan.textContent = colorDisplayName;
+          }
+        }).catch(error => {
+          console.warn('Failed to lookup Pantone name for badge:', error);
+        });
+      }
     });
   }
 
@@ -4282,6 +4343,12 @@ class V10_GarmentStudio {
 
     this.updateAssignedDisplay(garmentId);
     
+    // Update garment summary instantly
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (garmentCard) {
+      this.updateGarmentSummary(garmentCard, garmentData);
+    }
+    
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
@@ -4298,6 +4365,12 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
+    
+    // Update garment summary instantly
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (garmentCard) {
+      this.updateGarmentSummary(garmentCard, garmentData);
+    }
     
     // Update design studio tab and badge
     window.v10GarmentStudio.updateDesignStudioTabStatus();
