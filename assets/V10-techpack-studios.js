@@ -4222,9 +4222,11 @@ class V10_GarmentStudio {
       // For sample requests: garment type, fabric type, and sample type required
       const hasBasicRequirements = garmentData.type && garmentData.fabricType && currentSampleType;
       
-      // If custom sample type, also need lab dip assignment
+      // If custom sample type, lab dips are NOT required for edit finalization
+      // They can be assigned later in the lab dip studio
+      // The garment will still show as incomplete until lab dips are assigned
       if (currentSampleType === 'custom') {
-        return hasBasicRequirements && garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        return hasBasicRequirements;
       }
       
       return hasBasicRequirements;
