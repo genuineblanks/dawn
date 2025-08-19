@@ -244,9 +244,9 @@ const V10_CONFIG = {
 // ==============================================
 
 const V10_QUANTITY_CONFIG = {
-  // Production minimums (mapped from TechPack app constants)
+  // Production minimums - ONLY Custom Production for bulk orders
   minimums: {
-    ourBlanks: { single: 30, multiple: 20 },         // "Our Blanks" production
+    // Note: "Our Blanks" logic removed - bulk orders ONLY use Custom Production
     customHeavy: { single: 75, multiple: 50 },       // Custom production - heavy garments
     customLight: { single: 100, multiple: 75 }       // Custom production - light garments
   },
@@ -3309,20 +3309,14 @@ class V10_QuantityCalculator {
   // ==============================================
 
   /**
-   * Get minimum quantity based on colorway count, production type, and garment type
-   * Core business logic from TechPack app
+   * Get minimum quantity based on colorway count and garment type
+   * ONLY Custom Production logic for bulk orders
    */
   getMinimumQuantity(colorwayCount, productionType, garmentType) {
     colorwayCount = colorwayCount || 1;
     
-    // Our Blanks: Simple binary logic
-    if (productionType === 'our-blanks') {
-      return colorwayCount === 1 ? 
-        this.config.minimums.ourBlanks.single : 
-        this.config.minimums.ourBlanks.multiple;
-    }
-    
-    // Custom Production: Check if light garment (higher minimums)
+    // For bulk orders, ONLY use Custom Production minimums
+    // Check if light garment (higher minimums due to fabric costs)
     if (this.isLightGarment(garmentType)) {
       return colorwayCount === 1 ? 
         this.config.minimums.customLight.single : 
@@ -4352,8 +4346,11 @@ class V10_GarmentStudio {
   constructor() {
     // Singleton pattern - prevent multiple instances
     if (V10_GarmentStudio.instance) {
+      console.log('🔄 V10_GarmentStudio instance already exists, returning existing instance');
       return V10_GarmentStudio.instance;
     }
+    
+    console.log('🆕 Creating new V10_GarmentStudio instance');
     
     this.garmentsContainer = document.getElementById('garments-container');
     this.addGarmentBtn = document.getElementById('add-garment');
@@ -6483,10 +6480,19 @@ class V10_GarmentStudio {
     }
     
     // Generate enhanced quantity cards for each garment using responsive grid
+    console.log(`📦 Creating ${completedGarments.length} quantity cards...`);
     completedGarments.forEach((garment, index) => {
+      console.log(`   Creating card for garment ${index + 1}: ${garment.type} (ID: ${garment.id})`);
       const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
-      responsiveGrid.appendChild(quantityCard);
+      if (quantityCard) {
+        responsiveGrid.appendChild(quantityCard);
+        console.log(`   ✅ Card added for garment ${garment.id}`);
+      } else {
+        console.error(`   ❌ Failed to create card for garment ${garment.id}`);
+      }
     });
+    
+    console.log(`📦 Final responsive grid children count: ${responsiveGrid.children.length}`);
     
     // Initialize all quantity studio features
     this.initializeQuantityStudioFeatures();
@@ -6517,9 +6523,16 @@ class V10_GarmentStudio {
       return this.createFallbackQuantityCard(garment, index);
     }
     
+    console.log(`🔧 Template found, cloning for garment ${garment.id}`);
+    
     // Clone the template
     const cardElement = template.content.cloneNode(true);
     const card = cardElement.querySelector('.garment-quantity-card');
+    
+    if (!card) {
+      console.error('❌ .garment-quantity-card not found in template');
+      return this.createFallbackQuantityCard(garment, index);
+    }
     
     // Set garment ID
     card.dataset.garmentId = garment.id;

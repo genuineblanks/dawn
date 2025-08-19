@@ -47,8 +47,8 @@
    ============================================ */
 
 .garment-quantity-card {
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
+  background: rgb(var(--color-background));
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -114,12 +114,12 @@
 }
 
 .validation-text {
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-weight: 500;
 }
 
 .validation-percentage {
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   font-weight: 600;
 }
 
@@ -155,8 +155,8 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: var(--color-accent);
-  color: white;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
   border-radius: 8px;
 }
 
@@ -185,11 +185,11 @@
   margin: 0 0 0.5rem 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .garment-type {
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
 }
 
 .garment-fabric {
@@ -206,7 +206,7 @@
 }
 
 .minimum-required {
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   font-weight: 500;
 }
 
@@ -217,7 +217,7 @@
 .quantity-summary__value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   line-height: 1;
 }
 
@@ -275,7 +275,7 @@
 
 .colorway-selector__title {
   font-weight: 500;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .colorway-selector__count {
@@ -295,7 +295,7 @@
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 6px;
   font-size: 0.875rem;
   cursor: pointer;
@@ -303,13 +303,13 @@
 }
 
 .colorway-tab:hover {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .colorway-tab--active {
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   color: white;
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .colorway-tab__color {
@@ -324,7 +324,7 @@
    ============================================ */
 
 .responsive-size-grid {
-  background: var(--color-background);
+  background: rgb(var(--color-background));
 }
 
 .size-grid-header {
@@ -344,7 +344,7 @@
 
 .size-grid-title > span {
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .size-distribution-limits {
@@ -379,7 +379,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   color: white;
   border: none;
   border-radius: 6px;
@@ -430,7 +430,7 @@
 
 .size-input-card {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 8px;
   padding: 0.75rem 0.5rem;
   text-align: center;
@@ -440,7 +440,7 @@
 }
 
 .size-input-card:hover {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -459,7 +459,7 @@
 
 .size-label {
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-size: 0.875rem;
 }
 
@@ -475,7 +475,7 @@
 .size-quantity-input {
   width: 100%;
   padding: 0.5rem 0.25rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 4px;
   text-align: center;
   font-size: 0.875rem;
@@ -486,13 +486,13 @@
 
 .size-quantity-input:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .size-quantity-input:not(:placeholder-shown) {
   background: var(--color-accent-light);
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .size-input-card__bar {
@@ -504,7 +504,7 @@
 
 .size-bar-fill {
   height: 100%;
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   border-radius: 2px;
   transition: width 0.3s ease;
 }
@@ -539,7 +539,7 @@
 /* Colorway Validation Cards */
 .colorway-validation-card {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 0.75rem;
@@ -583,7 +583,7 @@
 
 .colorway-validation-name {
   font-weight: 500;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-size: 0.875rem;
 }
 
@@ -670,7 +670,7 @@
 
 .colorway-tab {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 6px;
   padding: 0.75rem;
   cursor: pointer;
@@ -683,14 +683,14 @@
 }
 
 .colorway-tab:hover {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .colorway-tab--active {
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   color: white;
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .colorway-tab__color {
@@ -767,19 +767,19 @@
    ============================================ */
 
 .size-input-card--focused {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   transform: translateY(-1px);
 }
 
 .size-input-card--active {
   background: var(--color-accent-light);
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .size-input-card--active .size-quantity-input {
   background: white;
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 /* ============================================
@@ -916,24 +916,24 @@
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .quick-action-btn:hover {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   background: var(--color-accent-light);
 }
 
 .quick-action-btn--preset {
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   color: white;
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
 }
 
 .quick-action-btn--preset:hover {
@@ -946,7 +946,7 @@
   left: 0;
   right: 0;
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 6px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   z-index: 10;
@@ -981,7 +981,7 @@
 .preset-name {
   display: block;
   font-weight: 500;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   margin-bottom: 0.25rem;
 }
 
@@ -1007,7 +1007,7 @@
   padding: 0.75rem;
   background: var(--color-background-secondary);
   border-radius: 6px;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
 }
 
 .summary-item {
@@ -1027,7 +1027,7 @@
 .summary-value {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
 }
 
 .summary-progress {
@@ -1046,7 +1046,7 @@
 
 .summary-progress-fill {
   height: 100%;
-  background: var(--color-accent);
+  background: rgb(var(--color-button));
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -1205,7 +1205,7 @@
   }
   50% {
     transform: scale(1.1);
-    color: var(--color-accent);
+    color: rgb(var(--color-button));
   }
   100% {
     transform: scale(1);
@@ -1272,7 +1272,7 @@
 
 .distribution-analytics-panel {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 12px;
   padding: 1.5rem;
   margin-top: 1rem;
@@ -1290,7 +1290,7 @@
 
 .analytics-header h4 {
   margin: 0;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-weight: 600;
 }
 
@@ -1312,7 +1312,7 @@
 .analytics-summary .metric strong {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .efficiency-complete strong {
@@ -1359,7 +1359,7 @@
 .bar-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   margin-top: 0.5rem;
 }
 
@@ -1386,7 +1386,7 @@
 
 .pattern-type {
   font-weight: 600;
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   font-size: 0.875rem;
   text-transform: capitalize;
 }
@@ -1411,7 +1411,7 @@
   margin: 0 0 0.75rem 0;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .recommendation {
@@ -1451,7 +1451,7 @@
 .rec-title {
   font-weight: 600;
   font-size: 0.8125rem;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .rec-priority {
@@ -1487,7 +1487,7 @@
 /* Aggregate Analytics Dashboard */
 .aggregate-analytics-dashboard {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -1504,7 +1504,7 @@
 
 .dashboard-header h3 {
   margin: 0;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-weight: 700;
 }
 
@@ -1564,7 +1564,7 @@
 .metric-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   margin-bottom: 0.5rem;
 }
 
@@ -1584,7 +1584,7 @@
   margin: 0 0 1rem 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .dominant-pattern {
@@ -1598,7 +1598,7 @@
 
 .pattern-name {
   font-weight: 600;
-  color: var(--color-accent);
+  color: rgb(var(--color-button));
   text-transform: capitalize;
 }
 
@@ -1616,7 +1616,7 @@
 
 .garment-analytics-summary {
   background: var(--color-background-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 8px;
   padding: 1rem;
   cursor: pointer;
@@ -1624,7 +1624,7 @@
 }
 
 .garment-analytics-summary:hover {
-  border-color: var(--color-accent);
+  border-color: rgb(var(--color-button));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1637,7 +1637,7 @@
 
 .garment-name {
   font-weight: 600;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
 }
 
 .efficiency-badge {
@@ -1719,7 +1719,7 @@
 
 .garment-analytics-wrapper {
   background: white;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -1727,7 +1727,7 @@
 
 .garment-analytics-wrapper h4 {
   margin: 0 0 1rem 0;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-weight: 600;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--color-border);
@@ -1753,7 +1753,7 @@
 
 .analytics-empty-state h4 {
   margin: 0 0 0.75rem 0;
-  color: var(--color-foreground);
+  color: rgb(var(--color-foreground));
   font-weight: 600;
 }
 
