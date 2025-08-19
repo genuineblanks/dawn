@@ -4314,6 +4314,59 @@ class V10_GarmentStudio {
     console.log(`📋 Duplicated garment: ${garmentId}`);
   }
 
+  createColorVariant(originalGarmentId, newLabDipId) {
+    const originalData = V10_State.garments.get(originalGarmentId);
+    if (!originalData) return null;
+
+    // Create variant with same specifications but no assignments
+    const variantData = {
+      ...originalData,
+      id: undefined, // Will be generated
+      assignedLabDips: new Set(), // Start fresh for new color variant
+      assignedDesigns: new Set()
+    };
+
+    // Add the new garment variant
+    this.addGarment(variantData);
+    
+    // Get the newly created garment ID (it will be the most recently added)
+    const allGarments = Array.from(V10_State.garments.values());
+    const newVariant = allGarments[allGarments.length - 1];
+    
+    if (newVariant) {
+      // Assign the new lab dip to the variant
+      newVariant.assignedLabDips.add(newLabDipId);
+      
+      // Update lab dip assignments state
+      if (!V10_State.assignments.labDips.has(newLabDipId)) {
+        V10_State.assignments.labDips.set(newLabDipId, new Set());
+      }
+      V10_State.assignments.labDips.get(newLabDipId).add(newVariant.id);
+      
+      // Position the variant garment card directly after the original
+      this.positionVariantAfterOriginal(originalGarmentId, newVariant.id);
+      
+      // Update displays for the new variant
+      this.updateAssignedDisplay(newVariant.id);
+      this.updateGarmentStatus(newVariant.id);
+      
+      console.log(`🎨 Created color variant: ${newVariant.id} from ${originalGarmentId} with lab dip ${newLabDipId}`);
+      return newVariant.id;
+    }
+    
+    return null;
+  }
+
+  positionVariantAfterOriginal(originalGarmentId, variantGarmentId) {
+    const originalCard = document.querySelector(`[data-garment-id="${originalGarmentId}"]`);
+    const variantCard = document.querySelector(`[data-garment-id="${variantGarmentId}"]`);
+    
+    if (originalCard && variantCard && originalCard.parentNode) {
+      // Move variant card to be directly after original
+      originalCard.parentNode.insertBefore(variantCard, originalCard.nextSibling);
+    }
+  }
+
   renumberGarments() {
     try {
       const garmentCards = this.garmentsContainer.querySelectorAll('.garment-card');
@@ -4372,6 +4425,24 @@ class V10_GarmentStudio {
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentData) return;
 
+    // Check if garment already has lab dips assigned
+    const hasExistingLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+    
+    if (hasExistingLabDips) {
+      // Create a color variant instead of adding to the same garment
+      console.log(`🎨 Garment ${garmentId} already has lab dips, creating color variant`);
+      const variantId = this.createColorVariant(garmentId, labDipId);
+      
+      if (variantId) {
+        // Update design studio tab and badge
+        window.v10GarmentStudio.updateDesignStudioTabStatus();
+        V10_BadgeManager.updateDesignCompletionBadge();
+        console.log(`✅ Created color variant ${variantId} with lab dip ${labDipId}`);
+      }
+      return;
+    }
+
+    // Original logic for first lab dip assignment
     garmentData.assignedLabDips.add(labDipId);
 
     if (!V10_State.assignments.labDips.has(labDipId)) {
@@ -5774,6 +5845,7 @@ class V10_DesignStudio {
     const designsCount = document.getElementById('designs-count');
     const labDipsEmpty = document.getElementById('labdips-empty');
     const designsEmpty = document.getElementById('designs-empty');
+    const labDipsTip = document.getElementById('labdips-tip');
 
     const labDipCount = V10_State.labDips.size;
     const designCount = V10_State.designSamples.size;
@@ -5792,6 +5864,11 @@ class V10_DesignStudio {
 
     if (designsEmpty) {
       designsEmpty.style.display = designCount === 0 ? 'block' : 'none';
+    }
+
+    // Show/hide tip message based on lab dip count
+    if (labDipsTip) {
+      labDipsTip.style.display = labDipCount >= 2 ? 'block' : 'none';
     }
   }
 
