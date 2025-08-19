@@ -569,6 +569,27 @@ Enhanced with Visual Studio Guide System
             <span class="garment-summary__fabric">Cotton</span>
           </div>
           <div class="garment-summary__status">Complete</div>
+          
+          <!-- Design Inclusion Controls -->
+          <div class="design-inclusion-controls">
+            <div class="design-toggle">
+              <label class="design-toggle__label">
+                <input type="checkbox" class="design-toggle__input" checked>
+                <span class="design-toggle__text">Include TechPack Design?</span>
+              </label>
+            </div>
+            <div class="design-reference" style="display: block;">
+              <input 
+                type="text" 
+                class="design-reference__input" 
+                placeholder="Enter design name/reference from your TechPack"
+                maxlength="100"
+              >
+              <div class="design-reference__warning" style="display: none;">
+                ⚠️ <strong>Design Reference Required</strong> - Please enter the design name/reference from your TechPack file so our team knows which design to apply to this garment.
+              </div>
+            </div>
+          </div>
         </div>
         <button type="button" class="garment-summary__edit-btn" title="Edit garment">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
