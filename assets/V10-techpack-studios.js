@@ -5697,13 +5697,15 @@ class V10_DesignStudio {
     let garments;
     if (type === 'labdip') {
       // Show all garments with basic info (type & fabric), let modal handle eligibility
-      garments = Array.from(V10_State.garments.values()).filter(g => 
-        g.type && g.fabricType
-      );
+      garments = Array.from(V10_State.garments.values())
+        .filter(g => g.type && g.fabricType)
+        .sort((a, b) => a.number - b.number);
       console.log(`🎨 Found ${garments.length} garments for lab dip assignment (eligibility handled in modal):`, garments);
     } else {
       // For design assignments, use completed garments
-      garments = Array.from(V10_State.garments.values()).filter(g => g.isComplete);
+      garments = Array.from(V10_State.garments.values())
+        .filter(g => g.isComplete)
+        .sort((a, b) => a.number - b.number);
       console.log(`📊 Found ${garments.length} complete garments for design assignment:`, garments);
     }
     
