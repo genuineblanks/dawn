@@ -870,6 +870,24 @@ body[class*="techpack"] *,
   box-shadow: none !important;
 }
 
+/* Custom disabled state class */
+.v10-btn--disabled {
+  background: #3a3a3a !important;
+  color: #6b7280 !important;
+  border-color: #4a4a4a !important;
+  opacity: 0.8;
+  cursor: not-allowed;
+  transform: none !important;
+  pointer-events: none;
+  box-shadow: none !important;
+}
+
+.v10-btn--disabled:hover {
+  background: #3a3a3a !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 .v10-btn--primary {
   background: var(--v10-accent-primary);
   color: white;

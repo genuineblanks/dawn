@@ -3918,6 +3918,15 @@ class V10_GarmentStudio {
     // Update design studio tab and badge
     this.updateDesignStudioTabStatus();
     V10_BadgeManager.updateDesignCompletionBadge();
+    
+    // Trigger validation update for Step 3 next button
+    if (window.v10TechPackSystem?.validationManager) {
+      try {
+        window.v10TechPackSystem.validationManager.validateStep();
+      } catch (validationError) {
+        console.warn('Error triggering validation update:', validationError);
+      }
+    }
   }
 
   // Check if all garments are complete and update studio status
@@ -4754,15 +4763,30 @@ class V10_GarmentStudio {
       errors.push('At least one garment is required');
     }
 
+    const incompleteGarments = [];
     garments.forEach((garment, index) => {
       if (!garment.isComplete) {
-        errors.push(`Garment ${index + 1} is incomplete`);
+        incompleteGarments.push(garment.number || (index + 1));
       }
     });
 
+    if (incompleteGarments.length > 0) {
+      const garmentList = incompleteGarments.join(', ');
+      if (incompleteGarments.length === 1) {
+        errors.push(`Garment ${garmentList} is incomplete - complete all garments to proceed to review`);
+      } else {
+        errors.push(`Garments ${garmentList} are incomplete - complete all garments to proceed to review`);
+      }
+    }
+
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
+      stats: {
+        total: garments.length,
+        complete: garments.length - incompleteGarments.length,
+        incomplete: incompleteGarments.length
+      }
     };
   }
 
@@ -6299,10 +6323,28 @@ class V10_ValidationManager {
         if (nextBtn) {
           nextBtn.disabled = !validation.isValid;
           
-          if (!validation.isValid && Array.isArray(validation.errors) && validation.errors.length > 0) {
-            nextBtn.title = validation.errors.join(', ');
+          // Enhanced button text and styling based on validation
+          if (validation.isValid) {
+            nextBtn.innerHTML = `
+              <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3l8-8"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              </svg>
+              Proceed to Review
+            `;
+            nextBtn.title = 'All garments complete - proceed to review and submit';
+            nextBtn.classList.remove('v10-btn--disabled');
           } else {
-            nextBtn.title = '';
+            // Show progress in button when incomplete
+            const stats = validation.stats;
+            if (stats) {
+              nextBtn.innerHTML = `Complete All Garments (${stats.complete}/${stats.total})`;
+              nextBtn.title = `${stats.incomplete} garment(s) incomplete - complete all garments to proceed`;
+            } else if (Array.isArray(validation.errors) && validation.errors.length > 0) {
+              nextBtn.innerHTML = 'Complete All Garments';
+              nextBtn.title = validation.errors.join(', ');
+            }
+            nextBtn.classList.add('v10-btn--disabled');
           }
         }
       } catch (buttonError) {
@@ -7371,6 +7413,9 @@ class V10_TechPackSystem {
 
     // Make garment studio globally accessible for assignments
     window.v10GarmentStudio = this.garmentStudio;
+    
+    // Make TechPack system globally accessible for validation
+    window.v10TechPackSystem = this;
 
     // Bind global events
     this.bindGlobalEvents();
