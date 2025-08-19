@@ -37,22 +37,21 @@ Enhanced with Visual Studio Guide System
     <div class="techpack-content">
       
       <!-- Step 3 Control Bar -->
+      <!-- Unified Control Bar -->
       <div class="step3-control-bar">
-        <!-- Quick Guide Button (Left) -->
-        <div class="step3-control-left">
-          <button type="button" class="techpack-help-btn techpack-help-btn--secondary quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="v10-unified-controls">
+          <!-- Quick Guide Button (Left) -->
+          <button type="button" class="v10-unified-btn v10-unified-btn--guide quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
               <circle cx="12" cy="17" r="1"/>
             </svg>
             <span>QUICK GUIDE</span>
           </button>
-        </div>
-        
-        <!-- Theme Toggle Buttons (Center) -->
-        <div class="step3-control-center">
-          <div class="v10-theme-toggle">
+          
+          <!-- Theme Toggle Buttons (Center) -->
+          <div class="v10-unified-theme-section">
             <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
               ☀️ Light
             </button>
@@ -60,12 +59,10 @@ Enhanced with Visual Studio Guide System
               🌙 Dark
             </button>
           </div>
-        </div>
-        
-        <!-- Visual Studio Guide Button (Right) -->
-        <div class="step3-control-right">
-          <button type="button" class="techpack-help-btn techpack-help-btn--primary visual-guide-trigger" id="step-3-help-btn" aria-label="Open Visual Studio Guide - Interactive help for understanding the workflow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          
+          <!-- Visual Studio Guide Button (Right) -->
+          <button type="button" class="v10-unified-btn v10-unified-btn--visual visual-guide-trigger" id="step-3-help-btn" aria-label="Open Visual Studio Guide - Interactive help for understanding the workflow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
               <circle cx="12" cy="17" r="1"/>
@@ -171,7 +168,7 @@ Enhanced with Visual Studio Guide System
         <div class="studio-header">
           <div class="studio-header__content">
             <h3 class="studio-header__title">Design Studio</h3>
-            <span class="studio-header__badge studio-header__badge--creative">CREATIVE</span>
+            <span class="studio-header__badge studio-header__badge--creative" id="design-completion-badge">CREATIVE</span>
           </div>
           <div class="studio-header__actions">
             <div class="studio-toggle">
@@ -556,8 +553,10 @@ Enhanced with Visual Studio Guide System
       <div class="garment-summary">
         <div class="garment-summary__content">
           <div class="garment-summary__title">
+            <div class="garment-summary__color-circle" style="display: none;"></div>
             <span class="garment-summary__type">T-Shirt</span>
             <span class="garment-summary__separator">-</span>
+            <span class="garment-summary__color-name" style="display: none;"></span>
             <span class="garment-summary__fabric">Cotton</span>
           </div>
           <div class="garment-summary__status">Complete</div>
@@ -887,8 +886,8 @@ Enhanced with Visual Studio Guide System
       </div>
 
 
-      <!-- Assigned Items Display (for sample requests) -->
-      <div class="assigned-items" data-show-for="sample">
+      <!-- Assigned Items Display (for sample requests) - HIDDEN: colors/designs now show in summary -->
+      <div class="assigned-items" data-show-for="sample" style="display: none;">
         <div class="assigned-section">
           <h6>Assigned Colors</h6>
           <div class="assigned-badges" id="assigned-labdips">
