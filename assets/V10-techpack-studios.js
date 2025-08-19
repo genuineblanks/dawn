@@ -6660,9 +6660,7 @@ class V10_ReviewManager {
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        if (window.stepManager) {
-          window.stepManager.navigateToStep(3);
-        }
+        this.goBackToStep(3);
       });
     }
 
