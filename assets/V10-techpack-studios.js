@@ -3393,7 +3393,7 @@ class V10_GarmentStudio {
       if (garmentData.type) {
         console.log('🔄 Populating fabric options for type:', garmentData.type);
         try {
-          this.populateFabricOptions(clone, garmentData.type);
+          this.populateFabricOptions(garmentCard, garmentData.type);
         } catch (fabricError) {
           console.error('❌ Error populating fabric options:', fabricError);
         }
@@ -4222,9 +4222,11 @@ class V10_GarmentStudio {
       // For sample requests: garment type, fabric type, and sample type required
       const hasBasicRequirements = garmentData.type && garmentData.fabricType && currentSampleType;
       
-      // If custom sample type, also need lab dip assignment
+      // If custom sample type, lab dips are NOT required for edit finalization
+      // They can be assigned later in the lab dip studio
+      // The garment will still show as incomplete until lab dips are assigned
       if (currentSampleType === 'custom') {
-        return hasBasicRequirements && garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        return hasBasicRequirements;
       }
       
       return hasBasicRequirements;
@@ -4491,12 +4493,14 @@ class V10_GarmentStudio {
     const originalData = V10_State.garments.get(originalGarmentId);
     if (!originalData) return null;
 
-    // Create variant with same specifications but no assignments
+    // Create variant with same specifications but fresh assignments
     const variantData = {
       ...originalData,
       id: undefined, // Will be generated
       assignedLabDips: new Set(), // Start fresh for new color variant
-      assignedDesigns: new Set()
+      assignedDesigns: new Set(),
+      isComplete: false, // Reset completion status - will be recalculated
+      isInEditMode: false // Ensure not in edit mode
     };
 
     // Add the new garment variant
@@ -4519,9 +4523,22 @@ class V10_GarmentStudio {
       // Position the variant garment card directly after the original
       this.positionVariantAfterOriginal(originalGarmentId, newVariant.id);
       
-      // Update displays for the new variant
-      this.updateAssignedDisplay(newVariant.id);
-      this.updateGarmentStatus(newVariant.id);
+      // Renumber all garments to maintain sequential order
+      this.renumberGarments();
+      
+      // Force immediate status update for the new variant
+      // This ensures the variant is properly validated with its assigned lab dip
+      setTimeout(() => {
+        this.updateGarmentStatus(newVariant.id);
+        console.log(`🔄 Updated status for variant ${newVariant.id}`);
+        
+        // Update the collapsed state to show color circle and summary
+        const variantCard = document.querySelector(`[data-garment-id="${newVariant.id}"]`);
+        if (variantCard) {
+          this.updateGarmentCollapsedState(variantCard, newVariant, newVariant.isComplete);
+          console.log(`🎨 Updated collapsed state for variant ${newVariant.id}`);
+        }
+      }, 50);
       
       // Update studio completion status after variant creation
       this.updateStudioCompletion();
