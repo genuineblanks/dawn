@@ -6066,6 +6066,20 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   font-style: italic;
 }
 
+.garment-summary__status--warning {
+  color: var(--v10-accent-warning) !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-style: normal;
+}
+
+.garment-summary__status--warning::before {
+  content: "⚠️";
+  font-size: 14px;
+  opacity: 0.8;
+}
+
 .garment-summary__edit-btn {
   display: flex;
   align-items: center;

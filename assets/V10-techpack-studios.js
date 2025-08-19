@@ -3780,12 +3780,8 @@ class V10_GarmentStudio {
       garmentData.sampleType = e.target.value;
       
       // Trigger status update and collapse logic immediately when sample type changes
-      console.log(`🎨 Sample type changed to: ${e.target.value} for garment ${garmentId}`);
-      
-      // Force status update to evaluate completion and trigger collapse
       setTimeout(() => {
         this.updateGarmentStatus(garmentId);
-        console.log(`✅ Status updated after sample type change for garment ${garmentId}`);
       }, 100);
     }
 
@@ -3839,7 +3835,6 @@ class V10_GarmentStudio {
     }
 
     // Handle garment collapse/expand based on completion status
-    console.log(`🔄 Updating collapse state for garment ${garmentId}: complete=${isComplete}, sampleType=${garmentData.sampleType}, hasLabDips=${garmentData.assignedLabDips?.size || 0}`);
     this.updateGarmentCollapsedState(garmentCard, garmentData, isComplete);
 
     // Update assigned items display
@@ -3945,23 +3940,10 @@ class V10_GarmentStudio {
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
-    console.log(`🔍 updateGarmentCollapsedState called for garment ${garmentData.id}:`, {
-      isComplete,
-      isInEditMode: garmentData.isInEditMode,
-      sampleType: garmentData.sampleType,
-      hasLabDips: garmentData.assignedLabDips?.size || 0,
-      hasSummaryContainer: !!summaryContainer,
-      hasContentContainer: !!contentContainer
-    });
-    
-    if (!summaryContainer || !contentContainer) {
-      console.warn(`⚠️ Missing containers for garment ${garmentData.id}`);
-      return;
-    }
+    if (!summaryContainer || !contentContainer) return;
 
     // Don't auto-collapse if in edit mode - keep form open for editing
     if (garmentData.isInEditMode) {
-      console.log(`🔒 Garment ${garmentData.id} in edit mode - keeping form open`);
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
       return;
@@ -3978,12 +3960,10 @@ class V10_GarmentStudio {
       
       // Update summary content
       this.updateGarmentSummary(garmentCard, garmentData);
-      console.log(`✅ Garment ${garmentData.id} collapsed (complete: ${isComplete}, shouldCollapse: ${shouldCollapse})`);
     } else {
       // Show content, hide summary
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
-      console.log(`📝 Garment ${garmentData.id} showing form (incomplete, basic info missing)`);
     }
   }
 
@@ -4063,6 +4043,16 @@ class V10_GarmentStudio {
       }
       
       statusSpan.textContent = statusMessage;
+      
+      // Apply warning styling for custom samples without lab dips
+      const isCustomWithoutLabDips = garmentData.sampleType === 'custom' && 
+        (!garmentData.assignedLabDips || garmentData.assignedLabDips.size === 0);
+      
+      if (isCustomWithoutLabDips) {
+        statusSpan.className = 'garment-summary__status garment-summary__status--warning';
+      } else {
+        statusSpan.className = 'garment-summary__status';
+      }
     }
   }
 
@@ -4159,11 +4149,8 @@ class V10_GarmentStudio {
         
         // Force collapse regardless of completion status when finalizing edit
         this.updateGarmentCollapsedState(updatedGarmentCard, updatedGarmentData, isComplete);
-        console.log(`🔄 Forced collapse update after finalize edit for garment ${garmentId}, complete: ${isComplete}`);
       }
     }, 150);
-    
-    console.log(`✅ Finalized edit for garment ${garmentId}`);
   }
 
   updateAssignedDisplay(garmentId) {
@@ -5332,8 +5319,19 @@ class V10_DesignStudio {
       return;
     }
 
-    const garments = Array.from(V10_State.garments.values()).filter(g => g.isComplete);
-    console.log(`📊 Found ${garments.length} complete garments:`, garments);
+    // For lab dips, show garments with custom sample type (regardless of completion status)
+    // This allows incomplete custom samples to receive lab dip assignments
+    let garments;
+    if (type === 'labdip') {
+      garments = Array.from(V10_State.garments.values()).filter(g => 
+        g.sampleType === 'custom' && g.type && g.fabricType
+      );
+      console.log(`🎨 Found ${garments.length} custom sample garments for lab dip assignment:`, garments);
+    } else {
+      // For design assignments, use completed garments
+      garments = Array.from(V10_State.garments.values()).filter(g => g.isComplete);
+      console.log(`📊 Found ${garments.length} complete garments for design assignment:`, garments);
+    }
     
     // Debug: Check garment sample types for lab dip assignment
     console.log('🔍 DEBUG: Garments for lab dip assignment:', garments.map(g => ({
