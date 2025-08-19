@@ -3545,7 +3545,7 @@ class V10_GarmentStudio {
           <label class="compact-radio-card">
             <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
             <span class="compact-radio-card__content">
-              <span class="compact-radio-card__icon">🧵</span>
+              <span class="compact-radio-card__icon">${this.getFabricTypeIcon(fabric)}</span>
               <span class="compact-radio-card__name">${fabric}</span>
             </span>
           </label>
@@ -3555,7 +3555,7 @@ class V10_GarmentStudio {
           <label class="radio-card">
             <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
             <span class="radio-card__content">
-              <span class="radio-card__icon">🧵</span>
+              <span class="radio-card__icon">${this.getFabricTypeIcon(fabric)}</span>
               <span class="radio-card__name">${fabric}</span>
             </span>
           </label>
@@ -3632,12 +3632,13 @@ class V10_GarmentStudio {
       if (display) display.style.display = 'flex';
       
     } else if (type === 'fabric') {
+      const fabricIcon = this.getFabricTypeIcon(value);
       const selectedIcon = clone.querySelector('#fabric-selected-icon');
       const selectedName = clone.querySelector('#fabric-selected-name');
       const placeholder = clone.querySelector('#fabric-placeholder');
       const display = clone.querySelector('#fabric-display');
       
-      if (selectedIcon) selectedIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>';
+      if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'flex';
@@ -4665,6 +4666,7 @@ class V10_GarmentStudio {
 
   updateCompactSelection(type, value, garmentCard) {
     if (type === 'garment') {
+      console.log(`🎨 Updating compact selection for garment: "${value}"`);
       const garmentIcon = this.getGarmentIcon(value);
       const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
       const selectedName = garmentCard.querySelector('#garment-selected-name');
@@ -4672,10 +4674,16 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#garment-display');
       const collapsed = garmentCard.querySelector('#garment-collapsed');
       
+      console.log(`🎯 Selected icon element:`, selectedIcon);
+      console.log(`📝 Previous innerHTML:`, selectedIcon?.innerHTML?.slice(0, 80) + '...');
+      
       if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
+      
+      console.log(`✅ Updated innerHTML:`, selectedIcon?.innerHTML?.slice(0, 80) + '...');
+      console.log(`👁️ Display element visibility:`, display?.style?.display);
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -4685,13 +4693,14 @@ class V10_GarmentStudio {
       }, 300);
       
     } else if (type === 'fabric') {
+      const fabricIcon = this.getFabricTypeIcon(value);
       const selectedIcon = garmentCard.querySelector('#fabric-selected-icon');
       const selectedName = garmentCard.querySelector('#fabric-selected-name');
       const placeholder = garmentCard.querySelector('#fabric-placeholder');
       const display = garmentCard.querySelector('#fabric-display');
       const collapsed = garmentCard.querySelector('#fabric-collapsed');
       
-      if (selectedIcon) selectedIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>';
+      if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
@@ -4890,6 +4899,7 @@ class V10_GarmentStudio {
   }
 
   getGarmentIcon(garmentType) {
+    console.log(`🔍 Getting garment icon for: "${garmentType}"`);
     const iconMap = {
       'Zip-Up Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-zip-up-hoodie"></use></svg>',
       'Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-hoodie"></use></svg>',
@@ -4905,7 +4915,40 @@ class V10_GarmentStudio {
       'Beanie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-beanie"></use></svg>',
       'Other': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>'
     };
-    return iconMap[garmentType] || '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-t-shirt"></use></svg>';
+    const result = iconMap[garmentType] || '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-t-shirt"></use></svg>';
+    console.log(`🎯 Returning icon for "${garmentType}":`, result.slice(0, 80) + '...');
+    return result;
+  }
+
+  getFabricTypeIcon(fabricType) {
+    // Cotton-based fabrics
+    if (fabricType.includes('Cotton')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2L8 6v4l4 4 4-4V6z"/><circle cx="12" cy="8" r="2"/><path d="M8 14v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4"/></svg>';
+    }
+    // Polyester fabrics
+    else if (fabricType.includes('Polyester')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2l3.5 3.5L12 9 8.5 5.5z"/><path d="M12 9l3.5 3.5L12 16l-3.5-3.5z"/><path d="M12 16l3.5 3.5L12 23l-3.5-3.5z"/></svg>';
+    }
+    // Hemp fabrics
+    else if (fabricType.includes('Hemp')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v18"/><path d="M8 7l8 0"/><path d="M6 11l12 0"/><path d="M8 15l8 0"/><circle cx="12" cy="5" r="2"/></svg>';
+    }
+    // Linen fabrics
+    else if (fabricType.includes('Linen')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12h18m-9-9v18"/><path d="M8 8l8 8m0-8l-8 8"/></svg>';
+    }
+    // Blend fabrics (Cotton-Poly combinations)
+    else if (fabricType.includes('/') || fabricType.includes('-')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="2"/><path d="M13 5v6l3 3"/><path d="M5 13h6l3-3"/><circle cx="15" cy="15" r="2"/></svg>';
+    }
+    // Elastane/Spandex blends
+    else if (fabricType.includes('Elastane') || fabricType.includes('Spandex')) {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12c0-4.5 2-8 5-8s5 3.5 5 8-2 8-5 8-5-3.5-5-8z"/><path d="M16 12c0-4.5 2-8 5-8v16c-3 0-5-3.5-5-8z"/></svg>';
+    }
+    // Default fabric icon
+    else {
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/><path d="M21 7L12 2 3 7"/><path d="M12 2v5"/><path d="M8 7v10"/><path d="M16 7v10"/></svg>';
+    }
   }
 
   getSampleReferenceIcon(referenceType) {

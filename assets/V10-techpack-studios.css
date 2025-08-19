@@ -336,90 +336,37 @@ body[class*="techpack"] *,
    ============================================== */
 
 .simple-progress-container {
-  margin-bottom: var(--v10-space-12);
+  margin-bottom: var(--v10-space-4);
   background: var(--v10-bg-tertiary);
-  border-radius: var(--v10-radius-xl);
-  padding: var(--v10-space-8);
-  box-shadow: var(--v10-shadow-lg);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-4);
+  box-shadow: var(--v10-shadow-sm);
   border: 1px solid var(--v10-border-primary);
   backdrop-filter: var(--v10-backdrop-blur);
   position: relative;
 }
 
-/* Glass morphism effect overlay */
-.simple-progress-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--v10-glass-bg);
-  border-radius: var(--v10-radius-xl);
-  border: 1px solid var(--v10-glass-border);
-  pointer-events: none;
-  z-index: 1;
-}
+/* Simplified container - no glass morphism overlay for cleaner look */
 
-.simple-progress-container > * {
-  position: relative;
-  z-index: 2;
-}
-
-.simple-progress-bar {
-  width: 100%;
-  height: 8px;
-  background: var(--v10-bg-secondary);
-  border-radius: var(--v10-radius-sm);
-  margin-bottom: var(--v10-space-8);
-  overflow: hidden;
-  position: relative;
-  border: 1px solid var(--v10-border-secondary);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.simple-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--v10-accent-primary), var(--v10-accent-secondary));
-  border-radius: var(--v10-radius-sm);
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  box-shadow: 0 2px 8px rgba(75, 85, 99, 0.3);
-}
-
-.simple-progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
+/* Progress bar removed - using only step circles for cleaner design */
 
 .simple-progress-steps {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--v10-space-4);
-  padding: var(--v10-space-2) 0;
+  gap: var(--v10-space-2);
+  padding: 0;
 }
 
 .simple-step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--v10-space-3);
+  gap: var(--v10-space-2);
   flex: 1;
   position: relative;
-  padding: var(--v10-space-3);
-  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-2);
+  border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
   background: transparent;
   border: 1px solid transparent;
@@ -455,10 +402,10 @@ body[class*="techpack"] *,
   font-weight: 600;
 }
 
-/* Step Circle Styles - Dark Theme Enhanced */
+/* Step Circle Styles - Compact Dark Theme */
 .simple-step-circle {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--v10-bg-secondary);
   border: 2px solid var(--v10-border-primary);
@@ -469,57 +416,36 @@ body[class*="techpack"] *,
   font-size: var(--v10-text-sm);
   font-weight: 600;
   transition: var(--v10-transition);
-  margin-bottom: var(--v10-space-2);
-  box-shadow: var(--v10-shadow-sm);
+  margin-bottom: var(--v10-space-1);
+  box-shadow: var(--v10-shadow-xs);
   position: relative;
-  backdrop-filter: blur(8px);
 }
 
-/* Glass morphism effect for circles */
-.simple-step-circle::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
+/* Simplified circle states - no glass morphism for cleaner look */
 .simple-step.active .simple-step-circle {
   background: var(--v10-accent-primary);
   border-color: var(--v10-accent-primary);
   color: white;
-  box-shadow: 0 0 0 4px rgba(75, 85, 99, 0.2), var(--v10-shadow-lg);
-  transform: scale(1.05);
-}
-
-.simple-step.active .simple-step-circle::before {
-  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.15), var(--v10-shadow-sm);
+  transform: scale(1.02);
 }
 
 .simple-step.completed .simple-step-circle {
   background: var(--v10-accent-success);
   border-color: var(--v10-accent-success);
   color: white;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2), var(--v10-shadow-lg);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15), var(--v10-shadow-sm);
 }
 
-.simple-step.completed .simple-step-circle::before {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Hover effects for interactive feel */
+/* Subtle hover effects */
 .simple-step:hover .simple-step-circle {
-  transform: scale(1.02);
-  box-shadow: var(--v10-shadow-md);
+  transform: scale(1.01);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .simple-step.active:hover .simple-step-circle,
 .simple-step.completed:hover .simple-step-circle {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 
 /* Legacy support for steps without circles */
@@ -552,18 +478,18 @@ body[class*="techpack"] *,
 
 @media (max-width: 768px) {
   .simple-progress-container {
-    padding: var(--v10-space-6);
-    margin-bottom: var(--v10-space-8);
+    padding: var(--v10-space-3);
+    margin-bottom: var(--v10-space-3);
   }
   
   .simple-progress-steps {
-    gap: var(--v10-space-2);
-    padding: var(--v10-space-1) 0;
+    gap: var(--v10-space-1);
+    padding: 0;
   }
   
   .simple-step {
-    padding: var(--v10-space-2);
-    gap: var(--v10-space-2);
+    padding: var(--v10-space-1);
+    gap: var(--v10-space-1);
   }
   
   .simple-step span {
@@ -572,19 +498,20 @@ body[class*="techpack"] *,
   }
   
   .simple-step-circle {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     font-size: var(--v10-text-xs);
+    margin-bottom: 0;
   }
   
   .simple-step.active .simple-step-circle,
   .simple-step.completed .simple-step-circle {
-    transform: scale(1.03);
+    transform: scale(1.01);
   }
   
   .simple-step.active:hover .simple-step-circle,
   .simple-step.completed:hover .simple-step-circle {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 }
 
