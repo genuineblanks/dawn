@@ -3752,6 +3752,16 @@ class V10_GarmentStudio {
       garmentData.fabricType = newValue;
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
       
+      // Clear any assigned lab dips when fabric changes (similar to sample type change logic)
+      if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
+        console.log(`🎨 Removing assigned lab dips from garment ${garmentId} due to fabric type change to ${newValue}`);
+        // Remove all assigned lab dips
+        const labDipIds = Array.from(garmentData.assignedLabDips);
+        labDipIds.forEach(labDipId => {
+          this.unassignLabDip(garmentId, labDipId);
+        });
+      }
+      
       // Update fabric restrictions when fabric type changes
       setTimeout(() => {
         V10_Utils.updateGarmentFabricRestrictions(garmentCard);
