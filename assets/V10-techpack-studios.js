@@ -6724,6 +6724,41 @@ class V10_ReviewManager {
     console.log('🎯 Step 4: Elements check:');
     console.log('  - Studio container exists:', !!studioContainer);
     console.log('  - Studio container classes:', studioContainer?.className);
+    
+    if (studioContainer) {
+      const computedStyle = window.getComputedStyle(studioContainer);
+      console.log('🎯 Step 4: Studio Container CSS Debug:');
+      console.log('  - Display:', computedStyle.display);
+      console.log('  - Visibility:', computedStyle.visibility);
+      console.log('  - Opacity:', computedStyle.opacity);
+      console.log('  - Height:', computedStyle.height);
+      console.log('  - Width:', computedStyle.width);
+      console.log('  - Position:', computedStyle.position);
+      console.log('  - Z-index:', computedStyle.zIndex);
+      console.log('  - Overflow:', computedStyle.overflow);
+      console.log('  - Background:', computedStyle.backgroundColor);
+      
+      // Check child elements
+      const studioHeader = studioContainer.querySelector('.studio-header');
+      const studioContent = studioContainer.querySelector('.studio-content');
+      const reviewGrid = studioContainer.querySelector('.review-summary-grid');
+      
+      console.log('🎯 Step 4: Child Elements Debug:');
+      console.log('  - Studio header exists:', !!studioHeader);
+      console.log('  - Studio header display:', studioHeader ? window.getComputedStyle(studioHeader).display : 'N/A');
+      console.log('  - Studio content exists:', !!studioContent);
+      console.log('  - Studio content display:', studioContent ? window.getComputedStyle(studioContent).display : 'N/A');
+      console.log('  - Review grid exists:', !!reviewGrid);
+      console.log('  - Review grid display:', reviewGrid ? window.getComputedStyle(reviewGrid).display : 'N/A');
+      
+      // Force add the --active class if missing
+      if (!studioContainer.classList.contains('studio-container--active')) {
+        console.log('🚨 Step 4: --active class missing! Adding it now...');
+        studioContainer.classList.add('studio-container--active');
+        console.log('🎯 Step 4: After adding --active class:', studioContainer.className);
+      }
+    }
+    
     console.log('  - Client info exists:', !!clientInfo);
     console.log('  - Client info content:', clientInfo?.innerHTML?.substring(0, 100));
     console.log('  - Garments exists:', !!garments);
