@@ -6648,7 +6648,7 @@ class V10_ReviewManager {
   init() {
     if (document.getElementById('techpack-v10-step-4')) {
       this.bindEvents();
-      this.populateReview();
+      // populateReview() will be called when step 4 becomes visible
     }
   }
 
@@ -6674,21 +6674,36 @@ class V10_ReviewManager {
       saveDraftBtn.addEventListener('click', () => this.saveDraft());
     }
 
-    // Edit buttons
-    document.querySelectorAll('[data-edit-step]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
-        if (window.stepManager) {
-          window.stepManager.navigateToStep(step);
-        }
-      });
-    });
+    // Edit buttons will be bound after content is populated
+    // See bindEditButtons() method
 
     // Terms checkbox
     const termsCheckbox = document.getElementById('terms-agreement');
     if (termsCheckbox) {
       termsCheckbox.addEventListener('change', () => this.updateSubmitButton());
     }
+  }
+
+  bindEditButtons() {
+    // Bind edit buttons after content is populated
+    console.log('🎯 Step 4: Binding edit buttons...');
+    document.querySelectorAll('[data-edit-step]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
+        console.log('🎯 Step 4: Edit button clicked, going to step:', step);
+        
+        if (window.stepManager && window.stepManager.navigateToStep) {
+          window.stepManager.navigateToStep(step);
+        } else if (window.v10TechPackSystem && window.v10TechPackSystem.showStep) {
+          // Fallback to direct step navigation
+          window.v10TechPackSystem.showStep(step);
+        } else {
+          console.error('No step navigation system available');
+        }
+      });
+    });
+    console.log('🎯 Step 4: Edit buttons bound:', document.querySelectorAll('[data-edit-step]').length);
   }
 
   populateReview() {
@@ -6717,6 +6732,9 @@ class V10_ReviewManager {
     this.updateSubmitMessage();
     
     console.log('🎯 Step 4: Review population completed');
+    
+    // Bind edit button events after content is populated
+    this.bindEditButtons();
     
     // Check elements after population
     
@@ -7999,6 +8017,16 @@ class V10_TechPackSystem {
         } catch (managerError) {
           console.error('Error initializing review manager:', managerError);
         }
+      }
+      
+      // Now that Step 4 is visible, populate the review content
+      try {
+        if (window.v10ReviewManager) {
+          console.log('🎯 STEP 4: Calling populateReview() after step is visible');
+          window.v10ReviewManager.populateReview();
+        }
+      } catch (populateError) {
+        console.error('Error populating review:', populateError);
       }
       
       // Scroll to step 4
