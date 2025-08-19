@@ -3897,6 +3897,17 @@ class V10_GarmentStudio {
       statusIndicator.className = `status-indicator ${isComplete ? 'status-indicator--complete' : 'status-indicator--incomplete'}`;
     }
 
+    // Apply visual enhancement classes to the entire garment card
+    if (garmentCard) {
+      if (isComplete) {
+        garmentCard.classList.add('garment-card--complete');
+        garmentCard.classList.remove('garment-card--incomplete');
+      } else {
+        garmentCard.classList.add('garment-card--incomplete');
+        garmentCard.classList.remove('garment-card--complete');
+      }
+    }
+
     // Handle garment collapse/expand based on completion status
     this.updateGarmentCollapsedState(garmentCard, garmentData, isComplete);
 
