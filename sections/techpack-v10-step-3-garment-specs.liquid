@@ -975,10 +975,10 @@ Enhanced with Visual Studio Guide System
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v=10.0.0" defer="defer"></script>
+<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
 
 <!-- Load Visual Studio Guide System -->
-<script src="{{ 'V10-visual-studio-guide.js' | asset_url }}?v=1.0.0" defer="defer"></script>
+<script src="{{ 'V10-visual-studio-guide.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
 
 <!-- Include Visual Guide Modal Component -->
 {% render 'V10-visual-guide-modal' %}
