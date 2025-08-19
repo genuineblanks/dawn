@@ -1,0 +1,1619 @@
+{% comment %}
+TechPack V10 Step 3: Premium Studio-Based Garment Specifications
+Enhanced with Visual Studio Guide System
+{% endcomment %}
+
+{{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
+{{ 'V10-visual-studio-guide.css' | asset_url | stylesheet_tag }}
+{{ 'v10-quantity-responsive.css' | asset_url | stylesheet_tag }}
+
+<section id="techpack-v10-step-3" class="v10-techpack-step" data-step="3" style="display: none;">
+  <div class="techpack-container">
+    
+    <!-- Compact Progress Steps -->
+    <div class="simple-progress-container">
+      <div class="simple-progress-steps">
+        <div class="simple-step completed">
+          <div class="simple-step-circle">✓</div>
+          <span>Client Info</span>
+        </div>
+        <div class="simple-step completed">
+          <div class="simple-step-circle">✓</div>
+          <span>File Upload</span>
+        </div>
+        <div class="simple-step active">
+          <div class="simple-step-circle">3</div>
+          <span>Garment Specifications</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">4</div>
+          <span>Review</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+      
+      <!-- Step 3 Control Bar -->
+      <div class="step3-control-bar">
+        <!-- Quick Guide Button (Left) -->
+        <div class="step3-control-left">
+          <button type="button" class="techpack-help-btn techpack-help-btn--secondary quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+            <span>QUICK GUIDE</span>
+          </button>
+        </div>
+        
+        <!-- Theme Toggle Buttons (Center) -->
+        <div class="step3-control-center">
+          <div class="v10-theme-toggle">
+            <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+              ☀️ Light
+            </button>
+            <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+              🌙 Dark
+            </button>
+          </div>
+        </div>
+        
+        <!-- Visual Studio Guide Button (Right) -->
+        <div class="step3-control-right">
+          <button type="button" class="techpack-help-btn techpack-help-btn--primary visual-guide-trigger" id="step-3-help-btn" aria-label="Open Visual Studio Guide - Interactive help for understanding the workflow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+            <span>VISUAL STUDIO GUIDE</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Studio Navigator -->
+      <div class="studio-navigator">
+        <div class="studio-tabs-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        </div>
+        <div class="studio-tabs">
+          <button type="button" class="studio-tab studio-tab--active" data-studio="garment" id="garment-studio-tab">
+            <div class="studio-tab__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                <line x1="16" y1="8" x2="2" y2="22"/>
+                <line x1="17.5" y1="15" x2="9" y2="15"/>
+              </svg>
+            </div>
+            <div class="studio-tab__content">
+              <span class="studio-tab__title">Garment Studio</span>
+              <span class="studio-tab__subtitle">Configure specifications</span>
+            </div>
+          </button>
+
+          <button type="button" class="studio-tab" data-studio="design" id="design-studio-tab" style="display: none;">
+            <div class="studio-tab__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="studio-tab__content">
+              <span class="studio-tab__title">Design Studio</span>
+              <span class="studio-tab__subtitle">Colors & samples</span>
+            </div>
+          </button>
+
+          <button type="button" class="studio-tab" data-studio="quantities" id="quantities-studio-tab" style="display: none;">
+            <div class="studio-tab__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="studio-tab__content">
+              <span class="studio-tab__title">Quantity Studio</span>
+              <span class="studio-tab__subtitle">Sizes & quantities</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Studio 1: Garment Specifications -->
+      <div class="studio-container studio-container--active" id="garment-studio">
+        <div class="studio-header">
+          <div class="studio-header__content">
+            <h3 class="studio-header__title">Garment Specifications</h3>
+            <span class="studio-header__badge studio-header__badge--incomplete" id="garment-completion-badge">INCOMPLETE</span>
+          </div>
+          <button type="button" class="studio-help-btn" data-help="garment-studio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="studio-content">
+          
+          <!-- Garments Container -->
+          <div class="garments-grid" id="garments-container">
+            <!-- Garments will be dynamically added here -->
+          </div>
+
+          <!-- Add Garment Button -->
+          <div class="add-garment-section">
+            <button type="button" class="add-garment-btn" id="add-garment">
+              <div class="add-garment-btn__icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </div>
+              <div class="add-garment-btn__text">
+                <span class="add-garment-btn__title">Add Another Garment</span>
+                <span class="add-garment-btn__subtitle">Configure additional specifications</span>
+              </div>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Studio 2: Design & Lab Dip Studio (Sample Requests Only) -->
+      <div class="studio-container" id="design-studio" style="display: none;">
+        <div class="studio-header">
+          <div class="studio-header__content">
+            <h3 class="studio-header__title">Design Studio</h3>
+            <span class="studio-header__badge studio-header__badge--creative" id="design-completion-badge">CREATIVE</span>
+          </div>
+          <div class="studio-header__actions">
+            <div class="studio-toggle">
+              <button type="button" class="studio-toggle__btn studio-toggle__btn--active" data-mode="labdips" id="labdips-mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6"/>
+                </svg>
+                Lab Dips
+              </button>
+              <button type="button" class="studio-toggle__btn" data-mode="designs" id="designs-mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Designs
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-content">
+          
+          <!-- Lab Dips Mode -->
+          <div class="design-mode design-mode--active" id="labdips-mode-content">
+            <div class="color-studio">
+              
+              <!-- Color Selection Area -->
+              <div class="color-selection-area">
+                <div class="color-selection-header">
+                  <h4>Select Your Color</h4>
+                </div>
+
+                <!-- Color Picker Input -->
+                <div class="color-picker-section">
+                  <div class="color-picker-row">
+                    <div class="color-picker-left">
+                      <div class="color-picker-wrapper">
+                        <input type="color" id="lab-dip-color-picker" class="color-picker-input" value="#2563eb">
+                      </div>
+                    </div>
+                    <div class="pantone-display-right">
+                      <!-- Auto Pantone Display will be moved here -->
+                      <div class="auto-pantone-display" id="auto-pantone-display">
+                        <div class="pantone-result">
+                          <div class="pantone-circle" id="auto-pantone-circle"></div>
+                          <div class="pantone-info">
+                            <div class="pantone-code" id="auto-pantone-code">PANTONE 19-4052 TPX</div>
+                            <div class="pantone-note">Auto-matched from 2,310+ colors</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pantone-code-input">
+                    <input type="text" id="manual-pantone-code" class="pantone-input" placeholder="Or enter Pantone code (e.g., 19-4052 TPX)">
+                  </div>
+                </div>
+
+                <!-- Popular Colors Grid -->
+                <div class="popular-colors-section">
+                  <h5>Popular Colors</h5>
+                  <div class="popular-colors-grid">
+                    <div class="popular-color-circle" data-color="#000000" data-pantone="19-4007 TPX" style="background-color: #000000;" title="Black"></div>
+                    <div class="popular-color-circle" data-color="#ffffff" data-pantone="11-4001 TPX" style="background-color: #ffffff; border: 1px solid #e5e7eb;" title="White"></div>
+                    <div class="popular-color-circle" data-color="#dc2626" data-pantone="18-1664 TPX" style="background-color: #dc2626;" title="Red"></div>
+                    <div class="popular-color-circle" data-color="#2563eb" data-pantone="19-4052 TPX" style="background-color: #2563eb;" title="Blue"></div>
+                    <div class="popular-color-circle" data-color="#16a34a" data-pantone="17-6153 TPX" style="background-color: #16a34a;" title="Green"></div>
+                    <div class="popular-color-circle" data-color="#eab308" data-pantone="13-0859 TPX" style="background-color: #eab308;" title="Yellow"></div>
+                    <div class="popular-color-circle" data-color="#f97316" data-pantone="16-1164 TPX" style="background-color: #f97316;" title="Orange"></div>
+                    <div class="popular-color-circle" data-color="#8b5cf6" data-pantone="18-3838 TPX" style="background-color: #8b5cf6;" title="Purple"></div>
+                    <div class="popular-color-circle" data-color="#ec4899" data-pantone="17-2034 TPX" style="background-color: #ec4899;" title="Pink"></div>
+                    <div class="popular-color-circle" data-color="#6b7280" data-pantone="18-4005 TPX" style="background-color: #6b7280;" title="Gray"></div>
+                  </div>
+                </div>
+
+
+                <!-- Add Lab Dip Actions -->
+                <div class="add-labdip-actions">
+                  <button type="button" class="add-to-garment-btn" id="add-labdip-to-garment" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add to Garment (€25)
+                  </button>
+                  <button type="button" class="add-fabric-swatch-btn" id="add-fabric-swatch">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                    Add Fabric Swatch Only (€25)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lab Dips Collection -->
+              <div class="labdips-collection">
+                <div class="collection-header">
+                  <h4>Lab Dip Collection</h4>
+                  <span class="collection-count" id="labdips-count">0 colors</span>
+                </div>
+                
+                <!-- Tip Message for Multiple Lab Dips -->
+                <div class="collection-tip" id="labdips-tip" style="display: none;">
+                  <div class="tip-icon">💡</div>
+                  <div class="tip-content">
+                    <strong>Tip:</strong> Assign different lab dips to the same garment to create color variants automatically
+                  </div>
+                </div>
+                
+                <div class="collection-grid" id="labdips-grid">
+                  <!-- Lab dips will be added here -->
+                </div>
+                <div class="collection-empty" id="labdips-empty">
+                  <div class="empty-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M12 1v6m0 6v6"/>
+                    </svg>
+                  </div>
+                  <h5>No Lab Dips Added</h5>
+                  <p>Start by selecting a color above</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Design Samples Mode -->
+          <div class="design-mode" id="designs-mode-content">
+            <div class="design-studio">
+              
+              <!-- Design Input Area -->
+              <div class="design-input-area">
+                <div class="design-input-header">
+                  <h4>Create Design Sample</h4>
+                </div>
+
+                <div class="design-input-form">
+                  <div class="design-form-row">
+                    <div class="design-form-group">
+                      <label class="design-form-label">Design Name</label>
+                      <input type="text" id="design-sample-name" class="design-form-input" placeholder="e.g., Logo Front, Back Print">
+                    </div>
+                    <div class="design-form-group">
+                      <label class="design-form-label">Design Type</label>
+                      <div class="design-type-grid">
+                        <label class="design-type-option">
+                          <input type="radio" name="design-type" value="Embroidery">
+                          <span class="design-type-card">
+                            <span class="design-type-icon">🧵</span>
+                            <span class="design-type-name">Embroidery</span>
+                          </span>
+                        </label>
+                        <label class="design-type-option">
+                          <input type="radio" name="design-type" value="Screen Print">
+                          <span class="design-type-card">
+                            <span class="design-type-icon">🖨️</span>
+                            <span class="design-type-name">Screen Print</span>
+                          </span>
+                        </label>
+                        <label class="design-type-option">
+                          <input type="radio" name="design-type" value="Digital Print">
+                          <span class="design-type-card">
+                            <span class="design-type-icon">🎨</span>
+                            <span class="design-type-name">Digital Print</span>
+                          </span>
+                        </label>
+                        <label class="design-type-option">
+                          <input type="radio" name="design-type" value="Other">
+                          <span class="design-type-card">
+                            <span class="design-type-icon">✨</span>
+                            <span class="design-type-name">Other</span>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Optional File Upload -->
+                  <div class="design-form-group">
+                    <label class="design-form-label">Upload Design File (Optional)</label>
+                    <div class="file-upload-area" id="design-file-upload">
+                      <div class="file-upload-content">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                          <polyline points="7,10 12,15 17,10"/>
+                          <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span>Click to upload or drag file here</span>
+                        <small>PNG, JPG, PDF up to 10MB</small>
+                      </div>
+                      <input type="file" id="design-file-input" accept=".png,.jpg,.jpeg,.pdf" hidden>
+                    </div>
+                  </div>
+
+                  <!-- Add Design Actions -->
+                  <div class="add-design-actions">
+                    <button type="button" class="add-to-garment-btn" id="add-design-to-garment" disabled>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Add to Garment (€15)
+                    </button>
+                    <button type="button" class="add-fabric-design-btn" id="add-fabric-design">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                      Add Fabric Design Sample (€15)
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Design Samples Collection -->
+              <div class="designs-collection">
+                <div class="collection-header">
+                  <h4>Design Sample Collection</h4>
+                  <span class="collection-count" id="designs-count">0 designs</span>
+                </div>
+                <div class="collection-grid" id="designs-grid">
+                  <!-- Design samples will be added here -->
+                </div>
+                <div class="collection-empty" id="designs-empty">
+                  <div class="empty-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                  <h5>No Design Samples Added</h5>
+                  <p>Start by creating a design above</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Studio 3: Quantities Studio (Bulk Orders Only) -->
+      <div class="studio-container" id="quantities-studio" style="display: none;">
+        <div class="studio-header">
+          <div class="studio-header__content">
+            <h3 class="studio-header__title">Quantity Studio</h3>
+            <span class="studio-header__badge studio-header__badge--production" id="quantities-completion-badge">PRODUCTION</span>
+          </div>
+          <div class="studio-header__actions">
+            <div class="studio-toggle">
+              <button type="button" class="studio-toggle__btn studio-toggle__btn--active" data-mode="sizes" id="sizes-mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Sizes & Quantities
+              </button>
+              <button type="button" class="studio-toggle__btn" data-mode="distribution" id="distribution-mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 3v18h18"/>
+                  <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                </svg>
+                Distribution
+              </button>
+            </div>
+            <button type="button" class="studio-help-btn" data-help="quantities-studio">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="studio-content">
+          
+          <!-- Enhanced Quantity Tracker -->
+          <div class="quantity-tracker-enhanced">
+            <div class="quantity-tracker-enhanced__stats">
+              <div class="quantity-stat">
+                <div class="quantity-stat__value" id="total-production-quantity">0</div>
+                <div class="quantity-stat__label">Total Units</div>
+              </div>
+              <div class="quantity-stat">
+                <div class="quantity-stat__value" id="total-garments-count">0</div>
+                <div class="quantity-stat__label">Garments</div>
+              </div>
+              <div class="quantity-stat">
+                <div class="quantity-stat__value" id="total-colorways-count">0</div>
+                <div class="quantity-stat__label">Colorways</div>
+              </div>
+              <div class="quantity-stat quantity-stat--minimum">
+                <div class="quantity-stat__value">75</div>
+                <div class="quantity-stat__label">Min Required</div>
+              </div>
+            </div>
+            <div class="quantity-progress-bar">
+              <div class="quantity-progress-bar__track">
+                <div class="quantity-progress-bar__fill" id="production-quantity-progress" style="width: 0%"></div>
+                <div class="quantity-progress-bar__minimum-marker" style="left: 75px;"></div>
+              </div>
+              <div class="quantity-progress-bar__status">
+                <span class="progress-status-text" id="quantity-progress-status">0 / 75 minimum units</span>
+                <span class="progress-percentage" id="quantity-progress-percentage">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sizes & Quantities Mode -->
+          <div class="quantities-mode quantities-mode--active" id="sizes-mode-content">
+            
+            <!-- Bulk Input Tools -->
+            <div class="bulk-input-tools">
+              <div class="bulk-tools-header">
+                <h4>Quick Fill Tools</h4>
+                <div class="bulk-tools-actions">
+                  <button type="button" class="bulk-tool-btn" id="clear-all-quantities">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c0-1 1-2 2-2v2"/>
+                      <line x1="10" y1="11" x2="10" y2="17"/>
+                      <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                    Clear All
+                  </button>
+                  <div class="bulk-preset-dropdown">
+                    <button type="button" class="bulk-tool-btn bulk-tool-btn--primary" id="apply-preset-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                      Apply Preset
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                      </svg>
+                    </button>
+                    <div class="preset-dropdown-menu" id="preset-dropdown-menu">
+                      <button type="button" class="preset-option" data-preset="bell-curve">
+                        <span class="preset-name">Bell Curve (S,M,L focus)</span>
+                        <span class="preset-description">2-6-8-10-8-6-2</span>
+                      </button>
+                      <button type="button" class="preset-option" data-preset="medium-heavy">
+                        <span class="preset-name">Medium Heavy</span>
+                        <span class="preset-description">3-5-8-12-8-5-3</span>
+                      </button>
+                      <button type="button" class="preset-option" data-preset="large-heavy">
+                        <span class="preset-name">Large Heavy</span>
+                        <span class="preset-description">2-4-6-8-12-10-8</span>
+                      </button>
+                      <button type="button" class="preset-option" data-preset="equal-split">
+                        <span class="preset-name">Equal Split</span>
+                        <span class="preset-description">Equal across all sizes</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Garment Quantities Grid with Desktop 2-per-row Layout -->
+            <div class="garment-quantities-grid" id="garment-quantities-container">
+              <!-- Validation Summary Cards -->
+              <div class="quantity-validation-summary" id="quantity-validation-summary">
+                <!-- Dynamic validation cards will be added here -->
+              </div>
+              
+              <!-- Responsive Garment Grid -->
+              <div class="responsive-garment-grid" id="responsive-garment-grid">
+                <!-- Quantity forms will be dynamically added here per garment -->
+                <!-- Desktop: 2 garments per row, Mobile: 1 garment per row -->
+              </div>
+            </div>
+
+            <!-- Add More Instructions -->
+            <div class="quantities-instructions">
+              <div class="instructions-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4"/>
+                  <path d="M12 8h.01"/>
+                </svg>
+              </div>
+              <div class="instructions-content">
+                <h5>Size & Quantity Instructions</h5>
+                <ul>
+                  <li>Each garment needs quantities distributed across sizes</li>
+                  <li>Use presets for common size distributions</li>
+                  <li>Minimum 75 units total required for production</li>
+                  <li>Different colorways can have different size distributions</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Distribution Analysis Mode -->
+          <div class="quantities-mode" id="distribution-mode-content">
+            
+            <!-- Aggregate Analytics Dashboard -->
+            <div id="aggregate-analytics-container">
+              <!-- Aggregate analytics dashboard will be rendered here via JavaScript -->
+            </div>
+            
+            <!-- Per-Garment Distribution Analytics -->
+            <div class="garment-analytics-container" id="garment-analytics-container">
+              <!-- Individual garment analytics charts will be rendered here via JavaScript -->
+            </div>
+            
+            <!-- Legacy Distribution Analysis (fallback) -->
+            <div class="distribution-analysis legacy-analysis" style="display: none;">
+              <div class="analysis-header">
+                <h4>Size Distribution Analysis</h4>
+                <div class="analysis-summary" id="distribution-summary">
+                  <span class="summary-item">Most Popular: <strong id="most-popular-size">M</strong></span>
+                  <span class="summary-item">Total Spread: <strong id="size-spread">5 sizes</strong></span>
+                </div>
+              </div>
+
+              <!-- Visual Size Distribution Chart -->
+              <div class="size-distribution-chart" id="size-distribution-chart">
+                <div class="chart-bars">
+                  <div class="size-bar" data-size="xxs">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">XXS</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="xs">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">XS</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="s">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">S</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="m">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">M</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="l">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">L</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="xl">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">XL</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="xxl">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">XXL</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                  <div class="size-bar" data-size="3xl">
+                    <div class="size-bar__fill" style="height: 0%;"></div>
+                    <div class="size-bar__label">3XL</div>
+                    <div class="size-bar__value">0</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Per-Garment Breakdown -->
+              <div class="garment-breakdown" id="garment-breakdown">
+                <div class="breakdown-header">
+                  <h5>Per-Garment Breakdown</h5>
+                </div>
+                <div class="breakdown-grid" id="breakdown-grid">
+                  <!-- Per-garment summaries will be added here -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Standalone Items Summary (Sample Requests Only) -->
+      <div class="standalone-items" id="standalone-items" style="display: none;">
+        <div class="standalone-header">
+          <h4>Standalone Items</h4>
+          <p>Items not assigned to garments will be sent as separate samples</p>
+        </div>
+        
+        <div class="standalone-grid">
+          <div class="standalone-section">
+            <h5>Fabric Swatches</h5>
+            <div class="standalone-list" id="standalone-labdips">
+              <!-- Unassigned lab dips -->
+            </div>
+          </div>
+          
+          <div class="standalone-section">
+            <h5>Design Samples on Fabric</h5>
+            <div class="standalone-list" id="standalone-designs">
+              <!-- Unassigned design samples -->
+            </div>
+          </div>
+        </div>
+
+        <div class="standalone-cost">
+          <span class="standalone-cost__label">Standalone Items Cost:</span>
+          <span class="standalone-cost__value" id="standalone-cost">€0</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="v10-step-actions">
+        <button type="button" class="v10-btn v10-btn--ghost" id="step-3-prev">
+          <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          Previous
+        </button>
+        <button type="button" class="v10-btn v10-btn--primary" id="step-3-next" disabled>
+          Next Step
+          <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="v10-modal-overlay" id="step-3-help-modal" style="display: none;">
+    <div class="v10-modal v10-modal--help">
+      <div class="v10-modal-header">
+        <div class="v10-modal-icon v10-modal-icon--help">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="v10-modal-title">Studio Guide</h3>
+        <button type="button" class="v10-modal-close" id="close-help-modal">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="v10-modal-body">
+        <div class="help-content" id="help-content">
+          <!-- Help content will be populated based on request type -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Garment Card Template -->
+<template id="V10-garment-template">
+  <div class="garment-card" data-garment-id="">
+    <div class="garment-card__header">
+      <div class="garment-card__title">
+        <span class="garment-card__number">Garment 1</span>
+        <div class="garment-card__status">
+          <span class="status-indicator status-indicator--incomplete">Incomplete</span>
+        </div>
+      </div>
+      <div class="garment-card__actions">
+        <button type="button" class="garment-card__finalize" title="Finalize edit" style="display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          <span>Finalize Edit</span>
+        </button>
+        <button type="button" class="garment-card__duplicate" title="Duplicate garment">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+        <button type="button" class="garment-card__remove" title="Remove garment">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Garment Summary (shown when complete) -->
+    <div class="garment-card__summary" style="display: none;">
+      <div class="garment-summary">
+        <div class="garment-summary__content">
+          <div class="garment-summary__title">
+            <div class="garment-summary__color-circle" style="display: none;"></div>
+            <span class="garment-summary__type">T-Shirt</span>
+            <span class="garment-summary__separator">-</span>
+            <span class="garment-summary__color-name" style="display: none;"></span>
+            <span class="garment-summary__fabric">Cotton</span>
+          </div>
+          <div class="garment-summary__status">Complete</div>
+          
+          <!-- Design Inclusion Controls -->
+          <div class="design-inclusion-controls">
+            <div class="design-toggle">
+              <label class="design-toggle__label">
+                <input type="checkbox" class="design-toggle__input" checked>
+                <span class="design-toggle__text">Include TechPack Design?</span>
+              </label>
+            </div>
+            <div class="design-reference" style="display: block;">
+              <input 
+                type="text" 
+                class="design-reference__input" 
+                placeholder="Enter design name/reference from your TechPack"
+                maxlength="100"
+              >
+              <div class="design-reference__warning" style="display: none;">
+                ⚠️ <strong>Design Reference Required</strong> - Please enter the design name/reference from your TechPack file so our team knows which design to apply to this garment.
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="garment-summary__edit-btn" title="Edit garment">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
+      </div>
+    </div>
+
+    <div class="garment-card__content">
+      
+      <!-- Compact Garment & Fabric Selection Split -->
+      <div class="garment-fabric-split-container">
+        
+        <!-- Garment Type - Left Side -->
+        <div class="compact-selection-section">
+          <div class="selection-header">
+            <h5>Garment Type</h5>
+            <button type="button" class="selection-help" data-help="garment-types">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="garment-collapsed">
+            <div class="selection-placeholder" id="garment-placeholder">
+              <span class="placeholder-icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
+              <span class="placeholder-text">Select garment type</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="garment-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="garment-selected-icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
+                <span class="selected-name" id="garment-selected-name">T-Shirt</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-garment-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Garment Type
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="garment-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="garment-type-grid">
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Zip-Up Hoodie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'zip-up-hoodie', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Zip-Up Hoodie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Hoodie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'hoodie', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Hoodie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="T-Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
+                  <span class="compact-radio-card__name">T-Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Sweatshirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'sweatshirt', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Sweatshirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Sweatpants">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'sweatpants', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Sweatpants</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Shorts">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'shorts', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Shorts</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Long Sleeve T-Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'long-sleeve', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Long Sleeve</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'shirt', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Polo Shirt">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'polo-shirt', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Polo Shirt</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Tank Top">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'tank-top', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Tank Top</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Hat/Cap">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'hat-cap', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Hat/Cap</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Beanie">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'beanie', size: 20 %}</span>
+                  <span class="compact-radio-card__name">Beanie</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="garmentType" value="Other">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">✨</span>
+                  <span class="compact-radio-card__name">Other</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fabric Type - Right Side (for quotation/sample) -->
+        <div class="compact-selection-section" data-show-for="quotation,sample">
+          <div class="selection-header">
+            <h5>Fabric Type</h5>
+            <button type="button" class="selection-help" data-help="fabric-types">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="fabric-collapsed">
+            <div class="selection-placeholder" id="fabric-placeholder">
+              <span class="placeholder-icon">🧵</span>
+              <span class="placeholder-text">Select fabric type</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="fabric-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="fabric-selected-icon">🧵</span>
+                <span class="selected-name" id="fabric-selected-name">100% Cotton</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-fabric-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Fabric Type
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="fabric-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="fabric-type-grid">
+              <!-- Fabric options will be populated dynamically based on garment type -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Reference - Right Side (for bulk orders) -->
+        <div class="compact-selection-section" data-show-for="bulk">
+          <div class="selection-header">
+            <h5>Sample Reference</h5>
+            <button type="button" class="selection-help" data-help="sample-reference">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <circle cx="12" cy="17" r="1"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Collapsed State -->
+          <div class="compact-selection-widget" id="sample-reference-collapsed">
+            <div class="selection-placeholder" id="sample-reference-placeholder">
+              <span class="placeholder-icon">📋</span>
+              <span class="placeholder-text">Select sample reference</span>
+              <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            
+            <div class="selection-display" id="sample-reference-display" style="display: none;">
+              <div class="selected-item">
+                <span class="selected-icon" id="sample-reference-selected-icon">📋</span>
+                <span class="selected-name" id="sample-reference-selected-name">Approved Sample – As Is</span>
+              </div>
+              <button type="button" class="change-selection-btn" id="change-sample-reference-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M3 21v-5h5"/>
+                </svg>
+                Change Sample Reference
+              </button>
+            </div>
+          </div>
+          
+          <!-- Expanded State -->
+          <div class="selection-expanded" id="sample-reference-expanded" style="display: none;">
+            <div class="compact-radio-grid" id="sample-reference-grid">
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="approved-sample">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">✅</span>
+                  <span class="compact-radio-card__name">Approved Sample – As Is</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="approved-with-changes">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">🔄</span>
+                  <span class="compact-radio-card__name">Approved Sample – With Changes</span>
+                </span>
+              </label>
+              <label class="compact-radio-card">
+                <input type="radio" name="sampleReference" value="new-sample-version">
+                <span class="compact-radio-card__content">
+                  <span class="compact-radio-card__icon">📋</span>
+                  <span class="compact-radio-card__name">New Sample Version</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Type Selection (for sample requests only) -->
+      <div class="selection-section" data-show-for="sample">
+        <div class="selection-header">
+          <h5>Sample Type</h5>
+          <button type="button" class="selection-help" data-help="sample-types">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+          </button>
+        </div>
+        <div class="sample-type-selection">
+          <div class="sample-type-card" data-value="stock">
+            <input type="radio" name="sampleType" value="stock" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">Stock Fabric Color</span>
+              <span class="sample-type-card__price">Select garment & fabric</span>
+            </div>
+            <span class="sample-type-card__description">Quick validation • 2-3 weeks</span>
+            <span class="sample-type-card__details">Black, off-white, or random stock color</span>
+          </div>
+          <div class="sample-type-card" data-value="custom">
+            <input type="radio" name="sampleType" value="custom" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">Custom Color (Pantone)</span>
+              <span class="sample-type-card__price">Select garment & fabric</span>
+            </div>
+            <span class="sample-type-card__description">Exact color match • 4-6 weeks</span>
+            <span class="sample-type-card__details">Requires Lab Dip assignment</span>
+          </div>
+          <div class="sample-type-card" data-value="techpack">
+            <input type="radio" name="sampleType" value="techpack" style="display: none;">
+            <div class="sample-type-card__header">
+              <span class="sample-type-card__title">As Per TechPack</span>
+              <span class="sample-type-card__price">Premium</span>
+            </div>
+            <span class="sample-type-card__description">Exact TechPack specifications • 4-8 weeks dependent on design</span>
+            <span class="sample-type-card__details">Higher cost, comprehensive sample</span>
+            <div class="techpack-warning" style="display: none;">
+              <div class="warning-content">
+                <div class="warning-text">Only select if you have Pantone TCX/TPX inside</div>
+                <div class="warning-action">
+                  <span>Otherwise add colorway from our </span>
+                  <button type="button" class="design-studio-btn" onclick="window.v10TechPackSystem?.navigator?.switchStudio('design')">
+                    Design Studio
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</template>
+
+<!-- Lab Dip Item Template -->
+<template id="V10-labdip-template">
+  <div class="collection-item" data-labdip-id="">
+    <div class="collection-item__visual">
+      <div class="collection-item__color" style="background-color: #000000;"></div>
+    </div>
+    <div class="collection-item__content">
+      <span class="collection-item__name">PANTONE 19-4052 TPX</span>
+      <span class="collection-item__type">Lab Dip</span>
+    </div>
+    <div class="collection-item__actions">
+      <button type="button" class="collection-item__assign" title="Assign to garment">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+      <button type="button" class="collection-item__remove" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</template>
+
+<!-- Design Sample Item Template -->
+<template id="V10-design-template">
+  <div class="collection-item" data-design-id="">
+    <div class="collection-item__visual">
+      <div class="collection-item__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="collection-item__content">
+      <span class="collection-item__name">Design Name</span>
+      <span class="collection-item__type">Embroidery</span>
+    </div>
+    <div class="collection-item__actions">
+      <button type="button" class="collection-item__assign" title="Assign to garment">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+      <button type="button" class="collection-item__remove" title="Remove">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</template>
+
+<!-- Enhanced Responsive Garment Quantity Card Template -->
+<template id="V10-garment-quantity-template">
+  <div class="garment-quantity-card" data-garment-id="">
+    <!-- Validation Status Card -->
+    <div class="garment-validation-card" id="garment-validation-card">
+      <div class="validation-progress-bar">
+        <div class="validation-progress-fill" id="validation-progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="validation-status" id="validation-status">
+        <span class="validation-text">Select garment types to calculate minimums</span>
+        <span class="validation-percentage">0%</span>
+      </div>
+    </div>
+
+    <div class="garment-quantity-card__header">
+      <div class="garment-info">
+        <div class="garment-info__visual">
+          <div class="garment-info__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+              <line x1="16" y1="8" x2="2" y2="22"/>
+              <line x1="17.5" y1="15" x2="9" y2="15"/>
+            </svg>
+          </div>
+          <div class="garment-colorway-indicators" id="colorway-indicators">
+            <!-- Colorway dots will be added here -->
+          </div>
+        </div>
+        <div class="garment-info__content">
+          <h4 class="garment-info__title">
+            <span class="garment-type">T-Shirt</span>
+            <span class="garment-fabric">Cotton</span>
+          </h4>
+          <div class="garment-info__subtitle">
+            <span class="colorway-count" id="colorway-count">1 colorway</span>
+            <span class="minimum-required" id="minimum-required">Min: 75</span>
+          </div>
+        </div>
+      </div>
+      <div class="garment-quantity-summary">
+        <div class="quantity-summary__value" id="garment-total-quantity">0</div>
+        <div class="quantity-summary__label">Total Units</div>
+        <div class="quantity-summary__status" id="quantity-status">Insufficient</div>
+      </div>
+    </div>
+
+    <div class="garment-quantity-card__content">
+      
+      <!-- Multi-Colorway Tabs (shown when multiple colorways exist) -->
+      <div class="colorway-tabs" id="colorway-tabs" style="display: none;">
+        <div class="colorway-tabs__list" id="colorway-tabs-list">
+          <!-- Colorway tabs will be added here -->
+        </div>
+        <button type="button" class="add-colorway-btn" id="add-colorway-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Colorway
+        </button>
+      </div>
+
+      <!-- Enhanced Size/Quantity Grid Container with TechPack Validation -->
+      <div class="size-quantity-container">
+        
+        <!-- Colorway Selection (shown when multiple colorways exist) -->
+        <div class="colorway-selector" id="colorway-selector" style="display: none;">
+          <div class="colorway-selector__header">
+            <span class="colorway-selector__title">Select Colorway:</span>
+            <span class="colorway-selector__count" id="active-colorway-count">1 of 1</span>
+          </div>
+          <div class="colorway-selector__tabs" id="colorway-selector-tabs">
+            <!-- Colorway tabs will be added here -->
+          </div>
+        </div>
+
+        <!-- Responsive Size Distribution Grid -->
+        <div class="responsive-size-grid" id="responsive-size-grid">
+          <!-- Desktop: Horizontal layout with all sizes visible -->
+          <!-- Mobile: Compact vertical cards with smart sizing -->
+          
+          <div class="size-grid-header">
+            <div class="size-grid-title">
+              <span>Size Distribution</span>
+              <div class="size-distribution-limits" id="size-distribution-limits">
+                <span class="limit-text">Max 7 sizes for this quantity</span>
+                <button type="button" class="limit-help-btn" title="Size distribution guidelines">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <circle cx="12" cy="17" r="1"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="size-grid-actions">
+              <button type="button" class="preset-quick-btn" id="preset-quick-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Preset
+              </button>
+            </div>
+          </div>
+
+          <!-- Size Input Cards Grid -->
+          <div class="size-input-grid" id="size-input-grid">
+            <div class="size-input-card" data-size="xxs">
+              <div class="size-input-card__header">
+                <span class="size-label">XXS</span>
+                <span class="size-percentage" id="xxs-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xxs-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xs">
+              <div class="size-input-card__header">
+                <span class="size-label">XS</span>
+                <span class="size-percentage" id="xs-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xs-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="s">
+              <div class="size-input-card__header">
+                <span class="size-label">S</span>
+                <span class="size-percentage" id="s-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="s-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="m">
+              <div class="size-input-card__header">
+                <span class="size-label">M</span>
+                <span class="size-percentage" id="m-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="m-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="l">
+              <div class="size-input-card__header">
+                <span class="size-label">L</span>
+                <span class="size-percentage" id="l-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="l-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xl">
+              <div class="size-input-card__header">
+                <span class="size-label">XL</span>
+                <span class="size-percentage" id="xl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="xxl">
+              <div class="size-input-card__header">
+                <span class="size-label">XXL</span>
+                <span class="size-percentage" id="xxl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="xxl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="size-input-card" data-size="3xl">
+              <div class="size-input-card__header">
+                <span class="size-label">3XL</span>
+                <span class="size-percentage" id="3xl-percentage">0%</span>
+              </div>
+              <div class="size-input-card__input">
+                <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" placeholder="0">
+              </div>
+              <div class="size-input-card__bar">
+                <div class="size-bar-fill" id="3xl-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Enhanced Actions & Validation Feedback -->
+      <div class="quantity-actions">
+        <div class="quantity-actions__validation">
+          <div class="validation-messages" id="validation-messages">
+            <!-- Dynamic validation messages will appear here -->
+          </div>
+        </div>
+        
+        <div class="quantity-actions__controls">
+          <div class="quantity-actions__left">
+            <div class="preset-dropdown-wrapper">
+              <button type="button" class="quick-action-btn quick-action-btn--preset" id="apply-preset-to-garment">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Apply Preset
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="preset-dropdown-menu" id="garment-preset-menu">
+                <button type="button" class="preset-option" data-preset="bell-curve">
+                  <span class="preset-name">Bell Curve</span>
+                  <span class="preset-description">S-M-L focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="medium-heavy">
+                  <span class="preset-name">Medium Heavy</span>
+                  <span class="preset-description">M-L focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="large-heavy">
+                  <span class="preset-name">Large Heavy</span>
+                  <span class="preset-description">L-XL focus</span>
+                </button>
+                <button type="button" class="preset-option" data-preset="equal-split">
+                  <span class="preset-name">Equal Split</span>
+                  <span class="preset-description">Even distribution</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="quick-action-btn" id="clear-garment-quantities">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              </svg>
+              Clear All
+            </button>
+          </div>
+          
+          <div class="quantity-actions__right">
+            <div class="quantity-summary-compact" id="quantity-summary-compact">
+              <div class="summary-item">
+                <span class="summary-label">Total:</span>
+                <span class="summary-value" id="garment-summary-total">0</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Required:</span>
+                <span class="summary-value" id="garment-summary-required">75</span>
+              </div>
+              <div class="summary-progress">
+                <div class="summary-progress-bar">
+                  <div class="summary-progress-fill" id="garment-summary-progress" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distribution Analytics Chart Container -->
+      <div class="distribution-chart-container" id="distribution-chart-container" style="display: none;">
+        <!-- Distribution analytics chart will be rendered here when Distribution mode is active -->
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<!-- Colorway Tab Template -->
+<template id="V10-colorway-tab-template">
+  <button type="button" class="colorway-tab" data-colorway-id="">
+    <div class="colorway-tab__color" style="background-color: #000000;"></div>
+    <div class="colorway-tab__content">
+      <span class="colorway-tab__name">PANTONE 19-4052 TPX</span>
+      <span class="colorway-tab__quantity">0 units</span>
+    </div>
+    <button type="button" class="colorway-tab__remove" title="Remove colorway">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </button>
+</template>
+
+<!-- Multi-Colorway Grid Template -->
+<template id="V10-multi-colorway-grid-template">
+  <div class="multi-colorway-grid" data-colorway-id="" style="display: none;">
+    <div class="colorway-grid-header">
+      <div class="colorway-info">
+        <div class="colorway-color" style="background-color: #000000;"></div>
+        <span class="colorway-name">PANTONE 19-4052 TPX</span>
+      </div>
+      <div class="colorway-total">
+        <span class="colorway-total-value">0</span>
+        <span class="colorway-total-label">units</span>
+      </div>
+    </div>
+    <div class="size-quantity-grid__header">
+      <div class="size-label">Size</div>
+      <div class="size-column">XXS</div>
+      <div class="size-column">XS</div>
+      <div class="size-column">S</div>
+      <div class="size-column">M</div>
+      <div class="size-column">L</div>
+      <div class="size-column">XL</div>
+      <div class="size-column">XXL</div>
+      <div class="size-column">3XL</div>
+    </div>
+    <div class="size-quantity-grid__row">
+      <div class="quantity-label">Qty</div>
+      <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
+      <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" placeholder="0">
+    </div>
+  </div>
+</template>
+
+<!-- Validation Message Card Template -->
+<template id="V10-validation-card-template">
+  <div class="validation-message" data-type="" data-garment-id="">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <!-- Icon will be populated by JavaScript based on validation type -->
+    </svg>
+    <span class="validation-message__text"></span>
+    <button type="button" class="validation-message__dismiss" title="Dismiss">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</template>
+
+<!-- Colorway Validation Card Template -->
+<template id="V10-colorway-validation-template">
+  <div class="colorway-validation-card" data-colorway-id="" data-garment-id="">
+    <div class="colorway-validation-header">
+      <div class="colorway-validation-visual">
+        <div class="colorway-validation-color" style="background-color: #000000;"></div>
+        <span class="colorway-validation-name">PANTONE 19-4052 TPX</span>
+      </div>
+      <div class="colorway-validation-status">
+        <span class="colorway-validation-progress">0%</span>
+        <div class="colorway-validation-indicator"></div>
+      </div>
+    </div>
+    <div class="colorway-validation-details">
+      <span class="colorway-validation-text">15 more units needed</span>
+      <div class="colorway-validation-bar">
+        <div class="colorway-validation-fill" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Load TechPack V10 Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
+
+<!-- Load Visual Studio Guide System -->
+<script src="{{ 'V10-visual-studio-guide.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
+
+<!-- Include Visual Guide Modal Component -->
+{% render 'V10-visual-guide-modal' %}
+
+<!-- Include Quick Guide Modal Component -->
+{% render 'V10-quick-guide-modal' %}
+
+{% schema %}
+{
+  "name": "TechPack V10 Step 3",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Studio-Based Garment Specifications"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Garment Specifications"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Studio-quality garment builder with intelligent assignment system"
+    },
+    {
+      "type": "number",
+      "id": "minimum_quantity",
+      "label": "Minimum Quantity",
+      "default": 75
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V10 Step 3"
+    }
+  ]
+}
+{% endschema %}
