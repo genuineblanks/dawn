@@ -3325,7 +3325,9 @@ class V10_GarmentStudio {
         assignedLabDips: new Set(data?.assignedLabDips || []),
         assignedDesigns: new Set(data?.assignedDesigns || []),
         isComplete: false,
-        isInEditMode: false
+        isInEditMode: false,
+        includeDesign: data?.includeDesign !== undefined ? data.includeDesign : true, // Default to true
+        designReference: data?.designReference || '' // Design name/reference from TechPack
       };
 
       // Store in state
@@ -3809,6 +3811,24 @@ class V10_GarmentStudio {
       }
     }
 
+    // Handle design inclusion toggle
+    if (e.target.classList.contains('design-toggle__input')) {
+      garmentData.includeDesign = e.target.checked;
+      console.log(`🎨 Design inclusion ${garmentData.includeDesign ? 'ENABLED' : 'DISABLED'} for garment ${garmentId}`);
+      
+      // Update the summary display immediately
+      this.updateGarmentSummary(garmentCard, garmentData);
+    }
+
+    // Handle design reference input
+    if (e.target.classList.contains('design-reference__input')) {
+      garmentData.designReference = e.target.value.trim();
+      console.log(`📝 Design reference updated for garment ${garmentId}: "${garmentData.designReference}"`);
+      
+      // Update the summary display immediately
+      this.updateGarmentSummary(garmentCard, garmentData);
+    }
+
     // Update garment status
     this.updateGarmentStatus(garmentId);
 
@@ -3989,8 +4009,44 @@ class V10_GarmentStudio {
     const colorName = garmentCard.querySelector('.garment-summary__color-name');
     const separator = garmentCard.querySelector('.garment-summary__separator');
     
+    // Design inclusion controls
+    const designToggle = garmentCard.querySelector('.design-toggle__input');
+    const designReference = garmentCard.querySelector('.design-reference__input');
+    const designReferenceContainer = garmentCard.querySelector('.design-reference');
+    const designWarning = garmentCard.querySelector('.design-reference__warning');
+    
+    // Update design toggle and reference from garment data
+    if (designToggle) {
+      designToggle.checked = garmentData.includeDesign;
+    }
+    if (designReference) {
+      designReference.value = garmentData.designReference || '';
+    }
+    
+    // Show/hide design reference input based on toggle
+    if (designReferenceContainer) {
+      designReferenceContainer.style.display = garmentData.includeDesign ? 'block' : 'none';
+    }
+    
+    // Show/hide warning based on design inclusion and reference
+    if (designWarning) {
+      const shouldShowWarning = garmentData.includeDesign && !garmentData.designReference.trim();
+      designWarning.style.display = shouldShowWarning ? 'block' : 'none';
+    }
+    
+    // Update garment type with design indication
     if (typeSpan && garmentData.type) {
-      typeSpan.textContent = garmentData.type;
+      let typeText = garmentData.type;
+      if (garmentData.includeDesign) {
+        if (garmentData.designReference && garmentData.designReference.trim()) {
+          typeText += ` with Design (${garmentData.designReference.trim()})`;
+        } else {
+          typeText += ' with Design';
+        }
+      } else {
+        typeText += ' (Blank)';
+      }
+      typeSpan.textContent = typeText;
     }
     
     // Handle color display for garments with assigned lab dips
@@ -4031,42 +4087,32 @@ class V10_GarmentStudio {
     }
     
     if (statusSpan) {
-      // Generate status message based on request type and sample type
-      let statusMessage = 'Complete';
+      let statusMessage = '✅ Complete';
+      let statusClass = 'garment-summary__status';
       
-      if (V10_State.requestType === 'sample-request' && garmentData.sampleType) {
-        switch (garmentData.sampleType) {
-          case 'techpack':
-            statusMessage = 'Complete';
-            break;
-          case 'stock':
-            statusMessage = 'Complete - Add a design (optional)';
-            break;
-          case 'custom':
-            // Check if lab dips are actually assigned for custom color samples
-            const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
-            if (hasLabDips) {
-              statusMessage = 'Complete';
-            } else {
-              statusMessage = 'Color assignment required in Design Studio';
-            }
-            break;
-          default:
-            statusMessage = 'Complete';
+      // Determine status based on design inclusion
+      if (garmentData.includeDesign) {
+        if (garmentData.designReference && garmentData.designReference.trim()) {
+          statusMessage = `✅ Complete - Design "${garmentData.designReference.trim()}" will be applied`;
+        } else {
+          statusMessage = '⚠️ Complete - Design reference needed';
+          statusClass += ' garment-summary__status--warning';
+        }
+      } else {
+        statusMessage = '✅ Complete - Blank garment (no design)';
+      }
+      
+      // Handle custom color requirement
+      if (garmentData.sampleType === 'custom') {
+        const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        if (!hasLabDips) {
+          statusMessage = 'Color assignment required in Design Studio';
+          statusClass = 'garment-summary__status garment-summary__status--warning';
         }
       }
       
       statusSpan.textContent = statusMessage;
-      
-      // Apply warning styling for custom samples without lab dips
-      const isCustomWithoutLabDips = garmentData.sampleType === 'custom' && 
-        (!garmentData.assignedLabDips || garmentData.assignedLabDips.size === 0);
-      
-      if (isCustomWithoutLabDips) {
-        statusSpan.className = 'garment-summary__status garment-summary__status--warning';
-      } else {
-        statusSpan.className = 'garment-summary__status';
-      }
+      statusSpan.className = statusClass;
     }
   }
 

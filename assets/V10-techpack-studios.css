@@ -1519,7 +1519,8 @@ body[class*="techpack"] *,
 /* Sample Type Badges */
 .sample-type-badge {
   position: absolute;
-  top: var(--v10-space-2);
+  top: 50%;
+  transform: translateY(-50%);
   right: var(--v10-space-2);
   padding: 2px 6px;
   border-radius: var(--v10-radius-sm);
@@ -6179,6 +6180,102 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   stroke-width: 2;
 }
 
+/* ==============================================
+   DESIGN INCLUSION CONTROLS STYLES
+   ============================================== */
+
+.design-inclusion-controls {
+  margin-top: var(--v10-space-3);
+  padding-top: var(--v10-space-3);
+  border-top: 1px solid var(--v10-border-primary);
+}
+
+.design-toggle {
+  margin-bottom: var(--v10-space-2);
+}
+
+.design-toggle__label {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  cursor: pointer;
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-primary);
+  user-select: none;
+}
+
+.design-toggle__input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--v10-accent-primary);
+  cursor: pointer;
+}
+
+.design-toggle__text {
+  line-height: 1.4;
+}
+
+.design-reference {
+  margin-top: var(--v10-space-2);
+}
+
+.design-reference__input {
+  width: 100%;
+  padding: var(--v10-space-2) var(--v10-space-3);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-primary);
+  background: var(--v10-surface-primary);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.design-reference__input:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 2px rgba(75, 85, 99, 0.1);
+}
+
+.design-reference__input::placeholder {
+  color: var(--v10-text-tertiary);
+  font-style: italic;
+}
+
+.design-reference__warning {
+  margin-top: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  color: var(--v10-accent-warning);
+  line-height: 1.4;
+}
+
+.design-reference__warning strong {
+  font-weight: 600;
+}
+
+/* Mobile responsiveness for design inclusion controls */
+@media (max-width: 768px) {
+  .design-inclusion-controls {
+    margin-top: var(--v10-space-2);
+    padding-top: var(--v10-space-2);
+  }
+  
+  .design-reference__input {
+    font-size: var(--v10-text-sm);
+    padding: var(--v10-space-2);
+  }
+  
+  .design-reference__warning {
+    padding: var(--v10-space-2);
+    font-size: var(--v10-text-xs);
+  }
+}
 
 /* Mobile responsiveness for garment summary */
 @media (max-width: 768px) {
