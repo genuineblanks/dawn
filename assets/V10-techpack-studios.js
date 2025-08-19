@@ -3795,9 +3795,14 @@ class V10_GarmentStudio {
         this.updateGarmentStatus(garmentId);
       }, 100);
       
-      // Mark finalize button as changed and clear any sample type highlighting
+      // Mark finalize button as changed and clear any existing highlighting
       this.markEditButtonAsChanged(garmentCard);
-      this.highlightRequiredSampleTypes(garmentCard); // This will clear highlights since sample type is now selected
+      
+      // Clear any existing red borders since user made a selection
+      const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
+      sampleTypeCards.forEach(card => {
+        card.classList.remove('sample-type-card--required');
+      });
     }
 
     // Handle sample reference change (bulk orders)
@@ -4169,22 +4174,10 @@ class V10_GarmentStudio {
 
   markEditButtonAsChanged(garmentCard) {
     const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
-    const garmentId = garmentCard.dataset.garmentId;
-    const isValid = this.validateGarmentRequirements(garmentId);
     
     if (finalizeBtn) {
       finalizeBtn.classList.add('garment-card__finalize--changed');
-      
-      if (isValid) {
-        finalizeBtn.classList.remove('garment-card__finalize--invalid');
-        finalizeBtn.classList.add('garment-card__finalize--valid');
-        console.log('🟠 Finalize button marked as changed and valid');
-      } else {
-        finalizeBtn.classList.remove('garment-card__finalize--valid');
-        finalizeBtn.classList.add('garment-card__finalize--invalid');
-        this.highlightRequiredSampleTypes(garmentCard);
-        console.log('🔴 Finalize button marked as changed but invalid');
-      }
+      console.log('🟠 Finalize button marked as changed');
     }
   }
 
@@ -4243,15 +4236,19 @@ class V10_GarmentStudio {
     // Validate requirements before allowing finalize
     if (!this.validateGarmentRequirements(garmentId)) {
       console.log('❌ Cannot finalize: Missing required fields');
-      this.highlightRequiredSampleTypes(garmentCard);
-      // Flash the button to indicate invalid state
-      const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
-      if (finalizeBtn) {
-        finalizeBtn.classList.add('garment-card__finalize--flash');
-        setTimeout(() => {
-          finalizeBtn.classList.remove('garment-card__finalize--flash');
-        }, 1000);
+      
+      // Only show red borders for sample types if that's what's missing and fabric doesn't support custom colors
+      const garmentData = V10_State.garments.get(garmentId);
+      const requestType = V10_State.requestType;
+      
+      if (requestType === 'sample-request' && garmentData.type && garmentData.fabricType && !garmentData.sampleType) {
+        // Check if the current fabric doesn't support custom colors (which would require sample type selection)
+        const isNonCotton = garmentData.fabricType && !V10_Utils.isCottonFabric(garmentData.fabricType);
+        if (isNonCotton) {
+          this.highlightRequiredSampleTypes(garmentCard);
+        }
       }
+      
       return;
     }
 
@@ -5098,8 +5095,15 @@ class V10_GarmentStudio {
     if (fabricPlaceholder) {
       fabricPlaceholder.style.cursor = 'not-allowed';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
+      
       if (placeholderText) {
-        placeholderText.textContent = 'Select garment first';
+        placeholderText.textContent = 'Select garment type first';
+      }
+      
+      // Set proper fabric icon even when disabled
+      if (placeholderIcon) {
+        placeholderIcon.innerHTML = this.getFabricPlaceholderIcon();
       }
     }
     

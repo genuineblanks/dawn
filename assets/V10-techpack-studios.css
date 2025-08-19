@@ -4476,38 +4476,16 @@ body[class*="techpack"] *,
 }
 
 /* Finalize Edit Button States */
-.garment-card__finalize--changed.garment-card__finalize--valid {
+.garment-card__finalize--changed {
   background: #f59e0b !important;
   border-color: #f59e0b !important;
   color: white !important;
 }
 
-.garment-card__finalize--changed.garment-card__finalize--valid:hover {
+.garment-card__finalize--changed:hover {
   background: #22c55e !important;
   border-color: #22c55e !important;
   color: white !important;
-}
-
-.garment-card__finalize--changed.garment-card__finalize--invalid {
-  background: #dc2626 !important;
-  border-color: #dc2626 !important;
-  color: white !important;
-  cursor: not-allowed !important;
-}
-
-.garment-card__finalize--changed.garment-card__finalize--invalid:hover {
-  background: #b91c1c !important;
-  border-color: #b91c1c !important;
-  color: white !important;
-}
-
-.garment-card__finalize--flash {
-  animation: flashRed 0.3s ease-in-out 3;
-}
-
-@keyframes flashRed {
-  0%, 100% { background: #dc2626; }
-  50% { background: #b91c1c; }
 }
 
 /* Sample Type Required Highlighting */
