@@ -6715,6 +6715,19 @@ class V10_ReviewManager {
     this.updateSubmitMessage();
     
     console.log('🎯 Step 4: Review population completed');
+    
+    // Check if elements are actually populated and visible
+    const studioContainer = document.getElementById('review-studio');
+    const clientInfo = document.getElementById('review-client-info');
+    const garments = document.getElementById('review-garments');
+    
+    console.log('🎯 Step 4: Elements check:');
+    console.log('  - Studio container exists:', !!studioContainer);
+    console.log('  - Studio container classes:', studioContainer?.className);
+    console.log('  - Client info exists:', !!clientInfo);
+    console.log('  - Client info content:', clientInfo?.innerHTML?.substring(0, 100));
+    console.log('  - Garments exists:', !!garments);
+    console.log('  - Garments content:', garments?.innerHTML?.substring(0, 100));
   }
 
   populateClientInfo() {
@@ -7942,16 +7955,31 @@ class V10_TechPackSystem {
 
   proceedToStep4() {
     try {
+      console.log('🎯 STEP 4: proceedToStep4() called');
       const step3 = document.getElementById('techpack-v10-step-3');
       const step4 = document.getElementById('techpack-v10-step-4');
+      
+      console.log('🎯 STEP 4: Elements found:', { step3: !!step3, step4: !!step4 });
       
       if (!step3 || !step4) {
         console.error('Cannot find step 3 or step 4 elements');
         return false;
       }
 
+      console.log('🎯 STEP 4: Before - step3.style.display:', step3.style.display);
+      console.log('🎯 STEP 4: Before - step4.style.display:', step4.style.display);
+      
       step3.style.display = 'none';
       step4.style.display = 'block';
+      
+      console.log('🎯 STEP 4: After - step3.style.display:', step3.style.display);
+      console.log('🎯 STEP 4: After - step4.style.display:', step4.style.display);
+      
+      // Check if step4 is actually visible
+      const computedStyle = window.getComputedStyle(step4);
+      console.log('🎯 STEP 4: Computed display:', computedStyle.display);
+      console.log('🎯 STEP 4: Computed visibility:', computedStyle.visibility);
+      console.log('🎯 STEP 4: Computed opacity:', computedStyle.opacity);
       
       // Update current step
       try {
