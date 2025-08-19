@@ -332,21 +332,50 @@ body[class*="techpack"] *,
 }
 
 /* ==============================================
-   PROGRESS INDICATOR SYSTEM
+   PROGRESS INDICATOR SYSTEM - DARK THEME INTEGRATED
    ============================================== */
 
 .simple-progress-container {
   margin-bottom: var(--v10-space-12);
+  background: var(--v10-bg-tertiary);
+  border-radius: var(--v10-radius-xl);
+  padding: var(--v10-space-8);
+  box-shadow: var(--v10-shadow-lg);
+  border: 1px solid var(--v10-border-primary);
+  backdrop-filter: var(--v10-backdrop-blur);
+  position: relative;
+}
+
+/* Glass morphism effect overlay */
+.simple-progress-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--v10-glass-bg);
+  border-radius: var(--v10-radius-xl);
+  border: 1px solid var(--v10-glass-border);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.simple-progress-container > * {
+  position: relative;
+  z-index: 2;
 }
 
 .simple-progress-bar {
   width: 100%;
-  height: 6px;
-  background: var(--v10-bg-tertiary);
+  height: 8px;
+  background: var(--v10-bg-secondary);
   border-radius: var(--v10-radius-sm);
   margin-bottom: var(--v10-space-8);
   overflow: hidden;
   position: relative;
+  border: 1px solid var(--v10-border-secondary);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .simple-progress-fill {
@@ -355,6 +384,7 @@ body[class*="techpack"] *,
   border-radius: var(--v10-radius-sm);
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  box-shadow: 0 2px 8px rgba(75, 85, 99, 0.3);
 }
 
 .simple-progress-fill::after {
@@ -364,7 +394,7 @@ body[class*="techpack"] *,
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
   animation: shimmer 2s infinite;
 }
 
@@ -378,48 +408,59 @@ body[class*="techpack"] *,
   justify-content: space-between;
   align-items: center;
   gap: var(--v10-space-4);
+  padding: var(--v10-space-2) 0;
 }
 
 .simple-step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--v10-space-2);
+  gap: var(--v10-space-3);
   flex: 1;
   position: relative;
-  padding: var(--v10-space-2);
-  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-3);
+  border-radius: var(--v10-radius-lg);
   transition: var(--v10-transition);
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .simple-step span {
   font-size: var(--v10-text-sm);
   font-weight: 500;
-  color: var(--v10-text-muted);
+  color: var(--v10-text-secondary);
   text-align: center;
   white-space: nowrap;
+  transition: var(--v10-transition);
 }
 
 .simple-step.active {
-  background: rgba(163, 163, 163, 0.1);
+  background: var(--v10-bg-hover);
   border: 1px solid var(--v10-border-focus);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .simple-step.active span {
-  color: var(--v10-accent-primary);
+  color: var(--v10-text-primary);
   font-weight: 600;
+}
+
+.simple-step.completed {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .simple-step.completed span {
   color: var(--v10-accent-success);
+  font-weight: 600;
 }
 
-/* Step Circle Styles */
+/* Step Circle Styles - Dark Theme Enhanced */
 .simple-step-circle {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--v10-bg-tertiary);
+  background: var(--v10-bg-secondary);
   border: 2px solid var(--v10-border-primary);
   color: var(--v10-text-muted);
   display: flex;
@@ -429,29 +470,68 @@ body[class*="techpack"] *,
   font-weight: 600;
   transition: var(--v10-transition);
   margin-bottom: var(--v10-space-2);
+  box-shadow: var(--v10-shadow-sm);
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+
+/* Glass morphism effect for circles */
+.simple-step-circle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .simple-step.active .simple-step-circle {
   background: var(--v10-accent-primary);
   border-color: var(--v10-accent-primary);
   color: white;
-  box-shadow: 0 0 0 4px rgba(163, 163, 163, 0.2);
+  box-shadow: 0 0 0 4px rgba(75, 85, 99, 0.2), var(--v10-shadow-lg);
+  transform: scale(1.05);
+}
+
+.simple-step.active .simple-step-circle::before {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .simple-step.completed .simple-step-circle {
   background: var(--v10-accent-success);
   border-color: var(--v10-accent-success);
   color: white;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2), var(--v10-shadow-lg);
+}
+
+.simple-step.completed .simple-step-circle::before {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hover effects for interactive feel */
+.simple-step:hover .simple-step-circle {
+  transform: scale(1.02);
+  box-shadow: var(--v10-shadow-md);
+}
+
+.simple-step.active:hover .simple-step-circle,
+.simple-step.completed:hover .simple-step-circle {
+  transform: scale(1.08);
 }
 
 /* Legacy support for steps without circles */
 .simple-step::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--v10-bg-tertiary);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
   transition: var(--v10-transition);
+  box-shadow: var(--v10-shadow-xs);
 }
 
 .simple-step:has(.simple-step-circle)::before {
@@ -460,16 +540,51 @@ body[class*="techpack"] *,
 
 .simple-step.active::before {
   background: var(--v10-accent-primary);
-  box-shadow: 0 0 0 4px rgba(163, 163, 163, 0.2);
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.2), var(--v10-shadow-sm);
 }
 
 .simple-step.completed::before {
   background: var(--v10-accent-success);
+  border-color: var(--v10-accent-success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), var(--v10-shadow-sm);
 }
 
 @media (max-width: 768px) {
+  .simple-progress-container {
+    padding: var(--v10-space-6);
+    margin-bottom: var(--v10-space-8);
+  }
+  
+  .simple-progress-steps {
+    gap: var(--v10-space-2);
+    padding: var(--v10-space-1) 0;
+  }
+  
+  .simple-step {
+    padding: var(--v10-space-2);
+    gap: var(--v10-space-2);
+  }
+  
   .simple-step span {
     font-size: var(--v10-text-xs);
+    font-weight: 500;
+  }
+  
+  .simple-step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: var(--v10-text-xs);
+  }
+  
+  .simple-step.active .simple-step-circle,
+  .simple-step.completed .simple-step-circle {
+    transform: scale(1.03);
+  }
+  
+  .simple-step.active:hover .simple-step-circle,
+  .simple-step.completed:hover .simple-step-circle {
+    transform: scale(1.05);
   }
 }
 
