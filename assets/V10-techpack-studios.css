@@ -5206,6 +5206,9 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   border: 2px solid var(--v10-border-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
+  background-color: #2563eb;
+  display: block !important;
+  visibility: visible !important;
 }
 
 .pantone-info {
