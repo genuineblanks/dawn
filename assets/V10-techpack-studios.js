@@ -3704,14 +3704,6 @@ class V10_GarmentStudio {
       e.stopPropagation();
       const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
       this.toggleSelection(widget);
-    } else if (e.target.closest('.compact-radio-card')) {
-      // Handle re-selection of already selected items
-      const radioInput = e.target.closest('.compact-radio-card').querySelector('input[type="radio"]');
-      if (radioInput && radioInput.checked) {
-        // Force trigger change event even if already selected
-        console.log('🔄 Re-selecting already selected option:', radioInput.value);
-        radioInput.dispatchEvent(new Event('change', { bubbles: true }));
-      }
     }
   }
 
@@ -3725,14 +3717,17 @@ class V10_GarmentStudio {
 
     // Handle garment type change (compact and regular)
     if (e.target.name.includes('garmentType')) {
-      garmentData.type = e.target.value;
-      this.populateFabricOptions(garmentCard, e.target.value);
+      const previousValue = garmentData.type;
+      const newValue = e.target.value;
+      
+      garmentData.type = newValue;
+      this.populateFabricOptions(garmentCard, newValue);
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        this.updateCompactSelection('garment', e.target.value, garmentCard);
+        this.updateCompactSelection('garment', newValue, garmentCard);
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
       }
@@ -3743,13 +3738,18 @@ class V10_GarmentStudio {
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
       
-      // Mark finalize button as changed
+      // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
+      
+      console.log(`🔄 Garment type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
     }
 
     // Handle fabric type change (compact and regular)
     if (e.target.name.includes('fabricType')) {
-      garmentData.fabricType = e.target.value;
+      const previousValue = garmentData.fabricType;
+      const newValue = e.target.value;
+      
+      garmentData.fabricType = newValue;
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
       
       // Update fabric restrictions when fabric type changes
@@ -3761,14 +3761,16 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        this.updateCompactSelection('fabric', e.target.value, garmentCard);
+        this.updateCompactSelection('fabric', newValue, garmentCard);
       }
       
       // Reset sample type selection
       this.resetSampleTypeSelection(garmentCard);
       
-      // Mark finalize button as changed
+      // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
+      
+      console.log(`🔄 Fabric type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
     }
 
     // Handle sample type change
@@ -4742,10 +4744,7 @@ class V10_GarmentStudio {
   }
 
   getFabricPlaceholderIcon() {
-    return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none"/>
-    </svg>`;
+    return '🧵';
   }
 
   resetFabricSelection(garmentCard) {
