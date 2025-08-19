@@ -89,31 +89,31 @@ TechPack V10 Step 4: Premium Review & Submit
           <div class="review-summary-grid">
             
             <!-- Client Information Card -->
-            <div class="review-section-card">
-              <div class="review-section-card__header">
-                <div class="review-section-card__title">
+            <div class="review-card">
+              <div class="review-card__header">
+                <div class="review-card__title">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
                   <span>Client Information</span>
                 </div>
-                <button type="button" class="review-section-card__edit" data-edit-step="1">
+                <button type="button" class="review-card__edit" data-edit-step="1">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                   </svg>
                 </button>
               </div>
-              <div class="review-section-card__content" id="review-client-info">
+              <div class="review-card__content" id="review-client-info">
                 <!-- Populated by JavaScript -->
               </div>
             </div>
 
             <!-- Uploaded Files Card -->
-            <div class="review-section-card">
-              <div class="review-section-card__header">
-                <div class="review-section-card__title">
+            <div class="review-card">
+              <div class="review-card__header">
+                <div class="review-card__title">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14,2 14,8 20,8"/>
@@ -123,29 +123,29 @@ TechPack V10 Step 4: Premium Review & Submit
                   </svg>
                   <span>Uploaded Files</span>
                 </div>
-                <button type="button" class="review-section-card__edit" data-edit-step="2">
+                <button type="button" class="review-card__edit" data-edit-step="2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                   </svg>
                 </button>
               </div>
-              <div class="review-section-card__content" id="review-uploaded-files">
+              <div class="review-card__content" id="review-uploaded-files">
                 <!-- Populated by JavaScript -->
               </div>
             </div>
 
             <!-- Request Type Card -->
-            <div class="review-section-card review-section-card--highlight">
-              <div class="review-section-card__header">
-                <div class="review-section-card__title">
+            <div class="review-card review-card--highlight">
+              <div class="review-card__header">
+                <div class="review-card__title">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M9 11H1v3h8v3l8-5-8-5v3z"/>
                   </svg>
                   <span>Request Type</span>
                 </div>
               </div>
-              <div class="review-section-card__content" id="review-request-type">
+              <div class="review-card__content" id="review-request-type">
                 <!-- Populated by JavaScript -->
               </div>
             </div>
@@ -495,66 +495,7 @@ TechPack V10 Step 4: Premium Review & Submit
   margin-bottom: var(--v10-space-2xl);
 }
 
-/* Review Section Cards (Summary Cards) */
-.review-section-card {
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-light);
-  border-radius: var(--v10-radius-lg);
-  overflow: hidden;
-  transition: var(--v10-transition);
-}
-
-.review-section-card:hover {
-  box-shadow: var(--v10-shadow-sm);
-  border-color: var(--v10-border-medium);
-}
-
-.review-section-card--highlight {
-  border-color: var(--v10-accent-blue);
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1);
-}
-
-.review-section-card__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--v10-space-lg) var(--v10-space-xl);
-  background: var(--v10-bg-secondary);
-  border-bottom: 1px solid var(--v10-border-light);
-}
-
-.review-section-card__title {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-md);
-  color: var(--v10-text-primary);
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.review-section-card__edit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: 1px solid var(--v10-border-medium);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-secondary);
-  cursor: pointer;
-  transition: var(--v10-transition);
-}
-
-.review-section-card__edit:hover {
-  background: var(--v10-accent-blue);
-  color: var(--v10-text-light);
-  border-color: var(--v10-accent-blue);
-}
-
-.review-section-card__content {
-  padding: var(--v10-space-xl);
-}
+/* CSS handled by main V10-techpack-studios.css file */
 
 /* Review Detail Sections (Main Content Sections) */
 .review-detail-section {
