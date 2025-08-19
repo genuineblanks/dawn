@@ -1,6 +1,6 @@
 /* ====================================================
-   V10 REGISTRATION - FORM VALIDATION & THEME MANAGEMENT
-   Premium registration system with enhanced UX
+   V10 REGISTRATION - INTEGRATED WITH EXISTING V10 SYSTEM
+   Extends V10 TechPack system for registration functionality
    ==================================================== */
 
 // Guard clause to prevent multiple initializations
@@ -25,7 +25,7 @@ const V10_Registration = {
   // Main initialization function
   initialize() {
     this.form = document.getElementById('v10-registration-form');
-    this.submitButton = this.form?.querySelector('.v10-btn--submit');
+    this.submitButton = this.form?.querySelector('.v10-btn-hero');
     this.termsCheckbox = document.getElementById('RegisterForm-Terms');
     this.termsModal = document.getElementById('v10-terms-modal');
     
@@ -33,9 +33,6 @@ const V10_Registration = {
       console.log('V10 Registration: Form not found, skipping initialization');
       return;
     }
-    
-    // Initialize theme system
-    this.initializeTheme();
     
     // Initialize form validation
     this.initializeFormValidation();
@@ -47,41 +44,6 @@ const V10_Registration = {
     this.initializeFormEnhancements();
     
     console.log('🔐 V10 Registration system initialized');
-  },
-  
-  // Initialize theme management
-  initializeTheme() {
-    // Set initial theme from localStorage or default to light
-    const savedTheme = localStorage.getItem('v10-theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    
-    // Update theme toggle buttons
-    this.updateThemeButtons(savedTheme);
-    
-    // Add event listeners to theme buttons
-    const themeButtons = document.querySelectorAll('.v10-theme-btn');
-    themeButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const theme = e.currentTarget.getAttribute('data-theme');
-        this.setTheme(theme);
-      });
-    });
-  },
-  
-  // Set theme and update UI
-  setTheme(theme) {
-    document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('v10-theme', theme);
-    this.updateThemeButtons(theme);
-  },
-  
-  // Update theme button active states
-  updateThemeButtons(activeTheme) {
-    const themeButtons = document.querySelectorAll('.v10-theme-btn');
-    themeButtons.forEach(button => {
-      const buttonTheme = button.getAttribute('data-theme');
-      button.classList.toggle('active', buttonTheme === activeTheme);
-    });
   },
   
   // Initialize form validation
@@ -107,7 +69,7 @@ const V10_Registration = {
   
   // Initialize terms modal
   initializeTermsModal() {
-    const termsLink = document.querySelector('.v10-terms-link');
+    const termsLink = document.querySelector('.v10-link-button[data-modal="v10-terms-modal"]');
     if (termsLink && this.termsModal) {
       termsLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -119,6 +81,18 @@ const V10_Registration = {
       closeButtons.forEach(button => {
         button.addEventListener('click', () => this.hideTermsModal());
       });
+      
+      // Accept button functionality
+      const acceptButton = this.termsModal.querySelector('.v10-terms-accept');
+      if (acceptButton && this.termsCheckbox) {
+        acceptButton.addEventListener('click', () => {
+          this.termsCheckbox.checked = true;
+          // Trigger change event for validation
+          const changeEvent = new Event('change', { bubbles: true });
+          this.termsCheckbox.dispatchEvent(changeEvent);
+          this.hideTermsModal();
+        });
+      }
       
       // Close modal on backdrop click
       this.termsModal.addEventListener('click', (e) => {
@@ -429,6 +403,8 @@ const V10_Registration = {
       if (focusableElements.length) {
         focusableElements[0].focus();
       }
+      
+      console.log('📄 Terms modal opened');
     }
   },
   
@@ -438,6 +414,8 @@ const V10_Registration = {
       this.termsModal.classList.remove('show');
       this.termsModal.style.display = 'none';
       document.body.style.overflow = '';
+      
+      console.log('📄 Terms modal closed');
     }
   },
   
