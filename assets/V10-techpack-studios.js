@@ -2849,36 +2849,72 @@ const V10_Utils = {
         if (customPrice && customPrice !== 'Premium') {
           priceElement.textContent = `avg. ${customPrice}€`;
           // Enable the card if custom is available
-          customCard.classList.remove('sample-type-card--disabled');
+          customCard.classList.remove('sample-type-card--disabled', 'sample-type-card--warning');
           customCard.style.opacity = '1';
           customCard.style.pointerEvents = 'auto';
+          
+          // Show normal description and details
+          const descElement = customCard.querySelector('.sample-type-card__description');
+          const detailsElement = customCard.querySelector('.sample-type-card__details');
+          if (descElement) descElement.style.display = 'block';
+          if (detailsElement) detailsElement.style.display = 'block';
+          
+          // Hide warning if it exists
+          const warningContainer = customCard.querySelector('.sample-type-warning');
+          if (warningContainer) warningContainer.style.display = 'none';
         } else if (!garmentType || !fabricType) {
           priceElement.textContent = 'Select garment & fabric';
           // Keep card enabled but show pending state
           customCard.style.opacity = '0.7';
         } else if (customPrice === null) {
-          // Custom not available for this fabric
+          // Custom not available for this fabric - show enhanced warning
           priceElement.textContent = 'Not available';
-          customCard.classList.add('sample-type-card--disabled');
-          customCard.style.opacity = '0.5';
+          customCard.classList.remove('sample-type-card--disabled');
+          customCard.classList.add('sample-type-card--warning');
+          customCard.style.opacity = '0.85';
           customCard.style.pointerEvents = 'none';
           
-          // Update description to explain why
-          const descElement = customCard.querySelector('.sample-type-card__details');
-          if (descElement) {
-            descElement.textContent = 'Custom color not available for blends';
+          // Hide existing description and details
+          const descElement = customCard.querySelector('.sample-type-card__description');
+          const detailsElement = customCard.querySelector('.sample-type-card__details');
+          if (descElement) descElement.style.display = 'none';
+          if (detailsElement) detailsElement.style.display = 'none';
+          
+          // Add or update warning container
+          let warningContainer = customCard.querySelector('.sample-type-warning');
+          if (!warningContainer) {
+            warningContainer = document.createElement('div');
+            warningContainer.className = 'sample-type-warning';
+            warningContainer.innerHTML = `
+              <div class="warning-icon">⚠️</div>
+              <div class="warning-content">
+                <strong>Lab Dip Option:</strong> You may still order a lab dip (fabric swatch) in your desired color before production
+              </div>
+            `;
+            customCard.appendChild(warningContainer);
           }
+          warningContainer.style.display = 'flex';
         } else {
           priceElement.textContent = `avg. ${V10_CONFIG.PRICING.CUSTOM_SAMPLE}€`;
         }
       }
     }
 
-    // Update techpack price (always premium)
+    // Update techpack price (always premium) and show warning
     if (techpackCard) {
       const priceElement = techpackCard.querySelector('.sample-type-card__price');
       if (priceElement && priceElement.textContent !== 'Premium') {
         priceElement.textContent = 'Premium';
+      }
+      
+      // Show TechPack warning if garment and fabric are selected
+      const warningContainer = techpackCard.querySelector('.techpack-warning');
+      if (warningContainer) {
+        if (garmentType && fabricType) {
+          warningContainer.style.display = 'block';
+        } else {
+          warningContainer.style.display = 'none';
+        }
       }
     }
   },
@@ -3191,6 +3227,11 @@ class V10_GarmentStudio {
     
     this.bindEvents();
     
+    // Initial studio completion check
+    setTimeout(() => {
+      this.updateStudioCompletion();
+    }, 100);
+    
     this.initialized = true;
     console.log('✅ V10_GarmentStudio initialized');
   }
@@ -3256,6 +3297,9 @@ class V10_GarmentStudio {
 
       // Renumber all garments to ensure sequential order
       this.renumberGarments();
+
+      // Update studio completion status after adding garment
+      this.updateStudioCompletion();
 
       console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
       return garmentId;
@@ -3542,7 +3586,7 @@ class V10_GarmentStudio {
       const placeholder = clone.querySelector('#garment-placeholder');
       const display = clone.querySelector('#garment-display');
       
-      if (selectedIcon) selectedIcon.textContent = garmentIcon;
+      if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'flex';
@@ -3553,7 +3597,7 @@ class V10_GarmentStudio {
       const placeholder = clone.querySelector('#fabric-placeholder');
       const display = clone.querySelector('#fabric-display');
       
-      if (selectedIcon) selectedIcon.textContent = '🧵';
+      if (selectedIcon) selectedIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>';
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'flex';
@@ -3742,6 +3786,48 @@ class V10_GarmentStudio {
 
     // Update assigned items display
     this.updateAssignedDisplay(garmentId);
+    
+    // Check and update overall studio completion status
+    this.updateStudioCompletion();
+  }
+
+  // Check if all garments are complete and update studio status
+  updateStudioCompletion() {
+    const allGarments = Array.from(V10_State.garments.values());
+    
+    if (allGarments.length === 0) {
+      this.updateStudioTabStatus(false, 0, 0);
+      return;
+    }
+    
+    const completeGarments = allGarments.filter(garment => garment.isComplete);
+    const isStudioComplete = completeGarments.length === allGarments.length;
+    
+    this.updateStudioTabStatus(isStudioComplete, completeGarments.length, allGarments.length);
+    
+    console.log(`🎯 Studio Completion: ${completeGarments.length}/${allGarments.length} garments complete`);
+  }
+
+  // Update the Garment Studio tab status indicator
+  updateStudioTabStatus(isComplete, completeCount, totalCount) {
+    const garmentStudioTab = document.getElementById('garment-studio-tab');
+    if (!garmentStudioTab) return;
+
+    const subtitleElement = garmentStudioTab.querySelector('.studio-tab__subtitle');
+    if (!subtitleElement) return;
+
+    if (totalCount === 0) {
+      subtitleElement.textContent = 'Configure specifications';
+      garmentStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
+    } else if (isComplete) {
+      subtitleElement.textContent = `Complete (${totalCount} garments)`;
+      garmentStudioTab.classList.add('studio-tab--complete');
+      garmentStudioTab.classList.remove('studio-tab--incomplete');
+    } else {
+      subtitleElement.textContent = `Incomplete (${completeCount}/${totalCount})`;
+      garmentStudioTab.classList.add('studio-tab--incomplete');
+      garmentStudioTab.classList.remove('studio-tab--complete');
+    }
   }
 
   updateGarmentCollapsedState(garmentCard, garmentData, isComplete) {
@@ -3989,6 +4075,9 @@ class V10_GarmentStudio {
 
         // Clean up assignments
         this.cleanupAssignments(garmentId);
+
+        // Update studio completion status after removal
+        this.updateStudioCompletion();
 
         // Remove from UI
         const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
@@ -4269,7 +4358,7 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#garment-display');
       const collapsed = garmentCard.querySelector('#garment-collapsed');
       
-      if (selectedIcon) selectedIcon.textContent = garmentIcon;
+      if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
@@ -4288,7 +4377,7 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#fabric-display');
       const collapsed = garmentCard.querySelector('#fabric-collapsed');
       
-      if (selectedIcon) selectedIcon.textContent = '🧵';
+      if (selectedIcon) selectedIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>';
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
@@ -4488,21 +4577,21 @@ class V10_GarmentStudio {
 
   getGarmentIcon(garmentType) {
     const iconMap = {
-      'Zip-Up Hoodie': '🧥',
-      'Hoodie': '👕',
-      'T-Shirt': '👔',
-      'Sweatshirt': '🧥',
-      'Sweatpants': '👖',
-      'Shorts': '🩳',
-      'Long Sleeve T-Shirt': '👕',
-      'Shirt': '👔',
-      'Polo Shirt': '👕',
-      'Tank Top': '🎽',
-      'Hat/Cap': '🧢',
-      'Beanie': '🧿',
-      'Other': '✨'
+      'Zip-Up Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-zip-up-hoodie"></use></svg>',
+      'Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-hoodie"></use></svg>',
+      'T-Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-t-shirt"></use></svg>',
+      'Sweatshirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-sweatshirt"></use></svg>',
+      'Sweatpants': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-sweatpants"></use></svg>',
+      'Shorts': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-shorts"></use></svg>',
+      'Long Sleeve T-Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-long-sleeve"></use></svg>',
+      'Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-shirt"></use></svg>',
+      'Polo Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-polo-shirt"></use></svg>',
+      'Tank Top': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-tank-top"></use></svg>',
+      'Hat/Cap': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-hat-cap"></use></svg>',
+      'Beanie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-beanie"></use></svg>',
+      'Other': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>'
     };
-    return iconMap[garmentType] || '👕';
+    return iconMap[garmentType] || '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="' + window.location.origin + '/assets/icons.svg#icon-t-shirt"></use></svg>';
   }
 
   getSampleReferenceIcon(referenceType) {
@@ -5057,16 +5146,31 @@ class V10_DesignStudio {
     }
   }
 
+  // Helper function to get badge text for sample types
+  getSampleTypeBadgeText(sampleType) {
+    switch(sampleType) {
+      case 'stock': return 'Stock Color';
+      case 'techpack': return 'As Per TechPack';
+      default: return '';
+    }
+  }
+
   createGarmentSelectorModal(garments, type, itemId = null) {
     console.log(`🔄 createGarmentSelectorModal: ${type}, ${garments.length} garments, itemId: ${itemId}`);
     
     try {
+      // For lab dips, filter and count available garments
+      let availableCount = garments.length;
+      if (type === 'labdip') {
+        availableCount = garments.filter(g => g.sampleType === 'custom').length;
+      }
+      
       const modal = document.createElement('div');
       modal.className = 'v10-modal-overlay';
     modal.innerHTML = `
       <div class="v10-modal">
         <div class="v10-modal-header">
-          <h3 class="v10-modal-title">Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'} to Garment</h3>
+          <h3 class="v10-modal-title">Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'} to Garment${type === 'labdip' && availableCount !== garments.length ? ` (${availableCount} of ${garments.length} available)` : ''}</h3>
           <button type="button" class="v10-modal-close">
             <svg width="20" height="20" viewBox="0 0 20 20">
               <path d="M15 5L5 15m0-10l10 10" stroke="currentColor" stroke-width="2"/>
@@ -5074,17 +5178,32 @@ class V10_DesignStudio {
           </button>
         </div>
         <div class="v10-modal-body">
-          <div class="garment-selector">
-            ${garments.map(garment => `
-              <label class="garment-selector__option">
-                <input type="radio" name="target-garment" value="${garment.id}">
-                <span class="garment-selector__card">
-                  <span class="garment-selector__title">Garment ${garment.number}</span>
-                  <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
-                </span>
-              </label>
-            `).join('')}
-          </div>
+          ${type === 'labdip' && availableCount === 0 ? `
+            <div class="garment-selector-empty">
+              <div class="empty-icon">⚠️</div>
+              <h4>No Garments Available</h4>
+              <p>No garments are available for lab dip assignment. Please select <strong>'Custom Color (Pantone)'</strong> for at least one garment.</p>
+            </div>
+          ` : `
+            <div class="garment-selector">
+              ${garments.map(garment => {
+                const isLabDip = type === 'labdip';
+                const isEligible = !isLabDip || garment.sampleType === 'custom';
+                const badgeText = !isEligible ? this.getSampleTypeBadgeText(garment.sampleType) : '';
+                
+                return `
+                  <label class="garment-selector__option${!isEligible ? ' garment-selector__option--disabled' : ''}">
+                    <input type="radio" name="target-garment" value="${garment.id}"${!isEligible ? ' disabled' : ''}>
+                    <span class="garment-selector__card">
+                      <span class="garment-selector__title">Garment ${garment.number}</span>
+                      <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
+                      ${badgeText ? `<span class="sample-type-badge sample-type-badge--${garment.sampleType}">${badgeText}</span>` : ''}
+                    </span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          `}
           <div class="v10-modal-actions">
             <button type="button" class="v10-btn v10-btn--ghost modal-cancel">Cancel</button>
             <button type="button" class="v10-btn v10-btn--primary modal-confirm" disabled>

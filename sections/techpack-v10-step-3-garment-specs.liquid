@@ -593,7 +593,7 @@ Enhanced with Visual Studio Guide System
           <!-- Collapsed State -->
           <div class="compact-selection-widget" id="garment-collapsed">
             <div class="selection-placeholder" id="garment-placeholder">
-              <span class="placeholder-icon">👕</span>
+              <span class="placeholder-icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
               <span class="placeholder-text">Select garment type</span>
               <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 9l6 6 6-6"/>
@@ -602,7 +602,7 @@ Enhanced with Visual Studio Guide System
             
             <div class="selection-display" id="garment-display" style="display: none;">
               <div class="selected-item">
-                <span class="selected-icon" id="garment-selected-icon">👕</span>
+                <span class="selected-icon" id="garment-selected-icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
                 <span class="selected-name" id="garment-selected-name">T-Shirt</span>
               </div>
               <button type="button" class="change-selection-btn" id="change-garment-btn">
@@ -623,84 +623,84 @@ Enhanced with Visual Studio Guide System
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Zip-Up Hoodie">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🧥</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'zip-up-hoodie', size: 20 %}</span>
                   <span class="compact-radio-card__name">Zip-Up Hoodie</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Hoodie">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'hoodie', size: 20 %}</span>
                   <span class="compact-radio-card__name">Hoodie</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="T-Shirt">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👔</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 't-shirt', size: 20 %}</span>
                   <span class="compact-radio-card__name">T-Shirt</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Sweatshirt">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🧥</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'sweatshirt', size: 20 %}</span>
                   <span class="compact-radio-card__name">Sweatshirt</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Sweatpants">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👖</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'sweatpants', size: 20 %}</span>
                   <span class="compact-radio-card__name">Sweatpants</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Shorts">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🩳</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'shorts', size: 20 %}</span>
                   <span class="compact-radio-card__name">Shorts</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Long Sleeve T-Shirt">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'long-sleeve', size: 20 %}</span>
                   <span class="compact-radio-card__name">Long Sleeve</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Shirt">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👔</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'shirt', size: 20 %}</span>
                   <span class="compact-radio-card__name">Shirt</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Polo Shirt">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">👕</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'polo-shirt', size: 20 %}</span>
                   <span class="compact-radio-card__name">Polo Shirt</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Tank Top">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🎽</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'tank-top', size: 20 %}</span>
                   <span class="compact-radio-card__name">Tank Top</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Hat/Cap">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🧢</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'hat-cap', size: 20 %}</span>
                   <span class="compact-radio-card__name">Hat/Cap</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="garmentType" value="Beanie">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🧿</span>
+                  <span class="compact-radio-card__icon">{% render 'icon', name: 'beanie', size: 20 %}</span>
                   <span class="compact-radio-card__name">Beanie</span>
                 </span>
               </label>
@@ -851,7 +851,7 @@ Enhanced with Visual Studio Guide System
               <span class="sample-type-card__title">Stock Fabric Color</span>
               <span class="sample-type-card__price">Select garment & fabric</span>
             </div>
-            <span class="sample-type-card__description">Quick validation • 1-2 weeks</span>
+            <span class="sample-type-card__description">Quick validation • 2-3 weeks</span>
             <span class="sample-type-card__details">Black, off-white, or random stock color</span>
           </div>
           <div class="sample-type-card" data-value="custom">
@@ -860,7 +860,7 @@ Enhanced with Visual Studio Guide System
               <span class="sample-type-card__title">Custom Color (Pantone)</span>
               <span class="sample-type-card__price">Select garment & fabric</span>
             </div>
-            <span class="sample-type-card__description">Exact color match • 3 weeks</span>
+            <span class="sample-type-card__description">Exact color match • 4-6 weeks</span>
             <span class="sample-type-card__details">Requires Lab Dip assignment</span>
           </div>
           <div class="sample-type-card" data-value="techpack">
@@ -869,8 +869,19 @@ Enhanced with Visual Studio Guide System
               <span class="sample-type-card__title">As Per TechPack</span>
               <span class="sample-type-card__price">Premium</span>
             </div>
-            <span class="sample-type-card__description">Exact TechPack specifications</span>
+            <span class="sample-type-card__description">Exact TechPack specifications • 4-8 weeks dependent on design</span>
             <span class="sample-type-card__details">Higher cost, comprehensive sample</span>
+            <div class="techpack-warning" style="display: none;">
+              <div class="warning-content">
+                <div class="warning-text">Only select if you have Pantone TCX/TPX inside</div>
+                <div class="warning-action">
+                  <span>Otherwise add colorway from our </span>
+                  <button type="button" class="design-studio-btn" onclick="window.v10TechPackSystem?.navigator?.switchStudio('design')">
+                    Design Studio
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
