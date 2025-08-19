@@ -4493,12 +4493,14 @@ class V10_GarmentStudio {
     const originalData = V10_State.garments.get(originalGarmentId);
     if (!originalData) return null;
 
-    // Create variant with same specifications but no assignments
+    // Create variant with same specifications but fresh assignments
     const variantData = {
       ...originalData,
       id: undefined, // Will be generated
       assignedLabDips: new Set(), // Start fresh for new color variant
-      assignedDesigns: new Set()
+      assignedDesigns: new Set(),
+      isComplete: false, // Reset completion status - will be recalculated
+      isInEditMode: false // Ensure not in edit mode
     };
 
     // Add the new garment variant
@@ -4521,9 +4523,18 @@ class V10_GarmentStudio {
       // Position the variant garment card directly after the original
       this.positionVariantAfterOriginal(originalGarmentId, newVariant.id);
       
+      // Renumber all garments to maintain sequential order
+      this.renumberGarments();
+      
       // Update displays for the new variant
       this.updateAssignedDisplay(newVariant.id);
-      this.updateGarmentStatus(newVariant.id);
+      
+      // Force immediate status update for the new variant
+      // This ensures the variant is properly validated with its assigned lab dip
+      setTimeout(() => {
+        this.updateGarmentStatus(newVariant.id);
+        console.log(`🔄 Updated status for variant ${newVariant.id}`);
+      }, 50);
       
       // Update studio completion status after variant creation
       this.updateStudioCompletion();
