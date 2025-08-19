@@ -3096,10 +3096,46 @@ body[class*="techpack"] *,
   border-bottom: 1px solid var(--v10-border-primary);
 }
 
-.review-garment-card__title {
+.review-garment-card__main {
   display: flex;
   align-items: center;
   gap: var(--v10-space-3);
+  flex: 1;
+}
+
+.review-garment-card__visual {
+  flex-shrink: 0;
+}
+
+.garment-color-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.review-garment-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-garment-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  margin-bottom: var(--v10-space-1);
+}
+
+.review-garment-card__color-name {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-secondary);
 }
 
 .garment-number {
@@ -3149,8 +3185,53 @@ body[class*="techpack"] *,
   font-weight: 600;
 }
 
+/* Currency Toggle Styling */
+.cost-summary-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-4);
+}
+
+.currency-toggle {
+  display: flex;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  overflow: hidden;
+}
+
+.currency-btn {
+  padding: var(--v10-space-1) var(--v10-space-3);
+  background: transparent;
+  border: none;
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-secondary);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.currency-btn:hover {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
+}
+
+.currency-btn--active {
+  background: var(--v10-accent-primary);
+  color: white;
+}
+
+.currency-btn--active:hover {
+  background: var(--v10-accent-primary);
+  color: white;
+}
+
 /* Cost Summary Styling */
-.cost-breakdown {
+.cost-breakdown-list {
   margin-bottom: var(--v10-space-6);
 }
 
@@ -3158,12 +3239,34 @@ body[class*="techpack"] *,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--v10-space-3) 0;
-  border-bottom: 1px solid var(--v10-border-primary);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-3);
+  transition: var(--v10-transition);
+}
+
+.cost-item:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .cost-item:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.cost-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cost-item__label {
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
 }
 
 .cost-item__description {
@@ -3172,8 +3275,10 @@ body[class*="techpack"] *,
 }
 
 .cost-item__amount {
-  font-weight: 600;
-  color: var(--v10-text-primary);
+  font-size: var(--v10-text-lg);
+  font-weight: 700;
+  color: var(--v10-accent-primary);
+  flex-shrink: 0;
 }
 
 .cost-summary__total {
@@ -3334,6 +3439,110 @@ body[class*="techpack"] *,
 
 .terms-text a:hover {
   text-decoration: underline;
+}
+
+/* Lab Dip Fabric Swatches Styling */
+.review-fabric-swatch {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-3);
+  transition: var(--v10-transition);
+}
+
+.review-fabric-swatch:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.review-fabric-swatch:last-child {
+  margin-bottom: 0;
+}
+
+.fabric-swatch-color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  flex-shrink: 0;
+}
+
+.fabric-swatch-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fabric-swatch-name {
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.fabric-swatch-label {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-secondary);
+  background: var(--v10-bg-tertiary);
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  display: inline-block;
+}
+
+/* Design Sample Styling */
+.review-design-sample {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-3);
+  transition: var(--v10-transition);
+}
+
+.review-design-sample:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.review-design-sample:last-child {
+  margin-bottom: 0;
+}
+
+.design-sample-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--v10-bg-tertiary);
+  border-radius: var(--v10-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--v10-text-secondary);
+  flex-shrink: 0;
+}
+
+.design-sample-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.design-sample-name {
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.design-sample-type {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-secondary);
 }
 
 /* Responsive Design for Review Sections */

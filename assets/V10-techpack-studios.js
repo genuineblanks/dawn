@@ -7285,10 +7285,26 @@ class V10_ReviewManager {
       const numberSpan = clone.querySelector('.garment-number');
       const typeSpan = clone.querySelector('.garment-type');
       const statusBadge = clone.querySelector('.status-badge');
+      const colorCircle = clone.querySelector('.garment-color-circle');
+      const colorNameText = clone.querySelector('.color-name-text');
       const contentDiv = clone.querySelector('.review-garment-card__content');
 
       if (numberSpan) numberSpan.textContent = `Garment ${garment.number}`;
-      if (typeSpan) typeSpan.textContent = garment.type;
+      if (typeSpan) typeSpan.textContent = garment.type || 'No type selected';
+      
+      // Update color circle and name
+      if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+        const firstLabDipId = Array.from(garment.assignedLabDips)[0];
+        const labDip = V10_State.labDips.get(firstLabDipId);
+        
+        if (labDip && colorCircle && colorNameText) {
+          colorCircle.style.backgroundColor = labDip.hex;
+          colorNameText.textContent = labDip.pantone;
+        }
+      } else {
+        if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
+        if (colorNameText) colorNameText.textContent = 'No color assigned';
+      }
       
       if (statusBadge) {
         statusBadge.textContent = garment.isComplete ? 'Complete' : 'Incomplete';
@@ -7382,146 +7398,68 @@ class V10_ReviewManager {
   }
 
   populateLabDips() {
-    const assignedContainer = document.getElementById('review-labdips-assigned');
     const standaloneContainer = document.getElementById('review-labdips-standalone');
     
-    if (!assignedContainer || !standaloneContainer) return;
+    if (!standaloneContainer) return;
 
     const labDips = Array.from(V10_State.labDips.values());
-    const assignedLabDips = [];
     const standaloneLabDips = [];
 
     labDips.forEach(labDip => {
       const assignments = V10_State.assignments.labDips.get(labDip.id);
-      if (assignments && assignments.size > 0) {
-        assignedLabDips.push({ labDip, garmentIds: Array.from(assignments) });
-      } else {
+      if (!assignments || assignments.size === 0) {
         standaloneLabDips.push(labDip);
       }
     });
 
-    // Render assigned lab dips
-    assignedContainer.innerHTML = assignedLabDips.map(({ labDip, garmentIds }) => {
-      const garmentNames = garmentIds.map(id => {
-        const garment = V10_State.garments.get(id);
-        return garment ? `Garment ${garment.number}` : 'Unknown';
-      }).join(', ');
-
-      return `
-        <div class="review-item">
-          <div class="review-item__visual">
-            <div class="review-item__color" style="background-color: ${labDip.hex};"></div>
-          </div>
-          <div class="review-item__content">
-            <span class="review-item__name">${labDip.pantone}</span>
-            <span class="review-item__cost">€25</span>
-          </div>
-          <div class="review-item__assignment">
-            <span class="assignment-type">Assigned to ${garmentNames}</span>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    // Render standalone lab dips
-    standaloneContainer.innerHTML = standaloneLabDips.map(labDip => `
-      <div class="review-item">
-        <div class="review-item__visual">
-          <div class="review-item__color" style="background-color: ${labDip.hex};"></div>
-        </div>
-        <div class="review-item__content">
-          <span class="review-item__name">${labDip.pantone}</span>
-          <span class="review-item__cost">€25</span>
-        </div>
-        <div class="review-item__assignment">
-          <span class="assignment-type">Fabric Swatch Only</span>
-        </div>
-      </div>
-    `).join('');
-
-    if (assignedLabDips.length === 0) {
-      assignedContainer.innerHTML = '<p class="empty-message">No lab dips assigned to garments</p>';
-    }
-
+    // Render only standalone lab dips as fabric swatches
     if (standaloneLabDips.length === 0) {
-      standaloneContainer.innerHTML = '<p class="empty-message">No standalone fabric swatches</p>';
+      standaloneContainer.innerHTML = '<p class="empty-message">No fabric swatches available</p>';
+    } else {
+      standaloneContainer.innerHTML = standaloneLabDips.map(labDip => `
+        <div class="review-fabric-swatch">
+          <div class="fabric-swatch-color" style="background-color: ${labDip.hex};"></div>
+          <div class="fabric-swatch-info">
+            <div class="fabric-swatch-name">${labDip.pantone}</div>
+            <div class="fabric-swatch-label">LAB DIP</div>
+          </div>
+        </div>
+      `).join('');
     }
   }
 
   populateDesigns() {
-    const assignedContainer = document.getElementById('review-designs-assigned');
     const standaloneContainer = document.getElementById('review-designs-standalone');
     
-    if (!assignedContainer || !standaloneContainer) return;
+    if (!standaloneContainer) return;
 
     const designs = Array.from(V10_State.designSamples.values());
-    const assignedDesigns = [];
     const standaloneDesigns = [];
 
     designs.forEach(design => {
       const assignments = V10_State.assignments.designs.get(design.id);
-      if (assignments && assignments.size > 0) {
-        assignedDesigns.push({ design, garmentIds: Array.from(assignments) });
-      } else {
+      if (!assignments || assignments.size === 0) {
         standaloneDesigns.push(design);
       }
     });
 
-    // Render assigned designs
-    assignedContainer.innerHTML = assignedDesigns.map(({ design, garmentIds }) => {
-      const garmentNames = garmentIds.map(id => {
-        const garment = V10_State.garments.get(id);
-        return garment ? `Garment ${garment.number}` : 'Unknown';
-      }).join(', ');
-
-      return `
-        <div class="review-item">
-          <div class="review-item__visual">
-            <div class="review-item__icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
-          </div>
-          <div class="review-item__content">
-            <span class="review-item__name">${design.name}</span>
-            <span class="review-item__type">${design.type}</span>
-            <span class="review-item__cost">€15</span>
-          </div>
-          <div class="review-item__assignment">
-            <span class="assignment-type">Assigned to ${garmentNames}</span>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    // Render standalone designs
-    standaloneContainer.innerHTML = standaloneDesigns.map(design => `
-      <div class="review-item">
-        <div class="review-item__visual">
-          <div class="review-item__icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    // Render only standalone designs
+    if (standaloneDesigns.length === 0) {
+      standaloneContainer.innerHTML = '<p class="empty-message">No design samples available</p>';
+    } else {
+      standaloneContainer.innerHTML = standaloneDesigns.map(design => `
+        <div class="review-design-sample">
+          <div class="design-sample-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
+          <div class="design-sample-info">
+            <div class="design-sample-name">${design.name}</div>
+            <div class="design-sample-type">${design.type}</div>
+          </div>
         </div>
-        <div class="review-item__content">
-          <span class="review-item__name">${design.name}</span>
-          <span class="review-item__type">${design.type}</span>
-          <span class="review-item__cost">€15</span>
-        </div>
-        <div class="review-item__assignment">
-          <span class="assignment-type">Fabric Design Sample</span>
-        </div>
-      </div>
-    `).join('');
-
-    if (assignedDesigns.length === 0) {
-      assignedContainer.innerHTML = '<p class="empty-message">No design samples assigned to garments</p>';
-    }
-
-    if (standaloneDesigns.length === 0) {
-      standaloneContainer.innerHTML = '<p class="empty-message">No standalone fabric design samples</p>';
+      `).join('');
     }
   }
 
@@ -7532,22 +7470,26 @@ class V10_ReviewManager {
     if (!breakdownContainer || !totalCostElement) return;
 
     const costs = this.calculateCosts();
+    const currentCurrency = this.getCurrentCurrency();
     let html = '';
 
     costs.items.forEach(item => {
       html += `
         <div class="cost-item">
-          <div>
+          <div class="cost-item__info">
             <div class="cost-item__label">${item.label}</div>
             <div class="cost-item__description">${item.description}</div>
           </div>
-          <div class="cost-item__amount">${V10_Utils.formatCurrency(item.amount)}</div>
+          <div class="cost-item__amount">${this.formatCurrencyWithToggle(item.amount, currentCurrency)}</div>
         </div>
       `;
     });
 
     breakdownContainer.innerHTML = html;
-    totalCostElement.textContent = V10_Utils.formatCurrency(costs.total);
+    totalCostElement.textContent = this.formatCurrencyWithToggle(costs.total, currentCurrency);
+    
+    // Initialize currency toggle if not already done
+    this.initializeCurrencyToggle();
   }
 
   calculateCosts() {
@@ -7628,16 +7570,12 @@ class V10_ReviewManager {
   updateSectionVisibility() {
     const requestType = V10_State.requestType;
     
-    const labDipsSection = document.getElementById('review-labdips-section');
-    const designsSection = document.getElementById('review-designs-section');
+    // Update new side-by-side samples grid
+    const samplesGrid = document.getElementById('review-samples-grid');
     const quantitiesSection = document.getElementById('review-quantities-section');
 
-    if (labDipsSection) {
-      labDipsSection.style.display = requestType === 'sample-request' ? 'block' : 'none';
-    }
-
-    if (designsSection) {
-      designsSection.style.display = requestType === 'sample-request' ? 'block' : 'none';
+    if (samplesGrid) {
+      samplesGrid.style.display = requestType === 'sample-request' ? 'grid' : 'none';
     }
 
     if (quantitiesSection) {
@@ -7879,6 +7817,62 @@ class V10_ReviewManager {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Currency Toggle Methods
+  getCurrentCurrency() {
+    return localStorage.getItem('v10-currency') || 'EUR';
+  }
+
+  setCurrency(currency) {
+    localStorage.setItem('v10-currency', currency);
+    this.updateCurrencyToggle(currency);
+    this.refreshCostDisplay();
+  }
+
+  updateCurrencyToggle(currency) {
+    const currencyBtns = document.querySelectorAll('.currency-btn');
+    currencyBtns.forEach(btn => {
+      if (btn.dataset.currency === currency) {
+        btn.classList.add('currency-btn--active');
+      } else {
+        btn.classList.remove('currency-btn--active');
+      }
+    });
+  }
+
+  refreshCostDisplay() {
+    this.populateCostSummary();
+  }
+
+  formatCurrencyWithToggle(amount, currency) {
+    if (typeof amount === 'string') return amount; // Handle non-numeric amounts like "Contact for pricing"
+    
+    const exchangeRate = 1.1; // EUR to USD rough conversion (you can make this dynamic)
+    
+    if (currency === 'USD') {
+      const convertedAmount = amount * exchangeRate;
+      return `$${convertedAmount.toFixed(2)}`;
+    } else {
+      return `€${amount.toFixed(2)}`;
+    }
+  }
+
+  initializeCurrencyToggle() {
+    const currencyBtns = document.querySelectorAll('.currency-btn');
+    const currentCurrency = this.getCurrentCurrency();
+    
+    // Set initial state
+    this.updateCurrencyToggle(currentCurrency);
+    
+    // Bind click events
+    currencyBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const newCurrency = btn.dataset.currency;
+        this.setCurrency(newCurrency);
+      });
+    });
   }
 }
 

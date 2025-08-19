@@ -147,63 +147,52 @@ TechPack V10 Step 4: Premium Review & Submit
               </div>
             </div>
 
-            <!-- Lab Dips Section (Sample Requests Only) -->
-            <div class="review-detail-section" id="review-labdips-section" style="display: none;">
-              <div class="review-detail-section__header">
-                <div class="review-detail-section__title">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M12 1v6m0 6v6"/>
-                  </svg>
-                  <h3>Lab Dip Color Swatches</h3>
+            <!-- Lab Dips & Design Samples Side-by-Side (Sample Requests Only) -->
+            <div class="review-summary-grid review-samples-grid" id="review-samples-grid" style="display: none;">
+              
+              <!-- Lab Dips Fabric Swatches Card -->
+              <div class="review-card">
+                <div class="review-card__header">
+                  <div class="review-card__title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M12 1v6m0 6v6"/>
+                    </svg>
+                    <span>Lab Dip Fabric Swatches</span>
+                  </div>
+                  <button type="button" class="review-card__edit" data-edit-step="3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
                 </div>
-                <button type="button" class="review-detail-section__edit" data-edit-step="3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  Edit Colors
-                </button>
-              </div>
-              <div class="review-detail-section__content">
-                <div class="review-labdips-container">
-                  <div class="review-labdips-assigned" id="review-labdips-assigned">
-                    <!-- Assigned lab dips -->
-                  </div>
-                  <div class="review-labdips-standalone" id="review-labdips-standalone">
-                    <!-- Standalone fabric swatches -->
-                  </div>
+                <div class="review-card__content" id="review-labdips-standalone">
+                  <!-- Standalone fabric swatches only -->
                 </div>
               </div>
-            </div>
 
-            <!-- Design Samples Section (Sample Requests Only) -->
-            <div class="review-detail-section" id="review-designs-section" style="display: none;">
-              <div class="review-detail-section__header">
-                <div class="review-detail-section__title">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                  <h3>Design Sample Applications</h3>
+              <!-- Design Samples Card -->
+              <div class="review-card">
+                <div class="review-card__header">
+                  <div class="review-card__title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>Design Sample Applications</span>
+                  </div>
+                  <button type="button" class="review-card__edit" data-edit-step="3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
                 </div>
-                <button type="button" class="review-detail-section__edit" data-edit-step="3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  Edit Designs
-                </button>
-              </div>
-              <div class="review-detail-section__content">
-                <div class="review-designs-container">
-                  <div class="review-designs-assigned" id="review-designs-assigned">
-                    <!-- Assigned design samples -->
-                  </div>
-                  <div class="review-designs-standalone" id="review-designs-standalone">
-                    <!-- Standalone fabric design samples -->
-                  </div>
+                <div class="review-card__content" id="review-designs-standalone">
+                  <!-- Standalone design samples only -->
                 </div>
               </div>
+
             </div>
 
             <!-- Quantities Section (Bulk Orders Only) -->
@@ -245,10 +234,16 @@ TechPack V10 Step 4: Premium Review & Submit
                 </svg>
                 <h3>Cost Summary</h3>
               </div>
-              <span class="studio-header__badge studio-header__badge--professional" id="cost-summary-badge">ESTIMATED</span>
+              <div class="cost-summary-header-actions">
+                <div class="currency-toggle">
+                  <button type="button" class="currency-btn currency-btn--active" data-currency="EUR">€</button>
+                  <button type="button" class="currency-btn" data-currency="USD">$</button>
+                </div>
+                <span class="studio-header__badge studio-header__badge--professional" id="cost-summary-badge">ESTIMATED</span>
+              </div>
             </div>
             <div class="review-detail-section__content">
-              <div class="cost-breakdown" id="cost-breakdown">
+              <div class="cost-breakdown-list" id="cost-breakdown">
                 <!-- Populated by JavaScript -->
               </div>
               <div class="cost-summary__total">
@@ -389,9 +384,19 @@ TechPack V10 Step 4: Premium Review & Submit
 <template id="review-garment-template">
   <div class="review-garment-card">
     <div class="review-garment-card__header">
-      <div class="review-garment-card__title">
-        <span class="garment-number">Garment 1</span>
-        <span class="garment-type">Hoodie</span>
+      <div class="review-garment-card__main">
+        <div class="review-garment-card__visual">
+          <div class="garment-color-circle" style="background-color: #ccc;"></div>
+        </div>
+        <div class="review-garment-card__info">
+          <div class="review-garment-card__title">
+            <span class="garment-number">Garment 1</span>
+            <span class="garment-type">Hoodie</span>
+          </div>
+          <div class="review-garment-card__color-name">
+            <span class="color-name-text">No color assigned</span>
+          </div>
+        </div>
       </div>
       <div class="review-garment-card__status">
         <span class="status-badge status-badge--complete">Complete</span>
