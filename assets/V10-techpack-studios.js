@@ -12,62 +12,57 @@ if (typeof window.V10_CONFIG !== 'undefined') {
 } else {
 
 const V10_CONFIG = {
-  // Fabric Type Mapping (from original system)
+  // Fabric Type Mapping (updated to match pricing table)
   FABRIC_TYPE_MAPPING: {
     'Zip-Up Hoodie': [
-      'Brushed Fleece 100% Organic Cotton',
-      'French Terry 100% Organic Cotton',
-      '80% Cotton 20% Polyester Blend',
-      '70% Cotton 30% Polyester Blend',
-      '50% Cotton 50% Polyester Blend',
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
       '100% Polyester'
     ],
     'Hoodie': [
-      'Brushed Fleece 100% Organic Cotton',
-      'French Terry 100% Organic Cotton',
-      '80% Cotton 20% Polyester Blend',
-      '70% Cotton 30% Polyester Blend',
-      '50% Cotton 50% Polyester Blend',
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
       '100% Polyester'
     ],
     'Sweatshirt': [
-      'Brushed Fleece 100% Organic Cotton',
-      'French Terry 100% Organic Cotton',
-      '80% Cotton 20% Polyester Blend',
-      '70% Cotton 30% Polyester Blend',
-      '50% Cotton 50% Polyester Blend',
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
       '100% Polyester'
     ],
     'Sweatpants': [
-      'Brushed Fleece 100% Organic Cotton',
-      'French Terry 100% Organic Cotton',
-      '80% Cotton 20% Polyester Blend',
-      '70% Cotton 30% Polyester Blend',
-      '50% Cotton 50% Polyester Blend',
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
       '100% Polyester'
     ],
     'Shorts': [
-      'Brushed Fleece 100% Organic Cotton',
-      'French Terry 100% Organic Cotton',
-      '80% Cotton 20% Polyester Blend',
-      '70% Cotton 30% Polyester Blend',
-      '50% Cotton 50% Polyester Blend',
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
       '100% Polyester'
     ],
     'T-Shirt': [
       '100% Organic Cotton Jersey',
-      '80% Cotton 20% Polyester Jersey',
-      '50% Cotton 50% Polyester Jersey',
-      '100% Polyester Jersey',
-      '100% Cotton & Elastan',
+      '100% Cotton & Elastane',
+      '80/20 Cotton-Poly',
+      '50/50 Cotton-Poly',
+      '100% Polyester',
       'Recycled Polyester'
     ],
     'Long Sleeve T-Shirt': [
       '100% Organic Cotton Jersey',
-      '80% Cotton 20% Polyester Jersey',
-      '50% Cotton 50% Polyester Jersey',
-      '100% Polyester Jersey',
-      '100% Cotton & Elastan',
+      '100% Cotton & Elastane',
+      '80/20 Cotton-Poly',
+      '50/50 Cotton-Poly',
+      '100% Polyester',
       'Recycled Polyester'
     ],
     'Shirt': [
@@ -75,61 +70,53 @@ const V10_CONFIG = {
       '100% Cotton Oxford',
       '100% Cotton Twill',
       '100% Cotton Canvas',
-      '80% Cotton 20% Polyester Blend',
       '100% Linen',
-      '55% Hemp / 45% Cotton'
+      '55% Hemp / 45% Cotton',
+      '80/20 Cotton-Poly'
     ],
     'Polo Shirt': [
       '100% Cotton Piqué',
-      '95% Cotton / 5% Elastane Piqué',
-      '80% Cotton 20% Polyester Piqué',
-      '50% Cotton / 50% Polyester Piqué',
+      '95/5 Cotton-Elastane Piqué',
+      '80/20 Cotton-Poly Piqué',
+      '50/50 Cotton-Poly Piqué',
       '100% Polyester Piqué'
     ],
     'Tank Top': [
       '100% Cotton Jersey',
-      '100% Cotton Waffle Knit',
-      '100% Cotton 2x2 Rib Knit',
       '100% Cotton Slub Jersey',
+      '100% Cotton Waffle Knit',
       '100% Cotton Lightweight French Terry',
-      '95% Cotton / 5% Elastane Jersey',
-      '50% Cotton / 50% Polyester Jersey',
+      '100% Cotton 2x2 Rib Knit',
+      '95/5 Cotton-Elastane Jersey',
+      '50/50 Cotton-Poly Jersey',
       '100% Polyester Mesh',
-      '65% Polyester / 35% Cotton Piqué Knit'
+      '65/35 Polyester-Cotton Piqué Knit'
     ],
     'Hat/Cap': [
-      '100% Cotton Twill',
-      '100% Cotton Canvas',
-      '100% Polyester',
-      '65% Polyester / 35% Cotton',
-      '100% Wool',
-      '100% Acrylic'
+      'Standard Material'
     ],
     'Beanie': [
-      '100% Acrylic',
-      '100% Wool',
-      '50% Wool / 50% Acrylic',
-      '95% Cotton / 5% Elastane',
-      '100% Cotton',
-      '100% Polyester Fleece'
+      'Standard Material'
     ]
   },
 
   // Cotton fabrics that allow custom colors
   COTTON_FABRICS: [
-    'Brushed Fleece 100% Organic Cotton',
-    'French Terry 100% Organic Cotton',
+    '100% Organic Cotton Brushed Fleece',
+    '100% Organic Cotton French Terry',
     '100% Organic Cotton Jersey',
-    '100% Cotton Jersey',
     '100% Cotton Poplin',
     '100% Cotton Oxford',
     '100% Cotton Twill',
     '100% Cotton Canvas',
+    '100% Linen',
+    '55% Hemp / 45% Cotton',
     '100% Cotton Piqué',
-    '100% Cotton Waffle Knit',
-    '100% Cotton 2x2 Rib Knit',
+    '100% Cotton Jersey',
     '100% Cotton Slub Jersey',
-    '100% Cotton Lightweight French Terry'
+    '100% Cotton Waffle Knit',
+    '100% Cotton Lightweight French Terry',
+    '100% Cotton 2x2 Rib Knit'
   ],
 
   // Complete Pantone TCX Color Database (2319 colors) - will be loaded dynamically
@@ -149,12 +136,100 @@ const V10_CONFIG = {
   // Design sample types
   DESIGN_TYPES: ['Embroidery', 'Screen Print', 'Digital Print', 'Other'],
 
-  // Pricing
+  // Legacy fixed pricing (kept for lab dips and design samples)
   PRICING: {
     LAB_DIP: 25,
     DESIGN_SAMPLE: 15,
-    STOCK_SAMPLE: 35,
-    CUSTOM_SAMPLE: 65
+    STOCK_SAMPLE: 35, // Default fallback
+    CUSTOM_SAMPLE: 65 // Default fallback
+  },
+
+  // Dynamic pricing based on garment, fabric, and sample type
+  GARMENT_PRICING: {
+    'Zip-Up Hoodie': {
+      '100% Organic Cotton Brushed Fleece': { stock: 150, custom: 180 },
+      '100% Organic Cotton French Terry': { stock: 150, custom: 180 },
+      '70/30 Cotton-Poly': { stock: 130, custom: null },
+      '50/50 Cotton-Poly': { stock: 120, custom: null },
+      '100% Polyester': { stock: 110, custom: null }
+    },
+    'Hoodie': {
+      '100% Organic Cotton Brushed Fleece': { stock: 120, custom: 150 },
+      '100% Organic Cotton French Terry': { stock: 120, custom: 150 },
+      '70/30 Cotton-Poly': { stock: 100, custom: null },
+      '50/50 Cotton-Poly': { stock: 90, custom: null },
+      '100% Polyester': { stock: 80, custom: null }
+    },
+    'Sweatshirt': {
+      '100% Organic Cotton Brushed Fleece': { stock: 80, custom: 100 },
+      '100% Organic Cotton French Terry': { stock: 80, custom: 100 },
+      '70/30 Cotton-Poly': { stock: 60, custom: null },
+      '50/50 Cotton-Poly': { stock: 50, custom: null },
+      '100% Polyester': { stock: 40, custom: null }
+    },
+    'Sweatpants': {
+      '100% Organic Cotton Brushed Fleece': { stock: 110, custom: 140 },
+      '100% Organic Cotton French Terry': { stock: 110, custom: 140 },
+      '70/30 Cotton-Poly': { stock: 90, custom: null },
+      '50/50 Cotton-Poly': { stock: 80, custom: null },
+      '100% Polyester': { stock: 70, custom: null }
+    },
+    'Shorts': {
+      '100% Organic Cotton Brushed Fleece': { stock: 80, custom: 100 },
+      '100% Organic Cotton French Terry': { stock: 80, custom: 100 },
+      '70/30 Cotton-Poly': { stock: 60, custom: null },
+      '50/50 Cotton-Poly': { stock: 50, custom: null },
+      '100% Polyester': { stock: 40, custom: null }
+    },
+    'T-Shirt': {
+      '100% Organic Cotton Jersey': { stock: 60, custom: 80 },
+      '100% Cotton & Elastane': { stock: 60, custom: null }, // blend, no custom
+      '80/20 Cotton-Poly': { stock: 40, custom: null },
+      '50/50 Cotton-Poly': { stock: 30, custom: null },
+      '100% Polyester': { stock: 20, custom: null },
+      'Recycled Polyester': { stock: 20, custom: null }
+    },
+    'Long Sleeve T-Shirt': {
+      '100% Organic Cotton Jersey': { stock: 80, custom: 100 },
+      '100% Cotton & Elastane': { stock: 80, custom: null }, // blend, no custom
+      '80/20 Cotton-Poly': { stock: 60, custom: null },
+      '50/50 Cotton-Poly': { stock: 50, custom: null },
+      '100% Polyester': { stock: 40, custom: null },
+      'Recycled Polyester': { stock: 40, custom: null }
+    },
+    'Shirt': {
+      '100% Cotton Poplin': { stock: 100, custom: 120 },
+      '100% Cotton Oxford': { stock: 100, custom: 120 },
+      '100% Cotton Twill': { stock: 100, custom: 120 },
+      '100% Cotton Canvas': { stock: 100, custom: 120 },
+      '100% Linen': { stock: 100, custom: 120 },
+      '55% Hemp / 45% Cotton': { stock: 100, custom: 120 },
+      '80/20 Cotton-Poly': { stock: 80, custom: null }
+    },
+    'Polo Shirt': {
+      '100% Cotton Piqué': { stock: 90, custom: 110 },
+      '95/5 Cotton-Elastane Piqué': { stock: 90, custom: null }, // blend, no custom
+      '80/20 Cotton-Poly Piqué': { stock: 70, custom: null },
+      '50/50 Cotton-Poly Piqué': { stock: 60, custom: null },
+      '100% Polyester Piqué': { stock: 50, custom: null }
+    },
+    'Tank Top': {
+      '100% Cotton Jersey': { stock: 50, custom: 65 },
+      '100% Cotton Slub Jersey': { stock: 50, custom: 65 },
+      '100% Cotton Waffle Knit': { stock: 50, custom: 65 },
+      '100% Cotton Lightweight French Terry': { stock: 50, custom: 65 },
+      '100% Cotton 2x2 Rib Knit': { stock: 50, custom: 65 },
+      '95/5 Cotton-Elastane Jersey': { stock: 50, custom: null }, // blend, no custom
+      '50/50 Cotton-Poly Jersey': { stock: 40, custom: null },
+      '100% Polyester Mesh': { stock: 30, custom: null },
+      '65/35 Polyester-Cotton Piqué Knit': { stock: 30, custom: null }
+    },
+    'Hat/Cap': {
+      'Standard Material': { stock: 250, custom: null } // stock only
+    },
+    'Beanie': {
+      'Standard Material': { stock: 150, custom: null } // stock only
+    }
   }
 };
 
@@ -2682,6 +2757,43 @@ const V10_Utils = {
     return has100Percent && hasCotton;
   },
 
+  // Calculate dynamic price based on garment, fabric, and sample type
+  calculateDynamicPrice: (garmentType, fabricType, sampleType) => {
+    // Return null if missing required parameters
+    if (!garmentType || !fabricType || !sampleType) {
+      return null;
+    }
+
+    // For TechPack sample type, return special indicator
+    if (sampleType === 'techpack') {
+      return 'Premium';
+    }
+
+    // Get pricing for specific garment type
+    const garmentPricing = V10_CONFIG.GARMENT_PRICING[garmentType];
+    if (!garmentPricing) {
+      // Fallback to legacy pricing if garment not found
+      return sampleType === 'stock' ? V10_CONFIG.PRICING.STOCK_SAMPLE : V10_CONFIG.PRICING.CUSTOM_SAMPLE;
+    }
+
+    // Get pricing for specific fabric type
+    const fabricPricing = garmentPricing[fabricType];
+    if (!fabricPricing) {
+      // Fallback to legacy pricing if fabric not found
+      return sampleType === 'stock' ? V10_CONFIG.PRICING.STOCK_SAMPLE : V10_CONFIG.PRICING.CUSTOM_SAMPLE;
+    }
+
+    // Return the price based on sample type
+    if (sampleType === 'stock') {
+      return fabricPricing.stock;
+    } else if (sampleType === 'custom') {
+      // Return null if custom not available for this fabric
+      return fabricPricing.custom;
+    }
+
+    return null;
+  },
+
   // Check if garment should have custom color restrictions based on fabric type
   shouldRestrictCustomColor: (garmentElement) => {
     if (!garmentElement) return false;
@@ -2695,6 +2807,80 @@ const V10_Utils = {
     }
     
     return !V10_Utils.isCottonFabric(fabricType);
+  },
+
+  // Update sample type card prices based on garment and fabric selection
+  updateSampleTypePrices: (garmentElement) => {
+    if (!garmentElement) return;
+
+    // Get current selections
+    const garmentTypeInput = garmentElement.querySelector('input[name*="garmentType"]:checked');
+    const fabricTypeInput = garmentElement.querySelector('input[name*="fabricType"]:checked');
+    
+    const garmentType = garmentTypeInput ? garmentTypeInput.value : null;
+    const fabricType = fabricTypeInput ? fabricTypeInput.value : null;
+
+    // Find sample type cards
+    const stockCard = garmentElement.querySelector('.sample-type-card[data-value="stock"]');
+    const customCard = garmentElement.querySelector('.sample-type-card[data-value="custom"]');
+    const techpackCard = garmentElement.querySelector('.sample-type-card[data-value="techpack"]');
+
+    // Update stock price
+    if (stockCard) {
+      const priceElement = stockCard.querySelector('.sample-type-card__price');
+      if (priceElement) {
+        const stockPrice = V10_Utils.calculateDynamicPrice(garmentType, fabricType, 'stock');
+        if (stockPrice && stockPrice !== 'Premium') {
+          priceElement.textContent = `avg. ${stockPrice}€`;
+        } else if (!garmentType || !fabricType) {
+          priceElement.textContent = 'Select garment & fabric';
+        } else {
+          priceElement.textContent = `avg. ${V10_CONFIG.PRICING.STOCK_SAMPLE}€`;
+        }
+      }
+    }
+
+    // Update custom price
+    if (customCard) {
+      const priceElement = customCard.querySelector('.sample-type-card__price');
+      if (priceElement) {
+        const customPrice = V10_Utils.calculateDynamicPrice(garmentType, fabricType, 'custom');
+        
+        if (customPrice && customPrice !== 'Premium') {
+          priceElement.textContent = `avg. ${customPrice}€`;
+          // Enable the card if custom is available
+          customCard.classList.remove('sample-type-card--disabled');
+          customCard.style.opacity = '1';
+          customCard.style.pointerEvents = 'auto';
+        } else if (!garmentType || !fabricType) {
+          priceElement.textContent = 'Select garment & fabric';
+          // Keep card enabled but show pending state
+          customCard.style.opacity = '0.7';
+        } else if (customPrice === null) {
+          // Custom not available for this fabric
+          priceElement.textContent = 'Not available';
+          customCard.classList.add('sample-type-card--disabled');
+          customCard.style.opacity = '0.5';
+          customCard.style.pointerEvents = 'none';
+          
+          // Update description to explain why
+          const descElement = customCard.querySelector('.sample-type-card__details');
+          if (descElement) {
+            descElement.textContent = 'Custom color not available for blends';
+          }
+        } else {
+          priceElement.textContent = `avg. ${V10_CONFIG.PRICING.CUSTOM_SAMPLE}€`;
+        }
+      }
+    }
+
+    // Update techpack price (always premium)
+    if (techpackCard) {
+      const priceElement = techpackCard.querySelector('.sample-type-card__price');
+      if (priceElement && priceElement.textContent !== 'Premium') {
+        priceElement.textContent = 'Premium';
+      }
+    }
   },
 
   // Update garment custom color restrictions based on fabric type
@@ -3157,6 +3343,9 @@ class V10_GarmentStudio {
         console.error('❌ Error setting garment values:', valuesError);
       }
 
+      // Update sample type prices after setting values
+      V10_Utils.updateSampleTypePrices(clone);
+
       // Show/hide sections based on request type
       try {
         this.updateSectionVisibility(clone);
@@ -3476,6 +3665,9 @@ class V10_GarmentStudio {
       
       // Reset sample type selection
       this.resetSampleTypeSelection(garmentCard);
+      
+      // Update sample type prices based on new garment selection
+      V10_Utils.updateSampleTypePrices(garmentCard);
     }
 
     // Handle fabric type change (compact and regular)
@@ -3486,6 +3678,8 @@ class V10_GarmentStudio {
       // Update fabric restrictions when fabric type changes
       setTimeout(() => {
         V10_Utils.updateGarmentFabricRestrictions(garmentCard);
+        // Update sample type prices based on new fabric selection
+        V10_Utils.updateSampleTypePrices(garmentCard);
       }, 50);
       
       // Handle compact interface selection update
@@ -4620,19 +4814,31 @@ class V10_DesignStudio {
   bindLabDipEvents() {
     // Color picker
     const colorPicker = document.getElementById('lab-dip-color-picker');
-    const colorPreview = document.getElementById('lab-dip-color-preview');
     const pantoneInput = document.getElementById('manual-pantone-code');
     const pantoneDisplay = document.getElementById('auto-pantone-display');
     const pantoneCircle = document.getElementById('auto-pantone-circle');
     const pantoneCode = document.getElementById('auto-pantone-code');
 
-    if (colorPicker && colorPreview) {
-      // Initialize preview with current color picker value
-      colorPreview.style.backgroundColor = colorPicker.value;
+    if (colorPicker && pantoneCircle) {
+      // Initialize circle and pantone display with current color picker value
+      const initialHex = colorPicker.value;
+      pantoneCircle.style.backgroundColor = initialHex;
+      
+      // Initialize pantone display with closest color match
+      if (pantoneDisplay && pantoneCode) {
+        const closestColors = V10_Utils.findClosestPantoneColors(initialHex, 1);
+        if (closestColors.length > 0) {
+          const bestMatch = closestColors[0];
+          pantoneCode.textContent = bestMatch.code;
+          const pantoneNote = document.querySelector('.pantone-note');
+          if (pantoneNote) {
+            pantoneNote.textContent = `Auto-matched from 2,319+ TCX colors (${bestMatch.confidence}% match)`;
+          }
+        }
+      }
       
       colorPicker.addEventListener('input', (e) => {
         const hex = e.target.value;
-        colorPreview.style.backgroundColor = hex;
         
         // Update auto-pantone display with enhanced color matching
         if (pantoneDisplay && pantoneCircle && pantoneCode) {
@@ -4676,7 +4882,6 @@ class V10_DesignStudio {
         const pantone = colorBtn.dataset.pantone;
         
         if (colorPicker) colorPicker.value = hex;
-        if (colorPreview) colorPreview.style.backgroundColor = hex;
         if (pantoneInput) pantoneInput.value = pantone;
         
         if (pantoneDisplay && pantoneCircle && pantoneCode) {
@@ -6019,19 +6224,41 @@ class V10_ReviewManager {
       // Sample costs
       garments.forEach(garment => {
         if (garment.sampleType === 'stock') {
+          // Calculate dynamic price based on garment and fabric type
+          const dynamicPrice = V10_Utils.calculateDynamicPrice(
+            garment.type, 
+            garment.fabricType, 
+            'stock'
+          ) || V10_CONFIG.PRICING.STOCK_SAMPLE;
+          
           items.push({
             label: `${garment.type} - Stock Sample`,
-            description: `Garment ${garment.number}`,
-            amount: V10_CONFIG.PRICING.STOCK_SAMPLE
+            description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            amount: dynamicPrice
           });
-          total += V10_CONFIG.PRICING.STOCK_SAMPLE;
+          total += dynamicPrice;
         } else if (garment.sampleType === 'custom') {
+          // Calculate dynamic price based on garment and fabric type
+          const dynamicPrice = V10_Utils.calculateDynamicPrice(
+            garment.type, 
+            garment.fabricType, 
+            'custom'
+          ) || V10_CONFIG.PRICING.CUSTOM_SAMPLE;
+          
           items.push({
             label: `${garment.type} - Custom Sample`,
-            description: `Garment ${garment.number}`,
-            amount: V10_CONFIG.PRICING.CUSTOM_SAMPLE
+            description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            amount: dynamicPrice
           });
-          total += V10_CONFIG.PRICING.CUSTOM_SAMPLE;
+          total += dynamicPrice;
+        } else if (garment.sampleType === 'techpack') {
+          // TechPack pricing varies by garment and fabric
+          items.push({
+            label: `${garment.type} - As Per TechPack`,
+            description: `Garment ${garment.number} (Premium)`,
+            amount: 'Contact for pricing'
+          });
+          // Don't add to total for techpack as it's variable
         }
       });
 
