@@ -1499,6 +1499,12 @@ body[class*="techpack"] *,
   border: 1px solid #a5b4fc;
 }
 
+.sample-type-badge--missing {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
 /* Empty State for Garment Selector */
 .garment-selector-empty {
   text-align: center;
@@ -5125,6 +5131,17 @@ DESIGN STUDIO TOGGLE FUNCTIONALITY
   letter-spacing: 0.05em;
 }
 
+.studio-header__badge--creative {
+  background: #8b5cf6;
+  color: white;
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .studio-header__subtitle {
   margin-top: var(--v10-space-2);
   font-size: var(--v10-text-sm);
@@ -6027,6 +6044,20 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 
 .garment-summary__fabric {
   color: var(--v10-text-primary);
+}
+
+.garment-summary__color-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-surface-secondary);
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.garment-summary__color-name {
+  color: var(--v10-accent-secondary);
+  font-weight: 500;
 }
 
 .garment-summary__status {

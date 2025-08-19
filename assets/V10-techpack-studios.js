@@ -3789,6 +3789,9 @@ class V10_GarmentStudio {
     
     // Check and update overall studio completion status
     this.updateStudioCompletion();
+    
+    // Update design studio completion badge
+    V10_BadgeManager.updateDesignCompletionBadge();
   }
 
   // Check if all garments are complete and update studio status
@@ -3865,9 +3868,36 @@ class V10_GarmentStudio {
     const typeSpan = garmentCard.querySelector('.garment-summary__type');
     const fabricSpan = garmentCard.querySelector('.garment-summary__fabric');
     const statusSpan = garmentCard.querySelector('.garment-summary__status');
+    const colorCircle = garmentCard.querySelector('.garment-summary__color-circle');
+    const colorName = garmentCard.querySelector('.garment-summary__color-name');
+    const separator = garmentCard.querySelector('.garment-summary__separator');
     
     if (typeSpan && garmentData.type) {
       typeSpan.textContent = garmentData.type;
+    }
+    
+    // Handle color display for garments with assigned lab dips
+    if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
+      // Get the first assigned lab dip for color display
+      const firstLabDipId = Array.from(garmentData.assignedLabDips)[0];
+      const labDip = V10_State.labDips.get(firstLabDipId);
+      
+      if (labDip && colorCircle && colorName) {
+        // Show color circle with lab dip color
+        colorCircle.style.backgroundColor = labDip.hex;
+        colorCircle.style.display = 'inline-block';
+        
+        // Show color name from pantone
+        colorName.textContent = labDip.pantone;
+        colorName.style.display = 'inline';
+        
+        // Ensure separator is visible
+        if (separator) separator.style.display = 'inline';
+      }
+    } else {
+      // Hide color elements when no lab dips assigned
+      if (colorCircle) colorCircle.style.display = 'none';
+      if (colorName) colorName.style.display = 'none';
     }
     
     if (fabricSpan && garmentData.fabricType) {
@@ -3887,7 +3917,15 @@ class V10_GarmentStudio {
             statusMessage = 'Complete - Add a design (optional)';
             break;
           case 'custom':
-            statusMessage = 'Complete - Needs to assign color on Design studio & design (optional)';
+            // Check if lab dips are actually assigned for custom color samples
+            const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+            if (hasLabDips) {
+              statusMessage = 'Complete';
+              isComplete = true;
+            } else {
+              statusMessage = 'Color assignment required in Design Studio';
+              isComplete = false;
+            }
             break;
           default:
             statusMessage = 'Complete';
@@ -4184,6 +4222,9 @@ class V10_GarmentStudio {
     V10_State.assignments.labDips.get(labDipId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
+    
+    // Update design studio completion badge
+    V10_BadgeManager.updateDesignCompletionBadge();
   }
 
   unassignLabDip(garmentId, labDipId) {
@@ -4197,6 +4238,9 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
+    
+    // Update design studio completion badge
+    V10_BadgeManager.updateDesignCompletionBadge();
   }
 
   assignDesign(garmentId, designId) {
@@ -4211,6 +4255,9 @@ class V10_GarmentStudio {
     V10_State.assignments.designs.get(designId).add(garmentId);
 
     this.updateAssignedDisplay(garmentId);
+    
+    // Update design studio completion badge
+    V10_BadgeManager.updateDesignCompletionBadge();
   }
 
   unassignDesign(garmentId, designId) {
@@ -4224,6 +4271,9 @@ class V10_GarmentStudio {
     }
 
     this.updateAssignedDisplay(garmentId);
+    
+    // Update design studio completion badge
+    V10_BadgeManager.updateDesignCompletionBadge();
   }
 
 
@@ -5098,6 +5148,16 @@ class V10_DesignStudio {
     const garments = Array.from(V10_State.garments.values()).filter(g => g.isComplete);
     console.log(`📊 Found ${garments.length} complete garments:`, garments);
     
+    // Debug: Check garment sample types for lab dip assignment
+    console.log('🔍 DEBUG: Garments for lab dip assignment:', garments.map(g => ({
+      id: g.id,
+      number: g.number,
+      type: g.type,
+      fabricType: g.fabricType,
+      sampleType: g.sampleType, // This is likely undefined/empty
+      isComplete: g.isComplete
+    })));
+    
     if (garments.length === 0) {
       alert('Please complete at least one garment specification first.');
       return;
@@ -5163,6 +5223,21 @@ class V10_DesignStudio {
       let availableCount = garments.length;
       if (type === 'labdip') {
         availableCount = garments.filter(g => g.sampleType === 'custom').length;
+        
+        // Debug: Lab dip filtering logic
+        console.log('🔍 DEBUG: Lab dip filtering logic:', {
+          type: type,
+          totalGarments: garments.length,
+          garmentsWithSampleType: garments.filter(g => g.sampleType).length,
+          garmentsWithCustom: garments.filter(g => g.sampleType === 'custom').length,
+          availableCount: availableCount,
+          garmentSampleTypes: garments.map(g => ({ 
+            id: g.id, 
+            number: g.number,
+            sampleType: g.sampleType,
+            sampleTypeType: typeof g.sampleType
+          }))
+        });
       }
       
       const modal = document.createElement('div');
@@ -5189,7 +5264,19 @@ class V10_DesignStudio {
               ${garments.map(garment => {
                 const isLabDip = type === 'labdip';
                 const isEligible = !isLabDip || garment.sampleType === 'custom';
-                const badgeText = !isEligible ? this.getSampleTypeBadgeText(garment.sampleType) : '';
+                
+                // Handle garments without sample types
+                let badgeText = '';
+                let badgeClass = '';
+                if (isLabDip && !isEligible) {
+                  if (!garment.sampleType || garment.sampleType === '') {
+                    badgeText = 'No Sample Type';
+                    badgeClass = 'missing';
+                  } else {
+                    badgeText = this.getSampleTypeBadgeText(garment.sampleType);
+                    badgeClass = garment.sampleType;
+                  }
+                }
                 
                 return `
                   <label class="garment-selector__option${!isEligible ? ' garment-selector__option--disabled' : ''}">
@@ -5197,7 +5284,7 @@ class V10_DesignStudio {
                     <span class="garment-selector__card">
                       <span class="garment-selector__title">Garment ${garment.number}</span>
                       <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
-                      ${badgeText ? `<span class="sample-type-badge sample-type-badge--${garment.sampleType}">${badgeText}</span>` : ''}
+                      ${badgeText ? `<span class="sample-type-badge sample-type-badge--${badgeClass}">${badgeText}</span>` : ''}
                     </span>
                   </label>
                 `;
@@ -9143,35 +9230,26 @@ const V10_BadgeManager = {
     const badge = document.getElementById('garment-completion-badge');
     if (!badge) return;
     
-    // Get all garment cards
-    const garmentCards = document.querySelectorAll('.garment-card');
+    // Use the same logic as the working tab completion system
+    const allGarments = Array.from(V10_State.garments.values());
     
-    if (garmentCards.length === 0) {
+    if (allGarments.length === 0) {
       // No garments = incomplete
-      this.setBadgeIncomplete(badge);
+      this.setBadgeIncomplete(badge, 0, 0);
       return;
     }
     
-    // Check completion status of all garments
-    let allComplete = true;
-    
-    garmentCards.forEach(card => {
-      const completeIndicator = card.querySelector('[class*="complete"], .garment-complete, .status-complete');
-      const completeText = card.textContent || card.innerText;
-      
-      // Check if garment has "Complete" status
-      const hasCompleteIndicator = completeIndicator || completeText.toLowerCase().includes('complete');
-      
-      if (!hasCompleteIndicator) {
-        allComplete = false;
-      }
-    });
+    // Count completed garments using the same logic as tab system
+    const completeGarments = allGarments.filter(garment => garment.isComplete);
+    const completeCount = completeGarments.length;
+    const totalCount = allGarments.length;
+    const isComplete = completeCount === totalCount;
     
     // Update badge based on completion status
-    if (allComplete) {
+    if (isComplete) {
       this.setBadgeComplete(badge);
     } else {
-      this.setBadgeIncomplete(badge);
+      this.setBadgeIncomplete(badge, completeCount, totalCount);
     }
   },
   
@@ -9182,15 +9260,20 @@ const V10_BadgeManager = {
   },
   
   // Set badge to incomplete state
-  setBadgeIncomplete(badge) {
-    badge.textContent = 'INCOMPLETE';
+  setBadgeIncomplete(badge, completeCount = 0, totalCount = 0) {
+    if (totalCount === 0) {
+      badge.textContent = 'INCOMPLETE';
+    } else {
+      badge.textContent = `INCOMPLETE (${completeCount}/${totalCount})`;
+    }
     badge.className = 'studio-header__badge studio-header__badge--incomplete';
   },
   
   // Initialize badge checking
   init() {
-    // Initial check
+    // Initial check for both badges
     this.updateGarmentCompletionBadge();
+    this.updateDesignCompletionBadge();
     
     // Set up observers for dynamic updates
     this.observeGarmentChanges();
@@ -9217,6 +9300,76 @@ const V10_BadgeManager = {
       attributes: true,
       attributeFilter: ['class']
     });
+  },
+
+  // Update design studio completion badge
+  updateDesignCompletionBadge() {
+    const badge = document.getElementById('design-completion-badge');
+    if (!badge) return;
+    
+    // Get all garments from state
+    const allGarments = Array.from(V10_State.garments.values());
+    
+    if (allGarments.length === 0) {
+      // No garments = show creative (default state)
+      this.setDesignBadgeCreative(badge);
+      return;
+    }
+    
+    // Count design requirements and fulfillments
+    let totalRequirements = 0;
+    let fulfilledRequirements = 0;
+    
+    allGarments.forEach(garment => {
+      // Check if garment has custom color requirement (needs lab dip)
+      if (garment.sampleType === 'custom') {
+        totalRequirements++;
+        if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+          fulfilledRequirements++;
+        }
+      }
+      
+      // Check if garment has design requirements (for future extension)
+      // This can be expanded to check for specific design requirements
+      if (garment.assignedDesigns && garment.assignedDesigns.size > 0) {
+        // If they have designs assigned, they had a requirement that's now fulfilled
+        // This logic can be refined based on your specific requirements
+      }
+    });
+    
+    // Update badge based on completion status
+    if (totalRequirements === 0) {
+      // No design requirements = show creative
+      this.setDesignBadgeCreative(badge);
+    } else if (fulfilledRequirements === totalRequirements) {
+      // All requirements fulfilled = complete
+      this.setDesignBadgeComplete(badge);
+    } else {
+      // Some requirements unfulfilled = incomplete with fraction
+      this.setDesignBadgeIncomplete(badge, fulfilledRequirements, totalRequirements);
+    }
+  },
+  
+  // Set design badge to creative state (default)
+  setDesignBadgeCreative(badge) {
+    badge.textContent = 'CREATIVE';
+    badge.className = 'studio-header__badge studio-header__badge--creative';
+  },
+  
+  // Set design badge to complete state
+  setDesignBadgeComplete(badge) {
+    badge.textContent = 'COMPLETE';
+    badge.className = 'studio-header__badge studio-header__badge--complete';
+  },
+  
+  // Set design badge to incomplete state
+  setDesignBadgeIncomplete(badge, fulfilledCount = 0, totalCount = 0) {
+    if (totalCount === 0) {
+      badge.textContent = 'INCOMPLETE';
+    } else {
+      badge.textContent = `INCOMPLETE (${fulfilledCount}/${totalCount})`;
+    }
+    badge.className = 'studio-header__badge studio-header__badge--incomplete';
   }
 };
 
