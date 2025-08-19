@@ -7680,15 +7680,112 @@ class V10_GarmentStudio {
     
     // Update mode containers
     document.querySelectorAll('.quantities-mode').forEach(container => {
-      container.classList.toggle('quantities-mode--active', container.id === `${mode}-mode-content`);
+      const isActive = container.id === `${mode}-mode-content`;
+      container.classList.toggle('quantities-mode--active', isActive);
+      container.style.display = isActive ? 'block' : 'none';
     });
     
-    // Update distribution chart when switching to distribution mode
+    // Handle mode-specific functionality
     if (mode === 'distribution') {
-      this.updateSizeDistributionChart();
+      this.initializeDistributionAnalytics();
+    } else if (mode === 'sizes') {
+      this.hideLegacyCharts();
     }
     
     console.log(`🔄 Switched to ${mode} mode`);
+  }
+
+  /**
+   * Initialize sophisticated distribution analytics system
+   */
+  initializeDistributionAnalytics() {
+    // Render aggregate analytics dashboard
+    this.quantityCalculator.renderAggregateAnalytics('aggregate-analytics-container');
+    
+    // Render individual garment analytics
+    const garmentAnalyticsContainer = document.getElementById('garment-analytics-container');
+    if (garmentAnalyticsContainer) {
+      garmentAnalyticsContainer.innerHTML = '';
+      
+      // Add analytics for each garment with quantities
+      V10_State.garments.forEach((garment, garmentId) => {
+        if (garment.quantities && Object.values(garment.quantities).some(q => (parseInt(q) || 0) > 0)) {
+          // Create container for this garment's analytics
+          const analyticsDiv = document.createElement('div');
+          analyticsDiv.className = 'garment-analytics-wrapper';
+          analyticsDiv.innerHTML = `
+            <h4>Garment ${garment.number || '?'} - ${garment.type || 'Unknown'}</h4>
+            <div class="distribution-chart-container" id="chart-${garmentId}"></div>
+          `;
+          garmentAnalyticsContainer.appendChild(analyticsDiv);
+          
+          // Render the distribution chart for this garment
+          this.quantityCalculator.renderDistributionChart(garmentId, `chart-${garmentId}`);
+        }
+      });
+      
+      // If no garments have quantities, show empty state
+      if (garmentAnalyticsContainer.children.length === 0) {
+        garmentAnalyticsContainer.innerHTML = `
+          <div class="analytics-empty-state">
+            <div class="empty-state-icon">📊</div>
+            <h4>No Distribution Data Available</h4>
+            <p>Add quantities to your garments in "Sizes & Quantities" mode to see distribution analytics here.</p>
+          </div>
+        `;
+      }
+    }
+    
+    // Show distribution charts on individual garment cards
+    this.toggleGarmentAnalyticsVisibility(true);
+    
+    console.log('📊 Distribution analytics initialized');
+  }
+
+  /**
+   * Hide legacy distribution charts and show new analytics
+   */
+  hideLegacyCharts() {
+    // Hide individual garment analytics
+    this.toggleGarmentAnalyticsVisibility(false);
+    
+    // Hide legacy analysis section
+    const legacyAnalysis = document.querySelector('.legacy-analysis');
+    if (legacyAnalysis) {
+      legacyAnalysis.style.display = 'none';
+    }
+    
+    console.log('📈 Switched to sizes mode - analytics hidden');
+  }
+
+  /**
+   * Toggle visibility of analytics charts on individual garment cards
+   */
+  toggleGarmentAnalyticsVisibility(show) {
+    const chartContainers = document.querySelectorAll('.distribution-chart-container');
+    chartContainers.forEach(container => {
+      if (show) {
+        container.style.display = 'block';
+        // Re-render chart if garment has data
+        const garmentCard = container.closest('[data-garment-id]');
+        if (garmentCard) {
+          const garmentId = garmentCard.dataset.garmentId;
+          this.quantityCalculator.renderDistributionChart(garmentId);
+        }
+      } else {
+        container.style.display = 'none';
+      }
+    });
+  }
+
+  /**
+   * Legacy method - kept for backward compatibility
+   */
+  updateSizeDistributionChart() {
+    // This method is kept for backward compatibility
+    // The new analytics system handles distribution visualization
+    console.log('📊 Legacy chart update requested - using new analytics system');
+    this.initializeDistributionAnalytics();
   }
 
   initializeBulkInputTools() {

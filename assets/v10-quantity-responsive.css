@@ -1714,6 +1714,70 @@
 }
 
 /* ============================================
+   ANALYTICS WRAPPER & EMPTY STATES
+   ============================================ */
+
+.garment-analytics-wrapper {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.garment-analytics-wrapper h4 {
+  margin: 0 0 1rem 0;
+  color: var(--color-foreground);
+  font-weight: 600;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.analytics-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--color-background-secondary);
+  border-radius: 12px;
+  border: 2px dashed var(--color-border);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.analytics-empty-state h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--color-foreground);
+  font-weight: 600;
+}
+
+.analytics-empty-state p {
+  margin: 0;
+  color: var(--color-foreground-subtle);
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.garment-analytics-container {
+  margin-top: 2rem;
+}
+
+/* Studio mode visibility */
+.quantities-mode {
+  display: none;
+}
+
+.quantities-mode--active {
+  display: block;
+}
+
+/* ============================================
    ACCESSIBILITY ENHANCEMENTS
    ============================================ */
 
