@@ -6617,70 +6617,71 @@ class V10_GarmentStudio {
       console.log('🔄 Quantity studio population already in progress, skipping...');
       return;
     }
-    this._populatingQuantityStudio = true;
     
-    const container = document.getElementById('garment-quantities-container');
-    if (!container) {
-      console.error('❌ Quantity container not found');
-      this._populatingQuantityStudio = false;
-      return;
-    }
-    
-    // Save current quantities before any DOM manipulation
-    this.saveCurrentQuantitiesToState();
-    
-    // Clean up any existing event listeners before rebuilding
-    this.cleanupQuantityStudioEventListeners();
-    
-    // Clear existing content completely to prevent multiplication
-    container.innerHTML = '';
-    console.log('🧹 Saved quantities, cleared DOM content and event listeners');
-    
-    // Create fresh structure
-    const validationSummary = document.createElement('div');
-    validationSummary.className = 'quantity-validation-summary';
-    validationSummary.id = 'quantity-validation-summary';
-    
-    const responsiveGrid = document.createElement('div');
-    responsiveGrid.className = 'responsive-garment-grid';
-    responsiveGrid.id = 'responsive-garment-grid';
-    
-    // Build clean structure
-    container.appendChild(validationSummary);
-    container.appendChild(responsiveGrid);
-    
-    // Get all garments that have been configured in Garment Studio
-    // Only completed garments should appear in quantity studio (in summary card state)
-    const requestType = V10_State.requestType;
-    const completedGarments = Array.from(V10_State.garments.values()).filter(garment => {
-      if (requestType === 'bulk-order-request') {
-        // For bulk orders, garment must be complete (type AND sample reference) to show summary card
-        return garment.isComplete && garment.type && garment.sampleReference;
-      } else {
-        // For samples, need type and either sample reference or fabric
-        return garment.type && (garment.sampleReference || garment.fabricType);
-      }
-    });
-    
-    // Debug logging to understand garment state
-    console.log(`📊 Populating Quantity Studio:`);
-    console.log(`   Request type: ${requestType}`);
-    console.log(`   Total garments in state: ${V10_State.garments.size}`);
-    console.log(`   Garments with type: ${Array.from(V10_State.garments.values()).filter(g => g.type).length}`);
-    console.log(`   Ready for quantities: ${completedGarments.length}`);
-    
-    // Log each garment's state for debugging
-    V10_State.garments.forEach((garment, id) => {
-      console.log(`   Garment ${garment.number || id}:`);
-      console.log(`     - type: "${garment.type}"`);
-      console.log(`     - sampleReference: "${garment.sampleReference}"`);
-      console.log(`     - isComplete: ${garment.isComplete}`);
-      console.log(`     - fabricType: "${garment.fabricType}"`);
+    try {
+      this._populatingQuantityStudio = true;
       
-      // Test the filtering logic for this garment
-      const passes = garment.isComplete && garment.type && garment.sampleReference;
-      console.log(`     - Passes filter: ${passes}`);
-    });
+      const container = document.getElementById('garment-quantities-container');
+      if (!container) {
+        console.error('❌ Quantity container not found');
+        return;
+      }
+      
+      // Save current quantities before any DOM manipulation
+      this.saveCurrentQuantitiesToState();
+      
+      // Clean up any existing event listeners before rebuilding
+      this.cleanupQuantityStudioEventListeners();
+      
+      // Clear existing content completely to prevent multiplication
+      container.innerHTML = '';
+      console.log('🧹 Saved quantities, cleared DOM content and event listeners');
+      
+      // Create fresh structure
+      const validationSummary = document.createElement('div');
+      validationSummary.className = 'quantity-validation-summary';
+      validationSummary.id = 'quantity-validation-summary';
+      
+      const responsiveGrid = document.createElement('div');
+      responsiveGrid.className = 'responsive-garment-grid';
+      responsiveGrid.id = 'responsive-garment-grid';
+      
+      // Build clean structure
+      container.appendChild(validationSummary);
+      container.appendChild(responsiveGrid);
+      
+      // Get all garments that have been configured in Garment Studio
+      // Only completed garments should appear in quantity studio (in summary card state)
+      const requestType = V10_State.requestType;
+      const completedGarments = Array.from(V10_State.garments.values()).filter(garment => {
+        if (requestType === 'bulk-order-request') {
+          // For bulk orders, garment must be complete (type AND sample reference) to show summary card
+          return garment.isComplete && garment.type && garment.sampleReference;
+        } else {
+          // For samples, need type and either sample reference or fabric
+          return garment.type && (garment.sampleReference || garment.fabricType);
+        }
+      });
+      
+      // Debug logging to understand garment state
+      console.log(`📊 Populating Quantity Studio:`);
+      console.log(`   Request type: ${requestType}`);
+      console.log(`   Total garments in state: ${V10_State.garments.size}`);
+      console.log(`   Garments with type: ${Array.from(V10_State.garments.values()).filter(g => g.type).length}`);
+      console.log(`   Ready for quantities: ${completedGarments.length}`);
+      
+      // Log each garment's state for debugging
+      V10_State.garments.forEach((garment, id) => {
+        console.log(`   Garment ${garment.number || id}:`);
+        console.log(`     - type: "${garment.type}"`);
+        console.log(`     - sampleReference: "${garment.sampleReference}"`);
+        console.log(`     - isComplete: ${garment.isComplete}`);
+        console.log(`     - fabricType: "${garment.fabricType}"`);
+        
+        // Test the filtering logic for this garment
+        const passes = garment.isComplete && garment.type && garment.sampleReference;
+        console.log(`     - Passes filter: ${passes}`);
+      });
     
     if (completedGarments.length === 0) {
       responsiveGrid.innerHTML = `
@@ -6771,20 +6772,25 @@ class V10_GarmentStudio {
     }
     
     // Generate initial validation cards
-    this.updateAllValidationCards();
+      this.updateAllValidationCards();
+      
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+      
+      console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s) in responsive grid (${duration.toFixed(2)}ms)`);
+      
+      // Warn about slow population
+      if (duration > 200) {
+        console.warn(`⚠️ Slow quantity studio population: ${duration.toFixed(2)}ms`);
+      }
     
-    const endTime = performance.now();
-    const duration = endTime - startTime;
-    
-    console.log(`📊 Populated quantity studio with ${completedGarments.length} enhanced garment card(s) in responsive grid (${duration.toFixed(2)}ms)`);
-    
-    // Warn about slow population
-    if (duration > 200) {
-      console.warn(`⚠️ Slow quantity studio population: ${duration.toFixed(2)}ms`);
+    } catch (error) {
+      console.error('❌ Error in populateQuantityStudio:', error);
+    } finally {
+      // Always reset singleton protection flag, even if error occurs
+      this._populatingQuantityStudio = false;
+      console.log('🔄 populateQuantityStudio() completed, flag reset');
     }
-    
-    // Reset singleton protection flag
-    this._populatingQuantityStudio = false;
   }
 
   createEnhancedQuantityCard(garment, index) {
