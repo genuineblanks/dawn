@@ -43,18 +43,19 @@
   will-change: auto;
 }
 
-/* Desktop: 2 garments per row */
+/* Desktop: Single column for horizontal table rows */
 @media (min-width: 1024px) {
   .responsive-garment-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
-/* Large desktop: maintain 2 per row with more space */
+/* Large desktop: maintain single column with more space */
 @media (min-width: 1400px) {
   .responsive-garment-grid {
-    gap: 2.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
 
