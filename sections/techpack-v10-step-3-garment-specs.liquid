@@ -1259,20 +1259,6 @@ Enhanced with Visual Studio Guide System
 </template>
 
 <!-- Colorway Tab Template -->
-        <div class="colorway-tabs__list" id="colorway-tabs-list">
-          <!-- Colorway tabs will be added here -->
-        </div>
-        <button type="button" class="add-colorway-btn" id="add-colorway-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Add Colorway
-        </button>
-      </div>
-
-      <!-- Enhanced Size/Quantity Grid Container with TechPack Validation -->
-      <div class="size-quantity-container">
         
         <!-- Colorway Selection (shown when multiple colorways exist) -->
         <div class="colorway-selector" id="colorway-selector" style="display: none;">
@@ -1285,8 +1271,8 @@ Enhanced with Visual Studio Guide System
           </div>
         </div>
 
-        <!-- Responsive Size Distribution Grid -->
-        <div class="responsive-size-grid" id="responsive-size-grid">
+        <!-- Responsive Size Distribution Grid (ONLY for bulk orders) -->
+        <div class="responsive-size-grid" id="responsive-size-grid" data-show-for="bulk-order-request">
           <!-- Desktop: Horizontal layout with all sizes visible -->
           <!-- Mobile: Compact vertical cards with smart sizing -->
           
