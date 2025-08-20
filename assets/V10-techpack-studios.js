@@ -5092,6 +5092,21 @@ class V10_GarmentStudio {
         console.warn('Error triggering validation update:', validationError);
       }
     }
+    
+    // For bulk orders, trigger quantity studio population when garment status changes
+    const requestType = V10_State.requestType;
+    if (requestType === 'bulk-order-request') {
+      // Debounce to prevent excessive updates during rapid changes
+      if (this._quantityStudioUpdateTimeout) {
+        clearTimeout(this._quantityStudioUpdateTimeout);
+      }
+      this._quantityStudioUpdateTimeout = setTimeout(() => {
+        if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
+          window.v10GarmentStudio.populateQuantityStudio();
+          console.log('🔄 Triggered quantity studio population after garment status change');
+        }
+      }, 150); // 150ms debounce
+    }
   }
 
   // Check if all garments are complete and update studio status
@@ -5695,6 +5710,21 @@ class V10_GarmentStudio {
         if (V10_State.garments.size === 0) {
           console.log('No garments left, adding fresh garment');
           this.addGarment();
+        }
+        
+        // For bulk orders, trigger quantity studio population after garment removal
+        const requestType = V10_State.requestType;
+        if (requestType === 'bulk-order-request') {
+          // Debounce to prevent excessive updates
+          if (this._quantityStudioRemovalTimeout) {
+            clearTimeout(this._quantityStudioRemovalTimeout);
+          }
+          this._quantityStudioRemovalTimeout = setTimeout(() => {
+            if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
+              window.v10GarmentStudio.populateQuantityStudio();
+              console.log('🔄 Triggered quantity studio population after garment removal');
+            }
+          }, 200); // 200ms debounce for removal
         }
       }
     } catch (error) {
@@ -6619,12 +6649,12 @@ class V10_GarmentStudio {
     container.appendChild(responsiveGrid);
     
     // Get all garments that have been configured in Garment Studio
-    // For bulk orders, we only need the garment type to be selected
+    // Only completed garments should appear in quantity studio (in summary card state)
     const requestType = V10_State.requestType;
     const completedGarments = Array.from(V10_State.garments.values()).filter(garment => {
       if (requestType === 'bulk-order-request') {
-        // For bulk orders, just need garment type
-        return garment.type;
+        // For bulk orders, garment must be complete (type AND sample reference) to show summary card
+        return garment.isComplete && garment.type && garment.sampleReference;
       } else {
         // For samples, need type and either sample reference or fabric
         return garment.type && (garment.sampleReference || garment.fabricType);
@@ -7913,7 +7943,7 @@ class V10_GarmentStudio {
 
   updateAllQuantityStats() {
     // Calculate totals
-    const allCards = document.querySelectorAll('.garment-quantity-row, .garment-quantity-card, .garment-quantity-form');
+    const allCards = document.querySelectorAll('.garment-quantity-card, .garment-quantity-form');
     let grandTotal = 0;
     let garmentCount = 0;
     let colorwayCount = 0;
