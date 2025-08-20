@@ -7157,7 +7157,7 @@ class V10_GarmentStudio {
     });
     
     // Update garment summary
-    this.updateGarmentSummary(garmentId, currentTotal, minimumRequired, progress);
+    this.updateQuantitySummary(garmentId, currentTotal, minimumRequired, progress);
     
     // Validate size distribution
     this.validateSizeDistribution(garmentId);
@@ -7187,7 +7187,7 @@ class V10_GarmentStudio {
     }
   }
 
-  updateGarmentSummary(garmentId, currentTotal, minimumRequired, progress) {
+  updateQuantitySummary(garmentId, currentTotal, minimumRequired, progress) {
     // Find garment row and update elements within it
     const garmentRow = document.querySelector(`[data-garment-id="${garmentId}"]`);
     if (!garmentRow) return;
