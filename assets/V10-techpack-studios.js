@@ -5185,12 +5185,32 @@ class V10_GarmentStudio {
   }
 
   updateGarmentSummary(garmentCard, garmentData) {
+    console.log('🔍 [GARMENT_DEBUG] updateGarmentSummary called');
+    console.log('📥 [GARMENT_DEBUG] Input garment data:', {
+      id: garmentData.id,
+      type: garmentData.type,
+      fabricType: garmentData.fabricType,
+      sampleReference: garmentData.sampleReference,
+      includeDesign: garmentData.includeDesign,
+      designReference: garmentData.designReference
+    });
+    console.log('📋 [GARMENT_DEBUG] Garment card element:', garmentCard);
+    
     const typeSpan = garmentCard.querySelector('.garment-summary__type');
     const fabricSpan = garmentCard.querySelector('.garment-summary__fabric');
     const statusSpan = garmentCard.querySelector('.garment-summary__status');
     const colorCircle = garmentCard.querySelector('.garment-summary__color-circle');
     const colorName = garmentCard.querySelector('.garment-summary__color-name');
     const separator = garmentCard.querySelector('.garment-summary__separator');
+    
+    console.log('🎯 [GARMENT_DEBUG] Rich summary elements found:', {
+      typeSpan: !!typeSpan,
+      fabricSpan: !!fabricSpan,
+      statusSpan: !!statusSpan,
+      colorCircle: !!colorCircle,
+      colorName: !!colorName,
+      separator: !!separator
+    });
     
     // Design inclusion controls
     const designToggle = garmentCard.querySelector('.design-toggle__input');
@@ -5229,7 +5249,14 @@ class V10_GarmentStudio {
       } else {
         typeText += ' (Blank)';
       }
+      console.log('📤 [GARMENT_DEBUG] Setting type span text to:', typeText);
       typeSpan.textContent = typeText;
+      console.log('✅ [GARMENT_DEBUG] Type span text after update:', typeSpan.textContent);
+    } else {
+      console.log('❌ [GARMENT_DEBUG] Type span or garment type missing:', {
+        hasTypeSpan: !!typeSpan,
+        hasGarmentType: !!garmentData.type
+      });
     }
     
     // Handle color display for garments with assigned lab dips
@@ -5266,7 +5293,14 @@ class V10_GarmentStudio {
     }
     
     if (fabricSpan && garmentData.fabricType) {
+      console.log('📤 [GARMENT_DEBUG] Setting fabric span text to:', garmentData.fabricType);
       fabricSpan.textContent = garmentData.fabricType;
+      console.log('✅ [GARMENT_DEBUG] Fabric span text after update:', fabricSpan.textContent);
+    } else {
+      console.log('❌ [GARMENT_DEBUG] Fabric span or fabric type missing:', {
+        hasFabricSpan: !!fabricSpan,
+        hasFabricType: !!garmentData.fabricType
+      });
     }
     
     if (statusSpan) {
@@ -6716,7 +6750,12 @@ class V10_GarmentStudio {
     // Initialize validation card
     this.setupValidationCard(card, garment);
     
-    // Update garment information in header
+    // Update garment information using rich summary system
+    console.log('🔄 [GARMENT_DEBUG] Template: About to call updateGarmentSummary (rich system)...');
+    this.updateGarmentSummary(card, garment);
+    console.log('✅ [GARMENT_DEBUG] Template: updateGarmentSummary completed');
+    
+    // Also call the simple setup for backward compatibility
     console.log('🔄 [GARMENT_DEBUG] Template: About to call setupGarmentInfo...');
     this.setupGarmentInfo(card, garment);
     console.log('✅ [GARMENT_DEBUG] Template: setupGarmentInfo completed');
@@ -7713,9 +7752,15 @@ class V10_GarmentStudio {
             </svg>
           </div>
           <div class="garment-details">
-            <div class="garment-name" id="garment-type-display">${garment.type || 'Select garment type'}</div>
+            <!-- Rich Garment Summary Integration -->
+            <div class="garment-summary__title">
+              <div class="garment-summary__color-circle" style="display: none;"></div>
+              <span class="garment-summary__type">${garment.type || 'Select garment type'}</span>
+              <span class="garment-summary__separator" style="display: none;">-</span>
+              <span class="garment-summary__color-name" style="display: none;"></span>
+              <span class="garment-summary__fabric">${garment.fabricType || garment.sampleReference || 'Select fabric'}</span>
+            </div>
             <div class="garment-meta">
-              <span class="garment-sample" id="garment-fabric-display">${garment.fabricType || garment.sampleReference || 'Select fabric'}</span>
               <span class="minimum-required" id="minimum-required">Min: 75</span>
             </div>
           </div>
@@ -7780,6 +7825,11 @@ class V10_GarmentStudio {
     console.log('✅ [GARMENT_DEBUG] Fallback: Created elements text content:');
     console.log('  - Type element:', createdTypeElement?.textContent);
     console.log('  - Fabric element:', createdFabricElement?.textContent);
+    
+    // Update garment using rich summary system
+    console.log('🔄 [GARMENT_DEBUG] Fallback: About to call updateGarmentSummary (rich system)...');
+    this.updateGarmentSummary(cardElement, garment);
+    console.log('✅ [GARMENT_DEBUG] Fallback: updateGarmentSummary completed');
     
     // Add event listeners
     const sizeInputs = cardElement.querySelectorAll('.size-quantity-input');
