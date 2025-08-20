@@ -6646,10 +6646,15 @@ class V10_GarmentStudio {
   }
 
   createEnhancedQuantityCard(garment, index) {
-    // Get the template
+    // Get the template with enhanced debugging and DOM ready check
+    console.log('🔍 Looking for V10-garment-quantity-template...');
+    console.log('📊 DOM readyState:', document.readyState);
+    
     const template = document.getElementById('V10-garment-quantity-template');
     if (!template) {
-      console.error('❌ V10-garment-quantity-template not found');
+      console.error('❌ V10-garment-quantity-template not found in DOM');
+      console.log('📋 Available templates:', Array.from(document.querySelectorAll('template')).map(t => t.id));
+      console.log('🔄 Falling back to horizontal layout in createFallbackQuantityCard');
       return this.createFallbackQuantityCard(garment, index);
     }
     
@@ -6657,12 +6662,16 @@ class V10_GarmentStudio {
     
     // Clone the template
     const cardElement = template.content.cloneNode(true);
+    console.log('📄 Template content cloned, searching for .garment-quantity-row...');
     const card = cardElement.querySelector('.garment-quantity-row');
     
     if (!card) {
       console.error('❌ .garment-quantity-row not found in template');
+      console.log('📋 Available classes in template:', Array.from(cardElement.querySelectorAll('*')).map(el => el.className));
       return this.createFallbackQuantityCard(garment, index);
     }
+    
+    console.log('✅ .garment-quantity-row found, setting up card...');
     
     // Set garment ID
     card.dataset.garmentId = garment.id;
@@ -7613,66 +7622,78 @@ class V10_GarmentStudio {
   }
 
   createFallbackQuantityCard(garment, index) {
-    // Fallback if template is not found
+    // Fallback with horizontal layout (same as template)
+    console.log(`🔄 Creating horizontal fallback card for garment ${garment.id}`);
     const cardElement = document.createElement('div');
-    cardElement.className = 'garment-quantity-card';
+    cardElement.className = 'garment-quantity-row';
     cardElement.dataset.garmentId = garment.id;
     
     cardElement.innerHTML = `
-      <div class="garment-quantity-card__header">
+      <!-- Left: Garment Info -->
+      <div class="garment-info-cell">
         <div class="garment-info">
-          <div class="garment-info__visual">
-            <div class="garment-info__icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-                <line x1="16" y1="8" x2="2" y2="22"/>
-                <line x1="17.5" y1="15" x2="9" y2="15"/>
-              </svg>
+          <div class="garment-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+              <line x1="16" y1="8" x2="2" y2="22"/>
+              <line x1="17.5" y1="15" x2="9" y2="15"/>
+            </svg>
+          </div>
+          <div class="garment-details">
+            <div class="garment-name" id="garment-type-display">${garment.type || 'Select garment type'}</div>
+            <div class="garment-meta">
+              <span class="garment-sample" id="garment-fabric-display">${garment.fabricType || garment.sampleReference || 'Select fabric'}</span>
+              <span class="minimum-required" id="minimum-required">Min: 75</span>
             </div>
           </div>
-          <div class="garment-info__content">
-            <h4 class="garment-info__title">
-              <span class="garment-type">${garment.type}</span>
-              <span class="garment-fabric">${garment.fabricType || garment.sampleReference}</span>
-            </h4>
-            <div class="garment-info__subtitle">
-              <span class="colorway-count">1 colorway</span>
-              <span class="size-range">XXS-3XL</span>
-            </div>
-          </div>
-        </div>
-        <div class="garment-quantity-summary">
-          <div class="quantity-summary__value" id="garment-total-quantity-${garment.id}">0</div>
-          <div class="quantity-summary__label">Total Units</div>
         </div>
       </div>
-      <div class="garment-quantity-card__content">
-        <div class="size-quantity-container">
-          <div class="size-quantity-grid single-colorway">
-            <div class="size-quantity-grid__header">
-              <div class="size-label">Size</div>
-              <div class="size-column">XXS</div>
-              <div class="size-column">XS</div>
-              <div class="size-column">S</div>
-              <div class="size-column">M</div>
-              <div class="size-column">L</div>
-              <div class="size-column">XL</div>
-              <div class="size-column">XXL</div>
-              <div class="size-column">3XL</div>
-            </div>
-            <div class="size-quantity-grid__row">
-              <div class="quantity-label">Qty</div>
-              <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" name="qty-xxs-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" name="qty-xs-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" name="qty-s-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" name="qty-m-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" name="qty-l-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" name="qty-xl-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" name="qty-xxl-${garment.id}">
-              <input type="number" class="size-quantity-input" data-size="3xl" min="0" value="0" name="qty-3xl-${garment.id}">
-            </div>
+      
+      <!-- Center: Size Quantity Inputs -->
+      <div class="size-inputs-cell">
+        <div class="size-input-group">
+          <div class="size-input-item">
+            <label>XXS</label>
+            <input type="number" class="size-quantity-input" data-size="xxs" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>XS</label>
+            <input type="number" class="size-quantity-input" data-size="xs" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>S</label>
+            <input type="number" class="size-quantity-input" data-size="s" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>M</label>
+            <input type="number" class="size-quantity-input" data-size="m" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>L</label>
+            <input type="number" class="size-quantity-input" data-size="l" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>XL</label>
+            <input type="number" class="size-quantity-input" data-size="xl" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>XXL</label>
+            <input type="number" class="size-quantity-input" data-size="xxl" min="0" value="0" placeholder="0">
+          </div>
+          <div class="size-input-item">
+            <label>3XL</label>
+            <input type="number" class="size-quantity-input" data-size="threexl" min="0" value="0" placeholder="0">
           </div>
         </div>
+      </div>
+
+      <!-- Right: Total & Status -->
+      <div class="quantity-total-cell">
+        <div class="total-display">
+          <div class="total-number" id="garment-total-quantity">0</div>
+          <div class="total-label">TOTAL UNITS</div>
+        </div>
+        <div class="quantity-status" id="quantity-status">Insufficient</div>
       </div>
     `;
     
