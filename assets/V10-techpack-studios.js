@@ -6865,6 +6865,11 @@ class V10_GarmentStudio {
         responsiveGrid.appendChild(quantityCard);
         console.log(`   ✅ Card added for garment ${garment.id}`);
         
+        // Now that card is in DOM, call setupGarmentInfo
+        console.log('🔄 [GARMENT_DEBUG] Template: About to call setupGarmentInfo (after DOM append)...');
+        this.setupGarmentInfo(quantityCard, garment);
+        console.log('✅ [GARMENT_DEBUG] Template: setupGarmentInfo completed');
+        
         // Debug: Check the final display text after adding to DOM
         const finalTypeElement = quantityCard.querySelector('#garment-type-display, .garment-name');
         const finalFabricElement = quantityCard.querySelector('#garment-fabric-display, .garment-sample');
@@ -6980,11 +6985,6 @@ class V10_GarmentStudio {
     this.updateGarmentSummary(card, garment);
     console.log('✅ [GARMENT_DEBUG] Template: updateGarmentSummary completed');
     
-    // Also call the simple setup for backward compatibility
-    console.log('🔄 [GARMENT_DEBUG] Template: About to call setupGarmentInfo...');
-    this.setupGarmentInfo(card, garment);
-    console.log('✅ [GARMENT_DEBUG] Template: setupGarmentInfo completed');
-    
     // Setup colorway system
     this.setupColorwaySystem(card, garment);
     
@@ -7078,6 +7078,11 @@ class V10_GarmentStudio {
         console.log('📤 [GARMENT_DEBUG] Setting fabric display to:', fabricInfo);
       }
     }
+    
+    // Get elements for total and status updates
+    const garmentTotalQuantity = card.querySelector('#garment-total-quantity');
+    const quantityStatus = card.querySelector('#quantity-status');
+    const minimumRequired = card.querySelector('#minimum-required');
     
     // Initialize total and status
     if (garmentTotalQuantity) {
