@@ -102,7 +102,7 @@ TechPack V10 Step 4: Premium Review & Submit
             </div>
 
             <!-- Request Type Card -->
-            <div class="review-card review-card--highlight">
+            <div class="review-card">
               <div class="review-card__header">
                 <div class="review-card__title">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -236,8 +236,8 @@ TechPack V10 Step 4: Premium Review & Submit
               </div>
               <div class="cost-summary-header-actions">
                 <div class="currency-toggle">
-                  <button type="button" class="currency-btn currency-btn--active" data-currency="EUR">€</button>
-                  <button type="button" class="currency-btn" data-currency="USD">$</button>
+                  <button type="button" class="currency-btn currency-btn--active" data-currency="EUR">€ EUR</button>
+                  <button type="button" class="currency-btn" data-currency="USD">$ USD</button>
                 </div>
                 <span class="studio-header__badge studio-header__badge--professional" id="cost-summary-badge">ESTIMATED</span>
               </div>
@@ -277,7 +277,7 @@ TechPack V10 Step 4: Premium Review & Submit
                   <input type="checkbox" id="terms-agreement" required>
                   <span class="checkmark"></span>
                   <span class="terms-text">
-                    I agree to the <a href="#" target="_blank">Terms & Conditions</a> and confirm that all information provided is accurate
+                    I agree to the <a href="#" id="terms-link">Terms & Conditions</a> and confirm that all information provided is accurate
                   </span>
                 </label>
               </div>
@@ -455,6 +455,51 @@ TechPack V10 Step 4: Premium Review & Submit
   </div>
 </template>
 
+<!-- Terms & Conditions Modal -->
+<div class="v10-modal" id="terms-modal" style="display: none;">
+  <div class="v10-modal-overlay"></div>
+  <div class="v10-modal-content v10-modal-content--medium">
+    <div class="v10-modal-header">
+      <h3 class="v10-modal-title">Terms & Conditions</h3>
+      <button type="button" class="v10-modal-close" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="v10-modal-body">
+      <div class="terms-content">
+        <h4>1. Service Agreement</h4>
+        <p>By submitting a request through our TechPack system, you agree to our terms of service and manufacturing agreements. All specifications provided will be used to create samples or fulfill orders as requested.</p>
+        
+        <h4>2. Pricing & Payment</h4>
+        <p>All prices displayed are estimates and may vary based on final specifications. Sample payments are required upfront. Bulk order deposits are required upon order confirmation.</p>
+        
+        <h4>3. Production Times</h4>
+        <p>Sample production: 7-14 business days. Bulk orders: 15-30 business days depending on quantity and complexity. Rush orders may be available for additional fees.</p>
+        
+        <h4>4. Quality Standards</h4>
+        <p>We maintain high quality standards for all products. Any quality issues must be reported within 48 hours of delivery for resolution.</p>
+        
+        <h4>5. Intellectual Property</h4>
+        <p>You retain ownership of your designs. We will not reproduce your designs for other clients without permission. All uploaded files are confidential.</p>
+        
+        <h4>6. Cancellation Policy</h4>
+        <p>Samples: Cancellations accepted within 24 hours of order placement. Bulk orders: Cancellations accepted before production begins (typically within 48 hours).</p>
+        
+        <h4>7. Shipping & Returns</h4>
+        <p>Shipping costs are additional unless otherwise specified. Returns are accepted for defective items only. Custom items are non-returnable unless defective.</p>
+        
+        <h4>8. Contact Information</h4>
+        <p>For questions about these terms, contact us at support@genuineblanks.com or through our customer service portal.</p>
+      </div>
+    </div>
+    <div class="v10-modal-actions">
+      <button type="button" class="v10-btn v10-btn--primary modal-close">I Understand</button>
+    </div>
+  </div>
+</div>
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
