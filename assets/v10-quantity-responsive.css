@@ -20,6 +20,17 @@
   transform: translateZ(0);
 }
 
+/* Size Distribution Grid Containment */
+.responsive-size-grid {
+  position: relative;
+  /* Contain child elements to prevent escape */
+  contain: layout style;
+  /* Ensure proper block flow */
+  display: block;
+  /* Prevent floating children from escaping */
+  overflow: hidden;
+}
+
 .garment-quantities-grid {
   display: flex;
   flex-direction: column;
