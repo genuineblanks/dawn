@@ -848,10 +848,10 @@ body[class*="techpack"] *,
   background: #3a3a3a !important;
   color: #6b7280 !important;
   border-color: #4a4a4a !important;
-  opacity: 0.6;
-  cursor: not-allowed;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
   transform: none !important;
-  pointer-events: none;
+  pointer-events: none !important;
   box-shadow: none !important;
 }
 
@@ -1923,10 +1923,7 @@ body[class*="techpack"] *,
   border-color: var(--v10-accent-error);
 }
 
-.v10-form-input-enhanced:valid,
-.v10-form-textarea-enhanced:valid {
-  border-color: var(--v10-accent-success);
-}
+/* Removed automatic success validation styling to prevent inappropriate green borders */
 
 .v10-form-textarea-enhanced {
   resize: vertical;
@@ -1943,6 +1940,13 @@ body[class*="techpack"] *,
   background: rgba(239, 68, 68, 0.1);
   color: var(--v10-accent-error);
   border: 1px solid rgba(239, 68, 68, 0.2);
+  display: none; /* Hidden by default */
+}
+
+.v10-form-field--error .v10-form-input-enhanced,
+.v10-form-field--error .v10-form-textarea-enhanced {
+  border-color: var(--v10-accent-orange) !important;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
 }
 
 .v10-char-count {

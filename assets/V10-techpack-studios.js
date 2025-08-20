@@ -3867,11 +3867,12 @@ class V10_QuantityCalculator {
    */
   generateDistributionAnalytics(garmentId) {
     const garment = V10_State.garments.get(garmentId);
-    if (!garment || !garment.quantities) {
+    const quantityData = V10_State.quantities.garments.get(garmentId);
+    if (!garment || !quantityData || !quantityData.sizes) {
       return null;
     }
 
-    const quantities = garment.quantities;
+    const quantities = quantityData.sizes;
     const sizeKeys = Object.keys(quantities);
     const sizeValues = Object.values(quantities).map(q => parseInt(q) || 0);
     const totalQuantity = sizeValues.reduce((sum, qty) => sum + qty, 0);
@@ -7912,7 +7913,7 @@ class V10_GarmentStudio {
 
   updateAllQuantityStats() {
     // Calculate totals
-    const allCards = document.querySelectorAll('.garment-quantity-card, .garment-quantity-form');
+    const allCards = document.querySelectorAll('.garment-quantity-row, .garment-quantity-card, .garment-quantity-form');
     let grandTotal = 0;
     let garmentCount = 0;
     let colorwayCount = 0;
@@ -8004,14 +8005,25 @@ class V10_GarmentStudio {
     if (!garment) return;
 
     const quantities = {};
-    const inputs = form.querySelectorAll('.quantity-input');
+    const inputs = form.querySelectorAll('.size-quantity-input, .quantity-input');
     inputs.forEach(input => {
       const size = input.dataset.size;
       const qty = parseInt(input.value) || 0;
       quantities[size] = qty;
     });
 
+    // Save to both locations for compatibility
     garment.quantities = quantities;
+    
+    // Also save to the new quantity state structure
+    const quantityData = {
+      sizes: quantities,
+      total: Object.values(quantities).reduce((sum, qty) => sum + qty, 0),
+      validation: {},
+      colorwayCount: 1
+    };
+    V10_State.quantities.garments.set(garmentId, quantityData);
+    
     console.log(`💾 Saved quantities for garment ${garment.number}:`, quantities);
   }
 
@@ -8119,7 +8131,8 @@ class V10_GarmentStudio {
       
       // Add analytics for each garment with quantities
       V10_State.garments.forEach((garment, garmentId) => {
-        if (garment.quantities && Object.values(garment.quantities).some(q => (parseInt(q) || 0) > 0)) {
+        const quantityData = V10_State.quantities.garments.get(garmentId);
+        if (quantityData && quantityData.sizes && Object.values(quantityData.sizes).some(q => (parseInt(q) || 0) > 0)) {
           // Create container for this garment's analytics
           const analyticsDiv = document.createElement('div');
           analyticsDiv.className = 'garment-analytics-wrapper';
@@ -10629,6 +10642,9 @@ class V10_TechPackSystem {
     // Make garment studio globally accessible for assignments
     window.v10GarmentStudio = this.garmentStudio;
     
+    // Make quantity functionality accessible via quantityStudio (same as garmentStudio)
+    this.quantityStudio = this.garmentStudio;
+    
     // Make TechPack system globally accessible for validation
     window.v10TechPackSystem = this;
 
@@ -11215,6 +11231,11 @@ class V10_ClientManager {
     this.setupNavigation();
     this.setupConditionalSections();
     this.loadSavedData();
+    
+    // Initial validation to ensure button state is correct
+    setTimeout(() => {
+      this.validateForm();
+    }, 100);
   }
 
   setupRequestTypeHandling() {
@@ -11340,35 +11361,53 @@ class V10_ClientManager {
   }
 
   showFieldError(field, message) {
-    let errorElement = field.parentNode.querySelector('.v10-form-error');
+    const fieldContainer = field.closest('.v10-form-field');
+    let errorElement = fieldContainer?.querySelector('.v10-validation-message');
+    
     if (!errorElement) {
+      // Create error element if it doesn't exist
       errorElement = document.createElement('div');
-      errorElement.className = 'v10-form-error';
+      errorElement.className = 'v10-validation-message';
       field.parentNode.appendChild(errorElement);
     }
     
     errorElement.textContent = message;
     errorElement.style.display = 'block';
+    errorElement.style.color = 'var(--v10-accent-orange)';
     field.style.borderColor = 'var(--v10-accent-orange)';
+    
+    // Add error class to field container
+    if (fieldContainer) {
+      fieldContainer.classList.add('v10-form-field--error');
+    }
   }
 
   clearFieldError(field) {
-    const errorElement = field.parentNode.querySelector('.v10-form-error');
+    const fieldContainer = field.closest('.v10-form-field');
+    const errorElement = fieldContainer?.querySelector('.v10-validation-message');
+    
     if (errorElement) {
       errorElement.style.display = 'none';
+      errorElement.textContent = '';
     }
+    
     field.style.borderColor = '';
+    
+    // Remove error class from field container
+    if (fieldContainer) {
+      fieldContainer.classList.remove('v10-form-field--error');
+    }
   }
 
   validateForm() {
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) {
-      // If form doesn't exist yet, just check if request type is selected
+      // If form doesn't exist yet, disable button - form is required for validation
       const nextBtn = document.getElementById('techpack-v10-step-1-next');
       if (nextBtn) {
-        nextBtn.disabled = !this.currentRequestType;
+        nextBtn.disabled = true;
       }
-      return !!this.currentRequestType;
+      return false;
     }
     
     let isValid = true;
@@ -11386,10 +11425,18 @@ class V10_ClientManager {
       }
     });
     
-    // Update next button state
+    // Update next button state  
     const nextBtn = document.getElementById('techpack-v10-step-1-next');
     if (nextBtn) {
       nextBtn.disabled = !isValid;
+      // Force visual disabled state for better UX
+      if (!isValid) {
+        nextBtn.style.pointerEvents = 'none';
+        nextBtn.style.opacity = '0.6';
+      } else {
+        nextBtn.style.pointerEvents = '';
+        nextBtn.style.opacity = '';
+      }
     }
     
     return isValid;
