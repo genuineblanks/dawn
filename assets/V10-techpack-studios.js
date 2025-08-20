@@ -9767,21 +9767,50 @@ class V10_ReviewManager {
 
     // Get client info from global state or form
     const clientData = this.getClientData();
+    const requestType = V10_State.requestType || 'sample-request';
     
-    container.innerHTML = `
-      <div class="review-detail">
-        <span class="detail-label">Company:</span>
-        <span class="detail-value">${clientData.company || 'Not provided'}</span>
-      </div>
-      <div class="review-detail">
-        <span class="detail-label">Contact:</span>
-        <span class="detail-value">${clientData.name || 'Not provided'}</span>
-      </div>
-      <div class="review-detail">
-        <span class="detail-label">Email:</span>
-        <span class="detail-value">${clientData.email || 'Not provided'}</span>
-      </div>
-    `;
+    let clientFields = '';
+    
+    // Only show fields relevant to the request type
+    if (clientData.company && clientData.company !== 'Not provided') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Company:</span>
+          <span class="detail-value">${clientData.company}</span>
+        </div>
+      `;
+    }
+    
+    if (clientData.email && clientData.email !== 'Not provided' && clientData.email !== 'office@genuineblanks.com') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">${clientData.email}</span>
+        </div>
+      `;
+    }
+    
+    // Add additional fields based on request type if available
+    if (clientData.firstName && clientData.firstName !== 'Not provided') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Name:</span>
+          <span class="detail-value">${clientData.firstName}</span>
+        </div>
+      `;
+    }
+    
+    // If no real data found, show minimal info
+    if (!clientFields) {
+      clientFields = `
+        <div class="review-detail">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">${clientData.email || 'Not provided'}</span>
+        </div>
+      `;
+    }
+    
+    container.innerHTML = clientFields;
   }
 
   populateUploadedFiles() {
@@ -10426,23 +10455,42 @@ class V10_ReviewManager {
   }
 
   getUploadedFiles() {
+    console.log('🔍 Getting uploaded files for review...');
+    
     // Try to get from Step 2 file manager first
     if (window.v10FileManager) {
-      const realFiles = window.v10FileManager.getUploadedFiles ? 
-        window.v10FileManager.getUploadedFiles() : [];
+      console.log('✅ v10FileManager found');
+      
+      // Try multiple methods to get files from file manager
+      let realFiles = [];
+      
+      if (window.v10FileManager.getUploadedFiles) {
+        realFiles = window.v10FileManager.getUploadedFiles();
+      } else if (window.v10FileManager.uploadedFiles) {
+        realFiles = Array.from(window.v10FileManager.uploadedFiles.values());
+      }
       
       if (realFiles && realFiles.length > 0) {
+        console.log(`📁 Found ${realFiles.length} files from file manager`);
         return realFiles;
       }
+    }
+    
+    // Try to get from V10_State
+    if (V10_State.uploadedFiles && V10_State.uploadedFiles.length > 0) {
+      console.log(`📁 Found ${V10_State.uploadedFiles.length} files from V10_State`);
+      return V10_State.uploadedFiles;
     }
     
     // Try to get from localStorage/sessionStorage as fallback
     try {
       const storedFiles = localStorage.getItem('v10_uploaded_files') || 
-                         sessionStorage.getItem('v10_uploaded_files');
+                         sessionStorage.getItem('v10_uploaded_files') ||
+                         localStorage.getItem('v10_step2_files');
       if (storedFiles) {
         const parsedFiles = JSON.parse(storedFiles);
         if (parsedFiles && parsedFiles.length > 0) {
+          console.log(`📁 Found ${parsedFiles.length} files from storage`);
           return parsedFiles;
         }
       }
@@ -10450,15 +10498,29 @@ class V10_ReviewManager {
       console.warn('Could not parse stored files:', error);
     }
     
-    // Fallback: if user has progressed to Step 4, show sample files
-    const garments = Array.from(V10_State.garments.values());
-    if (garments.length > 0) {
-      return [
-        { name: 'TechPack_Design.pdf', size: 2048576, type: 'application/pdf' },
-        { name: 'Reference_Image.jpg', size: 1024000, type: 'image/jpeg' }
-      ];
+    // Try to find files in DOM (from upload zone)
+    const uploadedFilesList = document.querySelector('#techpack-v10-uploaded-files .uploaded-files-list');
+    if (uploadedFilesList) {
+      const fileElements = uploadedFilesList.querySelectorAll('.uploaded-file');
+      if (fileElements.length > 0) {
+        const domFiles = Array.from(fileElements).map(el => {
+          const fileName = el.querySelector('.file-name')?.textContent || 'Unknown file';
+          const fileSize = el.querySelector('.file-size')?.textContent || '0 KB';
+          return {
+            name: fileName,
+            size: fileSize.includes('MB') ? parseFloat(fileSize) * 1024 * 1024 : 
+                  fileSize.includes('KB') ? parseFloat(fileSize) * 1024 : 0,
+            type: fileName.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 
+                  fileName.toLowerCase().match(/\.(jpg|jpeg)$/) ? 'image/jpeg' :
+                  fileName.toLowerCase().endsWith('.png') ? 'image/png' : 'unknown'
+          };
+        });
+        console.log(`📁 Found ${domFiles.length} files from DOM`);
+        return domFiles;
+      }
     }
     
+    console.log('❌ No uploaded files found');
     return [];
   }
 
