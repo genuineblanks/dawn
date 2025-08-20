@@ -5007,9 +5007,13 @@ class V10_GarmentStudio {
   }
 
   updateGarmentStatus(garmentId) {
+    console.log('🔄 [SUMMARY_FIX] updateGarmentStatus called for garment:', garmentId);
     const garmentData = V10_State.garments.get(garmentId);
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!garmentData || !garmentCard) return;
+    if (!garmentData || !garmentCard) {
+      console.log('❌ [SUMMARY_FIX] Missing garmentData or garmentCard');
+      return;
+    }
 
     const statusIndicator = garmentCard.querySelector('.status-indicator');
     const requestType = V10_State.requestType;
@@ -5160,10 +5164,14 @@ class V10_GarmentStudio {
   }
 
   updateGarmentCollapsedState(garmentCard, garmentData, isComplete) {
+    console.log('📱 [SUMMARY_FIX] updateGarmentCollapsedState called');
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
-    if (!summaryContainer || !contentContainer) return;
+    if (!summaryContainer || !contentContainer) {
+      console.log('❌ [SUMMARY_FIX] Missing summary or content container');
+      return;
+    }
 
     // Don't auto-collapse if in edit mode - keep form open for editing
     if (garmentData.isInEditMode) {
@@ -5181,7 +5189,8 @@ class V10_GarmentStudio {
       summaryContainer.style.display = 'block';
       contentContainer.style.display = 'none';
       
-      // Update summary content
+      // Update summary content ONLY when collapsing
+      console.log('✅ [SUMMARY_FIX] About to call updateGarmentSummary (collapsing)');
       this.updateGarmentSummary(garmentCard, garmentData);
     } else {
       // Show content, hide summary
