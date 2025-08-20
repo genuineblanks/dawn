@@ -4780,7 +4780,7 @@ class V10_GarmentStudio {
   }
 
   handleGarmentActions(e) {
-    const garmentCard = e.target.closest('.garment-card');
+    const garmentCard = e.target.closest('.garment-card, .garment-quantity-card');
     if (!garmentCard) return;
 
     const garmentId = garmentCard.dataset.garmentId;
@@ -6882,6 +6882,10 @@ class V10_GarmentStudio {
     });
     
     console.log(`📦 Final responsive grid children count: ${responsiveGrid.children.length}`);
+    
+    // Add event delegation for garment card actions
+    responsiveGrid.addEventListener('click', (e) => this.handleGarmentActions(e));
+    console.log('✅ Event delegation added to responsive grid');
     
     // Initialize all quantity studio features
     console.log('🔄 [GARMENT_DEBUG] About to initialize quantity studio features...');
