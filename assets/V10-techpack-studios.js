@@ -6599,10 +6599,24 @@ class V10_GarmentStudio {
     console.log(`📦 Creating ${completedGarments.length} quantity cards...`);
     completedGarments.forEach((garment, index) => {
       console.log(`   Creating card for garment ${index + 1}: ${garment.type} (ID: ${garment.id})`);
+      console.log('🔍 [GARMENT_DEBUG] About to create card for garment:', {
+        id: garment.id,
+        type: garment.type,
+        fabricType: garment.fabricType,
+        sampleReference: garment.sampleReference,
+        number: garment.number
+      });
       const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
       if (quantityCard) {
         responsiveGrid.appendChild(quantityCard);
         console.log(`   ✅ Card added for garment ${garment.id}`);
+        
+        // Debug: Check the final display text after adding to DOM
+        const finalTypeElement = quantityCard.querySelector('#garment-type-display, .garment-name');
+        const finalFabricElement = quantityCard.querySelector('#garment-fabric-display, .garment-sample');
+        console.log('🔍 [GARMENT_DEBUG] Final card display after DOM append:');
+        console.log('  - Type element text:', finalTypeElement?.textContent);
+        console.log('  - Fabric element text:', finalFabricElement?.textContent);
       } else {
         console.error(`   ❌ Failed to create card for garment ${garment.id}`);
       }
@@ -6611,7 +6625,22 @@ class V10_GarmentStudio {
     console.log(`📦 Final responsive grid children count: ${responsiveGrid.children.length}`);
     
     // Initialize all quantity studio features
+    console.log('🔄 [GARMENT_DEBUG] About to initialize quantity studio features...');
     this.initializeQuantityStudioFeatures();
+    console.log('✅ [GARMENT_DEBUG] Quantity studio features initialized');
+    
+    // Final debug check: Verify all cards still have correct display text
+    console.log('🔍 [GARMENT_DEBUG] FINAL CHECK - All card displays after full initialization:');
+    const allCards = responsiveGrid.querySelectorAll('.garment-quantity-row');
+    allCards.forEach((card, index) => {
+      const typeEl = card.querySelector('#garment-type-display, .garment-name');
+      const fabricEl = card.querySelector('#garment-fabric-display, .garment-sample');
+      console.log(`  Card ${index + 1}:`, {
+        garmentId: card.dataset.garmentId,
+        typeText: typeEl?.textContent,
+        fabricText: fabricEl?.textContent
+      });
+    });
     
     // Restore saved quantities after DOM rebuild
     this.restoreQuantitiesFromState();
@@ -6672,15 +6701,25 @@ class V10_GarmentStudio {
     }
     
     console.log('✅ .garment-quantity-row found, setting up card...');
+    console.log('🔍 [GARMENT_DEBUG] Template path: Using actual template');
+    console.log('📥 [GARMENT_DEBUG] Template garment data:', {
+      id: garment.id,
+      type: garment.type,
+      fabricType: garment.fabricType,
+      sampleReference: garment.sampleReference
+    });
     
     // Set garment ID
     card.dataset.garmentId = garment.id;
+    console.log('📤 [GARMENT_DEBUG] Template: Set dataset.garmentId to:', garment.id);
     
     // Initialize validation card
     this.setupValidationCard(card, garment);
     
     // Update garment information in header
+    console.log('🔄 [GARMENT_DEBUG] Template: About to call setupGarmentInfo...');
     this.setupGarmentInfo(card, garment);
+    console.log('✅ [GARMENT_DEBUG] Template: setupGarmentInfo completed');
     
     // Setup colorway system
     this.setupColorwaySystem(card, garment);
@@ -6720,6 +6759,15 @@ class V10_GarmentStudio {
   }
 
   setupGarmentInfo(card, garment) {
+    console.log('🔍 [GARMENT_DEBUG] setupGarmentInfo called');
+    console.log('📥 [GARMENT_DEBUG] Input garment data:', {
+      id: garment.id,
+      type: garment.type,
+      fabricType: garment.fabricType,
+      sampleReference: garment.sampleReference
+    });
+    console.log('📋 [GARMENT_DEBUG] Card element:', card);
+    
     // Update for horizontal layout - use consistent selectors
     const garmentType = card.querySelector('#garment-type-display, .garment-name');
     const garmentFabric = card.querySelector('#garment-fabric-display, .garment-sample');
@@ -6727,14 +6775,29 @@ class V10_GarmentStudio {
     const minimumRequired = card.querySelector('#minimum-required');
     const quantityStatus = card.querySelector('#quantity-status');
     
+    console.log('🎯 [GARMENT_DEBUG] Elements found:', {
+      garmentType: !!garmentType,
+      garmentFabric: !!garmentFabric,
+      garmentTotalQuantity: !!garmentTotalQuantity
+    });
+    
     // Update garment information
     if (garmentType) {
-      garmentType.textContent = garment.type || 'Select garment type';
+      const typeToSet = garment.type || 'Select garment type';
+      console.log('📤 [GARMENT_DEBUG] Setting garment type display to:', typeToSet);
+      garmentType.textContent = typeToSet;
+      console.log('✅ [GARMENT_DEBUG] Garment type element text after update:', garmentType.textContent);
+    } else {
+      console.log('❌ [GARMENT_DEBUG] Garment type element not found!');
     }
     
     if (garmentFabric) {
       const fabricInfo = garment.fabricType || garment.sampleReference || 'Select fabric';
+      console.log('📤 [GARMENT_DEBUG] Setting fabric display to:', fabricInfo);
       garmentFabric.textContent = fabricInfo;
+      console.log('✅ [GARMENT_DEBUG] Fabric element text after update:', garmentFabric.textContent);
+    } else {
+      console.log('❌ [GARMENT_DEBUG] Fabric element not found!');
     }
     
     // Initialize total and status
@@ -7623,10 +7686,20 @@ class V10_GarmentStudio {
 
   createFallbackQuantityCard(garment, index) {
     // Fallback with horizontal layout (same as template)
-    console.log(`🔄 Creating horizontal fallback card for garment ${garment.id}`);
+    console.log('🔍 [GARMENT_DEBUG] createFallbackQuantityCard called');
+    console.log('📥 [GARMENT_DEBUG] Fallback garment data:', {
+      id: garment.id,
+      type: garment.type,
+      fabricType: garment.fabricType,
+      sampleReference: garment.sampleReference,
+      index: index
+    });
+    
     const cardElement = document.createElement('div');
     cardElement.className = 'garment-quantity-row';
     cardElement.dataset.garmentId = garment.id;
+    
+    console.log('📤 [GARMENT_DEBUG] Fallback: Creating element with garmentId:', garment.id);
     
     cardElement.innerHTML = `
       <!-- Left: Garment Info -->
@@ -7696,6 +7769,17 @@ class V10_GarmentStudio {
         <div class="quantity-status" id="quantity-status">Insufficient</div>
       </div>
     `;
+    
+    console.log('📤 [GARMENT_DEBUG] Fallback: HTML template populated with:');
+    console.log('  - Garment type:', garment.type || 'Select garment type');
+    console.log('  - Fabric info:', garment.fabricType || garment.sampleReference || 'Select fabric');
+    
+    // Verify the created elements
+    const createdTypeElement = cardElement.querySelector('#garment-type-display');
+    const createdFabricElement = cardElement.querySelector('#garment-fabric-display');
+    console.log('✅ [GARMENT_DEBUG] Fallback: Created elements text content:');
+    console.log('  - Type element:', createdTypeElement?.textContent);
+    console.log('  - Fabric element:', createdFabricElement?.textContent);
     
     // Add event listeners
     const sizeInputs = cardElement.querySelectorAll('.size-quantity-input');
