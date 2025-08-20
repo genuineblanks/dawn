@@ -5015,8 +5015,11 @@ class V10_GarmentStudio {
       this.updateGarmentSummary(garmentCard, garmentData);
     }
 
-    // Update garment status
-    this.updateGarmentStatus(garmentId);
+    // Update garment status - but NOT for design toggle/reference changes as they don't affect completion
+    if (!e.target.classList.contains('design-toggle__input') && 
+        !e.target.classList.contains('design-reference__input')) {
+      this.updateGarmentStatus(garmentId);
+    }
 
     // Auto-save
   }
