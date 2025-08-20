@@ -4862,15 +4862,22 @@ class V10_GarmentStudio {
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
       
+      // Reset sample reference for bulk orders
+      const requestType = V10_State.requestType;
+      if (requestType === 'bulk-order-request') {
+        garmentData.sampleReference = ''; // Reset sample reference selection
+      }
+      
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', newValue, garmentCard);
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
         
-        // Enable sample reference for bulk orders when garment type is selected
-        const requestType = V10_State.requestType;
-        if (requestType === 'bulk-order-request') {
+        // Reset and enable sample reference for bulk orders when garment type is selected
+        const requestTypeCompact = V10_State.requestType;
+        if (requestTypeCompact === 'bulk-order-request') {
+          this.resetSampleReferenceSelection(garmentCard); // Reset sample reference display to placeholder
           this.enableSampleReferenceSelection(garmentCard);
         }
       }
@@ -4981,12 +4988,23 @@ class V10_GarmentStudio {
 
     // Handle sample reference change (bulk orders)
     if (e.target.name.includes('sampleReference')) {
-      garmentData.sampleReference = e.target.value;
+      const previousValue = garmentData.sampleReference;
+      const newValue = e.target.value;
+      
+      garmentData.sampleReference = newValue;
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        this.updateCompactSelection('sampleReference', e.target.value, garmentCard);
+        this.updateCompactSelection('sampleReference', newValue, garmentCard);
       }
+      
+      // Mark finalize button as changed (even if same value, user made an edit action)
+      this.markEditButtonAsChanged(garmentCard);
+      
+      console.log(`🔄 Sample reference ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
+      
+      // Update garment status and summary display
+      this.updateGarmentStatus(garmentId);
     }
 
     // Handle design inclusion toggle
@@ -6306,6 +6324,39 @@ class V10_GarmentStudio {
     console.log('🔄 Reset fabric selection to placeholder state');
   }
 
+  resetSampleReferenceSelection(garmentCard) {
+    const sampleReferencePlaceholder = garmentCard.querySelector('#sample-reference-placeholder');
+    const sampleReferenceDisplay = garmentCard.querySelector('#sample-reference-display');
+    const sampleReferenceSelectedName = garmentCard.querySelector('#sample-reference-selected-name');
+    
+    // Clear any displayed sample reference selection and show placeholder
+    if (sampleReferenceSelectedName) {
+      sampleReferenceSelectedName.textContent = '';
+    }
+    
+    if (sampleReferencePlaceholder) {
+      sampleReferencePlaceholder.style.display = 'flex';
+    }
+    
+    if (sampleReferenceDisplay) {
+      sampleReferenceDisplay.style.display = 'none';
+    }
+    
+    // Clear any sample reference radio button selections
+    const sampleReferenceRadios = garmentCard.querySelectorAll('input[name*="sampleReference"]');
+    sampleReferenceRadios.forEach(radio => {
+      radio.checked = false;
+    });
+    
+    // Remove selected state from sample reference cards
+    const sampleReferenceCards = garmentCard.querySelectorAll('.compact-radio-card[data-value*="sample"]');
+    sampleReferenceCards.forEach(card => {
+      card.classList.remove('selected');
+    });
+    
+    console.log('🔄 Reset sample reference selection to placeholder state');
+  }
+
   resetSampleTypeSelection(garmentCard) {
     // Clear all sample type radio button selections
     const sampleTypeRadios = garmentCard.querySelectorAll('input[name*="sampleType"]');
@@ -6379,42 +6430,30 @@ class V10_GarmentStudio {
     
     // Update sample reference dependency for bulk orders (depends on garment type)
     const requestType = V10_State.requestType;
-    console.log(`🔄 [DEPENDENCY_DEBUG] Checking sample reference dependency - requestType: ${requestType}, hasGarmentType: ${hasGarmentType}`);
-    
     if (requestType === 'bulk-order-request') {
       const sampleReferenceSection = garmentCard.querySelector('.compact-selection-section[data-show-for*="bulk"]');
-      console.log(`🔍 [DEPENDENCY_DEBUG] Sample reference section found:`, !!sampleReferenceSection);
-      
       if (sampleReferenceSection) {
         if (hasGarmentType) {
           // Enable sample reference selection
-          console.log(`✅ [DEPENDENCY_DEBUG] Enabling sample reference selection`);
           sampleReferenceSection.classList.remove('compact-selection-section--disabled');
           this.enableSelectionSection(sampleReferenceSection);
         } else {
           // Disable sample reference selection
-          console.log(`❌ [DEPENDENCY_DEBUG] Disabling sample reference selection`);
           sampleReferenceSection.classList.add('compact-selection-section--disabled');
           this.disableSelectionSection(sampleReferenceSection, 'Select garment type first');
         }
-      } else {
-        console.log(`⚠️ [DEPENDENCY_DEBUG] Sample reference section not found with selector: .compact-selection-section[data-show-for*="bulk"]`);
       }
     }
   }
 
   enableSelectionSection(section) {
-    console.log(`✅ [ENABLE_DEBUG] enableSelectionSection called`);
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
     
     if (widget) {
-      console.log(`🎯 [ENABLE_DEBUG] Setting widget styles - opacity: 1, pointerEvents: auto`);
       widget.style.opacity = '1';
       widget.style.pointerEvents = 'auto';
       widget.style.cursor = 'pointer';
-    } else {
-      console.log(`❌ [ENABLE_DEBUG] Widget not found in section`);
     }
     
     if (placeholder && placeholder.dataset.originalText) {
@@ -6423,17 +6462,13 @@ class V10_GarmentStudio {
   }
 
   disableSelectionSection(section, disabledText) {
-    console.log(`❌ [DISABLE_DEBUG] disableSelectionSection called with text: "${disabledText}"`);
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
     
     if (widget) {
-      console.log(`🎯 [DISABLE_DEBUG] Setting widget styles - opacity: 0.5, pointerEvents: none`);
       widget.style.opacity = '0.5';
       widget.style.pointerEvents = 'none';
       widget.style.cursor = 'not-allowed';
-    } else {
-      console.log(`❌ [DISABLE_DEBUG] Widget not found in section`);
     }
     
     if (placeholder) {
@@ -6441,9 +6476,6 @@ class V10_GarmentStudio {
         placeholder.dataset.originalText = placeholder.textContent;
       }
       placeholder.textContent = disabledText;
-      console.log(`📝 [DISABLE_DEBUG] Updated placeholder text to: "${disabledText}"`);
-    } else {
-      console.log(`❌ [DISABLE_DEBUG] Placeholder not found in section`);
     }
   }
 
