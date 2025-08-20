@@ -4987,6 +4987,21 @@ class V10_GarmentStudio {
       garmentData.includeDesign = e.target.checked;
       console.log(`🎨 Design inclusion ${garmentData.includeDesign ? 'ENABLED' : 'DISABLED'} for garment ${garmentId}`);
       
+      // Immediately show/hide the design reference input field
+      const designReferenceContainer = garmentCard.querySelector('.design-reference');
+      if (designReferenceContainer) {
+        designReferenceContainer.style.display = e.target.checked ? 'block' : 'none';
+      }
+      
+      // Clear the design reference if unchecked
+      if (!e.target.checked) {
+        garmentData.designReference = '';
+        const designRefInput = garmentCard.querySelector('.design-reference__input');
+        if (designRefInput) {
+          designRefInput.value = '';
+        }
+      }
+      
       // Update the summary display immediately
       this.updateGarmentSummary(garmentCard, garmentData);
     }
