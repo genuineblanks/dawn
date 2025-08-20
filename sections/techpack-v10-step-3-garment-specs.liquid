@@ -1512,9 +1512,10 @@ Enhanced with Visual Studio Guide System
 
 <!-- Garment Quantity Template -->
 <template id="V10-garment-quantity-template">
-  <div class="garment-quantity-row" data-garment-id="">
-    <!-- Left: Garment Info -->
-    <div class="garment-info-cell">
+  <div class="garment-quantity-card" data-garment-id="">
+    
+    <!-- Top: Garment Header -->
+    <div class="garment-quantity-header">
       <div class="garment-info">
         <div class="garment-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1537,10 +1538,17 @@ Enhanced with Visual Studio Guide System
           </div>
         </div>
       </div>
+      <div class="garment-total-summary">
+        <div class="total-display">
+          <div class="total-number" id="garment-total-quantity">0</div>
+          <div class="total-label">TOTAL UNITS</div>
+        </div>
+        <div class="quantity-status" id="quantity-status">Insufficient</div>
+      </div>
     </div>
     
-    <!-- Center: Size Quantity Inputs -->
-    <div class="size-inputs-cell">
+    <!-- Middle: Size Quantity Inputs -->
+    <div class="garment-quantity-body">
       <div class="size-input-group">
         <div class="size-input-item">
           <label>XXS</label>
@@ -1577,13 +1585,121 @@ Enhanced with Visual Studio Guide System
       </div>
     </div>
 
-    <!-- Right: Total & Status -->
-    <div class="quantity-total-cell">
-      <div class="total-display">
-        <div class="total-number" id="garment-total-quantity">0</div>
-        <div class="total-label">TOTAL UNITS</div>
+    <!-- Bottom: Integrated Action Controls -->
+    <div class="garment-actions-integrated">
+      <div class="garment-actions-left">
+        <!-- Apply Preset Dropdown -->
+        <div class="preset-dropdown-wrapper">
+          <button type="button" class="garment-action-btn garment-action-btn--preset" id="apply-preset-to-garment">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            Apply Preset
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="preset-dropdown-menu" id="garment-preset-menu">
+            <button type="button" class="preset-option" data-preset="bell-curve">
+              <span class="preset-name">Bell Curve</span>
+              <span class="preset-description">S-M-L focus</span>
+            </button>
+            <button type="button" class="preset-option" data-preset="medium-heavy">
+              <span class="preset-name">Medium Heavy</span>
+              <span class="preset-description">M-L focus</span>
+            </button>
+            <button type="button" class="preset-option" data-preset="large-heavy">
+              <span class="preset-name">Large Heavy</span>
+              <span class="preset-description">L-XL focus</span>
+            </button>
+            <button type="button" class="preset-option" data-preset="equal-split">
+              <span class="preset-name">Equal Split</span>
+              <span class="preset-description">Even distribution</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Clear All -->
+        <button type="button" class="garment-action-btn" id="clear-garment-quantities">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+          </svg>
+          Clear All
+        </button>
+        
+        <!-- Add Colorway -->
+        <button type="button" class="garment-action-btn garment-action-btn--secondary add-colorway">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 2v12m-6-6h12"/>
+          </svg>
+          Add Colorway
+        </button>
       </div>
-      <div class="quantity-status" id="quantity-status">Insufficient</div>
+      
+      <div class="garment-actions-right">
+        <div class="total-required-display">
+          <span class="total-value">0</span>
+          <span class="required-value">75</span>
+          <span class="required-label">MIN REQUIRED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- V10 Colorway Template -->
+<template id="v10-colorway-template">
+  <div class="v10-colorway" data-colorway-id="">
+    <div class="v10-colorway-header">
+      <div class="v10-colorway-title">
+        <div class="v10-colorway-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 8v6m11-5H7"/>
+          </svg>
+        </div>
+        <span class="v10-colorway-label">Colorway</span>
+      </div>
+      <button type="button" class="v10-colorway-remove" aria-label="Remove colorway">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="v10-colorway-content">
+      <!-- Color Selection -->
+      <div class="v10-color-selection">
+        <div class="v10-color-picker-wrapper">
+          <input type="color" class="v10-color-picker" value="#3b82f6" />
+          <div class="v10-color-display">
+            <div class="v10-color-preview"></div>
+            <span class="v10-color-label">Select Color</span>
+          </div>
+        </div>
+        
+        <div class="v10-color-name-input">
+          <input type="text" class="v10-color-name" placeholder="Color name (e.g., Royal Blue)" />
+        </div>
+      </div>
+      
+      <!-- Pantone/Lab Dip Integration -->
+      <div class="v10-pantone-section">
+        <div class="v10-pantone-toggle">
+          <label class="v10-toggle-switch">
+            <input type="checkbox" class="v10-pantone-required" />
+            <span class="v10-toggle-slider"></span>
+            <span class="v10-toggle-label">Require Lab Dip/Pantone</span>
+          </label>
+        </div>
+        
+        <div class="v10-pantone-details" style="display: none;">
+          <input type="text" class="v10-pantone-code" placeholder="Pantone code (e.g., 2925 C)" />
+          <textarea class="v10-color-notes" placeholder="Color specifications or notes..."></textarea>
+        </div>
+      </div>
     </div>
   </div>
 </template>
