@@ -7676,39 +7676,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   color: var(--v10-text-muted);
 }
 
-/* Quick Actions Bar */
-.quantity-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--v10-space-4) var(--v10-space-6);
-  background: var(--v10-bg-secondary);
-  border-top: 1px solid var(--v10-border-secondary);
-}
-
-.quantity-actions__left {
-  display: flex;
-  gap: var(--v10-space-2);
-}
-
-.quick-action-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-2) var(--v10-space-3);
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-secondary);
-  font-size: var(--v10-text-sm);
-  cursor: pointer;
-  transition: var(--v10-transition);
-}
-
-.quick-action-btn:hover {
-  background: var(--v10-bg-hover);
-  color: var(--v10-text-primary);
-}
 
 /* Size Distribution Preview */
 .size-distribution-preview {
@@ -8123,31 +8090,58 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   align-items: center;
 }
 
-.total-required-display {
+.garment-status-display {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-3);
-  font-size: var(--v10-text-sm);
+  gap: var(--v10-space-4);
+}
+
+.garment-total-units {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v10-space-1);
 }
 
 .total-value {
-  font-size: var(--v10-text-lg);
+  font-size: var(--v10-text-xl);
   font-weight: 700;
   color: var(--v10-text-primary);
+  line-height: 1;
 }
 
-.required-value {
-  font-size: var(--v10-text-lg);
-  font-weight: 700;
-  color: var(--v10-accent-primary);
-}
-
-.required-label {
+.total-label {
   font-size: var(--v10-text-xs);
   font-weight: 600;
   color: var(--v10-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.garment-status-badge {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  padding: var(--v10-space-1) var(--v10-space-3);
+  border-radius: var(--v10-radius-full);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge--insufficient {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-badge--sufficient {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 /* Preset Dropdown Styles */
@@ -8521,14 +8515,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     justify-content: center;
   }
   
-  .quantity-actions {
-    flex-direction: column;
-    gap: var(--v10-space-4);
-  }
-  
-  .quantity-actions__left {
-    justify-content: center;
-  }
   
   .bulk-tools-header {
     flex-direction: column;

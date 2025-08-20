@@ -4803,16 +4803,16 @@ class V10_GarmentStudio {
       e.stopPropagation();
       this.addColorway(garmentId);
       console.log('🎨 Add Colorway clicked for garment:', garmentId);
-    } else if (e.target.closest('#apply-preset-to-garment')) {
+    } else if (e.target.closest('.apply-preset-to-garment')) {
       // Handle apply preset button from integrated actions
       e.preventDefault();
       e.stopPropagation();
-      const presetMenu = garmentCard.querySelector('#garment-preset-menu');
+      const presetMenu = garmentCard.querySelector('.garment-preset-menu');
       if (presetMenu) {
         presetMenu.classList.toggle('active');
         console.log('📋 Apply Preset dropdown toggled');
       }
-    } else if (e.target.closest('#clear-garment-quantities')) {
+    } else if (e.target.closest('.clear-garment-quantities')) {
       // Handle clear quantities button from integrated actions
       e.preventDefault();
       e.stopPropagation();
@@ -4829,7 +4829,7 @@ class V10_GarmentStudio {
         console.log('✨ Applied preset:', presetName, 'to garment:', garmentId);
         
         // Hide dropdown after selection
-        const presetMenu = garmentCard.querySelector('#garment-preset-menu');
+        const presetMenu = garmentCard.querySelector('.garment-preset-menu');
         if (presetMenu) {
           presetMenu.classList.remove('active');
         }
@@ -7032,40 +7032,51 @@ class V10_GarmentStudio {
     });
     console.log('📋 [GARMENT_DEBUG] Card element:', card);
     
-    // Update for horizontal layout - use consistent selectors
+    // Get request type to determine which elements to show
+    const requestType = V10_State.requestType || 'sample-request';
+    
+    // Update garment type
     const garmentType = card.querySelector('#garment-type-display, .garment-name');
-    const garmentFabric = card.querySelector('#garment-fabric-display, .garment-sample');
-    const garmentTotalQuantity = card.querySelector('#garment-total-quantity');
-    const minimumRequired = card.querySelector('#minimum-required');
-    const quantityStatus = card.querySelector('#quantity-status');
-    
-    console.log('🎯 [GARMENT_DEBUG] Elements found:', {
-      garmentType: !!garmentType,
-      garmentFabric: !!garmentFabric,
-      garmentTotalQuantity: !!garmentTotalQuantity
-    });
-    
-    // Update garment information
     if (garmentType) {
       const typeToSet = garment.type || 'Select garment type';
       console.log('📤 [GARMENT_DEBUG] Setting garment type display to:', typeToSet);
-      
-      
       garmentType.textContent = typeToSet;
       console.log('✅ [GARMENT_DEBUG] Garment type element text after update:', garmentType.textContent);
     } else {
       console.log('❌ [GARMENT_DEBUG] Garment type element not found!');
     }
     
-    if (garmentFabric) {
-      const fabricInfo = garment.fabricType || garment.sampleReference || 'Select fabric';
-      console.log('📤 [GARMENT_DEBUG] Setting fabric display to:', fabricInfo);
+    // Handle fabric/sample reference based on request type
+    if (requestType === 'bulk-order-request') {
+      // For bulk orders: show sample reference, hide fabric
+      const fabricElement = card.querySelector('#garment-fabric-display');
+      const sampleRefElement = card.querySelector('#garment-sample-reference-display');
       
+      if (fabricElement) {
+        fabricElement.style.display = 'none';
+      }
       
-      garmentFabric.textContent = fabricInfo;
-      console.log('✅ [GARMENT_DEBUG] Fabric element text after update:', garmentFabric.textContent);
+      if (sampleRefElement) {
+        sampleRefElement.style.display = 'inline';
+        const sampleRefInfo = garment.sampleReference || 'Select sample reference';
+        sampleRefElement.textContent = sampleRefInfo;
+        console.log('📤 [GARMENT_DEBUG] Setting sample reference display to:', sampleRefInfo);
+      }
     } else {
-      console.log('❌ [GARMENT_DEBUG] Fabric element not found!');
+      // For sample requests: show fabric, hide sample reference
+      const fabricElement = card.querySelector('#garment-fabric-display');
+      const sampleRefElement = card.querySelector('#garment-sample-reference-display');
+      
+      if (sampleRefElement) {
+        sampleRefElement.style.display = 'none';
+      }
+      
+      if (fabricElement) {
+        fabricElement.style.display = 'inline';
+        const fabricInfo = garment.fabricType || 'Select fabric';
+        fabricElement.textContent = fabricInfo;
+        console.log('📤 [GARMENT_DEBUG] Setting fabric display to:', fabricInfo);
+      }
     }
     
     // Initialize total and status
@@ -8616,6 +8627,34 @@ class V10_GarmentStudio {
       document.querySelector(`#garment-total-quantity-${garmentId}, #garment-total-${garmentId}`);
     if (totalElement) {
       totalElement.textContent = quantityData.total;
+    }
+
+    // Update integrated action bar total and status
+    if (garmentRow) {
+      const actionTotalElement = garmentRow.querySelector('#garment-action-total');
+      const actionStatusElement = garmentRow.querySelector('#garment-action-status');
+      
+      if (actionTotalElement) {
+        actionTotalElement.textContent = quantityData.total;
+      }
+      
+      if (actionStatusElement) {
+        // Get minimum required for this garment
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData) {
+          const colorwayCount = this.getColorwayCount(garmentId);
+          const productionType = this.quantityCalculator.determineProductionType(garmentData);
+          const minimum = this.quantityCalculator.getMinimumQuantity(colorwayCount, productionType, garmentData.type);
+          
+          if (quantityData.total >= minimum) {
+            actionStatusElement.textContent = 'SUFFICIENT';
+            actionStatusElement.className = 'status-badge status-badge--sufficient';
+          } else {
+            actionStatusElement.textContent = 'INSUFFICIENT';
+            actionStatusElement.className = 'status-badge status-badge--insufficient';
+          }
+        }
+      }
     }
     
     // Update distribution preview
