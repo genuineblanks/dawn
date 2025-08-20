@@ -5058,7 +5058,7 @@ class V10_GarmentStudio {
         isComplete = basicComplete;
       }
     } else if (requestType === 'bulk-order-request') {
-      isComplete = garmentData.type && garmentData.sampleReference;
+      isComplete = !!(garmentData.type && garmentData.sampleReference);
     }
 
     garmentData.isComplete = isComplete;
@@ -6379,30 +6379,42 @@ class V10_GarmentStudio {
     
     // Update sample reference dependency for bulk orders (depends on garment type)
     const requestType = V10_State.requestType;
+    console.log(`🔄 [DEPENDENCY_DEBUG] Checking sample reference dependency - requestType: ${requestType}, hasGarmentType: ${hasGarmentType}`);
+    
     if (requestType === 'bulk-order-request') {
       const sampleReferenceSection = garmentCard.querySelector('.compact-selection-section[data-show-for*="bulk"]');
+      console.log(`🔍 [DEPENDENCY_DEBUG] Sample reference section found:`, !!sampleReferenceSection);
+      
       if (sampleReferenceSection) {
         if (hasGarmentType) {
           // Enable sample reference selection
+          console.log(`✅ [DEPENDENCY_DEBUG] Enabling sample reference selection`);
           sampleReferenceSection.classList.remove('compact-selection-section--disabled');
           this.enableSelectionSection(sampleReferenceSection);
         } else {
           // Disable sample reference selection
+          console.log(`❌ [DEPENDENCY_DEBUG] Disabling sample reference selection`);
           sampleReferenceSection.classList.add('compact-selection-section--disabled');
           this.disableSelectionSection(sampleReferenceSection, 'Select garment type first');
         }
+      } else {
+        console.log(`⚠️ [DEPENDENCY_DEBUG] Sample reference section not found with selector: .compact-selection-section[data-show-for*="bulk"]`);
       }
     }
   }
 
   enableSelectionSection(section) {
+    console.log(`✅ [ENABLE_DEBUG] enableSelectionSection called`);
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
     
     if (widget) {
+      console.log(`🎯 [ENABLE_DEBUG] Setting widget styles - opacity: 1, pointerEvents: auto`);
       widget.style.opacity = '1';
       widget.style.pointerEvents = 'auto';
       widget.style.cursor = 'pointer';
+    } else {
+      console.log(`❌ [ENABLE_DEBUG] Widget not found in section`);
     }
     
     if (placeholder && placeholder.dataset.originalText) {
@@ -6411,13 +6423,17 @@ class V10_GarmentStudio {
   }
 
   disableSelectionSection(section, disabledText) {
+    console.log(`❌ [DISABLE_DEBUG] disableSelectionSection called with text: "${disabledText}"`);
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
     
     if (widget) {
+      console.log(`🎯 [DISABLE_DEBUG] Setting widget styles - opacity: 0.5, pointerEvents: none`);
       widget.style.opacity = '0.5';
       widget.style.pointerEvents = 'none';
       widget.style.cursor = 'not-allowed';
+    } else {
+      console.log(`❌ [DISABLE_DEBUG] Widget not found in section`);
     }
     
     if (placeholder) {
@@ -6425,6 +6441,9 @@ class V10_GarmentStudio {
         placeholder.dataset.originalText = placeholder.textContent;
       }
       placeholder.textContent = disabledText;
+      console.log(`📝 [DISABLE_DEBUG] Updated placeholder text to: "${disabledText}"`);
+    } else {
+      console.log(`❌ [DISABLE_DEBUG] Placeholder not found in section`);
     }
   }
 
