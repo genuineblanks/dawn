@@ -8206,9 +8206,18 @@ class V10_GarmentStudio {
     if (!garment) return;
 
     const quantities = {};
-    const inputs = form.querySelectorAll('.size-quantity-input, .quantity-input');
+    const inputs = form.querySelectorAll('.size-quantity-input');
+    console.log(`🔍 [SAVE_DEBUG] Found ${inputs.length} inputs for garment ${garmentId}`);
+    
     inputs.forEach(input => {
       const size = input.dataset.size;
+      console.log(`🔍 [SAVE_DEBUG] Input element:`, input, `data-size:`, size, `value:`, input.value);
+      
+      if (!size) {
+        console.warn(`⚠️ [SAVE_DEBUG] Input missing data-size attribute:`, input);
+        return; // Skip inputs without data-size
+      }
+      
       const qty = parseInt(input.value) || 0;
       quantities[size] = qty;
     });
