@@ -4136,10 +4136,10 @@ class V10_QuantityCalculator {
         <div class="distribution-chart">
           <div class="chart-bars">
             ${analytics.distribution.map(item => `
-              <div class="chart-bar" data-size="${item.size}">
-                <div class="bar-fill" style="height: ${item.percentage}%" title="${item.label}"></div>
-                <div class="bar-label">${item.size}</div>
-                <div class="bar-value">${item.quantity}</div>
+              <div class="size-bar" data-size="${item.size}">
+                <div class="size-bar__fill" style="height: ${item.percentage}%" title="${item.label}"></div>
+                <div class="size-bar__label">${item.size}</div>
+                <div class="size-bar__value">${item.quantity}</div>
               </div>
             `).join('')}
           </div>
@@ -4174,7 +4174,7 @@ class V10_QuantityCalculator {
     
     // Add animation after render
     setTimeout(() => {
-      const bars = container.querySelectorAll('.bar-fill');
+      const bars = container.querySelectorAll('.size-bar__fill');
       bars.forEach((bar, index) => {
         setTimeout(() => {
           bar.style.transform = 'scaleY(1)';
@@ -8330,6 +8330,16 @@ class V10_GarmentStudio {
         distributionContent.classList.add('quantities-mode--active');
       }
       this.initializeDistributionAnalytics();
+    }
+    
+    // Hide/show summary bar based on mode
+    const summaryBar = document.getElementById('quantity-validation-summary');
+    if (summaryBar) {
+      if (mode === 'sizes') {
+        summaryBar.style.display = 'block'; // Show in sizes mode
+      } else if (mode === 'distribution') {
+        summaryBar.style.display = 'none'; // Hide in distribution mode  
+      }
     }
     
     console.log(`✅ Successfully switched to ${mode} mode`);
