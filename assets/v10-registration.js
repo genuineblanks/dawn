@@ -222,6 +222,29 @@ const V10_Registration = {
       }
     }
     
+    // Address field validation
+    else if (fieldId === 'RegisterForm-City' && fieldValue) {
+      if (fieldValue.length < 2) {
+        isValid = false;
+        errorMessage = 'Please enter a valid city name';
+      }
+    }
+    
+    else if (fieldId === 'RegisterForm-State' && fieldValue) {
+      if (fieldValue.length < 2) {
+        isValid = false;
+        errorMessage = 'Please enter a valid state/province';
+      }
+    }
+    
+    else if (fieldId === 'RegisterForm-PostalCode' && fieldValue) {
+      // Basic postal code validation - should have at least 3 characters
+      if (fieldValue.length < 3) {
+        isValid = false;
+        errorMessage = 'Please enter a valid postal code';
+      }
+    }
+    
     // URL validation
     else if (fieldType === 'url' && fieldValue) {
       try {
@@ -476,13 +499,40 @@ const V10_Registration = {
   
   // Format postal code
   formatPostalCode(e) {
+    const countrySelect = document.getElementById('RegisterForm-Country');
+    const selectedCountry = countrySelect?.value || 'US';
     let value = e.target.value.toUpperCase();
     
-    // US ZIP code format
-    if (/^\d+$/.test(value.replace('-', ''))) {
-      if (value.length > 5) {
-        value = value.replace(/(\d{5})(\d)/, '$1-$2');
-      }
+    switch (selectedCountry) {
+      case 'US':
+        // US ZIP code format: 12345 or 12345-6789
+        value = value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 5) {
+          value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        }
+        break;
+        
+      case 'CA':
+        // Canadian postal code format: K1A 0A9
+        value = value.replace(/[^A-Z0-9]/g, ''); // Remove non-alphanumeric
+        if (value.length > 3) {
+          value = value.replace(/([A-Z]\d[A-Z])(\d[A-Z]\d)/, '$1 $2');
+        }
+        break;
+        
+      case 'GB':
+        // UK postcode format: SW1A 1AA
+        value = value.replace(/[^A-Z0-9]/g, '');
+        if (value.length > 4) {
+          // Simple format - add space before last 3 characters
+          const len = value.length;
+          value = value.substring(0, len - 3) + ' ' + value.substring(len - 3);
+        }
+        break;
+        
+      default:
+        // For other countries, just uppercase and remove excessive spaces
+        value = value.replace(/\s+/g, ' ').trim();
     }
     
     e.target.value = value;
@@ -492,19 +542,57 @@ const V10_Registration = {
   updateVatValidation() {
     const countrySelect = document.getElementById('RegisterForm-Country');
     const vatInput = document.getElementById('RegisterForm-VatNumber');
-    const vatLabel = vatInput?.previousElementSibling;
+    const postalInput = document.getElementById('RegisterForm-PostalCode');
+    const stateInput = document.getElementById('RegisterForm-State');
     
-    if (!countrySelect || !vatInput || !vatLabel) return;
+    if (!countrySelect || !vatInput) return;
     
     const selectedCountry = countrySelect.value;
     const isEuropean = ['PT', 'ES', 'FR', 'DE', 'IT', 'NL', 'BE', 'AT', 'SE', 'DK', 'FI'].includes(selectedCountry);
     
+    // Update VAT input placeholder
     if (isEuropean) {
       vatInput.placeholder = 'European businesses must provide a VAT number';
     } else if (selectedCountry === 'US') {
       vatInput.placeholder = 'EIN or SSN number';
     } else {
       vatInput.placeholder = 'Business registration number or tax ID';
+    }
+    
+    // Update postal code placeholder based on country
+    if (postalInput) {
+      switch (selectedCountry) {
+        case 'US':
+          postalInput.placeholder = 'ZIP Code (e.g. 12345)';
+          break;
+        case 'CA':
+          postalInput.placeholder = 'Postal Code (e.g. K1A 0A9)';
+          break;
+        case 'GB':
+          postalInput.placeholder = 'Postcode (e.g. SW1A 1AA)';
+          break;
+        default:
+          postalInput.placeholder = 'Postal Code';
+      }
+    }
+    
+    // Update state field label and placeholder based on country
+    if (stateInput) {
+      const stateLabel = stateInput.previousElementSibling;
+      switch (selectedCountry) {
+        case 'US':
+        case 'CA':
+          if (stateLabel) stateLabel.textContent = 'State/Province';
+          stateInput.placeholder = 'State/Province';
+          break;
+        case 'GB':
+          if (stateLabel) stateLabel.textContent = 'County';
+          stateInput.placeholder = 'County';
+          break;
+        default:
+          if (stateLabel) stateLabel.textContent = 'State/Province/Region';
+          stateInput.placeholder = 'State/Province/Region';
+      }
     }
   },
   
