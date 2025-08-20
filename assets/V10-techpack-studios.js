@@ -6607,6 +6607,8 @@ class V10_GarmentStudio {
   }
 
   populateQuantityStudio() {
+    console.log('🔄 populateQuantityStudio() called');
+    
     // Performance monitoring
     const startTime = performance.now();
     
@@ -6669,7 +6671,15 @@ class V10_GarmentStudio {
     
     // Log each garment's state for debugging
     V10_State.garments.forEach((garment, id) => {
-      console.log(`   Garment ${garment.number || id}: type=${garment.type}, fabric=${garment.fabricType}, sample=${garment.sampleReference}`);
+      console.log(`   Garment ${garment.number || id}:`);
+      console.log(`     - type: "${garment.type}"`);
+      console.log(`     - sampleReference: "${garment.sampleReference}"`);
+      console.log(`     - isComplete: ${garment.isComplete}`);
+      console.log(`     - fabricType: "${garment.fabricType}"`);
+      
+      // Test the filtering logic for this garment
+      const passes = garment.isComplete && garment.type && garment.sampleReference;
+      console.log(`     - Passes filter: ${passes}`);
     });
     
     if (completedGarments.length === 0) {
