@@ -4878,6 +4878,9 @@ class V10_GarmentStudio {
       this.markEditButtonAsChanged(garmentCard);
       
       console.log(`🔄 Garment type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
+      
+      // Update garment status and summary display
+      this.updateGarmentStatus(garmentId);
     }
 
     // Handle fabric type change (compact and regular)
@@ -4917,6 +4920,9 @@ class V10_GarmentStudio {
       this.markEditButtonAsChanged(garmentCard);
       
       console.log(`🔄 Fabric type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
+      
+      // Update garment status and summary display
+      this.updateGarmentStatus(garmentId);
     }
 
     // Handle sample type change
