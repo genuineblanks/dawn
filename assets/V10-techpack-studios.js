@@ -7079,9 +7079,9 @@ class V10_GarmentStudio {
       }
     }
     
-    // Get elements for total and status updates
-    const garmentTotalQuantity = card.querySelector('#garment-total-quantity');
-    const quantityStatus = card.querySelector('#quantity-status');
+    // Get elements for total and status updates (now in the action bar)
+    const garmentTotalQuantity = card.querySelector('#garment-action-total');
+    const quantityStatus = card.querySelector('#garment-action-status');
     const minimumRequired = card.querySelector('#minimum-required');
     
     // Initialize total and status
@@ -8199,14 +8199,18 @@ class V10_GarmentStudio {
   }
 
   saveQuantityData(garmentId) {
-    const form = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (!form) return;
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (!card) {
+      console.warn(`⚠️ [SAVE_DEBUG] No card found for garment ${garmentId}`);
+      return;
+    }
 
     const garment = V10_State.garments.get(garmentId);
     if (!garment) return;
 
     const quantities = {};
-    const inputs = form.querySelectorAll('.size-quantity-input');
+    const inputs = card.querySelectorAll('.size-quantity-input');
+    console.log(`🔍 [SAVE_DEBUG] Card found:`, card);
     console.log(`🔍 [SAVE_DEBUG] Found ${inputs.length} inputs for garment ${garmentId}`);
     
     inputs.forEach(input => {

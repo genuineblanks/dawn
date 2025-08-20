@@ -8064,14 +8064,14 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 .garment-action-btn--preset {
-  background: var(--v10-accent-primary);
+  background: #4b5563;
   color: white;
-  border-color: var(--v10-accent-primary);
+  border-color: #4b5563;
 }
 
 .garment-action-btn--preset:hover {
-  background: var(--v10-accent-hover);
-  border-color: var(--v10-accent-hover);
+  background: #374151;
+  border-color: #374151;
 }
 
 .garment-action-btn--secondary {
