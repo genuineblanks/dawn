@@ -3218,31 +3218,34 @@ body[class*="techpack"] *,
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-sm);
   overflow: hidden;
+  padding: 2px;
 }
 
 .currency-btn {
   padding: var(--v10-space-1) var(--v10-space-3);
   background: transparent;
   border: none;
-  font-size: var(--v10-text-sm);
+  font-size: var(--v10-text-xs);
   font-weight: 600;
   color: var(--v10-text-secondary);
   cursor: pointer;
-  transition: var(--v10-transition);
-  min-width: 40px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: calc(var(--v10-radius-sm) - 2px);
+  position: relative;
 }
 
 .currency-btn:hover {
-  background: var(--v10-bg-hover);
   color: var(--v10-text-primary);
 }
 
 .currency-btn--active {
   background: var(--v10-accent-primary);
   color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .currency-btn--active:hover {

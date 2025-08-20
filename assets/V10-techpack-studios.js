@@ -5285,16 +5285,6 @@ class V10_GarmentStudio {
         }
         console.log('📤 [GARMENT_DEBUG] Setting type span text to:', typeText);
         
-        // T-Shirt Cotton tracking for rich summary
-        if (typeText.includes('T-Shirt') || typeText.includes('Cotton')) {
-          console.log('🚨 [TSHIRT_DEBUG] About to set T-Shirt/Cotton in updateGarmentSummary:', {
-            element: typeSpan,
-            oldText: typeSpan.textContent,
-            newText: typeText,
-            garmentData: garmentData,
-            stackTrace: new Error().stack
-          });
-        }
         
         typeSpan.textContent = typeText;
         console.log('[GARMENT_DEBUG] Type span text after update:', typeSpan.textContent);
@@ -5342,16 +5332,6 @@ class V10_GarmentStudio {
       if (garmentData.fabricType) {
         console.log('📤 [GARMENT_DEBUG] Setting fabric span text to:', garmentData.fabricType);
         
-        // T-Shirt Cotton tracking for rich summary fabric
-        if (garmentData.fabricType.includes('T-Shirt') || garmentData.fabricType.includes('Cotton')) {
-          console.log('🚨 [TSHIRT_DEBUG] About to set T-Shirt/Cotton fabric in updateGarmentSummary:', {
-            element: fabricSpan,
-            oldText: fabricSpan.textContent,
-            newText: garmentData.fabricType,
-            garmentData: garmentData,
-            stackTrace: new Error().stack
-          });
-        }
         
         fabricSpan.textContent = garmentData.fabricType;
         console.log('[GARMENT_DEBUG] Fabric span text after update:', fabricSpan.textContent);
@@ -6884,16 +6864,6 @@ class V10_GarmentStudio {
       const typeToSet = garment.type || 'Select garment type';
       console.log('📤 [GARMENT_DEBUG] Setting garment type display to:', typeToSet);
       
-      // T-Shirt Cotton tracking
-      if (typeToSet.includes('T-Shirt') || typeToSet.includes('Cotton')) {
-        console.log('🚨 [TSHIRT_DEBUG] About to set T-Shirt/Cotton in setupGarmentInfo:', {
-          element: garmentType,
-          oldText: garmentType.textContent,
-          newText: typeToSet,
-          garmentData: garment,
-          stackTrace: new Error().stack
-        });
-      }
       
       garmentType.textContent = typeToSet;
       console.log('✅ [GARMENT_DEBUG] Garment type element text after update:', garmentType.textContent);
@@ -6905,16 +6875,6 @@ class V10_GarmentStudio {
       const fabricInfo = garment.fabricType || garment.sampleReference || 'Select fabric';
       console.log('📤 [GARMENT_DEBUG] Setting fabric display to:', fabricInfo);
       
-      // T-Shirt Cotton tracking
-      if (fabricInfo.includes('T-Shirt') || fabricInfo.includes('Cotton')) {
-        console.log('🚨 [TSHIRT_DEBUG] About to set T-Shirt/Cotton fabric in setupGarmentInfo:', {
-          element: garmentFabric,
-          oldText: garmentFabric.textContent,
-          newText: fabricInfo,
-          garmentData: garment,
-          stackTrace: new Error().stack
-        });
-      }
       
       garmentFabric.textContent = fabricInfo;
       console.log('✅ [GARMENT_DEBUG] Fabric element text after update:', garmentFabric.textContent);
@@ -8085,163 +8045,12 @@ class V10_GarmentStudio {
     // Initialize preset dropdown
     this.initializePresetDropdown();
     
-    // Add T-Shirt Cotton tracking
-    this.initializeTShirtCottonTracking();
-    
     console.log('✅ Initialized all quantity studio features');
   }
 
-  initializeTShirtCottonTracking() {
-    console.log('🔍 [TSHIRT_DEBUG] Initializing T-Shirt Cotton tracking system...');
-    
-    // Track all garment display elements
-    const garmentDisplaySelectors = [
-      '.garment-summary__type',
-      '.garment-summary__fabric', 
-      '#garment-selected-name',
-      '#fabric-selected-name',
-      '.selected-name',
-      '.garment-name',
-      '#garment-type-display',
-      '#garment-fabric-display'
-    ];
-    
-    // Create mutation observer for each type of element
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' || mutation.type === 'characterData') {
-          const target = mutation.target;
-          const newText = target.textContent || target.innerText;
-          
-          if (newText && (newText.includes('T-Shirt') || newText.includes('Cotton'))) {
-            console.log('🚨 [TSHIRT_DEBUG] T-Shirt/Cotton text detected:', {
-              element: target,
-              className: target.className,
-              id: target.id,
-              text: newText,
-              mutation: mutation.type,
-              stackTrace: new Error().stack
-            });
-          }
-        }
-      });
-    });
-    
-    // Start observing all elements
-    garmentDisplaySelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        observer.observe(element, {
-          childList: true,
-          characterData: true,
-          subtree: true
-        });
-        
-        // Log current state
-        const currentText = element.textContent || element.innerText;
-        if (currentText && (currentText.includes('T-Shirt') || currentText.includes('Cotton'))) {
-          console.log('📍 [TSHIRT_DEBUG] Initial T-Shirt/Cotton found:', {
-            selector: selector,
-            element: element,
-            text: currentText
-          });
-        }
-      });
-    });
-    
-    // Global textContent interceptor
-    this.interceptTextContentChanges();
-    
-    // Start periodic monitoring
-    this.startPeriodicMonitoring();
-    
-    console.log('✅ [TSHIRT_DEBUG] T-Shirt Cotton tracking initialized');
-  }
 
-  interceptTextContentChanges() {
-    console.log('🔍 [TSHIRT_DEBUG] Setting up global textContent interceptor...');
-    
-    // Intercept textContent setter
-    const originalTextContentDescriptor = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    if (originalTextContentDescriptor && originalTextContentDescriptor.set) {
-      Object.defineProperty(Node.prototype, 'textContent', {
-        set: function(value) {
-          // Check if this is a T-Shirt or Cotton value
-          if (value && typeof value === 'string' && (value.includes('T-Shirt') || value.includes('Cotton'))) {
-            console.log('🚨 [TSHIRT_DEBUG] GLOBAL textContent setter called with T-Shirt/Cotton:', {
-              element: this,
-              className: this.className,
-              id: this.id,
-              oldValue: this.textContent,
-              newValue: value,
-              stackTrace: new Error().stack
-            });
-          }
-          // Call original setter
-          return originalTextContentDescriptor.set.call(this, value);
-        },
-        get: originalTextContentDescriptor.get,
-        configurable: true
-      });
-    }
-    
-    console.log('✅ [TSHIRT_DEBUG] Global textContent interceptor installed');
-  }
 
-  startPeriodicMonitoring() {
-    console.log('🔍 [TSHIRT_DEBUG] Starting periodic element monitoring...');
-    
-    // Monitor every 3 seconds
-    setInterval(() => {
-      this.performElementScan();
-    }, 3000);
-    
-    // Immediate scan
-    setTimeout(() => this.performElementScan(), 1000);
-  }
 
-  performElementScan() {
-    console.log('🔍 [TSHIRT_DEBUG] === PERIODIC SCAN START ===');
-    
-    const selectors = [
-      '.garment-summary__type',
-      '.garment-summary__fabric',
-      '#garment-selected-name', 
-      '#fabric-selected-name',
-      '.selected-name',
-      '.garment-name',
-      '#garment-type-display',
-      '#garment-fabric-display'
-    ];
-    
-    let foundTShirtCotton = false;
-    
-    selectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach((element, index) => {
-        const text = element.textContent || element.innerText || '';
-        if (text.includes('T-Shirt') || text.includes('Cotton')) {
-          foundTShirtCotton = true;
-          console.log('🚨 [TSHIRT_DEBUG] FOUND T-Shirt/Cotton in periodic scan:', {
-            selector: selector,
-            elementIndex: index,
-            element: element,
-            text: text,
-            className: element.className,
-            id: element.id,
-            parentElement: element.parentElement?.className,
-            isVisible: element.offsetParent !== null
-          });
-        }
-      });
-    });
-    
-    if (!foundTShirtCotton) {
-      console.log('✅ [TSHIRT_DEBUG] No T-Shirt/Cotton found in periodic scan');
-    }
-    
-    console.log('🔍 [TSHIRT_DEBUG] === PERIODIC SCAN END ===');
-  }
 
   initializeModeToggle() {
     const sizesToggle = document.getElementById('sizes-mode');
@@ -10036,6 +9845,9 @@ class V10_ReviewManager {
       container.innerHTML = '<p class="empty-message">No garments configured</p>';
       return;
     }
+    
+    // Sort garments by their number property to ensure proper order
+    garments.sort((a, b) => a.number - b.number);
 
     const template = document.getElementById('review-garment-template');
     if (!template) return;
