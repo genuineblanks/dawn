@@ -7353,8 +7353,8 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   background: var(--v10-bg-card);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
-  overflow: hidden;
   transition: var(--v10-transition);
+  position: relative;
 }
 
 .garment-quantity-card:hover {
@@ -8154,7 +8154,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 50;
+  z-index: 1000 !important;
   min-width: 200px;
   background: var(--v10-bg-primary);
   border: 1px solid var(--v10-border-primary);

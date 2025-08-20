@@ -6697,8 +6697,8 @@ class V10_GarmentStudio {
     V10_State.quantities.garments.forEach((quantityData, garmentId) => {
       if (!quantityData.sizes) return;
       
-      // Find the garment card for this ID
-      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      // Find the quantity card for this ID
+      const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
       if (!garmentCard) return;
       
       // Restore each size quantity
@@ -8642,8 +8642,8 @@ class V10_GarmentStudio {
     // Update state
     V10_State.quantities.garments.set(garmentId, quantityData);
     
-    // Update garment total display - check both old and new selectors
-    const garmentRow = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    // Update garment total display - find the quantity card
+    const garmentRow = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
     const totalElement = garmentRow ? 
       garmentRow.querySelector('#garment-total-quantity') : 
       document.querySelector(`#garment-total-quantity-${garmentId}, #garment-total-${garmentId}`);
@@ -8691,11 +8691,11 @@ class V10_GarmentStudio {
     try {
       console.log('🎨 Adding colorway to garment:', garmentId);
       
-      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
       const template = document.querySelector('#v10-colorway-template');
       
       if (!garmentCard || !template) {
-        console.error('❌ Missing garment card or colorway template');
+        console.error('❌ Missing quantity card or colorway template');
         return;
       }
 
@@ -8894,9 +8894,9 @@ class V10_GarmentStudio {
       console.log('🗑️ Clearing quantities for garment:', garmentId);
       
       // Find all quantity inputs for this garment
-      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
       if (!garmentCard) {
-        console.error('❌ Garment card not found:', garmentId);
+        console.error('❌ Quantity card not found:', garmentId);
         return;
       }
       
