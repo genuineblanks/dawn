@@ -4867,6 +4867,12 @@ class V10_GarmentStudio {
         this.updateCompactSelection('garment', newValue, garmentCard);
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
+        
+        // Enable sample reference for bulk orders when garment type is selected
+        const requestType = V10_State.requestType;
+        if (requestType === 'bulk-order-request') {
+          this.enableSampleReferenceSelection(garmentCard);
+        }
       }
       
       // Reset sample type selection
@@ -5642,6 +5648,9 @@ class V10_GarmentStudio {
           } else {
             isComplete = basicComplete;
           }
+        } else if (requestType === 'bulk-order-request') {
+          // For bulk orders, need garment type and sample reference
+          isComplete = updatedGarmentData.type && updatedGarmentData.sampleReference;
         }
         
         // Force collapse regardless of completion status when finalizing edit
@@ -6220,6 +6229,25 @@ class V10_GarmentStudio {
     }
   }
 
+  enableSampleReferenceSelection(garmentCard) {
+    const sampleReferenceCollapsed = garmentCard.querySelector('#sample-reference-collapsed');
+    const sampleReferencePlaceholder = garmentCard.querySelector('#sample-reference-placeholder');
+    
+    // Make sample reference selection available for bulk orders
+    if (sampleReferenceCollapsed) {
+      sampleReferenceCollapsed.style.opacity = '1';
+      sampleReferenceCollapsed.style.pointerEvents = 'auto';
+    }
+    if (sampleReferencePlaceholder) {
+      sampleReferencePlaceholder.style.cursor = 'pointer';
+      const placeholderText = sampleReferencePlaceholder.querySelector('.placeholder-text');
+      
+      if (placeholderText) {
+        placeholderText.textContent = 'Select sample reference';
+      }
+    }
+  }
+
   getFabricPlaceholderIcon() {
     // Return a generic fabric/textile icon for the placeholder
     return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2L8 6v4l4 4 4-4V6z"/><circle cx="12" cy="8" r="2"/><path d="M8 14v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4"/></svg>';
@@ -6346,6 +6374,23 @@ class V10_GarmentStudio {
         // Disable sample type selection
         sampleTypeSection.classList.add('selection-section--disabled');
         this.disableSampleTypeSection(sampleTypeSection, hasFabricType ? 'Select garment type first' : 'Select fabric type first');
+      }
+    }
+    
+    // Update sample reference dependency for bulk orders (depends on garment type)
+    const requestType = V10_State.requestType;
+    if (requestType === 'bulk-order-request') {
+      const sampleReferenceSection = garmentCard.querySelector('.compact-selection-section[data-show-for*="bulk"]');
+      if (sampleReferenceSection) {
+        if (hasGarmentType) {
+          // Enable sample reference selection
+          sampleReferenceSection.classList.remove('compact-selection-section--disabled');
+          this.enableSelectionSection(sampleReferenceSection);
+        } else {
+          // Disable sample reference selection
+          sampleReferenceSection.classList.add('compact-selection-section--disabled');
+          this.disableSelectionSection(sampleReferenceSection, 'Select garment type first');
+        }
       }
     }
   }
@@ -6511,10 +6556,17 @@ class V10_GarmentStudio {
       }
     }
     
-    // Sample reference is always enabled for bulk orders
+    // Initially disable sample reference until garment type is chosen (for bulk orders)
     if (sampleReferenceCollapsed) {
-      sampleReferenceCollapsed.style.opacity = '1';
-      sampleReferenceCollapsed.style.pointerEvents = 'auto';
+      const requestType = V10_State.requestType;
+      if (requestType === 'bulk-order-request') {
+        sampleReferenceCollapsed.style.opacity = '0.6';
+        sampleReferenceCollapsed.style.pointerEvents = 'none';
+      } else {
+        // For other request types, keep existing behavior
+        sampleReferenceCollapsed.style.opacity = '1';
+        sampleReferenceCollapsed.style.pointerEvents = 'auto';
+      }
     }
   }
 
