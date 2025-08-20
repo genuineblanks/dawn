@@ -4797,6 +4797,43 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       this.expandGarmentForEdit(garmentId);
+    } else if (e.target.closest('.add-colorway')) {
+      // Handle add colorway button from integrated actions
+      e.preventDefault();
+      e.stopPropagation();
+      this.addColorway(garmentId);
+      console.log('🎨 Add Colorway clicked for garment:', garmentId);
+    } else if (e.target.closest('#apply-preset-to-garment')) {
+      // Handle apply preset button from integrated actions
+      e.preventDefault();
+      e.stopPropagation();
+      const presetMenu = garmentCard.querySelector('#garment-preset-menu');
+      if (presetMenu) {
+        presetMenu.classList.toggle('active');
+        console.log('📋 Apply Preset dropdown toggled');
+      }
+    } else if (e.target.closest('#clear-garment-quantities')) {
+      // Handle clear quantities button from integrated actions
+      e.preventDefault();
+      e.stopPropagation();
+      this.clearGarmentQuantities(garmentId);
+      console.log('🗑️ Clear Quantities clicked for garment:', garmentId);
+    } else if (e.target.closest('.preset-option')) {
+      // Handle preset option selection
+      e.preventDefault();
+      e.stopPropagation();
+      const presetOption = e.target.closest('.preset-option');
+      const presetName = presetOption.dataset.preset;
+      if (presetName) {
+        this.quantityCalculator.applyPresetToGarment(garmentId, presetName);
+        console.log('✨ Applied preset:', presetName, 'to garment:', garmentId);
+        
+        // Hide dropdown after selection
+        const presetMenu = garmentCard.querySelector('#garment-preset-menu');
+        if (presetMenu) {
+          presetMenu.classList.remove('active');
+        }
+      }
     } else if (e.target.closest('.sample-type-card')) {
       // Handle sample type card clicks
       e.preventDefault();
@@ -6626,7 +6663,7 @@ class V10_GarmentStudio {
     const quantityInputs = document.querySelectorAll('.size-quantity-input');
     
     quantityInputs.forEach(input => {
-      const garmentCard = input.closest('.garment-quantity-row');
+      const garmentCard = input.closest('.garment-quantity-card');
       if (!garmentCard) return;
       
       const garmentId = garmentCard.dataset.garmentId;
@@ -6848,7 +6885,7 @@ class V10_GarmentStudio {
     
     // Final debug check: Verify all cards still have correct display text
     console.log('🔍 [GARMENT_DEBUG] FINAL CHECK - All card displays after full initialization:');
-    const allCards = responsiveGrid.querySelectorAll('.garment-quantity-row');
+    const allCards = responsiveGrid.querySelectorAll('.garment-quantity-card');
     allCards.forEach((card, index) => {
       const typeEl = card.querySelector('#garment-type-display, .garment-name');
       const fabricEl = card.querySelector('#garment-fabric-display, .garment-sample');
@@ -6913,16 +6950,16 @@ class V10_GarmentStudio {
     
     // Clone the template
     const cardElement = template.content.cloneNode(true);
-    console.log('📄 Template content cloned, searching for .garment-quantity-row...');
-    const card = cardElement.querySelector('.garment-quantity-row');
+    console.log('📄 Template content cloned, searching for .garment-quantity-card...');
+    const card = cardElement.querySelector('.garment-quantity-card');
     
     if (!card) {
-      console.error('❌ .garment-quantity-row not found in template');
+      console.error('❌ .garment-quantity-card not found in template');
       console.log('📋 Available classes in template:', Array.from(cardElement.querySelectorAll('*')).map(el => el.className));
       return this.createFallbackQuantityCard(garment, index);
     }
     
-    console.log('✅ .garment-quantity-row found, setting up card...');
+    console.log('✅ .garment-quantity-card found, setting up card...');
     console.log('🔍 [GARMENT_DEBUG] Template path: Using actual template');
     console.log('📥 [GARMENT_DEBUG] Template garment data:', {
       id: garment.id,
@@ -7927,7 +7964,7 @@ class V10_GarmentStudio {
     });
     
     const cardElement = document.createElement('div');
-    cardElement.className = 'garment-quantity-row';
+    cardElement.className = 'garment-quantity-card';
     cardElement.dataset.garmentId = garment.id;
     
     console.log('📤 [GARMENT_DEBUG] Fallback: Creating element with garmentId:', garment.id);
@@ -8583,6 +8620,237 @@ class V10_GarmentStudio {
     
     // Update distribution preview
     this.updateDistributionPreview(document.querySelector(`[data-garment-id="${garmentId}"]`), garmentId);
+  }
+
+  // ==============================================
+  // COLORWAY MANAGEMENT SYSTEM
+  // ==============================================
+
+  addColorway(garmentId) {
+    try {
+      console.log('🎨 Adding colorway to garment:', garmentId);
+      
+      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const template = document.querySelector('#v10-colorway-template');
+      
+      if (!garmentCard || !template) {
+        console.error('❌ Missing garment card or colorway template');
+        return;
+      }
+
+      // Find or create colorways container in the garment card
+      let colorwaysContainer = garmentCard.querySelector('.v10-colorways-container');
+      if (!colorwaysContainer) {
+        // Create colorways container after garment actions
+        colorwaysContainer = document.createElement('div');
+        colorwaysContainer.className = 'v10-colorways-container';
+        
+        const actionsSection = garmentCard.querySelector('.garment-actions-integrated');
+        if (actionsSection) {
+          actionsSection.parentNode.insertBefore(colorwaysContainer, actionsSection);
+        } else {
+          garmentCard.appendChild(colorwaysContainer);
+        }
+      }
+
+      const colorwayId = V10_Utils.generateId('colorway');
+      const clone = template.content.cloneNode(true);
+      const colorway = clone.querySelector('.v10-colorway');
+      
+      // Set colorway ID
+      colorway.dataset.colorwayId = colorwayId;
+      
+      // Initialize colorway data in state
+      if (!V10_State.garments.has(garmentId)) {
+        console.error('❌ Garment not found in state:', garmentId);
+        return;
+      }
+      
+      const garmentData = V10_State.garments.get(garmentId);
+      if (!garmentData.colorways) {
+        garmentData.colorways = new Map();
+      }
+      
+      garmentData.colorways.set(colorwayId, {
+        id: colorwayId,
+        color: '#3b82f6',
+        colorName: '',
+        pantoneRequired: false,
+        pantoneCode: '',
+        notes: ''
+      });
+
+      // Set up event listeners for this colorway
+      this.setupColorwayEventListeners(colorway, garmentId, colorwayId);
+      
+      // Add to container
+      colorwaysContainer.appendChild(colorway);
+      
+      // Auto-focus color name input
+      setTimeout(() => {
+        const colorNameInput = colorway.querySelector('.v10-color-name');
+        if (colorNameInput) {
+          colorNameInput.focus();
+        }
+      }, 100);
+
+      console.log('✅ Colorway added successfully:', colorwayId);
+      
+      // Update completion status
+      this.updateGarmentStatus(garmentId);
+      
+    } catch (error) {
+      console.error('❌ Error adding colorway:', error);
+    }
+  }
+
+  removeColorway(garmentId, colorwayId) {
+    try {
+      console.log('🗑️ Removing colorway:', colorwayId, 'from garment:', garmentId);
+      
+      const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
+      if (colorway) {
+        colorway.remove();
+      }
+      
+      // Remove from state
+      const garmentData = V10_State.garments.get(garmentId);
+      if (garmentData && garmentData.colorways) {
+        garmentData.colorways.delete(colorwayId);
+      }
+      
+      // Update completion status
+      this.updateGarmentStatus(garmentId);
+      
+      console.log('✅ Colorway removed successfully');
+      
+    } catch (error) {
+      console.error('❌ Error removing colorway:', error);
+    }
+  }
+
+  setupColorwayEventListeners(colorway, garmentId, colorwayId) {
+    // Remove button
+    const removeBtn = colorway.querySelector('.v10-colorway-remove');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        this.removeColorway(garmentId, colorwayId);
+      });
+    }
+
+    // Color picker
+    const colorPicker = colorway.querySelector('.v10-color-picker');
+    const colorPreview = colorway.querySelector('.v10-color-preview');
+    if (colorPicker && colorPreview) {
+      colorPicker.addEventListener('change', (e) => {
+        const color = e.target.value;
+        colorPreview.style.background = color;
+        
+        // Update state
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData && garmentData.colorways && garmentData.colorways.has(colorwayId)) {
+          garmentData.colorways.get(colorwayId).color = color;
+        }
+        
+        console.log('🎨 Color updated:', color);
+      });
+    }
+
+    // Color name input
+    const colorNameInput = colorway.querySelector('.v10-color-name');
+    if (colorNameInput) {
+      colorNameInput.addEventListener('input', (e) => {
+        const colorName = e.target.value;
+        
+        // Update state
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData && garmentData.colorways && garmentData.colorways.has(colorwayId)) {
+          garmentData.colorways.get(colorwayId).colorName = colorName;
+        }
+        
+        console.log('📝 Color name updated:', colorName);
+      });
+    }
+
+    // Pantone toggle
+    const pantoneToggle = colorway.querySelector('.v10-pantone-required');
+    const pantoneDetails = colorway.querySelector('.v10-pantone-details');
+    if (pantoneToggle && pantoneDetails) {
+      pantoneToggle.addEventListener('change', (e) => {
+        const required = e.target.checked;
+        pantoneDetails.style.display = required ? 'flex' : 'none';
+        
+        // Update state
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData && garmentData.colorways && garmentData.colorways.has(colorwayId)) {
+          garmentData.colorways.get(colorwayId).pantoneRequired = required;
+        }
+        
+        console.log('🏷️ Pantone required:', required);
+      });
+    }
+
+    // Pantone code input
+    const pantoneCodeInput = colorway.querySelector('.v10-pantone-code');
+    if (pantoneCodeInput) {
+      pantoneCodeInput.addEventListener('input', (e) => {
+        const pantoneCode = e.target.value;
+        
+        // Update state
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData && garmentData.colorways && garmentData.colorways.has(colorwayId)) {
+          garmentData.colorways.get(colorwayId).pantoneCode = pantoneCode;
+        }
+        
+        console.log('🎨 Pantone code updated:', pantoneCode);
+      });
+    }
+
+    // Color notes
+    const notesInput = colorway.querySelector('.v10-color-notes');
+    if (notesInput) {
+      notesInput.addEventListener('input', (e) => {
+        const notes = e.target.value;
+        
+        // Update state
+        const garmentData = V10_State.garments.get(garmentId);
+        if (garmentData && garmentData.colorways && garmentData.colorways.has(colorwayId)) {
+          garmentData.colorways.get(colorwayId).notes = notes;
+        }
+        
+        console.log('📝 Color notes updated:', notes);
+      });
+    }
+  }
+
+  getColorwayCount(garmentId) {
+    const garmentData = V10_State.garments.get(garmentId);
+    return garmentData && garmentData.colorways ? garmentData.colorways.size : 0;
+  }
+
+  clearGarmentQuantities(garmentId) {
+    try {
+      console.log('🗑️ Clearing quantities for garment:', garmentId);
+      
+      // Find all quantity inputs for this garment
+      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (!garmentCard) {
+        console.error('❌ Garment card not found:', garmentId);
+        return;
+      }
+      
+      const quantityInputs = garmentCard.querySelectorAll('.size-quantity-input');
+      quantityInputs.forEach(input => {
+        input.value = '0';
+        // Trigger input event to update calculations
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      
+      console.log('✅ Cleared quantities for', quantityInputs.length, 'size inputs');
+      
+    } catch (error) {
+      console.error('❌ Error clearing garment quantities:', error);
+    }
   }
 }
 

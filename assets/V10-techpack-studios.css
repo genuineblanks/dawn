@@ -7900,6 +7900,566 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   gap: var(--v10-space-4);
 }
 
+/* ====================================
+   UNIFIED GARMENT QUANTITY CARD LAYOUT 
+   ==================================== */
+
+.garment-quantity-card {
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--v10-space-6);
+}
+
+/* Top Header Section */
+.garment-quantity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--v10-space-6);
+  border-bottom: 1px solid var(--v10-border-secondary);
+}
+
+.garment-info {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-3);
+  flex: 1;
+}
+
+.garment-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--v10-glass-bg);
+  border: 1px solid var(--v10-glass-border);
+  border-radius: var(--v10-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--v10-accent-primary);
+  flex-shrink: 0;
+}
+
+.garment-details {
+  flex: 1;
+}
+
+.garment-summary__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  margin-bottom: var(--v10-space-2);
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.garment-summary__color-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+}
+
+.garment-meta {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-muted);
+}
+
+.garment-total-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--v10-space-2);
+}
+
+.total-display {
+  text-align: right;
+}
+
+.total-number {
+  font-size: var(--v10-text-2xl);
+  font-weight: 700;
+  color: var(--v10-text-primary);
+  line-height: 1;
+}
+
+.total-label {
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  color: var(--v10-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quantity-status {
+  padding: var(--v10-space-1) var(--v10-space-3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--v10-radius-full);
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.quantity-status.sufficient {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+/* Middle Body Section */
+.garment-quantity-body {
+  padding: var(--v10-space-6);
+}
+
+.size-input-group {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--v10-space-3);
+}
+
+.size-input-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-2);
+}
+
+.size-input-item label {
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  color: var(--v10-text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.size-quantity-input {
+  width: 100%;
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  text-align: center;
+  transition: var(--v10-transition);
+}
+
+.size-quantity-input:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.size-quantity-input:hover {
+  border-color: var(--v10-border-hover);
+}
+
+/* Bottom Actions Section */
+.garment-actions-integrated {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--v10-space-4) var(--v10-space-6);
+  background: var(--v10-bg-secondary);
+  border-top: 1px solid var(--v10-border-secondary);
+}
+
+.garment-actions-left {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+}
+
+.garment-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.garment-action-btn:hover {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
+  border-color: var(--v10-border-hover);
+}
+
+.garment-action-btn--preset {
+  background: var(--v10-accent-primary);
+  color: white;
+  border-color: var(--v10-accent-primary);
+}
+
+.garment-action-btn--preset:hover {
+  background: var(--v10-accent-hover);
+  border-color: var(--v10-accent-hover);
+}
+
+.garment-action-btn--secondary {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--v10-accent-primary);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.garment-action-btn--secondary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.garment-actions-right {
+  display: flex;
+  align-items: center;
+}
+
+.total-required-display {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  font-size: var(--v10-text-sm);
+}
+
+.total-value {
+  font-size: var(--v10-text-lg);
+  font-weight: 700;
+  color: var(--v10-text-primary);
+}
+
+.required-value {
+  font-size: var(--v10-text-lg);
+  font-weight: 700;
+  color: var(--v10-accent-primary);
+}
+
+.required-label {
+  font-size: var(--v10-text-xs);
+  font-weight: 600;
+  color: var(--v10-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Preset Dropdown Styles */
+.preset-dropdown-wrapper {
+  position: relative;
+}
+
+.preset-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  min-width: 200px;
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  box-shadow: var(--v10-shadow-lg);
+  padding: var(--v10-space-2);
+  margin-top: var(--v10-space-1);
+  display: none;
+}
+
+.preset-dropdown-menu.active {
+  display: block;
+}
+
+.preset-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: var(--v10-space-3);
+  background: none;
+  border: none;
+  border-radius: var(--v10-radius-sm);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  text-align: left;
+}
+
+.preset-option:hover {
+  background: var(--v10-bg-hover);
+}
+
+.preset-name {
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.preset-description {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-muted);
+}
+
+/* ====================================
+   V10 COLORWAY SYSTEM
+   ==================================== */
+
+.v10-colorway {
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-4);
+  overflow: hidden;
+}
+
+.v10-colorway-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--v10-space-4) var(--v10-space-5);
+  background: var(--v10-bg-secondary);
+  border-bottom: 1px solid var(--v10-border-secondary);
+}
+
+.v10-colorway-title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+}
+
+.v10-colorway-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--v10-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--v10-accent-primary);
+}
+
+.v10-colorway-label {
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.v10-colorway-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-muted);
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.v10-colorway-remove:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #dc2626;
+}
+
+.v10-colorway-content {
+  padding: var(--v10-space-5);
+}
+
+.v10-color-selection {
+  display: flex;
+  gap: var(--v10-space-4);
+  margin-bottom: var(--v10-space-5);
+}
+
+.v10-color-picker-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+}
+
+.v10-color-picker {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+.v10-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+}
+
+.v10-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: calc(var(--v10-radius-md) - 2px);
+}
+
+.v10-color-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
+}
+
+.v10-color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  background: #3b82f6;
+}
+
+.v10-color-label {
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-secondary);
+}
+
+.v10-color-name-input {
+  flex: 1;
+}
+
+.v10-color-name {
+  width: 100%;
+  padding: var(--v10-space-3) var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  transition: var(--v10-transition);
+}
+
+.v10-color-name:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.v10-pantone-section {
+  border-top: 1px solid var(--v10-border-secondary);
+  padding-top: var(--v10-space-5);
+}
+
+.v10-pantone-toggle {
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  cursor: pointer;
+}
+
+.v10-toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.v10-toggle-slider {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--v10-border-primary);
+  border-radius: 12px;
+  transition: var(--v10-transition);
+}
+
+.v10-toggle-slider:before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: var(--v10-transition);
+}
+
+.v10-toggle-switch input:checked + .v10-toggle-slider {
+  background: var(--v10-accent-primary);
+}
+
+.v10-toggle-switch input:checked + .v10-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.v10-toggle-label {
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-secondary);
+}
+
+.v10-pantone-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
+}
+
+.v10-pantone-code {
+  padding: var(--v10-space-3) var(--v10-space-4);
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.v10-pantone-code:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.v10-color-notes {
+  padding: var(--v10-space-3) var(--v10-space-4);
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.v10-color-notes:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Colorways Container */
+.v10-colorways-container {
+  padding: var(--v10-space-4) var(--v10-space-6);
+  border-top: 1px solid var(--v10-border-secondary);
+  background: var(--v10-bg-secondary);
+}
+
+.v10-colorways-container:empty {
+  display: none;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
   .quantity-tracker-enhanced__stats {
@@ -7919,10 +8479,20 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   .size-quantity-input:nth-child(n+6) {
     display: none;
   }
+  
+  /* Unified Garment Card - Tablet */
+  .size-input-group {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .size-input-item:nth-child(n+5) {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
-  .garment-quantity-card__header {
+  /* Unified Garment Card - Mobile */
+  .garment-quantity-header {
     flex-direction: column;
     gap: var(--v10-space-4);
     align-items: stretch;
@@ -7930,6 +8500,24 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   }
   
   .garment-info {
+    justify-content: center;
+  }
+  
+  .garment-total-summary {
+    align-items: center;
+  }
+  
+  .garment-actions-integrated {
+    flex-direction: column;
+    gap: var(--v10-space-4);
+  }
+  
+  .garment-actions-left {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .garment-actions-right {
     justify-content: center;
   }
   
