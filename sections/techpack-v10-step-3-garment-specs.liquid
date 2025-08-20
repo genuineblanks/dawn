@@ -548,73 +548,6 @@ Enhanced with Visual Studio Guide System
               </div>
             </div>
 
-            <!-- Quantity Actions (Apply Preset / Clear All) -->
-            <div class="quantity-actions">
-              <div class="quantity-actions__validation">
-                <div class="validation-messages" id="validation-messages">
-                  <!-- Dynamic validation messages will appear here -->
-                </div>
-              </div>
-              
-              <div class="quantity-actions__controls">
-                <div class="quantity-actions__left">
-                  <div class="preset-dropdown-wrapper">
-                    <button type="button" class="quick-action-btn quick-action-btn--preset" id="apply-preset-to-garment">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                      Apply Preset
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 9l6 6 6-6"/>
-                      </svg>
-                    </button>
-                    <div class="preset-dropdown-menu" id="garment-preset-menu">
-                      <button type="button" class="preset-option" data-preset="bell-curve">
-                        <span class="preset-name">Bell Curve</span>
-                        <span class="preset-description">S-M-L focus</span>
-                      </button>
-                      <button type="button" class="preset-option" data-preset="medium-heavy">
-                        <span class="preset-name">Medium Heavy</span>
-                        <span class="preset-description">M-L focus</span>
-                      </button>
-                      <button type="button" class="preset-option" data-preset="large-heavy">
-                        <span class="preset-name">Large Heavy</span>
-                        <span class="preset-description">L-XL focus</span>
-                      </button>
-                      <button type="button" class="preset-option" data-preset="equal-split">
-                        <span class="preset-name">Equal Split</span>
-                        <span class="preset-description">Even distribution</span>
-                      </button>
-                    </div>
-                  </div>
-                  <button type="button" class="quick-action-btn" id="clear-garment-quantities">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 6h18"/>
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                    </svg>
-                    Clear All
-                  </button>
-                </div>
-                
-                <div class="quantity-actions__right">
-                  <div class="quantity-summary-compact" id="quantity-summary-compact">
-                    <div class="summary-item">
-                      <span class="summary-label">Total:</span>
-                      <span class="summary-value" id="garment-summary-total">0</span>
-                    </div>
-                    <div class="summary-item">
-                      <span class="summary-label">Required:</span>
-                      <span class="summary-value" id="garment-summary-required">75</span>
-                    </div>
-                    <div class="summary-progress">
-                      <div class="summary-progress-bar">
-                        <div class="summary-progress-fill" id="garment-summary-progress" style="width: 0%"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <!-- Add More Instructions -->
             <div class="quantities-instructions">
@@ -1528,10 +1461,12 @@ Enhanced with Visual Studio Guide System
           <!-- Rich Garment Summary Integration -->
           <div class="garment-summary__title">
             <div class="garment-summary__color-circle" style="display: none;"></div>
-            <span class="garment-summary__type">Select garment type</span>
+            <span class="garment-summary__type garment-name" id="garment-type-display">Select garment type</span>
             <span class="garment-summary__separator" style="display: none;">-</span>
             <span class="garment-summary__color-name" style="display: none;"></span>
-            <span class="garment-summary__fabric">Select fabric</span>
+            <!-- For sample-request: shows fabric, for bulk-order-request: shows sample reference -->
+            <span class="garment-summary__fabric garment-sample" id="garment-fabric-display" data-show-for="sample">Select fabric</span>
+            <span class="garment-summary__sample-reference garment-sample" id="garment-sample-reference-display" data-show-for="bulk" style="display: none;">Select sample reference</span>
           </div>
           <div class="garment-meta">
             <span class="minimum-required" id="minimum-required">Min: 75</span>
@@ -1590,7 +1525,7 @@ Enhanced with Visual Studio Guide System
       <div class="garment-actions-left">
         <!-- Apply Preset Dropdown -->
         <div class="preset-dropdown-wrapper">
-          <button type="button" class="garment-action-btn garment-action-btn--preset" id="apply-preset-to-garment">
+          <button type="button" class="garment-action-btn garment-action-btn--preset apply-preset-to-garment">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
@@ -1599,7 +1534,7 @@ Enhanced with Visual Studio Guide System
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-          <div class="preset-dropdown-menu" id="garment-preset-menu">
+          <div class="preset-dropdown-menu garment-preset-menu">
             <button type="button" class="preset-option" data-preset="bell-curve">
               <span class="preset-name">Bell Curve</span>
               <span class="preset-description">S-M-L focus</span>
@@ -1620,7 +1555,7 @@ Enhanced with Visual Studio Guide System
         </div>
         
         <!-- Clear All -->
-        <button type="button" class="garment-action-btn" id="clear-garment-quantities">
+        <button type="button" class="garment-action-btn clear-garment-quantities">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 6h18"/>
             <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
@@ -1638,10 +1573,14 @@ Enhanced with Visual Studio Guide System
       </div>
       
       <div class="garment-actions-right">
-        <div class="total-required-display">
-          <span class="total-value">0</span>
-          <span class="required-value">75</span>
-          <span class="required-label">MIN REQUIRED</span>
+        <div class="garment-status-display">
+          <div class="garment-total-units">
+            <span class="total-value" id="garment-action-total">0</span>
+            <span class="total-label">TOTAL UNITS</span>
+          </div>
+          <div class="garment-status-badge">
+            <span class="status-badge status-badge--insufficient" id="garment-action-status">INSUFFICIENT</span>
+          </div>
         </div>
       </div>
     </div>
