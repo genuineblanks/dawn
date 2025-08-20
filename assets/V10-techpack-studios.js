@@ -7219,7 +7219,7 @@ class V10_GarmentStudio {
     // Real-time validation on any quantity input change
     document.addEventListener('input', (e) => {
       if (e.target.classList.contains('size-quantity-input')) {
-        const card = e.target.closest('.garment-quantity-card');
+        const card = e.target.closest('.garment-quantity-card, .garment-quantity-row');
         if (card) {
           const garmentId = card.dataset.garmentId;
           this.debouncedValidationUpdate(garmentId);
