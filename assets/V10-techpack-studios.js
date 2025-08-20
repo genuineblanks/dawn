@@ -5094,7 +5094,6 @@ class V10_GarmentStudio {
     }
     
     // For bulk orders, trigger quantity studio population when garment status changes
-    const requestType = V10_State.requestType;
     if (requestType === 'bulk-order-request') {
       // Debounce to prevent excessive updates during rapid changes
       if (this._quantityStudioUpdateTimeout) {
