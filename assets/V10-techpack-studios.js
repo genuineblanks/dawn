@@ -8203,9 +8203,9 @@ class V10_GarmentStudio {
   }
 
   saveQuantityData(garmentId) {
-    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    const card = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
     if (!card) {
-      console.warn(`⚠️ [SAVE_DEBUG] No card found for garment ${garmentId}`);
+      console.warn(`⚠️ [SAVE_DEBUG] No quantity card found for garment ${garmentId}`);
       return;
     }
 
