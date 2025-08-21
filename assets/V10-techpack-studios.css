@@ -293,7 +293,10 @@ body[class*="techpack"] *,
 .v10-techpack-landing {
   min-height: 100vh;
   background: linear-gradient(135deg, var(--v10-bg-primary) 0%, var(--v10-bg-secondary) 100%);
-  padding: var(--v10-space-16) 0;
+  padding: var(--v10-space-8) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .v10-techpack-step {
@@ -5413,14 +5416,15 @@ body[class*="techpack"] *,
 
 /* Landing-specific styling to avoid affecting other pages */
 #techpack-v10-landing {
-  /* Premium gradient title styling */
+  /* Premium gradient title styling - Light Theme */
   .v10-landing-title-premium {
     background: linear-gradient(135deg, 
-      #ffffff 0%, 
-      #e5e5e5 25%, 
-      #d4d4d4 50%, 
-      #a3a3a3 75%, 
-      #888888 100%
+      #2d3748 0%, 
+      #4a5568 20%, 
+      #718096 40%, 
+      #a0aec0 60%, 
+      #cbd5e0 80%, 
+      #e2e8f0 100%
     );
     background-clip: text;
     -webkit-background-clip: text;
@@ -5432,6 +5436,17 @@ body[class*="techpack"] *,
     line-height: 1.1;
     text-align: center;
     margin-bottom: var(--v10-space-6);
+  }
+  
+  /* Dark Theme - Keep existing white gradient */
+  [data-theme="dark"] .v10-landing-title-premium {
+    background: linear-gradient(135deg, 
+      #ffffff 0%, 
+      #e5e5e5 25%, 
+      #d4d4d4 50%, 
+      #a3a3a3 75%, 
+      #888888 100%
+    );
   }
 
   /* Premium gradient animation */
@@ -5622,16 +5637,16 @@ body[class*="techpack"] *,
   .v10-btn-templates-premium {
     display: inline-flex;
     align-items: center;
-    gap: var(--v10-space-3);
-    padding: var(--v10-space-4) var(--v10-space-8);
+    gap: var(--v10-space-2);
+    padding: var(--v10-space-3) var(--v10-space-6);
     background: linear-gradient(135deg, 
       rgba(163, 163, 163, 0.1) 0%, 
       rgba(163, 163, 163, 0.05) 100%
     );
     border: 1px solid var(--v10-border-primary);
-    border-radius: var(--v10-radius-lg);
+    border-radius: var(--v10-radius-md);
     color: var(--v10-text-secondary);
-    font-size: var(--v10-text-base);
+    font-size: var(--v10-text-sm);
     font-weight: 500;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -5667,33 +5682,34 @@ body[class*="techpack"] *,
   }
 
   .v10-btn-templates-premium svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
-  /* Premium "ACCESS STUDIO" hero button */
+  /* Premium "ACCESS STUDIO" hero button - Bigger */
   .v10-btn-hero-premium {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--v10-space-3);
-    padding: var(--v10-space-6) var(--v10-space-12);
+    gap: var(--v10-space-4);
+    padding: var(--v10-space-8) var(--v10-space-16);
     background: linear-gradient(135deg, 
       var(--v10-accent-primary) 0%, 
       var(--v10-accent-secondary) 100%
     );
     border: none;
-    border-radius: var(--v10-radius-lg);
+    border-radius: var(--v10-radius-xl);
     color: var(--v10-bg-primary);
-    font-size: var(--v10-text-lg);
+    font-size: var(--v10-text-xl);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.75px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    box-shadow: var(--v10-shadow-lg);
+    box-shadow: var(--v10-shadow-xl);
+    min-height: 60px;
   }
 
   .v10-btn-hero-premium::before {
@@ -5726,8 +5742,8 @@ body[class*="techpack"] *,
   }
 
   .v10-btn-hero-premium svg {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
   }
 
   /* Mobile responsive design */
@@ -5751,13 +5767,14 @@ body[class*="techpack"] *,
     }
 
     .v10-btn-hero-premium {
-      padding: var(--v10-space-5) var(--v10-space-10);
-      font-size: var(--v10-text-base);
+      padding: var(--v10-space-6) var(--v10-space-12);
+      font-size: var(--v10-text-lg);
+      min-height: 50px;
     }
 
     .v10-btn-templates-premium {
-      padding: var(--v10-space-3) var(--v10-space-6);
-      font-size: var(--v10-text-sm);
+      padding: var(--v10-space-2) var(--v10-space-5);
+      font-size: var(--v10-text-xs);
     }
   }
 
