@@ -2871,7 +2871,14 @@ const V10_Utils = {
     if (!garmentElement) return false;
     
     const fabricInputs = garmentElement.querySelectorAll('input[name*="fabricType"]:checked');
-    const fabricType = fabricInputs.length > 0 ? fabricInputs[0].value : null;
+    let fabricType = fabricInputs.length > 0 ? fabricInputs[0].value : null;
+    
+    // Fallback to saved garment data if no checked input (edit mode)
+    if (!fabricType) {
+      const garmentId = garmentElement.dataset.garmentId;
+      const garmentData = V10_State.garments.get(garmentId);
+      fabricType = garmentData?.fabricType;
+    }
     
     // Only restrict if fabric is selected and is non-cotton
     if (!fabricType) {
@@ -4773,6 +4780,11 @@ class V10_GarmentStudio {
       const sampleRefInput = clone.querySelector(`input[value="${garmentData.sampleReference}"]`);
       if (sampleRefInput) sampleRefInput.checked = true;
     }
+    
+    // Apply cotton validation for custom colors after setting all values
+    if (garmentData.fabricType) {
+      V10_Utils.updateGarmentFabricRestrictions(clone);
+    }
   }
 
   updateGarmentSelectionDisplay(clone, type, value) {
@@ -6669,11 +6681,17 @@ class V10_GarmentStudio {
   enableSelectionSection(section) {
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
+    const warningBox = section.querySelector('#custom-color-warning');
     
     if (widget) {
       widget.style.opacity = '1';
       widget.style.pointerEvents = 'auto';
       widget.style.cursor = 'pointer';
+    }
+    
+    // Hide warning box when enabling
+    if (warningBox) {
+      warningBox.style.display = 'none';
     }
     
     if (placeholder) {
@@ -6699,6 +6717,7 @@ class V10_GarmentStudio {
   disableSelectionSection(section, disabledText) {
     const widget = section.querySelector('.compact-selection-widget');
     const placeholder = section.querySelector('.placeholder-text');
+    const warningBox = section.querySelector('#custom-color-warning');
     
     if (widget) {
       widget.style.opacity = '0.5';
@@ -6706,7 +6725,11 @@ class V10_GarmentStudio {
       widget.style.cursor = 'not-allowed';
     }
     
-    if (placeholder) {
+    // For cotton validation, show warning box instead of changing placeholder
+    if (warningBox && disabledText.includes('Not available for this fabric')) {
+      warningBox.style.display = 'block';
+    } else if (placeholder) {
+      // For other validations, update placeholder text
       if (!placeholder.dataset.originalText) {
         placeholder.dataset.originalText = placeholder.textContent;
       }
