@@ -4466,39 +4466,42 @@ body[class*="techpack"] *,
 
 .compact-radio-card__content {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-4) var(--v10-space-4);
-  /* Glassmorphism base state */
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--v10-radius-lg);
+  justify-content: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-5);
+  /* Enhanced Glassmorphism base state */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--v10-radius-xl);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-  min-height: 80px;
+  min-height: 100px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
 }
 
 /* Enhanced hover glassmorphism */
 .compact-radio-card:hover .compact-radio-card__content {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 0 20px rgba(163, 163, 163, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 0 25px rgba(163, 163, 163, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Selected state with enhanced white glassmorphism */
 .compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: var(--v10-text-primary);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px) scale(1.02);
 }
 
 /* Add subtle shimmer effect on hover */
@@ -4519,9 +4522,9 @@ body[class*="techpack"] *,
 }
 
 .compact-radio-card__icon {
-  font-size: 20px;
-  width: 24px;
-  height: 24px;
+  font-size: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4529,12 +4532,30 @@ body[class*="techpack"] *,
   flex-shrink: 0;
   position: relative;
   z-index: 1;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.compact-radio-card:hover .compact-radio-card__icon,
+.compact-radio-card input[type="radio"]:checked + .compact-radio-card__content .compact-radio-card__icon {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .compact-radio-card__name {
-  font-size: var(--v10-text-base);
+  font-size: var(--v10-text-sm);
   font-weight: 600;
   color: inherit;
+  line-height: 1.3;
+  margin-top: var(--v10-space-1);
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.compact-radio-card:hover .compact-radio-card__name,
+.compact-radio-card input[type="radio"]:checked + .compact-radio-card__content .compact-radio-card__name {
+  opacity: 1;
+}
   line-height: 1.4;
   position: relative;
   z-index: 1;
@@ -4956,13 +4977,47 @@ body[class*="techpack"] *,
 }
 
 .garment-card {
-  background: var(--v10-bg-tertiary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-lg);
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.08) 0%, 
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--v10-radius-xl);
   padding: var(--v10-space-6);
-  transition: var(--v10-transition);
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   max-width: none;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.garment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.garment-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 30px rgba(255, 255, 255, 0.05);
 }
 
 /* Garment Card Header Layout */
@@ -7060,32 +7115,86 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
    ============================================== */
 
 .design-inclusion-controls {
-  margin-top: var(--v10-space-3);
-  padding-top: var(--v10-space-3);
-  border-top: 1px solid var(--v10-border-primary);
+  margin-top: var(--v10-space-4);
+  padding: var(--v10-space-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
 }
 
 .design-toggle {
-  margin-bottom: var(--v10-space-2);
+  margin-bottom: var(--v10-space-3);
 }
 
 .design-toggle__label {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-2);
+  justify-content: space-between;
+  gap: var(--v10-space-3);
   cursor: pointer;
   font-size: var(--v10-text-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--v10-text-primary);
   user-select: none;
+  padding: var(--v10-space-2) 0;
 }
 
+.design-toggle__text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.design-toggle--compact .design-toggle__text {
+  font-size: var(--v10-text-xs);
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Modern Switch Toggle */
 .design-toggle__input {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  accent-color: var(--v10-accent-primary);
+  display: none; /* Hide the checkbox */
+}
+
+.design-toggle__switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background: var(--v10-border-primary);
+  border-radius: 24px;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.design-toggle__switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.design-toggle__input:checked + .design-toggle__switch {
+  background: var(--v10-accent-primary);
+  border-color: var(--v10-accent-primary);
+}
+
+.design-toggle__input:checked + .design-toggle__switch::after {
+  transform: translateX(20px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.design-toggle__switch:hover {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(75, 85, 99, 0.1);
 }
 
 .design-toggle__text {
@@ -7093,19 +7202,23 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 .design-reference {
-  margin-top: var(--v10-space-2);
+  margin-top: var(--v10-space-3);
+  padding-top: var(--v10-space-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .design-reference__input {
   width: 100%;
-  padding: var(--v10-space-2) var(--v10-space-3);
+  padding: var(--v10-space-3) var(--v10-space-4);
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
+  border-radius: var(--v10-radius-md);
   font-size: var(--v10-text-sm);
   color: var(--v10-text-primary);
-  background: var(--v10-surface-primary);
-  transition: border-color 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .design-reference__input:focus {
@@ -9213,6 +9326,382 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   .simple-step-circle {
     width: 28px;
     height: 28px;
+  }
+}
+
+/* ====================================================
+   V10 MOBILE FIXES - SCREENSHOT ISSUE RESOLUTION
+   Targeted fixes for specific mobile layout problems
+   ==================================================== */
+
+@media (max-width: 768px) {
+  
+  /* ===== STEP 3 GARMENT SPECIFICATIONS MOBILE FIX ===== */
+  /* Fix for Screenshot 1: Three-column fabric selection cards */
+  
+  .v10-sample-type-grid,
+  .sample-type-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important; /* Single column stack on mobile */
+    gap: var(--v10-space-4) !important;
+    width: 100% !important;
+  }
+  
+  .v10-sample-type-card,
+  .sample-type-card {
+    min-height: 120px !important; /* Ensure touch target height */
+    padding: var(--v10-space-4) !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  .v10-sample-type-card h3,
+  .sample-type-card h3 {
+    font-size: var(--v10-text-base) !important; /* Readable on mobile */
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-sample-type-card p,
+  .sample-type-card p {
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Fabric Type Change Button Mobile */
+  .v10-fabric-change-btn,
+  .fabric-change-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    margin-top: var(--v10-space-3) !important;
+  }
+  
+  /* ===== SUBMISSION TYPE MODAL MOBILE FIX ===== */
+  /* Fix for Screenshots 2 & 3: Modal card layout */
+  
+  .v10-submission-options,
+  .submission-options {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-4) !important;
+    padding: var(--v10-space-4) !important;
+  }
+  
+  .v10-submission-option,
+  .submission-option {
+    min-height: 100px !important; /* Proper touch target */
+    padding: var(--v10-space-4) !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .v10-submission-option h3,
+  .submission-option h3 {
+    font-size: var(--v10-text-lg) !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-submission-option .feature-tags,
+  .submission-option .feature-tags {
+    flex-wrap: wrap !important;
+    gap: var(--v10-space-2) !important;
+    margin-top: var(--v10-space-3) !important;
+  }
+  
+  /* Registration Warning Mobile */
+  .v10-registration-warning,
+  .registration-warning {
+    padding: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-md) !important;
+  }
+  
+  /* ===== "WHAT YOU NEED" SECTION MOBILE FIX ===== */
+  /* Fix for Screenshot 4: Three large requirement cards */
+  
+  .v10-requirements-grid,
+  .v10-requirements-grid-premium,
+  .requirements-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important; /* Single column stack */
+    gap: var(--v10-space-5) !important;
+    padding: var(--v10-space-4) !important;
+  }
+  
+  .v10-requirement-card,
+  .requirement-card {
+    padding: var(--v10-space-5) !important;
+    min-height: 140px !important;
+    text-align: center !important;
+  }
+  
+  .v10-requirement-card .icon,
+  .requirement-card .icon {
+    width: 48px !important; /* Smaller mobile icons */
+    height: 48px !important;
+    margin: 0 auto var(--v10-space-3) auto !important;
+  }
+  
+  .v10-requirement-card h3,
+  .requirement-card h3 {
+    font-size: var(--v10-text-lg) !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-requirement-card p,
+  .requirement-card p {
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.5 !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  .v10-requirement-status,
+  .requirement-status {
+    display: inline-block !important;
+    padding: var(--v10-space-1) var(--v10-space-3) !important;
+    font-size: var(--v10-text-xs) !important;
+    font-weight: 600 !important;
+    border-radius: var(--v10-radius-full) !important;
+    margin-top: var(--v10-space-2) !important;
+  }
+  
+  /* ===== STEP NAVIGATION MOBILE FIX ===== */
+  /* Fix for Screenshot 5: Step navigation and status area */
+  
+  .v10-step-navigation,
+  .step-navigation {
+    padding: var(--v10-space-4) !important;
+    margin: var(--v10-space-4) 0 !important;
+  }
+  
+  .v10-studio-selection,
+  .studio-selection {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-4) !important;
+    margin-bottom: var(--v10-space-5) !important;
+  }
+  
+  .v10-studio-card,
+  .studio-card {
+    padding: var(--v10-space-4) !important;
+    min-height: 80px !important;
+  }
+  
+  .v10-studio-card h4,
+  .studio-card h4 {
+    font-size: var(--v10-text-base) !important;
+    margin-bottom: var(--v10-space-1) !important;
+  }
+  
+  .v10-studio-card p,
+  .studio-card p {
+    font-size: var(--v10-text-sm) !important;
+  }
+  
+  .v10-step-status,
+  .step-status {
+    padding: var(--v10-space-1) var(--v10-space-2) !important;
+    font-size: var(--v10-text-xs) !important;
+    border-radius: var(--v10-radius-md) !important;
+  }
+  
+  /* ===== GARMENT FORM MOBILE FIX ===== */
+  /* Fix for Screenshot 6: Form layout and input fields */
+  
+  .v10-garment-form,
+  .garment-form {
+    padding: var(--v10-space-4) !important;
+  }
+  
+  .v10-garment-header,
+  .garment-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .v10-garment-title,
+  .garment-title {
+    text-align: center !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-garment-actions,
+  .garment-actions {
+    flex-direction: column !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  .v10-form-group,
+  .form-group {
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .v10-form-row,
+  .form-row {
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+  }
+  
+  .v10-checkbox-field,
+  .checkbox-field {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: var(--v10-space-2) !important;
+    padding: var(--v10-space-3) !important;
+    min-height: 44px !important;
+  }
+  
+  .v10-warning-message,
+  .warning-message {
+    padding: var(--v10-space-3) !important;
+    margin: var(--v10-space-3) 0 !important;
+    border-radius: var(--v10-radius-md) !important;
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* ===== LAB DIP MODAL MOBILE FIX ===== */
+  /* Fix for Screenshot 7: Lab dip assignment modal */
+  
+  .v10-lab-dip-modal,
+  .lab-dip-modal {
+    padding: var(--v10-space-4) !important;
+    margin: var(--v10-space-2) !important;
+    max-width: calc(100vw - var(--v10-space-4)) !important;
+  }
+  
+  .v10-lab-dip-modal .v10-modal-header,
+  .lab-dip-modal .modal-header {
+    padding-bottom: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .v10-lab-dip-modal .v10-modal-content,
+  .lab-dip-modal .modal-content {
+    padding: var(--v10-space-3) 0 !important;
+  }
+  
+  .v10-garment-selector,
+  .garment-selector {
+    padding: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
+    min-height: 44px !important;
+  }
+  
+  /* ===== REVIEW & SUBMIT PAGE MOBILE FIX ===== */
+  /* Fix for Screenshot 8: Review page section spacing */
+  
+  .v10-review-container,
+  .review-container {
+    padding: var(--v10-space-4) !important;
+  }
+  
+  .v10-review-section,
+  .review-section {
+    margin-bottom: var(--v10-space-5) !important;
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+  }
+  
+  .v10-review-section h3,
+  .review-section h3 {
+    font-size: var(--v10-text-lg) !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  .v10-review-item,
+  .review-item {
+    padding: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-3) !important;
+    border-radius: var(--v10-radius-md) !important;
+  }
+  
+  .v10-review-item-header,
+  .review-item-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: var(--v10-space-2) !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  .v10-review-edit-btn,
+  .review-edit-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    margin-top: var(--v10-space-2) !important;
+  }
+  
+  .v10-review-content,
+  .review-content {
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* ===== GENERAL MOBILE IMPROVEMENTS ===== */
+  
+  /* Touch Target Compliance - Ensure all interactive elements meet 44px minimum */
+  .v10-btn,
+  .btn,
+  button,
+  .v10-card,
+  .card,
+  .v10-option,
+  .option,
+  .v10-radio-card,
+  .radio-card {
+    min-height: 44px !important;
+  }
+  
+  /* Mobile Typography Improvements */
+  .v10-heading-1 { font-size: var(--v10-text-2xl) !important; }
+  .v10-heading-2 { font-size: var(--v10-text-xl) !important; }
+  .v10-heading-3 { font-size: var(--v10-text-lg) !important; }
+  .v10-text-body { font-size: var(--v10-text-base) !important; }
+  .v10-text-small { font-size: var(--v10-text-sm) !important; }
+  
+  /* Mobile Spacing System */
+  .v10-section {
+    padding: var(--v10-space-5) 0 !important;
+  }
+  
+  .v10-container {
+    padding: 0 var(--v10-space-3) !important;
+  }
+  
+  /* Theme Toggle Mobile Position */
+  .v10-theme-toggle--header {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    margin: var(--v10-space-2) 0 !important;
+  }
+}
+
+/* ===== SMALL MOBILE OPTIMIZATIONS (480px and below) ===== */
+@media (max-width: 480px) {
+  
+  .v10-requirement-card,
+  .requirement-card {
+    padding: var(--v10-space-4) !important;
+    min-height: 120px !important;
+  }
+  
+  .v10-sample-type-card,
+  .sample-type-card {
+    padding: var(--v10-space-3) !important;
+    min-height: 100px !important;
+  }
+  
+  .v10-submission-option,
+  .submission-option {
+    padding: var(--v10-space-3) !important;
+    min-height: 80px !important;
+  }
+  
+  .v10-review-section,
+  .review-section {
+    padding: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
   }
 }
 
