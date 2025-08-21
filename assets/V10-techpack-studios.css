@@ -10962,16 +10962,3 @@ div[class*="circle"][style*="background-color"],
 }
 
 
-
-/* ====================================================
-   FINAL MOBILE OVERRIDE - MAIN PAGE TOGGLE BUTTONS ONLY
-   Target only the main page header toggle, not step buttons
-   ==================================================== */
-@media (max-width: 480px) {
-  .v10-theme-toggle--header .v10-theme-btn {
-    width: 20px !important;
-    height: 20px !important;
-    font-size: 10px !important;
-    padding: 2px !important;
-  }
-}
