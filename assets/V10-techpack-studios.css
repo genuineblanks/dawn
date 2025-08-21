@@ -5878,17 +5878,43 @@ body[class*="techpack"] *,
     border: 1px solid rgba(107, 114, 128, 0.3);
   }
 
-  /* SUPER WOW ENTRANCE - NEW DESIGN SYSTEM */
+  /* SUPER WOW ENTRANCE - APP-LIKE DESIGN SYSTEM */
   
-  /* Elegant Theme Toggle - Corner Positioned */
-  .v10-theme-elegant {
+  /* Main App Container - Unified Glassmorphism Box */
+  .v10-app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--v10-glass-bg);
+    backdrop-filter: var(--v10-backdrop-blur);
+    border: 1px solid var(--v10-glass-border);
+    border-radius: var(--v10-radius-xl);
+    box-shadow: var(--v10-shadow-xl);
+    padding: var(--v10-space-10);
+    position: relative;
+  }
+  
+  [data-theme="dark"] .v10-app-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Header Section Container */
+  .v10-header-section {
+    position: relative;
+    text-align: center;
+    margin-bottom: var(--v10-space-12);
+    padding: var(--v10-space-8) 0;
+  }
+  
+  /* Theme Toggle - Header Integrated */
+  .v10-theme-toggle-header {
     position: absolute;
-    top: var(--v10-space-6);
-    right: var(--v10-space-6);
+    top: 0;
+    right: 0;
     z-index: var(--v10-z-fixed);
   }
   
-  .v10-theme-toggle--corner {
+  .v10-theme-toggle--header {
     display: flex;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
@@ -5901,12 +5927,12 @@ body[class*="techpack"] *,
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  [data-theme="dark"] .v10-theme-toggle--corner {
+  [data-theme="dark"] .v10-theme-toggle--header {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
-  .v10-theme-toggle--corner .v10-theme-btn {
+  .v10-theme-toggle--header .v10-theme-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -5921,17 +5947,76 @@ body[class*="techpack"] *,
     cursor: pointer;
   }
   
-  .v10-theme-toggle--corner .v10-theme-btn--active {
+  .v10-theme-toggle--header .v10-theme-btn--active {
     background: var(--v10-bg-primary);
     color: var(--v10-text-primary);
     box-shadow: var(--v10-shadow-md);
   }
   
-  /* Spectacular Title */
-  .v10-landing-hero-new {
+  /* Header Title Section */
+  .v10-header-title {
+    margin-bottom: var(--v10-space-8);
+  }
+  
+  /* Header Description Section */
+  .v10-header-description {
+    max-width: 800px;
+    margin: 0 auto var(--v10-space-8) auto;
+  }
+  
+  .v10-header-description p {
+    font-size: var(--v10-text-lg);
+    line-height: 1.7;
+    color: var(--v10-text-secondary);
+    font-weight: 400;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--v10-radius-lg);
+    padding: var(--v10-space-6) var(--v10-space-8);
+    box-shadow: var(--v10-shadow-lg);
+    margin: 0;
+  }
+  
+  [data-theme="dark"] .v10-header-description p {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Actions Section - Buttons Container */
+  .v10-actions-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--v10-space-6);
+    margin-bottom: var(--v10-space-16);
+    padding: var(--v10-space-8) var(--v10-space-4);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--v10-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  [data-theme="dark"] .v10-actions-section {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+  }
+  
+  /* Requirements Section Container */
+  .v10-requirements-section {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--v10-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--v10-space-8);
+  }
+  
+  [data-theme="dark"] .v10-requirements-section {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+  }
+  
+  .v10-requirements-header {
     text-align: center;
-    margin-bottom: var(--v10-space-10);
-    padding-top: var(--v10-space-8);
+    margin-bottom: var(--v10-space-8);
   }
   
   .v10-title-spectacular {
@@ -6239,22 +6324,28 @@ body[class*="techpack"] *,
     height: 20px;
   }
   
-  /* SUPER WOW ENTRANCE - MOBILE RESPONSIVE */
+  /* APP CONTAINER - MOBILE RESPONSIVE */
   @media (max-width: 768px) {
-    .v10-theme-elegant {
-      top: var(--v10-space-4);
-      right: var(--v10-space-4);
+    .v10-app-container {
+      padding: var(--v10-space-6);
+      margin: var(--v10-space-4);
     }
     
-    .v10-theme-toggle--corner .v10-theme-btn {
+    .v10-header-section {
+      padding: var(--v10-space-6) 0;
+      margin-bottom: var(--v10-space-10);
+    }
+    
+    .v10-theme-toggle-header {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+    }
+    
+    .v10-theme-toggle--header .v10-theme-btn {
       width: 35px;
       height: 35px;
       font-size: var(--v10-text-base);
-    }
-    
-    .v10-landing-hero-new {
-      margin-bottom: var(--v10-space-8);
-      padding-top: var(--v10-space-6);
     }
     
     .v10-title-spectacular {
@@ -6266,19 +6357,19 @@ body[class*="techpack"] *,
       line-height: 0.9;
     }
     
-    .v10-description-elegant {
-      margin-bottom: var(--v10-space-10);
+    .v10-header-description {
       max-width: 95%;
     }
     
-    .v10-description-elegant p {
+    .v10-header-description p {
       font-size: var(--v10-text-base);
       padding: var(--v10-space-5) var(--v10-space-6);
     }
     
-    .v10-action-buttons-hero {
+    .v10-actions-section {
       gap: var(--v10-space-4);
       margin-bottom: var(--v10-space-12);
+      padding: var(--v10-space-6) var(--v10-space-3);
     }
     
     .v10-btn-access-studio {
@@ -6300,16 +6391,29 @@ body[class*="techpack"] *,
       width: 24px;
       height: 24px;
     }
+    
+    .v10-requirements-section {
+      padding: var(--v10-space-6);
+    }
   }
   
   @media (max-width: 480px) {
+    .v10-app-container {
+      padding: var(--v10-space-4);
+      margin: var(--v10-space-2);
+    }
+    
     .v10-title-spectacular {
       font-size: clamp(2rem, 12vw, 3rem);
     }
     
-    .v10-description-elegant p {
+    .v10-header-description p {
       font-size: var(--v10-text-base);
       padding: var(--v10-space-4) var(--v10-space-5);
+    }
+    
+    .v10-actions-section {
+      padding: var(--v10-space-4);
     }
     
     .v10-btn-access-studio {
@@ -6326,6 +6430,10 @@ body[class*="techpack"] *,
     
     .v10-btn-text {
       font-size: var(--v10-text-base);
+    }
+    
+    .v10-requirements-section {
+      padding: var(--v10-space-4);
     }
   }
 
