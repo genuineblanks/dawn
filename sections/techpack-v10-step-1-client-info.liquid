@@ -1,0 +1,1022 @@
+{% comment %}
+TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workflow
+{% endcomment %}
+
+<link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<style>
+  /* Only layout overrides - backgrounds handled by external V10 CSS */
+  .techpack-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>
+
+<!-- Landing Page Section -->
+<section id="techpack-v10-landing" class="v10-techpack-landing">
+  <div class="techpack-container">
+    
+    <!-- MAIN APP CONTAINER -->
+    <div class="v10-app-container">
+      
+      <!-- HEADER SECTION -->
+      <div class="v10-header-section">
+        <!-- Unified Header Box with Download, Title and Toggle -->
+        <div class="v10-unified-header-box">
+          <!-- Download Button - Left Side -->
+          <div class="v10-download-unified">
+            <a href="#" class="v10-btn-download-header" id="v10-get-templates-btn">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span>Download Templates</span>
+            </a>
+          </div>
+          
+          <!-- Title - Center -->
+          <div class="v10-header-content-wrapper">
+            <h1 class="v10-title-spectacular">GARMENT DEVELOPMENT STUDIO</h1>
+          </div>
+          
+          <!-- Theme Toggle - Right Side -->
+          <div class="v10-theme-toggle-unified">
+            <div class="v10-theme-toggle v10-theme-toggle--header">
+              <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+                ☀️
+              </button>
+              <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+                🌙
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Description Box -->
+        <div class="v10-header-description">
+          <p>
+            We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand. This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.
+          </p>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS SECTION -->
+      <div class="v10-actions-section">
+        <!-- Access Studio Button (Only) -->
+        <button type="button" class="v10-btn-access-studio" id="v10-open-client-modal">
+          <div class="v10-btn-inner">
+            <div class="v10-btn-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M11 15l3 3 6-6m8 3a11 11 0 11-22 0 11 11 0 0122 0z" stroke="currentColor" stroke-width="2.5"/>
+              </svg>
+            </div>
+            <span class="v10-btn-text">ACCESS SPECIALIZED STUDIO</span>
+          </div>
+          <div class="v10-btn-particles"></div>
+          <div class="v10-btn-glow"></div>
+        </button>
+      </div>
+
+      <!-- REQUIREMENTS SECTION -->
+      <div class="v10-requirements-section">
+        <div class="v10-requirements-header">
+          <h2 class="v10-section-title">What You Need to Get Started</h2>
+          <p class="v10-section-subtitle">Ensure you have these essentials for a smooth submission process</p>
+        </div>
+        
+        <div class="v10-requirements-grid-premium">
+        <div class="v10-requirement-card-premium">
+          <div class="v10-requirement-icon-premium">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+              <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="v10-requirement-content-premium">
+            <h3 class="v10-requirement-title-premium">TechPack / Design Files</h3>
+            <p class="v10-requirement-description-premium">Upload your design specifications, technical drawings, or concept sketches</p>
+            <div class="v10-requirement-formats-premium">PDF, AI, PNG, JPG, ZIP</div>
+          </div>
+          <div class="v10-status-badge-premium v10-status-badge-premium--required">Required</div>
+        </div>
+
+        <div class="v10-requirement-card-premium">
+          <div class="v10-requirement-icon-premium">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="v10-requirement-content-premium">
+            <h3 class="v10-requirement-title-premium">Fitting Measurements</h3>
+            <p class="v10-requirement-description-premium">Provide body measurements or select from our standard sizing patterns</p>
+            <div class="v10-requirement-formats-premium">Size Chart, Custom Measurements</div>
+          </div>
+          <div class="v10-status-badge-premium v10-status-badge-premium--optional">Optional*</div>
+        </div>
+
+        <div class="v10-requirement-card-premium">
+          <div class="v10-requirement-icon-premium">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+              <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2"/>
+              <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="v10-requirement-content-premium">
+            <h3 class="v10-requirement-title-premium">Design Measurements</h3>
+            <p class="v10-requirement-description-premium">Garment dimensions and specifications (our experts can assist if needed)</p>
+            <div class="v10-requirement-formats-premium">Spec Sheet, Measurements</div>
+          </div>
+          <div class="v10-status-badge-premium v10-status-badge-premium--assisted">Expert Help Available</div>
+        </div>
+
+        <div class="v10-requirement-card-premium">
+          <div class="v10-requirement-icon-premium">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="v10-requirement-content-premium">
+            <h3 class="v10-requirement-title-premium">Material Preferences</h3>
+            <p class="v10-requirement-description-premium">Fabric types, colors, quality requirements, and special instructions</p>
+            <div class="v10-requirement-formats-premium">Fabric Specs, Color Codes</div>
+          </div>
+          <div class="v10-status-badge-premium v10-status-badge-premium--optional">Optional</div>
+        </div>
+        </div>
+      </div>
+      
+    </div> <!-- End v10-app-container -->
+
+  </div>
+</section>
+
+<!-- Client Information Form Section (Hidden until workflow completes) -->
+<section id="techpack-v10-step-1" class="v10-techpack-step" data-step="1" style="display: none;">
+  <div class="techpack-container">
+    
+    <!-- Compact Progress Steps -->
+    <div class="simple-progress-container">
+      <div class="simple-progress-steps">
+        <div class="simple-step active">
+          <div class="simple-step-circle">1</div>
+          <span>Client Info</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">2</div>
+          <span>Files</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">3</div>
+          <span>Garments</span>
+        </div>
+        <div class="simple-step">
+          <div class="simple-step-circle">4</div>
+          <span>Review</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="techpack-content">
+    <form id="techpack-v10-client-form" class="v10-client-form">
+
+    <!-- Header -->
+    <div class="v10-step-header">
+      <div>
+        <div class="v10-step-title-wrapper">
+          <h1 class="v10-step-title">Client Information <span class="v10-client-status-text">(Registered Client)</span></h1>
+        </div>
+        <p class="v10-step-subtitle" id="v10-client-info-subtitle">Enter your information to begin sample development</p>
+      </div>
+      
+      <!-- Theme Toggle Button -->
+      <div class="v10-theme-toggle v10-theme-toggle--header">
+        <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+          ☀️ Light
+        </button>
+        <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+          🌙 Dark
+        </button>
+      </div>
+    </div>
+
+    <!-- Client Details Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-form-section">
+        <!-- Business/Brand Name -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            BUSINESS/BRAND NAME
+            <input 
+              type="text" 
+              name="company_name" 
+              class="v10-form-input-enhanced" 
+              required 
+              placeholder="Registered business or brand name"
+              data-validate="required"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Business Email Address -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            BUSINESS EMAIL ADDRESS
+            <input 
+              type="email" 
+              name="email" 
+              class="v10-form-input-enhanced" 
+              required 
+              placeholder="contact@company.com"
+              data-validate="email"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
+          <label class="v10-form-label-enhanced required">DELIVERY ADDRESS</label>
+          <div class="v10-delivery-options-enhanced">
+            <label class="v10-delivery-option-enhanced">
+              <input type="radio" name="deliveryAddress" value="company" checked>
+              <span class="v10-delivery-option-content-enhanced">
+                <div class="v10-delivery-option-icon">🏢</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Company Address</strong>
+                  <small>Use business location from above</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-delivery-option-enhanced">
+              <input type="radio" name="deliveryAddress" value="different">
+              <span class="v10-delivery-option-content-enhanced">
+                <div class="v10-delivery-option-icon">📍</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Different Address</strong>
+                  <small>Specify alternative delivery location</small>
+                </div>
+              </span>
+            </label>
+          </div>
+          
+          <!-- Critical Delivery Warning -->
+          <div class="v10-warning-box-enhanced">
+            <div class="v10-warning-icon">⚠️</div>
+            <div class="v10-warning-content">
+              <strong>Critical: Delivery address cannot be changed once order processing begins.</strong> Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Different Address Form (conditional) -->
+    <div class="v10-studio-card v10-different-address-card" id="v10-different-address-form" style="display: none;">
+      <div class="v10-form-section">
+        <!-- Contact Info Row -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            CONTACT NAME
+            <input
+              type="text"
+              name="deliveryContactName"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="Full name of contact person"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            CONTACT PHONE
+            <input
+              type="tel"
+              name="deliveryPhone"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="+1 234 567 8901"
+              maxlength="20"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Address Lines -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            ADDRESS LINE 1
+            <input
+              type="text"
+              name="deliveryAddress1"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="Street address, building, etc."
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced">
+            ADDRESS LINE 2
+            <input
+              type="text"
+              name="deliveryAddress2"
+              class="v10-form-input-enhanced"
+              placeholder="Apartment, suite, unit, etc."
+            >
+          </label>
+        </div>
+
+        <!-- City & State -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            CITY
+            <input
+              type="text"
+              name="deliveryCity"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="City name"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            STATE/PROVINCE
+            <input
+              type="text"
+              name="deliveryState"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="State, province, or region"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <!-- Postal & Country -->
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            POSTAL CODE
+            <input
+              type="text"
+              name="deliveryPostal"
+              class="v10-form-input-enhanced"
+              data-validate="required-if-different"
+              placeholder="ZIP or postal code"
+            >
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+
+        <div class="v10-form-field v10-form-field--half">
+          <label class="v10-form-label-enhanced required">
+            COUNTRY
+            <div class="v10-enhanced-country-wrapper">
+              <input
+                type="text"
+                id="v10-delivery-country"
+                name="deliveryCountry"
+                class="v10-form-input-enhanced v10-enhanced-country-input"
+                data-validate="required-if-different"
+                autocomplete="off"
+                placeholder="Select delivery country"
+                readonly
+              >
+              <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag"></div>
+              <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </div>
+              <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown">
+                <div class="v10-enhanced-country-search">
+                  <input
+                    type="text"
+                    class="v10-enhanced-country-search-input"
+                    placeholder="Search countries..."
+                    id="v10-delivery-country-search"
+                  >
+                </div>
+                <div class="v10-enhanced-country-list" id="v10-delivery-country-list"></div>
+              </div>
+            </div>
+          </label>
+          <div class="v10-validation-message" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Delivery Information Studio (Sample/Bulk Only) -->
+    <div class="v10-studio-card" id="v10-delivery-section" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Delivery Information</h2>
+        <p class="v10-studio-subtitle">Where should we send your order?</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <div class="v10-form-group v10-form-group--full">
+          <label class="v10-form-label required">Delivery Address</label>
+          <div class="v10-delivery-options">
+            <label class="v10-delivery-option">
+              <input type="radio" name="deliveryAddress" value="company" checked>
+              <span class="v10-delivery-option-content">
+                <div class="v10-delivery-option-icon">🏢</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Company Address</strong>
+                  <small>Use business location from above</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-delivery-option">
+              <input type="radio" name="deliveryAddress" value="different">
+              <span class="v10-delivery-option-content">
+                <div class="v10-delivery-option-icon">📍</div>
+                <div class="v10-delivery-option-text">
+                  <strong>Different Address</strong>
+                  <small>Specify alternative delivery location</small>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Delivery Warning -->
+      <div class="v10-warning-box">
+        <div class="v10-warning-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+            <path d="M10 7V11M10 13H10.01" stroke="white" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="v10-warning-content">
+          <strong>⚠️ Critical: Delivery address cannot be changed once order processing begins.</strong>
+          Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+        </div>
+      </div>
+
+      <!-- Different Address Form (conditional) -->
+      <div class="v10-different-address-form" id="v10-different-address-form-alt" style="display: none;">
+        <div class="v10-form-grid">
+          <!-- Contact Info Row -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              Contact Name
+              <input
+                type="text"
+                name="deliveryContactNameAlt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="Full name of contact person"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              Contact Phone
+              <input
+                type="tel"
+                name="deliveryPhoneAlt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="+1 234 567 8901"
+                maxlength="20"
+              >
+            </label>
+          </div>
+
+          <!-- Address Lines -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              Address Line 1
+              <input
+                type="text"
+                name="deliveryAddress1Alt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="Street address, building, etc."
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label">
+              Address Line 2
+              <input
+                type="text"
+                name="deliveryAddress2Alt"
+                class="v10-form-input"
+                placeholder="Apartment, suite, unit, etc."
+              >
+            </label>
+          </div>
+
+          <!-- City & State -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              City
+              <input
+                type="text"
+                name="deliveryCityAlt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="City name"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              State/Province
+              <input
+                type="text"
+                name="deliveryStateAlt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="State, province, or region"
+              >
+            </label>
+          </div>
+
+          <!-- Postal & Country -->
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              Postal Code
+              <input
+                type="text"
+                name="deliveryPostalAlt"
+                class="v10-form-input"
+                data-validate="required-if-different-alt"
+                placeholder="ZIP or postal code"
+              >
+            </label>
+          </div>
+
+          <div class="v10-form-group v10-form-group--half">
+            <label class="v10-form-label required">
+              COUNTRY
+              <div class="v10-enhanced-country-wrapper">
+                <input
+                  type="text"
+                  id="v10-delivery-country-alt"
+                  name="deliveryCountryAlt"
+                  class="v10-form-input v10-enhanced-country-input"
+                  data-validate="required-if-different-alt"
+                  autocomplete="off"
+                  placeholder="Select delivery country"
+                  readonly
+                >
+                <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag-alt"></div>
+                <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle-alt">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 6l4 4 4-4H4z"/>
+                  </svg>
+                </div>
+                <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown-alt">
+                  <div class="v10-enhanced-country-search">
+                    <input
+                      type="text"
+                      class="v10-enhanced-country-search-input"
+                      placeholder="Search countries..."
+                      id="v10-delivery-country-search-alt"
+                    >
+                  </div>
+                  <div class="v10-enhanced-country-list" id="v10-delivery-country-list-alt"></div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Delivery Notes -->
+          <div class="v10-form-group v10-form-group--full">
+            <label class="v10-form-label">
+              Delivery Notes (optional, max 140 characters)
+              <textarea
+                name="deliveryNotesAlt"
+                class="v10-form-textarea"
+                rows="3"
+                maxlength="140"
+                placeholder="Special delivery instructions, gate codes, best delivery times, etc."
+              ></textarea>
+            </label>
+            <div class="v10-char-count">
+              <span id="v10-delivery-notes-count">0</span>/140 characters
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Options Studio (Bulk Only) -->
+    <div class="v10-studio-card" id="v10-shipping-section" style="display: none;">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Shipping & Insurance</h2>
+        <p class="v10-studio-subtitle">Choose your preferred shipping method and protection level</p>
+      </div>
+
+      <div class="v10-form-grid">
+        <!-- Shipping Method -->
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label required">Preferred Shipping Method</label>
+          <div class="v10-shipping-methods">
+            <label class="v10-shipping-method">
+              <input type="radio" name="shippingMethod" value="air">
+              <span class="v10-shipping-method-content">
+                <div class="v10-shipping-method-icon">✈️</div>
+                <div class="v10-shipping-method-text">
+                  <strong>Air Freight</strong>
+                  <small>Faster + Expensive (5-10 business days)</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-shipping-method">
+              <input type="radio" name="shippingMethod" value="sea">
+              <span class="v10-shipping-method-content">
+                <div class="v10-shipping-method-icon">🚢</div>
+                <div class="v10-shipping-method-text">
+                  <strong>Sea Freight</strong>
+                  <small>Slower + Cheaper (20-40 business days)</small>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="v10-form-group v10-form-group--half">
+          <label class="v10-form-label required">Shipping Insurance</label>
+          <div class="v10-insurance-options">
+            <label class="v10-insurance-option">
+              <input type="radio" name="insurance" value="yes">
+              <span class="v10-insurance-option-content">
+                <div class="v10-insurance-option-icon">🛡️</div>
+                <div class="v10-insurance-option-text">
+                  <strong>Yes, add insurance</strong>
+                  <small>2-6% of invoice value</small>
+                </div>
+              </span>
+            </label>
+            <label class="v10-insurance-option">
+              <input type="radio" name="insurance" value="no">
+              <span class="v10-insurance-option-content">
+                <div class="v10-insurance-option-icon">⚠️</div>
+                <div class="v10-insurance-option-text">
+                  <strong>No insurance</strong>
+                  <small>No protection coverage</small>
+                </div>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insurance Help Text -->
+      <div class="v10-help-box">
+        <div class="v10-help-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5V8M8 10H8.01" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="v10-help-content">
+          <strong>Insurance covers missing or damaged items</strong> up to full invoice value. 
+          Without insurance, there's no protection for lost goods during shipping.
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Details Studio -->
+    <div class="v10-studio-card">
+      <div class="v10-studio-header">
+        <h2 class="v10-studio-title">Project Details</h2>
+        <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
+      </div>
+      
+      <div class="v10-form-section">
+        <div class="v10-form-field v10-form-field--full">
+          <label class="v10-form-label-enhanced">
+            PROJECT DESCRIPTION
+            <textarea
+              name="project_details"
+              class="v10-form-textarea-enhanced"
+              rows="4"
+              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+              maxlength="500"
+            ></textarea>
+          </label>
+          <div class="v10-char-count">
+            <span id="v10-project-details-count">0</span>/500 characters
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="v10-step-actions">
+      <button type="button" class="v10-btn v10-btn--ghost" id="techpack-v10-change-submission">
+        <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M8 3a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V10H3a1 1 0 110-2h4V4a1 1 0 011-1z" fill="currentColor"/>
+        </svg>
+        Change Submission Type
+      </button>
+      
+      <button type="button" class="v10-btn v10-btn--primary" id="techpack-v10-step-1-next" disabled>
+        Continue to Files
+        <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+      </button>
+    </div>
+    </form>
+    </div>
+  </div>
+</section>
+
+<!-- Client Verification Modal -->
+<div class="v10-modal-overlay" id="v10-client-verification-modal" style="display: none;">
+  <div class="v10-modal v10-modal--verification">
+    <div class="v10-modal-header">
+      <h3 class="v10-modal-title">Client Verification</h3>
+      <button type="button" class="v10-modal-close" id="v10-close-verification-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="v10-modal-body">
+      <div class="v10-verification-process">
+        <h4 class="v10-process-title">How Genuine Blanks Works</h4>
+        <div class="v10-process-steps">
+          <div class="v10-process-step">
+            <div class="v10-process-number">1</div>
+            <div class="v10-process-content">
+              <strong>Submit Your Tech Pack</strong>
+              <p>Upload your design files and provide garment specifications through our streamlined process</p>
+            </div>
+          </div>
+          <div class="v10-process-step">
+            <div class="v10-process-number">2</div>
+            <div class="v10-process-content">
+              <strong>Quote & Approval</strong>
+              <p>We review your requirements and provide a detailed quote within 24-48 hours</p>
+            </div>
+          </div>
+          <div class="v10-process-step">
+            <div class="v10-process-number">3</div>
+            <div class="v10-process-content">
+              <strong>Sample Production</strong>
+              <p>We create samples for your approval before proceeding to full production</p>
+            </div>
+          </div>
+          <div class="v10-process-step">
+            <div class="v10-process-number">4</div>
+            <div class="v10-process-content">
+              <strong>Manufacturing & Delivery</strong>
+              <p>Once approved, we manufacture your garments and deliver them to your specifications</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="v10-process-divider"></div>
+        
+        <p class="v10-verification-description">
+          Please select your client status to continue with the tech-pack submission process.
+        </p>
+        
+        <div class="v10-client-options">
+          <button type="button" class="v10-client-option" id="v10-registered-client" data-client-type="registered">
+            <div class="v10-client-option-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="v10-client-option-content">
+              <h4 class="v10-client-option-title">Yes, I'm a Registered Client</h4>
+              <p class="v10-client-option-description">I have worked with Genuine Blanks before and am registered in your system</p>
+            </div>
+          </button>
+
+          <button type="button" class="v10-client-option" id="v10-new-client" data-client-type="new">
+            <div class="v10-client-option-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="v10-client-option-content">
+              <h4 class="v10-client-option-title">No, I'm a New Client</h4>
+              <p class="v10-client-option-description">This is my first time working with Genuine Blanks</p>
+            </div>
+          </button>
+        </div>
+
+        <div class="v10-vat-notice">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5V8M8 10H8.01" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>VAT is only required for European countries</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Submission Type Selection Modal -->
+<div class="v10-modal-overlay" id="v10-submission-type-modal" style="display: none;">
+  <div class="v10-modal v10-modal--submission">
+    <div class="v10-modal-header">
+      <h3 class="v10-modal-title">Choose Your Submission Type</h3>
+      <button type="button" class="v10-modal-close" id="v10-close-submission-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="v10-modal-body">
+      <div class="v10-submission-selection">
+        <!-- Registration Notice for New Clients -->
+        <div class="v10-registration-notice" id="v10-registration-notice" style="display: none;">
+          <div class="v10-notice-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M10 6V10M10 14H10.01" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="v10-notice-content">
+            <h5 class="v10-notice-title">New Client - Registration Required</h5>
+            <p class="v10-notice-message">
+              As a new client, you can start with a Garment Quotation.<br>
+              Once you proceed with the quotation, we'll guide you through our registration process to unlock sample requests and bulk orders for future submissions.
+            </p>
+          </div>
+        </div>
+
+        <!-- Registration Warning for Registered Clients -->
+        <div class="v10-registration-warning" id="v10-registration-warning" style="display: none;">
+          <div class="v10-warning-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
+              <path d="M10 7V11M10 13H10.01" stroke="white" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="v10-warning-content">
+            <h5 class="v10-warning-title">Registration Verification Required</h5>
+            <p class="v10-warning-message">
+              We will verify your registration status during processing. If you're not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before.
+            </p>
+          </div>
+        </div>
+        
+        <p class="v10-submission-description" id="v10-submission-description">
+          Select the type of submission that best matches your current needs. Each option is tailored to different stages of your garment development process.
+        </p>
+        
+        <div class="v10-submission-options">
+          <!-- Garment Quotation Option -->
+          <button type="button" class="v10-submission-option v10-glass-card" id="v10-quotation-btn" data-submission-type="quotation">
+            <div class="v10-glass-card-content">
+              <div class="v10-glass-card-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9c.83 0 1.65-.12 2.41-.35.38-.11.74-.25 1.09-.4.21-.09.42-.2.62-.31L21 22l-1.9-4.88c.74-1.26 1.16-2.73 1.16-4.3C20.26 7.08 16.74 3 12 3z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="v10-glass-card-text">
+                <h4 class="v10-glass-card-title">Garment Quotation</h4>
+                <p class="v10-glass-card-description">Get average pricing estimates across different garment types and quantities before committing to samples</p>
+                <div class="v10-glass-card-features">
+                  <span class="v10-feature-item">💰 Pricing estimates</span>
+                  <span class="v10-feature-item">📊 Quantity breakdowns</span>
+                  <span class="v10-feature-item">⚡ Fast turnaround</span>
+                </div>
+              </div>
+            </div>
+            <div class="v10-glass-card-shimmer"></div>
+          </button>
+          
+          <!-- Sample Request Option -->
+          <button type="button" class="v10-submission-option v10-glass-card" id="v10-sample-btn" data-submission-type="sample-request">
+            <div class="v10-glass-card-content">
+              <div class="v10-glass-card-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M20.38 8.53l-1.45-1.45C18.21 6.36 17.41 6 16.54 6H13V4c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10.54c0-.87-.36-1.67-1.08-2.29z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M12 8v8m4-4H8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="v10-glass-card-text">
+                <h4 class="v10-glass-card-title">Request Sample</h4>
+                <p class="v10-glass-card-description">Create physical prototypes to validate design, fit, and quality before moving to bulk production</p>
+                <div class="v10-glass-card-features">
+                  <span class="v10-feature-item">🧪 Physical samples</span>
+                  <span class="v10-feature-item">✅ Quality validation</span>
+                  <span class="v10-feature-item">📏 Fit confirmation</span>
+                </div>
+              </div>
+            </div>
+            <div class="v10-glass-card-shimmer"></div>
+          </button>
+          
+          <!-- Bulk Order Option -->
+          <button type="button" class="v10-submission-option v10-glass-card" id="v10-bulk-btn" data-submission-type="bulk-order-request">
+            <div class="v10-glass-card-content">
+              <div class="v10-glass-card-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="v10-glass-card-text">
+                <h4 class="v10-glass-card-title">Request Bulk Order</h4>
+                <p class="v10-glass-card-description">Ready for production? Submit detailed specifications for full-scale manufacturing and delivery</p>
+                <div class="v10-glass-card-features">
+                  <span class="v10-feature-item">🏭 Full production</span>
+                  <span class="v10-feature-item">📦 Large quantities</span>
+                  <span class="v10-feature-item">🚚 Direct delivery</span>
+                </div>
+              </div>
+            </div>
+            <div class="v10-glass-card-shimmer"></div>
+          </button>
+          
+          <!-- Lab Dips & Brand Accessories Option -->
+          <button type="button" class="v10-submission-option v10-glass-card" id="v10-lab-dips-btn" data-submission-type="lab-dips-accessories">
+            <div class="v10-glass-card-content">
+              <div class="v10-glass-card-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="v10-glass-card-text">
+                <h4 class="v10-glass-card-title">Lab Dips & Brand Accessories</h4>
+                <p class="v10-glass-card-description">Order essential approvals and custom brand elements</p>
+                <div class="v10-glass-card-features">
+                  <span class="v10-feature-item">🧪 Lab Dips – Ensure perfect color matching</span>
+                  <span class="v10-feature-item">⭐ Accessories – Brand labels, hangtags, packaging</span>
+                </div>
+              </div>
+            </div>
+            <div class="v10-glass-card-shimmer"></div>
+          </button>
+        </div>
+        
+        <div class="v10-submission-note" id="v10-submission-note">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 5V8L10 10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>You can change your submission type at any time during the process</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Load TechPack V10 Application -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "TechPack V10 Step 1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Client Information Step"
+    },
+    {
+      "type": "text",
+      "id": "step_title",
+      "label": "Step Title",
+      "default": "Client Information"
+    },
+    {
+      "type": "text",
+      "id": "step_subtitle",
+      "label": "Step Subtitle",
+      "default": "Premium studio-style client verification and business details setup"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TechPack V10 Step 1"
+    }
+  ]
+}
+{% endschema %}
