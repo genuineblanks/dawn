@@ -4840,11 +4840,11 @@ class V10_GarmentStudio {
 
     const garmentId = garmentCard.dataset.garmentId;
 
-    if (e.target.closest('.garment-card__remove')) {
+    if (e.target.closest('.garment-card__remove') || e.target.closest('.garment-card__remove-summary')) {
       e.preventDefault();
       e.stopPropagation();
       this.removeGarment(garmentId);
-    } else if (e.target.closest('.garment-card__duplicate')) {
+    } else if (e.target.closest('.garment-card__duplicate') || e.target.closest('.garment-card__duplicate-summary')) {
       e.preventDefault();
       e.stopPropagation();
       this.duplicateGarment(garmentId);
@@ -5088,10 +5088,16 @@ class V10_GarmentStudio {
       garmentData.includeDesign = e.target.checked;
       console.log(`🎨 Design inclusion ${garmentData.includeDesign ? 'ENABLED' : 'DISABLED'} for garment ${garmentId}`);
       
-      // Immediately show/hide the design reference input field
-      const designReferenceContainer = garmentCard.querySelector('.design-reference');
-      if (designReferenceContainer) {
-        designReferenceContainer.style.display = e.target.checked ? 'block' : 'none';
+      // Show/hide the ENTIRE design inclusion controls box
+      const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+      if (designInclusionBox) {
+        if (e.target.checked) {
+          designInclusionBox.style.display = 'block';
+          designInclusionBox.classList.add('show');
+        } else {
+          designInclusionBox.style.display = 'none';
+          designInclusionBox.classList.remove('show');
+        }
       }
       
       // Preserve the design reference value when toggling (don't clear it)
@@ -5147,13 +5153,7 @@ class V10_GarmentStudio {
       garmentData.designReference = inputValue;
       console.log(`📝 Design reference saved for garment ${garmentId}: "${garmentData.designReference}"`);
       
-      // Hide the design reference container (retract the input field)
-      const designReferenceContainer = garmentCard.querySelector('.design-reference');
-      if (designReferenceContainer) {
-        designReferenceContainer.style.display = 'none';
-      }
-      
-      // Hide any validation warning
+      // Hide any validation warning (but keep the design box visible since it's controlled by toggle)
       const designWarning = garmentCard.querySelector('.design-reference__warning');
       if (designWarning) {
         designWarning.style.display = 'none';
@@ -5416,9 +5416,16 @@ class V10_GarmentStudio {
       designReference.value = garmentData.designReference || '';
     }
     
-    // Show/hide design reference input based on toggle
-    if (designReferenceContainer) {
-      designReferenceContainer.style.display = garmentData.includeDesign ? 'block' : 'none';
+    // Show/hide ENTIRE design inclusion controls box based on toggle
+    const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+    if (designInclusionBox) {
+      if (garmentData.includeDesign) {
+        designInclusionBox.style.display = 'block';
+        designInclusionBox.classList.add('show');
+      } else {
+        designInclusionBox.style.display = 'none';
+        designInclusionBox.classList.remove('show');
+      }
     }
     
     // Show/hide warning based on design inclusion and reference

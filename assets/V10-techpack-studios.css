@@ -8199,10 +8199,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  
-  /* Position button in content flow above toggle */
-  align-self: flex-end;
-  margin-bottom: var(--v10-space-2);
 }
 
 .garment-summary__edit-btn:hover {
@@ -8219,22 +8215,82 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 }
 
 /* ==============================================
-   DESIGN INCLUSION CONTROLS STYLES
+   ACTION BAR & DESIGN CONTROLS
    ============================================== */
 
-.design-inclusion-controls {
+/* New Horizontal Action Bar */
+.garment-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: var(--v10-space-4);
+  margin-bottom: var(--v10-space-3);
+  padding: var(--v10-space-3) 0;
+  border-top: 1px solid var(--v10-border-primary);
+}
+
+/* Design Toggle Inline (Left Side) */
+.design-toggle-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+}
+
+.design-toggle-inline .design-toggle__text {
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-secondary);
+}
+
+/* Action Buttons Group (Right Side) */
+.garment-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+/* Style duplicate and remove buttons in summary */
+.garment-card__duplicate-summary,
+.garment-card__remove-summary {
+  padding: var(--v10-space-2);
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  color: var(--v10-text-secondary);
+}
+
+.garment-card__duplicate-summary:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+}
+
+.garment-card__remove-summary:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* Design Inclusion Controls - Now Hidden by Default */
+.design-inclusion-controls {
+  margin-top: var(--v10-space-3);
   padding: var(--v10-space-4);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(8px);
-  
-  /* Make totally full width now that edit button is positioned above */
-  position: relative;
   width: 100%;
-  /* Remove previous width extensions since button is now above, not beside */
+  
+  /* Hidden by default - shown via JavaScript when toggle is on */
+  display: none;
+}
+
+/* Show design box when active */
+.design-inclusion-controls.show {
+  display: block;
 }
 
 .design-toggle {
