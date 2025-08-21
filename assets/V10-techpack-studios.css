@@ -8200,11 +8200,9 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   cursor: pointer;
   transition: all 0.3s ease;
   
-  /* Position button absolutely above design box */
-  position: absolute;
-  top: -10px;
-  right: 0;
-  z-index: 10;
+  /* Position button in content flow above toggle */
+  align-self: flex-end;
+  margin-bottom: var(--v10-space-2);
 }
 
 .garment-summary__edit-btn:hover {
@@ -8225,7 +8223,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
    ============================================== */
 
 .design-inclusion-controls {
-  margin-top: calc(var(--v10-space-4) + 50px); /* Extra space for floating edit button above */
+  margin-top: var(--v10-space-4);
   padding: var(--v10-space-4);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--v10-border-primary);
