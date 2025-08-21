@@ -6613,14 +6613,23 @@ class V10_GarmentStudio {
           // Check cotton fabric restriction before enabling custom color
           const shouldRestrictCustomColor = V10_Utils.shouldRestrictCustomColor(garmentCard);
           
+          console.log('🧪 Cotton validation debug:', {
+            garmentId,
+            fabricType: garmentData.fabricType,
+            shouldRestrictCustomColor,
+            customSectionFound: !!customSection
+          });
+          
           if (shouldRestrictCustomColor) {
             // Keep custom section disabled due to fabric restriction
             customSection.classList.add('compact-selection-section--disabled');
             this.disableSelectionSection(customSection, 'Not available for this fabric');
+            console.log('🚫 Custom color RESTRICTED for fabric:', garmentData.fabricType);
           } else {
             // Enable custom section - fabric allows custom colors
             customSection.classList.remove('compact-selection-section--disabled');
             this.enableSelectionSection(customSection);
+            console.log('✅ Custom color ALLOWED for fabric:', garmentData.fabricType);
           }
         }
         
