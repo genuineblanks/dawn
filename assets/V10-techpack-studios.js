@@ -12046,6 +12046,9 @@ class V10_ClientManager {
       step1.style.display = 'none';
       step2.style.display = 'block';
       
+      // Scroll to top for mobile navigation
+      window.scrollTo(0, 0);
+      
       // Update current step
       sessionStorage.setItem('v10_current_step', '2');
       
@@ -12811,6 +12814,9 @@ class V10_FileManager {
     
     step2.style.display = 'none';
     step3.style.display = 'block';
+    
+    // Scroll to top for mobile navigation
+    window.scrollTo(0, 0);
     
     // Update current step
     try {
