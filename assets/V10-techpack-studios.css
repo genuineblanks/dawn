@@ -9009,3 +9009,148 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     display: none;
   }
 }
+
+/* ====================================================
+   V10 TECHPACK MOBILE OPTIMIZATION SYSTEM
+   Complete mobile fixes for perfect mobile experience
+   ==================================================== */
+
+/* Mobile-First Container & Spacing Fixes */
+@media (max-width: 768px) {
+  
+  /* ===== CONTAINER & SPACING OPTIMIZATIONS ===== */
+  .techpack-container {
+    padding: 0 var(--v10-space-3) !important; /* 12px - optimal mobile padding */
+    max-width: 100%;
+  }
+  
+  .techpack-content {
+    padding: var(--v10-space-4) 0 !important; /* 16px vertical spacing */
+  }
+  
+  .v10-techpack-step {
+    padding: var(--v10-space-4) 0 !important; /* Reduce excessive padding */
+    min-height: auto; /* Remove forced height on mobile */
+  }
+  
+  /* ===== BUTTON POSITIONING & TOUCH TARGET FIXES ===== */
+  
+  /* Step Action Buttons - Mobile Layout */
+  .v10-step-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-step-actions .v10-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Theme Toggle Mobile Positioning - Minimal Fix */
+  .v10-theme-toggle--header {
+    justify-content: center;
+  }
+  
+  /* ===== MODAL SYSTEM MOBILE OPTIMIZATION ===== */
+  
+  /* Only adjust modal actions for mobile - don't touch overlay or modal positioning */
+  .v10-modal-actions {
+    flex-direction: column;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-modal-actions .v10-btn,
+  .v10-modal-actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* ===== FORM LAYOUT MOBILE OPTIMIZATION ===== */
+  
+  /* Form Layout - Mobile Single Column */
+  .v10-form-field--half {
+    width: 100%;
+  }
+  
+  /* Form Inputs - Touch Friendly */
+  .v10-form-input,
+  .v10-form-input-enhanced {
+    min-height: 44px;
+  }
+  
+  /* ===== STEP HEADER MOBILE OPTIMIZATION ===== */
+  .v10-step-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  /* ===== PROGRESS INDICATOR MOBILE ===== */
+  .simple-step {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .simple-step-circle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* ===== LANDING & SUBMISSION MOBILE ===== */
+  
+  .v10-landing-buttons-premium {
+    flex-direction: column;
+  }
+  
+  .v10-btn-hero-premium,
+  .v10-btn-templates-premium {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  .v10-requirements-grid-premium {
+    grid-template-columns: 1fr;
+  }
+  
+  .v10-submission-options {
+    grid-template-columns: 1fr;
+  }
+  
+  /* ===== GARMENT & OPTIONS MOBILE ===== */
+  
+  .garments-grid,
+  .v10-garments-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .garment-actions,
+  .v10-garment-actions {
+    flex-direction: column;
+  }
+  
+  .v10-delivery-options,
+  .v10-delivery-options-enhanced {
+    flex-direction: column;
+  }
+  
+  .v10-client-options {
+    flex-direction: column;
+  }
+}
+
+/* ====================================================
+   SMALL MOBILE OPTIMIZATION (480px and below)
+   Extra optimizations for very small screens
+   ==================================================== */
+
+@media (max-width: 480px) {
+  .techpack-container {
+    padding: 0 var(--v10-space-2);
+  }
+  
+  .simple-step-circle {
+    width: 28px;
+    height: 28px;
+  }
+}
+
