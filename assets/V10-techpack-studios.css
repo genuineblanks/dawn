@@ -8230,9 +8230,10 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(8px);
   
-  /* Extend full width and prepare for repositioned edit button */
+  /* Extend to full parent width to push edit button above toggle */
   position: relative;
-  width: 100%;
+  width: calc(100% + var(--v10-space-3));
+  margin-right: calc(-1 * var(--v10-space-3));
 }
 
 .design-toggle {
