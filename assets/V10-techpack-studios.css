@@ -4591,7 +4591,7 @@ body[class*="techpack"] *,
 
 .sample-type-selection {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--v10-space-3);
 }
 
@@ -4664,6 +4664,94 @@ body[class*="techpack"] *,
   display: block;
   color: var(--v10-text-secondary);
   font-size: var(--v10-text-xs);
+}
+
+/* Center all text in sample type cards */
+.sample-type-card__header,
+.sample-type-card__title,
+.sample-type-card__price,
+.sample-type-card__description,
+.sample-type-card__details {
+  text-align: center;
+}
+
+/* Expandable Card Styles */
+.sample-type-card.expandable-card {
+  transition: all 0.3s ease;
+}
+
+.sample-type-card.expanded {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-surface-selected);
+  box-shadow: 0 4px 12px rgba(163, 163, 163, 0.15);
+}
+
+/* Sub-options container */
+.sample-sub-options {
+  margin-top: var(--v10-space-4);
+  padding-top: var(--v10-space-4);
+  border-top: 1px solid var(--v10-border-secondary);
+}
+
+/* Sub-option rows */
+.sub-options-row {
+  display: flex;
+  gap: var(--v10-space-2);
+  margin-bottom: var(--v10-space-2);
+}
+
+.sub-options-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Sub-option buttons */
+.sub-option-btn {
+  flex: 1;
+  background: var(--v10-surface-elevated);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  padding: var(--v10-space-3) var(--v10-space-2);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  text-align: center;
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-option-btn:hover {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-surface-hover);
+}
+
+.sub-option-btn.selected {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-accent-primary);
+  color: white;
+}
+
+/* Full width sub-option button */
+.sub-option-btn--full {
+  width: 100%;
+}
+
+/* Sub-option text */
+.sub-option-text {
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Sub-option warning text */
+.sub-option-warning {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-warning);
+  margin-top: 4px;
+  text-align: center;
+  font-style: italic;
 }
 
 .sample-type-card--disabled {
@@ -9514,10 +9602,28 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     width: 100% !important;
   }
   
+  /* Mobile layout for sample type selection - single column */
+  .sample-type-selection {
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-4) !important;
+  }
+
   .v10-sample-type-card,
   .sample-type-card {
     min-height: 120px !important; /* Ensure touch target height */
     padding: var(--v10-space-4) !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+
+  /* Mobile sub-option buttons */
+  .sub-option-btn {
+    padding: var(--v10-space-4) var(--v10-space-3) !important;
+    font-size: var(--v10-text-sm) !important;
+    min-height: 44px !important; /* Touch target */
+  }
+
+  .sub-options-row {
+    gap: var(--v10-space-3) !important;
     margin-bottom: var(--v10-space-3) !important;
   }
   

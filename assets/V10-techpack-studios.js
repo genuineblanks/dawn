@@ -2840,10 +2840,6 @@ const V10_Utils = {
       return null;
     }
 
-    // For TechPack sample type, return special indicator
-    if (sampleType === 'techpack') {
-      return 'Premium';
-    }
 
     // Get pricing for specific garment type
     const garmentPricing = V10_CONFIG.GARMENT_PRICING[garmentType];
@@ -2899,7 +2895,6 @@ const V10_Utils = {
     // Find sample type cards
     const stockCard = garmentElement.querySelector('.sample-type-card[data-value="stock"]');
     const customCard = garmentElement.querySelector('.sample-type-card[data-value="custom"]');
-    const techpackCard = garmentElement.querySelector('.sample-type-card[data-value="techpack"]');
 
     // Update stock price
     if (stockCard) {
@@ -2955,23 +2950,6 @@ const V10_Utils = {
       }
     }
 
-    // Update techpack price (always premium) and show warning
-    if (techpackCard) {
-      const priceElement = techpackCard.querySelector('.sample-type-card__price');
-      if (priceElement && priceElement.textContent !== 'Premium') {
-        priceElement.textContent = 'Premium';
-      }
-      
-      // Show TechPack warning if garment and fabric are selected
-      const warningContainer = techpackCard.querySelector('.techpack-warning');
-      if (warningContainer) {
-        if (garmentType && fabricType) {
-          warningContainer.style.display = 'block';
-        } else {
-          warningContainer.style.display = 'none';
-        }
-      }
-    }
   },
 
   // Update garment custom color restrictions based on fabric type
@@ -4844,8 +4822,48 @@ class V10_GarmentStudio {
           presetMenu.classList.remove('active');
         }
       }
+    } else if (e.target.closest('.sub-option-btn')) {
+      // Handle sub-option button clicks
+      e.preventDefault();
+      e.stopPropagation();
+      const subOptionBtn = e.target.closest('.sub-option-btn');
+      const sampleCard = subOptionBtn.closest('.sample-type-card');
+      const subValue = subOptionBtn.dataset.subValue;
+      
+      console.log(`🎯 Sub-option selected: ${subValue} for ${sampleCard.dataset.value}`);
+      
+      // Clear other selections in the same group
+      const allSampleCards = garmentCard.querySelectorAll('.sample-type-card');
+      allSampleCards.forEach(card => {
+        card.classList.remove('selected', 'expanded');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+        // Hide sub-options
+        const subOptions = card.querySelector('.sample-sub-options');
+        if (subOptions) subOptions.style.display = 'none';
+        // Remove sub-option selection
+        card.querySelectorAll('.sub-option-btn').forEach(btn => btn.classList.remove('selected'));
+      });
+      
+      // Select this card and sub-option
+      sampleCard.classList.add('selected');
+      subOptionBtn.classList.add('selected');
+      const radioInput = sampleCard.querySelector('input[type="radio"]');
+      if (radioInput) {
+        radioInput.checked = true;
+        // Store sub-option selection
+        radioInput.dataset.subValue = subValue;
+        // Trigger change event to notify existing handlers
+        radioInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      
+      // Hide sub-options after selection
+      const subOptions = sampleCard.querySelector('.sample-sub-options');
+      if (subOptions) subOptions.style.display = 'none';
+      sampleCard.classList.remove('expanded');
+      
     } else if (e.target.closest('.sample-type-card')) {
-      // Handle sample type card clicks
+      // Handle sample type card clicks (main card, not sub-options)
       e.preventDefault();
       e.stopPropagation();
       const sampleCard = e.target.closest('.sample-type-card');
@@ -4856,22 +4874,45 @@ class V10_GarmentStudio {
         return; // Don't allow selection of restricted options
       }
       
-      const radioInput = sampleCard.querySelector('input[type="radio"]');
-      if (radioInput && !radioInput.checked) {
-        // Clear other selections in the same group
+      // Check if card has expandable options
+      const subOptions = sampleCard.querySelector('.sample-sub-options');
+      if (subOptions && sampleCard.classList.contains('expandable-card')) {
+        // Toggle expansion instead of direct selection
+        const isExpanded = sampleCard.classList.contains('expanded');
+        
+        // Collapse all other cards
         const allSampleCards = garmentCard.querySelectorAll('.sample-type-card');
         allSampleCards.forEach(card => {
-          card.classList.remove('selected');
-          const radio = card.querySelector('input[type="radio"]');
-          if (radio) radio.checked = false;
+          card.classList.remove('expanded');
+          const otherSubOptions = card.querySelector('.sample-sub-options');
+          if (otherSubOptions) otherSubOptions.style.display = 'none';
         });
         
-        // Select this card
-        sampleCard.classList.add('selected');
-        radioInput.checked = true;
-        
-        // Trigger change event to notify existing handlers
-        radioInput.dispatchEvent(new Event('change', { bubbles: true }));
+        if (!isExpanded) {
+          // Expand this card
+          sampleCard.classList.add('expanded');
+          subOptions.style.display = 'block';
+          console.log(`📋 Expanded sample type card: ${sampleCard.dataset.value}`);
+        }
+      } else {
+        // Handle non-expandable cards (legacy behavior)
+        const radioInput = sampleCard.querySelector('input[type="radio"]');
+        if (radioInput && !radioInput.checked) {
+          // Clear other selections in the same group
+          const allSampleCards = garmentCard.querySelectorAll('.sample-type-card');
+          allSampleCards.forEach(card => {
+            card.classList.remove('selected');
+            const radio = card.querySelector('input[type="radio"]');
+            if (radio) radio.checked = false;
+          });
+          
+          // Select this card
+          sampleCard.classList.add('selected');
+          radioInput.checked = true;
+          
+          // Trigger change event to notify existing handlers
+          radioInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       }
     }
   }
@@ -10721,14 +10762,6 @@ class V10_ReviewManager {
             amount: dynamicPrice
           });
           total += dynamicPrice;
-        } else if (garment.sampleType === 'techpack') {
-          // TechPack pricing varies by garment and fabric
-          items.push({
-            label: `${garment.type} - As Per TechPack`,
-            description: `Garment ${garment.number} (Premium)`,
-            amount: 'Contact for pricing'
-          });
-          // Don't add to total for techpack as it's variable
         }
       });
 
