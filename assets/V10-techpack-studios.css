@@ -4965,6 +4965,11 @@ body[class*="techpack"] *,
   gap: var(--v10-space-2);
 }
 
+.garment-card__content {
+  display: block;
+  width: 100%;
+}
+
 .garment-card__duplicate,
 .garment-card__remove,
 .garment-card__finalize {

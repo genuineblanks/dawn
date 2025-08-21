@@ -4775,7 +4775,7 @@ class V10_GarmentStudio {
         return false;
       });
       
-      section.style.display = shouldShow ? 'block' : 'none';
+      section.style.display = shouldShow ? '' : 'none';  // Use default CSS display when showing
     });
   }
 
@@ -5462,7 +5462,7 @@ class V10_GarmentStudio {
       
       // Hide summary, show content for editing
       summaryContainer.style.display = 'none';
-      contentContainer.style.display = 'block';
+      contentContainer.style.display = '';  // Remove any forced display, let CSS handle it
       
       // Populate form with existing garment data
       this.setGarmentValues(garmentCard, garmentData);
@@ -11568,7 +11568,7 @@ class V10_TechPackSystem {
         return false;
       });
       
-      section.style.display = shouldShow ? 'block' : 'none';
+      section.style.display = shouldShow ? '' : 'none';  // Use default CSS display when showing
     });
     
     console.log(`🔄 Global section visibility updated for request type: ${requestType}`);
