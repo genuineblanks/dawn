@@ -6032,6 +6032,76 @@ body[class*="techpack"] *,
     align-items: center;
   }
   
+  .v10-download-unified {
+    position: absolute;
+    left: var(--v10-space-6);
+    display: flex;
+    align-items: center;
+  }
+  
+  .v10-btn-download-header {
+    display: flex;
+    align-items: center;
+    gap: var(--v10-space-2);
+    padding: var(--v10-space-2) var(--v10-space-3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--v10-radius-md);
+    color: var(--v10-text-secondary);
+    font-size: var(--v10-text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+  
+  .v10-btn-download-header:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--v10-text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--v10-shadow-sm);
+  }
+  
+  [data-theme="dark"] .v10-btn-download-header {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Light Theme Visibility Fixes */
+  [data-theme="light"] .v10-unified-header-box {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  [data-theme="light"] .v10-requirement-card-premium {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+  
+  [data-theme="light"] .v10-requirement-card-premium:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+  
+  [data-theme="light"] .v10-btn-download-header {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--v10-text-primary);
+  }
+  
+  [data-theme="light"] .v10-btn-download-header:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  [data-theme="light"] .v10-theme-toggle--header {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
   /* Theme Toggle - Header Integrated */
   .v10-theme-toggle-header {
     position: absolute;
@@ -6465,21 +6535,29 @@ body[class*="techpack"] *,
     
     /* Unified Header Box - Mobile */
     .v10-unified-header-box {
-      padding: var(--v10-space-5);
+      padding: var(--v10-space-4);
       margin-bottom: var(--v10-space-6);
-      min-height: 80px;
-      flex-direction: column;
+      min-height: 60px;
+      flex-direction: row;
       text-align: center;
-      gap: var(--v10-space-4);
     }
     
     .v10-theme-toggle-unified {
+      position: absolute;
+      right: var(--v10-space-4);
       margin-left: 0;
       margin-top: 0;
-      align-self: center;
+    }
+    
+    .v10-download-unified {
+      position: absolute;
+      left: var(--v10-space-4);
     }
     
     .v10-header-content-wrapper {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       justify-content: center;
     }
     
@@ -6553,15 +6631,26 @@ body[class*="techpack"] *,
     
     /* Unified Header Box - Small Mobile */
     .v10-unified-header-box {
-      padding: var(--v10-space-4);
+      padding: var(--v10-space-3);
       margin-bottom: var(--v10-space-4);
-      min-height: 70px;
-      gap: var(--v10-space-3);
+      min-height: 50px;
     }
     
     .v10-theme-toggle-unified {
-      margin-left: 0;
-      margin-top: 0;
+      right: var(--v10-space-3);
+    }
+    
+    .v10-download-unified {
+      left: var(--v10-space-3);
+    }
+    
+    .v10-btn-download-header {
+      padding: var(--v10-space-1) var(--v10-space-2);
+      font-size: var(--v10-text-xs);
+    }
+    
+    .v10-btn-download-header span {
+      display: none;
     }
     
     .v10-title-spectacular {
@@ -10744,5 +10833,35 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     padding: var(--v10-space-3);
     margin-bottom: var(--v10-space-4);
   }
+}
+
+/* ===================================
+   ICON VISIBILITY AND THEME FIXES
+   =================================== */
+
+/* Fix for garment icon visibility after selection */
+.selected-icon svg {
+  color: inherit;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* Ensure selected icons are visible in both themes */
+.selection-display .selected-icon svg,
+.compact-selection-widget .selected-icon svg {
+  color: var(--v10-text-primary);
+  stroke: currentColor;
+}
+
+/* Theme-aware placeholder icons */
+.placeholder-icon svg {
+  color: var(--v10-text-secondary);
+  stroke: currentColor;
+}
+
+/* Compact radio card icons */
+.compact-radio-card__icon svg {
+  color: currentColor;
+  stroke: currentColor;
 }
 
