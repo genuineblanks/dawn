@@ -58,7 +58,7 @@ body[class*="techpack"] *,
   --v10-bg-primary: #ffffff;          /* Primary white background */
   --v10-bg-secondary: #f9fafb;        /* Secondary light grey panels */
   --v10-bg-tertiary: #ffffff;         /* Elevated surfaces */
-  --v10-bg-card: #ffffff;             /* Card backgrounds */
+  --v10-bg-card: #f8f8f8;             /* Card backgrounds - light grey for visibility */
   --v10-bg-modal: #ffffff;            /* Modal backgrounds */
   --v10-glass-bg: #ffffff;            /* Glass morphism background */
   --v10-bg-input: #f3f4f6;            /* Input backgrounds */
@@ -81,7 +81,7 @@ body[class*="techpack"] *,
   --v10-text-error: #dc2626;          /* Error text */
 
   /* Border Colors */
-  --v10-border-primary: #e5e7eb;      /* Primary borders */
+  --v10-border-primary: #d1d5db;      /* Primary borders - darker for better visibility */
   --v10-border-secondary: #f3f4f6;    /* Secondary borders */
   --v10-border-focus: #6b7280;        /* Focus borders - grey */
   --v10-border-success: #10b981;      /* Success borders - green */
