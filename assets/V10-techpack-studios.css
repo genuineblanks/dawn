@@ -4675,6 +4675,19 @@ body[class*="techpack"] *,
   text-align: center;
 }
 
+/* Sample type compact selection styling */
+.sample-type-selection .compact-selection-section {
+  min-height: 240px; /* Consistent height with garment/fabric sections */
+}
+
+.sample-type-selection .selection-header h5 {
+  text-align: center;
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-3);
+}
+
 /* Expandable Card Styles */
 .sample-type-card.expandable-card {
   transition: all 0.3s ease;
@@ -4704,34 +4717,68 @@ body[class*="techpack"] *,
   margin-bottom: 0;
 }
 
-/* Sub-option buttons */
+/* Sub-option buttons - Glassmorphism style matching compact-radio-cards */
 .sub-option-btn {
   flex: 1;
-  background: var(--v10-surface-elevated);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  padding: var(--v10-space-3) var(--v10-space-2);
+  position: relative;
   cursor: pointer;
-  transition: var(--v10-transition);
-  text-align: center;
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
-  color: var(--v10-text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--v10-space-1);
+  padding: var(--v10-space-4);
+  min-height: 80px;
+  border-radius: var(--v10-radius-lg);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Glassmorphism base styling */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+  
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-primary);
 }
 
+/* Add shimmer effect on hover */
+.sub-option-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.sub-option-btn:hover::before {
+  left: 100%;
+}
+
+/* Enhanced hover glassmorphism */
 .sub-option-btn:hover {
-  border-color: var(--v10-accent-primary);
-  background: var(--v10-surface-hover);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 0 25px rgba(163, 163, 163, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+/* Selected state with enhanced white glassmorphism */
 .sub-option-btn.selected {
-  border-color: var(--v10-accent-primary);
-  background: var(--v10-accent-primary);
-  color: white;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--v10-text-primary);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px) scale(1.02);
 }
 
 /* Full width sub-option button */
@@ -4752,6 +4799,37 @@ body[class*="techpack"] *,
   margin-top: 4px;
   text-align: center;
   font-style: italic;
+}
+
+/* Sample Type Pricing Display */
+.sample-type-pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--v10-space-2);
+}
+
+.sample-type-price {
+  font-weight: 600;
+  color: var(--v10-accent-primary);
+  font-size: var(--v10-text-sm);
+  margin-bottom: 2px;
+}
+
+.sample-type-description {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-accent-success);
+  font-weight: 500;
+}
+
+/* Compact Radio Card Warning */
+.compact-radio-card__warning {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-warning);
+  margin-top: 4px;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.8;
 }
 
 .sample-type-card--disabled {
@@ -5857,7 +5935,7 @@ body[class*="techpack"] *,
   }
   
   .v10-title-spectacular {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
     font-weight: 900;
     letter-spacing: -0.02em;
     line-height: 1.1;
@@ -6180,7 +6258,7 @@ body[class*="techpack"] *,
     }
     
     .v10-title-spectacular {
-      font-size: clamp(2rem, 10vw, 3rem);
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
     }
     
     .v10-title-line-1,
@@ -6226,7 +6304,7 @@ body[class*="techpack"] *,
   
   @media (max-width: 480px) {
     .v10-title-spectacular {
-      font-size: clamp(2rem, 15vw, 3.5rem);
+      font-size: clamp(2rem, 12vw, 3rem);
     }
     
     .v10-description-elegant p {
@@ -10027,6 +10105,12 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   .sub-options-row {
     gap: var(--v10-space-3) !important;
     margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  /* Mobile styling for sample type compact sections */
+  .sample-type-selection .compact-selection-section {
+    min-height: 180px !important;
+    margin-bottom: var(--v10-space-4) !important;
   }
   
   .v10-sample-type-card h3,
