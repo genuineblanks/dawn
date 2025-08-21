@@ -6163,7 +6163,7 @@ body[class*="techpack"] *,
   /* Header Description Section */
   .v10-header-description {
     max-width: 800px;
-    margin: var(--v10-space-12) auto var(--v10-space-12) auto;
+    margin: var(--v10-space-16) auto var(--v10-space-16) auto;
   }
   
   .v10-header-description p {
@@ -6591,7 +6591,7 @@ body[class*="techpack"] *,
     
     .v10-header-description {
       max-width: 95%;
-      margin: var(--v10-space-10) auto var(--v10-space-10) auto;
+      margin: var(--v10-space-14) auto var(--v10-space-14) auto;
     }
     
     .v10-header-description p {
@@ -10432,6 +10432,13 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   .simple-step-circle {
     width: 28px;
     height: 28px;
+  }
+  
+  /* Mobile Toggle Buttons - 50% smaller to prevent title overlap */
+  .v10-theme-toggle--header .v10-theme-btn {
+    width: 14px !important;
+    height: 14px !important;
+    font-size: 8px !important;
   }
 }
 
