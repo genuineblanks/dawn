@@ -2961,31 +2961,22 @@ const V10_Utils = {
     
     console.log(`🎨 Custom color restriction for garment ${garmentId}: ${shouldRestrict ? 'RESTRICTED' : 'ALLOWED'}`);
     
-    // Handle new compact selection widget structure first
+    // Handle compact selection widget structure
     const customSection = garmentElement.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
-    const customWidget = garmentElement.querySelector('#sample-custom-collapsed');
     
-    if (customSection && customWidget) {
+    if (customSection) {
       if (shouldRestrict) {
-        // Disable custom color option using compact selection disable method
+        // Disable custom color option using the same method as other validations
         customSection.classList.add('compact-selection-section--disabled');
-        customWidget.style.opacity = '0.5';
-        customWidget.style.pointerEvents = 'none';
-        customWidget.style.cursor = 'not-allowed';
-        
-        // Update placeholder text to show restriction
-        const placeholderText = customWidget.querySelector('.placeholder-text');
-        if (placeholderText) {
-          if (!placeholderText.dataset.originalText) {
-            placeholderText.dataset.originalText = placeholderText.textContent;
-          }
-          placeholderText.textContent = 'Not available for this fabric';
-        }
+        V10_GarmentStudio.getInstance().disableSelectionSection(customSection, 'Not available for this fabric');
         
         // Check if custom was selected and auto-switch to stock
         const customRadio = garmentElement.querySelector('input[name*="sampleType"][value="custom"]:checked');
         if (customRadio) {
           customRadio.checked = false;
+          
+          // Clear any sub-value data
+          delete customRadio.dataset.subValue;
           
           // Try to select stock color option as fallback
           const stockRadio = garmentElement.querySelector('input[name*="sampleType"][value="stock"]');
@@ -3001,25 +2992,14 @@ const V10_Utils = {
             console.log(`🔄 Auto-switched to stock sample for garment ${garmentId} due to fabric restriction`);
           }
           
-          // Reset custom display to placeholder
-          const customDisplay = customWidget.querySelector('.selection-display');
-          const customPlaceholder = customWidget.querySelector('.selection-placeholder');
-          if (customDisplay) customDisplay.style.display = 'none';
-          if (customPlaceholder) customPlaceholder.style.display = 'flex';
+          // Reset display states using existing reset method
+          V10_GarmentStudio.getInstance().resetSampleTypeSelection(garmentElement);
         }
         
       } else {
-        // Enable custom color option
+        // Enable custom color option using the same method as other validations
         customSection.classList.remove('compact-selection-section--disabled');
-        customWidget.style.opacity = '1';
-        customWidget.style.pointerEvents = 'auto';
-        customWidget.style.cursor = 'pointer';
-        
-        // Restore original placeholder text
-        const placeholderText = customWidget.querySelector('.placeholder-text');
-        if (placeholderText && placeholderText.dataset.originalText) {
-          placeholderText.textContent = placeholderText.dataset.originalText;
-        }
+        V10_GarmentStudio.getInstance().enableSelectionSection(customSection);
       }
     }
     
@@ -4890,31 +4870,17 @@ class V10_GarmentStudio {
   }
 
   handleCompactClicks(e) {
-    // Handle compact interface clicks - make entire widget clickable
-    const widget = e.target.closest('.compact-selection-widget');
-    
-    if (widget) {
-      // Check if widget is disabled
-      if (widget.style.pointerEvents === 'none') {
-        return; // Don't handle clicks on disabled widgets
-      }
-      
-      // Prevent clicks on radio buttons inside expanded options from triggering widget toggle
-      if (e.target.closest('.compact-radio-card') || e.target.closest('.selection-expanded')) {
-        return; // Let the radio button handle its own logic
-      }
-      
+    // Handle compact interface clicks - original working pattern
+    if (e.target.closest('.selection-placeholder')) {
       e.preventDefault();
       e.stopPropagation();
+      const widget = e.target.closest('.compact-selection-widget');
       this.toggleSelection(widget);
-      
-      console.log(`🎯 Compact widget clicked: ${widget.id || 'unnamed'}`);
     } else if (e.target.closest('.change-selection-btn')) {
-      // Legacy support for change buttons (if any still exist)
       e.preventDefault();
       e.stopPropagation();
-      const legacyWidget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
-      this.toggleSelection(legacyWidget);
+      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
+      this.toggleSelection(widget);
     }
   }
 
@@ -6691,22 +6657,10 @@ class V10_GarmentStudio {
     }
     
     if (placeholder) {
-      // Special handling for sample type widgets - preserve their original placeholder text
-      const isSampleWidget = widget && (widget.id === 'sample-stock-collapsed' || widget.id === 'sample-custom-collapsed');
-      
-      if (!isSampleWidget) {
-        // For non-sample widgets (garment, fabric), update text normally
-        if (!placeholder.dataset.originalText) {
-          placeholder.dataset.originalText = placeholder.textContent;
-        }
-        placeholder.textContent = disabledText;
-      } else {
-        // For sample widgets, just store original text but don't change it when disabled by dependencies
-        if (!placeholder.dataset.originalText) {
-          placeholder.dataset.originalText = placeholder.textContent;
-        }
-        // Keep the original "Select color option" text visible even when disabled
+      if (!placeholder.dataset.originalText) {
+        placeholder.dataset.originalText = placeholder.textContent;
       }
+      placeholder.textContent = disabledText;
     }
   }
 
@@ -6907,59 +6861,17 @@ class V10_GarmentStudio {
     }
     
     // Initially disable sample type selection until garment AND fabric are chosen
-    const sampleStockCollapsed = garmentCard.querySelector('#sample-stock-collapsed');
-    const sampleCustomCollapsed = garmentCard.querySelector('#sample-custom-collapsed');
+    const sampleStockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
+    const sampleCustomSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
     
-    if (sampleStockCollapsed) {
-      sampleStockCollapsed.style.opacity = '0.5';
-      sampleStockCollapsed.style.pointerEvents = 'none';
-      
-      const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
-      const stockDisplay = garmentCard.querySelector('#sample-stock-display');
-      
-      // Ensure placeholder is visible and display is hidden initially
-      if (stockPlaceholder) {
-        stockPlaceholder.style.display = 'flex';
-        stockPlaceholder.style.cursor = 'not-allowed';
-        const placeholderText = stockPlaceholder.querySelector('.placeholder-text');
-        if (placeholderText) {
-          // Store original text before changing it
-          if (!placeholderText.dataset.originalText) {
-            placeholderText.dataset.originalText = placeholderText.textContent;
-          }
-          placeholderText.textContent = 'Select fabric type first';
-        }
-      }
-      
-      if (stockDisplay) {
-        stockDisplay.style.display = 'none';
-      }
+    if (sampleStockSection) {
+      sampleStockSection.classList.add('compact-selection-section--disabled');
+      this.disableSelectionSection(sampleStockSection, 'Select fabric type first');
     }
     
-    if (sampleCustomCollapsed) {
-      sampleCustomCollapsed.style.opacity = '0.5';
-      sampleCustomCollapsed.style.pointerEvents = 'none';
-      
-      const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
-      const customDisplay = garmentCard.querySelector('#sample-custom-display');
-      
-      // Ensure placeholder is visible and display is hidden initially
-      if (customPlaceholder) {
-        customPlaceholder.style.display = 'flex';
-        customPlaceholder.style.cursor = 'not-allowed';
-        const placeholderText = customPlaceholder.querySelector('.placeholder-text');
-        if (placeholderText) {
-          // Store original text before changing it
-          if (!placeholderText.dataset.originalText) {
-            placeholderText.dataset.originalText = placeholderText.textContent;
-          }
-          placeholderText.textContent = 'Select fabric type first';
-        }
-      }
-      
-      if (customDisplay) {
-        customDisplay.style.display = 'none';
-      }
+    if (sampleCustomSection) {
+      sampleCustomSection.classList.add('compact-selection-section--disabled');
+      this.disableSelectionSection(sampleCustomSection, 'Select fabric type first');
     }
   }
 
