@@ -95,6 +95,10 @@ body[class*="techpack"] *,
   --v10-accent-warning: #f59e0b;      /* Warning accent */
   --v10-accent-error: #ef4444;        /* Error accent */
 
+  /* Warning Background Colors */
+  --v10-bg-warning: rgba(245, 158, 11, 0.08);     /* Warning background - light orange */
+  --v10-surface-warning: rgba(245, 158, 11, 0.06); /* Warning surface - lighter orange */
+
   /* Shadows - Light Theme Optimized */
   --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --v10-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -187,6 +191,10 @@ body[class*="techpack"] *,
   --v10-accent-success: #22c55e;      /* Success accent - proper green */
   --v10-accent-warning: #f59e0b;      /* Warning accent */
   --v10-accent-error: #ef4444;        /* Error accent */
+
+  /* Warning Background Colors - Dark Theme */
+  --v10-bg-warning: rgba(245, 158, 11, 0.15);     /* Warning background - darker orange for contrast */
+  --v10-surface-warning: rgba(245, 158, 11, 0.12); /* Warning surface - slightly lighter orange */
 
   /* Shadows - Dark Theme Optimized */
   --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
@@ -4324,7 +4332,7 @@ body[class*="techpack"] *,
 
 /* Compact Selection Section */
 .compact-selection-section {
-  background: var(--v10-surface-elevated);
+  background: var(--v10-bg-card);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-4);
@@ -4343,19 +4351,19 @@ body[class*="techpack"] *,
   opacity: 0.6;
   pointer-events: none;
   cursor: not-allowed;
-  background: #f8f9fa;
-  border: 2px solid #e9ecef;
+  background: var(--v10-bg-input);
+  border: 2px solid var(--v10-border-secondary);
 }
 
 .compact-selection-section--disabled:hover {
-  border-color: #e9ecef;
+  border-color: var(--v10-border-secondary);
 }
 
 /* Enhanced disabled overlay with warning */
 
 /* Make placeholder text more visible when disabled */
 .compact-selection-section--disabled .placeholder-text {
-  color: #dc2563;
+  color: var(--v10-text-error);
   font-weight: 600;
 }
 
@@ -4479,21 +4487,23 @@ body[class*="techpack"] *,
 
 /* Selection Widget Selected States - Theme Consistent */
 .compact-selection-section.selected {
-  background: rgba(163, 163, 163, 0.08);
+  background: var(--v10-bg-hover);
   border: 2px solid var(--v10-accent-primary);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--v10-shadow-md);
   position: relative;
+  transform: translateY(-1px);
 }
 
 .compact-selection-section.selected .compact-selection-widget {
   border-color: var(--v10-accent-primary);
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--v10-bg-input);
 }
 
 .compact-selection-section.selected .selection-display {
-  background: rgba(163, 163, 163, 0.05);
+  background: var(--v10-bg-active);
   border: 1px solid var(--v10-accent-primary);
   border-radius: var(--v10-radius-md);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .compact-selection-section.selected .selected-name {
@@ -4509,13 +4519,14 @@ body[class*="techpack"] *,
 /* Unselected state - ensure clear distinction */
 .compact-selection-section:not(.selected):not(.compact-selection-section--disabled) {
   border: 1px solid var(--v10-border-primary);
-  background: var(--v10-surface-primary);
+  background: var(--v10-bg-card);
   transition: all 0.2s ease;
 }
 
 .compact-selection-section:not(.selected):not(.compact-selection-section--disabled):hover {
   border-color: var(--v10-accent-primary);
-  box-shadow: 0 2px 8px rgba(163, 163, 163, 0.08);
+  box-shadow: var(--v10-shadow-sm);
+  background: var(--v10-bg-hover);
 }
 
 /* Selection Expanded (dropdown options) */
@@ -5523,8 +5534,8 @@ body[class*="techpack"] *,
 
 /* Custom Color Restriction Warning - Greyed Styling */
 .v10-custom-color-restriction-warning .warning-box {
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.15);
+  background: var(--v10-bg-warning);
+  border: 1px solid var(--v10-border-warning);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-3);
   margin-top: var(--v10-space-3);
@@ -5538,36 +5549,36 @@ body[class*="techpack"] *,
 }
 
 .v10-custom-color-restriction-warning .warning-header svg {
-  color: #f59e0b;
+  color: var(--v10-accent-warning);
   flex-shrink: 0;
 }
 
 .v10-custom-color-restriction-warning .warning-header strong {
-  color: #6b7280;
+  color: var(--v10-text-secondary);
   font-weight: 600;
   font-size: var(--v10-text-sm);
 }
 
 .v10-custom-color-restriction-warning .warning-content p {
-  color: #9ca3af;
+  color: var(--v10-text-muted);
   font-size: var(--v10-text-sm);
   margin-bottom: var(--v10-space-2);
   line-height: 1.4;
 }
 
 .v10-custom-color-restriction-warning .warning-content p strong {
-  color: #6b7280;
+  color: var(--v10-text-secondary);
   font-weight: 500;
 }
 
 .v10-custom-color-restriction-warning .swatch-exception {
-  background: rgba(245, 158, 11, 0.06);
+  background: var(--v10-surface-warning);
   border-radius: var(--v10-radius-sm);
   padding: var(--v10-space-2);
 }
 
 .v10-custom-color-restriction-warning .swatch-exception strong {
-  color: #f59e0b;
+  color: var(--v10-accent-warning);
   font-weight: 600;
   font-size: var(--v10-text-xs);
 }
@@ -5996,13 +6007,14 @@ body[class*="techpack"] *,
     border: 1px solid var(--v10-glass-border);
     border-radius: var(--v10-radius-xl);
     box-shadow: var(--v10-shadow-xl);
-    padding: var(--v10-space-6) var(--v10-space-8);
+    padding: var(--v10-space-5) var(--v10-space-6);
     margin-bottom: var(--v10-space-8);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 100px;
+    min-height: 70px;
+    overflow: hidden;
   }
   
   .v10-header-content-wrapper {
@@ -6014,7 +6026,9 @@ body[class*="techpack"] *,
   
   .v10-theme-toggle-unified {
     flex-shrink: 0;
-    margin-left: var(--v10-space-6);
+    margin-left: var(--v10-space-4);
+    display: flex;
+    align-items: center;
   }
   
   /* Theme Toggle - Header Integrated */
@@ -6031,9 +6045,9 @@ body[class*="techpack"] *,
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50px;
-    padding: var(--v10-space-1);
+    padding: 2px;
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 12px rgba(0, 0, 0, 0.1),
       0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -6044,13 +6058,13 @@ body[class*="techpack"] *,
   }
   
   .v10-theme-toggle--header .v10-theme-btn {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: none;
     background: transparent;
     color: var(--v10-text-secondary);
-    font-size: var(--v10-text-lg);
+    font-size: var(--v10-text-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6131,9 +6145,9 @@ body[class*="techpack"] *,
   }
   
   .v10-title-spectacular {
-    font-size: clamp(3rem, 5vw, 4.5rem);
-    font-weight: 900;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     line-height: 1.1;
     background: linear-gradient(135deg, 
@@ -6475,13 +6489,13 @@ body[class*="techpack"] *,
     }
     
     .v10-theme-toggle--header .v10-theme-btn {
-      width: 35px;
-      height: 35px;
-      font-size: var(--v10-text-base);
+      width: 26px;
+      height: 26px;
+      font-size: var(--v10-text-sm);
     }
     
     .v10-title-spectacular {
-      font-size: clamp(2.2rem, 6vw, 3rem);
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
       white-space: nowrap;
     }
     
@@ -6550,7 +6564,7 @@ body[class*="techpack"] *,
     }
     
     .v10-title-spectacular {
-      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      font-size: clamp(1rem, 6vw, 1.5rem);
       white-space: nowrap;
     }
     
@@ -9982,7 +9996,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   left: 2px;
   width: 20px;
   height: 20px;
-  background: white;
+  background: var(--v10-bg-primary);
   border-radius: 50%;
   transition: var(--v10-transition);
 }
