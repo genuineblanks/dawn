@@ -4822,6 +4822,7 @@ class V10_GarmentStudio {
           presetMenu.classList.remove('active');
         }
       }
+    }
   }
 
   handleCompactClicks(e) {
