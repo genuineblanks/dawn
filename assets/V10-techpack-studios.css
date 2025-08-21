@@ -9009,3 +9009,854 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     display: none;
   }
 }
+
+/* ====================================================
+   V10 TECHPACK MOBILE OPTIMIZATION SYSTEM
+   Complete mobile fixes for perfect mobile experience
+   ==================================================== */
+
+/* Mobile-First Container & Spacing Fixes */
+@media (max-width: 768px) {
+  
+  /* ===== CONTAINER & SPACING OPTIMIZATIONS ===== */
+  .techpack-container {
+    padding: 0 var(--v10-space-3) !important; /* 12px - optimal mobile padding */
+    max-width: 100%;
+  }
+  
+  .techpack-content {
+    padding: var(--v10-space-4) 0 !important; /* 16px vertical spacing */
+  }
+  
+  .v10-techpack-step {
+    padding: var(--v10-space-4) 0 !important; /* Reduce excessive padding */
+    min-height: auto; /* Remove forced height on mobile */
+  }
+  
+  /* ===== BUTTON POSITIONING & TOUCH TARGET FIXES ===== */
+  
+  /* Step Action Buttons - Perfect Mobile Layout */
+  .v10-step-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    padding: var(--v10-space-4) 0 !important;
+    margin-top: var(--v10-space-6) !important;
+  }
+  
+  .v10-step-actions .v10-btn {
+    width: 100% !important;
+    min-height: 48px !important; /* Touch-friendly height */
+    padding: var(--v10-space-3) var(--v10-space-4) !important;
+    font-size: var(--v10-text-base) !important;
+    border-radius: var(--v10-radius-md) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  /* Theme Toggle Mobile Positioning Fix */
+  .v10-theme-toggle {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    margin-bottom: var(--v10-space-4) !important;
+    justify-content: center !important;
+  }
+  
+  .v10-theme-toggle--floating {
+    position: fixed !important;
+    top: var(--v10-space-4) !important;
+    right: var(--v10-space-3) !important;
+    z-index: 1000 !important;
+    transform: scale(0.9) !important; /* Smaller on mobile */
+  }
+  
+  .v10-theme-toggle--header {
+    position: static !important;
+    width: 100% !important;
+    justify-content: center !important;
+    margin: var(--v10-space-4) 0 !important;
+  }
+  
+  /* ===== MODAL SYSTEM MOBILE OPTIMIZATION ===== */
+  
+  /* Modal Overlay - Mobile Bottom Sheet */
+  .v10-modal-overlay {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  
+  .v10-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0 !important;
+    margin: 0 !important;
+    transform: translateY(100%) !important;
+    transition: transform 0.3s ease-out !important;
+  }
+  
+  .v10-modal-overlay.show .v10-modal {
+    transform: translateY(0) !important;
+  }
+  
+  /* Modal Actions - Mobile Stacking */
+  .v10-modal-actions {
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    padding: var(--v10-space-4) !important;
+    border-top: 1px solid var(--v10-border-primary) !important;
+  }
+  
+  .v10-modal-actions .v10-btn,
+  .v10-modal-actions button {
+    width: 100% !important;
+    min-height: 48px !important;
+    margin: 0 !important;
+  }
+  
+  /* Modal Header Mobile Optimization */
+  .v10-modal-header {
+    padding: var(--v10-space-4) !important;
+    border-bottom: 1px solid var(--v10-border-primary) !important;
+  }
+  
+  .v10-modal-body {
+    padding: var(--v10-space-4) !important;
+    max-height: calc(90vh - 140px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* ===== FORM LAYOUT MOBILE OPTIMIZATION ===== */
+  
+  /* Form Grid - Mobile Single Column */
+  .v10-form-grid,
+  .v10-form-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-4) !important;
+  }
+  
+  .v10-form-field,
+  .v10-form-field--half,
+  .v10-form-field--full {
+    width: 100% !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  /* Form Inputs - Touch Optimized */
+  .v10-form-input,
+  .v10-form-input-enhanced,
+  .v10-form-select,
+  .v10-form-textarea,
+  .v10-form-textarea-enhanced {
+    width: 100% !important;
+    min-height: 48px !important; /* Touch-friendly */
+    padding: var(--v10-space-3) !important;
+    font-size: var(--v10-text-base) !important;
+    border-radius: var(--v10-radius-md) !important;
+    border: 1px solid var(--v10-border-primary) !important;
+    background: var(--v10-bg-input) !important;
+  }
+  
+  .v10-form-textarea,
+  .v10-form-textarea-enhanced {
+    min-height: 120px !important;
+    resize: vertical !important;
+  }
+  
+  /* Form Labels Mobile Optimization */
+  .v10-form-label,
+  .v10-form-label-enhanced {
+    font-size: var(--v10-text-sm) !important;
+    font-weight: 600 !important;
+    margin-bottom: var(--v10-space-2) !important;
+    display: block !important;
+  }
+  
+  /* ===== STEP HEADER MOBILE OPTIMIZATION ===== */
+  .v10-step-header {
+    flex-direction: column !important;
+    gap: var(--v10-space-4) !important;
+    align-items: stretch !important;
+    padding: var(--v10-space-4) 0 !important;
+    text-align: center !important;
+  }
+  
+  .v10-step-title {
+    font-size: var(--v10-text-xl) !important;
+    line-height: 1.3 !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-step-subtitle {
+    font-size: var(--v10-text-base) !important;
+    color: var(--v10-text-secondary) !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* ===== STUDIO CARD MOBILE OPTIMIZATION ===== */
+  .v10-studio-card {
+    margin-bottom: var(--v10-space-6) !important;
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+    box-shadow: var(--v10-shadow-sm) !important;
+  }
+  
+  .v10-studio-header {
+    text-align: center !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .v10-studio-title {
+    font-size: var(--v10-text-lg) !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-studio-subtitle {
+    font-size: var(--v10-text-sm) !important;
+    color: var(--v10-text-secondary) !important;
+  }
+  
+  /* ===== PROGRESS INDICATOR MOBILE ===== */
+  .simple-progress-container {
+    margin-bottom: var(--v10-space-6) !important;
+    padding: 0 var(--v10-space-2) !important;
+  }
+  
+  .simple-progress-steps {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  .simple-step {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: var(--v10-space-1) !important;
+  }
+  
+  .simple-step-circle {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: var(--v10-text-sm) !important;
+    font-weight: 600 !important;
+    background: var(--v10-bg-secondary) !important;
+    color: var(--v10-text-secondary) !important;
+    border: 2px solid var(--v10-border-primary) !important;
+  }
+  
+  .simple-step.active .simple-step-circle {
+    background: var(--v10-accent-primary) !important;
+    color: white !important;
+    border-color: var(--v10-accent-primary) !important;
+  }
+  
+  .simple-step span {
+    font-size: var(--v10-text-xs) !important;
+    text-align: center !important;
+    color: var(--v10-text-muted) !important;
+    line-height: 1.2 !important;
+  }
+  
+  .simple-step.active span {
+    color: var(--v10-accent-primary) !important;
+    font-weight: 600 !important;
+  }
+  
+  /* ===== LANDING PAGE MOBILE OPTIMIZATION ===== */
+  
+  /* Landing Hero Mobile */
+  .v10-landing-hero {
+    padding: var(--v10-space-6) 0 !important;
+    text-align: center !important;
+  }
+  
+  .v10-landing-title-premium {
+    font-size: var(--v10-text-2xl) !important;
+    line-height: 1.2 !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .v10-landing-subtitle-premium {
+    font-size: var(--v10-text-base) !important;
+    line-height: 1.5 !important;
+    color: var(--v10-text-secondary) !important;
+    max-width: none !important;
+  }
+  
+  /* Landing Buttons Mobile */
+  .v10-landing-buttons-premium {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    align-items: stretch !important;
+  }
+  
+  .v10-btn-hero-premium,
+  .v10-btn-templates-premium {
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: var(--v10-space-4) !important;
+    font-size: var(--v10-text-base) !important;
+    border-radius: var(--v10-radius-lg) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--v10-space-2) !important;
+    text-decoration: none !important;
+  }
+  
+  /* Requirements Grid Mobile */
+  .v10-requirements-grid-premium {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-4) !important;
+  }
+  
+  .v10-requirement-card-premium {
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+    text-align: center !important;
+  }
+  
+  .v10-requirement-icon-premium {
+    margin: 0 auto var(--v10-space-3) auto !important;
+  }
+  
+  .v10-requirement-title-premium {
+    font-size: var(--v10-text-base) !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-requirement-description-premium {
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* ===== SUBMISSION TYPE SELECTION MOBILE ===== */
+  
+  /* Submission Options Mobile Grid */
+  .v10-submission-options {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-4) !important;
+  }
+  
+  .v10-submission-option {
+    width: 100% !important;
+    min-height: auto !important;
+    padding: var(--v10-space-4) !important;
+    text-align: left !important;
+    border-radius: var(--v10-radius-lg) !important;
+  }
+  
+  .v10-glass-card {
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+  }
+  
+  .v10-glass-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  .v10-glass-card-icon {
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-glass-card-title {
+    font-size: var(--v10-text-lg) !important;
+    margin-bottom: var(--v10-space-2) !important;
+  }
+  
+  .v10-glass-card-description {
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.5 !important;
+    margin-bottom: var(--v10-space-3) !important;
+  }
+  
+  .v10-glass-card-features {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-1) !important;
+    align-items: center !important;
+  }
+  
+  .v10-feature-item {
+    font-size: var(--v10-text-xs) !important;
+    text-align: center !important;
+  }
+  
+  /* ===== GARMENT GRIDS MOBILE OPTIMIZATION ===== */
+  
+  /* Garments Grid Mobile */
+  .garments-grid,
+  .v10-garments-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--v10-space-4) !important;
+    padding: 0 !important;
+  }
+  
+  /* Garment Cards Mobile */
+  .garment-card,
+  .v10-garment-card {
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .garment-card-header,
+  .v10-garment-card-header {
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  .garment-info,
+  .v10-garment-info {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  .garment-actions,
+  .v10-garment-actions {
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+    width: 100% !important;
+  }
+  
+  .garment-actions .v10-btn,
+  .v10-garment-actions .v10-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+  }
+  
+  /* ===== DELIVERY OPTIONS MOBILE ===== */
+  
+  /* Delivery Options Mobile */
+  .v10-delivery-options,
+  .v10-delivery-options-enhanced {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-3) !important;
+  }
+  
+  .v10-delivery-option,
+  .v10-delivery-option-enhanced {
+    width: 100% !important;
+    padding: var(--v10-space-3) !important;
+    border-radius: var(--v10-radius-md) !important;
+    min-height: 60px !important;
+  }
+  
+  .v10-delivery-option-content,
+  .v10-delivery-option-content-enhanced {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--v10-space-3) !important;
+  }
+  
+  .v10-delivery-option-icon {
+    font-size: var(--v10-text-xl) !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .v10-delivery-option-text {
+    flex: 1 !important;
+  }
+  
+  /* ===== ENHANCED COUNTRY SELECTOR MOBILE ===== */
+  
+  .v10-enhanced-country-wrapper {
+    position: relative !important;
+    width: 100% !important;
+  }
+  
+  .v10-enhanced-country-input {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: var(--v10-space-3) var(--v10-space-10) var(--v10-space-3) var(--v10-space-3) !important;
+  }
+  
+  .v10-enhanced-country-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: var(--v10-bg-modal) !important;
+    border: 1px solid var(--v10-border-primary) !important;
+    border-radius: var(--v10-radius-md) !important;
+    box-shadow: var(--v10-shadow-lg) !important;
+    z-index: 1000 !important;
+    max-height: 300px !important;
+    overflow: hidden !important;
+  }
+  
+  .v10-enhanced-country-list {
+    max-height: 250px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .v10-enhanced-country-option {
+    padding: var(--v10-space-3) !important;
+    border-bottom: 1px solid var(--v10-border-secondary) !important;
+    cursor: pointer !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  /* ===== WARNING & ALERT BOXES MOBILE ===== */
+  
+  .v10-warning-box,
+  .v10-warning-box-enhanced {
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-md) !important;
+    margin: var(--v10-space-4) 0 !important;
+    display: flex !important;
+    gap: var(--v10-space-3) !important;
+    align-items: flex-start !important;
+  }
+  
+  .v10-warning-icon {
+    font-size: var(--v10-text-xl) !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .v10-warning-content {
+    flex: 1 !important;
+    font-size: var(--v10-text-sm) !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* ===== CLIENT OPTIONS MOBILE ===== */
+  
+  .v10-client-options {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--v10-space-4) !important;
+  }
+  
+  .v10-client-option {
+    width: 100% !important;
+    padding: var(--v10-space-4) !important;
+    border-radius: var(--v10-radius-lg) !important;
+    border: 1px solid var(--v10-border-primary) !important;
+    background: var(--v10-bg-card) !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: var(--v10-transition) !important;
+    min-height: auto !important;
+  }
+  
+  .v10-client-option-content {
+    display: flex !important;
+    gap: var(--v10-space-3) !important;
+    align-items: flex-start !important;
+  }
+  
+  .v10-client-option-icon {
+    flex-shrink: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: var(--v10-radius-md) !important;
+    background: var(--v10-bg-secondary) !important;
+  }
+  
+  .v10-client-option-title {
+    font-size: var(--v10-text-base) !important;
+    font-weight: 600 !important;
+    margin-bottom: var(--v10-space-2) !important;
+    line-height: 1.3 !important;
+  }
+  
+  .v10-client-option-description {
+    font-size: var(--v10-text-sm) !important;
+    color: var(--v10-text-secondary) !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ====================================================
+   SMALL MOBILE OPTIMIZATION (480px and below)
+   Extra optimizations for very small screens
+   ==================================================== */
+
+@media (max-width: 480px) {
+  
+  /* ===== EXTRA SMALL MOBILE CONTAINER ===== */
+  .techpack-container {
+    padding: 0 var(--v10-space-2) !important; /* 8px - tighter on very small screens */
+  }
+  
+  .techpack-content {
+    padding: var(--v10-space-3) 0 !important; /* Reduce vertical padding */
+  }
+  
+  /* ===== TYPOGRAPHY ADJUSTMENTS ===== */
+  .v10-landing-title-premium {
+    font-size: var(--v10-text-xl) !important; /* Smaller on very small screens */
+  }
+  
+  .v10-step-title {
+    font-size: var(--v10-text-lg) !important;
+  }
+  
+  .v10-btn-hero-premium,
+  .v10-btn-templates-premium {
+    min-height: 48px !important; /* Slightly smaller touch targets */
+    padding: var(--v10-space-3) !important;
+    font-size: var(--v10-text-sm) !important;
+  }
+  
+  /* ===== STUDIO CARDS COMPACT ===== */
+  .v10-studio-card {
+    padding: var(--v10-space-3) !important;
+    margin-bottom: var(--v10-space-4) !important;
+  }
+  
+  /* ===== FORM OPTIMIZATIONS ===== */
+  .v10-form-input,
+  .v10-form-input-enhanced,
+  .v10-form-select,
+  .v10-form-textarea,
+  .v10-form-textarea-enhanced {
+    min-height: 44px !important; /* Minimum iOS touch target */
+    padding: var(--v10-space-2) !important;
+    font-size: var(--v10-text-sm) !important;
+  }
+  
+  /* ===== MODAL COMPACT ===== */
+  .v10-modal {
+    max-height: 95vh !important; /* More screen real estate */
+  }
+  
+  .v10-modal-header,
+  .v10-modal-body,
+  .v10-modal-actions {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  /* ===== BUTTONS COMPACT ===== */
+  .v10-step-actions .v10-btn {
+    min-height: 44px !important;
+    padding: var(--v10-space-2) var(--v10-space-3) !important;
+    font-size: var(--v10-text-sm) !important;
+  }
+  
+  /* ===== PROGRESS INDICATORS COMPACT ===== */
+  .simple-step-circle {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: var(--v10-text-xs) !important;
+  }
+  
+  .simple-step span {
+    font-size: 10px !important; /* Extra small text for very small screens */
+  }
+  
+  /* ===== THEME TOGGLE COMPACT ===== */
+  .v10-theme-toggle--floating {
+    transform: scale(0.8) !important; /* Even smaller on very small screens */
+    top: var(--v10-space-2) !important;
+    right: var(--v10-space-2) !important;
+  }
+  
+  /* ===== GARMENT CARDS COMPACT ===== */
+  .garment-card,
+  .v10-garment-card {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  .v10-requirement-card-premium {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  /* ===== SUBMISSION OPTIONS COMPACT ===== */
+  .v10-submission-option {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  .v10-glass-card {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  .v10-glass-card-title {
+    font-size: var(--v10-text-base) !important;
+  }
+  
+  .v10-glass-card-description {
+    font-size: var(--v10-text-xs) !important;
+  }
+  
+  /* ===== CLIENT OPTIONS COMPACT ===== */
+  .v10-client-option {
+    padding: var(--v10-space-3) !important;
+  }
+  
+  .v10-client-option-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .v10-client-option-title {
+    font-size: var(--v10-text-sm) !important;
+  }
+  
+  .v10-client-option-description {
+    font-size: var(--v10-text-xs) !important;
+  }
+  
+  /* ===== DELIVERY OPTIONS COMPACT ===== */
+  .v10-delivery-option,
+  .v10-delivery-option-enhanced {
+    padding: var(--v10-space-2) var(--v10-space-3) !important;
+    min-height: 52px !important;
+  }
+  
+  .v10-delivery-option-icon {
+    font-size: var(--v10-text-lg) !important;
+  }
+  
+  /* ===== WARNING BOXES COMPACT ===== */
+  .v10-warning-box,
+  .v10-warning-box-enhanced {
+    padding: var(--v10-space-3) !important;
+    gap: var(--v10-space-2) !important;
+  }
+  
+  .v10-warning-content {
+    font-size: var(--v10-text-xs) !important;
+  }
+}
+
+/* ====================================================
+   MOBILE ACCESSIBILITY & PERFORMANCE ENHANCEMENTS
+   Final touches for perfect mobile experience
+   ==================================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  @media (max-width: 768px) {
+    .v10-btn,
+    .v10-form-input,
+    .v10-form-input-enhanced,
+    .v10-modal,
+    .v10-studio-card {
+      border-width: 2px !important;
+    }
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  @media (max-width: 768px) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Touch-friendly focus indicators */
+@media (max-width: 768px) {
+  .v10-btn:focus-visible,
+  .v10-form-input:focus-visible,
+  .v10-form-input-enhanced:focus-visible,
+  .v10-client-option:focus-visible,
+  .v10-submission-option:focus-visible {
+    outline: 3px solid var(--v10-accent-primary) !important;
+    outline-offset: 2px !important;
+  }
+}
+
+/* Mobile-specific loading states */
+@media (max-width: 768px) {
+  .v10-btn.loading {
+    pointer-events: none !important;
+    opacity: 0.7 !important;
+  }
+  
+  .v10-btn.loading::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin: auto !important;
+    border: 2px solid transparent !important;
+    border-top: 2px solid currentColor !important;
+    border-radius: 50% !important;
+    animation: v10-mobile-spin 1s linear infinite !important;
+  }
+}
+
+@keyframes v10-mobile-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile viewport fixes */
+@media (max-width: 768px) {
+  .v10-techpack-step,
+  .v10-modal-overlay {
+    /* Prevent zoom on input focus */
+    -webkit-text-size-adjust: 100% !important;
+    -moz-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+  
+  /* Improve scrolling performance */
+  .v10-modal-body,
+  .techpack-content {
+    -webkit-overflow-scrolling: touch !important;
+    transform: translateZ(0) !important; /* Force hardware acceleration */
+  }
+}
+
+/* Safe area support for modern mobile devices */
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .techpack-container {
+      padding-left: max(var(--v10-space-3), env(safe-area-inset-left)) !important;
+      padding-right: max(var(--v10-space-3), env(safe-area-inset-right)) !important;
+    }
+    
+    .v10-modal {
+      padding-bottom: max(0px, env(safe-area-inset-bottom)) !important;
+    }
+    
+    .v10-theme-toggle--floating {
+      top: max(var(--v10-space-4), env(safe-area-inset-top)) !important;
+      right: max(var(--v10-space-3), env(safe-area-inset-right)) !important;
+    }
+  }
+}
