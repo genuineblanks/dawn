@@ -8087,7 +8087,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 
 .garment-summary {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--v10-space-3);
 }
@@ -8200,10 +8200,8 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   cursor: pointer;
   transition: all 0.3s ease;
   
-  /* Position button at top-right, aligned with garment title */
-  align-self: flex-start;
-  margin-top: -2px; /* Fine-tune alignment with title text */
-  flex-shrink: 0; /* Prevent button from shrinking */
+  /* Keep button inline with content */
+  flex-shrink: 0;
 }
 
 .garment-summary__edit-btn:hover {
