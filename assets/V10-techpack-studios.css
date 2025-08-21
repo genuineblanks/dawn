@@ -6665,6 +6665,10 @@ body[class*="techpack"] *,
       white-space: nowrap;
     }
     
+    .v10-header-description {
+      margin: var(--v10-space-8) auto var(--v10-space-8) auto;
+    }
+    
     .v10-header-description p {
       font-size: var(--v10-text-base);
       padding: var(--v10-space-4) var(--v10-space-5);
