@@ -6781,12 +6781,20 @@ class V10_GarmentStudio {
       sampleStockCollapsed.style.pointerEvents = 'none';
       
       const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+      const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+      
+      // Ensure placeholder is visible and display is hidden initially
       if (stockPlaceholder) {
+        stockPlaceholder.style.display = 'flex';
         stockPlaceholder.style.cursor = 'not-allowed';
         const placeholderText = stockPlaceholder.querySelector('.placeholder-text');
         if (placeholderText) {
           placeholderText.textContent = 'Select fabric type first';
         }
+      }
+      
+      if (stockDisplay) {
+        stockDisplay.style.display = 'none';
       }
     }
     
@@ -6795,12 +6803,20 @@ class V10_GarmentStudio {
       sampleCustomCollapsed.style.pointerEvents = 'none';
       
       const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+      const customDisplay = garmentCard.querySelector('#sample-custom-display');
+      
+      // Ensure placeholder is visible and display is hidden initially
       if (customPlaceholder) {
+        customPlaceholder.style.display = 'flex';
         customPlaceholder.style.cursor = 'not-allowed';
         const placeholderText = customPlaceholder.querySelector('.placeholder-text');
         if (placeholderText) {
           placeholderText.textContent = 'Select fabric type first';
         }
+      }
+      
+      if (customDisplay) {
+        customDisplay.style.display = 'none';
       }
     }
   }
