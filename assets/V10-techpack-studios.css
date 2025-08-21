@@ -674,16 +674,9 @@ body[class*="techpack"] *,
 
 .v10-requirements-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile-first: single column */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--v10-space-6);
   margin-bottom: var(--v10-space-12);
-}
-
-/* Desktop enhancement - only apply multi-column on larger screens */
-@media (min-width: 768px) {
-  .v10-requirements-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
 }
 
 .v10-requirement-card {
@@ -830,7 +823,8 @@ body[class*="techpack"] *,
   }
   
   .v10-requirements-grid {
-    gap: var(--v10-space-4); /* Reduce gap on mobile */
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-4);
   }
   
   .v10-requirement-card {
@@ -1719,22 +1713,8 @@ body[class*="techpack"] *,
 
 .v10-submission-options {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile-first: single column */
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
-}
-
-/* Desktop enhancement: show multiple columns on larger screens */
-@media (min-width: 768px) {
-  .v10-submission-options {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
-  }
-}
-
-@media (min-width: 1024px) {
-  .v10-submission-options {
-    grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop */
-  }
 }
 
 .v10-submission-option {
@@ -2875,7 +2855,7 @@ body[class*="techpack"] *,
 
 .compact-radio-grid {
   display: grid;
-  grid-template-columns: 1fr;  /* Mobile-first: single column */
+  grid-template-columns: repeat(3, 1fr);  /* 3 columns for impactful layout */
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
 }
@@ -2884,17 +2864,10 @@ body[class*="techpack"] *,
 
 /* Removed duplicate change-selection-btn rules - using the correct ones below */
 
-/* Desktop enhancement: show multiple columns on larger screens */
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .compact-radio-grid {
     grid-template-columns: repeat(2, 1fr);  /* 2 columns on tablet */
-  }
-}
-
-@media (min-width: 1024px) {
-  .compact-radio-grid {
-    grid-template-columns: repeat(3, 1fr);  /* 3 columns on desktop */
-    gap: var(--v10-space-4);
+    gap: var(--v10-space-3);
   }
 }
 
@@ -2943,7 +2916,8 @@ body[class*="techpack"] *,
 
 @media (max-width: 480px) {
   .compact-radio-grid {
-    gap: var(--v10-space-3); /* Reduce gap on small mobile */
+    grid-template-columns: repeat(1, 1fr);  /* 1 column on mobile */
+    gap: var(--v10-space-3);
   }
   
   .compact-radio-card-content {
@@ -2982,16 +2956,9 @@ body[class*="techpack"] *,
 
 .review-summary-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile-first: single column */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--v10-space-6);
   margin-bottom: var(--v10-space-8);
-}
-
-/* Desktop enhancement */
-@media (min-width: 768px) {
-  .review-summary-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
 }
 
 .review-card {
@@ -3195,19 +3162,12 @@ body[class*="techpack"] *,
   line-height: 1.6;
 }
 
-/* Review Garment Cards - Mobile-first Layout */
+/* Review Garment Cards - 2 Column Layout */
 .review-garments-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile-first: single column */
+  grid-template-columns: 1fr 1fr;
   gap: var(--v10-space-4);
   align-items: start;
-}
-
-/* Desktop enhancement */
-@media (min-width: 768px) {
-  .review-garments-grid {
-    grid-template-columns: 1fr 1fr; /* 2 columns on desktop */
-  }
 }
 
 /* Single garment takes full width */
@@ -4725,15 +4685,8 @@ body[class*="techpack"] *,
 
 .sample-type-selection {
   display: grid;
-  grid-template-columns: 1fr; /* Mobile-first: single column */
+  grid-template-columns: 1fr 1fr;
   gap: var(--v10-space-3);
-}
-
-/* Desktop enhancement */
-@media (min-width: 768px) {
-  .sample-type-selection {
-    grid-template-columns: 1fr 1fr; /* 2 columns on desktop */
-  }
 }
 
 
@@ -5874,25 +5827,12 @@ body[class*="techpack"] *,
     background: rgba(255, 255, 255, 0.02);
   }
 
-  /* Premium requirements grid - mobile-first */
+  /* Premium requirements grid - 4 columns on desktop */
   .v10-requirements-grid-premium {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile-first: single column */
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--v10-space-6);
     margin-bottom: var(--v10-space-12);
-  }
-  
-  /* Desktop enhancement - show multiple columns on larger screens */
-  @media (min-width: 768px) {
-    .v10-requirements-grid-premium {
-      grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .v10-requirements-grid-premium {
-      grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
-    }
   }
 
   /* Premium requirement cards with lighter interiors */
@@ -6968,7 +6908,8 @@ body[class*="techpack"] *,
   /* Mobile responsive design */
   @media (max-width: 768px) {
     .v10-requirements-grid-premium {
-      gap: var(--v10-space-4); /* Reduce gap on mobile */
+      grid-template-columns: 1fr;
+      gap: var(--v10-space-4);
     }
 
     .v10-landing-title-premium {
@@ -10375,6 +10316,18 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   /* ===== BUTTON POSITIONING & TOUCH TARGET FIXES ===== */
   
   
+  /* Step Action Buttons - Mobile Layout */
+  .v10-step-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-step-actions .v10-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  
   /* Theme Toggle Mobile Positioning - Minimal Fix */
   .v10-theme-toggle--header {
     justify-content: center;
@@ -10899,59 +10852,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   }
 }
 
-/* ====================================================
-   V10 CRITICAL MOBILE TOUCH TARGET FIXES
-   Ensure all interactive elements meet 44px minimum
-   ==================================================== */
-
-@media (max-width: 768px) {
-  /* Touch target compliance - Critical for mobile usability */
-  .v10-btn,
-  .btn,
-  button,
-  .v10-card,
-  .card,
-  .v10-option,
-  .option,
-  .v10-radio-card,
-  .radio-card,
-  .compact-radio-card,
-  .v10-glass-card {
-    min-height: 44px !important;
-    min-width: 44px !important;
-  }
-  
-  /* Form inputs touch targets */
-  input,
-  select,
-  textarea,
-  .v10-form-input,
-  .v10-form-select,
-  .v10-form-textarea {
-    min-height: 44px !important;
-    font-size: 16px !important; /* Prevent iOS zoom */
-  }
-  
-  /* Modal and overlay improvements */
-  .v10-modal,
-  .modal {
-    padding: var(--v10-space-3) !important;
-    margin: var(--v10-space-2) !important;
-  }
-  
-  /* Improve spacing for better mobile UX */
-  .v10-form-group,
-  .form-group {
-    margin-bottom: var(--v10-space-4) !important;
-  }
-  
-  /* Card padding improvements */
-  .v10-glass-card,
-  .v10-card,
-  .card {
-    padding: var(--v10-space-4) !important;
-  }
-}
 
 /* ===================================
    ICON VISIBILITY AND THEME FIXES
@@ -11045,11 +10945,6 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-}
-
-/* Preserve lab dip background colors for the correct class */
-.collection-item__color[style*="background-color"] {
-  background-color: var(--labdip-bg-color, inherit) !important;
 }
 
 /* ===================================
