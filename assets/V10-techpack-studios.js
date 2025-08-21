@@ -9363,12 +9363,10 @@ class V10_DesignStudio {
                   <label class="garment-selector__option${!isEligible ? ' garment-selector__option--disabled' : ''}">
                     <input type="radio" name="target-garment" value="${garment.id}"${!isEligible ? ' disabled' : ''}>
                     <span class="garment-selector__card">
-                      <div class="garment-selector__main">
-                        <span class="garment-selector__title">Garment ${garment.number}</span>
-                        <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
-                        ${badgeText ? `<span class="sample-type-badge sample-type-badge--${badgeClass}">${badgeText}</span>` : ''}
-                      </div>
+                      <span class="garment-selector__title">Garment ${garment.number}</span>
+                      <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
                       ${labDipIndicators}
+                      ${badgeText ? `<span class="sample-type-badge sample-type-badge--${badgeClass}">${badgeText}</span>` : ''}
                     </span>
                   </label>
                 `;
@@ -10250,8 +10248,8 @@ class V10_ReviewManager {
     // Show target step
     targetStep.style.display = 'block';
     
-    // Scroll to target step
-    targetStep.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to top for mobile navigation
+    window.scrollTo(0, 0);
     
     // Update session storage if available
     try {
@@ -11653,6 +11651,9 @@ class V10_TechPackSystem {
       step3.style.display = 'none';
       step2.style.display = 'block';
       
+      // Scroll to top for mobile navigation
+      window.scrollTo(0, 0);
+      
       // Update current step
       sessionStorage.setItem('v10_current_step', '2');
       
@@ -11685,6 +11686,9 @@ class V10_TechPackSystem {
       
       step3.style.display = 'none';
       step4.style.display = 'block';
+      
+      // Scroll to top for mobile navigation
+      window.scrollTo(0, 0);
       
       console.log('🎯 STEP 4: After - step3.style.display:', step3.style.display);
       console.log('🎯 STEP 4: After - step4.style.display:', step4.style.display);
@@ -12658,6 +12662,9 @@ class V10_FileManager {
     if (step1 && step2) {
       step1.style.display = 'block';
       step2.style.display = 'none';
+      
+      // Scroll to top for mobile navigation
+      window.scrollTo(0, 0);
     }
   }
 

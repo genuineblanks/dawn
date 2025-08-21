@@ -1497,24 +1497,9 @@ body[class*="techpack"] *,
   cursor: not-allowed;
 }
 
-.garment-selector__card {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--v10-space-4);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-secondary);
-  transition: var(--v10-transition);
-  position: relative;
-}
+/* Primary .garment-selector__card rule moved to line 7220 with correct vertical layout */
 
-.garment-selector__main {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
+/* .garment-selector__main removed - not needed with vertical layout */
 
 .garment-selector__option:not(.garment-selector__option--disabled):hover .garment-selector__card {
   border-color: var(--v10-border-focus);
@@ -1527,17 +1512,7 @@ body[class*="techpack"] *,
   box-shadow: 0 0 0 2px rgba(75, 85, 99, 0.1);
 }
 
-.garment-selector__title {
-  font-weight: 600;
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-base);
-  margin-bottom: var(--v10-space-1);
-}
-
-.garment-selector__details {
-  color: var(--v10-text-secondary);
-  font-size: var(--v10-text-sm);
-}
+/* Title and details rules consolidated at line 7242 */
 
 .garment-selector__option input[type="radio"] {
   position: absolute;
@@ -1547,16 +1522,14 @@ body[class*="techpack"] *,
 
 /* Sample Type Badges */
 .sample-type-badge {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: var(--v10-space-2);
+  margin-top: var(--v10-space-2);
   padding: 2px 6px;
   border-radius: var(--v10-radius-sm);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   line-height: 1.2;
+  align-self: flex-start;
 }
 
 .sample-type-badge--stock {
@@ -1582,7 +1555,7 @@ body[class*="techpack"] *,
   display: flex;
   align-items: center;
   gap: var(--v10-space-1);
-  margin-left: var(--v10-space-3);
+  margin-top: var(--v10-space-2);
 }
 
 .labdip-color-circle {
