@@ -4821,8 +4821,7 @@ class V10_GarmentStudio {
         if (presetMenu) {
           presetMenu.classList.remove('active');
         }
-      } 
-    }
+      }
   }
 
   handleCompactClicks(e) {
@@ -6730,6 +6729,13 @@ class V10_GarmentStudio {
     if (fabricExpanded) fabricExpanded.style.display = 'none';
     if (sampleReferenceExpanded) sampleReferenceExpanded.style.display = 'none';
     
+    // Initialize sample type expanded states
+    const sampleStockExpanded = garmentCard.querySelector('#sample-stock-expanded');
+    const sampleCustomExpanded = garmentCard.querySelector('#sample-custom-expanded');
+    
+    if (sampleStockExpanded) sampleStockExpanded.style.display = 'none';
+    if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'none';
+    
     // Initially disable fabric selection until garment is chosen
     if (fabricCollapsed) {
       fabricCollapsed.style.opacity = '0.6';
@@ -6762,6 +6768,38 @@ class V10_GarmentStudio {
         // For other request types, keep existing behavior
         sampleReferenceCollapsed.style.opacity = '1';
         sampleReferenceCollapsed.style.pointerEvents = 'auto';
+      }
+    }
+    
+    // Initially disable sample type selection until garment AND fabric are chosen
+    const sampleStockCollapsed = garmentCard.querySelector('#sample-stock-collapsed');
+    const sampleCustomCollapsed = garmentCard.querySelector('#sample-custom-collapsed');
+    
+    if (sampleStockCollapsed) {
+      sampleStockCollapsed.style.opacity = '0.5';
+      sampleStockCollapsed.style.pointerEvents = 'none';
+      
+      const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+      if (stockPlaceholder) {
+        stockPlaceholder.style.cursor = 'not-allowed';
+        const placeholderText = stockPlaceholder.querySelector('.placeholder-text');
+        if (placeholderText) {
+          placeholderText.textContent = 'Select fabric type first';
+        }
+      }
+    }
+    
+    if (sampleCustomCollapsed) {
+      sampleCustomCollapsed.style.opacity = '0.5';
+      sampleCustomCollapsed.style.pointerEvents = 'none';
+      
+      const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+      if (customPlaceholder) {
+        customPlaceholder.style.cursor = 'not-allowed';
+        const placeholderText = customPlaceholder.querySelector('.placeholder-text');
+        if (placeholderText) {
+          placeholderText.textContent = 'Select fabric type first';
+        }
       }
     }
   }
