@@ -4254,6 +4254,7 @@ body[class*="techpack"] *,
   transition: var(--v10-transition);
   position: relative;
   overflow: visible;
+  min-height: 200px;  /* Ensure consistent minimum height */
 }
 
 .compact-selection-section:hover {
@@ -4400,20 +4401,7 @@ body[class*="techpack"] *,
   overflow: visible;
 }
 
-/* Compact Radio Grid - Fixed for 3-column layout */
-.compact-radio-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-2);
-}
-
-@media (max-width: 768px) {
-  .compact-radio-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--v10-space-2);
-  }
-}
+/* Removed duplicate compact-radio-grid rules - using the responsive auto-fit version above */
 
 .compact-radio-card {
   position: relative;
@@ -5216,6 +5204,31 @@ body[class*="techpack"] *,
   background: #22c55e !important;
   border-color: #22c55e !important;
   color: white !important;
+}
+
+/* Active Edit Mode - Always Green with Enhanced Styling */
+.garment-card__finalize--active {
+  background: var(--v10-accent-success) !important;
+  border-color: var(--v10-accent-success) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: var(--v10-text-base) !important;
+  padding: var(--v10-space-3) var(--v10-space-6) !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+.garment-card__finalize--active:hover {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+.garment-card__finalize--active span {
+  font-weight: 700 !important;
 }
 
 /* Sample Type Required Highlighting */
@@ -7796,7 +7809,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
 
 .chart-bars {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(6, 1fr);  /* 6 columns: XS, S, M, L, XL, XXL (no 3XL) */
   gap: var(--v10-space-3);
   height: 200px;
   align-items: end;
@@ -7818,9 +7831,14 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   width: 100%;
   background: linear-gradient(180deg, var(--v10-accent-primary) 0%, var(--v10-accent-success) 100%);
   border-radius: var(--v10-radius-sm) var(--v10-radius-sm) 0 0;
-  transition: height 0.5s ease;
+  transition: all 0.5s ease;
   position: relative;
   margin-bottom: auto;
+  /* Initial state for animation */
+  height: 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
 }
 
 .size-bar__label {
@@ -8903,7 +8921,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   }
   
   .chart-bars {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);  /* Show 4 main sizes on tablet */
   }
   
   .size-bar:nth-child(n+5) {
@@ -8931,7 +8949,7 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   }
   
   .chart-bars {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);  /* Show 3 main sizes on mobile */
   }
   
   .size-bar:nth-child(n+4) {

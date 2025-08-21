@@ -3873,8 +3873,17 @@ class V10_QuantityCalculator {
     }
 
     const quantities = quantityData.sizes;
-    const sizeKeys = Object.keys(quantities);
-    const sizeValues = Object.values(quantities).map(q => parseInt(q) || 0);
+    // Filter out 3XL size
+    const validSizes = ['xs', 's', 'm', 'l', 'xl', 'xxl'];
+    const filteredQuantities = {};
+    validSizes.forEach(size => {
+      if (quantities[size] !== undefined) {
+        filteredQuantities[size] = quantities[size];
+      }
+    });
+    
+    const sizeKeys = Object.keys(filteredQuantities);
+    const sizeValues = Object.values(filteredQuantities).map(q => parseInt(q) || 0);
     const totalQuantity = sizeValues.reduce((sum, qty) => sum + qty, 0);
 
     if (totalQuantity === 0) {
@@ -4177,8 +4186,9 @@ class V10_QuantityCalculator {
       const bars = container.querySelectorAll('.size-bar__fill');
       bars.forEach((bar, index) => {
         setTimeout(() => {
-          bar.style.transform = 'scaleY(1)';
           bar.style.opacity = '1';
+          bar.style.transform = 'scaleY(1)';
+          // The height is already set in the HTML, just need to trigger the animation
         }, index * 100);
       });
     }, 100);
@@ -5490,6 +5500,7 @@ class V10_GarmentStudio {
     const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
     if (finalizeBtn) {
       finalizeBtn.style.display = 'block';
+      finalizeBtn.classList.add('garment-card__finalize--active');  // Always green in edit mode
       
       // Bind click handler if not already bound
       if (!finalizeBtn.dataset.bound) {
@@ -5680,6 +5691,7 @@ class V10_GarmentStudio {
     if (finalizeBtn) {
       finalizeBtn.style.display = 'none';
       finalizeBtn.classList.remove('garment-card__finalize--changed');
+      finalizeBtn.classList.remove('garment-card__finalize--active');  // Remove active green state
     }
     
     // Update the garment's completion status and UI
