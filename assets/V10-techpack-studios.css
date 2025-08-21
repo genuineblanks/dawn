@@ -10922,15 +10922,21 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
    CRITICAL FIX: LAB DIP COLOR CIRCLES
    =================================== */
 
-/* Force lab dip color circles to be visible */
-.labdip-color-circle {
+/* Force lab dip color circles to be visible - ALL CLASSES */
+.labdip-color-circle,
+.techpack-lab-dip-item__color-circle,
+.techpack-lab-dip-selection-card__color-circle,
+.techpack-lab-dip-card__color-circle {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
 
-/* Preserve lab dip background colors */
-.labdip-color-circle[style*="background-color"] {
+/* Preserve lab dip background colors - ALL CLASSES */
+.labdip-color-circle[style*="background-color"],
+.techpack-lab-dip-item__color-circle[style*="background-color"],
+.techpack-lab-dip-selection-card__color-circle[style*="background-color"],
+.techpack-lab-dip-card__color-circle[style*="background-color"] {
   background-color: var(--labdip-bg-color, inherit) !important;
 }
 
