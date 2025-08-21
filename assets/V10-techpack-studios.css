@@ -6238,6 +6238,7 @@ body[class*="techpack"] *,
     padding: var(--v10-space-6) var(--v10-space-8);
     box-shadow: var(--v10-shadow-lg);
     margin: 0;
+    text-align: center;
   }
   
   [data-theme="dark"] .v10-header-description p {
@@ -11039,21 +11040,15 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
    CRITICAL FIX: LAB DIP COLOR CIRCLES
    =================================== */
 
-/* Force lab dip color circles to be visible - ALL CLASSES */
-.labdip-color-circle,
-.techpack-lab-dip-item__color-circle,
-.techpack-lab-dip-selection-card__color-circle,
-.techpack-lab-dip-card__color-circle {
+/* Fix the ACTUAL lab dip color circles in Lab Dip Collection */
+.collection-item__color {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
 
-/* Preserve lab dip background colors - ALL CLASSES */
-.labdip-color-circle[style*="background-color"],
-.techpack-lab-dip-item__color-circle[style*="background-color"],
-.techpack-lab-dip-selection-card__color-circle[style*="background-color"],
-.techpack-lab-dip-card__color-circle[style*="background-color"] {
+/* Preserve lab dip background colors for the correct class */
+.collection-item__color[style*="background-color"] {
   background-color: var(--labdip-bg-color, inherit) !important;
 }
 
