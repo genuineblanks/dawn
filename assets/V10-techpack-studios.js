@@ -5094,14 +5094,8 @@ class V10_GarmentStudio {
         designReferenceContainer.style.display = e.target.checked ? 'block' : 'none';
       }
       
-      // Clear the design reference if unchecked
-      if (!e.target.checked) {
-        garmentData.designReference = '';
-        const designRefInput = garmentCard.querySelector('.design-reference__input');
-        if (designRefInput) {
-          designRefInput.value = '';
-        }
-      }
+      // Preserve the design reference value when toggling (don't clear it)
+      // The design reference should be maintained even when toggle is off
       
       // Update the summary display immediately
       this.updateGarmentSummary(garmentCard, garmentData);
