@@ -9329,13 +9329,46 @@ class V10_DesignStudio {
                   }
                 }
                 
+                // Get assigned lab dips for this garment
+                let labDipIndicators = '';
+                if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+                  const labDipColors = [];
+                  garment.assignedLabDips.forEach(labDipId => {
+                    const labDip = V10_State.labDips.get(labDipId);
+                    if (labDip) {
+                      labDipColors.push({
+                        id: labDipId,
+                        pantone: labDip.pantone,
+                        hex: labDip.hex || '#cccccc'
+                      });
+                    }
+                  });
+                  
+                  if (labDipColors.length > 0) {
+                    labDipIndicators = `
+                      <div class="garment-labdip-indicators">
+                        ${labDipColors.slice(0, 4).map(color => `
+                          <span class="labdip-color-circle" 
+                                style="background-color: ${color.hex}" 
+                                title="${color.pantone}">
+                          </span>
+                        `).join('')}
+                        ${labDipColors.length > 4 ? `<span class="labdip-more-indicator">+${labDipColors.length - 4}</span>` : ''}
+                      </div>
+                    `;
+                  }
+                }
+                
                 return `
                   <label class="garment-selector__option${!isEligible ? ' garment-selector__option--disabled' : ''}">
                     <input type="radio" name="target-garment" value="${garment.id}"${!isEligible ? ' disabled' : ''}>
                     <span class="garment-selector__card">
-                      <span class="garment-selector__title">Garment ${garment.number}</span>
-                      <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
-                      ${badgeText ? `<span class="sample-type-badge sample-type-badge--${badgeClass}">${badgeText}</span>` : ''}
+                      <div class="garment-selector__main">
+                        <span class="garment-selector__title">Garment ${garment.number}</span>
+                        <span class="garment-selector__details">${garment.type} - ${garment.fabricType}</span>
+                        ${badgeText ? `<span class="sample-type-badge sample-type-badge--${badgeClass}">${badgeText}</span>` : ''}
+                      </div>
+                      ${labDipIndicators}
                     </span>
                   </label>
                 `;
