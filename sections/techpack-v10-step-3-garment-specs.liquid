@@ -1077,56 +1077,109 @@ Enhanced with Visual Studio Guide System
           </button>
         </div>
         <div class="sample-type-selection">
-          <!-- Stock Fabric Color Card with Expandable Options -->
-          <div class="sample-type-card expandable-card" data-value="stock">
-            <input type="radio" name="sampleType" value="stock" style="display: none;">
-            <div class="sample-type-card__header">
-              <span class="sample-type-card__title">Stock Fabric Color</span>
-              <span class="sample-type-card__price">Select garment & fabric</span>
+          
+          <!-- Stock Fabric Color - Left Side -->
+          <div class="compact-selection-section">
+            <div class="selection-header">
+              <h5>Stock Fabric Color</h5>
             </div>
-            <span class="sample-type-card__description">Quick validation • 2-3 weeks</span>
-            <span class="sample-type-card__details">Black, off-white, or random stock color</span>
             
-            <!-- Expandable Sub-Options -->
-            <div class="sample-sub-options" style="display: none;">
-              <div class="sub-options-row">
-                <button type="button" class="sub-option-btn" data-sub-value="black">
-                  <span class="sub-option-text">Black</span>
-                </button>
-                <button type="button" class="sub-option-btn" data-sub-value="white">
-                  <span class="sub-option-text">White</span>
-                </button>
+            <!-- Collapsed State -->
+            <div class="compact-selection-widget" id="sample-stock-collapsed">
+              <div class="selection-placeholder" id="sample-stock-placeholder">
+                <span class="placeholder-icon">🎨</span>
+                <span class="placeholder-text">Select color option</span>
+                <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
               </div>
-              <div class="sub-options-row">
-                <button type="button" class="sub-option-btn sub-option-btn--full" data-sub-value="proximate">
-                  <span class="sub-option-text">Most proximate stock color to the techpack</span>
-                </button>
+              
+              <div class="selection-display" id="sample-stock-display" style="display: none;">
+                <div class="selected-item">
+                  <span class="selected-icon" id="sample-stock-selected-icon">🎨</span>
+                  <span class="selected-name" id="sample-stock-selected-name">Black</span>
+                </div>
+                <div class="sample-type-pricing">
+                  <span class="sample-type-price" id="sample-stock-price">avg. 120€</span>
+                  <span class="sample-type-description">Quick validation • 2-3 weeks</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Expanded State -->
+            <div class="selection-expanded" id="sample-stock-expanded" style="display: none;">
+              <div class="compact-radio-grid" id="sample-stock-grid">
+                <label class="compact-radio-card">
+                  <input type="radio" name="sampleType" value="stock" data-sub-value="black">
+                  <span class="compact-radio-card__content">
+                    <span class="compact-radio-card__icon">⚫</span>
+                    <span class="compact-radio-card__name">Black</span>
+                  </span>
+                </label>
+                <label class="compact-radio-card">
+                  <input type="radio" name="sampleType" value="stock" data-sub-value="white">
+                  <span class="compact-radio-card__content">
+                    <span class="compact-radio-card__icon">⚪</span>
+                    <span class="compact-radio-card__name">White</span>
+                  </span>
+                </label>
+                <label class="compact-radio-card">
+                  <input type="radio" name="sampleType" value="stock" data-sub-value="proximate">
+                  <span class="compact-radio-card__content">
+                    <span class="compact-radio-card__icon">🎯</span>
+                    <span class="compact-radio-card__name">Most proximate stock color to the techpack</span>
+                  </span>
+                </label>
               </div>
             </div>
           </div>
 
-          <!-- Custom Color (Pantone) Card with Expandable Options -->
-          <div class="sample-type-card expandable-card" data-value="custom">
-            <input type="radio" name="sampleType" value="custom" style="display: none;">
-            <div class="sample-type-card__header">
-              <span class="sample-type-card__title">Custom Color (Pantone)</span>
-              <span class="sample-type-card__price">Select garment & fabric</span>
+          <!-- Custom Color (Pantone) - Right Side -->
+          <div class="compact-selection-section">
+            <div class="selection-header">
+              <h5>Custom Color (Pantone)</h5>
             </div>
-            <span class="sample-type-card__description">Exact color match • 4-6 weeks</span>
-            <span class="sample-type-card__details">Requires Lab Dip assignment</span>
             
-            <!-- Expandable Sub-Options -->
-            <div class="sample-sub-options" style="display: none;">
-              <div class="sub-options-row">
-                <button type="button" class="sub-option-btn sub-option-btn--full" data-sub-value="design-studio">
-                  <span class="sub-option-text">PICK FROM OUR DESIGN STUDIO PANTONE LIBRARY</span>
-                </button>
+            <!-- Collapsed State -->
+            <div class="compact-selection-widget" id="sample-custom-collapsed">
+              <div class="selection-placeholder" id="sample-custom-placeholder">
+                <span class="placeholder-icon">🌈</span>
+                <span class="placeholder-text">Select color option</span>
+                <svg class="placeholder-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
               </div>
-              <div class="sub-options-row">
-                <button type="button" class="sub-option-btn sub-option-btn--full" data-sub-value="exact-pantone">
-                  <span class="sub-option-text">Exact Pantone Code in Techpack</span>
-                  <span class="sub-option-warning">only select this if you have pantone tcx or TPX</span>
-                </button>
+              
+              <div class="selection-display" id="sample-custom-display" style="display: none;">
+                <div class="selected-item">
+                  <span class="selected-icon" id="sample-custom-selected-icon">🌈</span>
+                  <span class="selected-name" id="sample-custom-selected-name">Design Studio Library</span>
+                </div>
+                <div class="sample-type-pricing">
+                  <span class="sample-type-price" id="sample-custom-price">avg. 150€</span>
+                  <span class="sample-type-description">Exact color match • 4-6 weeks</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Expanded State -->
+            <div class="selection-expanded" id="sample-custom-expanded" style="display: none;">
+              <div class="compact-radio-grid" id="sample-custom-grid">
+                <label class="compact-radio-card">
+                  <input type="radio" name="sampleType" value="custom" data-sub-value="design-studio">
+                  <span class="compact-radio-card__content">
+                    <span class="compact-radio-card__icon">📚</span>
+                    <span class="compact-radio-card__name">PICK FROM OUR DESIGN STUDIO PANTONE LIBRARY</span>
+                  </span>
+                </label>
+                <label class="compact-radio-card">
+                  <input type="radio" name="sampleType" value="custom" data-sub-value="exact-pantone">
+                  <span class="compact-radio-card__content">
+                    <span class="compact-radio-card__icon">🎯</span>
+                    <span class="compact-radio-card__name">Exact Pantone Code in Techpack</span>
+                    <span class="compact-radio-card__warning">only select this if you have pantone tcx or TPX</span>
+                  </span>
+                </label>
               </div>
             </div>
           </div>

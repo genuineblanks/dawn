@@ -16,66 +16,74 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 <section id="techpack-v10-landing" class="v10-techpack-landing">
   <div class="techpack-container">
     
-    <!-- Elegant Theme Toggle - Corner Positioned -->
-    <div class="v10-theme-elegant">
-      <div class="v10-theme-toggle v10-theme-toggle--corner">
-        <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
-          ☀️
-        </button>
-        <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
-          🌙
+    <!-- MAIN APP CONTAINER -->
+    <div class="v10-app-container">
+      
+      <!-- HEADER SECTION -->
+      <div class="v10-header-section">
+        <!-- Theme Toggle - Integrated in Header -->
+        <div class="v10-theme-toggle-header">
+          <div class="v10-theme-toggle v10-theme-toggle--header">
+            <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+              ☀️
+            </button>
+            <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+              🌙
+            </button>
+          </div>
+        </div>
+        
+        <!-- Title -->
+        <div class="v10-header-title">
+          <h1 class="v10-title-spectacular">
+            <span class="v10-title-line-1">SPECIALIZED</span>
+            <span class="v10-title-line-2">GARMENT MANUFACTURING</span>
+          </h1>
+        </div>
+        
+        <!-- Description Box -->
+        <div class="v10-header-description">
+          <p>
+            We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand. This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.
+          </p>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS SECTION -->
+      <div class="v10-actions-section">
+        <!-- Templates Button (Top) -->
+        <a href="#" class="v10-btn-templates-download" id="v10-get-templates-btn">
+          <div class="v10-btn-templates-inner">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>Download TechPack Templates</span>
+          </div>
+        </a>
+        
+        <!-- Access Studio Button (Bottom) -->
+        <button type="button" class="v10-btn-access-studio" id="v10-open-client-modal">
+          <div class="v10-btn-inner">
+            <div class="v10-btn-icon">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M11 15l3 3 6-6m8 3a11 11 0 11-22 0 11 11 0 0122 0z" stroke="currentColor" stroke-width="2.5"/>
+              </svg>
+            </div>
+            <span class="v10-btn-text">ACCESS SPECIALIZED STUDIO</span>
+          </div>
+          <div class="v10-btn-particles"></div>
+          <div class="v10-btn-glow"></div>
         </button>
       </div>
-    </div>
 
-    <!-- Hero Section - Clean Title -->
-    <div class="v10-landing-hero-new">
-      <h1 class="v10-title-spectacular">
-        <span class="v10-title-line-1">SPECIALIZED</span>
-        <span class="v10-title-line-2">GARMENT MANUFACTURING</span>
-      </h1>
-    </div>
-
-    <!-- Description - Elegant Without Container -->
-    <div class="v10-description-elegant">
-      <p>
-        We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand. This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.
-      </p>
-    </div>
-
-    <!-- Action Buttons - No Container, Pure Impact -->
-    <div class="v10-action-buttons-hero">
-      <!-- Primary ACCESS STUDIO Button -->
-      <button type="button" class="v10-btn-access-studio" id="v10-open-client-modal">
-        <div class="v10-btn-inner">
-          <div class="v10-btn-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M11 15l3 3 6-6m8 3a11 11 0 11-22 0 11 11 0 0122 0z" stroke="currentColor" stroke-width="2.5"/>
-            </svg>
-          </div>
-          <span class="v10-btn-text">ACCESS SPECIALIZED STUDIO</span>
+      <!-- REQUIREMENTS SECTION -->
+      <div class="v10-requirements-section">
+        <div class="v10-requirements-header">
+          <h2 class="v10-section-title">What You Need to Get Started</h2>
+          <p class="v10-section-subtitle">Ensure you have these essentials for a smooth submission process</p>
         </div>
-        <div class="v10-btn-particles"></div>
-        <div class="v10-btn-glow"></div>
-      </button>
-      
-      <!-- Secondary Templates Button -->
-      <a href="#" class="v10-btn-templates-download" id="v10-get-templates-btn">
-        <div class="v10-btn-templates-inner">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          <span>Download TechPack Templates</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- Requirements Section -->
-    <div class="v10-requirements-section">
-      <h2 class="v10-section-title">What You Need to Get Started</h2>
-      <p class="v10-section-subtitle">Ensure you have these essentials for a smooth submission process</p>
-      
-      <div class="v10-requirements-grid-premium">
+        
+        <div class="v10-requirements-grid-premium">
         <div class="v10-requirement-card-premium">
           <div class="v10-requirement-icon-premium">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -136,8 +144,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
           <div class="v10-status-badge-premium v10-status-badge-premium--optional">Optional</div>
         </div>
+        </div>
       </div>
-    </div>
+      
+    </div> <!-- End v10-app-container -->
 
   </div>
 </section>
