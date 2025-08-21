@@ -5852,14 +5852,15 @@ body[class*="techpack"] *,
   /* Spectacular Title */
   .v10-landing-hero-new {
     text-align: center;
-    margin-bottom: var(--v10-space-12);
+    margin-bottom: var(--v10-space-10);
+    padding-top: var(--v10-space-8);
   }
   
   .v10-title-spectacular {
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 900;
     letter-spacing: -0.02em;
-    line-height: 0.9;
+    line-height: 1.1;
     background: linear-gradient(135deg, 
       var(--v10-text-primary) 0%, 
       var(--v10-text-secondary) 50%, 
@@ -5871,6 +5872,20 @@ body[class*="techpack"] *,
     -webkit-text-fill-color: transparent;
     animation: title-glow 4s ease-in-out infinite;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .v10-title-line-1 {
+    display: block;
+    line-height: 0.9;
+  }
+  
+  .v10-title-line-2 {
+    display: block;
+    line-height: 0.9;
+    margin-top: -0.1em;
   }
   
   @keyframes title-glow {
@@ -5878,32 +5893,34 @@ body[class*="techpack"] *,
     50% { background-position: 100% 50%; }
   }
   
-  /* Elegant Description */
+  /* Elegant Description with Enhanced Contrast Box */
   .v10-description-elegant {
     text-align: center;
-    margin-bottom: var(--v10-space-16);
+    margin-bottom: var(--v10-space-12);
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    padding: 0 var(--v10-space-4);
   }
   
   .v10-description-elegant p {
-    font-size: var(--v10-text-xl);
-    line-height: 1.8;
+    font-size: var(--v10-text-lg);
+    line-height: 1.7;
     color: var(--v10-text-secondary);
     font-weight: 400;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--v10-glass-bg);
+    backdrop-filter: var(--v10-backdrop-blur);
+    border: 1px solid var(--v10-glass-border);
     border-radius: var(--v10-radius-lg);
-    padding: var(--v10-space-8) var(--v10-space-10);
-    box-shadow: var(--v10-shadow-lg);
+    padding: var(--v10-space-6) var(--v10-space-8);
+    box-shadow: var(--v10-shadow-xl);
     margin: 0;
+    position: relative;
   }
   
   [data-theme="dark"] .v10-description-elegant p {
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   /* Action Buttons Hero Section */
@@ -5911,8 +5928,9 @@ body[class*="techpack"] *,
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--v10-space-6);
-    margin-bottom: var(--v10-space-20);
+    gap: var(--v10-space-5);
+    margin-bottom: var(--v10-space-16);
+    padding: 0 var(--v10-space-4);
   }
   
   /* PRIMARY ACCESS STUDIO BUTTON - SPECTACULAR */
@@ -5957,11 +5975,24 @@ body[class*="techpack"] *,
       #f7fafc 75%, 
       #ffffff 100%
     );
-    color: #2d3748;
+    color: #2d3748 !important;
     box-shadow: 
       0 20px 40px rgba(0, 0, 0, 0.4),
       0 0 0 1px rgba(0, 0, 0, 0.1) inset,
       0 0 50px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Ensure text colors are correct for each theme */
+  .v10-btn-access-studio,
+  .v10-btn-access-studio .v10-btn-text,
+  .v10-btn-access-studio .v10-btn-inner {
+    color: #ffffff !important;
+  }
+  
+  [data-theme="dark"] .v10-btn-access-studio,
+  [data-theme="dark"] .v10-btn-access-studio .v10-btn-text,
+  [data-theme="dark"] .v10-btn-access-studio .v10-btn-inner {
+    color: #2d3748 !important;
   }
   
   .v10-btn-access-studio:hover {
@@ -6143,24 +6174,33 @@ body[class*="techpack"] *,
       font-size: var(--v10-text-base);
     }
     
+    .v10-landing-hero-new {
+      margin-bottom: var(--v10-space-8);
+      padding-top: var(--v10-space-6);
+    }
+    
     .v10-title-spectacular {
-      font-size: clamp(2.5rem, 12vw, 4rem);
-      line-height: 1;
+      font-size: clamp(2rem, 10vw, 3rem);
+    }
+    
+    .v10-title-line-1,
+    .v10-title-line-2 {
+      line-height: 0.9;
     }
     
     .v10-description-elegant {
-      margin-bottom: var(--v10-space-12);
+      margin-bottom: var(--v10-space-10);
       max-width: 95%;
     }
     
     .v10-description-elegant p {
-      font-size: var(--v10-text-lg);
-      padding: var(--v10-space-6) var(--v10-space-6);
+      font-size: var(--v10-text-base);
+      padding: var(--v10-space-5) var(--v10-space-6);
     }
     
     .v10-action-buttons-hero {
       gap: var(--v10-space-4);
-      margin-bottom: var(--v10-space-16);
+      margin-bottom: var(--v10-space-12);
     }
     
     .v10-btn-access-studio {
