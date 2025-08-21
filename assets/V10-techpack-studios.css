@@ -2820,7 +2820,7 @@ body[class*="techpack"] *,
 
 .compact-radio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);  /* 3 columns for impactful layout */
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
 }
@@ -2829,15 +2829,22 @@ body[class*="techpack"] *,
 
 /* Removed duplicate change-selection-btn rules - using the correct ones below */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .compact-radio-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);  /* 2 columns on tablet */
+    gap: var(--v10-space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .compact-radio-grid {
+    grid-template-columns: repeat(1, 1fr);  /* 1 column on mobile */
     gap: var(--v10-space-3);
   }
   
   .compact-radio-card-content {
     padding: var(--v10-space-4);
-    min-height: 100px;
+    min-height: 80px;
   }
 }
 
@@ -4407,6 +4414,9 @@ body[class*="techpack"] *,
   position: relative;
   cursor: pointer;
   display: block;
+  border-radius: var(--v10-radius-lg);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .compact-radio-card input[type="radio"] {
@@ -4419,34 +4429,77 @@ body[class*="techpack"] *,
 .compact-radio-card__content {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-2) var(--v10-space-3);
-  background: transparent;
-  border: none;
-  border-radius: var(--v10-radius-sm);
-  transition: var(--v10-transition);
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4) var(--v10-space-4);
+  /* Glassmorphism base state */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--v10-radius-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
+  min-height: 80px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* Enhanced hover glassmorphism */
 .compact-radio-card:hover .compact-radio-card__content {
-  background: var(--v10-surface-hover);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 0 20px rgba(163, 163, 163, 0.1);
 }
 
+/* Selected state with accent glassmorphism */
 .compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
-  background: var(--v10-accent-primary);
+  background: rgba(59, 130, 246, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   color: var(--v10-text-primary);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15), 0 0 20px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Add subtle shimmer effect on hover */
+.compact-radio-card__content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.compact-radio-card:hover .compact-radio-card__content::before {
+  left: 100%;
 }
 
 .compact-radio-card__icon {
-  font-size: 16px;
-  width: 20px;
+  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .compact-radio-card__name {
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
+  font-size: var(--v10-text-base);
+  font-weight: 600;
   color: inherit;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
 }
 
 /* Sample Type Selection */
