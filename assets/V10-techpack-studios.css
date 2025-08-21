@@ -4435,6 +4435,27 @@ body[class*="techpack"] *,
   color: var(--v10-accent-secondary);
 }
 
+/* Selection Widget Selected States */
+.compact-selection-section.selected {
+  background: var(--v10-surface-selected);
+  border-color: var(--v10-accent-primary);
+}
+
+.compact-selection-section.selected .compact-selection-widget {
+  border-color: var(--v10-accent-primary);
+}
+
+.compact-selection-section.selected .selection-display {
+  background: rgba(var(--v10-accent-primary-rgb), 0.05);
+  border: 1px solid var(--v10-accent-primary);
+  border-radius: var(--v10-radius-md);
+}
+
+.compact-selection-section.selected .selected-name {
+  color: var(--v10-accent-primary);
+  font-weight: 600;
+}
+
 /* Selection Expanded (dropdown options) */
 .selection-expanded {
   position: relative;

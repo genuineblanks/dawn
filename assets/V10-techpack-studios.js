@@ -4755,7 +4755,17 @@ class V10_GarmentStudio {
     // Set sample type (for sample requests)
     if (garmentData.sampleType) {
       const sampleTypeInput = clone.querySelector(`input[value="${garmentData.sampleType}"]`);
-      if (sampleTypeInput) sampleTypeInput.checked = true;
+      if (sampleTypeInput) {
+        sampleTypeInput.checked = true;
+        
+        // Set sub-value if it exists
+        if (garmentData.sampleSubValue) {
+          sampleTypeInput.dataset.subValue = garmentData.sampleSubValue;
+        }
+        
+        // Trigger visual display update for sample type
+        this.updateCompactSelection('sampleType', garmentData.sampleType, clone);
+      }
     }
 
     // Set sample reference (for bulk orders)
@@ -4984,7 +4994,15 @@ class V10_GarmentStudio {
       const previousSampleType = garmentData.sampleType;
       garmentData.sampleType = e.target.value;
       
-      console.log(`🎯 Sample type changed for garment ${garmentId}: ${previousSampleType} → ${e.target.value}`);
+      // Store sub-value if it exists (for Black, White, Design Studio, etc.)
+      if (e.target.dataset.subValue) {
+        garmentData.sampleSubValue = e.target.dataset.subValue;
+      } else {
+        delete garmentData.sampleSubValue; // Clear if no sub-value
+      }
+      
+      console.log(`🎯 Sample type changed for garment ${garmentId}: ${previousSampleType} → ${e.target.value}`, 
+                 garmentData.sampleSubValue ? `(${garmentData.sampleSubValue})` : '');
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
@@ -6273,6 +6291,13 @@ class V10_GarmentStudio {
       const sampleType = input?.value;
       const subValue = input?.dataset.subValue;
       
+      // Remove selected class from both sections first
+      const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
+      const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
+      
+      stockSection?.classList.remove('selected');
+      customSection?.classList.remove('selected');
+      
       if (sampleType === 'stock') {
         const selectedIcon = garmentCard.querySelector('#sample-stock-selected-icon');
         const selectedName = garmentCard.querySelector('#sample-stock-selected-name');
@@ -6297,6 +6322,9 @@ class V10_GarmentStudio {
             priceElement.textContent = `avg. ${price}€`;
           }
         }
+        
+        // Add selected class to stock section
+        stockSection?.classList.add('selected');
         
         // Auto-collapse after selection
         setTimeout(() => {
@@ -6327,6 +6355,9 @@ class V10_GarmentStudio {
             priceElement.textContent = `avg. ${price}€`;
           }
         }
+        
+        // Add selected class to custom section
+        customSection?.classList.add('selected');
         
         // Auto-collapse after selection
         setTimeout(() => {
@@ -6579,8 +6610,18 @@ class V10_GarmentStudio {
           this.enableSelectionSection(stockSection);
         }
         if (customSection) {
-          customSection.classList.remove('compact-selection-section--disabled');
-          this.enableSelectionSection(customSection);
+          // Check cotton fabric restriction before enabling custom color
+          const shouldRestrictCustomColor = V10_Utils.shouldRestrictCustomColor(garmentCard);
+          
+          if (shouldRestrictCustomColor) {
+            // Keep custom section disabled due to fabric restriction
+            customSection.classList.add('compact-selection-section--disabled');
+            this.disableSelectionSection(customSection, 'Not available for this fabric');
+          } else {
+            // Enable custom section - fabric allows custom colors
+            customSection.classList.remove('compact-selection-section--disabled');
+            this.enableSelectionSection(customSection);
+          }
         }
         
       } else {
