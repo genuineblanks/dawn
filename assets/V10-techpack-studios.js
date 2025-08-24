@@ -5176,7 +5176,7 @@ class V10_GarmentStudio {
         designWarning.style.display = 'none';
       }
       
-      // Smart toggle behavior - keep ON but hide input box for cleaner UI
+      // Smart toggle behavior - keep ON but FORCE hide input box
       const designToggle = garmentCard.querySelector('.design-toggle__input');
       const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
       
@@ -5185,14 +5185,14 @@ class V10_GarmentStudio {
         designToggle.checked = true;
         garmentData.includeDesign = true;
         
-        // Hide the input box for cleaner UI
+        // FORCE hide the input box (State 3: Design Ready)
         designInclusionBox.style.display = 'none';
         designInclusionBox.classList.remove('show');
         
-        // Update colors now that design is entered
+        // Update colors now that design is entered (will show green state)
         this.updateToggleColors(garmentCard, garmentData);
         
-        console.log(`✅ Design saved and input minimized for garment ${garmentId} - Toggle remains ON`);
+        console.log(`✅ Design saved and box FORCED hidden - Toggle ON and GREEN (State 3)`);
       }
       
       // Update the summary display to show design name
@@ -5515,17 +5515,29 @@ class V10_GarmentStudio {
       designReference.value = garmentData.designReference || '';
     }
     
-    // Show/hide ENTIRE design inclusion controls box based on toggle
+    // Show/hide ENTIRE design inclusion controls box based on toggle state
     const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
     if (designInclusionBox) {
       if (garmentData.includeDesign) {
-        designInclusionBox.style.display = 'block';
-        designInclusionBox.classList.add('show');
+        const hasDesign = garmentData.designReference && garmentData.designReference.trim();
+        if (hasDesign) {
+          // State 3: Has design - keep box hidden
+          designInclusionBox.style.display = 'none';
+          designInclusionBox.classList.remove('show');
+        } else {
+          // State 2: No design yet - show input box
+          designInclusionBox.style.display = 'block';
+          designInclusionBox.classList.add('show');
+        }
       } else {
+        // State 1: Toggle off - hide box
         designInclusionBox.style.display = 'none';
         designInclusionBox.classList.remove('show');
       }
     }
+    
+    // Update toggle colors to match current state
+    this.updateToggleColors(garmentCard, garmentData);
     
     // Show/hide warning based on design inclusion and reference
     if (designWarning) {

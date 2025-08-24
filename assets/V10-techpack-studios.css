@@ -8248,6 +8248,26 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   font-weight: 600;
 }
 
+/* Green toggle switch when design is complete */
+.design-toggle-header.design-complete .design-toggle__switch {
+  background-color: #22c55e !important;
+  border-color: #22c55e !important;
+}
+
+.design-toggle-header.design-complete .design-toggle__switch::before {
+  background-color: white !important;
+}
+
+/* Orange state - Toggle switch when awaiting input */
+.design-toggle-header.awaiting-input .design-toggle__switch {
+  background-color: #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+.design-toggle-header.awaiting-input .design-toggle__switch::before {
+  background-color: white !important;
+}
+
 /* Clickable design state - shows cursor pointer */
 .design-toggle-header.clickable-design .design-toggle__text {
   cursor: pointer;
@@ -11034,3 +11054,5 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
+
+
