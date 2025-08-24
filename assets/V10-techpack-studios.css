@@ -8218,15 +8218,20 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
    ACTION BAR & DESIGN CONTROLS
    ============================================== */
 
-/* Design Toggle in Header */
+/* Design Toggle in Header - Hidden by default */
 .design-toggle-header {
-  display: flex;
+  display: none; /* Hidden until garment is configured */
   align-items: center;
   gap: var(--v10-space-2);
   margin-left: var(--v10-space-4);
   padding-left: var(--v10-space-4);
   border-left: 1px solid var(--v10-border-primary);
   transition: all 0.3s ease;
+}
+
+/* Show design toggle only when garment configuration is complete */
+.garment-card--configured .design-toggle-header {
+  display: flex;
 }
 
 .design-toggle-header .design-toggle__text {
