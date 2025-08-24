@@ -5153,10 +5153,26 @@ class V10_GarmentStudio {
       garmentData.designReference = inputValue;
       console.log(`📝 Design reference saved for garment ${garmentId}: "${garmentData.designReference}"`);
       
-      // Hide any validation warning (but keep the design box visible since it's controlled by toggle)
+      // Hide any validation warning
       const designWarning = garmentCard.querySelector('.design-reference__warning');
       if (designWarning) {
         designWarning.style.display = 'none';
+      }
+      
+      // Auto-toggle OFF after entering design name (retract the design box)
+      const designToggle = garmentCard.querySelector('.design-toggle__input');
+      const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+      
+      if (designToggle && designInclusionBox) {
+        // Set toggle to OFF
+        designToggle.checked = false;
+        garmentData.includeDesign = false;
+        
+        // Hide the design box
+        designInclusionBox.style.display = 'none';
+        designInclusionBox.classList.remove('show');
+        
+        console.log(`🔄 Auto-toggled OFF after entering design reference for garment ${garmentId}`);
       }
       
       // Update the summary display
@@ -5364,6 +5380,12 @@ class V10_GarmentStudio {
       summaryContainer.style.display = 'block';
       contentContainer.style.display = 'none';
       
+      // Show edit button when summary is visible
+      const editBtn = garmentCard.querySelector('.garment-summary__edit-btn');
+      if (editBtn) {
+        editBtn.style.display = 'flex';
+      }
+      
       // Update summary content ONLY when collapsing
       console.log('✅ [SUMMARY_FIX] About to call updateGarmentSummary (collapsing)');
       this.updateGarmentSummary(garmentCard, garmentData);
@@ -5371,6 +5393,12 @@ class V10_GarmentStudio {
       // Show content, hide summary
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';
+      
+      // Hide edit button when content is visible
+      const editBtn = garmentCard.querySelector('.garment-summary__edit-btn');
+      if (editBtn) {
+        editBtn.style.display = 'none';
+      }
     }
   }
 
