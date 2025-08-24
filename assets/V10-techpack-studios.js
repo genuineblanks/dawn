@@ -5093,16 +5093,22 @@ class V10_GarmentStudio {
       
       if (designInclusionBox) {
         if (e.target.checked) {
-          // Toggle ON - show input if no design, or if user wants to edit existing design
+          // Toggle ON - ALWAYS show input box for editing (even if design exists)
+          designInclusionBox.style.display = 'block';
+          designInclusionBox.classList.add('show');
+          
+          // Pre-fill with existing design name if it exists
           const hasDesign = garmentData.designReference && garmentData.designReference.trim();
-          if (!hasDesign) {
-            // State 2: Show input for new design entry
-            designInclusionBox.style.display = 'block';
-            designInclusionBox.classList.add('show');
+          if (hasDesign) {
+            const designInput = designInclusionBox.querySelector('.design-reference__input');
+            if (designInput) {
+              designInput.value = garmentData.designReference;
+              // Focus the input for immediate editing
+              setTimeout(() => designInput.focus(), 100);
+            }
+            console.log(`🔄 Edit mode: Pre-filled with "${garmentData.designReference}"`);
           } else {
-            // State 3: Has design, keep box hidden but allow toggle to edit
-            designInclusionBox.style.display = 'none';
-            designInclusionBox.classList.remove('show');
+            console.log(`🆕 New design mode: Empty input`);
           }
         } else {
           // Toggle OFF - State 1: Hide box completely
@@ -5203,6 +5209,26 @@ class V10_GarmentStudio {
     }
   }
 
+  // Check if garment basic configuration is complete
+  isGarmentConfigured(garmentData) {
+    return garmentData.type && garmentData.fabricType && garmentData.sampleType;
+  }
+
+  // Update garment card configuration state
+  updateGarmentConfigurationState(garmentCard, garmentData) {
+    const isConfigured = this.isGarmentConfigured(garmentData);
+    
+    if (isConfigured) {
+      garmentCard.classList.add('garment-card--configured');
+      console.log(`✅ Garment configured - Design toggle now available`);
+    } else {
+      garmentCard.classList.remove('garment-card--configured');
+      console.log(`⏳ Garment not configured - Design toggle hidden`);
+    }
+    
+    return isConfigured;
+  }
+
   // Update toggle text colors based on THREE-STATE system
   updateToggleColors(garmentCard, garmentData) {
     // Find the toggle text element - try multiple possible selectors
@@ -5220,37 +5246,31 @@ class V10_GarmentStudio {
     toggleContainer.classList.remove('awaiting-input', 'design-complete', 'clickable-design');
     toggleText.onclick = null;
     
+    // Check if design box is currently visible (edit mode)
+    const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+    const isBoxVisible = designInclusionBox && designInclusionBox.style.display === 'block';
+    
     if (!garmentData.includeDesign) {
       // State 1: Toggle OFF - "No Design" (gray)
       toggleText.textContent = 'Include TechPack Design?';
       console.log(`⚫ State 1: No Design (toggle OFF)`);
+    } else if (isBoxVisible) {
+      // State 2: Toggle ON + Input Box Visible - "Enter Design Name" (orange)
+      // This covers both new entry and editing existing design
+      toggleContainer.classList.add('awaiting-input');
+      const hasExistingDesign = garmentData.designReference && garmentData.designReference.trim();
+      toggleText.textContent = hasExistingDesign ? 'Edit Design Name' : 'Enter Design Name';
+      console.log(`🟠 State 2: ${hasExistingDesign ? 'Edit' : 'Enter'} Design Mode (input visible)`);
     } else if (garmentData.designReference && garmentData.designReference.trim()) {
-      // State 3: Toggle ON + Has Design - "With Design (name)" (green) + clickable
-      toggleContainer.classList.add('design-complete', 'clickable-design');
+      // State 3: Toggle ON + Has Design + Box Hidden - "With Design (name)" (green)
+      toggleContainer.classList.add('design-complete');
       toggleText.textContent = `With Design (${garmentData.designReference.trim()})`;
-      
-      // Make design name clickable to edit
-      toggleText.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
-        if (designInclusionBox) {
-          designInclusionBox.style.display = 'block';
-          designInclusionBox.classList.add('show');
-          // Focus the input
-          const input = designInclusionBox.querySelector('.design-reference__input');
-          if (input) {
-            setTimeout(() => input.focus(), 100);
-          }
-        }
-      };
-      
-      console.log(`🟢 State 3: Design Ready (${garmentData.designReference.trim()}) - Click to edit`);
+      console.log(`🟢 State 3: Design Ready (${garmentData.designReference.trim()})`);
     } else {
-      // State 2: Toggle ON + No Design - "Enter Design Name" (orange)
+      // Fallback: Toggle ON but no design and box not visible
       toggleContainer.classList.add('awaiting-input');
       toggleText.textContent = 'Enter Design Name';
-      console.log(`🟠 State 2: Design Needed (awaiting input)`);
+      console.log(`🟠 State 2: Design Needed (fallback)`);
     }
   }
 
@@ -5262,6 +5282,9 @@ class V10_GarmentStudio {
       console.log('❌ [SUMMARY_FIX] Missing garmentData or garmentCard');
       return;
     }
+    
+    // Update configuration state (show/hide design toggle)
+    const isConfigured = this.updateGarmentConfigurationState(garmentCard, garmentData);
 
     const statusIndicator = garmentCard.querySelector('.status-indicator');
     const requestType = V10_State.requestType;
@@ -5536,8 +5559,13 @@ class V10_GarmentStudio {
       }
     }
     
-    // Update toggle colors to match current state
-    this.updateToggleColors(garmentCard, garmentData);
+    // Update configuration state (show/hide design toggle based on completion)
+    const isConfigured = this.updateGarmentConfigurationState(garmentCard, garmentData);
+    
+    // Update toggle colors to match current state (only if configured)
+    if (isConfigured) {
+      this.updateToggleColors(garmentCard, garmentData);
+    }
     
     // Show/hide warning based on design inclusion and reference
     if (designWarning) {
@@ -5658,6 +5686,9 @@ class V10_GarmentStudio {
     if (summaryContainer && contentContainer) {
       // Set edit mode flag
       garmentData.isInEditMode = true;
+      
+      // Remove configured class - design toggle should hide during editing
+      garmentCard.classList.remove('garment-card--configured');
       
       // Hide summary, show content for editing
       summaryContainer.style.display = 'none';
