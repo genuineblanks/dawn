@@ -5096,6 +5096,7 @@ class V10_GarmentStudio {
           // Toggle ON - ALWAYS show input box for editing (even if design exists)
           designInclusionBox.style.display = 'block';
           designInclusionBox.classList.add('show');
+          console.log(`🔄 TOGGLE ON: Box set to visible`);
           
           // Pre-fill with existing design name if it exists
           const hasDesign = garmentData.designReference && garmentData.designReference.trim();
@@ -5541,22 +5542,33 @@ class V10_GarmentStudio {
     // Show/hide ENTIRE design inclusion controls box based on toggle state
     const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
     if (designInclusionBox) {
-      if (garmentData.includeDesign) {
+      // Only auto-manage box visibility if it's not currently being shown by user action
+      const isCurrentlyVisible = designInclusionBox.style.display === 'block';
+      const designToggle = garmentCard.querySelector('.design-toggle__input');
+      
+      console.log(`📊 updateGarmentSummary: includeDesign=${garmentData.includeDesign}, isCurrentlyVisible=${isCurrentlyVisible}`);
+      
+      if (!garmentData.includeDesign) {
+        // State 1: Toggle off - always hide box
+        designInclusionBox.style.display = 'none';
+        designInclusionBox.classList.remove('show');
+        console.log(`🔄 Box hidden: toggle OFF`);
+      } else if (!isCurrentlyVisible) {
+        // Only auto-show/hide if box isn't currently visible (respect user's explicit toggle action)
         const hasDesign = garmentData.designReference && garmentData.designReference.trim();
-        if (hasDesign) {
-          // State 3: Has design - keep box hidden
-          designInclusionBox.style.display = 'none';
-          designInclusionBox.classList.remove('show');
-        } else {
+        if (!hasDesign) {
           // State 2: No design yet - show input box
           designInclusionBox.style.display = 'block';
           designInclusionBox.classList.add('show');
+          console.log(`🔄 Box shown: no design yet`);
+        } else {
+          console.log(`🔄 Box left hidden: has design, not currently visible`);
         }
+        // If hasDesign and box not visible, leave it hidden (State 3)
       } else {
-        // State 1: Toggle off - hide box
-        designInclusionBox.style.display = 'none';
-        designInclusionBox.classList.remove('show');
+        console.log(`🔄 Box left visible: user is editing`);
       }
+      // If box is currently visible, don't auto-hide it (user is editing)
     }
     
     // Update configuration state (show/hide design toggle based on completion)
