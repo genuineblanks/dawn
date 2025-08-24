@@ -8226,12 +8226,37 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   margin-left: var(--v10-space-4);
   padding-left: var(--v10-space-4);
   border-left: 1px solid var(--v10-border-primary);
+  transition: all 0.3s ease;
 }
 
 .design-toggle-header .design-toggle__text {
   font-size: var(--v10-text-sm);
   font-weight: 500;
   color: var(--v10-text-secondary);
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+/* Orange state - Toggle ON but awaiting design input */
+.design-toggle-header.awaiting-input .design-toggle__text {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+/* Green state - Toggle ON with design entered */
+.design-toggle-header.design-complete .design-toggle__text {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* Clickable design state - shows cursor pointer */
+.design-toggle-header.clickable-design .design-toggle__text {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.design-toggle-header.clickable-design .design-toggle__text:hover {
+  opacity: 0.8;
 }
 
 .design-toggle-header .design-toggle__label {
@@ -11009,5 +11034,3 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
-
-
