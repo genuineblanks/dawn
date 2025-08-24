@@ -5090,13 +5090,33 @@ class V10_GarmentStudio {
       
       // Show/hide the ENTIRE design inclusion controls box
       const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+      const toggleContainer = garmentCard.querySelector('.design-toggle-header');
+      
       if (designInclusionBox) {
         if (e.target.checked) {
           designInclusionBox.style.display = 'block';
           designInclusionBox.classList.add('show');
+          
+          // Apply color states based on whether design reference exists
+          if (toggleContainer) {
+            if (garmentData.designReference && garmentData.designReference.trim()) {
+              // Has design - GREEN
+              toggleContainer.classList.remove('awaiting-input');
+              toggleContainer.classList.add('design-complete');
+            } else {
+              // No design yet - ORANGE
+              toggleContainer.classList.add('awaiting-input');
+              toggleContainer.classList.remove('design-complete');
+            }
+          }
         } else {
           designInclusionBox.style.display = 'none';
           designInclusionBox.classList.remove('show');
+          
+          // Toggle OFF - Remove all color classes
+          if (toggleContainer) {
+            toggleContainer.classList.remove('awaiting-input', 'design-complete');
+          }
         }
       }
       
@@ -5111,6 +5131,20 @@ class V10_GarmentStudio {
     if (e.target.classList.contains('design-reference__input')) {
       garmentData.designReference = e.target.value.trim();
       console.log(`📝 Design reference updated for garment ${garmentId}: "${garmentData.designReference}"`);
+      
+      // Update toggle color in real-time as user types
+      const toggleContainer = garmentCard.querySelector('.design-toggle-header');
+      if (toggleContainer && garmentData.includeDesign) {
+        if (garmentData.designReference) {
+          // Has text - switch to GREEN
+          toggleContainer.classList.remove('awaiting-input');
+          toggleContainer.classList.add('design-complete');
+        } else {
+          // No text - switch back to ORANGE
+          toggleContainer.classList.add('awaiting-input');
+          toggleContainer.classList.remove('design-complete');
+        }
+      }
       
       // Update the summary display immediately
       this.updateGarmentSummary(garmentCard, garmentData);
@@ -5159,23 +5193,30 @@ class V10_GarmentStudio {
         designWarning.style.display = 'none';
       }
       
-      // Auto-toggle OFF after entering design name (retract the design box)
+      // Smart toggle behavior - keep ON but hide input box for cleaner UI
       const designToggle = garmentCard.querySelector('.design-toggle__input');
       const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+      const toggleContainer = garmentCard.querySelector('.design-toggle-header');
       
       if (designToggle && designInclusionBox) {
-        // Set toggle to OFF
-        designToggle.checked = false;
-        garmentData.includeDesign = false;
+        // KEEP toggle ON (they want the design)
+        designToggle.checked = true;
+        garmentData.includeDesign = true;
         
-        // Hide the design box
+        // Hide the input box for cleaner UI
         designInclusionBox.style.display = 'none';
         designInclusionBox.classList.remove('show');
         
-        console.log(`🔄 Auto-toggled OFF after entering design reference for garment ${garmentId}`);
+        // Switch from ORANGE to GREEN since design is now entered
+        if (toggleContainer) {
+          toggleContainer.classList.remove('awaiting-input');
+          toggleContainer.classList.add('design-complete');
+        }
+        
+        console.log(`✅ Design saved and input minimized for garment ${garmentId} - Toggle remains ON and GREEN`);
       }
       
-      // Update the summary display
+      // Update the summary display to show design name
       this.updateGarmentSummary(garmentCard, garmentData);
       
       // Auto-save
