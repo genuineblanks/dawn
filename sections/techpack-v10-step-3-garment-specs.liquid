@@ -736,6 +736,14 @@ Enhanced with Visual Studio Guide System
         <div class="garment-card__status">
           <span class="status-indicator status-indicator--incomplete">Incomplete</span>
         </div>
+        <!-- Design Toggle in Header -->
+        <div class="design-toggle-header">
+          <span class="design-toggle__text">Include TechPack Design?</span>
+          <label class="design-toggle__label">
+            <input type="checkbox" class="design-toggle__input" checked>
+            <span class="design-toggle__switch"></span>
+          </label>
+        </div>
       </div>
       <div class="garment-card__actions">
         <button type="button" class="garment-card__finalize" title="Finalize edit" style="display: none;">
@@ -743,6 +751,13 @@ Enhanced with Visual Studio Guide System
             <path d="M20 6L9 17l-5-5"/>
           </svg>
           <span>Finalize Edit</span>
+        </button>
+        <button type="button" class="garment-summary__edit-btn" title="Edit garment" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
         </button>
         <button type="button" class="garment-card__duplicate" title="Duplicate garment">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -771,41 +786,6 @@ Enhanced with Visual Studio Guide System
             <span class="garment-summary__fabric">Cotton</span>
           </div>
           <div class="garment-summary__status">Complete</div>
-          
-          <!-- Action Bar with Toggle and Buttons -->
-          <div class="garment-actions-bar">
-            <!-- Design Toggle on Left -->
-            <div class="design-toggle-inline">
-              <span class="design-toggle__text">Include TechPack Design?</span>
-              <label class="design-toggle__label">
-                <input type="checkbox" class="design-toggle__input" checked>
-                <span class="design-toggle__switch"></span>
-              </label>
-            </div>
-            
-            <!-- Action Buttons on Right -->
-            <div class="garment-action-buttons">
-              <button type="button" class="garment-summary__edit-btn" title="Edit garment">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-                Edit
-              </button>
-              <button type="button" class="garment-card__duplicate-summary" title="Duplicate garment">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-              </button>
-              <button type="button" class="garment-card__remove-summary" title="Remove garment">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
-          </div>
           
           <!-- Design Reference Box (Hidden by default, shown when toggle is on) -->
           <div class="design-inclusion-controls" style="display: none;">
