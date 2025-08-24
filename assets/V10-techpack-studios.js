@@ -5090,6 +5090,7 @@ class V10_GarmentStudio {
       
       // Show/hide the ENTIRE design inclusion controls box
       const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
+      
       if (designInclusionBox) {
         if (e.target.checked) {
           designInclusionBox.style.display = 'block';
@@ -5099,6 +5100,9 @@ class V10_GarmentStudio {
           designInclusionBox.classList.remove('show');
         }
       }
+      
+      // Apply color feedback to toggle text
+      this.updateToggleColors(garmentCard, garmentData);
       
       // Preserve the design reference value when toggling (don't clear it)
       // The design reference should be maintained even when toggle is off
@@ -5111,6 +5115,9 @@ class V10_GarmentStudio {
     if (e.target.classList.contains('design-reference__input')) {
       garmentData.designReference = e.target.value.trim();
       console.log(`📝 Design reference updated for garment ${garmentId}: "${garmentData.designReference}"`);
+      
+      // Update toggle colors as user types
+      this.updateToggleColors(garmentCard, garmentData);
       
       // Update the summary display immediately
       this.updateGarmentSummary(garmentCard, garmentData);
@@ -5159,27 +5166,61 @@ class V10_GarmentStudio {
         designWarning.style.display = 'none';
       }
       
-      // Auto-toggle OFF after entering design name (retract the design box)
+      // Smart toggle behavior - keep ON but hide input box for cleaner UI
       const designToggle = garmentCard.querySelector('.design-toggle__input');
       const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
       
       if (designToggle && designInclusionBox) {
-        // Set toggle to OFF
-        designToggle.checked = false;
-        garmentData.includeDesign = false;
+        // KEEP toggle ON (they want the design)
+        designToggle.checked = true;
+        garmentData.includeDesign = true;
         
-        // Hide the design box
+        // Hide the input box for cleaner UI
         designInclusionBox.style.display = 'none';
         designInclusionBox.classList.remove('show');
         
-        console.log(`🔄 Auto-toggled OFF after entering design reference for garment ${garmentId}`);
+        // Update colors now that design is entered
+        this.updateToggleColors(garmentCard, garmentData);
+        
+        console.log(`✅ Design saved and input minimized for garment ${garmentId} - Toggle remains ON`);
       }
       
-      // Update the summary display
+      // Update the summary display to show design name
       this.updateGarmentSummary(garmentCard, garmentData);
       
       // Auto-save
       console.log(`✅ Design reference validated and collapsed for garment ${garmentId}`);
+    }
+  }
+
+  // Update toggle text colors based on state
+  updateToggleColors(garmentCard, garmentData) {
+    // Find the toggle text element - try multiple possible selectors
+    const toggleContainer = garmentCard.querySelector('.design-toggle-header') || 
+                           garmentCard.querySelector('[class*="toggle"]') ||
+                           garmentCard.querySelector('.design-toggle__text').parentElement;
+    
+    if (!toggleContainer) {
+      console.log('⚠️ Toggle container not found for color update');
+      return;
+    }
+    
+    // Remove all color classes first
+    toggleContainer.classList.remove('awaiting-input', 'design-complete');
+    
+    if (garmentData.includeDesign) {
+      if (garmentData.designReference && garmentData.designReference.trim()) {
+        // Has design - GREEN
+        toggleContainer.classList.add('design-complete');
+        console.log(`🟢 Toggle set to GREEN (design complete)`);
+      } else {
+        // No design yet - ORANGE
+        toggleContainer.classList.add('awaiting-input');
+        console.log(`🟠 Toggle set to ORANGE (awaiting input)`);
+      }
+    } else {
+      // Toggle OFF - Default color
+      console.log(`⚫ Toggle set to DEFAULT (off)`);
     }
   }
 
