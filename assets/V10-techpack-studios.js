@@ -12405,6 +12405,98 @@ class V10_ClientManager {
 
   /* ALL VALIDATION FUNCTIONS REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
 
+  // Email validation function with domain whitelist and spam protection
+  validateEmail(email) {
+    if (!email || typeof email !== 'string') {
+      return { isValid: false, reason: 'Email is required' };
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return { isValid: false, reason: 'Invalid email format' };
+    }
+
+    // Extract domain from email
+    const domain = email.split('@')[1].toLowerCase();
+
+    // Common trusted domains whitelist
+    const trustedDomains = [
+      // Major email providers
+      'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
+      'yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.de', 'yahoo.fr', 'yahoo.in',
+      'aol.com', 'icloud.com', 'me.com', 'mac.com',
+      
+      // Business email providers
+      'office365.com', 'exchange.com', 'protonmail.com', 'proton.me', 'tutanota.com',
+      'fastmail.com', 'zoho.com', 'yandex.com', 'mail.ru',
+      
+      // Regional providers
+      'gmx.com', 'gmx.de', 'web.de', 'freenet.de', 't-online.de',
+      'orange.fr', 'wanadoo.fr', 'free.fr', 'laposte.net',
+      'libero.it', 'virgilio.it', 'alice.it', 'tiscali.it',
+      'uol.com.br', 'ig.com.br', 'terra.com.br', 'bol.com.br',
+      
+      // Corporate domains (common patterns)
+      'company.com', 'corp.com', 'business.com'
+    ];
+
+    // Known temporary/disposable email domains blacklist
+    const tempEmailDomains = [
+      '10minutemail.com', '20minutemail.com', '33mail.com', 'guerrillamail.com',
+      'mailinator.com', 'maildrop.cc', 'tempmail.org', 'temp-mail.org',
+      'throwaway.email', 'guerrillamail.org', 'sharklasers.com', 'grr.la',
+      'guerrillamailblock.com', 'pokemail.net', 'spam4.me', 'binkmail.com',
+      'emailondeck.com', 'fakeinbox.com', 'hidemail.de', 'mytrashmail.com',
+      'no-spam.ws', 'noclickemail.com', 'trashmail.net', 'yopmail.com',
+      'mailtemp.info', 'tempinbox.com', 'spamgourmet.com', 'jetable.org',
+      'e4ward.com', 'mailexpire.com', 'rcpt.at', 'trash-mail.at',
+      'kurzepost.de', 'objectmail.com', 'proxymail.eu', 'deadaddress.com',
+      'emailias.com', 'mailnesia.com', 'mailcatch.com', 'mailinator.net',
+      'spamavert.com', 'tempemail.com', 'tempmailaddress.com', 'rtrtr.com',
+      'sogetthis.com', 'spamherald.com', 'spamhole.com', 'willselfdestruct.com',
+      'filzmail.com', 'meltmail.com', 'momentics.ru', 'fakemailz.com'
+    ];
+
+    // Check against blacklisted temporary domains
+    if (tempEmailDomains.includes(domain)) {
+      return { 
+        isValid: false, 
+        reason: 'Temporary or disposable email addresses are not allowed. Please use a permanent email address.' 
+      };
+    }
+
+    // Check if domain looks like a business domain (has company name pattern)
+    const businessDomainPattern = /^[a-z0-9\-]+\.(com|org|net|co\.uk|co|biz|info|de|fr|it|es|nl|au|ca|jp)$/i;
+    const isBusinessDomain = businessDomainPattern.test(domain) && 
+                            !trustedDomains.includes(domain) && 
+                            domain.length > 6; // Avoid very short domains
+
+    // Allow trusted domains and business domains
+    if (trustedDomains.includes(domain) || isBusinessDomain) {
+      return { isValid: true, reason: 'Valid email domain' };
+    }
+
+    // For other domains, check if they look legitimate (not obviously fake)
+    const suspiciousPatterns = [
+      /^\d+[a-z]+\./,           // domains starting with numbers
+      /^[a-z]{1,3}\./,          // very short domain names
+      /\d{4,}/,                 // domains with many consecutive numbers
+      /^temp/i, /test/i, /fake/i, /spam/i, /trash/i, /mail/i  // suspicious keywords in domain
+    ];
+
+    const isSuspicious = suspiciousPatterns.some(pattern => pattern.test(domain));
+    if (isSuspicious) {
+      return { 
+        isValid: false, 
+        reason: 'This email domain appears to be temporary or invalid. Please use a business or personal email address.' 
+      };
+    }
+
+    // If we reach here, it's probably a legitimate email
+    return { isValid: true, reason: 'Valid email' };
+  }
+
   validateForm(forceValidateAll = false) {
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) return false;
@@ -12463,6 +12555,35 @@ class V10_ClientManager {
         }
       }
     });
+    
+    // Special email validation (more strict than just required check)
+    const emailField = form.querySelector('input[name="email"], input[type="email"]');
+    if (emailField) {
+      const fieldKey = emailField.name || emailField.id || 'email-field';
+      
+      if (forceValidateAll || this.interactedFields.has(fieldKey)) {
+        const emailValidation = this.validateEmail(emailField.value);
+        
+        if (!emailValidation.isValid) {
+          console.log('❌ Email validation failed:', { 
+            fieldKey, 
+            email: emailField.value, 
+            reason: emailValidation.reason 
+          });
+          isValid = false;
+          const fieldContainer = emailField.closest('.v10-form-field');
+          if (fieldContainer) {
+            fieldContainer.classList.add('v10-form-field--invalid');
+          }
+        } else {
+          console.log('✅ Email validation passed:', { 
+            fieldKey, 
+            email: emailField.value, 
+            reason: emailValidation.reason 
+          });
+        }
+      }
+    }
     
     // Check delivery address radio (ONLY for sample/bulk/lab-dips requests, NOT quotation)
     if (this.currentRequestType !== 'quotation') {
@@ -12869,10 +12990,10 @@ class V10_FileManager {
       }
     }
     
-    // Show design placement for sample requests only
+    // Show design placement for sample requests and quotations
     if (designPlacementItem) {
-      if (requestType === 'sample-request') {
-        designPlacementItem.style.display = 'block';
+      if (requestType === 'sample-request' || requestType === 'quotation') {
+        designPlacementItem.style.display = 'flex';
       } else {
         designPlacementItem.style.display = 'none';
       }
@@ -12921,7 +13042,6 @@ class V10_FileManager {
       file: file,
       name: file.name,
       size: this.formatFileSize(file.size),
-      type: '',
       uploaded: false
     };
     
@@ -12943,13 +13063,7 @@ class V10_FileManager {
     clone.querySelector('.v10-file-name').textContent = fileData.name;
     clone.querySelector('.v10-file-size').textContent = fileData.size;
     
-    // Setup file type selection
-    const typeSelect = clone.querySelector('.v10-file-type-select');
-    typeSelect.addEventListener('change', (e) => {
-      fileData.type = e.target.value;
-      this.validateStep();
-      this.saveData();
-    });
+    // File type selection removed - no longer required
     
     // Setup remove button
     const removeBtn = clone.querySelector('.v10-file-remove');
@@ -13184,35 +13298,28 @@ class V10_FileManager {
     console.log('🔍 V10 validateStep() called');
     let isValid = true;
     
+    // Get file upload warning element
+    const fileUploadWarning = document.getElementById('v10-file-upload-warning');
+    
     // Check if files are uploaded
     console.log(`📁 Files uploaded: ${this.uploadedFiles.size}`);
     if (this.uploadedFiles.size === 0) {
       console.log('❌ No files uploaded');
       isValid = false;
-    }
-    
-    // Check if all files have types assigned and apply visual validation
-    for (let fileData of this.uploadedFiles.values()) {
-      const fileCard = document.querySelector(`[data-file-id="${fileData.id}"]`);
-      
-      if (!fileData.type) {
-        console.log('❌ File missing type:', fileData);
-        isValid = false;
-        // Apply validation styling
-        if (fileCard) {
-          fileCard.classList.add('v10-file-card--invalid');
-        }
-      } else {
-        // Remove validation styling if type is selected
-        if (fileCard) {
-          fileCard.classList.remove('v10-file-card--invalid');
-        }
+      // Show file upload warning
+      if (fileUploadWarning) {
+        fileUploadWarning.style.display = 'flex';
+      }
+    } else {
+      // Hide file upload warning when files are present
+      if (fileUploadWarning) {
+        fileUploadWarning.style.display = 'none';
       }
     }
     
+    // Note: File type validation removed - files no longer require classification
     // Note: Measurement validation intentionally removed from validateStep()
     // Measurements should only be validated when clicking "Next Step" button
-    // This prevents modals from appearing during file type selection
     
     // Button is always enabled - validation feedback shown on click instead
     console.log('🔘 Step 2 validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
@@ -13240,8 +13347,7 @@ class V10_FileManager {
       files: Array.from(this.uploadedFiles.values()).map(fileData => ({
         id: fileData.id,
         name: fileData.name,
-        size: fileData.size,
-        type: fileData.type
+        size: fileData.size
       }))
       // Note: measurements intentionally excluded from persistence
       // User should start fresh with checkboxes on each app entry
