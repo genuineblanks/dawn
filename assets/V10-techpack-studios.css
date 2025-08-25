@@ -1917,14 +1917,12 @@ body[class*="techpack"] *,
   letter-spacing: 0.05em;
 }
 
-/* Removed white-space: nowrap - was breaking layout by preventing input field wrapping */
-
-.v10-form-label-enhanced.required::after {
-  content: '\00a0*'; /* Non-breaking space + asterisk */
-  color: var(--v10-accent-error);
+/* UNIFIED REQUIRED ASTERISK SYSTEM - SINGLE CLEAN IMPLEMENTATION */
+.v10-required::after {
+  content: ' *';
+  color: #ef4444;
   font-weight: 400;
-  display: inline;
-  vertical-align: baseline;
+  margin-left: 4px;
 }
 
 .v10-form-input-enhanced,
@@ -4045,16 +4043,6 @@ body[class*="techpack"] *,
   color: var(--v10-text-primary);
   margin-bottom: var(--v10-space-2);
   display: block;
-}
-
-/* Removed white-space: nowrap - was breaking layout by preventing input field wrapping */
-
-.v10-form-label.required::after {
-  content: '\00a0*'; /* Non-breaking space + asterisk */
-  color: var(--v10-accent-error);
-  font-weight: 400;
-  display: inline;
-  vertical-align: baseline;
 }
 
 .v10-form-input {

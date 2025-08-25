@@ -12320,13 +12320,8 @@ class V10_ClientManager {
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
       input.addEventListener('input', () => {
-        this.validateField(input);
         this.saveData();
         this.validateForm();
-      });
-      
-      input.addEventListener('blur', () => {
-        this.validateField(input);
       });
     });
   }
@@ -12394,152 +12389,32 @@ class V10_ClientManager {
     });
   }
 
-  validateField(field) {
-    const fieldContainer = field.closest('.v10-form-field');
-    const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
-    
-    if (field.hasAttribute('required') && !field.value.trim()) {
-      // Don't show "Required" message - CSS asterisk already indicates this
-      // Just apply error styling to field
-      field.style.borderColor = 'var(--v10-accent-orange)';
-      if (fieldContainer) {
-        fieldContainer.classList.add('v10-form-field--error');
-      }
-      return false;
-    }
-    
-    if (field.type === 'email' && field.value) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(field.value)) {
-        this.showFieldError(field, 'Valid email required');
-        return false;
-      }
-    }
-    
-    this.clearFieldError(field);
-    return true;
-  }
-
-  showFieldError(field, message) {
-    const fieldContainer = field.closest('.v10-form-field');
-    let errorElement = fieldContainer?.querySelector('.v10-validation-message');
-    
-    if (!errorElement) {
-      // Create error element if it doesn't exist
-      errorElement = document.createElement('div');
-      errorElement.className = 'v10-validation-message';
-      field.parentNode.appendChild(errorElement);
-    }
-    
-    errorElement.textContent = message;
-    errorElement.style.display = 'block';
-    errorElement.style.color = 'var(--v10-accent-orange)';
-    field.style.borderColor = 'var(--v10-accent-orange)';
-    
-    // Add error class to field container
-    if (fieldContainer) {
-      fieldContainer.classList.add('v10-form-field--error');
-    }
-  }
-
-  clearFieldError(field) {
-    const fieldContainer = field.closest('.v10-form-field');
-    const errorElement = fieldContainer?.querySelector('.v10-validation-message');
-    
-    if (errorElement) {
-      errorElement.style.display = 'none';
-      errorElement.textContent = '';
-    }
-    
-    field.style.borderColor = '';
-    
-    // Remove error class from field container
-    if (fieldContainer) {
-      fieldContainer.classList.remove('v10-form-field--error');
-    }
-  }
+  /* ALL VALIDATION FUNCTIONS REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
 
   validateForm() {
+    // Simple validation - just check if basic fields are filled
     const form = document.getElementById('techpack-v10-client-form');
-    if (!form) {
-      // If form doesn't exist yet, disable button - form is required for validation
-      const nextBtn = document.getElementById('techpack-v10-step-1-next');
-      if (nextBtn) {
-        nextBtn.disabled = true;
-      }
-      return false;
-    }
+    if (!form) return false;
     
     let isValid = true;
     const requiredFields = form.querySelectorAll('input[required], select[required]');
     
-    // Check if request type is selected
+    // Check request type selected
     if (!this.currentRequestType) {
       isValid = false;
     }
     
-    // Validate all required fields
+    // Simple required field check
     requiredFields.forEach(field => {
-      if (!this.validateField(field)) {
+      if (!field.value.trim()) {
         isValid = false;
       }
     });
     
-    // Check delivery address selection for requests that require delivery
-    const deliveryAddressField = document.getElementById('v10-delivery-address-field');
-    if (deliveryAddressField && deliveryAddressField.style.display !== 'none') {
-      const selectedDeliveryAddress = document.querySelector('input[name="deliveryAddress"]:checked');
-      if (!selectedDeliveryAddress) {
-        isValid = false;
-        // Show validation message for delivery address
-        const deliveryContainer = document.querySelector('.v10-delivery-options-enhanced');
-        if (deliveryContainer) {
-          let errorMsg = deliveryContainer.parentNode.querySelector('.v10-validation-message');
-          if (!errorMsg) {
-            errorMsg = document.createElement('div');
-            errorMsg.className = 'v10-validation-message';
-            deliveryContainer.parentNode.appendChild(errorMsg);
-          }
-          errorMsg.style.display = 'block';
-          errorMsg.textContent = 'Please select a delivery address option';
-        }
-      } else {
-        // Clear validation message if address is selected
-        const deliveryContainer = document.querySelector('.v10-delivery-options-enhanced');
-        if (deliveryContainer) {
-          const errorMsg = deliveryContainer.parentNode.querySelector('.v10-validation-message');
-          if (errorMsg) {
-            errorMsg.style.display = 'none';
-          }
-        }
-        
-        // If "different address" is selected, validate those fields
-        if (selectedDeliveryAddress.value === 'different') {
-          const differentAddressForm = document.getElementById('v10-different-address-form');
-          if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-            const requiredDifferentFields = differentAddressForm.querySelectorAll('input[data-validate="required-if-different"]');
-            requiredDifferentFields.forEach(field => {
-              if (!this.validateField(field)) {
-                isValid = false;
-              }
-            });
-          }
-        }
-      }
-    }
-    
-    // Update next button state  
+    // Update button state
     const nextBtn = document.getElementById('techpack-v10-step-1-next');
     if (nextBtn) {
       nextBtn.disabled = !isValid;
-      // Force visual disabled state for better UX
-      if (!isValid) {
-        nextBtn.style.pointerEvents = 'none';
-        nextBtn.style.opacity = '0.6';
-      } else {
-        nextBtn.style.pointerEvents = '';
-        nextBtn.style.opacity = '';
-      }
     }
     
     return isValid;
@@ -13802,66 +13677,7 @@ class V10_ModalManager {
     });
   }
   
-  handleFieldValidation(event) {
-    const field = event.target;
-    const fieldContainer = field.closest('.v10-form-field');
-    const validationType = field.getAttribute('data-validate');
-    
-    if (!fieldContainer || !validationType) return;
-    
-    const value = field.value.trim();
-    let isValid = true;
-    let message = '';
-    let messageType = 'error';
-    
-    // Error-only validation logic
-    switch (validationType) {
-      case 'required':
-        if (!value) {
-          isValid = false;
-          message = ''; // Don't show "Required" message - CSS asterisk indicates this
-          messageType = 'error';
-        }
-        break;
-        
-      case 'email':
-        // Smart email validation - check for proper domain
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-        const commonDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 'icloud.com'];
-        
-        if (!value) {
-          isValid = false;
-          message = ''; // Don't show "Required" message - CSS asterisk indicates this
-          messageType = 'error';
-        } else if (!emailRegex.test(value)) {
-          isValid = false;
-          message = 'Valid email required';
-          messageType = 'error';
-        } else {
-          const domain = value.split('@')[1];
-          if (domain && (commonDomains.includes(domain) || domain.includes('.'))) {
-            // Valid email, clear any errors
-            message = '';
-          } else {
-            isValid = false;
-            message = 'Valid email required';
-            messageType = 'error';
-          }
-        }
-        break;
-        
-      case 'required-if-different':
-        const isDifferentAddress = document.querySelector('input[name="deliveryAddress"]:checked')?.value === 'different';
-        if (isDifferentAddress && !value) {
-          isValid = false;
-          message = ''; // Don't show "Required" message - CSS asterisk indicates this
-          messageType = 'error';
-        }
-        break;
-    }
-    
-    this.showValidationMessage(fieldContainer, messageType, message, isValid);
-  }
+  /* ADVANCED VALIDATION FUNCTION REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
   
   handleFieldInput(event) {
     const field = event.target;
