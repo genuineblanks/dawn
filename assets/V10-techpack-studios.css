@@ -2881,19 +2881,55 @@ body[class*="techpack"] *,
   }
 }
 
-/* Sample Type Sub-Option Grids - Now Using Standard 3-Column Layout */
-/* Removed single-column override - now inherits standard .compact-radio-grid layout */
+/* Sample Type Sub-Option Grids - Custom Layouts */
+/* Stock grid uses standard 3-column, Custom grid uses 2-column for 2 buttons */
 
-/* Sample type radio cards - now using standard horizontal layout */
-/* Removed custom overrides - sample cards now inherit standard compact-radio-card styles for consistency */
+#sample-custom-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--v10-space-4);
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-/* Special styling for the warning text */
+@media (max-width: 768px) {
+  #sample-custom-grid {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+}
+
+/* Sample type radio cards - enhanced alignment for buttons with warning text */
+.compact-radio-card__content {
+  align-items: center; /* Default center alignment */
+}
+
+/* Text container to handle name + warning vertically */
+.compact-radio-card__text-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
+  flex: 1;
+  text-align: left;
+}
+
+/* Specific alignment for sample type buttons with warnings */
+#sample-custom-grid .compact-radio-card__content {
+  align-items: flex-start;
+  padding: var(--v10-space-4) var(--v10-space-5);
+}
+
+#sample-stock-grid .compact-radio-card__content {
+  align-items: center;
+}
+
+/* Warning text styling - consolidated */
 .compact-radio-card__warning {
-  display: block;
   font-size: var(--v10-text-xs);
   color: var(--v10-text-secondary);
-  margin-top: var(--v10-space-1);
   font-style: italic;
+  opacity: 0.8;
+  line-height: 1.3;
 }
 
 @media (max-width: 480px) {
@@ -4927,15 +4963,7 @@ body[class*="techpack"] *,
   font-weight: 500;
 }
 
-/* Compact Radio Card Warning */
-.compact-radio-card__warning {
-  font-size: var(--v10-text-xs);
-  color: var(--v10-text-warning);
-  margin-top: 4px;
-  text-align: center;
-  font-style: italic;
-  opacity: 0.8;
-}
+/* Removed duplicate warning rule - using consolidated version above */
 
 .sample-type-card--disabled {
   background: var(--v10-bg-secondary);
@@ -11070,5 +11098,3 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
-
-
