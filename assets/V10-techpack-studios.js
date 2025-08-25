@@ -12317,15 +12317,19 @@ class V10_ClientManager {
     if (!form) return;
 
     const inputs = form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
+    inputs.forEach((input, index) => {
+      // Generate consistent field key (same as in validateForm)
+      const fieldKey = input.name || input.id || `field-${index}`;
+      
       // Track field interaction on focus
       input.addEventListener('focus', () => {
-        this.interactedFields.add(input.name || input.id || input);
+        this.interactedFields.add(fieldKey);
+        console.log('👆 Field focused:', fieldKey);
       });
       
       // Add input event for text fields, textareas, selects
       input.addEventListener('input', () => {
-        this.interactedFields.add(input.name || input.id || input);
+        this.interactedFields.add(fieldKey);
         this.saveData();
         // Clear validation state on input for better UX
         const fieldContainer = input.closest('.v10-form-field');
@@ -12333,22 +12337,25 @@ class V10_ClientManager {
           fieldContainer.classList.remove('v10-form-field--invalid');
         }
         // Only validate interacted fields, not the entire form immediately
+        console.log('✏️ Field input:', fieldKey);
       });
       
       // Add blur event for interacted fields
       input.addEventListener('blur', () => {
-        if (this.interactedFields.has(input.name || input.id || input)) {
+        if (this.interactedFields.has(fieldKey)) {
           this.validateSingleField(input);
+          console.log('👋 Field blurred (validated):', fieldKey);
         }
       });
       
       // Add change event for radio buttons and checkboxes
       if (input.type === 'radio' || input.type === 'checkbox') {
         input.addEventListener('change', () => {
-          this.interactedFields.add(input.name || input.id || input);
+          this.interactedFields.add(fieldKey);
           this.saveData();
           // Only validate conditional sections after radio/checkbox changes
           this.validateConditionalSections();
+          console.log('🔘 Radio/checkbox changed:', fieldKey, 'checked:', input.checked);
         });
       }
     });
@@ -12439,33 +12446,68 @@ class V10_ClientManager {
     
     // Check request type selected (always required)
     if (!this.currentRequestType) {
+      console.log('❌ No request type selected');
       isValid = false;
+    } else {
+      console.log('✅ Request type selected:', this.currentRequestType);
     }
     
     // Check basic required fields (only validate if interacted with or forcing all)
     const requiredFields = form.querySelectorAll('input[required], select[required]');
-    requiredFields.forEach(field => {
-      const fieldKey = field.name || field.id || field;
-      const shouldValidate = forceValidateAll || this.interactedFields.has(fieldKey);
+    console.log('🔍 Validating required fields:', {
+      forceValidateAll,
+      currentRequestType: this.currentRequestType,
+      requiredFieldsCount: requiredFields.length,
+      interactedFields: Array.from(this.interactedFields)
+    });
+    
+    requiredFields.forEach((field, index) => {
+      // Generate consistent field key using name, id, or index
+      const fieldKey = field.name || field.id || `field-${index}`;
       
-      if (shouldValidate && !field.value.trim()) {
-        isValid = false;
-        const fieldContainer = field.closest('.v10-form-field');
-        if (fieldContainer) {
-          fieldContainer.classList.add('v10-form-field--invalid');
+      if (forceValidateAll) {
+        // When forcing validation, check ALL required fields regardless of interaction
+        if (!field.value.trim()) {
+          console.log('❌ Required field empty:', { fieldKey, name: field.name, value: field.value });
+          isValid = false;
+          const fieldContainer = field.closest('.v10-form-field');
+          if (fieldContainer) {
+            fieldContainer.classList.add('v10-form-field--invalid');
+          }
+        } else {
+          console.log('✅ Required field valid:', { fieldKey, name: field.name, value: field.value.substring(0, 20) + '...' });
+        }
+      } else {
+        // Only validate fields user has interacted with
+        const hasInteracted = this.interactedFields.has(fieldKey);
+        if (hasInteracted && !field.value.trim()) {
+          console.log('❌ Interacted field empty:', { fieldKey, name: field.name });
+          isValid = false;
+          const fieldContainer = field.closest('.v10-form-field');
+          if (fieldContainer) {
+            fieldContainer.classList.add('v10-form-field--invalid');
+          }
         }
       }
     });
     
     // Check delivery address radio (ONLY for sample/bulk/lab-dips requests, NOT quotation)
     if (this.currentRequestType !== 'quotation') {
+      console.log('🔍 Checking delivery address for non-quotation request');
       const deliveryField = document.getElementById('v10-delivery-address-field');
+      console.log('📍 Delivery field:', { exists: !!deliveryField, visible: deliveryField ? deliveryField.style.display !== 'none' : false });
+      
       if (deliveryField && deliveryField.style.display !== 'none') {
         const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+        console.log('📍 Delivery address selection:', { selected: !!selectedDelivery, value: selectedDelivery?.value });
+        
         if (!selectedDelivery) {
+          console.log('❌ No delivery address selected');
           isValid = false;
           // Highlight the delivery address field
           deliveryField.classList.add('v10-form-field--invalid');
+        } else {
+          console.log('✅ Delivery address selected:', selectedDelivery.value);
         }
         
         // If different address selected, check required fields
@@ -12489,30 +12531,47 @@ class V10_ClientManager {
     
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
+      console.log('🔍 Checking bulk request requirements (shipping & insurance)');
+      
       const shippingSelected = document.querySelector('input[name="shippingMethod"]:checked');
       const insuranceSelected = document.querySelector('input[name="insurance"]:checked');
       
+      console.log('🚛 Shipping method:', { selected: !!shippingSelected, value: shippingSelected?.value });
+      console.log('🛡️ Insurance:', { selected: !!insuranceSelected, value: insuranceSelected?.value });
+      
       if (!shippingSelected) {
+        console.log('❌ No shipping method selected');
         isValid = false;
         const shippingField = document.querySelector('input[name="shippingMethod"]')?.closest('.v10-form-field');
         if (shippingField) {
           shippingField.classList.add('v10-form-field--invalid');
         }
+      } else {
+        console.log('✅ Shipping method selected:', shippingSelected.value);
       }
       
       if (!insuranceSelected) {
+        console.log('❌ No insurance selected');
         isValid = false;
         const insuranceField = document.querySelector('input[name="insurance"]')?.closest('.v10-form-field');
         if (insuranceField) {
           insuranceField.classList.add('v10-form-field--invalid');
         }
+      } else {
+        console.log('✅ Insurance selected:', insuranceSelected.value);
       }
+    } else {
+      console.log('ℹ️ Skipping bulk request validation (not bulk request type)');
     }
+    
+    // Final validation result
+    console.log('🎯 Final validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
     // Update button state
     const nextBtn = document.getElementById('techpack-v10-step-1-next');
     if (nextBtn) {
       nextBtn.disabled = !isValid;
+      console.log('🔘 Button state updated:', { disabled: !isValid });
     }
     
     return isValid;
