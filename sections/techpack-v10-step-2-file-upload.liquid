@@ -51,6 +51,15 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
 
     <!-- Upload Studio -->
     <div class="v10-studio-card">
+      <!-- File Upload Warning -->
+      <div class="v10-warning-box-enhanced" id="v10-file-upload-warning" style="display: none;">
+        <div class="v10-warning-icon">⚠️</div>
+        <div class="v10-warning-content">
+          <strong>File Upload Required</strong>
+          Please upload at least one file to continue. Accepted formats: PDF, AI, PNG, JPG, ZIP (Max 10MB per file).
+        </div>
+      </div>
+
       <div class="v10-upload-zone" id="techpack-v10-upload-zone">
         <div class="v10-upload-content">
           <div class="v10-upload-icon">
@@ -124,32 +133,15 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
         </label>
       </div>
 
-      <div class="v10-measurement-warning" id="techpack-v10-measurement-warning" style="display: none;">
-        <div class="v10-warning-icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
-            <path d="M10 7V11M10 13H10.01" stroke="white" stroke-width="2"/>
-          </svg>
-        </div>
+      <div class="v10-warning-box-enhanced" id="techpack-v10-measurement-warning" style="display: none;">
+        <div class="v10-warning-icon">⚠️</div>
         <div class="v10-warning-content">
-          <p class="v10-warning-text">
-            <strong>Important:</strong> Requests with false measurement claims will be rejected. Only check boxes for measurements actually included in your tech pack files.
-          </p>
+          <strong>Important</strong>
+          Requests with false measurement claims will be rejected. Only check boxes for measurements actually included in your tech pack files.
         </div>
       </div>
     </div>
 
-    <!-- File Classification Studio -->
-    <div class="v10-studio-card" id="techpack-v10-classification-studio" style="display: none;">
-      <div class="v10-studio-header">
-        <h2 class="v10-studio-title">File Classification</h2>
-        <p class="v10-studio-subtitle">Help us organize your files by specifying their types</p>
-      </div>
-
-      <div class="v10-classification-grid" id="techpack-v10-classification-grid">
-        <!-- Files will be dynamically added here -->
-      </div>
-    </div>
 
     <!-- Action Buttons -->
     <div class="v10-step-actions">
@@ -192,19 +184,6 @@ TechPack V10 Step 2: File Upload - Premium Studio Design
       </button>
     </div>
 
-    <div class="v10-file-classification">
-      <label class="v10-form-label">
-        File Type *
-        <select class="v10-form-select v10-file-type-select" required>
-          <option value="">⚠️ Select file type (required)</option>
-          <option value="Collection">📁 Collection Tech-Pack</option>
-          <option value="Single">📄 Single Garment Tech-Pack</option>
-          <option value="Design">🎨 Design Reference Files</option>
-          <option value="Accessories">🏷️ Accessories Reference Files</option>
-        </select>
-      </label>
-      <div class="v10-form-error" style="display: none;"></div>
-    </div>
 
     <div class="v10-file-progress" style="display: none;">
       <div class="v10-progress-bar">
