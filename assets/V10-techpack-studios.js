@@ -5212,7 +5212,18 @@ class V10_GarmentStudio {
 
   // Check if garment basic configuration is complete
   isGarmentConfigured(garmentData) {
-    return garmentData.type && garmentData.fabricType && garmentData.sampleType;
+    const requestType = V10_State.requestType;
+    
+    if (requestType === 'bulk-order-request') {
+      // For bulk orders: type and sample reference required for configuration
+      return garmentData.type && garmentData.sampleReference;
+    } else if (requestType === 'sample-request') {
+      // For sample requests: type, fabric, and sample type required
+      return garmentData.type && garmentData.fabricType && garmentData.sampleType;
+    } else {
+      // For quotation: type and fabric required
+      return garmentData.type && garmentData.fabricType;
+    }
   }
 
   // Update garment card configuration state
