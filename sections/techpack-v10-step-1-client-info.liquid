@@ -700,27 +700,41 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
 
-    <!-- Project Details Studio -->
-    <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h2 class="v10-studio-title">Project Details</h2>
-        <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
-      </div>
+    <!-- Project Details - Optional Collapsible Section -->
+    <div class="v10-optional-section-container">
+      <button type="button" class="v10-optional-section-toggle" id="v10-project-details-toggle">
+        <div class="v10-optional-section-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="v10-optional-section-content">
+          <h3 class="v10-optional-section-title">Add Project Details</h3>
+          <p class="v10-optional-section-subtitle">Optional: Describe your project requirements and specifications</p>
+        </div>
+      </button>
       
-      <div class="v10-form-section">
-        <div class="v10-form-field v10-form-field--full">
-          <label class="v10-form-label-enhanced">
-            PROJECT DESCRIPTION
-            <textarea
-              name="project_details"
-              class="v10-form-textarea-enhanced"
-              rows="4"
-              placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
-              maxlength="500"
-            ></textarea>
-          </label>
-          <div class="v10-char-count">
-            <span id="v10-project-details-count">0</span>/500 characters
+      <div class="v10-studio-card v10-optional-section-expanded" id="v10-project-details-section" style="display: none;">
+        <div class="v10-studio-header">
+          <h2 class="v10-studio-title">Project Details</h2>
+          <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
+        </div>
+        
+        <div class="v10-form-section">
+          <div class="v10-form-field v10-form-field--full">
+            <label class="v10-form-label-enhanced">
+              PROJECT DESCRIPTION
+              <textarea
+                name="project_details"
+                class="v10-form-textarea-enhanced"
+                rows="4"
+                placeholder="Describe your project requirements, quantities, specific materials, or any other important details..."
+                maxlength="500"
+              ></textarea>
+            </label>
+            <div class="v10-char-count">
+              <span id="v10-project-details-count">0</span>/500 characters
+            </div>
           </div>
         </div>
       </div>
