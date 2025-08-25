@@ -12361,28 +12361,25 @@ class V10_ClientManager {
   }
 
   updateConditionalSections() {
-    const deliveryStudio = document.getElementById('delivery-address-studio');
-    const timelineStudio = document.getElementById('timeline-studio');
+    const deliveryAddressField = document.getElementById('v10-delivery-address-field');
+    const differentAddressForm = document.getElementById('v10-different-address-form');
     
     if (!this.currentRequestType) return;
     
-    // Show delivery address for sample and bulk requests
-    if (deliveryStudio) {
-      if (this.currentRequestType === 'sample-request' || this.currentRequestType === 'bulk-order-request') {
-        deliveryStudio.style.display = 'block';
-        this.setFieldsRequired(deliveryStudio, true);
+    // Show delivery address for sample, bulk, and lab-dips requests (NOT quotation)
+    if (deliveryAddressField) {
+      if (this.currentRequestType === 'sample-request' || 
+          this.currentRequestType === 'bulk-order-request' || 
+          this.currentRequestType === 'lab-dips-accessories') {
+        deliveryAddressField.style.display = 'block';
       } else {
-        deliveryStudio.style.display = 'none';
-        this.setFieldsRequired(deliveryStudio, false);
-      }
-    }
-    
-    // Show timeline for all except quotations
-    if (timelineStudio) {
-      if (this.currentRequestType !== 'quotation') {
-        timelineStudio.style.display = 'block';
-      } else {
-        timelineStudio.style.display = 'none';
+        // Hide for quotation
+        deliveryAddressField.style.display = 'none';
+        
+        // Also hide different address form if it was showing
+        if (differentAddressForm) {
+          differentAddressForm.style.display = 'none';
+        }
       }
     }
   }
@@ -12427,30 +12424,32 @@ class V10_ClientManager {
       }
     });
     
-    // Check delivery address radio (for sample/bulk/lab-dips requests)
-    const deliveryField = document.getElementById('v10-delivery-address-field');
-    if (deliveryField && deliveryField.style.display !== 'none') {
-      const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-      if (!selectedDelivery) {
-        isValid = false;
-        // Highlight the delivery address field
-        deliveryField.classList.add('v10-form-field--invalid');
-      }
-      
-      // If different address selected, check required fields
-      if (selectedDelivery?.value === 'different') {
-        const differentForm = document.getElementById('v10-different-address-form');
-        if (differentForm && differentForm.style.display !== 'none') {
-          const requiredDifferentFields = differentForm.querySelectorAll('input[data-validate="required-if-different"]');
-          requiredDifferentFields.forEach(field => {
-            if (!field.value.trim()) {
-              isValid = false;
-              const fieldContainer = field.closest('.v10-form-field');
-              if (fieldContainer) {
-                fieldContainer.classList.add('v10-form-field--invalid');
+    // Check delivery address radio (ONLY for sample/bulk/lab-dips requests, NOT quotation)
+    if (this.currentRequestType !== 'quotation') {
+      const deliveryField = document.getElementById('v10-delivery-address-field');
+      if (deliveryField && deliveryField.style.display !== 'none') {
+        const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+        if (!selectedDelivery) {
+          isValid = false;
+          // Highlight the delivery address field
+          deliveryField.classList.add('v10-form-field--invalid');
+        }
+        
+        // If different address selected, check required fields
+        if (selectedDelivery?.value === 'different') {
+          const differentForm = document.getElementById('v10-different-address-form');
+          if (differentForm && differentForm.style.display !== 'none') {
+            const requiredDifferentFields = differentForm.querySelectorAll('input[data-validate="required-if-different"]');
+            requiredDifferentFields.forEach(field => {
+              if (!field.value.trim()) {
+                isValid = false;
+                const fieldContainer = field.closest('.v10-form-field');
+                if (fieldContainer) {
+                  fieldContainer.classList.add('v10-form-field--invalid');
+                }
               }
-            }
-          });
+            });
+          }
         }
       }
     }
@@ -13847,9 +13846,19 @@ class V10_ModalManager {
     const dropdown = document.getElementById(dropdownId);
     const list = document.getElementById(listId);
     const search = document.getElementById(searchId);
-    const toggle = document.getElementById(inputId.replace('country', 'country-toggle'));
+    const toggle = document.getElementById(inputId + '-toggle');
     
-    if (!input || !dropdown || !list || !search) return;
+    if (!input || !dropdown || !list || !search) {
+      console.warn('Country dropdown setup failed:', { 
+        inputId, 
+        input: !!input, 
+        dropdown: !!dropdown, 
+        list: !!list, 
+        search: !!search,
+        toggle: !!toggle 
+      });
+      return;
+    }
     
     // Country data (simplified version)
     const countries = [
@@ -13870,10 +13879,20 @@ class V10_ModalManager {
     
     // Setup toggle functionality
     if (toggle) {
-      toggle.addEventListener('click', () => {
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isVisible = dropdown.style.display === 'block';
+        dropdown.style.display = isVisible ? 'none' : 'block';
+        console.log(`🔄 Country dropdown ${inputId} toggled:`, !isVisible);
       });
     }
+    
+    // Also allow clicking on the input to show dropdown
+    input.addEventListener('click', (e) => {
+      e.preventDefault();
+      dropdown.style.display = 'block';
+    });
     
     // Setup search functionality
     search.addEventListener('input', (e) => {
@@ -13915,8 +13934,16 @@ class V10_ModalManager {
         
         dropdown.style.display = 'none';
         
+        // Trigger validation when country is selected
+        if (window.v10ClientManager) {
+          window.v10ClientManager.saveData();
+          window.v10ClientManager.validateForm();
+        }
+        
         // Trigger change event
         input.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        console.log(`✅ Selected country: ${country.name} (${country.code}) for input: ${input.id}`);
       });
       
       list.appendChild(item);
