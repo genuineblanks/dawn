@@ -12273,6 +12273,7 @@ class V10_ClientManager {
   constructor() {
     this.currentRequestType = null;
     this.formData = new Map();
+    this.interactedFields = new Set(); // Track fields user has interacted with
     
     // Initialize step 1 if present
     if (document.getElementById('techpack-v10-step-1')) {
@@ -12300,7 +12301,7 @@ class V10_ClientManager {
           this.currentRequestType = e.target.value;
           this.updateConditionalSections();
           this.saveData();
-          this.validateForm();
+          // Validation removed - fields should not be red immediately on request type change
           
           // Update global state
           if (window.V10_State) {
@@ -12317,37 +12318,37 @@ class V10_ClientManager {
 
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
+      // Track field interaction on focus
+      input.addEventListener('focus', () => {
+        this.interactedFields.add(input.name || input.id || input);
+      });
+      
       // Add input event for text fields, textareas, selects
       input.addEventListener('input', () => {
+        this.interactedFields.add(input.name || input.id || input);
         this.saveData();
         // Clear validation state on input for better UX
         const fieldContainer = input.closest('.v10-form-field');
         if (fieldContainer) {
           fieldContainer.classList.remove('v10-form-field--invalid');
         }
-        // Only validate the entire form for radio buttons and main required fields
-        if (input.hasAttribute('required') && !input.hasAttribute('data-validate')) {
-          this.validateForm();
-        }
+        // Only validate interacted fields, not the entire form immediately
       });
       
-      // Add blur event for conditional required fields (different address)
-      if (input.hasAttribute('data-validate')) {
-        input.addEventListener('blur', () => {
-          if (input.hasAttribute('data-validate') && input.value.trim() === '') {
-            const fieldContainer = input.closest('.v10-form-field');
-            if (fieldContainer) {
-              fieldContainer.classList.add('v10-form-field--invalid');
-            }
-          }
-        });
-      }
+      // Add blur event for interacted fields
+      input.addEventListener('blur', () => {
+        if (this.interactedFields.has(input.name || input.id || input)) {
+          this.validateSingleField(input);
+        }
+      });
       
       // Add change event for radio buttons and checkboxes
       if (input.type === 'radio' || input.type === 'checkbox') {
         input.addEventListener('change', () => {
+          this.interactedFields.add(input.name || input.id || input);
           this.saveData();
-          this.validateForm();
+          // Only validate conditional sections after radio/checkbox changes
+          this.validateConditionalSections();
         });
       }
     });
@@ -12359,7 +12360,7 @@ class V10_ClientManager {
     
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        if (this.validateForm()) {
+        if (this.validateForm(true)) { // Force validate all fields on submit
           this.proceedToStep2();
         }
       });
@@ -12424,25 +12425,30 @@ class V10_ClientManager {
 
   /* ALL VALIDATION FUNCTIONS REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
 
-  validateForm() {
+  validateForm(forceValidateAll = false) {
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) return false;
     
     let isValid = true;
     
-    // Clear all previous validation states
-    const allFields = form.querySelectorAll('.v10-form-field');
-    allFields.forEach(field => field.classList.remove('v10-form-field--invalid'));
+    // Clear all previous validation states only for interacted fields (unless forcing all)
+    if (forceValidateAll) {
+      const allFields = form.querySelectorAll('.v10-form-field');
+      allFields.forEach(field => field.classList.remove('v10-form-field--invalid'));
+    }
     
-    // Check request type selected
+    // Check request type selected (always required)
     if (!this.currentRequestType) {
       isValid = false;
     }
     
-    // Check basic required fields
+    // Check basic required fields (only validate if interacted with or forcing all)
     const requiredFields = form.querySelectorAll('input[required], select[required]');
     requiredFields.forEach(field => {
-      if (!field.value.trim()) {
+      const fieldKey = field.name || field.id || field;
+      const shouldValidate = forceValidateAll || this.interactedFields.has(fieldKey);
+      
+      if (shouldValidate && !field.value.trim()) {
         isValid = false;
         const fieldContainer = field.closest('.v10-form-field');
         if (fieldContainer) {
@@ -12512,6 +12518,49 @@ class V10_ClientManager {
     return isValid;
   }
 
+  validateSingleField(field) {
+    const fieldContainer = field.closest('.v10-form-field');
+    if (!fieldContainer) return;
+
+    // Clear previous validation state
+    fieldContainer.classList.remove('v10-form-field--invalid');
+
+    // Check if required and empty
+    if (field.hasAttribute('required') && !field.value.trim()) {
+      fieldContainer.classList.add('v10-form-field--invalid');
+      return false;
+    }
+
+    // Check conditional required fields (data-validate)
+    if (field.hasAttribute('data-validate')) {
+      const validateType = field.getAttribute('data-validate');
+      if ((validateType === 'required-if-different' || validateType === 'required-if-different-alt')) {
+        const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+        if (selectedDelivery?.value === 'different' && !field.value.trim()) {
+          fieldContainer.classList.add('v10-form-field--invalid');
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  validateConditionalSections() {
+    // Only validate delivery address radio if not quotation type
+    if (this.currentRequestType !== 'quotation') {
+      const deliveryField = document.getElementById('v10-delivery-address-field');
+      if (deliveryField && deliveryField.style.display !== 'none') {
+        const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+        if (!selectedDelivery) {
+          deliveryField.classList.add('v10-form-field--invalid');
+        } else {
+          deliveryField.classList.remove('v10-form-field--invalid');
+        }
+      }
+    }
+  }
+
   saveData() {
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) {
@@ -12568,7 +12617,7 @@ class V10_ClientManager {
       });
       
       this.updateConditionalSections();
-      this.validateForm();
+      // Validation removed - fields should not be red immediately on data load
       
     } catch (error) {
       console.error('Error loading saved data:', error);
@@ -13592,7 +13641,7 @@ class V10_ModalManager {
       } else {
         // Re-setup form validation now that form is visible
         window.v10ClientManager.setupFormValidation();
-        window.v10ClientManager.validateForm();
+        // Validation removed - fields should not be red immediately on form visibility
       }
     }
   }
@@ -13678,7 +13727,7 @@ class V10_ModalManager {
     if (window.v10ClientManager) {
       window.v10ClientManager.currentRequestType = submissionType;
       window.v10ClientManager.updateConditionalSections();
-      window.v10ClientManager.validateForm();
+      // Validation removed - fields should not be red immediately on request type selection
     }
 
     // Update change submission button text
