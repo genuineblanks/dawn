@@ -12440,9 +12440,8 @@ class V10_ClientManager {
       'btinternet.com', 'sky.com', 'talktalk.net', 'virgin.net',
       'telus.net', 'shaw.ca', 'rogers.com', 'bell.net',
       
-      // Major business domains (to prevent false positives)
-      'amazon.com', 'microsoft.com', 'apple.com', 'google.com', 'shopify.com',
-      'facebook.com', 'twitter.com', 'linkedin.com', 'github.com', 'adobe.com'
+      // Major business domains (general, not industry-specific)
+      'amazon.com', 'microsoft.com', 'apple.com', 'google.com', 'shopify.com'
     ];
 
     // Check if it's a trusted provider (instant approval)
@@ -12450,30 +12449,43 @@ class V10_ClientManager {
       return { isValid: true, reason: 'Trusted email provider' };
     }
 
-    // Detect obviously suspicious/fake domains
-    const suspiciousPatterns = [
-      /^[a-z]{1,3}\.com$/,           // Very short domains like "ab.com"
+    // Fashion industry appropriate validation - only block obviously fake domains
+    const obviouslyFakePatterns = [
+      /^[a-z]{1,2}\.com$/,           // Extremely short domains like "a.com", "ab.com"
       /^\d+[a-z]+\.com$/,            // Domains starting with numbers "123abc.com"
-      /^[a-z]+\d{3,}\.com$/,         // Domains ending with many numbers "domain123456.com"  
-      /^(temp|test|fake|spam|trash|mail|demo|example)/, // Obviously fake keywords
-      /^[qwerty]+/,                  // Keyboard mashing like "qwdpqw"
-      /^[a-z]{8,}[0-9]{2,}$/,       // Random letters + numbers pattern
-      /^[bcdfghjklmnpqrstvwxyz]{5,}\.com$/, // Consonant-heavy fake looking domains
+      /^[a-z]+\d{4,}\.com$/,         // Domains ending with many numbers "domain12345.com" (4+ numbers)
+      /^(temp|test|fake|spam|trash|10min|guerrilla)/, // Obviously temp email keywords
+      /^[qwertyuiopasdfghjklzxcvbnm]{7,}\.com$/, // Keyboard mashing (7+ consecutive keys)
       /\.(tk|ml|ga|cf)$/,            // Free suspicious TLDs
-      // Specific patterns for temp email domains
-      /^[a-z]{6}\.com$/,             // Exactly 6 random letters like "amcret.com"
-      /^[bcdfghjklmnpqrstvwxz]{4,6}[aeiouy][bcdfghjklmnpqrstvwxz]{1,2}\.com$/, // Random consonant+vowel patterns
+      // Very specific temp email patterns (conservative)
+      /^[a-z]{10,}[0-9]{2,}\.com$/,  // Very long random letters + numbers (likely temp)
+      // Catch 6-letter random-looking domains (temp email pattern) - various combinations
+      /^[bcdfghjklmnpqrstvwxz]{3}[aeiou]{2}[bcdfghjklmnpqrstvwxz]{1}\.com$/,  // consonant-vowel-consonant
+      /^[aeiou][bcdfghjklmnpqrstvwxz]{3}[aeiou][bcdfghjklmnpqrstvwxz]\.com$/,  // Like "amcret.com" (a-mcr-e-t pattern)
     ];
 
-    // Check if domain has obvious business keywords that make it legitimate
-    const businessKeywords = ['company', 'business', 'corp', 'inc', 'startup', 'tech', 'consulting', 'solutions', 'services', 'group', 'agency', 'studio', 'firm'];
-    const hasBusinessKeyword = businessKeywords.some(keyword => domain.includes(keyword));
+    // Check for fashion/creative industry TLDs and domains (allow these)
+    const fashionFriendlyTLDs = [
+      '.fashion', '.style', '.boutique', '.clothing', '.design', '.store', '.shop',
+      '.art', '.gallery', '.studio', '.creative', '.brand', '.luxury'
+    ];
     
-    const isSuspicious = suspiciousPatterns.some(pattern => pattern.test(domain));
-    if (isSuspicious && !hasBusinessKeyword) {
+    const isFashionTLD = fashionFriendlyTLDs.some(tld => domain.endsWith(tld.substring(1)));
+    
+    // Check for legitimate business/fashion keywords in domain name
+    const legitimateKeywords = [
+      'fashion', 'style', 'boutique', 'clothing', 'design', 'brand', 'luxury', 'studio', 'creative',
+      'company', 'business', 'corp', 'group', 'agency', 'firm', 'shop', 'store', 'thread',
+      'urban', 'street', 'wear', 'apparel', 'textile', 'fabric', 'couture', 'atelier'
+    ];
+    const hasLegitimateKeyword = legitimateKeywords.some(keyword => domain.includes(keyword));
+    
+    // Only block if it matches obvious fake patterns AND doesn't have fashion/business indicators
+    const isObviouslyFake = obviouslyFakePatterns.some(pattern => pattern.test(domain));
+    if (isObviouslyFake && !isFashionTLD && !hasLegitimateKeyword) {
       return { 
         isValid: false, 
-        reason: 'This email domain appears to be invalid or temporary. Please use a legitimate email address from a known provider (Gmail, Outlook, Yahoo, etc.) or your business domain.' 
+        reason: 'This email domain appears to be temporary or invalid. Please use a legitimate email address from a known provider (Gmail, Outlook, Yahoo, etc.) or your business email.' 
       };
     }
 
@@ -12481,15 +12493,15 @@ class V10_ClientManager {
     return await this.validateBusinessDomain(domain, email);
   }
 
-  // Validate business domains (non-consumer email providers)
+  // Validate custom domains (fashion/creative industry friendly)
   async validateBusinessDomain(domain, fullEmail) {
-    // Check if domain looks like a legitimate business domain
-    const businessDomainPattern = /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]\.(com|org|net|edu|gov|co\.uk|co|biz|info|de|fr|it|es|nl|au|ca|jp|in|br|mx|ru|cn|kr)$/i;
+    // Fashion/creative industry friendly domain pattern - more permissive
+    const validDomainPattern = /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]\.(com|org|net|edu|gov|co\.uk|co|biz|info|de|fr|it|es|nl|au|ca|jp|in|br|mx|ru|cn|kr|fashion|style|boutique|clothing|design|store|shop|art|gallery|studio|creative|brand|luxury)$/i;
     
-    if (!businessDomainPattern.test(domain)) {
+    if (!validDomainPattern.test(domain)) {
       return { 
         isValid: false, 
-        reason: 'Please use an email from a major email provider (Gmail, Outlook, Yahoo) or a valid business domain.' 
+        reason: 'Please use an email from a major email provider (Gmail, Outlook, Yahoo) or your business domain.' 
       };
     }
 
@@ -12509,14 +12521,14 @@ class V10_ClientManager {
       // If MX check fails, be more permissive for legitimate-looking domains
       console.log('MX check failed for domain:', domain, error);
       
-      // For well-known business patterns, allow through
-      if (domain.length >= 6 && /^[a-z0-9\-]+\.(com|org|net|co\.uk)$/i.test(domain)) {
+      // For creative/fashion domains, be more permissive
+      if (domain.length >= 4 && /^[a-z0-9\-]+\.(com|org|net|co\.uk|fashion|style|boutique|clothing|design|store|shop)$/i.test(domain)) {
         return { isValid: true, reason: 'Business domain (MX check unavailable)' };
       }
       
       return { 
         isValid: false, 
-        reason: 'Unable to verify domain. Please use a major email provider (Gmail, Outlook, Yahoo) or contact support.' 
+        reason: 'Unable to verify domain. Please use a major email provider (Gmail, Outlook, Yahoo) or contact support if you believe this is an error.' 
       };
     }
   }
@@ -12529,18 +12541,20 @@ class V10_ClientManager {
     // For now, implement a pattern-based approach that catches obvious fakes
     // while being permissive to legitimate businesses
     
-    // Known patterns of legitimate business domains
+    // Known patterns of legitimate domains (fashion/creative industry friendly)
     const legitimatePatterns = [
-      /^[a-zA-Z0-9][a-zA-Z0-9\-]{2,30}[a-zA-Z0-9]\.(com|org|net|co\.uk)$/,  // Standard business domains
+      /^[a-zA-Z0-9][a-zA-Z0-9\-]{1,30}[a-zA-Z0-9]\.(com|org|net|co\.uk)$/,  // Standard business domains (relaxed length)
       /^[a-zA-Z]{3,}\.edu$/,                                                  // Educational domains
-      /^[a-zA-Z]{3,}\.gov$/                                                   // Government domains
+      /^[a-zA-Z]{3,}\.gov$/,                                                  // Government domains
+      /^[a-zA-Z0-9][a-zA-Z0-9\-]{1,30}[a-zA-Z0-9]\.(fashion|style|boutique|clothing|design|store|shop|art|gallery|studio|creative|brand|luxury)$/i  // Fashion TLDs
     ];
 
     const isLegitimatePattern = legitimatePatterns.some(pattern => pattern.test(domain));
     
     // Simulate MX record check result based on domain patterns
     // In production, this should be a server-side API call
-    return isLegitimatePattern && domain.length >= 6;
+    // More permissive for creative/fashion domains - minimum 4 characters instead of 6
+    return isLegitimatePattern && domain.length >= 4;
   }
 
   async validateForm(forceValidateAll = false) {
