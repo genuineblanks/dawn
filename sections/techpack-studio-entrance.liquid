@@ -11,28 +11,43 @@ Premium Tesla/Apple minimal design with modal workflow
   <header class="tps-header">
     <div class="tps-container">
       <div class="tps-header-content">
-        <!-- Wordmark -->
-        <div class="tps-wordmark">
-          {% if section.settings.wordmark_text != blank %}
-            {{ section.settings.wordmark_text }}
-          {% else %}
-            TechPack-Studio
+        <!-- Download Button - Left -->
+        <div class="tps-header-left">
+          {% if section.settings.download_url != blank %}
+            <a href="{{ section.settings.download_url }}" class="tps-download-btn">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              {% if section.settings.download_label != blank %}
+                {{ section.settings.download_label }}
+              {% else %}
+                Download TechPack Templates
+              {% endif %}
+            </a>
           {% endif %}
         </div>
         
-        <!-- Theme Toggle -->
-        <div class="tps-theme-toggle">
-          <button type="button" class="tps-theme-btn tps-theme-btn--light tps-theme-btn--active" data-theme="light" aria-label="Switch to light theme">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
-              <path d="m12 2 0 2m0 16 0 2m10-10-2 0M4 12l-2 0m15.66-7.66-1.42 1.42M6.76 17.24l-1.42 1.42m12.72 0-1.42-1.42M6.76 6.76 5.34 5.34" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-          <button type="button" class="tps-theme-btn tps-theme-btn--dark" data-theme="dark" aria-label="Switch to dark theme">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
+        <!-- Main Title - Center -->
+        <div class="tps-header-center">
+          <h1 class="tps-header-title">
+            {% if section.settings.heading != blank %}
+              {{ section.settings.heading }}
+            {% else %}
+              GARMENT DEVELOPMENT STUDIO
+            {% endif %}
+          </h1>
+        </div>
+        
+        <!-- Theme Toggle - Right -->
+        <div class="tps-header-right">
+          <div class="tps-theme-toggle">
+            <button type="button" class="tps-theme-btn tps-theme-btn--light tps-theme-btn--active" data-theme="light" aria-label="Switch to light theme">
+              <span class="tps-theme-icon">☀️</span>
+            </button>
+            <button type="button" class="tps-theme-btn tps-theme-btn--dark" data-theme="dark" aria-label="Switch to dark theme">
+              <span class="tps-theme-icon">🌙</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -41,15 +56,7 @@ Premium Tesla/Apple minimal design with modal workflow
   <!-- Hero Section -->
   <section class="tps-hero">
     <div class="tps-container">
-      <div class="tps-hero-content">
-        <h1 class="tps-hero-title">
-          {% if section.settings.heading != blank %}
-            {{ section.settings.heading }}
-          {% else %}
-            GARMENT DEVELOPMENT STUDIO
-          {% endif %}
-        </h1>
-        
+      <div class="tps-hero-content">        
         <div class="tps-hero-disclaimers">
           {% if section.settings.subtext_line_1 != blank %}
             <p class="tps-hero-disclaimer">{{ section.settings.subtext_line_1 }}</p>
@@ -73,16 +80,6 @@ Premium Tesla/Apple minimal design with modal workflow
             {% endif %}
           </button>
           <p id="tps-access-description" class="tps-sr-only">Opens client verification modal to begin the studio workflow</p>
-          
-          {% if section.settings.download_url != blank %}
-            <a href="{{ section.settings.download_url }}" class="tps-btn-secondary">
-              {% if section.settings.download_label != blank %}
-                {{ section.settings.download_label }}
-              {% else %}
-                Download TechPack Templates
-              {% endif %}
-            </a>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -118,17 +115,17 @@ Premium Tesla/Apple minimal design with modal workflow
         <div class="tps-requirement-card">
           <div class="tps-requirement-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
-              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" stroke-width="2"/>
             </svg>
           </div>
           <div class="tps-requirement-content">
             <div class="tps-requirement-header">
-              <h3 class="tps-requirement-title">Brand & Company Details</h3>
-              <span class="tps-requirement-tag tps-requirement-tag--required">Required</span>
+              <h3 class="tps-requirement-title">Fitting Measurements</h3>
+              <span class="tps-requirement-tag tps-requirement-tag--optional">Optional*</span>
             </div>
-            <p class="tps-requirement-description">Your brand name, contact information, and project timeline preferences</p>
-            <div class="tps-requirement-formats">Business Registration Preferred</div>
+            <p class="tps-requirement-description">Provide body measurements or select from our standard sizing patterns</p>
+            <div class="tps-requirement-formats">Size Chart, Custom Measurements</div>
           </div>
         </div>
         
@@ -142,29 +139,28 @@ Premium Tesla/Apple minimal design with modal workflow
           </div>
           <div class="tps-requirement-content">
             <div class="tps-requirement-header">
-              <h3 class="tps-requirement-title">Reference Materials</h3>
-              <span class="tps-requirement-tag tps-requirement-tag--optional">Optional</span>
+              <h3 class="tps-requirement-title">Design Measurements</h3>
+              <span class="tps-requirement-tag tps-requirement-tag--expert">Expert Help Available</span>
             </div>
-            <p class="tps-requirement-description">Mood boards, fabric preferences, or inspiration images to guide development</p>
-            <div class="tps-requirement-formats">Any image format</div>
+            <p class="tps-requirement-description">Garment dimensions and specifications (our experts can assist if needed)</p>
+            <div class="tps-requirement-formats">Spec Sheet, Measurements</div>
           </div>
         </div>
         
         <div class="tps-requirement-card">
           <div class="tps-requirement-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 11H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="2"/>
-              <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="2"/>
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
             </svg>
           </div>
           <div class="tps-requirement-content">
             <div class="tps-requirement-header">
-              <h3 class="tps-requirement-title">Production Specifications</h3>
-              <span class="tps-requirement-tag tps-requirement-tag--expert">Expert Help</span>
+              <h3 class="tps-requirement-title">Material Preferences</h3>
+              <span class="tps-requirement-tag tps-requirement-tag--optional">Optional</span>
             </div>
-            <p class="tps-requirement-description">Detailed manufacturing requirements, sizing charts, and quality standards</p>
-            <div class="tps-requirement-formats">Our team can assist</div>
+            <p class="tps-requirement-description">Fabric types, colors, quality requirements, and special instructions</p>
+            <div class="tps-requirement-formats">Fabric Specs, Color Codes</div>
           </div>
         </div>
       </div>
