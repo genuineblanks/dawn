@@ -1941,6 +1941,14 @@ body[class*="techpack"] *,
   box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
 }
 
+/* Radio button validation styling */
+.v10-form-field--invalid .v10-delivery-option-content-enhanced,
+.v10-form-field--invalid .v10-shipping-method-content,
+.v10-form-field--invalid .v10-insurance-option-content {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
+}
+
 .v10-form-field--invalid .v10-form-label-enhanced {
   color: #ef4444 !important;
 }
