@@ -12319,10 +12319,19 @@ class V10_ClientManager {
 
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
+      // Add input event for text fields, textareas, selects
       input.addEventListener('input', () => {
         this.saveData();
         this.validateForm();
       });
+      
+      // Add change event for radio buttons and checkboxes
+      if (input.type === 'radio' || input.type === 'checkbox') {
+        input.addEventListener('change', () => {
+          this.saveData();
+          this.validateForm();
+        });
+      }
     });
   }
 
@@ -12392,24 +12401,55 @@ class V10_ClientManager {
   /* ALL VALIDATION FUNCTIONS REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
 
   validateForm() {
-    // Simple validation - just check if basic fields are filled
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) return false;
     
     let isValid = true;
-    const requiredFields = form.querySelectorAll('input[required], select[required]');
     
     // Check request type selected
     if (!this.currentRequestType) {
       isValid = false;
     }
     
-    // Simple required field check
+    // Check basic required fields
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
     requiredFields.forEach(field => {
       if (!field.value.trim()) {
         isValid = false;
       }
     });
+    
+    // Check delivery address radio (for sample/bulk/lab-dips requests)
+    const deliveryField = document.getElementById('v10-delivery-address-field');
+    if (deliveryField && deliveryField.style.display !== 'none') {
+      const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+      if (!selectedDelivery) {
+        isValid = false;
+      }
+      
+      // If different address selected, check required fields
+      if (selectedDelivery?.value === 'different') {
+        const differentForm = document.getElementById('v10-different-address-form');
+        if (differentForm && differentForm.style.display !== 'none') {
+          const requiredDifferentFields = differentForm.querySelectorAll('input[data-validate="required-if-different"]');
+          requiredDifferentFields.forEach(field => {
+            if (!field.value.trim()) {
+              isValid = false;
+            }
+          });
+        }
+      }
+    }
+    
+    // Check shipping method and insurance (for bulk requests)
+    if (this.currentRequestType === 'bulk-order-request') {
+      const shippingSelected = document.querySelector('input[name="shippingMethod"]:checked');
+      const insuranceSelected = document.querySelector('input[name="insurance"]:checked');
+      
+      if (!shippingSelected || !insuranceSelected) {
+        isValid = false;
+      }
+    }
     
     // Update button state
     const nextBtn = document.getElementById('techpack-v10-step-1-next');
