@@ -1949,6 +1949,12 @@ body[class*="techpack"] *,
   box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
 }
 
+/* File type select validation styling */
+.v10-file-card--invalid .v10-file-type-select {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
+}
+
 .v10-form-field--invalid .v10-form-label-enhanced {
   color: #ef4444 !important;
 }
@@ -2605,12 +2611,7 @@ body[class*="techpack"] *,
   opacity: 1;
 }
 
-/* Fix for Design Placement measurement item layout */
-#techpack-v10-design-placement-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+/* Design Placement item inherits styling from .v10-measurement-item */
 
 /* ==============================================
    STUDIO NAVIGATOR

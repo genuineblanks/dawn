@@ -13191,12 +13191,22 @@ class V10_FileManager {
       isValid = false;
     }
     
-    // Check if all files have types assigned
+    // Check if all files have types assigned and apply visual validation
     for (let fileData of this.uploadedFiles.values()) {
+      const fileCard = document.querySelector(`[data-file-id="${fileData.id}"]`);
+      
       if (!fileData.type) {
         console.log('❌ File missing type:', fileData);
         isValid = false;
-        break;
+        // Apply validation styling
+        if (fileCard) {
+          fileCard.classList.add('v10-file-card--invalid');
+        }
+      } else {
+        // Remove validation styling if type is selected
+        if (fileCard) {
+          fileCard.classList.remove('v10-file-card--invalid');
+        }
       }
     }
     
