@@ -12287,10 +12287,8 @@ class V10_ClientManager {
     this.setupConditionalSections();
     this.loadSavedData();
     
-    // Initial validation to ensure button state is correct
-    setTimeout(() => {
-      this.validateForm();
-    }, 100);
+    // Initial validation removed - fields should not be red on page load
+    // Validation will happen when user interacts with form or tries to submit
   }
 
   setupRequestTypeHandling() {
@@ -12392,6 +12390,15 @@ class V10_ClientManager {
           this.currentRequestType === 'bulk-order-request' || 
           this.currentRequestType === 'lab-dips-accessories') {
         deliveryAddressField.style.display = 'block';
+        
+        // Fix: Force CSS :checked state to re-apply when field becomes visible
+        setTimeout(() => {
+          const checkedRadio = deliveryAddressField.querySelector('input[name="deliveryAddress"]:checked');
+          if (checkedRadio) {
+            // Force browser to re-evaluate :checked CSS styling
+            checkedRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }, 50);
       } else {
         // Hide for quotation
         deliveryAddressField.style.display = 'none';

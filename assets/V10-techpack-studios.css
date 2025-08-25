@@ -2126,12 +2126,7 @@ body[class*="techpack"] *,
   border-color: var(--v10-border-focus);
 }
 
-/* Enhanced visual feedback for validation failures on selects */
-.v10-form-field--invalid .v10-form-select-enhanced,
-.v10-form-field--invalid .v10-form-select {
-  border-color: #ef4444 !important;
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
-}
+/* Duplicate validation styles removed - already handled above */
 
 /* Delivery Options */
 .v10-delivery-options-enhanced {
