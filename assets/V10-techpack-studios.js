@@ -12339,8 +12339,8 @@ class V10_ClientManager {
     const backBtn = document.getElementById('techpack-v10-step-1-back');
     
     if (nextBtn) {
-      nextBtn.addEventListener('click', async () => {
-        const isValid = await this.validateForm(true); // Force validate all fields on submit
+      nextBtn.addEventListener('click', () => {
+        const isValid = this.validateForm(true); // Force validate all fields on submit
         if (isValid) {
           this.proceedToStep2();
         }
@@ -12406,8 +12406,8 @@ class V10_ClientManager {
 
   /* ALL VALIDATION FUNCTIONS REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
 
-  // Strict email validation with whitelist + domain verification
-  async validateEmail(email) {
+  // Simple email validation - major providers + any reasonable business domain
+  validateEmail(email) {
     if (!email || typeof email !== 'string') {
       return { isValid: false, reason: 'Email is required' };
     }
@@ -12421,8 +12421,8 @@ class V10_ClientManager {
     // Extract domain from email
     const domain = email.split('@')[1].toLowerCase();
 
-    // Strict whitelist of trusted major email providers (instant approval)
-    const trustedProviders = [
+    // Major email providers (instant approval)
+    const majorProviders = [
       // Major consumer email providers
       'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
       'yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.de', 'yahoo.fr', 'yahoo.in', 'yahoo.com.au',
@@ -12438,126 +12438,37 @@ class V10_ClientManager {
       'libero.it', 'virgilio.it', 'alice.it', 'tiscali.it',
       'uol.com.br', 'ig.com.br', 'terra.com.br', 'bol.com.br', 'globo.com',
       'btinternet.com', 'sky.com', 'talktalk.net', 'virgin.net',
-      'telus.net', 'shaw.ca', 'rogers.com', 'bell.net',
-      
-      // Major business domains (general, not industry-specific)
-      'amazon.com', 'microsoft.com', 'apple.com', 'google.com', 'shopify.com'
+      'telus.net', 'shaw.ca', 'rogers.com', 'bell.net'
     ];
 
-    // Check if it's a trusted provider (instant approval)
-    if (trustedProviders.includes(domain)) {
-      return { isValid: true, reason: 'Trusted email provider' };
+    // Check if it's a major provider (instant approval)
+    if (majorProviders.includes(domain)) {
+      return { isValid: true, reason: 'Major email provider' };
     }
 
-    // Fashion industry appropriate validation - only block obviously fake domains
-    const obviouslyFakePatterns = [
-      /^[a-z]{1,2}\.com$/,           // Extremely short domains like "a.com", "ab.com"
-      /^\d+[a-z]+\.com$/,            // Domains starting with numbers "123abc.com"
-      /^[a-z]+\d{4,}\.com$/,         // Domains ending with many numbers "domain12345.com" (4+ numbers)
-      /^(temp|test|fake|spam|trash|10min|guerrilla)/, // Obviously temp email keywords
-      /^[qwertyuiopasdfghjklzxcvbnm]{7,}\.com$/, // Keyboard mashing (7+ consecutive keys)
-      /\.(tk|ml|ga|cf)$/,            // Free suspicious TLDs
-      // Very specific temp email patterns (conservative)
-      /^[a-z]{10,}[0-9]{2,}\.com$/,  // Very long random letters + numbers (likely temp)
-      // Catch 6-letter random-looking domains (temp email pattern) - various combinations
-      /^[bcdfghjklmnpqrstvwxz]{3}[aeiou]{2}[bcdfghjklmnpqrstvwxz]{1}\.com$/,  // consonant-vowel-consonant
-      /^[aeiou][bcdfghjklmnpqrstvwxz]{3}[aeiou][bcdfghjklmnpqrstvwxz]\.com$/,  // Like "amcret.com" (a-mcr-e-t pattern)
+    // For all other domains, just check basic format - allow any reasonable business domain
+    // Only block extremely obvious fake patterns
+    const obviousFakePatterns = [
+      /^[a-z]{1,2}\.com$/,           // Extremely short like "a.com", "ab.com"
+      /^(temp|test|fake|spam|10min|guerrilla)/,  // Obviously temp keywords
+      /^[qwertyuiop]{5,}/,           // Keyboard mashing
+      /\.(tk|ml|ga|cf)$/             // Free suspicious TLDs
     ];
 
-    // Check for fashion/creative industry TLDs and domains (allow these)
-    const fashionFriendlyTLDs = [
-      '.fashion', '.style', '.boutique', '.clothing', '.design', '.store', '.shop',
-      '.art', '.gallery', '.studio', '.creative', '.brand', '.luxury'
-    ];
-    
-    const isFashionTLD = fashionFriendlyTLDs.some(tld => domain.endsWith(tld.substring(1)));
-    
-    // Check for legitimate business/fashion keywords in domain name
-    const legitimateKeywords = [
-      'fashion', 'style', 'boutique', 'clothing', 'design', 'brand', 'luxury', 'studio', 'creative',
-      'company', 'business', 'corp', 'group', 'agency', 'firm', 'shop', 'store', 'thread',
-      'urban', 'street', 'wear', 'apparel', 'textile', 'fabric', 'couture', 'atelier'
-    ];
-    const hasLegitimateKeyword = legitimateKeywords.some(keyword => domain.includes(keyword));
-    
-    // Only block if it matches obvious fake patterns AND doesn't have fashion/business indicators
-    const isObviouslyFake = obviouslyFakePatterns.some(pattern => pattern.test(domain));
-    if (isObviouslyFake && !isFashionTLD && !hasLegitimateKeyword) {
+    const isObviousFake = obviousFakePatterns.some(pattern => pattern.test(domain));
+    if (isObviousFake) {
       return { 
         isValid: false, 
-        reason: 'This email domain appears to be temporary or invalid. Please use a legitimate email address from a known provider (Gmail, Outlook, Yahoo, etc.) or your business email.' 
+        reason: 'Please use a legitimate email address' 
       };
     }
 
-    // For business domains, perform basic domain validation
-    return await this.validateBusinessDomain(domain, email);
+    // Allow everything else - business domains, creative domains, etc.
+    return { isValid: true, reason: 'Valid email address' };
   }
 
-  // Validate custom domains (fashion/creative industry friendly)
-  async validateBusinessDomain(domain, fullEmail) {
-    // Fashion/creative industry friendly domain pattern - more permissive
-    const validDomainPattern = /^[a-z0-9][a-z0-9\-]{1,61}[a-z0-9]\.(com|org|net|edu|gov|co\.uk|co|biz|info|de|fr|it|es|nl|au|ca|jp|in|br|mx|ru|cn|kr|fashion|style|boutique|clothing|design|store|shop|art|gallery|studio|creative|brand|luxury)$/i;
-    
-    if (!validDomainPattern.test(domain)) {
-      return { 
-        isValid: false, 
-        reason: 'Please use an email from a major email provider (Gmail, Outlook, Yahoo) or your business domain.' 
-      };
-    }
 
-    // Domain looks legitimate - validate it has email servers (MX records)
-    try {
-      const hasEmailServer = await this.checkDomainMXRecords(domain);
-      
-      if (hasEmailServer) {
-        return { isValid: true, reason: 'Valid business domain with email servers' };
-      } else {
-        return { 
-          isValid: false, 
-          reason: 'This domain cannot receive emails. Please check your email address or use a major email provider (Gmail, Outlook, Yahoo).' 
-        };
-      }
-    } catch (error) {
-      // If MX check fails, be more permissive for legitimate-looking domains
-      console.log('MX check failed for domain:', domain, error);
-      
-      // For creative/fashion domains, be more permissive
-      if (domain.length >= 4 && /^[a-z0-9\-]+\.(com|org|net|co\.uk|fashion|style|boutique|clothing|design|store|shop)$/i.test(domain)) {
-        return { isValid: true, reason: 'Business domain (MX check unavailable)' };
-      }
-      
-      return { 
-        isValid: false, 
-        reason: 'Unable to verify domain. Please use a major email provider (Gmail, Outlook, Yahoo) or contact support if you believe this is an error.' 
-      };
-    }
-  }
-
-  // Check if domain has MX records (email servers) - browser-compatible approach
-  async checkDomainMXRecords(domain) {
-    // Note: Direct DNS/MX lookups are not possible from browser JavaScript
-    // This is a simplified check - in a real implementation, this would be done server-side
-    
-    // For now, implement a pattern-based approach that catches obvious fakes
-    // while being permissive to legitimate businesses
-    
-    // Known patterns of legitimate domains (fashion/creative industry friendly)
-    const legitimatePatterns = [
-      /^[a-zA-Z0-9][a-zA-Z0-9\-]{1,30}[a-zA-Z0-9]\.(com|org|net|co\.uk)$/,  // Standard business domains (relaxed length)
-      /^[a-zA-Z]{3,}\.edu$/,                                                  // Educational domains
-      /^[a-zA-Z]{3,}\.gov$/,                                                  // Government domains
-      /^[a-zA-Z0-9][a-zA-Z0-9\-]{1,30}[a-zA-Z0-9]\.(fashion|style|boutique|clothing|design|store|shop|art|gallery|studio|creative|brand|luxury)$/i  // Fashion TLDs
-    ];
-
-    const isLegitimatePattern = legitimatePatterns.some(pattern => pattern.test(domain));
-    
-    // Simulate MX record check result based on domain patterns
-    // In production, this should be a server-side API call
-    // More permissive for creative/fashion domains - minimum 4 characters instead of 6
-    return isLegitimatePattern && domain.length >= 4;
-  }
-
-  async validateForm(forceValidateAll = false) {
+  validateForm(forceValidateAll = false) {
     const form = document.getElementById('techpack-v10-client-form');
     if (!form) return false;
     
@@ -12622,31 +12533,25 @@ class V10_ClientManager {
       const fieldKey = emailField.name || emailField.id || 'email-field';
       
       if (forceValidateAll || this.interactedFields.has(fieldKey)) {
-        try {
-          const emailValidation = await this.validateEmail(emailField.value);
-          
-          if (!emailValidation.isValid) {
-            console.log('❌ Email validation failed:', { 
-              fieldKey, 
-              email: emailField.value, 
-              reason: emailValidation.reason 
-            });
-            isValid = false;
-            const fieldContainer = emailField.closest('.v10-form-field');
-            if (fieldContainer) {
-              fieldContainer.classList.add('v10-form-field--invalid');
-            }
-          } else {
-            console.log('✅ Email validation passed:', { 
-              fieldKey, 
-              email: emailField.value, 
-              reason: emailValidation.reason 
-            });
+        const emailValidation = this.validateEmail(emailField.value);
+        
+        if (!emailValidation.isValid) {
+          console.log('❌ Email validation failed:', { 
+            fieldKey, 
+            email: emailField.value, 
+            reason: emailValidation.reason 
+          });
+          isValid = false;
+          const fieldContainer = emailField.closest('.v10-form-field');
+          if (fieldContainer) {
+            fieldContainer.classList.add('v10-form-field--invalid');
           }
-        } catch (error) {
-          console.log('⚠️ Email validation error:', error);
-          // On error, be permissive and allow the email through
-          console.log('✅ Email validation allowed (error occurred)');
+        } else {
+          console.log('✅ Email validation passed:', { 
+            fieldKey, 
+            email: emailField.value, 
+            reason: emailValidation.reason 
+          });
         }
       }
     }
