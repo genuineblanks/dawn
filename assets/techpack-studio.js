@@ -150,14 +150,17 @@ if (!document.querySelector('#tps-root')) {
       this.lastFocusedElement = document.activeElement;
       
       // Show modal
+      modal.style.display = 'flex';
       modal.setAttribute('aria-hidden', 'false');
       this.activeModal = modal;
       
       // Lock body scroll
       document.body.style.overflow = 'hidden';
       
-      // Focus first focusable element
-      this.focusFirstElement(modal);
+      // Focus first focusable element after a brief delay to ensure visibility
+      setTimeout(() => {
+        this.focusFirstElement(modal);
+      }, 50);
       
       // Update submission modal state if needed
       if (modalId === 'tps-submission-modal') {
@@ -169,6 +172,7 @@ if (!document.querySelector('#tps-root')) {
       if (!this.activeModal) return;
       
       // Hide modal
+      this.activeModal.style.display = 'none';
       this.activeModal.setAttribute('aria-hidden', 'true');
       
       // Unlock body scroll
