@@ -1970,8 +1970,15 @@ body[class*="techpack"] *,
   background: var(--v10-bg-hover);
 }
 
-.v10-form-input-enhanced:invalid,
-.v10-form-textarea-enhanced:invalid {
+/* Native HTML5 validation styling - only show when user has interacted with field */
+.v10-form-input-enhanced:invalid:not(:placeholder-shown),
+.v10-form-textarea-enhanced:invalid:not(:placeholder-shown) {
+  border-color: var(--v10-accent-error);
+}
+
+/* Also show invalid styling when validation class is explicitly applied by JavaScript */
+.v10-form-field--invalid .v10-form-input-enhanced:invalid,
+.v10-form-field--invalid .v10-form-textarea-enhanced:invalid {
   border-color: var(--v10-accent-error);
 }
 
