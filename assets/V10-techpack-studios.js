@@ -5214,16 +5214,18 @@ class V10_GarmentStudio {
   isGarmentConfigured(garmentData) {
     const requestType = V10_State.requestType;
     
-    if (requestType === 'bulk-order-request') {
+    // Design toggle should only show for sample and bulk requests, never quotations
+    if (requestType === 'quotation') {
+      return false; // Never show design toggle for quotations
+    } else if (requestType === 'bulk-order-request') {
       // For bulk orders: type and sample reference required for configuration
       return garmentData.type && garmentData.sampleReference;
     } else if (requestType === 'sample-request') {
       // For sample requests: type, fabric, and sample type required
       return garmentData.type && garmentData.fabricType && garmentData.sampleType;
-    } else {
-      // For quotation: type and fabric required
-      return garmentData.type && garmentData.fabricType;
     }
+    
+    return false; // Default: don't show design toggle
   }
 
   // Update garment card configuration state
@@ -12397,7 +12399,12 @@ class V10_ClientManager {
     const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
     
     if (field.hasAttribute('required') && !field.value.trim()) {
-      this.showFieldError(field, 'Required');
+      // Don't show "Required" message - CSS asterisk already indicates this
+      // Just apply error styling to field
+      field.style.borderColor = 'var(--v10-accent-orange)';
+      if (fieldContainer) {
+        fieldContainer.classList.add('v10-form-field--error');
+      }
       return false;
     }
     
@@ -12477,6 +12484,49 @@ class V10_ClientManager {
         isValid = false;
       }
     });
+    
+    // Check delivery address selection for requests that require delivery
+    const deliveryAddressField = document.getElementById('v10-delivery-address-field');
+    if (deliveryAddressField && deliveryAddressField.style.display !== 'none') {
+      const selectedDeliveryAddress = document.querySelector('input[name="deliveryAddress"]:checked');
+      if (!selectedDeliveryAddress) {
+        isValid = false;
+        // Show validation message for delivery address
+        const deliveryContainer = document.querySelector('.v10-delivery-options-enhanced');
+        if (deliveryContainer) {
+          let errorMsg = deliveryContainer.parentNode.querySelector('.v10-validation-message');
+          if (!errorMsg) {
+            errorMsg = document.createElement('div');
+            errorMsg.className = 'v10-validation-message';
+            deliveryContainer.parentNode.appendChild(errorMsg);
+          }
+          errorMsg.style.display = 'block';
+          errorMsg.textContent = 'Please select a delivery address option';
+        }
+      } else {
+        // Clear validation message if address is selected
+        const deliveryContainer = document.querySelector('.v10-delivery-options-enhanced');
+        if (deliveryContainer) {
+          const errorMsg = deliveryContainer.parentNode.querySelector('.v10-validation-message');
+          if (errorMsg) {
+            errorMsg.style.display = 'none';
+          }
+        }
+        
+        // If "different address" is selected, validate those fields
+        if (selectedDeliveryAddress.value === 'different') {
+          const differentAddressForm = document.getElementById('v10-different-address-form');
+          if (differentAddressForm && differentAddressForm.style.display !== 'none') {
+            const requiredDifferentFields = differentAddressForm.querySelectorAll('input[data-validate="required-if-different"]');
+            requiredDifferentFields.forEach(field => {
+              if (!this.validateField(field)) {
+                isValid = false;
+              }
+            });
+          }
+        }
+      }
+    }
     
     // Update next button state  
     const nextBtn = document.getElementById('techpack-v10-step-1-next');
@@ -13651,6 +13701,9 @@ class V10_ModalManager {
     // Setup character counter for delivery notes
     this.setupCharacterCounter();
     
+    // Setup project details toggle
+    this.setupProjectDetailsToggle();
+    
     // Setup enhanced country dropdowns
     this.setupEnhancedCountryDropdowns();
 
@@ -13692,7 +13745,13 @@ class V10_ModalManager {
     
     // Add new listeners
     deliveryRadios.forEach(radio => {
-      radio.addEventListener('change', this.handleDeliveryAddressChange.bind(this));
+      radio.addEventListener('change', () => {
+        this.handleDeliveryAddressChange();
+        // Trigger form validation when delivery address changes
+        if (window.v10ClientManager) {
+          window.v10ClientManager.validateForm();
+        }
+      });
     });
     
     // Setup professional validation for all enhanced form fields
@@ -13760,7 +13819,7 @@ class V10_ModalManager {
       case 'required':
         if (!value) {
           isValid = false;
-          message = 'Required';
+          message = ''; // Don't show "Required" message - CSS asterisk indicates this
           messageType = 'error';
         }
         break;
@@ -13772,7 +13831,7 @@ class V10_ModalManager {
         
         if (!value) {
           isValid = false;
-          message = 'Required';
+          message = ''; // Don't show "Required" message - CSS asterisk indicates this
           messageType = 'error';
         } else if (!emailRegex.test(value)) {
           isValid = false;
@@ -13795,7 +13854,7 @@ class V10_ModalManager {
         const isDifferentAddress = document.querySelector('input[name="deliveryAddress"]:checked')?.value === 'different';
         if (isDifferentAddress && !value) {
           isValid = false;
-          message = 'Required';
+          message = ''; // Don't show "Required" message - CSS asterisk indicates this
           messageType = 'error';
         }
         break;
@@ -13893,6 +13952,41 @@ class V10_ModalManager {
       } else {
         parent?.classList.remove('v10-char-count--warning');
       }
+    }
+  }
+
+  setupProjectDetailsToggle() {
+    const toggle = document.getElementById('v10-project-details-toggle');
+    const section = document.getElementById('v10-project-details-section');
+    const textarea = section?.querySelector('textarea[name="project_details"]');
+    const counterElement = document.getElementById('v10-project-details-count');
+
+    if (!toggle || !section) return;
+
+    toggle.addEventListener('click', () => {
+      const isExpanded = section.style.display !== 'none';
+      
+      if (isExpanded) {
+        // Collapse
+        section.style.display = 'none';
+        toggle.classList.remove('active');
+      } else {
+        // Expand
+        section.style.display = 'block';
+        toggle.classList.add('active');
+        // Focus on textarea when expanded
+        if (textarea) {
+          setTimeout(() => textarea.focus(), 300);
+        }
+      }
+    });
+
+    // Setup character counter for project details
+    if (textarea && counterElement) {
+      textarea.addEventListener('input', () => {
+        const currentLength = textarea.value.length;
+        counterElement.textContent = currentLength;
+      });
     }
   }
   
