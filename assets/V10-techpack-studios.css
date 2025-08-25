@@ -881,25 +881,9 @@ body[class*="techpack"] *,
   box-shadow: none;
 }
 
-/* Custom disabled state class */
-.v10-btn--disabled {
-  background: #3a3a3a;
-  color: #6b7280;
-  border-color: #4a4a4a;
-  opacity: 0.8;
-  cursor: not-allowed;
-  transform: none;
-  pointer-events: none;
-  box-shadow: none;
-}
+/* Removed duplicate disabled styles - using main .v10-btn:disabled instead */
 
-.v10-btn--disabled:hover {
-  background: #3a3a3a;
-  transform: none;
-  box-shadow: none;
-}
-
-.v10-btn--primary {
+.v10-btn--primary:not(:disabled):not(.disabled):not([disabled]) {
   background: var(--v10-accent-primary);
   color: white;
   border-color: var(--v10-accent-primary);
@@ -1940,6 +1924,7 @@ body[class*="techpack"] *,
   display: inline;
   margin-left: 2px;
   vertical-align: baseline;
+  white-space: nowrap;
 }
 
 .v10-form-input-enhanced,
@@ -4069,6 +4054,7 @@ body[class*="techpack"] *,
   display: inline;
   margin-left: 2px;
   vertical-align: baseline;
+  white-space: nowrap;
 }
 
 .v10-form-input {
@@ -5275,24 +5261,7 @@ body[class*="techpack"] *,
   border: 1px solid #4a4a4a;
 }
 
-/* Specific button types for new client restrictions */
-.v10-btn--request-sample.disabled,
-.v10-btn--request-bulk.disabled,
-.v10-btn--lab-dips.disabled {
-  background: #3a3a3a;
-  color: #6b7280;
-  border-color: #4a4a4a;
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.v10-btn--request-sample.disabled:hover,
-.v10-btn--request-bulk.disabled:hover,
-.v10-btn--lab-dips.disabled:hover {
-  background: #3a3a3a;
-  transform: none;
-}
+/* Removed duplicate disabled styles - specific button types will use main .v10-btn:disabled */
 
 /* Studio tabs disabled state */
 .studio-tab.disabled {
@@ -7014,24 +6983,7 @@ body[class*="techpack"] *,
     50% { background-position: 100% 50%; }
   }
   
-  /* Enhanced Secondary Button */
-  .v10-btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--v10-border-primary);
-    color: var(--v10-text-secondary);
-    padding: var(--v10-space-4) var(--v10-space-8);
-    font-size: var(--v10-text-sm);
-    font-weight: 500;
-    backdrop-filter: blur(8px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .v10-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--v10-text-primary);
-    transform: translateY(-1px);
-    box-shadow: var(--v10-shadow-md);
-  }
+  /* Removed duplicate Enhanced Secondary Button - using .v10-btn--secondary instead */
 
   /* Mobile responsive design */
   @media (max-width: 768px) {
@@ -11150,5 +11102,3 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
-
-
