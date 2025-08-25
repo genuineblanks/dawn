@@ -209,7 +209,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       <div class="v10-form-section">
         <!-- Business/Brand Name -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             BUSINESS/BRAND NAME
             <input 
               type="text" 
@@ -220,12 +220,11 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               data-validate="required"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <!-- Business Email Address -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             BUSINESS EMAIL ADDRESS
             <input 
               type="email" 
@@ -236,12 +235,11 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               data-validate="email"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <!-- Delivery Address -->
         <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
-          <label class="v10-form-label-enhanced required">DELIVERY ADDRESS</label>
+          <label class="v10-form-label-enhanced v10-required">DELIVERY ADDRESS</label>
           <div class="v10-delivery-options-enhanced">
             <label class="v10-delivery-option-enhanced">
               <input type="radio" name="deliveryAddress" value="company" checked>
@@ -282,7 +280,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       <div class="v10-form-section">
         <!-- Contact Info Row -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             CONTACT NAME
             <input
               type="text"
@@ -292,11 +290,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               placeholder="Full name of contact person"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             CONTACT PHONE
             <input
               type="tel"
@@ -307,12 +304,11 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               maxlength="20"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <!-- Address Lines -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             ADDRESS LINE 1
             <input
               type="text"
@@ -322,7 +318,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               placeholder="Street address, building, etc."
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <div class="v10-form-field v10-form-field--half">
@@ -339,7 +334,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- City & State -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             CITY
             <input
               type="text"
@@ -349,11 +344,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               placeholder="City name"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             STATE/PROVINCE
             <input
               type="text"
@@ -363,12 +357,11 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               placeholder="State, province, or region"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <!-- Postal & Country -->
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             POSTAL CODE
             <input
               type="text"
@@ -378,43 +371,45 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               placeholder="ZIP or postal code"
             >
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
 
         <div class="v10-form-field v10-form-field--half">
-          <label class="v10-form-label-enhanced required">
+          <label class="v10-form-label-enhanced v10-required">
             COUNTRY
-            <div class="v10-enhanced-country-wrapper">
-              <input
-                type="text"
-                id="v10-delivery-country"
-                name="deliveryCountry"
-                class="v10-form-input-enhanced v10-enhanced-country-input"
-                data-validate="required-if-different"
-                autocomplete="off"
-                placeholder="Select delivery country"
-                readonly
-              >
-              <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag"></div>
-              <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M4 6l4 4 4-4H4z"/>
-                </svg>
-              </div>
-              <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown">
-                <div class="v10-enhanced-country-search">
-                  <input
-                    type="text"
-                    class="v10-enhanced-country-search-input"
-                    placeholder="Search countries..."
-                    id="v10-delivery-country-search"
-                  >
-                </div>
-                <div class="v10-enhanced-country-list" id="v10-delivery-country-list"></div>
-              </div>
-            </div>
+            <select
+              id="v10-delivery-country"
+              name="deliveryCountry"
+              class="v10-form-select-enhanced"
+              data-validate="required-if-different"
+            >
+              <option value="">Select country</option>
+              <option value="US">🇺🇸 United States</option>
+              <option value="CA">🇨🇦 Canada</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
+              <option value="DE">🇩🇪 Germany</option>
+              <option value="FR">🇫🇷 France</option>
+              <option value="ES">🇪🇸 Spain</option>
+              <option value="IT">🇮🇹 Italy</option>
+              <option value="NL">🇳🇱 Netherlands</option>
+              <option value="AU">🇦🇺 Australia</option>
+              <option value="PT">🇵🇹 Portugal</option>
+              <option value="BE">🇧🇪 Belgium</option>
+              <option value="AT">🇦🇹 Austria</option>
+              <option value="CH">🇨🇭 Switzerland</option>
+              <option value="DK">🇩🇰 Denmark</option>
+              <option value="SE">🇸🇪 Sweden</option>
+              <option value="NO">🇳🇴 Norway</option>
+              <option value="FI">🇫🇮 Finland</option>
+              <option value="IE">🇮🇪 Ireland</option>
+              <option value="LU">🇱🇺 Luxembourg</option>
+              <option value="JP">🇯🇵 Japan</option>
+              <option value="SG">🇸🇬 Singapore</option>
+              <option value="HK">🇭🇰 Hong Kong</option>
+              <option value="NZ">🇳🇿 New Zealand</option>
+              <option value="MX">🇲🇽 Mexico</option>
+              <option value="BR">🇧🇷 Brazil</option>
+            </select>
           </label>
-          <div class="v10-validation-message" style="display: none;"></div>
         </div>
       </div>
     </div>
@@ -429,7 +424,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
       <div class="v10-form-grid">
         <div class="v10-form-group v10-form-group--full">
-          <label class="v10-form-label required">Delivery Address</label>
+          <label class="v10-form-label v10-required">Delivery Address</label>
           <div class="v10-delivery-options">
             <label class="v10-delivery-option">
               <input type="radio" name="deliveryAddress" value="company" checked>
@@ -474,7 +469,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-form-grid">
           <!-- Contact Info Row -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               Contact Name
               <input
                 type="text"
@@ -487,7 +482,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               Contact Phone
               <input
                 type="tel"
@@ -502,7 +497,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- Address Lines -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               Address Line 1
               <input
                 type="text"
@@ -528,7 +523,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- City & State -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               City
               <input
                 type="text"
@@ -541,7 +536,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               State/Province
               <input
                 type="text"
@@ -555,7 +550,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
           <!-- Postal & Country -->
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               Postal Code
               <input
                 type="text"
@@ -568,37 +563,41 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
 
           <div class="v10-form-group v10-form-group--half">
-            <label class="v10-form-label required">
+            <label class="v10-form-label v10-required">
               COUNTRY
-              <div class="v10-enhanced-country-wrapper">
-                <input
-                  type="text"
-                  id="v10-delivery-country-alt"
-                  name="deliveryCountryAlt"
-                  class="v10-form-input v10-enhanced-country-input"
-                  data-validate="required-if-different-alt"
-                  autocomplete="off"
-                  placeholder="Select delivery country"
-                  readonly
-                >
-                <div class="v10-enhanced-country-flag" id="v10-delivery-country-flag-alt"></div>
-                <div class="v10-enhanced-country-toggle" id="v10-delivery-country-toggle-alt">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M4 6l4 4 4-4H4z"/>
-                  </svg>
-                </div>
-                <div class="v10-enhanced-country-dropdown" id="v10-delivery-country-dropdown-alt">
-                  <div class="v10-enhanced-country-search">
-                    <input
-                      type="text"
-                      class="v10-enhanced-country-search-input"
-                      placeholder="Search countries..."
-                      id="v10-delivery-country-search-alt"
-                    >
-                  </div>
-                  <div class="v10-enhanced-country-list" id="v10-delivery-country-list-alt"></div>
-                </div>
-              </div>
+              <select
+                id="v10-delivery-country-alt"
+                name="deliveryCountryAlt"
+                class="v10-form-select"
+                data-validate="required-if-different-alt"
+              >
+                <option value="">Select country</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="ES">🇪🇸 Spain</option>
+                <option value="IT">🇮🇹 Italy</option>
+                <option value="NL">🇳🇱 Netherlands</option>
+                <option value="AU">🇦🇺 Australia</option>
+                <option value="PT">🇵🇹 Portugal</option>
+                <option value="BE">🇧🇪 Belgium</option>
+                <option value="AT">🇦🇹 Austria</option>
+                <option value="CH">🇨🇭 Switzerland</option>
+                <option value="DK">🇩🇰 Denmark</option>
+                <option value="SE">🇸🇪 Sweden</option>
+                <option value="NO">🇳🇴 Norway</option>
+                <option value="FI">🇫🇮 Finland</option>
+                <option value="IE">🇮🇪 Ireland</option>
+                <option value="LU">🇱🇺 Luxembourg</option>
+                <option value="JP">🇯🇵 Japan</option>
+                <option value="SG">🇸🇬 Singapore</option>
+                <option value="HK">🇭🇰 Hong Kong</option>
+                <option value="NZ">🇳🇿 New Zealand</option>
+                <option value="MX">🇲🇽 Mexico</option>
+                <option value="BR">🇧🇷 Brazil</option>
+              </select>
             </label>
           </div>
 
@@ -632,7 +631,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       <div class="v10-form-grid">
         <!-- Shipping Method -->
         <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label required">Preferred Shipping Method</label>
+          <label class="v10-form-label v10-required">Preferred Shipping Method</label>
           <div class="v10-shipping-methods">
             <label class="v10-shipping-method">
               <input type="radio" name="shippingMethod" value="air">
@@ -659,7 +658,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Insurance -->
         <div class="v10-form-group v10-form-group--half">
-          <label class="v10-form-label required">Shipping Insurance</label>
+          <label class="v10-form-label v10-required">Shipping Insurance</label>
           <div class="v10-insurance-options">
             <label class="v10-insurance-option">
               <input type="radio" name="insurance" value="yes">
@@ -701,20 +700,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     </div>
 
     <!-- Project Details - Optional Collapsible Section -->
-    <div class="v10-optional-section-container">
-      <button type="button" class="v10-optional-section-toggle" id="v10-project-details-toggle">
-        <div class="v10-optional-section-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <div class="add-garment-section">
+      <button type="button" class="add-garment-btn" id="v10-project-details-toggle">
+        <div class="add-garment-btn__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
         </div>
-        <div class="v10-optional-section-content">
-          <h3 class="v10-optional-section-title">Add Project Details</h3>
-          <p class="v10-optional-section-subtitle">Optional: Describe your project requirements and specifications</p>
+        <div class="add-garment-btn__text">
+          <span class="add-garment-btn__title">Add Project Details</span>
+          <span class="add-garment-btn__subtitle">Optional: Describe your project requirements and specifications</span>
         </div>
       </button>
+    </div>
       
-      <div class="v10-studio-card v10-optional-section-expanded" id="v10-project-details-section" style="display: none;">
+    <div class="v10-studio-card" id="v10-project-details-section" style="display: none;">
         <div class="v10-studio-header">
           <h2 class="v10-studio-title">Project Details</h2>
           <p class="v10-studio-subtitle">Describe your project requirements and specifications</p>
@@ -737,7 +738,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <!-- Action Buttons -->
