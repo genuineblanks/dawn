@@ -12406,6 +12406,10 @@ class V10_ClientManager {
     
     let isValid = true;
     
+    // Clear all previous validation states
+    const allFields = form.querySelectorAll('.v10-form-field');
+    allFields.forEach(field => field.classList.remove('v10-form-field--invalid'));
+    
     // Check request type selected
     if (!this.currentRequestType) {
       isValid = false;
@@ -12416,6 +12420,10 @@ class V10_ClientManager {
     requiredFields.forEach(field => {
       if (!field.value.trim()) {
         isValid = false;
+        const fieldContainer = field.closest('.v10-form-field');
+        if (fieldContainer) {
+          fieldContainer.classList.add('v10-form-field--invalid');
+        }
       }
     });
     
@@ -12425,6 +12433,8 @@ class V10_ClientManager {
       const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
       if (!selectedDelivery) {
         isValid = false;
+        // Highlight the delivery address field
+        deliveryField.classList.add('v10-form-field--invalid');
       }
       
       // If different address selected, check required fields
@@ -12435,6 +12445,10 @@ class V10_ClientManager {
           requiredDifferentFields.forEach(field => {
             if (!field.value.trim()) {
               isValid = false;
+              const fieldContainer = field.closest('.v10-form-field');
+              if (fieldContainer) {
+                fieldContainer.classList.add('v10-form-field--invalid');
+              }
             }
           });
         }
@@ -12446,8 +12460,20 @@ class V10_ClientManager {
       const shippingSelected = document.querySelector('input[name="shippingMethod"]:checked');
       const insuranceSelected = document.querySelector('input[name="insurance"]:checked');
       
-      if (!shippingSelected || !insuranceSelected) {
+      if (!shippingSelected) {
         isValid = false;
+        const shippingField = document.querySelector('input[name="shippingMethod"]')?.closest('.v10-form-field');
+        if (shippingField) {
+          shippingField.classList.add('v10-form-field--invalid');
+        }
+      }
+      
+      if (!insuranceSelected) {
+        isValid = false;
+        const insuranceField = document.querySelector('input[name="insurance"]')?.closest('.v10-form-field');
+        if (insuranceField) {
+          insuranceField.classList.add('v10-form-field--invalid');
+        }
       }
     }
     
@@ -13669,9 +13695,6 @@ class V10_ModalManager {
       });
     });
     
-    // Setup professional validation for all enhanced form fields
-    this.setupProfessionalValidation();
-    
     // Initial state
     this.handleDeliveryAddressChange();
   }
@@ -13703,63 +13726,16 @@ class V10_ModalManager {
     }
   }
   
-  setupProfessionalValidation() {
-    const enhancedInputs = document.querySelectorAll('.v10-form-input-enhanced');
-    
-    enhancedInputs.forEach(input => {
-      // Remove existing listeners
-      input.removeEventListener('blur', this.handleFieldValidation);
-      input.removeEventListener('input', this.handleFieldInput);
-      
-      // Add professional validation listeners
-      input.addEventListener('blur', this.handleFieldValidation.bind(this));
-      input.addEventListener('input', this.handleFieldInput.bind(this));
-    });
-  }
   
   /* ADVANCED VALIDATION FUNCTION REMOVED - WILL BE REPLACED WITH UNIFIED SYSTEM */
   
-  handleFieldInput(event) {
-    const field = event.target;
-    const fieldContainer = field.closest('.v10-form-field');
-    
-    // Clear error state on input
-    if (fieldContainer && fieldContainer.classList.contains('v10-form-field--error')) {
-      this.clearFieldValidation(field);
-    }
-  }
   
-  showValidationMessage(fieldContainer, type, message, isValid) {
-    const validationMessage = fieldContainer.querySelector('.v10-validation-message');
-    
-    if (!validationMessage) return;
-    
-    // Clear all validation states
-    fieldContainer.classList.remove('v10-form-field--error', 'v10-form-field--warning');
-    validationMessage.classList.remove('v10-validation-message--error', 'v10-validation-message--warning');
-    
-    // Only show error messages
-    if (message && !isValid) {
-      fieldContainer.classList.add(`v10-form-field--${type}`);
-      validationMessage.classList.add(`v10-validation-message--${type}`);
-      validationMessage.textContent = message;
-      validationMessage.style.display = 'block';
-    } else {
-      // Hide validation message when field is valid
-      validationMessage.style.display = 'none';
-    }
-  }
   
   clearFieldValidation(field) {
     const fieldContainer = field.closest('.v10-form-field');
-    const validationMessage = fieldContainer?.querySelector('.v10-validation-message');
     
     if (fieldContainer) {
       fieldContainer.classList.remove('v10-form-field--error', 'v10-form-field--warning');
-    }
-    
-    if (validationMessage) {
-      validationMessage.style.display = 'none';
     }
   }
   
@@ -13817,9 +13793,16 @@ class V10_ModalManager {
     const textarea = section?.querySelector('textarea[name="project_details"]');
     const counterElement = document.getElementById('v10-project-details-count');
 
-    if (!toggle || !section) return;
+    if (!toggle || !section) {
+      console.warn('Project Details toggle setup failed:', { toggle: !!toggle, section: !!section });
+      return;
+    }
 
-    toggle.addEventListener('click', () => {
+    // Remove any existing listeners to prevent duplicates
+    toggle.removeEventListener('click', this.projectDetailsClickHandler);
+    
+    // Store the handler so we can remove it later if needed
+    this.projectDetailsClickHandler = () => {
       const isExpanded = section.style.display !== 'none';
       
       if (isExpanded) {
@@ -13835,7 +13818,9 @@ class V10_ModalManager {
           setTimeout(() => textarea.focus(), 300);
         }
       }
-    });
+    };
+
+    toggle.addEventListener('click', this.projectDetailsClickHandler);
 
     // Setup character counter for project details
     if (textarea && counterElement) {

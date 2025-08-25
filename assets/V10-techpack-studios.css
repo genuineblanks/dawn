@@ -1925,6 +1925,18 @@ body[class*="techpack"] *,
   margin-left: 4px;
 }
 
+/* Enhanced visual feedback for validation failures */
+.v10-form-field--invalid .v10-form-input-enhanced,
+.v10-form-field--invalid .v10-form-select-enhanced,
+.v10-form-field--invalid .v10-form-textarea-enhanced {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
+}
+
+.v10-form-field--invalid .v10-form-label-enhanced {
+  color: #ef4444 !important;
+}
+
 .v10-form-input-enhanced,
 .v10-form-textarea-enhanced {
   width: 100%;
@@ -8089,6 +8101,18 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   background: rgba(163, 163, 163, 0.2);
   color: var(--v10-accent-secondary);
   transform: rotate(180deg);
+}
+
+/* Active state for expanded Project Details */
+.add-garment-btn.active {
+  background: rgba(163, 163, 163, 0.08);
+  border-color: var(--v10-accent-secondary);
+}
+
+.add-garment-btn.active .add-garment-btn__icon {
+  background: rgba(163, 163, 163, 0.2);
+  color: var(--v10-accent-secondary);
+  transform: rotate(45deg);
 }
 
 .add-garment-btn__icon svg {
