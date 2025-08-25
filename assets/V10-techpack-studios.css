@@ -1917,18 +1917,14 @@ body[class*="techpack"] *,
   letter-spacing: 0.05em;
 }
 
-.v10-form-label-enhanced.required {
-  white-space: nowrap;
-}
+/* Removed white-space: nowrap - was breaking layout by preventing input field wrapping */
 
 .v10-form-label-enhanced.required::after {
-  content: ' *';
+  content: '\00a0*'; /* Non-breaking space + asterisk */
   color: var(--v10-accent-error);
   font-weight: 400;
   display: inline;
-  margin-left: 2px;
   vertical-align: baseline;
-  white-space: nowrap;
 }
 
 .v10-form-input-enhanced,
@@ -4051,18 +4047,14 @@ body[class*="techpack"] *,
   display: block;
 }
 
-.v10-form-label.required {
-  white-space: nowrap;
-}
+/* Removed white-space: nowrap - was breaking layout by preventing input field wrapping */
 
 .v10-form-label.required::after {
-  content: ' *';
+  content: '\00a0*'; /* Non-breaking space + asterisk */
   color: var(--v10-accent-error);
   font-weight: 400;
   display: inline;
-  margin-left: 2px;
   vertical-align: baseline;
-  white-space: nowrap;
 }
 
 .v10-form-input {
@@ -11110,3 +11102,5 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
+
+
