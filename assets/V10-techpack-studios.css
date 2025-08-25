@@ -2084,126 +2084,45 @@ body[class*="techpack"] *,
 }
 
 /* Enhanced Country Dropdown */
-.v10-enhanced-country-wrapper {
-  position: relative;
-}
-
-.v10-enhanced-country-input {
-  padding-right: calc(var(--v10-space-12) + var(--v10-space-4));
-}
-
-.v10-enhanced-country-flag {
-  position: absolute;
-  right: var(--v10-space-10);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: var(--v10-radius-sm);
-  background: var(--v10-bg-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--v10-text-sm);
-}
-
-.v10-enhanced-country-toggle {
-  position: absolute;
-  right: var(--v10-space-3);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--v10-text-muted);
-  cursor: pointer;
-  transition: var(--v10-transition);
-}
-
-.v10-enhanced-country-toggle:hover {
-  color: var(--v10-text-primary);
-}
-
-.v10-enhanced-country-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--v10-bg-modal);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  box-shadow: var(--v10-shadow-lg);
-  z-index: var(--v10-z-dropdown);
-  max-height: 200px;
-  overflow: hidden;
-  display: none;
-  margin-top: var(--v10-space-1);
-}
-
-.v10-enhanced-country-dropdown.show {
-  display: block;
-}
-
-.v10-enhanced-country-search {
-  padding: var(--v10-space-3);
-  border-bottom: 1px solid var(--v10-border-primary);
-}
-
-.v10-enhanced-country-search-input {
+/* Native Select Styling for Country Dropdowns */
+.v10-form-select-enhanced,
+.v10-form-select {
   width: 100%;
-  padding: var(--v10-space-2) var(--v10-space-3);
+  padding: var(--v10-space-3) var(--v10-space-4);
   background: var(--v10-bg-input);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: var(--v10-radius-sm);
+  border: 2px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
   color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
-  outline: none;
-}
-
-.v10-enhanced-country-search-input:focus {
-  border-color: var(--v10-accent-primary);
-}
-
-.v10-enhanced-country-list {
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.v10-enhanced-country-option {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-3);
-  cursor: pointer;
+  font-family: var(--v10-font-family);
+  font-size: var(--v10-text-md);
+  font-weight: 400;
+  line-height: 1.5;
   transition: var(--v10-transition);
-  border-bottom: 1px solid var(--v10-border-secondary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280'%3E%3Cpath d='M4 6l4 4 4-4H4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--v10-space-3) center;
+  background-size: 16px;
 }
 
-.v10-enhanced-country-option:hover {
-  background: var(--v10-bg-hover);
+.v10-form-select-enhanced:focus,
+.v10-form-select:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(163, 163, 163, 0.1);
 }
 
-.v10-enhanced-country-option:last-child {
-  border-bottom: none;
+.v10-form-select-enhanced:hover,
+.v10-form-select:hover {
+  border-color: var(--v10-border-focus);
 }
 
-.v10-enhanced-country-flag-option {
-  width: 20px;
-  height: 20px;
-  border-radius: var(--v10-radius-sm);
-  background: var(--v10-bg-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--v10-text-sm);
-  flex-shrink: 0;
-}
-
-.v10-enhanced-country-name {
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
+/* Enhanced visual feedback for validation failures on selects */
+.v10-form-field--invalid .v10-form-select-enhanced,
+.v10-form-field--invalid .v10-form-select {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1) !important;
 }
 
 /* Delivery Options */

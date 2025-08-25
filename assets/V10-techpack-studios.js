@@ -12322,8 +12322,28 @@ class V10_ClientManager {
       // Add input event for text fields, textareas, selects
       input.addEventListener('input', () => {
         this.saveData();
-        this.validateForm();
+        // Clear validation state on input for better UX
+        const fieldContainer = input.closest('.v10-form-field');
+        if (fieldContainer) {
+          fieldContainer.classList.remove('v10-form-field--invalid');
+        }
+        // Only validate the entire form for radio buttons and main required fields
+        if (input.hasAttribute('required') && !input.hasAttribute('data-validate')) {
+          this.validateForm();
+        }
       });
+      
+      // Add blur event for conditional required fields (different address)
+      if (input.hasAttribute('data-validate')) {
+        input.addEventListener('blur', () => {
+          if (input.hasAttribute('data-validate') && input.value.trim() === '') {
+            const fieldContainer = input.closest('.v10-form-field');
+            if (fieldContainer) {
+              fieldContainer.classList.add('v10-form-field--invalid');
+            }
+          }
+        });
+      }
       
       // Add change event for radio buttons and checkboxes
       if (input.type === 'radio' || input.type === 'checkbox') {
@@ -13687,10 +13707,8 @@ class V10_ModalManager {
     deliveryRadios.forEach(radio => {
       radio.addEventListener('change', () => {
         this.handleDeliveryAddressChange();
-        // Trigger form validation when delivery address changes
-        if (window.v10ClientManager) {
-          window.v10ClientManager.validateForm();
-        }
+        // Don't immediately validate on radio change to prevent instant red fields
+        // Validation will happen on form submission or field blur events
       });
     });
     
@@ -13709,6 +13727,10 @@ class V10_ModalManager {
         setTimeout(() => {
           differentAddressForm.classList.add('v10-form-animate-in');
         }, 50);
+        
+        // Clear any previous validation states when showing different address form
+        const fields = differentAddressForm.querySelectorAll('.v10-form-field');
+        fields.forEach(field => field.classList.remove('v10-form-field--invalid'));
       } else {
         differentAddressForm.classList.remove('v10-form-animate-in');
         setTimeout(() => {
@@ -13716,7 +13738,7 @@ class V10_ModalManager {
         }, 300);
         
         // Clear different address fields when hidden
-        const inputs = differentAddressForm.querySelectorAll('input, textarea');
+        const inputs = differentAddressForm.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
           input.value = '';
           this.clearFieldValidation(input);
@@ -13831,124 +13853,11 @@ class V10_ModalManager {
   }
   
   setupEnhancedCountryDropdowns() {
-    // Setup main country dropdown
-    this.setupCountryDropdown('v10-country', 'v10-country-dropdown', 'v10-country-list', 'v10-country-search');
-    
-    // Setup delivery country dropdown
-    this.setupCountryDropdown('v10-delivery-country', 'v10-delivery-country-dropdown', 'v10-delivery-country-list', 'v10-delivery-country-search');
-    
-    // Setup alternate delivery country dropdown
-    this.setupCountryDropdown('v10-delivery-country-alt', 'v10-delivery-country-dropdown-alt', 'v10-delivery-country-list-alt', 'v10-delivery-country-search-alt');
+    // Country dropdowns now use native select elements - no setup needed
+    console.log('✅ Country dropdowns using native select elements');
   }
   
-  setupCountryDropdown(inputId, dropdownId, listId, searchId) {
-    const input = document.getElementById(inputId);
-    const dropdown = document.getElementById(dropdownId);
-    const list = document.getElementById(listId);
-    const search = document.getElementById(searchId);
-    const toggle = document.getElementById(inputId + '-toggle');
-    
-    if (!input || !dropdown || !list || !search) {
-      console.warn('Country dropdown setup failed:', { 
-        inputId, 
-        input: !!input, 
-        dropdown: !!dropdown, 
-        list: !!list, 
-        search: !!search,
-        toggle: !!toggle 
-      });
-      return;
-    }
-    
-    // Country data (simplified version)
-    const countries = [
-      { name: "United States", code: "US", flag: "🇺🇸" },
-      { name: "Canada", code: "CA", flag: "🇨🇦" },
-      { name: "United Kingdom", code: "GB", flag: "🇬🇧" },
-      { name: "Germany", code: "DE", flag: "🇩🇪" },
-      { name: "France", code: "FR", flag: "🇫🇷" },
-      { name: "Spain", code: "ES", flag: "🇪🇸" },
-      { name: "Italy", code: "IT", flag: "🇮🇹" },
-      { name: "Netherlands", code: "NL", flag: "🇳🇱" },
-      { name: "Australia", code: "AU", flag: "🇦🇺" },
-      { name: "Portugal", code: "PT", flag: "🇵🇹" }
-    ];
-    
-    // Populate country list
-    this.populateCountryList(countries, list, input, dropdown);
-    
-    // Setup toggle functionality
-    if (toggle) {
-      toggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const isVisible = dropdown.style.display === 'block';
-        dropdown.style.display = isVisible ? 'none' : 'block';
-        console.log(`🔄 Country dropdown ${inputId} toggled:`, !isVisible);
-      });
-    }
-    
-    // Also allow clicking on the input to show dropdown
-    input.addEventListener('click', (e) => {
-      e.preventDefault();
-      dropdown.style.display = 'block';
-    });
-    
-    // Setup search functionality
-    search.addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      const filteredCountries = countries.filter(country => 
-        country.name.toLowerCase().includes(searchTerm)
-      );
-      this.populateCountryList(filteredCountries, list, input, dropdown);
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target) && !input.contains(e.target) && !toggle?.contains(e.target)) {
-        dropdown.style.display = 'none';
-      }
-    });
-  }
-  
-  populateCountryList(countries, list, input, dropdown) {
-    list.innerHTML = '';
-    
-    countries.forEach(country => {
-      const item = document.createElement('div');
-      item.className = 'v10-country-item';
-      item.innerHTML = `
-        <span class="v10-country-flag">${country.flag}</span>
-        <span class="v10-country-name">${country.name}</span>
-      `;
-      
-      item.addEventListener('click', () => {
-        input.value = country.name;
-        input.setAttribute('data-country-code', country.code);
-        
-        // Update flag display if exists
-        const flagElement = document.getElementById(input.id.replace('country', 'country-flag'));
-        if (flagElement) {
-          flagElement.textContent = country.flag;
-        }
-        
-        dropdown.style.display = 'none';
-        
-        // Trigger validation when country is selected
-        if (window.v10ClientManager) {
-          window.v10ClientManager.saveData();
-          window.v10ClientManager.validateForm();
-        }
-        
-        // Trigger change event
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-        
-        console.log(`✅ Selected country: ${country.name} (${country.code}) for input: ${input.id}`);
-      });
-      
-      list.appendChild(item);
-    });
-  }
+  // Country dropdown functions removed - using native select elements
 
   openModal(modalIdOrElement) {
     let modal;
