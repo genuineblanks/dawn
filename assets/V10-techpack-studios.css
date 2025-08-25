@@ -1918,6 +1918,14 @@ body[class*="techpack"] *,
 }
 
 /* UNIFIED REQUIRED ASTERISK SYSTEM - SINGLE CLEAN IMPLEMENTATION */
+.v10-required {
+  display: inline;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+
 .v10-required::after {
   content: ' *';
   color: #ef4444;
