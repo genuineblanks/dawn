@@ -8,82 +8,72 @@ Premium Tesla/Apple minimal design with modal workflow
 <div id="tps-root" data-theme="light">
   
   <!-- Header Section -->
-  <header class="tps-header">
-    <div class="tps-container">
-      <div class="tps-header-content">
-        <!-- Download Button - Left -->
-        <div class="tps-header-left">
-          {% if section.settings.download_url != blank %}
-            <a href="{{ section.settings.download_url }}" class="tps-download-btn">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              {% if section.settings.download_label != blank %}
-                {{ section.settings.download_label }}
-              {% else %}
-                Download TechPack Templates
-              {% endif %}
-            </a>
-          {% endif %}
-        </div>
-        
-        <!-- Main Title - Center -->
-        <div class="tps-header-center">
-          <h1 class="tps-header-title">
-            {% if section.settings.heading != blank %}
-              {{ section.settings.heading }}
-            {% else %}
-              GARMENT DEVELOPMENT STUDIO
-            {% endif %}
-          </h1>
-        </div>
-        
-        <!-- Theme Toggle - Right -->
-        <div class="tps-header-right">
-          <div class="tps-theme-toggle">
-            <button type="button" class="tps-theme-btn tps-theme-btn--light tps-theme-btn--active" data-theme="light" aria-label="Switch to light theme">
-              <span class="tps-theme-icon">☀️</span>
-            </button>
-            <button type="button" class="tps-theme-btn tps-theme-btn--dark" data-theme="dark" aria-label="Switch to dark theme">
-              <span class="tps-theme-icon">🌙</span>
-            </button>
-          </div>
-        </div>
+  <div class="tps-app-container">
+    <!-- Unified Header Box -->
+    <div class="tps-unified-header-box">
+      <!-- Download Button - Left Side -->
+      <div class="tps-download-section">
+        {% if section.settings.download_url != blank %}
+          <a href="{{ section.settings.download_url }}" class="tps-btn-download" id="tps-get-templates-btn">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M17 12v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m4-7l3-3 3 3m-3-3v12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>{% if section.settings.download_label != blank %}{{ section.settings.download_label }}{% else %}Download TechPack Templates{% endif %}</span>
+          </a>
+        {% endif %}
       </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="tps-hero">
-    <div class="tps-container">
-      <div class="tps-hero-content">        
-        <div class="tps-hero-disclaimers">
-          {% if section.settings.subtext_line_1 != blank %}
-            <p class="tps-hero-disclaimer">{{ section.settings.subtext_line_1 }}</p>
-          {% else %}
-            <p class="tps-hero-disclaimer">We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand.</p>
-          {% endif %}
-          
-          {% if section.settings.subtext_line_2 != blank %}
-            <p class="tps-hero-disclaimer">{{ section.settings.subtext_line_2 }}</p>
-          {% else %}
-            <p class="tps-hero-disclaimer">This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.</p>
-          {% endif %}
-        </div>
-        
-        <div class="tps-hero-actions">
-          <button type="button" class="tps-btn-primary" id="tps-access-studio" aria-describedby="tps-access-description">
-            {% if section.settings.primary_cta_label != blank %}
-              {{ section.settings.primary_cta_label }}
-            {% else %}
-              ACCESS SPECIALIZED STUDIO
-            {% endif %}
+      
+      <!-- Title - Center -->
+      <div class="tps-header-center">
+        <h1 class="tps-title-main">{% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}GARMENT DEVELOPMENT STUDIO{% endif %}</h1>
+      </div>
+      
+      <!-- Theme Toggle - Right Side -->
+      <div class="tps-theme-section">
+        <div class="tps-theme-toggle tps-theme-toggle--header">
+          <button type="button" class="tps-theme-btn tps-theme-btn--light tps-theme-btn--active" data-theme="light">
+            ☀️
           </button>
-          <p id="tps-access-description" class="tps-sr-only">Opens client verification modal to begin the studio workflow</p>
+          <button type="button" class="tps-theme-btn tps-theme-btn--dark" data-theme="dark">
+            🌙
+          </button>
         </div>
       </div>
     </div>
-  </section>
+    
+    <!-- Description Box -->
+    <div class="tps-header-description">
+      {% if section.settings.subtext_line_1 != blank %}
+        <p>{{ section.settings.subtext_line_1 }}</p>
+      {% else %}
+        <p>We are a lowkey specialized garment manufacturer for custom brands and intend to make the products specially for each brand.</p>
+      {% endif %}
+      
+      {% if section.settings.subtext_line_2 != blank %}
+        <p>{{ section.settings.subtext_line_2 }}</p>
+      {% else %}
+        <p>This is the intent of using our system and our company. If you're looking for fast fashion, we're not the ideal partner for you.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Action Buttons Section -->
+  <div class="tps-actions-section">
+    <!-- ACCESS STUDIO Button (SPECTACULAR) -->
+    <button type="button" class="tps-btn-access-studio" id="tps-access-studio">
+      <div class="tps-btn-inner">
+        <div class="tps-btn-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M11 15l3 3 6-6m8 3a11 11 0 11-22 0 11 11 0 0122 0z" stroke="currentColor" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <span class="tps-btn-text">{% if section.settings.primary_cta_label != blank %}{{ section.settings.primary_cta_label }}{% else %}ACCESS STUDIO{% endif %}</span>
+      </div>
+      <div class="tps-btn-particles"></div>
+      <div class="tps-btn-glow"></div>
+    </button>
+    <p id="tps-access-description" class="tps-sr-only">Opens client verification modal to begin the studio workflow</p>
+  </div>
 
   <!-- Requirements Section -->
   {% if section.settings.show_requirements_grid %}
