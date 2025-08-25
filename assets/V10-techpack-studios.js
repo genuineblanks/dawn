@@ -10330,11 +10330,12 @@ class V10_ValidationManager {
         return { isValid: false, errors: ['Validation error'] };
       }
       
-      // Update next button - try both IDs for compatibility
+      // Button state management removed - buttons are always enabled
+      // Navigation is handled by V10_TechPackSystem.bindGlobalEvents()
       try {
-        const nextBtn = this.nextBtn || document.getElementById('techpack-v10-step-3-next');
+        const nextBtn = this.nextBtn;
         if (nextBtn) {
-          nextBtn.disabled = !validation.isValid;
+          // Buttons remain always enabled - validation feedback shown on click instead
           
           // Enhanced button text and styling based on validation
           if (validation.isValid) {
@@ -11321,7 +11322,7 @@ class V10_ReviewManager {
     const termsCheckbox = document.getElementById('terms-agreement');
     
     if (submitBtn && termsCheckbox) {
-      submitBtn.disabled = !termsCheckbox.checked;
+      // Button is always enabled - validation feedback shown on click instead
     }
   }
 
@@ -11720,9 +11721,9 @@ class V10_TechPackSystem {
   }
 
   bindGlobalEvents() {
-    // Step 3 Navigation buttons
-    const backBtn = document.getElementById('techpack-v10-step-3-back');
-    const nextBtn = document.getElementById('techpack-v10-step-3-next');
+    // Step 3 Navigation buttons (using actual HTML IDs from section)
+    const backBtn = document.getElementById('step-3-prev');
+    const nextBtn = document.getElementById('step-3-next');
 
     if (backBtn) {
       backBtn.addEventListener('click', () => {
@@ -11734,34 +11735,6 @@ class V10_TechPackSystem {
       nextBtn.addEventListener('click', () => {
         if (this.validateStep().isValid) {
           this.proceedToStep4();
-        }
-      });
-    }
-
-    // Legacy navigation (keep for compatibility)
-    const legacyPrevBtn = document.getElementById('step-3-prev');
-    const legacyNextBtn = document.getElementById('step-3-next');
-
-    if (legacyPrevBtn) {
-      legacyPrevBtn.addEventListener('click', () => {
-        // Try window.stepManager first, fallback to direct navigation
-        if (window.stepManager) {
-          window.stepManager.navigateToStep(2);
-        } else {
-          this.goBackToStep2();
-        }
-      });
-    }
-
-    if (legacyNextBtn) {
-      legacyNextBtn.addEventListener('click', () => {
-        if (this.validationManager.validateStep().isValid) {
-          // Try window.stepManager first, fallback to direct navigation
-          if (window.stepManager) {
-            window.stepManager.navigateToStep(4);
-          } else {
-            this.proceedToStep4();
-          }
         }
       });
     }
@@ -12567,12 +12540,8 @@ class V10_ClientManager {
     // Final validation result
     console.log('🎯 Final validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
-    // Update button state
-    const nextBtn = document.getElementById('techpack-v10-step-1-next');
-    if (nextBtn) {
-      nextBtn.disabled = !isValid;
-      console.log('🔘 Button state updated:', { disabled: !isValid });
-    }
+    // Button is always enabled - validation feedback shown on click instead
+    console.log('🔘 Validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
     return isValid;
   }
@@ -13235,11 +13204,8 @@ class V10_FileManager {
     // Measurements should only be validated when clicking "Next Step" button
     // This prevents modals from appearing during file type selection
     
-    // Update next button
-    const nextBtn = document.getElementById('techpack-v10-step-2-next');
-    if (nextBtn) {
-      nextBtn.disabled = !isValid;
-    }
+    // Button is always enabled - validation feedback shown on click instead
+    console.log('🔘 Step 2 validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
     console.log(`✅ validateStep final result: ${isValid}`);
     return isValid;
