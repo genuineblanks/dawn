@@ -1029,6 +1029,62 @@ body[class*="techpack"] *,
   color: var(--v10-accent-warning);
 }
 
+/* Client Verification Button Layout */
+.v10-client-options-horizontal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-4);
+  margin: var(--v10-space-6) 0;
+}
+
+.v10-client-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--v10-space-6);
+  height: auto;
+  min-height: 140px;
+  justify-content: center;
+  border-radius: var(--v10-radius-lg);
+  transition: var(--v10-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.v10-client-btn-icon {
+  margin-bottom: var(--v10-space-3);
+  opacity: 0.8;
+  transition: var(--v10-transition);
+}
+
+.v10-client-btn-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-2);
+}
+
+.v10-client-btn-title {
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  margin: 0;
+  color: inherit;
+  line-height: 1.3;
+}
+
+.v10-client-btn-description {
+  font-size: var(--v10-text-sm);
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.v10-client-btn:hover .v10-client-btn-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 @media (max-width: 768px) {
   .v10-modal {
     width: 95vw;
@@ -1047,6 +1103,25 @@ body[class*="techpack"] *,
   .v10-modal-actions {
     flex-direction: column;
     gap: var(--v10-space-2);
+  }
+
+  .v10-client-options-horizontal {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
+    margin: var(--v10-space-4) 0;
+  }
+
+  .v10-client-btn {
+    min-height: 120px;
+    padding: var(--v10-space-4);
+  }
+
+  .v10-client-btn-title {
+    font-size: var(--v10-text-base);
+  }
+
+  .v10-client-btn-description {
+    font-size: var(--v10-text-xs);
   }
 }
 
