@@ -2812,6 +2812,14 @@ body[style*="overflow: hidden"] {
   margin-top: var(--v10-space-3);
 }
 
+/* Sample Type Selection Container - Side by Side Layout */
+.sample-type-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-4);
+  margin-top: var(--v10-space-3);
+}
+
 /* Compact Selection Sections */
 .compact-selection-section {
   position: relative;
@@ -2990,7 +2998,7 @@ body[style*="overflow: hidden"] {
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
   min-height: 50px;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .compact-radio-card:hover .compact-radio-card__content {
@@ -3140,13 +3148,23 @@ body[style*="overflow: hidden"] {
   cursor: default;
 }
 
-/* State 2: Orange (awaiting input) */
+/* State 2: Orange (awaiting input) - Only text color, no background */
+.design-toggle-header.awaiting-input {
+  background: none !important;
+  background-color: transparent !important;
+}
+
 .design-toggle-header.awaiting-input .design-toggle__text {
   color: #f59e0b !important;
   font-weight: 600;
 }
 
-/* State 3: Green (design complete + clickable) */
+/* State 3: Green (design complete + clickable) - Only text color, no background */
+.design-toggle-header.design-complete {
+  background: none !important;
+  background-color: transparent !important;
+}
+
 .design-toggle-header.design-complete .design-toggle__text {
   color: #10b981 !important;
   font-weight: 600;
@@ -3411,7 +3429,8 @@ body[style*="overflow: hidden"] {
     gap: var(--v10-space-4);
   }
   
-  .sample-type-options {
+  .sample-type-options,
+  .sample-type-selection {
     grid-template-columns: 1fr 1fr;
   }
   
@@ -3429,7 +3448,8 @@ body[style*="overflow: hidden"] {
   }
   
   /* Keep sample type options side by side on mobile too, but with smaller gap */
-  .sample-type-options {
+  .sample-type-options,
+  .sample-type-selection {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-2);
   }
@@ -3547,7 +3567,8 @@ body[style*="overflow: hidden"] {
     grid-template-columns: 1fr;
   }
   
-  .sample-type-options {
+  .sample-type-options,
+  .sample-type-selection {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-2);
   }
