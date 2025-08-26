@@ -2429,10 +2429,10 @@ body[style*="overflow: hidden"] {
   border-color: rgba(75, 85, 99, 0.2);
 }
 
-/* Garments Grid */
+/* Garments Grid - Single Column Layout */
 .garments-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--v10-space-6);
   margin-bottom: var(--v10-space-8);
 }
@@ -2678,20 +2678,913 @@ body[style*="overflow: hidden"] {
   pointer-events: none;
 }
 
-/* Design Toggle System */
-.design-toggle {
-  margin: var(--v10-space-4) 0;
+/* ==============================================
+   COMPLETE GARMENT CARD SYSTEM
+   ============================================== */
+
+/* Garment Card Structure */
+.garment-card {
+  background: var(--v10-bg-secondary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
+  transition: var(--v10-transition);
+  overflow: hidden;
+  position: relative;
 }
 
-.design-toggle__input,
-.design-reference__input {
-  padding: var(--v10-space-3) var(--v10-space-4);
+.garment-card:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
+}
+
+/* Garment Card Header */
+.garment-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-4) var(--v10-space-5);
+  background: var(--v10-bg-tertiary);
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+.garment-card__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-4);
+  flex: 1;
+}
+
+.garment-card__number {
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+
+.garment-card__status {
+  display: flex;
+  align-items: center;
+}
+
+.status-indicator {
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-indicator--incomplete {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-indicator--complete {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Garment Card Actions */
+.garment-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+.garment-card__actions button {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-1);
+  padding: var(--v10-space-2);
+  background: transparent;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-input);
-  color: var(--v10-text-primary);
+  color: var(--v10-text-secondary);
+  cursor: pointer;
   transition: var(--v10-transition);
+  font-size: var(--v10-text-sm);
+}
+
+.garment-card__actions button:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-text-primary);
+}
+
+.garment-card__finalize {
+  background: var(--v10-accent-success) !important;
+  color: white !important;
+  border-color: var(--v10-accent-success) !important;
+}
+
+.garment-card__finalize:hover {
+  background: #059669 !important;
+  transform: translateY(-1px);
+}
+
+/* Garment Card Content (Form State) */
+.garment-card__content {
+  padding: var(--v10-space-5);
+}
+
+/* Form Layout: Garment Type (left) + Fabric Type (right) + Sample Type (below) */
+.garment-fabric-split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-4);
+  margin-bottom: var(--v10-space-5);
+}
+
+/* Sample Type Section (Full Width Below) */
+.sample-type-container {
+  grid-column: 1 / -1;
+  margin-top: var(--v10-space-4);
+}
+
+.sample-type-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-3);
+}
+
+/* Compact Selection Sections */
+.compact-selection-section {
+  position: relative;
+}
+
+.selection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--v10-space-2);
+}
+
+.selection-header h5 {
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+
+.selection-help {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 50%;
+  color: var(--v10-text-secondary);
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.selection-help:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+}
+
+/* Compact Selection Widget */
+.compact-selection-widget {
+  background: var(--v10-bg-card);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  position: relative;
+}
+
+.compact-selection-widget:hover {
+  border-color: var(--v10-accent-primary);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+/* Selection Placeholder */
+.selection-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-3) var(--v10-space-4);
+  min-height: 50px;
+}
+
+.placeholder-icon {
+  display: flex;
+  align-items: center;
+  color: var(--v10-text-muted);
+}
+
+.placeholder-text {
+  flex: 1;
+  margin-left: var(--v10-space-3);
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+}
+
+.placeholder-arrow {
+  color: var(--v10-text-muted);
+  transition: var(--v10-transition);
+}
+
+/* Selection Display (when selected) */
+.selection-display {
+  padding: var(--v10-space-3) var(--v10-space-4);
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  margin-bottom: var(--v10-space-3);
+}
+
+.selected-icon {
+  display: flex;
+  align-items: center;
+  color: var(--v10-accent-primary);
+}
+
+.selected-name {
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-primary);
+}
+
+.change-selection-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-1);
+  padding: var(--v10-space-1) var(--v10-space-2);
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-xs);
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.change-selection-btn:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+}
+
+/* Selection Expanded (dropdown) */
+.selection-expanded {
+  background: var(--v10-bg-card);
+  border-top: 1px solid var(--v10-border-primary);
+  max-height: 300px;
+  overflow-y: auto;
+  animation: expandDown 0.2s ease-out;
+}
+
+@keyframes expandDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 300px;
+    opacity: 1;
+  }
+}
+
+/* Compact Radio Grid */
+.compact-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-3);
+}
+
+/* Compact Radio Cards */
+.compact-radio-card {
+  display: block;
+  cursor: pointer;
+}
+
+.compact-radio-card input[type="radio"] {
+  display: none;
+}
+
+.compact-radio-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+  min-height: 80px;
+  justify-content: center;
+}
+
+.compact-radio-card:hover .compact-radio-card__content {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+  transform: translateY(-1px);
+}
+
+.compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
+  border-color: var(--v10-accent-primary);
+  background: rgba(75, 85, 99, 0.08);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.compact-radio-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--v10-accent-primary);
+}
+
+.compact-radio-card__name {
+  font-size: var(--v10-text-xs);
+  font-weight: 500;
+  color: var(--v10-text-primary);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Garment Summary (Resume State) - Horizontal Layout */
+.garment-card__summary {
+  padding: var(--v10-space-4) var(--v10-space-5);
+}
+
+.garment-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--v10-space-4);
+}
+
+.garment-summary__content {
+  flex: 1;
+}
+
+.garment-summary__title {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  margin-bottom: var(--v10-space-2);
+}
+
+.garment-summary__type {
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.garment-summary__separator {
+  color: var(--v10-text-muted);
+}
+
+.garment-summary__fabric {
+  font-size: var(--v10-text-base);
+  color: var(--v10-text-secondary);
+}
+
+.garment-summary__color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  flex-shrink: 0;
+}
+
+.garment-summary__color-name {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+}
+
+.garment-summary__status {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-accent-success);
+  font-weight: 500;
+}
+
+.garment-summary__status--warning {
+  color: var(--v10-accent-warning);
+}
+
+.garment-summary__edit-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  font-size: var(--v10-text-sm);
+}
+
+.garment-summary__edit-btn:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+}
+
+/* ==============================================
+   3-STATE DESIGN TOGGLE SYSTEM
+   ============================================== */
+
+/* Design Toggle Header Container */
+.design-toggle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--v10-space-3);
+  margin-left: var(--v10-space-2);
+}
+
+/* Design Toggle Text - Default State (Gray) */
+.design-toggle__text {
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-secondary);
+  transition: var(--v10-transition);
+  cursor: default;
+}
+
+/* State 2: Orange (awaiting input) */
+.design-toggle-header.awaiting-input .design-toggle__text {
+  color: #f59e0b !important;
+  font-weight: 600;
+}
+
+/* State 3: Green (design complete + clickable) */
+.design-toggle-header.design-complete .design-toggle__text {
+  color: #10b981 !important;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.design-toggle-header.design-complete .design-toggle__text:hover {
+  color: #059669 !important;
+  text-decoration: none;
+}
+
+/* Design Toggle Switch Container */
+.design-toggle__label {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Hidden Checkbox */
+.design-toggle__input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Toggle Switch Background */
+.design-toggle__switch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--v10-border-primary);
+  transition: var(--v10-transition);
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+/* Toggle Switch Slider */
+.design-toggle__switch:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  transition: var(--v10-transition);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Toggle Switch - Checked State */
+.design-toggle__input:checked + .design-toggle__switch {
+  background: var(--v10-accent-primary);
+}
+
+.design-toggle__input:checked + .design-toggle__switch:before {
+  transform: translateX(24px);
+}
+
+/* State-based toggle colors */
+.design-toggle-header.awaiting-input .design-toggle__input:checked + .design-toggle__switch {
+  background: #f59e0b;
+}
+
+.design-toggle-header.design-complete .design-toggle__input:checked + .design-toggle__switch {
+  background: #10b981;
+}
+
+/* Design Inclusion Controls (Input Box) */
+.design-inclusion-controls {
+  margin-top: var(--v10-space-4);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-tertiary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Design Reference Input */
+.design-reference {
+  position: relative;
+}
+
+.design-reference__input {
   width: 100%;
+  padding: var(--v10-space-3) var(--v10-space-4);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  background: var(--v10-bg-card);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  transition: var(--v10-transition);
+  outline: none;
+}
+
+.design-reference__input:focus {
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.1);
+}
+
+.design-reference__input::placeholder {
+  color: var(--v10-text-muted);
+}
+
+/* Design Reference Warning */
+.design-reference__warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-2);
+  margin-top: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--v10-radius-md);
+  color: #f59e0b;
+  font-size: var(--v10-text-sm);
+  line-height: 1.4;
+}
+
+/* Disabled State for Design Toggle Section */
+.compact-selection-section--disabled .design-toggle-header {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Mobile optimizations for design toggle */
+@media (max-width: 768px) {
+  .design-toggle-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-2);
+  }
+  
+  .design-toggle__text {
+    font-size: var(--v10-text-xs);
+  }
+  
+  .design-inclusion-controls {
+    padding: var(--v10-space-3);
+  }
+}
+
+/* ==============================================
+   ENHANCED COMPACT SELECTION WIDGETS
+   ============================================== */
+
+/* Disabled compact selection sections */
+.compact-selection-section--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.compact-selection-section--disabled .compact-selection-widget {
+  cursor: not-allowed;
+}
+
+.compact-selection-section--disabled .placeholder-text::after {
+  content: " (disabled)";
+  color: var(--v10-text-muted);
+  font-size: var(--v10-text-xs);
+}
+
+/* Selected state for sections */
+.compact-selection-section.selected {
+  position: relative;
+}
+
+.compact-selection-section.selected::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid var(--v10-accent-primary);
+  border-radius: calc(var(--v10-radius-md) + 2px);
+  pointer-events: none;
+}
+
+/* Enhanced hover states */
+.compact-selection-widget:not(.compact-selection-section--disabled):hover .placeholder-arrow {
+  transform: rotate(180deg);
+}
+
+/* Loading state */
+.compact-selection-widget--loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.compact-selection-widget--loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Custom scrollbar for expanded selections */
+.selection-expanded::-webkit-scrollbar {
+  width: 4px;
+}
+
+.selection-expanded::-webkit-scrollbar-track {
+  background: var(--v10-bg-secondary);
+}
+
+.selection-expanded::-webkit-scrollbar-thumb {
+  background: var(--v10-border-primary);
+  border-radius: 4px;
+}
+
+.selection-expanded::-webkit-scrollbar-thumb:hover {
+  background: var(--v10-accent-primary);
+}
+
+/* Error state for selections */
+.compact-selection-widget--error {
+  border-color: var(--v10-accent-error);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.compact-selection-widget--error .placeholder-text {
+  color: var(--v10-accent-error);
+}
+
+/* ==============================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   ============================================== */
+
+/* Base mobile styles (already applied above) */
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .garment-fabric-split-container {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--v10-space-4);
+  }
+  
+  .sample-type-options {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .compact-radio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+}
+
+/* Mobile specific overrides */
+@media (max-width: 767px) {
+  /* Force single column for all form elements */
+  .garment-fabric-split-container {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
+  }
+  
+  .sample-type-options {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-2);
+  }
+  
+  /* Larger touch targets */
+  .compact-selection-widget {
+    min-height: 60px;
+  }
+  
+  .selection-placeholder {
+    padding: var(--v10-space-4);
+    min-height: 60px;
+  }
+  
+  .compact-radio-card__content {
+    min-height: 70px;
+    padding: var(--v10-space-4);
+  }
+  
+  .compact-radio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--v10-space-2);
+  }
+  
+  /* Garment card adjustments */
+  .garment-card__header {
+    padding: var(--v10-space-3) var(--v10-space-4);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--v10-space-3);
+  }
+  
+  .garment-card__title {
+    justify-content: space-between;
+  }
+  
+  .garment-card__actions {
+    justify-content: center;
+    gap: var(--v10-space-1);
+  }
+  
+  .garment-card__actions button {
+    flex: 1;
+    justify-content: center;
+    padding: var(--v10-space-2) var(--v10-space-3);
+  }
+  
+  .garment-card__content {
+    padding: var(--v10-space-4);
+  }
+  
+  /* Summary adjustments */
+  .garment-summary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--v10-space-3);
+  }
+  
+  .garment-summary__title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-2);
+  }
+  
+  .garment-summary__edit-btn {
+    align-self: center;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Selection headers */
+  .selection-header {
+    margin-bottom: var(--v10-space-3);
+  }
+  
+  .selection-header h5 {
+    font-size: var(--v10-text-base);
+  }
+  
+  /* Expanded selections full width */
+  .selection-expanded {
+    max-height: 250px;
+  }
+  
+  /* Design toggle mobile adjustments */
+  .design-toggle-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--v10-space-3);
+    margin-left: 0;
+  }
+  
+  .design-toggle__text {
+    text-align: center;
+    padding: var(--v10-space-2);
+  }
+  
+  .design-toggle__label {
+    align-self: center;
+  }
+  
+  .design-inclusion-controls {
+    margin-top: var(--v10-space-3);
+    padding: var(--v10-space-3);
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .garment-card {
+    margin: 0 calc(-1 * var(--v10-space-2));
+  }
+  
+  .compact-radio-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sample-type-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .garment-card__actions button {
+    font-size: var(--v10-text-xs);
+    padding: var(--v10-space-2);
+  }
+  
+  .garment-card__actions button span {
+    display: none;
+  }
+  
+  .garment-card__actions button svg {
+    margin: 0;
+  }
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .compact-selection-widget,
+  .compact-radio-card__content,
+  .design-toggle__switch,
+  .design-toggle__switch:before,
+  .placeholder-arrow {
+    transition: none !important;
+  }
+  
+  .selection-expanded {
+    animation: none !important;
+  }
+  
+  .design-inclusion-controls {
+    animation: none !important;
+  }
+  
+  .compact-selection-widget--loading::after {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .compact-selection-widget {
+    border-width: 3px;
+  }
+  
+  .compact-radio-card__content {
+    border-width: 3px;
+  }
+  
+  .status-indicator {
+    border-width: 2px;
+  }
+  
+  .design-toggle__switch {
+    border: 2px solid var(--v10-text-primary);
+  }
 }
 
 .design-toggle__input:focus,
