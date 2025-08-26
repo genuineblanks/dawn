@@ -1274,136 +1274,101 @@ body[class*="techpack"] *,
 .v10-submission-description {
   font-size: var(--v10-text-base);
   color: var(--v10-text-secondary);
-  margin: 0 0 var(--v10-space-8);
+  margin: 0 0 var(--v10-space-6);
   line-height: 1.6;
 }
 
 .v10-submission-options-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--v10-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
   margin-bottom: var(--v10-space-6);
 }
 
-.v10-glass-card {
+.v10-submission-option {
   background: var(--v10-bg-card);
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-4);
+  border-radius: var(--v10-radius-md);
+  padding: 0;
+  width: 100%;
   text-align: left;
-  position: relative;
-  overflow: hidden;
-  transition: var(--v10-transition);
   cursor: pointer;
-  box-shadow: var(--v10-shadow-sm);
-  min-height: 140px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  transition: var(--v10-transition);
 }
 
-.v10-glass-card:hover {
+.v10-submission-option:hover {
   background: var(--v10-bg-hover);
   border-color: var(--v10-accent-primary);
-  box-shadow: var(--v10-shadow-md);
-  transform: translateY(-2px);
 }
 
-.v10-glass-card-content {
+.v10-submission-option--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--v10-bg-secondary);
+}
+
+.v10-submission-option--disabled:hover {
+  background: var(--v10-bg-secondary);
+  border-color: var(--v10-border-primary);
+}
+
+.v10-submission-card {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  z-index: 2;
-  position: relative;
-  text-align: center;
+  align-items: flex-start;
+  gap: var(--v10-space-4);
+  padding: var(--v10-space-4);
 }
 
-.v10-glass-card-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: var(--v10-space-3);
-}
-
-.v10-glass-card-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: var(--v10-space-2);
-  color: var(--v10-accent-primary);
+.v10-submission-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--v10-accent-primary);
+  flex-shrink: 0;
 }
 
-.v10-glass-card-title {
-  font-size: var(--v10-text-base);
+.v10-submission-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.v10-submission-title {
+  font-size: var(--v10-text-lg);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-1);
+  margin: 0 0 var(--v10-space-2);
   line-height: 1.2;
 }
 
-.v10-glass-card-description {
-  font-size: var(--v10-text-xs);
+.v10-submission-description {
+  font-size: var(--v10-text-sm);
   color: var(--v10-text-secondary);
   line-height: 1.4;
-  margin: 0;
+  margin: 0 0 var(--v10-space-3);
 }
 
-.v10-glass-card-badges {
+.v10-submission-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--v10-space-1);
-  justify-content: center;
-  margin-top: var(--v10-space-3);
+  gap: var(--v10-space-2);
 }
 
-.v10-feature-badge {
+.v10-submission-badge {
   display: inline-flex;
   align-items: center;
   font-size: var(--v10-text-xs);
   font-weight: 500;
   line-height: 1;
-  padding: var(--v10-space-2) var(--v10-space-3);
-  border-radius: var(--v10-radius-full);
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
-  color: var(--v10-text-primary);
-  transition: var(--v10-transition);
-}
-
-.v10-feature-badge:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-}
-
-/* Badge Variants for Different Categories */
-.v10-feature-badge--pricing { background: rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.3); }
-.v10-feature-badge--data { background: rgba(54, 162, 235, 0.1); border-color: rgba(54, 162, 235, 0.3); }
-.v10-feature-badge--speed { background: rgba(255, 99, 132, 0.1); border-color: rgba(255, 99, 132, 0.3); }
-.v10-feature-badge--sample { background: rgba(153, 102, 255, 0.1); border-color: rgba(153, 102, 255, 0.3); }
-.v10-feature-badge--quality { background: rgba(75, 192, 192, 0.1); border-color: rgba(75, 192, 192, 0.3); }
-.v10-feature-badge--fit { background: rgba(255, 159, 64, 0.1); border-color: rgba(255, 159, 64, 0.3); }
-.v10-feature-badge--production { background: rgba(201, 203, 207, 0.1); border-color: rgba(201, 203, 207, 0.3); }
-.v10-feature-badge--quantity { background: rgba(54, 162, 235, 0.1); border-color: rgba(54, 162, 235, 0.3); }
-.v10-feature-badge--delivery { background: rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.3); }
-.v10-feature-badge--labs { background: rgba(153, 102, 255, 0.1); border-color: rgba(153, 102, 255, 0.3); }
-.v10-feature-badge--accessories { background: rgba(255, 206, 86, 0.1); border-color: rgba(255, 206, 86, 0.3); }
-
-.v10-glass-card-shimmer {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.5s ease;
-  z-index: 1;
-}
-
-.v10-glass-card:hover .v10-glass-card-shimmer {
-  left: 100%;
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .v10-submission-note {
@@ -1425,36 +1390,34 @@ body[class*="techpack"] *,
   opacity: 0.7;
 }
 
-@media (max-width: 1024px) {
-  .v10-glass-card {
-    min-height: 130px;
-    padding: var(--v10-space-3);
-  }
-}
-
 @media (max-width: 768px) {
-  .v10-glass-card {
-    min-height: 120px;
-    padding: var(--v10-space-3);
+  .v10-submission-card {
+    flex-direction: column;
+    gap: var(--v10-space-3);
+    text-align: center;
   }
   
-  .v10-glass-card-icon {
-    width: 32px;
-    height: 32px;
-    margin-bottom: var(--v10-space-1);
+  .v10-submission-icon {
+    width: 40px;
+    height: 40px;
+    align-self: center;
   }
   
-  .v10-glass-card-title {
-    font-size: var(--v10-text-sm);
+  .v10-submission-title {
+    font-size: var(--v10-text-base);
   }
   
-  .v10-glass-card-description {
+  .v10-submission-description {
     font-size: var(--v10-text-xs);
   }
   
-  .v10-feature-badge {
+  .v10-submission-badges {
+    justify-content: center;
+  }
+  
+  .v10-submission-badge {
     font-size: var(--v10-text-xs);
-    padding: var(--v10-space-1) var(--v10-space-2);
+    padding: var(--v10-space-1);
   }
   
   .v10-submission-note {
