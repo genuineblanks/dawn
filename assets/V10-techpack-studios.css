@@ -2282,26 +2282,34 @@ body[style*="overflow: hidden"] {
   font-weight: 600;
 }
 
-/* Status-based accent indicators for active tabs */
-.studio-tab--active.studio-tab--incomplete {
-  border-left: 4px solid #f59e0b;
+/* Status-based accent indicators for active tabs - High specificity to override theme selectors */
+[data-theme="light"] .studio-tab--active.studio-tab--incomplete,
+[data-theme="dark"] .studio-tab--active.studio-tab--incomplete {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+  border: 2px solid #f59e0b !important;
+  border-left: 4px solid #f59e0b !important;
   padding-left: calc(var(--v10-space-6) - 2px);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2) !important;
 }
 
-.studio-tab--active.studio-tab--complete {
-  border-left: 4px solid #10b981;
+[data-theme="light"] .studio-tab--active.studio-tab--complete,
+[data-theme="dark"] .studio-tab--active.studio-tab--complete {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+  border: 2px solid #10b981 !important;
+  border-left: 4px solid #10b981 !important;
   padding-left: calc(var(--v10-space-6) - 2px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2) !important;
 }
 
-/* Theme-specific premium adjustments */
-[data-theme="light"] .studio-tab--active {
+/* Theme-specific premium adjustments - Only apply if no status class exists */
+[data-theme="light"] .studio-tab--active:not(.studio-tab--incomplete):not(.studio-tab--complete) {
   background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   border: 2px solid #d1d5db;
   color: var(--v10-text-primary);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] .studio-tab--active {
+[data-theme="dark"] .studio-tab--active:not(.studio-tab--incomplete):not(.studio-tab--complete) {
   background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
   border: 2px solid #4b5563;
   color: var(--v10-text-primary);
@@ -2332,6 +2340,27 @@ body[style*="overflow: hidden"] {
   opacity: 0.8;
   line-height: 1.3;
   margin-top: var(--v10-space-1);
+}
+
+/* Icon and title color rules for status indication - High specificity */
+[data-theme="light"] .studio-tab--active.studio-tab--incomplete .studio-tab__icon,
+[data-theme="dark"] .studio-tab--active.studio-tab--incomplete .studio-tab__icon {
+  color: #f59e0b !important;
+}
+
+[data-theme="light"] .studio-tab--active.studio-tab--complete .studio-tab__icon,
+[data-theme="dark"] .studio-tab--active.studio-tab--complete .studio-tab__icon {
+  color: #10b981 !important;
+}
+
+[data-theme="light"] .studio-tab--active.studio-tab--incomplete .studio-tab__title,
+[data-theme="dark"] .studio-tab--active.studio-tab--incomplete .studio-tab__title {
+  color: #f59e0b !important;
+}
+
+[data-theme="light"] .studio-tab--active.studio-tab--complete .studio-tab__title,
+[data-theme="dark"] .studio-tab--active.studio-tab--complete .studio-tab__title {
+  color: #10b981 !important;
 }
 
 .studio-container {
