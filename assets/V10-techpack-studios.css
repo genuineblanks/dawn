@@ -1294,11 +1294,17 @@ body[class*="techpack"] *,
   text-align: left;
   cursor: pointer;
   transition: var(--v10-transition);
+  font-size: var(--v10-text-base);
+  font-weight: 500;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
 }
 
 .v10-submission-option:hover {
-  background: var(--v10-bg-hover);
+  background-color: var(--v10-bg-hover);
   border-color: var(--v10-accent-primary);
+  color: var(--v10-text-primary);
 }
 
 .v10-submission-option--disabled {
@@ -1306,11 +1312,13 @@ body[class*="techpack"] *,
   cursor: default;
   background: var(--v10-bg-secondary);
   pointer-events: none;
+  color: var(--v10-text-muted);
 }
 
 .v10-submission-option--disabled:hover {
   background: var(--v10-bg-secondary);
   border-color: var(--v10-border-primary);
+  color: var(--v10-text-muted);
 }
 
 .v10-submission-card {
@@ -2141,7 +2149,7 @@ body[class*="techpack"] *,
 }
 
 .v10-actions-section {
-  margin: var(--v10-space-16) 0;
+  margin: var(--v10-space-8) 0;
   text-align: center;
 }
 
@@ -2457,7 +2465,7 @@ body[class*="techpack"] *,
   }
   
   .v10-actions-section {
-    margin: var(--v10-space-12) 0;
+    margin: var(--v10-space-6) 0;
   }
   
   .v10-requirements-section {
