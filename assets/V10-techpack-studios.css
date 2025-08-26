@@ -2227,41 +2227,85 @@ body[style*="overflow: hidden"] {
   gap: var(--v10-space-3);
   padding: var(--v10-space-4) var(--v10-space-6);
   background: var(--v10-bg-card);
-  border: 1px solid var(--v10-border-primary);
+  border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   cursor: pointer;
-  transition: var(--v10-transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--v10-text-secondary);
   flex: 1;
   min-width: 0;
+  opacity: 0.9;
+  position: relative;
 }
 
-.studio-tab:hover {
+.studio-tab:hover:not(.studio-tab--active) {
+  opacity: 1;
   border-color: var(--v10-accent-primary);
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-md);
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
 }
 
-.studio-tab--active {
-  background: var(--v10-accent-primary);
+/* Status indicators for inactive tabs */
+.studio-tab.studio-tab--incomplete:not(.studio-tab--active) {
+  border-left: 3px solid rgba(245, 158, 11, 0.5);
+  padding-left: calc(var(--v10-space-6) - 1px);
+}
+
+.studio-tab.studio-tab--complete:not(.studio-tab--active) {
+  border-left: 3px solid rgba(16, 185, 129, 0.5);
+  padding-left: calc(var(--v10-space-6) - 1px);
+}
+
+/* Dark theme inactive tab adjustments */
+[data-theme="dark"] .studio-tab {
+  background: var(--v10-bg-secondary);
+  border-color: var(--v10-border-secondary);
+  opacity: 0.85;
+}
+
+[data-theme="dark"] .studio-tab:hover:not(.studio-tab--active) {
+  opacity: 1;
+  background: var(--v10-bg-card);
   border-color: var(--v10-accent-primary);
-  color: white;
-  box-shadow: var(--v10-shadow-md);
 }
 
-/* Theme-specific fixes for Studio tab visibility */
+/* Premium neutral studio tab active state */
+.studio-tab--active {
+  background: linear-gradient(135deg, var(--v10-bg-tertiary) 0%, var(--v10-bg-secondary) 100%);
+  border: 2px solid var(--v10-border-primary);
+  color: var(--v10-text-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  position: relative;
+  font-weight: 600;
+}
+
+/* Status-based accent indicators for active tabs */
+.studio-tab--active.studio-tab--incomplete {
+  border-left: 4px solid #f59e0b;
+  padding-left: calc(var(--v10-space-6) - 2px);
+}
+
+.studio-tab--active.studio-tab--complete {
+  border-left: 4px solid #10b981;
+  padding-left: calc(var(--v10-space-6) - 2px);
+}
+
+/* Theme-specific premium adjustments */
 [data-theme="light"] .studio-tab--active {
-  background: #4b5563; /* Dark grey for proper contrast on light background */
-  border-color: #4b5563;
-  color: white;
-  box-shadow: var(--v10-shadow-md);
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  border: 2px solid #d1d5db;
+  color: var(--v10-text-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] .studio-tab--active {
-  background: #6b7280; /* Lighter grey for better visibility on dark background */
-  border-color: #6b7280;
-  color: white;
-  box-shadow: var(--v10-shadow-lg);
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  border: 2px solid #4b5563;
+  color: var(--v10-text-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .studio-tab__icon {
@@ -2333,15 +2377,21 @@ body[style*="overflow: hidden"] {
 }
 
 .studio-header__badge--incomplete {
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--v10-accent-error);
-  border-color: rgba(220, 38, 38, 0.2);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
+  border-color: #f59e0b;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
 .studio-header__badge--complete {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--v10-accent-success);
-  border-color: rgba(16, 185, 129, 0.2);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+  color: #10b981;
+  border: 1px solid #10b981;
+  border-color: #10b981;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .studio-header__badge--professional {
