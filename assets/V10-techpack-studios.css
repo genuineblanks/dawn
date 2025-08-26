@@ -930,6 +930,14 @@ body[class*="techpack"] *,
   transition: var(--v10-transition);
 }
 
+/* Support JavaScript overflow hidden to prevent background scrolling */
+body[style*="overflow: hidden"] {
+  position: fixed !important;
+  width: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
 .v10-modal-overlay[style*="display: block"],
 .v10-modal-overlay:not([style*="display: none"]) {
   opacity: 1;
@@ -958,7 +966,7 @@ body[class*="techpack"] *,
 
 .v10-modal-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--v10-space-4);
   padding: var(--v10-space-6);
@@ -1299,12 +1307,16 @@ body[class*="techpack"] *,
   line-height: 1.5;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--v10-shadow-sm);
+  user-select: none;
 }
 
 .v10-submission-option:hover {
   background-color: var(--v10-bg-hover);
   border-color: var(--v10-accent-primary);
   color: var(--v10-text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-md);
 }
 
 .v10-submission-option--disabled {
@@ -1319,6 +1331,8 @@ body[class*="techpack"] *,
   background: var(--v10-bg-secondary);
   border-color: var(--v10-border-primary);
   color: var(--v10-text-muted);
+  transform: none;
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .v10-submission-card {

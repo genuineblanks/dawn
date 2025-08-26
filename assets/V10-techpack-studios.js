@@ -13151,6 +13151,7 @@ class V10_FileManager {
     const closeModal = () => {
       console.log('🚪 Closing modal...');
       modal.style.display = 'none';
+      document.body.style.overflow = '';
     };
     
     // Remove existing listeners and add new ones
@@ -13168,6 +13169,8 @@ class V10_FileManager {
     }
     
     console.log('🎭 Showing modal with display: flex');
+    // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
     // Show the modal with proper overlay
     modal.style.display = 'flex';
     console.log('✅ Modal display set, current style:', modal.style.display);
