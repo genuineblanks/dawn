@@ -2183,7 +2183,7 @@ body[class*="techpack"] *,
 
 /* Requirements section */
 .v10-requirements-section {
-  margin: var(--v10-space-16) 0;
+  margin: var(--v10-space-12) 0;
 }
 
 .v10-requirements-header {
@@ -2218,6 +2218,9 @@ body[class*="techpack"] *,
   transition: var(--v10-transition);
   position: relative;
   box-shadow: var(--v10-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
 .v10-requirement-card-premium:hover {
@@ -2235,10 +2238,11 @@ body[class*="techpack"] *,
   align-items: center;
   justify-content: center;
   color: var(--v10-accent-primary);
-  margin-bottom: var(--v10-space-4);
+  margin: 0 auto var(--v10-space-4);
 }
 
 .v10-requirement-content-premium {
+  flex: 1;
   margin-bottom: var(--v10-space-4);
 }
 
@@ -2267,9 +2271,7 @@ body[class*="techpack"] *,
 }
 
 .v10-status-badge-premium {
-  position: absolute;
-  top: var(--v10-space-3);
-  right: var(--v10-space-3);
+  align-self: center;
   font-size: var(--v10-text-xs);
   font-weight: 600;
   text-transform: uppercase;
@@ -2277,6 +2279,7 @@ body[class*="techpack"] *,
   padding: var(--v10-space-1) var(--v10-space-2);
   border-radius: var(--v10-radius-sm);
   border: 1px solid;
+  margin-top: auto;
 }
 
 .v10-status-badge-premium--required {
