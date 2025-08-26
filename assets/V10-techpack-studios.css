@@ -576,10 +576,9 @@ body[class*="techpack"] *,
 }
 
 .v10-btn--primary:hover {
-  background-color: var(--v10-accent-primary);
-  color: white;
+  background-color: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
-  filter: brightness(1.1);
 }
 
 .v10-btn--secondary {
@@ -977,13 +976,15 @@ body[class*="techpack"] *,
   flex: 1;
 }
 
+.v10-modal-header-spacer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
 .v10-modal-title.v10-text-center {
   text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - 120px);
+  flex: 1;
 }
 
 .v10-modal-close {
@@ -1279,7 +1280,7 @@ body[class*="techpack"] *,
 
 .v10-submission-options-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--v10-space-4);
   margin-bottom: var(--v10-space-6);
 }
@@ -1393,11 +1394,6 @@ body[class*="techpack"] *,
 }
 
 @media (max-width: 1024px) {
-  .v10-submission-options-grid {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
-  }
-  
   .v10-glass-card {
     min-height: 160px;
     padding: var(--v10-space-4);
