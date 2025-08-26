@@ -2530,10 +2530,10 @@ body[style*="overflow: hidden"] {
   align-items: center;
   gap: var(--v10-space-3);
   padding: var(--v10-space-4) var(--v10-space-6);
-  background: transparent;
-  border: 2px dashed var(--v10-border-primary);
+  background: var(--v10-accent-primary);
+  border: 2px solid var(--v10-accent-primary);
   border-radius: var(--v10-radius-lg);
-  color: var(--v10-text-secondary);
+  color: white;
   cursor: pointer;
   transition: var(--v10-transition);
   font-size: var(--v10-text-base);
@@ -2541,24 +2541,26 @@ body[style*="overflow: hidden"] {
   min-height: 80px;
   width: 100%;
   max-width: 400px;
+  box-shadow: var(--v10-shadow-md);
 }
 
 .add-garment-btn:hover {
-  border-color: var(--v10-accent-primary);
-  color: var(--v10-accent-primary);
-  background: rgba(75, 85, 99, 0.05);
-  transform: translateY(-1px);
+  background: #374151;
+  border-color: #374151;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
 }
 
 .add-garment-btn__icon {
   width: 32px;
   height: 32px;
-  background: var(--v10-bg-secondary);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: var(--v10-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--v10-accent-primary);
+  color: white;
 }
 
 .add-garment-btn__text {
@@ -2904,15 +2906,22 @@ body[style*="overflow: hidden"] {
   transition: var(--v10-transition);
 }
 
-/* Selection Display (when selected) */
+/* Selection Display (when selected) - Centered and Clickable */
 .selection-display {
   padding: var(--v10-space-3) var(--v10-space-4);
   border-bottom: 1px solid var(--v10-border-primary);
+  cursor: pointer;
+  transition: var(--v10-transition);
+}
+
+.selection-display:hover {
+  background: var(--v10-bg-hover);
 }
 
 .selected-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-3);
   margin-bottom: var(--v10-space-3);
 }
@@ -2930,23 +2939,7 @@ body[style*="overflow: hidden"] {
 }
 
 .change-selection-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-1);
-  padding: var(--v10-space-1) var(--v10-space-2);
-  background: transparent;
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-secondary);
-  font-size: var(--v10-text-xs);
-  cursor: pointer;
-  transition: var(--v10-transition);
-}
-
-.change-selection-btn:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-  color: var(--v10-accent-primary);
+  display: none;
 }
 
 /* Selection Expanded (dropdown) */
@@ -3414,6 +3407,171 @@ body[style*="overflow: hidden"] {
 
 .compact-selection-widget--error .placeholder-text {
   color: var(--v10-accent-error);
+}
+
+/* ==============================================
+   CUSTOM COLOR SECTION ENHANCEMENTS
+   ============================================== */
+
+/* Special styling for custom color options */
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child {
+  /* Design Studio - PANTONE Library */
+  background: linear-gradient(135deg, rgba(67, 56, 202, 0.1), rgba(67, 56, 202, 0.05));
+  border-color: #4338ca;
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child .compact-radio-card__content {
+  border-color: #4338ca;
+  background: linear-gradient(135deg, rgba(67, 56, 202, 0.08), rgba(67, 56, 202, 0.03));
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child .compact-radio-card__icon {
+  color: #4338ca;
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child .compact-radio-card__name {
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child {
+  /* I have TCX/TPX PANTONE in my Techpack */
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+  border-color: #f59e0b;
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child .compact-radio-card__content {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child .compact-radio-card__icon {
+  color: #f59e0b;
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child .compact-radio-card__name {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+/* Selected states for custom color options */
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child input[type="radio"]:checked + .compact-radio-card__content {
+  background: linear-gradient(135deg, rgba(67, 56, 202, 0.2), rgba(67, 56, 202, 0.1));
+  border-color: #4338ca;
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
+}
+
+.sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child input[type="radio"]:checked + .compact-radio-card__content {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+  border-color: #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Warning text styling for TCX/TPX option */
+.compact-radio-card__warning {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-muted);
+  font-style: italic;
+  margin-top: var(--v10-space-1);
+}
+
+/* Text container for multi-line radio button text */
+.compact-radio-card__text-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
+}
+
+/* ==============================================
+   UI HIERARCHY IMPROVEMENTS
+   ============================================== */
+
+/* Different section backgrounds for better hierarchy */
+.garment-fabric-split-container .compact-selection-section:first-child {
+  /* Garment Type - Subtle blue tint */
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(59, 130, 246, 0.01));
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
+}
+
+.garment-fabric-split-container .compact-selection-section:last-child {
+  /* Fabric Type - Subtle green tint */
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), rgba(16, 185, 129, 0.01));
+  border: 1px solid rgba(16, 185, 129, 0.1);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
+}
+
+.sample-type-selection {
+  /* Sample Type - Subtle orange tint */
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.02), rgba(245, 158, 11, 0.01));
+  border: 1px solid rgba(245, 158, 11, 0.08);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-5);
+  margin-top: var(--v10-space-6);
+}
+
+/* Enhanced section headers */
+.selection-header h5 {
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+.selection-header h5::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--v10-accent-primary);
+  border-radius: 1px;
+}
+
+/* Section-specific header colors */
+.garment-fabric-split-container .compact-selection-section:first-child .selection-header h5::after {
+  background: #3b82f6;
+}
+
+.garment-fabric-split-container .compact-selection-section:last-child .selection-header h5::after {
+  background: #10b981;
+}
+
+.sample-type-selection .selection-header h5::after {
+  background: #f59e0b;
+}
+
+/* Card spacing improvements */
+.compact-selection-widget {
+  background: var(--v10-bg-card);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  position: relative;
+  margin-top: var(--v10-space-3);
+}
+
+/* Visual separation between major sections */
+.sample-type-selection .compact-selection-section {
+  position: relative;
+}
+
+.sample-type-selection .compact-selection-section:first-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--v10-border-primary), transparent);
 }
 
 /* ==============================================
