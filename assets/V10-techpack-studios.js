@@ -13682,10 +13682,22 @@ class V10_ModalManager {
       }
       
       // Enable only quotation, disable others
-      if (quotationBtn) quotationBtn.disabled = false;
-      if (sampleBtn) sampleBtn.disabled = true;
-      if (bulkBtn) bulkBtn.disabled = true;
-      if (labDipsBtn) labDipsBtn.disabled = true;
+      if (quotationBtn) {
+        quotationBtn.disabled = false;
+        quotationBtn.classList.remove('v10-submission-option--disabled');
+      }
+      if (sampleBtn) {
+        sampleBtn.disabled = true;
+        sampleBtn.classList.add('v10-submission-option--disabled');
+      }
+      if (bulkBtn) {
+        bulkBtn.disabled = true;
+        bulkBtn.classList.add('v10-submission-option--disabled');
+      }
+      if (labDipsBtn) {
+        labDipsBtn.disabled = true;
+        labDipsBtn.classList.add('v10-submission-option--disabled');
+      }
       
     } else if (clientType === 'registered') {
       // Show warning for registered clients
@@ -13697,11 +13709,23 @@ class V10_ModalManager {
         submissionDescription.innerHTML = 'Select the type of submission that best matches your current needs. Each option is tailored to different stages of your garment development process.';
       }
       
-      // Enable all options
-      if (quotationBtn) quotationBtn.disabled = false;
-      if (sampleBtn) sampleBtn.disabled = false;
-      if (bulkBtn) bulkBtn.disabled = false;
-      if (labDipsBtn) labDipsBtn.disabled = false;
+      // Enable all options for registered clients
+      if (quotationBtn) {
+        quotationBtn.disabled = false;
+        quotationBtn.classList.remove('v10-submission-option--disabled');
+      }
+      if (sampleBtn) {
+        sampleBtn.disabled = false;
+        sampleBtn.classList.remove('v10-submission-option--disabled');
+      }
+      if (bulkBtn) {
+        bulkBtn.disabled = false;
+        bulkBtn.classList.remove('v10-submission-option--disabled');
+      }
+      if (labDipsBtn) {
+        labDipsBtn.disabled = false;
+        labDipsBtn.classList.remove('v10-submission-option--disabled');
+      }
     }
   }
 

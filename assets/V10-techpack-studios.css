@@ -1303,8 +1303,9 @@ body[class*="techpack"] *,
 
 .v10-submission-option--disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: default;
   background: var(--v10-bg-secondary);
+  pointer-events: none;
 }
 
 .v10-submission-option--disabled:hover {
@@ -1366,9 +1367,10 @@ body[class*="techpack"] *,
   line-height: 1;
   padding: var(--v10-space-1) var(--v10-space-2);
   border-radius: var(--v10-radius-sm);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(55, 65, 81, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .v10-submission-note {
@@ -1392,15 +1394,16 @@ body[class*="techpack"] *,
 
 @media (max-width: 768px) {
   .v10-submission-card {
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--v10-space-3);
-    text-align: center;
+    text-align: left;
+    align-items: flex-start;
   }
   
   .v10-submission-icon {
     width: 40px;
     height: 40px;
-    align-self: center;
+    flex-shrink: 0;
   }
   
   .v10-submission-title {
@@ -1412,7 +1415,7 @@ body[class*="techpack"] *,
   }
   
   .v10-submission-badges {
-    justify-content: center;
+    justify-content: flex-start;
   }
   
   .v10-submission-badge {
@@ -1542,6 +1545,16 @@ body[class*="techpack"] *,
   margin-bottom: var(--v10-space-4);
 }
 
+.v10-warning-box-enhanced--blue {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.v10-warning-box-enhanced--red {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
 .v10-warning-icon {
   font-size: var(--v10-text-lg);
   flex-shrink: 0;
@@ -1564,6 +1577,16 @@ body[class*="techpack"] *,
 [data-theme="dark"] .v10-warning-box-enhanced {
   background: var(--v10-surface-warning);
   border-color: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .v10-warning-box-enhanced--blue {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="dark"] .v10-warning-box-enhanced--red {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.15);
 }
 
 /* ==============================================
