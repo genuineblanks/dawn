@@ -4424,6 +4424,7 @@ class V10_GarmentStudio {
     setTimeout(() => {
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
+      this.updateQuantitiesStudioTabStatus();
     }, 100);
     
     this.initialized = true;
@@ -4498,6 +4499,7 @@ class V10_GarmentStudio {
       // Update studio completion status after adding garment
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
+      this.updateQuantitiesStudioTabStatus();
 
       console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
       return garmentId;
@@ -5459,6 +5461,48 @@ class V10_GarmentStudio {
       subtitleElement.textContent = `Incomplete (${fulfilledRequirements}/${totalRequirements})`;
       designStudioTab.classList.add('studio-tab--incomplete');
       designStudioTab.classList.remove('studio-tab--complete');
+    }
+  }
+
+  // Update the Quantities Studio tab status indicator
+  updateQuantitiesStudioTabStatus() {
+    const quantitiesStudioTab = document.getElementById('quantities-studio-tab');
+    if (!quantitiesStudioTab) return;
+    
+    const subtitleElement = quantitiesStudioTab.querySelector('.studio-tab__subtitle');
+    if (!subtitleElement) return;
+    
+    // Get all garments from state
+    const allGarments = Array.from(V10_State.garments.values());
+    
+    if (allGarments.length === 0) {
+      subtitleElement.textContent = 'Sizes & quantities';
+      quantitiesStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
+      return;
+    }
+    
+    // Check if quantities are configured for all garments
+    let quantitiesConfigured = 0;
+    
+    allGarments.forEach(garment => {
+      // Check if garment has quantity configuration
+      const garmentQuantities = V10_State.quantities.get(garment.id);
+      if (garmentQuantities && garmentQuantities.total > 0) {
+        quantitiesConfigured++;
+      }
+    });
+    
+    // Update tab based on completion status
+    if (quantitiesConfigured === allGarments.length) {
+      // All quantities configured = complete
+      subtitleElement.textContent = `Complete (${allGarments.length} garments)`;
+      quantitiesStudioTab.classList.add('studio-tab--complete');
+      quantitiesStudioTab.classList.remove('studio-tab--incomplete');
+    } else {
+      // Some quantities missing = incomplete with fraction
+      subtitleElement.textContent = `Incomplete (${quantitiesConfigured}/${allGarments.length})`;
+      quantitiesStudioTab.classList.add('studio-tab--incomplete');
+      quantitiesStudioTab.classList.remove('studio-tab--complete');
     }
   }
 
