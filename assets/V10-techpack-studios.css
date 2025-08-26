@@ -1389,10 +1389,18 @@ body[style*="overflow: hidden"] {
   line-height: 1;
   padding: var(--v10-space-1) var(--v10-space-2);
   border-radius: var(--v10-radius-sm);
-  background: rgba(55, 65, 81, 0.9);
+  background: var(--v10-bg-secondary);
   color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(75, 85, 99, 0.3);
+  border: 1px solid var(--v10-border-primary);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Light theme - inverted badges for proper contrast */
+[data-theme="light"] .v10-submission-badge {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--v10-text-primary);
+  border: 1px solid var(--v10-border-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .v10-submission-note {
