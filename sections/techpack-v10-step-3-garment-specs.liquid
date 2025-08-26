@@ -155,7 +155,7 @@ Enhanced with Visual Studio Guide System
                 </svg>
               </div>
               <div class="add-garment-btn__text">
-                <span class="add-garment-btn__title">Add Another Garment</span>
+                <span class="add-garment-btn__title">Add Garment</span>
                 <span class="add-garment-btn__subtitle">Configure additional specifications</span>
               </div>
             </button>
@@ -1042,21 +1042,38 @@ Enhanced with Visual Studio Guide System
               <label class="compact-radio-card">
                 <input type="radio" name="sampleReference" value="approved-sample">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">✅</span>
+                  <span class="compact-radio-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M9 12l2 2 4-4"/>
+                      <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                  </span>
                   <span class="compact-radio-card__name">Approved Sample – As Is</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="sampleReference" value="approved-with-changes">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">🔄</span>
+                  <span class="compact-radio-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                      <path d="M21 3v5h-5"/>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                      <path d="M3 21v-5h5"/>
+                    </svg>
+                  </span>
                   <span class="compact-radio-card__name">Approved Sample – With Changes</span>
                 </span>
               </label>
               <label class="compact-radio-card">
                 <input type="radio" name="sampleReference" value="new-sample-version">
                 <span class="compact-radio-card__content">
-                  <span class="compact-radio-card__icon">📋</span>
+                  <span class="compact-radio-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    </svg>
+                  </span>
                   <span class="compact-radio-card__name">New Sample Version</span>
                 </span>
               </label>
@@ -1223,7 +1240,7 @@ Enhanced with Visual Studio Guide System
                         <path d="M8 11h6"/>
                       </svg>
                     </span>
-                    <span class="compact-radio-card__name">Design Studio - PANTONE Library</span>
+                    <span class="compact-radio-card__name">Select from our Design Studio</span>
                   </span>
                 </label>
                 <label class="compact-radio-card">
@@ -1237,10 +1254,7 @@ Enhanced with Visual Studio Guide System
                         <path d="m8 12 4 4"/>
                       </svg>
                     </span>
-                    <span class="compact-radio-card__text-container">
-                      <span class="compact-radio-card__name">I have TCX/TPX PANTONE in my Techpack</span>
-                      <span class="compact-radio-card__warning">Select only if you have PANTONE TCX/TPX codes</span>
-                    </span>
+                    <span class="compact-radio-card__name">My files have the correct TCX/TPX pantone colors for this garment</span>
                   </span>
                 </label>
               </div>
