@@ -619,31 +619,33 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           Please select your client status to continue with the tech-pack submission process.
         </p>
         
-        <div class="v10-client-options">
-          <button type="button" class="v10-client-option" id="v10-registered-client" data-client-type="registered">
-            <div class="v10-client-option-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
-                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-              </svg>
-            </div>
-            <div class="v10-client-option-content">
-              <h4 class="v10-client-option-title">Yes, I'm a Registered Client</h4>
-              <p class="v10-client-option-description">I have worked with Genuine Blanks before and am registered in your system</p>
-            </div>
-          </button>
-
-          <button type="button" class="v10-client-option" id="v10-new-client" data-client-type="new">
-            <div class="v10-client-option-icon">
+        <div class="v10-client-options-horizontal">
+          <!-- New Client - Left Side -->
+          <button type="button" class="v10-btn v10-btn--secondary v10-client-btn" id="v10-new-client" data-client-type="new">
+            <div class="v10-client-btn-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
                 <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
                 <path d="M20 8v6M23 11h-6" stroke="currentColor" stroke-width="2"/>
               </svg>
             </div>
-            <div class="v10-client-option-content">
-              <h4 class="v10-client-option-title">No, I'm a New Client</h4>
-              <p class="v10-client-option-description">This is my first time working with Genuine Blanks</p>
+            <div class="v10-client-btn-content">
+              <h4 class="v10-client-btn-title">No, I'm a New Client</h4>
+              <p class="v10-client-btn-description">This is my first time working with Genuine Blanks</p>
+            </div>
+          </button>
+
+          <!-- Registered Client - Right Side -->
+          <button type="button" class="v10-btn v10-btn--primary v10-client-btn" id="v10-registered-client" data-client-type="registered">
+            <div class="v10-client-btn-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="v10-client-btn-content">
+              <h4 class="v10-client-btn-title">Yes, I'm a Registered Client</h4>
+              <p class="v10-client-btn-description">I have worked with Genuine Blanks before and am registered in your system</p>
             </div>
           </button>
         </div>
@@ -675,35 +677,20 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     <div class="v10-modal-body">
       <div class="v10-submission-selection">
         <!-- Registration Notice for New Clients -->
-        <div class="v10-registration-notice" id="v10-registration-notice" style="display: none;">
-          <div class="v10-notice-icon">
-            <svg width="20" height="20" viewBox="0 0 20 20">
-              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              <path d="M10 6V10M10 14H10.01" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="v10-notice-content">
-            <h5 class="v10-notice-title">New Client - Registration Required</h5>
-            <p class="v10-notice-message">
-              As a new client, you can start with a Garment Quotation.<br>
-              Once you proceed with the quotation, we'll guide you through our registration process to unlock sample requests and bulk orders for future submissions.
-            </p>
+        <div class="v10-warning-box-enhanced" id="v10-registration-notice" style="display: none;">
+          <div class="v10-warning-icon">ℹ️</div>
+          <div class="v10-warning-content">
+            <strong>New Client - Registration Required</strong>
+            As a new client, you can start with a Garment Quotation. Once you proceed with the quotation, we'll guide you through our registration process to unlock sample requests and bulk orders for future submissions.
           </div>
         </div>
 
         <!-- Registration Warning for Registered Clients -->
-        <div class="v10-registration-warning" id="v10-registration-warning" style="display: none;">
-          <div class="v10-warning-icon">
-            <svg width="20" height="20" viewBox="0 0 20 20">
-              <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" fill="currentColor"/>
-              <path d="M10 7V11M10 13H10.01" stroke="white" stroke-width="2"/>
-            </svg>
-          </div>
+        <div class="v10-warning-box-enhanced" id="v10-registration-warning" style="display: none;">
+          <div class="v10-warning-icon">⚠️</div>
           <div class="v10-warning-content">
-            <h5 class="v10-warning-title">Registration Verification Required</h5>
-            <p class="v10-warning-message">
-              We will verify your registration status during processing. If you're not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before.
-            </p>
+            <strong>Registration Verification Required</strong>
+            We will verify your registration status during processing. If you're not registered in our system, your submission will be automatically rejected. Please ensure you have worked with us before.
           </div>
         </div>
         
