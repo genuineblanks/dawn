@@ -582,9 +582,36 @@ body[class*="techpack"] *,
 }
 
 .v10-btn--primary:hover {
-  background-color: var(--v10-bg-hover);
-  color: var(--v10-text-primary);
+  background-color: var(--v10-accent-secondary);
+  color: white;
+  border-color: var(--v10-accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-md);
+}
+
+/* Theme-specific button fixes */
+[data-theme="light"] .v10-btn--primary {
+  background-color: var(--v10-accent-primary);
+  color: white;
   border-color: var(--v10-accent-primary);
+}
+
+[data-theme="light"] .v10-btn--primary:hover {
+  background-color: #374151; /* Darker grey for better contrast */
+  color: white;
+  border-color: #374151;
+}
+
+[data-theme="dark"] .v10-btn--primary {
+  background-color: var(--v10-accent-primary);
+  color: white;
+  border-color: var(--v10-accent-primary);
+}
+
+[data-theme="dark"] .v10-btn--primary:hover {
+  background-color: var(--v10-accent-secondary);
+  color: white;
+  border-color: var(--v10-accent-secondary);
 }
 
 .v10-btn--secondary {
@@ -610,6 +637,48 @@ body[class*="techpack"] *,
   background-color: var(--v10-bg-hover);
   color: var(--v10-text-primary);
   box-shadow: none;
+}
+
+/* ==============================================
+   HELP BOX SYSTEM
+   ============================================== */
+
+.v10-help-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--v10-radius-md);
+  margin: var(--v10-space-4) 0;
+}
+
+.v10-help-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--v10-accent-success);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.v10-help-content {
+  flex: 1;
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-primary);
+  line-height: 1.5;
+}
+
+.v10-help-content strong {
+  font-weight: 600;
+  display: inline;
+  margin-right: var(--v10-space-1);
+}
+
+/* Dark theme adjustments for help box */
+[data-theme="dark"] .v10-help-box {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.15);
 }
 
 /* Button Icons */
@@ -942,6 +1011,26 @@ body[style*="overflow: hidden"] {
   width: 100% !important;
   top: 0 !important;
   left: 0 !important;
+}
+
+/* Hide visual guide elements by default to prevent flash on page load */
+.visual-guide-trigger-container,
+.visual-guide-trigger,
+[class*="size-distribution"],
+[id*="size-distribution"] {
+  display: none !important;
+}
+
+/* Only show visual guide elements on step 3 and 4 */
+#techpack-v10-step-3 .visual-guide-trigger-container,
+#techpack-v10-step-4 .visual-guide-trigger-container,
+#techpack-v10-step-3 .visual-guide-trigger,
+#techpack-v10-step-4 .visual-guide-trigger,
+#techpack-v10-step-3 [class*="size-distribution"],
+#techpack-v10-step-4 [class*="size-distribution"],
+#techpack-v10-step-3 [id*="size-distribution"],
+#techpack-v10-step-4 [id*="size-distribution"] {
+  display: block !important;
 }
 
 .v10-modal-overlay[style*="display: block"],
@@ -1628,6 +1717,432 @@ body[style*="overflow: hidden"] {
 [data-theme="dark"] .v10-warning-box-enhanced--red {
   background: rgba(239, 68, 68, 0.05);
   border-color: rgba(239, 68, 68, 0.15);
+}
+
+/* Green warning box variant for insurance information */
+.v10-warning-box-enhanced--green {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="dark"] .v10-warning-box-enhanced--green {
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.15);
+}
+
+/* ==============================================
+   FORM VALIDATION & ERROR SYSTEM
+   ============================================== */
+
+/* Form field error states */
+.v10-form-field--error .v10-form-input-enhanced,
+.v10-form-field--error .v10-form-select-enhanced,
+.v10-form-field--error .v10-form-textarea-enhanced {
+  border-color: var(--v10-accent-error) !important;
+  background-color: rgba(239, 68, 68, 0.05);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.v10-form-field--error .v10-form-label-enhanced {
+  color: var(--v10-accent-error);
+}
+
+/* Error message styling */
+.v10-form-error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-1);
+  margin-top: var(--v10-space-1);
+  color: var(--v10-accent-error);
+  font-size: var(--v10-text-xs);
+  font-weight: 500;
+}
+
+.v10-form-error-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Radio button error states */
+.v10-delivery-option-enhanced--error .v10-delivery-option-content-enhanced,
+.v10-shipping-method--error .v10-shipping-method-content,
+.v10-insurance-option--error .v10-insurance-option-content {
+  border-color: var(--v10-accent-error) !important;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+/* ==============================================
+   ENHANCED FORM STYLING SYSTEM
+   ============================================== */
+
+/* Form field containers */
+.v10-form-field,
+.v10-form-field--half,
+.v10-form-field--full {
+  margin-bottom: var(--v10-space-4);
+  display: flex;
+  flex-direction: column;
+}
+
+.v10-form-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-4);
+}
+
+.v10-form-field--half {
+  grid-column: span 1;
+}
+
+.v10-form-field--full {
+  grid-column: span 2;
+}
+
+/* Enhanced form labels */
+.v10-form-label-enhanced {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-2);
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.v10-required::after {
+  content: "*";
+  color: var(--v10-accent-error);
+  margin-left: var(--v10-space-1);
+}
+
+/* Enhanced form inputs */
+.v10-form-input-enhanced,
+.v10-form-select-enhanced,
+.v10-form-textarea-enhanced {
+  padding: var(--v10-space-3) var(--v10-space-4);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  background: var(--v10-bg-input);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+  transition: var(--v10-transition);
+  width: 100%;
+}
+
+.v10-form-input-enhanced:focus,
+.v10-form-select-enhanced:focus,
+.v10-form-textarea-enhanced:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: var(--v10-shadow-focus);
+  background: var(--v10-bg-primary);
+}
+
+.v10-form-input-enhanced::placeholder,
+.v10-form-textarea-enhanced::placeholder {
+  color: var(--v10-text-disabled);
+  opacity: 0.8;
+}
+
+/* Textarea specific styling */
+.v10-form-textarea-enhanced {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Character counter */
+.v10-char-count {
+  display: flex;
+  justify-content: flex-end;
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-muted);
+  margin-top: var(--v10-space-1);
+}
+
+@media (max-width: 768px) {
+  .v10-form-section {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
+  }
+  
+  .v10-form-field--half,
+  .v10-form-field--full {
+    grid-column: span 1;
+  }
+  
+  .v10-form-field {
+    margin-bottom: var(--v10-space-3);
+  }
+}
+
+/* ==============================================
+   RADIO BUTTON SYSTEMS - COMPREHENSIVE
+   ============================================== */
+
+/* Delivery Address Options */
+.v10-delivery-options-enhanced {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-3);
+}
+
+.v10-delivery-option-enhanced {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.v10-delivery-option-enhanced input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.v10-delivery-option-content-enhanced {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+  width: 100%;
+  min-height: 60px;
+}
+
+.v10-delivery-option-enhanced:hover .v10-delivery-option-content-enhanced {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-delivery-option-enhanced input[type="radio"]:checked + .v10-delivery-option-content-enhanced {
+  border-color: var(--v10-accent-success);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.v10-delivery-option-icon {
+  font-size: var(--v10-text-xl);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-sm);
+  flex-shrink: 0;
+}
+
+.v10-delivery-option-text {
+  flex: 1;
+}
+
+.v10-delivery-option-text strong {
+  display: block;
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.v10-delivery-option-text small {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+  line-height: 1.3;
+}
+
+/* Shipping Method Options */
+.v10-shipping-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-3);
+}
+
+.v10-shipping-method {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.v10-shipping-method input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.v10-shipping-method-content {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+  width: 100%;
+  min-height: 60px;
+}
+
+.v10-shipping-method:hover .v10-shipping-method-content {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-shipping-method input[type="radio"]:checked + .v10-shipping-method-content {
+  border-color: var(--v10-accent-success);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.v10-shipping-method-icon {
+  font-size: var(--v10-text-xl);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-sm);
+  flex-shrink: 0;
+}
+
+.v10-shipping-method-text {
+  flex: 1;
+}
+
+.v10-shipping-method-text strong {
+  display: block;
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.v10-shipping-method-text small {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+  line-height: 1.3;
+}
+
+/* Insurance Options */
+.v10-insurance-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-3);
+}
+
+.v10-insurance-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.v10-insurance-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.v10-insurance-option-content {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+  width: 100%;
+  min-height: 60px;
+}
+
+.v10-insurance-option:hover .v10-insurance-option-content {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-insurance-option input[type="radio"]:checked + .v10-insurance-option-content {
+  border-color: var(--v10-accent-success);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.v10-insurance-option-icon {
+  font-size: var(--v10-text-xl);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-sm);
+  flex-shrink: 0;
+}
+
+.v10-insurance-option-text {
+  flex: 1;
+}
+
+.v10-insurance-option-text strong {
+  display: block;
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.v10-insurance-option-text small {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+  line-height: 1.3;
+}
+
+/* Mobile responsive adjustments for radio buttons */
+@media (max-width: 768px) {
+  .v10-delivery-option-content-enhanced,
+  .v10-shipping-method-content,
+  .v10-insurance-option-content {
+    padding: var(--v10-space-3);
+    gap: var(--v10-space-2);
+    min-height: 50px;
+  }
+  
+  .v10-delivery-option-icon,
+  .v10-shipping-method-icon,
+  .v10-insurance-option-icon {
+    width: 28px;
+    height: 28px;
+    font-size: var(--v10-text-lg);
+  }
+  
+  .v10-delivery-option-text strong,
+  .v10-shipping-method-text strong,
+  .v10-insurance-option-text strong {
+    font-size: var(--v10-text-sm);
+  }
+  
+  .v10-delivery-option-text small,
+  .v10-shipping-method-text small,
+  .v10-insurance-option-text small {
+    font-size: var(--v10-text-xs);
+  }
 }
 
 /* ==============================================
