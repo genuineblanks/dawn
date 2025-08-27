@@ -11617,6 +11617,19 @@ class V10_TechPackSystem {
     // Step 3 Navigation buttons (using actual HTML IDs from section)
     const backBtn = document.getElementById('techpack-v10-step-3-prev');
     const nextBtn = document.getElementById('techpack-v10-step-3-next');
+    const stepActionsContainer = document.querySelector('#techpack-v10-step-3 .v10-step-actions');
+    const step3Section = document.getElementById('techpack-v10-step-3');
+
+    console.log('🔍 Step 3 Navigation Debug:', {
+      step3Section: !!step3Section,
+      step3Display: step3Section?.style.display,
+      stepActionsContainer: !!stepActionsContainer,
+      stepActionsDisplay: stepActionsContainer?.style.display,
+      stepActionsComputed: stepActionsContainer ? window.getComputedStyle(stepActionsContainer).display : 'N/A',
+      backBtn: !!backBtn,
+      nextBtn: !!nextBtn,
+      allStep3Elements: document.querySelectorAll('#techpack-v10-step-3 *').length
+    });
 
     if (backBtn) {
       backBtn.addEventListener('click', () => {
