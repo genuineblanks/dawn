@@ -11615,22 +11615,13 @@ class V10_TechPackSystem {
 
   bindGlobalEvents() {
     // Step 3 Navigation buttons (using actual HTML IDs from section)
-    const backBtn = document.getElementById('step-3-prev');
-    const nextBtn = document.getElementById('step-3-next');
-
-    console.log('🔍 Navigation buttons found:', { 
-      backBtn: !!backBtn, 
-      nextBtn: !!nextBtn,
-      stepActionsContainer: !!document.querySelector('.v10-step-actions')
-    });
+    const backBtn = document.getElementById('techpack-v10-step-3-prev');
+    const nextBtn = document.getElementById('techpack-v10-step-3-next');
 
     if (backBtn) {
       backBtn.addEventListener('click', () => {
         this.goBackToStep2();
       });
-      console.log('✅ Back button listener added');
-    } else {
-      console.warn('⚠️ Back button not found');
     }
 
     if (nextBtn) {
@@ -11639,9 +11630,6 @@ class V10_TechPackSystem {
           this.proceedToStep4();
         }
       });
-      console.log('✅ Next button listener added');
-    } else {
-      console.warn('⚠️ Next button not found');
     }
 
     // Help button
