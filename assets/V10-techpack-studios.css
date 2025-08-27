@@ -733,7 +733,7 @@ body[class*="techpack"] *,
 .v10-upload-zone:hover {
   border-color: var(--v10-accent-primary);
   background-color: var(--v10-bg-hover);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: var(--v10-shadow-lg);
 }
 
@@ -745,7 +745,14 @@ body[class*="techpack"] *,
   width: 48px;
   height: 48px;
   color: var(--v10-accent-primary);
-  margin-bottom: var(--v10-space-4);
+  margin: 0 auto var(--v10-space-4) auto;
+  display: block;
+  transition: var(--v10-transition);
+}
+
+.v10-upload-zone:hover .v10-upload-icon {
+  transform: scale(1.1);
+  color: #f59e0b;
 }
 
 .v10-upload-title {
@@ -1519,9 +1526,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-measurement-status--optional {
-  background: rgba(107, 114, 128, 0.1);
-  color: var(--v10-text-muted);
-  border: 1px solid rgba(107, 114, 128, 0.2);
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .v10-measurement-checkbox-input {
@@ -4083,9 +4090,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-status-badge-premium--optional {
-  background: rgba(107, 114, 128, 0.1);
-  color: var(--v10-text-muted);
-  border-color: rgba(107, 114, 128, 0.2);
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
 }
 
 .v10-status-badge-premium--assisted {
