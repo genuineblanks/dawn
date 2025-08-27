@@ -505,10 +505,10 @@ body[class*="techpack"] *,
   justify-content: center;
   gap: var(--v10-space-2);
   padding: var(--v10-space-2) var(--v10-space-4);
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--v10-radius-md);
-  color: var(--v10-text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   font-size: var(--v10-text-sm);
   font-weight: 500;
   text-decoration: none;
@@ -518,15 +518,28 @@ body[class*="techpack"] *,
   flex-shrink: 0;
 }
 .v10-guidance-btn:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-  color: var(--v10-text-primary);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #f59e0b;
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: var(--v10-shadow-md);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 .v10-guidance-btn:active {
   transform: translateY(0);
-  box-shadow: var(--v10-shadow-sm);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.v10-guidance-btn::after {
+  content: "?";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: var(--v10-space-2);
 }
 
 /* V10 Guidance Modal System */
