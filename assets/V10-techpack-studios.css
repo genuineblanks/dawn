@@ -700,19 +700,51 @@ body[class*="techpack"] *,
   border-top: 1px solid var(--v10-border-primary);
 }
 
-/* Force Step 3 Navigation Buttons to Always Show */
-#techpack-v10-step-3 .v10-step-actions {
+/* NUCLEAR CSS OVERRIDE - Force Step 3 Navigation Buttons to Always Show */
+#techpack-v10-step-3 .v10-step-actions,
+section[id*="step-3"] .v10-step-actions,
+.v10-techpack-step[data-step="3"] .v10-step-actions {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
   position: relative !important;
-  z-index: 1000 !important;
+  z-index: 9999 !important;
+  width: 100% !important;
+  min-height: 60px !important;
+  background: rgba(255, 0, 0, 0.1) !important; /* Debug red background */
+  border: 2px solid red !important; /* Debug red border */
+  margin: 20px 0 !important;
+  padding: 20px !important;
 }
 
-#techpack-v10-step-3 .v10-step-actions .v10-btn {
+#techpack-v10-step-3 .v10-step-actions .v10-btn,
+section[id*="step-3"] .v10-step-actions .v10-btn,
+.v10-techpack-step[data-step="3"] .v10-step-actions .v10-btn {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+  position: relative !important;
+  z-index: 10000 !important;
+  min-width: 120px !important;
+  min-height: 40px !important;
+  background: rgba(0, 255, 0, 0.3) !important; /* Debug green background */
+  border: 2px solid green !important; /* Debug green border */
+  color: black !important;
+}
+
+/* Force buttons to show even with inline styles */
+#techpack-v10-step-3-prev,
+#techpack-v10-step-3-next {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10001 !important;
+  background: yellow !important; /* Debug yellow background */
+  border: 3px solid blue !important; /* Debug blue border */
+  color: black !important;
+  min-width: 100px !important;
+  min-height: 50px !important;
 }
 
 @media (max-width: 768px) {
