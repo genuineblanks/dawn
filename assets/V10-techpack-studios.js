@@ -4631,16 +4631,16 @@ class V10_GarmentStudio {
         this.garmentsContainer.appendChild(clone);
         console.log('✅ Garment added to container');
         
-        // Initialize compact interface AFTER adding to DOM
+        // Initialize in EXPANDED state like edit mode AFTER adding to DOM
         try {
           const addedGarmentCard = this.garmentsContainer.querySelector(`[data-garment-id="${garmentData.id}"]`);
           if (addedGarmentCard) {
-            this.initializeCompactInterface(addedGarmentCard);
+            this.initializeExpandedInterface(addedGarmentCard, garmentData);
           } else {
             console.error('❌ Could not find added garment card in DOM');
           }
-        } catch (compactError) {
-          console.error('❌ Error initializing compact interface:', compactError);
+        } catch (expandedError) {
+          console.error('❌ Error initializing expanded interface:', expandedError);
         }
       } else {
         console.error('❌ Garments container not found');
@@ -7281,6 +7281,7 @@ class V10_GarmentStudio {
   }
 
 
+  // DEPRECATED: initializeCompactInterface - Now using initializeExpandedInterface for unified behavior
   initializeCompactInterface(garmentCard) {
     // Set up initial states - use querySelector on the garmentCard to find within this specific garment
     const garmentExpanded = garmentCard.querySelector('#garment-expanded');
@@ -7348,6 +7349,46 @@ class V10_GarmentStudio {
       sampleCustomSection.classList.add('compact-selection-section--disabled');
       this.disableSelectionSection(sampleCustomSection, 'Select fabric type first');
     }
+  }
+
+  initializeExpandedInterface(garmentCard, garmentData) {
+    console.log('🔄 Initializing expanded interface for new garment like edit mode');
+    
+    // Set edit mode flag to trigger expanded behavior
+    garmentData.isInEditMode = true;
+    
+    // Hide summary and show content (like edit mode)
+    const summaryContainer = garmentCard.querySelector('.garment-card__summary');
+    const contentContainer = garmentCard.querySelector('.garment-card__content');
+    
+    if (summaryContainer) summaryContainer.style.display = 'none';
+    if (contentContainer) contentContainer.style.display = 'block';
+    
+    // Remove configured class - design toggle should hide during editing
+    garmentCard.classList.remove('garment-card--configured');
+    
+    // Initialize all expanded states (no collapsed placeholders)
+    const garmentExpanded = garmentCard.querySelector('#garment-expanded');
+    const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
+    const sampleStockExpanded = garmentCard.querySelector('#sample-stock-expanded');
+    const sampleCustomExpanded = garmentCard.querySelector('#sample-custom-expanded');
+    const sampleReferenceExpanded = garmentCard.querySelector('#sample-reference-expanded');
+    
+    // Set all to hidden initially (will be shown when selections are made)
+    if (garmentExpanded) garmentExpanded.style.display = 'none';
+    if (fabricExpanded) fabricExpanded.style.display = 'none';
+    if (sampleStockExpanded) sampleStockExpanded.style.display = 'none';
+    if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'none';
+    if (sampleReferenceExpanded) sampleReferenceExpanded.style.display = 'none';
+    
+    // Enable fabric selection right away but keep it disabled until garment type is selected
+    this.enableFabricSelection(garmentCard);
+    this.updateSelectionDependencies(garmentCard);
+    
+    // Show finalize edit button (like edit mode)
+    this.showFinalizeEditButton(garmentCard);
+    
+    console.log('✅ Expanded interface initialized for new garment:', garmentData.id);
   }
 
   saveCurrentQuantitiesToState() {
