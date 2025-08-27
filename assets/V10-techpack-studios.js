@@ -6586,6 +6586,7 @@ class V10_GarmentStudio {
         this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
       }, 300);
     
+    }
   }
 
   getSimpleIcon(type) {
