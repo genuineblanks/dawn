@@ -4511,7 +4511,7 @@ class V10_GarmentStudio {
         assignedLabDips: new Set(data?.assignedLabDips || []),
         assignedDesigns: new Set(data?.assignedDesigns || []),
         isComplete: false,
-        isInEditMode: false,
+        isInEditMode: true,
         includeDesign: data?.includeDesign !== undefined ? data.includeDesign : true, // Default to true
         designReference: data?.designReference || '' // Design name/reference from TechPack
       };
@@ -4968,8 +4968,23 @@ class V10_GarmentStudio {
         }
       }
       
-      // Reset sample type selection
-      this.resetSampleTypeSelection(garmentCard);
+      // Reset sample type selections when garment changes
+      const sampleStockSection = garmentCard.querySelector('#sample-stock-section');
+      const sampleCustomSection = garmentCard.querySelector('#sample-custom-section');
+      
+      if (sampleStockSection) {
+        const placeholder = sampleStockSection.querySelector('#sample-stock-placeholder');
+        const display = sampleStockSection.querySelector('#sample-stock-display');
+        if (placeholder) placeholder.style.display = 'block';
+        if (display) display.style.display = 'none';
+      }
+      
+      if (sampleCustomSection) {
+        const placeholder = sampleCustomSection.querySelector('#sample-custom-placeholder');
+        const display = sampleCustomSection.querySelector('#sample-custom-display');
+        if (placeholder) placeholder.style.display = 'block';
+        if (display) display.style.display = 'none';
+      }
       
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
@@ -11603,10 +11618,19 @@ class V10_TechPackSystem {
     const backBtn = document.getElementById('step-3-prev');
     const nextBtn = document.getElementById('step-3-next');
 
+    console.log('🔍 Navigation buttons found:', { 
+      backBtn: !!backBtn, 
+      nextBtn: !!nextBtn,
+      stepActionsContainer: !!document.querySelector('.v10-step-actions')
+    });
+
     if (backBtn) {
       backBtn.addEventListener('click', () => {
         this.goBackToStep2();
       });
+      console.log('✅ Back button listener added');
+    } else {
+      console.warn('⚠️ Back button not found');
     }
 
     if (nextBtn) {
@@ -11615,6 +11639,9 @@ class V10_TechPackSystem {
           this.proceedToStep4();
         }
       });
+      console.log('✅ Next button listener added');
+    } else {
+      console.warn('⚠️ Next button not found');
     }
 
     // Help button
