@@ -7206,13 +7206,6 @@ class V10_GarmentStudio {
       this.cleanupQuantityStudioEventListeners();
       
       // Clear existing content completely to prevent multiplication
-      console.log('🚨 ABOUT TO CLEAR CONTAINER:', {
-        containerElement: container,
-        containerId: container?.id,
-        containerClass: container?.className,
-        hasNavigationButtons: !!document.querySelector('.v10-step-actions'),
-        navigationButtonsInContainer: container.querySelectorAll('.v10-step-actions').length
-      });
       container.innerHTML = '';
       console.log('🧹 Saved quantities, cleared DOM content and event listeners');
       
@@ -11624,19 +11617,6 @@ class V10_TechPackSystem {
     // Step 3 Navigation buttons (using actual HTML IDs from section)
     const backBtn = document.getElementById('techpack-v10-step-3-prev');
     const nextBtn = document.getElementById('techpack-v10-step-3-next');
-    const stepActionsContainer = document.querySelector('#techpack-v10-step-3 .v10-step-actions');
-    const step3Section = document.getElementById('techpack-v10-step-3');
-
-    console.log('🔍 Step 3 Navigation Debug:', {
-      step3Section: !!step3Section,
-      step3Display: step3Section?.style.display,
-      stepActionsContainer: !!stepActionsContainer,
-      stepActionsDisplay: stepActionsContainer?.style.display,
-      stepActionsComputed: stepActionsContainer ? window.getComputedStyle(stepActionsContainer).display : 'N/A',
-      backBtn: !!backBtn,
-      nextBtn: !!nextBtn,
-      allStep3Elements: document.querySelectorAll('#techpack-v10-step-3 *').length
-    });
 
     if (backBtn) {
       backBtn.addEventListener('click', () => {
@@ -13433,9 +13413,6 @@ class V10_FileManager {
     step2.style.display = 'none';
     step3.style.display = 'block';
     
-    // Now that step 3 is visible, bind navigation buttons
-    this.bindStep3NavigationButtons();
-    
     // Scroll to top for mobile navigation
     window.scrollTo(0, 0);
     
@@ -13459,73 +13436,6 @@ class V10_FileManager {
     
     console.log('✅ Step transition completed successfully');
     return true;
-  }
-
-  bindStep3NavigationButtons() {
-    // Bind navigation buttons now that step 3 is visible
-    const backBtn = document.getElementById('techpack-v10-step-3-prev');
-    const nextBtn = document.getElementById('techpack-v10-step-3-next');
-
-    console.log('🔗 Binding Step 3 Navigation (after transition):', {
-      backBtn: !!backBtn,
-      nextBtn: !!nextBtn,
-      step3Visible: document.getElementById('techpack-v10-step-3').style.display !== 'none'
-    });
-
-    if (backBtn && !backBtn.hasAttribute('data-bound')) {
-      backBtn.addEventListener('click', () => {
-        if (window.v10TechPackSystem) {
-          window.v10TechPackSystem.goBackToStep2();
-        }
-      });
-      backBtn.setAttribute('data-bound', 'true');
-      console.log('✅ Back button bound');
-    }
-
-    if (nextBtn && !nextBtn.hasAttribute('data-bound')) {
-      nextBtn.addEventListener('click', () => {
-        if (window.v10TechPackSystem && window.v10TechPackSystem.validateStep().isValid) {
-          window.v10TechPackSystem.proceedToStep4();
-        }
-      });
-      nextBtn.setAttribute('data-bound', 'true');
-      console.log('✅ Next button bound');
-    }
-
-    // Debug computed styles for both buttons
-    if (backBtn) {
-      const styles = getComputedStyle(backBtn);
-      console.log('🔍 PREV Button computed styles:', {
-        display: styles.display,
-        position: styles.position,
-        visibility: styles.visibility,
-        opacity: styles.opacity,
-        zIndex: styles.zIndex,
-        top: styles.top,
-        left: styles.left,
-        width: styles.width,
-        height: styles.height,
-        backgroundColor: styles.backgroundColor,
-        transform: styles.transform
-      });
-    }
-
-    if (nextBtn) {
-      const styles = getComputedStyle(nextBtn);
-      console.log('🔍 NEXT Button computed styles:', {
-        display: styles.display,
-        position: styles.position,
-        visibility: styles.visibility,
-        opacity: styles.opacity,
-        zIndex: styles.zIndex,
-        top: styles.top,
-        left: styles.left,
-        width: styles.width,
-        height: styles.height,
-        backgroundColor: styles.backgroundColor,
-        transform: styles.transform
-      });
-    }
   }
 
   getFileData() {
