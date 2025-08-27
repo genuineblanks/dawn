@@ -4752,76 +4752,84 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   cursor: not-allowed;
 }
 
-/* Collection Grid */
-.collection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--v10-space-4);
-  margin-bottom: var(--v10-space-6);
-}
-
-.collection-item {
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4);
-  transition: var(--v10-transition);
-}
-
-.collection-item:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-}
-
+/* Lab Dip Collection Item Layout: Color Circle (left) + Content (center) + Actions (right) */
 .collection-item__visual {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-3);
-  margin-bottom: var(--v10-space-3);
+  flex: 0 0 auto;
+  display: block;
+  width: 40px;
+  height: 40px;
 }
 
 .collection-item__color {
+  display: block;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 2px solid var(--v10-border-primary);
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  visibility: visible;
 }
 
-.collection-item__info {
+.collection-item__content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
 }
 
 .collection-item__name {
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin-bottom: 2px;
+  font-size: var(--v10-text-sm);
 }
 
-.collection-item__code {
-  font-size: 0.75rem;
-  color: var(--v10-text-muted);
+.collection-item__type {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .collection-item__actions {
+  flex: 0 0 auto;
   display: flex;
   gap: var(--v10-space-2);
+  align-items: center;
 }
 
-.collection-item__btn {
-  padding: var(--v10-space-1) var(--v10-space-2);
-  font-size: 0.75rem;
-  background: transparent;
+.collection-item__assign,
+.collection-item__remove {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-secondary);
+  background: var(--v10-bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: var(--v10-transition);
+  color: var(--v10-text-secondary);
 }
 
-.collection-item__btn:hover {
+.collection-item__assign:hover {
   background: var(--v10-accent-primary);
-  border-color: var(--v10-accent-primary);
   color: white;
+  border-color: var(--v10-accent-primary);
+}
+
+.collection-item__remove:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.garment-card:hover,
+.collection-item:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
 }
 
 /* Garments with Applied Colors Section */
