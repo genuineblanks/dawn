@@ -216,12 +216,6 @@ body[class*="techpack"] *,
   color: var(--v10-accent-secondary);
 }
 
-.v10-techpack-step button, [id^="techpack-v10"] button, .v10-modal-overlay button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-}
 
 .v10-techpack-step input, .v10-techpack-step textarea, .v10-techpack-step select,
 [id^="techpack-v10"] input, [id^="techpack-v10"] textarea, [id^="techpack-v10"] select,
@@ -3949,7 +3943,6 @@ body[style*="overflow: hidden"] {
 }
 
 /* Help buttons */
-.studio-help-btn,
 .techpack-help-btn {
   padding: var(--v10-space-2) var(--v10-space-3);
   background: var(--v10-bg-secondary);
@@ -3964,7 +3957,6 @@ body[style*="overflow: hidden"] {
   gap: var(--v10-space-2);
 }
 
-.studio-help-btn:hover,
 .techpack-help-btn:hover {
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
