@@ -5034,9 +5034,6 @@ class V10_GarmentStudio {
         this.updateCompactSelection('fabric', newValue, garmentCard);
       }
       
-      // Reset sample type selection
-      this.resetSampleTypeSelection(garmentCard);
-      
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
       
@@ -6681,12 +6678,6 @@ class V10_GarmentStudio {
           selectedCard.classList.add('compact-radio-card--selected');
         }
         
-        // CROSS-OPTION RESET: Reset custom color to placeholder when stock is selected
-        const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
-        const customDisplay = garmentCard.querySelector('#sample-custom-display');
-        if (customPlaceholder) customPlaceholder.style.display = 'flex';
-        if (customDisplay) customDisplay.style.display = 'none';
-        
         // EDIT MODE FIX: Don't auto-collapse in edit mode - just update the display
         if (!garmentData?.isInEditMode) {
           setTimeout(() => {
@@ -6730,12 +6721,6 @@ class V10_GarmentStudio {
         if (selectedCard) {
           selectedCard.classList.add('compact-radio-card--selected');
         }
-        
-        // CROSS-OPTION RESET: Reset stock color to placeholder when custom is selected
-        const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
-        const stockDisplay = garmentCard.querySelector('#sample-stock-display');
-        if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
-        if (stockDisplay) stockDisplay.style.display = 'none';
         
         // EDIT MODE FIX: Don't auto-collapse in edit mode - just update the display
         if (!garmentData?.isInEditMode) {
