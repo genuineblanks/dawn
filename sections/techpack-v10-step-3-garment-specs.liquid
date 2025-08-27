@@ -4,7 +4,6 @@ Enhanced with Visual Studio Guide System
 {% endcomment %}
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
-{{ 'V10-visual-studio-guide.css' | asset_url | stylesheet_tag }}
 {{ 'v10-quantity-responsive.css' | asset_url | stylesheet_tag }}
 
 <!-- Force Dark Mode - No Light Theme Support -->
@@ -41,44 +40,6 @@ document.body.setAttribute('data-theme', 'dark');
 
     <div class="techpack-content">
       
-      <!-- Step 3 Control Bar -->
-      <div class="step3-control-bar">
-        <!-- Quick Guide Button (Left) -->
-        <div class="step3-control-left">
-          <button type="button" class="techpack-help-btn techpack-help-btn--secondary quick-guide-trigger" id="step-3-quick-guide-btn" aria-label="Open Quick Guide - Simple overview of the process">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-            <span>QUICK GUIDE</span>
-          </button>
-        </div>
-        
-        <!-- Theme Toggle Buttons (Center) -->
-        <div class="step3-control-center">
-          <div class="v10-theme-toggle">
-            <button type="button" class="v10-theme-btn v10-theme-btn--light" data-theme="light">
-              ☀️ Light
-            </button>
-            <button type="button" class="v10-theme-btn v10-theme-btn--dark v10-theme-btn--active" data-theme="dark">
-              🌙 Dark
-            </button>
-          </div>
-        </div>
-        
-        <!-- Visual Studio Guide Button (Right) -->
-        <div class="step3-control-right">
-          <button type="button" class="techpack-help-btn techpack-help-btn--primary visual-guide-trigger" id="step-3-help-btn" aria-label="Open Visual Studio Guide - Interactive help for understanding the workflow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <circle cx="12" cy="17" r="1"/>
-            </svg>
-            <span>VISUAL STUDIO GUIDE</span>
-          </button>
-        </div>
-      </div>
 
       <!-- Studio Navigator -->
       <div class="studio-navigator">
@@ -1644,14 +1605,6 @@ document.body.setAttribute('data-theme', 'dark');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
 
-<!-- Load Visual Studio Guide System -->
-<script src="{{ 'V10-visual-studio-guide.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
-
-<!-- Include Visual Guide Modal Component -->
-{% render 'V10-visual-guide-modal' %}
-
-<!-- Include Quick Guide Modal Component -->
-{% render 'V10-quick-guide-modal' %}
 
 {% schema %}
 {

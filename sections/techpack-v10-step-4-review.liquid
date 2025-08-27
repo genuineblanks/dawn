@@ -45,15 +45,6 @@ document.body.setAttribute('data-theme', 'dark');
           <p class="techpack-subtitle">Please review your submission before sending</p>
         </div>
         
-        <!-- Theme Toggle Button -->
-        <div class="v10-theme-toggle v10-theme-toggle--header">
-          <button type="button" class="v10-theme-btn v10-theme-btn--light" data-theme="light">
-            ☀️ Light
-          </button>
-          <button type="button" class="v10-theme-btn v10-theme-btn--dark v10-theme-btn--active" data-theme="dark">
-            🌙 Dark
-          </button>
-        </div>
       </div>
 
       <!-- Review Content -->
@@ -512,14 +503,6 @@ document.body.setAttribute('data-theme', 'dark');
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
 
-<!-- Load Visual Studio Guide System -->
-<script src="{{ 'V10-visual-studio-guide.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
-
-<!-- Include Visual Guide Modal Component -->
-{% render 'V10-visual-guide-modal' %}
-
-<!-- Include Quick Guide Modal Component -->
-{% render 'V10-quick-guide-modal' %}
 
 {% schema %}
 {
