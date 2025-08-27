@@ -6982,11 +6982,8 @@ class V10_GarmentStudio {
         // Enable fabric selection
         fabricSection.classList.remove('compact-selection-section--disabled');
         this.enableSelectionSection(fabricSection);
-      } else {
-        // Disable fabric selection
-        fabricSection.classList.add('compact-selection-section--disabled');
-        this.disableSelectionSection(fabricSection, 'Select garment type first');
       }
+      // Fabric is already disabled initially, no need to re-disable it
     }
 
     // Update sample type dependency (depends on fabric type) - NEW compact widget system only
@@ -7313,7 +7310,7 @@ class V10_GarmentStudio {
       const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
       
       if (placeholderText) {
-        placeholderText.textContent = 'Select garment type first';
+        placeholderText.textContent = 'Select fabric type';
       }
       
       // Set proper fabric icon even when disabled
