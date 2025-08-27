@@ -12223,6 +12223,66 @@ class V10_TechPackSystem {
             <li>You can order multiple sample types for the same garment</li>
           </ul>
         `
+      },
+      'shipping-options': {
+        title: 'Shipping & Insurance Options',
+        content: `
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem;">✈️</span>
+                Air Freight
+              </h4>
+              <p><strong>Speed:</strong> 7-14 days delivery</p>
+              <p><strong>Cost:</strong> Higher shipping rates</p>
+              <p><strong>Best For:</strong> Urgent orders, time-sensitive production</p>
+              <p><strong>Reliability:</strong> Most predictable delivery times</p>
+            </div>
+            
+            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem;">🚢</span>
+                Sea Freight
+              </h4>
+              <p><strong>Speed:</strong> 25-35 days delivery</p>
+              <p><strong>Cost:</strong> Significantly lower rates</p>
+              <p><strong>Best For:</strong> Large orders, cost-conscious shipping</p>
+              <p><strong>Reliability:</strong> Longer but more economical</p>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem;">🛡️</span>
+                With Insurance
+              </h4>
+              <p><strong>Coverage:</strong> Full protection against loss/damage</p>
+              <p><strong>Cost:</strong> Additional 2-3% of order value</p>
+              <p><strong>Peace of Mind:</strong> Complete financial protection</p>
+              <p><strong>Claims:</strong> Quick reimbursement process</p>
+            </div>
+            
+            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.5rem;">💰</span>
+                No Insurance
+              </h4>
+              <p><strong>Coverage:</strong> Standard carrier liability only</p>
+              <p><strong>Cost:</strong> Lower overall shipping costs</p>
+              <p><strong>Risk:</strong> Limited protection for loss/damage</p>
+              <p><strong>Savings:</strong> Reduce shipping expenses</p>
+            </div>
+          </div>
+          
+          <h4>Recommendations</h4>
+          <ul>
+            <li><strong>Air + Insurance:</strong> Best for urgent, high-value orders</li>
+            <li><strong>Air + No Insurance:</strong> Good balance for time-sensitive, standard orders</li>
+            <li><strong>Sea + Insurance:</strong> Ideal for large orders where cost savings matter but protection is desired</li>
+            <li><strong>Sea + No Insurance:</strong> Most economical option for large, non-urgent orders</li>
+          </ul>
+        `
       }
     };
 
