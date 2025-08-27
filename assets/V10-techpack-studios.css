@@ -215,8 +215,12 @@ body[class*="techpack"] *,
 .v10-techpack-step a:hover, [id^="techpack-v10"] a:hover, .v10-modal-overlay a:hover {
   color: var(--v10-accent-secondary);
 }
-
-
+.v10-techpack-step button, [id^="techpack-v10"] button, .v10-modal-overlay button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
 .v10-techpack-step input, .v10-techpack-step textarea, .v10-techpack-step select,
 [id^="techpack-v10"] input, [id^="techpack-v10"] textarea, [id^="techpack-v10"] select,
 .v10-modal-overlay input, .v10-modal-overlay textarea, .v10-modal-overlay select {
@@ -499,8 +503,8 @@ body[class*="techpack"] *,
   justify-content: center;
   gap: var(--v10-space-2);
   padding: var(--v10-space-2) var(--v10-space-4);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: var(--v10-radius-md);
   color: rgba(255, 255, 255, 0.7);
   font-size: var(--v10-text-sm);
@@ -512,8 +516,8 @@ body[class*="techpack"] *,
   flex-shrink: 0;
 }
 .v10-guidance-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #f59e0b;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: #f59e0b !important;
   color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
