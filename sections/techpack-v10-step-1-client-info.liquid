@@ -410,14 +410,13 @@ document.body.setAttribute('data-theme', 'dark');
 
     <!-- Shipping Options Studio (Bulk Only) -->
     <div class="v10-studio-card" id="v10-shipping-section" style="display: none;">
-      <div class="v10-studio-header">
+      <div class="v10-studio-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
           <h2 class="v10-studio-title">Shipping & Insurance</h2>
           <p class="v10-studio-subtitle">Choose your preferred shipping method and protection level</p>
         </div>
-        <button class="studio-help-btn" data-help="shipping-options">
-          <span>Which shipping options should I choose?</span>
-          <span>?</span>
+        <button class="studio-help-btn" data-help="shipping-options" style="flex-shrink: 0;">
+          Which shipping options should I choose?
         </button>
       </div>
 
@@ -787,23 +786,6 @@ document.body.setAttribute('data-theme', 'dark');
   </div>
 </div>
 
-<!-- Shipping Options Help Modal -->
-<div class="v10-modal-overlay" id="topic-help-modal" style="display: none;">
-  <div class="v10-modal">
-    <div class="v10-modal-header">
-      <h3 class="v10-modal-title" id="help-modal-title">Shipping & Insurance Options</h3>
-      <button class="v10-modal-close" id="close-help-modal" aria-label="Close modal">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <div class="v10-modal-body" id="help-modal-content">
-      <!-- Content will be dynamically loaded by JavaScript -->
-    </div>
-  </div>
-</div>
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
