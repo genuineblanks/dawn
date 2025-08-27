@@ -5125,3 +5125,81 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
     padding: var(--v10-space-5);
   }
 }
+
+/* ===================================
+   CRITICAL FIX: POPULAR COLOR CIRCLES
+   =================================== */
+
+/* Force popular color circles to be visible */
+.popular-color-circle {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force specific background colors to override any conflicts */
+.popular-color-circle[data-color="#000000"] {
+  background-color: #000000 !important;
+}
+
+.popular-color-circle[data-color="#ffffff"] {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.popular-color-circle[data-color="#dc2626"] {
+  background-color: #dc2626 !important;
+}
+
+.popular-color-circle[data-color="#2563eb"] {
+  background-color: #2563eb !important;
+}
+
+.popular-color-circle[data-color="#16a34a"] {
+  background-color: #16a34a !important;
+}
+
+.popular-color-circle[data-color="#eab308"] {
+  background-color: #eab308 !important;
+}
+
+.popular-color-circle[data-color="#f97316"] {
+  background-color: #f97316 !important;
+}
+
+.popular-color-circle[data-color="#8b5cf6"] {
+  background-color: #8b5cf6 !important;
+}
+
+.popular-color-circle[data-color="#ec4899"] {
+  background-color: #ec4899 !important;
+}
+
+.popular-color-circle[data-color="#6b7280"] {
+  background-color: #6b7280 !important;
+}
+
+/* ===================================
+   CRITICAL FIX: LAB DIP COLOR CIRCLES
+   =================================== */
+
+/* Fix the ACTUAL lab dip color circles in Lab Dip Collection */
+.collection-item__color {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===================================
+   UNIVERSAL COLOR CIRCLE SAFETY
+   =================================== */
+
+/* Ensure all color circles with inline styles are preserved */
+div[class*="color-circle"][style*="background-color"],
+div[class*="circle"][style*="background-color"],
+.color-picker[style*="background-color"],
+.v10-color-picker[style*="background-color"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
