@@ -14673,61 +14673,65 @@ window.V10_GuidanceModal = {
 // Shipping Options Guidance
 function showShippingGuidance() {
   const content = `
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
-          <span style="font-size: 1.5rem;">✈️</span>
-          Air Freight
-        </h4>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Speed:</strong> 7-14 days delivery</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Higher shipping rates</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Best For:</strong> Urgent orders, time-sensitive production</p>
-        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Reliability:</strong> Most predictable delivery times</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;" class="guidance-cards-grid">
+      <!-- Air Freight Card -->
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
+        <div style="background: #3b82f6; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+          Ideal for samples & urgent deliveries
+        </div>
+        <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">Air Freight</h3>
+        <div style="color: var(--v10-text-secondary); line-height: 1.6; space-y: 0.5rem;">
+          <p style="margin-bottom: 0.5rem;"><strong>Delivery:</strong> 2–8 days worldwide (1–3 days in Europe)</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Cost:</strong> Higher than sea (fast but expensive)</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Best For:</strong> Samples, small runs, urgent launches</p>
+          <p style="margin-bottom: 0;"><strong>Why Brands Choose It:</strong> Guaranteed speed and reliability</p>
+        </div>
       </div>
       
-      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
-          <span style="font-size: 1.5rem;">🚢</span>
-          Sea Freight
-        </h4>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Speed:</strong> 25-35 days delivery</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Significantly lower rates</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Best For:</strong> Large orders, cost-conscious shipping</p>
-        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Reliability:</strong> Longer but more economical</p>
+      <!-- Sea Freight Card -->
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
+        <div style="background: #059669; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+          Best for bulk orders (500+ units) & global shipments
+        </div>
+        <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">Sea Freight</h3>
+        <div style="color: var(--v10-text-secondary); line-height: 1.6;">
+          <p style="margin-bottom: 0.5rem;"><strong>Delivery:</strong> 5–10 days in Europe, 20–45 days worldwide</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Cost:</strong> Lowest price per unit, especially 500+ pcs</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Best For:</strong> Bulk orders, large productions, outside Europe</p>
+          <p style="margin-bottom: 0;"><strong>Why Brands Choose It:</strong> Cuts cost massively when scale matters</p>
+        </div>
       </div>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
-          <span style="font-size: 1.5rem;">🛡️</span>
-          With Insurance
-        </h4>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Coverage:</strong> Full protection against loss/damage</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Additional 2-3% of order value</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Peace of Mind:</strong> Complete financial protection</p>
-        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Claims:</strong> Quick reimbursement process</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;" class="guidance-cards-grid">
+      <!-- With Insurance Card -->
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
+        <div style="background: #f59e0b; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+          Recommended for valuable or high-volume orders
+        </div>
+        <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">With Insurance</h3>
+        <div style="color: var(--v10-text-secondary); line-height: 1.6;">
+          <p style="margin-bottom: 0.5rem;"><strong>Coverage:</strong> Full protection if goods are lost or damaged</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Extra Cost:</strong> 2–6% of invoice value</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Best For:</strong> Large or valuable shipments</p>
+          <p style="margin-bottom: 0;"><strong>Why Brands Choose It:</strong> Peace of mind—safe even if issues occur</p>
+        </div>
       </div>
       
-      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
-          <span style="font-size: 1.5rem;">💰</span>
-          No Insurance
-        </h4>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Coverage:</strong> Standard carrier liability only</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Lower overall shipping costs</p>
-        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Risk:</strong> Limited protection for loss/damage</p>
-        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Savings:</strong> Reduce shipping expenses</p>
+      <!-- No Insurance Card -->
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
+        <div style="background: #6b7280; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+          Suitable only for low-value or test runs
+        </div>
+        <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">No Insurance</h3>
+        <div style="color: var(--v10-text-secondary); line-height: 1.6;">
+          <p style="margin-bottom: 0.5rem;"><strong>Coverage:</strong> Basic carrier liability only</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Extra Cost:</strong> None</p>
+          <p style="margin-bottom: 0.5rem;"><strong>Best For:</strong> Low-value or test shipments</p>
+          <p style="margin-bottom: 0;"><strong>Why Brands Choose It:</strong> Cheapest option when risk is low</p>
+        </div>
       </div>
     </div>
-    
-    <h4 style="color: var(--v10-text-primary); margin-bottom: 1rem;">Recommendations</h4>
-    <ul style="color: var(--v10-text-secondary); line-height: 1.6;">
-      <li><strong>Air + Insurance:</strong> Best for urgent, high-value orders</li>
-      <li><strong>Air + No Insurance:</strong> Good balance for time-sensitive, standard orders</li>
-      <li><strong>Sea + Insurance:</strong> Ideal for large orders where cost savings matter but protection is desired</li>
-      <li><strong>Sea + No Insurance:</strong> Most economical option for large, non-urgent orders</li>
-    </ul>
   `;
   
   window.V10_GuidanceModal.show('Shipping & Insurance Options', content);
