@@ -732,19 +732,29 @@ section[id*="step-3"] .v10-step-actions .v10-btn,
   color: black !important;
 }
 
-/* Force buttons to show even with inline styles */
+/* ULTIMATE DEBUG - Force buttons to fixed position on screen */
 #techpack-v10-step-3-prev,
 #techpack-v10-step-3-next {
-  display: flex !important;
+  display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  position: relative !important;
-  z-index: 10001 !important;
-  background: yellow !important; /* Debug yellow background */
-  border: 3px solid blue !important; /* Debug blue border */
-  color: black !important;
-  min-width: 100px !important;
-  min-height: 50px !important;
+  position: fixed !important;
+  top: 50px !important;
+  left: 50px !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 99999 !important;
+  background: red !important; /* Debug red background */
+  border: 5px solid yellow !important; /* Debug yellow border */
+  color: white !important;
+  width: 150px !important;
+  height: 60px !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+#techpack-v10-step-3-next {
+  top: 120px !important; /* Position below the previous button */
 }
 
 @media (max-width: 768px) {

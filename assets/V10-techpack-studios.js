@@ -13491,6 +13491,41 @@ class V10_FileManager {
       nextBtn.setAttribute('data-bound', 'true');
       console.log('✅ Next button bound');
     }
+
+    // Debug computed styles for both buttons
+    if (backBtn) {
+      const styles = getComputedStyle(backBtn);
+      console.log('🔍 PREV Button computed styles:', {
+        display: styles.display,
+        position: styles.position,
+        visibility: styles.visibility,
+        opacity: styles.opacity,
+        zIndex: styles.zIndex,
+        top: styles.top,
+        left: styles.left,
+        width: styles.width,
+        height: styles.height,
+        backgroundColor: styles.backgroundColor,
+        transform: styles.transform
+      });
+    }
+
+    if (nextBtn) {
+      const styles = getComputedStyle(nextBtn);
+      console.log('🔍 NEXT Button computed styles:', {
+        display: styles.display,
+        position: styles.position,
+        visibility: styles.visibility,
+        opacity: styles.opacity,
+        zIndex: styles.zIndex,
+        top: styles.top,
+        left: styles.left,
+        width: styles.width,
+        height: styles.height,
+        backgroundColor: styles.backgroundColor,
+        transform: styles.transform
+      });
+    }
   }
 
   getFileData() {
