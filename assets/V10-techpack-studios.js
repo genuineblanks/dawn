@@ -14337,22 +14337,6 @@ class V10_ModalManager {
   }
 }
 
-// ==============================================
-// DARK MODE ENFORCER - NO LIGHT THEME
-// ==============================================
-
-const V10_DarkModeEnforcer = {
-  // Force dark mode on initialization
-  init() {
-    // Always force dark mode - no light mode support
-    document.body.setAttribute('data-theme', 'dark');
-    
-    // Clear any stored theme preferences (force dark)
-    localStorage.removeItem('v10-theme');
-    
-    console.log('🌙 Dark mode enforced - light theme disabled');
-  }
-};
 
 // ==============================================
 // GARMENT COMPLETION BADGE SYSTEM
@@ -14516,8 +14500,6 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     console.log('🚀 V10 TechPack Studios - Initializing System...');
     
-    // Initialize dark mode enforcer first
-    V10_DarkModeEnforcer.init();
     
     // Initialize badge manager
     V10_BadgeManager.init();
@@ -14625,7 +14607,6 @@ window.V10_FileManager = V10_FileManager;
 window.V10_ModalManager = V10_ModalManager;
 window.V10_State = V10_State;
 window.V10_CONFIG = V10_CONFIG;
-window.V10_DarkModeEnforcer = V10_DarkModeEnforcer;
 window.V10_BadgeManager = V10_BadgeManager;
 
 } // End of guard clause
