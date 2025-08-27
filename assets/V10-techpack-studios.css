@@ -4491,128 +4491,76 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 ===========================================
 */
 
-/* Design Form Components */
-.design-input-form {
+/* Color Picker Section */
+.color-picker-section {
+  margin-bottom: var(--v10-space-6);
+}
+
+.color-picker-row {
   display: flex;
-  flex-direction: column;
-  gap: var(--v10-space-4);
-}
-
-.design-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--v10-space-4);
-}
-
-.design-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--v10-space-2);
-}
-
-.design-form-label {
-  font-size: var(--v10-text-sm);
-  font-weight: 600;
-  color: var(--v10-text-primary);
-}
-
-.design-form-input {
-  padding: var(--v10-space-3);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  background: var(--v10-bg-secondary);
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
-}
-
-/* Design Type Grid */
-.design-type-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--v10-space-2);
-}
-
-.design-type-option {
-  display: block;
-  cursor: pointer;
-}
-
-.design-type-option input[type="radio"] {
-  display: none;
-}
-
-.design-type-card {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--v10-space-1);
-  padding: var(--v10-space-3);
-  background: var(--v10-bg-tertiary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  transition: var(--v10-transition);
+  gap: var(--v10-space-4);
+  margin-bottom: var(--v10-space-4);
 }
 
-.design-type-option input[type="radio"]:checked + .design-type-card {
-  background: var(--v10-bg-tertiary);
-  border-color: var(--v10-border-accent);
+.color-picker-left {
+  flex: 0 0 auto;
 }
 
-.design-type-icon {
-  font-size: 20px;
-}
-
-.design-type-name {
-  font-size: var(--v10-text-xs);
-  color: var(--v10-text-primary);
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Action Buttons */
-.add-labdip-actions,
-.add-design-actions {
-  display: flex;
-  gap: var(--v10-space-3);
-  margin-top: var(--v10-space-4);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.add-to-garment-btn,
-.add-fabric-swatch-btn,
-.add-fabric-design-btn {
+.pantone-display-right {
   flex: 1;
+}
+
+.color-picker-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-4) var(--v10-space-5);
-  background: transparent;
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-lg);
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
+  gap: var(--v10-space-3);
+  margin-bottom: var(--v10-space-3);
+}
+
+.color-picker-input {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--v10-radius-md);
+  border: 2px solid var(--v10-border-primary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
 }
 
-.add-to-garment-btn:hover:not(:disabled),
-.add-fabric-swatch-btn:hover,
-.add-fabric-design-btn:hover {
-  background: var(--v10-accent-primary);
-  border-color: var(--v10-accent-primary);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(163, 163, 163, 0.2);
+.color-picker-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: var(--v10-radius-md);
 }
 
-.add-to-garment-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
+.color-picker-input::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--v10-radius-md);
+}
+
+.color-picker-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--v10-radius-md);
+  border: 2px solid var(--v10-border-primary);
+  background: var(--v10-bg-secondary);
+}
+
+.pantone-code-input {
+  margin-bottom: var(--v10-space-4);
+}
+
+.pantone-input {
+  width: 100%;
+  padding: var(--v10-space-3);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  background: var(--v10-bg-primary);
+  color: var(--v10-text-primary);
+  font-size: 0.875rem;
 }
 
 /* Popular Colors Grid */
@@ -4676,23 +4624,17 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Auto Pantone Display */
 .auto-pantone-display {
-  background: transparent;
-  padding: 0;
-  border: none;
-  width: 100%;
-  flex: 1;
+  margin-bottom: var(--v10-space-4);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border-radius: var(--v10-radius-md);
+  border: 1px solid var(--v10-border-secondary);
 }
 
 .pantone-result {
   display: flex;
   align-items: center;
   gap: var(--v10-space-3);
-  padding: var(--v10-space-3);
-  background: var(--v10-bg-secondary);
-  width: 100%;
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  transition: all 0.2s ease;
 }
 
 .pantone-circle {
@@ -4700,11 +4642,6 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   height: 40px;
   border-radius: 50%;
   border: 2px solid var(--v10-border-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-  background-color: #2563eb;
-  display: block;
-  visibility: visible;
 }
 
 .pantone-info {
@@ -4714,13 +4651,13 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .pantone-code {
   font-weight: 600;
   color: var(--v10-text-primary);
-  font-size: var(--v10-text-base);
+  font-size: 0.875rem;
   margin-bottom: var(--v10-space-1);
 }
 
 .pantone-note {
-  font-size: var(--v10-text-xs);
-  color: var(--v10-text-secondary);
+  font-size: 0.75rem;
+  color: var(--v10-text-muted);
 }
 
 /* Action Buttons */
