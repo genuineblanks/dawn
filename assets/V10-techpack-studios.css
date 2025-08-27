@@ -700,63 +700,6 @@ body[class*="techpack"] *,
   border-top: 1px solid var(--v10-border-primary);
 }
 
-/* NUCLEAR CSS OVERRIDE - Force Step 3 Navigation Buttons to Always Show */
-#techpack-v10-step-3 .v10-step-actions,
-section[id*="step-3"] .v10-step-actions,
-.v10-techpack-step[data-step="3"] .v10-step-actions {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 9999 !important;
-  width: 100% !important;
-  min-height: 60px !important;
-  background: rgba(255, 0, 0, 0.1) !important; /* Debug red background */
-  border: 2px solid red !important; /* Debug red border */
-  margin: 20px 0 !important;
-  padding: 20px !important;
-}
-
-#techpack-v10-step-3 .v10-step-actions .v10-btn,
-section[id*="step-3"] .v10-step-actions .v10-btn,
-.v10-techpack-step[data-step="3"] .v10-step-actions .v10-btn {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 10000 !important;
-  min-width: 120px !important;
-  min-height: 40px !important;
-  background: rgba(0, 255, 0, 0.3) !important; /* Debug green background */
-  border: 2px solid green !important; /* Debug green border */
-  color: black !important;
-}
-
-/* ULTIMATE DEBUG - Force buttons to fixed position on screen */
-#techpack-v10-step-3-prev,
-#techpack-v10-step-3-next {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: fixed !important;
-  top: 50px !important;
-  left: 50px !important;
-  right: auto !important;
-  bottom: auto !important;
-  z-index: 99999 !important;
-  background: red !important; /* Debug red background */
-  border: 5px solid yellow !important; /* Debug yellow border */
-  color: white !important;
-  width: 150px !important;
-  height: 60px !important;
-  font-size: 16px !important;
-  font-weight: bold !important;
-}
-
-#techpack-v10-step-3-next {
-  top: 120px !important; /* Position below the previous button */
-}
-
 @media (max-width: 768px) {
   .v10-step-actions {
     flex-direction: column;
@@ -5181,4 +5124,82 @@ MODAL SYSTEM STYLES (V10 COMPATIBILITY)
   .v10-modal--help .v10-modal-body {
     padding: var(--v10-space-5);
   }
+}
+
+/* ===================================
+   CRITICAL FIX: POPULAR COLOR CIRCLES
+   =================================== */
+
+/* Force popular color circles to be visible */
+.popular-color-circle {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force specific background colors to override any conflicts */
+.popular-color-circle[data-color="#000000"] {
+  background-color: #000000 !important;
+}
+
+.popular-color-circle[data-color="#ffffff"] {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.popular-color-circle[data-color="#dc2626"] {
+  background-color: #dc2626 !important;
+}
+
+.popular-color-circle[data-color="#2563eb"] {
+  background-color: #2563eb !important;
+}
+
+.popular-color-circle[data-color="#16a34a"] {
+  background-color: #16a34a !important;
+}
+
+.popular-color-circle[data-color="#eab308"] {
+  background-color: #eab308 !important;
+}
+
+.popular-color-circle[data-color="#f97316"] {
+  background-color: #f97316 !important;
+}
+
+.popular-color-circle[data-color="#8b5cf6"] {
+  background-color: #8b5cf6 !important;
+}
+
+.popular-color-circle[data-color="#ec4899"] {
+  background-color: #ec4899 !important;
+}
+
+.popular-color-circle[data-color="#6b7280"] {
+  background-color: #6b7280 !important;
+}
+
+/* ===================================
+   CRITICAL FIX: LAB DIP COLOR CIRCLES
+   =================================== */
+
+/* Fix the ACTUAL lab dip color circles in Lab Dip Collection */
+.collection-item__color {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===================================
+   UNIVERSAL COLOR CIRCLE SAFETY
+   =================================== */
+
+/* Ensure all color circles with inline styles are preserved */
+div[class*="color-circle"][style*="background-color"],
+div[class*="circle"][style*="background-color"],
+.color-picker[style*="background-color"],
+.v10-color-picker[style*="background-color"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
