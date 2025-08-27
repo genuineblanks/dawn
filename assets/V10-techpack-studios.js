@@ -13426,6 +13426,9 @@ class V10_FileManager {
     step2.style.display = 'none';
     step3.style.display = 'block';
     
+    // Now that step 3 is visible, bind navigation buttons
+    this.bindStep3NavigationButtons();
+    
     // Scroll to top for mobile navigation
     window.scrollTo(0, 0);
     
@@ -13449,6 +13452,38 @@ class V10_FileManager {
     
     console.log('✅ Step transition completed successfully');
     return true;
+  }
+
+  bindStep3NavigationButtons() {
+    // Bind navigation buttons now that step 3 is visible
+    const backBtn = document.getElementById('techpack-v10-step-3-prev');
+    const nextBtn = document.getElementById('techpack-v10-step-3-next');
+
+    console.log('🔗 Binding Step 3 Navigation (after transition):', {
+      backBtn: !!backBtn,
+      nextBtn: !!nextBtn,
+      step3Visible: document.getElementById('techpack-v10-step-3').style.display !== 'none'
+    });
+
+    if (backBtn && !backBtn.hasAttribute('data-bound')) {
+      backBtn.addEventListener('click', () => {
+        if (window.v10TechPackSystem) {
+          window.v10TechPackSystem.goBackToStep2();
+        }
+      });
+      backBtn.setAttribute('data-bound', 'true');
+      console.log('✅ Back button bound');
+    }
+
+    if (nextBtn && !nextBtn.hasAttribute('data-bound')) {
+      nextBtn.addEventListener('click', () => {
+        if (window.v10TechPackSystem && window.v10TechPackSystem.validateStep().isValid) {
+          window.v10TechPackSystem.proceedToStep4();
+        }
+      });
+      nextBtn.setAttribute('data-bound', 'true');
+      console.log('✅ Next button bound');
+    }
   }
 
   getFileData() {
