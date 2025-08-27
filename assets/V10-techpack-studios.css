@@ -498,6 +498,93 @@ body[class*="techpack"] *,
   box-shadow: var(--v10-shadow-sm);
 }
 
+/* V10 Guidance Button System */
+.v10-guidance-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.v10-guidance-btn:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-md);
+}
+.v10-guidance-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+/* V10 Guidance Modal System */
+.v10-guidance-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v10-space-4);
+}
+.v10-guidance-modal.active {
+  display: flex;
+}
+.v10-guidance-modal-content {
+  background: var(--v10-bg-modal);
+  border-radius: var(--v10-radius-xl);
+  box-shadow: var(--v10-shadow-xl);
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 800px;
+  border: 1px solid var(--v10-border-primary);
+}
+.v10-guidance-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--v10-space-6);
+  border-bottom: 1px solid var(--v10-border-primary);
+  background: var(--v10-bg-secondary);
+}
+.v10-guidance-modal-title {
+  font-size: var(--v10-text-xl);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+.v10-guidance-modal-close {
+  background: none;
+  border: none;
+  color: var(--v10-text-muted);
+  cursor: pointer;
+  padding: var(--v10-space-2);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+}
+.v10-guidance-modal-close:hover {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
+}
+.v10-guidance-modal-body {
+  padding: var(--v10-space-6);
+}
+
 .v10-btn:focus {
   box-shadow: var(--v10-shadow-focus);
   outline: none;

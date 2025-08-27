@@ -12223,66 +12223,6 @@ class V10_TechPackSystem {
             <li>You can order multiple sample types for the same garment</li>
           </ul>
         `
-      },
-      'shipping-options': {
-        title: 'Shipping & Insurance Options',
-        content: `
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem;">✈️</span>
-                Air Freight
-              </h4>
-              <p><strong>Speed:</strong> 7-14 days delivery</p>
-              <p><strong>Cost:</strong> Higher shipping rates</p>
-              <p><strong>Best For:</strong> Urgent orders, time-sensitive production</p>
-              <p><strong>Reliability:</strong> Most predictable delivery times</p>
-            </div>
-            
-            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem;">🚢</span>
-                Sea Freight
-              </h4>
-              <p><strong>Speed:</strong> 25-35 days delivery</p>
-              <p><strong>Cost:</strong> Significantly lower rates</p>
-              <p><strong>Best For:</strong> Large orders, cost-conscious shipping</p>
-              <p><strong>Reliability:</strong> Longer but more economical</p>
-            </div>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem;">🛡️</span>
-                With Insurance
-              </h4>
-              <p><strong>Coverage:</strong> Full protection against loss/damage</p>
-              <p><strong>Cost:</strong> Additional 2-3% of order value</p>
-              <p><strong>Peace of Mind:</strong> Complete financial protection</p>
-              <p><strong>Claims:</strong> Quick reimbursement process</p>
-            </div>
-            
-            <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
-              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                <span style="font-size: 1.5rem;">💰</span>
-                No Insurance
-              </h4>
-              <p><strong>Coverage:</strong> Standard carrier liability only</p>
-              <p><strong>Cost:</strong> Lower overall shipping costs</p>
-              <p><strong>Risk:</strong> Limited protection for loss/damage</p>
-              <p><strong>Savings:</strong> Reduce shipping expenses</p>
-            </div>
-          </div>
-          
-          <h4>Recommendations</h4>
-          <ul>
-            <li><strong>Air + Insurance:</strong> Best for urgent, high-value orders</li>
-            <li><strong>Air + No Insurance:</strong> Good balance for time-sensitive, standard orders</li>
-            <li><strong>Sea + Insurance:</strong> Ideal for large orders where cost savings matter but protection is desired</li>
-            <li><strong>Sea + No Insurance:</strong> Most economical option for large, non-urgent orders</li>
-          </ul>
-        `
       }
     };
 
@@ -14659,6 +14599,139 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('💥 Fatal error during V10 initialization:', error);
   }
 });
+
+// V10 Guidance Modal System
+window.V10_GuidanceModal = {
+  show(title, content) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('v10-guidance-modal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'v10-guidance-modal';
+    modal.className = 'v10-guidance-modal';
+    modal.innerHTML = `
+      <div class="v10-guidance-modal-content">
+        <div class="v10-guidance-modal-header">
+          <h3 class="v10-guidance-modal-title">${title}</h3>
+          <button type="button" class="v10-guidance-modal-close">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="15" y1="5" x2="5" y2="15"></line>
+              <line x1="5" y1="5" x2="15" y2="15"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="v10-guidance-modal-body">
+          ${content}
+        </div>
+      </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(modal);
+    
+    // Show modal
+    setTimeout(() => {
+      modal.classList.add('active');
+    }, 10);
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Close handlers
+    const closeBtn = modal.querySelector('.v10-guidance-modal-close');
+    const closeModal = () => this.hide();
+    
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    
+    // ESC key
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  },
+  
+  hide() {
+    const modal = document.getElementById('v10-guidance-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => modal.remove(), 300);
+    }
+    document.body.style.overflow = '';
+  }
+};
+
+// Shipping Options Guidance
+function showShippingGuidance() {
+  const content = `
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
+          <span style="font-size: 1.5rem;">✈️</span>
+          Air Freight
+        </h4>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Speed:</strong> 7-14 days delivery</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Higher shipping rates</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Best For:</strong> Urgent orders, time-sensitive production</p>
+        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Reliability:</strong> Most predictable delivery times</p>
+      </div>
+      
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
+          <span style="font-size: 1.5rem;">🚢</span>
+          Sea Freight
+        </h4>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Speed:</strong> 25-35 days delivery</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Significantly lower rates</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Best For:</strong> Large orders, cost-conscious shipping</p>
+        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Reliability:</strong> Longer but more economical</p>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
+          <span style="font-size: 1.5rem;">🛡️</span>
+          With Insurance
+        </h4>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Coverage:</strong> Full protection against loss/damage</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Additional 2-3% of order value</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Peace of Mind:</strong> Complete financial protection</p>
+        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Claims:</strong> Quick reimbursement process</p>
+      </div>
+      
+      <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: var(--v10-text-primary);">
+          <span style="font-size: 1.5rem;">💰</span>
+          No Insurance
+        </h4>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Coverage:</strong> Standard carrier liability only</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Cost:</strong> Lower overall shipping costs</p>
+        <p style="margin-bottom: 0.5rem; color: var(--v10-text-secondary);"><strong>Risk:</strong> Limited protection for loss/damage</p>
+        <p style="margin-bottom: 0; color: var(--v10-text-secondary);"><strong>Savings:</strong> Reduce shipping expenses</p>
+      </div>
+    </div>
+    
+    <h4 style="color: var(--v10-text-primary); margin-bottom: 1rem;">Recommendations</h4>
+    <ul style="color: var(--v10-text-secondary); line-height: 1.6;">
+      <li><strong>Air + Insurance:</strong> Best for urgent, high-value orders</li>
+      <li><strong>Air + No Insurance:</strong> Good balance for time-sensitive, standard orders</li>
+      <li><strong>Sea + Insurance:</strong> Ideal for large orders where cost savings matter but protection is desired</li>
+      <li><strong>Sea + No Insurance:</strong> Most economical option for large, non-urgent orders</li>
+    </ul>
+  `;
+  
+  window.V10_GuidanceModal.show('Shipping & Insurance Options', content);
+}
 
 // Export for global access
 window.V10_TechPackSystem = V10_TechPackSystem;
