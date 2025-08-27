@@ -7206,6 +7206,13 @@ class V10_GarmentStudio {
       this.cleanupQuantityStudioEventListeners();
       
       // Clear existing content completely to prevent multiplication
+      console.log('🚨 ABOUT TO CLEAR CONTAINER:', {
+        containerElement: container,
+        containerId: container?.id,
+        containerClass: container?.className,
+        hasNavigationButtons: !!document.querySelector('.v10-step-actions'),
+        navigationButtonsInContainer: container.querySelectorAll('.v10-step-actions').length
+      });
       container.innerHTML = '';
       console.log('🧹 Saved quantities, cleared DOM content and event listeners');
       
