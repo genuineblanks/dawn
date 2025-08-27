@@ -3,6 +3,14 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 {% endcomment %}
 
 <link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+
+<!-- Force Dark Mode - No Light Theme Support -->
+<script>
+// Immediately force dark mode on page load
+document.documentElement.setAttribute('data-theme', 'dark');
+document.body.setAttribute('data-theme', 'dark');
+</script>
+
 <style>
   /* Only layout overrides - backgrounds handled by external V10 CSS */
   .techpack-container {
@@ -41,10 +49,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           <!-- Theme Toggle - Right Side -->
           <div class="v10-theme-toggle-unified">
             <div class="v10-theme-toggle v10-theme-toggle--header">
-              <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+              <button type="button" class="v10-theme-btn v10-theme-btn--light" data-theme="light">
                 ☀️
               </button>
-              <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+              <button type="button" class="v10-theme-btn v10-theme-btn--dark v10-theme-btn--active" data-theme="dark">
                 🌙
               </button>
             </div>
@@ -193,10 +201,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       
       <!-- Theme Toggle Button -->
       <div class="v10-theme-toggle v10-theme-toggle--header">
-        <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
+        <button type="button" class="v10-theme-btn v10-theme-btn--light" data-theme="light">
           ☀️ Light
         </button>
-        <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
+        <button type="button" class="v10-theme-btn v10-theme-btn--dark v10-theme-btn--active" data-theme="dark">
           🌙 Dark
         </button>
       </div>

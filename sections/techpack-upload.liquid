@@ -1,6 +1,13 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
+<!-- Force Dark Mode - No Light Theme Support -->
+<script>
+// Immediately force dark mode on page load
+document.documentElement.setAttribute('data-theme', 'dark');
+document.body.setAttribute('data-theme', 'dark');
+</script>
+
 <section id="techpack-upload" class="techpack-step" data-step="1">
   <div class="techpack-container">
     
