@@ -111,6 +111,16 @@
   top: 0;
 }
 
+.card__media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .card .media {
   width: 100%;
 }
@@ -150,6 +160,13 @@
   padding: 1.3rem 1rem;
 }
 
+/* Mobile-specific adjustments for better image-to-text ratio */
+@media screen and (max-width: 749px) {
+  .card__information {
+    padding: 0.8rem 0.5rem;
+  }
+}
+
 .card:not(.ratio) > .card__content {
   grid-template-rows: max-content minmax(0, 1fr) max-content auto;
 }
@@ -164,6 +181,37 @@
   .card__information {
     padding-bottom: 1.7rem;
     padding-top: 1.7rem;
+  }
+}
+
+/* Mobile typography optimization */
+@media screen and (max-width: 749px) {
+  .card__heading {
+    font-size: 1.2rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0.3rem !important;
+  }
+  
+  .card__heading.h5 {
+    font-size: 1.2rem !important;
+  }
+  
+  /* Make images more prominent by increasing card media area */
+  .card--media .card__inner .card__content {
+    padding: 0.8rem 0.5rem;
+  }
+  
+  /* Reduce price text size to be more minimal */
+  .card-information .price {
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Minimize product grid spacing for more image focus */
+  .product-grid .card-wrapper {
+    margin-bottom: 1rem;
   }
 }
 
@@ -250,7 +298,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 1;
+  z-index: 0;
 }
 
 .card__heading a:after {
