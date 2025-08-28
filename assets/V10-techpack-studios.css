@@ -4049,12 +4049,78 @@ body[style*="overflow: hidden"] {
 }
 
 
+.v10-download-new {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+}
+
 .v10-theme-toggle-unified {
   justify-self: end;
   display: flex;
   align-items: center;
 }
 
+
+/* New Download Button - Matches ACCESS STUDIO styling with original dimensions */
+.v10-download-new .v10-btn-download-new {
+  position: relative !important;
+  background: var(--v10-bg-secondary) !important;
+  color: var(--v10-text-primary) !important;
+  border: 1px solid var(--v10-border-primary) !important;
+  border-radius: var(--v10-radius-md) !important;
+  padding: var(--v10-space-3) var(--v10-space-4) !important; /* Original download button size */
+  font-size: var(--v10-text-sm) !important; /* Original download button font size */
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: var(--v10-transition) !important;
+  overflow: hidden !important;
+  box-shadow: var(--v10-shadow-sm) !important;
+  text-transform: none !important; /* No uppercase for download button */
+  letter-spacing: normal !important;
+  text-align: center !important;
+}
+
+.v10-download-new .v10-btn-download-new:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: var(--v10-shadow-md) !important;
+  background: #1a1a1a !important; /* Same hover color as ACCESS STUDIO */
+  color: var(--v10-text-primary) !important;
+  border-color: var(--v10-accent-primary) !important;
+}
+
+.v10-download-new .v10-btn-download-new .v10-btn-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--v10-space-2) !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.v10-download-new .v10-btn-download-new .v10-btn-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.v10-download-new .v10-btn-download-new .v10-btn-text {
+  white-space: nowrap !important;
+  font-weight: 500 !important;
+}
+
+/* Button effects - same as ACCESS STUDIO */
+.v10-download-new .v10-btn-download-new .v10-btn-particles,
+.v10-download-new .v10-btn-download-new .v10-btn-glow {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
 
 /* Title Styles */
 .v10-title-spectacular {
@@ -4396,6 +4462,16 @@ body[style*="overflow: hidden"] {
     word-break: break-word;
   }
   
+  /* Mobile: Download button shows icon only */
+  .v10-download-new .v10-btn-download-new .v10-btn-text {
+    display: none !important;
+  }
+  
+  .v10-download-new .v10-btn-download-new {
+    padding: var(--v10-space-2) !important;
+    min-width: 40px !important;
+    justify-content: center !important;
+  }
   
   .v10-requirements-grid-premium {
     grid-template-columns: repeat(2, 1fr);
