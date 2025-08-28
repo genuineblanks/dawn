@@ -1,0 +1,431 @@
+{% comment %}
+  V10 Unified Theme Toggle Component
+  Consolidates 4 duplicate theme toggle implementations
+  Single source of truth for theme switching functionality
+{% endcomment %}
+
+{% liquid
+  assign toggle_position = toggle_position | default: 'header'
+  assign toggle_size = toggle_size | default: 'normal'
+  assign show_labels = show_labels | default: true
+  assign toggle_id = toggle_id | default: 'v10-theme-toggle'
+%}
+
+<!-- V10 Theme Toggle Component -->
+<div class="v10-theme-toggle v10-theme-toggle--{{ toggle_position }}{% if toggle_size == 'compact' %} v10-theme-toggle--compact{% endif %}" id="{{ toggle_id }}">
+  <button type="button" 
+          class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" 
+          data-theme="light"
+          aria-label="{{ 'techpack.theme.light_mode' | t | default: 'Switch to light theme' }}"
+          title="{{ 'techpack.theme.light_mode' | t | default: 'Light theme' }}">
+    <svg class="v10-theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    {% if show_labels %}
+      <span class="v10-theme-label">{{ 'techpack.theme.light' | t | default: 'Light' }}</span>
+    {% endif %}
+  </button>
+  
+  <button type="button" 
+          class="v10-theme-btn v10-theme-btn--dark" 
+          data-theme="dark"
+          aria-label="{{ 'techpack.theme.dark_mode' | t | default: 'Switch to dark theme' }}"
+          title="{{ 'techpack.theme.dark_mode' | t | default: 'Dark theme' }}">
+    <svg class="v10-theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    {% if show_labels %}
+      <span class="v10-theme-label">{{ 'techpack.theme.dark' | t | default: 'Dark' }}</span>
+    {% endif %}
+  </button>
+</div>
+
+<!-- Theme Toggle Styles -->
+<style>
+/* Base Theme Toggle Styles */
+.v10-theme-toggle {
+  display: flex;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-1);
+  gap: var(--v10-space-1);
+  transition: var(--v10-transition);
+}
+
+/* Position Variants */
+.v10-theme-toggle--header {
+  align-self: flex-start;
+}
+
+.v10-theme-toggle--sidebar {
+  flex-direction: column;
+  width: 100%;
+}
+
+.v10-theme-toggle--floating {
+  position: fixed;
+  top: var(--v10-space-4);
+  right: var(--v10-space-4);
+  z-index: var(--v10-z-fixed);
+  box-shadow: var(--v10-shadow-lg);
+}
+
+/* Size Variants */
+.v10-theme-toggle--compact .v10-theme-btn {
+  padding: var(--v10-space-1) var(--v10-space-2);
+}
+
+.v10-theme-toggle--compact .v10-theme-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.v10-theme-toggle--compact .v10-theme-label {
+  display: none;
+}
+
+/* Theme Button Styles */
+.v10-theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--v10-radius-sm);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  color: var(--v10-text-muted);
+  cursor: pointer;
+  transition: var(--v10-transition);
+  position: relative;
+  min-width: 44px; /* Accessibility: minimum touch target */
+  min-height: 32px;
+}
+
+.v10-theme-btn:hover:not(.v10-theme-btn--active) {
+  color: var(--v10-text-secondary);
+  background: var(--v10-bg-hover);
+}
+
+.v10-theme-btn--active {
+  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-primary);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+/* Theme Icon */
+.v10-theme-icon {
+  flex-shrink: 0;
+  transition: var(--v10-transition);
+}
+
+.v10-theme-btn--active .v10-theme-icon {
+  transform: scale(1.1);
+}
+
+/* Theme Label */
+.v10-theme-label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Animation for theme switching */
+.v10-theme-btn--switching {
+  transform: scale(0.95);
+}
+
+.v10-theme-btn--switching .v10-theme-icon {
+  animation: themeSwitch 0.3s ease-in-out;
+}
+
+@keyframes themeSwitch {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .v10-theme-toggle--header {
+    margin-top: var(--v10-space-2);
+    align-self: stretch;
+  }
+  
+  .v10-theme-toggle--floating {
+    top: var(--v10-space-2);
+    right: var(--v10-space-2);
+  }
+  
+  .v10-theme-btn {
+    padding: var(--v10-space-2);
+    font-size: var(--v10-text-xs);
+  }
+  
+  .v10-theme-label {
+    display: none;
+  }
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .v10-theme-toggle {
+  background: var(--v10-bg-tertiary);
+  border-color: var(--v10-border-primary);
+}
+
+[data-theme="dark"] .v10-theme-btn--active {
+  background: var(--v10-bg-primary);
+  box-shadow: var(--v10-shadow-md);
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  .v10-theme-toggle {
+    border-width: 2px;
+  }
+  
+  .v10-theme-btn--active {
+    outline: 2px solid var(--v10-accent-primary);
+    outline-offset: 1px;
+  }
+}
+
+/* Focus Styles */
+.v10-theme-btn:focus {
+  outline: 2px solid var(--v10-accent-primary);
+  outline-offset: 2px;
+}
+
+/* Loading State */
+.v10-theme-toggle--loading .v10-theme-btn {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.v10-theme-toggle--loading .v10-theme-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+
+<!-- Theme Toggle JavaScript -->
+<script>
+// V10 Unified Theme System
+(function() {
+  'use strict';
+  
+  // Prevent multiple initialization
+  if (window.V10ThemeToggle) {
+    console.log('V10 Theme Toggle already initialized');
+    return;
+  }
+  
+  class V10ThemeToggle {
+    constructor(toggleElement) {
+      this.toggle = toggleElement;
+      this.buttons = this.toggle.querySelectorAll('.v10-theme-btn');
+      this.currentTheme = this.getStoredTheme() || this.getSystemTheme();
+      
+      this.init();
+    }
+    
+    init() {
+      // Set initial theme
+      this.applyTheme(this.currentTheme, false);
+      
+      // Bind events
+      this.bindEvents();
+      
+      // Mark as initialized
+      this.toggle.dataset.initialized = 'true';
+      
+      console.log('V10 Theme Toggle initialized with theme:', this.currentTheme);
+    }
+    
+    bindEvents() {
+      this.buttons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const theme = button.dataset.theme;
+          this.switchTheme(theme);
+        });
+      });
+      
+      // Listen for system theme changes
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          if (!this.getStoredTheme()) {
+            const systemTheme = e.matches ? 'dark' : 'light';
+            this.applyTheme(systemTheme, false);
+          }
+        });
+      }
+      
+      // Listen for storage changes (multi-tab sync)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'v10-theme') {
+          const newTheme = e.newValue || this.getSystemTheme();
+          this.applyTheme(newTheme, false);
+        }
+      });
+    }
+    
+    switchTheme(theme) {
+      if (theme === this.currentTheme) return;
+      
+      // Add loading state
+      this.toggle.classList.add('v10-theme-toggle--loading');
+      
+      // Apply theme after animation
+      setTimeout(() => {
+        this.applyTheme(theme, true);
+        this.toggle.classList.remove('v10-theme-toggle--loading');
+      }, 150);
+    }
+    
+    applyTheme(theme, animate = true) {
+      const oldTheme = this.currentTheme;
+      this.currentTheme = theme;
+      
+      // Update DOM
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      // Update button states
+      this.updateButtonStates(theme, animate);
+      
+      // Store preference
+      this.storeTheme(theme);
+      
+      // Fire custom events
+      this.fireThemeEvents(theme, oldTheme);
+      
+      console.log('Theme switched to:', theme);
+    }
+    
+    updateButtonStates(theme, animate) {
+      this.buttons.forEach(button => {
+        const isActive = button.dataset.theme === theme;
+        
+        if (animate && isActive) {
+          button.classList.add('v10-theme-btn--switching');
+          setTimeout(() => {
+            button.classList.remove('v10-theme-btn--switching');
+          }, 300);
+        }
+        
+        button.classList.toggle('v10-theme-btn--active', isActive);
+        button.setAttribute('aria-pressed', isActive);
+      });
+    }
+    
+    getStoredTheme() {
+      try {
+        return localStorage.getItem('v10-theme');
+      } catch (e) {
+        console.warn('Unable to access localStorage for theme preference');
+        return null;
+      }
+    }
+    
+    storeTheme(theme) {
+      try {
+        localStorage.setItem('v10-theme', theme);
+      } catch (e) {
+        console.warn('Unable to store theme preference in localStorage');
+      }
+    }
+    
+    getSystemTheme() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    }
+    
+    fireThemeEvents(newTheme, oldTheme) {
+      // Fire on toggle element
+      this.toggle.dispatchEvent(new CustomEvent('themeChange', {
+        detail: { 
+          newTheme, 
+          oldTheme,
+          toggle: this.toggle 
+        },
+        bubbles: true
+      }));
+      
+      // Fire globally
+      document.dispatchEvent(new CustomEvent('v10ThemeChange', {
+        detail: { 
+          newTheme, 
+          oldTheme,
+          source: 'toggle'
+        }
+      }));
+    }
+    
+    // Public API
+    getCurrentTheme() {
+      return this.currentTheme;
+    }
+    
+    setTheme(theme) {
+      this.switchTheme(theme);
+    }
+  }
+  
+  // Auto-initialize all theme toggles
+  function initializeThemeToggles() {
+    const toggles = document.querySelectorAll('.v10-theme-toggle:not([data-initialized])');
+    toggles.forEach(toggle => {
+      new V10ThemeToggle(toggle);
+    });
+  }
+  
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeThemeToggles);
+  } else {
+    initializeThemeToggles();
+  }
+  
+  // Re-initialize on dynamic content load
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) { // Element node
+          if (node.matches('.v10-theme-toggle:not([data-initialized])')) {
+            new V10ThemeToggle(node);
+          } else {
+            const toggles = node.querySelectorAll('.v10-theme-toggle:not([data-initialized])');
+            toggles.forEach(toggle => new V10ThemeToggle(toggle));
+          }
+        }
+      });
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
+  // Export for external use
+  window.V10ThemeToggle = V10ThemeToggle;
+  window.initializeThemeToggles = initializeThemeToggles;
+  
+})();
+</script>
