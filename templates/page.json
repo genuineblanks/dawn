@@ -53,6 +53,17 @@
         "padding_bottom": 52
       }
     },
+    "page_4736gK": {
+      "type": "page",
+      "name": "t:sections.page.presets.name",
+      "settings": {
+        "page": "techpack-upload",
+        "heading_size": "h1",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "main": {
       "type": "main-page",
       "settings": {
@@ -125,6 +136,7 @@
   },
   "order": [
     "rich_text_HUxmna",
+    "page_4736gK",
     "main",
     "collapsible_content_T7creP"
   ]
