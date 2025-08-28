@@ -1975,9 +1975,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-delivery-option-enhanced input[type="radio"]:checked + .v10-delivery-option-content-enhanced {
-  border-color: var(--v10-accent-success);
-  background: rgba(16, 185, 129, 0.05);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 .v10-delivery-option-icon {
@@ -2052,9 +2052,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-shipping-method input[type="radio"]:checked + .v10-shipping-method-content {
-  border-color: var(--v10-accent-success);
-  background: rgba(16, 185, 129, 0.05);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 .v10-shipping-method-icon {
@@ -2129,9 +2129,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-insurance-option input[type="radio"]:checked + .v10-insurance-option-content {
-  border-color: var(--v10-accent-success);
-  background: rgba(16, 185, 129, 0.05);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 .v10-insurance-option-icon {
