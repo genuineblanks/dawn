@@ -4801,8 +4801,8 @@ class V10_GarmentStudio {
       if (sampleTypeInput) {
         sampleTypeInput.checked = true;
         
-        // Use unified display function
-        this.setSampleTypeDisplay(clone, garmentData.sampleType, garmentData.sampleSubValue);
+        // Use unified visual update function with isInitialSet flag to skip cross-option reset
+        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue, true);
       } else {
         console.error(`Sample type input not found for: ${garmentData.sampleType}, subValue: ${garmentData.sampleSubValue}`);
       }
@@ -4979,24 +4979,7 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        // Update garment display
-        const garmentIcon = this.getGarmentIcon(newValue);
-        const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
-        const selectedName = garmentCard.querySelector('#garment-selected-name');
-        const placeholder = garmentCard.querySelector('#garment-placeholder');
-        const display = garmentCard.querySelector('#garment-display');
-        
-        if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
-        if (selectedName) selectedName.textContent = newValue;
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-        
-        // Auto-collapse garment selection and enable fabric
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
-          this.updateSelectionDependencies(garmentCard);
-        }, 300);
-        
+        this.updateCompactSelection('garment', newValue, garmentCard);
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
         
@@ -5008,6 +4991,8 @@ class V10_GarmentStudio {
         }
       }
       
+      // Reset sample type selection
+      this.resetSampleTypeSelection(garmentCard);
       
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
@@ -5049,24 +5034,11 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        // Update fabric display
-        const fabricIcon = this.getFabricTypeIcon(newValue);
-        const selectedIcon = garmentCard.querySelector('#fabric-selected-icon');
-        const selectedName = garmentCard.querySelector('#fabric-selected-name');
-        const placeholder = garmentCard.querySelector('#fabric-placeholder');
-        const display = garmentCard.querySelector('#fabric-display');
-        
-        if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
-        if (selectedName) selectedName.textContent = newValue;
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-        
-        // Auto-collapse fabric selection
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
-          this.updateSelectionDependencies(garmentCard);
-        }, 300);
+        this.updateCompactSelection('fabric', newValue, garmentCard);
       }
+      
+      // Reset sample type selection
+      this.resetSampleTypeSelection(garmentCard);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
@@ -5125,22 +5097,7 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
-        // Update sample reference display
-        const sampleReferenceIcon = this.getSampleReferenceIcon(newValue);
-        const selectedIcon = garmentCard.querySelector('#sample-reference-selected-icon');
-        const selectedName = garmentCard.querySelector('#sample-reference-selected-name');
-        const placeholder = garmentCard.querySelector('#sample-reference-placeholder');
-        const display = garmentCard.querySelector('#sample-reference-display');
-        
-        if (selectedIcon) selectedIcon.innerHTML = sampleReferenceIcon;
-        if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(newValue);
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-        
-        // Auto-collapse sample reference selection
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
-        }, 300);
+        this.updateCompactSelection('sampleReference', newValue, garmentCard);
       }
       
       // Mark finalize button as changed (even if same value, user made an edit action)
@@ -6610,57 +6567,230 @@ class V10_GarmentStudio {
     return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/></svg>';
   }
 
-  // UNIFIED: Single function to handle both stock and custom sample type displays identically
-  setSampleTypeDisplay(garmentCard, sampleType, sampleSubValue) {
-    if (!garmentCard || !sampleType) return;
+  updateCompactSelection(type, value, garmentCard, subValue = null, isInitialSet = false) {
+    if (type === 'garment') {
+      const garmentIcon = this.getGarmentIcon(value);
+      const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
+      const selectedName = garmentCard.querySelector('#garment-selected-name');
+      const placeholder = garmentCard.querySelector('#garment-placeholder');
+      const display = garmentCard.querySelector('#garment-display');
+      const collapsed = garmentCard.querySelector('#garment-collapsed');
+      
+      if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+        // Update dependencies after garment selection to enable fabric type
+        this.updateSelectionDependencies(garmentCard);
+      }, 300);
+      
+    } else if (type === 'fabric') {
+      const fabricIcon = this.getFabricTypeIcon(value);
+      const selectedIcon = garmentCard.querySelector('#fabric-selected-icon');
+      const selectedName = garmentCard.querySelector('#fabric-selected-name');
+      const placeholder = garmentCard.querySelector('#fabric-placeholder');
+      const display = garmentCard.querySelector('#fabric-display');
+      const collapsed = garmentCard.querySelector('#fabric-collapsed');
+      
+      if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
+      if (selectedName) selectedName.textContent = value;
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+        // Update dependencies after fabric type selection
+        this.updateSelectionDependencies(garmentCard);
+      }, 300);
+      
+    } else if (type === 'sampleReference') {
+      const sampleReferenceIcon = this.getSampleReferenceIcon(value);
+      const selectedIcon = garmentCard.querySelector('#sample-reference-selected-icon');
+      const selectedName = garmentCard.querySelector('#sample-reference-selected-name');
+      const placeholder = garmentCard.querySelector('#sample-reference-placeholder');
+      const display = garmentCard.querySelector('#sample-reference-display');
+      const collapsed = garmentCard.querySelector('#sample-reference-collapsed');
+      
+      if (selectedIcon) selectedIcon.innerHTML = sampleReferenceIcon;
+      if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(value);
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
+      }, 300);
     
-    // Get the correct widget section based on sampleType
-    const widgetId = sampleType === 'stock' ? '#sample-stock-collapsed' : '#sample-custom-collapsed';
-    const widget = garmentCard.querySelector(widgetId);
-    if (!widget) return;
-    
-    // Get DOM elements (using consistent pattern for both stock and custom)
-    const selectedIcon = widget.querySelector('.selected-icon');
-    const selectedName = widget.querySelector('.selected-name');  
-    const placeholder = widget.querySelector('.selection-placeholder');
-    const display = widget.querySelector('.selection-display');
-    const priceElement = widget.querySelector('.sample-type-price');
-    
-    // Get display values using existing helper functions
-    let displayName, icon;
-    if (sampleType === 'stock') {
-      displayName = this.getSampleStockDisplayName(sampleSubValue);
-      icon = this.getSampleStockIcon(sampleSubValue);
-    } else {
-      displayName = this.getSampleCustomDisplayName(sampleSubValue);
-      icon = this.getSampleCustomIcon(sampleSubValue);
-    }
-    
-    // Set display elements (same pattern for both types)
-    if (selectedIcon) selectedIcon.innerHTML = icon;
-    if (selectedName) selectedName.textContent = displayName;
-    if (placeholder) placeholder.style.display = 'none';
-    if (display) display.style.display = 'block';
-    
-    // Update pricing
-    const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
-    if (priceElement && garmentData) {
-      const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, sampleType);
-      if (price && price !== 'Premium') {
-        priceElement.textContent = `avg. ${price}€`;
+    } else if (type === 'sampleType') {
+      // Handle sample type selections with sub-values
+      const input = garmentCard.querySelector(`input[name*="sampleType"]:checked`);
+      const sampleType = input?.value;
+      // Use passed subValue parameter, fallback to DOM if not provided
+      const actualSubValue = subValue || input?.dataset.subValue;
+      
+      console.log(`🔍 DEBUG updateCompactSelection sampleType: ${value}, actualSubValue: ${actualSubValue}, isInitialSet: ${isInitialSet}`);
+      
+      // Remove selected class from both sections first
+      const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
+      const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
+      
+      // Get garment data once for the entire function
+      const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+      
+      stockSection?.classList.remove('selected');
+      customSection?.classList.remove('selected');
+      
+      if (sampleType === 'stock') {
+        const selectedIcon = garmentCard.querySelector('#sample-stock-selected-icon');
+        const selectedName = garmentCard.querySelector('#sample-stock-selected-name');
+        const placeholder = garmentCard.querySelector('#sample-stock-placeholder');
+        const display = garmentCard.querySelector('#sample-stock-display');
+        const priceElement = garmentCard.querySelector('#sample-stock-price');
+        
+        // Get display name for sub-option
+        const displayName = this.getSampleStockDisplayName(actualSubValue);
+        const icon = this.getSampleStockIcon(actualSubValue);
+        
+        if (selectedIcon) selectedIcon.innerHTML = icon;
+        if (selectedName) selectedName.textContent = displayName;
+        if (placeholder) placeholder.style.display = 'none';
+        if (display) display.style.display = 'block';
+        
+        // Update pricing
+        if (priceElement && garmentData) {
+          const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, 'stock');
+          if (price && price !== 'Premium') {
+            priceElement.textContent = `avg. ${price}€`;
+          }
+        }
+        
+        // FIXED: Apply selection styling to individual radio card instead of entire section
+        // First, remove selected class from all stock radio cards
+        const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+        stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+        
+        // Then, add selection class to the specific selected radio card
+        const selectedRadio = garmentCard.querySelector(`input[name*="sampleType"][value="stock"][data-sub-value="${actualSubValue}"]:checked`);
+        const selectedCard = selectedRadio?.closest('.compact-radio-card');
+        if (selectedCard) {
+          selectedCard.classList.add('compact-radio-card--selected');
+        }
+        
+        // ALWAYS update garment state with current selection (regardless of previous state)
+        garmentData.sampleType = sampleType;
+        garmentData.sampleSubValue = actualSubValue;
+        
+        // Only do cross-option reset and auto-collapse for live user selections, not initial value setting
+        if (!isInitialSet) {
+          // COMPLETE CROSS-OPTION RESET: Fully reset custom when stock is selected
+          const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+          const customDisplay = garmentCard.querySelector('#sample-custom-display');
+          const customRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="custom"]');
+          const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+          
+          // Reset visual state
+          if (customPlaceholder) customPlaceholder.style.display = 'flex';
+          if (customDisplay) customDisplay.style.display = 'none';
+          
+          // Reset radio inputs
+          customRadios.forEach(radio => radio.checked = false);
+          
+          // Reset visual selection cards
+          customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+          
+          // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
+          }, 300);
+        }
+        
+      } else if (sampleType === 'custom') {
+        const selectedIcon = garmentCard.querySelector('#sample-custom-selected-icon');
+        const selectedName = garmentCard.querySelector('#sample-custom-selected-name');
+        const placeholder = garmentCard.querySelector('#sample-custom-placeholder');
+        const display = garmentCard.querySelector('#sample-custom-display');
+        const priceElement = garmentCard.querySelector('#sample-custom-price');
+        
+        console.log(`🔍 DEBUG custom sample type DOM elements:`, {
+          selectedIcon: !!selectedIcon,
+          selectedName: !!selectedName,
+          placeholder: !!placeholder,
+          display: !!display,
+          actualSubValue
+        });
+        
+        // Get display name for sub-option
+        const displayName = this.getSampleCustomDisplayName(actualSubValue);
+        const icon = this.getSampleCustomIcon(actualSubValue);
+        
+        console.log(`🔍 DEBUG custom display values:`, { displayName, icon });
+        
+        if (selectedIcon) selectedIcon.innerHTML = icon;
+        if (selectedName) selectedName.textContent = displayName;
+        if (placeholder) {
+          placeholder.style.display = 'none';
+          console.log(`🔍 DEBUG: Set placeholder display to none`);
+        }
+        if (display) {
+          display.style.display = 'block';
+          console.log(`🔍 DEBUG: Set display to block`);
+        }
+        
+        // Update pricing
+        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+        if (priceElement && garmentData) {
+          const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, 'custom');
+          if (price && price !== 'Premium') {
+            priceElement.textContent = `avg. ${price}€`;
+          }
+        }
+        
+        // FIXED: Apply selection styling to individual radio card instead of entire section
+        // First, remove selected class from all custom radio cards
+        const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+        customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+        
+        // Then, add selection class to the specific selected radio card
+        const selectedRadio = garmentCard.querySelector(`input[name*="sampleType"][value="custom"][data-sub-value="${actualSubValue}"]:checked`);
+        const selectedCard = selectedRadio?.closest('.compact-radio-card');
+        if (selectedCard) {
+          selectedCard.classList.add('compact-radio-card--selected');
+        }
+        
+        // ALWAYS update garment state with current selection (regardless of previous state)
+        garmentData.sampleType = sampleType;
+        garmentData.sampleSubValue = actualSubValue;
+        
+        // Only do cross-option reset and auto-collapse for live user selections, not initial value setting
+        if (!isInitialSet) {
+          // COMPLETE CROSS-OPTION RESET: Fully reset stock when custom is selected
+          const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+          const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+          const stockRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="stock"]');
+          const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+          
+          // Reset visual state
+          if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+          if (stockDisplay) stockDisplay.style.display = 'none';
+          
+          // Reset radio inputs
+          stockRadios.forEach(radio => radio.checked = false);
+          
+          // Reset visual selection cards
+          stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+          
+          // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
+          }, 300);
+        }
       }
-    }
-    
-    // Update visual selection on radio cards
-    const gridSelector = sampleType === 'stock' ? '#sample-stock-grid' : '#sample-custom-grid';
-    const cards = garmentCard.querySelectorAll(`${gridSelector} .compact-radio-card`);
-    cards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-    
-    // Find and highlight the selected card
-    const selectedRadio = garmentCard.querySelector(`input[name*="sampleType"][value="${sampleType}"][data-sub-value="${sampleSubValue}"]:checked`);
-    const selectedCard = selectedRadio?.closest('.compact-radio-card');
-    if (selectedCard) {
-      selectedCard.classList.add('compact-radio-card--selected');
     }
   }
 
@@ -6797,6 +6927,87 @@ class V10_GarmentStudio {
     
   }
 
+  resetSampleTypeSelection(garmentCard) {
+    // Clear all sample type radio button selections
+    const sampleTypeRadios = garmentCard.querySelectorAll('input[name*="sampleType"]');
+    sampleTypeRadios.forEach(radio => {
+      radio.checked = false;
+      // Clear sub-value data
+      if (radio.dataset.subValue) {
+        delete radio.dataset.subValue;
+      }
+    });
+    
+    // Reset compact selection widget display states
+    const stockWidget = garmentCard.querySelector('#sample-stock-collapsed');
+    const customWidget = garmentCard.querySelector('#sample-custom-collapsed');
+    
+    if (stockWidget) {
+      const stockPlaceholder = stockWidget.querySelector('.selection-placeholder');
+      const stockDisplay = stockWidget.querySelector('.selection-display');
+      
+      if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+      if (stockDisplay) stockDisplay.style.display = 'none';
+      
+      // Clear any selected compact radio cards and remove visual selected state
+      const stockCards = stockWidget.querySelectorAll('.compact-radio-card');
+      stockCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+        // FIXED: Remove both old and new visual selected styling from compact radio cards
+        card.classList.remove('selected', 'compact-radio-card--selected');
+        const cardContent = card.querySelector('.compact-radio-card__content');
+        if (cardContent) {
+          cardContent.style.border = '';
+          cardContent.style.borderColor = '';
+        }
+      });
+    }
+    
+    if (customWidget) {
+      const customPlaceholder = customWidget.querySelector('.selection-placeholder');
+      const customDisplay = customWidget.querySelector('.selection-display');
+      
+      if (customPlaceholder) customPlaceholder.style.display = 'flex';
+      if (customDisplay) customDisplay.style.display = 'none';
+      
+      // Clear any selected compact radio cards and remove visual selected state
+      const customCards = customWidget.querySelectorAll('.compact-radio-card');
+      customCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+        // FIXED: Remove both old and new visual selected styling from compact radio cards
+        card.classList.remove('selected', 'compact-radio-card--selected');
+        const cardContent = card.querySelector('.compact-radio-card__content');
+        if (cardContent) {
+          cardContent.style.border = '';
+          cardContent.style.borderColor = '';
+        }
+      });
+    }
+    
+    // BACKWARD COMPATIBILITY: Remove old section-level selected classes (now using individual card selection)
+    const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
+    const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
+    
+    stockSection?.classList.remove('selected');
+    customSection?.classList.remove('selected');
+    
+    // Remove selected state from legacy sample type cards
+    const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
+    sampleTypeCards.forEach(card => {
+      card.classList.remove('selected');
+    });
+    
+    // Remove any restriction classes (they'll be re-applied when needed)
+    sampleTypeCards.forEach(card => {
+      card.classList.remove('sample-type-card--restricted');
+      card.style.opacity = '';
+      card.style.pointerEvents = '';
+      card.style.cursor = '';
+    });
+    
+  }
 
   updateSelectionDependencies(garmentCard) {
     const garmentId = garmentCard.dataset.garmentId;
@@ -7198,8 +7409,8 @@ class V10_GarmentStudio {
     garmentData.sampleType = sampleType;
     garmentData.sampleSubValue = sampleSubValue; // Don't convert undefined to empty string
 
-    // Use unified display function
-    this.setSampleTypeDisplay(garmentCard, sampleType, sampleSubValue);
+    // Update visual display
+    this.updateCompactSelection('sampleType', sampleType, garmentCard, sampleSubValue);
 
     // Update pricing
     V10_Utils.updateSampleTypePrices(garmentCard);
