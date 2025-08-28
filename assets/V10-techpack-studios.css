@@ -4029,23 +4029,6 @@ body[style*="overflow: hidden"] {
   border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
 }
 
-/* Unified glass morphism container for all content */
-.v10-content-unified-wrapper {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-radius: var(--v10-radius-xl);
-  padding: var(--v10-space-8);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.02); /* Very subtle background tint */
-}
-
-/* Keep the header description box as a distinct element inside */
-.v10-header-description {
-  border: 1px solid rgba(255, 255, 255, 0.12); /* Slightly more visible for this section */
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
 .v10-header-section {
   margin-bottom: 5rem; /* Back to original spacing */
 }
@@ -4261,17 +4244,12 @@ body[style*="overflow: hidden"] {
   display: flex;
   flex-direction: column;
   text-align: center;
-  /* Glass morphism enhancement */
-  backdrop-filter: blur(10px);
 }
 
 .v10-requirement-card-premium:hover {
   transform: translateY(-2px);
   box-shadow: var(--v10-shadow-lg);
   border-color: var(--v10-accent-primary);
-  /* Enhanced glass morphism on hover */
-  backdrop-filter: blur(15px);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .v10-requirement-icon-premium {
