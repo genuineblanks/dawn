@@ -6688,13 +6688,29 @@ class V10_GarmentStudio {
           selectedCard.classList.add('compact-radio-card--selected');
         }
         
-        // CROSS-OPTION RESET: Reset custom color to placeholder when stock is selected
+        // COMPLETE CROSS-OPTION RESET: Fully reset custom when stock is selected
         const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
         const customDisplay = garmentCard.querySelector('#sample-custom-display');
+        const customRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="custom"]');
+        const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+        
+        // Reset visual state
         if (customPlaceholder) customPlaceholder.style.display = 'flex';
         if (customDisplay) customDisplay.style.display = 'none';
         
-        // Auto-collapse after selection (consistent behavior with garment/fabric)
+        // Reset radio inputs
+        customRadios.forEach(radio => radio.checked = false);
+        
+        // Reset visual selection cards
+        customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+        
+        // If previous state was custom, clear it completely from garment data
+        if (garmentData.sampleType === 'custom') {
+          garmentData.sampleType = sampleType; // Set to stock
+          garmentData.sampleSubValue = actualSubValue;
+        }
+        
+        // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
         setTimeout(() => {
           this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
         }, 300);
@@ -6736,13 +6752,29 @@ class V10_GarmentStudio {
           selectedCard.classList.add('compact-radio-card--selected');
         }
         
-        // CROSS-OPTION RESET: Reset stock color to placeholder when custom is selected
+        // COMPLETE CROSS-OPTION RESET: Fully reset stock when custom is selected
         const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
         const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+        const stockRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="stock"]');
+        const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+        
+        // Reset visual state
         if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
         if (stockDisplay) stockDisplay.style.display = 'none';
         
-        // Auto-collapse after selection (consistent behavior with garment/fabric)
+        // Reset radio inputs
+        stockRadios.forEach(radio => radio.checked = false);
+        
+        // Reset visual selection cards
+        stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+        
+        // If previous state was stock, clear it completely from garment data
+        if (garmentData.sampleType === 'stock') {
+          garmentData.sampleType = sampleType; // Set to custom
+          garmentData.sampleSubValue = actualSubValue;
+        }
+        
+        // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
         setTimeout(() => {
           this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
         }, 300);
