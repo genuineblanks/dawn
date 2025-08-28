@@ -9,6 +9,24 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 // Immediately force dark mode on page load
 document.documentElement.setAttribute('data-theme', 'dark');
 document.body.setAttribute('data-theme', 'dark');
+
+// Debug download button
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('=== Download Button Debug ===');
+  const btn = document.getElementById('v10-get-templates-btn');
+  if (btn) {
+    console.log('✅ Button found:', btn);
+    console.log('📋 Button classes:', btn.className);
+    console.log('🎨 Button computed styles:', window.getComputedStyle(btn));
+    console.log('💅 Button inline styles:', btn.style.cssText);
+    console.log('🖱️ Button parent:', btn.parentElement);
+  } else {
+    console.log('❌ Button NOT found with ID: v10-get-templates-btn');
+    // Look for all buttons with download class
+    const downloadBtns = document.querySelectorAll('.v10-btn-download-header');
+    console.log('🔍 Found download buttons by class:', downloadBtns);
+  }
+});
 </script>
 
 <style>
@@ -48,7 +66,7 @@ document.body.setAttribute('data-theme', 'dark');
           
           <!-- Theme Toggle - Right Side -->
           <div class="v10-theme-toggle-unified">
-            {% render 'v10-theme-toggle', toggle_position: 'header', toggle_size: 'normal', show_labels: true %}
+            {% render 'v10-theme-toggle', toggle_position: 'header', toggle_size: 'normal', show_labels: false %}
           </div>
         </div>
         

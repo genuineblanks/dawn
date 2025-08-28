@@ -4058,39 +4058,29 @@ body[style*="overflow: hidden"] {
   align-items: center;
 }
 
-/* High specificity targeting for download button */
-#v10-get-templates-btn,
-#v10-get-templates-btn.v10-btn-download-header,
 .v10-btn-download-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: var(--v10-space-2) !important;
-  padding: var(--v10-space-2) var(--v10-space-3) !important;
-  background: var(--v10-bg-secondary) !important;
-  border: 1px solid var(--v10-border-primary) !important;
-  border-radius: var(--v10-radius-sm) !important;
-  color: var(--v10-text-muted) !important;
-  text-decoration: none !important;
-  font-size: var(--v10-text-sm) !important;
-  font-weight: 500 !important;
-  transition: var(--v10-transition) !important;
-  cursor: pointer !important;
-  min-width: 44px !important;
-  min-height: 32px !important;
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-3) var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  text-decoration: none;
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  transition: var(--v10-transition);
 }
 
-/* Hover states with high specificity */
-#v10-get-templates-btn:hover,
-#v10-get-templates-btn.v10-btn-download-header:hover,
 .v10-btn-download-header:hover {
-  background: var(--v10-bg-hover) !important;
-  color: var(--v10-text-secondary) !important;
-  border-color: var(--v10-accent-primary) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: var(--v10-shadow-sm) !important;
+  color: var(--v10-text-primary);
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-sm);
 }
 
+/* Debug script for download button */
 .v10-title-spectacular {
   font-size: var(--v10-text-3xl);
   font-weight: 700;
