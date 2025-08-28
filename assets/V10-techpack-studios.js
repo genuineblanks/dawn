@@ -4806,7 +4806,7 @@ class V10_GarmentStudio {
       if (sampleTypeInput) {
         sampleTypeInput.checked = true;
         
-        // Trigger visual display update for sample type with subValue
+        // Use unified visual update function
         this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue);
       } else {
         console.error(`Sample type input not found for: ${garmentData.sampleType}, subValue: ${garmentData.sampleSubValue}`);
@@ -4968,6 +4968,7 @@ class V10_GarmentStudio {
       this.populateFabricOptions(garmentCard, newValue);
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
+      garmentData.sampleSubValue = ''; // Reset sample sub-value
       
       // Reset sample reference for bulk orders
       const requestType = V10_State.requestType;
@@ -5011,6 +5012,7 @@ class V10_GarmentStudio {
       
       garmentData.fabricType = newValue;
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
+      garmentData.sampleSubValue = ''; // Reset sample sub-value when fabric changes
       
       // Clear any assigned lab dips when fabric changes (similar to sample type change logic)
       if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
@@ -5049,27 +5051,16 @@ class V10_GarmentStudio {
     // Handle sample type change
     if (e.target.name.includes('sampleType')) {
       const previousSampleType = garmentData.sampleType;
-      garmentData.sampleType = e.target.value;
+      const newSampleType = e.target.value;
+      const newSampleSubValue = e.target.dataset.subValue;
       
-      // Store sub-value if it exists (for Black, White, Design Studio, etc.)
-      if (e.target.dataset.subValue) {
-        garmentData.sampleSubValue = e.target.dataset.subValue;
-      } else {
-        delete garmentData.sampleSubValue; // Clear if no sub-value
-      }
-      
-      console.log(`Sample type changed for garment ${garmentId}: ${previousSampleType} → ${e.target.value}`, 
-                 garmentData.sampleSubValue ? `(${garmentData.sampleSubValue})` : '');
-      
-      // Handle compact interface selection update
-      if (e.target.closest('.compact-radio-card')) {
-        this.updateCompactSelection('sampleType', e.target.value, garmentCard, e.target.dataset.subValue);
-      }
+      console.log(`Sample type changed for garment ${garmentId}: ${previousSampleType} → ${newSampleType}`, 
+                 newSampleSubValue ? `(${newSampleSubValue})` : '');
       
       // If changing from custom to another type, remove assigned lab dips
-      if (previousSampleType === 'custom' && e.target.value !== 'custom') {
+      if (previousSampleType === 'custom' && newSampleType !== 'custom') {
         if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
-          console.log(`🎨 Removing assigned lab dips from garment ${garmentId} due to sample type change from custom to ${e.target.value}`);
+          console.log(`🎨 Removing assigned lab dips from garment ${garmentId} due to sample type change from custom to ${newSampleType}`);
           // Remove all assigned lab dips
           const labDipIds = Array.from(garmentData.assignedLabDips);
           labDipIds.forEach(labDipId => {
@@ -5078,16 +5069,8 @@ class V10_GarmentStudio {
         }
       }
       
-      // Immediate state synchronization - ensure DOM and state are in sync
-      this.syncGarmentStateWithDOM(garmentId);
-      
-      // Trigger status update and collapse logic immediately when sample type changes
-      setTimeout(() => {
-        this.updateGarmentStatus(garmentId);
-      }, 100);
-      
-      // Mark finalize button as changed and clear any existing highlighting
-      this.markEditButtonAsChanged(garmentCard);
+      // Use unified update function (handles state, visual, pricing, marking changed, status)
+      this.updateSampleType(garmentId, newSampleType, newSampleSubValue, garmentCard);
       
       // Clear any existing red borders since user made a selection
       const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
@@ -5898,6 +5881,7 @@ class V10_GarmentStudio {
     const selectedSampleTypeRadio = garmentCard.querySelector('input[name*="sampleType"]:checked');
     if (selectedSampleTypeRadio) {
       state.sampleType = selectedSampleTypeRadio.value;
+      state.sampleSubValue = selectedSampleTypeRadio.dataset.subValue;
     }
 
     // Get currently selected fabric type from DOM
@@ -5928,6 +5912,13 @@ class V10_GarmentStudio {
     if (currentDOMState.sampleType && currentDOMState.sampleType !== garmentData.sampleType) {
       console.log(`🔄 Syncing sample type: ${garmentData.sampleType} → ${currentDOMState.sampleType}`);
       garmentData.sampleType = currentDOMState.sampleType;
+      stateChanged = true;
+    }
+    
+    // Sync sample sub-value
+    if (currentDOMState.sampleSubValue !== garmentData.sampleSubValue) {
+      console.log(`🔄 Syncing sample sub-value: ${garmentData.sampleSubValue} → ${currentDOMState.sampleSubValue}`);
+      garmentData.sampleSubValue = currentDOMState.sampleSubValue;
       stateChanged = true;
     }
     
@@ -7389,6 +7380,32 @@ class V10_GarmentStudio {
     this.showFinalizeEditButton(garmentCard);
     
     console.log('✅ Expanded interface initialized for new garment:', garmentData.id);
+  }
+
+  // Unified sample type update function - handles all sample type operations consistently
+  updateSampleType(garmentId, sampleType, sampleSubValue, garmentCard) {
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentData) return;
+
+    console.log(`🔄 Unified sample type update: ${garmentId} → ${sampleType} (${sampleSubValue || 'no subvalue'})`);
+
+    // Update state
+    garmentData.sampleType = sampleType;
+    garmentData.sampleSubValue = sampleSubValue || '';
+
+    // Update visual display
+    this.updateCompactSelection('sampleType', sampleType, garmentCard, sampleSubValue);
+
+    // Update pricing
+    V10_Utils.updateSampleTypePrices(garmentCard);
+
+    // Mark finalize button as changed
+    this.markEditButtonAsChanged(garmentCard);
+
+    // Update garment status
+    this.updateGarmentStatus(garmentId);
+
+    console.log(`✅ Sample type unified update complete: ${sampleType}${sampleSubValue ? ` (${sampleSubValue})` : ''}`);
   }
 
   saveCurrentQuantitiesToState() {
