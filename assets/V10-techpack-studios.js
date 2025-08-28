@@ -4837,12 +4837,7 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection (consistent with updateCompactSelection)
-      setTimeout(() => {
-        this.toggleSelection(collapsed);
-        // Update dependencies after garment selection to enable fabric type
-        this.updateSelectionDependencies(clone);
-      }, 300);
+      // Show selected state - no auto-collapse, user clicks to expand if needed
       
     } else if (type === 'fabric') {
       const fabricIcon = this.getFabricTypeIcon(value);
@@ -4857,12 +4852,7 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection (consistent with updateCompactSelection)
-      setTimeout(() => {
-        this.toggleSelection(collapsed);
-        // Update dependencies after fabric type selection
-        this.updateSelectionDependencies(clone);
-      }, 300);
+      // Show selected state - no auto-collapse, user clicks to expand if needed
     }
   }
 
