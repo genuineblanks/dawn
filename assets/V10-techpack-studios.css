@@ -4460,7 +4460,7 @@ body[style*="overflow: hidden"] {
   }
   
   .v10-title-spectacular {
-    font-size: var(--v10-text-xl);
+    font-size: calc(var(--v10-text-xl) * 0.5); /* 50% smaller on mobile */
     line-height: 1.2;
     word-break: break-word;
   }
