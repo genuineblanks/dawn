@@ -54,6 +54,17 @@ body[class*="techpack"] *,
    CSS CUSTOM PROPERTIES - DARK THEME ONLY
    ============================================== */
 
+/* Stunning Background Gradient - Force Override */
+body {
+  background: radial-gradient(
+    ellipse at center,
+    #1a1a1a 20%,     /* Dark-dark grey at center (matching the box) */
+    #242424 60%,     /* Medium-dark grey transition */
+    #2a2a2a 100%     /* Slightly lighter at edges */
+  ) !important;
+  min-height: 100vh !important;
+}
+
 :root {
   /* Core Dark Theme Colors - Enhanced Professional Dark Theme */
   --v10-bg-primary: #1a1a1a;          /* Main container - darkest for depth */
