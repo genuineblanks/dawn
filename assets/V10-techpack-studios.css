@@ -242,6 +242,7 @@ body[class*="techpack"] *,
 @media (max-width: 768px) {
   .v10-techpack-landing {
     min-height: 100vh;
+    padding: 3.5rem 0; /* 75% less than 14rem */
   }
 }
 
@@ -4076,13 +4077,9 @@ body[style*="overflow: hidden"] {
   min-height: 32px;
 }
 
-.v10-btn-download-header:hover:not(.v10-btn-download-header--active) {
+.v10-btn-download-header:hover {
   background: var(--v10-bg-hover);
   color: var(--v10-text-secondary);
-}
-
-.v10-btn-download-header:hover {
-  color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-sm);
@@ -4127,7 +4124,7 @@ body[style*="overflow: hidden"] {
   color: var(--v10-text-primary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4) var(--v10-space-8);
+  padding: var(--v10-space-4) calc(var(--v10-space-8) * 2); /* Double width */
   font-size: var(--v10-text-base);
   font-weight: 600;
   cursor: pointer;
@@ -4136,6 +4133,7 @@ body[style*="overflow: hidden"] {
   box-shadow: var(--v10-shadow-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  text-align: center; /* Ensure text centering */
 }
 
 .v10-btn-access-studio:hover {
