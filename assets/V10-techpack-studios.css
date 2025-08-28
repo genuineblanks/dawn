@@ -5404,3 +5404,17 @@ div[class*="circle"][style*="background-color"],
   backdrop-filter: blur(12px) !important; /* Glass effect */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important; /* Depth shadow */
 }
+
+/* =================================================================
+   MOBILE TITLE REDUCTION - TARGETED ONLY
+   ================================================================= */
+
+/* Mobile responsive title sizing - restore previous mobile optimization */
+@media (max-width: 768px) {
+  .v10-title-spectacular {
+    font-size: calc(var(--v10-text-3xl) * 0.5) !important; /* 50% smaller for mobile */
+    line-height: 1.1 !important;
+    word-break: break-word !important;
+    letter-spacing: 0.02em !important;
+  }
+}
