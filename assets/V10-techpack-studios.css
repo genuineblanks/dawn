@@ -4048,9 +4048,6 @@ body[style*="overflow: hidden"] {
   justify-self: center;
 }
 
-.v10-download-unified {
-  justify-self: start;
-}
 
 .v10-theme-toggle-unified {
   justify-self: end;
@@ -4058,29 +4055,8 @@ body[style*="overflow: hidden"] {
   align-items: center;
 }
 
-.v10-btn-download-header {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  color: var(--v10-text-secondary);
-  text-decoration: none;
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
-  transition: var(--v10-transition);
-}
 
-.v10-btn-download-header:hover {
-  color: var(--v10-text-primary);
-  border-color: var(--v10-accent-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--v10-shadow-sm);
-}
-
-/* Debug script for download button */
+/* Title Styles */
 .v10-title-spectacular {
   font-size: var(--v10-text-3xl);
   font-weight: 700;
@@ -4420,15 +4396,6 @@ body[style*="overflow: hidden"] {
     word-break: break-word;
   }
   
-  .v10-btn-download-header span {
-    display: none;
-  }
-  
-  .v10-btn-download-header {
-    padding: var(--v10-space-2);
-    min-width: 40px;
-    justify-content: center;
-  }
   
   .v10-requirements-grid-premium {
     grid-template-columns: repeat(2, 1fr);
