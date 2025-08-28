@@ -5805,28 +5805,9 @@ class V10_GarmentStudio {
         this.populateFabricOptions(garmentCard, garmentData.type);
       }
       
-      // For new garments, initialize expanded states to hidden (will be shown when selections are made)
-      if (!this.hasExistingSelections(garmentData)) {
-        const garmentExpanded = garmentCard.querySelector('#garment-expanded');
-        const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
-        const sampleStockExpanded = garmentCard.querySelector('#sample-stock-expanded');
-        const sampleCustomExpanded = garmentCard.querySelector('#sample-custom-expanded');
-        const sampleReferenceExpanded = garmentCard.querySelector('#sample-reference-expanded');
-        
-        if (garmentExpanded) garmentExpanded.style.display = 'none';
-        if (fabricExpanded) fabricExpanded.style.display = 'none';
-        if (sampleStockExpanded) sampleStockExpanded.style.display = 'none';
-        if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'none';
-        if (sampleReferenceExpanded) sampleReferenceExpanded.style.display = 'none';
-        
-        // Enable fabric selection and update dependencies for new garments
-        this.enableFabricSelection(garmentCard);
-      }
+      // Clean edit mode - let user control interface manually
       
-      // TIMING FIX: Delay selection dependencies update to avoid conflicts with menu animations
-      setTimeout(() => {
-        this.updateSelectionDependencies(garmentCard);
-      }, 350); // Wait for menu collapse animation to complete
+      // Dependencies handled during initial setup - no delayed interference needed
       
       // Show finalize edit button
       this.showFinalizeEditButton(garmentCard);
