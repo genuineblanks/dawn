@@ -4077,11 +4077,14 @@ body[style*="overflow: hidden"] {
   min-height: 32px;
 }
 
-.v10-btn-download-header:hover {
-  background: var(--v10-bg-hover);
+.v10-btn-download-header:hover:not(.v10-btn-download-header--active) {
   color: var(--v10-text-secondary);
-  border-color: var(--v10-accent-primary);
-  transform: translateY(-1px);
+  background: var(--v10-bg-hover);
+}
+
+.v10-btn-download-header--active {
+  background: var(--v10-bg-tertiary);
+  color: var(--v10-text-primary);
   box-shadow: var(--v10-shadow-sm);
 }
 
@@ -4124,8 +4127,8 @@ body[style*="overflow: hidden"] {
   color: var(--v10-text-primary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4) calc(var(--v10-space-8) * 2); /* Double width */
-  font-size: var(--v10-text-base);
+  padding: calc(var(--v10-space-4) * 2) calc(var(--v10-space-8) * 4); /* x2 height, x4 width */
+  font-size: calc(var(--v10-text-base) * 1.5); /* Bigger text for bigger button */
   font-weight: 600;
   cursor: pointer;
   transition: var(--v10-transition);
