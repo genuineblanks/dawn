@@ -4019,7 +4019,7 @@ body[style*="overflow: hidden"] {
   box-sizing: border-box;
 }
 
-/* Enhanced unified entrance container - original dark background only */
+/* Enhanced unified entrance container */
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
@@ -4027,14 +4027,6 @@ body[style*="overflow: hidden"] {
   box-shadow: var(--v10-shadow-xl);
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
-}
-
-
-/* Keep the header description box as a distinct element */
-.v10-header-description {
-  border: 1px solid rgba(255, 255, 255, 0.12); /* Slightly more visible for this section */
-  backdrop-filter: blur(12px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .v10-header-section {
@@ -4144,7 +4136,7 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-header-description {
-  background: var(--v10-bg-primary); /* Dark background to match main container */
+  background: var(--v10-bg-tertiary); /* Subtle background variation */
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   text-align: center;
@@ -4252,17 +4244,12 @@ body[style*="overflow: hidden"] {
   display: flex;
   flex-direction: column;
   text-align: center;
-  /* Glass morphism enhancement */
-  backdrop-filter: blur(10px);
 }
 
 .v10-requirement-card-premium:hover {
   transform: translateY(-2px);
   box-shadow: var(--v10-shadow-lg);
   border-color: var(--v10-accent-primary);
-  /* Enhanced glass morphism on hover */
-  backdrop-filter: blur(15px);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .v10-requirement-icon-premium {
@@ -5424,77 +5411,4 @@ div[class*="circle"][style*="background-color"],
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-}
-
-/* =================================================================
-   FINAL OVERRIDE: GLASS MORPHISM CONTAINER - MAXIMUM SPECIFICITY
-   ================================================================= */
-
-/* Glass morphism wrapper - ULTIMATE OVERRIDE at end of file */
-.v10-techpack-landing .v10-app-container.v10-entrance-unified .v10-content-glass-wrapper {
-  /* MAXIMUM SPECIFICITY + !important to override ALL resets */
-  
-  /* Visual effects that DON'T rely on background-color */
-  border: 4px solid rgba(255, 255, 255, 0.3) !important; /* VERY visible border */
-  outline: 2px solid rgba(255, 255, 255, 0.1) !important; /* Additional outline */
-  border-radius: var(--v10-radius-lg) !important;
-  padding: var(--v10-space-8) !important;
-  
-  /* Multiple shadows for glass depth effect */
-  box-shadow: 
-    /* Outer shadows */
-    0 20px 60px rgba(0, 0, 0, 0.5), 
-    0 8px 25px rgba(0, 0, 0, 0.4),
-    0 4px 10px rgba(0, 0, 0, 0.3),
-    /* Inner highlights */
-    inset 0 3px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
-    inset 3px 0 0 rgba(255, 255, 255, 0.1),
-    inset -3px 0 0 rgba(0, 0, 0, 0.1) !important;
-  
-  /* Force position */
-  position: relative !important;
-  
-  /* Use transform for additional visual prominence */
-  transform: scale(1) !important;
-  z-index: 10 !important;
-}
-
-/* Glass reflection using pseudo-element */
-.v10-techpack-landing .v10-app-container.v10-entrance-unified .v10-content-glass-wrapper::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 60% !important;
-  
-  /* Use border instead of background for visibility */
-  border-top: 3px solid rgba(255, 255, 255, 0.2) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0 !important;
-  
-  /* Additional glass effects using box-shadow */
-  box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.1) !important;
-  
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-/* Additional glass glow effect */
-.v10-techpack-landing .v10-app-container.v10-entrance-unified .v10-content-glass-wrapper::after {
-  content: '' !important;
-  position: absolute !important;
-  top: -2px !important;
-  left: -2px !important;
-  right: -2px !important;
-  bottom: -2px !important;
-  
-  /* Glow effect using box-shadow */
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1) !important;
-  border-radius: var(--v10-radius-lg) !important;
-  
-  pointer-events: none !important;
-  z-index: -1 !important;
 }
