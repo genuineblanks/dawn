@@ -4023,7 +4023,7 @@ body[style*="overflow: hidden"] {
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
-  padding: 4rem; /* Equal spacing on all sides - bigger */
+  padding: 7rem 12rem; /* Extra wide horizontal spacing, same vertical */
   box-shadow: var(--v10-shadow-xl);
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
@@ -4127,7 +4127,7 @@ body[style*="overflow: hidden"] {
 
 /* Title Styles */
 .v10-title-spectacular {
-  font-size: var(--v10-text-3xl);
+  font-size: calc(var(--v10-text-3xl) * 0.75); /* 25% smaller */
   font-weight: 700;
   color: var(--v10-text-primary);
   margin: 0;
@@ -4229,21 +4229,22 @@ body[style*="overflow: hidden"] {
 .v10-requirements-grid-premium {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem; /* Back to original gap */
-  margin-top: 3rem; /* Back to original space above the grid */
+  gap: 1.5rem; /* Better proportional spacing */
+  margin-top: var(--v10-space-8);
 }
 
 .v10-requirement-card-premium {
   background: var(--v10-bg-card);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--v10-radius-xl);
-  padding: var(--v10-space-8);
+  padding: var(--v10-space-6);
   transition: var(--v10-transition);
   position: relative;
   box-shadow: var(--v10-shadow-md);
   display: flex;
   flex-direction: column;
   text-align: center;
+  gap: var(--v10-space-4); /* Better internal spacing */
 }
 
 .v10-requirement-card-premium:hover {
@@ -4261,26 +4262,29 @@ body[style*="overflow: hidden"] {
   align-items: center;
   justify-content: center;
   color: var(--v10-accent-primary);
-  margin: 0 auto var(--v10-space-4);
+  margin: 0 auto; /* Clean centered icon */
+  flex-shrink: 0;
 }
 
 .v10-requirement-content-premium {
   flex: 1;
-  margin-bottom: var(--v10-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-2); /* Consistent spacing between title and description */
 }
 
 .v10-requirement-title-premium {
   font-size: var(--v10-text-lg);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-2) 0;
+  margin: 0;
 }
 
 .v10-requirement-description-premium {
   font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-  line-height: 1.5;
-  margin: 0 0 var(--v10-space-3) 0;
+  color: var(--v10-text-muted); /* More greyish for better hierarchy */
+  line-height: 1.6;
+  margin: 0;
 }
 
 .v10-requirement-formats-premium {
