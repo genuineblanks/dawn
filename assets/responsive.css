@@ -5,7 +5,11 @@
 @media screen and (max-width: 1390px) {
   .banner ul.banner__box li.item-banner a {display: flex;}
 
-nav ul li a.header__menu-item, nav ul li .list-menu__item {font-size: 1.2rem;}
+nav ul li a.header__menu-item, nav ul li .list-menu__item {
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
 .banner ul.banner__box li.item-banner img {
     max-height: 200px;
 }
@@ -49,6 +53,66 @@ header.header {
 }
 .header header-drawer {
     margin-left: -1rem;
+}
+
+/* Mobile Header Professional Styling */
+nav ul li a.header__menu-item, nav ul li .list-menu__item {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+    letter-spacing: 0.2px;
+}
+
+/* Mobile Header Background Adjustments */
+body sticky-header.header-wrapper,
+body .template-index sticky-header.header-wrapper {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body .template-index sticky-header.header-wrapper {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+body sticky-header.header-wrapper {
+    background: #e8e8e8 !important;
+    background-color: #e8e8e8 !important;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Mobile Navigation Spacing */
+nav ul {
+    gap: 0.5rem;
+}
+
+/* Mobile Header Icons */
+.header__icons {
+    gap: 0.3rem;
+}
+
+.header__icon {
+    padding: 0.3rem;
+}
+
+/* Mobile Tech Pack Button */
+.header-techpack-btn {
+    padding: 0.3rem;
+}
+
+.header-techpack-btn:hover {
+    transform: none;
+    background: transparent;
+}
+
+.header-techpack-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mobile Visual Separator */
+nav ul li:nth-child(5)::after {
+    display: none;
 }
 .product-count-5 {
     background-color: #f8faf9;
