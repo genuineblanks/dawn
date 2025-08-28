@@ -4979,6 +4979,24 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
+        // Update garment display
+        const garmentIcon = this.getGarmentIcon(newValue);
+        const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
+        const selectedName = garmentCard.querySelector('#garment-selected-name');
+        const placeholder = garmentCard.querySelector('#garment-placeholder');
+        const display = garmentCard.querySelector('#garment-display');
+        
+        if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
+        if (selectedName) selectedName.textContent = newValue;
+        if (placeholder) placeholder.style.display = 'none';
+        if (display) display.style.display = 'block';
+        
+        // Auto-collapse garment selection and enable fabric
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+          this.updateSelectionDependencies(garmentCard);
+        }, 300);
+        
         this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
         this.enableFabricSelection(garmentCard);
         
@@ -5031,8 +5049,24 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
+        // Update fabric display
+        const fabricIcon = this.getFabricTypeIcon(newValue);
+        const selectedIcon = garmentCard.querySelector('#fabric-selected-icon');
+        const selectedName = garmentCard.querySelector('#fabric-selected-name');
+        const placeholder = garmentCard.querySelector('#fabric-placeholder');
+        const display = garmentCard.querySelector('#fabric-display');
+        
+        if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
+        if (selectedName) selectedName.textContent = newValue;
+        if (placeholder) placeholder.style.display = 'none';
+        if (display) display.style.display = 'block';
+        
+        // Auto-collapse fabric selection
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+          this.updateSelectionDependencies(garmentCard);
+        }, 300);
       }
-      
       
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
@@ -5091,6 +5125,22 @@ class V10_GarmentStudio {
       
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
+        // Update sample reference display
+        const sampleReferenceIcon = this.getSampleReferenceIcon(newValue);
+        const selectedIcon = garmentCard.querySelector('#sample-reference-selected-icon');
+        const selectedName = garmentCard.querySelector('#sample-reference-selected-name');
+        const placeholder = garmentCard.querySelector('#sample-reference-placeholder');
+        const display = garmentCard.querySelector('#sample-reference-display');
+        
+        if (selectedIcon) selectedIcon.innerHTML = sampleReferenceIcon;
+        if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(newValue);
+        if (placeholder) placeholder.style.display = 'none';
+        if (display) display.style.display = 'block';
+        
+        // Auto-collapse sample reference selection
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
+        }, 300);
       }
       
       // Mark finalize button as changed (even if same value, user made an edit action)
