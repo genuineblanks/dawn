@@ -4058,26 +4058,33 @@ body[style*="overflow: hidden"] {
   align-items: center;
 }
 
-.v10-btn-download-header {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-  padding: var(--v10-space-3) var(--v10-space-4);
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  color: var(--v10-text-secondary);
-  text-decoration: none;
-  font-size: var(--v10-text-sm);
-  font-weight: 500;
-  transition: var(--v10-transition);
+/* Download Button - Match Theme Toggle Button Style Exactly */
+.v10-download-unified .v10-btn-download-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--v10-space-2) !important;
+  padding: var(--v10-space-2) var(--v10-space-3) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: var(--v10-radius-sm) !important;
+  font-size: var(--v10-text-sm) !important;
+  font-weight: 500 !important;
+  color: var(--v10-text-muted) !important;
+  cursor: pointer !important;
+  transition: var(--v10-transition) !important;
+  position: relative !important;
+  min-width: 44px !important; /* Accessibility: minimum touch target */
+  min-height: 32px !important;
+  text-decoration: none !important;
 }
 
-.v10-btn-download-header:hover {
-  color: var(--v10-text-primary);
-  border-color: var(--v10-accent-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--v10-shadow-sm);
+.v10-download-unified .v10-btn-download-header:hover {
+  color: var(--v10-text-secondary) !important;
+  background: var(--v10-bg-hover) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
 
 /* Debug script for download button */
