@@ -4022,13 +4022,13 @@ body[style*="overflow: hidden"] {
 .v10-entrance-unified {
   background: #1a1a1a; /* Dark dark grey for app container */
   border-radius: 12px;
-  padding: 2.7rem 2rem; /* Reduced padding by 33% */
+  padding: 4rem 3rem; /* Back to original spacing */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: relative;
 }
 
 .v10-header-section {
-  margin-bottom: 3.3rem; /* Reduced spacing by 33% */
+  margin-bottom: 5rem; /* Back to original spacing */
 }
 
 .v10-unified-header-box {
@@ -4040,7 +4040,7 @@ body[style*="overflow: hidden"] {
   background: rgba(255, 255, 255, 0.05); /* Subtle background for header area */
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--v10-radius-lg);
-  margin-bottom: 2rem; /* Reduced spacing by 33% */
+  margin-bottom: 3rem; /* Back to original spacing */
   backdrop-filter: blur(10px);
 }
 
@@ -4062,20 +4062,28 @@ body[style*="overflow: hidden"] {
 .v10-btn-download-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-2);
-  padding: var(--v10-space-3) var(--v10-space-4);
+  padding: var(--v10-space-2) var(--v10-space-3);
   background: var(--v10-bg-secondary);
   border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  color: var(--v10-text-secondary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-muted);
   text-decoration: none;
   font-size: var(--v10-text-sm);
   font-weight: 500;
   transition: var(--v10-transition);
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 32px;
+}
+
+.v10-btn-download-header:hover:not(.v10-btn-download-header--active) {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-secondary);
 }
 
 .v10-btn-download-header:hover {
-  background: var(--v10-bg-hover);
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
   transform: translateY(-1px);
@@ -4110,9 +4118,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-actions-section {
-  margin: 2.7rem 0; /* Reduced vertical spacing by 33% */
+  margin: 4rem 0; /* Back to original spacing */
   text-align: center;
-  padding: 1.3rem 0; /* Reduced padding by 33% */
+  padding: 2rem 0; /* Back to original spacing */
 }
 
 .v10-btn-access-studio {
@@ -4135,7 +4143,7 @@ body[style*="overflow: hidden"] {
 .v10-btn-access-studio:hover {
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-md);
-  background: var(--v10-bg-hover);
+  background: #1a1a1a; /* Much darker grey, same as container background */
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
 }
@@ -4158,8 +4166,8 @@ body[style*="overflow: hidden"] {
 
 /* Requirements section */
 .v10-requirements-section {
-  margin: 3.3rem 0 2rem; /* Reduced margin by 33% */
-  padding-top: 1.3rem; /* Reduced padding by 33% */
+  margin: 5rem 0 3rem; /* Back to original spacing */
+  padding-top: 2rem; /* Back to original spacing */
 }
 
 .v10-requirements-header {
@@ -4183,8 +4191,8 @@ body[style*="overflow: hidden"] {
 .v10-requirements-grid-premium {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.3rem; /* Reduced gap by 33% */
-  margin-top: 2rem; /* Reduced space above the grid by 33% */
+  gap: 2rem; /* Back to original gap */
+  margin-top: 3rem; /* Back to original space above the grid */
 }
 
 .v10-requirement-card-premium {
@@ -4404,7 +4412,7 @@ body[style*="overflow: hidden"] {
   
   /* Landing page mobile fixes */
   .v10-entrance-unified {
-    padding: 1.3rem 1rem; /* Reduced by 33% for mobile */
+    padding: 2rem 1.5rem; /* Back to original for mobile */
     border-radius: 8px;
   }
   
