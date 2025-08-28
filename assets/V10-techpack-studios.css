@@ -4459,8 +4459,8 @@ body[style*="overflow: hidden"] {
     padding: var(--v10-space-4);
   }
   
-  .v10-entrance-unified .v10-title-spectacular {
-    font-size: calc(var(--v10-text-3xl) * 0.375) !important; /* 50% of desktop size with higher specificity */
+  .v10-title-spectacular {
+    font-size: var(--v10-text-xl);
     line-height: 1.2;
     word-break: break-word;
   }
