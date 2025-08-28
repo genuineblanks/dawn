@@ -233,15 +233,9 @@ body[class*="techpack"] *,
    ============================================== */
 
 .v10-techpack-landing {
-  background: radial-gradient(
-    ellipse at center,
-    var(--v10-bg-primary) 20%,     /* Dark-dark grey at center (matching the box) */
-    var(--v10-bg-secondary) 60%,   /* Medium-dark grey transition */
-    var(--v10-bg-tertiary) 100%    /* Slightly lighter at edges */
-  );
+  background: #2d2d2d; /* Medium dark grey for full page background */
   padding: 14rem 0; /* Maximum spacing for ultra-premium look */
   display: flex;
-  min-height: 100vh; /* Ensure full height coverage */
 }
 
 /* Keep min-height only for mobile if needed */
