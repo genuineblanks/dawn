@@ -5388,3 +5388,19 @@ div[class*="circle"][style*="background-color"],
   visibility: visible !important;
   opacity: 1 !important;
 }
+
+/* =================================================================
+   SUBTEXT BOX GLASS MORPHISM - TARGETED ONLY
+   ================================================================= */
+
+/* Glass morphism for subtext box only - will not affect other elements */
+.v10-header-description {
+  background: var(--v10-bg-primary) !important; /* Dark background to match main container */
+  border: 1px solid rgba(255, 255, 255, 0.12) !important; /* Glass morphism border */
+  border-radius: var(--v10-radius-lg) !important;
+  padding: var(--v10-space-6) !important;
+  text-align: center !important;
+  margin-bottom: var(--v10-space-8) !important;
+  backdrop-filter: blur(12px) !important; /* Glass effect */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important; /* Depth shadow */
+}
