@@ -4795,11 +4795,11 @@ class V10_GarmentStudio {
     if (garmentData.sampleType) {
       let sampleTypeInput;
       
-      // If we have a sub-value, find the specific input with matching value AND data-sub-value
-      if (garmentData.sampleSubValue) {
+      // If we have a sub-value (including empty string), find the specific input with matching value AND data-sub-value
+      if (garmentData.hasOwnProperty('sampleSubValue') && garmentData.sampleSubValue !== null && garmentData.sampleSubValue !== undefined) {
         sampleTypeInput = clone.querySelector(`input[value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
       } else {
-        // Fallback: find any input with matching value
+        // Fallback: find any input with matching value (when no sub-value was ever set)
         sampleTypeInput = clone.querySelector(`input[value="${garmentData.sampleType}"]`);
       }
       
@@ -4835,11 +4835,19 @@ class V10_GarmentStudio {
       const selectedName = clone.querySelector('#garment-selected-name');
       const placeholder = clone.querySelector('#garment-placeholder');
       const display = clone.querySelector('#garment-display');
+      const collapsed = clone.querySelector('#garment-collapsed');
       
       if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'flex';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection (consistent with updateCompactSelection)
+      setTimeout(() => {
+        this.toggleSelection(collapsed);
+        // Update dependencies after garment selection to enable fabric type
+        this.updateSelectionDependencies(clone);
+      }, 300);
       
     } else if (type === 'fabric') {
       const fabricIcon = this.getFabricTypeIcon(value);
@@ -4847,11 +4855,19 @@ class V10_GarmentStudio {
       const selectedName = clone.querySelector('#fabric-selected-name');
       const placeholder = clone.querySelector('#fabric-placeholder');
       const display = clone.querySelector('#fabric-display');
+      const collapsed = clone.querySelector('#fabric-collapsed');
       
       if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
       if (selectedName) selectedName.textContent = value;
       if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'flex';
+      if (display) display.style.display = 'block';
+      
+      // Auto-collapse after selection (consistent with updateCompactSelection)
+      setTimeout(() => {
+        this.toggleSelection(collapsed);
+        // Update dependencies after fabric type selection
+        this.updateSelectionDependencies(clone);
+      }, 300);
     }
   }
 
@@ -4968,7 +4984,7 @@ class V10_GarmentStudio {
       this.populateFabricOptions(garmentCard, newValue);
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
-      garmentData.sampleSubValue = ''; // Reset sample sub-value
+      garmentData.sampleSubValue = undefined; // Reset sample sub-value
       
       // Reset sample reference for bulk orders
       const requestType = V10_State.requestType;
@@ -5012,7 +5028,7 @@ class V10_GarmentStudio {
       
       garmentData.fabricType = newValue;
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
-      garmentData.sampleSubValue = ''; // Reset sample sub-value when fabric changes
+      garmentData.sampleSubValue = undefined; // Reset sample sub-value when fabric changes
       
       // Clear any assigned lab dips when fabric changes (similar to sample type change logic)
       if (garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0) {
@@ -6678,12 +6694,10 @@ class V10_GarmentStudio {
         if (customPlaceholder) customPlaceholder.style.display = 'flex';
         if (customDisplay) customDisplay.style.display = 'none';
         
-        // EDIT MODE FIX: Don't auto-collapse in edit mode - just update the display
-        if (!garmentData?.isInEditMode) {
-          setTimeout(() => {
-            this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
-          }, 300);
-        }
+        // Auto-collapse after selection (consistent behavior with garment/fabric)
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
+        }, 300);
         
       } else if (sampleType === 'custom') {
         const selectedIcon = garmentCard.querySelector('#sample-custom-selected-icon');
@@ -6728,12 +6742,10 @@ class V10_GarmentStudio {
         if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
         if (stockDisplay) stockDisplay.style.display = 'none';
         
-        // EDIT MODE FIX: Don't auto-collapse in edit mode - just update the display
-        if (!garmentData?.isInEditMode) {
-          setTimeout(() => {
-            this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
-          }, 300);
-        }
+        // Auto-collapse after selection (consistent behavior with garment/fabric)
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
+        }, 300);
       }
     }
   }
@@ -7389,9 +7401,9 @@ class V10_GarmentStudio {
 
     console.log(`🔄 Unified sample type update: ${garmentId} → ${sampleType} (${sampleSubValue || 'no subvalue'})`);
 
-    // Update state
+    // Update state - preserve undefined vs empty string distinction
     garmentData.sampleType = sampleType;
-    garmentData.sampleSubValue = sampleSubValue || '';
+    garmentData.sampleSubValue = sampleSubValue; // Don't convert undefined to empty string
 
     // Update visual display
     this.updateCompactSelection('sampleType', sampleType, garmentCard, sampleSubValue);
