@@ -234,7 +234,7 @@ body[class*="techpack"] *,
 
 .v10-techpack-landing {
   background: #2d2d2d; /* Medium dark grey for full page background */
-  padding: 4rem 0; /* Increased spacing for better breathing room */
+  padding: 6rem 0; /* More generous spacing for optimal breathing room */
   display: flex;
 }
 
