@@ -255,8 +255,9 @@ body[class*="techpack"] *,
 .techpack-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--v10-space-6);
+  padding: 0; /* Remove padding to prevent white space - let v10-app-container handle it */
   position: relative;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .techpack-content {
@@ -270,7 +271,7 @@ body[class*="techpack"] *,
 
 @media (max-width: 768px) {
   .techpack-container {
-    padding: 0 var(--v10-space-4);
+    padding: 0; /* Remove mobile padding too */
   }
   
   .techpack-content {
@@ -4014,7 +4015,7 @@ body[style*="overflow: hidden"] {
 .v10-app-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--v10-space-8);
+  padding: var(--v10-space-4); /* Reduced padding to prevent white space */
 }
 
 /* Unified entrance container with dark dark grey background */
@@ -4024,6 +4025,8 @@ body[style*="overflow: hidden"] {
   padding: 4rem 3rem; /* Back to original spacing */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: relative;
+  width: 100%; /* Ensure it doesn't exceed container width */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .v10-header-section {
