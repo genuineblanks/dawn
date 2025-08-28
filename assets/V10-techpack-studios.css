@@ -55,15 +55,15 @@ body[class*="techpack"] *,
    ============================================== */
 
 :root {
-  /* Core Dark Theme Colors - Financial Dashboard Theme */
-  --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
-  --v10-bg-secondary: #2d2d2d;        /* Secondary dark panels - more contrast */
-  --v10-bg-tertiary: #1e1e1e;         /* Elevated surfaces - same as primary for seamless look */
-  --v10-bg-card: #2d2d2d;             /* Card backgrounds */
+  /* Core Dark Theme Colors - Enhanced Professional Dark Theme */
+  --v10-bg-primary: #1a1a1a;          /* Main container - darkest for depth */
+  --v10-bg-secondary: #242424;        /* Header/elevated sections - subtle contrast */
+  --v10-bg-tertiary: #2a2a2a;         /* Card backgrounds - medium tone */
+  --v10-bg-card: #2e2e2e;             /* Individual cards - slightly lighter */
   --v10-bg-modal: #262626;            /* Modal backgrounds */
   --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
-  --v10-bg-hover: #454545;            /* Hover states */
-  --v10-bg-active: #525252;           /* Active states */
+  --v10-bg-hover: #3a3a3a;            /* Hover states - warmer tone */
+  --v10-bg-active: #424242;           /* Active states - professional grey */
 
   /* Glass Morphism Effects */
   --v10-glass-bg: rgba(56, 56, 56, 0.8);
@@ -255,9 +255,8 @@ body[class*="techpack"] *,
 .techpack-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0; /* Remove padding to prevent white space - let v10-app-container handle it */
+  padding: 0 var(--v10-space-6);
   position: relative;
-  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .techpack-content {
@@ -271,7 +270,7 @@ body[class*="techpack"] *,
 
 @media (max-width: 768px) {
   .techpack-container {
-    padding: 0; /* Remove mobile padding too */
+    padding: 0 var(--v10-space-4);
   }
   
   .techpack-content {
@@ -4013,20 +4012,21 @@ body[style*="overflow: hidden"] {
 
 /* Landing page specific components */
 .v10-app-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--v10-space-4); /* Reduced padding to prevent white space */
+  padding: var(--v10-space-6) var(--v10-space-4);
+  box-sizing: border-box;
 }
 
-/* Unified entrance container with dark dark grey background */
+/* Enhanced unified entrance container */
 .v10-entrance-unified {
-  background: #1a1a1a; /* Dark dark grey for app container */
-  border-radius: 12px;
-  padding: 4rem 3rem; /* Back to original spacing */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background: var(--v10-bg-primary); /* Use consistent primary dark */
+  border-radius: var(--v10-radius-xl);
+  padding: 4rem; /* Equal spacing on all sides - bigger */
+  box-shadow: var(--v10-shadow-xl);
   position: relative;
-  width: 100%; /* Ensure it doesn't exceed container width */
-  box-sizing: border-box; /* Include padding in width calculation */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
 }
 
 .v10-header-section {
@@ -4037,13 +4037,13 @@ body[style*="overflow: hidden"] {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
-  gap: var(--v10-space-4);
-  padding: var(--v10-space-6);
-  background: rgba(255, 255, 255, 0.05); /* Subtle background for header area */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--v10-radius-lg);
-  margin-bottom: 3rem; /* Back to original spacing */
-  backdrop-filter: blur(10px);
+  gap: var(--v10-space-6);
+  padding: var(--v10-space-8);
+  background: var(--v10-bg-secondary); /* Enhanced header background */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--v10-radius-xl);
+  margin-bottom: var(--v10-space-8);
+  box-shadow: var(--v10-shadow-lg);
 }
 
 .v10-header-content-wrapper {
@@ -4085,9 +4085,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-download-new .v10-btn-download-new:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: var(--v10-shadow-md) !important;
-  background: #1a1a1a !important; /* Same hover color as ACCESS STUDIO */
+  transform: translateY(-2px) !important;
+  box-shadow: var(--v10-shadow-lg) !important;
+  background: var(--v10-bg-hover) !important; /* Consistent hover background */
   color: var(--v10-text-primary) !important;
   border-color: var(--v10-accent-primary) !important;
 }
@@ -4136,12 +4136,13 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-header-description {
-  background: transparent; /* Remove background */
-  border-radius: 0;
-  padding: var(--v10-space-4) 0;
+  background: var(--v10-bg-tertiary); /* Subtle background variation */
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-6);
   text-align: center;
-  border: none; /* Remove border */
-  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--v10-space-8);
+  box-shadow: var(--v10-shadow-sm);
 }
 
 .v10-header-description p {
@@ -4178,9 +4179,9 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-btn-access-studio:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--v10-shadow-md);
-  background: #1a1a1a; /* Much darker grey, same as container background */
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-lg);
+  background: var(--v10-bg-hover); /* Use consistent hover background */
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
 }
@@ -4233,17 +4234,16 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-requirement-card-premium {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-6);
+  background: var(--v10-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--v10-radius-xl);
+  padding: var(--v10-space-8);
   transition: var(--v10-transition);
   position: relative;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--v10-shadow-md);
   display: flex;
   flex-direction: column;
   text-align: center;
-  backdrop-filter: blur(5px);
 }
 
 .v10-requirement-card-premium:hover {
@@ -4459,8 +4459,8 @@ body[style*="overflow: hidden"] {
     padding: var(--v10-space-4);
   }
   
-  .v10-title-spectacular {
-    font-size: var(--v10-text-xl);
+  .v10-entrance-unified .v10-title-spectacular {
+    font-size: calc(var(--v10-text-3xl) * 0.375) !important; /* 50% of desktop size with higher specificity */
     line-height: 1.2;
     word-break: break-word;
   }
