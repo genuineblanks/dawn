@@ -24,8 +24,8 @@ document.body.setAttribute('data-theme', 'dark');
 <section id="techpack-v10-landing" class="v10-techpack-landing">
   <div class="techpack-container">
     
-    <!-- MAIN APP CONTAINER -->
-    <div class="v10-app-container">
+    <!-- MAIN APP CONTAINER WITH UNIFIED BACKGROUND -->
+    <div class="v10-app-container v10-entrance-unified">
       
       <!-- HEADER SECTION -->
       <div class="v10-header-section">
@@ -44,6 +44,11 @@ document.body.setAttribute('data-theme', 'dark');
           <!-- Title - Center -->
           <div class="v10-header-content-wrapper">
             <h1 class="v10-title-spectacular">GARMENT DEVELOPMENT STUDIO</h1>
+          </div>
+          
+          <!-- Theme Toggle - Right Side -->
+          <div class="v10-theme-toggle-unified">
+            {% render 'v10-theme-toggle', toggle_position: 'header', toggle_size: 'normal', show_labels: false %}
           </div>
         </div>
         
