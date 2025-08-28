@@ -4023,7 +4023,7 @@ body[style*="overflow: hidden"] {
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
-  padding: 7rem 12rem; /* Extra wide horizontal spacing, same vertical */
+  padding: 4rem; /* Equal spacing on all sides - bigger */
   box-shadow: var(--v10-shadow-xl);
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
