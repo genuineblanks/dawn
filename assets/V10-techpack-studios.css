@@ -4019,14 +4019,34 @@ body[style*="overflow: hidden"] {
   box-sizing: border-box;
 }
 
-/* Enhanced unified entrance container */
+/* Enhanced unified entrance container with prominent glass morphism */
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
   padding: 4rem; /* Equal spacing on all sides - bigger */
-  box-shadow: var(--v10-shadow-xl);
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
+  
+  /* PROMINENT glass morphism effects */
+  border: 2px solid rgba(255, 255, 255, 0.15); /* Much more visible border */
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.25), /* Deep shadow for depth */
+    0 0 0 1px rgba(255, 255, 255, 0.05), /* Inner glow */
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); /* Top highlight */
+  backdrop-filter: blur(15px); /* Strong blur effect */
+  
+  /* Subtle gradient overlay for extra glass effect */
+  background-image: 
+    linear-gradient(145deg, 
+      rgba(255, 255, 255, 0.03) 0%, 
+      transparent 50%, 
+      rgba(255, 255, 255, 0.01) 100%);
+}
+
+/* Keep the header description box as a distinct element */
+.v10-header-description {
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Slightly more visible for this section */
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .v10-header-section {
@@ -4244,12 +4264,17 @@ body[style*="overflow: hidden"] {
   display: flex;
   flex-direction: column;
   text-align: center;
+  /* Glass morphism enhancement */
+  backdrop-filter: blur(10px);
 }
 
 .v10-requirement-card-premium:hover {
   transform: translateY(-2px);
   box-shadow: var(--v10-shadow-lg);
   border-color: var(--v10-accent-primary);
+  /* Enhanced glass morphism on hover */
+  backdrop-filter: blur(15px);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .v10-requirement-icon-premium {
