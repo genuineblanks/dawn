@@ -233,8 +233,8 @@ body[class*="techpack"] *,
    ============================================== */
 
 .v10-techpack-landing {
-  background: #1a1a1a; /* Darker background for contrast with the unified container */
-  padding: 3rem 0; /* Increased padding for better spacing */
+  background: #2d2d2d; /* Medium dark grey for full page background */
+  padding: 2rem 0; /* Reduced padding by 33% */
   min-height: 100vh; /* Ensure full viewport height */
   display: flex;
   align-items: center;
@@ -4018,17 +4018,17 @@ body[style*="overflow: hidden"] {
   padding: var(--v10-space-8);
 }
 
-/* Unified entrance container with dark grey background */
+/* Unified entrance container with dark dark grey background */
 .v10-entrance-unified {
-  background: #2d2d2d;
+  background: #1a1a1a; /* Dark dark grey for app container */
   border-radius: 12px;
-  padding: 4rem 3rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 2.7rem 2rem; /* Reduced padding by 33% */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: relative;
 }
 
 .v10-header-section {
-  margin-bottom: 5rem; /* Increased spacing */
+  margin-bottom: 3.3rem; /* Reduced spacing by 33% */
 }
 
 .v10-unified-header-box {
@@ -4040,7 +4040,7 @@ body[style*="overflow: hidden"] {
   background: rgba(255, 255, 255, 0.05); /* Subtle background for header area */
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--v10-radius-lg);
-  margin-bottom: 3rem; /* Increased spacing */
+  margin-bottom: 2rem; /* Reduced spacing by 33% */
   backdrop-filter: blur(10px);
 }
 
@@ -4075,6 +4075,7 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-btn-download-header:hover {
+  background: var(--v10-bg-hover);
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
   transform: translateY(-1px);
@@ -4109,32 +4110,34 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-actions-section {
-  margin: 4rem 0; /* Increased vertical spacing */
+  margin: 2.7rem 0; /* Reduced vertical spacing by 33% */
   text-align: center;
-  padding: 2rem 0; /* Additional padding for breathing room */
+  padding: 1.3rem 0; /* Reduced padding by 33% */
 }
 
 .v10-btn-access-studio {
   position: relative;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-  color: #1a1a1a;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--v10-radius-lg);
-  padding: 1.5rem 3rem;
-  font-size: var(--v10-text-lg);
+  background: var(--v10-bg-secondary);
+  color: var(--v10-text-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4) var(--v10-space-8);
+  font-size: var(--v10-text-base);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--v10-transition);
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+  box-shadow: var(--v10-shadow-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .v10-btn-access-studio:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--v10-shadow-md);
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-primary);
+  border-color: var(--v10-accent-primary);
 }
 
 .v10-btn-inner {
@@ -4155,8 +4158,8 @@ body[style*="overflow: hidden"] {
 
 /* Requirements section */
 .v10-requirements-section {
-  margin: 5rem 0 3rem; /* Increased top margin for better separation */
-  padding-top: 2rem; /* Additional padding */
+  margin: 3.3rem 0 2rem; /* Reduced margin by 33% */
+  padding-top: 1.3rem; /* Reduced padding by 33% */
 }
 
 .v10-requirements-header {
@@ -4180,8 +4183,8 @@ body[style*="overflow: hidden"] {
 .v10-requirements-grid-premium {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem; /* Increased gap between cards */
-  margin-top: 3rem; /* Add more space above the grid */
+  gap: 1.3rem; /* Reduced gap by 33% */
+  margin-top: 2rem; /* Reduced space above the grid by 33% */
 }
 
 .v10-requirement-card-premium {
@@ -4401,7 +4404,7 @@ body[style*="overflow: hidden"] {
   
   /* Landing page mobile fixes */
   .v10-entrance-unified {
-    padding: 2rem 1.5rem;
+    padding: 1.3rem 1rem; /* Reduced by 33% for mobile */
     border-radius: 8px;
   }
   
