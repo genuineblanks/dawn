@@ -4015,7 +4015,7 @@ body[style*="overflow: hidden"] {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--v10-space-8); /* Equal spacing on all sides - bigger */
+  padding: var(--v10-space-6) var(--v10-space-4);
   box-sizing: border-box;
 }
 
@@ -4023,7 +4023,7 @@ body[style*="overflow: hidden"] {
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
-  padding: 3rem 2rem; /* Better proportional spacing */
+  padding: 4rem; /* Equal spacing on all sides - bigger */
   box-shadow: var(--v10-shadow-xl);
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
