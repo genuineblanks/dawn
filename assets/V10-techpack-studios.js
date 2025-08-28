@@ -6725,11 +6725,9 @@ class V10_GarmentStudio {
         // Reset visual selection cards
         customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
         
-        // If previous state was custom, clear it completely from garment data
-        if (garmentData.sampleType === 'custom') {
-          garmentData.sampleType = sampleType; // Set to stock
-          garmentData.sampleSubValue = actualSubValue;
-        }
+        // ALWAYS update garment state with current selection (regardless of previous state)
+        garmentData.sampleType = sampleType;
+        garmentData.sampleSubValue = actualSubValue;
         
         // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
         setTimeout(() => {
@@ -6789,11 +6787,9 @@ class V10_GarmentStudio {
         // Reset visual selection cards
         stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
         
-        // If previous state was stock, clear it completely from garment data
-        if (garmentData.sampleType === 'stock') {
-          garmentData.sampleType = sampleType; // Set to custom
-          garmentData.sampleSubValue = actualSubValue;
-        }
+        // ALWAYS update garment state with current selection (regardless of previous state)
+        garmentData.sampleType = sampleType;
+        garmentData.sampleSubValue = actualSubValue;
         
         // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
         setTimeout(() => {
