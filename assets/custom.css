@@ -87,59 +87,48 @@ summary svg.icon.icon-plus, summary svg.icon.icon-minus {
     display: -webkit-flex;
 }
 
-/* ================ PROFESSIONAL HEADER STYLING ================== */
-/* AGGRESSIVE HEADER COLOR OVERRIDES - FORCE COLORS TO WORK */
+/* ================ TECHPACK HEADER STYLING ================== */
+/* Professional dark theme header with glass morphism */
 
-/* Homepage Header - White Background - Multiple Selector Variations */
+/* Universal Header - TechPack Glass Morphism */
+body sticky-header.header-wrapper,
+body .header-wrapper,
+sticky-header.header-wrapper,
+.header-wrapper,
 body .template-index sticky-header.header-wrapper,
 body.template-index sticky-header.header-wrapper,
 .template-index sticky-header.header-wrapper,
 body .template-index .header-wrapper,
 body.template-index .header-wrapper,
-.template-index .header-wrapper {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+.template-index .header-wrapper,
+body:not(.template-index) sticky-header.header-wrapper,
+body:not(.template-index) .header-wrapper {
+    background: var(--techpack-glass-bg) !important;
+    background-color: var(--techpack-glass-bg) !important;
+    backdrop-filter: var(--techpack-backdrop-blur) !important;
+    border-bottom: 1px solid var(--techpack-glass-border) !important;
+    box-shadow: var(--techpack-shadow-sm) !important;
+    transition: var(--techpack-transition) !important;
 }
 
-/* Homepage Header Scrolled State - Multiple Selector Variations */
+/* Header Scrolled State - Enhanced Glass Effect */
+body sticky-header.header-wrapper.scrolled,
+body .header-wrapper.scrolled,
+sticky-header.header-wrapper.scrolled,
+.header-wrapper.scrolled,
 body .template-index sticky-header.header-wrapper.scrolled,
 body.template-index sticky-header.header-wrapper.scrolled,
 .template-index sticky-header.header-wrapper.scrolled,
 body .template-index .header-wrapper.scrolled,
 body.template-index .header-wrapper.scrolled,
-.template-index .header-wrapper.scrolled {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Global Header - Light Grey Theme (matching footer) - Multiple Selector Variations */
-body sticky-header.header-wrapper,
-body .header-wrapper,
-sticky-header.header-wrapper,
-.header-wrapper,
-body:not(.template-index) sticky-header.header-wrapper,
-body:not(.template-index) .header-wrapper {
-    background: #e8e8e8 !important;
-    background-color: #e8e8e8 !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-/* Global Header Scrolled State - Multiple Selector Variations */
-body sticky-header.header-wrapper.scrolled,
-body .header-wrapper.scrolled,
-sticky-header.header-wrapper.scrolled,
-.header-wrapper.scrolled,
+.template-index .header-wrapper.scrolled,
 body:not(.template-index) sticky-header.header-wrapper.scrolled,
 body:not(.template-index) .header-wrapper.scrolled {
-    background: #e8e8e8 !important;
-    background-color: #e8e8e8 !important;
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15) !important;
+    background: var(--techpack-glass-bg-light) !important;
+    background-color: var(--techpack-glass-bg-light) !important;
+    backdrop-filter: var(--techpack-backdrop-blur) !important;
+    box-shadow: var(--techpack-shadow-lg) !important;
+    border-bottom: 1px solid var(--techpack-border-focus) !important;
 }
 
 header.header.page-width {
@@ -155,43 +144,45 @@ nav ul {
     gap: 2rem;
 }
 
-/* Professional Navigation Items */
+/* TechPack Navigation Items */
 nav ul li a.header__menu-item, nav ul li .list-menu__item {
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    transition: var(--techpack-transition);
+    letter-spacing: 0.05rem;
     position: relative;
     padding: 0.8rem 1.2rem;
     font-size: 0.95rem;
     text-transform: uppercase;
+    color: var(--techpack-text-primary) !important;
+    border-radius: var(--techpack-border-radius);
 }
 
-/* Homepage Navigation Colors - Dark Grey Text */
+/* Navigation Hover Effects */
 body .template-index nav ul li a.header__menu-item, 
-body .template-index nav ul li .list-menu__item {
-    color: #4a4a4a !important;
+body .template-index nav ul li .list-menu__item,
+body nav ul li a.header__menu-item, 
+body nav ul li .list-menu__item {
+    color: var(--techpack-text-primary) !important;
 }
 
-/* Global Navigation Colors - Dark Text on Light Grey */
-body nav ul li a.header__menu-item, body nav ul li .list-menu__item {
-    color: #333333 !important;
+nav ul li a.header__menu-item:hover,
+nav ul li .list-menu__item:hover {
+    background: var(--techpack-glass-bg-light);
+    color: var(--techpack-text-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: var(--techpack-shadow-sm);
 }
 
-/* Visual Separator for Services */
+/* TechPack Visual Separator */
 body nav ul li:nth-child(5)::after {
     content: '';
     width: 1px;
     height: 20px;
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: var(--techpack-border-primary) !important;
     position: absolute;
     right: -1rem;
     top: 50%;
     transform: translateY(-50%);
-}
-
-/* Homepage separator */
-body .template-index nav ul li:nth-child(5)::after {
-    background: rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Professional Underline Effect */
@@ -507,7 +498,7 @@ p.click-to-scroll span {display: block;font-weight: bold;}
     color: #000;
 }
 /* Video overlay text part css end here */
-/* ================ Footer css start here ================== */
+/* ================ TECHPACK FOOTER STYLING ================== */
 .footer__content-top .footer__blocks-wrapper .footer-block-image {
     flex-direction: column;
 }
@@ -517,14 +508,26 @@ p.click-to-scroll span {display: block;font-weight: bold;}
 .footer-block__details-content  h3 {
     margin: 0;
     text-transform: uppercase;
-    font-family: 'Impact';
+    font-family: 'Arial Narrow', sans-serif;
     font-size: 40px;
     letter-spacing: 1px;
+    color: var(--techpack-text-primary);
 }
 .logo-text p {
     margin: 0;
-    color: #000;
+    color: var(--techpack-text-secondary);
     font-size: 18px;
+}
+
+/* Footer Container Styling */
+.footer {
+    background: var(--techpack-bg-secondary);
+    border-top: 1px solid var(--techpack-border-primary);
+}
+
+.footer__content-top,
+.footer__content-bottom {
+    color: var(--techpack-text-secondary);
 }
 .footer-block__paragraph {
     margin: 0 auto;
@@ -542,17 +545,23 @@ p.click-to-scroll span {display: block;font-weight: bold;}
 .newsletter-form__field-wrapper .newsletter-form__button {
     position: static;
     width: 100%;
-    background-color: #000!important;
+    background: var(--techpack-bg-secondary) !important;
+    border: 1px solid var(--techpack-border-primary) !important;
+    border-radius: var(--techpack-border-radius) !important;
     height: 45px;
-    color: #fff;
-    font-weight: 500;
-    font-family: Impact;
-    transition: .3s;
+    color: var(--techpack-text-primary) !important;
+    font-weight: 600;
+    font-family: 'Arial Narrow', sans-serif;
+    transition: var(--techpack-transition);
     font-size: 18px;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.05rem;
+    box-shadow: var(--techpack-shadow-sm);
 }
 .newsletter-form__field-wrapper .newsletter-form__button:hover {
-    background-color: #333 !important;
+    background: var(--techpack-bg-tertiary) !important;
+    border-color: var(--techpack-border-focus) !important;
+    transform: translateY(-1px);
+    box-shadow: var(--techpack-shadow-md) !important;
 }
 .newsletter-form__field-wrapper .field__button>svg {
     height: 1.5rem;
@@ -561,40 +570,31 @@ p.click-to-scroll span {display: block;font-weight: bold;}
 }
 .newsletter-form__field-wrapper .inner-folder .field__input {
     padding: 1rem;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    border-radius: 0.3rem;
-    transition: 0.3s;
+    border: 1px solid var(--techpack-border-primary);
+    background-color: var(--techpack-bg-input);
+    border-radius: var(--techpack-border-radius);
+    transition: var(--techpack-transition);
+    color: var(--techpack-text-primary);
 }
-footer .field__input::placeholder { /* Chrome/Opera/Safari */
-  color: rgba(0,0,0,0.4);
-  opacity: 1;
-}
-footer .field__input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: rgba(0,0,0,0.4);
-  opacity: 1;
-}
-footer .field__input::-moz-placeholder { /* Firefox 19+ */
-  color: rgba(0,0,0,0.4);
-  opacity: 1;
-}
-footer .field__input:-ms-input-placeholder { /* IE 10+ */
-  color: rgba(0,0,0,0.4);
-  opacity: 1;
-}
-footer .field__input:-moz-placeholder { /* Firefox 18- */
-  color: rgba(0,0,0,0.4);
+footer .field__input::placeholder,
+footer .field__input::-webkit-input-placeholder,
+footer .field__input::-moz-placeholder,
+footer .field__input:-ms-input-placeholder,
+footer .field__input:-moz-placeholder {
+  color: var(--techpack-text-muted);
   opacity: 1;
 }
 .newsletter-form__field-wrapper .inner-folder .field__input:focus {
-    box-shadow: none;
-    border-color: #c1c1c1;
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.2);
+    border-color: var(--techpack-border-focus);
+    background-color: var(--techpack-bg-tertiary);
+    outline: none;
 }
 .inner-folder .field__label {
     position: static;
     font-weight: 600;
-    color: #333;
-    font-family: Impact;
+    color: var(--techpack-text-primary);
+    font-family: 'Arial Narrow', sans-serif;
     text-transform: uppercase;
     padding: 0 0 5px 3px;
     display: inline-block;
@@ -624,7 +624,22 @@ footer .footer__copyright {
 }
 .footer__copyright ul li  a {
     text-transform: uppercase;
-    transition: 0.3s;
+    transition: var(--techpack-transition);
+    color: var(--techpack-text-accent);
+}
+
+.footer__copyright ul li a:hover {
+    color: var(--techpack-text-primary);
+}
+
+/* Footer Links Styling */
+.footer a {
+    color: var(--techpack-text-accent);
+    transition: var(--techpack-transition);
+}
+
+.footer a:hover {
+    color: var(--techpack-text-primary);
 }
 .footer__payment .list-payment {
     justify-content: center;

@@ -1,0 +1,375 @@
+/* ====================================================
+   UNIFIED THEME SYSTEM - TECHPACK AESTHETIC
+   Professional dark theme with subtle glass morphism
+   Maintains Shopify native functionality
+   ==================================================== */
+
+/* ====================================================
+   TECHPACK DESIGN SYSTEM VARIABLES
+   ==================================================== */
+
+:root {
+  /* TechPack Core Colors - Professional Dark Theme */
+  --techpack-bg-primary: #1e1e1e;
+  --techpack-bg-secondary: #2d2d2d;
+  --techpack-bg-tertiary: #383838;
+  --techpack-bg-card: #2d2d2d;
+  --techpack-bg-modal: #1a1a1a;
+  --techpack-bg-input: #383838;
+  --techpack-bg-hover: #454545;
+  --techpack-bg-active: #525252;
+
+  /* TechPack Glass Morphism (Subtle) */
+  --techpack-glass-bg: rgba(56, 56, 56, 0.8);
+  --techpack-glass-bg-light: rgba(255, 255, 255, 0.05);
+  --techpack-glass-border: rgba(255, 255, 255, 0.1);
+  --techpack-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --techpack-backdrop-blur: blur(12px);
+
+  /* TechPack Text Colors */
+  --techpack-text-primary: #ffffff;
+  --techpack-text-secondary: #e5e5e5;
+  --techpack-text-muted: #b3b3b3;
+  --techpack-text-disabled: #666666;
+  --techpack-text-accent: #a3a3a3;
+
+  /* TechPack Border System */
+  --techpack-border-primary: #4a4a4a;
+  --techpack-border-secondary: #404040;
+  --techpack-border-focus: #6b7280;
+  --techpack-border-radius: 2px;
+
+  /* TechPack Shadows (Professional) */
+  --techpack-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --techpack-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --techpack-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --techpack-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --techpack-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+
+  /* TechPack Transitions */
+  --techpack-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --techpack-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --techpack-transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* TechPack Spacing Scale */
+  --techpack-space-1: 0.25rem;
+  --techpack-space-2: 0.5rem;
+  --techpack-space-3: 0.75rem;
+  --techpack-space-4: 1rem;
+  --techpack-space-6: 1.5rem;
+  --techpack-space-8: 2rem;
+  --techpack-space-12: 3rem;
+  --techpack-space-16: 4rem;
+}
+
+/* ====================================================
+   SHOPIFY VARIABLE OVERRIDES - TECHPACK THEME
+   ==================================================== */
+
+/* Override key Shopify color variables to use TechPack aesthetic */
+:root {
+  /* Background Colors */
+  --color-background: 30, 30, 30; /* #1e1e1e */
+  --color-base-background-1: 30, 30, 30;
+  --color-base-background-2: 45, 45, 45; /* #2d2d2d */
+  
+  /* Text Colors */
+  --color-base-text: 255, 255, 255; /* White text */
+  --color-base-accent-1: 163, 163, 163; /* Light grey accent */
+  --color-base-accent-2: 107, 114, 128; /* Muted grey accent */
+  
+  /* Border and Outline Colors */
+  --color-base-outline-button-labels: 255, 255, 255;
+  --color-base-solid-button-labels: 255, 255, 255;
+  
+  /* Card and Surface Colors */
+  --gradient-base-background-1: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+  --gradient-base-background-2: linear-gradient(135deg, #2d2d2d 0%, #383838 100%);
+}
+
+/* ====================================================
+   GLOBAL TECHPACK STYLING
+   ==================================================== */
+
+/* Apply TechPack aesthetic to main content areas */
+body,
+.main-content,
+.page-width {
+  background-color: var(--techpack-bg-primary);
+  color: var(--techpack-text-primary);
+}
+
+/* Card Components with TechPack Aesthetic */
+.card,
+.card-wrapper,
+.product-card-wrapper,
+.collection-card-wrapper,
+.blog-card-wrapper {
+  background: var(--techpack-glass-bg);
+  backdrop-filter: var(--techpack-backdrop-blur);
+  border: 1px solid var(--techpack-glass-border);
+  border-radius: var(--techpack-border-radius);
+  box-shadow: var(--techpack-shadow-md);
+  transition: var(--techpack-transition);
+}
+
+.card:hover,
+.card-wrapper:hover,
+.product-card-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--techpack-shadow-lg);
+  background: var(--techpack-glass-bg-light);
+}
+
+/* Section Backgrounds */
+.section-template,
+.shopify-section {
+  background-color: var(--techpack-bg-primary);
+}
+
+/* Text Elements */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--techpack-text-primary);
+}
+
+p, span, div {
+  color: var(--techpack-text-secondary);
+}
+
+.muted {
+  color: var(--techpack-text-muted);
+}
+
+/* ====================================================
+   BUTTON SYSTEM OVERRIDES
+   ==================================================== */
+
+/* Primary Buttons with TechPack Aesthetic */
+.button,
+.btn,
+input[type="submit"],
+button {
+  background: linear-gradient(135deg, var(--techpack-bg-secondary) 0%, var(--techpack-bg-tertiary) 100%);
+  color: var(--techpack-text-primary);
+  border: 1px solid var(--techpack-border-primary);
+  border-radius: var(--techpack-border-radius);
+  transition: var(--techpack-transition);
+  box-shadow: var(--techpack-shadow-sm);
+}
+
+.button:hover,
+.btn:hover,
+input[type="submit"]:hover,
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--techpack-shadow-md);
+  background: linear-gradient(135deg, var(--techpack-bg-tertiary) 0%, var(--techpack-bg-hover) 100%);
+}
+
+/* Secondary Buttons */
+.button--secondary {
+  background: var(--techpack-glass-bg);
+  backdrop-filter: var(--techpack-backdrop-blur);
+  border: 1px solid var(--techpack-glass-border);
+  color: var(--techpack-text-primary);
+}
+
+.button--secondary:hover {
+  background: var(--techpack-glass-bg-light);
+  border-color: var(--techpack-border-focus);
+}
+
+/* ====================================================
+   FORM ELEMENTS
+   ==================================================== */
+
+input,
+textarea,
+select {
+  background-color: var(--techpack-bg-input);
+  border: 1px solid var(--techpack-border-primary);
+  border-radius: var(--techpack-border-radius);
+  color: var(--techpack-text-primary);
+  transition: var(--techpack-transition-fast);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--techpack-border-focus);
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.2);
+  outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--techpack-text-muted);
+}
+
+/* ====================================================
+   NAVIGATION ELEMENTS
+   ==================================================== */
+
+/* Header Navigation */
+.header,
+.header-wrapper {
+  background: var(--techpack-glass-bg);
+  backdrop-filter: var(--techpack-backdrop-blur);
+  border-bottom: 1px solid var(--techpack-glass-border);
+}
+
+/* Navigation Links */
+.header__menu-item a,
+.list-menu__item a {
+  color: var(--techpack-text-primary);
+  transition: var(--techpack-transition-fast);
+}
+
+.header__menu-item a:hover,
+.list-menu__item a:hover {
+  color: var(--techpack-text-accent);
+}
+
+/* ====================================================
+   PRODUCT ELEMENTS
+   ==================================================== */
+
+/* Product Cards */
+.card-information {
+  background: var(--techpack-glass-bg);
+  backdrop-filter: var(--techpack-backdrop-blur);
+  border-top: 1px solid var(--techpack-glass-border);
+}
+
+.product-card-wrapper .card__content {
+  background: transparent;
+}
+
+/* Price Elements */
+.price {
+  color: var(--techpack-text-primary);
+}
+
+.price--on-sale .price__regular {
+  color: var(--techpack-text-muted);
+}
+
+/* ====================================================
+   FOOTER
+   ==================================================== */
+
+.footer {
+  background: var(--techpack-bg-secondary);
+  border-top: 1px solid var(--techpack-border-primary);
+}
+
+.footer__content-top,
+.footer__content-bottom {
+  color: var(--techpack-text-secondary);
+}
+
+.footer a {
+  color: var(--techpack-text-accent);
+  transition: var(--techpack-transition-fast);
+}
+
+.footer a:hover {
+  color: var(--techpack-text-primary);
+}
+
+/* ====================================================
+   RESPONSIVE DESIGN
+   ==================================================== */
+
+/* Mobile Optimizations */
+@media screen and (max-width: 749px) {
+  .card,
+  .card-wrapper {
+    border-radius: var(--techpack-border-radius);
+  }
+  
+  /* Reduce blur effects on mobile for performance */
+  .card,
+  .card-wrapper,
+  .header,
+  .header-wrapper {
+    backdrop-filter: none;
+  }
+}
+
+/* Desktop Enhancements */
+@media screen and (min-width: 990px) {
+  .card:hover,
+  .card-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--techpack-shadow-xl);
+  }
+}
+
+/* ====================================================
+   ACCESSIBILITY & PERFORMANCE
+   ==================================================== */
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .card:hover,
+  .card-wrapper:hover,
+  .button:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --techpack-border-primary: #ffffff;
+    --techpack-text-muted: #ffffff;
+    --techpack-glass-border: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Focus Indicators */
+*:focus-visible {
+  outline: 2px solid var(--techpack-border-focus);
+  outline-offset: 2px;
+}
+
+/* ====================================================
+   UTILITY CLASSES
+   ==================================================== */
+
+.techpack-glass {
+  background: var(--techpack-glass-bg);
+  backdrop-filter: var(--techpack-backdrop-blur);
+  border: 1px solid var(--techpack-glass-border);
+  border-radius: var(--techpack-border-radius);
+}
+
+.techpack-card {
+  background: var(--techpack-bg-card);
+  border: 1px solid var(--techpack-border-primary);
+  border-radius: var(--techpack-border-radius);
+  box-shadow: var(--techpack-shadow-md);
+}
+
+.techpack-transition {
+  transition: var(--techpack-transition);
+}
+
+.techpack-text-primary {
+  color: var(--techpack-text-primary);
+}
+
+.techpack-text-secondary {
+  color: var(--techpack-text-secondary);
+}
+
+.techpack-text-muted {
+  color: var(--techpack-text-muted);
+}

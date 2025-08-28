@@ -55,30 +55,30 @@ header.header {
     margin-left: -1rem;
 }
 
-/* Mobile Header Professional Styling */
+/* Mobile Header TechPack Styling */
 nav ul li a.header__menu-item, nav ul li .list-menu__item {
     font-size: 0.9rem;
     padding: 0.6rem 0.8rem;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.05rem;
+    color: var(--techpack-text-primary) !important;
+    border-radius: var(--techpack-border-radius);
 }
 
-/* Mobile Header Background Adjustments */
+nav ul li a.header__menu-item:hover, 
+nav ul li .list-menu__item:hover {
+    background: var(--techpack-glass-bg-light);
+    transform: none; /* Disable transform on mobile for performance */
+}
+
+/* Mobile Header Background - TechPack Glass Effect */
 body sticky-header.header-wrapper,
 body .template-index sticky-header.header-wrapper {
-    backdrop-filter: none !important;
+    background: var(--techpack-bg-secondary) !important;
+    background-color: var(--techpack-bg-secondary) !important;
+    backdrop-filter: none !important; /* Disabled for mobile performance */
     -webkit-backdrop-filter: none !important;
-}
-
-body .template-index sticky-header.header-wrapper {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.08) !important;
-}
-
-body sticky-header.header-wrapper {
-    background: #e8e8e8 !important;
-    background-color: #e8e8e8 !important;
-    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.15) !important;
+    border-bottom: 1px solid var(--techpack-border-primary) !important;
+    box-shadow: var(--techpack-shadow-sm) !important;
 }
 
 /* Mobile Navigation Spacing */
@@ -250,8 +250,62 @@ footer .footer__content-top {
     padding-right: calc(2rem / var(--font-body-scale));
 }
 .video-bottom-text p {
-    color: #000;
+    color: var(--techpack-text-primary);
 }
-  
+
+/* ===============================================
+   TECHPACK MOBILE PERFORMANCE OPTIMIZATIONS
+   =============================================== */
+
+/* Disable heavy effects on mobile for better performance */
+.product-card-wrapper,
+.card-wrapper {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.product-card-wrapper:hover,
+.card-wrapper:hover {
+    transform: none !important;
+}
+
+.card--card,
+.card--standard .card__inner {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Mobile Button Optimizations */
+.button:hover,
+.swatch:hover,
+.quantity__button:hover {
+    transform: none !important;
+}
+
+/* Mobile Text Colors */
+.button-above p,
+.video-text-overlay h2.banner__heading,
+.video-text-overlay .videotoptext p,
+.product-count-5 .video-bottom-text p {
+    color: var(--techpack-text-primary) !important;
+}
+
+/* Mobile Background Colors */
+.product-count-5,
+.autoplay-video .video-section {
+    background-color: var(--techpack-bg-primary) !important;
+}
+
+/* Mobile Footer Enhancements */
+footer .footer__copyright,
+footer .footer__content-top,
+footer .footer__content-bottom {
+    background-color: var(--techpack-bg-secondary);
+    color: var(--techpack-text-secondary);
+}
+
+footer .footer__copyright ul li a {
+    color: var(--techpack-text-accent);
+}
   
 }
