@@ -248,7 +248,12 @@ body[class*="techpack"] *,
 
 .v10-techpack-step {
   min-height: 100vh;
-  background: var(--v10-bg-secondary);
+  background: radial-gradient(
+    ellipse at center,
+    var(--v10-bg-primary) 15%,     /* Dark-dark grey at center (matching the box) */
+    var(--v10-bg-secondary) 50%,   /* Medium-dark grey transition */
+    var(--v10-bg-tertiary) 100%    /* Slightly lighter at edges */
+  );
   padding: var(--v10-space-8) 0;
 }
 
