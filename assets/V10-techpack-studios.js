@@ -4801,8 +4801,8 @@ class V10_GarmentStudio {
       if (sampleTypeInput) {
         sampleTypeInput.checked = true;
         
-        // Use unified visual update function
-        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue);
+        // Use unified visual update function with isInitialSet flag to skip cross-option reset
+        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue, true);
       } else {
         console.error(`Sample type input not found for: ${garmentData.sampleType}, subValue: ${garmentData.sampleSubValue}`);
       }
@@ -6596,7 +6596,7 @@ class V10_GarmentStudio {
     return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/></svg>';
   }
 
-  updateCompactSelection(type, value, garmentCard, subValue = null) {
+  updateCompactSelection(type, value, garmentCard, subValue = null, isInitialSet = false) {
     if (type === 'garment') {
       const garmentIcon = this.getGarmentIcon(value);
       const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
@@ -6709,30 +6709,33 @@ class V10_GarmentStudio {
           selectedCard.classList.add('compact-radio-card--selected');
         }
         
-        // COMPLETE CROSS-OPTION RESET: Fully reset custom when stock is selected
-        const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
-        const customDisplay = garmentCard.querySelector('#sample-custom-display');
-        const customRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="custom"]');
-        const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
-        
-        // Reset visual state
-        if (customPlaceholder) customPlaceholder.style.display = 'flex';
-        if (customDisplay) customDisplay.style.display = 'none';
-        
-        // Reset radio inputs
-        customRadios.forEach(radio => radio.checked = false);
-        
-        // Reset visual selection cards
-        customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-        
         // ALWAYS update garment state with current selection (regardless of previous state)
         garmentData.sampleType = sampleType;
         garmentData.sampleSubValue = actualSubValue;
         
-        // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
-        }, 300);
+        // Only do cross-option reset and auto-collapse for live user selections, not initial value setting
+        if (!isInitialSet) {
+          // COMPLETE CROSS-OPTION RESET: Fully reset custom when stock is selected
+          const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+          const customDisplay = garmentCard.querySelector('#sample-custom-display');
+          const customRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="custom"]');
+          const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+          
+          // Reset visual state
+          if (customPlaceholder) customPlaceholder.style.display = 'flex';
+          if (customDisplay) customDisplay.style.display = 'none';
+          
+          // Reset radio inputs
+          customRadios.forEach(radio => radio.checked = false);
+          
+          // Reset visual selection cards
+          customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+          
+          // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
+          }, 300);
+        }
         
       } else if (sampleType === 'custom') {
         const selectedIcon = garmentCard.querySelector('#sample-custom-selected-icon');
@@ -6771,30 +6774,33 @@ class V10_GarmentStudio {
           selectedCard.classList.add('compact-radio-card--selected');
         }
         
-        // COMPLETE CROSS-OPTION RESET: Fully reset stock when custom is selected
-        const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
-        const stockDisplay = garmentCard.querySelector('#sample-stock-display');
-        const stockRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="stock"]');
-        const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
-        
-        // Reset visual state
-        if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
-        if (stockDisplay) stockDisplay.style.display = 'none';
-        
-        // Reset radio inputs
-        stockRadios.forEach(radio => radio.checked = false);
-        
-        // Reset visual selection cards
-        stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-        
         // ALWAYS update garment state with current selection (regardless of previous state)
         garmentData.sampleType = sampleType;
         garmentData.sampleSubValue = actualSubValue;
         
-        // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
-        }, 300);
+        // Only do cross-option reset and auto-collapse for live user selections, not initial value setting
+        if (!isInitialSet) {
+          // COMPLETE CROSS-OPTION RESET: Fully reset stock when custom is selected
+          const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+          const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+          const stockRadios = garmentCard.querySelectorAll('input[name*="sampleType"][value="stock"]');
+          const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+          
+          // Reset visual state
+          if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+          if (stockDisplay) stockDisplay.style.display = 'none';
+          
+          // Reset radio inputs
+          stockRadios.forEach(radio => radio.checked = false);
+          
+          // Reset visual selection cards
+          stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+          
+          // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
+          }, 300);
+        }
       }
     }
   }
