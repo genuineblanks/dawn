@@ -4019,27 +4019,52 @@ body[style*="overflow: hidden"] {
   box-sizing: border-box;
 }
 
-/* Enhanced unified entrance container with prominent glass morphism */
+/* Enhanced unified entrance container - original dark background only */
 .v10-entrance-unified {
   background: var(--v10-bg-primary); /* Use consistent primary dark */
   border-radius: var(--v10-radius-xl);
   padding: 4rem; /* Equal spacing on all sides - bigger */
+  box-shadow: var(--v10-shadow-xl);
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for depth */
+}
+
+/* Glass morphism wrapper for content inside dark container */
+.v10-content-glass-wrapper {
+  /* Prominent visible glass morphism */
+  border: 2px solid rgba(255, 255, 255, 0.2); /* Strong visible border */
+  backdrop-filter: blur(16px); /* Strong blur for glass effect */
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-8);
   
-  /* PROMINENT glass morphism effects */
-  border: 2px solid rgba(255, 255, 255, 0.15); /* Much more visible border */
+  /* Multiple layered effects for visibility */
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.25), /* Deep shadow for depth */
-    0 0 0 1px rgba(255, 255, 255, 0.05), /* Inner glow */
-    inset 0 1px 0 rgba(255, 255, 255, 0.1); /* Top highlight */
-  backdrop-filter: blur(15px); /* Strong blur effect */
+    0 8px 32px rgba(0, 0, 0, 0.3), /* Deep shadow */
+    0 2px 8px rgba(0, 0, 0, 0.2), /* Close shadow */
+    inset 0 1px 0 rgba(255, 255, 255, 0.15), /* Top highlight */
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1); /* Bottom shadow */
   
-  /* Subtle gradient overlay for extra glass effect */
-  background-image: 
+  /* Subtle gradient background for extra glass effect */
+  background: 
     linear-gradient(145deg, 
-      rgba(255, 255, 255, 0.03) 0%, 
-      transparent 50%, 
-      rgba(255, 255, 255, 0.01) 100%);
+      rgba(255, 255, 255, 0.05) 0%, 
+      rgba(255, 255, 255, 0.02) 50%, 
+      rgba(0, 0, 0, 0.02) 100%);
+  
+  /* Glass reflection effect */
+  position: relative;
+}
+
+.v10-content-glass-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+  pointer-events: none;
 }
 
 /* Keep the header description box as a distinct element */
