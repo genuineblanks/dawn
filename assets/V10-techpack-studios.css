@@ -1200,7 +1200,7 @@ body[style*="overflow: hidden"] {
 
 .v10-modal-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--v10-space-3);
   padding: var(--v10-space-4) var(--v10-space-6);
   border-top: 1px solid var(--v10-border-primary);
