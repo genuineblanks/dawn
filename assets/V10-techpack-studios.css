@@ -4177,7 +4177,7 @@ body[style*="overflow: hidden"] {
   color: var(--v10-text-primary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
-  padding: calc(var(--v10-space-4) * 4) calc(var(--v10-space-8) * 8); /* Double the current size: x4 height, x8 width */
+  padding: calc(var(--v10-space-4) * 2.4) calc(var(--v10-space-8) * 8); /* 40% less height: x2.4 height, x8 width */
   font-size: calc(var(--v10-text-base) * 2); /* Double the font size */
   font-weight: 600;
   cursor: pointer;
