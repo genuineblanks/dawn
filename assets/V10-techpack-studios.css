@@ -4455,16 +4455,14 @@ body[style*="overflow: hidden"] {
   
   .v10-unified-header-box {
     grid-template-columns: auto 1fr auto;
-    gap: var(--v10-space-1);
-    padding: var(--v10-space-3);
-    align-items: center;
+    gap: var(--v10-space-2);
+    padding: var(--v10-space-4);
   }
   
   .v10-entrance-unified .v10-title-spectacular {
-    font-size: calc(var(--v10-text-3xl) * 0.55) !important; /* More readable size on mobile */
-    line-height: 1.1;
+    font-size: calc(var(--v10-text-3xl) * 0.375) !important; /* 50% of desktop size with higher specificity */
+    line-height: 1.2;
     word-break: break-word;
-    letter-spacing: 0.02em;
   }
   
   /* Mobile: Download button shows icon only */
@@ -4473,31 +4471,9 @@ body[style*="overflow: hidden"] {
   }
   
   .v10-download-new .v10-btn-download-new {
-    padding: var(--v10-space-1) !important;
-    min-width: 32px !important;
+    padding: var(--v10-space-2) !important;
+    min-width: 40px !important;
     justify-content: center !important;
-    min-height: 32px !important;
-  }
-  
-  .v10-download-new .v10-btn-download-new svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-  
-  /* Make theme toggle smaller on mobile */
-  .v10-theme-toggle {
-    padding: var(--v10-space-1) !important;
-  }
-  
-  .v10-theme-btn {
-    padding: var(--v10-space-1) !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
-  }
-  
-  .v10-theme-icon {
-    width: 14px !important;
-    height: 14px !important;
   }
   
   .v10-requirements-grid-premium {
