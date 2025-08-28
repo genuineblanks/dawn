@@ -6634,6 +6634,8 @@ class V10_GarmentStudio {
       // Use passed subValue parameter, fallback to DOM if not provided
       const actualSubValue = subValue || input?.dataset.subValue;
       
+      console.log(`🔍 DEBUG updateCompactSelection sampleType: ${value}, actualSubValue: ${actualSubValue}, isInitialSet: ${isInitialSet}`);
+      
       // Remove selected class from both sections first
       const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
       const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
@@ -6715,14 +6717,30 @@ class V10_GarmentStudio {
         const display = garmentCard.querySelector('#sample-custom-display');
         const priceElement = garmentCard.querySelector('#sample-custom-price');
         
+        console.log(`🔍 DEBUG custom sample type DOM elements:`, {
+          selectedIcon: !!selectedIcon,
+          selectedName: !!selectedName,
+          placeholder: !!placeholder,
+          display: !!display,
+          actualSubValue
+        });
+        
         // Get display name for sub-option
         const displayName = this.getSampleCustomDisplayName(actualSubValue);
         const icon = this.getSampleCustomIcon(actualSubValue);
         
+        console.log(`🔍 DEBUG custom display values:`, { displayName, icon });
+        
         if (selectedIcon) selectedIcon.innerHTML = icon;
         if (selectedName) selectedName.textContent = displayName;
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
+        if (placeholder) {
+          placeholder.style.display = 'none';
+          console.log(`🔍 DEBUG: Set placeholder display to none`);
+        }
+        if (display) {
+          display.style.display = 'block';
+          console.log(`🔍 DEBUG: Set display to block`);
+        }
         
         // Update pricing
         const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
