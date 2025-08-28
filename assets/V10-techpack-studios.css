@@ -233,8 +233,11 @@ body[class*="techpack"] *,
    ============================================== */
 
 .v10-techpack-landing {
-  background: linear-gradient(135deg, var(--v10-bg-primary) 0%, var(--v10-bg-secondary) 100%);
-  padding: var(--v10-space-16) 0;
+  background: #1a1a1a; /* Darker background for contrast with the unified container */
+  padding: 3rem 0; /* Increased padding for better spacing */
+  min-height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  align-items: center;
 }
 
 /* Keep min-height only for mobile if needed */
@@ -4015,8 +4018,17 @@ body[style*="overflow: hidden"] {
   padding: var(--v10-space-8);
 }
 
+/* Unified entrance container with dark grey background */
+.v10-entrance-unified {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 4rem 3rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
 .v10-header-section {
-  margin-bottom: var(--v10-space-12);
+  margin-bottom: 5rem; /* Increased spacing */
 }
 
 .v10-unified-header-box {
@@ -4025,10 +4037,11 @@ body[style*="overflow: hidden"] {
   align-items: center;
   gap: var(--v10-space-4);
   padding: var(--v10-space-6);
-  background: var(--v10-bg-card);
-  border: 1px solid var(--v10-border-primary);
+  background: rgba(255, 255, 255, 0.05); /* Subtle background for header area */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--v10-radius-lg);
-  margin-bottom: var(--v10-space-6);
+  margin-bottom: 3rem; /* Increased spacing */
+  backdrop-filter: blur(10px);
 }
 
 .v10-header-content-wrapper {
@@ -4042,6 +4055,8 @@ body[style*="overflow: hidden"] {
 
 .v10-theme-toggle-unified {
   justify-self: end;
+  display: flex;
+  align-items: center;
 }
 
 .v10-btn-download-header {
@@ -4076,36 +4091,50 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-header-description {
-  background: var(--v10-bg-secondary);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-6);
+  background: transparent; /* Remove background */
+  border-radius: 0;
+  padding: var(--v10-space-4) 0;
   text-align: center;
-  border: 1px solid var(--v10-border-primary);
+  border: none; /* Remove border */
+  margin-bottom: 2rem;
+}
+
+.v10-header-description p {
+  color: #e5e5e5; /* Light text color for contrast */
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 0 auto 1rem;
+  max-width: 800px; /* Limit width for better readability */
+  opacity: 0.9;
 }
 
 .v10-actions-section {
-  margin: var(--v10-space-8) 0;
+  margin: 4rem 0; /* Increased vertical spacing */
   text-align: center;
+  padding: 2rem 0; /* Additional padding for breathing room */
 }
 
 .v10-btn-access-studio {
   position: relative;
-  background: var(--v10-text-primary);
-  color: var(--v10-bg-primary);
-  border: none;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  color: #1a1a1a;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-6) var(--v10-space-12);
+  padding: 1.5rem 3rem;
   font-size: var(--v10-text-lg);
   font-weight: 600;
   cursor: pointer;
-  transition: var(--v10-transition);
+  transition: all 0.3s ease;
   overflow: hidden;
-  box-shadow: var(--v10-shadow-lg);
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .v10-btn-access-studio:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--v10-shadow-xl);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
 }
 
 .v10-btn-inner {
@@ -4126,7 +4155,8 @@ body[style*="overflow: hidden"] {
 
 /* Requirements section */
 .v10-requirements-section {
-  margin: var(--v10-space-12) 0;
+  margin: 5rem 0 3rem; /* Increased top margin for better separation */
+  padding-top: 2rem; /* Additional padding */
 }
 
 .v10-requirements-header {
@@ -4150,20 +4180,22 @@ body[style*="overflow: hidden"] {
 .v10-requirements-grid-premium {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--v10-space-6);
+  gap: 2rem; /* Increased gap between cards */
+  margin-top: 3rem; /* Add more space above the grid */
 }
 
 .v10-requirement-card-premium {
-  background: linear-gradient(135deg, var(--v10-bg-card) 0%, var(--v10-bg-secondary) 100%);
-  border: 1px solid var(--v10-border-primary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   transition: var(--v10-transition);
   position: relative;
-  box-shadow: var(--v10-shadow-sm);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   text-align: center;
+  backdrop-filter: blur(5px);
 }
 
 .v10-requirement-card-premium:hover {
@@ -4368,6 +4400,11 @@ body[style*="overflow: hidden"] {
   }
   
   /* Landing page mobile fixes */
+  .v10-entrance-unified {
+    padding: 2rem 1.5rem;
+    border-radius: 8px;
+  }
+  
   .v10-unified-header-box {
     grid-template-columns: auto 1fr auto;
     gap: var(--v10-space-2);
