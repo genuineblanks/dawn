@@ -4136,7 +4136,7 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-header-description {
-  background: var(--v10-bg-tertiary); /* Subtle background variation */
+  background: var(--v10-bg-primary); /* Dark background to match main container */
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   text-align: center;
