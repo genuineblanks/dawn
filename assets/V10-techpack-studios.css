@@ -5418,3 +5418,21 @@ div[class*="circle"][style*="background-color"],
     letter-spacing: 0.02em !important;
   }
 }
+
+/* =================================================================
+   MOBILE THEME TOGGLE WIDTH REDUCTION - TARGETED ONLY
+   ================================================================= */
+
+/* Reduce theme toggle width on mobile for better text centering */
+@media (max-width: 768px) {
+  .v10-theme-toggle {
+    padding: 2px !important; /* Much smaller container padding */
+    gap: 2px !important; /* Reduce gap between buttons */
+  }
+  
+  .v10-theme-btn {
+    padding: 6px 8px !important; /* Much smaller button padding */
+    font-size: 10px !important; /* Even smaller font size */
+    min-width: auto !important; /* Remove any minimum width */
+  }
+}
