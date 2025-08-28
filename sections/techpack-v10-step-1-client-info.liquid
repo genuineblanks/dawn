@@ -17,12 +17,24 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btn) {
     console.log('✅ Button found:', btn);
     console.log('📋 Button classes:', btn.className);
-    console.log('🎨 Button computed styles:', window.getComputedStyle(btn));
+    
+    const computedStyles = window.getComputedStyle(btn);
+    console.log('🎨 SPECIFIC COMPUTED STYLES:');
+    console.log('  Background:', computedStyles.backgroundColor);
+    console.log('  Padding:', computedStyles.padding);
+    console.log('  Border:', computedStyles.border);
+    console.log('  Border-radius:', computedStyles.borderRadius);
+    console.log('  Color:', computedStyles.color);
+    console.log('  Font-size:', computedStyles.fontSize);
+    console.log('  Font-weight:', computedStyles.fontWeight);
+    console.log('  Display:', computedStyles.display);
+    console.log('  Text-decoration:', computedStyles.textDecoration);
+    
     console.log('💅 Button inline styles:', btn.style.cssText);
     console.log('🖱️ Button parent:', btn.parentElement);
+    console.log('🔍 Parent classes:', btn.parentElement.className);
   } else {
     console.log('❌ Button NOT found with ID: v10-get-templates-btn');
-    // Look for all buttons with download class
     const downloadBtns = document.querySelectorAll('.v10-btn-download-header');
     console.log('🔍 Found download buttons by class:', downloadBtns);
   }
