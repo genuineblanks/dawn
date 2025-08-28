@@ -5,11 +5,7 @@
 @media screen and (max-width: 1390px) {
   .banner ul.banner__box li.item-banner a {display: flex;}
 
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
-  font-size: 1.1rem;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
+nav ul li a.header__menu-item, nav ul li .list-menu__item {font-size: 1.2rem;}
 .banner ul.banner__box li.item-banner img {
     max-height: 200px;
 }
@@ -53,66 +49,6 @@ header.header {
 }
 .header header-drawer {
     margin-left: -1rem;
-}
-
-/* Mobile Header TechPack Styling */
-nav ul li a.header__menu-item, nav ul li .list-menu__item {
-    font-size: 0.9rem;
-    padding: 0.6rem 0.8rem;
-    letter-spacing: 0.05rem;
-    color: var(--techpack-text-primary) !important;
-    border-radius: var(--techpack-border-radius);
-}
-
-nav ul li a.header__menu-item:hover, 
-nav ul li .list-menu__item:hover {
-    background: var(--techpack-glass-bg-light);
-    transform: none; /* Disable transform on mobile for performance */
-}
-
-/* Mobile Header Background - TechPack Glass Effect */
-body sticky-header.header-wrapper,
-body .template-index sticky-header.header-wrapper {
-    background: var(--techpack-bg-secondary) !important;
-    background-color: var(--techpack-bg-secondary) !important;
-    backdrop-filter: none !important; /* Disabled for mobile performance */
-    -webkit-backdrop-filter: none !important;
-    border-bottom: 1px solid var(--techpack-border-primary) !important;
-    box-shadow: var(--techpack-shadow-sm) !important;
-}
-
-/* Mobile Navigation Spacing */
-nav ul {
-    gap: 0.5rem;
-}
-
-/* Mobile Header Icons */
-.header__icons {
-    gap: 0.3rem;
-}
-
-.header__icon {
-    padding: 0.3rem;
-}
-
-/* Mobile Tech Pack Button */
-.header-techpack-btn {
-    padding: 0.3rem;
-}
-
-.header-techpack-btn:hover {
-    transform: none;
-    background: transparent;
-}
-
-.header-techpack-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-/* Mobile Visual Separator */
-nav ul li:nth-child(5)::after {
-    display: none;
 }
 .product-count-5 {
     background-color: #f8faf9;
@@ -250,62 +186,8 @@ footer .footer__content-top {
     padding-right: calc(2rem / var(--font-body-scale));
 }
 .video-bottom-text p {
-    color: var(--techpack-text-primary);
+    color: #000;
 }
-
-/* ===============================================
-   TECHPACK MOBILE PERFORMANCE OPTIMIZATIONS
-   =============================================== */
-
-/* Disable heavy effects on mobile for better performance */
-.product-card-wrapper,
-.card-wrapper {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-.product-card-wrapper:hover,
-.card-wrapper:hover {
-    transform: none !important;
-}
-
-.card--card,
-.card--standard .card__inner {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* Mobile Button Optimizations */
-.button:hover,
-.swatch:hover,
-.quantity__button:hover {
-    transform: none !important;
-}
-
-/* Mobile Text Colors */
-.button-above p,
-.video-text-overlay h2.banner__heading,
-.video-text-overlay .videotoptext p,
-.product-count-5 .video-bottom-text p {
-    color: var(--techpack-text-primary) !important;
-}
-
-/* Mobile Background Colors */
-.product-count-5,
-.autoplay-video .video-section {
-    background-color: var(--techpack-bg-primary) !important;
-}
-
-/* Mobile Footer Enhancements */
-footer .footer__copyright,
-footer .footer__content-top,
-footer .footer__content-bottom {
-    background-color: var(--techpack-bg-secondary);
-    color: var(--techpack-text-secondary);
-}
-
-footer .footer__copyright ul li a {
-    color: var(--techpack-text-accent);
-}
+  
   
 }
