@@ -16,8 +16,8 @@
   <button type="button" 
           class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" 
           data-theme="light"
-          aria-label="{{ 'techpack.theme.light_mode' | t | default: 'Switch to light theme' }}"
-          title="{{ 'techpack.theme.light_mode' | t | default: 'Light theme' }}">
+          aria-label="Switch to light theme"
+          title="Light theme">
     <svg class="v10-theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="5"/>
       <line x1="12" y1="1" x2="12" y2="3"/>
@@ -30,20 +30,20 @@
       <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
     </svg>
     {% if show_labels %}
-      <span class="v10-theme-label">{{ 'techpack.theme.light' | t | default: 'Light' }}</span>
+      <span class="v10-theme-label">Light</span>
     {% endif %}
   </button>
   
   <button type="button" 
           class="v10-theme-btn v10-theme-btn--dark" 
           data-theme="dark"
-          aria-label="{{ 'techpack.theme.dark_mode' | t | default: 'Switch to dark theme' }}"
-          title="{{ 'techpack.theme.dark_mode' | t | default: 'Dark theme' }}">
+          aria-label="Switch to dark theme"
+          title="Dark theme">
     <svg class="v10-theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
     </svg>
     {% if show_labels %}
-      <span class="v10-theme-label">{{ 'techpack.theme.dark' | t | default: 'Dark' }}</span>
+      <span class="v10-theme-label">Dark</span>
     {% endif %}
   </button>
 </div>
