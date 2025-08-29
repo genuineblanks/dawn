@@ -13375,33 +13375,42 @@ class V10_FileManager {
     }
     
     // Set up event listeners
-    const closeModal = () => {
+    const closeModalHandler = () => {
       console.log('🚪 Closing modal...');
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
+      if (window.v10ModalManager) {
+        window.v10ModalManager.closeModal(modal);
+      } else {
+        // Fallback if modal manager not available
+        modal.classList.add('v10-hidden');
+        document.body.style.overflow = '';
+      }
     };
     
     // Remove existing listeners and add new ones
     if (backBtn) {
       const newBackBtn = backBtn.cloneNode(true);
       backBtn.parentNode.replaceChild(newBackBtn, backBtn);
-      newBackBtn.addEventListener('click', closeModal);
+      newBackBtn.addEventListener('click', closeModalHandler);
     }
     
     const closeBtn = document.getElementById('v10-close-warning-modal');
     if (closeBtn) {
       const newCloseBtn = closeBtn.cloneNode(true);
       closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
-      newCloseBtn.addEventListener('click', closeModal);
+      newCloseBtn.addEventListener('click', closeModalHandler);
     }
     
-    console.log('🎭 Showing modal with display: flex');
-    // Prevent background scrolling
-    document.body.style.overflow = 'hidden';
+    console.log('🎭 Showing modal');
     // Show the modal with proper overlay
-    modal.style.display = 'flex';
-    console.log('✅ Modal display set, current style:', modal.style.display);
-    console.log('🎯 Modal visibility:', window.getComputedStyle(modal).display);
+    if (window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
+    } else {
+      // Fallback if modal manager not available
+      document.body.style.overflow = 'hidden';
+      modal.classList.remove('v10-hidden');
+      modal.classList.add('v10-flex');
+    }
+    console.log('✅ Modal shown successfully');
   }
 
   showIncompleteMeasurementsModal(fitChecked, designChecked, placementChecked) {
@@ -13465,30 +13474,41 @@ class V10_FileManager {
     }
     
     // Set up event listeners (basic)
-    const closeModal = () => {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
+    const closeModalHandler = () => {
+      if (window.v10ModalManager) {
+        window.v10ModalManager.closeModal(modal);
+      } else {
+        // Fallback if modal manager not available
+        modal.classList.add('v10-hidden');
+        document.body.style.overflow = '';
+      }
     };
     
     // Simple event setup
     if (backBtn) {
-      backBtn.onclick = closeModal;
+      backBtn.onclick = closeModalHandler;
     }
     if (proceedBtn) {
       proceedBtn.onclick = () => {
-        closeModal();
+        closeModalHandler();
         this.proceedToStep3();
       };
     }
     
     const closeBtn = document.getElementById('v10-close-measurement-modal');
     if (closeBtn) {
-      closeBtn.onclick = closeModal;
+      closeBtn.onclick = closeModalHandler;
     }
     
     // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (window.v10ModalManager) {
+      window.v10ModalManager.openModal(modal);
+    } else {
+      // Fallback if modal manager not available
+      modal.classList.remove('v10-hidden');
+      modal.classList.add('v10-flex');
+      document.body.style.overflow = 'hidden';
+    }
     
     console.log('✅ Incomplete measurements modal shown');
   }
@@ -13784,6 +13804,7 @@ class V10_FileManager {
 
 class V10_ModalManager {
   constructor() {
+    this.initialized = false;
     this.currentClientType = null;
     this.currentSubmissionType = null;
     this.modals = new Map();
@@ -13792,9 +13813,18 @@ class V10_ModalManager {
   }
 
   init() {
+    // Prevent multiple initialization
+    if (this.initialized) {
+      console.log('⚠️ V10_ModalManager already initialized, skipping...');
+      return;
+    }
+    
     this.initializeModals();
     this.setupEventListeners();
     this.setupModalInteractions();
+    
+    this.initialized = true;
+    console.log('✅ V10_ModalManager initialized successfully');
   }
 
   initializeModals() {
@@ -13903,8 +13933,14 @@ class V10_ModalManager {
 
     if (clientType === 'new') {
       // Show notice for new clients
-      if (registrationNotice) registrationNotice.style.display = 'flex';
-      if (registrationWarning) registrationWarning.style.display = 'none';
+      if (registrationNotice) {
+        registrationNotice.classList.remove('v10-hidden');
+        registrationNotice.classList.add('v10-flex');
+      }
+      if (registrationWarning) {
+        registrationWarning.classList.add('v10-hidden');
+        registrationWarning.classList.remove('v10-flex');
+      }
       
       // Update description
       if (submissionDescription) {
@@ -13931,8 +13967,14 @@ class V10_ModalManager {
       
     } else if (clientType === 'registered') {
       // Show warning for registered clients
-      if (registrationNotice) registrationNotice.style.display = 'none';
-      if (registrationWarning) registrationWarning.style.display = 'flex';
+      if (registrationNotice) {
+        registrationNotice.classList.add('v10-hidden');
+        registrationNotice.classList.remove('v10-flex');
+      }
+      if (registrationWarning) {
+        registrationWarning.classList.remove('v10-hidden');
+        registrationWarning.classList.add('v10-flex');
+      }
       
       // Update description
       if (submissionDescription) {
@@ -13991,11 +14033,11 @@ class V10_ModalManager {
     const formSection = document.getElementById('techpack-v10-step-1');
     
     if (landingSection) {
-      landingSection.style.display = 'none';
+      landingSection.classList.add('v10-hidden');
     }
     
     if (formSection) {
-      formSection.style.display = 'block';
+      formSection.classList.remove('v10-hidden');
       formSection.scrollIntoView({ behavior: 'smooth' });
       
       // Update current step
@@ -14019,9 +14061,9 @@ class V10_ModalManager {
     const statusBadge = document.getElementById('v10-client-status-badge');
     if (statusBadge) {
       statusBadge.textContent = this.currentClientType === 'new' ? 'New Client' : 'Registered Client';
-      statusBadge.style.background = this.currentClientType === 'new' 
-        ? 'linear-gradient(135deg, #f59e0b, #d97706)' 
-        : 'linear-gradient(135deg, #10b981, #059669)';
+      // Use CSS classes for badge styling
+      statusBadge.classList.remove('v10-badge--new-client', 'v10-badge--registered');
+      statusBadge.classList.add(this.currentClientType === 'new' ? 'v10-badge--new-client' : 'v10-badge--registered');
     }
     
     // Update subtitle based on submission type
@@ -14042,9 +14084,9 @@ class V10_ModalManager {
     const shippingSection = document.getElementById('v10-shipping-section');
     
     // Hide all conditional sections first
-    if (deliveryAddressField) deliveryAddressField.style.display = 'none';
-    if (deliverySection) deliverySection.style.display = 'none';
-    if (shippingSection) shippingSection.style.display = 'none';
+    if (deliveryAddressField) deliveryAddressField.classList.add('v10-hidden');
+    if (deliverySection) deliverySection.classList.add('v10-hidden');
+    if (shippingSection) shippingSection.classList.add('v10-hidden');
     
     // Show sections based on submission type
     switch (submissionType) {
@@ -14055,24 +14097,24 @@ class V10_ModalManager {
       case 'sample-request':
         // Show delivery address field for samples
         if (deliveryAddressField) {
-          deliveryAddressField.style.display = 'block';
+          deliveryAddressField.classList.remove('v10-hidden');
         }
         break;
         
       case 'bulk-order-request':
         // Show delivery address field and shipping sections for bulk orders
         if (deliveryAddressField) {
-          deliveryAddressField.style.display = 'block';
+          deliveryAddressField.classList.remove('v10-hidden');
         }
         if (shippingSection) {
-          shippingSection.style.display = 'block';
+          shippingSection.classList.remove('v10-hidden');
         }
         break;
         
       case 'lab-dips-accessories':
         // Show delivery address field for lab dips/accessories
         if (deliveryAddressField) {
-          deliveryAddressField.style.display = 'block';
+          deliveryAddressField.classList.remove('v10-hidden');
         }
         break;
     }
