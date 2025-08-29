@@ -5448,3 +5448,29 @@ div[class*="circle"][style*="background-color"],
     min-width: auto !important; /* Remove any minimum width */
   }
 }
+
+/* =================================================================
+   V10 UTILITY CLASSES - JAVASCRIPT REFACTORING SUPPORT
+   ================================================================= */
+
+/* Display utilities */
+.v10-hidden {
+  display: none !important;
+}
+
+.v10-flex {
+  display: flex !important;
+}
+
+.v10-block {
+  display: block !important;
+}
+
+/* Badge gradient classes */
+.v10-badge--new-client {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.v10-badge--registered {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+}
