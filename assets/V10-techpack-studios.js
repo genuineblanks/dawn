@@ -6048,7 +6048,7 @@ class V10_GarmentStudio {
     
     allGarments.forEach(garment => {
       // Check if garment has quantity configuration
-      const garmentQuantities = V10_State.quantities.get(garment.id);
+      const garmentQuantities = V10_State.quantities.garments.get(garment.id);
       if (garmentQuantities && garmentQuantities.total > 0) {
         quantitiesConfigured++;
       }
@@ -7033,8 +7033,11 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
         // Update dependencies after garment selection to enable fabric type
-        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
-        this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        const garmentId = garmentCard.dataset.garmentId;
+        if (garmentId) {
+          const garmentData = V10_State.garments.get(garmentId);
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        }
       }, 300);
       
     } else if (type === 'fabric') {
@@ -7054,8 +7057,11 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
         // Update dependencies after fabric type selection
-        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
-        this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        const garmentId = garmentCard.dataset?.garmentId;
+        if (garmentId) {
+          const garmentData = V10_State.garments.get(garmentId);
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        }
       }, 300);
       
     } else if (type === 'sampleReference') {
@@ -7090,7 +7096,8 @@ class V10_GarmentStudio {
       const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
       
       // Get garment data once for the entire function
-      const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+      const garmentId = garmentCard.dataset?.garmentId;
+      const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
       
       stockSection?.classList.remove('selected');
       customSection?.classList.remove('selected');
@@ -7192,7 +7199,8 @@ class V10_GarmentStudio {
         }
         
         // Update pricing
-        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+        const garmentId = garmentCard.dataset?.garmentId;
+        const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
         if (priceElement && garmentData) {
           const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, 'custom');
           if (price && price !== 'Premium') {
