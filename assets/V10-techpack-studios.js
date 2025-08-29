@@ -3028,8 +3028,8 @@ const V10_Utils = {
             console.log(`🔄 Auto-switched to stock sample for garment ${garmentId} due to fabric restriction`);
           }
           
-          // Reset display states using existing reset method
-          V10_GarmentStudio.getInstance().resetSampleTypeSelection(garmentElement);
+          // Reset display states using UI Manager
+          V10_GarmentStudio.getInstance().uiManager.resetSampleTypeSelection(garmentElement);
         }
         
       } else {
@@ -4661,7 +4661,8 @@ class V10_GarmentUIManager {
       
       if (input) {
         input.checked = true;
-        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue, true);
+        // Note: updateCompactSelection will be called after DOM insertion in main class
+        // to avoid clone/garmentCard mismatch issues
       }
     }
   }
@@ -4749,6 +4750,198 @@ class V10_GarmentUIManager {
   getFabricTypeIcon(fabricType) {
     const studioInstance = V10_GarmentStudio.getInstance();
     return studioInstance?.getFabricTypeIcon?.(fabricType) || '🧵';
+  }
+  
+  /**
+   * Initialize garment selection workflow dependencies
+   * Implements: Type → Fabric → Sample dependency chain
+   */
+  initializeSelectionWorkflow(garmentCard) {
+    // Initially disable fabric and sample selections
+    this.disableFabricSelection(garmentCard);
+    this.disableSampleSelection(garmentCard);
+    
+    console.log('✅ [UI] Selection workflow initialized');
+  }
+  
+  /**
+   * Update selection dependencies based on current state
+   */
+  updateSelectionDependencies(garmentCard, garmentData) {
+    const requestType = V10_State.requestType;
+    
+    // Enable/disable fabric selection based on garment type
+    if (garmentData.type) {
+      this.enableFabricSelection(garmentCard);
+      this.populateFabricOptions(garmentCard, garmentData.type);
+    } else {
+      this.disableFabricSelection(garmentCard);
+      this.disableSampleSelection(garmentCard);
+      return;
+    }
+    
+    // Enable/disable sample selection based on fabric type
+    if (garmentData.fabricType) {
+      this.enableSampleSelection(garmentCard, garmentData.fabricType);
+    } else {
+      this.disableSampleSelection(garmentCard);
+    }
+    
+    console.log('🔄 [UI] Selection dependencies updated');
+  }
+  
+  /**
+   * Enable fabric selection
+   */
+  enableFabricSelection(garmentCard) {
+    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    
+    if (fabricCollapsed) {
+      fabricCollapsed.style.opacity = '1';
+      fabricCollapsed.style.pointerEvents = 'auto';
+    }
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.cursor = 'pointer';
+      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      if (placeholderText) {
+        placeholderText.textContent = 'Select fabric type';
+      }
+    }
+  }
+  
+  /**
+   * Disable fabric selection
+   */
+  disableFabricSelection(garmentCard) {
+    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    
+    if (fabricCollapsed) {
+      fabricCollapsed.style.opacity = '0.5';
+      fabricCollapsed.style.pointerEvents = 'none';
+    }
+    if (fabricPlaceholder) {
+      fabricPlaceholder.style.cursor = 'not-allowed';
+      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      if (placeholderText) {
+        placeholderText.textContent = 'Select garment type first';
+      }
+    }
+  }
+  
+  /**
+   * Enable sample selection based on fabric type
+   */
+  enableSampleSelection(garmentCard, fabricType) {
+    // Cotton fabrics: enable both stock and custom
+    // Non-cotton fabrics: only stock colors
+    const isCotton = fabricType && fabricType.toLowerCase().includes('cotton');
+    
+    const stockSection = garmentCard.querySelector('#sample-stock-collapsed');
+    const customSection = garmentCard.querySelector('#sample-custom-collapsed');
+    
+    // Always enable stock colors
+    if (stockSection) {
+      stockSection.style.opacity = '1';
+      stockSection.style.pointerEvents = 'auto';
+    }
+    
+    // Enable/disable custom based on cotton
+    if (customSection) {
+      if (isCotton) {
+        customSection.style.opacity = '1';
+        customSection.style.pointerEvents = 'auto';
+      } else {
+        customSection.style.opacity = '0.5';
+        customSection.style.pointerEvents = 'none';
+        // Add visual indicator for disabled state
+        const customPlaceholder = customSection.querySelector('.placeholder-text');
+        if (customPlaceholder) {
+          customPlaceholder.textContent = 'Only available for cotton fabrics';
+        }
+      }
+    }
+  }
+  
+  /**
+   * Disable sample selection
+   */
+  disableSampleSelection(garmentCard) {
+    const stockSection = garmentCard.querySelector('#sample-stock-collapsed');
+    const customSection = garmentCard.querySelector('#sample-custom-collapsed');
+    
+    if (stockSection) {
+      stockSection.style.opacity = '0.5';
+      stockSection.style.pointerEvents = 'none';
+    }
+    if (customSection) {
+      customSection.style.opacity = '0.5';
+      customSection.style.pointerEvents = 'none';
+    }
+  }
+  
+  /**
+   * Reset fabric selection to placeholder
+   */
+  resetFabricSelection(garmentCard) {
+    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
+    const fabricDisplay = garmentCard.querySelector('#fabric-display');
+    const fabricSelectedName = garmentCard.querySelector('#fabric-selected-name');
+    
+    if (fabricSelectedName) fabricSelectedName.textContent = '';
+    if (fabricPlaceholder) fabricPlaceholder.style.display = 'flex';
+    if (fabricDisplay) fabricDisplay.style.display = 'none';
+  }
+  
+  /**
+   * Reset sample selection to placeholder
+   */
+  resetSampleSelection(garmentCard) {
+    // Reset both stock and custom selections
+    const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+    const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+    const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+    const customDisplay = garmentCard.querySelector('#sample-custom-display');
+    
+    // Reset stock
+    if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+    if (stockDisplay) stockDisplay.style.display = 'none';
+    
+    // Reset custom
+    if (customPlaceholder) customPlaceholder.style.display = 'flex';
+    if (customDisplay) customDisplay.style.display = 'none';
+    
+    // Uncheck all sample type radio buttons
+    const sampleInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"]');
+    sampleInputs.forEach(input => input.checked = false);
+  }
+  
+  /**
+   * Handle sample type cross-selection reset
+   * When user selects one sample type, reset the other
+   */
+  handleSampleTypeCrossReset(garmentCard, selectedType) {
+    if (selectedType === 'stock') {
+      // User selected stock, reset custom
+      const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+      const customDisplay = garmentCard.querySelector('#sample-custom-display');
+      const customInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"custom\"]');
+      
+      if (customPlaceholder) customPlaceholder.style.display = 'flex';
+      if (customDisplay) customDisplay.style.display = 'none';
+      customInputs.forEach(input => input.checked = false);
+      
+    } else if (selectedType === 'custom') {
+      // User selected custom, reset stock
+      const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+      const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+      const stockInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"stock\"]');
+      
+      if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+      if (stockDisplay) stockDisplay.style.display = 'none';
+      stockInputs.forEach(input => input.checked = false);
+    }
   }
   
   // Compact selection methods (simplified versions)
@@ -4849,21 +5042,31 @@ class V10_GarmentManager {
   duplicateGarment(sourceId) {
     try {
       const sourceGarment = V10_State.garments.get(sourceId);
-      if (!sourceGarment) return null;
+      if (!sourceGarment) {
+        console.error('Source garment not found for ID:', sourceId);
+        return null;
+      }
 
-      // Create duplicate data (new ID, no assignments)
+      // Create duplicate data (new ID, no assignments, but preserve specifications)
       const duplicateData = {
-        ...sourceGarment,
-        id: V10_Utils.generateId('garment'),
+        type: sourceGarment.type,
+        fabricType: sourceGarment.fabricType,
+        sampleType: sourceGarment.sampleType,
+        sampleSubValue: sourceGarment.sampleSubValue,
+        sampleReference: sourceGarment.sampleReference,
+        includeDesign: sourceGarment.includeDesign,
+        designReference: sourceGarment.designReference,
+        // Reset state-specific properties
         assignedLabDips: new Set(),
         assignedDesigns: new Set(),
         isComplete: false,
         isInEditMode: false
       };
 
+      console.log('🔄 Duplicating garment with data:', duplicateData);
       return this.addGarment(duplicateData);
     } catch (error) {
-      console.error('Error duplicating garment:', error);
+      console.error('❌ Error duplicating garment:', error);
       return null;
     }
   }
@@ -5085,7 +5288,7 @@ class V10_GarmentStudio {
     this.garmentManager.on('garmentAdded', (event) => {
       const { garmentId, garmentData } = event.detail;
       this.renderGarment(garmentData);
-      this.renumberGarments();
+      this.garmentManager.renumberGarments();
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
       this.updateQuantitiesStudioTabStatus();
@@ -5192,7 +5395,14 @@ class V10_GarmentStudio {
         
         const addedGarmentCard = document.querySelector(`[data-garment-id="${garmentData.id}"]`);
         if (addedGarmentCard) {
-          this.updateSelectionDependencies(addedGarmentCard);
+          // Initialize UI workflow
+          this.uiManager.initializeSelectionWorkflow(addedGarmentCard);
+          this.uiManager.updateSelectionDependencies(addedGarmentCard, garmentData);
+          
+          // Update compact selections after DOM insertion for existing garment data
+          if (garmentData.sampleType) {
+            this.updateCompactSelection('sampleType', garmentData.sampleType, addedGarmentCard, garmentData.sampleSubValue, true);
+          }
         }
       } catch (error) {
         console.error('❌ Error updating garment post-render:', error);
@@ -5311,19 +5521,12 @@ class V10_GarmentStudio {
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', newValue, garmentCard);
-        this.resetFabricSelection(garmentCard); // Reset fabric display to placeholder
-        this.enableFabricSelection(garmentCard);
-        
-        // Reset and enable sample reference for bulk orders when garment type is selected
-        const requestTypeCompact = V10_State.requestType;
-        if (requestTypeCompact === 'bulk-order-request') {
-          this.resetSampleReferenceSelection(garmentCard); // Reset sample reference display to placeholder
-          this.enableSampleReferenceSelection(garmentCard);
-        }
+        this.uiManager.resetFabricSelection(garmentCard);
+        this.uiManager.resetSampleSelection(garmentCard);
       }
       
-      // Reset sample type selection
-      this.resetSampleTypeSelection(garmentCard);
+      // Update selection dependencies through UI Manager
+      this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       
       // Update sample type prices based on new garment selection
       V10_Utils.updateSampleTypePrices(garmentCard);
@@ -5368,8 +5571,9 @@ class V10_GarmentStudio {
         this.updateCompactSelection('fabric', newValue, garmentCard);
       }
       
-      // Reset sample type selection
-      this.resetSampleTypeSelection(garmentCard);
+      // Reset sample selection and update dependencies
+      this.uiManager.resetSampleSelection(garmentCard);
+      this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
@@ -5403,6 +5607,9 @@ class V10_GarmentStudio {
       
       // Use unified update function (handles state, visual, pricing, marking changed, status)
       this.updateSampleType(garmentId, newSampleType, newSampleSubValue, garmentCard);
+      
+      // Handle cross-selection reset (stock vs custom)
+      this.uiManager.handleSampleTypeCrossReset(garmentCard, newSampleType);
       
       // Clear any existing red borders since user made a selection
       const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
@@ -6396,7 +6603,7 @@ class V10_GarmentStudio {
     
     if (success) {
       // Handle UI-specific logic after successful removal
-      this.renumberGarments();
+      this.garmentManager.renumberGarments();
       
       // If no garments left, add a new one
       if (V10_State.garments.size === 0) {
@@ -6466,7 +6673,7 @@ class V10_GarmentStudio {
       this.positionVariantAfterOriginal(originalGarmentId, newVariant.id);
       
       // Renumber all garments to maintain sequential order
-      this.renumberGarments();
+      this.garmentManager.renumberGarments();
       
       // Force immediate status update for the new variant
       // This ensures the variant is properly validated with its assigned lab dip
@@ -6505,47 +6712,6 @@ class V10_GarmentStudio {
     }
   }
 
-  renumberGarments() {
-    try {
-      const garmentCards = this.garmentsContainer.querySelectorAll('.garment-card');
-      let updatedCount = 0;
-      
-      garmentCards.forEach((garmentCard, index) => {
-        const newNumber = index + 1;
-        const garmentId = garmentCard.dataset.garmentId;
-        
-        // Update the display number in the card
-        const numberElement = garmentCard.querySelector('.garment-card__number');
-        if (numberElement) {
-          const oldText = numberElement.textContent;
-          const newText = `Garment ${newNumber}`;
-          
-          if (oldText !== newText) {
-            numberElement.textContent = newText;
-            updatedCount++;
-            console.log(`🔢 Updated garment display: "${oldText}" → "${newText}"`);
-          }
-        }
-        
-        // Update the number in state data
-        if (garmentId && V10_State.garments.has(garmentId)) {
-          const garmentData = V10_State.garments.get(garmentId);
-          const oldNumber = garmentData.number;
-          
-          if (oldNumber !== newNumber) {
-            garmentData.number = newNumber;
-            console.log(`🔢 Updated garment state: ${garmentId} number ${oldNumber} → ${newNumber}`);
-          }
-        }
-      });
-      
-      if (updatedCount > 0) {
-        console.log(`✅ Renumbered ${updatedCount} garments`);
-      }
-    } catch (error) {
-      console.error('Error renumbering garments:', error);
-    }
-  }
 
   cleanupAssignments(garmentId) {
     // Remove garment from all lab dip assignments
@@ -6843,6 +7009,12 @@ class V10_GarmentStudio {
   }
 
   updateCompactSelection(type, value, garmentCard, subValue = null, isInitialSet = false) {
+    // Safety check: ensure garmentCard is a valid DOM element
+    if (!garmentCard || !garmentCard.querySelector || !garmentCard.dataset) {
+      console.error('❌ updateCompactSelection: Invalid garmentCard provided:', garmentCard);
+      return;
+    }
+    
     if (type === 'garment') {
       const garmentIcon = this.getGarmentIcon(value);
       const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
@@ -6861,7 +7033,8 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
         // Update dependencies after garment selection to enable fabric type
-        this.updateSelectionDependencies(garmentCard);
+        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+        this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       }, 300);
       
     } else if (type === 'fabric') {
@@ -6881,7 +7054,8 @@ class V10_GarmentStudio {
       setTimeout(() => {
         this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
         // Update dependencies after fabric type selection
-        this.updateSelectionDependencies(garmentCard);
+        const garmentData = V10_State.garments.get(garmentCard.dataset.garmentId);
+        this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       }, 300);
       
     } else if (type === 'sampleReference') {
@@ -7069,229 +7243,13 @@ class V10_GarmentStudio {
     }
   }
 
-  enableFabricSelection(garmentCard) {
-    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
-    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
-    
-    // Make fabric selection available
-    if (fabricCollapsed) {
-      fabricCollapsed.style.opacity = '1';
-      fabricCollapsed.style.pointerEvents = 'auto';
-    }
-    if (fabricPlaceholder) {
-      fabricPlaceholder.style.cursor = 'pointer';
-      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
-      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
-      
-      if (placeholderText) {
-        placeholderText.textContent = 'Select fabric type';
-      }
-      
-      // Update icon to fabric icon instead of garment icon
-      if (placeholderIcon) {
-        placeholderIcon.innerHTML = this.getFabricPlaceholderIcon();
-      }
-    }
-  }
 
-  enableSampleReferenceSelection(garmentCard) {
-    const sampleReferenceCollapsed = garmentCard.querySelector('#sample-reference-collapsed');
-    const sampleReferencePlaceholder = garmentCard.querySelector('#sample-reference-placeholder');
-    
-    // Make sample reference selection available for bulk orders
-    if (sampleReferenceCollapsed) {
-      sampleReferenceCollapsed.style.opacity = '1';
-      sampleReferenceCollapsed.style.pointerEvents = 'auto';
-    }
-    if (sampleReferencePlaceholder) {
-      sampleReferencePlaceholder.style.cursor = 'pointer';
-      const placeholderText = sampleReferencePlaceholder.querySelector('.placeholder-text');
-      
-      if (placeholderText) {
-        placeholderText.textContent = 'Select sample reference';
-      }
-    }
-  }
 
-  getFabricPlaceholderIcon() {
-    // Return a generic fabric/textile icon for the placeholder
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2L8 6v4l4 4 4-4V6z"/><circle cx="12" cy="8" r="2"/><path d="M8 14v4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4"/></svg>';
-  }
 
-  getGarmentIcon(garmentType) {
-    // Return appropriate SVG icon for each garment type
-    switch(garmentType) {
-      case 'T-Shirt':
-      case 'Long Sleeve T-Shirt':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
-      case 'Hoodie':
-      case 'Zip-Up Hoodie':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M7 3v4l5-4 5 4V3"/><path d="M7 15h10v6H7z"/></svg>';
-      case 'Sweatshirt':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 8.5l-2-1-1.5-6.5H6.5L5 7.5l-2 1L3 12l2 .5V21h14v-8.5l2-.5z"/></svg>';
-      case 'Tank Top':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4a4 4 0 0 1 10 0v2l4 1v14H3V7l4-1V4z"/></svg>';
-      case 'Polo Shirt':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/><path d="M8 7h8v2H8z"/></svg>';
-      case 'Shirt':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/><path d="M6 7h12v1H6z"/></svg>';
-      case 'Shorts':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 2h7l1.5 5-2 7H9l-2-7z"/><path d="M6 14v6h4v-6"/><path d="M14 14v6h4v-6"/></svg>';
-      case 'Sweatpants':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 2h7v5l-1 13H10L9 7z"/><path d="M6 15v6h4v-6"/><path d="M14 15v6h4v-6"/></svg>';
-      case 'Hat/Cap':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8 2 5 5 5 9c0 1 0 3 2 3h10c2 0 2-2 2-3 0-4-3-7-7-7z"/><path d="M5 12c-2 0-3 1-3 3h20c0-2-1-3-3-3"/></svg>';
-      case 'Beanie':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8.5 2 5.5 4.5 5.5 7.5S8.5 13 12 13s6.5-2.5 6.5-5.5S15.5 2 12 2z"/><path d="M5.5 11.5C3.5 11.5 2 13 2 15h20c0-2-1.5-3.5-3.5-3.5"/></svg>';
-      case 'Other':
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-      default:
-        return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
-    }
-  }
 
-  resetFabricSelection(garmentCard) {
-    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
-    const fabricDisplay = garmentCard.querySelector('#fabric-display');
-    const fabricSelectedName = garmentCard.querySelector('#fabric-selected-name');
-    
-    // Clear any displayed fabric selection and show placeholder
-    if (fabricSelectedName) {
-      fabricSelectedName.textContent = '';
-    }
-    
-    if (fabricPlaceholder) {
-      fabricPlaceholder.style.display = 'flex';
-    }
-    
-    if (fabricDisplay) {
-      fabricDisplay.style.display = 'none';
-    }
-    
-  }
 
-  resetSampleReferenceSelection(garmentCard) {
-    const sampleReferencePlaceholder = garmentCard.querySelector('#sample-reference-placeholder');
-    const sampleReferenceDisplay = garmentCard.querySelector('#sample-reference-display');
-    const sampleReferenceSelectedName = garmentCard.querySelector('#sample-reference-selected-name');
-    
-    // Clear any displayed sample reference selection and show placeholder
-    if (sampleReferenceSelectedName) {
-      sampleReferenceSelectedName.textContent = '';
-    }
-    
-    if (sampleReferencePlaceholder) {
-      sampleReferencePlaceholder.style.display = 'flex';
-    }
-    
-    if (sampleReferenceDisplay) {
-      sampleReferenceDisplay.style.display = 'none';
-    }
-    
-    // Clear any sample reference radio button selections
-    const sampleReferenceRadios = garmentCard.querySelectorAll('input[name*="sampleReference"]');
-    sampleReferenceRadios.forEach(radio => {
-      radio.checked = false;
-    });
-    
-    // Remove selected state from sample reference cards
-    const sampleReferenceCards = garmentCard.querySelectorAll('.compact-radio-card[data-value*="sample"]');
-    sampleReferenceCards.forEach(card => {
-      card.classList.remove('selected');
-    });
-    
-  }
 
-  resetSampleTypeSelection(garmentCard) {
-    // Clear all sample type radio button selections
-    const sampleTypeRadios = garmentCard.querySelectorAll('input[name*="sampleType"]');
-    sampleTypeRadios.forEach(radio => {
-      radio.checked = false;
-      // Clear sub-value data
-      if (radio.dataset.subValue) {
-        delete radio.dataset.subValue;
-      }
-    });
-    
-    // Reset compact selection widget display states
-    const stockWidget = garmentCard.querySelector('#sample-stock-collapsed');
-    const customWidget = garmentCard.querySelector('#sample-custom-collapsed');
-    
-    if (stockWidget) {
-      const stockPlaceholder = stockWidget.querySelector('.selection-placeholder');
-      const stockDisplay = stockWidget.querySelector('.selection-display');
-      
-      if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
-      if (stockDisplay) stockDisplay.style.display = 'none';
-      
-      // Clear any selected compact radio cards and remove visual selected state
-      const stockCards = stockWidget.querySelectorAll('.compact-radio-card');
-      stockCards.forEach(card => {
-        const radio = card.querySelector('input[type="radio"]');
-        if (radio) radio.checked = false;
-        // FIXED: Remove both old and new visual selected styling from compact radio cards
-        card.classList.remove('selected', 'compact-radio-card--selected');
-        const cardContent = card.querySelector('.compact-radio-card__content');
-        if (cardContent) {
-          cardContent.style.border = '';
-          cardContent.style.borderColor = '';
-        }
-      });
-    }
-    
-    if (customWidget) {
-      const customPlaceholder = customWidget.querySelector('.selection-placeholder');
-      const customDisplay = customWidget.querySelector('.selection-display');
-      
-      if (customPlaceholder) customPlaceholder.style.display = 'flex';
-      if (customDisplay) customDisplay.style.display = 'none';
-      
-      // Clear any selected compact radio cards and remove visual selected state
-      const customCards = customWidget.querySelectorAll('.compact-radio-card');
-      customCards.forEach(card => {
-        const radio = card.querySelector('input[type="radio"]');
-        if (radio) radio.checked = false;
-        // FIXED: Remove both old and new visual selected styling from compact radio cards
-        card.classList.remove('selected', 'compact-radio-card--selected');
-        const cardContent = card.querySelector('.compact-radio-card__content');
-        if (cardContent) {
-          cardContent.style.border = '';
-          cardContent.style.borderColor = '';
-        }
-      });
-    }
-    
-    // BACKWARD COMPATIBILITY: Remove old section-level selected classes (now using individual card selection)
-    const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
-    const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
-    
-    stockSection?.classList.remove('selected');
-    customSection?.classList.remove('selected');
-    
-    // Remove selected state from legacy sample type cards
-    const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
-    sampleTypeCards.forEach(card => {
-      card.classList.remove('selected');
-    });
-    
-    // Remove any restriction classes (they'll be re-applied when needed)
-    sampleTypeCards.forEach(card => {
-      card.classList.remove('sample-type-card--restricted');
-      card.style.opacity = '';
-      card.style.pointerEvents = '';
-      card.style.cursor = '';
-    });
-    
-  }
 
-  updateSelectionDependencies(garmentCard) {
-    const garmentId = garmentCard.dataset.garmentId;
-    const garmentData = V10_State.garments.get(garmentId);
-    if (!garmentData) return;
-
-    // Get all selection sections
-    const fabricSection = garmentCard.querySelector('.compact-selection-section[data-show-for*="quotation"], .compact-selection-section[data-show-for*="sample"]');
-    const sampleTypeSection = garmentCard.querySelector('.selection-section[data-show-for="sample"]');
 
     // Check selection states
     const hasGarmentType = !!garmentData.type;
@@ -7603,75 +7561,6 @@ class V10_GarmentStudio {
   }
 
 
-  // DEPRECATED: initializeCompactInterface - Now using initializeExpandedInterface for unified behavior
-  initializeCompactInterface(garmentCard) {
-    // Set up initial states - use querySelector on the garmentCard to find within this specific garment
-    const garmentExpanded = garmentCard.querySelector('#garment-expanded');
-    const fabricExpanded = garmentCard.querySelector('#fabric-expanded');
-    const fabricCollapsed = garmentCard.querySelector('#fabric-collapsed');
-    const sampleReferenceExpanded = garmentCard.querySelector('#sample-reference-expanded');
-    const sampleReferenceCollapsed = garmentCard.querySelector('#sample-reference-collapsed');
-    
-    if (garmentExpanded) garmentExpanded.style.display = 'none';
-    if (fabricExpanded) fabricExpanded.style.display = 'none';
-    if (sampleReferenceExpanded) sampleReferenceExpanded.style.display = 'none';
-    
-    // Initialize sample type expanded states
-    const sampleStockExpanded = garmentCard.querySelector('#sample-stock-expanded');
-    const sampleCustomExpanded = garmentCard.querySelector('#sample-custom-expanded');
-    
-    if (sampleStockExpanded) sampleStockExpanded.style.display = 'none';
-    if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'none';
-    
-    // Initially disable fabric selection until garment is chosen
-    if (fabricCollapsed) {
-      fabricCollapsed.style.opacity = '0.6';
-      fabricCollapsed.style.pointerEvents = 'none';
-    }
-    
-    const fabricPlaceholder = garmentCard.querySelector('#fabric-placeholder');
-    if (fabricPlaceholder) {
-      fabricPlaceholder.style.cursor = 'not-allowed';
-      const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
-      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
-      
-      if (placeholderText) {
-        placeholderText.textContent = 'Select garment type first';
-      }
-      
-      // Set proper fabric icon even when disabled
-      if (placeholderIcon) {
-        placeholderIcon.innerHTML = this.getFabricPlaceholderIcon();
-      }
-    }
-    
-    // Initially disable sample reference until garment type is chosen (for bulk orders)
-    if (sampleReferenceCollapsed) {
-      const requestType = V10_State.requestType;
-      if (requestType === 'bulk-order-request') {
-        sampleReferenceCollapsed.style.opacity = '0.6';
-        sampleReferenceCollapsed.style.pointerEvents = 'none';
-      } else {
-        // For other request types, keep existing behavior
-        sampleReferenceCollapsed.style.opacity = '1';
-        sampleReferenceCollapsed.style.pointerEvents = 'auto';
-      }
-    }
-    
-    // Initially disable sample type selection until garment AND fabric are chosen
-    const sampleStockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
-    const sampleCustomSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
-    
-    if (sampleStockSection) {
-      sampleStockSection.classList.add('compact-selection-section--disabled');
-      this.disableSelectionSection(sampleStockSection, 'Select fabric type first');
-    }
-    
-    if (sampleCustomSection) {
-      sampleCustomSection.classList.add('compact-selection-section--disabled');
-      this.disableSelectionSection(sampleCustomSection, 'Select fabric type first');
-    }
-  }
 
   // Unified sample type update function - handles all sample type operations consistently
   updateSampleType(garmentId, sampleType, sampleSubValue, garmentCard) {
