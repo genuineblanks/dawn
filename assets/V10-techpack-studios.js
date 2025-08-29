@@ -13933,14 +13933,8 @@ class V10_ModalManager {
 
     if (clientType === 'new') {
       // Show notice for new clients
-      if (registrationNotice) {
-        registrationNotice.classList.remove('v10-hidden');
-        registrationNotice.classList.add('v10-flex');
-      }
-      if (registrationWarning) {
-        registrationWarning.classList.add('v10-hidden');
-        registrationWarning.classList.remove('v10-flex');
-      }
+      if (registrationNotice) registrationNotice.style.display = 'flex';
+      if (registrationWarning) registrationWarning.style.display = 'none';
       
       // Update description
       if (submissionDescription) {
@@ -13967,14 +13961,8 @@ class V10_ModalManager {
       
     } else if (clientType === 'registered') {
       // Show warning for registered clients
-      if (registrationNotice) {
-        registrationNotice.classList.add('v10-hidden');
-        registrationNotice.classList.remove('v10-flex');
-      }
-      if (registrationWarning) {
-        registrationWarning.classList.remove('v10-hidden');
-        registrationWarning.classList.add('v10-flex');
-      }
+      if (registrationNotice) registrationNotice.style.display = 'none';
+      if (registrationWarning) registrationWarning.style.display = 'flex';
       
       // Update description
       if (submissionDescription) {
@@ -14033,11 +14021,12 @@ class V10_ModalManager {
     const formSection = document.getElementById('techpack-v10-step-1');
     
     if (landingSection) {
-      landingSection.classList.add('v10-hidden');
+      landingSection.style.display = 'none';
     }
     
     if (formSection) {
-      formSection.classList.remove('v10-hidden');
+      // Must use inline style to override the inline display:none from the HTML
+      formSection.style.display = 'block';
       formSection.scrollIntoView({ behavior: 'smooth' });
       
       // Update current step
@@ -14083,10 +14072,10 @@ class V10_ModalManager {
     const deliverySection = document.getElementById('v10-delivery-section');
     const shippingSection = document.getElementById('v10-shipping-section');
     
-    // Hide all conditional sections first
-    if (deliveryAddressField) deliveryAddressField.classList.add('v10-hidden');
-    if (deliverySection) deliverySection.classList.add('v10-hidden');
-    if (shippingSection) shippingSection.classList.add('v10-hidden');
+    // Hide all conditional sections first (using inline styles to ensure they override any defaults)
+    if (deliveryAddressField) deliveryAddressField.style.display = 'none';
+    if (deliverySection) deliverySection.style.display = 'none';
+    if (shippingSection) shippingSection.style.display = 'none';
     
     // Show sections based on submission type
     switch (submissionType) {
@@ -14097,24 +14086,24 @@ class V10_ModalManager {
       case 'sample-request':
         // Show delivery address field for samples
         if (deliveryAddressField) {
-          deliveryAddressField.classList.remove('v10-hidden');
+          deliveryAddressField.style.display = 'block';
         }
         break;
         
       case 'bulk-order-request':
         // Show delivery address field and shipping sections for bulk orders
         if (deliveryAddressField) {
-          deliveryAddressField.classList.remove('v10-hidden');
+          deliveryAddressField.style.display = 'block';
         }
         if (shippingSection) {
-          shippingSection.classList.remove('v10-hidden');
+          shippingSection.style.display = 'block';
         }
         break;
         
       case 'lab-dips-accessories':
         // Show delivery address field for lab dips/accessories
         if (deliveryAddressField) {
-          deliveryAddressField.classList.remove('v10-hidden');
+          deliveryAddressField.style.display = 'block';
         }
         break;
     }
