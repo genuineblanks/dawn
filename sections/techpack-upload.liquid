@@ -1,12 +1,7 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
-<!-- Force Dark Mode - No Light Theme Support -->
-<script>
-// Immediately force dark mode on page load
-document.documentElement.setAttribute('data-theme', 'dark');
-document.body.setAttribute('data-theme', 'dark');
-</script>
+<!-- Dark mode is now handled in techpack-v10-step-1-client-info.liquid -->
 
 <section id="techpack-upload" class="techpack-step" data-step="1">
   <div class="techpack-container">
@@ -300,13 +295,6 @@ document.body.setAttribute('data-theme', 'dark');
 
 <!-- Template removed - Using unified template in techpack-v10-step-3-garment-specs.liquid -->
 
-<script>
-// Initialize V10 TechPack Form when loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof window.V10TechpackForm !== 'undefined') {
-    window.V10TechpackForm.init();
-  }
-});
-</script>
+<!-- V10 initialization is handled by V10_ModalManager in V10-techpack-studios.js -->
 
 {% endif %}
