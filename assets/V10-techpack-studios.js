@@ -5059,9 +5059,28 @@ class V10_GarmentManager {
         // Reset state-specific properties
         assignedLabDips: new Set(),
         assignedDesigns: new Set(),
-        isComplete: false,
         isInEditMode: false
       };
+
+      // Calculate completion status based on request type and available data
+      const requestType = V10_State.requestType;
+      let isComplete = false;
+      
+      if (requestType === 'quotation') {
+        isComplete = duplicateData.type && duplicateData.fabricType;
+      } else if (requestType === 'sample-request') {
+        const basicComplete = duplicateData.type && duplicateData.fabricType && duplicateData.sampleType;
+        if (duplicateData.sampleType === 'lab-dip-swatches') {
+          // Lab dip samples require assigned lab dips, but duplicated garments start fresh
+          isComplete = false;
+        } else {
+          isComplete = basicComplete;
+        }
+      } else if (requestType === 'bulk-order-request') {
+        isComplete = !!(duplicateData.type && duplicateData.sampleReference);
+      }
+      
+      duplicateData.isComplete = isComplete;
 
       console.log('🔄 Duplicating garment with data:', duplicateData);
       return this.addGarment(duplicateData);
