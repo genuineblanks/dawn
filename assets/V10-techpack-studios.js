@@ -13256,8 +13256,8 @@ class V10_FileManager {
     const designChecked = designCheckbox?.checked;
     const placementChecked = placementCheckbox?.checked;
     
-    // For sample requests, fit measurements are required
-    if (requestType === 'sample-request' && !fitChecked) {
+    // For sample requests AND quotations, fit measurements are required
+    if ((requestType === 'sample-request' || requestType === 'quotation') && !fitChecked) {
       this.showMeasurementRequirementModal();
       return false;
     }
@@ -13286,8 +13286,8 @@ class V10_FileManager {
     const proceedBtn = document.getElementById('techpack-v10-warning-proceed');
     
     if (title) title.textContent = 'Fit Measurements Required';
-    if (message) message.textContent = 'Sample requests require fit measurements to proceed. Please select "Fit Measurements" to continue.';
-    if (details) details.innerHTML = '<p><strong>Required:</strong> Body measurements or size charts are mandatory for proper garment fitting.</p>';
+    if (message) message.textContent = 'This request type requires fit measurements to proceed. Please select "Fit Measurements" to continue.';
+    if (details) details.innerHTML = '<p><strong>Required:</strong> Body measurements or size charts are mandatory for accurate quotations and proper garment fitting.</p>';
     
     // Configure buttons
     if (proceedBtn) proceedBtn.style.display = 'none';
