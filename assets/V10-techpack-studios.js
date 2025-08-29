@@ -4418,6 +4418,621 @@ class V10_QuantityCalculator {
 }
 
 // ==============================================
+// V10 GARMENT UI MANAGER - DOM Rendering Layer
+// ==============================================
+
+/**
+ * V10_GarmentUIManager - UI Rendering Layer  
+ * Handles DOM rendering, template population, and visual updates
+ * Uses template-driven approach to replace HTML string concatenation
+ */
+class V10_GarmentUIManager {
+  constructor() {
+    this.templates = {
+      garmentCard: null,
+      fabricGrid: null,
+      sampleTypeOptions: null
+    };
+    
+    this.initializeTemplates();
+  }
+  
+  initializeTemplates() {
+    // Cache template references for performance
+    this.templates.garmentCard = document.getElementById('V10-garment-template');
+    if (!this.templates.garmentCard) {
+      console.error('❌ V10-garment-template not found');
+    }
+  }
+  
+  /**
+   * Render garment using template-driven approach
+   * Replaces the massive 556-line renderGarment method
+   */
+  renderGarment(garmentData) {
+    try {
+      console.log('🔄 [UI] Rendering garment:', garmentData);
+      
+      if (!this.templates.garmentCard) {
+        console.error('❌ Garment template not available');
+        return null;
+      }
+
+      if (!garmentData || !garmentData.id) {
+        console.error('❌ Invalid garment data provided:', garmentData);
+        return null;
+      }
+
+      const clone = this.templates.garmentCard.content.cloneNode(true);
+      const garmentCard = clone.querySelector('.garment-card');
+      
+      if (!garmentCard) {
+        console.error('❌ Garment card element not found in template');
+        return null;
+      }
+
+      // Set garment ID and number
+      garmentCard.dataset.garmentId = garmentData.id;
+      this.setGarmentNumber(clone, garmentData);
+      
+      // Setup unique radio names
+      this.setupRadioNames(clone, garmentData.id);
+      
+      // Populate fabric options if garment type exists
+      if (garmentData.type) {
+        this.populateFabricOptions(garmentCard, garmentData.type);
+      }
+      
+      // Set current values
+      this.setGarmentValues(clone, garmentData);
+      
+      // Update pricing and visibility
+      this.updateSampleTypePrices(clone);
+      this.updateSectionVisibility(clone);
+      
+      console.log('✅ [UI] Garment rendered successfully');
+      return clone;
+      
+    } catch (error) {
+      console.error('❌ [UI] Error rendering garment:', error);
+      return null;
+    }
+  }
+  
+  /**
+   * Set garment number in template
+   */
+  setGarmentNumber(clone, garmentData) {
+    const numberSpan = clone.querySelector('.garment-card__number');
+    if (numberSpan) {
+      numberSpan.textContent = `Garment ${garmentData.number}`;
+    }
+  }
+  
+  /**
+   * Setup unique radio button names per garment
+   */
+  setupRadioNames(clone, garmentId) {
+    const radioGroups = [
+      { selector: 'input[name="garmentType"]', name: `garmentType-${garmentId}` },
+      { selector: 'input[name="sampleType"]', name: `sampleType-${garmentId}` },
+      { selector: 'input[name="sampleReference"]', name: `sampleReference-${garmentId}` }
+    ];
+    
+    radioGroups.forEach(({ selector, name }) => {
+      clone.querySelectorAll(selector).forEach(input => {
+        input.name = name;
+      });
+    });
+  }
+  
+  /**
+   * Populate fabric options using template-driven approach
+   */
+  populateFabricOptions(garmentCard, garmentType) {
+    try {
+      const fabricGrid = garmentCard.querySelector('#fabric-type-grid');
+      if (!fabricGrid) {
+        console.warn('❌ [UI] Fabric grid not found');
+        return;
+      }
+
+      const garmentId = garmentCard.dataset.garmentId;
+      const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
+      
+      if (fabrics.length === 0) {
+        fabricGrid.innerHTML = '<p class="no-fabrics">No fabric options available for this garment type.</p>';
+        return;
+      }
+      
+      const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
+      const template = isCompactInterface ? 'compact-radio-card' : 'radio-card';
+      
+      fabricGrid.innerHTML = fabrics.map(fabric => 
+        this.createFabricOptionHTML(fabric, garmentId, template)
+      ).join('');
+      
+      // Add event listeners for restrictions
+      this.addFabricChangeListeners(fabricGrid, garmentCard);
+      
+      console.log(`✅ [UI] Populated ${fabrics.length} fabric options`);
+      
+    } catch (error) {
+      console.error('❌ [UI] Error populating fabric options:', error);
+    }
+  }
+  
+  /**
+   * Create fabric option HTML using template approach
+   */
+  createFabricOptionHTML(fabric, garmentId, template) {
+    const icon = this.getFabricTypeIcon(fabric);
+    
+    if (template === 'compact-radio-card') {
+      return `
+        <label class="compact-radio-card">
+          <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
+          <span class="compact-radio-card__content">
+            <span class="compact-radio-card__icon">${icon}</span>
+            <span class="compact-radio-card__name">${fabric}</span>
+          </span>
+        </label>`;
+    } else {
+      return `
+        <label class="radio-card">
+          <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
+          <span class="radio-card__content">
+            <span class="radio-card__icon">${icon}</span>
+            <span class="radio-card__name">${fabric}</span>
+          </span>
+        </label>`;
+    }
+  }
+  
+  /**
+   * Add event listeners for fabric restrictions
+   */
+  addFabricChangeListeners(fabricGrid, garmentCard) {
+    const fabricInputs = fabricGrid.querySelectorAll('input[type="radio"]');
+    fabricInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        setTimeout(() => {
+          V10_Utils.updateGarmentFabricRestrictions(garmentCard);
+        }, 50);
+      });
+    });
+  }
+  
+  /**
+   * Set garment values in template
+   */
+  setGarmentValues(clone, garmentData) {
+    this.setGarmentType(clone, garmentData);
+    this.setFabricType(clone, garmentData);
+    this.setSampleType(clone, garmentData);
+    this.setSampleReference(clone, garmentData);
+    
+    // Apply cotton validation after setting values
+    if (garmentData.fabricType) {
+      V10_Utils.updateGarmentFabricRestrictions(clone);
+    }
+  }
+  
+  /**
+   * Set garment type value
+   */
+  setGarmentType(clone, garmentData) {
+    if (garmentData.type) {
+      const input = clone.querySelector(`input[value="${garmentData.type}"]`);
+      if (input) {
+        input.checked = true;
+        this.updateGarmentSelectionDisplay(clone, 'garment', garmentData.type);
+      }
+    }
+  }
+  
+  /**
+   * Set fabric type value
+   */
+  setFabricType(clone, garmentData) {
+    if (garmentData.fabricType) {
+      const input = clone.querySelector(`input[value="${garmentData.fabricType}"]`);
+      if (input) {
+        input.checked = true;
+        this.updateGarmentSelectionDisplay(clone, 'fabric', garmentData.fabricType);
+      }
+    }
+  }
+  
+  /**
+   * Set sample type value with sub-value matching
+   */
+  setSampleType(clone, garmentData) {
+    if (garmentData.sampleType) {
+      let input;
+      
+      if (garmentData.hasOwnProperty('sampleSubValue') && 
+          garmentData.sampleSubValue !== null && 
+          garmentData.sampleSubValue !== undefined) {
+        input = clone.querySelector(`input[value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
+      } else {
+        input = clone.querySelector(`input[value="${garmentData.sampleType}"]`);
+      }
+      
+      if (input) {
+        input.checked = true;
+        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue, true);
+      }
+    }
+  }
+  
+  /**
+   * Set sample reference value
+   */
+  setSampleReference(clone, garmentData) {
+    if (garmentData.sampleReference) {
+      const input = clone.querySelector(`input[value="${garmentData.sampleReference}"]`);
+      if (input) {
+        input.checked = true;
+      }
+    }
+  }
+  
+  /**
+   * Update section visibility based on request type
+   */
+  updateSectionVisibility(clone) {
+    const requestType = V10_State.requestType;
+    
+    clone.querySelectorAll('[data-show-for]').forEach(section => {
+      const showFor = section.dataset.showFor.split(',');
+      const shouldShow = showFor.some(type => {
+        if (type === 'quotation') return requestType === 'quotation';
+        if (type === 'sample') return requestType === 'sample-request';
+        if (type === 'bulk') return requestType === 'bulk-order-request';
+        return false;
+      });
+      
+      section.style.display = shouldShow ? '' : 'none';
+    });
+  }
+  
+  /**
+   * Update sample type prices
+   */
+  updateSampleTypePrices(clone) {
+    V10_Utils.updateSampleTypePrices(clone);
+  }
+  
+  /**
+   * Update garment selection display for garment/fabric widgets
+   */
+  updateGarmentSelectionDisplay(clone, type, value) {
+    if (type === 'garment') {
+      this.updateSelectionWidget(clone, {
+        iconSelector: '#garment-selected-icon',
+        nameSelector: '#garment-selected-name', 
+        placeholderSelector: '#garment-placeholder',
+        displaySelector: '#garment-display'
+      }, value, this.getGarmentIcon(value));
+    } else if (type === 'fabric') {
+      this.updateSelectionWidget(clone, {
+        iconSelector: '#fabric-selected-icon',
+        nameSelector: '#fabric-selected-name',
+        placeholderSelector: '#fabric-placeholder', 
+        displaySelector: '#fabric-display'
+      }, value, this.getFabricTypeIcon(value));
+    }
+  }
+  
+  /**
+   * Update selection widget elements
+   */
+  updateSelectionWidget(clone, selectors, value, icon) {
+    const elements = {};
+    Object.keys(selectors).forEach(key => {
+      elements[key] = clone.querySelector(selectors[key]);
+    });
+    
+    if (elements.iconSelector) elements.iconSelector.innerHTML = icon;
+    if (elements.nameSelector) elements.nameSelector.textContent = value;
+    if (elements.placeholderSelector) elements.placeholderSelector.style.display = 'none';
+    if (elements.displaySelector) elements.displaySelector.style.display = 'block';
+  }
+  
+  // Icon getter methods (delegated from main class)
+  getGarmentIcon(garmentType) {
+    const studioInstance = V10_GarmentStudio.getInstance();
+    return studioInstance?.getGarmentIcon?.(garmentType) || '👕';
+  }
+  
+  getFabricTypeIcon(fabricType) {
+    const studioInstance = V10_GarmentStudio.getInstance();
+    return studioInstance?.getFabricTypeIcon?.(fabricType) || '🧵';
+  }
+  
+  // Compact selection methods (simplified versions)
+  updateCompactSelection(type, value, container, subValue = null, isInitialSet = false) {
+    // Delegate to main class for now - will be extracted in next phase
+    const studioInstance = V10_GarmentStudio.getInstance();
+    if (studioInstance?.updateCompactSelection) {
+      return studioInstance.updateCompactSelection(type, value, container, subValue, isInitialSet);
+    }
+  }
+}
+
+// ==============================================
+// V10 GARMENT MANAGER - Core Business Logic
+// ==============================================
+
+class V10_GarmentManager {
+  constructor() {
+    this.eventEmitter = new EventTarget();
+    this.removing = false; // Prevent concurrent removals
+  }
+
+  // Core CRUD Operations
+  addGarment(data = null) {
+    try {
+      const garmentId = data?.id || V10_Utils.generateId('garment');
+      const garmentNumber = this.getNextGarmentNumber();
+
+      const garmentData = {
+        id: garmentId,
+        number: garmentNumber,
+        type: data?.type || '',
+        fabricType: data?.fabricType || '',
+        sampleType: data?.sampleType || '',
+        sampleReference: data?.sampleReference || '',
+        assignedLabDips: new Set(data?.assignedLabDips || []),
+        assignedDesigns: new Set(data?.assignedDesigns || []),
+        isComplete: false,
+        isInEditMode: false,
+        includeDesign: data?.includeDesign !== undefined ? data.includeDesign : true,
+        designReference: data?.designReference || ''
+      };
+
+      // Store in global state
+      V10_State.garments.set(garmentId, garmentData);
+
+      // Emit event for UI updates
+      this.eventEmitter.dispatchEvent(new CustomEvent('garmentAdded', {
+        detail: { garmentId, garmentData }
+      }));
+
+      return garmentId;
+    } catch (error) {
+      console.error('Error adding garment:', error);
+      return null;
+    }
+  }
+
+  removeGarment(garmentId) {
+    try {
+      if (this.removing) return false;
+      this.removing = true;
+
+      const garmentData = V10_State.garments.get(garmentId);
+      if (!garmentData) {
+        this.removing = false;
+        return false;
+      }
+
+      // Check assignments and confirm if needed
+      const hasAssignments = garmentData.assignedLabDips.size > 0 || garmentData.assignedDesigns.size > 0;
+      
+      if (hasAssignments && !this.confirmRemoval(garmentData)) {
+        this.removing = false;
+        return false;
+      }
+
+      // Remove from state
+      V10_State.garments.delete(garmentId);
+
+      // Clean up assignments
+      this.cleanupGarmentAssignments(garmentId);
+
+      // Emit event for UI updates
+      this.eventEmitter.dispatchEvent(new CustomEvent('garmentRemoved', {
+        detail: { garmentId }
+      }));
+
+      this.removing = false;
+      return true;
+    } catch (error) {
+      console.error('Error removing garment:', error);
+      this.removing = false;
+      return false;
+    }
+  }
+
+  duplicateGarment(sourceId) {
+    try {
+      const sourceGarment = V10_State.garments.get(sourceId);
+      if (!sourceGarment) return null;
+
+      // Create duplicate data (new ID, no assignments)
+      const duplicateData = {
+        ...sourceGarment,
+        id: V10_Utils.generateId('garment'),
+        assignedLabDips: new Set(),
+        assignedDesigns: new Set(),
+        isComplete: false,
+        isInEditMode: false
+      };
+
+      return this.addGarment(duplicateData);
+    } catch (error) {
+      console.error('Error duplicating garment:', error);
+      return null;
+    }
+  }
+
+  // Business Logic Helpers
+  getNextGarmentNumber() {
+    const existingNumbers = Array.from(V10_State.garments.values())
+      .map(g => g.number)
+      .sort((a, b) => a - b);
+    
+    // Find first gap in sequence
+    for (let i = 1; i <= existingNumbers.length + 1; i++) {
+      if (!existingNumbers.includes(i)) {
+        return i;
+      }
+    }
+    return 1;
+  }
+
+  renumberGarments() {
+    const garments = Array.from(V10_State.garments.values())
+      .sort((a, b) => a.number - b.number);
+
+    garments.forEach((garment, index) => {
+      const newNumber = index + 1;
+      if (garment.number !== newNumber) {
+        garment.number = newNumber;
+        // Emit update event
+        this.eventEmitter.dispatchEvent(new CustomEvent('garmentRenumbered', {
+          detail: { garmentId: garment.id, newNumber }
+        }));
+      }
+    });
+  }
+
+  validateGarments() {
+    const requestType = V10_State.requestType;
+    const garments = Array.from(V10_State.garments.values());
+    
+    if (garments.length === 0) return false;
+
+    return garments.every(garment => this.isGarmentComplete(garment, requestType));
+  }
+
+  isGarmentComplete(garment, requestType) {
+    if (!garment.type) return false;
+
+    switch (requestType) {
+      case 'quotation':
+        return garment.type && garment.fabricType;
+      case 'sample-request':
+        return garment.type && garment.fabricType && garment.sampleType;
+      case 'bulk-order-request':
+        return garment.type && garment.sampleReference;
+      default:
+        return garment.type;
+    }
+  }
+
+  // Assignment Management
+  assignLabDip(garmentId, labDipId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (garment) {
+      garment.assignedLabDips.add(labDipId);
+      this.eventEmitter.dispatchEvent(new CustomEvent('labDipAssigned', {
+        detail: { garmentId, labDipId }
+      }));
+      return true;
+    }
+    return false;
+  }
+
+  unassignLabDip(garmentId, labDipId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (garment) {
+      garment.assignedLabDips.delete(labDipId);
+      this.eventEmitter.dispatchEvent(new CustomEvent('labDipUnassigned', {
+        detail: { garmentId, labDipId }
+      }));
+      return true;
+    }
+    return false;
+  }
+
+  assignDesign(garmentId, designId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (garment) {
+      garment.assignedDesigns.add(designId);
+      this.eventEmitter.dispatchEvent(new CustomEvent('designAssigned', {
+        detail: { garmentId, designId }
+      }));
+      return true;
+    }
+    return false;
+  }
+
+  unassignDesign(garmentId, designId) {
+    const garment = V10_State.garments.get(garmentId);
+    if (garment) {
+      garment.assignedDesigns.delete(designId);
+      this.eventEmitter.dispatchEvent(new CustomEvent('designUnassigned', {
+        detail: { garmentId, designId }
+      }));
+      return true;
+    }
+    return false;
+  }
+
+  // Private Helpers
+  confirmRemoval(garmentData) {
+    let message = 'This garment has assignments that will be lost:\n\n';
+    
+    if (garmentData.assignedLabDips.size > 0) {
+      message += `• ${garmentData.assignedLabDips.size} assigned color(s)\n`;
+    }
+    
+    if (garmentData.assignedDesigns.size > 0) {
+      message += `• ${garmentData.assignedDesigns.size} assigned design(s)\n`;
+    }
+    
+    message += '\nRemove this garment? This action cannot be undone.';
+    return confirm(message);
+  }
+
+  cleanupGarmentAssignments(garmentId) {
+    // Clean up lab dip assignments
+    V10_State.labDips.forEach(labDip => {
+      if (labDip.assignedGarments) {
+        labDip.assignedGarments.delete(garmentId);
+      }
+    });
+
+    // Clean up design assignments
+    V10_State.designs.forEach(design => {
+      if (design.assignedGarments) {
+        design.assignedGarments.delete(garmentId);
+      }
+    });
+  }
+
+  // Data Access
+  getGarment(garmentId) {
+    return V10_State.garments.get(garmentId);
+  }
+
+  getAllGarments() {
+    return Array.from(V10_State.garments.values());
+  }
+
+  getGarmentCount() {
+    return V10_State.garments.size;
+  }
+
+  // Event System
+  on(eventType, callback) {
+    this.eventEmitter.addEventListener(eventType, callback);
+  }
+
+  off(eventType, callback) {
+    this.eventEmitter.removeEventListener(eventType, callback);
+  }
+
+  destroy() {
+    this.removing = false;
+    // Clean up would go here if needed
+  }
+}
+
+// ==============================================
 
 class V10_GarmentStudio {
   constructor() {
@@ -4434,8 +5049,13 @@ class V10_GarmentStudio {
     this.garmentCounter = 0;
     this.eventListenersAttached = false;
     
-    // Initialize quantity calculator
+    // Initialize core managers
+    this.garmentManager = new V10_GarmentManager();
+    this.uiManager = new V10_GarmentUIManager();
     this.quantityCalculator = new V10_QuantityCalculator();
+    
+    // Set up garment manager event listeners
+    this.setupGarmentManagerEvents();
     
     V10_GarmentStudio.instance = this;
     this.init();
@@ -4458,6 +5078,41 @@ class V10_GarmentStudio {
     
     this.initialized = true;
     console.log('✅ V10_GarmentStudio initialized');
+  }
+
+  setupGarmentManagerEvents() {
+    // Listen to garment manager events for UI updates
+    this.garmentManager.on('garmentAdded', (event) => {
+      const { garmentId, garmentData } = event.detail;
+      this.renderGarment(garmentData);
+      this.renumberGarments();
+      this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
+      this.updateQuantitiesStudioTabStatus();
+      console.log(`➕ Added garment ${garmentData.number}: ${garmentId}`);
+    });
+
+    this.garmentManager.on('garmentRemoved', (event) => {
+      const { garmentId } = event.detail;
+      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (garmentCard) {
+        garmentCard.remove();
+      }
+      this.updateStudioCompletion();
+      this.updateDesignStudioTabStatus();
+      console.log(`🗑️ Removed garment: ${garmentId}`);
+    });
+
+    this.garmentManager.on('garmentRenumbered', (event) => {
+      const { garmentId, newNumber } = event.detail;
+      const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (garmentCard) {
+        const numberElement = garmentCard.querySelector('.garment-number');
+        if (numberElement) {
+          numberElement.textContent = newNumber;
+        }
+      }
+    });
   }
 
   bindEvents() {
@@ -4497,133 +5152,22 @@ class V10_GarmentStudio {
   }
 
   addGarment(data = null) {
-    try {
-      const garmentId = data?.id || V10_Utils.generateId('garment');
-      const garmentNumber = this.getNextGarmentNumber();
-
-      const garmentData = {
-        id: garmentId,
-        number: garmentNumber,
-        type: data?.type || '',
-        fabricType: data?.fabricType || '',
-        sampleType: data?.sampleType || '', // For sample requests
-        sampleReference: data?.sampleReference || '', // For bulk orders
-        assignedLabDips: new Set(data?.assignedLabDips || []),
-        assignedDesigns: new Set(data?.assignedDesigns || []),
-        isComplete: false,
-        isInEditMode: false,
-        includeDesign: data?.includeDesign !== undefined ? data.includeDesign : true, // Default to true
-        designReference: data?.designReference || '' // Design name/reference from TechPack
-      };
-
-      // Store in state
-      V10_State.garments.set(garmentId, garmentData);
-
-      // Create UI
-      this.renderGarment(garmentData);
-
-      // Renumber all garments to ensure sequential order
-      this.renumberGarments();
-
-      // Update studio completion status after adding garment
-      this.updateStudioCompletion();
-      this.updateDesignStudioTabStatus();
-      this.updateQuantitiesStudioTabStatus();
-
-      console.log(`➕ Added garment ${garmentNumber}: ${garmentId}`);
-      return garmentId;
-    } catch (error) {
-      console.error('Error adding garment:', error);
-      return null;
-    }
+    // Delegate to garment manager - UI updates handled by event listeners
+    return this.garmentManager.addGarment(data);
   }
 
-  // Get the next available garment number (fills gaps)
+  // Delegate to garment manager
   getNextGarmentNumber() {
-    const existingNumbers = Array.from(V10_State.garments.values()).map(g => g.number).sort((a, b) => a - b);
-    
-    // Find the first gap in the sequence
-    for (let i = 1; i <= existingNumbers.length + 1; i++) {
-      if (!existingNumbers.includes(i)) {
-        return i;
-      }
-    }
-    
-    // Fallback: return next number after the highest
-    return existingNumbers.length + 1;
+    return this.garmentManager.getNextGarmentNumber();
   }
 
   renderGarment(garmentData) {
     try {
-      console.log('🔄 Rendering garment:', garmentData);
-      
-      const template = document.getElementById('V10-garment-template');
-      if (!template) {
-        console.error('❌ V10-garment-template not found');
-        return;
-      }
-
-      if (!garmentData || !garmentData.id) {
-        console.error('❌ Invalid garment data provided:', garmentData);
-        return;
-      }
-
-      const clone = template.content.cloneNode(true);
+      // Use UI manager to render garment template
+      const clone = this.uiManager.renderGarment(garmentData);
       if (!clone) {
-        console.error('❌ Failed to clone template content');
+        console.error('❌ Failed to render garment template');
         return;
-      }
-
-      const garmentCard = clone.querySelector('.garment-card');
-      if (!garmentCard) {
-        console.error('❌ Garment card element not found in template');
-        return;
-      }
-
-      // Set garment ID
-      garmentCard.dataset.garmentId = garmentData.id;
-      console.log('✅ Set garment ID:', garmentData.id);
-
-      // Set garment number
-      const numberSpan = clone.querySelector('.garment-card__number');
-      if (numberSpan) {
-        numberSpan.textContent = `Garment ${garmentData.number}`;
-      }
-
-      // Set unique names for radio buttons
-      try {
-        this.setupRadioNames(clone, garmentData.id);
-      } catch (radioError) {
-        console.error('❌ Error setting up radio names:', radioError);
-      }
-
-      // Populate fabric options based on request type - only if garment type exists
-      if (garmentData.type) {
-        console.log('🔄 Populating fabric options for type:', garmentData.type);
-        try {
-          this.populateFabricOptions(garmentCard, garmentData.type);
-        } catch (fabricError) {
-          console.error('❌ Error populating fabric options:', fabricError);
-        }
-      } else {
-        console.warn('⚠️ No garment type specified, skipping fabric options');
-      }
-
-      // Set current values
-      try {
-        this.setGarmentValues(clone, garmentData);
-      } catch (valuesError) {
-        console.error('❌ Error setting garment values:', valuesError);
-      }
-
-      // Update sample type prices after setting values
-      V10_Utils.updateSampleTypePrices(clone);
-
-      // Show/hide sections based on request type
-      try {
-        this.updateSectionVisibility(clone);
-      } catch (visibilityError) {
-        console.error('❌ Error updating section visibility:', visibilityError);
       }
 
       // Add to container
@@ -4631,7 +5175,7 @@ class V10_GarmentStudio {
         this.garmentsContainer.appendChild(clone);
         console.log('✅ Garment added to container');
         
-        // Use unified edit interface for both new and existing garments
+        // Initialize edit interface
         try {
           this.expandGarmentForEdit(garmentData.id);
         } catch (editError) {
@@ -4642,235 +5186,22 @@ class V10_GarmentStudio {
         return;
       }
 
-      // Update status
+      // Update status and dependencies
       try {
         this.updateGarmentStatus(garmentData.id);
-      } catch (statusError) {
-        console.error('❌ Error updating garment status:', statusError);
-      }
-
-      // Initialize selection dependencies (fabric and sample type disabled initially)
-      try {
+        
         const addedGarmentCard = document.querySelector(`[data-garment-id="${garmentData.id}"]`);
         if (addedGarmentCard) {
           this.updateSelectionDependencies(addedGarmentCard);
         }
-      } catch (dependencyError) {
-        console.error('❌ Error initializing dependencies:', dependencyError);
+      } catch (error) {
+        console.error('❌ Error updating garment post-render:', error);
       }
     } catch (error) {
       console.error('❌ Error rendering garment:', error);
     }
   }
 
-  setupRadioNames(clone, garmentId) {
-    // Update radio button names to be unique per garment
-    clone.querySelectorAll('input[name="garmentType"]').forEach(input => {
-      input.name = `garmentType-${garmentId}`;
-    });
-    
-    clone.querySelectorAll('input[name="sampleType"]').forEach(input => {
-      input.name = `sampleType-${garmentId}`;
-    });
-    
-    clone.querySelectorAll('input[name="sampleReference"]').forEach(input => {
-      input.name = `sampleReference-${garmentId}`;
-    });
-  }
-
-  populateFabricOptions(element, garmentType) {
-    try {
-      if (!element) {
-        console.error('populateFabricOptions: element is null or undefined');
-        return;
-      }
-
-      if (!element.querySelector) {
-        console.error('populateFabricOptions: element does not have querySelector method');
-        return;
-      }
-
-      const fabricGrid = element.querySelector('#fabric-type-grid');
-      if (!fabricGrid) {
-        console.warn('populateFabricOptions: missing fabricGrid in element');
-        return;
-      }
-
-      if (!garmentType) {
-        console.warn('populateFabricOptions: missing garmentType');
-        return;
-      }
-
-      // Find garment card - could be the element itself or nested inside
-      let garmentCard = element;
-      if (!element.classList || !element.classList.contains('garment-card')) {
-        garmentCard = element.closest('.garment-card');
-      }
-
-      if (!garmentCard || !garmentCard.dataset || !garmentCard.dataset.garmentId) {
-        console.error('Cannot find garment card with valid dataset');
-        return;
-      }
-
-      const garmentId = garmentCard.dataset.garmentId;
-      const fabrics = V10_CONFIG.FABRIC_TYPE_MAPPING[garmentType] || [];
-      
-      if (fabrics.length === 0) {
-        console.warn(`No fabric options found for garment type: ${garmentType}`);
-        fabricGrid.innerHTML = '<p class="no-fabrics">No fabric options available for this garment type.</p>';
-        return;
-      }
-      
-      // Check if this is in the compact interface
-      const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
-      
-      if (isCompactInterface) {
-        fabricGrid.innerHTML = fabrics.map(fabric => `
-          <label class="compact-radio-card">
-            <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
-            <span class="compact-radio-card__content">
-              <span class="compact-radio-card__icon">${this.getFabricTypeIcon(fabric)}</span>
-              <span class="compact-radio-card__name">${fabric}</span>
-            </span>
-          </label>
-        `).join('');
-      } else {
-        fabricGrid.innerHTML = fabrics.map(fabric => `
-          <label class="radio-card">
-            <input type="radio" name="fabricType-${garmentId}" value="${fabric}">
-            <span class="radio-card__content">
-              <span class="radio-card__icon">${this.getFabricTypeIcon(fabric)}</span>
-              <span class="radio-card__name">${fabric}</span>
-            </span>
-          </label>
-        `).join('');
-      }
-      
-      console.log(`✅ Populated ${fabrics.length} fabric options for ${garmentType} (compact: ${isCompactInterface})`);
-      
-      // Add event listeners to fabric options for restriction checking
-      const fabricInputs = fabricGrid.querySelectorAll('input[type="radio"]');
-      fabricInputs.forEach(input => {
-        input.addEventListener('change', () => {
-          // Update fabric restrictions when fabric is selected
-          setTimeout(() => {
-            V10_Utils.updateGarmentFabricRestrictions(garmentCard);
-          }, 50);
-        });
-      });
-      
-    } catch (error) {
-      console.error('❌ Error in populateFabricOptions:', error);
-      return;
-    }
-  }
-
-  setGarmentValues(clone, garmentData) {
-    // Set garment type
-    if (garmentData.type) {
-      const garmentTypeInput = clone.querySelector(`input[value="${garmentData.type}"]`);
-      if (garmentTypeInput) {
-        garmentTypeInput.checked = true;
-        // Update visual display for garment selection widget
-        this.updateGarmentSelectionDisplay(clone, 'garment', garmentData.type);
-      }
-    }
-
-    // Set fabric type
-    if (garmentData.fabricType) {
-      const fabricTypeInput = clone.querySelector(`input[value="${garmentData.fabricType}"]`);
-      if (fabricTypeInput) {
-        fabricTypeInput.checked = true;
-        // Update visual display for fabric selection widget
-        this.updateGarmentSelectionDisplay(clone, 'fabric', garmentData.fabricType);
-      }
-    }
-
-    // Set sample type with proper sub-value matching (for sample requests)
-    if (garmentData.sampleType) {
-      let sampleTypeInput;
-      
-      // If we have a sub-value (including empty string), find the specific input with matching value AND data-sub-value
-      if (garmentData.hasOwnProperty('sampleSubValue') && garmentData.sampleSubValue !== null && garmentData.sampleSubValue !== undefined) {
-        sampleTypeInput = clone.querySelector(`input[value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
-      } else {
-        // Fallback: find any input with matching value (when no sub-value was ever set)
-        sampleTypeInput = clone.querySelector(`input[value="${garmentData.sampleType}"]`);
-      }
-      
-      if (sampleTypeInput) {
-        sampleTypeInput.checked = true;
-        
-        // Use unified visual update function with isInitialSet flag to skip cross-option reset
-        this.updateCompactSelection('sampleType', garmentData.sampleType, clone, garmentData.sampleSubValue, true);
-      } else {
-        console.error(`Sample type input not found for: ${garmentData.sampleType}, subValue: ${garmentData.sampleSubValue}`);
-      }
-    }
-
-    // Set sample reference (for bulk orders)
-    if (garmentData.sampleReference) {
-      const sampleRefInput = clone.querySelector(`input[value="${garmentData.sampleReference}"]`);
-      if (sampleRefInput) sampleRefInput.checked = true;
-    }
-    
-    // Apply cotton validation for custom colors after setting all values
-    if (garmentData.fabricType) {
-      V10_Utils.updateGarmentFabricRestrictions(clone);
-    }
-  }
-
-  updateGarmentSelectionDisplay(clone, type, value) {
-    // This function handles visual display updates for garment/fabric selection widgets only
-    // It's separate from updateCompactSelection to avoid conflicts with lab dip system
-    
-    if (type === 'garment') {
-      const garmentIcon = this.getGarmentIcon(value);
-      const selectedIcon = clone.querySelector('#garment-selected-icon');
-      const selectedName = clone.querySelector('#garment-selected-name');
-      const placeholder = clone.querySelector('#garment-placeholder');
-      const display = clone.querySelector('#garment-display');
-      const collapsed = clone.querySelector('#garment-collapsed');
-      
-      if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
-      if (selectedName) selectedName.textContent = value;
-      if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'block';
-      
-      // Show selected state - no auto-collapse, user clicks to expand if needed
-      
-    } else if (type === 'fabric') {
-      const fabricIcon = this.getFabricTypeIcon(value);
-      const selectedIcon = clone.querySelector('#fabric-selected-icon');
-      const selectedName = clone.querySelector('#fabric-selected-name');
-      const placeholder = clone.querySelector('#fabric-placeholder');
-      const display = clone.querySelector('#fabric-display');
-      const collapsed = clone.querySelector('#fabric-collapsed');
-      
-      if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
-      if (selectedName) selectedName.textContent = value;
-      if (placeholder) placeholder.style.display = 'none';
-      if (display) display.style.display = 'block';
-      
-      // Show selected state - no auto-collapse, user clicks to expand if needed
-    }
-  }
-
-  updateSectionVisibility(clone) {
-    const requestType = V10_State.requestType;
-    
-    clone.querySelectorAll('[data-show-for]').forEach(section => {
-      const showFor = section.dataset.showFor.split(',');
-      const shouldShow = showFor.some(type => {
-        if (type === 'quotation') return requestType === 'quotation';
-        if (type === 'sample') return requestType === 'sample-request';
-        if (type === 'bulk') return requestType === 'bulk-order-request';
-        return false;
-      });
-      
-      section.style.display = shouldShow ? '' : 'none';  // Use default CSS display when showing
-    });
-  }
 
   handleGarmentActions(e) {
     const garmentCard = e.target.closest('.garment-card, .garment-quantity-card');
@@ -4966,7 +5297,7 @@ class V10_GarmentStudio {
       const newValue = e.target.value;
       
       garmentData.type = newValue;
-      this.populateFabricOptions(garmentCard, newValue);
+      this.uiManager.populateFabricOptions(garmentCard, newValue);
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
       garmentData.sampleSubValue = undefined; // Reset sample sub-value
@@ -5797,12 +6128,12 @@ class V10_GarmentStudio {
       
       // Only populate existing values if garment has selections
       if (this.hasExistingSelections(garmentData)) {
-        this.setGarmentValues(garmentCard, garmentData);
+        this.uiManager.setGarmentValues(garmentCard, garmentData);
       }
       
       // Ensure fabric options are populated if garment type exists
       if (garmentData.type) {
-        this.populateFabricOptions(garmentCard, garmentData.type);
+        this.uiManager.populateFabricOptions(garmentCard, garmentData.type);
       }
       
       // Clean edit mode - let user control interface manually
@@ -6060,100 +6391,44 @@ class V10_GarmentStudio {
 
 
   removeGarment(garmentId) {
-    try {
-      // Prevent multiple calls during processing
-      if (this.removing) {
-        return;
+    // Delegate to garment manager
+    const success = this.garmentManager.removeGarment(garmentId);
+    
+    if (success) {
+      // Handle UI-specific logic after successful removal
+      this.renumberGarments();
+      
+      // If no garments left, add a new one
+      if (V10_State.garments.size === 0) {
+        console.log('No garments left, adding fresh garment');
+        this.addGarment();
       }
-      this.removing = true;
       
-      // Check if garment has assignments
-      const garmentData = V10_State.garments.get(garmentId);
-      const hasAssignments = garmentData && 
-        (garmentData.assignedLabDips.size > 0 || garmentData.assignedDesigns.size > 0);
-      
-      let shouldDelete = true;
-      
-      if (hasAssignments) {
-        // Build confirmation message showing what will be lost
-        let message = 'This garment has assignments that will be lost:\n\n';
-        
-        if (garmentData.assignedLabDips.size > 0) {
-          message += `• ${garmentData.assignedLabDips.size} assigned color(s)\n`;
+      // For bulk orders, trigger quantity studio population after garment removal
+      const requestType = V10_State.requestType;
+      if (requestType === 'bulk-order-request') {
+        if (this._quantityStudioRemovalTimeout) {
+          clearTimeout(this._quantityStudioRemovalTimeout);
         }
-        
-        if (garmentData.assignedDesigns.size > 0) {
-          message += `• ${garmentData.assignedDesigns.size} assigned design(s)\n`;
-        }
-        
-        message += '\nRemove this garment? This action cannot be undone.';
-        shouldDelete = confirm(message);
-      }
-      // If no assignments, delete immediately without confirmation
-      
-      if (shouldDelete) {
-        // Remove from state
-        V10_State.garments.delete(garmentId);
-
-        // Clean up assignments
-        this.cleanupAssignments(garmentId);
-
-        // Update studio completion status after removal
-        this.updateStudioCompletion();
-        this.updateDesignStudioTabStatus();
-
-        // Remove from UI
-        const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-        if (garmentCard) {
-          garmentCard.remove();
-        }
-
-        console.log(`🗑️ Removed garment: ${garmentId}`);
-        
-        // Renumber remaining garments
-        this.renumberGarments();
-        
-        // If no garments left, add a new one
-        if (V10_State.garments.size === 0) {
-          console.log('No garments left, adding fresh garment');
-          this.addGarment();
-        }
-        
-        // For bulk orders, trigger quantity studio population after garment removal
-        const requestType = V10_State.requestType;
-        if (requestType === 'bulk-order-request') {
-          // Debounce to prevent excessive updates
-          if (this._quantityStudioRemovalTimeout) {
-            clearTimeout(this._quantityStudioRemovalTimeout);
+        this._quantityStudioRemovalTimeout = setTimeout(() => {
+          if (window.v10GarmentStudio?.populateQuantityStudio) {
+            window.v10GarmentStudio.populateQuantityStudio();
+            console.log('🔄 Triggered quantity studio population after garment removal');
           }
-          this._quantityStudioRemovalTimeout = setTimeout(() => {
-            if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
-              window.v10GarmentStudio.populateQuantityStudio();
-              console.log('🔄 Triggered quantity studio population after garment removal');
-            }
-          }, 200); // 200ms debounce for removal
-        }
+        }, 200);
       }
-    } catch (error) {
-      console.error('Error removing garment:', error);
-    } finally {
-      this.removing = false;
     }
+    
+    return success;
   }
 
   duplicateGarment(garmentId) {
-    const originalData = V10_State.garments.get(garmentId);
-    if (!originalData) return;
-
-    const duplicateData = {
-      ...originalData,
-      id: undefined, // Will be generated
-      assignedLabDips: new Set(), // Don't copy assignments
-      assignedDesigns: new Set()
-    };
-
-    this.addGarment(duplicateData);
-    console.log(`📋 Duplicated garment: ${garmentId}`);
+    // Delegate to garment manager
+    const newId = this.garmentManager.duplicateGarment(garmentId);
+    if (newId) {
+      console.log(`📋 Duplicated garment: ${garmentId}`);
+    }
+    return newId;
   }
 
   createColorVariant(originalGarmentId, newLabDipId) {
