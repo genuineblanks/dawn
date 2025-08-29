@@ -12487,9 +12487,6 @@ class V10_ClientManager {
     this.setupNavigation();
     this.setupConditionalSections();
     this.loadSavedData();
-    
-    // Initial validation removed - fields should not be red on page load
-    // Validation will happen when user interacts with form or tries to submit
   }
 
   setupRequestTypeHandling() {
@@ -12501,7 +12498,6 @@ class V10_ClientManager {
           this.currentRequestType = e.target.value;
           this.updateConditionalSections();
           this.saveData();
-          // Validation removed - fields should not be red immediately on request type change
           
           // Update global state
           if (window.V10_State) {
@@ -12638,59 +12634,41 @@ class V10_ClientManager {
     if (!email || typeof email !== 'string') {
       return { isValid: false, reason: 'Email is required' };
     }
-
-    // Basic email format validation
+    
+    email = email.trim().toLowerCase();
+    
+    // Basic format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return { isValid: false, reason: 'Invalid email format' };
     }
-
-    // Extract domain from email
-    const domain = email.split('@')[1].toLowerCase();
-
-    // Major email providers (instant approval)
-    const majorProviders = [
-      // Major consumer email providers
-      'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
-      'yahoo.com', 'yahoo.co.uk', 'yahoo.ca', 'yahoo.de', 'yahoo.fr', 'yahoo.in', 'yahoo.com.au',
-      'aol.com', 'icloud.com', 'me.com', 'mac.com',
-      
-      // Professional email providers  
-      'protonmail.com', 'proton.me', 'tutanota.com', 'fastmail.com', 'zoho.com',
-      'yandex.com', 'mail.ru', 'qq.com', '163.com', '126.com',
-      
-      // Regional major providers
-      'gmx.com', 'gmx.de', 'web.de', 'freenet.de', 't-online.de',
-      'orange.fr', 'wanadoo.fr', 'free.fr', 'laposte.net', 'sfr.fr',
-      'libero.it', 'virgilio.it', 'alice.it', 'tiscali.it',
-      'uol.com.br', 'ig.com.br', 'terra.com.br', 'bol.com.br', 'globo.com',
-      'btinternet.com', 'sky.com', 'talktalk.net', 'virgin.net',
-      'telus.net', 'shaw.ca', 'rogers.com', 'bell.net'
-    ];
-
-    // Check if it's a major provider (instant approval)
-    if (majorProviders.includes(domain)) {
-      return { isValid: true, reason: 'Major email provider' };
-    }
-
-    // For all other domains, just check basic format - allow any reasonable business domain
-    // Only block extremely obvious fake patterns
-    const obviousFakePatterns = [
-      /^[a-z]{1,2}\.com$/,           // Extremely short like "a.com", "ab.com"
-      /^(temp|test|fake|spam|10min|guerrilla)/,  // Obviously temp keywords
-      /^[qwertyuiop]{5,}/,           // Keyboard mashing
-      /\.(tk|ml|ga|cf)$/             // Free suspicious TLDs
-    ];
-
-    const isObviousFake = obviousFakePatterns.some(pattern => pattern.test(domain));
-    if (isObviousFake) {
-      return { 
-        isValid: false, 
-        reason: 'Please use a legitimate email address' 
+    
+    const [localPart, domain] = email.split('@');
+    
+    // Common typo detection and correction
+    const commonTypos = {
+      'gmial.com': 'gmail.com', 'gmai.com': 'gmail.com', 'gmil.com': 'gmail.com',
+      'yahooo.com': 'yahoo.com', 'yaho.com': 'yahoo.com',
+      'hotmial.com': 'hotmail.com', 'hotmai.com': 'hotmail.com',
+      'outlok.com': 'outlook.com', 'outloo.com': 'outlook.com'
+    };
+    
+    if (commonTypos[domain]) {
+      return {
+        isValid: false,
+        reason: `Did you mean ${localPart}@${commonTypos[domain]}?`,
+        suggestion: `${localPart}@${commonTypos[domain]}`,
+        isTypo: true
       };
     }
-
-    // Allow everything else - business domains, creative domains, etc.
+    
+    // Basic domain validation - allow business emails and all reasonable domains
+    const tldParts = domain.split('.');
+    const tld = tldParts[tldParts.length - 1];
+    if (tld.length < 2 || tld.length > 6) {
+      return { isValid: false, reason: 'Please check your email domain' };
+    }
+    
     return { isValid: true, reason: 'Valid email address' };
   }
 
@@ -12709,47 +12687,23 @@ class V10_ClientManager {
     
     // Check request type selected (always required)
     if (!this.currentRequestType) {
-      console.log('❌ No request type selected');
       isValid = false;
-    } else {
-      console.log('✅ Request type selected:', this.currentRequestType);
     }
     
     // Check basic required fields (only validate if interacted with or forcing all)
     const requiredFields = form.querySelectorAll('input[required], select[required]');
-    console.log('🔍 Validating required fields:', {
-      forceValidateAll,
-      currentRequestType: this.currentRequestType,
-      requiredFieldsCount: requiredFields.length,
-      interactedFields: Array.from(this.interactedFields)
-    });
     
     requiredFields.forEach((field, index) => {
       // Generate consistent field key using name, id, or index
       const fieldKey = field.name || field.id || `field-${index}`;
       
-      if (forceValidateAll) {
-        // When forcing validation, check ALL required fields regardless of interaction
-        if (!field.value.trim()) {
-          console.log('❌ Required field empty:', { fieldKey, name: field.name, value: field.value });
-          isValid = false;
-          const fieldContainer = field.closest('.v10-form-field');
-          if (fieldContainer) {
-            fieldContainer.classList.add('v10-form-field--invalid');
-          }
-        } else {
-          console.log('✅ Required field valid:', { fieldKey, name: field.name, value: field.value.substring(0, 20) + '...' });
-        }
-      } else {
-        // Only validate fields user has interacted with
-        const hasInteracted = this.interactedFields.has(fieldKey);
-        if (hasInteracted && !field.value.trim()) {
-          console.log('❌ Interacted field empty:', { fieldKey, name: field.name });
-          isValid = false;
-          const fieldContainer = field.closest('.v10-form-field');
-          if (fieldContainer) {
-            fieldContainer.classList.add('v10-form-field--invalid');
-          }
+      const shouldValidate = forceValidateAll || this.interactedFields.has(fieldKey);
+      
+      if (shouldValidate && !field.value.trim()) {
+        isValid = false;
+        const fieldContainer = field.closest('.v10-form-field');
+        if (fieldContainer) {
+          fieldContainer.classList.add('v10-form-field--invalid');
         }
       }
     });
@@ -12759,47 +12713,31 @@ class V10_ClientManager {
     if (emailField) {
       const fieldKey = emailField.name || emailField.id || 'email-field';
       
-      if (forceValidateAll || this.interactedFields.has(fieldKey)) {
+      const shouldValidateEmail = forceValidateAll || this.interactedFields.has(fieldKey);
+      
+      if (shouldValidateEmail) {
         const emailValidation = this.validateEmail(emailField.value);
         
         if (!emailValidation.isValid) {
-          console.log('❌ Email validation failed:', { 
-            fieldKey, 
-            email: emailField.value, 
-            reason: emailValidation.reason 
-          });
           isValid = false;
           const fieldContainer = emailField.closest('.v10-form-field');
           if (fieldContainer) {
             fieldContainer.classList.add('v10-form-field--invalid');
           }
-        } else {
-          console.log('✅ Email validation passed:', { 
-            fieldKey, 
-            email: emailField.value, 
-            reason: emailValidation.reason 
-          });
         }
       }
     }
     
     // Check delivery address radio (ONLY for sample/bulk/lab-dips requests, NOT quotation)
     if (this.currentRequestType !== 'quotation') {
-      console.log('🔍 Checking delivery address for non-quotation request');
       const deliveryField = document.getElementById('v10-delivery-address-field');
-      console.log('📍 Delivery field:', { exists: !!deliveryField, visible: deliveryField ? deliveryField.style.display !== 'none' : false });
       
       if (deliveryField && deliveryField.style.display !== 'none') {
         const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-        console.log('📍 Delivery address selection:', { selected: !!selectedDelivery, value: selectedDelivery?.value });
         
         if (!selectedDelivery) {
-          console.log('❌ No delivery address selected');
           isValid = false;
-          // Highlight the delivery address field
           deliveryField.classList.add('v10-form-field--invalid');
-        } else {
-          console.log('✅ Delivery address selected:', selectedDelivery.value);
         }
         
         // If different address selected, check required fields
@@ -12964,7 +12902,6 @@ class V10_ClientManager {
       });
       
       this.updateConditionalSections();
-      // Validation removed - fields should not be red immediately on data load
       
     } catch (error) {
       console.error('Error loading saved data:', error);
@@ -13004,6 +12941,21 @@ class V10_ClientManager {
 
   getClientData() {
     return JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+  }
+
+  /**
+   * Cleanup method to remove event listeners and clear data
+   * Call this when navigating away or destroying the form
+   */
+  destroy() {
+    // Clear form data from memory (not storage)
+    this.formData.clear();
+    this.interactedFields.clear();
+    
+    // Reset properties
+    this.currentRequestType = null;
+    
+    console.log('🧹 V10_ClientManager cleaned up');
   }
 }
 
@@ -14038,7 +13990,6 @@ class V10_ModalManager {
       } else {
         // Re-setup form validation now that form is visible
         window.v10ClientManager.setupFormValidation();
-        // Validation removed - fields should not be red immediately on form visibility
       }
     }
   }
@@ -14124,7 +14075,6 @@ class V10_ModalManager {
     if (window.v10ClientManager) {
       window.v10ClientManager.currentRequestType = submissionType;
       window.v10ClientManager.updateConditionalSections();
-      // Validation removed - fields should not be red immediately on request type selection
     }
 
     // Update change submission button text
