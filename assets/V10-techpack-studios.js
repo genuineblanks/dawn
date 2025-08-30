@@ -6076,9 +6076,15 @@ class V10_GarmentStudio {
         if (separator) separator.style.display = 'inline';
       }
     } else {
-      // Hide color elements when no lab dips assigned
-      if (colorCircle) colorCircle.style.display = 'none';
-      if (colorName) colorName.style.display = 'none';
+      // Show appropriate color indicators for different sample types
+      if (garmentData.sampleType && colorCircle && colorName) {
+        this.showSampleTypeColorIndicator(garmentData, colorCircle, colorName, separator);
+      } else {
+        // Hide color elements when no sample type selected
+        if (colorCircle) colorCircle.style.display = 'none';
+        if (colorName) colorName.style.display = 'none';
+        if (separator) separator.style.display = 'none';
+      }
     }
     
     if (fabricSpan) {
@@ -6110,6 +6116,124 @@ class V10_GarmentStudio {
       
       statusSpan.textContent = statusMessage;
       statusSpan.className = statusClass;
+    }
+  }
+
+  // Show appropriate color indicators for different sample types
+  showSampleTypeColorIndicator(garmentData, colorCircle, colorName, separator) {
+    const sampleType = garmentData.sampleType;
+    const sampleSubValue = garmentData.sampleSubValue;
+    
+    // Show the color elements
+    colorCircle.style.display = 'inline-block';
+    colorName.style.display = 'inline';
+    if (separator) separator.style.display = 'inline';
+    
+    if (sampleType === 'stock') {
+      // Stock color samples
+      switch (sampleSubValue) {
+        case 'black':
+          colorCircle.style.background = '#000000';
+          colorName.textContent = 'Black';
+          break;
+        case 'white':
+          colorCircle.style.background = '#ffffff';
+          colorCircle.style.border = '2px solid #d1d5db';
+          colorName.textContent = 'White';
+          break;
+        case 'proximate':
+          // Multi-color gradient for "most proximate color"
+          colorCircle.style.background = 'conic-gradient(#ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b)';
+          colorCircle.style.border = '1px solid #9ca3af';
+          colorName.textContent = 'Proximate Color';
+          break;
+        default:
+          colorCircle.style.background = '#6b7280';
+          colorName.textContent = 'Stock Color';
+          break;
+      }
+    } else if (sampleType === 'custom') {
+      // Custom color samples
+      if (sampleSubValue === 'design-studio') {
+        // Design Studio - Pantone Library (requires lab dip assignment)
+        colorCircle.style.background = 'linear-gradient(45deg, #ec4899, #8b5cf6)';
+        colorCircle.style.border = '1px solid #9ca3af';
+        colorName.textContent = 'Design Studio';
+      } else if (sampleSubValue === 'exact-pantone') {
+        // I have TCX/TPX pantone in my techpack
+        colorCircle.style.background = 'radial-gradient(circle, #f59e0b 30%, #ef4444 70%)';
+        colorCircle.style.border = '2px solid #d97706';
+        colorName.textContent = 'TCX/TPX Pantone';
+      } else {
+        // Generic custom
+        colorCircle.style.background = '#8b5cf6';
+        colorName.textContent = 'Custom Color';
+      }
+    } else {
+      // Fallback
+      colorCircle.style.background = '#9ca3af';
+      colorName.textContent = 'Sample Color';
+    }
+    
+    // Reset any existing border unless specifically set above
+    if (!colorCircle.style.border) {
+      colorCircle.style.border = 'none';
+    }
+  }
+
+  // Show appropriate color indicators for different sample types in review cards
+  showSampleTypeColorForReview(garment, colorCircle, colorNameText) {
+    const sampleType = garment.sampleType;
+    const sampleSubValue = garment.sampleSubValue;
+    
+    if (sampleType === 'stock') {
+      // Stock color samples
+      switch (sampleSubValue) {
+        case 'black':
+          colorCircle.style.backgroundColor = '#000000';
+          colorCircle.style.border = 'none';
+          colorNameText.textContent = 'Black';
+          break;
+        case 'white':
+          colorCircle.style.backgroundColor = '#ffffff';
+          colorCircle.style.border = '2px solid #d1d5db';
+          colorNameText.textContent = 'White';
+          break;
+        case 'proximate':
+          // For review cards, use a representative multi-color
+          colorCircle.style.background = 'conic-gradient(#ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b)';
+          colorCircle.style.border = '1px solid #9ca3af';
+          colorNameText.textContent = 'Proximate Color';
+          break;
+        default:
+          colorCircle.style.backgroundColor = '#6b7280';
+          colorCircle.style.border = 'none';
+          colorNameText.textContent = 'Stock Color';
+          break;
+      }
+    } else if (sampleType === 'custom') {
+      // Custom color samples
+      if (sampleSubValue === 'design-studio') {
+        // Design Studio - Pantone Library
+        colorCircle.style.background = 'linear-gradient(45deg, #ec4899, #8b5cf6)';
+        colorCircle.style.border = '1px solid #9ca3af';
+        colorNameText.textContent = 'Design Studio';
+      } else if (sampleSubValue === 'exact-pantone') {
+        // I have TCX/TPX pantone in my techpack
+        colorCircle.style.background = 'radial-gradient(circle, #f59e0b 30%, #ef4444 70%)';
+        colorCircle.style.border = '2px solid #d97706';
+        colorNameText.textContent = 'TCX/TPX Pantone';
+      } else {
+        // Generic custom
+        colorCircle.style.backgroundColor = '#8b5cf6';
+        colorCircle.style.border = 'none';
+        colorNameText.textContent = 'Custom Color';
+      }
+    } else {
+      // Fallback
+      colorCircle.style.backgroundColor = '#9ca3af';
+      colorCircle.style.border = 'none';
+      colorNameText.textContent = 'Sample Color';
     }
   }
 
@@ -11140,9 +11264,15 @@ class V10_ReviewManager {
           console.log(`🎨 DEBUG: Set color ${hexColor} for ${labDip.pantone}`);
         }
       } else {
-        if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
-        if (colorNameText) colorNameText.textContent = 'No color assigned';
-        console.log(`🎨 DEBUG: No lab dips assigned to garment ${garment.number}`);
+        // Show appropriate color indicators for different sample types
+        if (garment.sampleType && colorCircle && colorNameText) {
+          this.showSampleTypeColorForReview(garment, colorCircle, colorNameText);
+          console.log(`🎨 DEBUG: Showing sample type color for garment ${garment.number}`);
+        } else {
+          if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
+          if (colorNameText) colorNameText.textContent = 'No color assigned';
+          console.log(`🎨 DEBUG: No sample type selected for garment ${garment.number}`);
+        }
       }
       
       if (statusBadge) {
