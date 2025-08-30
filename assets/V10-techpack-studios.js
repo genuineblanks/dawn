@@ -2875,7 +2875,7 @@ const V10_Utils = {
     
     // Fallback to saved garment data if no checked input (edit mode)
     if (!fabricType) {
-      const garmentId = garmentElement.dataset.garmentId;
+      const garmentId = garmentElement?.dataset?.garmentId;
       const garmentData = V10_State.garments.get(garmentId);
       fabricType = garmentData?.fabricType;
     }
@@ -2963,7 +2963,7 @@ const V10_Utils = {
   updateGarmentFabricRestrictions: (garmentElement) => {
     if (!garmentElement) return;
     
-    const garmentId = garmentElement.dataset.garmentId;
+    const garmentId = garmentElement?.dataset?.garmentId;
     const shouldRestrict = V10_Utils.shouldRestrictCustomColor(garmentElement);
     
     console.log(`🎨 Custom color restriction for garment ${garmentId}: ${shouldRestrict ? 'RESTRICTED' : 'ALLOWED'}`);
@@ -5197,18 +5197,30 @@ class V10_GarmentManager {
 
   cleanupGarmentAssignments(garmentId) {
     // Clean up lab dip assignments
-    V10_State.labDips.forEach(labDip => {
-      if (labDip.assignedGarments) {
-        labDip.assignedGarments.delete(garmentId);
-      }
-    });
+    if (V10_State.labDips) {
+      V10_State.labDips.forEach(labDip => {
+        if (labDip.assignedGarments) {
+          labDip.assignedGarments.delete(garmentId);
+        }
+      });
+    }
 
-    // Clean up design assignments
-    V10_State.designs.forEach(design => {
-      if (design.assignedGarments) {
-        design.assignedGarments.delete(garmentId);
+    // Clean up assignment maps
+    if (V10_State.assignments) {
+      // Remove from lab dip assignments
+      if (V10_State.assignments.labDips) {
+        V10_State.assignments.labDips.forEach((garmentIds, labDipId) => {
+          garmentIds.delete(garmentId);
+        });
       }
-    });
+      
+      // Remove from design assignments
+      if (V10_State.assignments.designs) {
+        V10_State.assignments.designs.forEach((garmentIds, designId) => {
+          garmentIds.delete(garmentId);
+        });
+      }
+    }
   }
 
   // Data Access
