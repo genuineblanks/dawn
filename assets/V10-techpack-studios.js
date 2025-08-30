@@ -134,7 +134,7 @@ const V10_CONFIG = {
   ],
 
   // Design sample types
-  DESIGN_TYPES: ['Embroidery', 'Screen Print', 'Digital Print', 'Other'],
+  DESIGN_TYPES: ['Embroidery', 'Screen Print', 'Digital Print'],
 
   // Legacy fixed pricing (kept for lab dips and design samples)
   PRICING: {
@@ -3492,7 +3492,7 @@ class V10_QuantityCalculator {
    * Get colorway count for a garment
    */
   getColorwayCount(garmentId) {
-    // Check assigned lab dips from Design Studio
+    // Check assigned lab dips from Color Studio
     const assignedLabDips = V10_State.assignments.labDips;
     let colorwayCount = 0;
     
@@ -5809,7 +5809,7 @@ class V10_GarmentStudio {
       if (!isComplete && garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
         const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
         if (!hasLabDips) {
-          statusText = 'Incomplete - Color assignment required in Design Studio';
+          statusText = 'Incomplete - Color assignment required in Color Studio';
         }
       }
       
@@ -5902,7 +5902,7 @@ class V10_GarmentStudio {
     }
   }
 
-  // Update the Design Studio tab status indicator
+  // Update the Color Studio tab status indicator
   updateDesignStudioTabStatus() {
     const designStudioTab = document.getElementById('design-studio-tab');
     if (!designStudioTab) return;
@@ -5914,7 +5914,7 @@ class V10_GarmentStudio {
     const allGarments = Array.from(V10_State.garments.values());
     
     if (allGarments.length === 0) {
-      subtitleElement.textContent = 'Colors & samples';
+      subtitleElement.textContent = 'Colors & Labdips';
       designStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
       return;
     }
@@ -5937,7 +5937,7 @@ class V10_GarmentStudio {
     // Update tab based on completion status
     if (totalRequirements === 0) {
       // No design requirements = show default
-      subtitleElement.textContent = 'Colors & samples';
+      subtitleElement.textContent = 'Colors & Labdips';
       designStudioTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
     } else if (fulfilledRequirements === totalRequirements) {
       // All requirements fulfilled = complete
@@ -6113,7 +6113,7 @@ class V10_GarmentStudio {
     } else {
       // Show appropriate color indicators for different sample types
       if (garmentData.sampleType && colorCircle && colorName) {
-        // Special case: Design Studio should wait for lab dip assignment
+        // Special case: Color Studio should wait for lab dip assignment
         if (garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
           // Show empty circle waiting for lab dip color
           colorCircle.style.display = 'inline-block';
@@ -7344,8 +7344,7 @@ class V10_GarmentStudio {
       'Polo Shirt': 'polo-shirt',
       'Tank Top': 'tank-top',
       'Hat/Cap': 'hat-cap',
-      'Beanie': 'beanie',
-      'Other': 'other'
+      'Beanie': 'beanie'
     };
     
     const iconName = iconNameMap[garmentType];
@@ -7438,7 +7437,7 @@ class V10_GarmentStudio {
   getSampleCustomDisplayName(subValue) {
     switch(subValue) {
       case 'design-studio':
-        return 'Design Studio Library';
+        return 'Color Studio Library';
       case 'exact-pantone':
         return 'Exact Pantone Code';
       default:
@@ -10806,7 +10805,7 @@ class V10_ValidationManager {
         // Check for custom sample types that need lab dips or designs
         // Only 'design-studio' custom samples require lab dip assignments
         if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio' && (!garment.assignedLabDips || garment.assignedLabDips.size === 0)) {
-          errors.push(`Garment ${index + 1}: Design Studio sample requires Lab Dip assignment`);
+          errors.push(`Garment ${index + 1}: Color Studio sample requires Lab Dip assignment`);
           isValid = false;
         }
         
@@ -11283,13 +11282,13 @@ class V10_ReviewManager {
       } else {
         // Show appropriate color indicators for different sample types
         if (garment.sampleType && colorCircle && colorNameText) {
-          // Special case: Design Studio should show empty circle waiting for lab dip
+          // Special case: Color Studio should show empty circle waiting for lab dip
           if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio') {
             colorCircle.style.backgroundColor = 'transparent';
             colorCircle.style.background = '';
             colorCircle.style.border = '2px solid #9ca3af';
             colorNameText.textContent = 'Awaiting Color Assignment';
-            console.log(`🎨 DEBUG: Design Studio awaiting color assignment for garment ${garment.number}`);
+            console.log(`🎨 DEBUG: Color Studio awaiting color assignment for garment ${garment.number}`);
           } else {
             this.showSampleTypeColorForReview(garment, colorCircle, colorNameText);
             console.log(`🎨 DEBUG: Showing sample type color for garment ${garment.number}`);
@@ -12210,7 +12209,7 @@ class V10_TechPackSystem {
         `
       },
       'design-studio': {
-        title: 'Design Studio Guide',
+        title: 'Color Studio Guide',
         content: `
           <h4>Purpose</h4>
           <p>Create design samples and lab dips for color/design validation. This studio helps you communicate your visual requirements clearly to our production team.</p>
