@@ -6978,19 +6978,10 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#garment-display');
       const collapsed = garmentCard.querySelector('#garment-collapsed');
       
-      // Check if garment is in edit mode - if so, skip visual display updates
-      const garmentId = garmentCard.dataset?.garmentId;
-      const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-      const isInEditMode = garmentData?.isInEditMode === true;
-      
       if (selectedIcon) selectedIcon.innerHTML = garmentIcon;
       if (selectedName) selectedName.textContent = value;
-      
-      // Only update visual display if NOT in edit mode
-      if (!isInEditMode) {
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-      }
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
       
       
       // Auto-collapse after selection
@@ -7012,19 +7003,10 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#fabric-display');
       const collapsed = garmentCard.querySelector('#fabric-collapsed');
       
-      // Check if garment is in edit mode - if so, skip visual display updates
-      const garmentId = garmentCard.dataset?.garmentId;
-      const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-      const isInEditMode = garmentData?.isInEditMode === true;
-      
       if (selectedIcon) selectedIcon.innerHTML = fabricIcon;
       if (selectedName) selectedName.textContent = value;
-      
-      // Only update visual display if NOT in edit mode
-      if (!isInEditMode) {
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-      }
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -7045,19 +7027,10 @@ class V10_GarmentStudio {
       const display = garmentCard.querySelector('#sample-reference-display');
       const collapsed = garmentCard.querySelector('#sample-reference-collapsed');
       
-      // Check if garment is in edit mode - if so, skip visual display updates
-      const garmentId = garmentCard.dataset?.garmentId;
-      const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-      const isInEditMode = garmentData?.isInEditMode === true;
-      
       if (selectedIcon) selectedIcon.innerHTML = sampleReferenceIcon;
       if (selectedName) selectedName.textContent = this.getSampleReferenceDisplayName(value);
-      
-      // Only update visual display if NOT in edit mode
-      if (!isInEditMode) {
-        if (placeholder) placeholder.style.display = 'none';
-        if (display) display.style.display = 'block';
-      }
+      if (placeholder) placeholder.style.display = 'none';
+      if (display) display.style.display = 'block';
       
       // Auto-collapse after selection
       setTimeout(() => {
@@ -7080,7 +7053,6 @@ class V10_GarmentStudio {
       // Get garment data once for the entire function
       const garmentId = garmentCard.dataset?.garmentId;
       const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-      const isInEditMode = garmentData?.isInEditMode === true;
       
       stockSection?.classList.remove('selected');
       customSection?.classList.remove('selected');
@@ -7098,12 +7070,8 @@ class V10_GarmentStudio {
         
         if (selectedIcon) selectedIcon.innerHTML = icon;
         if (selectedName) selectedName.textContent = displayName;
-        
-        // Only update visual display if NOT in edit mode
-        if (!isInEditMode) {
-          if (placeholder) placeholder.style.display = 'none';
-          if (display) display.style.display = 'block';
-        }
+        if (placeholder) placeholder.style.display = 'none';
+        if (display) display.style.display = 'block';
         
         // Price display removed - keeping selection functionality  
         if (priceElement && garmentData) {
@@ -7173,17 +7141,13 @@ class V10_GarmentStudio {
         
         if (selectedIcon) selectedIcon.innerHTML = icon;
         if (selectedName) selectedName.textContent = displayName;
-        
-        // Only update visual display if NOT in edit mode
-        if (!isInEditMode) {
-          if (placeholder) {
-            placeholder.style.display = 'none';
-            console.log(`🔍 DEBUG: Set placeholder display to none`);
-          }
-          if (display) {
-            display.style.display = 'block';
-            console.log(`🔍 DEBUG: Set display to block`);
-          }
+        if (placeholder) {
+          placeholder.style.display = 'none';
+          console.log(`🔍 DEBUG: Set placeholder display to none`);
+        }
+        if (display) {
+          display.style.display = 'block';
+          console.log(`🔍 DEBUG: Set display to block`);
         }
         
         // Update pricing
