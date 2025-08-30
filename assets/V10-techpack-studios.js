@@ -6290,7 +6290,8 @@ class V10_GarmentStudio {
       contentContainer.style.display = 'block';  // Force block for edit mode
       
       // Don't pre-populate values - let user make fresh selections for all options
-      this.clearGarmentSelectionDisplays(garmentCard);
+      // Reset all selection widgets to placeholder state (like fabric type does)
+      this.resetAllSelectionsToPlaceholder(garmentCard);
       
       // Clean edit mode - let user control interface manually
       
@@ -6307,39 +6308,34 @@ class V10_GarmentStudio {
     }
   }
 
-  clearGarmentSelectionDisplays(garmentCard) {
-    // Clear garment type selection
-    const garmentRadios = garmentCard.querySelectorAll('input[name="garmentType"]');
-    garmentRadios.forEach(radio => radio.checked = false);
-    this.resetSelectionByIds(garmentCard, 'garment-display', 'garment-placeholder', 'Select garment type');
+  resetAllSelectionsToPlaceholder(garmentCard) {
+    // Reset garment type to placeholder state
+    this.resetSelectionToPlaceholder(garmentCard, '#garment-placeholder', '#garment-display');
     
-    // Clear fabric type selection
-    const fabricRadios = garmentCard.querySelectorAll('input[name="fabricType"]');
-    fabricRadios.forEach(radio => radio.checked = false);
-    this.resetSelectionByIds(garmentCard, 'fabric-display', 'fabric-placeholder', 'Select fabric type');
+    // Reset fabric type to placeholder state
+    this.resetSelectionToPlaceholder(garmentCard, '#fabric-placeholder', '#fabric-display');
     
-    // Clear sample type selections (both stock and custom)
-    const sampleRadios = garmentCard.querySelectorAll('input[name="sampleType"]');
-    sampleRadios.forEach(radio => radio.checked = false);
-    this.resetSelectionByIds(garmentCard, 'sample-stock-display', 'sample-stock-placeholder', 'Select sample type');
-    this.resetSelectionByIds(garmentCard, 'sample-custom-display', 'sample-custom-placeholder', 'Select color option');
+    // Reset sample type selections to placeholder state
+    this.resetSelectionToPlaceholder(garmentCard, '#sample-stock-placeholder', '#sample-stock-display');
+    this.resetSelectionToPlaceholder(garmentCard, '#sample-custom-placeholder', '#sample-custom-display');
     
-    console.log('✅ Cleared all garment selection displays for edit mode');
+    // Clear all radio button selections
+    garmentCard.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.checked = false;
+    });
+    
+    console.log('✅ Reset all selections to placeholder state for edit mode');
   }
 
-  resetSelectionByIds(garmentCard, displayId, placeholderId, placeholderText) {
-    const selectionDisplay = garmentCard.querySelector(`#${displayId}`);
-    if (selectionDisplay) {
-      selectionDisplay.style.display = 'none';
-    }
+  resetSelectionToPlaceholder(garmentCard, placeholderSelector, displaySelector) {
+    const placeholder = garmentCard.querySelector(placeholderSelector);
+    const display = garmentCard.querySelector(displaySelector);
     
-    const placeholder = garmentCard.querySelector(`#${placeholderId}`);
     if (placeholder) {
-      const placeholderTextElement = placeholder.querySelector('.placeholder-text');
-      if (placeholderTextElement) {
-        placeholderTextElement.textContent = placeholderText;
-      }
       placeholder.style.display = 'block';
+    }
+    if (display) {
+      display.style.display = 'none';
     }
   }
 
