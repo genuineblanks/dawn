@@ -6939,19 +6939,7 @@ class V10_GarmentStudio {
       return;
     }
     
-    // CLEAN STATE MANAGEMENT: Clear any stale visual state when opening menus in edit mode
-    const garmentId = garmentCard.dataset?.garmentId;
-    const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-    if (garmentData && garmentData.isInEditMode === true) {
-      // For sample type menus, ensure no cross-contamination
-      const widgetId = selectionWidget.id;
-      if (widgetId === 'sample-stock-collapsed' || widgetId === 'sample-custom-collapsed') {
-        // Clear stale state from the opposite sample type to prevent contamination
-        const oppositeType = widgetId.includes('stock') ? 'custom' : 'stock';
-        console.log(`🔄 Edit mode: Clearing stale ${oppositeType} state before opening ${widgetId}`);
-        this.uiManager.handleSampleTypeCrossReset(garmentCard, widgetId.includes('stock') ? 'stock' : 'custom');
-      }
-    }
+    // Remove problematic edit mode logic - it's causing unwanted side effects
     
     console.log('🔄 toggleSelection called for:', selectionWidget.id || 'unnamed widget');
     
@@ -6973,13 +6961,8 @@ class V10_GarmentStudio {
     
     if (!expanded) {
       console.error('❌ No expanded section found for widget:', selectionWidget.id);
-      console.error('Section element:', section);
-      console.error('Section HTML:', section ? section.innerHTML.substring(0, 200) : 'null');
       return;
     }
-    
-    console.log('🔍 Current expanded display:', expanded.style.display);
-    console.log('🔍 Expanded element:', expanded);
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
       // Show expanded state (show dropdown options)
@@ -7101,16 +7084,18 @@ class V10_GarmentStudio {
       if (display) display.style.display = 'block';
       
       
-      // Auto-collapse after selection
-      setTimeout(() => {
-        this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
-        // Update dependencies after garment selection to enable fabric type
-        const garmentId = garmentCard.dataset.garmentId;
-        if (garmentId) {
-          const garmentData = V10_State.garments.get(garmentId);
-          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-        }
-      }, 300);
+      // Auto-collapse after selection (but NOT in edit mode - causes issues)
+      if (!garmentData || !garmentData.isInEditMode) {
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+          // Update dependencies after garment selection to enable fabric type
+          const garmentId = garmentCard.dataset.garmentId;
+          if (garmentId) {
+            const garmentData = V10_State.garments.get(garmentId);
+            this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+          }
+        }, 300);
+      }
       
     } else if (type === 'fabric') {
       const fabricIcon = this.getFabricTypeIcon(value);
@@ -7125,16 +7110,18 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection
-      setTimeout(() => {
-        this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
-        // Update dependencies after fabric type selection
-        const garmentId = garmentCard.dataset?.garmentId;
-        if (garmentId) {
-          const garmentData = V10_State.garments.get(garmentId);
-          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-        }
-      }, 300);
+      // Auto-collapse after selection (but NOT in edit mode - causes issues)
+      if (!garmentData || !garmentData.isInEditMode) {
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+          // Update dependencies after fabric type selection
+          const garmentId = garmentCard.dataset?.garmentId;
+          if (garmentId) {
+            const garmentData = V10_State.garments.get(garmentId);
+            this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+          }
+        }, 300);
+      }
       
     } else if (type === 'sampleReference') {
       const sampleReferenceIcon = this.getSampleReferenceIcon(value);
@@ -7149,10 +7136,12 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection
-      setTimeout(() => {
-        this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
-      }, 300);
+      // Auto-collapse after selection (but NOT in edit mode - causes issues)
+      if (!garmentData || !garmentData.isInEditMode) {
+        setTimeout(() => {
+          this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
+        }, 300);
+      }
     
     } else if (type === 'sampleType') {
       // Handle sample type selections with sub-values
@@ -7230,9 +7219,12 @@ class V10_GarmentStudio {
           customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
           
           // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
-          setTimeout(() => {
-            this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
-          }, 300);
+          // But NOT in edit mode - causes issues
+          if (!garmentData || !garmentData.isInEditMode) {
+            setTimeout(() => {
+              this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
+            }, 300);
+          }
         }
         
       } else if (sampleType === 'custom') {
@@ -7310,9 +7302,12 @@ class V10_GarmentStudio {
           stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
           
           // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
-          setTimeout(() => {
-            this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
-          }, 300);
+          // But NOT in edit mode - causes issues
+          if (!garmentData || !garmentData.isInEditMode) {
+            setTimeout(() => {
+              this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
+            }, 300);
+          }
         }
       }
     }
