@@ -4487,8 +4487,8 @@ class V10_GarmentUIManager {
       this.setGarmentValues(clone, garmentData);
       
       // Update pricing and visibility
-      this.updateSampleTypePrices(clone);
-      this.updateSectionVisibility(clone);
+      this.updateSampleTypePrices(garmentCard);
+      this.updateSectionVisibility(garmentCard);
       
       console.log('✅ [UI] Garment rendered successfully');
       return clone;
@@ -4614,7 +4614,11 @@ class V10_GarmentUIManager {
     
     // Apply cotton validation after setting values
     if (garmentData.fabricType) {
-      V10_Utils.updateGarmentFabricRestrictions(clone);
+      // Get the actual garment card element from the clone
+      const garmentCard = clone.querySelector ? clone.querySelector('.garment-card') : clone;
+      if (garmentCard) {
+        V10_Utils.updateGarmentFabricRestrictions(garmentCard);
+      }
     }
   }
   
