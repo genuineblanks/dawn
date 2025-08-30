@@ -5134,8 +5134,22 @@ class V10_GarmentManager {
     switch (requestType) {
       case 'quotation':
         return garment.type && garment.fabricType;
-      case 'sample-request':
-        return garment.type && garment.fabricType && garment.sampleType;
+      case 'sample-request': {
+        const basicComplete = garment.type && garment.fabricType && garment.sampleType;
+        // For custom samples, check sub-value to determine completion requirements
+        if (basicComplete && garment.sampleType === 'custom') {
+          // Only 'design-studio' requires lab dip assignment
+          // 'exact-pantone' (I have TCX/TPX pantone) is complete immediately
+          if (garment.sampleSubValue === 'design-studio') {
+            return garment.assignedLabDips && garment.assignedLabDips.size > 0;
+          } else {
+            // For 'exact-pantone' or other custom sub-values, basic completion is enough
+            return basicComplete;
+          }
+        } else {
+          return basicComplete;
+        }
+      }
       case 'bulk-order-request':
         return garment.type && garment.sampleReference;
       default:
@@ -5911,9 +5925,16 @@ class V10_GarmentStudio {
       // Basic completion: type, fabric, and sample type selected
       const basicComplete = garmentData.type && garmentData.fabricType && garmentData.sampleType;
       
-      // For custom samples, also require lab dip assignment
+      // For custom samples, check the sub-value to determine completion requirements
       if (basicComplete && garmentData.sampleType === 'custom') {
-        isComplete = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        // Only 'design-studio' requires lab dip assignment
+        // 'exact-pantone' (I have TCX/TPX pantone) is complete immediately
+        if (garmentData.sampleSubValue === 'design-studio') {
+          isComplete = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        } else {
+          // For 'exact-pantone' or other custom sub-values, basic completion is enough
+          isComplete = basicComplete;
+        }
       } else {
         isComplete = basicComplete;
       }
@@ -6617,7 +6638,14 @@ class V10_GarmentStudio {
         if (requestType === 'sample-request') {
           const basicComplete = updatedGarmentData.type && updatedGarmentData.fabricType && updatedGarmentData.sampleType;
           if (basicComplete && updatedGarmentData.sampleType === 'custom') {
-            isComplete = updatedGarmentData.assignedLabDips && updatedGarmentData.assignedLabDips.size > 0;
+            // Only 'design-studio' requires lab dip assignment
+            // 'exact-pantone' (I have TCX/TPX pantone) is complete immediately
+            if (updatedGarmentData.sampleSubValue === 'design-studio') {
+              isComplete = updatedGarmentData.assignedLabDips && updatedGarmentData.assignedLabDips.size > 0;
+            } else {
+              // For 'exact-pantone' or other custom sub-values, basic completion is enough
+              isComplete = basicComplete;
+            }
           } else {
             isComplete = basicComplete;
           }
