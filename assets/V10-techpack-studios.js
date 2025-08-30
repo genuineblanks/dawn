@@ -5339,9 +5339,9 @@ class V10_GarmentStudio {
       const { garmentId, newNumber } = event.detail;
       const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (garmentCard) {
-        const numberElement = garmentCard.querySelector('.garment-number');
+        const numberElement = garmentCard.querySelector('.garment-card__number');
         if (numberElement) {
-          numberElement.textContent = newNumber;
+          numberElement.textContent = `Garment ${newNumber}`;
         }
       }
     });
@@ -7416,24 +7416,37 @@ class V10_GarmentStudio {
 
   getGarmentIcon(garmentType) {
     console.log(`🔍 Getting garment icon for: "${garmentType}"`);
-    const iconMap = {
-      'Zip-Up Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 8c0-3 2.7-5 6-5s6 2 6 5"/><path d="M12 8v11"/><path d="M10.5 8l1.5 1.5 1.5-1.5"/><path d="M10.5 10l1.5 1.5 1.5-1.5"/><path d="M10.5 12l1.5 1.5 1.5-1.5"/><path d="M5 8v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><path d="M5 10l-2 1v4a1 1 0 0 0 1 1h1"/><path d="M19 10l2 1v4a1 1 0 0 1-1 1h-1"/><path d="M7 14h3"/><path d="M14 14h3"/></svg>',
-      'Hoodie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 8c0-3 2.7-5 6-5s6 2 6 5"/><path d="M9 6c.6 1.5.6 3 0 4.5"/><path d="M15 6c-.6 1.5-.6 3 0 4.5"/><path d="M5 8v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><path d="M8 14h8v3H8z"/><path d="M5 10l-2 1v4a1 1 0 0 0 1 1h1"/><path d="M19 10l2 1v4a1 1 0 0 1-1 1h-1"/></svg>',
-      'T-Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5c0 1.7 1.3 3 3 3s3-1.3 3-3"/><path d="M15 5l3 2 2 2-2 2-2-1"/><path d="M9 5l-3 2-2 2 2 2 2-1"/><path d="M8 10v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-9"/></svg>',
-      'Sweatshirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 8c0-3 2.7-5 6-5s6 2 6 5"/><path d="M5 8v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><path d="M8 14h8v3H8z"/><path d="M5 10l-2 1v4a1 1 0 0 0 1 1h1"/><path d="M19 10l2 1v4a1 1 0 0 1-1 1h-1"/></svg>',
-      'Sweatpants': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 5h12v6H6z"/><path d="M7 11v7l2 1h2l-1-8"/><path d="M17 11v7l-2 1h-2l1-8"/><path d="M8 5V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M10 19h4"/></svg>',
-      'Shorts': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 5h12v6H6z"/><path d="M7 11v4l2 1h2l-1-5"/><path d="M17 11v4l-2 1h-2l1-5"/><path d="M8 5V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/></svg>',
-      'Long Sleeve T-Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5c0 1.7 1.3 3 3 3s3-1.3 3-3"/><path d="M15 5l3 2v6l-2-1"/><path d="M9 5l-3 2v6l2-1"/><path d="M8 10v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-9"/><path d="M5 9h2"/><path d="M17 9h2"/></svg>',
-      'Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5c0 1.7 1.3 3 3 3s3-1.3 3-3"/><path d="M15 5l3 2 2 2-2 2-2-1"/><path d="M9 5l-3 2-2 2 2 2 2-1"/><path d="M8 10v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-9"/><circle cx="10" cy="7" r="1"/><circle cx="14" cy="7" r="1"/><path d="M12 15v2"/></svg>',
-      'Polo Shirt': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/><path d="M12 6v2"/></svg>',
-      'Tank Top': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 2a4 4 0 0 1-8 0"/><path d="M8 2v20h8V2"/><path d="M6 6L8 2"/><path d="M18 6L16 2"/></svg>',
-      'Hat/Cap': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8 2 5 8 5 12h14c0-4-3-10-7-10z"/><path d="M3 12h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2z"/></svg>',
-      'Beanie': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2C8 2 5 5 5 9v3c0 3 3 6 7 6s7-3 7-6V9c0-4-3-7-7-7z"/><path d="M9 9h6"/></svg>',
-      'Other': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/></svg>'
+    
+    // Map garment types to their sprite icon names
+    const iconNameMap = {
+      'Zip-Up Hoodie': 'zip-up-hoodie',
+      'Hoodie': 'hoodie',
+      'T-Shirt': 't-shirt',
+      'Sweatshirt': 'sweatshirt',
+      'Sweatpants': 'sweatpants',
+      'Shorts': 'shorts',
+      'Long Sleeve T-Shirt': 'long-sleeve',
+      'Shirt': 'shirt',
+      'Polo Shirt': 'polo-shirt',
+      'Tank Top': 'tank-top',
+      'Hat/Cap': 'hat-cap',
+      'Beanie': 'beanie',
+      'Other': 'other'
     };
-    const result = iconMap[garmentType] || '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
-    console.log(`🎯 Returning icon for "${garmentType}":`, result.slice(0, 80) + '...');
-    return result;
+    
+    const iconName = iconNameMap[garmentType];
+    
+    if (iconName) {
+      // Use the sprite icon with the same structure as the Liquid template
+      const result = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#icon-${iconName}"></use></svg>`;
+      console.log(`🎯 Returning sprite icon for "${garmentType}": icon-${iconName}`);
+      return result;
+    }
+    
+    // Fallback for unknown garment types
+    const fallback = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
+    console.log(`🎯 Returning fallback icon for "${garmentType}"`);
+    return fallback;
   }
 
   getFabricTypeIcon(fabricType) {
