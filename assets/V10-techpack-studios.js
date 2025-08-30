@@ -6972,9 +6972,14 @@ class V10_GarmentStudio {
     });
     
     if (!expanded) {
-      console.error('❌ No expanded section found');
+      console.error('❌ No expanded section found for widget:', selectionWidget.id);
+      console.error('Section element:', section);
+      console.error('Section HTML:', section ? section.innerHTML.substring(0, 200) : 'null');
       return;
     }
+    
+    console.log('🔍 Current expanded display:', expanded.style.display);
+    console.log('🔍 Expanded element:', expanded);
     
     if (expanded.style.display === 'none' || !expanded.style.display) {
       // Show expanded state (show dropdown options)
