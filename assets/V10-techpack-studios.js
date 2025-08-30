@@ -6290,6 +6290,7 @@ class V10_GarmentStudio {
       contentContainer.style.display = 'block';  // Force block for edit mode
       
       // Don't pre-populate values - let user make fresh selections for all options
+      this.clearGarmentSelectionDisplays(garmentCard);
       
       // Clean edit mode - let user control interface manually
       
@@ -6303,6 +6304,42 @@ class V10_GarmentStudio {
         fabricType: garmentData.fabricType,
         sampleType: garmentData.sampleType
       });
+    }
+  }
+
+  clearGarmentSelectionDisplays(garmentCard) {
+    // Clear garment type selection
+    const garmentRadios = garmentCard.querySelectorAll('input[name="garmentType"]');
+    garmentRadios.forEach(radio => radio.checked = false);
+    this.resetSelectionByIds(garmentCard, 'garment-display', 'garment-placeholder', 'Select garment type');
+    
+    // Clear fabric type selection
+    const fabricRadios = garmentCard.querySelectorAll('input[name="fabricType"]');
+    fabricRadios.forEach(radio => radio.checked = false);
+    this.resetSelectionByIds(garmentCard, 'fabric-display', 'fabric-placeholder', 'Select fabric type');
+    
+    // Clear sample type selections (both stock and custom)
+    const sampleRadios = garmentCard.querySelectorAll('input[name="sampleType"]');
+    sampleRadios.forEach(radio => radio.checked = false);
+    this.resetSelectionByIds(garmentCard, 'sample-stock-display', 'sample-stock-placeholder', 'Select sample type');
+    this.resetSelectionByIds(garmentCard, 'sample-custom-display', 'sample-custom-placeholder', 'Select color option');
+    
+    console.log('✅ Cleared all garment selection displays for edit mode');
+  }
+
+  resetSelectionByIds(garmentCard, displayId, placeholderId, placeholderText) {
+    const selectionDisplay = garmentCard.querySelector(`#${displayId}`);
+    if (selectionDisplay) {
+      selectionDisplay.style.display = 'none';
+    }
+    
+    const placeholder = garmentCard.querySelector(`#${placeholderId}`);
+    if (placeholder) {
+      const placeholderTextElement = placeholder.querySelector('.placeholder-text');
+      if (placeholderTextElement) {
+        placeholderTextElement.textContent = placeholderText;
+      }
+      placeholder.style.display = 'block';
     }
   }
 
