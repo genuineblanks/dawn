@@ -5059,28 +5059,9 @@ class V10_GarmentManager {
         // Reset state-specific properties
         assignedLabDips: new Set(),
         assignedDesigns: new Set(),
+        isComplete: false,
         isInEditMode: false
       };
-
-      // Calculate completion status based on request type and available data
-      const requestType = V10_State.requestType;
-      let isComplete = false;
-      
-      if (requestType === 'quotation') {
-        isComplete = duplicateData.type && duplicateData.fabricType;
-      } else if (requestType === 'sample-request') {
-        const basicComplete = duplicateData.type && duplicateData.fabricType && duplicateData.sampleType;
-        if (duplicateData.sampleType === 'lab-dip-swatches') {
-          // Lab dip samples require assigned lab dips, but duplicated garments start fresh
-          isComplete = false;
-        } else {
-          isComplete = basicComplete;
-        }
-      } else if (requestType === 'bulk-order-request') {
-        isComplete = !!(duplicateData.type && duplicateData.sampleReference);
-      }
-      
-      duplicateData.isComplete = isComplete;
 
       console.log('🔄 Duplicating garment with data:', duplicateData);
       return this.addGarment(duplicateData);
@@ -5304,7 +5285,7 @@ class V10_GarmentStudio {
 
   setupGarmentManagerEvents() {
     // Listen to garment manager events for UI updates
-    this.garmentManager.on('garmentAdded', (event) => {
+    this.garmentManager.eventEmitter.addEventListener('garmentAdded', (event) => {
       const { garmentId, garmentData } = event.detail;
       this.renderGarment(garmentData);
       this.garmentManager.renumberGarments();
@@ -5314,7 +5295,7 @@ class V10_GarmentStudio {
       console.log(`➕ Added garment ${garmentData.number}: ${garmentId}`);
     });
 
-    this.garmentManager.on('garmentRemoved', (event) => {
+    this.garmentManager.eventEmitter.addEventListener('garmentRemoved', (event) => {
       const { garmentId } = event.detail;
       const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (garmentCard) {
@@ -5325,7 +5306,7 @@ class V10_GarmentStudio {
       console.log(`🗑️ Removed garment: ${garmentId}`);
     });
 
-    this.garmentManager.on('garmentRenumbered', (event) => {
+    this.garmentManager.eventEmitter.addEventListener('garmentRenumbered', (event) => {
       const { garmentId, newNumber } = event.detail;
       const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
       if (garmentCard) {
