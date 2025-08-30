@@ -6953,7 +6953,7 @@ class V10_GarmentStudio {
     
     // selectionWidget IS the compact-selection-widget, so we work with it directly
     const collapsed = selectionWidget; // This is the compact-selection-widget itself
-    const section = selectionWidget.closest('.compact-selection-section');
+    // section already declared above, reuse the existing variable
     const expanded = section ? section.querySelector('.selection-expanded') : null;
     const placeholder = selectionWidget.querySelector('.selection-placeholder');
     
