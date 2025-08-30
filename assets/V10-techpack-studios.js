@@ -6057,7 +6057,8 @@ class V10_GarmentStudio {
     
     allGarments.forEach(garment => {
       // Check if garment has custom color requirement (needs lab dip)
-      if (garment.sampleType === 'custom') {
+      // Only 'design-studio' custom samples require lab dip assignments
+      if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio') {
         totalRequirements++;
         if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
           fulfilledRequirements++;
@@ -10241,7 +10242,7 @@ class V10_DesignStudio {
             <div class="garment-selector">
               ${garments.map(garment => {
                 const isLabDip = type === 'labdip';
-                const isEligible = !isLabDip || garment.sampleType === 'custom';
+                const isEligible = !isLabDip || (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio');
                 
                 // Handle garments without sample types
                 let badgeText = '';
@@ -10918,8 +10919,9 @@ class V10_ValidationManager {
         }
         
         // Check for custom sample types that need lab dips or designs
-        if (garment.sampleType === 'custom' && (!garment.assignedLabDips || garment.assignedLabDips.size === 0)) {
-          errors.push(`Garment ${index + 1}: Custom color sample requires Lab Dip assignment`);
+        // Only 'design-studio' custom samples require lab dip assignments
+        if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio' && (!garment.assignedLabDips || garment.assignedLabDips.size === 0)) {
+          errors.push(`Garment ${index + 1}: Design Studio sample requires Lab Dip assignment`);
           isValid = false;
         }
         
@@ -14595,7 +14597,8 @@ const V10_BadgeManager = {
     
     allGarments.forEach(garment => {
       // Check if garment has custom color requirement (needs lab dip)
-      if (garment.sampleType === 'custom') {
+      // Only 'design-studio' custom samples require lab dip assignments
+      if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio') {
         totalRequirements++;
         if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
           fulfilledRequirements++;
