@@ -5564,6 +5564,11 @@ class V10_GarmentStudio {
 
     // Handle garment type change (compact and regular)
     if (e.target.name.includes('garmentType')) {
+      // Only proceed if the radio button is actually checked and has a valid value
+      if (!e.target.checked || !e.target.value || e.target.value === '') {
+        return;
+      }
+      
       const previousValue = garmentData.type;
       const newValue = e.target.value;
       
