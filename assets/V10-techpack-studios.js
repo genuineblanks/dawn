@@ -2908,13 +2908,8 @@ const V10_Utils = {
       const priceElement = stockCard.querySelector('.sample-type-card__price');
       if (priceElement) {
         const stockPrice = V10_Utils.calculateDynamicPrice(garmentType, fabricType, 'stock');
-        if (stockPrice && stockPrice !== 'Premium') {
-          priceElement.textContent = `avg. ${stockPrice}€`;
-        } else if (!garmentType || !fabricType) {
-          priceElement.textContent = 'Select garment & fabric';
-        } else {
-          priceElement.textContent = `avg. ${V10_CONFIG.PRICING.STOCK_SAMPLE}€`;
-        }
+        // Price display removed - keeping selection functionality
+        priceElement.textContent = '';
       }
     }
 
@@ -2925,7 +2920,8 @@ const V10_Utils = {
         const customPrice = V10_Utils.calculateDynamicPrice(garmentType, fabricType, 'custom');
         
         if (customPrice && customPrice !== 'Premium') {
-          priceElement.textContent = `avg. ${customPrice}€`;
+          // Price display removed - keeping selection functionality
+          priceElement.textContent = '';
           // Enable the card if custom is available
           customCard.classList.remove('sample-type-card--disabled', 'sample-type-card--warning');
           customCard.style.opacity = '1';
@@ -2941,7 +2937,8 @@ const V10_Utils = {
           const warningContainer = customCard.querySelector('.sample-type-warning');
           if (warningContainer) warningContainer.style.display = 'none';
         } else if (!garmentType || !fabricType) {
-          priceElement.textContent = 'Select garment & fabric';
+          // Price display removed - keeping selection functionality
+          priceElement.textContent = '';
           // Keep card enabled but show pending state
           customCard.style.opacity = '0.7';
         } else if (customPrice === null) {
@@ -2952,7 +2949,8 @@ const V10_Utils = {
           customCard.style.opacity = '0.85';
           customCard.style.pointerEvents = 'none';
         } else {
-          priceElement.textContent = `avg. ${V10_CONFIG.PRICING.CUSTOM_SAMPLE}€`;
+          // Price display removed - keeping selection functionality
+          priceElement.textContent = '';
         }
       }
     }
@@ -6101,8 +6099,8 @@ class V10_GarmentStudio {
       let statusMessage = '✅ Complete';
       let statusClass = 'garment-summary__status';
       
-      // Handle custom color requirement
-      if (garmentData.sampleType === 'custom') {
+      // Handle custom color requirement - only for design-studio samples
+      if (garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
         const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
         if (!hasLabDips) {
           statusMessage = 'Color assignment required in Design Studio';
@@ -6934,12 +6932,9 @@ class V10_GarmentStudio {
         if (placeholder) placeholder.style.display = 'none';
         if (display) display.style.display = 'block';
         
-        // Update pricing
+        // Price display removed - keeping selection functionality  
         if (priceElement && garmentData) {
-          const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, 'stock');
-          if (price && price !== 'Premium') {
-            priceElement.textContent = `avg. ${price}€`;
-          }
+          priceElement.textContent = '';
         }
         
         // FIXED: Apply selection styling to individual radio card instead of entire section
@@ -7017,11 +7012,9 @@ class V10_GarmentStudio {
         // Update pricing
         const garmentId = garmentCard.dataset?.garmentId;
         const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
+        // Price display removed - keeping selection functionality
         if (priceElement && garmentData) {
-          const price = V10_Utils.calculateDynamicPrice(garmentData.type, garmentData.fabricType, 'custom');
-          if (price && price !== 'Premium') {
-            priceElement.textContent = `avg. ${price}€`;
-          }
+          priceElement.textContent = '';
         }
         
         // FIXED: Apply selection styling to individual radio card instead of entire section
