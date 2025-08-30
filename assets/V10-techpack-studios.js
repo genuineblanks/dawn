@@ -4651,22 +4651,42 @@ class V10_GarmentUIManager {
   /**
    * Set sample type value with sub-value matching
    */
-  setSampleType(clone, garmentData) {
+  setSampleType(element, garmentData) {
     if (garmentData.sampleType) {
       let input;
       
+      // First try to find input with sub-value if it exists
       if (garmentData.hasOwnProperty('sampleSubValue') && 
           garmentData.sampleSubValue !== null && 
           garmentData.sampleSubValue !== undefined) {
-        input = clone.querySelector(`input[value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
+        // Try with name attribute for DOM elements
+        input = element.querySelector(`input[name*="sampleType"][value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
+        if (!input) {
+          // Fallback for clone/template elements
+          input = element.querySelector(`input[value="${garmentData.sampleType}"][data-sub-value="${garmentData.sampleSubValue}"]`);
+        }
       } else {
-        input = clone.querySelector(`input[value="${garmentData.sampleType}"]`);
+        // Try with name attribute for DOM elements
+        input = element.querySelector(`input[name*="sampleType"][value="${garmentData.sampleType}"]`);
+        if (!input) {
+          // Fallback for clone/template elements
+          input = element.querySelector(`input[value="${garmentData.sampleType}"]`);
+        }
       }
       
       if (input) {
         input.checked = true;
-        // Note: updateCompactSelection will be called after DOM insertion in main class
-        // to avoid clone/garmentCard mismatch issues
+        // For DOM elements, also update the visual display
+        const garmentCard = element.querySelector ? element.querySelector('.garment-card') : element;
+        if (garmentCard && garmentCard.dataset && garmentCard.dataset.garmentId) {
+          // We're working with a DOM element, update the compact selection
+          setTimeout(() => {
+            const studioInstance = V10_GarmentStudio.getInstance();
+            if (studioInstance) {
+              studioInstance.updateCompactSelection('sampleType', garmentData.sampleType, garmentCard, garmentData.sampleSubValue, true);
+            }
+          }, 0);
+        }
       }
     }
   }
