@@ -4808,8 +4808,14 @@ class V10_GarmentUIManager {
     if (fabricPlaceholder) {
       fabricPlaceholder.style.cursor = 'pointer';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
+      
       if (placeholderText) {
         placeholderText.textContent = 'Select fabric type';
+      }
+      if (placeholderIcon) {
+        // Use SVG icon for fabric placeholder
+        placeholderIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M12 14v8"/><path d="M8 14l-2 2-2-2"/><path d="M16 14l2 2 2-2"/></svg>';
       }
     }
   }
@@ -4828,8 +4834,14 @@ class V10_GarmentUIManager {
     if (fabricPlaceholder) {
       fabricPlaceholder.style.cursor = 'not-allowed';
       const placeholderText = fabricPlaceholder.querySelector('.placeholder-text');
+      const placeholderIcon = fabricPlaceholder.querySelector('.placeholder-icon');
+      
       if (placeholderText) {
         placeholderText.textContent = 'Select garment type first';
+      }
+      if (placeholderIcon) {
+        // Use SVG icon for disabled state
+        placeholderIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>';
       }
     }
   }
@@ -5494,6 +5506,13 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       const widget = e.target.closest('.compact-selection-widget');
+      
+      // Don't toggle if the widget is disabled
+      if (widget && widget.style.pointerEvents === 'none') {
+        console.log('🚫 Selection widget is disabled, not toggling');
+        return;
+      }
+      
       this.toggleSelection(widget);
     } else if (e.target.closest('.change-selection-btn')) {
       e.preventDefault();
