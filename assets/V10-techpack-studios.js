@@ -6124,20 +6124,25 @@ class V10_GarmentStudio {
     const sampleType = garmentData.sampleType;
     const sampleSubValue = garmentData.sampleSubValue;
     
-    // Show the color elements
+    // Show the color elements using same pattern as lab dips
     colorCircle.style.display = 'inline-block';
     colorName.style.display = 'inline';
     if (separator) separator.style.display = 'inline';
+    
+    // Clear any existing background styles first
+    colorCircle.style.backgroundColor = '';
+    colorCircle.style.background = '';
+    colorCircle.style.border = '';
     
     if (sampleType === 'stock') {
       // Stock color samples
       switch (sampleSubValue) {
         case 'black':
-          colorCircle.style.background = '#000000';
+          colorCircle.style.backgroundColor = '#000000';
           colorName.textContent = 'Black';
           break;
         case 'white':
-          colorCircle.style.background = '#ffffff';
+          colorCircle.style.backgroundColor = '#ffffff';
           colorCircle.style.border = '2px solid #d1d5db';
           colorName.textContent = 'White';
           break;
@@ -6148,7 +6153,7 @@ class V10_GarmentStudio {
           colorName.textContent = 'Proximate Color';
           break;
         default:
-          colorCircle.style.background = '#6b7280';
+          colorCircle.style.backgroundColor = '#6b7280';
           colorName.textContent = 'Stock Color';
           break;
       }
@@ -6166,18 +6171,13 @@ class V10_GarmentStudio {
         colorName.textContent = 'TCX/TPX Pantone';
       } else {
         // Generic custom
-        colorCircle.style.background = '#8b5cf6';
+        colorCircle.style.backgroundColor = '#8b5cf6';
         colorName.textContent = 'Custom Color';
       }
     } else {
       // Fallback
-      colorCircle.style.background = '#9ca3af';
+      colorCircle.style.backgroundColor = '#9ca3af';
       colorName.textContent = 'Sample Color';
-    }
-    
-    // Reset any existing border unless specifically set above
-    if (!colorCircle.style.border) {
-      colorCircle.style.border = 'none';
     }
   }
 
@@ -6186,12 +6186,16 @@ class V10_GarmentStudio {
     const sampleType = garment.sampleType;
     const sampleSubValue = garment.sampleSubValue;
     
+    // Clear any existing background styles first
+    colorCircle.style.backgroundColor = '';
+    colorCircle.style.background = '';
+    colorCircle.style.border = '';
+    
     if (sampleType === 'stock') {
       // Stock color samples
       switch (sampleSubValue) {
         case 'black':
           colorCircle.style.backgroundColor = '#000000';
-          colorCircle.style.border = 'none';
           colorNameText.textContent = 'Black';
           break;
         case 'white':
@@ -6207,7 +6211,6 @@ class V10_GarmentStudio {
           break;
         default:
           colorCircle.style.backgroundColor = '#6b7280';
-          colorCircle.style.border = 'none';
           colorNameText.textContent = 'Stock Color';
           break;
       }
@@ -6226,13 +6229,11 @@ class V10_GarmentStudio {
       } else {
         // Generic custom
         colorCircle.style.backgroundColor = '#8b5cf6';
-        colorCircle.style.border = 'none';
         colorNameText.textContent = 'Custom Color';
       }
     } else {
       // Fallback
       colorCircle.style.backgroundColor = '#9ca3af';
-      colorCircle.style.border = 'none';
       colorNameText.textContent = 'Sample Color';
     }
   }
