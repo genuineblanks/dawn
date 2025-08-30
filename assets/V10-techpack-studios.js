@@ -6924,7 +6924,11 @@ class V10_GarmentStudio {
 
     // Check if section is disabled before allowing expansion
     const section = selectionWidget.closest('.compact-selection-section');
-    if (section && section.classList.contains('compact-selection-section--disabled')) {
+    if (!section) {
+      console.error('❌ No section found for selection widget');
+      return;
+    }
+    if (section.classList.contains('compact-selection-section--disabled')) {
       console.log('🚫 Section is disabled, not expanding menu');
       return;
     }
