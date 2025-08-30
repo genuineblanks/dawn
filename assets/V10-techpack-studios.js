@@ -4998,8 +4998,6 @@ class V10_GarmentManager {
         assignedDesigns: new Set(data?.assignedDesigns || []),
         isComplete: false,
         isInEditMode: false,
-        includeDesign: data?.includeDesign !== undefined ? data.includeDesign : true,
-        designReference: data?.designReference || ''
       };
 
       // Store in global state
@@ -5071,8 +5069,6 @@ class V10_GarmentManager {
         sampleType: sourceGarment.sampleType,
         sampleSubValue: sourceGarment.sampleSubValue,
         sampleReference: sourceGarment.sampleReference,
-        includeDesign: sourceGarment.includeDesign,
-        designReference: sourceGarment.designReference,
         // Reset state-specific properties
         assignedLabDips: new Set(),
         assignedDesigns: new Set(),
@@ -5697,131 +5693,15 @@ class V10_GarmentStudio {
       this.updateGarmentStatus(garmentId);
     }
 
-    // Handle design inclusion toggle
-    if (e.target.classList.contains('design-toggle__input')) {
-      garmentData.includeDesign = e.target.checked;
-      console.log(`🎨 Design inclusion ${garmentData.includeDesign ? 'ENABLED' : 'DISABLED'} for garment ${garmentId}`);
-      
-      // Show/hide the ENTIRE design inclusion controls box
-      const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
-      
-      if (designInclusionBox) {
-        if (e.target.checked) {
-          // Toggle ON - ALWAYS show input box for editing (even if design exists)
-          designInclusionBox.style.display = 'block';
-          designInclusionBox.classList.add('show');
-          console.log(`🔄 TOGGLE ON: Box set to visible`);
-          
-          // Pre-fill with existing design name if it exists
-          const hasDesign = garmentData.designReference && garmentData.designReference.trim();
-          if (hasDesign) {
-            const designInput = designInclusionBox.querySelector('.design-reference__input');
-            if (designInput) {
-              designInput.value = garmentData.designReference;
-              // Focus the input for immediate editing
-              setTimeout(() => designInput.focus(), 100);
-            }
-            console.log(`🔄 Edit mode: Pre-filled with "${garmentData.designReference}"`);
-          } else {
-            console.log(`🆕 New design mode: Empty input`);
-          }
-        } else {
-          // Toggle OFF - State 1: Hide box completely
-          designInclusionBox.style.display = 'none';
-          designInclusionBox.classList.remove('show');
-        }
-      }
-      
-      // Apply three-state color feedback
-      this.updateToggleColors(garmentCard, garmentData);
-      
-      // Preserve the design reference value when toggling (don't clear it)
-      // The design reference should be maintained even when toggle is off
-      
-      // Update the summary display immediately
-      this.updateGarmentSummary(garmentCard, garmentData);
-    }
 
-    // Handle design reference input
-    if (e.target.classList.contains('design-reference__input')) {
-      garmentData.designReference = e.target.value.trim();
-      console.log(`📝 Design reference updated for garment ${garmentId}: "${garmentData.designReference}"`);
-      
-      // Update toggle colors as user types
-      this.updateToggleColors(garmentCard, garmentData);
-      
-      // Update the summary display immediately
-      this.updateGarmentSummary(garmentCard, garmentData);
-    }
-
-    // Update garment status - but NOT for design toggle/reference changes as they don't affect completion
-    if (!e.target.classList.contains('design-toggle__input') && 
-        !e.target.classList.contains('design-reference__input')) {
-      this.updateGarmentStatus(garmentId);
-    }
+    // Update garment status for all relevant changes
+    this.updateGarmentStatus(garmentId);
 
     // Auto-save
   }
 
   handleGarmentKeyDown(e) {
-    // Handle Enter key press on design reference input
-    if (e.key === 'Enter' && e.target.classList.contains('design-reference__input')) {
-      e.preventDefault();
-      
-      const garmentCard = e.target.closest('.garment-card');
-      if (!garmentCard) return;
-      
-      const garmentId = garmentCard.dataset.garmentId;
-      const garmentData = V10_State.garments.get(garmentId);
-      if (!garmentData) return;
-      
-      const inputValue = e.target.value.trim();
-      
-      // Validate that input has content
-      if (inputValue.length === 0) {
-        // Show validation warning if input is empty
-        const designWarning = garmentCard.querySelector('.design-reference__warning');
-        if (designWarning) {
-          designWarning.style.display = 'block';
-        }
-        return;
-      }
-      
-      // Update garment data with the design reference value
-      garmentData.designReference = inputValue;
-      console.log(`📝 Design reference saved for garment ${garmentId}: "${garmentData.designReference}"`);
-      
-      // Hide any validation warning
-      const designWarning = garmentCard.querySelector('.design-reference__warning');
-      if (designWarning) {
-        designWarning.style.display = 'none';
-      }
-      
-      // Smart toggle behavior - keep ON but FORCE hide input box
-      const designToggle = garmentCard.querySelector('.design-toggle__input');
-      const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
-      
-      if (designToggle && designInclusionBox) {
-        // KEEP toggle ON (they want the design)
-        designToggle.checked = true;
-        garmentData.includeDesign = true;
-        
-        // FORCE hide the input box (State 3: Design Ready)
-        designInclusionBox.style.display = 'none';
-        designInclusionBox.classList.remove('show');
-        
-        // Update colors now that design is entered (will show green state)
-        this.updateToggleColors(garmentCard, garmentData);
-        
-        console.log(`✅ Design saved and box FORCED hidden - Toggle ON and GREEN (State 3)`);
-      }
-      
-      // Update the summary display to show design name
-      this.updateGarmentSummary(garmentCard, garmentData);
-      
-      // Auto-save
-      console.log(`✅ Design reference validated and collapsed for garment ${garmentId}`);
-    }
+    // No specific key handling needed for garment cards currently
   }
 
   // Check if garment basic configuration is complete
@@ -5855,51 +5735,6 @@ class V10_GarmentStudio {
     }
     
     return isConfigured;
-  }
-
-  // Update toggle text colors based on THREE-STATE system
-  updateToggleColors(garmentCard, garmentData) {
-    // Find the toggle text element - try multiple possible selectors
-    const toggleText = garmentCard.querySelector('.design-toggle__text');
-    const toggleContainer = garmentCard.querySelector('.design-toggle-header') || 
-                           garmentCard.querySelector('[class*="toggle"]') ||
-                           (toggleText ? toggleText.parentElement : null);
-    
-    if (!toggleContainer || !toggleText) {
-      console.log('⚠️ Toggle elements not found for color update');
-      return;
-    }
-    
-    // Remove all color classes and click handler
-    toggleContainer.classList.remove('awaiting-input', 'design-complete', 'clickable-design');
-    toggleText.onclick = null;
-    
-    // Check if design box is currently visible (edit mode)
-    const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
-    const isBoxVisible = designInclusionBox && designInclusionBox.style.display === 'block';
-    
-    if (!garmentData.includeDesign) {
-      // State 1: Toggle OFF - "No Design" (gray)
-      toggleText.textContent = 'Include TechPack Design?';
-      console.log(`⚫ State 1: No Design (toggle OFF)`);
-    } else if (isBoxVisible) {
-      // State 2: Toggle ON + Input Box Visible - "Enter Design Name" (orange)
-      // This covers both new entry and editing existing design
-      toggleContainer.classList.add('awaiting-input');
-      const hasExistingDesign = garmentData.designReference && garmentData.designReference.trim();
-      toggleText.textContent = hasExistingDesign ? 'Edit Design Name' : 'Enter Design Name';
-      console.log(`🟠 State 2: ${hasExistingDesign ? 'Edit' : 'Enter'} Design Mode (input visible)`);
-    } else if (garmentData.designReference && garmentData.designReference.trim()) {
-      // State 3: Toggle ON + Has Design + Box Hidden - "With Design (name)" (green)
-      toggleContainer.classList.add('design-complete');
-      toggleText.textContent = `With Design (${garmentData.designReference.trim()})`;
-      console.log(`🟢 State 3: Design Ready (${garmentData.designReference.trim()})`);
-    } else {
-      // Fallback: Toggle ON but no design and box not visible
-      toggleContainer.classList.add('awaiting-input');
-      toggleText.textContent = 'Enter Design Name';
-      console.log(`🟠 State 2: Design Needed (fallback)`);
-    }
   }
 
   updateGarmentStatus(garmentId) {
@@ -6181,8 +6016,6 @@ class V10_GarmentStudio {
       type: garmentData.type,
       fabricType: garmentData.fabricType,
       sampleReference: garmentData.sampleReference,
-      includeDesign: garmentData.includeDesign,
-      designReference: garmentData.designReference
     });
     console.log('📋 [GARMENT_DEBUG] Garment card element:', garmentCard);
     
@@ -6202,84 +6035,14 @@ class V10_GarmentStudio {
       separator: !!separator
     });
     
-    // Design inclusion controls
-    const designToggle = garmentCard.querySelector('.design-toggle__input');
-    const designReference = garmentCard.querySelector('.design-reference__input');
-    const designReferenceContainer = garmentCard.querySelector('.design-reference');
-    const designWarning = garmentCard.querySelector('.design-reference__warning');
-    
-    // Update design toggle and reference from garment data
-    if (designToggle) {
-      designToggle.checked = garmentData.includeDesign;
-    }
-    if (designReference) {
-      designReference.value = garmentData.designReference || '';
-    }
-    
-    // Show/hide ENTIRE design inclusion controls box based on toggle state
-    const designInclusionBox = garmentCard.querySelector('.design-inclusion-controls');
-    if (designInclusionBox) {
-      // Only auto-manage box visibility if it's not currently being shown by user action
-      const isCurrentlyVisible = designInclusionBox.style.display === 'block';
-      const designToggle = garmentCard.querySelector('.design-toggle__input');
-      
-      console.log(`📊 updateGarmentSummary: includeDesign=${garmentData.includeDesign}, isCurrentlyVisible=${isCurrentlyVisible}`);
-      
-      if (!garmentData.includeDesign) {
-        // State 1: Toggle off - always hide box
-        designInclusionBox.style.display = 'none';
-        designInclusionBox.classList.remove('show');
-        console.log(`🔄 Box hidden: toggle OFF`);
-      } else if (!isCurrentlyVisible) {
-        // Only auto-show/hide if box isn't currently visible (respect user's explicit toggle action)
-        const hasDesign = garmentData.designReference && garmentData.designReference.trim();
-        if (!hasDesign) {
-          // State 2: No design yet - show input box
-          designInclusionBox.style.display = 'block';
-          designInclusionBox.classList.add('show');
-          console.log(`🔄 Box shown: no design yet`);
-        } else {
-          console.log(`🔄 Box left hidden: has design, not currently visible`);
-        }
-        // If hasDesign and box not visible, leave it hidden (State 3)
-      } else {
-        console.log(`🔄 Box left visible: user is editing`);
-      }
-      // If box is currently visible, don't auto-hide it (user is editing)
-    }
-    
-    // Update configuration state (show/hide design toggle based on completion)
+    // Update configuration state
     const isConfigured = this.updateGarmentConfigurationState(garmentCard, garmentData);
     
-    // Update toggle colors to match current state (only if configured)
-    if (isConfigured) {
-      this.updateToggleColors(garmentCard, garmentData);
-    }
-    
-    // Show/hide warning based on design inclusion and reference
-    if (designWarning) {
-      const shouldShowWarning = garmentData.includeDesign && !garmentData.designReference.trim();
-      designWarning.style.display = shouldShowWarning ? 'block' : 'none';
-    }
-    
-    // Update garment type with design indication
+    // Update garment type display
     if (typeSpan) {
       if (garmentData.type) {
-        let typeText = garmentData.type;
-        if (garmentData.includeDesign) {
-          if (garmentData.designReference && garmentData.designReference.trim()) {
-            typeText += ` with Design (${garmentData.designReference.trim()})`;
-          } else {
-            typeText += ' with Design';
-          }
-        } else {
-          typeText += ' (Blank)';
-        }
-        console.log('📤 [GARMENT_DEBUG] Setting type span text to:', typeText);
-        
-        
-        typeSpan.textContent = typeText;
-        console.log('[GARMENT_DEBUG] Type span text after update:', typeSpan.textContent);
+        typeSpan.textContent = garmentData.type;
+        console.log('[GARMENT_DEBUG] Type span text updated to:', typeSpan.textContent);
       } else {
         console.log('[GARMENT_DEBUG] No garment type set yet, keeping placeholder');
       }
@@ -6337,18 +6100,6 @@ class V10_GarmentStudio {
     if (statusSpan) {
       let statusMessage = '✅ Complete';
       let statusClass = 'garment-summary__status';
-      
-      // Determine status based on design inclusion
-      if (garmentData.includeDesign) {
-        if (garmentData.designReference && garmentData.designReference.trim()) {
-          statusMessage = `✅ Complete - Design "${garmentData.designReference.trim()}" will be applied`;
-        } else {
-          statusMessage = '⚠️ Complete - Design reference needed';
-          statusClass += ' garment-summary__status--warning';
-        }
-      } else {
-        statusMessage = '✅ Complete - Blank garment (no design)';
-      }
       
       // Handle custom color requirement
       if (garmentData.sampleType === 'custom') {
