@@ -5534,11 +5534,9 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       const widget = e.target.closest('.compact-selection-widget');
-      const section = e.target.closest('.compact-selection-section');
       
-      // Don't toggle if the section or widget is disabled
-      if ((widget && widget.style.pointerEvents === 'none') || 
-          (section && section.classList.contains('compact-selection-section--disabled'))) {
+      // Don't toggle if the widget is disabled
+      if (widget && widget.style.pointerEvents === 'none') {
         console.log('🚫 Selection widget is disabled, not toggling');
         return;
       }
@@ -5547,30 +5545,12 @@ class V10_GarmentStudio {
     } else if (e.target.closest('.change-selection-btn')) {
       e.preventDefault();
       e.stopPropagation();
-      const section = e.target.closest('.compact-selection-section');
-      const widget = section.querySelector('.compact-selection-widget');
-      
-      // Don't toggle if the section or widget is disabled
-      if ((widget && widget.style.pointerEvents === 'none') || 
-          (section && section.classList.contains('compact-selection-section--disabled'))) {
-        console.log('🚫 Selection widget is disabled, not toggling');
-        return;
-      }
-      
+      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
       this.toggleSelection(widget);
     } else if (e.target.closest('.selection-display')) {
       e.preventDefault();
       e.stopPropagation();
-      const section = e.target.closest('.compact-selection-section');
-      const widget = section.querySelector('.compact-selection-widget');
-      
-      // Don't toggle if the section or widget is disabled
-      if ((widget && widget.style.pointerEvents === 'none') || 
-          (section && section.classList.contains('compact-selection-section--disabled'))) {
-        console.log('🚫 Selection widget is disabled, not toggling');
-        return;
-      }
-      
+      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
       this.toggleSelection(widget);
     }
     // Removed complex radio button re-selection logic to fix selection issues
@@ -6860,6 +6840,13 @@ class V10_GarmentStudio {
   toggleSelection(selectionWidget) {
     if (!selectionWidget) {
       console.log('❌ toggleSelection: no selectionWidget provided');
+      return;
+    }
+
+    // Check if section is disabled before allowing expansion
+    const section = selectionWidget.closest('.compact-selection-section');
+    if (section && section.classList.contains('compact-selection-section--disabled')) {
+      console.log('🚫 Section is disabled, not expanding menu');
       return;
     }
 
