@@ -4935,6 +4935,41 @@ class V10_GarmentUIManager {
   }
   
   /**
+   * Reset sample type selection to placeholder (missing method implementation)
+   */
+  resetSampleTypeSelection(garmentCard) {
+    // Reset both stock and custom sample type selections
+    const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
+    const stockDisplay = garmentCard.querySelector('#sample-stock-display');
+    const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
+    const customDisplay = garmentCard.querySelector('#sample-custom-display');
+    
+    // Reset visual state
+    if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
+    if (stockDisplay) stockDisplay.style.display = 'none';
+    if (customPlaceholder) customPlaceholder.style.display = 'flex';
+    if (customDisplay) customDisplay.style.display = 'none';
+    
+    // Uncheck all sample type radio buttons
+    const sampleInputs = garmentCard.querySelectorAll('input[name*="sampleType"]');
+    sampleInputs.forEach(input => input.checked = false);
+    
+    // Remove selected classes from radio cards
+    const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+    const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+    stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+    customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+    
+    // Remove selected classes from sections
+    const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
+    const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
+    stockSection?.classList.remove('selected');
+    customSection?.classList.remove('selected');
+    
+    console.log('🔄 Sample type selection reset to placeholder');
+  }
+  
+  /**
    * Handle sample type cross-selection reset
    * When user selects one sample type, reset the other
    */
@@ -4943,36 +4978,68 @@ class V10_GarmentUIManager {
     const garmentData = V10_State.garments.get(garmentId);
     
     if (selectedType === 'stock') {
-      // User selected stock, reset custom
+      // User selected stock, COMPLETELY reset custom
       const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
       const customDisplay = garmentCard.querySelector('#sample-custom-display');
       const customInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"custom\"]');
+      const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
+      const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
       
+      // Reset visual state
       if (customPlaceholder) customPlaceholder.style.display = 'flex';
       if (customDisplay) customDisplay.style.display = 'none';
-      customInputs.forEach(input => input.checked = false);
       
-      // Clear any previous custom selection from state if it existed
-      if (garmentData && garmentData.sampleType === 'custom') {
-        console.log(`🔄 Cross-reset: Clearing previous custom selection from garment ${garmentId}`);
-        garmentData.sampleType = '';
+      // Reset radio inputs
+      customInputs.forEach(input => {
+        input.checked = false;
+        input.dataset.subValue = '';
+      });
+      
+      // Reset visual selection cards
+      customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+      
+      // Reset section selection state
+      if (customSection) customSection.classList.remove('selected');
+      
+      // THOROUGHLY clear state - any custom remnants
+      if (garmentData) {
+        console.log(`🔄 Cross-reset: Thoroughly clearing custom selection from garment ${garmentId}`);
+        if (garmentData.sampleType === 'custom') {
+          garmentData.sampleType = '';
+        }
         garmentData.sampleSubValue = undefined;
       }
       
     } else if (selectedType === 'custom') {
-      // User selected custom, reset stock
+      // User selected custom, COMPLETELY reset stock
       const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
       const stockDisplay = garmentCard.querySelector('#sample-stock-display');
       const stockInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"stock\"]');
+      const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+      const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
       
+      // Reset visual state
       if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
       if (stockDisplay) stockDisplay.style.display = 'none';
-      stockInputs.forEach(input => input.checked = false);
       
-      // Clear any previous stock selection from state if it existed
-      if (garmentData && garmentData.sampleType === 'stock') {
-        console.log(`🔄 Cross-reset: Clearing previous stock selection from garment ${garmentId}`);
-        garmentData.sampleType = '';
+      // Reset radio inputs
+      stockInputs.forEach(input => {
+        input.checked = false;
+        input.dataset.subValue = '';
+      });
+      
+      // Reset visual selection cards
+      stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
+      
+      // Reset section selection state
+      if (stockSection) stockSection.classList.remove('selected');
+      
+      // THOROUGHLY clear state - any stock remnants
+      if (garmentData) {
+        console.log(`🔄 Cross-reset: Thoroughly clearing stock selection from garment ${garmentId}`);
+        if (garmentData.sampleType === 'stock') {
+          garmentData.sampleType = '';
+        }
         garmentData.sampleSubValue = undefined;
       }
     }
@@ -5575,8 +5642,7 @@ class V10_GarmentStudio {
       const previousValue = garmentData.type;
       const newValue = e.target.value;
       
-      garmentData.type = newValue;
-      this.uiManager.populateFabricOptions(garmentCard, newValue);
+      // CLEAR STATE FIRST - prevent contamination
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
       garmentData.sampleSubValue = undefined; // Reset sample sub-value
@@ -5587,11 +5653,18 @@ class V10_GarmentStudio {
         garmentData.sampleReference = ''; // Reset sample reference selection
       }
       
+      // RESET VISUAL STATE BEFORE UPDATING
+      this.uiManager.resetFabricSelection(garmentCard);
+      this.uiManager.resetSampleSelection(garmentCard);
+      this.uiManager.resetSampleTypeSelection(garmentCard);
+      
+      // NOW update garment type and populate fabric options
+      garmentData.type = newValue;
+      this.uiManager.populateFabricOptions(garmentCard, newValue);
+      
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', newValue, garmentCard);
-        this.uiManager.resetFabricSelection(garmentCard);
-        this.uiManager.resetSampleSelection(garmentCard);
       }
       
       // Update selection dependencies through UI Manager
@@ -5614,7 +5687,7 @@ class V10_GarmentStudio {
       const previousValue = garmentData.fabricType;
       const newValue = e.target.value;
       
-      garmentData.fabricType = newValue;
+      // CLEAR STATE FIRST - prevent contamination
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
       garmentData.sampleSubValue = undefined; // Reset sample sub-value when fabric changes
       
@@ -5628,6 +5701,13 @@ class V10_GarmentStudio {
         });
       }
       
+      // RESET VISUAL STATE BEFORE UPDATING
+      this.uiManager.resetSampleSelection(garmentCard);
+      this.uiManager.resetSampleTypeSelection(garmentCard);
+      
+      // NOW update fabric type
+      garmentData.fabricType = newValue;
+      
       // Update fabric restrictions when fabric type changes
       setTimeout(() => {
         V10_Utils.updateGarmentFabricRestrictions(garmentCard);
@@ -5640,8 +5720,7 @@ class V10_GarmentStudio {
         this.updateCompactSelection('fabric', newValue, garmentCard);
       }
       
-      // Reset sample selection and update dependencies
-      this.uiManager.resetSampleSelection(garmentCard);
+      // Update dependencies after state cleared and visual reset
       this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
@@ -6856,6 +6935,20 @@ class V10_GarmentStudio {
       return;
     }
     
+    // CLEAN STATE MANAGEMENT: Clear any stale visual state when opening menus in edit mode
+    const garmentId = garmentCard.dataset?.garmentId;
+    const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
+    if (garmentData && garmentData.isInEditMode === true) {
+      // For sample type menus, ensure no cross-contamination
+      const widgetId = selectionWidget.id;
+      if (widgetId === 'sample-stock-collapsed' || widgetId === 'sample-custom-collapsed') {
+        // Clear stale state from the opposite sample type to prevent contamination
+        const oppositeType = widgetId.includes('stock') ? 'custom' : 'stock';
+        console.log(`🔄 Edit mode: Clearing stale ${oppositeType} state before opening ${widgetId}`);
+        this.uiManager.handleSampleTypeCrossReset(garmentCard, widgetId.includes('stock') ? 'stock' : 'custom');
+      }
+    }
+    
     console.log('🔄 toggleSelection called for:', selectionWidget.id || 'unnamed widget');
     
     // selectionWidget IS the compact-selection-widget, so we work with it directly
@@ -6974,6 +7067,14 @@ class V10_GarmentStudio {
     // Safety check: ensure garmentCard is a valid DOM element
     if (!garmentCard || !garmentCard.querySelector || !garmentCard.dataset) {
       console.error('❌ updateCompactSelection: Invalid garmentCard provided:', garmentCard);
+      return;
+    }
+    
+    // CRITICAL: Check if in edit mode - skip visual updates to allow reset behavior
+    const garmentId = garmentCard.dataset?.garmentId;
+    const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
+    if (garmentData && garmentData.isInEditMode === true && !isInitialSet) {
+      console.log('🔄 Edit mode detected - skipping visual update to allow reset behavior');
       return;
     }
     
