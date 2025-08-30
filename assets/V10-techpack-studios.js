@@ -6095,7 +6095,20 @@ class V10_GarmentStudio {
     } else {
       // Show appropriate color indicators for different sample types
       if (garmentData.sampleType && colorCircle && colorName) {
-        this.showSampleTypeColorIndicator(garmentData, colorCircle, colorName, separator);
+        // Special case: Design Studio should wait for lab dip assignment
+        if (garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
+          // Show empty circle waiting for lab dip color
+          colorCircle.style.display = 'inline-block';
+          colorCircle.style.backgroundColor = 'transparent';
+          colorCircle.style.background = '';
+          colorCircle.style.border = '2px solid #9ca3af';
+          colorName.textContent = 'Awaiting Color Assignment';
+          colorName.style.display = 'inline';
+          if (separator) separator.style.display = 'inline';
+        } else {
+          // All other sample types get their indicator
+          this.showSampleTypeColorIndicator(garmentData, colorCircle, colorName, separator);
+        }
       } else {
         // Hide color elements when no sample type selected
         if (colorCircle) colorCircle.style.display = 'none';
@@ -6176,18 +6189,13 @@ class V10_GarmentStudio {
       }
     } else if (sampleType === 'custom') {
       // Custom color samples
-      if (sampleSubValue === 'design-studio') {
-        // Design Studio - Pantone Library (requires lab dip assignment)
+      if (sampleSubValue === 'exact-pantone') {
+        // I have TCX/TPX pantone in my techpack - Show the gradient icon
         colorCircle.style.background = 'linear-gradient(45deg, #ec4899, #8b5cf6)';
         colorCircle.style.border = '1px solid #9ca3af';
-        colorName.textContent = 'Design Studio';
-      } else if (sampleSubValue === 'exact-pantone') {
-        // I have TCX/TPX pantone in my techpack
-        colorCircle.style.background = 'radial-gradient(circle, #f59e0b 30%, #ef4444 70%)';
-        colorCircle.style.border = '2px solid #d97706';
         colorName.textContent = 'TCX/TPX Pantone';
       } else {
-        // Generic custom
+        // Generic custom (shouldn't reach here for design-studio due to special handling above)
         colorCircle.style.backgroundColor = '#8b5cf6';
         colorName.textContent = 'Custom Color';
       }
@@ -6233,18 +6241,13 @@ class V10_GarmentStudio {
       }
     } else if (sampleType === 'custom') {
       // Custom color samples
-      if (sampleSubValue === 'design-studio') {
-        // Design Studio - Pantone Library
+      if (sampleSubValue === 'exact-pantone') {
+        // I have TCX/TPX pantone in my techpack - Show the gradient icon
         colorCircle.style.background = 'linear-gradient(45deg, #ec4899, #8b5cf6)';
         colorCircle.style.border = '1px solid #9ca3af';
-        colorNameText.textContent = 'Design Studio';
-      } else if (sampleSubValue === 'exact-pantone') {
-        // I have TCX/TPX pantone in my techpack
-        colorCircle.style.background = 'radial-gradient(circle, #f59e0b 30%, #ef4444 70%)';
-        colorCircle.style.border = '2px solid #d97706';
         colorNameText.textContent = 'TCX/TPX Pantone';
       } else {
-        // Generic custom
+        // Generic custom (shouldn't reach here for design-studio due to special handling above)
         colorCircle.style.backgroundColor = '#8b5cf6';
         colorNameText.textContent = 'Custom Color';
       }
@@ -11284,8 +11287,17 @@ class V10_ReviewManager {
       } else {
         // Show appropriate color indicators for different sample types
         if (garment.sampleType && colorCircle && colorNameText) {
-          this.showSampleTypeColorForReview(garment, colorCircle, colorNameText);
-          console.log(`🎨 DEBUG: Showing sample type color for garment ${garment.number}`);
+          // Special case: Design Studio should show empty circle waiting for lab dip
+          if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio') {
+            colorCircle.style.backgroundColor = 'transparent';
+            colorCircle.style.background = '';
+            colorCircle.style.border = '2px solid #9ca3af';
+            colorNameText.textContent = 'Awaiting Color Assignment';
+            console.log(`🎨 DEBUG: Design Studio awaiting color assignment for garment ${garment.number}`);
+          } else {
+            this.showSampleTypeColorForReview(garment, colorCircle, colorNameText);
+            console.log(`🎨 DEBUG: Showing sample type color for garment ${garment.number}`);
+          }
         } else {
           if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
           if (colorNameText) colorNameText.textContent = 'No color assigned';
