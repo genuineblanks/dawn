@@ -4936,6 +4936,9 @@ class V10_GarmentUIManager {
    * When user selects one sample type, reset the other
    */
   handleSampleTypeCrossReset(garmentCard, selectedType) {
+    const garmentId = garmentCard.dataset.garmentId;
+    const garmentData = V10_State.garments.get(garmentId);
+    
     if (selectedType === 'stock') {
       // User selected stock, reset custom
       const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
@@ -4946,6 +4949,13 @@ class V10_GarmentUIManager {
       if (customDisplay) customDisplay.style.display = 'none';
       customInputs.forEach(input => input.checked = false);
       
+      // Clear any previous custom selection from state if it existed
+      if (garmentData && garmentData.sampleType === 'custom') {
+        console.log(`🔄 Cross-reset: Clearing previous custom selection from garment ${garmentId}`);
+        garmentData.sampleType = '';
+        garmentData.sampleSubValue = undefined;
+      }
+      
     } else if (selectedType === 'custom') {
       // User selected custom, reset stock
       const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
@@ -4955,6 +4965,13 @@ class V10_GarmentUIManager {
       if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
       if (stockDisplay) stockDisplay.style.display = 'none';
       stockInputs.forEach(input => input.checked = false);
+      
+      // Clear any previous stock selection from state if it existed
+      if (garmentData && garmentData.sampleType === 'stock') {
+        console.log(`🔄 Cross-reset: Clearing previous stock selection from garment ${garmentId}`);
+        garmentData.sampleType = '';
+        garmentData.sampleSubValue = undefined;
+      }
     }
   }
   
@@ -5649,11 +5666,11 @@ class V10_GarmentStudio {
         }
       }
       
+      // Handle cross-selection reset (stock vs custom) FIRST
+      this.uiManager.handleSampleTypeCrossReset(garmentCard, newSampleType);
+      
       // Use unified update function (handles state, visual, pricing, marking changed, status)
       this.updateSampleType(garmentId, newSampleType, newSampleSubValue, garmentCard);
-      
-      // Handle cross-selection reset (stock vs custom)
-      this.uiManager.handleSampleTypeCrossReset(garmentCard, newSampleType);
       
       // Clear any existing red borders since user made a selection
       const sampleTypeCards = garmentCard.querySelectorAll('.sample-type-card');
