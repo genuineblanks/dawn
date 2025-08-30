@@ -4935,41 +4935,6 @@ class V10_GarmentUIManager {
   }
   
   /**
-   * Reset sample type selection to placeholder (missing method implementation)
-   */
-  resetSampleTypeSelection(garmentCard) {
-    // Reset both stock and custom sample type selections
-    const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
-    const stockDisplay = garmentCard.querySelector('#sample-stock-display');
-    const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
-    const customDisplay = garmentCard.querySelector('#sample-custom-display');
-    
-    // Reset visual state
-    if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
-    if (stockDisplay) stockDisplay.style.display = 'none';
-    if (customPlaceholder) customPlaceholder.style.display = 'flex';
-    if (customDisplay) customDisplay.style.display = 'none';
-    
-    // Uncheck all sample type radio buttons
-    const sampleInputs = garmentCard.querySelectorAll('input[name*="sampleType"]');
-    sampleInputs.forEach(input => input.checked = false);
-    
-    // Remove selected classes from radio cards
-    const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
-    const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
-    stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-    customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-    
-    // Remove selected classes from sections
-    const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
-    const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
-    stockSection?.classList.remove('selected');
-    customSection?.classList.remove('selected');
-    
-    console.log('🔄 Sample type selection reset to placeholder');
-  }
-  
-  /**
    * Handle sample type cross-selection reset
    * When user selects one sample type, reset the other
    */
@@ -4978,68 +4943,36 @@ class V10_GarmentUIManager {
     const garmentData = V10_State.garments.get(garmentId);
     
     if (selectedType === 'stock') {
-      // User selected stock, COMPLETELY reset custom
+      // User selected stock, reset custom
       const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
       const customDisplay = garmentCard.querySelector('#sample-custom-display');
       const customInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"custom\"]');
-      const customCards = garmentCard.querySelectorAll('#sample-custom-grid .compact-radio-card');
-      const customSection = garmentCard.querySelector('#sample-custom-collapsed')?.closest('.compact-selection-section');
       
-      // Reset visual state
       if (customPlaceholder) customPlaceholder.style.display = 'flex';
       if (customDisplay) customDisplay.style.display = 'none';
+      customInputs.forEach(input => input.checked = false);
       
-      // Reset radio inputs
-      customInputs.forEach(input => {
-        input.checked = false;
-        input.dataset.subValue = '';
-      });
-      
-      // Reset visual selection cards
-      customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-      
-      // Reset section selection state
-      if (customSection) customSection.classList.remove('selected');
-      
-      // THOROUGHLY clear state - any custom remnants
-      if (garmentData) {
-        console.log(`🔄 Cross-reset: Thoroughly clearing custom selection from garment ${garmentId}`);
-        if (garmentData.sampleType === 'custom') {
-          garmentData.sampleType = '';
-        }
+      // Clear any previous custom selection from state if it existed
+      if (garmentData && garmentData.sampleType === 'custom') {
+        console.log(`🔄 Cross-reset: Clearing previous custom selection from garment ${garmentId}`);
+        garmentData.sampleType = '';
         garmentData.sampleSubValue = undefined;
       }
       
     } else if (selectedType === 'custom') {
-      // User selected custom, COMPLETELY reset stock
+      // User selected custom, reset stock
       const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
       const stockDisplay = garmentCard.querySelector('#sample-stock-display');
       const stockInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"stock\"]');
-      const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
-      const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
       
-      // Reset visual state
       if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
       if (stockDisplay) stockDisplay.style.display = 'none';
+      stockInputs.forEach(input => input.checked = false);
       
-      // Reset radio inputs
-      stockInputs.forEach(input => {
-        input.checked = false;
-        input.dataset.subValue = '';
-      });
-      
-      // Reset visual selection cards
-      stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
-      
-      // Reset section selection state
-      if (stockSection) stockSection.classList.remove('selected');
-      
-      // THOROUGHLY clear state - any stock remnants
-      if (garmentData) {
-        console.log(`🔄 Cross-reset: Thoroughly clearing stock selection from garment ${garmentId}`);
-        if (garmentData.sampleType === 'stock') {
-          garmentData.sampleType = '';
-        }
+      // Clear any previous stock selection from state if it existed
+      if (garmentData && garmentData.sampleType === 'stock') {
+        console.log(`🔄 Cross-reset: Clearing previous stock selection from garment ${garmentId}`);
+        garmentData.sampleType = '';
         garmentData.sampleSubValue = undefined;
       }
     }
@@ -5601,9 +5534,11 @@ class V10_GarmentStudio {
       e.preventDefault();
       e.stopPropagation();
       const widget = e.target.closest('.compact-selection-widget');
+      const section = e.target.closest('.compact-selection-section');
       
-      // Don't toggle if the widget is disabled
-      if (widget && widget.style.pointerEvents === 'none') {
+      // Don't toggle if the section or widget is disabled
+      if ((widget && widget.style.pointerEvents === 'none') || 
+          (section && section.classList.contains('compact-selection-section--disabled'))) {
         console.log('🚫 Selection widget is disabled, not toggling');
         return;
       }
@@ -5612,12 +5547,30 @@ class V10_GarmentStudio {
     } else if (e.target.closest('.change-selection-btn')) {
       e.preventDefault();
       e.stopPropagation();
-      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
+      const section = e.target.closest('.compact-selection-section');
+      const widget = section.querySelector('.compact-selection-widget');
+      
+      // Don't toggle if the section or widget is disabled
+      if ((widget && widget.style.pointerEvents === 'none') || 
+          (section && section.classList.contains('compact-selection-section--disabled'))) {
+        console.log('🚫 Selection widget is disabled, not toggling');
+        return;
+      }
+      
       this.toggleSelection(widget);
     } else if (e.target.closest('.selection-display')) {
       e.preventDefault();
       e.stopPropagation();
-      const widget = e.target.closest('.compact-selection-section').querySelector('.compact-selection-widget');
+      const section = e.target.closest('.compact-selection-section');
+      const widget = section.querySelector('.compact-selection-widget');
+      
+      // Don't toggle if the section or widget is disabled
+      if ((widget && widget.style.pointerEvents === 'none') || 
+          (section && section.classList.contains('compact-selection-section--disabled'))) {
+        console.log('🚫 Selection widget is disabled, not toggling');
+        return;
+      }
+      
       this.toggleSelection(widget);
     }
     // Removed complex radio button re-selection logic to fix selection issues
@@ -5642,7 +5595,8 @@ class V10_GarmentStudio {
       const previousValue = garmentData.type;
       const newValue = e.target.value;
       
-      // CLEAR STATE FIRST - prevent contamination
+      garmentData.type = newValue;
+      this.uiManager.populateFabricOptions(garmentCard, newValue);
       garmentData.fabricType = ''; // Reset fabric selection
       garmentData.sampleType = ''; // Reset sample selection
       garmentData.sampleSubValue = undefined; // Reset sample sub-value
@@ -5653,18 +5607,11 @@ class V10_GarmentStudio {
         garmentData.sampleReference = ''; // Reset sample reference selection
       }
       
-      // RESET VISUAL STATE BEFORE UPDATING
-      this.uiManager.resetFabricSelection(garmentCard);
-      this.uiManager.resetSampleSelection(garmentCard);
-      this.uiManager.resetSampleTypeSelection(garmentCard);
-      
-      // NOW update garment type and populate fabric options
-      garmentData.type = newValue;
-      this.uiManager.populateFabricOptions(garmentCard, newValue);
-      
       // Handle compact interface selection update
       if (e.target.closest('.compact-radio-card')) {
         this.updateCompactSelection('garment', newValue, garmentCard);
+        this.uiManager.resetFabricSelection(garmentCard);
+        this.uiManager.resetSampleSelection(garmentCard);
       }
       
       // Update selection dependencies through UI Manager
@@ -5687,7 +5634,7 @@ class V10_GarmentStudio {
       const previousValue = garmentData.fabricType;
       const newValue = e.target.value;
       
-      // CLEAR STATE FIRST - prevent contamination
+      garmentData.fabricType = newValue;
       garmentData.sampleType = ''; // Reset sample selection when fabric changes
       garmentData.sampleSubValue = undefined; // Reset sample sub-value when fabric changes
       
@@ -5701,13 +5648,6 @@ class V10_GarmentStudio {
         });
       }
       
-      // RESET VISUAL STATE BEFORE UPDATING
-      this.uiManager.resetSampleSelection(garmentCard);
-      this.uiManager.resetSampleTypeSelection(garmentCard);
-      
-      // NOW update fabric type
-      garmentData.fabricType = newValue;
-      
       // Update fabric restrictions when fabric type changes
       setTimeout(() => {
         V10_Utils.updateGarmentFabricRestrictions(garmentCard);
@@ -5720,7 +5660,8 @@ class V10_GarmentStudio {
         this.updateCompactSelection('fabric', newValue, garmentCard);
       }
       
-      // Update dependencies after state cleared and visual reset
+      // Reset sample selection and update dependencies
+      this.uiManager.resetSampleSelection(garmentCard);
       this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
       
       // Mark finalize button as changed (even if same value, user made an edit action)
@@ -6922,35 +6863,22 @@ class V10_GarmentStudio {
       return;
     }
 
-    // Check if section is disabled before allowing expansion
-    const section = selectionWidget.closest('.compact-selection-section');
-    if (!section) {
-      console.error('❌ No section found for selection widget');
-      return;
-    }
-    if (section.classList.contains('compact-selection-section--disabled')) {
-      console.log('🚫 Section is disabled, not expanding menu');
-      return;
-    }
-
     const garmentCard = selectionWidget.closest('.garment-card');
     if (!garmentCard) {
       console.error('❌ No garment card found for selection widget');
       return;
     }
     
-    // Remove problematic edit mode logic - it's causing unwanted side effects
-    
     console.log('🔄 toggleSelection called for:', selectionWidget.id || 'unnamed widget');
     
     // selectionWidget IS the compact-selection-widget, so we work with it directly
     const collapsed = selectionWidget; // This is the compact-selection-widget itself
-    // section is guaranteed to exist here (we returned early if disabled)
-    const expanded = section.querySelector('.selection-expanded');
+    const section = selectionWidget.closest('.compact-selection-section');
+    const expanded = section ? section.querySelector('.selection-expanded') : null;
     const placeholder = selectionWidget.querySelector('.selection-placeholder');
     
     // Find the selected display to toggle it
-    const selectedDisplay = section.querySelector('.selection-display');
+    const selectedDisplay = section ? section.querySelector('.selection-display') : null;
     
     console.log('🔍 Found elements:', {
       expanded: !!expanded,
@@ -6960,7 +6888,7 @@ class V10_GarmentStudio {
     });
     
     if (!expanded) {
-      console.error('❌ No expanded section found for widget:', selectionWidget.id);
+      console.error('❌ No expanded section found');
       return;
     }
     
@@ -7062,14 +6990,6 @@ class V10_GarmentStudio {
       return;
     }
     
-    // CRITICAL: Check if in edit mode - skip visual updates to allow reset behavior
-    const garmentId = garmentCard.dataset?.garmentId;
-    const garmentData = garmentId ? V10_State.garments.get(garmentId) : null;
-    if (garmentData && garmentData.isInEditMode === true && !isInitialSet) {
-      console.log('🔄 Edit mode detected - skipping visual update to allow reset behavior');
-      return;
-    }
-    
     if (type === 'garment') {
       const garmentIcon = this.getGarmentIcon(value);
       const selectedIcon = garmentCard.querySelector('#garment-selected-icon');
@@ -7084,18 +7004,16 @@ class V10_GarmentStudio {
       if (display) display.style.display = 'block';
       
       
-      // Auto-collapse after selection (but NOT in edit mode - causes issues)
-      if (!garmentData || !garmentData.isInEditMode) {
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
-          // Update dependencies after garment selection to enable fabric type
-          const garmentId = garmentCard.dataset.garmentId;
-          if (garmentId) {
-            const garmentData = V10_State.garments.get(garmentId);
-            this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-          }
-        }, 300);
-      }
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#garment-collapsed'));
+        // Update dependencies after garment selection to enable fabric type
+        const garmentId = garmentCard.dataset.garmentId;
+        if (garmentId) {
+          const garmentData = V10_State.garments.get(garmentId);
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        }
+      }, 300);
       
     } else if (type === 'fabric') {
       const fabricIcon = this.getFabricTypeIcon(value);
@@ -7110,18 +7028,16 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection (but NOT in edit mode - causes issues)
-      if (!garmentData || !garmentData.isInEditMode) {
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
-          // Update dependencies after fabric type selection
-          const garmentId = garmentCard.dataset?.garmentId;
-          if (garmentId) {
-            const garmentData = V10_State.garments.get(garmentId);
-            this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
-          }
-        }, 300);
-      }
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#fabric-collapsed'));
+        // Update dependencies after fabric type selection
+        const garmentId = garmentCard.dataset?.garmentId;
+        if (garmentId) {
+          const garmentData = V10_State.garments.get(garmentId);
+          this.uiManager.updateSelectionDependencies(garmentCard, garmentData);
+        }
+      }, 300);
       
     } else if (type === 'sampleReference') {
       const sampleReferenceIcon = this.getSampleReferenceIcon(value);
@@ -7136,12 +7052,10 @@ class V10_GarmentStudio {
       if (placeholder) placeholder.style.display = 'none';
       if (display) display.style.display = 'block';
       
-      // Auto-collapse after selection (but NOT in edit mode - causes issues)
-      if (!garmentData || !garmentData.isInEditMode) {
-        setTimeout(() => {
-          this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
-        }, 300);
-      }
+      // Auto-collapse after selection
+      setTimeout(() => {
+        this.toggleSelection(garmentCard.querySelector('#sample-reference-collapsed'));
+      }, 300);
     
     } else if (type === 'sampleType') {
       // Handle sample type selections with sub-values
@@ -7219,12 +7133,9 @@ class V10_GarmentStudio {
           customCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
           
           // Auto-collapse ONLY the selected stock section (don't collapse the reset custom section)
-          // But NOT in edit mode - causes issues
-          if (!garmentData || !garmentData.isInEditMode) {
-            setTimeout(() => {
-              this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
-            }, 300);
-          }
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-stock-collapsed'));
+          }, 300);
         }
         
       } else if (sampleType === 'custom') {
@@ -7302,12 +7213,9 @@ class V10_GarmentStudio {
           stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));
           
           // Auto-collapse ONLY the selected custom section (don't collapse the reset stock section)
-          // But NOT in edit mode - causes issues
-          if (!garmentData || !garmentData.isInEditMode) {
-            setTimeout(() => {
-              this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
-            }, 300);
-          }
+          setTimeout(() => {
+            this.toggleSelection(garmentCard.querySelector('#sample-custom-collapsed'));
+          }, 300);
         }
       }
     }
