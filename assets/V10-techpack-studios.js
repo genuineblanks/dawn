@@ -5795,7 +5795,17 @@ class V10_GarmentStudio {
     garmentData.isComplete = isComplete;
 
     if (statusIndicator) {
-      statusIndicator.textContent = isComplete ? 'Complete' : 'Incomplete';
+      let statusText = isComplete ? 'Complete' : 'Incomplete';
+      
+      // Add specific message for design-studio samples needing color assignment
+      if (!isComplete && garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
+        const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+        if (!hasLabDips) {
+          statusText = 'Incomplete - Color assignment required in Design Studio';
+        }
+      }
+      
+      statusIndicator.textContent = statusText;
       statusIndicator.className = `status-indicator ${isComplete ? 'status-indicator--complete' : 'status-indicator--incomplete'}`;
     }
 
@@ -6131,22 +6141,7 @@ class V10_GarmentStudio {
       console.log('[GARMENT_DEBUG] Fabric span element not found!');
     }
     
-    if (statusSpan) {
-      let statusMessage = '✅ Complete';
-      let statusClass = 'garment-summary__status';
-      
-      // Handle custom color requirement - only for design-studio samples
-      if (garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
-        const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
-        if (!hasLabDips) {
-          statusMessage = 'Color assignment required in Design Studio';
-          statusClass = 'garment-summary__status garment-summary__status--warning';
-        }
-      }
-      
-      statusSpan.textContent = statusMessage;
-      statusSpan.className = statusClass;
-    }
+    // Status span removed - redundant with badge indicator
   }
 
   // Show appropriate color indicators for different sample types
@@ -6242,9 +6237,10 @@ class V10_GarmentStudio {
     } else if (sampleType === 'custom') {
       // Custom color samples
       if (sampleSubValue === 'exact-pantone') {
-        // I have TCX/TPX pantone in my techpack - Show the gradient icon
-        colorCircle.style.background = 'linear-gradient(45deg, #ec4899, #8b5cf6)';
+        // I have TCX/TPX pantone in my techpack - Show the SVG icon
+        colorCircle.style.backgroundColor = '#f3f4f6';
         colorCircle.style.border = '1px solid #9ca3af';
+        colorCircle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="color: #6b7280;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
         colorNameText.textContent = 'TCX/TPX Pantone';
       } else {
         // Generic custom (shouldn't reach here for design-studio due to special handling above)
@@ -6285,15 +6281,7 @@ class V10_GarmentStudio {
       summaryContainer.style.display = 'none';
       contentContainer.style.display = 'block';  // Force block for edit mode
       
-      // Only populate existing values if garment has selections
-      if (this.hasExistingSelections(garmentData)) {
-        this.uiManager.setGarmentValues(garmentCard, garmentData);
-      }
-      
-      // Ensure fabric options are populated if garment type exists
-      if (garmentData.type) {
-        this.uiManager.populateFabricOptions(garmentCard, garmentData.type);
-      }
+      // Don't pre-populate values - let user make fresh selections for all options
       
       // Clean edit mode - let user control interface manually
       
