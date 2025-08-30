@@ -2804,7 +2804,7 @@ const V10_Utils = {
     }
   },
 
-  // Cotton fabric detection (for custom color restrictions)
+  // Fabric detection for custom color eligibility (Cotton + 100% Polyester)
   isCottonFabric: (fabricType) => {
     if (!fabricType || typeof fabricType !== 'string') {
       return false;
@@ -2812,6 +2812,11 @@ const V10_Utils = {
     
     // Convert to lowercase for case-insensitive matching
     const fabric = fabricType.toLowerCase();
+    
+    // Check for 100% Polyester (now allowed for custom colors)
+    if (fabric.includes('100%') && fabric.includes('polyester')) {
+      return true;
+    }
     
     // SPECIAL CASE: Exclude 100% Cotton Flannel (if it exists)
     if (fabric.includes('100%') && fabric.includes('cotton') && fabric.includes('flannel')) {
@@ -4848,9 +4853,12 @@ class V10_GarmentUIManager {
    * Enable sample selection based on fabric type
    */
   enableSampleSelection(garmentCard, fabricType) {
-    // Cotton fabrics: enable both stock and custom
-    // Non-cotton fabrics: only stock colors
-    const isCotton = fabricType && fabricType.toLowerCase().includes('cotton');
+    // Cotton and 100% Polyester fabrics: enable both stock and custom
+    // Other fabrics: only stock colors
+    const isAllowedForCustom = fabricType && (
+      fabricType.toLowerCase().includes('cotton') || 
+      fabricType.toLowerCase().includes('100% polyester')
+    );
     
     const stockSection = garmentCard.querySelector('#sample-stock-collapsed');
     const customSection = garmentCard.querySelector('#sample-custom-collapsed');
@@ -4861,19 +4869,14 @@ class V10_GarmentUIManager {
       stockSection.style.pointerEvents = 'auto';
     }
     
-    // Enable/disable custom based on cotton
+    // Enable/disable custom based on allowed fabrics
     if (customSection) {
-      if (isCotton) {
+      if (isAllowedForCustom) {
         customSection.style.opacity = '1';
         customSection.style.pointerEvents = 'auto';
       } else {
         customSection.style.opacity = '0.5';
         customSection.style.pointerEvents = 'none';
-        // Add visual indicator for disabled state
-        const customPlaceholder = customSection.querySelector('.placeholder-text');
-        if (customPlaceholder) {
-          customPlaceholder.textContent = 'Only available for cotton fabrics';
-        }
       }
     }
   }
@@ -10764,14 +10767,14 @@ class V10_ValidationManager {
             const isNonCotton = !V10_Utils.isCottonFabric(garment.fabricType);
             
             if (isNonCotton) {
-              errors.push(`Garment ${index + 1}: Custom samples require cotton fabrics. Selected: ${garment.fabricType}`);
+              errors.push(`Garment ${index + 1}: Custom samples require cotton or 100% polyester fabrics. Selected: ${garment.fabricType}`);
               isValid = false;
             }
           }
           
           // Check for lab dip assignments with non-cotton fabrics
           if (garment.assignedLabDips && garment.assignedLabDips.size > 0 && !V10_Utils.isCottonFabric(garment.fabricType)) {
-            errors.push(`Garment ${index + 1}: Lab dip assignments require cotton fabrics for custom colors`);
+            errors.push(`Garment ${index + 1}: Lab dip assignments require cotton or 100% polyester fabrics for custom colors`);
             isValid = false;
           }
         }
@@ -10812,7 +10815,7 @@ class V10_ValidationManager {
           const isCottonFabric = V10_Utils.isCottonFabric(garment.fabricType);
           
           if (garment.sampleType.includes('custom') && !isCottonFabric) {
-            errors.push(`Garment ${index + 1}: Custom color samples not available for ${garment.fabricType}. Please select a cotton fabric or choose stock color sample.`);
+            errors.push(`Garment ${index + 1}: Custom color samples not available for ${garment.fabricType}. Please select a cotton or 100% polyester fabric or choose stock color sample.`);
             isValid = false;
           }
         }
