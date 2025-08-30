@@ -5394,6 +5394,14 @@ class V10_GarmentStudio {
         this.garmentsContainer.appendChild(clone);
         console.log('✅ Garment added to container');
         
+        // Get the newly added garment card from DOM
+        const addedGarmentCard = document.querySelector(`[data-garment-id="${garmentData.id}"]`);
+        
+        // Update compact selections after DOM insertion for sample type
+        if (addedGarmentCard && garmentData.sampleType) {
+          this.updateCompactSelection('sampleType', garmentData.sampleType, addedGarmentCard, garmentData.sampleSubValue, true);
+        }
+        
         // Initialize edit interface
         try {
           this.expandGarmentForEdit(garmentData.id);
