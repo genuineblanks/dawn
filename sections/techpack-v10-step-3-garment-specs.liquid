@@ -243,10 +243,7 @@ document.body.setAttribute('data-theme', 'dark');
                 
                 <!-- Tip Message for Multiple Lab Dips -->
                 <div class="collection-tip" id="labdips-tip" style="display: none;">
-                  <div class="tip-icon">💡</div>
-                  <div class="tip-content">
-                    <strong>Tip:</strong> Assign different lab dips to the same garment to create color variants automatically
-                  </div>
+                  &#128161; <strong>Tip:</strong> Assign different lab dips to the same garment to create color variants automatically
                 </div>
                 
                 <div class="collection-grid" id="labdips-grid">
@@ -330,13 +327,6 @@ document.body.setAttribute('data-theme', 'dark');
 
                   <!-- Add Design Actions -->
                   <div class="add-design-actions">
-                    <button type="button" class="add-to-garment-btn" id="add-design-to-garment" disabled>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                      </svg>
-                      Add to Garment (€15)
-                    </button>
                     <button type="button" class="add-fabric-design-btn" id="add-fabric-design">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -644,13 +634,13 @@ document.body.setAttribute('data-theme', 'dark');
 
       <!-- Navigation -->
       <div class="v10-step-actions">
-        <button type="button" class="v10-btn v10-btn--ghost" id="step-3-prev">
+        <button type="button" class="v10-btn v10-btn--primary" id="step-3-prev">
           <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
             <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
           </svg>
           Previous
         </button>
-        <button type="button" class="v10-btn v10-btn--primary" id="step-3-next" disabled>
+        <button type="button" class="v10-btn v10-btn--primary v10-btn--disabled" id="step-3-next">
           Next Step
           <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
             <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
