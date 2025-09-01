@@ -3394,7 +3394,7 @@ body[style*="overflow: hidden"] {
 }
 
 .sample-type-selection .compact-selection-section:last-child .compact-radio-card:first-child::before {
-  content: "DESIGN STUDIO";
+  content: "COLOR STUDIO";
   position: absolute;
   top: -6px;
   right: -6px;
@@ -3413,7 +3413,7 @@ body[style*="overflow: hidden"] {
 }
 
 .sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child::before {
-  content: "PANTONE INSIDE TECHPACK";
+  content: "FOLLOW TECHPACK EXACTLY";
   position: absolute;
   top: -6px;
   right: -6px;
