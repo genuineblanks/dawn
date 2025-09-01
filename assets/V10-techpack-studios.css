@@ -2490,7 +2490,7 @@ body[style*="overflow: hidden"] {
 }
 
 .garment-card {
-  background: var(--v10-bg-secondary);
+  background: #1a1a1a;
   border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-5);
@@ -2738,7 +2738,7 @@ body[style*="overflow: hidden"] {
 
 /* Garment Card Structure */
 .garment-card {
-  background: var(--v10-bg-secondary);
+  background: #1a1a1a;
   border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   transition: var(--v10-transition);
@@ -4979,10 +4979,12 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   margin-bottom: var(--v10-space-4);
   color: var(--v10-text-primary);
   font-size: 0.875rem;
-  line-height: 1.2;
-  display: inline-flex;
-  align-items: baseline;
-  width: 100%;
+  line-height: 1.4;
+}
+
+.collection-tip span {
+  display: inline;
+  white-space: nowrap;
 }
 
 /* Assigned Items and Badges */
