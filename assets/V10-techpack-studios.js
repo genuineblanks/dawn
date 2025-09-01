@@ -340,7 +340,6 @@ const V10_State = {
     this.quantities.globalMinimum = 0;
     this.quantities.globalTotal = 0;
     this.quantities.progressPercentage = 0;
-    console.log('🗑️ V10 State cleared (including quantities)');
   }
 };
 
@@ -2674,7 +2673,6 @@ const V10_Utils = {
         { code: 'Forest biome - 19-5230 TCX', hex: '#184A45', name: 'Forest biome' },
         { code: 'Rain forest - 19-5232 TCX', hex: '#15463E', name: 'Rain forest' }
       ];
-      console.log(`✅ V10 Pantone TCX Database initialized with ${V10_CONFIG.PANTONE_TCX_COLORS.length} colors`);
     }
   },
 
@@ -2771,30 +2769,24 @@ const V10_Utils = {
     try {
       // Test database initialization
       V10_Utils.initPantoneDatabase();
-      console.log('✅ Database initialization: PASSED');
       
       // Test color conversion functions
       const testHex = '#FF0000';
       const rgbResult = V10_Utils.hexToRgb(testHex);
-      console.log('✅ Hex to RGB conversion: PASSED', rgbResult);
       
       // Test distance calculation
       const rgb1 = { r: 255, g: 0, b: 0 };
       const rgb2 = { r: 0, g: 255, b: 0 };
       const distance = V10_Utils.calculateColorDistance(rgb1, rgb2);
-      console.log('✅ Color distance calculation: PASSED', distance);
       
       // Test closest color matching
       const closestColor = V10_Utils.hexToPantone(testHex);
-      console.log('✅ Closest color matching: PASSED', closestColor);
       
       // Test multiple color matches
       const closestColors = V10_Utils.findClosestPantoneColors(testHex, 3);
-      console.log('✅ Multiple color matching: PASSED', closestColors.length, 'results');
       
       // Test Pantone validation
       const isValid = V10_Utils.validatePantone('19-4052 TCX');
-      console.log('✅ Pantone validation: PASSED', isValid);
       
       console.log('🎉 All V10 Pantone System tests PASSED!');
       return true;
@@ -3028,7 +3020,6 @@ const V10_Utils = {
           const garmentData = V10_State.garments.get(garmentId);
           if (garmentData) {
             garmentData.sampleType = 'stock';
-            console.log(`🔄 Auto-switched to stock sample for garment ${garmentId} due to fabric restriction`);
           }
           
           // Reset display states using UI Manager
@@ -3120,7 +3111,6 @@ const V10_Utils = {
     try {
       // Test 1: FABRIC_TYPE_MAPPING completeness
       const garmentTypes = Object.keys(V10_CONFIG.FABRIC_TYPE_MAPPING);
-      console.log('✅ FABRIC_TYPE_MAPPING test:', `${garmentTypes.length} garment types configured`);
       
       // Test 2: Cotton fabric detection
       const cottonTests = [
@@ -3133,17 +3123,11 @@ const V10_Utils = {
       cottonTests.forEach(fabric => {
         const isCotton = V10_Utils.isCottonFabric(fabric);
         const expected = fabric.includes('100%') && fabric.includes('Cotton');
-        console.log(`✅ Cotton detection test: ${fabric} = ${isCotton} (expected: ${expected})`);
       });
       
       // Test 3: Restriction logic
-      console.log('✅ Custom color restriction logic: Available');
-      console.log('✅ Fabric restriction updates: Available');
       
       // Test 4: Enhanced validation
-      console.log('✅ Enhanced validation methods: Available');
-      console.log('✅ Fabric restrictions validation: Available');
-      console.log('✅ Sample type requirements validation: Available');
       
       // Test 5: Integration points
       const integrationPoints = [
@@ -3154,11 +3138,9 @@ const V10_Utils = {
       ];
       
       integrationPoints.forEach(point => {
-        console.log(`✅ Integration point: ${point}`);
       });
       
       console.log('🎉 All V10 Garment-Fabric-Sample System tests PASSED!');
-      console.log('📋 System Features:');
       console.log('   • Complete fabric type mapping for all garment types');
       console.log('   • Intelligent cotton fabric detection');
       console.log('   • Custom color restrictions for non-cotton fabrics');
@@ -3230,7 +3212,6 @@ const V10_Utils = {
           return pantoneCode; // Return original code if database unavailable
         }
         window.V10_PANTONE_DATABASE = await response.json();
-        console.log('✅ Pantone database loaded with', Object.keys(window.V10_PANTONE_DATABASE).length, 'colors');
       }
 
       // Remove common prefixes/suffixes and normalize the code
@@ -3357,7 +3338,6 @@ class V10_StudioNavigator {
     // Reset to garment studio
     this.switchStudio('garment');
     
-    console.log(`📋 Request type set to: ${type}`);
   }
 }
 
@@ -3652,7 +3632,6 @@ class V10_QuantityCalculator {
     // Apply distribution to garment
     this.applyDistributionToGarment(garmentId, distributionData);
     
-    console.log(`🎯 Applied intelligent ${presetName} preset to garment ${garmentId}: ${distributionData.total} units (target: ${targetQuantity})`);
   }
 
   /**
@@ -4454,7 +4433,6 @@ class V10_GarmentUIManager {
    */
   renderGarment(garmentData) {
     try {
-      console.log('🔄 [UI] Rendering garment:', garmentData);
       
       if (!this.templates.garmentCard) {
         console.error('❌ Garment template not available');
@@ -4493,7 +4471,6 @@ class V10_GarmentUIManager {
       this.updateSampleTypePrices(garmentCard);
       this.updateSectionVisibility(garmentCard);
       
-      console.log('✅ [UI] Garment rendered successfully');
       return clone;
       
     } catch (error) {
@@ -4558,7 +4535,6 @@ class V10_GarmentUIManager {
       // Add event listeners for restrictions
       this.addFabricChangeListeners(fabricGrid, garmentCard);
       
-      console.log(`✅ [UI] Populated ${fabrics.length} fabric options`);
       
     } catch (error) {
       console.error('❌ [UI] Error populating fabric options:', error);
@@ -4768,7 +4744,6 @@ class V10_GarmentUIManager {
     this.disableFabricSelection(garmentCard);
     this.disableSampleSelection(garmentCard);
     
-    console.log('✅ [UI] Selection workflow initialized');
   }
   
   /**
@@ -4794,7 +4769,6 @@ class V10_GarmentUIManager {
       this.disableSampleSelection(garmentCard);
     }
     
-    console.log('🔄 [UI] Selection dependencies updated');
   }
   
   /**
@@ -4961,7 +4935,6 @@ class V10_GarmentUIManager {
       
       // Clear any previous custom selection from state if it existed
       if (garmentData && garmentData.sampleType === 'custom') {
-        console.log(`🔄 Cross-reset: Clearing previous custom selection from garment ${garmentId}`);
         garmentData.sampleType = '';
         garmentData.sampleSubValue = undefined;
       }
@@ -4990,7 +4963,6 @@ class V10_GarmentUIManager {
 
       // Clear any previous stock selection from state if it existed
       if (garmentData && garmentData.sampleType === 'stock') {
-        console.log(`🔄 Cross-reset: Clearing previous stock selection from garment ${garmentId}`);
         garmentData.sampleType = '';
         garmentData.sampleSubValue = undefined;
       }
@@ -5113,7 +5085,6 @@ class V10_GarmentManager {
         isInEditMode: false
       };
 
-      console.log('🔄 Duplicating garment with data:', duplicateData);
       return this.addGarment(duplicateData);
     } catch (error) {
       console.error('❌ Error duplicating garment:', error);
@@ -5317,11 +5288,9 @@ class V10_GarmentStudio {
   constructor() {
     // Singleton pattern - prevent multiple instances
     if (V10_GarmentStudio.instance) {
-      console.log('🔄 V10_GarmentStudio instance already exists, returning existing instance');
       return V10_GarmentStudio.instance;
     }
     
-    console.log('🆕 Creating new V10_GarmentStudio instance');
     
     this.garmentsContainer = document.getElementById('garments-container');
     this.addGarmentBtn = document.getElementById('add-garment');
@@ -5356,7 +5325,6 @@ class V10_GarmentStudio {
     }, 100);
     
     this.initialized = true;
-    console.log('✅ V10_GarmentStudio initialized');
   }
 
   setupGarmentManagerEvents() {
@@ -5368,7 +5336,6 @@ class V10_GarmentStudio {
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
       this.updateQuantitiesStudioTabStatus();
-      console.log(`➕ Added garment ${garmentData.number}: ${garmentId}`);
     });
 
     this.garmentManager.eventEmitter.addEventListener('garmentRemoved', (event) => {
@@ -5379,7 +5346,6 @@ class V10_GarmentStudio {
       }
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
-      console.log(`🗑️ Removed garment: ${garmentId}`);
     });
 
     this.garmentManager.eventEmitter.addEventListener('garmentRenumbered', (event) => {
@@ -5407,14 +5373,15 @@ class V10_GarmentStudio {
 
     // Delegate events for garment cards
     if (this.garmentsContainer) {
-      this.garmentsContainer.addEventListener('click', (e) => this.handleGarmentActions(e));
+      this.garmentsContainer.addEventListener('click', (e) => {
+        this.handleGarmentActions(e);
+        this.handleCompactClicks(e);
+      });
       this.garmentsContainer.addEventListener('change', (e) => this.handleGarmentChanges(e));
-      this.garmentsContainer.addEventListener('click', (e) => this.handleCompactClicks(e));
       this.garmentsContainer.addEventListener('keydown', (e) => this.handleGarmentKeyDown(e));
     }
 
     this.eventListenersAttached = true;
-    console.log('✅ V10_GarmentStudio events bound');
   }
 
   // Static method to get instance
@@ -5427,7 +5394,6 @@ class V10_GarmentStudio {
     this.eventListenersAttached = false;
     this.initialized = false;
     V10_GarmentStudio.instance = null;
-    console.log('🗑️ V10_GarmentStudio destroyed');
   }
 
   addGarment(data = null) {
@@ -5452,7 +5418,6 @@ class V10_GarmentStudio {
       // Add to container
       if (this.garmentsContainer) {
         this.garmentsContainer.appendChild(clone);
-        console.log('✅ Garment added to container');
         
         // Initialize edit interface
         try {
@@ -5520,14 +5485,12 @@ class V10_GarmentStudio {
       const presetMenu = garmentCard.querySelector('.garment-preset-menu');
       if (presetMenu) {
         presetMenu.classList.toggle('active');
-        console.log('📋 Apply Preset dropdown toggled');
       }
     } else if (e.target.closest('.clear-garment-quantities')) {
       // Handle clear quantities button from integrated actions
       e.preventDefault();
       e.stopPropagation();
       this.clearGarmentQuantities(garmentId);
-      console.log('🗑️ Clear Quantities clicked for garment:', garmentId);
     } else if (e.target.closest('.preset-option')) {
       // Handle preset option selection
       e.preventDefault();
@@ -5558,7 +5521,6 @@ class V10_GarmentStudio {
       // Don't toggle if the section or widget is disabled
       if ((widget && widget.style.pointerEvents === 'none') || 
           (section && section.classList.contains('compact-selection-section--disabled'))) {
-        console.log('🚫 Selection widget is disabled, not toggling');
         return;
       }
       
@@ -5572,7 +5534,6 @@ class V10_GarmentStudio {
       // Don't toggle if the section or widget is disabled
       if ((widget && widget.style.pointerEvents === 'none') || 
           (section && section.classList.contains('compact-selection-section--disabled'))) {
-        console.log('🚫 Selection widget is disabled, not toggling');
         return;
       }
       
@@ -5586,14 +5547,28 @@ class V10_GarmentStudio {
       // Don't toggle if the section or widget is disabled
       if ((widget && widget.style.pointerEvents === 'none') || 
           (section && section.classList.contains('compact-selection-section--disabled'))) {
-        console.log('🚫 Selection widget is disabled, not toggling');
         return;
       }
       
       this.toggleSelection(widget);
+    } else if (e.target.closest('.compact-radio-card')) {
+      // Handle clicking on radio cards - allow re-selection to close menu
+      const radioCard = e.target.closest('.compact-radio-card');
+      const radio = radioCard.querySelector('input[type="radio"]');
+      
+      if (radio && radio.checked) {
+        // If radio is already checked, close the menu immediately
+        e.preventDefault();
+        const section = radioCard.closest('.compact-selection-section');
+        const widget = section?.querySelector('.compact-selection-widget');
+        
+        if (widget) {
+          this.toggleSelection(widget);
+        }
+      }
+      // Let unchecked radios process normally via change event
     }
-    // Removed complex radio button re-selection logic to fix selection issues
-    // Re-selection is now only available via the "Change" buttons and selection display clicks
+    // Re-selection works by detecting clicks on already-selected options
   }
 
   handleGarmentChanges(e) {
@@ -5642,7 +5617,6 @@ class V10_GarmentStudio {
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
       
-      console.log(`🔄 Garment type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
       
       // Update garment status and summary display
       this.updateGarmentStatus(garmentId);
@@ -5686,7 +5660,6 @@ class V10_GarmentStudio {
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
       
-      console.log(`🔄 Fabric type ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
       
       // Update garment status and summary display
       this.updateGarmentStatus(garmentId);
@@ -5726,11 +5699,9 @@ class V10_GarmentStudio {
       });
       
       // Trigger immediate revalidation to ensure current selection is recognized
-      console.log(`🔄 Triggering immediate validation for garment changes`);
       // Small delay to ensure DOM updates are complete
       setTimeout(() => {
         const currentlyValid = this.validateGarmentRequirements(garmentId);
-        console.log(`✅ Immediate validation result: ${currentlyValid ? 'VALID' : 'INVALID'}`);
       }, 50);
     }
 
@@ -5749,7 +5720,6 @@ class V10_GarmentStudio {
       // Mark finalize button as changed (even if same value, user made an edit action)
       this.markEditButtonAsChanged(garmentCard);
       
-      console.log(`🔄 Sample reference ${previousValue === newValue ? 're-selected' : 'changed'}: ${newValue}`);
       
       // Update garment status and summary display
       this.updateGarmentStatus(garmentId);
@@ -5790,7 +5760,6 @@ class V10_GarmentStudio {
     
     if (isConfigured) {
       garmentCard.classList.add('garment-card--configured');
-      console.log(`✅ Garment configured - Design toggle now available`);
     } else {
       garmentCard.classList.remove('garment-card--configured');
       console.log(`⏳ Garment not configured - Design toggle hidden`);
@@ -5800,7 +5769,6 @@ class V10_GarmentStudio {
   }
 
   updateGarmentStatus(garmentId) {
-    console.log('🔄 [SUMMARY_FIX] updateGarmentStatus called for garment:', garmentId);
     const garmentData = V10_State.garments.get(garmentId);
     const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
     if (!garmentData || !garmentCard) {
@@ -5896,7 +5864,6 @@ class V10_GarmentStudio {
       this._quantityStudioUpdateTimeout = setTimeout(() => {
         if (window.v10GarmentStudio && typeof window.v10GarmentStudio.populateQuantityStudio === 'function') {
           window.v10GarmentStudio.populateQuantityStudio();
-          console.log('🔄 Triggered quantity studio population after garment status change');
         }
       }, 150); // 150ms debounce
     }
@@ -5916,7 +5883,6 @@ class V10_GarmentStudio {
     
     this.updateStudioTabStatus(isStudioComplete, completeGarments.length, allGarments.length);
     
-    console.log(`🎯 Studio Completion: ${completeGarments.length}/${allGarments.length} garments complete`);
   }
 
   // Update the Garment Studio tab status indicator
@@ -6034,7 +6000,6 @@ class V10_GarmentStudio {
   }
 
   updateGarmentCollapsedState(garmentCard, garmentData, isComplete) {
-    console.log('📱 [SUMMARY_FIX] updateGarmentCollapsedState called');
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
@@ -6066,7 +6031,6 @@ class V10_GarmentStudio {
       }
       
       // Update summary content ONLY when collapsing
-      console.log('✅ [SUMMARY_FIX] About to call updateGarmentSummary (collapsing)');
       this.updateGarmentSummary(garmentCard, garmentData);
     } else {
       // Show content, hide summary
@@ -6082,14 +6046,11 @@ class V10_GarmentStudio {
   }
 
   updateGarmentSummary(garmentCard, garmentData) {
-    console.log('🔍 [GARMENT_DEBUG] updateGarmentSummary called');
-    console.log('📥 [GARMENT_DEBUG] Input garment data:', {
       id: garmentData.id,
       type: garmentData.type,
       fabricType: garmentData.fabricType,
       sampleReference: garmentData.sampleReference,
     });
-    console.log('📋 [GARMENT_DEBUG] Garment card element:', garmentCard);
     
     const typeSpan = garmentCard.querySelector('.garment-summary__type');
     const fabricSpan = garmentCard.querySelector('.garment-summary__fabric');
@@ -6098,7 +6059,6 @@ class V10_GarmentStudio {
     const colorName = garmentCard.querySelector('.garment-summary__color-name');
     const separator = garmentCard.querySelector('.garment-summary__separator');
     
-    console.log('🎯 [GARMENT_DEBUG] Rich summary elements found:', {
       typeSpan: !!typeSpan,
       fabricSpan: !!fabricSpan,
       statusSpan: !!statusSpan,
@@ -6443,34 +6403,29 @@ class V10_GarmentStudio {
     
     // Sync sample type
     if (currentDOMState.sampleType && currentDOMState.sampleType !== garmentData.sampleType) {
-      console.log(`🔄 Syncing sample type: ${garmentData.sampleType} → ${currentDOMState.sampleType}`);
       garmentData.sampleType = currentDOMState.sampleType;
       stateChanged = true;
     }
     
     // Sync sample sub-value
     if (currentDOMState.sampleSubValue !== garmentData.sampleSubValue) {
-      console.log(`🔄 Syncing sample sub-value: ${garmentData.sampleSubValue} → ${currentDOMState.sampleSubValue}`);
       garmentData.sampleSubValue = currentDOMState.sampleSubValue;
       stateChanged = true;
     }
     
     // Sync fabric type
     if (currentDOMState.fabricType && currentDOMState.fabricType !== garmentData.fabricType) {
-      console.log(`🔄 Syncing fabric type: ${garmentData.fabricType} → ${currentDOMState.fabricType}`);
       garmentData.fabricType = currentDOMState.fabricType;
       stateChanged = true;
     }
     
     // Sync garment type
     if (currentDOMState.garmentType && currentDOMState.garmentType !== garmentData.type) {
-      console.log(`🔄 Syncing garment type: ${garmentData.type} → ${currentDOMState.garmentType}`);
       garmentData.type = currentDOMState.garmentType;
       stateChanged = true;
     }
     
     if (stateChanged) {
-      console.log(`✅ State synchronized for garment ${garmentId}`);
     }
     
     return stateChanged;
@@ -6504,15 +6459,12 @@ class V10_GarmentStudio {
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentCard || !garmentData) return;
 
-    console.log(`🔄 Finalizing edit for garment ${garmentId}...`);
     
     // Ensure state is synchronized with current DOM selections before validation
     this.syncGarmentStateWithDOM(garmentId);
     
     // Get current DOM state for validation logging
     const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
-    console.log(`🔍 Current DOM state:`, currentDOMState);
-    console.log(`🔍 Current garment data:`, {
       type: garmentData.type,
       fabricType: garmentData.fabricType,
       sampleType: garmentData.sampleType,
@@ -6538,7 +6490,6 @@ class V10_GarmentStudio {
       return;
     }
 
-    console.log(`✅ Validation passed, finalizing garment ${garmentId}`);
 
     // Clear edit mode flag
     garmentData.isInEditMode = false;
@@ -6614,7 +6565,6 @@ class V10_GarmentStudio {
         this._quantityStudioRemovalTimeout = setTimeout(() => {
           if (window.v10GarmentStudio?.populateQuantityStudio) {
             window.v10GarmentStudio.populateQuantityStudio();
-            console.log('🔄 Triggered quantity studio population after garment removal');
           }
         }, 200);
       }
@@ -6627,7 +6577,6 @@ class V10_GarmentStudio {
     // Delegate to garment manager
     const newId = this.garmentManager.duplicateGarment(garmentId);
     if (newId) {
-      console.log(`📋 Duplicated garment: ${garmentId}`);
     }
     return newId;
   }
@@ -6673,7 +6622,6 @@ class V10_GarmentStudio {
       // This ensures the variant is properly validated with its assigned lab dip
       setTimeout(() => {
         this.updateGarmentStatus(newVariant.id);
-        console.log(`🔄 Updated status for variant ${newVariant.id}`);
         
         // Update the collapsed state to show color circle and summary
         const variantCard = document.querySelector(`[data-garment-id="${newVariant.id}"]`);
@@ -6738,10 +6686,8 @@ class V10_GarmentStudio {
           this.updateDesignStudioTabStatus();
           V10_BadgeManager.updateGarmentCompletionBadge();
           V10_BadgeManager.updateDesignCompletionBadge();
-          console.log(`🔄 Forced comprehensive status update after color variant creation`);
         }, 100);
         
-        console.log(`✅ Created color variant ${variantId} with lab dip ${labDipId}`);
       }
       return;
     }
@@ -6888,7 +6834,6 @@ class V10_GarmentStudio {
       return;
     }
     
-    console.log('🔄 toggleSelection called for:', selectionWidget.id || 'unnamed widget');
     
     // selectionWidget IS the compact-selection-widget, so we work with it directly
     const collapsed = selectionWidget; // This is the compact-selection-widget itself
@@ -6899,7 +6844,6 @@ class V10_GarmentStudio {
     // Find the selected display to toggle it
     const selectedDisplay = section ? section.querySelector('.selection-display') : null;
     
-    console.log('🔍 Found elements:', {
       expanded: !!expanded,
       placeholder: !!placeholder, 
       selectedDisplay: !!selectedDisplay,
@@ -6930,7 +6874,6 @@ class V10_GarmentStudio {
       
       if (hasSelection) {
         // Show selected display if there's a selection
-        console.log('✅ Showing selected display');
         if (placeholder) placeholder.style.display = 'none';
         if (selectedDisplay) selectedDisplay.style.display = 'block';
       } else {
@@ -7083,7 +7026,6 @@ class V10_GarmentStudio {
       // Use passed subValue parameter, fallback to DOM if not provided
       const actualSubValue = subValue || input?.dataset.subValue;
       
-      console.log(`🔍 DEBUG updateCompactSelection sampleType: ${value}, actualSubValue: ${actualSubValue}, isInitialSet: ${isInitialSet}`);
       
       // Remove selected class from both sections first
       const stockSection = garmentCard.querySelector('#sample-stock-collapsed')?.closest('.compact-selection-section');
@@ -7164,7 +7106,6 @@ class V10_GarmentStudio {
         const display = garmentCard.querySelector('#sample-custom-display');
         const priceElement = garmentCard.querySelector('#sample-custom-price');
         
-        console.log(`🔍 DEBUG custom sample type DOM elements:`, {
           selectedIcon: !!selectedIcon,
           selectedName: !!selectedName,
           placeholder: !!placeholder,
@@ -7176,17 +7117,14 @@ class V10_GarmentStudio {
         const displayName = this.getSampleCustomDisplayName(actualSubValue);
         const icon = this.getSampleCustomIcon(actualSubValue);
         
-        console.log(`🔍 DEBUG custom display values:`, { displayName, icon });
         
         if (selectedIcon) selectedIcon.innerHTML = icon;
         if (selectedName) selectedName.textContent = displayName;
         if (placeholder) {
           placeholder.style.display = 'none';
-          console.log(`🔍 DEBUG: Set placeholder display to none`);
         }
         if (display) {
           display.style.display = 'block';
-          console.log(`🔍 DEBUG: Set display to block`);
         }
         
         // Update pricing
@@ -7368,7 +7306,6 @@ class V10_GarmentStudio {
   }
 
   getGarmentIcon(garmentType) {
-    console.log(`🔍 Getting garment icon for: "${garmentType}"`);
     
     // Map garment types to their sprite icon names
     const iconNameMap = {
@@ -7391,13 +7328,11 @@ class V10_GarmentStudio {
     if (iconName) {
       // Use the sprite icon with the same structure as the Liquid template
       const result = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#icon-${iconName}"></use></svg>`;
-      console.log(`🎯 Returning sprite icon for "${garmentType}": icon-${iconName}`);
       return result;
     }
     
     // Fallback for unknown garment types
     const fallback = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0l-4.38 1.46a2 2 0 0 0-1.49 2.28l.5 3C2.78 9.66 3 10.26 3 11v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9c0-.74.22-1.34.37-2.26l.5-3a2 2 0 0 0-1.49-2.28z"/></svg>';
-    console.log(`🎯 Returning fallback icon for "${garmentType}"`);
     return fallback;
   }
 
@@ -7500,7 +7435,6 @@ class V10_GarmentStudio {
     const garmentData = V10_State.garments.get(garmentId);
     if (!garmentData) return;
 
-    console.log(`🔄 Unified sample type update: ${garmentId} → ${sampleType} (${sampleSubValue || 'no subvalue'})`);
 
     // Update state - preserve undefined vs empty string distinction
     garmentData.sampleType = sampleType;
@@ -7518,7 +7452,6 @@ class V10_GarmentStudio {
     // Update garment status
     this.updateGarmentStatus(garmentId);
 
-    console.log(`✅ Sample type unified update complete: ${sampleType}${sampleSubValue ? ` (${sampleSubValue})` : ''}`);
   }
 
   saveCurrentQuantitiesToState() {
@@ -7576,7 +7509,6 @@ class V10_GarmentStudio {
       });
     });
     
-    console.log('🔄 Restored quantities from state');
   }
 
   cleanupQuantityStudioEventListeners() {
@@ -7610,14 +7542,12 @@ class V10_GarmentStudio {
   }
 
   populateQuantityStudio() {
-    console.log('🔄 populateQuantityStudio() called');
     
     // Performance monitoring
     const startTime = performance.now();
     
     // Add singleton protection to prevent duplicate execution
     if (this._populatingQuantityStudio) {
-      console.log('🔄 Quantity studio population already in progress, skipping...');
       return;
     }
     
@@ -7716,7 +7646,6 @@ class V10_GarmentStudio {
     console.log(`📦 Creating ${completedGarments.length} quantity cards...`);
     completedGarments.forEach((garment, index) => {
       console.log(`   Creating card for garment ${index + 1}: ${garment.type} (ID: ${garment.id})`);
-      console.log('🔍 [GARMENT_DEBUG] About to create card for garment:', {
         id: garment.id,
         type: garment.type,
         fabricType: garment.fabricType,
@@ -7726,17 +7655,13 @@ class V10_GarmentStudio {
       const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
       if (quantityCard) {
         responsiveGrid.appendChild(quantityCard);
-        console.log(`   ✅ Card added for garment ${garment.id}`);
         
         // Now that card is in DOM, call setupGarmentInfo
-        console.log('🔄 [GARMENT_DEBUG] Template: About to call setupGarmentInfo (after DOM append)...');
         this.setupGarmentInfo(quantityCard, garment);
-        console.log('✅ [GARMENT_DEBUG] Template: setupGarmentInfo completed');
         
         // Debug: Check the final display text after adding to DOM
         const finalTypeElement = quantityCard.querySelector('#garment-type-display, .garment-name');
         const finalFabricElement = quantityCard.querySelector('#garment-fabric-display, .garment-sample');
-        console.log('🔍 [GARMENT_DEBUG] Final card display after DOM append:');
         console.log('  - Type element text:', finalTypeElement?.textContent);
         console.log('  - Fabric element text:', finalFabricElement?.textContent);
       } else {
@@ -7748,15 +7673,11 @@ class V10_GarmentStudio {
     
     // Add event delegation for garment card actions
     responsiveGrid.addEventListener('click', (e) => this.handleGarmentActions(e));
-    console.log('✅ Event delegation added to responsive grid');
     
     // Initialize all quantity studio features
-    console.log('🔄 [GARMENT_DEBUG] About to initialize quantity studio features...');
     this.initializeQuantityStudioFeatures();
-    console.log('✅ [GARMENT_DEBUG] Quantity studio features initialized');
     
     // Final debug check: Verify all cards still have correct display text
-    console.log('🔍 [GARMENT_DEBUG] FINAL CHECK - All card displays after full initialization:');
     const allCards = responsiveGrid.querySelectorAll('.garment-quantity-card');
     allCards.forEach((card, index) => {
       const typeEl = card.querySelector('#garment-type-display, .garment-name');
@@ -7801,20 +7722,16 @@ class V10_GarmentStudio {
     } finally {
       // Always reset singleton protection flag, even if error occurs
       this._populatingQuantityStudio = false;
-      console.log('🔄 populateQuantityStudio() completed, flag reset');
     }
   }
 
   createEnhancedQuantityCard(garment, index) {
     // Get the template with enhanced debugging and DOM ready check
-    console.log('🔍 Looking for V10-garment-quantity-template...');
     console.log('📊 DOM readyState:', document.readyState);
     
     const template = document.getElementById('V10-garment-quantity-template');
     if (!template) {
       console.error('❌ V10-garment-quantity-template not found in DOM');
-      console.log('📋 Available templates:', Array.from(document.querySelectorAll('template')).map(t => t.id));
-      console.log('🔄 Falling back to horizontal layout in createFallbackQuantityCard');
       return this.createFallbackQuantityCard(garment, index);
     }
     
@@ -7827,13 +7744,9 @@ class V10_GarmentStudio {
     
     if (!card) {
       console.error('❌ .garment-quantity-card not found in template');
-      console.log('📋 Available classes in template:', Array.from(cardElement.querySelectorAll('*')).map(el => el.className));
       return this.createFallbackQuantityCard(garment, index);
     }
     
-    console.log('✅ .garment-quantity-card found, setting up card...');
-    console.log('🔍 [GARMENT_DEBUG] Template path: Using actual template');
-    console.log('📥 [GARMENT_DEBUG] Template garment data:', {
       id: garment.id,
       type: garment.type,
       fabricType: garment.fabricType,
@@ -7848,9 +7761,7 @@ class V10_GarmentStudio {
     this.setupValidationCard(card, garment);
     
     // Update garment information using rich summary system
-    console.log('🔄 [GARMENT_DEBUG] Template: About to call updateGarmentSummary (rich system)...');
     this.updateGarmentSummary(card, garment);
-    console.log('✅ [GARMENT_DEBUG] Template: updateGarmentSummary completed');
     
     // Setup colorway system
     this.setupColorwaySystem(card, garment);
@@ -7890,14 +7801,11 @@ class V10_GarmentStudio {
   }
 
   setupGarmentInfo(card, garment) {
-    console.log('🔍 [GARMENT_DEBUG] setupGarmentInfo called');
-    console.log('📥 [GARMENT_DEBUG] Input garment data:', {
       id: garment.id,
       type: garment.type,
       fabricType: garment.fabricType,
       sampleReference: garment.sampleReference
     });
-    console.log('📋 [GARMENT_DEBUG] Card element:', card);
     
     // Get request type to determine which elements to show
     const requestType = V10_State.requestType || 'sample-request';
@@ -7908,7 +7816,6 @@ class V10_GarmentStudio {
       const typeToSet = garment.type || 'Select garment type';
       console.log('📤 [GARMENT_DEBUG] Setting garment type display to:', typeToSet);
       garmentType.textContent = typeToSet;
-      console.log('✅ [GARMENT_DEBUG] Garment type element text after update:', garmentType.textContent);
     } else {
       console.log('❌ [GARMENT_DEBUG] Garment type element not found!');
     }
@@ -8124,7 +8031,6 @@ class V10_GarmentStudio {
   // ==============================================
 
   initializeValidationSystem() {
-    console.log('🔍 Initializing sophisticated validation system...');
     
     // Clear existing validation state
     V10_State.quantities.validationCards.clear();
@@ -8132,7 +8038,6 @@ class V10_GarmentStudio {
     // Set up global validation event handlers
     this.setupGlobalValidationHandlers();
     
-    console.log('✅ Validation system initialized');
   }
 
   setupGlobalValidationHandlers() {
@@ -8837,8 +8742,6 @@ class V10_GarmentStudio {
 
   createFallbackQuantityCard(garment, index) {
     // Fallback with horizontal layout (same as template)
-    console.log('🔍 [GARMENT_DEBUG] createFallbackQuantityCard called');
-    console.log('📥 [GARMENT_DEBUG] Fallback garment data:', {
       id: garment.id,
       type: garment.type,
       fabricType: garment.fabricType,
@@ -8934,14 +8837,11 @@ class V10_GarmentStudio {
     // Verify the created elements
     const createdTypeElement = cardElement.querySelector('#garment-type-display');
     const createdFabricElement = cardElement.querySelector('#garment-fabric-display');
-    console.log('✅ [GARMENT_DEBUG] Fallback: Created elements text content:');
     console.log('  - Type element:', createdTypeElement?.textContent);
     console.log('  - Fabric element:', createdFabricElement?.textContent);
     
     // Update garment using rich summary system
-    console.log('🔄 [GARMENT_DEBUG] Fallback: About to call updateGarmentSummary (rich system)...');
     this.updateGarmentSummary(cardElement, garment);
-    console.log('✅ [GARMENT_DEBUG] Fallback: updateGarmentSummary completed');
     
     // Add event listeners
     const sizeInputs = cardElement.querySelectorAll('.size-quantity-input');
@@ -9077,12 +8977,9 @@ class V10_GarmentStudio {
 
     const quantities = {};
     const inputs = card.querySelectorAll('.size-quantity-input');
-    console.log(`🔍 [SAVE_DEBUG] Card found:`, card);
-    console.log(`🔍 [SAVE_DEBUG] Found ${inputs.length} inputs for garment ${garmentId}`);
     
     inputs.forEach(input => {
       const size = input.dataset.size;
-      console.log(`🔍 [SAVE_DEBUG] Input element:`, input, `data-size:`, size, `value:`, input.value);
       
       if (!size) {
         console.warn(`⚠️ [SAVE_DEBUG] Input missing data-size attribute:`, input);
@@ -9138,7 +9035,6 @@ class V10_GarmentStudio {
     // Initialize preset dropdown
     this.initializePresetDropdown();
     
-    console.log('✅ Initialized all quantity studio features');
   }
 
 
@@ -9159,7 +9055,6 @@ class V10_GarmentStudio {
   }
 
   switchQuantityMode(mode) {
-    console.log(`🔄 Attempting to switch to ${mode} mode`);
     
     // Update toggle buttons
     document.querySelectorAll('.studio-toggle__btn').forEach(btn => {
@@ -9205,7 +9100,6 @@ class V10_GarmentStudio {
       }
     }
     
-    console.log(`✅ Successfully switched to ${mode} mode`);
   }
 
   /**
@@ -9628,7 +9522,6 @@ class V10_GarmentStudio {
         }
       }, 100);
 
-      console.log('✅ Colorway added successfully:', colorwayId);
       
       // Update completion status
       this.updateGarmentStatus(garmentId);
@@ -9640,7 +9533,6 @@ class V10_GarmentStudio {
 
   removeColorway(garmentId, colorwayId) {
     try {
-      console.log('🗑️ Removing colorway:', colorwayId, 'from garment:', garmentId);
       
       const colorway = document.querySelector(`[data-colorway-id="${colorwayId}"]`);
       if (colorway) {
@@ -9656,7 +9548,6 @@ class V10_GarmentStudio {
       // Update completion status
       this.updateGarmentStatus(garmentId);
       
-      console.log('✅ Colorway removed successfully');
       
     } catch (error) {
       console.error('❌ Error removing colorway:', error);
@@ -9764,7 +9655,6 @@ class V10_GarmentStudio {
 
   clearGarmentQuantities(garmentId) {
     try {
-      console.log('🗑️ Clearing quantities for garment:', garmentId);
       
       // Find all quantity inputs for this garment
       const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
@@ -9780,7 +9670,6 @@ class V10_GarmentStudio {
         input.dispatchEvent(new Event('input', { bubbles: true }));
       });
       
-      console.log('✅ Cleared quantities for', quantityInputs.length, 'size inputs');
       
     } catch (error) {
       console.error('❌ Error clearing garment quantities:', error);
@@ -10024,7 +9913,6 @@ class V10_DesignStudio {
   }
 
   showGarmentSelector(type, itemId = null) {
-    console.log(`🔄 showGarmentSelector called with type: ${type}, itemId: ${itemId}`);
     
     // Check if modal manager exists
     if (!window.v10ModalManager) {
@@ -10051,7 +9939,6 @@ class V10_DesignStudio {
     }
     
     // Debug: Check garment sample types for lab dip assignment
-    console.log('🔍 DEBUG: Garments for lab dip assignment:', garments.map(g => ({
       id: g.id,
       number: g.number,
       type: g.type,
@@ -10067,7 +9954,6 @@ class V10_DesignStudio {
 
     try {
       // Create modal with garment list
-      console.log('🔄 Creating garment selector modal...');
       const modal = this.createGarmentSelectorModal(garments, type, itemId);
       
       if (!modal) {
@@ -10083,7 +9969,6 @@ class V10_DesignStudio {
         parentNode: modal.parentNode?.tagName
       });
       
-      console.log('✅ Modal created, opening with V10 Modal Manager...');
       
       // Add small delay to ensure DOM is ready
       setTimeout(() => {
@@ -10100,7 +9985,6 @@ class V10_DesignStudio {
           });
         }, 100);
         
-        console.log('✅ Modal opened successfully');
       }, 10);
     } catch (error) {
       console.error('❌ Error in showGarmentSelector:', error);
@@ -10118,7 +10002,6 @@ class V10_DesignStudio {
   }
 
   createGarmentSelectorModal(garments, type, itemId = null) {
-    console.log(`🔄 createGarmentSelectorModal: ${type}, ${garments.length} garments, itemId: ${itemId}`);
     
     try {
       // For lab dips, filter and count available garments
@@ -10127,7 +10010,6 @@ class V10_DesignStudio {
         availableCount = garments.filter(g => g.sampleType === 'custom').length;
         
         // Debug: Lab dip filtering logic
-        console.log('🔍 DEBUG: Lab dip filtering logic:', {
           type: type,
           totalGarments: garments.length,
           garmentsWithSampleType: garments.filter(g => g.sampleType).length,
@@ -10263,7 +10145,6 @@ class V10_DesignStudio {
           if (itemId) {
             // Assign existing item to garment
             if (type === 'labdip') {
-              console.log(`✅ Assigning existing lab dip ${itemId} to garment ${selectedGarment}`);
               window.v10GarmentStudio.assignLabDip(selectedGarment, itemId);
               
               // Add delayed badge update to ensure assignment is fully processed
@@ -10272,10 +10153,8 @@ class V10_DesignStudio {
                 window.v10GarmentStudio.updateDesignStudioTabStatus();
                 V10_BadgeManager.updateGarmentCompletionBadge();
                 V10_BadgeManager.updateDesignCompletionBadge();
-                console.log(`🔄 Modal assignment badge update completed for lab dip ${itemId}`);
               }, 150);
             } else {
-              console.log(`✅ Assigning existing design ${itemId} to garment ${selectedGarment}`);
               window.v10GarmentStudio.assignDesign(selectedGarment, itemId);
               
               // Add delayed badge update to ensure assignment is fully processed
@@ -10284,7 +10163,6 @@ class V10_DesignStudio {
                 window.v10GarmentStudio.updateDesignStudioTabStatus();
                 V10_BadgeManager.updateGarmentCompletionBadge();
                 V10_BadgeManager.updateDesignCompletionBadge();
-                console.log(`🔄 Modal assignment badge update completed for design ${itemId}`);
               }, 150);
             }
           } else {
@@ -10295,18 +10173,15 @@ class V10_DesignStudio {
               this.addDesignSample(false, selectedGarment);
             }
           }
-          console.log(`📋 ${type} assignment completed, closing modal`);
         }
       } catch (error) {
         console.error(`❌ Error during ${type} assignment:`, error);
       } finally {
         // Always try to close the modal
-        console.log('🔄 Attempting to close modal...');
         closeModal();
       }
     });
 
-    console.log('✅ Modal DOM created successfully');
     
     // Append modal to document body
     document.body.appendChild(modal);
@@ -10513,7 +10388,6 @@ class V10_DesignStudio {
       V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
   
-      console.log(`🗑️ Removed lab dip: ${labDipId}`);
     }
   }
 
@@ -10537,7 +10411,6 @@ class V10_DesignStudio {
 
       this.updateCollectionCounts();
   
-      console.log(`🗑️ Removed design sample: ${designId}`);
     }
   }
 
@@ -11023,18 +10896,15 @@ class V10_ReviewManager {
 
   bindEditButtons() {
     // Bind edit buttons after content is populated
-    console.log('🎯 Step 4: Binding edit buttons...');
     document.querySelectorAll('[data-edit-step]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
-        console.log('🎯 Step 4: Edit button clicked, going to step:', step);
         
         // Use direct step navigation like existing system
         this.goBackToStep(step);
       });
     });
-    console.log('🎯 Step 4: Edit buttons bound:', document.querySelectorAll('[data-edit-step]').length);
     
     // Bind Terms & Conditions modal
     this.bindTermsModal();
@@ -11093,7 +10963,6 @@ class V10_ReviewManager {
       return;
     }
     
-    console.log(`🎯 Step 4: Navigating back to step ${stepNumber}`);
     
     // Hide step 4
     step4.style.display = 'none';
@@ -11113,9 +10982,6 @@ class V10_ReviewManager {
   }
 
   populateReview() {
-    console.log('🎯 Step 4: Starting review population...');
-    console.log('🎯 V10_State garments:', V10_State.garments.size);
-    console.log('🎯 V10_State requestType:', V10_State.requestType);
     
     // Element check at start of function
     
@@ -11137,7 +11003,6 @@ class V10_ReviewManager {
     this.updateSectionVisibility();
     this.updateSubmitMessage();
     
-    console.log('🎯 Step 4: Review population completed');
     
     // Bind edit button events after content is populated
     this.bindEditButtons();
@@ -11148,7 +11013,6 @@ class V10_ReviewManager {
     const clientInfo = document.getElementById('review-client-info');
     const garments = document.getElementById('review-garments');
     
-    console.log('🎯 Step 4: Elements check:');
     console.log('  - Review cards populated successfully');
     
     console.log('  - Client info exists:', !!clientInfo);
@@ -11858,11 +11722,9 @@ class V10_ReviewManager {
   }
 
   getUploadedFiles() {
-    console.log('🔍 Getting uploaded files for review...');
     
     // Try to get from Step 2 file manager first
     if (window.v10FileManager) {
-      console.log('✅ v10FileManager found');
       
       // Try multiple methods to get files from file manager
       let realFiles = [];
@@ -12057,7 +11919,6 @@ class V10_TechPackSystem {
   destroy() {
     this.initialized = false;
     V10_TechPackSystem.instance = null;
-    console.log('🗑️ V10_TechPackSystem destroyed');
   }
 
   bindGlobalEvents() {
@@ -12096,7 +11957,6 @@ class V10_TechPackSystem {
   setupAutoValidation() {
     // Auto-validation is handled by individual form change events
     // No persistent state saving - validation occurs on demand
-    console.log('🔄 Auto-validation setup completed (in-memory mode)');
   }
 
 
@@ -12446,7 +12306,6 @@ class V10_TechPackSystem {
       section.style.display = shouldShow ? '' : 'none';  // Use default CSS display when showing
     });
     
-    console.log(`🔄 Global section visibility updated for request type: ${requestType}`);
   }
 
   getOrderSummary() {
@@ -12492,7 +12351,6 @@ class V10_TechPackSystem {
       // Ensure file manager and conditional sections are updated
       if (window.v10FileManager) {
         window.v10FileManager.updateConditionalSections();
-        console.log('🔄 Step 2: Refreshed conditional sections after back navigation');
       }
       
       // Scroll to step 2
@@ -12502,19 +12360,15 @@ class V10_TechPackSystem {
 
   proceedToStep4() {
     try {
-      console.log('🎯 STEP 4: proceedToStep4() called');
       const step3 = document.getElementById('techpack-v10-step-3');
       const step4 = document.getElementById('techpack-v10-step-4');
       
-      console.log('🎯 STEP 4: Elements found:', { step3: !!step3, step4: !!step4 });
       
       if (!step3 || !step4) {
         console.error('Cannot find step 3 or step 4 elements');
         return false;
       }
 
-      console.log('🎯 STEP 4: Before - step3.style.display:', step3.style.display);
-      console.log('🎯 STEP 4: Before - step4.style.display:', step4.style.display);
       
       step3.style.display = 'none';
       step4.style.display = 'block';
@@ -12522,14 +12376,9 @@ class V10_TechPackSystem {
       // Scroll to top for mobile navigation
       window.scrollTo(0, 0);
       
-      console.log('🎯 STEP 4: After - step3.style.display:', step3.style.display);
-      console.log('🎯 STEP 4: After - step4.style.display:', step4.style.display);
       
       // Check if step4 is actually visible
       const computedStyle = window.getComputedStyle(step4);
-      console.log('🎯 STEP 4: Computed display:', computedStyle.display);
-      console.log('🎯 STEP 4: Computed visibility:', computedStyle.visibility);
-      console.log('🎯 STEP 4: Computed opacity:', computedStyle.opacity);
       
       // Update current step
       try {
@@ -12550,7 +12399,6 @@ class V10_TechPackSystem {
       // Now that Step 4 is visible, populate the review content
       try {
         if (window.v10ReviewManager) {
-          console.log('🎯 STEP 4: Calling populateReview() after step is visible');
           window.v10ReviewManager.populateReview();
         }
       } catch (populateError) {
@@ -12874,7 +12722,6 @@ class V10_ClientManager {
     
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
-      console.log('🔍 Checking bulk request requirements (shipping & insurance)');
       
       const shippingSelected = document.querySelector('input[name="shippingMethod"]:checked');
       const insuranceSelected = document.querySelector('input[name="insurance"]:checked');
@@ -12890,7 +12737,6 @@ class V10_ClientManager {
           shippingField.classList.add('v10-form-field--invalid');
         }
       } else {
-        console.log('✅ Shipping method selected:', shippingSelected.value);
       }
       
       if (!insuranceSelected) {
@@ -12901,14 +12747,12 @@ class V10_ClientManager {
           insuranceField.classList.add('v10-form-field--invalid');
         }
       } else {
-        console.log('✅ Insurance selected:', insuranceSelected.value);
       }
     } else {
       console.log('ℹ️ Skipping bulk request validation (not bulk request type)');
     }
     
     // Final validation result
-    console.log('🎯 Final validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
     // Button is always enabled - validation feedback shown on click instead
     console.log('🔘 Validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
@@ -13046,7 +12890,6 @@ class V10_ClientManager {
       setTimeout(() => {
         if (window.v10FileManager) {
           window.v10FileManager.updateConditionalSections();
-          console.log('🔄 Step 2: Refreshed conditional sections after navigation');
         }
       }, 100);
     }
@@ -13172,19 +13015,16 @@ class V10_FileManager {
         console.log('🖱️ V10 Step 2 Next button clicked');
         e.preventDefault();
         
-        console.log('📋 Calling validateStep() for files...');
         if (!this.validateStep()) {
           console.log('❌ File validation failed, cannot proceed');
           return;
         }
         
-        console.log('📋 Files valid, now calling validateMeasurements()...');
         if (!this.validateMeasurements()) {
           console.log('❌ Measurement validation failed, modal should be shown');
           return;
         }
         
-        console.log('✅ All validation passed, proceeding to step 3');
         const result = this.proceedToStep3();
         // Handle both synchronous and asynchronous returns
         if (result && typeof result.then === 'function') {
@@ -13237,7 +13077,6 @@ class V10_FileManager {
       requestType = urlParams.get('request_type');
     }
     
-    console.log('🔄 FileManager updateConditionalSections - Request type:', requestType);
     
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
@@ -13246,7 +13085,6 @@ class V10_FileManager {
     if (measurementStudio) {
       if (requestType === 'sample-request' || requestType === 'quotation') {
         measurementStudio.style.display = 'block';
-        console.log('✅ Showing measurement studio for:', requestType);
       } else {
         measurementStudio.style.display = 'none';
         console.log('🔒 Hiding measurement studio for request type:', requestType);
@@ -13484,7 +13322,6 @@ class V10_FileManager {
 
 
   validateStep() {
-    console.log('🔍 V10 validateStep() called');
     let isValid = true;
     
     // Get file upload warning element
@@ -13513,7 +13350,6 @@ class V10_FileManager {
     // Button is always enabled - validation feedback shown on click instead
     console.log('🔘 Step 2 validation result:', { isValid, formValid: isValid ? 'PASS' : 'FAIL' });
     
-    console.log(`✅ validateStep final result: ${isValid}`);
     return isValid;
   }
 
@@ -13590,7 +13426,6 @@ class V10_FileManager {
       let step3 = document.getElementById('techpack-v10-step-3');
       
       // Enhanced debug current DOM state
-      console.log('🔍 Step element search:', {
         step2Found: !!step2,
         step3Found: !!step3,
         allStepSections: document.querySelectorAll('[id*="techpack-v10-step"]').length,
@@ -13608,7 +13443,6 @@ class V10_FileManager {
         document.querySelector('section[data-step="3"]')
       ];
       
-      console.log('🔍 Step 3 detection attempts:', {
         byId: !!step3Attempts[0],
         byQuerySelector: !!step3Attempts[1],  
         bySection: !!step3Attempts[2],
@@ -13620,7 +13454,6 @@ class V10_FileManager {
       // Check if step 3 exists but is hidden by CSS
       if (step3Attempts[0]) {
         const step3El = step3Attempts[0];
-        console.log('🔍 Step 3 element found but checking visibility:', {
           displayStyle: step3El.style.display,
           computedDisplay: window.getComputedStyle(step3El).display,
           isVisible: step3El.offsetParent !== null,
@@ -13629,7 +13462,6 @@ class V10_FileManager {
           parentElement: step3El.parentElement ? step3El.parentElement.tagName : 'NO_PARENT'
         });
       } else {
-        console.log('🔍 Step 3 element not found in DOM - checking if it exists anywhere:', {
           anyStep3: document.querySelector('[id*="step-3"], [id*="step_3"]'),
           anyV10Elements: document.querySelectorAll('[id*="v10"]').length,
           bodyChildren: document.body.children.length
@@ -13649,7 +13481,6 @@ class V10_FileManager {
             step2 = document.getElementById('techpack-v10-step-2');
             step3 = document.getElementById('techpack-v10-step-3');
             
-            console.log(`🔄 Retry ${retryCount}/${maxRetries}:`, {
               step2Found: !!step2,
               step3Found: !!step3,
               allSectionIds: Array.from(document.querySelectorAll('[id*="techpack-v10-step"]')).map(el => el.id)
@@ -13705,7 +13536,6 @@ class V10_FileManager {
                           document.querySelector('#techpack-v10-step-3');
       
       if (step3Section) {
-        console.log('✅ Step 3 section found, making sure it\'s accessible');
         // Make sure it's visible to DOM queries
         if (step3Section.style.display === 'none') {
           step3Section.style.display = 'block';
@@ -13730,7 +13560,6 @@ class V10_FileManager {
   }
 
   executeStepTransition(step2, step3) {
-    console.log('🔄 Executing step transition...');
     
     step2.style.display = 'none';
     step3.style.display = 'block';
@@ -13749,14 +13578,12 @@ class V10_FileManager {
     if (!window.v10TechPackSystem) {
       try {
         window.v10TechPackSystem = new V10_TechPackSystem();
-        console.log('✅ TechPack System initialized successfully');
       } catch (systemError) {
         console.error('❌ Error initializing TechPack System:', systemError);
         return false;
       }
     }
     
-    console.log('✅ Step transition completed successfully');
     return true;
   }
 
@@ -13816,7 +13643,6 @@ class V10_ModalManager {
     this.setupModalInteractions();
     
     this.initialized = true;
-    console.log('✅ V10_ModalManager initialized successfully');
   }
 
   initializeModals() {
@@ -14000,7 +13826,6 @@ class V10_ModalManager {
     // Update TechPack System with request type (for studio navigation)
     if (window.v10TechPackSystem) {
       window.v10TechPackSystem.setRequestType(submissionType);
-      console.log(`🔄 TechPack System updated with request type: ${submissionType}`);
     }
     
     // Show the actual form and hide landing page
@@ -14035,7 +13860,6 @@ class V10_ModalManager {
   }
 
   updateFormForSubmissionType(submissionType) {
-    console.log(`🔄 Updating form for submission type: ${submissionType}`);
     
     // Update client status badge
     const statusBadge = document.getElementById('v10-client-status-badge');
@@ -14297,7 +14121,6 @@ class V10_ModalManager {
   
   setupEnhancedCountryDropdowns() {
     // Country dropdowns now use native select elements - no setup needed
-    console.log('✅ Country dropdowns using native select elements');
   }
   
   // Country dropdown functions removed - using native select elements
@@ -14608,7 +14431,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('v10-client-verification-modal') ||
             document.getElementById('v10-submission-type-modal')) {
           window.v10ModalManager = new V10_ModalManager();
-          console.log('✅ Modal Manager initialized');
         }
       } catch (modalError) {
         console.error('❌ Error initializing Modal Manager:', modalError);
@@ -14618,7 +14440,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         if (document.getElementById('techpack-v10-step-1')) {
           window.v10ClientManager = new V10_ClientManager();
-          console.log('✅ Client Manager initialized');
         }
       } catch (clientError) {
         console.error('❌ Error initializing Client Manager:', clientError);
@@ -14628,7 +14449,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         if (document.getElementById('techpack-v10-step-2')) {
           window.v10FileManager = new V10_FileManager();
-          console.log('✅ File Manager initialized');
         }
       } catch (fileError) {
         console.error('❌ Error initializing File Manager:', fileError);
@@ -14640,7 +14460,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         if (document.getElementById('techpack-v10-step-3')) {
           window.v10TechPackSystem = new V10_TechPackSystem();
-          console.log('✅ TechPack System initialized');
           
           // Get request type from multiple sources with fallback
           let requestType = V10_State.requestType;
@@ -14660,7 +14479,6 @@ document.addEventListener('DOMContentLoaded', () => {
           // Ensure request type is set and system is properly configured
           V10_State.requestType = requestType;
           window.v10TechPackSystem.setRequestType(requestType);
-          console.log(`🎯 Request type configured: ${requestType}`);
           
           return true;
         }
@@ -14678,7 +14496,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const techPackInitialized = initializeTechPack();
         
         if (techPackInitialized) {
-          console.log('🎯 V10 TechPack Studios - Full System Initialized');
           
           // Test the enhanced systems
           setTimeout(() => {
@@ -14686,7 +14503,6 @@ document.addEventListener('DOMContentLoaded', () => {
             V10_Utils.testGarmentFabricSampleSystem();
           }, 100);
         } else {
-          console.log('🎯 V10 TechPack Studios - Core System Initialized');
         }
       }, 50);
     });
