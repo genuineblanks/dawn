@@ -6146,8 +6146,17 @@ class V10_GarmentStudio {
       const labDip = V10_State.labDips.get(firstLabDipId);
       
       if (labDip && colorCircle && colorName) {
-        // Show color circle with lab dip color
-        colorCircle.style.backgroundColor = labDip.hex;
+        // Check if this is a custom text-only code (purple hex with custom flag)
+        const isCustomTextCode = labDip.isCustomCode && labDip.hex === '#8B5CF6';
+        
+        if (isCustomTextCode) {
+          // Use multi-colored gradient for text-only custom codes
+          colorCircle.style.background = 'conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b)';
+        } else {
+          // Normal color display
+          colorCircle.style.backgroundColor = labDip.hex;
+        }
+        
         colorCircle.style.display = 'inline-block';
         
         // Show color name from pantone (async lookup)
