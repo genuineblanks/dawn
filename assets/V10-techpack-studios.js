@@ -10070,7 +10070,7 @@ class V10_DesignStudio {
     const addToGarmentBtn = document.getElementById('add-labdip-to-garment');
 
     const hasColor = colorPicker?.value;
-    const hasValidPantone = pantoneInput?.value && V10_Utils.validatePantone(pantoneInput.value);
+    const hasValidPantone = pantoneInput?.value && pantoneInput.value.trim();
     
     const isValid = hasColor || hasValidPantone;
 
@@ -10395,14 +10395,16 @@ class V10_DesignStudio {
 
     let hex, pantone;
 
-    if (pantoneInput.value && V10_Utils.validatePantone(pantoneInput.value)) {
+    if (pantoneInput.value && pantoneInput.value.trim()) {
+      // User typed something - use their exact text regardless of validity
       pantone = pantoneInput.value.trim();
-      hex = colorPicker.value; // Use color picker as fallback
+      // For custom user input, use a distinctive color or the color picker value
+      hex = colorPicker.value || '#8B5CF6'; // Purple color for custom codes
     } else if (colorPicker.value) {
       hex = colorPicker.value;
       pantone = V10_Utils.hexToPantone(hex);
     } else {
-      alert('Please select a color or enter a valid Pantone code.');
+      alert('Please select a color or enter a Pantone code.');
       return;
     }
 
@@ -10412,6 +10414,7 @@ class V10_DesignStudio {
       hex,
       pantone,
       isFabricSwatch,
+      isCustomCode: pantoneInput.value && pantoneInput.value.trim() && !V10_Utils.validatePantone(pantoneInput.value),
       createdAt: new Date().toISOString()
     };
 
@@ -10497,8 +10500,25 @@ class V10_DesignStudio {
     const colorElement = clone.querySelector('.collection-item__color');
     const nameElement = clone.querySelector('.collection-item__name');
     
-    if (colorElement) colorElement.style.backgroundColor = labDipData.hex;
-    if (nameElement) nameElement.textContent = labDipData.pantone;
+    if (colorElement) {
+      colorElement.style.backgroundColor = labDipData.hex;
+      
+      // Add distinctive styling for custom user codes
+      if (labDipData.isCustomCode) {
+        colorElement.style.border = '2px solid #8B5CF6';
+        colorElement.style.boxShadow = '0 0 8px rgba(139, 92, 246, 0.3)';
+        colorElement.classList.add('custom-pantone-color');
+      }
+    }
+    
+    if (nameElement) {
+      nameElement.textContent = labDipData.pantone;
+      
+      // Add custom indicator for user-typed codes
+      if (labDipData.isCustomCode) {
+        nameElement.innerHTML = `${labDipData.pantone} <span class="custom-code-indicator">CUSTOM</span>`;
+      }
+    }
 
     // Bind events
     const assignBtn = clone.querySelector('.collection-item__assign');

@@ -4759,6 +4759,37 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   color: white;
 }
 
+/* Collection Item Action Buttons (+ and ×) */
+.collection-item__assign,
+.collection-item__remove {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--v10-radius-sm);
+  border: 1px solid var(--v10-border-primary);
+  background: transparent;
+  color: var(--v10-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  padding: 0;
+}
+
+.collection-item__assign:hover {
+  background: #2d2d2d;
+  border-color: #4a4a4a;
+  color: var(--v10-text-primary);
+  transform: translateY(-1px);
+}
+
+.collection-item__remove:hover {
+  background: #2d2d2d;
+  border-color: #ef4444;
+  color: #ef4444;
+  transform: translateY(-1px);
+}
+
 /* Sample Type Badges for Modal - Modern Required/Optional Style */
 .sample-type-badge {
   padding: 4px 8px;
@@ -4994,6 +5025,25 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .collection-tip span {
   display: inline;
   white-space: nowrap;
+}
+
+/* Custom Pantone Code Styling */
+.custom-pantone-color {
+  position: relative;
+  overflow: visible !important;
+}
+
+.custom-code-indicator {
+  font-size: 9px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  color: white;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
 }
 
 /* Assigned Items and Badges */
