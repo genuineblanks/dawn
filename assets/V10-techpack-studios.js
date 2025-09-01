@@ -6840,9 +6840,12 @@ class V10_GarmentStudio {
       V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
       
-      // Update assignment overview
+      // Update assignment overview and lab dip collection
       if (window.v10ReviewManager) {
         window.v10ReviewManager.populateGarmentAssignments();
+      }
+      if (window.v10ColorStudio) {
+        window.v10ColorStudio.updateLabDipCollectionAssignments();
       }
     }, 50);
   }
@@ -6870,9 +6873,12 @@ class V10_GarmentStudio {
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
     
-    // Update assignment overview
+    // Update assignment overview and lab dip collection
     if (window.v10ReviewManager) {
       window.v10ReviewManager.populateGarmentAssignments();
+    }
+    if (window.v10ColorStudio) {
+      window.v10ColorStudio.updateLabDipCollectionAssignments();
     }
   }
 
@@ -6894,9 +6900,12 @@ class V10_GarmentStudio {
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
     
-    // Update assignment overview
+    // Update assignment overview and lab dip collection
     if (window.v10ReviewManager) {
       window.v10ReviewManager.populateGarmentAssignments();
+    }
+    if (window.v10ColorStudio) {
+      window.v10ColorStudio.updateLabDipCollectionAssignments();
     }
   }
 
@@ -6917,9 +6926,12 @@ class V10_GarmentStudio {
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
     
-    // Update assignment overview
+    // Update assignment overview and lab dip collection
     if (window.v10ReviewManager) {
       window.v10ReviewManager.populateGarmentAssignments();
+    }
+    if (window.v10ColorStudio) {
+      window.v10ColorStudio.updateLabDipCollectionAssignments();
     }
   }
 
@@ -10553,6 +10565,7 @@ class V10_DesignStudio {
     
     const colorElement = clone.querySelector('.collection-item__color');
     const nameElement = clone.querySelector('.collection-item__name');
+    const typeElement = clone.querySelector('.collection-item__type');
     
     if (colorElement) {
       // Check if this is a pure text-only custom code (purple background)
@@ -10583,6 +10596,12 @@ class V10_DesignStudio {
         nameElement.innerHTML = `${labDipData.pantone} <span class="custom-code-indicator">CUSTOM</span>`;
       }
     }
+    
+    // Update type element with assignment information
+    if (typeElement) {
+      const assignmentText = this.getLabDipAssignmentText(labDipData.id);
+      typeElement.textContent = assignmentText;
+    }
 
     // Bind events
     const assignBtn = clone.querySelector('.collection-item__assign');
@@ -10599,6 +10618,23 @@ class V10_DesignStudio {
     container.appendChild(clone);
     
     if (emptyState) emptyState.style.display = 'none';
+  }
+  
+  updateLabDipCollectionAssignments() {
+    const container = document.getElementById('labdips-grid');
+    if (!container) return;
+    
+    // Update all existing lab dip items
+    const labDipItems = container.querySelectorAll('.collection-item[data-labdip-id]');
+    labDipItems.forEach(item => {
+      const labDipId = item.dataset.labdipId;
+      const typeElement = item.querySelector('.collection-item__type');
+      
+      if (typeElement && labDipId) {
+        const assignmentText = this.getLabDipAssignmentText(labDipId);
+        typeElement.textContent = assignmentText;
+      }
+    });
   }
 
   renderDesignItem(designData) {
@@ -11646,19 +11682,25 @@ class V10_ReviewManager {
 
   getLabDipAssignmentText(labDipId) {
     const assignments = V10_State.assignments.labDips.get(labDipId);
+    console.log(`🔍 getLabDipAssignmentText for ${labDipId}:`, assignments);
+    
     if (!assignments || assignments.size === 0) {
+      console.log(`❌ No assignments for lab dip ${labDipId} - returning LAB DIP`);
       return 'LAB DIP';
     }
     
     const assignedGarmentNames = [];
     assignments.forEach(garmentId => {
       const garment = V10_State.garments.get(garmentId);
+      console.log(`🔍 Checking garment ${garmentId}:`, garment);
       if (garment) {
         assignedGarmentNames.push(`Garment ${garment.number}`);
       }
     });
     
-    return assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
+    const result = assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
+    console.log(`✅ Assignment text for ${labDipId}: "${result}"`);
+    return result;
   }
 
   populateGarmentAssignments() {
@@ -11671,11 +11713,7 @@ class V10_ReviewManager {
     
     const assignments = this.getGarmentAssignments();
     
-    if (assignments.length === 0) {
-      overview.style.display = 'none';
-      return;
-    }
-    
+    // Always show the section
     overview.style.display = 'block';
     count.textContent = `${assignments.length} assignment${assignments.length !== 1 ? 's' : ''}`;
     
@@ -12813,6 +12851,11 @@ class V10_TechPackSystem {
           // Initialize assignment overview
           setTimeout(() => {
             window.v10ReviewManager.populateGarmentAssignments();
+            
+            // Also update lab dip collection assignments
+            if (window.v10ColorStudio) {
+              window.v10ColorStudio.updateLabDipCollectionAssignments();
+            }
           }, 100);
         } catch (managerError) {
           console.error('Error initializing review manager:', managerError);
@@ -14933,6 +14976,26 @@ document.addEventListener('DOMContentLoaded', () => {
           V10_State.requestType = requestType;
           window.v10TechPackSystem.setRequestType(requestType);
           console.log(`🎯 Request type configured: ${requestType}`);
+          
+          // Initialize review manager for assignment tracking on Step 3
+          if (!window.v10ReviewManager) {
+            try {
+              window.v10ReviewManager = new V10_ReviewManager();
+              console.log('✅ Review Manager initialized for Step 3');
+              
+              // Initialize assignment overview
+              setTimeout(() => {
+                window.v10ReviewManager.populateGarmentAssignments();
+                
+                // Also update lab dip collection assignments
+                if (window.v10ColorStudio) {
+                  window.v10ColorStudio.updateLabDipCollectionAssignments();
+                }
+              }, 200);
+            } catch (reviewError) {
+              console.error('❌ Error initializing Review Manager:', reviewError);
+            }
+          }
           
           return true;
         }
