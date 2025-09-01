@@ -4977,25 +4977,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-3);
   margin-bottom: var(--v10-space-4);
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-}
-
-.tip-icon {
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.tip-content {
-  flex: 1;
   color: var(--v10-text-primary);
   font-size: 0.875rem;
   line-height: 1.4;
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 /* Assigned Items and Badges */
