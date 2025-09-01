@@ -4747,46 +4747,48 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   color: white;
 }
 
-/* Sample Type Badges for Modal */
+/* Sample Type Badges for Modal - Modern Required/Optional Style */
 .sample-type-badge {
   margin-top: var(--v10-space-2);
-  padding: 2px 6px;
-  border-radius: var(--v10-radius-sm);
+  padding: 4px 8px;
+  border-radius: var(--v10-radius-md);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   line-height: 1.2;
   align-self: flex-start;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid;
 }
 
 .sample-type-badge--stock {
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fcd34d;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-color: #047857;
 }
 
 .sample-type-badge--techpack {
-  background: #e0e7ff;
-  color: #3730a3;
-  border: 1px solid #a5b4fc;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border-color: #1d4ed8;
 }
 
 .sample-type-badge--complete {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #86efac;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border-color: #15803d;
 }
 
 .sample-type-badge--custom {
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fcd34d;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border-color: #6d28d9;
 }
 
 .sample-type-badge--missing {
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
+  background: linear-gradient(135deg, #64748b, #475569);
+  color: white;
+  border-color: #334155;
 }
 
 /* Lab Dip Color Indicators */
