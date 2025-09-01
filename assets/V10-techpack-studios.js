@@ -10541,9 +10541,13 @@ class V10_DesignStudio {
     const nameInput = document.getElementById('design-sample-name');
     const typeInputs = document.querySelectorAll('input[name="design-type"]');
     const fileInput = document.getElementById('design-file-input');
+    const heightInput = document.getElementById('design-height');
+    const widthInput = document.getElementById('design-width');
 
     const name = nameInput?.value.trim();
     const selectedType = Array.from(typeInputs).find(input => input.checked);
+    const height = heightInput?.value ? parseFloat(heightInput.value) : null;
+    const width = widthInput?.value ? parseFloat(widthInput.value) : null;
     
     if (!name || !selectedType) {
       alert('Please enter a design name and select a type.');
@@ -10555,6 +10559,8 @@ class V10_DesignStudio {
       id: designId,
       name,
       type: selectedType.value,
+      height,
+      width,
       fileName: fileInput?.files[0]?.name || null,
       isFabricSample,
       createdAt: new Date().toISOString()
@@ -10574,6 +10580,8 @@ class V10_DesignStudio {
 
     // Clear inputs
     if (nameInput) nameInput.value = '';
+    if (heightInput) heightInput.value = '';
+    if (widthInput) widthInput.value = '';
     typeInputs.forEach(input => input.checked = false);
     if (fileInput) fileInput.value = '';
 
@@ -10693,9 +10701,18 @@ class V10_DesignStudio {
     
     const nameElement = clone.querySelector('.collection-item__name');
     const typeElement = clone.querySelector('.collection-item__type');
+    const measurementsElement = clone.querySelector('.collection-item__measurements');
     
     if (nameElement) nameElement.textContent = designData.name;
     if (typeElement) typeElement.textContent = designData.type;
+    
+    // Add measurements if available
+    if (measurementsElement) {
+      const measurements = [];
+      if (designData.height) measurements.push(`H: ${designData.height}cm`);
+      if (designData.width) measurements.push(`W: ${designData.width}cm`);
+      measurementsElement.textContent = measurements.length > 0 ? measurements.join(' × ') : '';
+    }
 
     // Bind events
     const assignBtn = clone.querySelector('.collection-item__assign');
@@ -11848,19 +11865,8 @@ class V10_ReviewManager {
         }
       });
       
-      // Check design assignments
-      V10_State.assignments.designs.forEach((garmentIds, designId) => {
-        if (garmentIds.has(garmentId)) {
-          const design = V10_State.designSamples.get(designId);
-          if (design) {
-            assignedColors.push({
-              name: design.name,
-              hex: '#4338ca', // Default design color
-              type: 'design'
-            });
-          }
-        }
-      });
+      // Design assignments are hidden from colorway section
+      // Only lab dips are shown in "Garments with colorways assigned"
       
       if (assignedColors.length > 0) {
         assignments.push({

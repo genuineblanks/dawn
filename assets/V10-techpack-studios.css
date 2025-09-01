@@ -4755,7 +4755,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Design Type Selection - Match Lab Dips Color Picker */
 .design-type-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--v10-space-3);
 }
 
@@ -5056,6 +5056,13 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   color: var(--v10-text-muted);
   text-transform: uppercase;
   font-weight: 500;
+}
+
+.collection-item__measurements {
+  font-size: 0.7rem;
+  color: var(--v10-color-accent);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 .collection-item__code {
