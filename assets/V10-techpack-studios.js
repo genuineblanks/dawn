@@ -9993,7 +9993,6 @@ class V10_DesignStudio {
     // Design form inputs
     const designNameInput = document.getElementById('design-sample-name');
     const designTypeInputs = document.querySelectorAll('input[name="design-type"]');
-    const addToGarmentBtn = document.getElementById('add-design-to-garment');
     const addFabricDesignBtn = document.getElementById('add-fabric-design');
 
     // Update buttons when form changes
@@ -10002,7 +10001,6 @@ class V10_DesignStudio {
       const typeSelected = Array.from(designTypeInputs).some(input => input.checked);
       const isValid = name && typeSelected;
 
-      if (addToGarmentBtn) addToGarmentBtn.disabled = !isValid;
       if (addFabricDesignBtn) addFabricDesignBtn.disabled = !isValid;
     };
 
@@ -10048,10 +10046,6 @@ class V10_DesignStudio {
     }
 
     // Add buttons
-    if (addToGarmentBtn) {
-      addToGarmentBtn.addEventListener('click', () => this.showGarmentSelector('design'));
-    }
-
     if (addFabricDesignBtn) {
       addFabricDesignBtn.addEventListener('click', () => this.addDesignSample(true));
     }

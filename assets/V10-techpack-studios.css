@@ -4160,6 +4160,60 @@ body[style*="overflow: hidden"] {
   border-bottom: none;
 }
 
+/* Review Design Samples */
+.review-design-sample {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3) var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-2);
+  transition: var(--v10-transition);
+}
+
+.review-design-sample:hover {
+  border-color: var(--v10-accent-primary);
+}
+
+.design-sample-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--v10-accent-primary);
+  color: white;
+  border-radius: var(--v10-radius-sm);
+  flex-shrink: 0;
+}
+
+.design-sample-info {
+  flex: 1;
+}
+
+.design-sample-name {
+  font-size: var(--v10-text-base);
+  font-weight: 500;
+  color: var(--v10-text-primary);
+  margin-bottom: var(--v10-space-1);
+}
+
+.design-sample-type {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+  text-transform: capitalize;
+}
+
+/* Empty message styling for design samples */
+.empty-message {
+  text-align: center;
+  padding: var(--v10-space-6);
+  color: var(--v10-text-secondary);
+  font-style: italic;
+}
+
 /* ==============================================
    RESPONSIVE DESIGN
    ============================================== */
@@ -4599,7 +4653,12 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   gap: var(--v10-space-2);
 }
 
-.add-to-garment-btn,
+/* Center single button layout for design actions */
+.add-design-actions {
+  align-items: center;
+  text-align: center;
+}
+
 .add-fabric-swatch-btn,
 .add-fabric-design-btn {
   display: flex;
@@ -4615,18 +4674,28 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   font-weight: 500;
   cursor: pointer;
   transition: var(--v10-transition);
+  min-width: 280px;
 }
 
-.add-to-garment-btn:hover,
 .add-fabric-swatch-btn:hover,
 .add-fabric-design-btn:hover {
   background: var(--v10-accent-secondary);
   border-color: var(--v10-accent-secondary);
 }
 
-.add-to-garment-btn:disabled {
+.add-fabric-design-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .add-fabric-swatch-btn,
+  .add-fabric-design-btn {
+    min-width: 100%;
+    font-size: 0.8rem;
+    padding: var(--v10-space-2) var(--v10-space-3);
+  }
 }
 
 /* Collection Grid */
