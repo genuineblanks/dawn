@@ -5885,7 +5885,9 @@ class V10_GarmentStudio {
     // Trigger validation update for Step 3 next button
     if (window.v10TechPackSystem?.validationManager) {
       try {
-        window.v10TechPackSystem.validationManager.validateStep();
+        console.log(`🔄 Triggering validation after garment ${garmentId} status update (isComplete: ${isComplete})`);
+        const validation = window.v10TechPackSystem.validationManager.validateStep();
+        console.log(`📋 Validation result:`, validation);
       } catch (validationError) {
         console.warn('Error triggering validation update:', validationError);
       }
@@ -5921,6 +5923,17 @@ class V10_GarmentStudio {
     this.updateStudioTabStatus(isStudioComplete, completeGarments.length, allGarments.length);
     
     console.log(`🎯 Studio Completion: ${completeGarments.length}/${allGarments.length} garments complete`);
+    
+    // Trigger validation update when studio completion changes
+    if (window.v10TechPackSystem?.validationManager) {
+      try {
+        console.log(`🔄 Triggering validation after studio completion update (${isStudioComplete ? 'ALL COMPLETE' : 'INCOMPLETE'})`);
+        const validation = window.v10TechPackSystem.validationManager.validateStep();
+        console.log(`📋 Studio validation result:`, validation);
+      } catch (validationError) {
+        console.warn('Error triggering validation from studio completion:', validationError);
+      }
+    }
   }
 
   // Update the Garment Studio tab status indicator
@@ -10680,6 +10693,7 @@ class V10_ValidationManager {
   }
 
   init() {
+    console.log('🚀 V10_ValidationManager initialized - running initial validation');
     this.validateStep();
   }
 
@@ -10706,6 +10720,7 @@ class V10_ValidationManager {
           
           // Enhanced button text and styling based on validation
           if (validation.isValid) {
+            console.log('✅ All garments complete - enabling Proceed to Review button');
             nextBtn.innerHTML = `
               <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 11l3 3l8-8"/>
@@ -10715,17 +10730,21 @@ class V10_ValidationManager {
             `;
             nextBtn.title = 'All garments complete - proceed to review and submit';
             nextBtn.classList.remove('v10-btn--disabled');
+            nextBtn.removeAttribute('disabled'); // Ensure HTML disabled attribute is removed
           } else {
             // Show progress in button when incomplete
             const stats = validation.stats;
             if (stats) {
+              console.log(`⏳ Garments incomplete - showing progress (${stats.complete}/${stats.total})`);
               nextBtn.innerHTML = `Complete All Garments (${stats.complete}/${stats.total})`;
               nextBtn.title = `${stats.incomplete} garment(s) incomplete - complete all garments to proceed`;
             } else if (Array.isArray(validation.errors) && validation.errors.length > 0) {
+              console.log(`❌ Validation errors:`, validation.errors);
               nextBtn.innerHTML = 'Complete All Garments';
               nextBtn.title = validation.errors.join(', ');
             }
             nextBtn.classList.add('v10-btn--disabled');
+            // Note: Don't add disabled attribute back - let CSS handle visual state
           }
         }
       } catch (buttonError) {
