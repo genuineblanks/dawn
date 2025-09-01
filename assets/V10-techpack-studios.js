@@ -10259,7 +10259,8 @@ class V10_DesignStudio {
                       labDipColors.push({
                         id: labDipId,
                         pantone: labDip.pantone,
-                        hex: labDip.hex || '#cccccc'
+                        hex: labDip.hex || '#cccccc',
+                        isCustomCode: labDip.isCustomCode
                       });
                     }
                   });
@@ -10267,12 +10268,20 @@ class V10_DesignStudio {
                   if (labDipColors.length > 0) {
                     labDipIndicators = `
                       <div class="garment-labdip-indicators">
-                        ${labDipColors.slice(0, 4).map(color => `
-                          <span class="labdip-color-circle" 
-                                style="background-color: ${color.hex}" 
-                                title="${color.pantone}">
-                          </span>
-                        `).join('')}
+                        ${labDipColors.slice(0, 4).map(color => {
+                          // Check if this is a custom text-only code (purple hex with custom flag)
+                          const isCustomTextCode = color.isCustomCode && color.hex === '#8B5CF6';
+                          const backgroundStyle = isCustomTextCode 
+                            ? 'background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b);'
+                            : `background-color: ${color.hex};`;
+                          
+                          return `
+                            <span class="labdip-color-circle" 
+                                  style="${backgroundStyle}" 
+                                  title="${color.pantone}">
+                            </span>
+                          `;
+                        }).join('')}
                         ${labDipColors.length > 4 ? `<span class="labdip-more-indicator">+${labDipColors.length - 4}</span>` : ''}
                       </div>
                     `;
