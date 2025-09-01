@@ -10487,6 +10487,12 @@ class V10_DesignStudio {
                 window.v10GarmentStudio.updateDesignStudioTabStatus();
                 V10_BadgeManager.updateGarmentCompletionBadge();
                 V10_BadgeManager.updateDesignCompletionBadge();
+                
+                // Update lab dip collection assignment text after modal assignment
+                if (window.v10ColorStudio) {
+                  window.v10ColorStudio.updateLabDipCollectionAssignments();
+                }
+                
                 console.log(`🔄 Modal assignment badge update completed for lab dip ${itemId}`);
               }, 150);
             } else {
