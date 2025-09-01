@@ -3317,6 +3317,11 @@ class V10_StudioNavigator {
       }, 100); // 100ms debounce
     }
 
+    // Update assignment section visibility based on current studio
+    if (window.v10ReviewManager) {
+      window.v10ReviewManager.populateGarmentAssignments();
+    }
+
     // Auto-save
 
     console.log(`🎛️ Switched to ${studioName} studio`);
@@ -10811,6 +10816,29 @@ class V10_DesignStudio {
 
     this.updateCollectionCounts();
   }
+  
+  getLabDipAssignmentText(labDipId) {
+    const assignments = V10_State.assignments.labDips.get(labDipId);
+    console.log(`🔍 getLabDipAssignmentText for ${labDipId}:`, assignments);
+    
+    if (!assignments || assignments.size === 0) {
+      console.log(`❌ No assignments for lab dip ${labDipId} - returning LAB DIP`);
+      return 'LAB DIP';
+    }
+    
+    const assignedGarmentNames = [];
+    assignments.forEach(garmentId => {
+      const garment = V10_State.garments.get(garmentId);
+      console.log(`🔍 Checking garment ${garmentId}:`, garment);
+      if (garment) {
+        assignedGarmentNames.push(`Garment ${garment.number}`);
+      }
+    });
+    
+    const result = assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
+    console.log(`✅ Assignment text for ${labDipId}: "${result}"`);
+    return result;
+  }
 }
 
 // ==============================================
@@ -11711,9 +11739,15 @@ class V10_ReviewManager {
     
     if (!overview || !grid || !emptyState || !count) return;
     
+    // Only show the section in Color Studio (design studio)
+    if (V10_State.currentStudio !== 'design') {
+      overview.style.display = 'none';
+      return;
+    }
+    
     const assignments = this.getGarmentAssignments();
     
-    // Always show the section
+    // Show the section when in Color Studio
     overview.style.display = 'block';
     count.textContent = `${assignments.length} assignment${assignments.length !== 1 ? 's' : ''}`;
     
