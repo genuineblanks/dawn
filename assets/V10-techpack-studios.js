@@ -5591,28 +5591,9 @@ class V10_GarmentStudio {
       }
       
       this.toggleSelection(widget);
-    } else if (e.target.closest('.compact-radio-card')) {
-      // Handle clicking on already-selected radio buttons to close menu
-      const radioCard = e.target.closest('.compact-radio-card');
-      const radio = radioCard.querySelector('input[type="radio"]');
-
-      if (radio && radio.checked) {
-      // Radio is already selected - just close the menu
-      e.preventDefault();
-      e.stopPropagation();
-
-      const section = radioCard.closest('.compact-selection-section');
-      const widget = section?.querySelector('.compact-selection-widget');
-
-      if (widget) {
-        // Close the menu without changing selection
-        console.log('📌 Closing menu for already-selected option:', radio.value);
-        this.toggleSelection(widget);
-        }
-      }
-      // If not checked, let the change event handle it normally
     }
-    // Re-selection now works via clicking already-selected radio cards
+    // Removed complex radio button re-selection logic to fix selection issues
+    // Re-selection is now only available via the "Change" buttons and selection display clicks
   }
 
   handleGarmentChanges(e) {
