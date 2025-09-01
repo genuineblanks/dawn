@@ -6600,10 +6600,15 @@ class V10_GarmentStudio {
     
     if (!garmentCard || !garmentData) return;
     
+    console.log(`🎨 Finalizing appearance for variant ${garmentData.id}...`);
+    
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
     if (summaryContainer && contentContainer) {
+      // Clear edit mode flag to ensure proper state
+      garmentData.isInEditMode = false;
+      
       // Show summary, hide content (opposite of edit mode)
       summaryContainer.style.display = 'block';
       contentContainer.style.display = 'none';
@@ -6617,10 +6622,15 @@ class V10_GarmentStudio {
         finalizeBtn.style.display = 'none';
       }
       
-      // Update the collapsed state display
-      this.updateGarmentCollapsedState(garmentCard, garmentData, garmentData.isComplete);
+      // Update garment summary with current data (including lab dip colors)
+      this.updateGarmentSummary(garmentCard, garmentData);
       
-      console.log(`🎨 Finalized appearance for variant garment ${garmentData.id}`);
+      // Force the collapsed state display (variants should always show as complete)
+      this.updateGarmentCollapsedState(garmentCard, garmentData, true);
+      
+      console.log(`✅ Variant ${garmentData.id} appearance finalized successfully`);
+    } else {
+      console.error(`❌ Could not find summary/content containers for variant ${garmentData.id}`);
     }
   }
 
@@ -6710,12 +6720,14 @@ class V10_GarmentStudio {
       // Ensure the variant displays in collapsed state immediately
       setTimeout(() => {
         const variantCard = document.querySelector(`[data-garment-id="${newVariant.id}"]`);
-        if (variantCard && newVariant.isComplete) {
-          // Force the garment to finalized collapsed state
+        if (variantCard) {
+          // Force the garment to finalized collapsed state (variants should always be collapsed)
           this.finalizeGarmentAppearance(variantCard, newVariant);
           console.log(`🎨 Auto-finalized variant ${newVariant.id} with lab dip assignment`);
+        } else {
+          console.error(`❌ Could not find variant card for ${newVariant.id}`);
         }
-      }, 100);
+      }, 150);
       
       // Update studio completion status after variant creation
       this.updateStudioCompletion();
