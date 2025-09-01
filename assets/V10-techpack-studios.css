@@ -3487,10 +3487,10 @@ body[style*="overflow: hidden"] {
 
 /* Sample type pricing information styling */
 .sample-type-pricing {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: var(--v10-space-2);
+  white-space: nowrap;
 }
 
 .sample-type-price {
