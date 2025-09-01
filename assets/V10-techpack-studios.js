@@ -10232,7 +10232,7 @@ class V10_DesignStudio {
                     badgeClass = 'missing';
                   } else if (garment.sampleType === 'custom' && garment.sampleSubValue !== 'design-studio') {
                     // Custom color selected but not available for lab dips
-                    badgeText = 'Custom Color (Pantone)';
+                    badgeText = 'Pantone TCX/TPX Inside TechPack';
                     badgeClass = 'custom';
                   } else {
                     badgeText = this.getSampleTypeBadgeText(garment.sampleType);
@@ -10427,10 +10427,8 @@ class V10_DesignStudio {
     this.renderLabDipItem(labDipData);
     this.updateCollectionCounts();
 
-    // Clear inputs
-    if (pantoneInput) pantoneInput.value = '';
-    const pantoneDisplay = document.getElementById('auto-pantone-display');
-    if (pantoneDisplay) pantoneDisplay.style.display = 'none';
+    // Keep color selection for repeated use - don't clear inputs
+    // Users can keep adding the same color multiple times without having to reselect it
 
     // Auto-save
 
