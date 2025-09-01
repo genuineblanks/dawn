@@ -6444,7 +6444,10 @@ class V10_GarmentStudio {
 
     const requestType = V10_State.requestType;
     
-    if (requestType === 'sample-request') {
+    if (requestType === 'quotation') {
+      // For quotations: only garment type and fabric type required
+      return garmentData.type && garmentData.fabricType;
+    } else if (requestType === 'sample-request') {
       // Get current DOM state as fallback for edit mode validation
       const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
       
@@ -10941,12 +10944,12 @@ class V10_DesignStudio {
     const assignedGarments = V10_State.assignments.labDips.get(labDipId);
     const hasAssignments = assignedGarments && assignedGarments.size > 0;
     
-    // Show appropriate confirmation message based on assignment status
-    const confirmMessage = hasAssignments 
-      ? 'Remove this lab dip? This will also remove it from all garments.'
-      : 'Remove this lab dip?';
+    // Only show confirmation if lab dip has assigned garments
+    const shouldProceed = hasAssignments 
+      ? confirm('Remove this lab dip? This will also remove it from all garments.')
+      : true; // No confirmation needed for unassigned lab dips
     
-    if (confirm(confirmMessage)) {
+    if (shouldProceed) {
       // Remove from state
       V10_State.labDips.delete(labDipId);
       
@@ -13026,7 +13029,90 @@ class V10_TechPackSystem {
 
 
   // Public API
+  resetStepsData() {
+    // Clear V10_State data for Steps 2, 3, 4 (preserve client info from Step 1)
+    V10_State.garments.clear();
+    V10_State.labDips.clear();
+    V10_State.designSamples.clear();
+    V10_State.assignments.labDips.clear();
+    V10_State.assignments.designs.clear();
+    V10_State.totalQuantity = 0;
+    
+    // Reset quantity management
+    V10_State.quantities.garments.clear();
+    V10_State.quantities.validation.clear();
+    V10_State.quantities.globalMinimum = 0;
+    V10_State.quantities.globalTotal = 0;
+    V10_State.quantities.progressPercentage = 0;
+    V10_State.quantities.validationCards.clear();
+    
+    // Reset studio state
+    V10_State.currentStudio = 'garment';
+    V10_State.currentMode = 'labdips';
+    
+    // Clear UI elements for Steps 2, 3, 4
+    this.clearStepsUI();
+    
+    // Add initial garment if needed (like fresh start)
+    if (this.garmentStudio && typeof this.garmentStudio.addGarment === 'function') {
+      setTimeout(() => {
+        this.garmentStudio.addGarment();
+      }, 100);
+    }
+    
+    console.log('🔄 Steps 2, 3, 4 data reset for new request type');
+  }
+
+  clearStepsUI() {
+    // Clear garment cards
+    const garmentContainer = document.getElementById('garment-container');
+    if (garmentContainer) {
+      garmentContainer.innerHTML = '';
+    }
+    
+    // Clear lab dip collection
+    const labdipsGrid = document.getElementById('labdips-grid');
+    if (labdipsGrid) {
+      labdipsGrid.innerHTML = '';
+    }
+    
+    // Clear design sample collection
+    const designsGrid = document.getElementById('designs-grid');
+    if (designsGrid) {
+      designsGrid.innerHTML = '';
+    }
+    
+    // Clear file upload areas - reset to initial state
+    const fileUploadAreas = document.querySelectorAll('.file-upload-area');
+    fileUploadAreas.forEach(area => {
+      const fileDisplay = area.querySelector('.file-display');
+      const dropZone = area.querySelector('.file-drop-zone');
+      if (fileDisplay) fileDisplay.style.display = 'none';
+      if (dropZone) dropZone.style.display = 'flex';
+    });
+    
+    // Reset any form inputs for Steps 2, 3 (preserve Step 1 client info)
+    const step2Forms = document.querySelectorAll('#v10-step-2 input, #v10-step-2 textarea, #v10-step-2 select');
+    step2Forms.forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+    
+    const step3Forms = document.querySelectorAll('#v10-step-3 input:not([name="design-type"]), #v10-step-3 textarea, #v10-step-3 select');
+    step3Forms.forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+  }
+
   setRequestType(type) {
+    this.resetStepsData();
     this.navigator.setRequestType(type);
     this.updateGlobalSectionVisibility(type);
     this.validationManager.revalidate();
