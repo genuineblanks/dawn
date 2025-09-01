@@ -3020,7 +3020,6 @@ body[style*="overflow: hidden"] {
 .selection-display {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--v10-space-3);
   padding: var(--v10-space-3) var(--v10-space-4);
   border-bottom: 1px solid var(--v10-border-primary);
@@ -3489,12 +3488,9 @@ body[style*="overflow: hidden"] {
 /* Sample type pricing information styling */
 .sample-type-pricing {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--v10-space-1);
-  text-align: center;
-  margin-top: var(--v10-space-2);
+  gap: var(--v10-space-2);
+  margin-left: auto;
 }
 
 .sample-type-price {
