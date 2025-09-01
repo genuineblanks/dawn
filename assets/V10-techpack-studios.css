@@ -3018,9 +3018,6 @@ body[style*="overflow: hidden"] {
 
 /* Selection Display (when selected) - Centered and Clickable */
 .selection-display {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-3);
   padding: var(--v10-space-3) var(--v10-space-4);
   border-bottom: 1px solid var(--v10-border-primary);
   cursor: pointer;
@@ -3040,7 +3037,9 @@ body[style*="overflow: hidden"] {
 .selected-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-3);
+  margin-bottom: var(--v10-space-3);
 }
 
 .selected-icon {
@@ -3487,27 +3486,25 @@ body[style*="overflow: hidden"] {
 
 /* Sample type pricing information styling */
 .sample-type-pricing {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: var(--v10-space-2) !important;
-  white-space: nowrap !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-1);
+  text-align: center;
+  margin-top: var(--v10-space-2);
 }
 
 .sample-type-price {
-  display: inline !important;
   font-weight: 600;
   font-size: var(--v10-text-sm);
   color: var(--v10-accent-primary);
-  white-space: nowrap !important;
 }
 
 .sample-type-description {
-  display: inline !important;
   font-size: var(--v10-text-xs);
   color: var(--v10-text-secondary);
   line-height: 1.2;
-  white-space: nowrap !important;
 }
 
 /* Text container for multi-line radio button text */
