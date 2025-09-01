@@ -3225,13 +3225,25 @@ const V10_Utils = {
     try {
       // Cache the pantone database to avoid repeated fetches
       if (!window.V10_PANTONE_DATABASE) {
-        const response = await fetch('/assets/pantone-numbers.json');
-        if (!response.ok) {
-          console.warn('Could not load Pantone database:', response.statusText);
-          return pantoneCode; // Return original code if database unavailable
+        try {
+          const response = await fetch('/assets/pantone-numbers.json');
+          if (!response.ok) {
+            console.warn('Could not load Pantone database file, using fallback:', response.statusText);
+            // Use basic fallback database for common colors
+            window.V10_PANTONE_DATABASE = {
+              "186": "#CE2029",
+              "287": "#005CA7", 
+              "355": "#009639",
+              "Black 7": "#2B2926"
+            };
+          } else {
+            window.V10_PANTONE_DATABASE = await response.json();
+            console.log('✅ Pantone database loaded with', Object.keys(window.V10_PANTONE_DATABASE).length, 'colors');
+          }
+        } catch (error) {
+          console.warn('Pantone database fetch failed, using minimal fallback:', error);
+          window.V10_PANTONE_DATABASE = {};
         }
-        window.V10_PANTONE_DATABASE = await response.json();
-        console.log('✅ Pantone database loaded with', Object.keys(window.V10_PANTONE_DATABASE).length, 'colors');
       }
 
       // Remove common prefixes/suffixes and normalize the code
@@ -10669,8 +10681,22 @@ class V10_DesignStudio {
     
     // Update type element with assignment information
     if (typeElement) {
-      const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipData.id);
-      typeElement.textContent = assignmentText;
+      if (window.v10ReviewManager && window.v10ReviewManager.getLabDipAssignmentText) {
+        const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipData.id);
+        typeElement.textContent = assignmentText;
+      } else {
+        // Fallback if v10ReviewManager not available
+        const assignments = V10_State.assignments.labDips.get(labDipData.id);
+        if (assignments && assignments.size > 0) {
+          const garmentNames = Array.from(assignments).map(garmentId => {
+            const garment = V10_State.garments.get(garmentId);
+            return garment ? `Garment ${garment.number} ${garment.type || 'Unknown'}` : null;
+          }).filter(Boolean);
+          typeElement.textContent = garmentNames.length > 0 ? garmentNames.join(', ') : 'LAB DIP';
+        } else {
+          typeElement.textContent = 'LAB DIP';
+        }
+      }
     }
 
     // Bind events
@@ -10707,7 +10733,22 @@ class V10_DesignStudio {
       const typeElement = item.querySelector('.collection-item__type');
       
       if (typeElement && labDipId) {
-        const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipId);
+        let assignmentText;
+        if (window.v10ReviewManager && window.v10ReviewManager.getLabDipAssignmentText) {
+          assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipId);
+        } else {
+          // Fallback assignment logic
+          const assignments = V10_State.assignments.labDips.get(labDipId);
+          if (assignments && assignments.size > 0) {
+            const garmentNames = Array.from(assignments).map(garmentId => {
+              const garment = V10_State.garments.get(garmentId);
+              return garment ? `Garment ${garment.number} ${garment.type || 'Unknown'}` : null;
+            }).filter(Boolean);
+            assignmentText = garmentNames.length > 0 ? garmentNames.join(', ') : 'LAB DIP';
+          } else {
+            assignmentText = 'LAB DIP';
+          }
+        }
         console.log(`🔄 Updating lab dip ${labDipId}: "${typeElement.textContent}" → "${assignmentText}"`);
         typeElement.textContent = assignmentText;
       }
