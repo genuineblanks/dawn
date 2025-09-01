@@ -10230,6 +10230,10 @@ class V10_DesignStudio {
                   if (!garment.sampleType || garment.sampleType === '') {
                     badgeText = 'No Sample Type';
                     badgeClass = 'missing';
+                  } else if (garment.sampleType === 'custom' && garment.sampleSubValue !== 'design-studio') {
+                    // Custom color selected but not available for lab dips
+                    badgeText = 'Custom Color (Pantone)';
+                    badgeClass = 'custom';
                   } else {
                     badgeText = this.getSampleTypeBadgeText(garment.sampleType);
                     badgeClass = garment.sampleType;
