@@ -7547,7 +7547,7 @@ class V10_GarmentStudio {
   getSampleCustomDisplayName(subValue) {
     switch(subValue) {
       case 'design-studio':
-        return 'Color Studio Library';
+        return 'COLOR STUDIO';
       case 'exact-pantone':
         return 'Exact Pantone Code';
       default:
@@ -9969,6 +9969,16 @@ class V10_DesignStudio {
       pantoneInput.addEventListener('input', V10_Utils.debounce(() => {
         this.updateLabDipButtons();
       }, 300));
+      
+      // Add Enter key listener for fabric swatch
+      pantoneInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault(); // Prevent form submission
+          if (pantoneInput.value && pantoneInput.value.trim()) {
+            this.addLabDip(true); // Add as fabric swatch
+          }
+        }
+      });
     }
 
     // Popular colors
@@ -10241,7 +10251,7 @@ class V10_DesignStudio {
                     badgeClass = 'missing';
                   } else if (garment.sampleType === 'custom' && garment.sampleSubValue !== 'design-studio') {
                     // Custom color selected but not available for lab dips
-                    badgeText = 'Pantone TCX/TPX Inside TechPack';
+                    badgeText = 'FOLLOW TECHPACK EXACTLY';
                     badgeClass = 'custom';
                   } else {
                     badgeText = this.getSampleTypeBadgeText(garment.sampleType);
@@ -10448,7 +10458,13 @@ class V10_DesignStudio {
     this.renderLabDipItem(labDipData);
     this.updateCollectionCounts();
 
-    // Keep color selection for repeated use - don't clear inputs
+    // Clear custom pantone text input after successful addition
+    if (pantoneInput.value && pantoneInput.value.trim()) {
+      pantoneInput.value = '';
+      console.log('🧹 Cleared pantone text input after adding custom code');
+    }
+    
+    // Keep color picker selection for repeated use - don't clear color picker
     // Users can keep adding the same color multiple times without having to reselect it
 
     // Auto-save
