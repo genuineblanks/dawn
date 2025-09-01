@@ -4714,8 +4714,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Design Form Styling */
 .design-form-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: var(--v10-space-4);
+  margin-top: var(--v10-space-5);
   margin-bottom: var(--v10-space-4);
 }
 
@@ -5000,6 +5002,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   width: 100%;
   display: flex;
   align-items: center;
+  gap: var(--v10-space-4);
 }
 
 .collection-item:hover {
@@ -5010,7 +5013,6 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .collection-item__visual {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-3);
   margin-bottom: var(--v10-space-3);
 }
 
