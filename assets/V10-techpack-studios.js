@@ -6793,6 +6793,11 @@ class V10_GarmentStudio {
       if (window.v10ReviewManager) {
         window.v10ReviewManager.populateGarmentAssignments();
       }
+      
+      // Update lab dip collection assignment text
+      if (window.v10ColorStudio) {
+        window.v10ColorStudio.updateLabDipCollectionAssignments();
+      }
 
       // If we're currently in Color Studio, immediately refresh the assignment section
       if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
