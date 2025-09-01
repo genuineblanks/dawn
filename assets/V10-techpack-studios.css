@@ -4979,8 +4979,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   margin-bottom: var(--v10-space-4);
   color: var(--v10-text-primary);
   font-size: 0.875rem;
-  line-height: 1.4;
-  display: block;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: baseline;
+  width: 100%;
 }
 
 /* Assigned Items and Badges */
