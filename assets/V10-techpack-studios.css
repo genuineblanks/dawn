@@ -4644,11 +4644,11 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
 }
 
-/* Collection Grid */
+/* Collection Grid - Full Width Single Column */
 .collection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--v10-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
   margin-bottom: var(--v10-space-6);
 }
 
@@ -4658,6 +4658,9 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-4);
   transition: var(--v10-transition);
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .collection-item:hover {
@@ -4724,6 +4727,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .collection-item__actions {
   display: flex;
   gap: var(--v10-space-2);
+  margin-left: auto;
 }
 
 .collection-item__btn {
@@ -4799,6 +4803,81 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   font-size: 10px;
   color: var(--v10-text-secondary);
   font-weight: 600;
+}
+
+/* Garment Selector Modal Layout */
+.garment-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-3);
+}
+
+.garment-selector__option {
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+.garment-selector__option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.garment-selector__card {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-secondary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+  width: 100%;
+}
+
+.garment-selector__card:hover {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+}
+
+.garment-selector__option input[type="radio"]:checked + .garment-selector__card {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-accent-light);
+}
+
+.garment-selector__option--disabled .garment-selector__card {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--v10-bg-disabled);
+}
+
+.garment-selector__title {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: 2px;
+}
+
+.garment-selector__details {
+  font-size: 0.875rem;
+  color: var(--v10-text-secondary);
+  flex: 1;
+}
+
+.garment-selector-empty {
+  text-align: center;
+  padding: var(--v10-space-8);
+  color: var(--v10-text-secondary);
+}
+
+.garment-selector-empty .empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--v10-space-4);
+}
+
+.garment-selector-empty h4 {
+  margin: 0 0 var(--v10-space-2) 0;
+  color: var(--v10-text-primary);
 }
 
 /* Garments with Applied Colors Section */
@@ -4976,9 +5055,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
     gap: var(--v10-space-3);
   }
 
-  .collection-grid {
-    grid-template-columns: 1fr;
-  }
+  /* Collection grid now uses flexbox - no responsive changes needed */
 
   .garments-colors-grid {
     grid-template-columns: 1fr;
