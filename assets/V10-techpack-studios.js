@@ -10398,8 +10398,8 @@ class V10_DesignStudio {
     if (pantoneInput.value && pantoneInput.value.trim()) {
       // User typed something - use their exact text regardless of validity
       pantone = pantoneInput.value.trim();
-      // For custom user input, ALWAYS use distinctive purple color
-      hex = '#8B5CF6'; // Purple color for custom codes
+      // For custom user input, use a distinctive color or the color picker value
+      hex = colorPicker.value || '#8B5CF6'; // Purple color for custom codes
     } else if (colorPicker.value) {
       hex = colorPicker.value;
       pantone = V10_Utils.hexToPantone(hex);
@@ -10501,13 +10501,23 @@ class V10_DesignStudio {
     const nameElement = clone.querySelector('.collection-item__name');
     
     if (colorElement) {
-      colorElement.style.backgroundColor = labDipData.hex;
-      
-      // Add distinctive styling for custom user codes
-      if (labDipData.isCustomCode) {
+      // Check if this is a pure text-only custom code (purple background)
+      if (labDipData.isCustomCode && labDipData.hex === '#8B5CF6') {
+        // Use multi-colored gradient for text-only custom codes
+        colorElement.style.background = 'conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b)';
         colorElement.style.border = '2px solid #8B5CF6';
         colorElement.style.boxShadow = '0 0 8px rgba(139, 92, 246, 0.3)';
         colorElement.classList.add('custom-pantone-color');
+      } else {
+        // Normal color display
+        colorElement.style.backgroundColor = labDipData.hex;
+        
+        // Add border for custom codes that have specific colors
+        if (labDipData.isCustomCode) {
+          colorElement.style.border = '2px solid #8B5CF6';
+          colorElement.style.boxShadow = '0 0 8px rgba(139, 92, 246, 0.3)';
+          colorElement.classList.add('custom-pantone-color');
+        }
       }
     }
     
