@@ -4599,7 +4599,12 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   gap: var(--v10-space-2);
 }
 
-.add-to-garment-btn,
+/* Center single button layout for design actions */
+.add-design-actions {
+  align-items: center;
+  text-align: center;
+}
+
 .add-fabric-swatch-btn,
 .add-fabric-design-btn {
   display: flex;
@@ -4615,18 +4620,28 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   font-weight: 500;
   cursor: pointer;
   transition: var(--v10-transition);
+  min-width: 280px;
 }
 
-.add-to-garment-btn:hover,
 .add-fabric-swatch-btn:hover,
 .add-fabric-design-btn:hover {
   background: var(--v10-accent-secondary);
   border-color: var(--v10-accent-secondary);
 }
 
-.add-to-garment-btn:disabled {
+.add-fabric-design-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .add-fabric-swatch-btn,
+  .add-fabric-design-btn {
+    min-width: 100%;
+    font-size: 0.8rem;
+    padding: var(--v10-space-2) var(--v10-space-3);
+  }
 }
 
 /* Collection Grid */
@@ -4664,14 +4679,41 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   border: 2px solid var(--v10-border-primary);
 }
 
+/* Design sample icon styling to match lab dip color circle */
+.collection-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--v10-accent-primary);
+  color: white;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+}
+
 .collection-item__info {
   flex: 1;
+}
+
+.collection-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .collection-item__name {
   font-weight: 600;
   color: var(--v10-text-primary);
   margin-bottom: 2px;
+}
+
+.collection-item__type {
+  font-size: 0.75rem;
+  color: var(--v10-text-muted);
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 .collection-item__code {
@@ -4699,6 +4741,64 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   background: var(--v10-accent-primary);
   border-color: var(--v10-accent-primary);
   color: white;
+}
+
+/* Sample Type Badges for Modal */
+.sample-type-badge {
+  margin-top: var(--v10-space-2);
+  padding: 2px 6px;
+  border-radius: var(--v10-radius-sm);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 1.2;
+  align-self: flex-start;
+}
+
+.sample-type-badge--stock {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.sample-type-badge--techpack {
+  background: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #a5b4fc;
+}
+
+.sample-type-badge--complete {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #86efac;
+}
+
+.sample-type-badge--missing {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+/* Lab Dip Color Indicators */
+.garment-labdip-indicators {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-1);
+  margin-top: var(--v10-space-2);
+}
+
+.labdip-color-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--v10-border-primary);
+  display: inline-block;
+}
+
+.labdip-more-indicator {
+  font-size: 10px;
+  color: var(--v10-text-secondary);
+  font-weight: 600;
 }
 
 /* Garments with Applied Colors Section */

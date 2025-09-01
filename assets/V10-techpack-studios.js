@@ -10223,13 +10223,22 @@ class V10_DesignStudio {
                 const isLabDip = type === 'labdip';
                 const isEligible = !isLabDip || (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio');
                 
-                // Handle garments without sample types
+                // Handle badges for both lab dips and designs
                 let badgeText = '';
                 let badgeClass = '';
                 if (isLabDip && !isEligible) {
                   if (!garment.sampleType || garment.sampleType === '') {
                     badgeText = 'No Sample Type';
                     badgeClass = 'missing';
+                  } else {
+                    badgeText = this.getSampleTypeBadgeText(garment.sampleType);
+                    badgeClass = garment.sampleType;
+                  }
+                } else if (!isLabDip) {
+                  // For design assignments, show sample type badges for all garments
+                  if (!garment.sampleType || garment.sampleType === '') {
+                    badgeText = 'Complete';
+                    badgeClass = 'complete';
                   } else {
                     badgeText = this.getSampleTypeBadgeText(garment.sampleType);
                     badgeClass = garment.sampleType;
