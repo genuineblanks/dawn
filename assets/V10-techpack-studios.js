@@ -10398,8 +10398,8 @@ class V10_DesignStudio {
     if (pantoneInput.value && pantoneInput.value.trim()) {
       // User typed something - use their exact text regardless of validity
       pantone = pantoneInput.value.trim();
-      // For custom user input, use a distinctive color or the color picker value
-      hex = colorPicker.value || '#8B5CF6'; // Purple color for custom codes
+      // For custom user input, ALWAYS use distinctive purple color
+      hex = '#8B5CF6'; // Purple color for custom codes
     } else if (colorPicker.value) {
       hex = colorPicker.value;
       pantone = V10_Utils.hexToPantone(hex);
