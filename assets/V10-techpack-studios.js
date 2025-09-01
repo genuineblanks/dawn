@@ -304,6 +304,7 @@ const V10_QUANTITY_CONFIG = {
 const V10_State = {
   requestType: null, // 'quotation', 'sample-request', 'bulk-order-request'
   currentStudio: 'garment',
+  currentMode: 'labdips', // 'labdips' or 'designs' within design studio
   garments: new Map(),
   labDips: new Map(),
   designSamples: new Map(),
@@ -3285,6 +3286,14 @@ class V10_StudioNavigator {
   switchStudio(studioName) {
     // Update state
     V10_State.currentStudio = studioName;
+
+    // Initialize mode for design studio
+    if (studioName === 'design') {
+      V10_State.currentMode = 'labdips'; // Default to labdips mode
+      if (window.v10ColorStudio) {
+        window.v10ColorStudio.switchMode('labdips');
+      }
+    }
 
     // Update tab UI
     document.querySelectorAll('.studio-tab').forEach(tab => {
@@ -6765,6 +6774,18 @@ class V10_GarmentStudio {
       V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
       
+      // Update assignment overview when variant is created
+      if (window.v10ReviewManager) {
+        window.v10ReviewManager.populateGarmentAssignments();
+      }
+
+      // If we're currently in Color Studio, immediately refresh the assignment section
+      if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
+        setTimeout(() => {
+          window.v10ReviewManager.populateGarmentAssignments();
+        }, 50);
+      }
+      
       console.log(`🎨 Created color variant: ${newVariant.id} from ${originalGarmentId} with lab dip ${newLabDipId}`);
       return newVariant.id;
     }
@@ -9960,6 +9981,9 @@ class V10_DesignStudio {
 
   switchMode(mode) {
     this.currentMode = mode;
+    
+    // Update global state for mode tracking
+    V10_State.currentMode = mode;
 
     // Update toggle buttons
     document.querySelectorAll('.studio-toggle__btn').forEach(btn => {
@@ -9971,7 +9995,12 @@ class V10_DesignStudio {
       container.classList.toggle('design-mode--active', container.id === `${mode}-mode-content`);
     });
 
-    console.log(`🎨 Switched to ${mode} mode`);
+    // Update assignment section visibility based on mode
+    if (window.v10ReviewManager) {
+      window.v10ReviewManager.populateGarmentAssignments();
+    }
+
+    console.log(`🎨 Switched to ${mode} mode - assignments section updated`);
   }
 
   bindLabDipEvents() {
@@ -10640,7 +10669,7 @@ class V10_DesignStudio {
     
     // Update type element with assignment information
     if (typeElement) {
-      const assignmentText = this.getLabDipAssignmentText(labDipData.id);
+      const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipData.id);
       typeElement.textContent = assignmentText;
     }
 
@@ -10678,7 +10707,7 @@ class V10_DesignStudio {
       const typeElement = item.querySelector('.collection-item__type');
       
       if (typeElement && labDipId) {
-        const assignmentText = this.getLabDipAssignmentText(labDipId);
+        const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipId);
         console.log(`🔄 Updating lab dip ${labDipId}: "${typeElement.textContent}" → "${assignmentText}"`);
         typeElement.textContent = assignmentText;
       }
@@ -10869,28 +10898,7 @@ class V10_DesignStudio {
     this.updateCollectionCounts();
   }
   
-  getLabDipAssignmentText(labDipId) {
-    const assignments = V10_State.assignments.labDips.get(labDipId);
-    console.log(`🔍 getLabDipAssignmentText for ${labDipId}:`, assignments);
-    
-    if (!assignments || assignments.size === 0) {
-      console.log(`❌ No assignments for lab dip ${labDipId} - returning LAB DIP`);
-      return 'LAB DIP';
-    }
-    
-    const assignedGarmentNames = [];
-    assignments.forEach(garmentId => {
-      const garment = V10_State.garments.get(garmentId);
-      console.log(`🔍 Checking garment ${garmentId}:`, garment);
-      if (garment) {
-        assignedGarmentNames.push(`Garment ${garment.number}`);
-      }
-    });
-    
-    const result = assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
-    console.log(`✅ Assignment text for ${labDipId}: "${result}"`);
-    return result;
-  }
+  // Assignment text function moved to V10_ReviewManager to avoid duplication
 }
 
 // ==============================================
@@ -11753,7 +11761,7 @@ class V10_ReviewManager {
           </div>
           <div class="collection-item__content">
             <span class="collection-item__name">${labDip.pantone}</span>
-            <span class="collection-item__type">${this.getLabDipAssignmentText(labDip.id)}</span>
+            <span class="collection-item__type">${window.v10ReviewManager.getLabDipAssignmentText(labDip.id)}</span>
           </div>
         </div>
       `).join('');
@@ -11774,7 +11782,8 @@ class V10_ReviewManager {
       const garment = V10_State.garments.get(garmentId);
       console.log(`🔍 Checking garment ${garmentId}:`, garment);
       if (garment) {
-        assignedGarmentNames.push(`Garment ${garment.number}`);
+        const garmentType = garment.type || 'Unknown';
+        assignedGarmentNames.push(`Garment ${garment.number} ${garmentType}`);
       }
     });
     
@@ -11791,15 +11800,15 @@ class V10_ReviewManager {
     
     if (!overview || !grid || !emptyState || !count) return;
     
-    // Only show the section in Color Studio (design studio)
-    if (V10_State.currentStudio !== 'design') {
+    // Only show the section in Color Studio (design studio) AND in Lab Dips mode
+    if (V10_State.currentStudio !== 'design' || V10_State.currentMode !== 'labdips') {
       overview.style.display = 'none';
       return;
     }
     
     const assignments = this.getGarmentAssignments();
     
-    // Show the section when in Color Studio
+    // Show the section when in Color Studio Lab Dips mode
     overview.style.display = 'block';
     count.textContent = `${assignments.length} assignment${assignments.length !== 1 ? 's' : ''}`;
     
