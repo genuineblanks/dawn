@@ -651,11 +651,13 @@ body[class*="techpack"] *,
 }
 
 .v10-btn--primary:hover {
-  background-color: var(--v10-accent-secondary);
+  background-color: #6b7280;
   color: white;
-  border-color: var(--v10-accent-secondary);
+  border-color: #6b7280;
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-md);
+  filter: brightness(1.1);
+  transition: all var(--v10-transition);
 }
 
 
@@ -1202,7 +1204,8 @@ body[style*="overflow: hidden"] {
   display: flex;
   justify-content: space-between;
   gap: var(--v10-space-3);
-  padding: var(--v10-space-4) var(--v10-space-6);
+  padding: var(--v10-space-5) var(--v10-space-6);
+  margin-top: var(--v10-space-4);
   border-top: 1px solid var(--v10-border-primary);
   background: var(--v10-bg-secondary);
 }
@@ -4749,9 +4752,9 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Sample Type Badges for Modal - Modern Required/Optional Style */
 .sample-type-badge {
-  margin-top: var(--v10-space-2);
   padding: 4px 8px;
   border-radius: var(--v10-radius-md);
+  align-self: center;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;

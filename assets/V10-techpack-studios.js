@@ -10294,7 +10294,7 @@ class V10_DesignStudio {
             </div>
           `}
           <div class="v10-modal-actions">
-            <button type="button" class="v10-btn v10-btn--ghost modal-cancel">Cancel</button>
+            <button type="button" class="v10-btn v10-btn--secondary modal-cancel">Cancel</button>
             <button type="button" class="v10-btn v10-btn--primary modal-confirm" disabled>
               Assign ${type === 'labdip' ? 'Lab Dip' : 'Design Sample'}
             </button>
