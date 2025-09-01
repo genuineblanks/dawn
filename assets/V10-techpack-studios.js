@@ -4947,7 +4947,14 @@ class V10_GarmentUIManager {
       const customPlaceholder = garmentCard.querySelector('#sample-custom-placeholder');
       const customDisplay = garmentCard.querySelector('#sample-custom-display');
       const customInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"custom\"]');
-      
+      const customSelectedName = garmentCard.querySelector('#sample-custom-selected-name');
+      const customSelectedIcon = garmentCard.querySelector('#sample-custom-selected-icon');
+
+      // Clear display text and icon FIRST
+      if (customSelectedName) customSelectedName.textContent = '';
+      if (customSelectedIcon) customSelectedIcon.innerHTML = '';
+
+      // Reset visual state
       if (customPlaceholder) customPlaceholder.style.display = 'flex';
       if (customDisplay) customDisplay.style.display = 'none';
       customInputs.forEach(input => input.checked = false);
@@ -4964,11 +4971,23 @@ class V10_GarmentUIManager {
       const stockPlaceholder = garmentCard.querySelector('#sample-stock-placeholder');
       const stockDisplay = garmentCard.querySelector('#sample-stock-display');
       const stockInputs = garmentCard.querySelectorAll('input[name*=\"sampleType\"][value=\"stock\"]');
-      
+      const stockSelectedName = garmentCard.querySelector('#sample-stock-selected-name');
+      const stockSelectedIcon = garmentCard.querySelector('#sample-stock-selected-icon');
+
+      // Clear display text and icon FIRST
+      if (stockSelectedName) stockSelectedName.textContent = '';
+      if (stockSelectedIcon) stockSelectedIcon.innerHTML = '';
+
+
+      // Reset visual state     
       if (stockPlaceholder) stockPlaceholder.style.display = 'flex';
       if (stockDisplay) stockDisplay.style.display = 'none';
       stockInputs.forEach(input => input.checked = false);
-      
+
+      // Remove visual selection from stock radio cards
+      const stockCards = garmentCard.querySelectorAll('#sample-stock-grid .compact-radio-card');
+      stockCards.forEach(card => card.classList.remove('compact-radio-card--selected'));      
+
       // Clear any previous stock selection from state if it existed
       if (garmentData && garmentData.sampleType === 'stock') {
         console.log(`🔄 Cross-reset: Clearing previous stock selection from garment ${garmentId}`);
