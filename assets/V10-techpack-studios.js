@@ -10477,7 +10477,8 @@ class V10_DesignStudio {
           if (itemId) {
             // Assign existing item to garment
             if (type === 'labdip') {
-              console.log(`✅ Assigning existing lab dip ${itemId} to garment ${selectedGarment}`);
+              console.log(`🎯 MODAL ASSIGNMENT: Assigning existing lab dip ${itemId} to garment ${selectedGarment}`);
+              console.log(`🎯 MODAL DEBUG: v10GarmentStudio available:`, !!window.v10GarmentStudio);
               window.v10GarmentStudio.assignLabDip(selectedGarment, itemId);
               
               // Add delayed badge update to ensure assignment is fully processed
@@ -10729,7 +10730,13 @@ class V10_DesignStudio {
     const removeBtn = clone.querySelector('.collection-item__remove');
 
     if (assignBtn) {
-      assignBtn.addEventListener('click', () => this.showGarmentSelector('labdip', labDipData.id));
+      console.log(`🔗 Binding assignment button for lab dip ${labDipData.id}`, assignBtn);
+      assignBtn.addEventListener('click', () => {
+        console.log(`🎯 LAB DIP COLLECTION BUTTON CLICKED for ${labDipData.id}`);
+        this.showGarmentSelector('labdip', labDipData.id);
+      });
+    } else {
+      console.log(`❌ No assign button found for lab dip ${labDipData.id}`);
     }
 
     if (removeBtn) {
