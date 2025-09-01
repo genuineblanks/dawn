@@ -4975,13 +4975,12 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   padding: var(--v10-space-3);
   margin-bottom: var(--v10-space-4);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--v10-space-2);
 }
 
 .tip-icon {
   font-size: 1.25rem;
-  margin-top: 2px;
 }
 
 .tip-content {
