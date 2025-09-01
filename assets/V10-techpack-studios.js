@@ -5298,6 +5298,15 @@ class V10_GarmentManager {
         V10_State.assignments.labDips.forEach((garmentIds, labDipId) => {
           garmentIds.delete(garmentId);
         });
+        
+        // Update lab dip collection text after assignment cleanup
+        console.log('🧹 CLEANUP: Updating lab dip collection assignments after garment deletion');
+        if (window.v10ColorStudio?.updateLabDipCollectionAssignments) {
+          setTimeout(() => {
+            window.v10ColorStudio.updateLabDipCollectionAssignments();
+            console.log('✅ CLEANUP: Lab dip collection assignments updated');
+          }, 50);
+        }
       }
       
       // Remove from design assignments
@@ -5405,6 +5414,16 @@ class V10_GarmentStudio {
       }
       this.updateStudioCompletion();
       this.updateDesignStudioTabStatus();
+      
+      // Update lab dip collection assignments after garment removal
+      console.log(`🔄 EVENT: Updating lab dip assignments after garment ${garmentId} removal`);
+      if (window.v10ColorStudio?.updateLabDipCollectionAssignments) {
+        setTimeout(() => {
+          window.v10ColorStudio.updateLabDipCollectionAssignments();
+          console.log('✅ EVENT: Lab dip collection assignments updated after removal');
+        }, 100);
+      }
+      
       console.log(`🗑️ Removed garment: ${garmentId}`);
     });
 
