@@ -3489,8 +3489,8 @@ body[style*="overflow: hidden"] {
 .sample-type-pricing {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-2);
-  margin-left: auto;
+  justify-content: center;
+  text-align: center;
 }
 
 .sample-type-price {
