@@ -5300,11 +5300,9 @@ class V10_GarmentManager {
         });
         
         // Update lab dip collection text after assignment cleanup
-        console.log('🧹 CLEANUP: Updating lab dip collection assignments after garment deletion');
         if (window.v10ColorStudio?.updateLabDipCollectionAssignments) {
           setTimeout(() => {
             window.v10ColorStudio.updateLabDipCollectionAssignments();
-            console.log('✅ CLEANUP: Lab dip collection assignments updated');
           }, 50);
         }
       }
@@ -5416,11 +5414,9 @@ class V10_GarmentStudio {
       this.updateDesignStudioTabStatus();
       
       // Update lab dip collection assignments after garment removal
-      console.log(`🔄 EVENT: Updating lab dip assignments after garment ${garmentId} removal`);
       if (window.v10ColorStudio?.updateLabDipCollectionAssignments) {
         setTimeout(() => {
           window.v10ColorStudio.updateLabDipCollectionAssignments();
-          console.log('✅ EVENT: Lab dip collection assignments updated after removal');
         }, 100);
       }
       
@@ -10508,50 +10504,40 @@ class V10_DesignStudio {
                 V10_BadgeManager.updateDesignCompletionBadge();
                 
                 // Update lab dip collection assignment text after modal assignment
-                console.log('🔍 MODAL DEBUG: Checking for designStudio...', !!window.v10TechPackSystem?.designStudio);
-                console.log('🔍 MODAL DEBUG: Current assignments state:', V10_State.assignments.labDips);
-                
                 let updateSuccessful = false;
                 
                 // Primary method: Use designStudio through TechPack system
                 if (window.v10TechPackSystem?.designStudio?.updateLabDipCollectionAssignments) {
                   try {
-                    console.log('🔄 MODAL: Calling designStudio.updateLabDipCollectionAssignments...');
                     window.v10TechPackSystem.designStudio.updateLabDipCollectionAssignments();
-                    console.log('✅ MODAL: designStudio.updateLabDipCollectionAssignments completed');
                     updateSuccessful = true;
                   } catch (error) {
-                    console.error('❌ MODAL: Error calling designStudio method:', error);
+                    console.error('Error calling designStudio method:', error);
                   }
                 }
                 
                 // Secondary method: Check if global alias exists
                 if (!updateSuccessful && window.v10ColorStudio?.updateLabDipCollectionAssignments) {
                   try {
-                    console.log('🔄 MODAL ALT: Using v10ColorStudio global alias...');
                     window.v10ColorStudio.updateLabDipCollectionAssignments();
-                    console.log('✅ MODAL ALT: v10ColorStudio method completed');
                     updateSuccessful = true;
                   } catch (error) {
-                    console.error('❌ MODAL ALT: Error calling v10ColorStudio method:', error);
+                    console.error('Error calling v10ColorStudio method:', error);
                   }
                 }
                 
                 // Tertiary method: Direct function call fallback
                 if (!updateSuccessful && window.v10DesignStudio?.updateLabDipCollectionAssignments) {
                   try {
-                    console.log('🔄 MODAL ALT2: Using v10DesignStudio method...');
                     window.v10DesignStudio.updateLabDipCollectionAssignments();
-                    console.log('✅ MODAL ALT2: v10DesignStudio method completed');
                     updateSuccessful = true;
                   } catch (error) {
-                    console.error('❌ MODAL ALT2: Error calling v10DesignStudio method:', error);
+                    console.error('Error calling v10DesignStudio method:', error);
                   }
                 }
                 
                 // Final fallback: Direct DOM manipulation
                 if (!updateSuccessful) {
-                  console.log('🔄 MODAL FALLBACK: Attempting direct DOM update...');
                   try {
                     const container = document.getElementById('labdips-grid');
                     const labDipItem = container?.querySelector(`[data-labdip-id="${itemId}"]`);
@@ -10559,7 +10545,6 @@ class V10_DesignStudio {
                     
                     if (typeElement && window.v10ReviewManager?.getLabDipAssignmentText) {
                       const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(itemId);
-                      console.log('🔄 MODAL FALLBACK: Updating text directly:', assignmentText);
                       typeElement.textContent = assignmentText;
                       updateSuccessful = true;
                     } else if (typeElement) {
@@ -10571,18 +10556,13 @@ class V10_DesignStudio {
                           return garment ? `Garment ${garment.number} ${garment.type || 'Unknown'}` : null;
                         }).filter(Boolean);
                         const assignmentText = garmentNames.length > 0 ? garmentNames.join(', ') : 'LAB DIP';
-                        console.log('🔄 MODAL ULTRA FALLBACK: Manual assignment text:', assignmentText);
                         typeElement.textContent = assignmentText;
                         updateSuccessful = true;
                       }
                     }
                   } catch (fallbackError) {
-                    console.error('❌ MODAL FALLBACK: Direct update failed:', fallbackError);
+                    console.error('Modal fallback update failed:', fallbackError);
                   }
-                }
-                
-                if (!updateSuccessful) {
-                  console.error('❌ MODAL: All update methods failed for lab dip', itemId);
                 }
                 
                 console.log(`🔄 Modal assignment badge update completed for lab dip ${itemId}`);
@@ -10847,25 +10827,17 @@ class V10_DesignStudio {
   }
   
   updateLabDipCollectionAssignments() {
-    console.log('🔄 updateLabDipCollectionAssignments called');
-    console.log('🔄 Current assignments state:', V10_State.assignments.labDips);
     const container = document.getElementById('labdips-grid');
     if (!container) {
-      console.log('❌ No labdips-grid container found');
       return;
     }
     
     // Update all existing lab dip items
     const labDipItems = container.querySelectorAll('.collection-item[data-labdip-id]');
-    console.log(`🔍 Found ${labDipItems.length} lab dip items to update`);
-    console.log(`🔍 Lab dip items:`, labDipItems);
     
     labDipItems.forEach((item, index) => {
       const labDipId = item.dataset.labdipId;
       const typeElement = item.querySelector('.collection-item__type');
-      
-      console.log(`🔍 Item ${index}: labDipId=${labDipId}, typeElement=`, typeElement);
-      console.log(`🔍 Item ${index} current text:`, typeElement?.textContent);
       
       if (typeElement && labDipId) {
         let assignmentText;
@@ -10884,7 +10856,6 @@ class V10_DesignStudio {
             assignmentText = 'LAB DIP';
           }
         }
-        console.log(`🔄 Updating lab dip ${labDipId}: "${typeElement.textContent}" → "${assignmentText}"`);
         typeElement.textContent = assignmentText;
         
         // Re-bind event listeners after text update
@@ -10893,10 +10864,7 @@ class V10_DesignStudio {
           // Remove existing event listeners to avoid duplicates
           assignBtn.replaceWith(assignBtn.cloneNode(true));
           const newAssignBtn = item.querySelector('.collection-item__assign');
-          
-          console.log(`🔗 Re-binding assignment button for lab dip ${labDipId}`, newAssignBtn);
           newAssignBtn.addEventListener('click', () => {
-            console.log(`🎯 LAB DIP COLLECTION BUTTON CLICKED (re-bound) for ${labDipId}`);
             this.showGarmentSelector('labdip', labDipId);
           });
         }
