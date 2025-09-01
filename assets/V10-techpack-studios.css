@@ -4715,7 +4715,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Design Form Styling */
 .design-form-row {
   display: grid;
-  grid-template-columns: 53% 23.5% 23.5%;
+  grid-template-columns: 1.10fr 0.45fr 0.45fr;
   gap: var(--v10-space-4);
   margin-top: var(--v10-space-5);
   margin-bottom: var(--v10-space-4);
