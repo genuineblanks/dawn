@@ -10788,6 +10788,20 @@ class V10_DesignStudio {
         }
         console.log(`🔄 Updating lab dip ${labDipId}: "${typeElement.textContent}" → "${assignmentText}"`);
         typeElement.textContent = assignmentText;
+        
+        // Re-bind event listeners after text update
+        const assignBtn = item.querySelector('.collection-item__assign');
+        if (assignBtn) {
+          // Remove existing event listeners to avoid duplicates
+          assignBtn.replaceWith(assignBtn.cloneNode(true));
+          const newAssignBtn = item.querySelector('.collection-item__assign');
+          
+          console.log(`🔗 Re-binding assignment button for lab dip ${labDipId}`, newAssignBtn);
+          newAssignBtn.addEventListener('click', () => {
+            console.log(`🎯 LAB DIP COLLECTION BUTTON CLICKED (re-bound) for ${labDipId}`);
+            this.showGarmentSelector('labdip', labDipId);
+          });
+        }
       }
     });
   }
