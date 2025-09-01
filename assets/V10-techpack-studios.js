@@ -13053,13 +13053,6 @@ class V10_TechPackSystem {
     // Clear UI elements for Steps 2, 3, 4
     this.clearStepsUI();
     
-    // Add initial garment if needed (like fresh start)
-    if (this.garmentStudio && typeof this.garmentStudio.addGarment === 'function') {
-      setTimeout(() => {
-        this.garmentStudio.addGarment();
-      }, 100);
-    }
-    
     console.log('🔄 Steps 2, 3, 4 data reset for new request type');
   }
 
