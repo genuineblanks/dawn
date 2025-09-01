@@ -7549,7 +7549,7 @@ class V10_GarmentStudio {
       case 'design-studio':
         return 'COLOR STUDIO';
       case 'exact-pantone':
-        return 'Exact Pantone Code';
+        return 'Tech Pack (Pantone/Patterns)';
       default:
         return 'Custom Color';
     }

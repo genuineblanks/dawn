@@ -3018,6 +3018,10 @@ body[style*="overflow: hidden"] {
 
 /* Selection Display (when selected) - Centered and Clickable */
 .selection-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--v10-space-3);
   padding: var(--v10-space-3) var(--v10-space-4);
   border-bottom: 1px solid var(--v10-border-primary);
   cursor: pointer;
@@ -3037,9 +3041,7 @@ body[style*="overflow: hidden"] {
 .selected-item {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--v10-space-3);
-  margin-bottom: var(--v10-space-3);
 }
 
 .selected-icon {
@@ -3413,7 +3415,7 @@ body[style*="overflow: hidden"] {
 }
 
 .sample-type-selection .compact-selection-section:last-child .compact-radio-card:last-child::before {
-  content: "FOLLOW TECHPACK EXACTLY";
+  content: "TECHPACK";
   position: absolute;
   top: -6px;
   right: -6px;
