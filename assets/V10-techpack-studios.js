@@ -5591,35 +5591,9 @@ class V10_GarmentStudio {
       }
       
       this.toggleSelection(widget);
-    } else if (e.target.closest('.compact-radio-card')) {
-      // Handle clicking on radio cards - allow re-selection of same option to close menu
-      const radioCard = e.target.closest('.compact-radio-card');
-      const radio = radioCard.querySelector('input[type="radio"]');
-      
-      if (radio) {
-        // Store the initial checked state BEFORE the click processes
-        const wasChecked = radio.checked;
-        
-        if (wasChecked) {
-          // If it was already checked, set a timeout to check if it's still selected
-          // This gives the change event time to fire if user clicked a different option
-          setTimeout(() => {
-            // Check if it's still checked (meaning no change occurred - same option clicked)
-            if (radio.checked) {
-              const section = radioCard.closest('.compact-selection-section');
-              const widget = section?.querySelector('.compact-selection-widget');
-              
-              if (widget) {
-                console.log('📌 Closing menu - same option re-selected:', radio.value);
-                this.toggleSelection(widget);
-              }
-            }
-          }, 100); // Small delay to let change event process first if needed
-        }
-      }
-      // Always let the event continue naturally - no preventDefault
     }
-    // Re-selection works by detecting clicks on already-selected options
+    // Removed complex radio button re-selection logic to fix selection issues
+    // Re-selection is now only available via the "Change" buttons and selection display clicks
   }
 
   handleGarmentChanges(e) {
