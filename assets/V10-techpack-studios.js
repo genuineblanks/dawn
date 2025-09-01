@@ -6762,6 +6762,9 @@ class V10_GarmentStudio {
       }
       V10_State.assignments.labDips.get(newLabDipId).add(newVariant.id);
       
+      console.log(`🎯 COLOR VARIANT DEBUG: Lab dip ${newLabDipId} assigned to variant ${newVariant.id}`);
+      console.log(`🎯 VARIANT ASSIGNMENT STATE:`, V10_State.assignments.labDips.get(newLabDipId));
+      
       // Renumber all garments to maintain sequential order
       this.garmentManager.renumberGarments();
       
@@ -6862,6 +6865,9 @@ class V10_GarmentStudio {
       V10_State.assignments.labDips.set(labDipId, new Set());
     }
     V10_State.assignments.labDips.get(labDipId).add(garmentId);
+    
+    console.log(`🎯 ASSIGNMENT DEBUG: Lab dip ${labDipId} assigned to garment ${garmentId}`);
+    console.log(`🎯 ASSIGNMENT STATE:`, V10_State.assignments.labDips.get(labDipId));
 
     this.updateGarmentStatus(garmentId);
     
@@ -10681,22 +10687,36 @@ class V10_DesignStudio {
     
     // Update type element with assignment information
     if (typeElement) {
+      console.log(`🔍 RENDER DEBUG: Updating type element for lab dip ${labDipData.id}`);
+      console.log(`🔍 Type element found:`, typeElement);
+      console.log(`🔍 Current text:`, typeElement.textContent);
+      console.log(`🔍 v10ReviewManager available:`, !!window.v10ReviewManager);
+      
       if (window.v10ReviewManager && window.v10ReviewManager.getLabDipAssignmentText) {
         const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(labDipData.id);
+        console.log(`🔍 Assignment text from ReviewManager:`, assignmentText);
         typeElement.textContent = assignmentText;
+        console.log(`🔍 Text after update:`, typeElement.textContent);
       } else {
         // Fallback if v10ReviewManager not available
+        console.log(`🔍 Using fallback assignment logic`);
         const assignments = V10_State.assignments.labDips.get(labDipData.id);
+        console.log(`🔍 Assignments found:`, assignments);
         if (assignments && assignments.size > 0) {
           const garmentNames = Array.from(assignments).map(garmentId => {
             const garment = V10_State.garments.get(garmentId);
+            console.log(`🔍 Garment ${garmentId}:`, garment);
             return garment ? `Garment ${garment.number} ${garment.type || 'Unknown'}` : null;
           }).filter(Boolean);
+          console.log(`🔍 Garment names:`, garmentNames);
           typeElement.textContent = garmentNames.length > 0 ? garmentNames.join(', ') : 'LAB DIP';
         } else {
           typeElement.textContent = 'LAB DIP';
         }
+        console.log(`🔍 Final text after fallback:`, typeElement.textContent);
       }
+    } else {
+      console.log(`❌ No type element found for lab dip ${labDipData.id}`);
     }
 
     // Bind events
@@ -10718,6 +10738,7 @@ class V10_DesignStudio {
   
   updateLabDipCollectionAssignments() {
     console.log('🔄 updateLabDipCollectionAssignments called');
+    console.log('🔄 Current assignments state:', V10_State.assignments.labDips);
     const container = document.getElementById('labdips-grid');
     if (!container) {
       console.log('❌ No labdips-grid container found');
@@ -10727,10 +10748,14 @@ class V10_DesignStudio {
     // Update all existing lab dip items
     const labDipItems = container.querySelectorAll('.collection-item[data-labdip-id]');
     console.log(`🔍 Found ${labDipItems.length} lab dip items to update`);
+    console.log(`🔍 Lab dip items:`, labDipItems);
     
-    labDipItems.forEach(item => {
+    labDipItems.forEach((item, index) => {
       const labDipId = item.dataset.labdipId;
       const typeElement = item.querySelector('.collection-item__type');
+      
+      console.log(`🔍 Item ${index}: labDipId=${labDipId}, typeElement=`, typeElement);
+      console.log(`🔍 Item ${index} current text:`, typeElement?.textContent);
       
       if (typeElement && labDipId) {
         let assignmentText;
@@ -11810,6 +11835,8 @@ class V10_ReviewManager {
   }
 
   getLabDipAssignmentText(labDipId) {
+    console.log(`🎯 getLabDipAssignmentText called for lab dip: ${labDipId}`);
+    console.log(`🎯 All assignments state:`, V10_State.assignments.labDips);
     const assignments = V10_State.assignments.labDips.get(labDipId);
     console.log(`🔍 getLabDipAssignmentText for ${labDipId}:`, assignments);
     
@@ -11824,12 +11851,17 @@ class V10_ReviewManager {
       console.log(`🔍 Checking garment ${garmentId}:`, garment);
       if (garment) {
         const garmentType = garment.type || 'Unknown';
-        assignedGarmentNames.push(`Garment ${garment.number} ${garmentType}`);
+        const garmentName = `Garment ${garment.number} ${garmentType}`;
+        console.log(`🔍 Adding garment name: ${garmentName}`);
+        assignedGarmentNames.push(garmentName);
+      } else {
+        console.log(`❌ Garment ${garmentId} not found in V10_State.garments`);
       }
     });
     
     const result = assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
-    console.log(`✅ Assignment text for ${labDipId}: "${result}"`);
+    console.log(`✅ Final assignment text for ${labDipId}: "${result}"`);
+    console.log(`✅ Assigned garment names array:`, assignedGarmentNames);
     return result;
   }
 
