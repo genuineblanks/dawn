@@ -5129,6 +5129,11 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   transform: translateY(-1px);
 }
 
+/* Hide assign button from design sample collection items */
+#designs-grid .collection-item__assign {
+  display: none;
+}
+
 .collection-item__remove:hover {
   background: #2d2d2d;
   border-color: #ef4444;

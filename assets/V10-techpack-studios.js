@@ -10163,7 +10163,10 @@ class V10_DesignStudio {
     const updateDesignButtons = () => {
       const name = designNameInput?.value.trim();
       const typeSelected = Array.from(designTypeInputs).some(input => input.checked);
-      const isValid = name && typeSelected;
+      const height = document.getElementById('design-height')?.value;
+      const width = document.getElementById('design-width')?.value;
+      const hasDimensions = height && width && parseFloat(height) > 0 && parseFloat(width) > 0;
+      const isValid = name && typeSelected && hasDimensions;
 
       if (addFabricDesignBtn) addFabricDesignBtn.disabled = !isValid;
     };
@@ -10175,6 +10178,21 @@ class V10_DesignStudio {
     designTypeInputs.forEach(input => {
       input.addEventListener('change', updateDesignButtons);
     });
+
+    // Add listeners for dimension inputs
+    const heightInput = document.getElementById('design-height');
+    const widthInput = document.getElementById('design-width');
+    
+    if (heightInput) {
+      heightInput.addEventListener('input', updateDesignButtons);
+    }
+    
+    if (widthInput) {
+      widthInput.addEventListener('input', updateDesignButtons);
+    }
+
+    // Initial validation check
+    updateDesignButtons();
 
     // File upload
     const fileUploadArea = document.getElementById('design-file-upload');
@@ -10919,12 +10937,20 @@ class V10_DesignStudio {
   }
 
   removeLabDip(labDipId) {
-    if (confirm('Remove this lab dip? This will also remove it from all garments.')) {
+    // Check if lab dip has assigned garments first
+    const assignedGarments = V10_State.assignments.labDips.get(labDipId);
+    const hasAssignments = assignedGarments && assignedGarments.size > 0;
+    
+    // Show appropriate confirmation message based on assignment status
+    const confirmMessage = hasAssignments 
+      ? 'Remove this lab dip? This will also remove it from all garments.'
+      : 'Remove this lab dip?';
+    
+    if (confirm(confirmMessage)) {
       // Remove from state
       V10_State.labDips.delete(labDipId);
       
-      // Clean up assignments
-      const assignedGarments = V10_State.assignments.labDips.get(labDipId);
+      // Clean up assignments (if any exist)
       if (assignedGarments) {
         assignedGarments.forEach(garmentId => {
           window.v10GarmentStudio.unassignLabDip(garmentId, labDipId);
