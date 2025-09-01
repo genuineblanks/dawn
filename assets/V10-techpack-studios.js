@@ -5454,11 +5454,15 @@ class V10_GarmentStudio {
         this.garmentsContainer.appendChild(clone);
         console.log('✅ Garment added to container');
         
-        // Initialize edit interface
-        try {
-          this.expandGarmentForEdit(garmentData.id);
-        } catch (editError) {
-          console.error('❌ Error initializing edit interface:', editError);
+        // Initialize edit interface only for manually created garments, not variants
+        if (!garmentData.isVariant) {
+          try {
+            this.expandGarmentForEdit(garmentData.id);
+          } catch (editError) {
+            console.error('❌ Error initializing edit interface:', editError);
+          }
+        } else {
+          console.log('🎨 Variant garment created - skipping edit mode initialization');
         }
       } else {
         console.error('❌ Garments container not found');
@@ -6590,6 +6594,35 @@ class V10_GarmentStudio {
     }, 150);
   }
 
+  finalizeGarmentAppearance(garmentCard, garmentData) {
+    // Force garment to display in finalized collapsed state for variants
+    // This skips the normal edit workflow and shows the garment as complete
+    
+    if (!garmentCard || !garmentData) return;
+    
+    const summaryContainer = garmentCard.querySelector('.garment-card__summary');
+    const contentContainer = garmentCard.querySelector('.garment-card__content');
+    
+    if (summaryContainer && contentContainer) {
+      // Show summary, hide content (opposite of edit mode)
+      summaryContainer.style.display = 'block';
+      contentContainer.style.display = 'none';
+      
+      // Add configured class to show garment as finalized
+      garmentCard.classList.add('garment-card--configured');
+      
+      // Hide any finalize button that might be present
+      const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
+      if (finalizeBtn) {
+        finalizeBtn.style.display = 'none';
+      }
+      
+      // Update the collapsed state display
+      this.updateGarmentCollapsedState(garmentCard, garmentData, garmentData.isComplete);
+      
+      console.log(`🎨 Finalized appearance for variant garment ${garmentData.id}`);
+    }
+  }
 
   removeGarment(garmentId) {
     // Delegate to garment manager
@@ -6637,13 +6670,15 @@ class V10_GarmentStudio {
     if (!originalData) return null;
 
     // Create variant with same specifications but fresh assignments
+    // Mark as a pre-finalized variant to skip edit mode during creation
     const variantData = {
       ...originalData,
       id: undefined, // Will be generated
       assignedLabDips: new Set(), // Start fresh for new color variant
       assignedDesigns: new Set(),
-      isComplete: false, // Reset completion status - will be recalculated
-      isInEditMode: false // Ensure not in edit mode
+      isComplete: false, // Will be recalculated after lab dip assignment
+      isInEditMode: false, // Ensure not in edit mode
+      isVariant: true // Flag to indicate this is a color variant
     };
 
     // Add the new garment variant
@@ -6669,19 +6704,18 @@ class V10_GarmentStudio {
       // Renumber all garments to maintain sequential order
       this.garmentManager.renumberGarments();
       
-      // Force immediate status update for the new variant
-      // This ensures the variant is properly validated with its assigned lab dip
+      // Immediately validate and finalize the variant since it has all required data
+      this.updateGarmentStatus(newVariant.id);
+      
+      // Ensure the variant displays in collapsed state immediately
       setTimeout(() => {
-        this.updateGarmentStatus(newVariant.id);
-        console.log(`🔄 Updated status for variant ${newVariant.id}`);
-        
-        // Update the collapsed state to show color circle and summary
         const variantCard = document.querySelector(`[data-garment-id="${newVariant.id}"]`);
-        if (variantCard) {
-          this.updateGarmentCollapsedState(variantCard, newVariant, newVariant.isComplete);
-          console.log(`🎨 Updated collapsed state for variant ${newVariant.id}`);
+        if (variantCard && newVariant.isComplete) {
+          // Force the garment to finalized collapsed state
+          this.finalizeGarmentAppearance(variantCard, newVariant);
+          console.log(`🎨 Auto-finalized variant ${newVariant.id} with lab dip assignment`);
         }
-      }, 50);
+      }, 100);
       
       // Update studio completion status after variant creation
       this.updateStudioCompletion();
