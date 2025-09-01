@@ -14689,8 +14689,11 @@ class V10_ModalManager {
     
     // Update TechPack System with request type (for studio navigation)
     if (window.v10TechPackSystem) {
+      console.log(`🔄 Calling setRequestType with reset for: ${submissionType}`);
       window.v10TechPackSystem.setRequestType(submissionType);
-      console.log(`🔄 TechPack System updated with request type: ${submissionType}`);
+      console.log(`✅ TechPack System updated with request type: ${submissionType}`);
+    } else {
+      console.warn('❌ TechPack System not available for request type reset');
     }
     
     // Show the actual form and hide landing page
