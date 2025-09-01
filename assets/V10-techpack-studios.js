@@ -6046,26 +6046,12 @@ class V10_GarmentStudio {
   }
 
   updateGarmentSummary(garmentCard, garmentData) {
-      id: garmentData.id,
-      type: garmentData.type,
-      fabricType: garmentData.fabricType,
-      sampleReference: garmentData.sampleReference,
-    });
-    
     const typeSpan = garmentCard.querySelector('.garment-summary__type');
     const fabricSpan = garmentCard.querySelector('.garment-summary__fabric');
     const statusSpan = garmentCard.querySelector('.garment-summary__status');
     const colorCircle = garmentCard.querySelector('.garment-summary__color-circle');
     const colorName = garmentCard.querySelector('.garment-summary__color-name');
     const separator = garmentCard.querySelector('.garment-summary__separator');
-    
-      typeSpan: !!typeSpan,
-      fabricSpan: !!fabricSpan,
-      statusSpan: !!statusSpan,
-      colorCircle: !!colorCircle,
-      colorName: !!colorName,
-      separator: !!separator
-    });
     
     // Update configuration state
     const isConfigured = this.updateGarmentConfigurationState(garmentCard, garmentData);
@@ -6465,11 +6451,6 @@ class V10_GarmentStudio {
     
     // Get current DOM state for validation logging
     const currentDOMState = this.getCurrentGarmentDOMState(garmentId);
-      type: garmentData.type,
-      fabricType: garmentData.fabricType,
-      sampleType: garmentData.sampleType,
-      hasLabDips: garmentData.assignedLabDips?.size > 0
-    });
 
     // Validate requirements before allowing finalize
     if (!this.validateGarmentRequirements(garmentId)) {
@@ -6844,12 +6825,6 @@ class V10_GarmentStudio {
     // Find the selected display to toggle it
     const selectedDisplay = section ? section.querySelector('.selection-display') : null;
     
-      expanded: !!expanded,
-      placeholder: !!placeholder, 
-      selectedDisplay: !!selectedDisplay,
-      expandedDisplay: expanded?.style.display
-    });
-    
     if (!expanded) {
       console.error('❌ No expanded section found');
       return;
@@ -7105,13 +7080,6 @@ class V10_GarmentStudio {
         const placeholder = garmentCard.querySelector('#sample-custom-placeholder');
         const display = garmentCard.querySelector('#sample-custom-display');
         const priceElement = garmentCard.querySelector('#sample-custom-price');
-        
-          selectedIcon: !!selectedIcon,
-          selectedName: !!selectedName,
-          placeholder: !!placeholder,
-          display: !!display,
-          actualSubValue
-        });
         
         // Get display name for sub-option
         const displayName = this.getSampleCustomDisplayName(actualSubValue);
@@ -7646,12 +7614,6 @@ class V10_GarmentStudio {
     console.log(`📦 Creating ${completedGarments.length} quantity cards...`);
     completedGarments.forEach((garment, index) => {
       console.log(`   Creating card for garment ${index + 1}: ${garment.type} (ID: ${garment.id})`);
-        id: garment.id,
-        type: garment.type,
-        fabricType: garment.fabricType,
-        sampleReference: garment.sampleReference,
-        number: garment.number
-      });
       const quantityCard = this.createEnhancedQuantityCard(garment, index + 1);
       if (quantityCard) {
         responsiveGrid.appendChild(quantityCard);
@@ -7746,12 +7708,6 @@ class V10_GarmentStudio {
       console.error('❌ .garment-quantity-card not found in template');
       return this.createFallbackQuantityCard(garment, index);
     }
-    
-      id: garment.id,
-      type: garment.type,
-      fabricType: garment.fabricType,
-      sampleReference: garment.sampleReference
-    });
     
     // Set garment ID
     card.dataset.garmentId = garment.id;
