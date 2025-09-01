@@ -10489,8 +10489,41 @@ class V10_DesignStudio {
                 V10_BadgeManager.updateDesignCompletionBadge();
                 
                 // Update lab dip collection assignment text after modal assignment
+                console.log('🔍 MODAL DEBUG: Checking for v10ColorStudio...', !!window.v10ColorStudio);
+                console.log('🔍 MODAL DEBUG: Current assignments state:', V10_State.assignments.labDips);
+                
                 if (window.v10ColorStudio) {
-                  window.v10ColorStudio.updateLabDipCollectionAssignments();
+                  try {
+                    console.log('🔄 MODAL: Calling updateLabDipCollectionAssignments...');
+                    window.v10ColorStudio.updateLabDipCollectionAssignments();
+                    console.log('✅ MODAL: updateLabDipCollectionAssignments completed');
+                  } catch (error) {
+                    console.error('❌ MODAL: Error calling updateLabDipCollectionAssignments:', error);
+                    console.log('🔄 MODAL: Attempting direct DOM update fallback...');
+                    
+                    // Fallback: Try to update the specific lab dip item directly
+                    try {
+                      const container = document.getElementById('labdips-grid');
+                      const labDipItem = container?.querySelector(`[data-labdip-id="${itemId}"]`);
+                      const typeElement = labDipItem?.querySelector('.collection-item__type');
+                      
+                      if (typeElement && window.v10ReviewManager) {
+                        const assignmentText = window.v10ReviewManager.getLabDipAssignmentText(itemId);
+                        console.log('🔄 MODAL FALLBACK: Updating text directly:', assignmentText);
+                        typeElement.textContent = assignmentText;
+                      }
+                    } catch (fallbackError) {
+                      console.error('❌ MODAL FALLBACK: Direct update failed:', fallbackError);
+                    }
+                  }
+                } else {
+                  console.log('❌ MODAL: v10ColorStudio not available, trying alternative approach...');
+                  
+                  // Alternative: Direct function call if v10ColorStudio class method exists
+                  if (window.v10DesignStudio && window.v10DesignStudio.updateLabDipCollectionAssignments) {
+                    console.log('🔄 MODAL ALT: Using v10DesignStudio method...');
+                    window.v10DesignStudio.updateLabDipCollectionAssignments();
+                  }
                 }
                 
                 console.log(`🔄 Modal assignment badge update completed for lab dip ${itemId}`);
