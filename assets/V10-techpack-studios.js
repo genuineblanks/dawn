@@ -9971,7 +9971,7 @@ class V10_DesignStudio {
         const pantone = colorBtn.dataset.pantone;
         
         if (colorPicker) colorPicker.value = hex;
-        if (pantoneInput) pantoneInput.value = pantone;
+        // Don't fill pantone text input - keep it for manual user input only
         
         if (pantoneDisplay && pantoneCircle && pantoneCode) {
           pantoneDisplay.style.display = 'block';
