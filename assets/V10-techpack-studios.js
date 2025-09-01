@@ -6839,6 +6839,11 @@ class V10_GarmentStudio {
       this.updateDesignStudioTabStatus();
       V10_BadgeManager.updateGarmentCompletionBadge();
       V10_BadgeManager.updateDesignCompletionBadge();
+      
+      // Update assignment overview
+      if (window.v10ReviewManager) {
+        window.v10ReviewManager.populateGarmentAssignments();
+      }
     }, 50);
   }
 
@@ -6864,6 +6869,11 @@ class V10_GarmentStudio {
     window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
+    
+    // Update assignment overview
+    if (window.v10ReviewManager) {
+      window.v10ReviewManager.populateGarmentAssignments();
+    }
   }
 
   assignDesign(garmentId, designId) {
@@ -6883,6 +6893,11 @@ class V10_GarmentStudio {
     window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
+    
+    // Update assignment overview
+    if (window.v10ReviewManager) {
+      window.v10ReviewManager.populateGarmentAssignments();
+    }
   }
 
   unassignDesign(garmentId, designId) {
@@ -6901,6 +6916,11 @@ class V10_GarmentStudio {
     window.v10GarmentStudio.updateDesignStudioTabStatus();
     V10_BadgeManager.updateGarmentCompletionBadge();
     V10_BadgeManager.updateDesignCompletionBadge();
+    
+    // Update assignment overview
+    if (window.v10ReviewManager) {
+      window.v10ReviewManager.populateGarmentAssignments();
+    }
   }
 
 
@@ -11617,11 +11637,121 @@ class V10_ReviewManager {
           </div>
           <div class="collection-item__content">
             <span class="collection-item__name">${labDip.pantone}</span>
-            <span class="collection-item__type">LAB DIP</span>
+            <span class="collection-item__type">${this.getLabDipAssignmentText(labDip.id)}</span>
           </div>
         </div>
       `).join('');
     }
+  }
+
+  getLabDipAssignmentText(labDipId) {
+    const assignments = V10_State.assignments.labDips.get(labDipId);
+    if (!assignments || assignments.size === 0) {
+      return 'LAB DIP';
+    }
+    
+    const assignedGarmentNames = [];
+    assignments.forEach(garmentId => {
+      const garment = V10_State.garments.get(garmentId);
+      if (garment) {
+        assignedGarmentNames.push(`Garment ${garment.number}`);
+      }
+    });
+    
+    return assignedGarmentNames.length > 0 ? assignedGarmentNames.join(', ') : 'LAB DIP';
+  }
+
+  populateGarmentAssignments() {
+    const overview = document.getElementById('garment-assignments-overview');
+    const grid = document.getElementById('assignments-grid');
+    const emptyState = document.getElementById('assignments-empty');
+    const count = document.getElementById('assignments-count');
+    
+    if (!overview || !grid || !emptyState || !count) return;
+    
+    const assignments = this.getGarmentAssignments();
+    
+    if (assignments.length === 0) {
+      overview.style.display = 'none';
+      return;
+    }
+    
+    overview.style.display = 'block';
+    count.textContent = `${assignments.length} assignment${assignments.length !== 1 ? 's' : ''}`;
+    
+    if (assignments.length === 0) {
+      grid.style.display = 'none';
+      emptyState.style.display = 'block';
+    } else {
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+      
+      grid.innerHTML = assignments.map(assignment => `
+        <div class="assignment-item">
+          <div class="assignment-item__garment">
+            <span class="assignment-item__garment-name">${assignment.garmentName}</span>
+            <span class="assignment-item__garment-type">${assignment.garmentType}</span>
+          </div>
+          <div class="assignment-item__colors">
+            ${assignment.colors.map(color => `
+              <div class="assignment-item__color-chip" 
+                   style="background-color: ${color.hex || '#ccc'};" 
+                   data-color-name="${color.name}"
+                   title="${color.name}">
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+  
+  getGarmentAssignments() {
+    const assignments = [];
+    
+    // Check all garments for assigned colors
+    V10_State.garments.forEach((garment, garmentId) => {
+      const assignedColors = [];
+      
+      // Check lab dip assignments
+      V10_State.assignments.labDips.forEach((garmentIds, labDipId) => {
+        if (garmentIds.has(garmentId)) {
+          const labDip = V10_State.labDips.get(labDipId);
+          if (labDip) {
+            assignedColors.push({
+              name: labDip.pantone,
+              hex: labDip.hex,
+              type: 'lab-dip'
+            });
+          }
+        }
+      });
+      
+      // Check design assignments
+      V10_State.assignments.designs.forEach((garmentIds, designId) => {
+        if (garmentIds.has(garmentId)) {
+          const design = V10_State.designSamples.get(designId);
+          if (design) {
+            assignedColors.push({
+              name: design.name,
+              hex: '#4338ca', // Default design color
+              type: 'design'
+            });
+          }
+        }
+      });
+      
+      if (assignedColors.length > 0) {
+        assignments.push({
+          garmentId: garmentId,
+          garmentName: `Garment ${garment.number}`,
+          garmentType: garment.type || 'Unknown',
+          colors: assignedColors
+        });
+      }
+    });
+    
+    return assignments;
   }
 
   populateDesigns() {
@@ -12679,6 +12809,11 @@ class V10_TechPackSystem {
       if (!window.v10ReviewManager) {
         try {
           window.v10ReviewManager = new V10_ReviewManager();
+          
+          // Initialize assignment overview
+          setTimeout(() => {
+            window.v10ReviewManager.populateGarmentAssignments();
+          }, 100);
         } catch (managerError) {
           console.error('Error initializing review manager:', managerError);
         }

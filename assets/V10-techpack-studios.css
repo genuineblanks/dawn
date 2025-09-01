@@ -4697,6 +4697,282 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   cursor: not-allowed;
 }
 
+/* Design Input Area - Match Lab Dips Styling */
+.design-input-area {
+  background: #1a1a1a;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-6);
+}
+
+.design-input-header h4 {
+  margin: 0 0 var(--v10-space-4) 0;
+  color: var(--v10-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Design Form Styling */
+.design-form-row {
+  display: flex;
+  gap: var(--v10-space-4);
+  margin-bottom: var(--v10-space-4);
+}
+
+.design-form-group {
+  flex: 1;
+}
+
+.design-form-label {
+  display: block;
+  margin-bottom: var(--v10-space-2);
+  color: var(--v10-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.design-form-input {
+  width: 100%;
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-input);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-primary);
+  font-size: 0.875rem;
+  transition: var(--v10-transition);
+}
+
+.design-form-input:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.design-form-input::placeholder {
+  color: var(--v10-text-secondary);
+}
+
+/* Design Type Selection - Match Lab Dips Color Picker */
+.design-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v10-space-3);
+}
+
+.design-type-option {
+  cursor: pointer;
+}
+
+.design-type-option input[type="radio"] {
+  display: none;
+}
+
+.design-type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+}
+
+.design-type-option:hover .design-type-card {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+}
+
+.design-type-option input[type="radio"]:checked + .design-type-card {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-accent-primary);
+  color: white;
+}
+
+.design-type-icon {
+  font-size: 1.25rem;
+}
+
+.design-type-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* File Upload Area - Match Lab Dips Theme */
+.file-upload-area {
+  border: 2px dashed var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--v10-transition);
+  background: var(--v10-bg-card);
+}
+
+.file-upload-area:hover {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+}
+
+.file-upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+.file-upload-content svg {
+  color: var(--v10-text-secondary);
+}
+
+.file-upload-content span {
+  color: var(--v10-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.file-upload-content small {
+  color: var(--v10-text-secondary);
+  font-size: 0.75rem;
+}
+
+/* Add Design Actions */
+.add-design-actions {
+  margin-top: var(--v10-space-4);
+  display: flex;
+  justify-content: center;
+}
+
+/* Garments with Colorways Assigned Section */
+.garment-assignments-overview {
+  margin-top: var(--v10-space-8);
+  background: #1a1a1a;
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-6);
+}
+
+.assignments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--v10-space-6);
+  padding-bottom: var(--v10-space-4);
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+.assignments-title {
+  margin: 0;
+  color: var(--v10-text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.assignments-count {
+  color: var(--v10-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: var(--v10-space-1) var(--v10-space-3);
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+}
+
+/* Assignments Grid */
+.assignments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--v10-space-4);
+}
+
+.assignment-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+}
+
+.assignment-item:hover {
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-hover);
+}
+
+.assignment-item__garment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v10-space-1);
+}
+
+.assignment-item__garment-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.assignment-item__garment-type {
+  font-size: 0.75rem;
+  color: var(--v10-text-secondary);
+}
+
+.assignment-item__colors {
+  display: flex;
+  gap: var(--v10-space-2);
+  margin-left: auto;
+}
+
+.assignment-item__color-chip {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  position: relative;
+}
+
+.assignment-item__color-chip:hover::after {
+  content: attr(data-color-name);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--v10-bg-tooltip);
+  color: var(--v10-text-primary);
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Empty State */
+.assignments-empty {
+  text-align: center;
+  padding: var(--v10-space-8) var(--v10-space-4);
+  color: var(--v10-text-secondary);
+}
+
+.assignments-empty .empty-icon {
+  margin-bottom: var(--v10-space-4);
+  opacity: 0.5;
+}
+
+.assignments-empty h4 {
+  margin: 0 0 var(--v10-space-2) 0;
+  color: var(--v10-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.assignments-empty p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 480px) {
   .add-fabric-swatch-btn,

@@ -221,7 +221,7 @@ document.body.setAttribute('data-theme', 'dark');
                       <line x1="12" y1="5" x2="12" y2="19"/>
                       <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
-                    Add to Garment (€25)
+                    Add to Garment
                   </button>
                   <button type="button" class="add-fabric-swatch-btn" id="add-fabric-swatch">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -229,7 +229,7 @@ document.body.setAttribute('data-theme', 'dark');
                       <circle cx="8.5" cy="8.5" r="1.5"/>
                       <path d="M21 15l-5-5L5 21"/>
                     </svg>
-                    Add Fabric Swatch Only (€25)
+                    Add to Lab Dip Collection
                   </button>
                 </div>
               </div>
@@ -629,6 +629,28 @@ document.body.setAttribute('data-theme', 'dark');
         <div class="standalone-cost">
           <span class="standalone-cost__label">Standalone Items Cost:</span>
           <span class="standalone-cost__value" id="standalone-cost">€0</span>
+        </div>
+      </div>
+
+      <!-- Garments with Colorways Assigned Section -->
+      <div class="garment-assignments-overview" id="garment-assignments-overview" style="display: none;">
+        <div class="assignments-header">
+          <h3 class="assignments-title">Garments with colorways assigned</h3>
+          <span class="assignments-count" id="assignments-count">0 assignments</span>
+        </div>
+        <div class="assignments-grid" id="assignments-grid">
+          <!-- Assignment items will be populated here -->
+        </div>
+        <div class="assignments-empty" id="assignments-empty">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h4>No Assignments Yet</h4>
+          <p>Colors assigned to garments will appear here</p>
         </div>
       </div>
 
