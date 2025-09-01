@@ -6601,15 +6601,18 @@ class V10_GarmentStudio {
     if (!garmentCard || !garmentData) return;
     
     console.log(`🎨 Finalizing appearance for variant ${garmentData.id}...`);
+    console.log(`🔍 Current state - isInEditMode: ${garmentData.isInEditMode}, isComplete: ${garmentData.isComplete}`);
+    
+    // CRITICAL: Clear edit mode flag FIRST before any DOM manipulation
+    garmentData.isInEditMode = false;
     
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
     if (summaryContainer && contentContainer) {
-      // Clear edit mode flag to ensure proper state
-      garmentData.isInEditMode = false;
+      console.log(`🔧 Manually forcing summary display for variant ${garmentData.id}`);
       
-      // Show summary, hide content (opposite of edit mode)
+      // Directly force the display states (bypassing the normal logic)
       summaryContainer.style.display = 'block';
       contentContainer.style.display = 'none';
       
@@ -6622,13 +6625,16 @@ class V10_GarmentStudio {
         finalizeBtn.style.display = 'none';
       }
       
+      // Show edit button in summary view
+      const editBtn = garmentCard.querySelector('.garment-summary__edit-btn');
+      if (editBtn) {
+        editBtn.style.display = 'flex';
+      }
+      
       // Update garment summary with current data (including lab dip colors)
       this.updateGarmentSummary(garmentCard, garmentData);
       
-      // Force the collapsed state display (variants should always show as complete)
-      this.updateGarmentCollapsedState(garmentCard, garmentData, true);
-      
-      console.log(`✅ Variant ${garmentData.id} appearance finalized successfully`);
+      console.log(`✅ Variant ${garmentData.id} appearance finalized - summary visible, content hidden`);
     } else {
       console.error(`❌ Could not find summary/content containers for variant ${garmentData.id}`);
     }
@@ -6707,9 +6713,6 @@ class V10_GarmentStudio {
         V10_State.assignments.labDips.set(newLabDipId, new Set());
       }
       V10_State.assignments.labDips.get(newLabDipId).add(newVariant.id);
-      
-      // Position the variant garment card directly after the original
-      this.positionVariantAfterOriginal(originalGarmentId, newVariant.id);
       
       // Renumber all garments to maintain sequential order
       this.garmentManager.renumberGarments();
