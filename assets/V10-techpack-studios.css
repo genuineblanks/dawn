@@ -635,9 +635,16 @@ body[class*="techpack"] *,
   outline: none;
 }
 
-.v10-btn:disabled {
+.v10-btn:disabled,
+.v10-btn--disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.v10-btn--disabled:hover {
   transform: none;
   box-shadow: none;
   filter: none;
@@ -3142,6 +3149,8 @@ body[style*="overflow: hidden"] {
 /* Garment Summary (Resume State) - Horizontal Layout */
 .garment-card__summary {
   padding: var(--v10-space-4) var(--v10-space-5);
+  background: var(--v10-bg-card);
+  border-radius: var(--v10-radius-md);
 }
 
 .garment-summary {
