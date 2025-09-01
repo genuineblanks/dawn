@@ -6852,6 +6852,13 @@ class V10_GarmentStudio {
       if (window.v10ColorStudio) {
         window.v10ColorStudio.updateLabDipCollectionAssignments();
       }
+      
+      // If we're currently in Color Studio, immediately refresh the assignment section
+      if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
+        setTimeout(() => {
+          window.v10ReviewManager.populateGarmentAssignments();
+        }, 100);
+      }
     }, 50);
   }
 
@@ -6885,6 +6892,13 @@ class V10_GarmentStudio {
     if (window.v10ColorStudio) {
       window.v10ColorStudio.updateLabDipCollectionAssignments();
     }
+    
+    // If we're currently in Color Studio, immediately refresh the assignment section
+    if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
+      setTimeout(() => {
+        window.v10ReviewManager.populateGarmentAssignments();
+      }, 100);
+    }
   }
 
   assignDesign(garmentId, designId) {
@@ -6912,6 +6926,13 @@ class V10_GarmentStudio {
     if (window.v10ColorStudio) {
       window.v10ColorStudio.updateLabDipCollectionAssignments();
     }
+    
+    // If we're currently in Color Studio, immediately refresh the assignment section
+    if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
+      setTimeout(() => {
+        window.v10ReviewManager.populateGarmentAssignments();
+      }, 100);
+    }
   }
 
   unassignDesign(garmentId, designId) {
@@ -6937,6 +6958,13 @@ class V10_GarmentStudio {
     }
     if (window.v10ColorStudio) {
       window.v10ColorStudio.updateLabDipCollectionAssignments();
+    }
+    
+    // If we're currently in Color Studio, immediately refresh the assignment section
+    if (V10_State.currentStudio === 'design' && window.v10ReviewManager) {
+      setTimeout(() => {
+        window.v10ReviewManager.populateGarmentAssignments();
+      }, 100);
     }
   }
 
@@ -10626,17 +10654,24 @@ class V10_DesignStudio {
   }
   
   updateLabDipCollectionAssignments() {
+    console.log('🔄 updateLabDipCollectionAssignments called');
     const container = document.getElementById('labdips-grid');
-    if (!container) return;
+    if (!container) {
+      console.log('❌ No labdips-grid container found');
+      return;
+    }
     
     // Update all existing lab dip items
     const labDipItems = container.querySelectorAll('.collection-item[data-labdip-id]');
+    console.log(`🔍 Found ${labDipItems.length} lab dip items to update`);
+    
     labDipItems.forEach(item => {
       const labDipId = item.dataset.labdipId;
       const typeElement = item.querySelector('.collection-item__type');
       
       if (typeElement && labDipId) {
         const assignmentText = this.getLabDipAssignmentText(labDipId);
+        console.log(`🔄 Updating lab dip ${labDipId}: "${typeElement.textContent}" → "${assignmentText}"`);
         typeElement.textContent = assignmentText;
       }
     });
@@ -11765,13 +11800,23 @@ class V10_ReviewManager {
             <span class="assignment-item__garment-type">${assignment.garmentType}</span>
           </div>
           <div class="assignment-item__colors">
-            ${assignment.colors.map(color => `
-              <div class="assignment-item__color-chip" 
-                   style="background-color: ${color.hex || '#ccc'};" 
-                   data-color-name="${color.name}"
-                   title="${color.name}">
-              </div>
-            `).join('')}
+            ${assignment.colors.map(color => {
+              let backgroundStyle;
+              if (color.isCustomTextCode) {
+                // Use gradient for custom text codes
+                backgroundStyle = 'background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b); border: 2px solid #8B5CF6;';
+              } else {
+                backgroundStyle = `background-color: ${color.hex || '#ccc'};`;
+              }
+              
+              return `
+                <div class="assignment-item__color-chip" 
+                     style="${backgroundStyle}" 
+                     data-color-name="${color.name}"
+                     title="${color.name}">
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       `).join('');
@@ -11790,10 +11835,14 @@ class V10_ReviewManager {
         if (garmentIds.has(garmentId)) {
           const labDip = V10_State.labDips.get(labDipId);
           if (labDip) {
+            // Check if this is a custom text-only code that should show gradient
+            const isCustomTextCode = labDip.isCustomCode && labDip.hex === '#8B5CF6';
+            
             assignedColors.push({
               name: labDip.pantone,
               hex: labDip.hex,
-              type: 'lab-dip'
+              type: 'lab-dip',
+              isCustomTextCode: isCustomTextCode
             });
           }
         }
