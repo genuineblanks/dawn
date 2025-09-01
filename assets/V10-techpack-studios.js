@@ -9971,7 +9971,7 @@ class V10_DesignStudio {
         const pantone = colorBtn.dataset.pantone;
         
         if (colorPicker) colorPicker.value = hex;
-        if (pantoneInput) pantoneInput.value = pantone;
+        // Don't auto-fill text box - keep it only for manual user input
         
         if (pantoneDisplay && pantoneCircle && pantoneCode) {
           pantoneDisplay.style.display = 'block';
@@ -10398,8 +10398,8 @@ class V10_DesignStudio {
     if (pantoneInput.value && pantoneInput.value.trim()) {
       // User typed something - use their exact text regardless of validity
       pantone = pantoneInput.value.trim();
-      // For custom user input, use a distinctive color or the color picker value
-      hex = colorPicker.value || '#8B5CF6'; // Purple color for custom codes
+      // For manual text input, ALWAYS use the special rainbow gradient identifier
+      hex = '#8B5CF6'; // This will trigger rainbow gradient in rendering
     } else if (colorPicker.value) {
       hex = colorPicker.value;
       pantone = V10_Utils.hexToPantone(hex);
