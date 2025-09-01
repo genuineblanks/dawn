@@ -4295,7 +4295,7 @@ DESIGN STUDIO SYSTEM - LAB DIPS
 
 /* Color Selection Area */
 .color-selection-area {
-  background: var(--v10-bg-card);
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -4311,7 +4311,7 @@ DESIGN STUDIO SYSTEM - LAB DIPS
 /* Collection Containers */
 .labdips-collection,
 .designs-collection {
-  background: var(--v10-bg-card);
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
