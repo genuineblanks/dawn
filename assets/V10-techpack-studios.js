@@ -12648,6 +12648,15 @@ class V10_TechPackSystem {
     // Set up auto-validation
     this.setupAutoValidation();
 
+    // Check for pending request type reset from modal manager
+    if (window.v10PendingRequestTypeReset) {
+      const pendingType = window.v10PendingRequestTypeReset;
+      console.log(`🔄 Executing pending request type reset for: ${pendingType}`);
+      this.setRequestType(pendingType);
+      delete window.v10PendingRequestTypeReset;
+      console.log(`✅ Pending reset completed for: ${pendingType}`);
+    }
+
     this.initialized = true;
     console.log('🚀 V10 TechPack System initialized');
   }
@@ -14693,7 +14702,9 @@ class V10_ModalManager {
       window.v10TechPackSystem.setRequestType(submissionType);
       console.log(`✅ TechPack System updated with request type: ${submissionType}`);
     } else {
-      console.warn('❌ TechPack System not available for request type reset');
+      console.warn('❌ TechPack System not available yet, storing pending reset for:', submissionType);
+      // Store pending reset to execute when TechPack System initializes
+      window.v10PendingRequestTypeReset = submissionType;
     }
     
     // Show the actual form and hide landing page
