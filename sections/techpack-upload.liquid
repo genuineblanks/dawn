@@ -1,5 +1,6 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
-{{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
+{{ 'gb-design-system.css' | asset_url | stylesheet_tag }}
+{{ 'theme-bridge.js' | asset_url | script_tag }}
 
 <section id="techpack-upload" class="techpack-step" data-step="1">
   <div class="techpack-container">
