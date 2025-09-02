@@ -13059,6 +13059,12 @@ class V10_TechPackSystem {
     V10_State.currentStudio = 'garment';
     V10_State.currentMode = 'labdips';
     
+    // Clear uploaded files - SIMPLE FIX
+    if (window.v10FileManager && window.v10FileManager.uploadedFiles) {
+      window.v10FileManager.uploadedFiles.clear();
+    }
+    V10_State.fileData = null;
+    
     // Clear UI elements for Steps 2, 3, 4
     this.clearStepsUI();
     
@@ -13082,6 +13088,24 @@ class V10_TechPackSystem {
     const designsGrid = document.getElementById('designs-grid');
     if (designsGrid) {
       designsGrid.innerHTML = '';
+    }
+    
+    // Clear uploaded files display
+    const uploadedFilesContainer = document.getElementById('techpack-v10-uploaded-files');
+    if (uploadedFilesContainer) {
+      uploadedFilesContainer.innerHTML = '';
+    }
+    
+    // Reset measurement checkboxes
+    const measurementCheckboxes = document.querySelectorAll('#techpack-v10-measurement-studio input[type="checkbox"]');
+    measurementCheckboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Hide measurement studio
+    const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
+    if (measurementStudio) {
+      measurementStudio.style.display = 'none';
     }
     
     // Clear file upload areas - reset to initial state
@@ -14261,6 +14285,7 @@ class V10_FileManager {
     
     return data;
   }
+
 
   loadSavedFiles() {
     // Step 2 files no longer loaded from localStorage
