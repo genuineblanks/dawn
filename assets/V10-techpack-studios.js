@@ -13072,10 +13072,15 @@ class V10_TechPackSystem {
   }
 
   clearStepsUI() {
-    // Clear garment cards
+    // Clear garment cards - BOTH IDs (there's garments-container and garment-container)
     const garmentContainer = document.getElementById('garment-container');
     if (garmentContainer) {
       garmentContainer.innerHTML = '';
+    }
+    
+    const garmentsContainer = document.getElementById('garments-container');
+    if (garmentsContainer) {
+      garmentsContainer.innerHTML = '';
     }
     
     // Clear lab dip collection
