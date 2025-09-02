@@ -1,7 +1,6 @@
 {% if template.name == 'page' and template.suffix == 'techpack-upload' %}
-{{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
-
-<!-- Dark mode is now handled in techpack-v10-step-1-client-info.liquid -->
+{{ 'gb-design-system.css' | asset_url | stylesheet_tag }}
+{{ 'theme-bridge.js' | asset_url | script_tag }}
 
 <section id="techpack-upload" class="techpack-step" data-step="1">
   <div class="techpack-container">

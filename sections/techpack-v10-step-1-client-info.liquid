@@ -2,15 +2,8 @@
 TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workflow
 {% endcomment %}
 
-<link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
-
-<!-- Force Dark Mode - No Light Theme Support -->
-<script>
-// Immediately force dark mode on page load
-document.documentElement.setAttribute('data-theme', 'dark');
-document.body.setAttribute('data-theme', 'dark');
-
-</script>
+{{ 'gb-design-system.css' | asset_url | stylesheet_tag }}
+{{ 'theme-bridge.js' | asset_url | script_tag }}
 
 <style>
   /* Only layout overrides - backgrounds handled by external V10 CSS */
