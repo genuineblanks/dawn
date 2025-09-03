@@ -43,7 +43,7 @@ TechPack V10 Step 4: Premium Review & Submit
       <!-- Review Content -->
 
           <!-- Review Summary Cards -->
-          <div class="review-summary-grid review-summary-grid--top">
+          <div class="review-summary-grid">
             
             <!-- Client Information Card -->
             <div class="review-card">
@@ -274,7 +274,7 @@ TechPack V10 Step 4: Premium Review & Submit
               </div>
 
               <!-- Action Buttons -->
-              <div class="v10-step-actions v10-step-actions--three-button">
+              <div class="v10-step-actions">
                 <button type="button" class="v10-btn v10-btn--secondary" id="step-4-prev">
                   <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
                     <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -282,22 +282,24 @@ TechPack V10 Step 4: Premium Review & Submit
                   Previous
                 </button>
                 
-                <button type="button" class="v10-btn v10-btn--ghost" id="save-draft-btn">
-                  <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                    <polyline points="17,21 17,13 7,13 7,21"/>
-                    <polyline points="7,3 7,8 15,8"/>
-                  </svg>
-                  Save Draft
-                </button>
-                
-                <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
-                  <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-                  </svg>
-                  Submit Request
-                </button>
+                <div class="submit-primary-actions">
+                  <button type="button" class="v10-btn v10-btn--secondary" id="save-draft-btn">
+                    <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                      <polyline points="17,21 17,13 7,13 7,21"/>
+                      <polyline points="7,3 7,8 15,8"/>
+                    </svg>
+                    Save Draft
+                  </button>
+                  
+                  <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
+                    <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="22" y1="2" x2="11" y2="13"/>
+                      <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                    </svg>
+                    Submit Request
+                  </button>
+                </div>
               </div>
 
             </div>
