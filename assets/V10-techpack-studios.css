@@ -5666,8 +5666,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .add-fabric-swatch-btn:hover,
 .add-fabric-design-btn:hover,
 .add-to-garment-btn:hover {
-  background: var(--v10-accent-secondary);
-  border-color: var(--v10-accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .add-fabric-design-btn:disabled {
