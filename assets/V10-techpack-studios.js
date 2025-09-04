@@ -11029,6 +11029,14 @@ class V10_DesignStudio {
       colorPicker.addEventListener('input', (e) => {
         const hex = e.target.value;
         
+        // Check if we should preserve TPX data (set by popular color click)
+        if (pantoneDisplay && pantoneDisplay.dataset.preserveTpx === 'true') {
+          // Clear the flag and skip TCX lookup to preserve TPX
+          delete pantoneDisplay.dataset.preserveTpx;
+          this.updateLabDipButtons();
+          return;
+        }
+        
         // Update auto-pantone display with enhanced color matching
         if (pantoneDisplay && pantoneCircle && pantoneCode) {
           const closestColors = V10_Utils.findClosestPantoneColors(hex, 1);
@@ -11676,7 +11684,7 @@ class V10_DesignStudio {
       hex,
       pantone,
       isFabricSwatch,
-      isCustomCode: pantoneInput.value && pantoneInput.value.trim() && !V10_Utils.validatePantone(pantoneInput.value),
+      isCustomCode: pantoneInput.value && pantoneInput.value.trim() ? true : false, // Always true for any manual textbox input
       createdAt: new Date().toISOString()
     };
 
