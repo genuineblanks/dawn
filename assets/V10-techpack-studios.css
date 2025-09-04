@@ -5348,19 +5348,8 @@ DESIGN STUDIO SYSTEM - LAB DIPS
 
 /* Desktop Only: Equal Height for Color Selection and Lab Dips Collection */
 @media (min-width: 769px) {
-  .color-selection-area,
-  .labdips-collection {
-    display: flex;
-    flex-direction: column;
-    min-height: 600px;
-  }
-  
-  .color-selection-area {
-    justify-content: flex-start;
-  }
-  
-  .labdips-collection {
-    justify-content: flex-start;
+  .color-studio {
+    align-items: stretch;
   }
 }
 
