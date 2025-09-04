@@ -309,30 +309,6 @@ TechPack V10 Step 4: Premium Review & Submit
     </div>
   </div>
 
-  <!-- Help Modal -->
-  <div class="v10-modal-overlay" id="step-4-help-modal" style="display: none;">
-    <div class="v10-modal v10-modal--help">
-      <div class="v10-modal-header">
-        <div class="v10-modal-icon v10-modal-icon--help">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </div>
-        <h3 class="v10-modal-title">Review Guide</h3>
-        <button type="button" class="v10-modal-close" id="close-help-modal">
-          <svg width="20" height="20" viewBox="0 0 20 20">
-            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-      </div>
-      <div class="v10-modal-body">
-        <div class="help-content" id="help-content">
-          <!-- Help content will be populated based on request type -->
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Success Modal -->
   <div class="v10-modal-overlay" id="success-modal" style="display: none;">
@@ -445,15 +421,20 @@ TechPack V10 Step 4: Premium Review & Submit
 </template>
 
 <!-- Terms & Conditions Modal -->
-<div class="v10-modal" id="terms-modal" style="display: none;">
-  <div class="v10-modal-overlay"></div>
-  <div class="v10-modal-content v10-modal-content--medium">
+<div class="v10-modal-overlay" id="terms-modal" style="display: none;">
+  <div class="v10-modal v10-modal--terms">
     <div class="v10-modal-header">
+      <div class="v10-modal-icon v10-modal-icon--info">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+      </div>
       <h3 class="v10-modal-title">Terms & Conditions</h3>
       <button type="button" class="v10-modal-close" aria-label="Close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
         </svg>
       </button>
     </div>
@@ -485,7 +466,7 @@ TechPack V10 Step 4: Premium Review & Submit
       </div>
     </div>
     <div class="v10-modal-actions">
-      <button type="button" class="v10-btn v10-btn--primary modal-close">I Understand</button>
+      <button type="button" class="v10-btn v10-btn--primary v10-modal-close">I Understand</button>
     </div>
   </div>
 </div>
