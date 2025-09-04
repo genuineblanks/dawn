@@ -12795,6 +12795,8 @@ class V10_ReviewManager {
     }
     
     // Populate all sections with enhanced design
+    this.populateClientInfo();
+    this.populateUploadedFiles();
     this.populateExecutiveSummary();
     this.populateRequestOverview();
     this.populateStatistics();
@@ -13056,6 +13058,30 @@ class V10_ReviewManager {
         </div>
       `;
     }).join('');
+  }
+
+  getGarmentColorInfo(garment) {
+    // Get color information for cost summary format
+    let colorInfo = '';
+    
+    if (garment.sampleType === 'stock' && garment.sampleSubValue) {
+      // Stock sample with specific color
+      const color = V10_CONFIG.STOCK_COLORS[garment.sampleSubValue];
+      if (color) {
+        colorInfo = ` - ${color.name} - ${color.tcx || color.pantone || ''}`;
+      }
+    } else if (garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+      // Custom sample with lab dips
+      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
+      const labDip = V10_State.labDips.get(firstLabDipId);
+      if (labDip) {
+        const colorName = labDip.pantone || labDip.name || 'Custom Color';
+        const tcxCode = labDip.tcx || '';
+        colorInfo = ` - ${colorName}${tcxCode ? ' - ' + tcxCode : ''}`;
+      }
+    }
+    
+    return colorInfo;
   }
 
   getGarmentColorDisplay(garment) {
@@ -13393,10 +13419,10 @@ class V10_ReviewManager {
       }
     });
 
-    // Update count
+    // Update count - show only standalone lab dips count
     if (countElement) {
-      const totalCount = labDips.length;
-      countElement.textContent = `${totalCount} swatch${totalCount !== 1 ? 'es' : ''}`;
+      const standaloneCount = standaloneLabDips.length;
+      countElement.textContent = `${standaloneCount} swatch${standaloneCount !== 1 ? 'es' : ''}`;
     }
 
     // Render enhanced lab dips using new template
@@ -13428,7 +13454,8 @@ class V10_ReviewManager {
           if (colorDiv) colorDiv.style.backgroundColor = labDip.hex || '#ccc';
           if (nameElement) nameElement.textContent = labDip.pantone || 'Custom Color';
           if (assignmentElement) assignmentElement.textContent = this.getLabDipAssignmentText(labDip.id);
-          if (costElement) costElement.textContent = '€25';
+          // Remove cost from fabric swatches section - costs should only appear in cost summary
+          if (costElement) costElement.style.display = 'none';
           
           standaloneContainer.appendChild(clone);
         });
@@ -13675,11 +13702,12 @@ class V10_ReviewManager {
       // Regular cost breakdown for samples and bulk orders
       costs.items.forEach(item => {
         const amount = this.formatCurrencyWithToggle(item.amount, currentCurrency);
+        const description = item.fullDescription || item.description;
         html += `
           <div class="v10-cost-item">
             <div class="v10-cost-info">
               <div class="v10-cost-label">${item.label}</div>
-              <div class="v10-cost-description">${item.description}</div>
+              <div class="v10-cost-description">${description}</div>
             </div>
             <div class="v10-cost-amount">${amount}</div>
           </div>
@@ -13766,9 +13794,13 @@ class V10_ReviewManager {
             'stock'
           ) || V10_CONFIG.PRICING.STOCK_SAMPLE;
           
+          // Get color information for proper description
+          const colorInfo = this.getGarmentColorInfo(garment);
+          
           items.push({
             label: `${garment.type} - Stock Sample`,
             description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
             amount: dynamicPrice
           });
           total += dynamicPrice;
@@ -13780,9 +13812,13 @@ class V10_ReviewManager {
             'custom'
           ) || V10_CONFIG.PRICING.CUSTOM_SAMPLE;
           
+          // Get color information for proper description
+          const colorInfo = this.getGarmentColorInfo(garment);
+          
           items.push({
             label: `${garment.type} - Custom Sample`,
             description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
             amount: dynamicPrice
           });
           total += dynamicPrice;

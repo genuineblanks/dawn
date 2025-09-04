@@ -54,11 +54,11 @@ body[class*="techpack"] *,
    CSS CUSTOM PROPERTIES - DARK THEME ONLY
    ============================================== */
 
-:root {
-  /* Enhanced Dark Theme Colors - Professional Financial Dashboard */
+#techpack-v10-step-4 {
+  /* Enhanced Dark Theme Colors - Professional Financial Dashboard - SCOPED TO STEP 4 ONLY */
   --v10-bg-primary: #1a1a1a;          /* Darker primary background for better contrast */
   --v10-bg-secondary: #2d2d2d;        /* Medium grey for cards - perfect contrast */
-  --v10-bg-tertiary: #242424;         /* Slightly elevated surfaces */
+  --v10-bg-tertiary: #2a2a2a;         /* Match Steps 1-3 medium dark grey */
   --v10-bg-card: #2d2d2d;             /* Card backgrounds - medium grey */
   --v10-bg-card-hover: #343434;       /* Card hover state */
   --v10-bg-modal: #202020;            /* Modal backgrounds */
@@ -9029,6 +9029,21 @@ div[class*="circle"][style*="background-color"],
 /* ===== Step 4 Typography Only - Background handled by unified .techpack-content ===== */
 #techpack-v10-step-4 .techpack-content {
   color: var(--v10-text-primary);
+}
+
+/* Review Grid - Side by Side Layout */
+.v10-review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--v10-space-6);
+  margin-bottom: var(--v10-space-6);
+}
+
+@media (max-width: 768px) {
+  .v10-review-grid {
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-4);
+  }
 }
 
 .techpack-header-with-help {
