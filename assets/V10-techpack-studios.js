@@ -12714,49 +12714,6 @@ class V10_ReviewManager {
     }
   }
 
-  bindTermsModal() {
-    const termsLink = document.getElementById('terms-link');
-    const termsModal = document.getElementById('terms-modal');
-    
-    if (termsLink && termsModal) {
-      termsLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.openTermsModal();
-      });
-      
-      // Bind close buttons
-      const closeButtons = termsModal.querySelectorAll('.v10-modal-close, .modal-close');
-      closeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.closeTermsModal();
-        });
-      });
-      
-      // Bind overlay click
-      const overlay = termsModal.querySelector('.v10-modal-overlay');
-      if (overlay) {
-        overlay.addEventListener('click', () => {
-          this.closeTermsModal();
-        });
-      }
-    }
-  }
-
-  openTermsModal() {
-    const modal = document.getElementById('terms-modal');
-    if (modal) {
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
-  closeTermsModal() {
-    const modal = document.getElementById('terms-modal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
 
   // New Terms Modal Methods
   bindNewTermsModal() {

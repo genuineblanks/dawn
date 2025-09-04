@@ -1920,9 +1920,6 @@ body[style*="overflow: hidden"] {
   max-width: 500px;
 }
 
-.v10-modal--terms {
-  max-width: 650px;
-}
 
 .v10-modal--verification {
   max-width: 600px;
