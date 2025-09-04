@@ -55,36 +55,40 @@ body[class*="techpack"] *,
    ============================================== */
 
 :root {
-  /* Core Dark Theme Colors - Financial Dashboard Theme */
-  --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
-  --v10-bg-secondary: #3a3a3a;        /* Secondary dark panels - lighter for better button visibility */
-  --v10-bg-tertiary: #1e1e1e;         /* Elevated surfaces - same as primary for seamless look */
-  --v10-bg-card: #3a3a3a;             /* Card backgrounds - lighter for better button visibility */
-  --v10-bg-modal: #262626;            /* Modal backgrounds */
-  --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
-  --v10-bg-hover: #454545;            /* Hover states */
-  --v10-bg-active: #525252;           /* Active states */
+  /* Enhanced Dark Theme Colors - Professional Financial Dashboard */
+  --v10-bg-primary: #1a1a1a;          /* Darker primary background for better contrast */
+  --v10-bg-secondary: #2d2d2d;        /* Medium grey for cards - perfect contrast */
+  --v10-bg-tertiary: #242424;         /* Slightly elevated surfaces */
+  --v10-bg-card: #2d2d2d;             /* Card backgrounds - medium grey */
+  --v10-bg-card-hover: #343434;       /* Card hover state */
+  --v10-bg-modal: #202020;            /* Modal backgrounds */
+  --v10-bg-input: #343434;            /* Input backgrounds */
+  --v10-bg-hover: #3f3f3f;            /* Hover states - lighter grey */
+  --v10-bg-active: #4a4a4a;           /* Active states */
 
-  /* Glass Morphism Effects */
-  --v10-glass-bg: rgba(56, 56, 56, 0.8);
-  --v10-glass-border: rgba(255, 255, 255, 0.1);
-  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  --v10-backdrop-blur: blur(12px);
+  /* Enhanced Glass Morphism Effects */
+  --v10-glass-bg: rgba(45, 45, 45, 0.85);
+  --v10-glass-border: rgba(255, 255, 255, 0.12);
+  --v10-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --v10-glass-shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --v10-backdrop-blur: blur(16px);
 
-  /* Text Colors - High Contrast for Dark Background */
-  --v10-text-primary: #ffffff;        /* Primary white text */
-  --v10-text-secondary: #e5e5e5;      /* Secondary light text */
-  --v10-text-muted: #b3b3b3;          /* Muted grey text */
+  /* Enhanced Text Colors - High Contrast Hierarchy */
+  --v10-text-primary: #ffffff;        /* Pure white for headers */
+  --v10-text-secondary: #e8e8e8;      /* Light grey for body text */
+  --v10-text-tertiary: #c1c1c1;       /* Medium grey for descriptions */
+  --v10-text-muted: #9a9a9a;          /* Muted grey text */
   --v10-text-disabled: #666666;       /* Disabled text */
-  --v10-text-success: #6b7280;        /* Success text - muted grey-green */
+  --v10-text-success: #10b981;        /* Success text - proper green */
   --v10-text-warning: #f59e0b;        /* Warning text */
   --v10-text-error: #ef4444;          /* Error text */
 
-  /* Border Colors */
-  --v10-border-primary: #4a4a4a;      /* Primary borders - lighter for visibility */
-  --v10-border-secondary: #404040;    /* Secondary borders */
-  --v10-border-focus: #6b7280;        /* Focus borders - subtle grey */
-  --v10-border-success: #10b981;      /* Success borders - green */
+  /* Enhanced Border Colors */
+  --v10-border-primary: #3f3f3f;      /* Primary borders - subtle but visible */
+  --v10-border-secondary: #333333;    /* Secondary borders */
+  --v10-border-light: rgba(255, 255, 255, 0.1); /* Light accent borders */
+  --v10-border-focus: #6b7280;        /* Focus borders */
+  --v10-border-success: #10b981;      /* Success borders */
   --v10-border-warning: #f59e0b;      /* Warning borders */
   --v10-border-error: #ef4444;        /* Error borders */
 
@@ -885,26 +889,70 @@ button:focus,
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
-  box-shadow: var(--v10-shadow-sm);
-  transition: var(--v10-transition);
+  box-shadow: var(--v10-glass-shadow);
+  backdrop-filter: var(--v10-backdrop-blur);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.v10-studio-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--v10-border-light);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+}
+
+.v10-studio-card:hover {
+  background: var(--v10-bg-card-hover);
+  box-shadow: var(--v10-glass-shadow-strong);
+  transform: translateY(-1px);
+  border-color: var(--v10-border-light);
 }
 
 .v10-studio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--v10-space-6);
+  border-bottom: 1px solid var(--v10-border-secondary);
+  padding-bottom: var(--v10-space-4);
 }
 
 .v10-studio-title {
-  font-size: var(--v10-text-2xl);
+  font-size: var(--v10-text-xl);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-2) 0;
+  margin: 0;
+  letter-spacing: -0.025em;
 }
 
 .v10-studio-subtitle {
-  font-size: var(--v10-text-base);
-  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-tertiary);
   margin: 0;
   line-height: 1.5;
+}
+
+.v10-edit-btn {
+  background: transparent;
+  border: 1px solid var(--v10-border-primary);
+  color: var(--v10-text-tertiary);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  border-radius: var(--v10-radius-md);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v10-edit-btn:hover {
+  background: var(--v10-bg-hover);
+  color: var(--v10-text-secondary);
+  border-color: var(--v10-border-light);
 }
 
 /* ==============================================
@@ -7559,12 +7607,78 @@ div[class*="circle"][style*="background-color"],
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-5);
   margin-bottom: var(--v10-space-4);
-  transition: var(--v10-transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
-/* Removed hover effect for solid appearance */
+.garment-quantity-card--complete {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1), 
+              0 0 20px rgba(16, 185, 129, 0.05);
+}
+
+.garment-quantity-card--complete::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.status-badge--sufficient {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  animation: pulse-green 2s infinite;
+}
+
+.status-badge--insufficient {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+@keyframes pulse-green {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.9; }
+}
+
+/* Quantity Status Indicator */
+.quantity-status {
+  font-weight: 700;
+  font-size: var(--v10-text-xl);
+  transition: color 0.3s ease;
+}
+
+.quantity-status.sufficient {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.quantity-status.insufficient {
+  color: var(--v10-text-secondary);
+}
 
 .garment-quantity-card__header {
   display: flex;
@@ -7584,6 +7698,21 @@ div[class*="circle"][style*="background-color"],
   font-weight: 600;
   color: var(--v10-text-primary);
   margin-bottom: var(--v10-space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+.garment-quantity-card__number {
+  color: var(--v10-accent-primary);
+  font-weight: 700;
+  font-size: var(--v10-text-xl);
+}
+
+.garment-quantity-card__type {
+  color: #10b981;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
 .garment-quantity-card__subtitle {
@@ -7621,6 +7750,22 @@ div[class*="circle"][style*="background-color"],
   font-weight: 700;
   color: var(--v10-text-primary);
   line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.garment-total-units {
+  font-weight: 700;
+  font-size: var(--v10-text-xl);
+  transition: all 0.3s ease;
+}
+
+.garment-total-units.sufficient {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.garment-total-units.insufficient {
+  color: var(--v10-text-secondary);
 }
 
 .garment-stat__label {
@@ -7629,6 +7774,17 @@ div[class*="circle"][style*="background-color"],
   text-transform: uppercase;
   letter-spacing: 0.025em;
   margin-top: var(--v10-space-1);
+}
+
+/* Minimum Required Text */
+.minimum-required-text {
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+}
+
+.minimum-required-text strong {
+  color: var(--v10-accent-primary);
+  font-weight: 700;
 }
 
 /* Professional Size Grid */
