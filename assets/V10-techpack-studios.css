@@ -57,9 +57,9 @@ body[class*="techpack"] *,
 :root {
   /* Core Dark Theme Colors - Financial Dashboard Theme */
   --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
-  --v10-bg-secondary: #2d2d2d;        /* Secondary dark panels - more contrast */
+  --v10-bg-secondary: #3a3a3a;        /* Secondary dark panels - lighter for better button visibility */
   --v10-bg-tertiary: #1e1e1e;         /* Elevated surfaces - same as primary for seamless look */
-  --v10-bg-card: #2d2d2d;             /* Card backgrounds */
+  --v10-bg-card: #3a3a3a;             /* Card backgrounds - lighter for better button visibility */
   --v10-bg-modal: #262626;            /* Modal backgrounds */
   --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
   --v10-bg-hover: #454545;            /* Hover states */
@@ -4697,7 +4697,7 @@ body[style*="overflow: hidden"] {
 .v10-download-new .v10-btn-download-new:hover {
   transform: translateY(-1px) !important;
   box-shadow: var(--v10-shadow-md) !important;
-  background: #1a1a1a !important; /* Same hover color as ACCESS STUDIO */
+  background: #333333 !important; /* Slightly darker than base for hover effect but still visible */
   color: var(--v10-text-primary) !important;
   border-color: var(--v10-accent-primary) !important;
 }
@@ -4790,7 +4790,7 @@ body[style*="overflow: hidden"] {
 .v10-btn-access-studio:hover {
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-md);
-  background: #1a1a1a; /* Much darker grey, same as container background */
+  background: #333333; /* Slightly darker than base for hover effect but still visible */
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
 }
@@ -6277,7 +6277,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .collection-item__assign:hover {
-  background: #2d2d2d;
+  background: #3a3a3a; /* Lighter for better visibility */
   border-color: #4a4a4a;
   color: var(--v10-text-primary);
   transform: translateY(-1px);
@@ -6289,7 +6289,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 .collection-item__remove:hover {
-  background: #2d2d2d;
+  background: #3a3a3a; /* Lighter for better visibility */
   border-color: #ef4444;
   color: #ef4444;
   transform: translateY(-1px);

@@ -11678,6 +11678,15 @@ class V10_DesignStudio {
       return;
     }
 
+    // Check for duplicate lab dips - prevent same pantone code from being added twice
+    const normalizedPantone = pantone.toLowerCase().trim();
+    for (const existingLabDip of V10_State.labDips.values()) {
+      if (existingLabDip.pantone.toLowerCase().trim() === normalizedPantone) {
+        // Silently prevent duplicate - just return without adding
+        return;
+      }
+    }
+
     const labDipId = V10_Utils.generateId('labdip');
     const labDipData = {
       id: labDipId,
