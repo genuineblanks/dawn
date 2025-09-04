@@ -14051,10 +14051,9 @@ class V10_ReviewManager {
     
     if (!submitBtn || !termsCheckbox) return;
     
-    // Enable/disable based on terms agreement and validation
+    // Enable/disable based on terms agreement only (validation should be done in previous steps)
     const termsAgreed = termsCheckbox.checked;
-    const allValid = this.validateAllSections();
-    const isEnabled = termsAgreed && allValid;
+    const isEnabled = termsAgreed;
     
     submitBtn.disabled = !isEnabled;
     
@@ -14066,12 +14065,10 @@ class V10_ReviewManager {
       submitBtn.classList.remove('v10-btn--ready');
     }
     
-    // Update button text based on validation state
+    // Update button text based on terms agreement
     const buttonText = submitBtn.querySelector('span');
     if (buttonText) {
-      if (!allValid) {
-        buttonText.textContent = 'Complete Required Fields';
-      } else if (!termsAgreed) {
+      if (!termsAgreed) {
         buttonText.textContent = 'Accept Terms to Continue';
       } else {
         const requestType = V10_State.requestType;
