@@ -8674,29 +8674,480 @@ div[class*="circle"][style*="background-color"],
 .v10-garment-item {
   display: flex;
   align-items: center;
-  gap: var(--v10-space-3);
-  padding: var(--v10-space-3);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-md);
-  margin-bottom: var(--v10-space-2);
+  gap: var(--v10-space-4);
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+  margin-bottom: var(--v10-space-3);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.v10-garment-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--v10-border-light);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+}
+
+.v10-garment-item:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-border-light);
+  transform: translateX(2px);
 }
 
 .v10-garment-color {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid var(--v10-border-primary);
+  border: 2px solid var(--v10-border-light);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.v10-garment-color::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .v10-garment-text {
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
-  line-height: 1.4;
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-base);
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 .v10-empty-state {
   text-align: center;
   padding: var(--v10-space-8);
+  color: var(--v10-text-muted);
+  background: var(--v10-bg-tertiary);
+  border: 1px dashed var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+}
+
+/* ===== Fabric Swatches & Design Applications Grid ===== */
+.v10-samples-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--v10-space-6);
+  margin-top: var(--v10-space-4);
+}
+
+@media (min-width: 768px) {
+  .v10-samples-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.v10-swatch-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-2);
+  transition: all 0.2s ease;
+}
+
+.v10-swatch-item:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-border-light);
+}
+
+.v10-swatch-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-light);
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.v10-swatch-info {
+  flex: 1;
+}
+
+.v10-swatch-title {
   color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  margin: 0 0 var(--v10-space-1) 0;
+}
+
+.v10-swatch-details {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-xs);
+  margin: 0;
+}
+
+.v10-swatch-price {
+  color: var(--v10-text-primary);
+  font-weight: 600;
+  font-size: var(--v10-text-sm);
+}
+
+/* Design Applications */
+.v10-design-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v10-space-6);
+  background: var(--v10-bg-tertiary);
+  border: 1px dashed var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+  text-align: center;
+  color: var(--v10-text-muted);
+}
+
+.v10-design-icon {
+  margin-bottom: var(--v10-space-2);
+  opacity: 0.6;
+}
+
+/* ===== Cost Summary Redesign ===== */
+#cost-breakdown {
+  margin-bottom: var(--v10-space-6);
+}
+
+.v10-cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-3);
+  transition: all 0.2s ease;
+}
+
+.v10-cost-item:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-border-light);
+}
+
+.v10-cost-info {
+  flex: 1;
+}
+
+.v10-cost-label {
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-base);
+  font-weight: 500;
+  margin: 0 0 var(--v10-space-1) 0;
+}
+
+.v10-cost-description {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-sm);
+  margin: 0;
+}
+
+.v10-cost-amount {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+  font-weight: 600;
+  text-align: right;
+}
+
+.v10-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--v10-space-4);
+  background: var(--v10-bg-tertiary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
+  margin-top: var(--v10-space-4);
+}
+
+.v10-total-label {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+}
+
+.v10-total-amount {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-xl);
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ===== Submit Section Redesign ===== */
+.v10-submit-section {
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-6);
+  margin-top: var(--v10-space-6);
+  position: relative;
+}
+
+.v10-submit-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--v10-border-light);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+}
+
+.v10-submit-header {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-submit-icon {
+  color: var(--v10-text-success);
+  flex-shrink: 0;
+}
+
+.v10-submit-title {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  margin: 0;
+}
+
+.v10-submit-subtitle {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-base);
+  margin: 0 0 var(--v10-space-4) 0;
+  line-height: 1.5;
+}
+
+.v10-timeline {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-4);
+  flex-wrap: wrap;
+  margin-top: var(--v10-space-4);
+}
+
+.v10-timeline-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-sm);
+}
+
+.v10-timeline-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--v10-text-warning);
+}
+
+.v10-timeline-separator {
+  width: 1px;
+  height: 16px;
+  background: var(--v10-border-secondary);
+}
+
+@media (max-width: 768px) {
+  .v10-timeline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-2);
+  }
+  
+  .v10-timeline-separator {
+    display: none;
+  }
+}
+
+/* Submit Card (existing structure) */
+.v10-submit-card {
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-success);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-6);
+  margin-bottom: var(--v10-space-6);
+  position: relative;
+}
+
+.v10-submit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--v10-text-success), transparent);
+  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
+}
+
+.v10-submit-header {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-4);
+}
+
+.v10-submit-icon {
+  color: var(--v10-text-success);
+  flex-shrink: 0;
+}
+
+.v10-submit-info {
+  flex: 1;
+}
+
+.v10-submit-title {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-xl);
+  font-weight: 600;
+  margin: 0 0 var(--v10-space-2) 0;
+}
+
+.v10-submit-message {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-base);
+  line-height: 1.5;
+}
+
+/* ===== Overall Page Typography & Layout ===== */
+.techpack-content {
+  background: var(--v10-bg-primary);
+  color: var(--v10-text-primary);
+  min-height: 100vh;
+  padding: var(--v10-space-6) 0;
+}
+
+.techpack-header-with-help {
+  margin-bottom: var(--v10-space-8);
+}
+
+.techpack-title {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-3xl);
+  font-weight: 700;
+  margin: 0 0 var(--v10-space-2) 0;
+  letter-spacing: -0.025em;
+}
+
+.techpack-subtitle {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-lg);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Improve review content spacing */
+.v10-review-content {
+  color: var(--v10-text-secondary);
+}
+
+.v10-review-content p {
+  margin: 0 0 var(--v10-space-3) 0;
+  line-height: 1.6;
+}
+
+/* Better checkbox styling */
+.v10-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-3);
+  cursor: pointer;
+  font-size: var(--v10-text-base);
+  line-height: 1.5;
+  color: var(--v10-text-secondary);
+}
+
+.v10-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.v10-checkbox-text a {
+  color: var(--v10-text-success);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.v10-checkbox-text a:hover {
+  text-decoration-color: var(--v10-text-success);
+}
+
+/* ===== Mobile Responsive Improvements ===== */
+@media (max-width: 768px) {
+  .techpack-content {
+    padding: var(--v10-space-4) 0;
+  }
+
+  .v10-studio-card {
+    padding: var(--v10-space-4);
+    margin-bottom: var(--v10-space-4);
+  }
+
+  .v10-studio-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-3);
+  }
+
+  .v10-garment-item {
+    padding: var(--v10-space-3);
+    gap: var(--v10-space-3);
+  }
+
+  .v10-garment-color {
+    width: 28px;
+    height: 28px;
+  }
+
+  .v10-garment-text {
+    font-size: var(--v10-text-sm);
+  }
+
+  .v10-cost-item {
+    padding: var(--v10-space-3);
+  }
+
+  .v10-cost-label {
+    font-size: var(--v10-text-sm);
+  }
+
+  .v10-total-row {
+    padding: var(--v10-space-3);
+  }
+
+  .v10-submit-card {
+    padding: var(--v10-space-4);
+  }
+
+  .v10-submit-header {
+    gap: var(--v10-space-3);
+  }
+
+  .techpack-title {
+    font-size: var(--v10-text-2xl);
+  }
+
+  .techpack-subtitle {
+    font-size: var(--v10-text-base);
+  }
 }
