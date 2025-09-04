@@ -9026,8 +9026,8 @@ div[class*="circle"][style*="background-color"],
   line-height: 1.5;
 }
 
-/* ===== Overall Page Typography & Layout ===== */
-.techpack-content {
+/* ===== Overall Page Typography & Layout - SCOPED TO STEP 4 ONLY ===== */
+#techpack-v10-step-4 .techpack-content {
   background: var(--v10-bg-primary);
   color: var(--v10-text-primary);
   min-height: 100vh;
@@ -9092,9 +9092,9 @@ div[class*="circle"][style*="background-color"],
   text-decoration-color: var(--v10-text-success);
 }
 
-/* ===== Mobile Responsive Improvements ===== */
+/* ===== Mobile Responsive Improvements - SCOPED TO STEP 4 ===== */
 @media (max-width: 768px) {
-  .techpack-content {
+  #techpack-v10-step-4 .techpack-content {
     padding: var(--v10-space-4) 0;
   }
 
