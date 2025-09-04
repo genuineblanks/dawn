@@ -5385,9 +5385,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Popular Colors Grid */
 .popular-colors-section {
   margin-bottom: var(--v10-space-4);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
 }
 
 .popular-colors-section h5 {
@@ -5402,8 +5400,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(3, auto);
   gap: var(--v10-space-2);
-  max-width: 360px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .popular-color-circle {
@@ -6342,15 +6339,15 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--v10-space-2);
-    max-width: 100%;
+    width: 100%;
   }
   
   .popular-color-circle {
-    width: 60px !important;
-    height: 35px !important;
-    border-radius: var(--v10-radius-md) !important;
+    width: 50px !important;
+    height: 30px !important;
+    border-radius: var(--v10-radius-sm) !important;
   }
   
   /* Fix mobile color picker alignment */
@@ -6362,12 +6359,23 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .color-picker-left {
-    flex: 0 0 auto !important;
+    flex: 0 0 60px !important;
+  }
+  
+  .color-picker-wrapper {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .color-picker-input {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: var(--v10-radius-md) !important;
   }
   
   .pantone-display-right {
     flex: 1 !important;
-    margin-left: var(--v10-space-1) !important;
+    margin-left: 0 !important;
   }
   
   .add-labdip-actions,
