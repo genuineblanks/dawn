@@ -1928,6 +1928,117 @@ body[style*="overflow: hidden"] {
   max-width: 600px;
 }
 
+/* New Terms & Conditions Modal Styling */
+.v10-new-terms-modal {
+  max-width: 700px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.v10-new-terms-modal .v10-modal-header {
+  padding: var(--v10-space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.v10-new-terms-modal .v10-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0;
+}
+
+.v10-new-terms-modal .v10-modal-body {
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(80vh - 140px); /* Account for header and footer */
+}
+
+.v10-new-terms-content {
+  padding: var(--v10-space-6);
+}
+
+.v10-terms-section {
+  margin-bottom: var(--v10-space-6);
+  padding-bottom: var(--v10-space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.v10-terms-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.v10-terms-section h4 {
+  color: var(--v10-text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 var(--v10-space-3) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+}
+
+.v10-terms-section p {
+  color: var(--v10-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.v10-new-terms-modal-actions {
+  padding: var(--v10-space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.v10-new-terms-understand {
+  min-width: 200px;
+  padding: var(--v10-space-4) var(--v10-space-6);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Mobile responsiveness for new terms modal */
+@media (max-width: 768px) {
+  .v10-new-terms-modal {
+    width: 95%;
+    max-height: 85vh;
+    margin: 2.5vh auto;
+  }
+  
+  .v10-new-terms-modal .v10-modal-header,
+  .v10-new-terms-content,
+  .v10-new-terms-modal-actions {
+    padding: var(--v10-space-4);
+  }
+  
+  .v10-new-terms-modal .v10-modal-body {
+    max-height: calc(85vh - 120px);
+  }
+  
+  .v10-new-terms-understand {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .v10-terms-section h4 {
+    font-size: 1rem;
+  }
+  
+  .v10-terms-section p {
+    font-size: 0.9rem;
+  }
+}
+
 .v10-modal--submission {
   max-width: 700px;
 }
@@ -9303,6 +9414,13 @@ div[class*="circle"][style*="background-color"],
   margin-bottom: var(--v10-space-8);
 }
 
+/* Uploaded Files Grid Layout - 2 per row */
+#review-uploaded-files {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: var(--v10-space-3) !important;
+}
+
 .techpack-title {
   color: var(--v10-text-primary);
   font-size: var(--v10-text-3xl);
@@ -9399,6 +9517,13 @@ div[class*="circle"][style*="background-color"],
     font-size: var(--v10-text-xs);
     padding: var(--v10-space-1) var(--v10-space-2);
     margin: 0 var(--v10-space-1);
+  }
+
+  /* Mobile Uploaded Files - 2 per row */
+  #review-uploaded-files {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--v10-space-3) !important;
   }
 
   .v10-garment-item {

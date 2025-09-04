@@ -12654,6 +12654,9 @@ class V10_ReviewManager {
     if (termsCheckbox) {
       termsCheckbox.addEventListener('change', () => this.updateSubmitButton());
     }
+    
+    // Bind new terms modal
+    this.bindNewTermsModal();
   }
 
   bindEditButtons() {
@@ -12749,6 +12752,50 @@ class V10_ReviewManager {
 
   closeTermsModal() {
     const modal = document.getElementById('terms-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  // New Terms Modal Methods
+  bindNewTermsModal() {
+    const termsLink = document.getElementById('terms-link');
+    const newTermsModal = document.getElementById('new-terms-modal');
+    
+    if (termsLink && newTermsModal) {
+      termsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openNewTermsModal();
+      });
+      
+      // Bind close buttons
+      const closeButtons = newTermsModal.querySelectorAll('.v10-modal-close, .v10-new-terms-understand');
+      closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.closeNewTermsModal();
+        });
+      });
+      
+      // Close on overlay click
+      newTermsModal.addEventListener('click', (e) => {
+        if (e.target === newTermsModal) {
+          this.closeNewTermsModal();
+        }
+      });
+    }
+  }
+
+  openNewTermsModal() {
+    const modal = document.getElementById('new-terms-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeNewTermsModal() {
+    const modal = document.getElementById('new-terms-modal');
     if (modal) {
       modal.style.display = 'none';
       document.body.style.overflow = '';
@@ -12927,8 +12974,8 @@ class V10_ReviewManager {
     
     let clientFields = '';
     
-    // Show name/contact first if available
-    if (clientData.name && clientData.name !== 'Not provided') {
+    // Show name/contact first if available AND different from company name
+    if (clientData.name && clientData.name !== 'Not provided' && clientData.name !== clientData.company) {
       clientFields += `
         <div class="review-detail">
           <span class="detail-label">Name:</span>
