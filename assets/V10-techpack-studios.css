@@ -6635,7 +6635,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   
   .color-selection-area,
   .labdips-collection,
-  .designs-collection {
+  .designs-collection,
+  .design-input-area {
     width: 100% !important;
     max-width: none !important;
     flex: none !important;
