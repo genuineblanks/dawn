@@ -12822,9 +12822,6 @@ class V10_ReviewManager {
     
     // Update submit button state
     this.updateSubmitButton();
-    
-    // Update status badge
-    this.updateStatusBadge();
   }
 
   populateExecutiveSummary() {
@@ -12886,19 +12883,7 @@ class V10_ReviewManager {
   }
 
   updateStatusBadge() {
-    const badge = document.getElementById('review-status-badge');
-    if (!badge) return;
-    
-    const requestType = V10_State.requestType;
-    const isComplete = this.validateAllSections();
-    
-    if (isComplete) {
-      badge.textContent = 'Ready to Submit';
-      badge.className = 'v10-status-badge v10-status-badge--ready';
-    } else {
-      badge.textContent = 'Incomplete';
-      badge.className = 'v10-status-badge v10-status-badge--incomplete';
-    }
+    // Status badge functionality removed
   }
 
   validateAllSections() {
