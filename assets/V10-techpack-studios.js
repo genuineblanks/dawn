@@ -13068,11 +13068,8 @@ class V10_ReviewManager {
     let colorInfo = '';
     
     if (garment.sampleType === 'stock' && garment.sampleSubValue) {
-      // Stock sample with specific color
-      const color = V10_CONFIG.STOCK_COLORS[garment.sampleSubValue];
-      if (color) {
-        colorInfo = ` - ${color.name} - ${color.tcx || color.pantone || ''}`;
-      }
+      // Stock sample with specific color - use the selected color name directly
+      colorInfo = ` - ${garment.sampleSubValue}`;
     } else if (garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size > 0) {
       // Custom sample with lab dips
       const firstLabDipId = Array.from(garment.assignedLabDips)[0];

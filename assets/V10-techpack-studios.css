@@ -9155,7 +9155,7 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* ===== Mobile Responsive Improvements - Step 4 uses unified .techpack-content ===== */
-
+@media (max-width: 768px) {
   .v10-studio-card {
     padding: var(--v10-space-4);
     margin-bottom: var(--v10-space-4);
