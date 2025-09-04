@@ -13851,36 +13851,45 @@ class V10_TechPackSystem {
   }
 
   setupHelpSystem() {
-    // Add event listeners to all help buttons with data-help attribute
-    document.querySelectorAll('[data-help]').forEach(button => {
-      button.addEventListener('click', (e) => {
+    console.log('🔧 Setting up help system...');
+    
+    // Use event delegation to prevent duplicate listeners
+    // Remove any existing help listeners first
+    if (this.helpDelegateHandler) {
+      document.removeEventListener('click', this.helpDelegateHandler);
+    }
+    
+    // Create a single delegated event handler for all help buttons
+    this.helpDelegateHandler = (e) => {
+      const helpButton = e.target.closest('[data-help], .limit-help-btn, .studio-help-btn');
+      
+      if (helpButton) {
         e.preventDefault();
         e.stopPropagation();
-        const helpTopic = e.target.closest('[data-help]').dataset.help;
-        this.showTopicHelp(helpTopic);
-      });
-    });
-
-    // Add event listeners to limit help buttons
-    document.querySelectorAll('.limit-help-btn').forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.showTopicHelp('size-distribution');
-      });
-    });
-
-    // Add event listeners to studio help buttons
-    document.querySelectorAll('.studio-help-btn').forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const helpTopic = button.dataset.help;
-        if (helpTopic) {
-          this.showTopicHelp(helpTopic);
+        
+        let helpTopic;
+        
+        // Determine help topic based on button type
+        if (helpButton.classList.contains('limit-help-btn')) {
+          helpTopic = 'size-distribution';
+        } else if (helpButton.dataset.help) {
+          helpTopic = helpButton.dataset.help;
+        } else {
+          console.warn('⚠️ Help button found but no topic specified:', helpButton);
+          return;
         }
-      });
-    });
+        
+        console.log(`🎯 Help button clicked for topic: ${helpTopic}`);
+        this.showTopicHelp(helpTopic);
+      }
+    };
+    
+    // Add single delegated event listener to document
+    document.addEventListener('click', this.helpDelegateHandler);
+    
+    // Count help buttons for debugging
+    const helpButtons = document.querySelectorAll('[data-help], .limit-help-btn, .studio-help-btn');
+    console.log(`✅ Help system initialized with ${helpButtons.length} help buttons using event delegation`);
 
 
     console.log('🔧 Help system initialized for all help buttons');
@@ -13899,24 +13908,46 @@ class V10_TechPackSystem {
   }
 
   showTopicHelp(topic) {
+    console.log(`🔍 Opening help modal for topic: ${topic}`);
+    
     // Create or get help modal using V10 modal system
     let modal = document.getElementById('topic-help-modal');
     if (!modal) {
+      console.log('📝 Creating new help modal');
       modal = this.createTopicHelpModal();
       document.body.appendChild(modal);
+    } else {
+      console.log('♻️ Reusing existing help modal');
     }
 
     // Load content for the specific topic
     this.loadTopicHelpContent(modal, topic);
 
-    // Show modal using V10 modal manager
-    if (window.v10ModalManager) {
+    // Show modal using V10 modal manager with improved fallback
+    if (window.v10ModalManager && typeof window.v10ModalManager.openModal === 'function') {
+      console.log('✅ Using V10 Modal Manager');
       window.v10ModalManager.openModal(modal);
     } else {
-      // Fallback if modal manager not available
+      console.log('⚠️ V10 Modal Manager not available, using fallback');
+      // Enhanced fallback with better modal behavior
       modal.style.display = 'flex';
       modal.classList.add('active');
+      modal.style.opacity = '0';
+      modal.style.visibility = 'visible';
+      
+      // Force reflow and animate in
+      requestAnimationFrame(() => {
+        modal.style.transition = 'opacity 0.3s ease-out';
+        modal.style.opacity = '1';
+      });
+      
       document.body.style.overflow = 'hidden';
+      
+      // Focus management for accessibility
+      const firstFocusable = modal.querySelector('.v10-modal-close');
+      if (firstFocusable) {
+        firstFocusable.focus();
+      }
     }
   }
 
@@ -13950,32 +13981,58 @@ class V10_TechPackSystem {
       </div>
     `;
     
-    // Add click event to close button
-    const closeBtn = modal.querySelector('.v10-modal-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        if (window.v10ModalManager) {
-          window.v10ModalManager.closeModal(modal);
-        } else {
+    // Enhanced close functionality
+    const closeModal = () => {
+      console.log('🔄 Closing help modal');
+      if (window.v10ModalManager && typeof window.v10ModalManager.closeModal === 'function') {
+        window.v10ModalManager.closeModal(modal);
+      } else {
+        // Enhanced fallback close with animation
+        modal.style.transition = 'opacity 0.3s ease-out';
+        modal.style.opacity = '0';
+        
+        setTimeout(() => {
           modal.style.display = 'none';
+          modal.style.visibility = 'hidden';
           modal.classList.remove('active');
           document.body.style.overflow = '';
-        }
+        }, 300);
+      }
+    };
+
+    // Add click event to close button with event delegation
+    const closeBtn = modal.querySelector('.v10-modal-close');
+    if (closeBtn) {
+      // Remove any existing listeners to prevent duplicates
+      closeBtn.replaceWith(closeBtn.cloneNode(true));
+      const newCloseBtn = modal.querySelector('.v10-modal-close');
+      newCloseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
       });
     }
 
-    // Add click event to backdrop
+    // Add click event to backdrop with better targeting
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        if (window.v10ModalManager) {
-          window.v10ModalManager.closeModal(modal);
-        } else {
-          modal.style.display = 'none';
-          modal.classList.remove('active');
-          document.body.style.overflow = '';
-        }
+      // Only close if clicking the backdrop (modal overlay), not the modal content
+      if (e.target === modal || e.target.classList.contains('v10-modal-overlay')) {
+        e.preventDefault();
+        closeModal();
       }
     });
+
+    // Add ESC key support
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        e.preventDefault();
+        closeModal();
+      }
+    };
+
+    // Remove existing keydown listener if it exists
+    document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return modal;
   }
