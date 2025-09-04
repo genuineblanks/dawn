@@ -5408,20 +5408,22 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 .popular-color-circle {
   display: block;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 45px;
+  height: 32px;
+  border-radius: var(--v10-radius-sm);
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--v10-shadow-sm);
   justify-self: center;
   align-self: center;
   visibility: visible;
+  border: 2px solid var(--v10-border-primary);
 }
 
 .popular-color-circle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: var(--v10-shadow-hover);
+  border-color: var(--v10-accent-primary);
 }
 
 .popular-color {
@@ -6340,15 +6342,27 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--v10-space-2);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--v10-space-3);
     max-width: 100%;
   }
   
   .popular-color-circle {
-    width: 45px !important;
-    height: 45px !important;
-    border-width: 2px !important;
+    width: 60px !important;
+    height: 35px !important;
+    border-radius: var(--v10-radius-md) !important;
+  }
+  
+  /* Fix mobile color picker alignment */
+  .color-picker-row {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: var(--v10-space-3) !important;
+  }
+  
+  .color-picker-left,
+  .pantone-display-right {
+    flex: 1 !important;
   }
   
   .add-labdip-actions,
