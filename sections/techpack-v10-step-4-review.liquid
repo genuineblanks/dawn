@@ -80,7 +80,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Garment Specifications</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">
+        <button type="button" class="v10-edit-btn" data-edit-step="3" data-studio="garment">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -99,8 +99,8 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
       <!-- Fabric Swatches -->
       <div class="v10-studio-card">
         <div class="v10-studio-header">
-          <h3 class="v10-studio-title">Fabric Swatches <span class="v10-count-badge" id="labdips-count">0 swatches</span></h3>
-          <button type="button" class="v10-edit-btn" data-edit-step="3">
+          <h3 class="v10-studio-title">Fabric Swatches</h3>
+          <button type="button" class="v10-edit-btn" data-edit-step="3" data-studio="color">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -118,8 +118,8 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
       <!-- Design Applications -->
       <div class="v10-studio-card" id="review-designs-section">
         <div class="v10-studio-header">
-          <h3 class="v10-studio-title">Design Applications <span class="v10-count-badge" id="designs-count">0 designs</span></h3>
-          <button type="button" class="v10-edit-btn" data-edit-step="3">
+          <h3 class="v10-studio-title">Design Applications</h3>
+          <button type="button" class="v10-edit-btn" data-edit-step="3" data-studio="color">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -140,7 +140,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card" id="review-quantities-section" style="display: none;">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Production Quantities</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">
+        <button type="button" class="v10-edit-btn" data-edit-step="3" data-studio="quantities">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -157,10 +157,18 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Cost Summary</h3>
+        <!-- Estimation Warning Badge -->
+        <div class="v10-optional-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          This is an estimation price, final quotation will be given once you submit this request
+        </div>
         <!-- Currency Toggle -->
         <div class="currency-toggle">
-          <button type="button" class="v10-currency-btn" data-currency="EUR">€</button>
-          <button type="button" class="v10-currency-btn" data-currency="USD">$</button>
+          <button type="button" class="v10-currency-btn" data-currency="EUR">€EURO</button>
+          <button type="button" class="v10-currency-btn" data-currency="USD">$DOLLAR</button>
         </div>
       </div>
       <div class="v10-review-content">
@@ -192,15 +200,28 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
           </div>
         </div>
 
-    <!-- Terms & Conditions - Centered -->
+    <!-- Terms & Conditions - Proper Box -->
     <div class="v10-terms-section">
-      <div class="v10-form-field">
-        <label class="v10-checkbox-label">
-          <input type="checkbox" id="terms-agreement" required>
-          <span class="v10-checkbox-text">
-            I have reviewed all details and agree to the <a href="#" id="terms-link">Terms & Conditions</a>
-          </span>
-        </label>
+      <div class="v10-terms-box">
+        <div class="v10-terms-header">
+          <h4 class="v10-terms-title">Agreement Required</h4>
+          <p class="v10-terms-subtitle">Please review and accept the terms to continue</p>
+        </div>
+        <div class="v10-terms-content">
+          <label class="v10-measurement-checkbox">
+            <input type="checkbox" id="terms-agreement" class="v10-measurement-checkbox__input" required>
+            <div class="v10-measurement-checkbox__custom">
+              <svg class="v10-measurement-checkbox__check" width="14" height="14" viewBox="0 0 14 14">
+                <path d="M11.5 3.5L5.5 9.5l-3-3" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <div class="v10-measurement-checkbox__content">
+              <div class="v10-measurement-checkbox__title">
+                I have reviewed all details and agree to the <a href="#" id="terms-link">Terms & Conditions</a>
+              </div>
+            </div>
+          </label>
+        </div>
       </div>
     </div>
 

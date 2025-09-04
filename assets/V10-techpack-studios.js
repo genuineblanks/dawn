@@ -12179,22 +12179,12 @@ class V10_DesignStudio {
   }
 
   updateCollectionCounts() {
-    const labDipsCount = document.getElementById('labdips-count');
-    const designsCount = document.getElementById('designs-count');
     const labDipsEmpty = document.getElementById('labdips-empty');
     const designsEmpty = document.getElementById('designs-empty');
     const labDipsTip = document.getElementById('labdips-tip');
 
     const labDipCount = V10_State.labDips.size;
     const designCount = V10_State.designSamples.size;
-
-    if (labDipsCount) {
-      labDipsCount.textContent = `${labDipCount} color${labDipCount !== 1 ? 's' : ''}`;
-    }
-
-    if (designsCount) {
-      designsCount.textContent = `${designCount} design${designCount !== 1 ? 's' : ''}`;
-    }
 
     if (labDipsEmpty) {
       labDipsEmpty.style.display = labDipCount === 0 ? 'block' : 'none';
@@ -12587,7 +12577,7 @@ class V10_StandaloneItemsManager {
           </div>
           <div class="collection-item__content">
             <span class="collection-item__name">${labDip.pantone}</span>
-            <span class="collection-item__type">Fabric Swatch - ${V10_Utils.formatCurrency(V10_CONFIG.PRICING.LAB_DIP)}</span>
+            <span class="collection-item__type">${V10_Utils.formatCurrency(V10_CONFIG.PRICING.LAB_DIP)}</span>
           </div>
         </div>
       `).join('');
@@ -12675,14 +12665,26 @@ class V10_ReviewManager {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const step = parseInt(btn.dataset.editStep);
-        console.log('🎯 Step 4: Section edit button clicked, going to step:', step);
-        this.goBackToStep(step);
+        const studio = btn.dataset.studio;
+        console.log('🎯 Step 4: Section edit button clicked, going to step:', step, studio ? `with studio: ${studio}` : '');
+        this.goBackToStep(step, studio);
+      });
+    });
+    
+    // Bind edit buttons with studio support
+    document.querySelectorAll('.v10-edit-btn[data-edit-step]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const step = parseInt(btn.dataset.editStep);
+        const studio = btn.dataset.studio;
+        console.log('🎯 Step 4: Edit button clicked, going to step:', step, studio ? `with studio: ${studio}` : '');
+        this.goBackToStep(step, studio);
       });
     });
     
     // Bind legacy edit buttons for compatibility
     document.querySelectorAll('[data-edit-step]').forEach(btn => {
-      if (!btn.classList.contains('v10-section-edit-btn')) {
+      if (!btn.classList.contains('v10-section-edit-btn') && !btn.classList.contains('v10-edit-btn')) {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
@@ -12753,7 +12755,7 @@ class V10_ReviewManager {
     }
   }
 
-  goBackToStep(stepNumber) {
+  goBackToStep(stepNumber, targetStudio = null) {
     const step4 = document.getElementById('techpack-v10-step-4');
     const targetStep = document.getElementById(`techpack-v10-step-${stepNumber}`);
     
@@ -12762,13 +12764,19 @@ class V10_ReviewManager {
       return;
     }
     
-    console.log(`🎯 Step 4: Navigating back to step ${stepNumber}`);
+    console.log(`🎯 Step 4: Navigating back to step ${stepNumber}${targetStudio ? ` -> ${targetStudio} studio` : ''}`);
     
     // Hide step 4
     step4.style.display = 'none';
     
     // Show target step
     targetStep.style.display = 'block';
+    
+    // Switch to specific studio if requested
+    if (targetStudio && stepNumber === 3 && window.v10TechPackSystem && window.v10TechPackSystem.navigator) {
+      console.log(`🎛️ Switching to ${targetStudio} studio`);
+      window.v10TechPackSystem.navigator.switchStudio(targetStudio);
+    }
     
     // Scroll to top for mobile navigation
     window.scrollTo(0, 0);
@@ -13543,7 +13551,6 @@ class V10_ReviewManager {
 
   populateLabDips() {
     const standaloneContainer = document.getElementById('review-labdips-standalone');
-    const countElement = document.getElementById('labdips-count');
     
     if (!standaloneContainer) return;
 
@@ -13556,12 +13563,6 @@ class V10_ReviewManager {
         standaloneLabDips.push(labDip);
       }
     });
-
-    // Use the same logic as cost summary for lab dips count
-    if (countElement) {
-      const standaloneCount = standaloneLabDips.length;
-      countElement.textContent = `${standaloneCount} swatch${standaloneCount !== 1 ? 'es' : ''}`;
-    }
 
     // Render fabric swatches using simple inline HTML (matching garment specs format)
     if (standaloneLabDips.length === 0) {
@@ -13589,7 +13590,7 @@ class V10_ReviewManager {
               <!-- Color circle for fabric swatch -->
             </div>
             <div class="v10-garment-text">
-              Fabric Swatch - ${colorName}${tcxCode}
+              ${colorName}${tcxCode}
             </div>
           </div>
         `;
@@ -13728,7 +13729,6 @@ class V10_ReviewManager {
 
   populateDesigns() {
     const standaloneContainer = document.getElementById('review-designs-standalone');
-    const countElement = document.getElementById('designs-count');
     
     if (!standaloneContainer) return;
 
@@ -13741,12 +13741,6 @@ class V10_ReviewManager {
         standaloneDesigns.push(design);
       }
     });
-
-    // Use the same logic as cost summary for designs count  
-    if (countElement) {
-      const standaloneCount = standaloneDesigns.length;
-      countElement.textContent = `${standaloneCount} design${standaloneCount !== 1 ? 's' : ''}`;
-    }
 
     // Render enhanced designs using new template
     if (standaloneDesigns.length === 0) {

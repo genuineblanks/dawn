@@ -9185,6 +9185,115 @@ div[class*="circle"][style*="background-color"],
   margin: var(--v10-space-6) 0;
 }
 
+/* Terms Box Styling */
+.v10-terms-box {
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-6);
+  max-width: 600px;
+  width: 100%;
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-terms-header {
+  margin-bottom: var(--v10-space-4);
+  text-align: center;
+}
+
+.v10-terms-title {
+  color: var(--v10-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 var(--v10-space-2) 0;
+}
+
+.v10-terms-subtitle {
+  color: var(--v10-text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.v10-terms-content {
+  display: flex;
+  justify-content: center;
+}
+
+/* Measurement Checkbox Styling (matching Step 2) */
+.v10-measurement-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v10-space-3);
+  cursor: pointer;
+  padding: var(--v10-space-3);
+  border-radius: var(--v10-radius-md);
+  transition: var(--v10-transition);
+}
+
+.v10-measurement-checkbox:hover {
+  background: var(--v10-bg-hover);
+}
+
+.v10-measurement-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.v10-measurement-checkbox__custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  background: var(--v10-bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--v10-transition);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.v10-measurement-checkbox:hover .v10-measurement-checkbox__custom {
+  border-color: var(--v10-accent-primary);
+}
+
+.v10-measurement-checkbox__input:checked + .v10-measurement-checkbox__custom {
+  background: var(--v10-accent-primary);
+  border-color: var(--v10-accent-primary);
+}
+
+.v10-measurement-checkbox__check {
+  opacity: 0;
+  color: white;
+  transition: var(--v10-transition);
+}
+
+.v10-measurement-checkbox__input:checked + .v10-measurement-checkbox__custom .v10-measurement-checkbox__check {
+  opacity: 1;
+}
+
+.v10-measurement-checkbox__content {
+  flex: 1;
+}
+
+.v10-measurement-checkbox__title {
+  color: var(--v10-text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.v10-measurement-checkbox__title a {
+  color: var(--v10-accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.v10-measurement-checkbox__title a:hover {
+  text-decoration: underline;
+}
+
 .v10-submit-actions {
   display: flex;
   justify-content: center;
