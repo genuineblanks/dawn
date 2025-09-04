@@ -12934,7 +12934,17 @@ class V10_ReviewManager {
     
     let clientFields = '';
     
-    // Only show fields relevant to the request type
+    // Show name/contact first if available
+    if (clientData.name && clientData.name !== 'Not provided') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Name:</span>
+          <span class="detail-value">${clientData.name}</span>
+        </div>
+      `;
+    }
+    
+    // Show company for business requests
     if (clientData.company && clientData.company !== 'Not provided') {
       clientFields += `
         <div class="review-detail">
@@ -12944,6 +12954,7 @@ class V10_ReviewManager {
       `;
     }
     
+    // Always show email if available
     if (clientData.email && clientData.email !== 'Not provided' && clientData.email !== 'office@genuineblanks.com') {
       clientFields += `
         <div class="review-detail">
@@ -12953,19 +12964,52 @@ class V10_ReviewManager {
       `;
     }
     
-    // Add additional fields based on request type if available
-    if (clientData.firstName && clientData.firstName !== 'Not provided') {
+    // Add request type specific information
+    clientFields += `
+      <div class="review-detail">
+        <span class="detail-label">Request Type:</span>
+        <span class="detail-value">${this.getRequestTypeLabel(requestType)}</span>
+      </div>
+    `;
+    
+    // Add phone if available (for sample requests and bulk orders)
+    if ((requestType === 'sample-request' || requestType === 'bulk-order-request') && clientData.phone && clientData.phone !== 'Not provided') {
       clientFields += `
         <div class="review-detail">
-          <span class="detail-label">Name:</span>
-          <span class="detail-value">${clientData.firstName}</span>
+          <span class="detail-label">Phone:</span>
+          <span class="detail-value">${clientData.phone}</span>
         </div>
       `;
+    }
+    
+    // Add additional business info for bulk orders
+    if (requestType === 'bulk-order-request') {
+      if (clientData.businessType) {
+        clientFields += `
+          <div class="review-detail">
+            <span class="detail-label">Business Type:</span>
+            <span class="detail-value">${clientData.businessType}</span>
+          </div>
+        `;
+      }
+      
+      if (clientData.expectedVolume) {
+        clientFields += `
+          <div class="review-detail">
+            <span class="detail-label">Expected Volume:</span>
+            <span class="detail-value">${clientData.expectedVolume}</span>
+          </div>
+        `;
+      }
     }
     
     // If no real data found, show minimal info
     if (!clientFields) {
       clientFields = `
+        <div class="review-detail">
+          <span class="detail-label">Request Type:</span>
+          <span class="detail-value">${this.getRequestTypeLabel(requestType)}</span>
+        </div>
         <div class="review-detail">
           <span class="detail-label">Email:</span>
           <span class="detail-value">${clientData.email || 'Not provided'}</span>
@@ -12974,6 +13018,15 @@ class V10_ReviewManager {
     }
     
     container.innerHTML = clientFields;
+  }
+  
+  getRequestTypeLabel(requestType) {
+    const labels = {
+      'quotation': 'Quotation Request',
+      'sample-request': 'Sample Request', 
+      'bulk-order-request': 'Bulk Order Request'
+    };
+    return labels[requestType] || 'Unknown Request';
   }
 
   populateUploadedFiles() {
@@ -12988,18 +13041,26 @@ class V10_ReviewManager {
       return;
     }
 
-    container.innerHTML = files.map(file => `
-      <div class="file-item">
-        <div class="file-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14,2 14,8 20,8"/>
-          </svg>
+    container.innerHTML = files.map(file => {
+      // Handle different file object structures
+      const fileName = file.name || file.fileName || 'Unknown file';
+      const fileSize = file.size || file.fileSize || 0;
+      
+      return `
+        <div class="file-item">
+          <div class="file-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+            </svg>
+          </div>
+          <div class="file-details">
+            <span class="file-name">${fileName}</span>
+            ${fileSize > 0 ? `<span class="file-size">(${this.formatFileSize(fileSize)})</span>` : ''}
+          </div>
         </div>
-        <span class="file-name">${file.name}</span>
-        <span class="file-size">${this.formatFileSize(file.size || 0)}</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   populateRequestType() {
@@ -13425,7 +13486,7 @@ class V10_ReviewManager {
       countElement.textContent = `${standaloneCount} swatch${standaloneCount !== 1 ? 'es' : ''}`;
     }
 
-    // Render enhanced lab dips using new template
+    // Render fabric swatches using simple inline HTML (matching garment specs format)
     if (standaloneLabDips.length === 0) {
       standaloneContainer.innerHTML = `
         <div class="v10-empty-state v10-empty-state--small">
@@ -13439,27 +13500,21 @@ class V10_ReviewManager {
         </div>
       `;
     } else {
-      const template = document.getElementById('review-labdip-template');
-      if (template) {
-        standaloneContainer.innerHTML = '';
+      // Use simple inline HTML generation matching garment display format
+      standaloneContainer.innerHTML = standaloneLabDips.map(labDip => {
+        const colorHex = labDip.hex || '#ccc';
+        const colorName = labDip.pantone || labDip.name || 'Custom Color';
+        const tcxCode = labDip.tcx ? ` - ${labDip.tcx}` : '';
         
-        standaloneLabDips.forEach(labDip => {
-          const clone = template.content.cloneNode(true);
-          
-          const colorDiv = clone.querySelector('.v10-swatch-color');
-          const nameElement = clone.querySelector('.v10-swatch-name');
-          const assignmentElement = clone.querySelector('.v10-swatch-assignment');
-          const costElement = clone.querySelector('.v10-swatch-cost');
-          
-          if (colorDiv) colorDiv.style.backgroundColor = labDip.hex || '#ccc';
-          if (nameElement) nameElement.textContent = labDip.pantone || 'Custom Color';
-          if (assignmentElement) assignmentElement.textContent = this.getLabDipAssignmentText(labDip.id);
-          // Remove cost from fabric swatches section - costs should only appear in cost summary
-          if (costElement) costElement.style.display = 'none';
-          
-          standaloneContainer.appendChild(clone);
-        });
-      }
+        return `
+          <div class="v10-garment-item">
+            <div class="v10-garment-color" style="background-color: ${colorHex}"></div>
+            <div class="v10-garment-text">
+              Fabric Swatch - ${colorName}${tcxCode}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
   }
 
