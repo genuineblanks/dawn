@@ -3829,7 +3829,16 @@ body[style*="overflow: hidden"] {
   font-size: var(--v10-text-sm);
 }
 
-/* Removed hover effect for solid appearance */
+.garment-summary__edit-btn:hover {
+  background: var(--v10-bg-hover);
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+  transform: translateY(-1px);
+}
+
+.garment-summary__edit-btn:active {
+  transform: translateY(0);
+}
 
 /* Ensure edit button is visible when garment summary is visible */
 .garment-card__summary[style*="block"] .garment-summary__edit-btn,
@@ -6339,24 +6348,18 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: var(--v10-space-1);
     width: 100%;
     padding: 0;
   }
   
   .popular-color-circle {
-    width: 50px !important;
+    width: 32px !important;
     height: 24px !important;
-    border-radius: 4px !important;
+    border-radius: 3px !important;
     margin: 0 auto;
     border-width: 1px !important;
-  }
-  
-  /* Hide last 2 rectangles on mobile - Dark Gray and Light Gray */
-  .popular-color-circle[data-color="#374151"],
-  .popular-color-circle[data-color="#f3f4f6"] {
-    display: none !important;
   }
   
   /* Fix mobile color picker alignment */
@@ -6419,20 +6422,14 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 @media (max-width: 480px) {
   .popular-colors-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--v10-space-1);
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
   }
   
   .popular-color-circle {
-    width: 42px !important;
+    width: 28px !important;
     height: 20px !important;
-    border-radius: 3px !important;
-  }
-  
-  /* Hide last 2 rectangles on small mobile - Dark Gray and Light Gray */
-  .popular-color-circle[data-color="#374151"],
-  .popular-color-circle[data-color="#f3f4f6"] {
-    display: none !important;
+    border-radius: 2px !important;
   }
   
   .color-picker-wrapper {
