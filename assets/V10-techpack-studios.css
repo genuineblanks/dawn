@@ -54,8 +54,8 @@ body[class*="techpack"] *,
    CSS CUSTOM PROPERTIES - DARK THEME ONLY
    ============================================== */
 
-:root {
-  /* Enhanced Dark Theme Colors - Professional Financial Dashboard */
+#techpack-v10-step-4 {
+  /* Enhanced Dark Theme Colors - Professional Financial Dashboard - SCOPED TO STEP 4 ONLY */
   --v10-bg-primary: #1a1a1a;          /* Darker primary background for better contrast */
   --v10-bg-secondary: #2d2d2d;        /* Medium grey for cards - perfect contrast */
   --v10-bg-tertiary: #242424;         /* Slightly elevated surfaces */
@@ -9026,19 +9026,19 @@ div[class*="circle"][style*="background-color"],
   line-height: 1.5;
 }
 
-/* ===== Overall Page Typography & Layout ===== */
-.techpack-content {
+/* ===== Overall Page Typography & Layout - SCOPED TO STEP 4 ONLY ===== */
+#techpack-v10-step-4 .techpack-content {
   background: var(--v10-bg-primary);
   color: var(--v10-text-primary);
   min-height: 100vh;
   padding: var(--v10-space-6) 0;
 }
 
-.techpack-header-with-help {
+#techpack-v10-step-4 .techpack-header-with-help {
   margin-bottom: var(--v10-space-8);
 }
 
-.techpack-title {
+#techpack-v10-step-4 .techpack-title {
   color: var(--v10-text-primary);
   font-size: var(--v10-text-3xl);
   font-weight: 700;
@@ -9046,25 +9046,25 @@ div[class*="circle"][style*="background-color"],
   letter-spacing: -0.025em;
 }
 
-.techpack-subtitle {
+#techpack-v10-step-4 .techpack-subtitle {
   color: var(--v10-text-tertiary);
   font-size: var(--v10-text-lg);
   margin: 0;
   line-height: 1.5;
 }
 
-/* Improve review content spacing */
-.v10-review-content {
+/* Improve review content spacing - SCOPED TO STEP 4 */
+#techpack-v10-step-4 .v10-review-content {
   color: var(--v10-text-secondary);
 }
 
-.v10-review-content p {
+#techpack-v10-step-4 .v10-review-content p {
   margin: 0 0 var(--v10-space-3) 0;
   line-height: 1.6;
 }
 
-/* Better checkbox styling */
-.v10-checkbox-label {
+/* Better checkbox styling - SCOPED TO STEP 4 */
+#techpack-v10-step-4 .v10-checkbox-label {
   display: flex;
   align-items: flex-start;
   gap: var(--v10-space-3);
@@ -9074,80 +9074,80 @@ div[class*="circle"][style*="background-color"],
   color: var(--v10-text-secondary);
 }
 
-.v10-checkbox-label input[type="checkbox"] {
+#techpack-v10-step-4 .v10-checkbox-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
-.v10-checkbox-text a {
+#techpack-v10-step-4 .v10-checkbox-text a {
   color: var(--v10-text-success);
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: text-decoration-color 0.2s ease;
 }
 
-.v10-checkbox-text a:hover {
+#techpack-v10-step-4 .v10-checkbox-text a:hover {
   text-decoration-color: var(--v10-text-success);
 }
 
-/* ===== Mobile Responsive Improvements ===== */
+/* ===== Mobile Responsive Improvements - SCOPED TO STEP 4 ===== */
 @media (max-width: 768px) {
-  .techpack-content {
+  #techpack-v10-step-4 .techpack-content {
     padding: var(--v10-space-4) 0;
   }
 
-  .v10-studio-card {
+  #techpack-v10-step-4 .v10-studio-card {
     padding: var(--v10-space-4);
     margin-bottom: var(--v10-space-4);
   }
 
-  .v10-studio-header {
+  #techpack-v10-step-4 .v10-studio-header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--v10-space-3);
   }
 
-  .v10-garment-item {
+  #techpack-v10-step-4 .v10-garment-item {
     padding: var(--v10-space-3);
     gap: var(--v10-space-3);
   }
 
-  .v10-garment-color {
+  #techpack-v10-step-4 .v10-garment-color {
     width: 28px;
     height: 28px;
   }
 
-  .v10-garment-text {
+  #techpack-v10-step-4 .v10-garment-text {
     font-size: var(--v10-text-sm);
   }
 
-  .v10-cost-item {
+  #techpack-v10-step-4 .v10-cost-item {
     padding: var(--v10-space-3);
   }
 
-  .v10-cost-label {
+  #techpack-v10-step-4 .v10-cost-label {
     font-size: var(--v10-text-sm);
   }
 
-  .v10-total-row {
+  #techpack-v10-step-4 .v10-total-row {
     padding: var(--v10-space-3);
   }
 
-  .v10-submit-card {
+  #techpack-v10-step-4 .v10-submit-card {
     padding: var(--v10-space-4);
   }
 
-  .v10-submit-header {
+  #techpack-v10-step-4 .v10-submit-header {
     gap: var(--v10-space-3);
   }
 
-  .techpack-title {
+  #techpack-v10-step-4 .techpack-title {
     font-size: var(--v10-text-2xl);
   }
 
-  .techpack-subtitle {
+  #techpack-v10-step-4 .techpack-subtitle {
     font-size: var(--v10-text-base);
   }
 }
