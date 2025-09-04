@@ -6346,16 +6346,16 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-color-circle {
-    width: 32px !important;
+    width: 50px !important;
     height: 24px !important;
     border-radius: 4px !important;
     margin: 0 auto;
     border-width: 1px !important;
   }
   
-  /* Hide last 2 rectangles on regular mobile for perfect 4x4 grid */
-  .popular-color-circle:nth-child(17),
-  .popular-color-circle:nth-child(18) {
+  /* Hide last 2 rectangles on mobile - Dark Gray and Light Gray */
+  .popular-color-circle[data-color="#374151"],
+  .popular-color-circle[data-color="#f3f4f6"] {
     display: none !important;
   }
   
@@ -6424,14 +6424,14 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-color-circle {
-    width: 28px !important;
+    width: 42px !important;
     height: 20px !important;
     border-radius: 3px !important;
   }
   
-  /* Hide last 2 rectangles on mobile for perfect 4x4 grid */
-  .popular-color-circle:nth-child(17),
-  .popular-color-circle:nth-child(18) {
+  /* Hide last 2 rectangles on small mobile - Dark Gray and Light Gray */
+  .popular-color-circle[data-color="#374151"],
+  .popular-color-circle[data-color="#f3f4f6"] {
     display: none !important;
   }
   
