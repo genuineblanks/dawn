@@ -5776,8 +5776,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   /* Hide "automatically" word from tip text on mobile to fix overflow */
-  .mobile-hide-auto {
-    display: none;
+  .collection-tip .mobile-hide-auto {
+    display: none !important;
   }
 }
 
