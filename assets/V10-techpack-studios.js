@@ -13169,60 +13169,6 @@ class V10_ReviewManager {
     return assignments;
   }
 
-  // Continue with rest of existing methods...
-  // The rest continues from the original populateGarments method
-  ///////////////////////////
-  
-  oldPopulateGarmentsRemainder() {
-    // This contains the rest of the original method that I need to adapt
-    if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
-      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
-      const labDip = V10_State.labDips.get(firstLabDipId);
-        
-        console.log(`🎨 DEBUG: Found labDip:`, labDip);
-        
-        if (labDip && colorCircle && colorNameText) {
-          const hexColor = labDip.hex || '#ccc';
-          colorCircle.style.backgroundColor = hexColor;
-          colorNameText.textContent = labDip.pantone || 'Unknown Color';
-          console.log(`🎨 DEBUG: Set color ${hexColor} for ${labDip.pantone}`);
-        }
-      } else {
-        // Show appropriate color indicators for different sample types
-        if (garment.sampleType && colorCircle && colorNameText) {
-          // Special case: Color Studio should show empty circle waiting for lab dip
-          if (garment.sampleType === 'custom' && garment.sampleSubValue === 'design-studio') {
-            colorCircle.style.backgroundColor = 'transparent';
-            colorCircle.style.background = '';
-            colorCircle.style.border = '2px solid #9ca3af';
-            colorNameText.textContent = 'Awaiting Color Assignment';
-            console.log(`🎨 DEBUG: Color Studio awaiting color assignment for garment ${garment.number}`);
-          } else {
-            this.showSampleTypeColorForReview(garment, colorCircle, colorNameText);
-            console.log(`🎨 DEBUG: Showing sample type color for garment ${garment.number}`);
-          }
-        } else {
-          if (colorCircle) colorCircle.style.backgroundColor = '#e5e7eb';
-          if (colorNameText) colorNameText.textContent = 'No color assigned';
-          console.log(`🎨 DEBUG: No sample type selected for garment ${garment.number}`);
-        }
-      }
-      
-      if (statusBadge) {
-        statusBadge.textContent = garment.isComplete ? 'Complete' : 'Incomplete';
-        statusBadge.className = `status-badge ${garment.isComplete ? 'status-badge--complete' : 'status-badge--incomplete'}`;
-      }
-
-      // Add garment details
-      const details = this.buildGarmentDetails(garment);
-      if (contentDiv) {
-        contentDiv.innerHTML = details;
-      }
-
-      container.appendChild(clone);
-    });
-  }
-
   buildFullGarmentName(garment) {
     // Build full garment name like: "Hoodie with Design (pedro) - 18-1664 TPX 100% Organic Cotton Brushed Fleece"
     const clientData = this.getClientData();
