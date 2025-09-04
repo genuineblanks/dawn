@@ -13197,7 +13197,12 @@ class V10_ReviewManager {
       overlay: ''
     };
     
-    if (requestType === 'sample-request' && garment.sampleType) {
+    if (requestType === 'quotation') {
+      // Use multi-colored gradient for quotations instead of default gray
+      colorDisplay.color = 'transparent';
+      colorDisplay.overlay = 'background: conic-gradient(#ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b); border: 1px solid #9ca3af;';
+      colorDisplay.name = 'Standard Configuration';
+    } else if (requestType === 'sample-request' && garment.sampleType) {
       if (garment.sampleType === 'stock' && garment.sampleSubValue) {
         // Stock color samples with proper patterns matching Step 3
         if (garment.sampleSubValue === 'proximate') {
@@ -13536,6 +13541,20 @@ class V10_ReviewManager {
 
   populateLabDips() {
     const standaloneContainer = document.getElementById('review-labdips-standalone');
+    const labDipsSection = document.querySelector('#review-labdips-section, .v10-studio-card:has(#review-labdips-standalone)');
+    
+    // Hide entire section for quotations
+    if (V10_State.requestType === 'quotation') {
+      if (labDipsSection) {
+        labDipsSection.style.display = 'none';
+      }
+      return;
+    }
+    
+    // Show section for non-quotation requests
+    if (labDipsSection) {
+      labDipsSection.style.display = 'block';
+    }
     
     if (!standaloneContainer) return;
 
@@ -13714,6 +13733,20 @@ class V10_ReviewManager {
 
   populateDesigns() {
     const standaloneContainer = document.getElementById('review-designs-standalone');
+    const designsSection = document.querySelector('#review-designs-section, .v10-studio-card:has(#review-designs-standalone)');
+    
+    // Hide entire section for quotations
+    if (V10_State.requestType === 'quotation') {
+      if (designsSection) {
+        designsSection.style.display = 'none';
+      }
+      return;
+    }
+    
+    // Show section for non-quotation requests
+    if (designsSection) {
+      designsSection.style.display = 'block';
+    }
     
     if (!standaloneContainer) return;
 
@@ -13814,7 +13847,7 @@ class V10_ReviewManager {
     } else {
       // Regular cost breakdown for samples and bulk orders
       costs.items.forEach(item => {
-        const amount = this.formatCurrencyWithToggle(item.amount, currentCurrency);
+        const amount = typeof item.amount === 'string' ? item.amount : this.formatCurrencyWithToggle(item.amount, currentCurrency);
         const description = item.description;
         
         // Generate color circle for garment items
@@ -13909,7 +13942,23 @@ class V10_ReviewManager {
     const items = [];
     let total = 0;
 
-    if (requestType === 'sample-request') {
+    if (requestType === 'quotation') {
+      // For quotations, show garments but without prices
+      const garments = Array.from(V10_State.garments.values());
+      
+      garments.forEach(garment => {
+        if (garment.type && garment.fabricType) {
+          items.push({
+            label: `Garment ${garment.number} - Quotation Item`,
+            description: `${garment.type} ${garment.fabricType}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}`,
+            amount: 'Contact for pricing',
+            garment: garment // Add garment data for color circles
+          });
+        }
+      });
+      
+    } else if (requestType === 'sample-request') {
       const garments = Array.from(V10_State.garments.values());
       
       // Sample costs
