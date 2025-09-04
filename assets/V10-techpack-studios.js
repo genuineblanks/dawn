@@ -3308,18 +3308,31 @@ class V10_QuantityCalculator {
   getMinimumQuantity(colorwayCount, productionType, garmentType) {
     colorwayCount = colorwayCount || 1;
     
-    // For bulk orders, ONLY use Custom Production minimums
-    // Check if light garment (higher minimums due to fabric costs)
-    if (this.isLightGarment(garmentType)) {
-      return colorwayCount === 1 ? 
-        this.config.minimums.customLight.single : 
-        this.config.minimums.customLight.multiple;
-    }
+    console.log(`📊 Calculating minimum for ${garmentType} with ${colorwayCount} colorway(s)`);
     
-    // Custom Production: Heavy garments (default)
-    return colorwayCount === 1 ? 
-      this.config.minimums.customHeavy.single : 
-      this.config.minimums.customHeavy.multiple;
+    // Define specific minimums per garment type (matching your requirements)
+    const garmentMinimums = {
+      't-shirt': { single: 100, multiple: 75 },
+      'hoodie': { single: 75, multiple: 50 },
+      'sweatshirt': { single: 75, multiple: 50 },
+      'polo': { single: 100, multiple: 75 },
+      'tank-top': { single: 100, multiple: 75 },
+      'joggers': { single: 75, multiple: 50 },
+      'shorts': { single: 75, multiple: 50 },
+      'pants': { single: 75, multiple: 50 },
+      'jacket': { single: 50, multiple: 40 },
+      'default': { single: 75, multiple: 50 }
+    };
+    
+    // Get minimums for this garment type
+    const minimums = garmentMinimums[garmentType?.toLowerCase()] || garmentMinimums.default;
+    
+    // Return based on colorway count
+    const minimum = colorwayCount === 1 ? minimums.single : minimums.multiple;
+    
+    console.log(`✅ Minimum for ${garmentType}: ${minimum} units ${colorwayCount > 1 ? 'per colorway' : ''}`);
+    
+    return minimum;
   }
 
   /**
@@ -3335,21 +3348,59 @@ class V10_QuantityCalculator {
   calculateTotalMinimum(garments = null) {
     const garmentsToCheck = garments || Array.from(V10_State.garments.values());
     let totalMinimum = 0;
+    let garmentDetails = [];
+    
+    console.log(`🔢 Calculating total minimum for ${garmentsToCheck.length} garment(s)`);
     
     garmentsToCheck.forEach(garment => {
+      // Only calculate for complete garments
+      if (!garment.type || (!garment.fabricType && !garment.sampleReference)) {
+        console.log(`⏭️ Skipping incomplete garment ${garment.id}`);
+        return;
+      }
+      
       const colorwayCount = this.getColorwayCount(garment.id);
       const productionType = this.determineProductionType(garment);
       const garmentMinimum = this.getMinimumQuantity(colorwayCount, productionType, garment.type);
       
       // For multiple colorways, multiply by colorway count
-      if (colorwayCount > 1) {
-        totalMinimum += garmentMinimum * colorwayCount;
-      } else {
-        totalMinimum += garmentMinimum;
+      const garmentTotal = colorwayCount > 1 ? garmentMinimum * colorwayCount : garmentMinimum;
+      
+      totalMinimum += garmentTotal;
+      
+      garmentDetails.push({
+        type: garment.type,
+        colorways: colorwayCount,
+        minimum: garmentMinimum,
+        total: garmentTotal
+      });
+      
+      console.log(`📦 ${garment.type}: ${garmentTotal} units (${colorwayCount} colorway(s) × ${garmentMinimum} min)`);
+    });
+    
+    console.log(`📊 TOTAL MINIMUM REQUIRED: ${totalMinimum} units`);
+    
+    // Update the display immediately
+    this.updateMinimumDisplay(totalMinimum);
+    
+    return totalMinimum;
+  }
+  
+  updateMinimumDisplay(totalMinimum) {
+    // Update all minimum display elements
+    const minElements = document.querySelectorAll('[data-minimum-display], #minimum-required-total, .minimum-required-value');
+    minElements.forEach(el => {
+      if (el) {
+        el.textContent = totalMinimum;
       }
     });
     
-    return totalMinimum;
+    // Update progress status text
+    const progressStatus = document.getElementById('quantity-progress-status');
+    if (progressStatus) {
+      const currentTotal = V10_State.quantities.globalTotal || 0;
+      progressStatus.textContent = `${currentTotal} / ${totalMinimum} minimum units`;
+    }
   }
 
   // ==============================================
@@ -8359,13 +8410,19 @@ class V10_GarmentStudio {
     card.className = 'garment-quantity-card';
     card.dataset.garmentId = garment.id;
     
+    // Calculate minimum for this garment
+    const colorwayCount = this.quantityCalculator.getColorwayCount(garment.id);
+    const productionType = this.quantityCalculator.determineProductionType(garment);
+    const minimumRequired = this.quantityCalculator.getMinimumQuantity(colorwayCount, productionType, garment.type);
+    
     // Build professional card HTML
     card.innerHTML = `
       <!-- Card Header with Professional Layout -->
       <div class="garment-quantity-card__header">
         <div class="garment-quantity-card__title-section">
           <h3 class="garment-quantity-card__title">
-            Garment ${garment.number || index + 1} - ${garment.type || 'Unknown Type'}
+            <span class="garment-quantity-card__number">Garment ${garment.number || index + 1}</span> - 
+            <span class="garment-quantity-card__type">${garment.type || 'Unknown Type'}</span>
           </h3>
           <div class="garment-quantity-card__subtitle">
             <span class="garment-quantity-card__type-badge">
@@ -8377,20 +8434,25 @@ class V10_GarmentStudio {
             </span>
             <span>•</span>
             <span>${garment.fabricType || 'Fabric not selected'}</span>
+            <span>•</span>
+            <span class="minimum-required-text">Min: <strong>${minimumRequired}</strong> units</span>
           </div>
         </div>
         <div class="garment-quantity-card__stats">
           <div class="garment-stat">
-            <div class="garment-stat__value" id="total-${garment.id}">0</div>
+            <div class="garment-stat__value quantity-status insufficient" id="total-${garment.id}">0</div>
             <div class="garment-stat__label">Total</div>
           </div>
           <div class="garment-stat">
-            <div class="garment-stat__value" id="colors-${garment.id}">0</div>
+            <div class="garment-stat__value" id="colors-${garment.id}">${colorwayCount}</div>
             <div class="garment-stat__label">Colors</div>
           </div>
           <div class="garment-stat">
             <div class="garment-stat__value" id="sizes-${garment.id}">0</div>
             <div class="garment-stat__label">Sizes</div>
+          </div>
+          <div class="garment-stat">
+            <div class="status-badge status-badge--insufficient" data-status-badge>INSUFFICIENT</div>
           </div>
         </div>
       </div>
@@ -9640,6 +9702,41 @@ class V10_GarmentStudio {
     // Calculate progress
     const currentTotal = quantityData.total || 0;
     const progress = minimumRequired > 0 ? Math.min((currentTotal / minimumRequired) * 100, 100) : 0;
+    
+    // Update garment card visual state
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (garmentCard) {
+      if (currentTotal >= minimumRequired) {
+        garmentCard.classList.add('garment-quantity-card--complete');
+      } else {
+        garmentCard.classList.remove('garment-quantity-card--complete');
+      }
+    }
+    
+    // Update quantity status visual
+    const quantityStatus = garmentCard?.querySelector('.quantity-status, .garment-total-units');
+    if (quantityStatus) {
+      quantityStatus.textContent = currentTotal;
+      if (currentTotal >= minimumRequired) {
+        quantityStatus.classList.add('sufficient');
+        quantityStatus.classList.remove('insufficient');
+      } else {
+        quantityStatus.classList.add('insufficient');
+        quantityStatus.classList.remove('sufficient');
+      }
+    }
+    
+    // Update status badge
+    const statusBadge = garmentCard?.querySelector('.status-badge, [data-status-badge]');
+    if (statusBadge) {
+      if (currentTotal >= minimumRequired) {
+        statusBadge.textContent = 'SUFFICIENT';
+        statusBadge.className = 'status-badge status-badge--sufficient';
+      } else {
+        statusBadge.textContent = 'INSUFFICIENT';
+        statusBadge.className = 'status-badge status-badge--insufficient';
+      }
+    }
     
     // Update validation card
     this.updateValidationCard(garmentId, {
