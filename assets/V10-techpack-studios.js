@@ -13547,10 +13547,10 @@ class V10_ReviewManager {
       }
     });
 
-    // Update count - show only standalone lab dips count
+    // Update count - show total lab dips count (not just standalone)
     if (countElement) {
-      const standaloneCount = standaloneLabDips.length;
-      countElement.textContent = `${standaloneCount} swatch${standaloneCount !== 1 ? 'es' : ''}`;
+      const totalCount = labDips.length;
+      countElement.textContent = `${totalCount} swatch${totalCount !== 1 ? 'es' : ''}`;
     }
 
     // Render fabric swatches using simple inline HTML (matching garment specs format)
@@ -13992,6 +13992,7 @@ class V10_ReviewManager {
     const samplesSection = document.getElementById('review-samples-section');
     const quantitiesSection = document.getElementById('review-quantities-section');
 
+    // Show samples section (contains both fabric swatches and design applications) for sample requests
     if (samplesSection) {
       samplesSection.style.display = requestType === 'sample-request' ? 'block' : 'none';
     }
