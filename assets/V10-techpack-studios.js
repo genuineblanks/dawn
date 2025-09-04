@@ -11107,6 +11107,12 @@ class V10_DesignStudio {
         const hex = colorBtn.dataset.color;
         const pantone = colorBtn.dataset.pantone;
         
+        // Set flag to preserve TPX data and prevent color picker input override
+        const isTPX = pantone && pantone.includes('TPX');
+        if (isTPX && pantoneDisplay) {
+          pantoneDisplay.dataset.preserveTpx = 'true';
+        }
+        
         if (colorPicker) colorPicker.value = hex;
         // Don't auto-fill text box - keep it only for manual user input
         
