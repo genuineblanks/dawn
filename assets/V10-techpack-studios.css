@@ -57,10 +57,10 @@ body[class*="techpack"] *,
 :root {
   /* Core Dark Theme Colors - Financial Dashboard Theme */
   --v10-bg-primary: #1e1e1e;          /* Primary dark background - slightly lighter */
-  --v10-bg-secondary: #3a3a3a;        /* Secondary dark panels - lighter for better visibility */
+  --v10-bg-secondary: #2d2d2d;        /* Secondary dark panels - more contrast */
   --v10-bg-tertiary: #1e1e1e;         /* Elevated surfaces - same as primary for seamless look */
-  --v10-bg-card: #3a3a3a;             /* Card backgrounds - lighter for better visibility */
-  --v10-bg-modal: #2e2e2e;            /* Modal backgrounds - slightly lighter */
+  --v10-bg-card: #2d2d2d;             /* Card backgrounds */
+  --v10-bg-modal: #262626;            /* Modal backgrounds */
   --v10-bg-input: #383838;            /* Input backgrounds - lighter for visibility */
   --v10-bg-hover: #454545;            /* Hover states */
   --v10-bg-active: #525252;           /* Active states */
@@ -725,7 +725,7 @@ button:focus,
 
 
 .v10-btn--secondary {
-  background-color: var(--v10-bg-card);
+  background-color: #3a3a3a; /* Slightly lighter than var(--v10-bg-card) for better visibility */
   color: var(--v10-text-primary);
   border-color: var(--v10-border-primary);
 }
@@ -1302,7 +1302,7 @@ button:focus,
 }
 
 .v10-stock-color-button[data-color="black"]:hover {
-  background-color: #333333;
+  background-color: #1a1a1a;
   border-color: var(--v10-accent-primary);
 }
 
@@ -3228,14 +3228,14 @@ body[style*="overflow: hidden"] {
 }
 
 .studio-toggle__btn--active {
-  background: var(--v10-bg-card);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-card) for better visibility */
   color: var(--v10-text-primary);
   box-shadow: var(--v10-shadow-sm);
   font-weight: 600;
 }
 
 .studio-toggle__btn--active:hover {
-  background: var(--v10-bg-card);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-card) for better visibility */
 }
 
 .studio-toggle__btn svg {
@@ -3322,7 +3322,7 @@ body[style*="overflow: hidden"] {
 }
 
 .garment-card {
-  background: #333333;
+  background: #1a1a1a;
   border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   padding: var(--v10-space-5);
@@ -3566,7 +3566,7 @@ body[style*="overflow: hidden"] {
 
 /* Main garment card system - used for all garment interactions throughout the app */
 .garment-card {
-  background: #333333;
+  background: #1a1a1a;
   border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-lg);
   transition: var(--v10-transition);
@@ -4593,7 +4593,7 @@ body[style*="overflow: hidden"] {
 /* Help buttons */
 .techpack-help-btn {
   padding: var(--v10-space-2) var(--v10-space-3);
-  background: var(--v10-bg-secondary);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-secondary) for better visibility */
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   color: var(--v10-text-muted);
@@ -4617,7 +4617,7 @@ body[style*="overflow: hidden"] {
 }
 
 .techpack-help-btn--secondary {
-  background: var(--v10-bg-card);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-card) for better visibility */
   color: var(--v10-text-secondary);
 }
 
@@ -4628,9 +4628,9 @@ body[style*="overflow: hidden"] {
   padding: var(--v10-space-4); /* Reduced padding to prevent white space */
 }
 
-/* Unified entrance container with lighter dark grey background */
+/* Unified entrance container with dark dark grey background */
 .v10-entrance-unified {
-  background: #333333; /* Lighter dark grey for better visibility */
+  background: #1a1a1a; /* Dark dark grey for app container */
   border-radius: 12px;
   padding: 4rem 3rem; /* Back to original spacing */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -4678,7 +4678,7 @@ body[style*="overflow: hidden"] {
 /* New Download Button - Matches ACCESS STUDIO styling with original dimensions */
 .v10-download-new .v10-btn-download-new {
   position: relative !important;
-  background: var(--v10-bg-secondary) !important;
+  background: #3a3a3a !important; /* Slightly lighter than var(--v10-bg-secondary) for better visibility */
   color: var(--v10-text-primary) !important;
   border: 1px solid var(--v10-border-primary) !important;
   border-radius: var(--v10-radius-md) !important;
@@ -4697,7 +4697,7 @@ body[style*="overflow: hidden"] {
 .v10-download-new .v10-btn-download-new:hover {
   transform: translateY(-1px) !important;
   box-shadow: var(--v10-shadow-md) !important;
-  background: #333333 !important; /* Lighter hover color for better visibility */
+  background: #1a1a1a !important; /* Same hover color as ACCESS STUDIO */
   color: var(--v10-text-primary) !important;
   border-color: var(--v10-accent-primary) !important;
 }
@@ -4771,7 +4771,7 @@ body[style*="overflow: hidden"] {
 
 .v10-btn-access-studio {
   position: relative;
-  background: var(--v10-bg-secondary);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-secondary) for better visibility */
   color: var(--v10-text-primary);
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
@@ -4790,7 +4790,7 @@ body[style*="overflow: hidden"] {
 .v10-btn-access-studio:hover {
   transform: translateY(-1px);
   box-shadow: var(--v10-shadow-md);
-  background: #333333; /* Lighter grey for better visibility */
+  background: #1a1a1a; /* Much darker grey, same as container background */
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
 }
@@ -5471,7 +5471,7 @@ DESIGN STUDIO SYSTEM - LAB DIPS
 
 /* Color Selection Area */
 .color-selection-area {
-  background: #333333;
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -5487,7 +5487,7 @@ DESIGN STUDIO SYSTEM - LAB DIPS
 /* Collection Containers */
 .labdips-collection,
 .designs-collection {
-  background: #333333;
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -5853,7 +5853,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 /* Design Input Area - Match Lab Dips Styling */
 .design-input-area {
-  background: #333333;
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -6004,7 +6004,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 /* Garments with Colorways Assigned Section */
 .garment-assignments-overview {
   margin-top: var(--v10-space-8);
-  background: #333333;
+  background: #1a1a1a;
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: var(--v10-space-6);
@@ -7448,7 +7448,7 @@ div[class*="circle"][style*="background-color"],
 
 .bulk-tool-btn:hover {
   border-color: var(--v10-border-focus);
-  background: var(--v10-bg-card);
+  background: #3a3a3a; /* Slightly lighter than var(--v10-bg-card) for better visibility */
   color: var(--v10-text-primary);
 }
 
