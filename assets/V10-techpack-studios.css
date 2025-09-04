@@ -9196,23 +9196,6 @@ div[class*="circle"][style*="background-color"],
   box-shadow: var(--v10-shadow-sm);
 }
 
-.v10-terms-header {
-  margin-bottom: var(--v10-space-4);
-  text-align: center;
-}
-
-.v10-terms-title {
-  color: var(--v10-text-primary);
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0 0 var(--v10-space-2) 0;
-}
-
-.v10-terms-subtitle {
-  color: var(--v10-text-secondary);
-  font-size: 0.875rem;
-  margin: 0;
-}
 
 .v10-terms-content {
   display: flex;
@@ -9292,6 +9275,12 @@ div[class*="circle"][style*="background-color"],
 
 .v10-measurement-checkbox__title a:hover {
   text-decoration: underline;
+}
+
+/* Large variant for terms checkbox */
+.v10-measurement-checkbox--large .v10-measurement-checkbox__title {
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .v10-submit-actions {
@@ -9376,9 +9365,40 @@ div[class*="circle"][style*="background-color"],
   }
 
   .v10-studio-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--v10-space-3);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--v10-space-2);
+  }
+
+  /* Mobile Currency Toggle - Show only symbols */
+  .v10-currency-btn {
+    font-size: var(--v10-text-sm);
+    padding: var(--v10-space-1) var(--v10-space-2);
+    min-width: 28px;
+  }
+  
+  .v10-currency-btn[data-currency="EUR"] {
+    font-size: 0; /* Hide original text */
+  }
+  .v10-currency-btn[data-currency="EUR"]::after {
+    content: "€";
+    font-size: var(--v10-text-sm);
+  }
+  
+  .v10-currency-btn[data-currency="USD"] {
+    font-size: 0; /* Hide original text */
+  }
+  .v10-currency-btn[data-currency="USD"]::after {
+    content: "$";
+    font-size: var(--v10-text-sm);
+  }
+
+  /* Mobile Optional Badge Adjustment */
+  .v10-optional-badge {
+    font-size: var(--v10-text-xs);
+    padding: var(--v10-space-1) var(--v10-space-2);
+    margin: 0 var(--v10-space-1);
   }
 
   .v10-garment-item {
