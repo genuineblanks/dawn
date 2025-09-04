@@ -1909,6 +1909,153 @@ body[style*="overflow: hidden"] {
   color: white;
 }
 
+/* Premium Help Content Styling */
+.help-content {
+  font-size: var(--v10-text-base);
+  line-height: 1.7;
+  color: var(--v10-text-primary);
+}
+
+.help-content h4 {
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin: 0 0 var(--v10-space-3) 0;
+  padding-bottom: var(--v10-space-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.help-content h4:first-child {
+  margin-top: 0;
+}
+
+.help-content h4:not(:first-child) {
+  margin-top: var(--v10-space-6);
+}
+
+.help-content h4::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--v10-accent-primary);
+  border-radius: 1px;
+}
+
+.help-content p {
+  margin: 0 0 var(--v10-space-4) 0;
+  color: var(--v10-text-secondary);
+  line-height: 1.6;
+}
+
+.help-content ol,
+.help-content ul {
+  margin: 0 0 var(--v10-space-4) 0;
+  padding-left: var(--v10-space-5);
+}
+
+.help-content li {
+  margin-bottom: var(--v10-space-2);
+  color: var(--v10-text-secondary);
+  line-height: 1.6;
+  position: relative;
+}
+
+.help-content ol > li {
+  counter-increment: step-counter;
+  margin-bottom: var(--v10-space-3);
+}
+
+.help-content ol {
+  counter-reset: step-counter;
+  list-style: none;
+  padding-left: var(--v10-space-6);
+}
+
+.help-content ol > li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: calc(-1 * var(--v10-space-6));
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--v10-accent-primary);
+  color: white;
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-content ul {
+  list-style: none;
+}
+
+.help-content ul > li::before {
+  content: '•';
+  color: var(--v10-accent-primary);
+  font-weight: 600;
+  font-size: var(--v10-text-lg);
+  position: absolute;
+  left: calc(-1 * var(--v10-space-4));
+  top: 0;
+}
+
+.help-content strong {
+  font-weight: 600;
+  color: var(--v10-accent-primary);
+}
+
+.help-content code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: var(--v10-space-1) var(--v10-space-2);
+  border-radius: var(--v10-radius-sm);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: var(--v10-text-sm);
+  color: var(--v10-accent-secondary);
+}
+
+/* Nested Lists Styling */
+.help-content li ul,
+.help-content li ol {
+  margin: var(--v10-space-2) 0 var(--v10-space-2) 0;
+  padding-left: var(--v10-space-5);
+}
+
+.help-content li ul li::before {
+  content: '◦';
+  color: var(--v10-text-muted);
+}
+
+/* Mobile Help Content */
+@media (max-width: 768px) {
+  .help-content h4 {
+    font-size: var(--v10-text-base);
+    margin-bottom: var(--v10-space-2);
+  }
+  
+  .help-content ol,
+  .help-content ul {
+    padding-left: var(--v10-space-4);
+  }
+  
+  .help-content ol {
+    padding-left: var(--v10-space-5);
+  }
+  
+  .help-content ol > li::before {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    left: calc(-1 * var(--v10-space-5));
+  }
+}
+
 @media (max-width: 768px) {
   .v10-client-options-horizontal {
     grid-template-columns: 1fr 1fr;
@@ -5573,6 +5720,35 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .pantone-note {
   font-size: 0.75rem;
   color: var(--v10-text-muted);
+}
+
+/* Mobile pantone display formatting - split name and code into separate lines */
+@media (max-width: 768px) {
+  .pantone-code {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  
+  .pantone-code::before {
+    content: attr(data-color-name);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--v10-text-primary);
+    margin-bottom: 2px;
+  }
+  
+  .pantone-code::after {
+    content: attr(data-pantone-code);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--v10-text-secondary);
+  }
+  
+  /* Hide the original text content on mobile when using data attributes */
+  .pantone-code[data-color-name][data-pantone-code] {
+    font-size: 0;
+  }
 }
 
 /* Lab Dip Color Indicators */

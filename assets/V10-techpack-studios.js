@@ -11038,6 +11038,24 @@ class V10_DesignStudio {
             pantoneCircle.style.backgroundColor = hex;
             pantoneCode.textContent = bestMatch.code;
             
+            // Clear TPX preservation data since this is a new TCX lookup
+            delete pantoneDisplay.dataset.originalTpx;
+            delete pantoneDisplay.dataset.originalHex;
+            
+            // Parse matched code for mobile display (e.g., "Golden glow - 13-0859 TCX")
+            const dashIndex = bestMatch.code.lastIndexOf(' - ');
+            if (dashIndex > 0) {
+              const colorName = bestMatch.code.substring(0, dashIndex);
+              const pantoneCodePart = bestMatch.code.substring(dashIndex + 3);
+              
+              pantoneCode.setAttribute('data-color-name', colorName);
+              pantoneCode.setAttribute('data-pantone-code', pantoneCodePart);
+            } else {
+              // Fallback if format doesn't match expected pattern
+              pantoneCode.setAttribute('data-color-name', '');
+              pantoneCode.setAttribute('data-pantone-code', bestMatch.code);
+            }
+            
             // Update the note to show confidence
             const pantoneNote = document.querySelector('.pantone-note');
             if (pantoneNote) {
@@ -11047,7 +11065,16 @@ class V10_DesignStudio {
             // Fallback to original method
             pantoneDisplay.style.display = 'block';
             pantoneCircle.style.backgroundColor = hex;
-            pantoneCode.textContent = `PANTONE ${V10_Utils.hexToPantone(hex)}`;
+            const fallbackPantone = `PANTONE ${V10_Utils.hexToPantone(hex)}`;
+            pantoneCode.textContent = fallbackPantone;
+            
+            // Clear TPX preservation data
+            delete pantoneDisplay.dataset.originalTpx;
+            delete pantoneDisplay.dataset.originalHex;
+            
+            // Set mobile attributes for fallback
+            pantoneCode.setAttribute('data-color-name', '');
+            pantoneCode.setAttribute('data-pantone-code', fallbackPantone);
           }
         }
         
@@ -11088,10 +11115,29 @@ class V10_DesignStudio {
           pantoneCircle.style.backgroundColor = hex;
           pantoneCode.textContent = pantone;
           
-          // Update the note to show this is a pre-selected color
+          // Store original TPX data for preservation
+          pantoneDisplay.dataset.originalTpx = pantone;
+          pantoneDisplay.dataset.originalHex = hex;
+          
+          // Parse pantone for mobile display (e.g., "Golden glow - 13-0859 TPX")
+          const dashIndex = pantone.lastIndexOf(' - ');
+          if (dashIndex > 0) {
+            const colorName = pantone.substring(0, dashIndex);
+            const pantoneCodePart = pantone.substring(dashIndex + 3);
+            
+            pantoneCode.setAttribute('data-color-name', colorName);
+            pantoneCode.setAttribute('data-pantone-code', pantoneCodePart);
+          } else {
+            // Fallback if format doesn't match expected pattern
+            pantoneCode.setAttribute('data-color-name', '');
+            pantoneCode.setAttribute('data-pantone-code', pantone);
+          }
+          
+          // Update the note to show this is a pre-selected color with correct type
           const pantoneNote = document.querySelector('.pantone-note');
           if (pantoneNote) {
-            pantoneNote.textContent = 'Pre-selected TCX color (100% match)';
+            const colorType = pantone.includes('TPX') ? 'TPX' : 'TCX';
+            pantoneNote.textContent = `Pre-selected ${colorType} color (100% match)`;
           }
         }
         
@@ -11593,6 +11639,7 @@ class V10_DesignStudio {
   addLabDip(isFabricSwatch = false, targetGarmentId = null) {
     const colorPicker = document.getElementById('lab-dip-color-picker');
     const pantoneInput = document.getElementById('manual-pantone-code');
+    const pantoneDisplay = document.querySelector('.auto-pantone-display');
 
     let hex, pantone;
 
@@ -11603,7 +11650,15 @@ class V10_DesignStudio {
       hex = '#8B5CF6'; // This will trigger rainbow gradient in rendering
     } else if (colorPicker.value) {
       hex = colorPicker.value;
-      pantone = V10_Utils.hexToPantone(hex);
+      
+      // Check if we have original TPX data from popular colors
+      if (pantoneDisplay && pantoneDisplay.dataset.originalTpx && pantoneDisplay.dataset.originalHex === hex) {
+        // Preserve the original TPX code
+        pantone = pantoneDisplay.dataset.originalTpx;
+      } else {
+        // Fall back to TCX lookup for color picker selections
+        pantone = V10_Utils.hexToPantone(hex);
+      }
     } else {
       alert('Please select a color or enter a Pantone code.');
       return;
@@ -13818,7 +13873,7 @@ class V10_TechPackSystem {
             </svg>
           </button>
         </div>
-        <div class="v10-modal-content">
+        <div class="v10-modal-body">
           <div class="help-content" id="topic-help-content">
             <!-- Topic-specific content will be loaded here -->
           </div>
