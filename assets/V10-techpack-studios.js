@@ -13550,24 +13550,17 @@ class V10_ReviewManager {
     const labDips = Array.from(V10_State.labDips.values());
     const standaloneLabDips = [];
 
-    console.log('🎯 populateLabDips: Total lab dips found:', labDips.length);
-    console.log('🎯 Lab dips data:', labDips);
-
     labDips.forEach(labDip => {
       const assignments = V10_State.assignments.labDips.get(labDip.id);
       if (!assignments || assignments.size === 0) {
         standaloneLabDips.push(labDip);
       }
-      console.log(`🎯 Lab dip ${labDip.id}: assignments =`, assignments);
     });
 
-    console.log('🎯 Standalone lab dips count:', standaloneLabDips.length);
-
-    // Update count - show total lab dips count (not just standalone)
+    // Use the same logic as cost summary for lab dips count
     if (countElement) {
-      const totalCount = labDips.length;
-      countElement.textContent = `${totalCount} swatch${totalCount !== 1 ? 'es' : ''}`;
-      console.log('🎯 Updated count element to:', totalCount);
+      const standaloneCount = standaloneLabDips.length;
+      countElement.textContent = `${standaloneCount} swatch${standaloneCount !== 1 ? 'es' : ''}`;
     }
 
     // Render fabric swatches using simple inline HTML (matching garment specs format)
@@ -13742,9 +13735,6 @@ class V10_ReviewManager {
     const designs = Array.from(V10_State.designSamples.values());
     const standaloneDesigns = [];
 
-    console.log('🎯 populateDesigns: Total designs found:', designs.length);
-    console.log('🎯 Designs data:', designs);
-
     designs.forEach(design => {
       const assignments = V10_State.assignments.designs.get(design.id);
       if (!assignments || assignments.size === 0) {
@@ -13752,11 +13742,10 @@ class V10_ReviewManager {
       }
     });
 
-    // Update count
+    // Use the same logic as cost summary for designs count  
     if (countElement) {
-      const totalCount = designs.length;
-      countElement.textContent = `${totalCount} design${totalCount !== 1 ? 's' : ''}`;
-      console.log('🎯 Updated designs count element to:', totalCount);
+      const standaloneCount = standaloneDesigns.length;
+      countElement.textContent = `${standaloneCount} design${standaloneCount !== 1 ? 's' : ''}`;
     }
 
     // Render enhanced designs using new template
@@ -13847,7 +13836,7 @@ class V10_ReviewManager {
       // Regular cost breakdown for samples and bulk orders
       costs.items.forEach(item => {
         const amount = this.formatCurrencyWithToggle(item.amount, currentCurrency);
-        const description = item.fullDescription || item.description;
+        const description = item.description;
         
         // Generate color circle for garment items
         let colorCircleHtml = '';
