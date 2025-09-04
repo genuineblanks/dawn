@@ -1966,20 +1966,22 @@ body[style*="overflow: hidden"] {
 
 .help-content ol > li {
   counter-increment: step-counter;
-  margin-bottom: var(--v10-space-3);
+  margin-bottom: var(--v10-space-5); /* Increased spacing for better separation */
+  min-height: 32px; /* Minimum height to accommodate numbered circles */
+  padding-top: 4px; /* Small padding to align with circle */
 }
 
 .help-content ol {
   counter-reset: step-counter;
   list-style: none;
-  padding-left: var(--v10-space-6);
+  padding-left: var(--v10-space-8); /* Increased padding for better spacing */
 }
 
 .help-content ol > li::before {
   content: counter(step-counter);
   position: absolute;
-  left: calc(-1 * var(--v10-space-6));
-  top: 0;
+  left: calc(-1 * var(--v10-space-8)); /* Adjusted to match new padding */
+  top: 4px; /* Slightly offset to align better with text */
   width: 24px;
   height: 24px;
   background: var(--v10-accent-primary);
@@ -1990,6 +1992,8 @@ body[style*="overflow: hidden"] {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0; /* Prevent circle from shrinking */
+  z-index: 1; /* Ensure circle stays above other elements */
 }
 
 .help-content ul {
@@ -2023,13 +2027,23 @@ body[style*="overflow: hidden"] {
 /* Nested Lists Styling */
 .help-content li ul,
 .help-content li ol {
-  margin: var(--v10-space-2) 0 var(--v10-space-2) 0;
-  padding-left: var(--v10-space-5);
+  margin: var(--v10-space-3) 0 var(--v10-space-3) 0; /* Increased margin for better separation */
+  padding-left: var(--v10-space-6); /* Increased padding for better indentation */
+}
+
+.help-content li ul li {
+  margin-bottom: var(--v10-space-2); /* Ensure nested items have proper spacing */
+  min-height: auto; /* Reset min-height for nested items */
+  padding-top: 0; /* Reset padding for nested items */
 }
 
 .help-content li ul li::before {
   content: '◦';
   color: var(--v10-text-muted);
+  position: absolute;
+  left: -16px; /* Fixed positioning for bullet points */
+  top: 0;
+  font-size: var(--v10-text-lg);
 }
 
 /* Mobile Help Content */
@@ -2041,18 +2055,29 @@ body[style*="overflow: hidden"] {
   
   .help-content ol,
   .help-content ul {
-    padding-left: var(--v10-space-4);
+    padding-left: var(--v10-space-5); /* Increased for mobile consistency */
   }
   
   .help-content ol {
-    padding-left: var(--v10-space-5);
+    padding-left: var(--v10-space-6); /* Increased for mobile consistency */
+  }
+  
+  .help-content ol > li {
+    margin-bottom: var(--v10-space-4); /* Maintain good spacing on mobile */
+    min-height: 28px; /* Adjusted for smaller mobile circles */
   }
   
   .help-content ol > li::before {
     width: 20px;
     height: 20px;
     font-size: 12px;
-    left: calc(-1 * var(--v10-space-5));
+    left: calc(-1 * var(--v10-space-6)); /* Adjusted to match new mobile padding */
+    top: 2px; /* Adjusted alignment for mobile */
+  }
+  
+  .help-content li ul,
+  .help-content li ol {
+    padding-left: var(--v10-space-4); /* Adjusted nested indentation for mobile */
   }
 }
 
@@ -5748,6 +5773,11 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   /* Hide the original text content on mobile when using data attributes */
   .pantone-code[data-color-name][data-pantone-code] {
     font-size: 0;
+  }
+  
+  /* Hide "automatically" word from tip text on mobile to fix overflow */
+  .mobile-hide-auto {
+    display: none;
   }
 }
 
