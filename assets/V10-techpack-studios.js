@@ -13826,26 +13826,7 @@ class V10_ReviewManager {
     const requestType = V10_State.requestType;
     let html = '';
 
-    if (requestType === 'quotation') {
-      // Special handling for quotations
-      html = `
-        <div class="v10-cost-item v10-cost-item--quote">
-          <div class="v10-cost-info">
-            <div class="v10-cost-label">Quotation Service</div>
-            <div class="v10-cost-description">Detailed pricing analysis for your specifications</div>
-          </div>
-          <div class="v10-cost-amount v10-cost-amount--quote">Contact for pricing</div>
-        </div>
-      `;
-      
-      totalCostElement.textContent = 'Contact for pricing';
-      
-      if (disclaimerElement) {
-        disclaimerElement.textContent = 'A detailed quote will be provided within 24-48 hours';
-      }
-      
-    } else {
-      // Regular cost breakdown for samples and bulk orders
+    // Regular cost breakdown for samples, quotations, and bulk orders
       costs.items.forEach(item => {
         const amount = typeof item.amount === 'string' ? item.amount : this.formatCurrencyWithToggle(item.amount, currentCurrency);
         const description = item.description;
@@ -13880,11 +13861,11 @@ class V10_ReviewManager {
       if (disclaimerElement) {
         const disclaimers = {
           'sample-request': 'Final pricing may vary based on final specifications',
+          'quotation': 'Pricing estimates based on standard configurations',
           'bulk-order-request': 'Volume discounts may apply for larger orders'
         };
         disclaimerElement.textContent = disclaimers[requestType] || 'Pricing subject to final specifications';
       }
-    }
 
     breakdownContainer.innerHTML = html;
     
@@ -13942,28 +13923,28 @@ class V10_ReviewManager {
     const items = [];
     let total = 0;
 
-    if (requestType === 'quotation') {
-      // For quotations, show garments but without prices
-      const garments = Array.from(V10_State.garments.values());
-      
-      garments.forEach(garment => {
-        if (garment.type && garment.fabricType) {
-          items.push({
-            label: `Garment ${garment.number} - Quotation Item`,
-            description: `${garment.type} ${garment.fabricType}`,
-            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}`,
-            amount: 'Contact for pricing',
-            garment: garment // Add garment data for color circles
-          });
-        }
-      });
-      
-    } else if (requestType === 'sample-request') {
+    if (requestType === 'sample-request' || requestType === 'quotation') {
       const garments = Array.from(V10_State.garments.values());
       
       // Sample costs
       garments.forEach(garment => {
-        if (garment.sampleType === 'stock') {
+        if (requestType === 'quotation') {
+          // For quotations: show estimated pricing based on standard stock sample
+          const dynamicPrice = V10_Utils.calculateDynamicPrice(
+            garment.type, 
+            garment.fabricType, 
+            'stock'
+          ) || V10_CONFIG.PRICING.STOCK_SAMPLE;
+          
+          items.push({
+            label: `Garment ${garment.number} - Pricing Estimate`,
+            description: `${garment.type} ${garment.fabricType}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}`,
+            amount: dynamicPrice,
+            garment: garment // Add garment data for color circles
+          });
+          total += dynamicPrice;
+        } else if (garment.sampleType === 'stock') {
           // Calculate dynamic price based on garment and fabric type
           const dynamicPrice = V10_Utils.calculateDynamicPrice(
             garment.type, 
@@ -14296,9 +14277,14 @@ class V10_ReviewManager {
     if (window.v10ClientManager) {
       const realClientData = window.v10ClientManager.getClientData();
       if (realClientData && Object.keys(realClientData).length > 0) {
+        // For quotations and bulk orders, use company name as the display name if no personal name
+        const personalName = realClientData.firstName || realClientData.name || realClientData.Name;
+        const companyName = realClientData.company || realClientData.Company || realClientData.company_name;
+        const displayName = personalName || companyName || 'Not provided';
+        
         return {
-          company: realClientData.company || realClientData.Company || 'Not provided',
-          name: realClientData.firstName || realClientData.name || realClientData.Name || 'Not provided',
+          company: companyName || 'Not provided',
+          name: displayName,
           email: realClientData.email || realClientData.Email || 'Not provided',
           phone: realClientData.phone || realClientData.Phone || 'Not provided',
           businessType: realClientData.businessType || realClientData.BusinessType || 'Not provided',
@@ -14366,9 +14352,12 @@ class V10_ReviewManager {
     }
     
     // Return collected data or defaults
+    // Use company name as display name if no personal name (for quotations/bulk orders)
+    const displayName = clientData.name || clientData.company || 'Not provided';
+    
     return {
       company: clientData.company || 'Not provided',
-      name: clientData.name || 'Not provided',
+      name: displayName,
       email: clientData.email || 'office@genuineblanks.com',
       phone: clientData.phone || 'Not provided',
       deliveryType: clientData.deliveryType || 'Not provided',
