@@ -12982,12 +12982,16 @@ class V10_ReviewManager {
       `;
     }
     
-    // Add delivery type if available (for sample requests and bulk orders)
-    if ((requestType === 'sample-request' || requestType === 'bulk-order-request') && clientData.deliveryType && clientData.deliveryType !== 'Not provided') {
+    // Add delivery type for sample requests and bulk orders
+    if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+      const deliveryType = clientData.deliveryType && clientData.deliveryType !== 'Not provided' 
+        ? clientData.deliveryType 
+        : 'Company Address'; // Default to Company Address
+      
       clientFields += `
         <div class="review-detail">
-          <span class="detail-label">Delivery:</span>
-          <span class="detail-value">${clientData.deliveryType}</span>
+          <span class="detail-label">Delivery Address:</span>
+          <span class="detail-value">${deliveryType}</span>
         </div>
       `;
     }
@@ -13004,23 +13008,29 @@ class V10_ReviewManager {
     
     // Add shipping and insurance info for bulk orders
     if (requestType === 'bulk-order-request') {
-      if (clientData.shippingMethod && clientData.shippingMethod !== 'Not provided') {
-        clientFields += `
-          <div class="review-detail">
-            <span class="detail-label">Shipping Method:</span>
-            <span class="detail-value">${clientData.shippingMethod}</span>
-          </div>
-        `;
-      }
+      // Always show shipping method for bulk orders
+      const shippingMethod = clientData.shippingMethod && clientData.shippingMethod !== 'Not provided'
+        ? clientData.shippingMethod
+        : 'Not selected';
       
-      if (clientData.insurance && clientData.insurance !== 'Not provided') {
-        clientFields += `
-          <div class="review-detail">
-            <span class="detail-label">Insurance:</span>
-            <span class="detail-value">${clientData.insurance}</span>
-          </div>
-        `;
-      }
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Shipping Method:</span>
+          <span class="detail-value">${shippingMethod}</span>
+        </div>
+      `;
+      
+      // Always show insurance for bulk orders
+      const insurance = clientData.insurance && clientData.insurance !== 'Not provided'
+        ? clientData.insurance
+        : 'Not selected';
+        
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Insurance:</span>
+          <span class="detail-value">${insurance}</span>
+        </div>
+      `;
       
       // Legacy business info if available from client manager
       if (clientData.businessType && clientData.businessType !== 'Not provided') {
@@ -13156,7 +13166,7 @@ class V10_ReviewManager {
             <!-- Color pattern overlay -->
           </div>
           <div class="v10-garment-text">
-            ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
+            ${garment.number}. ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
           </div>
         </div>
       `;
@@ -13540,17 +13550,24 @@ class V10_ReviewManager {
     const labDips = Array.from(V10_State.labDips.values());
     const standaloneLabDips = [];
 
+    console.log('🎯 populateLabDips: Total lab dips found:', labDips.length);
+    console.log('🎯 Lab dips data:', labDips);
+
     labDips.forEach(labDip => {
       const assignments = V10_State.assignments.labDips.get(labDip.id);
       if (!assignments || assignments.size === 0) {
         standaloneLabDips.push(labDip);
       }
+      console.log(`🎯 Lab dip ${labDip.id}: assignments =`, assignments);
     });
+
+    console.log('🎯 Standalone lab dips count:', standaloneLabDips.length);
 
     // Update count - show total lab dips count (not just standalone)
     if (countElement) {
       const totalCount = labDips.length;
       countElement.textContent = `${totalCount} swatch${totalCount !== 1 ? 'es' : ''}`;
+      console.log('🎯 Updated count element to:', totalCount);
     }
 
     // Render fabric swatches using simple inline HTML (matching garment specs format)
@@ -13725,6 +13742,9 @@ class V10_ReviewManager {
     const designs = Array.from(V10_State.designSamples.values());
     const standaloneDesigns = [];
 
+    console.log('🎯 populateDesigns: Total designs found:', designs.length);
+    console.log('🎯 Designs data:', designs);
+
     designs.forEach(design => {
       const assignments = V10_State.assignments.designs.get(design.id);
       if (!assignments || assignments.size === 0) {
@@ -13736,6 +13756,7 @@ class V10_ReviewManager {
     if (countElement) {
       const totalCount = designs.length;
       countElement.textContent = `${totalCount} design${totalCount !== 1 ? 's' : ''}`;
+      console.log('🎯 Updated designs count element to:', totalCount);
     }
 
     // Render enhanced designs using new template
@@ -13827,11 +13848,26 @@ class V10_ReviewManager {
       costs.items.forEach(item => {
         const amount = this.formatCurrencyWithToggle(item.amount, currentCurrency);
         const description = item.fullDescription || item.description;
+        
+        // Generate color circle for garment items
+        let colorCircleHtml = '';
+        if (item.garment) {
+          const colorDisplay = this.getGarmentColorDisplay(item.garment);
+          colorCircleHtml = `
+            <div class="v10-garment-color" style="background-color: ${colorDisplay.color}; ${colorDisplay.overlay || ''}">
+              <!-- Color pattern overlay -->
+            </div>
+          `;
+        }
+        
         html += `
           <div class="v10-cost-item">
             <div class="v10-cost-info">
-              <div class="v10-cost-label">${item.label}</div>
-              <div class="v10-cost-description">${description}</div>
+              ${colorCircleHtml}
+              <div class="v10-cost-details">
+                <div class="v10-cost-label">${item.label}</div>
+                <div class="v10-cost-description">${description}</div>
+              </div>
             </div>
             <div class="v10-cost-amount">${amount}</div>
           </div>
@@ -13922,10 +13958,11 @@ class V10_ReviewManager {
           const colorInfo = this.getGarmentColorInfo(garment);
           
           items.push({
-            label: `${garment.type} - Stock Sample`,
-            description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            label: `Garment ${garment.number} - Stock Sample`,
+            description: `${garment.type} ${garment.fabricType || 'Standard'}${colorInfo}`,
             fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
-            amount: dynamicPrice
+            amount: dynamicPrice,
+            garment: garment // Add garment data for color circles
           });
           total += dynamicPrice;
         } else if (garment.sampleType === 'custom') {
@@ -13940,10 +13977,11 @@ class V10_ReviewManager {
           const colorInfo = this.getGarmentColorInfo(garment);
           
           items.push({
-            label: `${garment.type} - Custom Sample`,
-            description: `Garment ${garment.number} (${garment.fabricType || 'Standard'})`,
+            label: `Garment ${garment.number} - Custom Sample`,
+            description: `${garment.type} ${garment.fabricType || 'Standard'}${colorInfo}`,
             fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
-            amount: dynamicPrice
+            amount: dynamicPrice,
+            garment: garment // Add garment data for color circles
           });
           total += dynamicPrice;
         }
@@ -14250,7 +14288,11 @@ class V10_ReviewManager {
           email: realClientData.email || realClientData.Email || 'Not provided',
           phone: realClientData.phone || realClientData.Phone || 'Not provided',
           businessType: realClientData.businessType || realClientData.BusinessType || 'Not provided',
-          expectedVolume: realClientData.expectedVolume || realClientData.ExpectedVolume || 'Not provided'
+          expectedVolume: realClientData.expectedVolume || realClientData.ExpectedVolume || 'Not provided',
+          deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
+          address: realClientData.address || realClientData.Address || 'Not provided',
+          shippingMethod: realClientData.shippingMethod || realClientData.ShippingMethod || 'Not provided',
+          insurance: realClientData.insurance || realClientData.Insurance || 'Not provided'
         };
       }
     }
