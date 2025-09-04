@@ -6353,6 +6353,12 @@ COLOR PICKER & DESIGN FORM COMPONENTS
     border-width: 1px !important;
   }
   
+  /* Hide last 2 rectangles on regular mobile for perfect 4x4 grid */
+  .popular-color-circle:nth-child(17),
+  .popular-color-circle:nth-child(18) {
+    display: none !important;
+  }
+  
   /* Fix mobile color picker alignment */
   .color-picker-row {
     flex-direction: row !important;
@@ -6413,7 +6419,20 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 @media (max-width: 480px) {
   .popular-colors-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--v10-space-1);
+  }
+  
+  .popular-color-circle {
+    width: 28px !important;
+    height: 20px !important;
+    border-radius: 3px !important;
+  }
+  
+  /* Hide last 2 rectangles on mobile for perfect 4x4 grid */
+  .popular-color-circle:nth-child(17),
+  .popular-color-circle:nth-child(18) {
+    display: none !important;
   }
   
   .color-picker-wrapper {
