@@ -9026,12 +9026,9 @@ div[class*="circle"][style*="background-color"],
   line-height: 1.5;
 }
 
-/* ===== Overall Page Typography & Layout - SCOPED TO STEP 4 ONLY ===== */
+/* ===== Step 4 Typography Only - Background handled by unified .techpack-content ===== */
 #techpack-v10-step-4 .techpack-content {
-  background: var(--v10-bg-primary);
   color: var(--v10-text-primary);
-  min-height: 100vh;
-  padding: var(--v10-space-6) 0;
 }
 
 .techpack-header-with-help {
@@ -9092,11 +9089,7 @@ div[class*="circle"][style*="background-color"],
   text-decoration-color: var(--v10-text-success);
 }
 
-/* ===== Mobile Responsive Improvements - SCOPED TO STEP 4 ===== */
-@media (max-width: 768px) {
-  #techpack-v10-step-4 .techpack-content {
-    padding: var(--v10-space-4) 0;
-  }
+/* ===== Mobile Responsive Improvements - Step 4 uses unified .techpack-content ===== */
 
   .v10-studio-card {
     padding: var(--v10-space-4);
