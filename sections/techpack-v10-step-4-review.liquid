@@ -1,5 +1,5 @@
 {% comment %}
-TechPack V10 Step 4: Premium Review & Submit
+TechPack V10 Step 4: Premium Review & Submit - Redesigned
 {% endcomment %}
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
@@ -7,301 +7,385 @@ TechPack V10 Step 4: Premium Review & Submit
 <section id="techpack-v10-step-4" class="v10-techpack-step" data-step="4" style="display: none;">
   <div class="techpack-container">
     
-    <!-- Compact Progress Steps -->
-    <div class="simple-progress-container">
-      <div class="simple-progress-steps">
-        <div class="simple-step completed">
-          <div class="simple-step-circle">✓</div>
-          <span>Client Info</span>
+    <!-- Enhanced Progress Steps -->
+    <div class="v10-progress-container">
+      <div class="v10-progress-steps">
+        <div class="v10-step-indicator completed">
+          <div class="v10-step-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </div>
+          <div class="v10-step-label">
+            <span class="v10-step-title">Client Information</span>
+            <span class="v10-step-subtitle">Contact details</span>
+          </div>
         </div>
-        <div class="simple-step completed">
-          <div class="simple-step-circle">✓</div>
-          <span>File Upload</span>
+        <div class="v10-step-indicator completed">
+          <div class="v10-step-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </div>
+          <div class="v10-step-label">
+            <span class="v10-step-title">File Upload</span>
+            <span class="v10-step-subtitle">Reference materials</span>
+          </div>
         </div>
-        <div class="simple-step completed">
-          <div class="simple-step-circle">✓</div>
-          <span>Color Studios</span>
+        <div class="v10-step-indicator completed">
+          <div class="v10-step-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </div>
+          <div class="v10-step-label">
+            <span class="v10-step-title">Specifications</span>
+            <span class="v10-step-subtitle">Garment details</span>
+          </div>
         </div>
-        <div class="simple-step active">
-          <div class="simple-step-circle">4</div>
-          <span>Review</span>
+        <div class="v10-step-indicator active">
+          <div class="v10-step-circle">
+            <span class="v10-step-number">4</span>
+          </div>
+          <div class="v10-step-label">
+            <span class="v10-step-title">Review & Submit</span>
+            <span class="v10-step-subtitle">Final confirmation</span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="techpack-content">
       
-      <!-- Header like Steps 1-2 -->
-      <div class="techpack-header-with-help">
-        <div class="techpack-header-content">
-          <h2 class="techpack-title">Review & Submit</h2>
-          <p class="techpack-subtitle">Please review your submission before sending</p>
+      <!-- Premium Header with Status Badge -->
+      <div class="v10-review-header">
+        <div class="v10-header-content">
+          <div class="v10-header-main">
+            <h2 class="v10-header-title">Review Your Request</h2>
+            <p class="v10-header-subtitle">Please verify all details before submitting your request</p>
+          </div>
+          <div class="v10-header-badge">
+            <span class="v10-status-badge v10-status-badge--review" id="review-status-badge">Ready for Review</span>
+          </div>
         </div>
-        
       </div>
 
       <!-- Review Content -->
 
-          <!-- Review Summary Cards -->
-          <div class="review-summary-grid review-summary-grid--top">
-            
-            <!-- Client Information Card -->
-            <div class="review-card">
-              <div class="review-card__header">
-                <div class="review-card__title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span>Client Information</span>
-                </div>
-                <button type="button" class="review-card__edit" data-edit-step="1">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-              </div>
-              <div class="review-card__content" id="review-client-info">
-                <!-- Populated by JavaScript -->
-              </div>
+      <!-- Executive Summary Cards -->
+      <div class="v10-executive-summary">
+        
+        <!-- Request Overview Card -->
+        <div class="v10-overview-card">
+          <div class="v10-overview-header">
+            <div class="v10-overview-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+              </svg>
             </div>
-
-            <!-- Uploaded Files Card -->
-            <div class="review-card">
-              <div class="review-card__header">
-                <div class="review-card__title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <line x1="10" y1="9" x2="8" y2="9"/>
-                  </svg>
-                  <span>Uploaded Files</span>
-                </div>
-                <button type="button" class="review-card__edit" data-edit-step="2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-              </div>
-              <div class="review-card__content" id="review-uploaded-files">
-                <!-- Populated by JavaScript -->
-              </div>
+            <div class="v10-overview-info">
+              <h3 class="v10-overview-title" id="request-overview-title">Sample Request</h3>
+              <p class="v10-overview-subtitle" id="request-overview-subtitle">Professional garment samples for approval</p>
             </div>
-
-            <!-- Request Type Card -->
-            <div class="review-card">
-              <div class="review-card__header">
-                <div class="review-card__title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 11H1v3h8v3l8-5-8-5v3z"/>
-                  </svg>
-                  <span>Request Type</span>
-                </div>
-              </div>
-              <div class="review-card__content" id="review-request-type">
-                <!-- Populated by JavaScript -->
-              </div>
+            <div class="v10-overview-badge">
+              <span class="v10-request-type-badge" id="request-type-badge">SAMPLES</span>
             </div>
-
           </div>
+        </div>
 
-          <!-- Detailed Review Sections -->
-          <div class="review-details">
-            
-            <!-- Garment Specifications Section -->
-            <div class="review-detail-section">
-              <div class="review-detail-section__header">
-                <div class="review-detail-section__title">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-                    <line x1="16" y1="8" x2="2" y2="22"/>
-                    <line x1="17.5" y1="15" x2="9" y2="15"/>
-                  </svg>
-                  <h3>Garment Specifications</h3>
-                </div>
-                <button type="button" class="review-detail-section__edit" data-edit-step="3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  Edit Garments
-                </button>
+        <!-- Quick Stats Grid -->
+        <div class="v10-stats-grid">
+          <div class="v10-stat-card">
+            <div class="v10-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                <line x1="16" y1="8" x2="2" y2="22"/>
+              </svg>
+            </div>
+            <div class="v10-stat-content">
+              <span class="v10-stat-value" id="total-garments">0</span>
+              <span class="v10-stat-label">Garments</span>
+            </div>
+          </div>
+          
+          <div class="v10-stat-card">
+            <div class="v10-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6"/>
+              </svg>
+            </div>
+            <div class="v10-stat-content">
+              <span class="v10-stat-value" id="total-colors">0</span>
+              <span class="v10-stat-label">Colors</span>
+            </div>
+          </div>
+          
+          <div class="v10-stat-card">
+            <div class="v10-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+              </svg>
+            </div>
+            <div class="v10-stat-content">
+              <span class="v10-stat-value" id="total-files">0</span>
+              <span class="v10-stat-label">Files</span>
+            </div>
+          </div>
+          
+          <div class="v10-stat-card v10-stat-card--highlight">
+            <div class="v10-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="v10-stat-content">
+              <span class="v10-stat-value" id="total-cost">€0</span>
+              <span class="v10-stat-label">Estimated</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Main Review Sections -->
+      <div class="v10-review-sections">
+        
+        <!-- Garment Specifications Section -->
+        <div class="v10-section-card">
+          <div class="v10-section-header">
+            <div class="v10-section-info">
+              <div class="v10-section-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                  <line x1="16" y1="8" x2="2" y2="22"/>
+                </svg>
               </div>
-              <div class="review-detail-section__content">
-                <div class="review-garments-grid" id="review-garments">
+              <div class="v10-section-text">
+                <h3 class="v10-section-title">Garment Specifications</h3>
+                <p class="v10-section-description">Complete garment details and requirements</p>
+              </div>
+            </div>
+            <button type="button" class="v10-section-edit-btn" data-edit-step="3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <span>Edit</span>
+            </button>
+          </div>
+          
+          <div class="v10-section-content">
+            <div class="v10-garments-showcase" id="review-garments">
+              <!-- Populated by JavaScript with enhanced garment cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Customizations (Sample Requests Only) -->
+        <div class="v10-section-card" id="review-samples-section" style="display: none;">
+          <div class="v10-section-header">
+            <div class="v10-section-info">
+              <div class="v10-section-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6"/>
+                  <circle cx="12" cy="5" r="2"/>
+                  <circle cx="12" cy="19" r="2"/>
+                </svg>
+              </div>
+              <div class="v10-section-text">
+                <h3 class="v10-section-title">Sample Customizations</h3>
+                <p class="v10-section-description">Color swatches and design applications</p>
+              </div>
+            </div>
+            <button type="button" class="v10-section-edit-btn" data-edit-step="3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <span>Edit</span>
+            </button>
+          </div>
+          
+          <div class="v10-section-content">
+            <div class="v10-samples-grid">
+              
+              <!-- Lab Dips Showcase -->
+              <div class="v10-sample-showcase">
+                <div class="v10-showcase-header">
+                  <h4 class="v10-showcase-title">Fabric Swatches</h4>
+                  <span class="v10-showcase-count" id="labdips-count">0 swatches</span>
+                </div>
+                <div class="v10-showcase-content" id="review-labdips-standalone">
                   <!-- Populated by JavaScript -->
                 </div>
               </div>
-            </div>
 
-            <!-- Lab Dips & Design Samples Side-by-Side (Sample Requests Only) -->
-            <div class="review-summary-grid review-samples-grid" id="review-samples-grid" style="display: none;">
-              
-              <!-- Lab Dips Fabric Swatches Card -->
-              <div class="review-card">
-                <div class="review-card__header">
-                  <div class="review-card__title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="3"/>
-                      <path d="M12 1v6m0 6v6"/>
-                    </svg>
-                    <span>Lab Dip Fabric Swatches</span>
-                  </div>
-                  <button type="button" class="review-card__edit" data-edit-step="3">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                    </svg>
-                  </button>
+              <!-- Design Samples Showcase -->
+              <div class="v10-sample-showcase">
+                <div class="v10-showcase-header">
+                  <h4 class="v10-showcase-title">Design Applications</h4>
+                  <span class="v10-showcase-count" id="designs-count">0 designs</span>
                 </div>
-                <div class="review-card__content" id="review-labdips-standalone">
-                  <!-- Standalone fabric swatches only -->
-                </div>
-              </div>
-
-              <!-- Design Samples Card -->
-              <div class="review-card">
-                <div class="review-card__header">
-                  <div class="review-card__title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <span>Design Sample Applications</span>
-                  </div>
-                  <button type="button" class="review-card__edit" data-edit-step="3">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="review-card__content" id="review-designs-standalone">
-                  <!-- Standalone design samples only -->
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Quantities Section (Bulk Orders Only) -->
-            <div class="review-detail-section" id="review-quantities-section" style="display: none;">
-              <div class="review-detail-section__header">
-                <div class="review-detail-section__title">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                  <h3>Production Quantities</h3>
-                </div>
-                <button type="button" class="review-detail-section__edit" data-edit-step="3">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                  Edit Quantities
-                </button>
-              </div>
-              <div class="review-detail-section__content">
-                <div class="review-quantities-container" id="review-quantities">
+                <div class="v10-showcase-content" id="review-designs-standalone">
                   <!-- Populated by JavaScript -->
                 </div>
               </div>
+
             </div>
-
           </div>
+        </div>
 
-          <!-- Cost Summary Section -->
-          <div class="review-detail-section review-detail-section--cost" id="cost-summary-section">
-            <div class="review-detail-section__header">
-              <div class="review-detail-section__title">
+        <!-- Production Quantities (Bulk Orders Only) -->
+        <div class="v10-section-card" id="review-quantities-section" style="display: none;">
+          <div class="v10-section-header">
+            <div class="v10-section-info">
+              <div class="v10-section-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="12" y1="1" x2="12" y2="23"/>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
-                <h3>Cost Summary</h3>
               </div>
-              <div class="cost-summary-header-actions">
-                <div class="currency-toggle">
-                  <button type="button" class="currency-btn currency-btn--active" data-currency="EUR">€ EUR</button>
-                  <button type="button" class="currency-btn" data-currency="USD">$ USD</button>
-                </div>
-                <span class="studio-header__badge studio-header__badge--professional" id="cost-summary-badge">ESTIMATED</span>
+              <div class="v10-section-text">
+                <h3 class="v10-section-title">Production Quantities</h3>
+                <p class="v10-section-description">Size distribution and production volumes</p>
               </div>
             </div>
-            <div class="review-detail-section__content">
-              <div class="cost-breakdown-list" id="cost-breakdown">
-                <!-- Populated by JavaScript -->
-              </div>
-              <div class="cost-summary__total">
-                <span class="cost-total__label">Total Cost:</span>
-                <span class="cost-total__value" id="total-cost">€0</span>
+            <button type="button" class="v10-section-edit-btn" data-edit-step="3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <span>Edit</span>
+            </button>
+          </div>
+          
+          <div class="v10-section-content">
+            <div class="v10-quantities-showcase" id="review-quantities">
+              <!-- Populated by JavaScript with enhanced quantity display -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cost Summary Section -->
+      <div class="v10-cost-summary-card">
+        <div class="v10-cost-header">
+          <div class="v10-cost-info">
+            <div class="v10-cost-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="v10-cost-text">
+              <h3 class="v10-cost-title">Cost Summary</h3>
+              <p class="v10-cost-description">Detailed pricing breakdown for your request</p>
+            </div>
+          </div>
+          <div class="v10-cost-actions">
+            <div class="v10-currency-toggle">
+              <button type="button" class="v10-currency-btn v10-currency-btn--active" data-currency="EUR">
+                <span class="v10-currency-symbol">€</span>
+                <span class="v10-currency-code">EUR</span>
+              </button>
+              <button type="button" class="v10-currency-btn" data-currency="USD">
+                <span class="v10-currency-symbol">$</span>
+                <span class="v10-currency-code">USD</span>
+              </button>
+            </div>
+            <span class="v10-pricing-badge" id="cost-summary-badge">ESTIMATED</span>
+          </div>
+        </div>
+        
+        <div class="v10-cost-content">
+          <div class="v10-cost-breakdown" id="cost-breakdown">
+            <!-- Populated by JavaScript -->
+          </div>
+          
+          <div class="v10-cost-total">
+            <div class="v10-total-row">
+              <span class="v10-total-label">Total Estimated Cost</span>
+              <span class="v10-total-amount" id="total-cost">€0</span>
+            </div>
+            <div class="v10-total-note">
+              <small id="pricing-disclaimer">Final pricing may vary based on final specifications</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="v10-submit-section">
+        
+        <!-- Submit Message -->
+        <div class="v10-submit-card">
+          <div class="v10-submit-header">
+            <div class="v10-submit-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+              </svg>
+            </div>
+            <div class="v10-submit-info">
+              <h3 class="v10-submit-title">Ready to Submit</h3>
+              <div class="v10-submit-message" id="submit-message">
+                <!-- Populated by JavaScript with request-specific message -->
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Submit Actions Section -->
-          <div class="review-detail-section review-detail-section--submit">
-            <div class="review-detail-section__header">
-              <div class="review-detail-section__title">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="22" y1="2" x2="11" y2="13"/>
-                  <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-                </svg>
-                <h3>Submit Request</h3>
-              </div>
-            </div>
-            <div class="review-detail-section__content">
-              
-              <!-- Request Type Specific Messages -->
-              <div class="submit-message" id="submit-message">
-                <!-- Populated by JavaScript -->
-              </div>
-
-              <!-- Terms & Conditions -->
-              <div class="terms-agreement">
-                <label class="terms-checkbox">
-                  <input type="checkbox" id="terms-agreement" required>
-                  <span class="checkmark"></span>
-                  <span class="terms-text">
-                    I agree to the <a href="#" id="terms-link">Terms & Conditions</a> and confirm that all information provided is accurate
-                  </span>
-                </label>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="v10-step-actions v10-step-actions--three-button">
-                <button type="button" class="v10-btn v10-btn--secondary" id="step-4-prev">
-                  <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
-                    <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
-                  </svg>
-                  Previous
-                </button>
-                
-                <button type="button" class="v10-btn v10-btn--ghost" id="save-draft-btn">
-                  <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                    <polyline points="17,21 17,13 7,13 7,21"/>
-                    <polyline points="7,3 7,8 15,8"/>
-                  </svg>
-                  Save Draft
-                </button>
-                
-                <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
-                  <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-                  </svg>
-                  Submit Request
-                </button>
-              </div>
-
-            </div>
+        <!-- Terms & Conditions -->
+        <div class="v10-terms-section">
+          <div class="v10-terms-agreement">
+            <label class="v10-terms-checkbox">
+              <input type="checkbox" id="terms-agreement" required>
+              <span class="v10-checkbox-mark"></span>
+              <span class="v10-terms-text">
+                I have reviewed all details and agree to the <a href="#" id="terms-link" class="v10-terms-link">Terms & Conditions</a>
+              </span>
+            </label>
           </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="v10-submit-actions">
+          <button type="button" class="v10-btn v10-btn--secondary v10-btn--large" id="step-4-prev">
+            <svg class="v10-btn-icon v10-btn-icon--left" width="18" height="18" viewBox="0 0 16 16">
+              <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+            <span>Back to Edit</span>
+          </button>
+          
+          <div class="v10-primary-actions">
+            <button type="button" class="v10-btn v10-btn--ghost v10-btn--large" id="save-draft-btn">
+              <svg class="v10-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17,21 17,13 7,13 7,21"/>
+                <polyline points="7,3 7,8 15,8"/>
+              </svg>
+              <span>Save Draft</span>
+            </button>
+            
+            <button type="button" class="v10-btn v10-btn--primary v10-btn--large v10-btn--cta" id="submit-request-btn" disabled>
+              <svg class="v10-btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+              </svg>
+              <span>Submit Request</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
 
         </div>
       </div>
@@ -345,77 +429,108 @@ TechPack V10 Step 4: Premium Review & Submit
 
 </section>
 
-<!-- Review Garment Card Template -->
+<!-- Enhanced Review Garment Card Template -->
 <template id="review-garment-template">
-  <div class="review-garment-card">
-    <div class="review-garment-card__header">
-      <div class="review-garment-card__main">
-        <div class="review-garment-card__visual">
-          <div class="garment-color-circle" style="background-color: #ccc;"></div>
-        </div>
-        <div class="review-garment-card__info">
-          <div class="review-garment-card__title">
-            <span class="garment-number">Garment 1</span>
-            <span class="garment-type">Hoodie</span>
+  <div class="v10-garment-showcase-card">
+    <div class="v10-garment-header">
+      <div class="v10-garment-identity">
+        <div class="v10-garment-visual">
+          <div class="v10-color-display">
+            <div class="v10-color-circle" style="background-color: #ccc;"></div>
+            <div class="v10-color-overlay" style="display: none;"></div>
           </div>
-          <div class="review-garment-card__color-name">
-            <span class="color-name-text">No color assigned</span>
+          <div class="v10-garment-badge">
+            <span class="v10-garment-number">1</span>
+          </div>
+        </div>
+        <div class="v10-garment-info">
+          <h4 class="v10-garment-title">
+            <span class="v10-garment-name">Hoodie</span>
+            <span class="v10-garment-subtitle">Premium sample</span>
+          </h4>
+          <div class="v10-color-info">
+            <span class="v10-color-name">Color not assigned</span>
           </div>
         </div>
       </div>
-      <div class="review-garment-card__status">
-        <span class="status-badge status-badge--complete">Complete</span>
+      <div class="v10-garment-status">
+        <span class="v10-status-indicator v10-status--complete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20,6 9,17 4,12"/>
+          </svg>
+          Complete
+        </span>
       </div>
     </div>
-    <div class="review-garment-card__content">
-      <div class="review-garment-detail">
-        <span class="detail-label">Fabric:</span>
-        <span class="detail-value">100% Organic Cotton</span>
+    
+    <div class="v10-garment-specifications">
+      <div class="v10-spec-grid">
+        <div class="v10-spec-item">
+          <span class="v10-spec-label">Fabric</span>
+          <span class="v10-spec-value">100% Organic Cotton</span>
+        </div>
+        <div class="v10-spec-item">
+          <span class="v10-spec-label">Sample Type</span>
+          <span class="v10-spec-value">Stock Color</span>
+        </div>
+        <div class="v10-spec-item v10-spec-item--full" style="display: none;">
+          <span class="v10-spec-label">Size Distribution</span>
+          <div class="v10-size-chips">
+            <!-- Populated for bulk orders -->
+          </div>
+        </div>
       </div>
-      <div class="review-garment-detail">
-        <span class="detail-label">Sample Type:</span>
-        <span class="detail-value">Stock Color</span>
-      </div>
-      <div class="review-garment-assigned">
-        <!-- Assigned items will be inserted here -->
+      
+      <div class="v10-garment-assignments" style="display: none;">
+        <div class="v10-assignments-header">
+          <span class="v10-assignments-label">Applied Customizations</span>
+        </div>
+        <div class="v10-assignments-list">
+          <!-- Populated by JavaScript for sample requests -->
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<!-- Review Lab Dip Template -->
+<!-- Enhanced Lab Dip Template -->
 <template id="review-labdip-template">
-  <div class="review-item">
-    <div class="review-item__visual">
-      <div class="review-item__color" style="background-color: #000000;"></div>
+  <div class="v10-swatch-card">
+    <div class="v10-swatch-visual">
+      <div class="v10-swatch-color" style="background-color: #000000;"></div>
+      <div class="v10-swatch-info">
+        <span class="v10-swatch-type">Fabric Swatch</span>
+      </div>
     </div>
-    <div class="review-item__content">
-      <span class="review-item__name">PANTONE 19-4052 TPX</span>
-      <span class="review-item__cost">€25</span>
-    </div>
-    <div class="review-item__assignment">
-      <span class="assignment-type">Assigned to Garment 1</span>
+    <div class="v10-swatch-details">
+      <h5 class="v10-swatch-name">PANTONE 19-4052 TPX</h5>
+      <div class="v10-swatch-meta">
+        <span class="v10-swatch-assignment">Assigned to Garment 1</span>
+        <span class="v10-swatch-cost">€25</span>
+      </div>
     </div>
   </div>
 </template>
 
-<!-- Review Design Template -->
+<!-- Enhanced Design Template -->
 <template id="review-design-template">
-  <div class="review-item">
-    <div class="review-item__visual">
-      <div class="review-item__icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div class="v10-design-card">
+    <div class="v10-design-visual">
+      <div class="v10-design-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
       </div>
+      <div class="v10-design-badge">
+        <span class="v10-design-type">Embroidery</span>
+      </div>
     </div>
-    <div class="review-item__content">
-      <span class="review-item__name">Logo Front</span>
-      <span class="review-item__type">Embroidery</span>
-      <span class="review-item__cost">€15</span>
-    </div>
-    <div class="review-item__assignment">
-      <span class="assignment-type">Assigned to Garment 1</span>
+    <div class="v10-design-details">
+      <h5 class="v10-design-name">Logo Front</h5>
+      <div class="v10-design-meta">
+        <span class="v10-design-assignment">Assigned to Garment 1</span>
+        <span class="v10-design-cost">€15</span>
+      </div>
     </div>
   </div>
 </template>
