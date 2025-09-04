@@ -12812,6 +12812,9 @@ class V10_ReviewManager {
     // Bind edit button events after content is populated
     this.bindEditButtons();
     
+    // Update submit button state
+    this.updateSubmitButton();
+    
     // Update status badge
     this.updateStatusBadge();
   }
