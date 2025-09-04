@@ -39,25 +39,40 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
       </div>
     </div>
 
-    <!-- Client Information -->
-    <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h3 class="v10-studio-title">Client Information</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="1">Edit</button>
+    <!-- Client Information & Files - Side by Side -->
+    <div class="v10-review-grid">
+      <!-- Client Information -->
+      <div class="v10-studio-card">
+        <div class="v10-studio-header">
+          <h3 class="v10-studio-title">Client Information</h3>
+          <button type="button" class="v10-edit-btn" data-edit-step="1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        </div>
+        <div class="v10-review-content" id="review-client-info">
+          <!-- Populated by JavaScript -->
+        </div>
       </div>
-      <div class="v10-review-content" id="review-client-info">
-        <!-- Populated by JavaScript -->
-      </div>
-    </div>
 
-    <!-- Uploaded Files -->
-    <div class="v10-studio-card">
-      <div class="v10-studio-header">
-        <h3 class="v10-studio-title">Uploaded Files</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="2">Edit</button>
-      </div>
-      <div class="v10-review-content" id="review-uploaded-files">
-        <!-- Populated by JavaScript -->
+      <!-- Uploaded Files -->
+      <div class="v10-studio-card">
+        <div class="v10-studio-header">
+          <h3 class="v10-studio-title">Uploaded Files</h3>
+          <button type="button" class="v10-edit-btn" data-edit-step="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        </div>
+        <div class="v10-review-content" id="review-uploaded-files">
+          <!-- Populated by JavaScript -->
+        </div>
       </div>
     </div>
 
@@ -65,7 +80,13 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Garment Specifications</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">Edit</button>
+        <button type="button" class="v10-edit-btn" data-edit-step="3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
       </div>
       <div class="v10-review-content" id="review-garments">
         <!-- Populated by JavaScript -->
@@ -76,7 +97,14 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card" id="review-samples-section" style="display: none;">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Fabric Swatches & Design Applications</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">Edit</button>
+        <span class="v10-count-badge" id="labdips-count">0 swatches</span>
+        <button type="button" class="v10-edit-btn" data-edit-step="3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
       </div>
       <div class="v10-review-content">
         <div class="v10-samples-grid">
@@ -94,7 +122,13 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card" id="review-quantities-section" style="display: none;">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Production Quantities</h3>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">Edit</button>
+        <button type="button" class="v10-edit-btn" data-edit-step="3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
       </div>
       <div class="v10-review-content" id="review-quantities">
         <!-- Populated by JavaScript -->
@@ -105,6 +139,11 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
     <div class="v10-studio-card">
       <div class="v10-studio-header">
         <h3 class="v10-studio-title">Cost Summary</h3>
+        <!-- Currency Toggle -->
+        <div class="currency-toggle">
+          <button type="button" class="v10-currency-btn" data-currency="EUR">€</button>
+          <button type="button" class="v10-currency-btn" data-currency="USD">$</button>
+        </div>
       </div>
       <div class="v10-review-content">
         <div id="cost-breakdown">
@@ -135,22 +174,20 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
           </div>
         </div>
 
-    <!-- Terms & Conditions -->
-    <div class="v10-studio-card">
-      <div class="v10-form-section">
-        <div class="v10-form-field">
-          <label class="v10-checkbox-label">
-            <input type="checkbox" id="terms-agreement" required>
-            <span class="v10-checkbox-text">
-              I have reviewed all details and agree to the <a href="#" id="terms-link">Terms & Conditions</a>
-            </span>
-          </label>
-        </div>
+    <!-- Terms & Conditions - Centered -->
+    <div class="v10-terms-section">
+      <div class="v10-form-field">
+        <label class="v10-checkbox-label">
+          <input type="checkbox" id="terms-agreement" required>
+          <span class="v10-checkbox-text">
+            I have reviewed all details and agree to the <a href="#" id="terms-link">Terms & Conditions</a>
+          </span>
+        </label>
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="v10-step-actions">
+    <!-- Action Buttons - Centered -->
+    <div class="v10-submit-actions">
       <button type="button" class="v10-btn v10-btn--secondary" id="step-4-prev">
         <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
           <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -158,7 +195,7 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
         Previous
       </button>
       
-      <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn" disabled>
+      <button type="button" class="v10-btn v10-btn--primary" id="submit-request-btn">
         Submit Request
         <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
           <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
