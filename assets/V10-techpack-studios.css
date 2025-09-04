@@ -9816,3 +9816,479 @@ div[class*="circle"][style*="background-color"],
   color: white;
 }
 
+
+/* ==============================================
+   V10 QUANTITY STUDIO ENHANCED STYLES
+   ============================================== */
+
+/* Color Picker Modal */
+.v10-color-picker-content {
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.v10-color-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(var(--v10-accent-rgb), 0.1);
+  border: 1px solid rgba(var(--v10-accent-rgb), 0.3);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--v10-text-secondary);
+}
+
+.v10-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.v10-color-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: var(--v10-bg-secondary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v10-color-preset:hover {
+  border-color: var(--v10-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.v10-color-preset-swatch {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.v10-color-preset-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--v10-text-primary);
+}
+
+.v10-color-preset-code {
+  font-size: 0.75rem;
+  color: var(--v10-text-tertiary);
+  text-align: center;
+}
+
+.v10-custom-color-section {
+  padding-top: 20px;
+  border-top: 1px solid var(--v10-border-primary);
+}
+
+.v10-custom-color-section h3 {
+  margin-bottom: 15px;
+  color: var(--v10-text-primary);
+}
+
+.v10-custom-color-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.v10-color-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.v10-color-input-group label {
+  font-size: 0.85rem;
+  color: var(--v10-text-secondary);
+  font-weight: 500;
+}
+
+.v10-color-input-group input[type="text"] {
+  padding: 10px;
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 6px;
+  color: var(--v10-text-primary);
+  font-size: 0.95rem;
+}
+
+.v10-hex-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.v10-hex-input-wrapper input[type="text"] {
+  flex: 1;
+}
+
+.v10-hex-input-wrapper input[type="color"] {
+  width: 50px;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Enhanced Garment Cards */
+.v10-garment-quantity-card {
+  background: var(--v10-bg-secondary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.v10-garment-quantity-card--complete {
+  border-color: var(--v10-success-color, #10b981);
+  background: linear-gradient(135deg, 
+    var(--v10-bg-secondary) 0%, 
+    rgba(16, 185, 129, 0.05) 100%);
+}
+
+.v10-garment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--v10-border-primary);
+}
+
+.v10-garment-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--v10-text-primary);
+  margin-bottom: 4px;
+}
+
+.v10-garment-title span {
+  color: var(--v10-accent-primary);
+}
+
+.v10-garment-subtitle {
+  font-size: 0.9rem;
+  color: var(--v10-text-secondary);
+}
+
+.v10-garment-min {
+  padding: 6px 12px;
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--v10-accent-primary);
+}
+
+/* Colorway Tabs */
+.v10-colorway-tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--v10-border-primary);
+  flex-wrap: wrap;
+}
+
+.v10-colorway-tabs {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.v10-colorway-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--v10-bg-primary);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.v10-colorway-tab.active {
+  border-color: var(--v10-accent-primary);
+  background: rgba(var(--v10-accent-rgb), 0.1);
+}
+
+.v10-colorway-tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.v10-colorway-tab-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--v10-border-primary);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.v10-colorway-tab-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.v10-colorway-tab-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.v10-colorway-tab-count {
+  font-size: 0.75rem;
+  color: var(--v10-text-tertiary);
+}
+
+.v10-colorway-tab-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--v10-danger-color, #ef4444);
+  border: 2px solid var(--v10-bg-secondary);
+  color: white;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.v10-colorway-tab:hover .v10-colorway-tab-remove {
+  display: flex;
+}
+
+.v10-colorway-tab-remove:hover {
+  transform: scale(1.1);
+}
+
+.v10-add-colorway-tab {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--v10-bg-primary);
+  border: 2px dashed var(--v10-border-primary);
+  color: var(--v10-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v10-add-colorway-tab:hover {
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+  background: rgba(var(--v10-accent-rgb), 0.05);
+}
+
+/* Size Inputs with Color Indicators */
+.v10-colorway-content-wrapper {
+  padding: 20px 0;
+}
+
+.v10-design-reference-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 8px;
+}
+
+.v10-design-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: 10px;
+}
+
+.v10-design-reference-input {
+  width: 100%;
+  padding: 10px;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 6px;
+  color: var(--v10-text-primary);
+  font-size: 0.95rem;
+}
+
+.v10-size-inputs-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.v10-size-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.v10-size-color-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.v10-size-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--v10-text-secondary);
+  text-align: center;
+  padding-top: 6px;
+}
+
+.v10-size-input {
+  padding: 8px;
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: 6px;
+  color: var(--v10-text-primary);
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.v10-size-input:focus {
+  border-color: var(--v10-accent-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--v10-accent-rgb), 0.1);
+}
+
+.v10-size-input:hover {
+  background: var(--v10-bg-secondary);
+}
+
+/* Colorway Actions */
+.v10-colorway-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--v10-border-primary);
+}
+
+.v10-colorway-subtotal {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: var(--v10-text-secondary);
+}
+
+.v10-colorway-subtotal strong {
+  color: var(--v10-accent-primary);
+  font-size: 1.1rem;
+}
+
+/* Garment Footer */
+.v10-garment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--v10-border-primary);
+}
+
+.v10-garment-total {
+  font-size: 0.95rem;
+  color: var(--v10-text-secondary);
+}
+
+.v10-garment-total strong {
+  font-size: 1.2rem;
+  color: var(--v10-text-primary);
+  font-weight: 700;
+}
+
+.v10-garment-status {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.v10-garment-status--insufficient {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.v10-garment-status--sufficient {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .v10-size-inputs-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .v10-colorway-tabs-container {
+    flex-direction: column;
+  }
+  
+  .v10-colorway-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .v10-colorway-subtotal {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .v10-size-inputs-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .v10-garment-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .v10-garment-footer {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}

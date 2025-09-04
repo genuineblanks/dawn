@@ -3309,26 +3309,131 @@ class V10_QuantityStudioManager {
       'jacket': { single: 50, multi: 40 },
       'default': { single: 75, multi: 50 }
     };
+    
+    // Color presets for visual guidance
+    this.colorPresets = [
+      { name: 'Black', hex: '#000000', pantone: '19-4005 TPX' },
+      { name: 'White', hex: '#FFFFFF', pantone: '11-0601 TPX' },
+      { name: 'Navy Blue', hex: '#002F6C', pantone: '19-4052 TPX' },
+      { name: 'Royal Blue', hex: '#4169E1', pantone: '18-3949 TPX' },
+      { name: 'Red', hex: '#ED1C24', pantone: '18-1664 TPX' },
+      { name: 'Forest Green', hex: '#228B22', pantone: '18-0130 TPX' },
+      { name: 'Grey', hex: '#808080', pantone: '17-0000 TPX' },
+      { name: 'Charcoal', hex: '#36454F', pantone: '19-0303 TPX' },
+      { name: 'Burgundy', hex: '#800020', pantone: '19-1629 TPX' },
+      { name: 'Pink', hex: '#FFC0CB', pantone: '13-1906 TPX' },
+      { name: 'Orange', hex: '#FF6600', pantone: '16-1364 TPX' },
+      { name: 'Yellow', hex: '#FFD700', pantone: '14-0755 TPX' }
+    ];
+    
+    // Load saved state from sessionStorage
+    this.loadSavedState();
+  }
+  
+  loadSavedState() {
+    try {
+      const saved = sessionStorage.getItem('v10_quantity_studio_state');
+      if (saved) {
+        const state = JSON.parse(saved);
+        console.log('📦 Loading saved quantity studio state:', state);
+        
+        // Restore garments with colorways
+        if (state.garments) {
+          state.garments.forEach(garmentData => {
+            const garmentState = {
+              ...garmentData,
+              colorways: new Map()
+            };
+            
+            // Restore colorways
+            if (garmentData.colorways && Array.isArray(garmentData.colorways)) {
+              garmentData.colorways.forEach(colorway => {
+                garmentState.colorways.set(colorway.id, colorway);
+              });
+            }
+            
+            this.garments.set(garmentData.id, garmentState);
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error loading saved state:', error);
+    }
+  }
+  
+  saveState() {
+    try {
+      const state = {
+        garments: []
+      };
+      
+      this.garments.forEach((garment, id) => {
+        const garmentData = {
+          ...garment,
+          colorways: Array.from(garment.colorways.entries()).map(([cwId, cw]) => ({
+            id: cwId,
+            ...cw
+          }))
+        };
+        state.garments.push(garmentData);
+      });
+      
+      sessionStorage.setItem('v10_quantity_studio_state', JSON.stringify(state));
+      console.log('💾 Saved quantity studio state');
+    } catch (error) {
+      console.error('Error saving state:', error);
+    }
   }
   
   initialize() {
     console.log('🚀 Initializing V10 Quantity Studio Manager');
     this.loadGarments();
+    this.restoreQuantityData();
     this.updateStats();
     this.renderAllGarments();
+    this.setupColorPickerModal();
   }
   
   loadGarments() {
+    // Keep existing colorways when reloading garments
+    const existingColorways = new Map();
+    this.garments.forEach((garment, id) => {
+      if (garment.colorways && garment.colorways.size > 0) {
+        existingColorways.set(id, garment.colorways);
+      }
+    });
+    
     this.garments.clear();
     V10_State.garments.forEach((garment, id) => {
       if (garment.type && (garment.fabricType || garment.sampleReference)) {
-        this.garments.set(id, {
+        const garmentData = {
           ...garment,
-          colorways: new Map(),
+          colorways: existingColorways.get(id) || new Map(),
           quantities: {},
           total: 0
-        });
+        };
+        
+        // Check if design reference should be enabled
+        if (garment.sampleReference && garment.sampleReference.toLowerCase().includes('design')) {
+          garmentData.requiresDesignReference = true;
+        }
+        
+        this.garments.set(id, garmentData);
       }
+    });
+  }
+  
+  restoreQuantityData() {
+    // Recalculate totals from existing colorways
+    this.garments.forEach((garment, garmentId) => {
+      let garmentTotal = 0;
+      garment.colorways.forEach(colorway => {
+        if (colorway.quantities) {
+          colorway.subtotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+          garmentTotal += colorway.subtotal;
+        }
+      });
+      garment.total = garmentTotal;
     });
   }
   
@@ -3384,7 +3489,10 @@ class V10_QuantityStudioManager {
     }
     if (garmentsEl) garmentsEl.textContent = garmentCount;
     if (colorwaysEl) colorwaysEl.textContent = colorwayCount;
-    if (minEl) minEl.textContent = totalMinimum;
+    if (minEl) {
+      minEl.textContent = totalMinimum;
+      minEl.classList.toggle('sufficient', totalUnits >= totalMinimum && totalMinimum > 0);
+    }
     
     console.log(`📊 Stats Updated: ${totalUnits}/${totalMinimum} units, ${garmentCount} garments, ${colorwayCount} colorways`);
   }
@@ -3400,120 +3508,389 @@ class V10_QuantityStudioManager {
       return;
     }
     
+    let garmentIndex = 1;
     this.garments.forEach((garment, id) => {
-      container.appendChild(this.createGarmentCard(garment, id));
+      container.appendChild(this.createGarmentCard(garment, id, garmentIndex++));
     });
   }
   
-  createGarmentCard(garment, garmentId) {
+  createGarmentCard(garment, garmentId, index) {
     const div = document.createElement('div');
     div.className = 'v10-garment-quantity-card';
     div.dataset.garmentId = garmentId;
     
-    const minimum = this.calculateGarmentMinimum(garment.type, garment.colorways?.size || 0);
+    const colorwayCount = garment.colorways?.size || 0;
+    const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
+    const isSufficient = garment.total >= minimum && colorwayCount > 0;
+    
+    if (isSufficient) {
+      div.classList.add('v10-garment-quantity-card--complete');
+    }
+    
+    // Determine what to show: fabric or sample reference
+    const subtitle = garment.sampleReference || garment.fabricType || 'No selection';
     
     div.innerHTML = `
       <div class="v10-garment-header">
         <div>
-          <div class="v10-garment-title">Garment ${garment.number || '1'} - <span>${garment.type}</span></div>
-          <div class="v10-garment-subtitle">${garment.fabricType || garment.sampleReference || 'No fabric selected'}</div>
+          <div class="v10-garment-title">Garment ${index} - <span>${garment.type}</span></div>
+          <div class="v10-garment-subtitle">${subtitle}</div>
         </div>
         <div class="v10-garment-min">${minimum} MIN</div>
       </div>
       
       <div class="v10-colorway-section">
-        <button type="button" class="v10-add-colorway-btn" onclick="window.v10QuantityStudio.showColorwayModal('${garmentId}')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Add Colorway to Set Quantities
-        </button>
+        ${colorwayCount === 0 ? `
+          <button type="button" class="v10-add-colorway-btn" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Colorway to Set Quantities
+          </button>
+        ` : `
+          <div class="v10-colorway-tabs-container">
+            <div class="v10-colorway-tabs" id="tabs-${garmentId}">
+              <!-- Colorway tabs will be added here -->
+            </div>
+            <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        `}
         
-        <div class="v10-colorways-list" id="colorways-${garmentId}">
-          <!-- Colorways will be added here -->
+        <div class="v10-colorways-content" id="colorways-${garmentId}" style="${colorwayCount === 0 ? 'display: none;' : ''}">
+          <!-- Colorway content will be added here -->
         </div>
       </div>
       
       <div class="v10-garment-footer">
-        <div class="v10-garment-total">TOTAL: ${garment.total || 0} / ${minimum} MIN</div>
-        <div class="v10-garment-status v10-garment-status--insufficient">INSUFFICIENT</div>
+        <div class="v10-garment-total">TOTAL: <strong>${garment.total}</strong> / ${minimum} MIN</div>
+        <div class="v10-garment-status v10-garment-status--${isSufficient ? 'sufficient' : 'insufficient'}">
+          ${isSufficient ? 'SUFFICIENT' : colorwayCount === 0 ? 'ADD COLORWAY' : 'INSUFFICIENT'}
+        </div>
       </div>
     `;
+    
+    // After creating, render existing colorways
+    if (colorwayCount > 0) {
+      setTimeout(() => {
+        this.renderColorways(garmentId);
+      }, 0);
+    }
     
     return div;
   }
   
-  showColorwayModal(garmentId) {
-    // For now, just add a default colorway
-    this.addColorway(garmentId, { name: 'Black', color: '#000000' });
+  setupColorPickerModal() {
+    // Check if modal already exists
+    let modal = document.getElementById('v10-color-picker-modal');
+    if (!modal) {
+      // Create modal HTML
+      modal = document.createElement('div');
+      modal.id = 'v10-color-picker-modal';
+      modal.className = 'v10-modal-overlay';
+      modal.style.display = 'none';
+      modal.innerHTML = `
+        <div class="v10-modal-content v10-color-picker-content">
+          <div class="v10-modal-header">
+            <h2>Select Colorway</h2>
+            <button type="button" class="v10-modal-close" onclick="window.v10QuantityStudio.closeColorPicker()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="v10-modal-body">
+            <p class="v10-color-disclaimer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: var(--v10-accent-primary);">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+              </svg>
+              Colors shown are for visual reference only. Actual production colors may vary based on fabric and dyeing process.
+            </p>
+            
+            <div class="v10-color-grid" id="v10-color-presets">
+              <!-- Color presets will be added here -->
+            </div>
+            
+            <div class="v10-custom-color-section">
+              <h3>Custom Color</h3>
+              <div class="v10-custom-color-inputs">
+                <div class="v10-color-input-group">
+                  <label>Color Name</label>
+                  <input type="text" id="v10-custom-color-name" placeholder="e.g., Ocean Blue" />
+                </div>
+                <div class="v10-color-input-group">
+                  <label>Hex Code</label>
+                  <div class="v10-hex-input-wrapper">
+                    <input type="text" id="v10-custom-color-hex" placeholder="#0080FF" maxlength="7" />
+                    <input type="color" id="v10-custom-color-picker" />
+                  </div>
+                </div>
+                <button type="button" class="v10-btn v10-btn--secondary" onclick="window.v10QuantityStudio.applyCustomColor()">
+                  Apply Custom Color
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Add color presets
+      this.renderColorPresets();
+      
+      // Setup color picker sync
+      const hexInput = document.getElementById('v10-custom-color-hex');
+      const colorPicker = document.getElementById('v10-custom-color-picker');
+      
+      if (hexInput && colorPicker) {
+        colorPicker.addEventListener('change', (e) => {
+          hexInput.value = e.target.value;
+        });
+        
+        hexInput.addEventListener('input', (e) => {
+          if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+            colorPicker.value = e.target.value;
+          }
+        });
+      }
+    }
+  }
+  
+  renderColorPresets() {
+    const container = document.getElementById('v10-color-presets');
+    if (!container) return;
+    
+    container.innerHTML = this.colorPresets.map(color => `
+      <button type="button" class="v10-color-preset" 
+              onclick="window.v10QuantityStudio.selectPresetColor('${color.name}', '${color.hex}', '${color.pantone}')"
+              title="${color.name} - ${color.pantone}">
+        <div class="v10-color-preset-swatch" style="background-color: ${color.hex}"></div>
+        <div class="v10-color-preset-name">${color.name}</div>
+        <div class="v10-color-preset-code">${color.pantone}</div>
+      </button>
+    `).join('');
+  }
+  
+  showColorPicker(garmentId) {
+    this.currentGarmentId = garmentId;
+    const modal = document.getElementById('v10-color-picker-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  
+  closeColorPicker() {
+    const modal = document.getElementById('v10-color-picker-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    
+    // Clear custom inputs
+    const nameInput = document.getElementById('v10-custom-color-name');
+    const hexInput = document.getElementById('v10-custom-color-hex');
+    if (nameInput) nameInput.value = '';
+    if (hexInput) hexInput.value = '';
+  }
+  
+  selectPresetColor(name, hex, pantone) {
+    if (!this.currentGarmentId) return;
+    
+    this.addColorway(this.currentGarmentId, {
+      name: `${name} (${pantone})`,
+      color: hex,
+      pantone: pantone
+    });
+    
+    this.closeColorPicker();
+  }
+  
+  applyCustomColor() {
+    const nameInput = document.getElementById('v10-custom-color-name');
+    const hexInput = document.getElementById('v10-custom-color-hex');
+    
+    const name = nameInput?.value || 'Custom Color';
+    const hex = hexInput?.value || '#808080';
+    
+    if (!this.currentGarmentId) return;
+    
+    this.addColorway(this.currentGarmentId, {
+      name: name,
+      color: hex,
+      pantone: 'Custom'
+    });
+    
+    this.closeColorPicker();
   }
   
   addColorway(garmentId, colorwayData) {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
-    const colorwayId = `colorway-${Date.now()}`;
+    const colorwayId = `colorway-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     garment.colorways.set(colorwayId, {
       ...colorwayData,
       quantities: {},
-      subtotal: 0
+      subtotal: 0,
+      designReference: ''
     });
+    
+    // Show colorway content area
+    const contentArea = document.getElementById(`colorways-${garmentId}`);
+    if (contentArea) contentArea.style.display = '';
     
     this.updateStats();
     this.renderColorways(garmentId);
     this.updateGarmentTotals(garmentId);
+    this.saveState();
   }
   
   renderColorways(garmentId) {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
+    // Update tabs
+    const tabsContainer = document.getElementById(`tabs-${garmentId}`);
+    if (tabsContainer) {
+      tabsContainer.innerHTML = '';
+      let tabIndex = 0;
+      garment.colorways.forEach((colorway, colorwayId) => {
+        const tab = document.createElement('button');
+        tab.className = 'v10-colorway-tab';
+        tab.dataset.colorwayId = colorwayId;
+        if (tabIndex === 0) tab.classList.add('active');
+        
+        tab.innerHTML = `
+          <div class="v10-colorway-tab-color" style="background-color: ${colorway.color}"></div>
+          <div class="v10-colorway-tab-info">
+            <div class="v10-colorway-tab-name">${colorway.name}</div>
+            <div class="v10-colorway-tab-count">${colorway.subtotal} units</div>
+          </div>
+          <button type="button" class="v10-colorway-tab-remove" 
+                  onclick="event.stopPropagation(); window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        `;
+        
+        tab.onclick = (e) => {
+          if (!e.target.closest('.v10-colorway-tab-remove')) {
+            this.switchColorwayTab(garmentId, colorwayId);
+          }
+        };
+        
+        tabsContainer.appendChild(tab);
+        tabIndex++;
+      });
+    }
+    
+    // Render first colorway content by default
+    const firstColorwayId = Array.from(garment.colorways.keys())[0];
+    if (firstColorwayId) {
+      this.renderColorwayContent(garmentId, firstColorwayId);
+    }
+  }
+  
+  switchColorwayTab(garmentId, colorwayId) {
+    // Update active tab
+    const tabs = document.querySelectorAll(`#tabs-${garmentId} .v10-colorway-tab`);
+    tabs.forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.colorwayId === colorwayId);
+    });
+    
+    // Render content for selected colorway
+    this.renderColorwayContent(garmentId, colorwayId);
+  }
+  
+  renderColorwayContent(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
     const container = document.getElementById(`colorways-${garmentId}`);
     if (!container) return;
     
-    container.innerHTML = '';
+    const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
     
-    garment.colorways.forEach((colorway, colorwayId) => {
-      const div = document.createElement('div');
-      div.className = 'v10-colorway-item';
-      
-      const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
-      const sizeInputsHtml = sizes.map(size => `
-        <div class="v10-size-input-group">
-          <label class="v10-size-label">${size}</label>
-          <input type="number" 
-                 class="v10-size-input" 
-                 value="${colorway.quantities[size] || 0}"
-                 min="0"
-                 data-garment="${garmentId}"
-                 data-colorway="${colorwayId}"
-                 data-size="${size}"
-                 onchange="window.v10QuantityStudio.updateQuantity('${garmentId}', '${colorwayId}', '${size}', this.value)">
-        </div>
-      `).join('');
-      
-      div.innerHTML = `
-        <div class="v10-colorway-header">
-          <div class="v10-colorway-name">
-            <div class="v10-color-swatch" style="background-color: ${colorway.color}"></div>
-            ${colorway.name}
+    container.innerHTML = `
+      <div class="v10-colorway-content-wrapper">
+        ${garment.requiresDesignReference ? `
+          <div class="v10-design-reference-section">
+            <label class="v10-design-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              Design Reference Name
+            </label>
+            <input type="text" 
+                   class="v10-design-reference-input" 
+                   placeholder="Enter design name or code for this colorway"
+                   value="${colorway.designReference || ''}"
+                   onchange="window.v10QuantityStudio.updateDesignReference('${garmentId}', '${colorwayId}', this.value)">
           </div>
-          <button onclick="window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')" 
-                  style="background: none; border: none; color: var(--v10-text-tertiary); cursor: pointer;">
-            ✕
+        ` : ''}
+        
+        <div class="v10-size-inputs-row">
+          ${sizes.map(size => `
+            <div class="v10-size-input-wrapper">
+              <div class="v10-size-color-indicator" style="background-color: ${colorway.color}"></div>
+              <label class="v10-size-label">${size}</label>
+              <input type="number" 
+                     class="v10-size-input" 
+                     value="${colorway.quantities[size] || 0}"
+                     min="0"
+                     placeholder="0"
+                     data-garment="${garmentId}"
+                     data-colorway="${colorwayId}"
+                     data-size="${size}"
+                     oninput="window.v10QuantityStudio.updateQuantity('${garmentId}', '${colorwayId}', '${size}', this.value)">
+            </div>
+          `).join('')}
+        </div>
+        
+        <div class="v10-colorway-actions">
+          <button type="button" class="v10-btn v10-btn--ghost" 
+                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'bell-curve')">
+            Apply Bell Curve
           </button>
+          <button type="button" class="v10-btn v10-btn--ghost" 
+                  onclick="window.v10QuantityStudio.clearColorwayQuantities('${garmentId}', '${colorwayId}')">
+            Clear All
+          </button>
+          <div class="v10-colorway-subtotal">
+            Subtotal: <strong>${colorway.subtotal}</strong> units
+          </div>
         </div>
-        <div class="v10-colorway-sizes">
-          ${sizeInputsHtml}
-        </div>
-        <div class="v10-colorway-footer">
-          <div class="v10-colorway-subtotal">Subtotal: <strong>${colorway.subtotal}</strong> units</div>
-        </div>
-      `;
-      
-      container.appendChild(div);
-    });
+      </div>
+    `;
+  }
+  
+  updateDesignReference(garmentId, colorwayId, value) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    colorway.designReference = value;
+    this.saveState();
+    console.log(`📝 Updated design reference for ${colorway.name}: "${value}"`);
   }
   
   updateQuantity(garmentId, colorwayId, size, quantity) {
@@ -3534,36 +3911,86 @@ class V10_QuantityStudioManager {
       garment.total += cw.subtotal;
     });
     
+    // Update tab count
+    const tab = document.querySelector(`#tabs-${garmentId} [data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
+    if (tab) tab.textContent = `${colorway.subtotal} units`;
+    
+    // Update subtotal in content
+    const subtotalEl = document.querySelector(`#colorways-${garmentId} .v10-colorway-subtotal strong`);
+    if (subtotalEl) subtotalEl.textContent = colorway.subtotal;
+    
     this.updateStats();
     this.updateGarmentTotals(garmentId);
-    this.updateColorwaySubtotal(garmentId, colorwayId);
+    this.saveState();
   }
   
-  updateColorwaySubtotal(garmentId, colorwayId) {
+  applyPreset(garmentId, colorwayId, presetType) {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
     const colorway = garment.colorways.get(colorwayId);
     if (!colorway) return;
     
-    const container = document.getElementById(`colorways-${garmentId}`);
-    if (!container) return;
+    // Calculate total to distribute
+    const currentTotal = colorway.subtotal || 100;
+    const targetTotal = Math.max(currentTotal, 100);
     
-    const colorwayEls = container.querySelectorAll('.v10-colorway-item');
-    const index = Array.from(garment.colorways.keys()).indexOf(colorwayId);
+    const presets = {
+      'bell-curve': [5, 10, 20, 30, 20, 10, 5],  // XXS to XXL percentages
+      'medium-heavy': [5, 10, 15, 30, 25, 10, 5],
+      'large-heavy': [5, 5, 15, 25, 30, 15, 5],
+      'equal': [14.3, 14.3, 14.3, 14.3, 14.3, 14.3, 14.2]
+    };
     
-    if (colorwayEls[index]) {
-      const subtotalEl = colorwayEls[index].querySelector('.v10-colorway-subtotal strong');
-      if (subtotalEl) subtotalEl.textContent = colorway.subtotal;
+    const distribution = presets[presetType] || presets['bell-curve'];
+    const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    
+    sizes.forEach((size, index) => {
+      colorway.quantities[size] = Math.round(targetTotal * distribution[index] / 100);
+    });
+    
+    // Adjust for rounding errors
+    const actualTotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+    if (actualTotal !== targetTotal) {
+      colorway.quantities['M'] += targetTotal - actualTotal;
     }
+    
+    // Re-render and update
+    this.renderColorwayContent(garmentId, colorwayId);
+    this.updateQuantity(garmentId, colorwayId, 'XXS', colorway.quantities['XXS']);
+  }
+  
+  clearColorwayQuantities(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    sizes.forEach(size => {
+      colorway.quantities[size] = 0;
+    });
+    
+    colorway.subtotal = 0;
+    garment.total = 0;
+    garment.colorways.forEach(cw => {
+      garment.total += cw.subtotal;
+    });
+    
+    this.renderColorwayContent(garmentId, colorwayId);
+    this.updateStats();
+    this.updateGarmentTotals(garmentId);
+    this.saveState();
   }
   
   updateGarmentTotals(garmentId) {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
-    const minimum = this.calculateGarmentMinimum(garment.type, garment.colorways.size);
-    const isSufficient = garment.total >= minimum;
+    const colorwayCount = garment.colorways.size;
+    const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
+    const isSufficient = garment.total >= minimum && colorwayCount > 0;
     
     const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
     if (card) {
@@ -3572,12 +3999,18 @@ class V10_QuantityStudioManager {
       const minEl = card.querySelector('.v10-garment-min');
       if (minEl) minEl.textContent = `${minimum} MIN`;
       
-      const totalEl = card.querySelector('.v10-garment-total');
-      if (totalEl) totalEl.textContent = `TOTAL: ${garment.total} / ${minimum} MIN`;
+      const totalEl = card.querySelector('.v10-garment-total strong');
+      if (totalEl) totalEl.textContent = garment.total;
+      
+      const totalTextEl = card.querySelector('.v10-garment-total');
+      if (totalTextEl) {
+        totalTextEl.innerHTML = `TOTAL: <strong>${garment.total}</strong> / ${minimum} MIN`;
+      }
       
       const statusEl = card.querySelector('.v10-garment-status');
       if (statusEl) {
-        statusEl.textContent = isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT';
+        const statusText = isSufficient ? 'SUFFICIENT' : (colorwayCount === 0 ? 'ADD COLORWAY' : 'INSUFFICIENT');
+        statusEl.textContent = statusText;
         statusEl.className = `v10-garment-status v10-garment-status--${isSufficient ? 'sufficient' : 'insufficient'}`;
       }
     }
@@ -3595,9 +4028,33 @@ class V10_QuantityStudioManager {
       garment.total += cw.subtotal;
     });
     
+    // If no colorways left, show the add button again
+    if (garment.colorways.size === 0) {
+      const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      if (card) {
+        const section = card.querySelector('.v10-colorway-section');
+        if (section) {
+          section.innerHTML = `
+            <button type="button" class="v10-add-colorway-btn" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Colorway to Set Quantities
+            </button>
+            <div class="v10-colorways-content" id="colorways-${garmentId}" style="display: none;">
+            </div>
+          `;
+        }
+      }
+    } else {
+      // Re-render remaining colorways
+      this.renderColorways(garmentId);
+    }
+    
     this.updateStats();
-    this.renderColorways(garmentId);
     this.updateGarmentTotals(garmentId);
+    this.saveState();
   }
 }
 
