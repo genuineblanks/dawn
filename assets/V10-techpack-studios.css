@@ -9565,3 +9565,254 @@ div[class*="circle"][style*="background-color"],
     font-size: var(--v10-text-base);
   }
 }
+
+/* ============================================== */
+/* V10 QUANTITY STUDIO REBUILD - NEW STYLES */
+/* ============================================== */
+
+/* Simplified Quantity Studio Stats Bar */
+.v10-quantity-stats-bar {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-3);
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-quantity-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--v10-space-4);
+}
+
+.v10-stat-item {
+  text-align: center;
+}
+
+.v10-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--v10-text-secondary);
+  transition: all 0.3s ease;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.v10-stat-value.sufficient {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.v10-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--v10-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.v10-stat-item--highlight .v10-stat-value {
+  color: #f59e0b;
+}
+
+
+/* New Garment Quantity Card */
+.v10-garment-quantity-card {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-5);
+  margin-bottom: var(--v10-space-4);
+  transition: all 0.3s ease;
+}
+
+.v10-garment-quantity-card--complete {
+  border-color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+}
+
+.v10-garment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--v10-space-4);
+  padding-bottom: var(--v10-space-3);
+  border-bottom: 1px solid var(--v10-border-secondary);
+}
+
+.v10-garment-title {
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  margin-bottom: 4px;
+}
+
+.v10-garment-title span {
+  color: #10b981;
+}
+
+.v10-garment-subtitle {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+}
+
+.v10-garment-min {
+  background: var(--v10-bg-tertiary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+/* Colorway Management */
+.v10-colorway-section {
+  margin-top: var(--v10-space-4);
+}
+
+.v10-add-colorway-btn {
+  width: 100%;
+  padding: var(--v10-space-3);
+  background: transparent;
+  border: 2px dashed var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
+  color: var(--v10-text-secondary);
+  font-weight: 600;
+  font-size: var(--v10-text-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--v10-space-2);
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-add-colorway-btn:hover {
+  border-color: var(--v10-accent-primary);
+  color: var(--v10-accent-primary);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.v10-colorway-item {
+  background: var(--v10-bg-primary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-4);
+  margin-bottom: var(--v10-space-3);
+}
+
+.v10-colorway-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--v10-space-3);
+}
+
+.v10-colorway-name {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.v10-color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--v10-border-secondary);
+}
+
+.v10-colorway-sizes {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--v10-space-2);
+}
+
+.v10-size-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v10-size-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--v10-text-tertiary);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.v10-size-input {
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-secondary);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+  color: var(--v10-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.v10-size-input:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.v10-colorway-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--v10-space-3);
+  padding-top: var(--v10-space-3);
+  border-top: 1px solid var(--v10-border-secondary);
+}
+
+.v10-colorway-subtotal {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+}
+
+.v10-colorway-subtotal strong {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-base);
+}
+
+.v10-garment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--v10-space-4);
+  padding-top: var(--v10-space-4);
+  border-top: 2px solid var(--v10-border-secondary);
+}
+
+.v10-garment-total {
+  font-size: var(--v10-text-lg);
+  font-weight: 700;
+  color: var(--v10-text-primary);
+}
+
+.v10-garment-status {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.v10-garment-status--sufficient {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.v10-garment-status--insufficient {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+

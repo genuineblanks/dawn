@@ -3288,6 +3288,320 @@ class V10_StudioNavigator {
 // ==============================================
 // GARMENT STUDIO MANAGER
 // ==============================================
+
+// ==============================================
+// NEW SIMPLIFIED QUANTITY STUDIO MANAGER
+// ==============================================
+
+class V10_QuantityStudioManager {
+  constructor() {
+    this.garments = new Map();
+    this.minimums = {
+      't-shirt': { single: 100, multi: 75 },
+      'shirt': { single: 75, multi: 50 },
+      'hoodie': { single: 75, multi: 50 },
+      'sweatshirt': { single: 75, multi: 50 },
+      'polo': { single: 100, multi: 75 },
+      'tank-top': { single: 100, multi: 75 },
+      'joggers': { single: 75, multi: 50 },
+      'shorts': { single: 75, multi: 50 },
+      'pants': { single: 75, multi: 50 },
+      'jacket': { single: 50, multi: 40 },
+      'default': { single: 75, multi: 50 }
+    };
+  }
+  
+  initialize() {
+    console.log('🚀 Initializing V10 Quantity Studio Manager');
+    this.loadGarments();
+    this.updateStats();
+    this.renderAllGarments();
+  }
+  
+  loadGarments() {
+    this.garments.clear();
+    V10_State.garments.forEach((garment, id) => {
+      if (garment.type && (garment.fabricType || garment.sampleReference)) {
+        this.garments.set(id, {
+          ...garment,
+          colorways: new Map(),
+          quantities: {},
+          total: 0
+        });
+      }
+    });
+  }
+  
+  calculateGarmentMinimum(garmentType, colorwayCount) {
+    const type = garmentType?.toLowerCase() || 'default';
+    const minimums = this.minimums[type] || this.minimums.default;
+    
+    if (colorwayCount <= 1) {
+      return minimums.single;
+    } else {
+      return minimums.multi * colorwayCount;
+    }
+  }
+  
+  calculateTotalMinimum() {
+    let total = 0;
+    this.garments.forEach(garment => {
+      const colorwayCount = garment.colorways?.size || 0;
+      if (colorwayCount > 0) {
+        total += this.calculateGarmentMinimum(garment.type, colorwayCount);
+      }
+    });
+    return total;
+  }
+  
+  calculateTotalUnits() {
+    let total = 0;
+    this.garments.forEach(garment => {
+      total += garment.total || 0;
+    });
+    return total;
+  }
+  
+  updateStats() {
+    const totalUnits = this.calculateTotalUnits();
+    const totalMinimum = this.calculateTotalMinimum();
+    const garmentCount = this.garments.size;
+    let colorwayCount = 0;
+    
+    this.garments.forEach(garment => {
+      colorwayCount += garment.colorways?.size || 0;
+    });
+    
+    // Update DOM
+    const unitsEl = document.getElementById('v10-total-units');
+    const garmentsEl = document.getElementById('v10-total-garments');
+    const colorwaysEl = document.getElementById('v10-total-colorways');
+    const minEl = document.getElementById('v10-min-required');
+    
+    if (unitsEl) {
+      unitsEl.textContent = totalUnits;
+      unitsEl.classList.toggle('sufficient', totalUnits >= totalMinimum && totalMinimum > 0);
+    }
+    if (garmentsEl) garmentsEl.textContent = garmentCount;
+    if (colorwaysEl) colorwaysEl.textContent = colorwayCount;
+    if (minEl) minEl.textContent = totalMinimum;
+    
+    console.log(`📊 Stats Updated: ${totalUnits}/${totalMinimum} units, ${garmentCount} garments, ${colorwayCount} colorways`);
+  }
+  
+  renderAllGarments() {
+    const container = document.getElementById('responsive-garment-grid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (this.garments.size === 0) {
+      container.innerHTML = '<div class="quantities-instructions">Complete garment specifications to set quantities</div>';
+      return;
+    }
+    
+    this.garments.forEach((garment, id) => {
+      container.appendChild(this.createGarmentCard(garment, id));
+    });
+  }
+  
+  createGarmentCard(garment, garmentId) {
+    const div = document.createElement('div');
+    div.className = 'v10-garment-quantity-card';
+    div.dataset.garmentId = garmentId;
+    
+    const minimum = this.calculateGarmentMinimum(garment.type, garment.colorways?.size || 0);
+    
+    div.innerHTML = `
+      <div class="v10-garment-header">
+        <div>
+          <div class="v10-garment-title">Garment ${garment.number || '1'} - <span>${garment.type}</span></div>
+          <div class="v10-garment-subtitle">${garment.fabricType || garment.sampleReference || 'No fabric selected'}</div>
+        </div>
+        <div class="v10-garment-min">${minimum} MIN</div>
+      </div>
+      
+      <div class="v10-colorway-section">
+        <button type="button" class="v10-add-colorway-btn" onclick="window.v10QuantityStudio.showColorwayModal('${garmentId}')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add Colorway to Set Quantities
+        </button>
+        
+        <div class="v10-colorways-list" id="colorways-${garmentId}">
+          <!-- Colorways will be added here -->
+        </div>
+      </div>
+      
+      <div class="v10-garment-footer">
+        <div class="v10-garment-total">TOTAL: ${garment.total || 0} / ${minimum} MIN</div>
+        <div class="v10-garment-status v10-garment-status--insufficient">INSUFFICIENT</div>
+      </div>
+    `;
+    
+    return div;
+  }
+  
+  showColorwayModal(garmentId) {
+    // For now, just add a default colorway
+    this.addColorway(garmentId, { name: 'Black', color: '#000000' });
+  }
+  
+  addColorway(garmentId, colorwayData) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorwayId = `colorway-${Date.now()}`;
+    garment.colorways.set(colorwayId, {
+      ...colorwayData,
+      quantities: {},
+      subtotal: 0
+    });
+    
+    this.updateStats();
+    this.renderColorways(garmentId);
+    this.updateGarmentTotals(garmentId);
+  }
+  
+  renderColorways(garmentId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const container = document.getElementById(`colorways-${garmentId}`);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    garment.colorways.forEach((colorway, colorwayId) => {
+      const div = document.createElement('div');
+      div.className = 'v10-colorway-item';
+      
+      const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      const sizeInputsHtml = sizes.map(size => `
+        <div class="v10-size-input-group">
+          <label class="v10-size-label">${size}</label>
+          <input type="number" 
+                 class="v10-size-input" 
+                 value="${colorway.quantities[size] || 0}"
+                 min="0"
+                 data-garment="${garmentId}"
+                 data-colorway="${colorwayId}"
+                 data-size="${size}"
+                 onchange="window.v10QuantityStudio.updateQuantity('${garmentId}', '${colorwayId}', '${size}', this.value)">
+        </div>
+      `).join('');
+      
+      div.innerHTML = `
+        <div class="v10-colorway-header">
+          <div class="v10-colorway-name">
+            <div class="v10-color-swatch" style="background-color: ${colorway.color}"></div>
+            ${colorway.name}
+          </div>
+          <button onclick="window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')" 
+                  style="background: none; border: none; color: var(--v10-text-tertiary); cursor: pointer;">
+            ✕
+          </button>
+        </div>
+        <div class="v10-colorway-sizes">
+          ${sizeInputsHtml}
+        </div>
+        <div class="v10-colorway-footer">
+          <div class="v10-colorway-subtotal">Subtotal: <strong>${colorway.subtotal}</strong> units</div>
+        </div>
+      `;
+      
+      container.appendChild(div);
+    });
+  }
+  
+  updateQuantity(garmentId, colorwayId, size, quantity) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    colorway.quantities[size] = parseInt(quantity) || 0;
+    
+    // Calculate colorway subtotal
+    colorway.subtotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+    
+    // Calculate garment total
+    garment.total = 0;
+    garment.colorways.forEach(cw => {
+      garment.total += cw.subtotal;
+    });
+    
+    this.updateStats();
+    this.updateGarmentTotals(garmentId);
+    this.updateColorwaySubtotal(garmentId, colorwayId);
+  }
+  
+  updateColorwaySubtotal(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    const container = document.getElementById(`colorways-${garmentId}`);
+    if (!container) return;
+    
+    const colorwayEls = container.querySelectorAll('.v10-colorway-item');
+    const index = Array.from(garment.colorways.keys()).indexOf(colorwayId);
+    
+    if (colorwayEls[index]) {
+      const subtotalEl = colorwayEls[index].querySelector('.v10-colorway-subtotal strong');
+      if (subtotalEl) subtotalEl.textContent = colorway.subtotal;
+    }
+  }
+  
+  updateGarmentTotals(garmentId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const minimum = this.calculateGarmentMinimum(garment.type, garment.colorways.size);
+    const isSufficient = garment.total >= minimum;
+    
+    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (card) {
+      card.classList.toggle('v10-garment-quantity-card--complete', isSufficient);
+      
+      const minEl = card.querySelector('.v10-garment-min');
+      if (minEl) minEl.textContent = `${minimum} MIN`;
+      
+      const totalEl = card.querySelector('.v10-garment-total');
+      if (totalEl) totalEl.textContent = `TOTAL: ${garment.total} / ${minimum} MIN`;
+      
+      const statusEl = card.querySelector('.v10-garment-status');
+      if (statusEl) {
+        statusEl.textContent = isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT';
+        statusEl.className = `v10-garment-status v10-garment-status--${isSufficient ? 'sufficient' : 'insufficient'}`;
+      }
+    }
+  }
+  
+  removeColorway(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    garment.colorways.delete(colorwayId);
+    
+    // Recalculate total
+    garment.total = 0;
+    garment.colorways.forEach(cw => {
+      garment.total += cw.subtotal;
+    });
+    
+    this.updateStats();
+    this.renderColorways(garmentId);
+    this.updateGarmentTotals(garmentId);
+  }
+}
+
+// ==============================================
 // QUANTITY CALCULATION & VALIDATION ENGINE
 // ==============================================
 
@@ -8211,6 +8525,19 @@ class V10_GarmentStudio {
   }
 
   populateQuantityStudio() {
+    console.log('🔄 populateQuantityStudio() called - Using new V10_QuantityStudioManager');
+    
+    // Initialize the new quantity studio manager if not already created
+    if (!window.v10QuantityStudio) {
+      window.v10QuantityStudio = new V10_QuantityStudioManager();
+    }
+    
+    // Initialize the quantity studio
+    window.v10QuantityStudio.initialize();
+    
+    return; // Exit here - the new manager handles everything
+    
+    // OLD CODE BELOW - KEPT FOR REFERENCE BUT NOT EXECUTED
     console.log('🔄 populateQuantityStudio() called');
     
     // Performance monitoring

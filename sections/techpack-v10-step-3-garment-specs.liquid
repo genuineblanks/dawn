@@ -420,34 +420,24 @@ Enhanced with Visual Studio Guide System
 
         <div class="studio-content">
           
-          <!-- Enhanced Quantity Tracker -->
-          <div class="quantity-tracker-enhanced">
-            <div class="quantity-tracker-enhanced__stats">
-              <div class="quantity-stat">
-                <div class="quantity-stat__value" id="total-production-quantity">0</div>
-                <div class="quantity-stat__label">Total Units</div>
+          <!-- Simplified Quantity Stats Bar -->
+          <div class="v10-quantity-stats-bar">
+            <div class="v10-quantity-stats">
+              <div class="v10-stat-item">
+                <div class="v10-stat-value" id="v10-total-units">0</div>
+                <div class="v10-stat-label">TOTAL UNITS</div>
               </div>
-              <div class="quantity-stat">
-                <div class="quantity-stat__value" id="total-garments-count">0</div>
-                <div class="quantity-stat__label">Garments</div>
+              <div class="v10-stat-item">
+                <div class="v10-stat-value" id="v10-total-garments">0</div>
+                <div class="v10-stat-label">GARMENTS</div>
               </div>
-              <div class="quantity-stat">
-                <div class="quantity-stat__value" id="total-colorways-count">0</div>
-                <div class="quantity-stat__label">Colorways</div>
+              <div class="v10-stat-item">
+                <div class="v10-stat-value" id="v10-total-colorways">0</div>
+                <div class="v10-stat-label">COLORWAYS</div>
               </div>
-              <div class="quantity-stat quantity-stat--minimum">
-                <div class="quantity-stat__value">75</div>
-                <div class="quantity-stat__label">Min Required</div>
-              </div>
-            </div>
-            <div class="quantity-progress-bar">
-              <div class="quantity-progress-bar__track">
-                <div class="quantity-progress-bar__fill" id="production-quantity-progress" style="width: 0%"></div>
-                <div class="quantity-progress-bar__minimum-marker" style="left: 75px;"></div>
-              </div>
-              <div class="quantity-progress-bar__status">
-                <span class="progress-status-text" id="quantity-progress-status">0 / 75 minimum units</span>
-                <span class="progress-percentage" id="quantity-progress-percentage">0%</span>
+              <div class="v10-stat-item v10-stat-item--highlight">
+                <div class="v10-stat-value" id="v10-min-required">0</div>
+                <div class="v10-stat-label">MIN REQUIRED</div>
               </div>
             </div>
           </div>
