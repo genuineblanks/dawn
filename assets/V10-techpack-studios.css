@@ -54,8 +54,8 @@ body[class*="techpack"] *,
    CSS CUSTOM PROPERTIES - DARK THEME ONLY
    ============================================== */
 
-#techpack-v10-step-4 {
-  /* Enhanced Dark Theme Colors - Professional Financial Dashboard - SCOPED TO STEP 4 ONLY */
+:root {
+  /* Enhanced Dark Theme Colors - Professional Financial Dashboard */
   --v10-bg-primary: #1a1a1a;          /* Darker primary background for better contrast */
   --v10-bg-secondary: #2d2d2d;        /* Medium grey for cards - perfect contrast */
   --v10-bg-tertiary: #2a2a2a;         /* Match Steps 1-3 medium dark grey */
