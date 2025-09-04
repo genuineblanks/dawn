@@ -12934,14 +12934,7 @@ class V10_ReviewManager {
     if (garments.length === 0) {
       container.innerHTML = `
         <div class="v10-empty-state">
-          <div class="v10-empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-              <line x1="16" y1="8" x2="2" y2="22"/>
-            </svg>
-          </div>
-          <h4 class="v10-empty-title">No Garments Configured</h4>
-          <p class="v10-empty-message">Add garments in the previous step to see them here</p>
+          <p>No garments configured</p>
         </div>
       `;
       return;
@@ -12950,61 +12943,77 @@ class V10_ReviewManager {
     // Sort garments by their number property to ensure proper order
     garments.sort((a, b) => a.number - b.number);
 
-    const template = document.getElementById('review-garment-template');
-    if (!template) return;
+    container.innerHTML = garments.map(garment => {
+      // Get color display
+      const colorDisplay = this.getGarmentColorDisplay(garment);
+      
+      // Create simple garment display: Color Circle + "Name - Fabric - Color/Pantone"
+      return `
+        <div class="v10-garment-item">
+          <div class="v10-garment-color" style="background-color: ${colorDisplay.color}">
+            ${colorDisplay.overlay || ''}
+          </div>
+          <div class="v10-garment-text">
+            ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
 
-    container.innerHTML = '';
+  getGarmentColorDisplay(garment) {
+    const requestType = V10_State.requestType;
     
-    // Set grid layout based on garment count
-    container.className = `v10-garments-showcase v10-garments-showcase--${garments.length === 1 ? 'single' : 'multiple'}`;
-
-    garments.forEach(garment => {
-      const clone = template.content.cloneNode(true);
-      
-      // Update garment number and badge
-      const numberSpan = clone.querySelector('.v10-garment-number');
-      const nameSpan = clone.querySelector('.v10-garment-name');
-      const subtitleSpan = clone.querySelector('.v10-garment-subtitle');
-      const colorCircle = clone.querySelector('.v10-color-circle');
-      const colorOverlay = clone.querySelector('.v10-color-overlay');
-      const colorNameText = clone.querySelector('.v10-color-name');
-      const statusIndicator = clone.querySelector('.v10-status-indicator');
-      const fabricValue = clone.querySelector('.v10-spec-value');
-      const sampleTypeValue = clone.querySelectorAll('.v10-spec-value')[1];
-
-      // Set basic garment info
-      if (numberSpan) numberSpan.textContent = garment.number;
-      if (nameSpan) nameSpan.textContent = garment.type || 'Unknown Garment';
-      
-      // Set subtitle based on request type
-      const requestType = V10_State.requestType;
-      const subtitles = {
-        'quotation': 'Pricing estimate',
-        'sample-request': 'Physical sample',
-        'bulk-order-request': 'Production order'
-      };
-      if (subtitleSpan) subtitleSpan.textContent = subtitles[requestType] || 'Garment item';
-      
-      // Set specifications
-      if (fabricValue) fabricValue.textContent = garment.fabricType || 'Not specified';
-      if (sampleTypeValue) {
-        const sampleTypeText = this.getSampleTypeDisplayText(garment);
-        sampleTypeValue.textContent = sampleTypeText;
+    // Default display
+    let colorDisplay = {
+      color: '#e5e5e5',
+      name: '',
+      overlay: ''
+    };
+    
+    if (requestType === 'sample-request' && garment.sampleType) {
+      if (garment.sampleType === 'stock' && garment.sampleSubValue) {
+        // Stock color samples
+        const stockColors = {
+          'black': { color: '#000000', name: 'Black' },
+          'white': { color: '#ffffff', name: 'White' },
+          'gray': { color: '#6b7280', name: 'Gray' },
+          'navy': { color: '#1e3a8a', name: 'Navy' },
+          'red': { color: '#dc2626', name: 'Red' },
+          'green': { color: '#16a34a', name: 'Green' }
+        };
+        
+        const stockColor = stockColors[garment.sampleSubValue] || { color: '#e5e5e5', name: garment.sampleSubValue };
+        colorDisplay.color = stockColor.color;
+        colorDisplay.name = stockColor.name;
+        
+      } else if (garment.sampleType === 'custom' && garment.assignedLabDips?.size > 0) {
+        // Custom color samples from lab dips
+        const labDipIds = Array.from(garment.assignedLabDips);
+        
+        if (labDipIds.length === 1) {
+          // Single color
+          const labDip = V10_State.labDips.get(labDipIds[0]);
+          if (labDip) {
+            colorDisplay.color = labDip.hex || '#e5e5e5';
+            colorDisplay.name = labDip.pantone || 'Custom Color';
+          }
+        } else if (labDipIds.length > 1) {
+          // Multiple colors - create gradient using CSS background
+          const colors = labDipIds.map(id => {
+            const labDip = V10_State.labDips.get(id);
+            return labDip?.hex || '#e5e5e5';
+          });
+          
+          // Return first color as base, use background property for gradient
+          colorDisplay.color = colors[0];
+          colorDisplay.name = `${colors.length} Colors`;
+          // We'll handle gradient in CSS
+        }
       }
-      
-      // Enhanced color display
-      this.updateEnhancedColorDisplay(garment, colorCircle, colorOverlay, colorNameText);
-      
-      // Update status indicator
-      this.updateGarmentStatus(garment, statusIndicator);
-      
-      // Handle request-specific content
-      this.populateGarmentSpecificContent(clone, garment, requestType);
-      
-      console.log(`🎨 Enhanced Garment ${garment.number} populated:`, garment.type);
-      
-      container.appendChild(clone);
-    });
+    }
+    
+    return colorDisplay;
   }
 
   getSampleTypeDisplayText(garment) {
