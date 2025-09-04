@@ -12982,9 +12982,48 @@ class V10_ReviewManager {
       `;
     }
     
-    // Add additional business info for bulk orders
+    // Add delivery type if available (for sample requests and bulk orders)
+    if ((requestType === 'sample-request' || requestType === 'bulk-order-request') && clientData.deliveryType && clientData.deliveryType !== 'Not provided') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Delivery:</span>
+          <span class="detail-value">${clientData.deliveryType}</span>
+        </div>
+      `;
+    }
+    
+    // Add address if different address was selected
+    if (clientData.address && clientData.address !== 'Not provided') {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Address:</span>
+          <span class="detail-value">${clientData.address}</span>
+        </div>
+      `;
+    }
+    
+    // Add shipping and insurance info for bulk orders
     if (requestType === 'bulk-order-request') {
-      if (clientData.businessType) {
+      if (clientData.shippingMethod && clientData.shippingMethod !== 'Not provided') {
+        clientFields += `
+          <div class="review-detail">
+            <span class="detail-label">Shipping Method:</span>
+            <span class="detail-value">${clientData.shippingMethod}</span>
+          </div>
+        `;
+      }
+      
+      if (clientData.insurance && clientData.insurance !== 'Not provided') {
+        clientFields += `
+          <div class="review-detail">
+            <span class="detail-label">Insurance:</span>
+            <span class="detail-value">${clientData.insurance}</span>
+          </div>
+        `;
+      }
+      
+      // Legacy business info if available from client manager
+      if (clientData.businessType && clientData.businessType !== 'Not provided') {
         clientFields += `
           <div class="review-detail">
             <span class="detail-label">Business Type:</span>
@@ -12993,7 +13032,7 @@ class V10_ReviewManager {
         `;
       }
       
-      if (clientData.expectedVolume) {
+      if (clientData.expectedVolume && clientData.expectedVolume !== 'Not provided') {
         clientFields += `
           <div class="review-detail">
             <span class="detail-label">Expected Volume:</span>
@@ -13113,8 +13152,8 @@ class V10_ReviewManager {
       // Create simple garment display: Color Circle + "Name - Fabric - Color/Pantone"
       return `
         <div class="v10-garment-item">
-          <div class="v10-garment-color" style="background-color: ${colorDisplay.color}">
-            ${colorDisplay.overlay || ''}
+          <div class="v10-garment-color" style="background-color: ${colorDisplay.color}; ${colorDisplay.overlay || ''}">
+            <!-- Color pattern overlay -->
           </div>
           <div class="v10-garment-text">
             ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
@@ -13157,42 +13196,70 @@ class V10_ReviewManager {
     
     if (requestType === 'sample-request' && garment.sampleType) {
       if (garment.sampleType === 'stock' && garment.sampleSubValue) {
-        // Stock color samples
-        const stockColors = {
-          'black': { color: '#000000', name: 'Black' },
-          'white': { color: '#ffffff', name: 'White' },
-          'gray': { color: '#6b7280', name: 'Gray' },
-          'navy': { color: '#1e3a8a', name: 'Navy' },
-          'red': { color: '#dc2626', name: 'Red' },
-          'green': { color: '#16a34a', name: 'Green' }
-        };
-        
-        const stockColor = stockColors[garment.sampleSubValue] || { color: '#e5e5e5', name: garment.sampleSubValue };
-        colorDisplay.color = stockColor.color;
-        colorDisplay.name = stockColor.name;
-        
-      } else if (garment.sampleType === 'custom' && garment.assignedLabDips?.size > 0) {
-        // Custom color samples from lab dips
-        const labDipIds = Array.from(garment.assignedLabDips);
-        
-        if (labDipIds.length === 1) {
-          // Single color
-          const labDip = V10_State.labDips.get(labDipIds[0]);
-          if (labDip) {
-            colorDisplay.color = labDip.hex || '#e5e5e5';
-            colorDisplay.name = labDip.pantone || 'Custom Color';
-          }
-        } else if (labDipIds.length > 1) {
-          // Multiple colors - create gradient using CSS background
-          const colors = labDipIds.map(id => {
-            const labDip = V10_State.labDips.get(id);
-            return labDip?.hex || '#e5e5e5';
-          });
+        // Stock color samples with proper patterns matching Step 3
+        if (garment.sampleSubValue === 'proximate') {
+          // Multi-color gradient for "most proximate color" 
+          colorDisplay.color = 'transparent'; // Base will be overridden by background
+          colorDisplay.overlay = 'background: conic-gradient(#ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b); border: 1px solid #9ca3af;';
+          colorDisplay.name = 'Proximate Color';
+        } else {
+          const stockColors = {
+            'black': { color: '#000000', name: 'Black' },
+            'white': { color: '#ffffff', name: 'White', border: '2px solid #d1d5db' },
+            'gray': { color: '#6b7280', name: 'Gray' },
+            'navy': { color: '#1e3a8a', name: 'Navy' },
+            'red': { color: '#dc2626', name: 'Red' },
+            'green': { color: '#16a34a', name: 'Green' }
+          };
           
-          // Return first color as base, use background property for gradient
-          colorDisplay.color = colors[0];
-          colorDisplay.name = `${colors.length} Colors`;
-          // We'll handle gradient in CSS
+          const stockColor = stockColors[garment.sampleSubValue] || { color: '#e5e5e5', name: garment.sampleSubValue };
+          colorDisplay.color = stockColor.color;
+          colorDisplay.name = stockColor.name;
+          
+          if (stockColor.border) {
+            colorDisplay.overlay = `border: ${stockColor.border};`;
+          }
+        }
+        
+      } else if (garment.sampleType === 'custom') {
+        // Custom color samples
+        if (garment.sampleSubValue === 'exact-pantone') {
+          // TCX/TPX Pantone - diagonal gradient pattern matching Step 3
+          colorDisplay.color = 'transparent';
+          colorDisplay.overlay = 'background: linear-gradient(45deg, #ec4899, #8b5cf6); border: 1px solid #9ca3af;';
+          colorDisplay.name = 'TCX/TPX Pantone';
+        } else if (garment.assignedLabDips?.size > 0) {
+          // Lab dip assigned colors
+          const labDipIds = Array.from(garment.assignedLabDips);
+          
+          if (labDipIds.length === 1) {
+            // Single color
+            const labDip = V10_State.labDips.get(labDipIds[0]);
+            if (labDip) {
+              colorDisplay.color = labDip.hex || '#e5e5e5';
+              colorDisplay.name = labDip.pantone || 'Custom Color';
+            }
+          } else if (labDipIds.length > 1) {
+            // Multiple colors - create gradient using CSS background
+            const colors = labDipIds.map(id => {
+              const labDip = V10_State.labDips.get(id);
+              return labDip?.hex || '#e5e5e5';
+            });
+            
+            // Create gradient overlay
+            const gradientStops = colors.map((color, index) => {
+              const percent = (index / (colors.length - 1)) * 100;
+              return `${color} ${percent}%`;
+            }).join(', ');
+            
+            colorDisplay.color = 'transparent';
+            colorDisplay.overlay = `background: linear-gradient(45deg, ${gradientStops});`;
+            colorDisplay.name = `${colors.length} Colors`;
+          }
+        } else {
+          // Generic custom color
+          colorDisplay.color = '#8b5cf6';
+          colorDisplay.name = 'Custom Color';
         }
       }
     }
@@ -13500,7 +13567,7 @@ class V10_ReviewManager {
         </div>
       `;
     } else {
-      // Use simple inline HTML generation matching garment display format
+      // Use garment display format with proper color circles
       standaloneContainer.innerHTML = standaloneLabDips.map(labDip => {
         const colorHex = labDip.hex || '#ccc';
         const colorName = labDip.pantone || labDip.name || 'Custom Color';
@@ -13508,7 +13575,9 @@ class V10_ReviewManager {
         
         return `
           <div class="v10-garment-item">
-            <div class="v10-garment-color" style="background-color: ${colorHex}"></div>
+            <div class="v10-garment-color" style="background-color: ${colorHex}">
+              <!-- Color circle for fabric swatch -->
+            </div>
             <div class="v10-garment-text">
               Fabric Swatch - ${colorName}${tcxCode}
             </div>
@@ -13880,15 +13949,25 @@ class V10_ReviewManager {
         }
       });
 
-      // Lab dip costs
-      const labDipCount = V10_State.labDips.size;
-      if (labDipCount > 0) {
+      // Lab dip costs - only count standalone lab dips (not assigned to garments)
+      const labDips = Array.from(V10_State.labDips.values());
+      const standaloneLabDips = [];
+      
+      labDips.forEach(labDip => {
+        const assignments = V10_State.assignments.labDips.get(labDip.id);
+        if (!assignments || assignments.size === 0) {
+          standaloneLabDips.push(labDip);
+        }
+      });
+      
+      const standaloneLabDipCount = standaloneLabDips.length;
+      if (standaloneLabDipCount > 0) {
         items.push({
           label: 'Lab Dip Swatches',
-          description: `${labDipCount} color${labDipCount > 1 ? 's' : ''}`,
-          amount: labDipCount * V10_CONFIG.PRICING.LAB_DIP
+          description: `${standaloneLabDipCount} color${standaloneLabDipCount > 1 ? 's' : ''}`,
+          amount: standaloneLabDipCount * V10_CONFIG.PRICING.LAB_DIP
         });
-        total += labDipCount * V10_CONFIG.PRICING.LAB_DIP;
+        total += standaloneLabDipCount * V10_CONFIG.PRICING.LAB_DIP;
       }
 
       // Design sample costs
@@ -14167,26 +14246,78 @@ class V10_ReviewManager {
         return {
           company: realClientData.company || realClientData.Company || 'Not provided',
           name: realClientData.firstName || realClientData.name || realClientData.Name || 'Not provided',
-          email: realClientData.email || realClientData.Email || 'Not provided'
+          email: realClientData.email || realClientData.Email || 'Not provided',
+          phone: realClientData.phone || realClientData.Phone || 'Not provided',
+          businessType: realClientData.businessType || realClientData.BusinessType || 'Not provided',
+          expectedVolume: realClientData.expectedVolume || realClientData.ExpectedVolume || 'Not provided'
         };
       }
     }
     
-    // Try to get from form inputs as fallback
+    // Try to get from Step 1 form inputs as fallback
     const clientData = {};
-    const companyInput = document.querySelector('input[name="company"], #company');
-    const nameInput = document.querySelector('input[name="firstName"], #firstName');
-    const emailInput = document.querySelector('input[name="email"], #email');
     
+    // Basic fields
+    const companyInput = document.querySelector('input[name="company_name"], input[name="company"], #company');
+    const nameInput = document.querySelector('input[name="deliveryContactName"], input[name="firstName"], input[name="name"], #firstName');
+    const emailInput = document.querySelector('input[name="email"], #email');
+    const phoneInput = document.querySelector('input[name="deliveryPhone"], input[name="phone"], #phone');
+    
+    // Address fields
+    const deliveryAddressRadio = document.querySelector('input[name="deliveryAddress"]:checked');
+    const address1Input = document.querySelector('input[name="deliveryAddress1"]');
+    const address2Input = document.querySelector('input[name="deliveryAddress2"]');
+    const cityInput = document.querySelector('input[name="deliveryCity"]');
+    const stateInput = document.querySelector('input[name="deliveryState"]');
+    const postalInput = document.querySelector('input[name="deliveryPostal"]');
+    
+    // Shipping fields (for bulk orders)
+    const shippingMethodRadio = document.querySelector('input[name="shippingMethod"]:checked');
+    const insuranceRadio = document.querySelector('input[name="insurance"]:checked');
+    
+    // Collect basic data
     if (companyInput) clientData.company = companyInput.value;
     if (nameInput) clientData.name = nameInput.value;
     if (emailInput) clientData.email = emailInput.value;
+    if (phoneInput) clientData.phone = phoneInput.value;
     
-    // If no real data, use default sample data
+    // Collect address data
+    if (deliveryAddressRadio) {
+      clientData.deliveryType = deliveryAddressRadio.value === 'company' ? 'Company Address' : 'Different Address';
+      
+      if (deliveryAddressRadio.value === 'different') {
+        // Collect full address details for different address
+        const addressParts = [];
+        if (address1Input?.value) addressParts.push(address1Input.value);
+        if (address2Input?.value) addressParts.push(address2Input.value);
+        if (cityInput?.value) addressParts.push(cityInput.value);
+        if (stateInput?.value) addressParts.push(stateInput.value);
+        if (postalInput?.value) addressParts.push(postalInput.value);
+        
+        if (addressParts.length > 0) {
+          clientData.address = addressParts.join(', ');
+        }
+      }
+    }
+    
+    // Collect shipping info (for bulk orders)
+    if (shippingMethodRadio) {
+      clientData.shippingMethod = shippingMethodRadio.value === 'air' ? 'Air Freight' : 'Sea Freight';
+    }
+    if (insuranceRadio) {
+      clientData.insurance = insuranceRadio.value === 'yes' ? 'Yes' : 'No';
+    }
+    
+    // Return collected data or defaults
     return {
-      company: clientData.company || 'Sample Company',
-      name: clientData.name || 'John Doe', 
-      email: clientData.email || 'office@genuineblanks.com'
+      company: clientData.company || 'Not provided',
+      name: clientData.name || 'Not provided',
+      email: clientData.email || 'office@genuineblanks.com',
+      phone: clientData.phone || 'Not provided',
+      deliveryType: clientData.deliveryType || 'Not provided',
+      address: clientData.address || 'Not provided',
+      shippingMethod: clientData.shippingMethod || 'Not provided',
+      insurance: clientData.insurance || 'Not provided'
     };
   }
 

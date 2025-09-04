@@ -8939,8 +8939,10 @@ div[class*="circle"][style*="background-color"],
 .v10-submit-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-3);
   margin-bottom: var(--v10-space-4);
+  text-align: center;
 }
 
 .v10-submit-icon {
@@ -9036,6 +9038,7 @@ div[class*="circle"][style*="background-color"],
 
 .v10-submit-info {
   flex: 1;
+  text-align: center;
 }
 
 .v10-submit-title {
@@ -9049,6 +9052,70 @@ div[class*="circle"][style*="background-color"],
   color: var(--v10-text-tertiary);
   font-size: var(--v10-text-base);
   line-height: 1.5;
+}
+
+/* Timeline Badges */
+.v10-submit-timeline {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--v10-space-3);
+  margin-top: var(--v10-space-4);
+}
+
+.v10-timeline-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  padding: var(--v10-space-2) var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-full);
+  color: var(--v10-text-secondary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* File Item Layout - Horizontal */
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v10-space-3);
+  padding: var(--v10-space-3);
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  margin-bottom: var(--v10-space-2);
+}
+
+.file-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--v10-bg-tertiary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--v10-text-secondary);
+  flex-shrink: 0;
+}
+
+.file-details {
+  flex: 1;
+}
+
+.file-name {
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  font-weight: 500;
+}
+
+.file-size {
+  color: var(--v10-text-tertiary);
+  font-size: var(--v10-text-xs);
+  margin-left: var(--v10-space-2);
 }
 
 /* ===== Step 4 Typography Only - Background handled by unified .techpack-content ===== */

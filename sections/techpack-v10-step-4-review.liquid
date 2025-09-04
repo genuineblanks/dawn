@@ -93,29 +93,49 @@ TechPack V10 Step 4: Premium Review & Submit - Redesigned
       </div>
     </div>
 
-    <!-- Fabric Swatches (Sample Requests Only) -->
-    <div class="v10-studio-card" id="review-samples-section" style="display: none;">
-      <div class="v10-studio-header">
-        <h3 class="v10-studio-title">Fabric Swatches & Design Applications</h3>
-        <span class="v10-count-badge" id="labdips-count">0 swatches</span>
-        <button type="button" class="v10-edit-btn" data-edit-step="3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
-          Edit
-        </button>
-      </div>
-      <div class="v10-review-content">
-        <div class="v10-samples-grid">
+    <!-- Fabric Swatches & Design Applications - Side by Side -->
+    <div class="v10-review-grid" id="review-samples-section" style="display: none;">
+      
+      <!-- Fabric Swatches -->
+      <div class="v10-studio-card">
+        <div class="v10-studio-header">
+          <h3 class="v10-studio-title">Fabric Swatches</h3>
+          <span class="v10-count-badge" id="labdips-count">0 swatches</span>
+          <button type="button" class="v10-edit-btn" data-edit-step="3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        </div>
+        <div class="v10-review-content">
           <div id="review-labdips-standalone">
             <!-- Populated by JavaScript -->
           </div>
+        </div>
+      </div>
+      
+      <!-- Design Applications -->
+      <div class="v10-studio-card">
+        <div class="v10-studio-header">
+          <h3 class="v10-studio-title">Design Applications</h3>
+          <span class="v10-count-badge" id="designs-count">0 designs</span>
+          <button type="button" class="v10-edit-btn" data-edit-step="3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        </div>
+        <div class="v10-review-content">
           <div id="review-designs-standalone">
             <!-- Populated by JavaScript -->
           </div>
         </div>
       </div>
+      
     </div>
 
     <!-- Production Quantities (Bulk Orders Only) -->
