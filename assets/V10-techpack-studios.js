@@ -11267,6 +11267,43 @@ class V10_DesignStudio {
     }
   }
 
+  findExistingLabDip() {
+    // Determine pantone code using same logic as addLabDip()
+    const colorPicker = document.getElementById('lab-dip-color-picker');
+    const pantoneInput = document.getElementById('manual-pantone-code');
+    const pantoneDisplay = document.querySelector('.auto-pantone-display');
+
+    let pantone;
+
+    if (pantoneInput.value && pantoneInput.value.trim()) {
+      // User typed something - use their exact text
+      pantone = pantoneInput.value.trim();
+    } else if (colorPicker.value) {
+      const hex = colorPicker.value;
+      
+      // Check if we have original TPX data from popular colors
+      if (pantoneDisplay && pantoneDisplay.dataset.originalTpx && pantoneDisplay.dataset.originalHex === hex) {
+        // Use the original TPX code
+        pantone = pantoneDisplay.dataset.originalTpx;
+      } else {
+        // Fall back to TCX lookup for color picker selections
+        pantone = V10_Utils.hexToPantone(hex);
+      }
+    } else {
+      return null; // No valid pantone code
+    }
+
+    // Search for existing lab dip with matching pantone code
+    const normalizedPantone = pantone.toLowerCase().trim();
+    for (const [labDipId, existingLabDip] of V10_State.labDips.entries()) {
+      if (existingLabDip.pantone.toLowerCase().trim() === normalizedPantone) {
+        return labDipId; // Found existing lab dip
+      }
+    }
+
+    return null; // No existing lab dip found
+  }
+
   showGarmentSelector(type, itemId = null) {
     console.log(`🔄 showGarmentSelector called with type: ${type}, itemId: ${itemId}`);
     
@@ -11620,7 +11657,16 @@ class V10_DesignStudio {
           } else {
             // Create new item and assign to garment (current behavior for "Add to Garment" from forms)
             if (type === 'labdip') {
-              this.addLabDip(false, selectedGarment);
+              // Check if there's already an existing lab dip with the same pantone code
+              const existingLabDipId = this.findExistingLabDip();
+              if (existingLabDipId) {
+                // Use existing lab dip for assignment
+                console.log(`🔄 Found existing lab dip ${existingLabDipId}, assigning to garment ${selectedGarment}`);
+                window.v10GarmentStudio.assignLabDip(selectedGarment, existingLabDipId);
+              } else {
+                // No existing lab dip found, create new one
+                this.addLabDip(false, selectedGarment);
+              }
             } else {
               this.addDesignSample(false, selectedGarment);
             }
