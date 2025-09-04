@@ -5399,10 +5399,10 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 
 .popular-colors-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 40px);
-  gap: var(--v10-space-3);
-  max-width: 280px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, auto);
+  gap: var(--v10-space-2);
+  max-width: 360px;
   margin: 0 auto;
 }
 
@@ -6342,8 +6342,8 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
   
   .popular-colors-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--v10-space-3);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--v10-space-2);
     max-width: 100%;
   }
   
@@ -6357,12 +6357,17 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   .color-picker-row {
     flex-direction: row !important;
     align-items: center !important;
-    gap: var(--v10-space-3) !important;
+    gap: var(--v10-space-2) !important;
+    margin-bottom: var(--v10-space-3) !important;
   }
   
-  .color-picker-left,
+  .color-picker-left {
+    flex: 0 0 auto !important;
+  }
+  
   .pantone-display-right {
     flex: 1 !important;
+    margin-left: var(--v10-space-1) !important;
   }
   
   .add-labdip-actions,
