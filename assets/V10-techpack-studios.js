@@ -12571,21 +12571,45 @@ class V10_ReviewManager {
 
   bindEditButtons() {
     // Bind edit buttons after content is populated
-    console.log('🎯 Step 4: Binding edit buttons...');
-    document.querySelectorAll('[data-edit-step]').forEach(btn => {
+    console.log('🎯 Step 4: Binding enhanced edit buttons...');
+    
+    // Bind section edit buttons (new v10-section-edit-btn)
+    document.querySelectorAll('.v10-section-edit-btn[data-edit-step]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
-        console.log('🎯 Step 4: Edit button clicked, going to step:', step);
-        
-        // Use direct step navigation like existing system
+        const step = parseInt(btn.dataset.editStep);
+        console.log('🎯 Step 4: Section edit button clicked, going to step:', step);
         this.goBackToStep(step);
       });
     });
+    
+    // Bind legacy edit buttons for compatibility
+    document.querySelectorAll('[data-edit-step]').forEach(btn => {
+      if (!btn.classList.contains('v10-section-edit-btn')) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const step = parseInt(e.target.closest('[data-edit-step]').dataset.editStep);
+          console.log('🎯 Step 4: Legacy edit button clicked, going to step:', step);
+          this.goBackToStep(step);
+        });
+      }
+    });
+    
     console.log('🎯 Step 4: Edit buttons bound:', document.querySelectorAll('[data-edit-step]').length);
     
     // Bind Terms & Conditions modal
     this.bindTermsModal();
+    
+    // Bind terms checkbox to update submit button
+    const termsCheckbox = document.getElementById('terms-agreement');
+    if (termsCheckbox) {
+      termsCheckbox.addEventListener('change', () => {
+        this.updateSubmitButton();
+      });
+      
+      // Initial button state
+      this.updateSubmitButton();
+    }
   }
 
   bindTermsModal() {
@@ -12661,11 +12685,9 @@ class V10_ReviewManager {
   }
 
   populateReview() {
-    console.log('🎯 Step 4: Starting review population...');
+    console.log('🎯 Step 4: Starting enhanced review population...');
     console.log('🎯 V10_State garments:', V10_State.garments.size);
     console.log('🎯 V10_State requestType:', V10_State.requestType);
-    
-    // Element check at start of function
     
     // Ensure assignments structure exists (safety check)
     if (!V10_State.assignments) {
@@ -12675,9 +12697,10 @@ class V10_ReviewManager {
       };
     }
     
-    this.populateClientInfo();
-    this.populateUploadedFiles();
-    this.populateRequestType();
+    // Populate all sections with enhanced design
+    this.populateExecutiveSummary();
+    this.populateRequestOverview();
+    this.populateStatistics();
     this.populateGarments();
     this.populateLabDips();
     this.populateDesigns();
@@ -12685,24 +12708,118 @@ class V10_ReviewManager {
     this.updateSectionVisibility();
     this.updateSubmitMessage();
     
-    console.log('🎯 Step 4: Review population completed');
+    console.log('🎯 Step 4: Enhanced review population completed');
     
     // Bind edit button events after content is populated
     this.bindEditButtons();
     
-    // Check elements after population
+    // Update status badge
+    this.updateStatusBadge();
+  }
+
+  populateExecutiveSummary() {
+    // This method will be called to populate the new executive summary section
+    console.log('🎯 Step 4: Populating executive summary...');
+  }
+
+  populateRequestOverview() {
+    const titleEl = document.getElementById('request-overview-title');
+    const subtitleEl = document.getElementById('request-overview-subtitle');
+    const badgeEl = document.getElementById('request-type-badge');
     
-    // Check if elements are actually populated and visible
-    const clientInfo = document.getElementById('review-client-info');
-    const garments = document.getElementById('review-garments');
+    if (!titleEl || !subtitleEl || !badgeEl) return;
     
-    console.log('🎯 Step 4: Elements check:');
-    console.log('  - Review cards populated successfully');
+    const requestType = V10_State.requestType;
+    const overviewData = {
+      'quotation': {
+        title: 'Quotation Request',
+        subtitle: 'Professional pricing estimate for your specifications',
+        badge: 'QUOTE'
+      },
+      'sample-request': {
+        title: 'Sample Request',
+        subtitle: 'Physical samples for approval and testing',
+        badge: 'SAMPLES'
+      },
+      'bulk-order-request': {
+        title: 'Bulk Order Request', 
+        subtitle: 'Production order for specified quantities',
+        badge: 'PRODUCTION'
+      }
+    };
     
-    console.log('  - Client info exists:', !!clientInfo);
-    console.log('  - Client info content:', clientInfo?.innerHTML?.substring(0, 100));
-    console.log('  - Garments exists:', !!garments);
-    console.log('  - Garments content:', garments?.innerHTML?.substring(0, 100));
+    const data = overviewData[requestType] || overviewData['quotation'];
+    titleEl.textContent = data.title;
+    subtitleEl.textContent = data.subtitle;
+    badgeEl.textContent = data.badge;
+  }
+
+  populateStatistics() {
+    const totalGarmentsEl = document.getElementById('total-garments');
+    const totalColorsEl = document.getElementById('total-colors');
+    const totalFilesEl = document.getElementById('total-files');
+    const totalCostEl = document.getElementById('total-cost');
+    
+    if (!totalGarmentsEl || !totalColorsEl || !totalFilesEl || !totalCostEl) return;
+    
+    // Calculate statistics
+    const garmentCount = V10_State.garments.size;
+    const colorCount = V10_State.labDips.size;
+    const fileCount = this.getUploadedFiles().length;
+    const costs = this.calculateCosts();
+    const currentCurrency = this.getCurrentCurrency();
+    
+    totalGarmentsEl.textContent = garmentCount;
+    totalColorsEl.textContent = colorCount;
+    totalFilesEl.textContent = fileCount;
+    totalCostEl.textContent = this.formatCurrencyWithToggle(costs.total, currentCurrency);
+  }
+
+  updateStatusBadge() {
+    const badge = document.getElementById('review-status-badge');
+    if (!badge) return;
+    
+    const requestType = V10_State.requestType;
+    const isComplete = this.validateAllSections();
+    
+    if (isComplete) {
+      badge.textContent = 'Ready to Submit';
+      badge.className = 'v10-status-badge v10-status-badge--ready';
+    } else {
+      badge.textContent = 'Incomplete';
+      badge.className = 'v10-status-badge v10-status-badge--incomplete';
+    }
+  }
+
+  validateAllSections() {
+    // Simple validation - check if we have garments and they're complete
+    if (V10_State.garments.size === 0) return false;
+    
+    const garments = Array.from(V10_State.garments.values());
+    return garments.every(garment => this.isGarmentComplete(garment, V10_State.requestType));
+  }
+
+  isGarmentComplete(garment, requestType) {
+    // Basic validation logic (simplified from existing)
+    const hasBasicSpecs = garment.type && garment.fabricType;
+    
+    switch (requestType) {
+      case 'quotation':
+        return hasBasicSpecs;
+      case 'sample-request':
+        const hasSampleType = garment.sampleType;
+        if (garment.sampleType === 'stock') {
+          return hasBasicSpecs && hasSampleType && garment.sampleSubValue;
+        } else if (garment.sampleType === 'custom') {
+          return hasBasicSpecs && hasSampleType && garment.assignedLabDips?.size > 0;
+        }
+        return false;
+      case 'bulk-order-request':
+        const hasQuantities = garment.quantities && Object.values(garment.quantities).some(qty => qty > 0);
+        return hasBasicSpecs && hasQuantities;
+      default:
+        return hasBasicSpecs;
+    }
   }
 
   populateClientInfo() {
@@ -12815,7 +12932,18 @@ class V10_ReviewManager {
     const garments = Array.from(V10_State.garments.values());
     
     if (garments.length === 0) {
-      container.innerHTML = '<p class="empty-message">No garments configured</p>';
+      container.innerHTML = `
+        <div class="v10-empty-state">
+          <div class="v10-empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+              <line x1="16" y1="8" x2="2" y2="22"/>
+            </svg>
+          </div>
+          <h4 class="v10-empty-title">No Garments Configured</h4>
+          <p class="v10-empty-message">Add garments in the previous step to see them here</p>
+        </div>
+      `;
       return;
     }
     
@@ -12827,36 +12955,229 @@ class V10_ReviewManager {
 
     container.innerHTML = '';
     
-    // Add grid class based on garment count
-    if (garments.length === 1) {
-      container.classList.add('single-garment');
-    } else {
-      container.classList.remove('single-garment');
-    }
+    // Set grid layout based on garment count
+    container.className = `v10-garments-showcase v10-garments-showcase--${garments.length === 1 ? 'single' : 'multiple'}`;
 
     garments.forEach(garment => {
       const clone = template.content.cloneNode(true);
       
-      const numberSpan = clone.querySelector('.garment-number');
-      const typeSpan = clone.querySelector('.garment-type');
-      const statusBadge = clone.querySelector('.status-badge');
-      const colorCircle = clone.querySelector('.garment-color-circle');
-      const colorNameText = clone.querySelector('.color-name-text');
-      const contentDiv = clone.querySelector('.review-garment-card__content');
+      // Update garment number and badge
+      const numberSpan = clone.querySelector('.v10-garment-number');
+      const nameSpan = clone.querySelector('.v10-garment-name');
+      const subtitleSpan = clone.querySelector('.v10-garment-subtitle');
+      const colorCircle = clone.querySelector('.v10-color-circle');
+      const colorOverlay = clone.querySelector('.v10-color-overlay');
+      const colorNameText = clone.querySelector('.v10-color-name');
+      const statusIndicator = clone.querySelector('.v10-status-indicator');
+      const fabricValue = clone.querySelector('.v10-spec-value');
+      const sampleTypeValue = clone.querySelectorAll('.v10-spec-value')[1];
 
-      if (numberSpan) numberSpan.textContent = `Garment ${garment.number}`;
-      if (typeSpan) {
-        // Build full garment name like Step 3
-        const fullGarmentName = this.buildFullGarmentName(garment);
-        typeSpan.textContent = fullGarmentName;
+      // Set basic garment info
+      if (numberSpan) numberSpan.textContent = garment.number;
+      if (nameSpan) nameSpan.textContent = garment.type || 'Unknown Garment';
+      
+      // Set subtitle based on request type
+      const requestType = V10_State.requestType;
+      const subtitles = {
+        'quotation': 'Pricing estimate',
+        'sample-request': 'Physical sample',
+        'bulk-order-request': 'Production order'
+      };
+      if (subtitleSpan) subtitleSpan.textContent = subtitles[requestType] || 'Garment item';
+      
+      // Set specifications
+      if (fabricValue) fabricValue.textContent = garment.fabricType || 'Not specified';
+      if (sampleTypeValue) {
+        const sampleTypeText = this.getSampleTypeDisplayText(garment);
+        sampleTypeValue.textContent = sampleTypeText;
       }
       
-      // Update color circle and name with debugging
-      console.log(`🎨 DEBUG: Garment ${garment.number} assignedLabDips:`, garment.assignedLabDips);
+      // Enhanced color display
+      this.updateEnhancedColorDisplay(garment, colorCircle, colorOverlay, colorNameText);
       
-      if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
-        const firstLabDipId = Array.from(garment.assignedLabDips)[0];
-        const labDip = V10_State.labDips.get(firstLabDipId);
+      // Update status indicator
+      this.updateGarmentStatus(garment, statusIndicator);
+      
+      // Handle request-specific content
+      this.populateGarmentSpecificContent(clone, garment, requestType);
+      
+      console.log(`🎨 Enhanced Garment ${garment.number} populated:`, garment.type);
+      
+      container.appendChild(clone);
+    });
+  }
+
+  getSampleTypeDisplayText(garment) {
+    const requestType = V10_State.requestType;
+    
+    if (requestType === 'sample-request' && garment.sampleType) {
+      if (garment.sampleType === 'stock') {
+        return `Stock Color (${garment.sampleSubValue || 'Not selected'})`;
+      } else if (garment.sampleType === 'custom') {
+        const labDipCount = garment.assignedLabDips?.size || 0;
+        return `Custom Color (${labDipCount} lab dip${labDipCount !== 1 ? 's' : ''})`;
+      }
+    }
+    
+    return requestType === 'bulk-order-request' ? 'Production ready' : 'Standard';
+  }
+
+  updateEnhancedColorDisplay(garment, colorCircle, colorOverlay, colorNameText) {
+    if (!colorCircle || !colorNameText) return;
+    
+    const requestType = V10_State.requestType;
+    
+    // Reset styles
+    colorCircle.style.background = '';
+    colorCircle.style.backgroundColor = '#e5e5e5';
+    colorOverlay.style.display = 'none';
+    
+    if (requestType === 'sample-request' && garment.sampleType) {
+      if (garment.sampleType === 'stock' && garment.sampleSubValue) {
+        // Stock color samples
+        const stockColors = {
+          'black': { color: '#000000', name: 'Black' },
+          'white': { color: '#ffffff', name: 'White' },
+          'gray': { color: '#6b7280', name: 'Gray' },
+          'navy': { color: '#1e3a8a', name: 'Navy' },
+          'red': { color: '#dc2626', name: 'Red' },
+          'green': { color: '#16a34a', name: 'Green' }
+        };
+        
+        const colorData = stockColors[garment.sampleSubValue] || { color: '#e5e5e5', name: garment.sampleSubValue };
+        colorCircle.style.backgroundColor = colorData.color;
+        colorNameText.textContent = colorData.name;
+        
+      } else if (garment.sampleType === 'custom' && garment.assignedLabDips?.size > 0) {
+        // Custom color samples from lab dips
+        const labDipIds = Array.from(garment.assignedLabDips);
+        
+        if (labDipIds.length === 1) {
+          // Single color
+          const labDip = V10_State.labDips.get(labDipIds[0]);
+          if (labDip) {
+            colorCircle.style.backgroundColor = labDip.hex || '#e5e5e5';
+            colorNameText.textContent = labDip.pantone || 'Custom Color';
+          }
+        } else if (labDipIds.length > 1) {
+          // Multiple colors - create gradient
+          const colors = labDipIds.map(id => {
+            const labDip = V10_State.labDips.get(id);
+            return labDip?.hex || '#e5e5e5';
+          });
+          
+          const gradientStops = colors.map((color, index) => {
+            const percent = (index / (colors.length - 1)) * 100;
+            return `${color} ${percent}%`;
+          }).join(', ');
+          
+          colorCircle.style.background = `linear-gradient(45deg, ${gradientStops})`;
+          colorNameText.textContent = `${colors.length} Colors`;
+        }
+      }
+    } else {
+      // Default for quotations and bulk orders
+      colorNameText.textContent = 'Standard';
+    }
+  }
+
+  updateGarmentStatus(garment, statusIndicator) {
+    if (!statusIndicator) return;
+    
+    const isComplete = this.isGarmentComplete(garment, V10_State.requestType);
+    
+    if (isComplete) {
+      statusIndicator.className = 'v10-status-indicator v10-status--complete';
+      statusIndicator.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20,6 9,17 4,12"/>
+        </svg>
+        Complete
+      `;
+    } else {
+      statusIndicator.className = 'v10-status-indicator v10-status--incomplete';
+      statusIndicator.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        Incomplete
+      `;
+    }
+  }
+
+  populateGarmentSpecificContent(clone, garment, requestType) {
+    const assignmentsSection = clone.querySelector('.v10-garment-assignments');
+    const assignmentsList = clone.querySelector('.v10-assignments-list');
+    const sizesSection = clone.querySelector('.v10-spec-item--full');
+    const sizeChips = clone.querySelector('.v10-size-chips');
+    
+    if (requestType === 'sample-request') {
+      // Show assignments for sample requests
+      const assignments = this.getGarmentAssignments(garment);
+      
+      if (assignments.length > 0 && assignmentsSection && assignmentsList) {
+        assignmentsSection.style.display = 'block';
+        assignmentsList.innerHTML = assignments.map(assignment => `
+          <div class="v10-assignment-chip">
+            <span class="v10-assignment-icon">${assignment.icon}</span>
+            <span class="v10-assignment-text">${assignment.text}</span>
+          </div>
+        `).join('');
+      }
+      
+    } else if (requestType === 'bulk-order-request') {
+      // Show size distribution for bulk orders
+      if (garment.quantities && sizesSection && sizeChips) {
+        const sizes = Object.entries(garment.quantities).filter(([size, qty]) => qty > 0);
+        
+        if (sizes.length > 0) {
+          sizesSection.style.display = 'block';
+          sizeChips.innerHTML = sizes.map(([size, qty]) => `
+            <div class="v10-size-chip">
+              <span class="v10-size-label">${size}</span>
+              <span class="v10-size-qty">${qty}</span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+  }
+
+  getGarmentAssignments(garment) {
+    const assignments = [];
+    
+    // Lab dip assignments
+    if (garment.assignedLabDips?.size > 0) {
+      const labDipCount = garment.assignedLabDips.size;
+      assignments.push({
+        icon: '🎨',
+        text: `${labDipCount} Lab Dip${labDipCount > 1 ? 's' : ''}`
+      });
+    }
+    
+    // Design assignments  
+    if (garment.assignedDesigns?.size > 0) {
+      const designCount = garment.assignedDesigns.size;
+      assignments.push({
+        icon: '⭐',
+        text: `${designCount} Design${designCount > 1 ? 's' : ''}`
+      });
+    }
+    
+    return assignments;
+  }
+
+  // Continue with rest of existing methods...
+  // The rest continues from the original populateGarments method
+  ///////////////////////////
+  
+  oldPopulateGarmentsRemainder() {
+    // This contains the rest of the original method that I need to adapt
+    if (garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
+      const labDip = V10_State.labDips.get(firstLabDipId);
         
         console.log(`🎨 DEBUG: Found labDip:`, labDip);
         
@@ -13004,6 +13325,7 @@ class V10_ReviewManager {
 
   populateLabDips() {
     const standaloneContainer = document.getElementById('review-labdips-standalone');
+    const countElement = document.getElementById('labdips-count');
     
     if (!standaloneContainer) return;
 
@@ -13017,21 +13339,46 @@ class V10_ReviewManager {
       }
     });
 
-    // Render only standalone lab dips using the working collection-item structure
+    // Update count
+    if (countElement) {
+      const totalCount = labDips.length;
+      countElement.textContent = `${totalCount} swatch${totalCount !== 1 ? 'es' : ''}`;
+    }
+
+    // Render enhanced lab dips using new template
     if (standaloneLabDips.length === 0) {
-      standaloneContainer.innerHTML = '<p class="empty-message">No fabric swatches available</p>';
-    } else {
-      standaloneContainer.innerHTML = standaloneLabDips.map(labDip => `
-        <div class="collection-item">
-          <div class="collection-item__visual">
-            <div class="collection-item__color" style="background-color: ${labDip.hex || '#ccc'};"></div>
+      standaloneContainer.innerHTML = `
+        <div class="v10-empty-state v10-empty-state--small">
+          <div class="v10-empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6"/>
+            </svg>
           </div>
-          <div class="collection-item__content">
-            <span class="collection-item__name">${labDip.pantone}</span>
-            <span class="collection-item__type">${window.v10ReviewManager.getLabDipAssignmentText(labDip.id)}</span>
-          </div>
+          <p class="v10-empty-message">No fabric swatches available</p>
         </div>
-      `).join('');
+      `;
+    } else {
+      const template = document.getElementById('review-labdip-template');
+      if (template) {
+        standaloneContainer.innerHTML = '';
+        
+        standaloneLabDips.forEach(labDip => {
+          const clone = template.content.cloneNode(true);
+          
+          const colorDiv = clone.querySelector('.v10-swatch-color');
+          const nameElement = clone.querySelector('.v10-swatch-name');
+          const assignmentElement = clone.querySelector('.v10-swatch-assignment');
+          const costElement = clone.querySelector('.v10-swatch-cost');
+          
+          if (colorDiv) colorDiv.style.backgroundColor = labDip.hex || '#ccc';
+          if (nameElement) nameElement.textContent = labDip.pantone || 'Custom Color';
+          if (assignmentElement) assignmentElement.textContent = this.getLabDipAssignmentText(labDip.id);
+          if (costElement) costElement.textContent = '€25';
+          
+          standaloneContainer.appendChild(clone);
+        });
+      }
     }
   }
 
@@ -13166,6 +13513,7 @@ class V10_ReviewManager {
 
   populateDesigns() {
     const standaloneContainer = document.getElementById('review-designs-standalone');
+    const countElement = document.getElementById('designs-count');
     
     if (!standaloneContainer) return;
 
@@ -13179,53 +13527,171 @@ class V10_ReviewManager {
       }
     });
 
-    // Render only standalone designs
+    // Update count
+    if (countElement) {
+      const totalCount = designs.length;
+      countElement.textContent = `${totalCount} design${totalCount !== 1 ? 's' : ''}`;
+    }
+
+    // Render enhanced designs using new template
     if (standaloneDesigns.length === 0) {
-      standaloneContainer.innerHTML = '<p class="empty-message">No design samples available</p>';
-    } else {
-      standaloneContainer.innerHTML = standaloneDesigns.map(design => `
-        <div class="review-design-sample">
-          <div class="design-sample-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      standaloneContainer.innerHTML = `
+        <div class="v10-empty-state v10-empty-state--small">
+          <div class="v10-empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
-          <div class="design-sample-info">
-            <div class="design-sample-name">${design.name}</div>
-            <div class="design-sample-type">${design.type}</div>
-          </div>
+          <p class="v10-empty-message">No design samples available</p>
         </div>
-      `).join('');
+      `;
+    } else {
+      const template = document.getElementById('review-design-template');
+      if (template) {
+        standaloneContainer.innerHTML = '';
+        
+        standaloneDesigns.forEach(design => {
+          const clone = template.content.cloneNode(true);
+          
+          const nameElement = clone.querySelector('.v10-design-name');
+          const typeElement = clone.querySelector('.v10-design-type');
+          const assignmentElement = clone.querySelector('.v10-design-assignment');
+          const costElement = clone.querySelector('.v10-design-cost');
+          
+          if (nameElement) nameElement.textContent = design.name || 'Design Sample';
+          if (typeElement) typeElement.textContent = design.type || 'Print';
+          if (assignmentElement) assignmentElement.textContent = this.getDesignAssignmentText(design.id);
+          if (costElement) costElement.textContent = '€15';
+          
+          standaloneContainer.appendChild(clone);
+        });
+      }
     }
+  }
+
+  getDesignAssignmentText(designId) {
+    const assignments = V10_State.assignments.designs.get(designId);
+    
+    if (!assignments || assignments.size === 0) {
+      return 'Standalone design';
+    }
+    
+    const assignedGarmentNames = [];
+    assignments.forEach(garmentId => {
+      const garment = V10_State.garments.get(garmentId);
+      if (garment) {
+        assignedGarmentNames.push(`Garment ${garment.number}`);
+      }
+    });
+    
+    return `Assigned to ${assignedGarmentNames.join(', ')}`;
   }
 
   populateCostSummary() {
     const breakdownContainer = document.getElementById('cost-breakdown');
     const totalCostElement = document.getElementById('total-cost');
+    const disclaimerElement = document.getElementById('pricing-disclaimer');
     
     if (!breakdownContainer || !totalCostElement) return;
 
     const costs = this.calculateCosts();
     const currentCurrency = this.getCurrentCurrency();
+    const requestType = V10_State.requestType;
     let html = '';
 
-    costs.items.forEach(item => {
-      html += `
-        <div class="cost-item">
-          <div class="cost-item__info">
-            <div class="cost-item__label">${item.label}</div>
-            <div class="cost-item__description">${item.description}</div>
+    if (requestType === 'quotation') {
+      // Special handling for quotations
+      html = `
+        <div class="v10-cost-item v10-cost-item--quote">
+          <div class="v10-cost-info">
+            <div class="v10-cost-label">Quotation Service</div>
+            <div class="v10-cost-description">Detailed pricing analysis for your specifications</div>
           </div>
-          <div class="cost-item__amount">${this.formatCurrencyWithToggle(item.amount, currentCurrency)}</div>
+          <div class="v10-cost-amount v10-cost-amount--quote">Contact for pricing</div>
         </div>
       `;
-    });
+      
+      totalCostElement.textContent = 'Contact for pricing';
+      
+      if (disclaimerElement) {
+        disclaimerElement.textContent = 'A detailed quote will be provided within 24-48 hours';
+      }
+      
+    } else {
+      // Regular cost breakdown for samples and bulk orders
+      costs.items.forEach(item => {
+        const amount = this.formatCurrencyWithToggle(item.amount, currentCurrency);
+        html += `
+          <div class="v10-cost-item">
+            <div class="v10-cost-info">
+              <div class="v10-cost-label">${item.label}</div>
+              <div class="v10-cost-description">${item.description}</div>
+            </div>
+            <div class="v10-cost-amount">${amount}</div>
+          </div>
+        `;
+      });
+
+      totalCostElement.textContent = this.formatCurrencyWithToggle(costs.total, currentCurrency);
+      
+      if (disclaimerElement) {
+        const disclaimers = {
+          'sample-request': 'Final pricing may vary based on final specifications',
+          'bulk-order-request': 'Volume discounts may apply for larger orders'
+        };
+        disclaimerElement.textContent = disclaimers[requestType] || 'Pricing subject to final specifications';
+      }
+    }
 
     breakdownContainer.innerHTML = html;
-    totalCostElement.textContent = this.formatCurrencyWithToggle(costs.total, currentCurrency);
     
-    // Initialize currency toggle if not already done
-    this.initializeCurrencyToggle();
+    // Initialize enhanced currency toggle
+    this.initializeEnhancedCurrencyToggle();
+  }
+
+  initializeEnhancedCurrencyToggle() {
+    const currencyBtns = document.querySelectorAll('.v10-currency-btn');
+    const currentCurrency = this.getCurrentCurrency();
+    
+    // Set initial state
+    this.updateEnhancedCurrencyToggle(currentCurrency);
+    
+    // Bind click events
+    currencyBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const newCurrency = btn.dataset.currency;
+        this.setCurrency(newCurrency);
+      });
+    });
+  }
+
+  updateEnhancedCurrencyToggle(activeCurrency) {
+    const currencyBtns = document.querySelectorAll('.v10-currency-btn');
+    
+    currencyBtns.forEach(btn => {
+      const isActive = btn.dataset.currency === activeCurrency;
+      
+      if (isActive) {
+        btn.classList.add('v10-currency-btn--active');
+        btn.classList.remove('v10-currency-btn--inactive');
+      } else {
+        btn.classList.remove('v10-currency-btn--active');
+        btn.classList.add('v10-currency-btn--inactive');
+      }
+    });
+  }
+
+  setCurrency(currency) {
+    try {
+      sessionStorage.setItem('v10_currency', currency);
+    } catch (error) {
+      console.warn('Could not save currency preference:', error);
+    }
+    
+    this.updateEnhancedCurrencyToggle(currency);
+    this.populateCostSummary();
+    this.populateStatistics(); // Update the summary statistics as well
   }
 
   calculateCosts() {
@@ -13298,12 +13764,12 @@ class V10_ReviewManager {
   updateSectionVisibility() {
     const requestType = V10_State.requestType;
     
-    // Update new side-by-side samples grid
-    const samplesGrid = document.getElementById('review-samples-grid');
+    // Update new enhanced sections
+    const samplesSection = document.getElementById('review-samples-section');
     const quantitiesSection = document.getElementById('review-quantities-section');
 
-    if (samplesGrid) {
-      samplesGrid.style.display = requestType === 'sample-request' ? 'grid' : 'none';
+    if (samplesSection) {
+      samplesSection.style.display = requestType === 'sample-request' ? 'block' : 'none';
     }
 
     if (quantitiesSection) {
@@ -13318,16 +13784,30 @@ class V10_ReviewManager {
     const requestType = V10_State.requestType;
     const messages = {
       'quotation': `
-        <h4>Ready to Request Quotation</h4>
-        <p>Your specifications will be reviewed and you'll receive a detailed price quote within 24-48 hours. No payment is required at this stage.</p>
+        <h4 class="v10-submit-message-title">Ready to Request Quotation</h4>
+        <p class="v10-submit-message-text">Your specifications will be reviewed and you'll receive a detailed price quote within 24-48 hours. No payment is required at this stage.</p>
+        <div class="v10-submit-timeline">
+          <span class="v10-timeline-item">📋 Review: 2-4 hours</span>
+          <span class="v10-timeline-item">📧 Quote: 24-48 hours</span>
+        </div>
       `,
       'sample-request': `
-        <h4>Ready to Order Samples</h4>
-        <p>Your samples will be produced and shipped within the specified timeframes. Payment will be processed after submission.</p>
+        <h4 class="v10-submit-message-title">Ready to Order Samples</h4>
+        <p class="v10-submit-message-text">Your samples will be produced and shipped within the specified timeframes. Payment will be processed after submission.</p>
+        <div class="v10-submit-timeline">
+          <span class="v10-timeline-item">⚡ Processing: 1-2 hours</span>
+          <span class="v10-timeline-item">🏭 Production: 7-14 days</span>
+          <span class="v10-timeline-item">📦 Shipping: 3-5 days</span>
+        </div>
       `,
       'bulk-order-request': `
-        <h4>Ready to Place Bulk Order</h4>
-        <p>Your production order will be reviewed and confirmed. A 50% deposit will be required to begin production.</p>
+        <h4 class="v10-submit-message-title">Ready to Place Bulk Order</h4>
+        <p class="v10-submit-message-text">Your production order will be reviewed and confirmed. A 50% deposit will be required to begin production.</p>
+        <div class="v10-submit-timeline">
+          <span class="v10-timeline-item">📋 Review: 24-48 hours</span>
+          <span class="v10-timeline-item">💰 Deposit: Upon approval</span>
+          <span class="v10-timeline-item">🏭 Production: 15-30 days</span>
+        </div>
       `
     };
 
@@ -13338,8 +13818,39 @@ class V10_ReviewManager {
     const submitBtn = document.getElementById('submit-request-btn');
     const termsCheckbox = document.getElementById('terms-agreement');
     
-    if (submitBtn && termsCheckbox) {
-      // Button is always enabled - validation feedback shown on click instead
+    if (!submitBtn || !termsCheckbox) return;
+    
+    // Enable/disable based on terms agreement and validation
+    const termsAgreed = termsCheckbox.checked;
+    const allValid = this.validateAllSections();
+    const isEnabled = termsAgreed && allValid;
+    
+    submitBtn.disabled = !isEnabled;
+    
+    if (isEnabled) {
+      submitBtn.classList.remove('v10-btn--disabled');
+      submitBtn.classList.add('v10-btn--ready');
+    } else {
+      submitBtn.classList.add('v10-btn--disabled');
+      submitBtn.classList.remove('v10-btn--ready');
+    }
+    
+    // Update button text based on validation state
+    const buttonText = submitBtn.querySelector('span');
+    if (buttonText) {
+      if (!allValid) {
+        buttonText.textContent = 'Complete Required Fields';
+      } else if (!termsAgreed) {
+        buttonText.textContent = 'Accept Terms to Continue';
+      } else {
+        const requestType = V10_State.requestType;
+        const buttonTexts = {
+          'quotation': 'Request Quote',
+          'sample-request': 'Order Samples',
+          'bulk-order-request': 'Place Order'
+        };
+        buttonText.textContent = buttonTexts[requestType] || 'Submit Request';
+      }
     }
   }
 
