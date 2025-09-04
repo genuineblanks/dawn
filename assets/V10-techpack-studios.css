@@ -1559,8 +1559,9 @@ button:focus,
 .v10-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: var(--v10-z-modal-backdrop);
   display: flex;
   align-items: center;
@@ -1568,7 +1569,7 @@ button:focus,
   padding: var(--v10-space-4);
   opacity: 0;
   visibility: hidden;
-  transition: var(--v10-transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Support JavaScript overflow hidden to prevent background scrolling */
@@ -1608,21 +1609,41 @@ body[style*="overflow: hidden"] {
 .v10-modal {
   background: var(--v10-bg-modal);
   border-radius: var(--v10-radius-xl);
-  box-shadow: var(--v10-shadow-xl);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    0 10px 20px -5px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
   max-height: 90vh;
   overflow: hidden;
   position: relative;
-  transform: scale(0.95) translateY(20px);
-  transition: var(--v10-transition);
+  transform: scale(0.9) translateY(30px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: var(--v10-z-modal);
   width: 100%;
   max-width: 600px;
-  border: 1px solid var(--v10-border-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .v10-modal-overlay[style*="display: block"] .v10-modal,
 .v10-modal-overlay:not([style*="display: none"]) .v10-modal {
   transform: scale(1) translateY(0);
+  animation: modalEnhancedEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalEnhancedEntrance {
+  0% {
+    transform: scale(0.8) translateY(40px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 .v10-modal-header {
@@ -1631,8 +1652,10 @@ body[style*="overflow: hidden"] {
   justify-content: space-between;
   gap: var(--v10-space-4);
   padding: var(--v10-space-6);
-  border-bottom: 1px solid var(--v10-border-primary);
-  background: var(--v10-bg-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   position: relative;
 }
 
@@ -1686,9 +1709,13 @@ body[style*="overflow: hidden"] {
 }
 
 .v10-modal-close:hover {
-  background: var(--v10-bg-hover);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
+  transform: scale(1.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .v10-modal-body {
@@ -1717,8 +1744,10 @@ body[style*="overflow: hidden"] {
   gap: var(--v10-space-3);
   padding: var(--v10-space-5) var(--v10-space-6);
   margin-top: var(--v10-space-4);
-  border-top: 1px solid var(--v10-border-primary);
-  background: var(--v10-bg-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .v10-modal-icon {
@@ -1828,7 +1857,59 @@ body[style*="overflow: hidden"] {
   .v10-modal-actions .v10-btn {
     flex: 1;
   }
+}
 
+/* Modal Specific Variants */
+.v10-modal--help {
+  max-width: 700px;
+}
+
+.v10-modal--help .v10-modal-body {
+  padding: var(--v10-space-8);
+}
+
+.v10-modal--measurement {
+  max-width: 500px;
+}
+
+.v10-modal--terms {
+  max-width: 650px;
+}
+
+.v10-modal--verification {
+  max-width: 600px;
+}
+
+.v10-modal--submission {
+  max-width: 700px;
+}
+
+.v10-modal--success {
+  max-width: 550px;
+}
+
+/* Modal Icon Variants */
+.v10-modal-icon--help {
+  background: var(--v10-accent-primary);
+  color: white;
+}
+
+.v10-modal-icon--success {
+  background: var(--v10-accent-success);
+  color: white;
+}
+
+.v10-modal-icon--warning {
+  background: var(--v10-accent-warning);
+  color: white;
+}
+
+.v10-modal-icon--info {
+  background: var(--v10-accent-info);
+  color: white;
+}
+
+@media (max-width: 768px) {
   .v10-client-options-horizontal {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-3);
@@ -5265,6 +5346,24 @@ DESIGN STUDIO SYSTEM - LAB DIPS
   padding: var(--v10-space-6);
 }
 
+/* Desktop Only: Equal Height for Color Selection and Lab Dips Collection */
+@media (min-width: 769px) {
+  .color-selection-area,
+  .labdips-collection {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+  }
+  
+  .color-selection-area {
+    justify-content: flex-start;
+  }
+  
+  .labdips-collection {
+    justify-content: flex-start;
+  }
+}
+
 .collection-header {
   display: flex;
   justify-content: space-between;
@@ -6438,179 +6537,6 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   }
 }
 
-/* 
-===========================================
-MODAL SYSTEM STYLES (V10 COMPATIBILITY)
-===========================================
-*/
-
-/* Modal Overlay */
-.v10-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: var(--v10-z-modal);
-  padding: var(--v10-space-4);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.v10-modal-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Modal Container */
-.v10-modal {
-  background: var(--v10-bg-card);
-  border-radius: var(--v10-radius-lg);
-  max-width: 600px;
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: var(--v10-shadow-xl);
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
-  border: 1px solid var(--v10-border-primary);
-}
-
-.v10-modal-overlay.active .v10-modal {
-  transform: scale(1);
-}
-
-/* Modal Header */
-.v10-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--v10-space-6);
-  border-bottom: 1px solid var(--v10-border-primary);
-}
-
-.v10-modal-title {
-  margin: 0;
-  color: var(--v10-text-primary);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.v10-modal-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--v10-radius-md);
-  margin-right: var(--v10-space-4);
-  flex-shrink: 0;
-}
-
-.v10-modal-icon--help {
-  background: var(--v10-accent-primary);
-  color: white;
-}
-
-/* Modal Close Button */
-.v10-modal-close {
-  background: transparent;
-  border: none;
-  color: var(--v10-text-muted);
-  cursor: pointer;
-  padding: var(--v10-space-2);
-  border-radius: var(--v10-radius-md);
-  transition: var(--v10-transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.v10-modal-close:hover {
-  background: var(--v10-bg-hover);
-  color: var(--v10-text-primary);
-}
-
-/* Modal Body */
-.v10-modal-body {
-  padding: var(--v10-space-6);
-}
-
-/* Help Modal Specific Styles */
-.v10-modal--help {
-  max-width: 700px;
-}
-
-.v10-modal--help .v10-modal-body {
-  padding: var(--v10-space-8);
-}
-
-/* Measurement Modal Specific Styles */
-.v10-modal--measurement {
-  max-width: 500px;
-}
-
-.v10-modal-message {
-  color: var(--v10-text-primary);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: var(--v10-space-4);
-}
-
-.v10-modal-details {
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: var(--v10-radius-md);
-  padding: var(--v10-space-4);
-  margin-bottom: var(--v10-space-4);
-}
-
-.v10-modal-details h4 {
-  margin: 0 0 var(--v10-space-3) 0;
-  color: var(--v10-text-primary);
-  font-size: 1.125rem;
-  font-weight: 600;
-}
-
-.v10-modal-details ul {
-  margin: 0;
-  padding-left: var(--v10-space-5);
-  color: var(--v10-text-primary);
-}
-
-.v10-modal-details li {
-  margin-bottom: var(--v10-space-1);
-  font-size: 0.875rem;
-}
-
-/* Mobile Modal Styles */
-@media (max-width: 768px) {
-  .v10-modal-overlay {
-    padding: var(--v10-space-3);
-  }
-  
-  .v10-modal {
-    max-height: 90vh;
-    margin: 0;
-  }
-  
-  .v10-modal-header {
-    padding: var(--v10-space-4);
-  }
-  
-  .v10-modal-body {
-    padding: var(--v10-space-4);
-  }
-  
-  .v10-modal--help .v10-modal-body {
-    padding: var(--v10-space-5);
-  }
-}
 
 /* ===================================
    CRITICAL FIX: POPULAR COLOR CIRCLES
