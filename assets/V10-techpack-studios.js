@@ -3682,15 +3682,8 @@ class V10_QuantityStudioManager {
   
   createGarmentCard(garment, garmentId, index) {
     const div = document.createElement('div');
-    div.className = 'v10-quantity-garment-full';
+    div.className = 'garment-quantity-card';
     div.dataset.garmentId = garmentId;
-    div.style.cssText = `
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin-bottom: 24px;
-      width: 100%;
-    `;
     
     const colorwayCount = garment.colorways?.size || 0;
     const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
@@ -3703,37 +3696,28 @@ class V10_QuantityStudioManager {
     // Determine what to show: fabric or sample reference
     const subtitle = garment.sampleReference || garment.fabricType || 'with-design-applied';
     
-    // Full professional dark layout matching the desired design
+    // Use professional card layout from the start
     div.innerHTML = `
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 0;
-        margin-bottom: 20px;
-        color: #ffffff;
-      ">
-        <div>
-          <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">
-            Garment ${index} - <span style="color: #10b981;">${garment.type}</span>
+      <div class="garment-quantity-card__header">
+        <div class="garment-quantity-card__title-section">
+          <h3 class="garment-quantity-card__title">
+            <span class="garment-quantity-card__number">Garment ${index}</span> - 
+            <span class="garment-quantity-card__type">${garment.type}</span>
+          </h3>
+          <div class="garment-quantity-card__subtitle">
+            <span>${subtitle}</span>
           </div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.6);">${subtitle}</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 24px;">
-          <div style="text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: ${isSufficient ? '#10b981' : '#ffffff'};" id="total-${garmentId}">
+        <div class="garment-quantity-card__stats">
+          <div class="garment-stat">
+            <div class="garment-stat__value garment-total-units ${isSufficient ? 'sufficient' : 'insufficient'}" id="total-${garmentId}">
               ${garment.total || 0}
             </div>
-            <div style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase;">TOTAL</div>
+            <div class="garment-stat__label">TOTAL</div>
           </div>
-          <div style="
-            background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%);
-            padding: 8px 16px;
-            border: 1px solid #f59e0b;
-            font-size: 14px;
-            font-weight: 700;
-            color: #f59e0b;
-          ">${minimum} MIN</div>
+          <div class="garment-stat__value" style="color: #f59e0b; font-weight: 700; font-size: 1rem;">
+            ${minimum} MIN
+          </div>
         </div>
       </div>
       
@@ -3785,39 +3769,11 @@ class V10_QuantityStudioManager {
         </div>
       </div>
       
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 0;
-        margin-top: 24px;
-        border-top: 1px solid rgba(255,255,255,0.08);
-      ">
-        <div style="
-          font-size: 14px;
-          color: rgba(255,255,255,0.7);
-          font-weight: 500;
-        ">
-          TOTAL: <span style="font-size: 18px; font-weight: 700; color: ${isSufficient ? '#10b981' : '#ffffff'}; margin: 0 8px;" id="footer-total-${garmentId}">${garment.total || 0}</span> / ${minimum} MIN
+      <div class="v10-garment-footer">
+        <div class="v10-garment-total">TOTAL: <strong>${garment.total}</strong> / ${minimum} MIN</div>
+        <div class="v10-garment-status v10-garment-status--${isSufficient ? 'sufficient' : 'insufficient'}">
+          ${isSufficient ? 'SUFFICIENT' : colorwayCount === 0 ? 'ADD COLORWAY' : 'INSUFFICIENT'}
         </div>
-        <button type="button" 
-                onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')"
-                style="
-                  padding: 10px 20px;
-                  background: transparent;
-                  border: 1px solid ${colorwayCount === 0 ? '#ef4444' : (isSufficient ? '#10b981' : '#ef4444')};
-                  color: ${colorwayCount === 0 ? '#ef4444' : (isSufficient ? '#10b981' : '#ef4444')};
-                  font-weight: 600;
-                  font-size: 13px;
-                  cursor: pointer;
-                  transition: all 0.2s;
-                  text-transform: uppercase;
-                  letter-spacing: 0.5px;
-                "
-                onmouseover="this.style.background='${colorwayCount === 0 ? 'rgba(239,68,68,0.1)' : (isSufficient ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)')}'; this.style.transform='translateY(-1px)';"
-                onmouseout="this.style.background='transparent'; this.style.transform='translateY(0)';">
-          ${colorwayCount === 0 ? 'ADD COLORWAY' : (isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT')}
-        </button>
       </div>
     `;
     
@@ -4061,7 +4017,7 @@ class V10_QuantityStudioManager {
     const isQuantityView = quantityStudioContainer && quantityStudioContainer.style.display !== 'none';
     
     // Always try to update the garment card if it exists
-    const garmentCard = document.querySelector(`.v10-quantity-garment-full[data-garment-id="${garmentId}"]`);
+    const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
     
     if (garmentCard) {
       // Check if this is the first colorway being added
@@ -4467,7 +4423,7 @@ class V10_QuantityStudioManager {
     console.log(`   Status: ${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'}`);
     
     // Try multiple selectors to find the card
-    const card = document.querySelector(`.v10-quantity-garment-full[data-garment-id="${garmentId}"]`) ||
+    const card = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`) ||
                  document.querySelector(`[data-garment-id="${garmentId}"]`);
     
     if (card) {
@@ -4535,7 +4491,7 @@ class V10_QuantityStudioManager {
     
     // If no colorways left, show the add button again
     if (garment.colorways.size === 0) {
-      const card = document.querySelector(`.v10-quantity-garment-full[data-garment-id="${garmentId}"]`);
+      const card = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
       if (card) {
         const section = card.querySelector('.v10-colorway-section');
         if (section) {
