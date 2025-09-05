@@ -3684,13 +3684,6 @@ class V10_QuantityStudioManager {
     const div = document.createElement('div');
     div.className = 'v10-quantity-garment-full';
     div.dataset.garmentId = garmentId;
-    div.style.cssText = `
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin-bottom: 24px;
-      width: 100%;
-    `;
     
     const colorwayCount = garment.colorways?.size || 0;
     const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
@@ -3738,47 +3731,18 @@ class V10_QuantityStudioManager {
       </div>
       
       <div class="v10-colorway-section">
-        ${colorwayCount === 0 ? `
-          <button type="button" class="v10-add-colorway-btn" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="v10-colorway-tabs-container">
+          <div class="v10-colorway-tabs" id="tabs-${garmentId}">
+            <!-- Colorway tabs will be added here -->
+          </div>
+          <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add colorway" style="margin-left: ${colorwayCount === 0 ? '0' : '8px'};">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            Add Colorway to Set Quantities
+            <span style="display: inline-block;">${colorwayCount === 0 ? 'Add Colorway to Set Quantities' : 'Add Colorway'}</span>
           </button>
-        ` : `
-          <div class="v10-colorway-tabs-container">
-            <div class="v10-colorway-tabs" id="tabs-${garmentId}">
-              <!-- Colorway tabs will be added here -->
-            </div>
-            <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway" style="
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              gap: 8px;
-              padding: 10px 16px;
-              background: rgba(255,255,255,0.05);
-              border: 1px dashed rgba(255,255,255,0.3);
-              border-radius: 0;
-              color: rgba(255,255,255,0.8);
-              font-size: 13px;
-              font-weight: 500;
-              cursor: pointer;
-              transition: all 0.2s;
-              white-space: nowrap;
-              line-height: 1;
-              min-height: 36px;
-              margin-left: 8px;
-            " onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.5)';" 
-               onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.3)';">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span style="display: inline-block;">Add Colorway</span>
-            </button>
-          </div>
-        `}
+        </div>
         
         <div class="v10-colorways-content" id="colorways-${garmentId}" style="${colorwayCount === 0 ? 'display: none;' : ''}">
           <!-- Colorway content will be added here -->
@@ -9498,154 +9462,10 @@ class V10_GarmentStudio {
     window.v10QuantityStudio.initialize();
   }
 
-  createProfessionalQuantityCard(garment, index) {
-    console.log(`🎨 Creating professional quantity card for garment ${garment.id}`);
-    
-    // Create professional card structure
-    const card = document.createElement('div');
-    card.className = 'garment-quantity-card';
-    card.dataset.garmentId = garment.id;
-    
-    // Calculate minimum for this garment
-    const colorwayCount = this.quantityCalculator.getColorwayCount(garment.id);
-    const productionType = this.quantityCalculator.determineProductionType(garment);
-    const minimumRequired = this.quantityCalculator.getMinimumQuantity(colorwayCount, productionType, garment.type);
-    
-    // Build professional card HTML
-    card.innerHTML = `
-      <!-- Card Header with Professional Layout -->
-      <div class="garment-quantity-card__header">
-        <div class="garment-quantity-card__title-section">
-          <h3 class="garment-quantity-card__title">
-            <span class="garment-quantity-card__number">Garment ${garment.number || index + 1}</span> - 
-            <span class="garment-quantity-card__type">${garment.type || 'Unknown Type'}</span>
-          </h3>
-          <div class="garment-quantity-card__subtitle">
-            <span class="garment-quantity-card__type-badge">
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7z"/>
-                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2z"/>
-              </svg>
-              ${garment.sampleReference || 'New Version'}
-            </span>
-            <span>•</span>
-            <span>${garment.fabricType || 'Fabric not selected'}</span>
-            <span>•</span>
-            <span class="minimum-required-text">Min: <strong>${minimumRequired}</strong> units</span>
-          </div>
-        </div>
-        <div class="garment-quantity-card__stats">
-          <div class="garment-stat">
-            <div class="garment-stat__value quantity-status insufficient" id="total-${garment.id}">0</div>
-            <div class="garment-stat__label">Total</div>
-          </div>
-          <div class="garment-stat">
-            <div class="garment-stat__value" id="colors-${garment.id}">${colorwayCount}</div>
-            <div class="garment-stat__label">Colors</div>
-          </div>
-          <div class="garment-stat">
-            <div class="garment-stat__value" id="sizes-${garment.id}">0</div>
-            <div class="garment-stat__label">Sizes</div>
-          </div>
-          <div class="garment-stat">
-            <div class="status-badge status-badge--insufficient" data-status-badge>INSUFFICIENT</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Professional Size Grid -->
-      <div class="garment-size-grid">
-        <div class="size-grid-header">
-          <div class="size-label">Colorway</div>
-          <div class="size-label">XXS</div>
-          <div class="size-label">XS</div>
-          <div class="size-label">S</div>
-          <div class="size-label">M</div>
-          <div class="size-label">L</div>
-          <div class="size-label">XL</div>
-          <div class="size-label">XXL</div>
-        </div>
-        <div class="size-grid-content" id="size-grid-${garment.id}">
-          <!-- Dynamic rows will be added here -->
-        </div>
-      </div>
-      
-      <!-- Colorway Management -->
-      <div class="colorway-management">
-        <div class="colorway-management__header">
-          <h4 class="colorway-management__title">Colorways</h4>
-          <span class="colorway-management__count" id="colorway-count-${garment.id}">0 colorways</span>
-        </div>
-        <div class="colorway-list" id="colorway-list-${garment.id}">
-          <!-- Colorway cards will be added here -->
-        </div>
-        <div class="colorway-management__actions">
-          <button type="button" class="add-colorway" data-garment-id="${garment.id}">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M8 2v12m-6-6h12"/>
-            </svg>
-            Add Colorway
-          </button>
-          <div class="colorway-bulk-tools">
-            <button type="button" class="v10-btn v10-btn--secondary apply-preset-btn" data-garment-id="${garment.id}">
-              Apply Preset
-            </button>
-            <button type="button" class="v10-btn v10-btn--ghost clear-all-btn" data-garment-id="${garment.id}">
-              Clear All
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Initialize colorway system
-    this.initializeProfessionalColorways(card, garment);
-    
-    console.log(`✅ Professional quantity card created for garment ${garment.id}`);
-    return card;
-  }
+  // Removed duplicate createProfessionalQuantityCard and initializeProfessionalColorways functions
+  // These are handled by V10_QuantityStudioManager
 
-  // Professional Colorway System
-  initializeProfessionalColorways(card, garment) {
-    const addColorwayBtn = card.querySelector('.add-colorway');
-    if (addColorwayBtn) {
-      addColorwayBtn.addEventListener('click', () => {
-        this.showColorwayModal(garment.id);
-      });
-    }
-    
-    // Only render existing colorways if they exist - don't create automatically
-    if (garment.colorways && garment.colorways.size > 0) {
-      this.renderExistingColorways(garment.id);
-    }
-    // User must manually add colorways via "Add Colorway" button
-  }
-
-  addProfessionalColorway(garmentId, color = '#2563eb', colorName = '') {
-    const garmentData = V10_State.garments.get(garmentId);
-    if (!garmentData) return;
-    
-    if (!garmentData.colorways) {
-      garmentData.colorways = new Map();
-    }
-    
-    const colorwayId = V10_Utils.generateId('colorway');
-    const colorwayData = {
-      id: colorwayId,
-      color: color,
-      colorName: colorName || `Color ${garmentData.colorways.size + 1}`,
-      quantities: {
-        xxs: 0, xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0
-      }
-    };
-    
-    garmentData.colorways.set(colorwayId, colorwayData);
-    this.renderColorwayRow(garmentId, colorwayData);
-    this.updateColorwayCount(garmentId);
-    this.updateGarmentStats(garmentId);
-    
-    console.log(`🎨 Added colorway ${colorwayId} to garment ${garmentId}`);
-  }
+  // Removed duplicate addProfessionalColorway function - handled by V10_QuantityStudioManager
 
   renderColorwayRow(garmentId, colorwayData) {
     const sizeGrid = document.getElementById(`size-grid-${garmentId}`);
