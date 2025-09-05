@@ -7846,6 +7846,8 @@ class V10_GarmentStudio {
     // Initialize the quantity studio
     window.v10QuantityStudio.initialize();
   }
+}
+
 // ==============================================
 // DESIGN STUDIO MANAGER
 // ==============================================
