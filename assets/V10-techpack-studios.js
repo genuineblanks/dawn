@@ -3568,21 +3568,49 @@ class V10_QuantityStudioManager {
       colorwayCount += garment.colorways?.size || 0;
     });
     
-    // Update DOM
-    const unitsEl = document.getElementById('v10-total-units');
-    const garmentsEl = document.getElementById('v10-total-garments');
-    const colorwaysEl = document.getElementById('v10-total-colorways');
-    const minEl = document.getElementById('v10-min-required');
+    // Check if quantities are sufficient
+    const isSufficient = totalUnits >= totalMinimum && totalMinimum > 0 && colorwayCount > 0;
+    
+    console.log(`📈 Updating stats: ${totalUnits}/${totalMinimum} units (${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'})`);
+    
+    // Update DOM - try multiple element IDs for compatibility
+    const unitsEl = document.getElementById('v10-total-units') || 
+                   document.querySelector('.total-units-value');
+    const garmentsEl = document.getElementById('v10-total-garments') || 
+                      document.querySelector('.total-garments-value');
+    const colorwaysEl = document.getElementById('v10-total-colorways') || 
+                       document.querySelector('.total-colorways-value');
+    const minEl = document.getElementById('v10-min-required') || 
+                 document.querySelector('.min-required-value');
     
     if (unitsEl) {
       unitsEl.textContent = totalUnits;
-      unitsEl.classList.toggle('sufficient', totalUnits >= totalMinimum && totalMinimum > 0);
+      if (isSufficient) {
+        unitsEl.classList.add('sufficient');
+        unitsEl.classList.remove('insufficient');
+      } else {
+        unitsEl.classList.remove('sufficient');
+        unitsEl.classList.add('insufficient');
+      }
     }
-    if (garmentsEl) garmentsEl.textContent = garmentCount;
-    if (colorwaysEl) colorwaysEl.textContent = colorwayCount;
+    
+    if (garmentsEl) {
+      garmentsEl.textContent = garmentCount;
+    }
+    
+    if (colorwaysEl) {
+      colorwaysEl.textContent = colorwayCount;
+    }
+    
     if (minEl) {
       minEl.textContent = totalMinimum;
-      minEl.classList.toggle('sufficient', totalUnits >= totalMinimum && totalMinimum > 0);
+      if (isSufficient) {
+        minEl.classList.add('sufficient');
+        minEl.classList.remove('insufficient');
+      } else {
+        minEl.classList.remove('sufficient');
+        minEl.classList.add('insufficient');
+      }
     }
     
     console.log(`📊 Stats Updated: ${totalUnits}/${totalMinimum} units, ${garmentCount} garments, ${colorwayCount} colorways`);
@@ -4209,33 +4237,63 @@ class V10_QuantityStudioManager {
   
   updateGarmentTotals(garmentId) {
     const garment = this.garments.get(garmentId);
-    if (!garment) return;
+    if (!garment) {
+      console.log(`⚠️ updateGarmentTotals: Garment ${garmentId} not found`);
+      return;
+    }
     
     const colorwayCount = garment.colorways.size;
     const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
     const isSufficient = garment.total >= minimum && colorwayCount > 0;
     
-    const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    console.log(`📊 Updating totals for ${garmentId}: ${garment.total}/${minimum} (${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'})`);
+    
+    // Try multiple selectors to find the card
+    const card = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`) ||
+                 document.querySelector(`[data-garment-id="${garmentId}"]`);
+    
     if (card) {
-      card.classList.toggle('v10-garment-quantity-card--complete', isSufficient);
+      // Update card complete status
+      if (isSufficient) {
+        card.classList.add('v10-garment-quantity-card--complete');
+      } else {
+        card.classList.remove('v10-garment-quantity-card--complete');
+      }
       
+      // Update minimum display
       const minEl = card.querySelector('.v10-garment-min');
-      if (minEl) minEl.textContent = `${minimum} MIN`;
+      if (minEl) {
+        minEl.textContent = `${minimum} MIN`;
+      }
       
+      // Update total display
       const totalEl = card.querySelector('.v10-garment-total strong');
-      if (totalEl) totalEl.textContent = garment.total;
+      if (totalEl) {
+        totalEl.textContent = garment.total;
+      }
       
+      // Update full total text
       const totalTextEl = card.querySelector('.v10-garment-total');
       if (totalTextEl) {
         totalTextEl.innerHTML = `TOTAL: <strong>${garment.total}</strong> / ${minimum} MIN`;
       }
       
+      // Update status indicator
       const statusEl = card.querySelector('.v10-garment-status');
       if (statusEl) {
         const statusText = isSufficient ? 'SUFFICIENT' : (colorwayCount === 0 ? 'ADD COLORWAY' : 'INSUFFICIENT');
         statusEl.textContent = statusText;
         statusEl.className = `v10-garment-status v10-garment-status--${isSufficient ? 'sufficient' : 'insufficient'}`;
+        
+        // Force style update to ensure visibility
+        statusEl.style.display = '';
+        
+        console.log(`✅ Status updated to: ${statusText}`);
+      } else {
+        console.log('⚠️ Status element not found');
       }
+    } else {
+      console.log(`⚠️ Card not found for garment ${garmentId}`);
     }
   }
   
@@ -4243,17 +4301,19 @@ class V10_QuantityStudioManager {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
+    console.log(`🗑️ Removing colorway ${colorwayId} from garment ${garmentId}`);
+    
     garment.colorways.delete(colorwayId);
     
     // Recalculate total
     garment.total = 0;
     garment.colorways.forEach(cw => {
-      garment.total += cw.subtotal;
+      garment.total += cw.subtotal || 0;
     });
     
     // If no colorways left, show the add button again
     if (garment.colorways.size === 0) {
-      const card = document.querySelector(`[data-garment-id="${garmentId}"]`);
+      const card = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
       if (card) {
         const section = card.querySelector('.v10-colorway-section');
         if (section) {
