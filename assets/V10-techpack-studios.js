@@ -3387,11 +3387,52 @@ class V10_QuantityStudioManager {
   
   initialize() {
     console.log('🚀 Initializing V10 Quantity Studio Manager');
-    this.loadGarments();
-    this.restoreQuantityData();
-    this.updateStats();
-    this.renderAllGarments();
+    
+    // Ensure modal is set up first
     this.setupColorPickerModal();
+    
+    // Load garments from state
+    this.loadGarments();
+    
+    // Restore saved quantity data
+    this.restoreQuantityData();
+    
+    // Restore saved state including colorways
+    this.loadSavedState();
+    
+    // Update statistics
+    this.updateStats();
+    
+    // Render all garments with their colorways
+    this.renderAllGarments();
+    
+    // Set up event listeners for dynamic updates
+    this.setupEventListeners();
+    
+    console.log('✅ V10 Quantity Studio Manager initialized successfully');
+  }
+  
+  setupEventListeners() {
+    // Listen for custom events
+    document.addEventListener('colorwayAdded', (e) => {
+      console.log('📢 Colorway added event received:', e.detail);
+    });
+    
+    // Ensure color picker modal works properly
+    const modal = document.getElementById('v10-color-picker-modal');
+    if (modal) {
+      // Prevent modal from closing when clicking inside
+      modal.querySelector('.v10-modal-content')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+      
+      // Close modal when clicking outside
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          this.closeColorPicker();
+        }
+      });
+    }
   }
   
   loadGarments() {
@@ -3510,8 +3551,23 @@ class V10_QuantityStudioManager {
     
     let garmentIndex = 1;
     this.garments.forEach((garment, id) => {
-      container.appendChild(this.createGarmentCard(garment, id, garmentIndex++));
+      const card = this.createGarmentCard(garment, id, garmentIndex++);
+      container.appendChild(card);
+      
+      // After adding the card, render its colorways if any exist
+      if (garment.colorways && garment.colorways.size > 0) {
+        setTimeout(() => {
+          this.renderColorways(id);
+          // Make first colorway active
+          const firstColorwayId = garment.colorways.keys().next().value;
+          if (firstColorwayId) {
+            this.switchColorwayTab(id, firstColorwayId);
+          }
+        }, 0);
+      }
     });
+    
+    console.log(`📊 Rendered ${this.garments.size} garment(s) in Quantity Studio`);
   }
   
   createGarmentCard(garment, garmentId, index) {
@@ -3639,11 +3695,11 @@ class V10_QuantityStudioManager {
                          oninput="window.v10QuantityStudio.updateVisualColorDisplay(this.value); window.v10QuantityStudio.checkBothFieldsFilled()">
                   <div style="flex: 1;">
                     <div id="v10-visual-color-display" 
-                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 8px; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 16px;">
-                      #808080
+                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 8px; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 14px;">
+                      Click to select color
                     </div>
                     <p style="color: #888; font-size: 13px;">
-                      Click the color box to select your color
+                      Visual reference for digital display only
                     </p>
                   </div>
                 </div>
@@ -3705,8 +3761,15 @@ class V10_QuantityStudioManager {
   updateVisualColorDisplay(hex) {
     const display = document.getElementById('v10-visual-color-display');
     if (display) {
-      display.textContent = hex.toUpperCase();
+      display.textContent = 'Color Selected ✓';
       display.style.background = hex;
+      // Ensure text is readable on any background
+      const rgb = parseInt(hex.slice(1), 16);
+      const r = (rgb >> 16) & 255;
+      const g = (rgb >> 8) & 255;
+      const b = rgb & 255;
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      display.style.color = brightness > 128 ? '#000' : '#fff';
     }
     this.selectedVisualColor = hex;
   }
@@ -3814,8 +3877,9 @@ class V10_QuantityStudioManager {
     colorPicker.value = '#808080';
     const display = document.getElementById('v10-visual-color-display');
     if (display) {
-      display.textContent = '#808080';
+      display.textContent = 'Click to select color';
       display.style.background = '#808080';
+      display.style.color = '#fff';
     }
     
     this.closeColorPicker();
@@ -3906,7 +3970,10 @@ class V10_QuantityStudioManager {
   
   addColorway(garmentId, colorwayData) {
     const garment = this.garments.get(garmentId);
-    if (!garment) return;
+    if (!garment) {
+      console.error(`Garment ${garmentId} not found`);
+      return;
+    }
     
     const colorwayId = `colorway-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     garment.colorways.set(colorwayId, {
@@ -3916,14 +3983,36 @@ class V10_QuantityStudioManager {
       designReference: ''
     });
     
+    console.log(`✅ Added colorway ${colorwayData.name} to garment ${garmentId}`);
+    
+    // Update the UI immediately
+    this.updateColorwayUI(garmentId);
+    
+    // Save state
+    this.saveState();
+  }
+  
+  updateColorwayUI(garmentId) {
     // Show colorway content area
     const contentArea = document.getElementById(`colorways-${garmentId}`);
-    if (contentArea) contentArea.style.display = '';
+    if (contentArea) {
+      contentArea.style.display = '';
+    }
     
+    // Update all UI components
     this.updateStats();
     this.renderColorways(garmentId);
     this.updateGarmentTotals(garmentId);
-    this.saveState();
+    
+    // Force re-render of the garment card if it exists
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+    if (garmentCard) {
+      // Trigger any necessary UI updates
+      const event = new CustomEvent('colorwayAdded', { detail: { garmentId } });
+      garmentCard.dispatchEvent(event);
+    }
+    
+    console.log(`🔄 Updated UI for garment ${garmentId}`);
   }
   
   renderColorways(garmentId) {
