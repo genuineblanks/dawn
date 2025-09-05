@@ -3694,15 +3694,31 @@ class V10_QuantityStudioManager {
     }
     
     // Determine what to show: fabric or sample reference
-    const subtitle = garment.sampleReference || garment.fabricType || 'No selection';
+    const subtitle = garment.sampleReference || garment.fabricType || 'with-design-applied';
     
+    // Use professional card layout from the start
     div.innerHTML = `
-      <div class="v10-garment-header">
-        <div>
-          <div class="v10-garment-title">Garment ${index} - <span>${garment.type}</span></div>
-          <div class="v10-garment-subtitle">${subtitle}</div>
+      <div class="garment-quantity-card__header">
+        <div class="garment-quantity-card__title-section">
+          <h3 class="garment-quantity-card__title">
+            <span class="garment-quantity-card__number">Garment ${index}</span> - 
+            <span class="garment-quantity-card__type">${garment.type}</span>
+          </h3>
+          <div class="garment-quantity-card__subtitle">
+            <span>${subtitle}</span>
+          </div>
         </div>
-        <div class="v10-garment-min">${minimum} MIN</div>
+        <div class="garment-quantity-card__stats">
+          <div class="garment-stat">
+            <div class="garment-stat__value garment-total-units ${isSufficient ? 'sufficient' : 'insufficient'}" id="total-${garmentId}">
+              ${garment.total || 0}
+            </div>
+            <div class="garment-stat__label">TOTAL</div>
+          </div>
+          <div class="garment-stat__value" style="color: #f59e0b; font-weight: 700; font-size: 1rem;">
+            ${minimum} MIN
+          </div>
+        </div>
       </div>
       
       <div class="v10-colorway-section">
@@ -3727,7 +3743,7 @@ class V10_QuantityStudioManager {
               padding: 10px 16px;
               background: rgba(255,255,255,0.05);
               border: 1px dashed rgba(255,255,255,0.3);
-              border-radius: 4px;
+              border-radius: 0;
               color: rgba(255,255,255,0.8);
               font-size: 13px;
               font-weight: 500;
@@ -3784,7 +3800,7 @@ class V10_QuantityStudioManager {
         <div class="v10-modal-content v10-color-picker-content" style="background: #1a1a1a !important; max-width: 500px;">
           <div class="v10-modal-header" style="background: #252525; padding: 20px; border-bottom: 1px solid #404040;">
             <h2 style="color: #ffffff;">Add Colorway</h2>
-            <button type="button" class="v10-modal-close" onclick="window.v10QuantityStudio.closeColorPicker()" style="background: #333333; padding: 8px; border-radius: 8px;">
+            <button type="button" class="v10-modal-close" onclick="window.v10QuantityStudio.closeColorPicker()" style="background: #333333; padding: 8px; border-radius: 0;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -3798,11 +3814,11 @@ class V10_QuantityStudioManager {
               <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
                 Step 1: Enter Pantone/Lab-Dip Code (Required)
               </h3>
-              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px;">
+              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 0; padding: 16px;">
                 <input type="text" 
                        id="v10-color-code" 
                        placeholder="e.g., 19-4005 TPX, TCX-2134, or LAB-001"
-                       style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 6px; color: #fff; font-size: 14px;"
+                       style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 0; color: #fff; font-size: 14px;"
                        oninput="window.v10QuantityStudio.checkBothFieldsFilled()">
                 <p style="color: #888; font-size: 12px; margin-top: 8px;">
                   Enter the official Pantone TPX/TCX code or your Lab-Dip reference code
@@ -3821,11 +3837,11 @@ class V10_QuantityStudioManager {
                   <input type="color" 
                          id="v10-visual-color-picker" 
                          value="#808080"
-                         style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 8px; cursor: pointer; background: transparent;"
+                         style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 0; cursor: pointer; background: transparent;"
                          oninput="window.v10QuantityStudio.updateVisualColorDisplay(this.value); window.v10QuantityStudio.checkBothFieldsFilled()">
                   <div style="flex: 1;">
                     <div id="v10-visual-color-display" 
-                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 8px; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 14px;">
+                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 0; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 14px;">
                       Click to select color
                     </div>
                     <p style="color: #888; font-size: 13px;">
@@ -3835,7 +3851,7 @@ class V10_QuantityStudioManager {
                 </div>
               </div>
               
-              <p style="color: #666; font-size: 11px; margin-top: 16px; padding: 12px; background: #0f0f0f; border-radius: 6px; border-left: 3px solid #f59e0b;">
+              <p style="color: #666; font-size: 11px; margin-top: 16px; padding: 12px; background: #0f0f0f; border-radius: 0; border-left: 3px solid #f59e0b;">
                 <strong>Note:</strong> Both Pantone code and color selection are required. The visual color helps with digital representation while the Pantone code ensures accurate production matching.
               </p>
             </div>
@@ -3845,7 +3861,7 @@ class V10_QuantityStudioManager {
               <button type="button" 
                       class="v10-btn v10-btn--secondary" 
                       onclick="window.v10QuantityStudio.closeColorPicker()"
-                      style="flex: 1; padding: 14px; background: #2a2a2a; color: #9ca3af; border: 1px solid #404040; border-radius: 8px; font-weight: 700;">
+                      style="flex: 1; padding: 14px; background: #2a2a2a; color: #9ca3af; border: 1px solid #404040; border-radius: 0; font-weight: 700;">
                 Cancel
               </button>
               <button type="button" 
@@ -3853,7 +3869,7 @@ class V10_QuantityStudioManager {
                       class="v10-btn v10-btn--primary" 
                       onclick="window.v10QuantityStudio.applyColorway()"
                       disabled
-                      style="flex: 1; padding: 14px; background: #6b7280; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; cursor: not-allowed;">
+                      style="flex: 1; padding: 14px; background: #6b7280; color: #ffffff; border: none; border-radius: 0; font-weight: 700; cursor: not-allowed;">
                 Add Colorway
               </button>
             </div>
@@ -4025,7 +4041,7 @@ class V10_QuantityStudioManager {
                 padding: 10px 16px;
                 background: rgba(255,255,255,0.05);
                 border: 1px dashed rgba(255,255,255,0.3);
-                border-radius: 4px;
+                border-radius: 0;
                 color: rgba(255,255,255,0.8);
                 font-size: 13px;
                 font-weight: 500;
@@ -4099,13 +4115,14 @@ class V10_QuantityStudioManager {
         tab.style.background = `linear-gradient(135deg, ${colorway.color}22, ${colorway.color}11)`;
         tab.style.borderLeft = `3px solid ${colorway.color}`;
         tab.style.minWidth = '180px';
+        tab.style.position = 'relative';
         
         tab.innerHTML = `
           <div class="v10-colorway-tab-content" style="display: flex; align-items: center; gap: 10px; width: 100%;">
             <div class="v10-colorway-tab-color-indicator" style="
               width: 24px; 
               height: 24px; 
-              border-radius: 4px; 
+              border-radius: 0; 
               background-color: ${colorway.color};
               border: 2px solid rgba(255,255,255,0.2);
               flex-shrink: 0;
@@ -4119,12 +4136,20 @@ class V10_QuantityStudioManager {
               ">${colorway.subtotal} / ${perColorwayMin} units</div>
             </div>
             <button type="button" class="v10-colorway-tab-remove" style="
-              background: rgba(255,255,255,0.1);
-              border: none;
-              border-radius: 3px;
-              padding: 4px;
+              position: absolute;
+              top: -6px;
+              right: -6px;
+              width: 20px;
+              height: 20px;
+              background: #ef4444;
+              border: 2px solid #1a1a1a;
+              border-radius: 0;
+              padding: 0;
               cursor: pointer;
-              transition: all 0.2s;
+              display: none;
+              align-items: center;
+              justify-content: center;
+              color: white;
             " onclick="event.stopPropagation(); window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -4133,6 +4158,16 @@ class V10_QuantityStudioManager {
             </button>
           </div>
         `;
+        
+        // Show/hide remove button on hover
+        tab.onmouseenter = () => {
+          const removeBtn = tab.querySelector('.v10-colorway-tab-remove');
+          if (removeBtn) removeBtn.style.display = 'flex';
+        };
+        tab.onmouseleave = () => {
+          const removeBtn = tab.querySelector('.v10-colorway-tab-remove');
+          if (removeBtn) removeBtn.style.display = 'none';
+        };
         
         tab.onclick = (e) => {
           if (!e.target.closest('.v10-colorway-tab-remove')) {
@@ -4285,9 +4320,14 @@ class V10_QuantityStudioManager {
       garment.total += cw.subtotal;
     });
     
-    // Update tab count
+    // Update tab count with minimum shown
+    const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
+    const isSufficient = colorway.subtotal >= perColorwayMin;
     const tab = document.querySelector(`#tabs-${garmentId} [data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
-    if (tab) tab.textContent = `${colorway.subtotal} units`;
+    if (tab) {
+      tab.textContent = `${colorway.subtotal} / ${perColorwayMin} units`;
+      tab.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
+    }
     
     // Update subtotal in content
     const subtotalEl = document.querySelector(`#colorways-${garmentId} .v10-colorway-subtotal strong`);
@@ -5042,7 +5082,7 @@ class V10_QuantityCalculator {
       background: #10b981;
       color: white;
       padding: 0.5rem 0.75rem;
-      border-radius: 6px;
+      border-radius: 0;
       font-size: 0.875rem;
       display: flex;
       align-items: center;
@@ -9576,7 +9616,7 @@ class V10_GarmentStudio {
     
     gridRow.innerHTML = `
       <div class="size-label" style="background: ${colorwayData.color}; color: white; display: flex; align-items: center; gap: 8px;">
-        <div style="width: 12px; height: 12px; background: ${colorwayData.color}; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3);"></div>
+        <div style="width: 12px; height: 12px; background: ${colorwayData.color}; border-radius: 0; border: 1px solid rgba(255,255,255,0.3);"></div>
         <span style="font-size: 11px; font-weight: 600; text-overflow: ellipsis; overflow: hidden;">${colorwayData.colorName}</span>
       </div>
       ${['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'].map(size => `
@@ -18652,7 +18692,7 @@ function showShippingGuidance() {
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;" class="guidance-cards-grid">
       <!-- Air Freight Card -->
       <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
-        <div style="background: #3b82f6; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+        <div style="background: #3b82f6; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
           Ideal for samples & urgent deliveries
         </div>
         <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">Air Freight</h3>
@@ -18666,7 +18706,7 @@ function showShippingGuidance() {
       
       <!-- Sea Freight Card -->
       <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
-        <div style="background: #059669; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+        <div style="background: #059669; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
           Best for bulk orders (500+ units) & global shipments
         </div>
         <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">Sea Freight</h3>
@@ -18682,7 +18722,7 @@ function showShippingGuidance() {
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;" class="guidance-cards-grid">
       <!-- With Insurance Card -->
       <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
-        <div style="background: #f59e0b; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+        <div style="background: #f59e0b; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
           Recommended for valuable or high-volume orders
         </div>
         <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">With Insurance</h3>
@@ -18696,7 +18736,7 @@ function showShippingGuidance() {
       
       <!-- No Insurance Card -->
       <div style="background: var(--v10-bg-secondary); border: 1px solid var(--v10-border-primary); border-radius: var(--v10-radius-lg); padding: 1.5rem; position: relative;">
-        <div style="background: #6b7280; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
+        <div style="background: #6b7280; color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0; position: absolute; top: 1rem; right: 1rem; white-space: nowrap;">
           Suitable only for low-value or test runs
         </div>
         <h3 style="color: var(--v10-text-primary); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; margin-top: 0.5rem;">No Insurance</h3>

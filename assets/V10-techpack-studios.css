@@ -419,7 +419,7 @@ button:focus,
 .simple-step-circle {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--v10-bg-secondary);
   border: 2px solid var(--v10-border-primary);
   color: var(--v10-text-muted);
@@ -605,7 +605,7 @@ button:focus,
   width: 18px;
   height: 18px;
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
+  border-radius: 0;
   font-size: 12px;
   font-weight: 600;
   margin-left: var(--v10-space-2);
@@ -2146,7 +2146,7 @@ body[style*="overflow: hidden"] {
   color: white;
   font-size: var(--v10-text-sm);
   font-weight: 600;
-  border-radius: 50%;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2297,7 +2297,7 @@ body[style*="overflow: hidden"] {
 .v10-process-number {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--v10-accent-primary);
   color: white;
   display: flex;
@@ -3576,7 +3576,7 @@ body[style*="overflow: hidden"] {
 .garment-color-circle {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
   box-shadow: var(--v10-shadow-sm);
 }
@@ -3922,7 +3922,7 @@ body[style*="overflow: hidden"] {
   height: 20px;
   background: transparent;
   border: 1px solid var(--v10-border-primary);
-  border-radius: 50%;
+  border-radius: 0;
   color: var(--v10-text-secondary);
   cursor: pointer;
   transition: var(--v10-transition);
@@ -4206,7 +4206,7 @@ body[style*="overflow: hidden"] {
 .garment-summary__color-circle {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
   flex-shrink: 0;
 }
@@ -5910,7 +5910,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .pantone-circle {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
 }
 
@@ -5975,7 +5975,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .labdip-color-circle {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: help;
@@ -6298,7 +6298,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .assignment-item__color-chip {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
   position: relative;
 }
@@ -6386,7 +6386,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .collection-item__color {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
 }
 
@@ -6399,7 +6399,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   height: 40px;
   background: var(--v10-accent-primary);
   color: white;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
 }
 
@@ -6563,7 +6563,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .labdip-color-circle {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid var(--v10-border-primary);
   display: inline-block;
 }
@@ -6701,7 +6701,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .garment-color-circle {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
 }
 
@@ -6789,7 +6789,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 .assigned-badge__color {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid var(--v10-border-primary);
 }
 
@@ -7112,7 +7112,7 @@ div[class*="circle"][style*="background-color"],
 .v10-colorway-icon {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--v10-accent-primary);
   flex-shrink: 0;
 }
@@ -8096,7 +8096,7 @@ div[class*="circle"][style*="background-color"],
 .colorway-color-preview {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-secondary);
   flex-shrink: 0;
   position: relative;
@@ -8107,7 +8107,7 @@ div[class*="circle"][style*="background-color"],
   content: '';
   position: absolute;
   inset: 2px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--color, #3b82f6);
 }
 
@@ -8166,7 +8166,7 @@ div[class*="circle"][style*="background-color"],
   width: 40px;
   height: 40px;
   background: rgba(59, 130, 246, 0.1);
-  border-radius: 50%;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8607,7 +8607,7 @@ div[class*="circle"][style*="background-color"],
 .chart-legend-color {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--v10-accent-primary);
 }
 
@@ -8665,7 +8665,7 @@ div[class*="circle"][style*="background-color"],
   width: 32px;
   height: 32px;
   background: rgba(245, 158, 11, 0.1);
-  border-radius: 50%;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8855,7 +8855,7 @@ div[class*="circle"][style*="background-color"],
 .v10-garment-color {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-light);
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -8869,7 +8869,7 @@ div[class*="circle"][style*="background-color"],
   left: -1px;
   right: -1px;
   bottom: -1px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -8923,7 +8923,7 @@ div[class*="circle"][style*="background-color"],
 .v10-swatch-color {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-light);
   flex-shrink: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -9258,7 +9258,7 @@ div[class*="circle"][style*="background-color"],
 .v10-cost-item .v10-garment-color {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 0;
   flex-shrink: 0;
   border: 1px solid var(--v10-border-primary);
 }
@@ -9621,6 +9621,18 @@ div[class*="circle"][style*="background-color"],
 }
 
 
+/* Badge Styles - Linear Design */
+.v10-garment-min {
+  background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%);
+  padding: 8px 16px;
+  border: 1px solid #10b981;
+  border-radius: 0; /* Linear design */
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #10b981;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
 /* Colorway Management - keeping relevant parts */
 .v10-colorway-section {
   margin-top: var(--v10-space-4);
@@ -9758,7 +9770,7 @@ div[class*="circle"][style*="background-color"],
 
 .v10-garment-status {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 0;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -9830,7 +9842,7 @@ div[class*="circle"][style*="background-color"],
 .v10-color-preset-swatch {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 0;
   border: 2px solid var(--v10-border-primary);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -9880,7 +9892,7 @@ div[class*="circle"][style*="background-color"],
   padding: 10px;
   background: var(--v10-bg-primary);
   border: 1px solid var(--v10-border-primary);
-  border-radius: 6px;
+  border-radius: 0;
   color: var(--v10-text-primary);
   font-size: 0.95rem;
 }
@@ -9899,7 +9911,7 @@ div[class*="circle"][style*="background-color"],
   width: 50px;
   height: 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -10054,7 +10066,7 @@ div[class*="circle"][style*="background-color"],
   padding: 10px;
   background: var(--v10-bg-secondary);
   border: 1px solid var(--v10-border-primary);
-  border-radius: 6px;
+  border-radius: 0;
   color: var(--v10-text-primary);
   font-size: 0.95rem;
 }
@@ -10095,7 +10107,7 @@ div[class*="circle"][style*="background-color"],
   padding: 8px;
   background: var(--v10-bg-primary);
   border: 1px solid var(--v10-border-primary);
-  border-radius: 6px;
+  border-radius: 0;
   color: var(--v10-text-primary);
   text-align: center;
   font-size: 0.95rem;
@@ -10491,29 +10503,7 @@ div[class*="circle"][style*="background-color"],
   margin: 0 4px;
 }
 
-/* Remove Button Icon Fix */
-.v10-colorway-tab-remove {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 6px;
-  padding: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.v10-colorway-tab-remove:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.v10-colorway-tab-remove svg {
-  width: 12px;
-  height: 12px;
-  stroke: #ef4444;
-}
+/* Remove Button Icon Fix - Removed duplicate, using inline styles in JS instead */
 
 /* Design Reference Input */
 .v10-design-reference-input {
@@ -10577,7 +10567,7 @@ div[class*="circle"][style*="background-color"],
 .v10-size-color-indicator {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 0;
   position: absolute;
   top: 4px;
   right: 4px;
