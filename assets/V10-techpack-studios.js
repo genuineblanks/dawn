@@ -3539,6 +3539,38 @@ class V10_QuantityStudioManager {
     }
   }
   
+  // Get the minimum required PER colorway (not total)
+  getPerColorwayMinimum(garmentType, colorwayCount) {
+    const type = garmentType?.toLowerCase() || 'default';
+    const minimums = this.minimums[type] || this.minimums.default;
+    
+    if (colorwayCount <= 1) {
+      return minimums.single;
+    } else {
+      return minimums.multi;
+    }
+  }
+  
+  // Check if ALL colorways meet their individual minimums
+  checkColorwaysSufficient(garmentId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment || !garment.colorways || garment.colorways.size === 0) {
+      return false;
+    }
+    
+    const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
+    
+    // Check if EVERY colorway meets the minimum
+    let allSufficient = true;
+    garment.colorways.forEach(colorway => {
+      if (!colorway.subtotal || colorway.subtotal < perColorwayMin) {
+        allSufficient = false;
+      }
+    });
+    
+    return allSufficient;
+  }
+  
   calculateTotalMinimum() {
     let total = 0;
     this.garments.forEach(garment => {
@@ -3687,11 +3719,27 @@ class V10_QuantityStudioManager {
             <div class="v10-colorway-tabs" id="tabs-${garmentId}">
               <!-- Colorway tabs will be added here -->
             </div>
-            <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway">
+            <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway" style="
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              padding: 8px 12px;
+              background: rgba(255,255,255,0.05);
+              border: 1px dashed rgba(255,255,255,0.3);
+              border-radius: 4px;
+              color: rgba(255,255,255,0.8);
+              font-size: 12px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.2s;
+              white-space: nowrap;
+            " onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.5)';" 
+               onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.3)';">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
+              <span>Add Colorway</span>
             </button>
           </div>
         `}
@@ -3965,11 +4013,27 @@ class V10_QuantityStudioManager {
               <div class="v10-colorway-tabs" id="tabs-${garmentId}">
                 <!-- Colorway tabs will be added here -->
               </div>
-              <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway">
+              <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway" style="
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 12px;
+                background: rgba(255,255,255,0.05);
+                border: 1px dashed rgba(255,255,255,0.3);
+                border-radius: 4px;
+                color: rgba(255,255,255,0.8);
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+              " onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.5)';" 
+                 onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.3)';">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
+                <span>Add Colorway</span>
               </button>
             </div>
             <div class="v10-colorways-content" id="colorways-${garmentId}">
@@ -4019,19 +4083,47 @@ class V10_QuantityStudioManager {
         tab.dataset.colorwayId = colorwayId;
         if (tabIndex === 0) tab.classList.add('active');
         
+        // Check if this colorway meets minimum
+        const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
+        const isSufficient = colorway.subtotal >= perColorwayMin;
+        
+        // Enhanced tab with color background and better styling
+        tab.style.background = `linear-gradient(135deg, ${colorway.color}22, ${colorway.color}11)`;
+        tab.style.borderLeft = `3px solid ${colorway.color}`;
+        tab.style.minWidth = '180px';
+        
         tab.innerHTML = `
-          <div class="v10-colorway-tab-color" style="background-color: ${colorway.color}"></div>
-          <div class="v10-colorway-tab-info">
-            <div class="v10-colorway-tab-name">${colorway.name}</div>
-            <div class="v10-colorway-tab-count">${colorway.subtotal} units</div>
+          <div class="v10-colorway-tab-content" style="display: flex; align-items: center; gap: 10px; width: 100%;">
+            <div class="v10-colorway-tab-color-indicator" style="
+              width: 24px; 
+              height: 24px; 
+              border-radius: 4px; 
+              background-color: ${colorway.color};
+              border: 2px solid rgba(255,255,255,0.2);
+              flex-shrink: 0;
+            "></div>
+            <div class="v10-colorway-tab-info" style="flex: 1; text-align: left;">
+              <div class="v10-colorway-tab-name" style="font-weight: 600; font-size: 12px;">${colorway.name}</div>
+              <div class="v10-colorway-tab-count" style="
+                font-size: 11px; 
+                opacity: 0.8;
+                color: ${isSufficient ? '#00ff88' : '#ff6b6b'};
+              ">${colorway.subtotal} / ${perColorwayMin} units</div>
+            </div>
+            <button type="button" class="v10-colorway-tab-remove" style="
+              background: rgba(255,255,255,0.1);
+              border: none;
+              border-radius: 3px;
+              padding: 4px;
+              cursor: pointer;
+              transition: all 0.2s;
+            " onclick="event.stopPropagation(); window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
           </div>
-          <button type="button" class="v10-colorway-tab-remove" 
-                  onclick="event.stopPropagation(); window.v10QuantityStudio.removeColorway('${garmentId}', '${colorwayId}')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
         `;
         
         tab.onclick = (e) => {
@@ -4053,10 +4145,33 @@ class V10_QuantityStudioManager {
   }
   
   switchColorwayTab(garmentId, colorwayId) {
-    // Update active tab
+    // Update active tab with enhanced visual feedback
     const tabs = document.querySelectorAll(`#tabs-${garmentId} .v10-colorway-tab`);
+    const garment = this.garments.get(garmentId);
+    
     tabs.forEach(tab => {
-      tab.classList.toggle('active', tab.dataset.colorwayId === colorwayId);
+      const isActive = tab.dataset.colorwayId === colorwayId;
+      tab.classList.toggle('active', isActive);
+      
+      // Enhanced active state styling
+      if (isActive) {
+        const colorway = garment?.colorways.get(colorwayId);
+        if (colorway) {
+          tab.style.background = `linear-gradient(135deg, ${colorway.color}33, ${colorway.color}22)`;
+          tab.style.borderLeft = `4px solid ${colorway.color}`;
+          tab.style.boxShadow = `0 2px 8px ${colorway.color}33`;
+          tab.style.transform = 'scale(1.02)';
+        }
+      } else {
+        const tabColorwayId = tab.dataset.colorwayId;
+        const colorway = garment?.colorways.get(tabColorwayId);
+        if (colorway) {
+          tab.style.background = `linear-gradient(135deg, ${colorway.color}22, ${colorway.color}11)`;
+          tab.style.borderLeft = `3px solid ${colorway.color}`;
+          tab.style.boxShadow = 'none';
+          tab.style.transform = 'scale(1)';
+        }
+      }
     });
     
     // Render content for selected colorway
@@ -4243,10 +4358,21 @@ class V10_QuantityStudioManager {
     }
     
     const colorwayCount = garment.colorways.size;
-    const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
-    const isSufficient = garment.total >= minimum && colorwayCount > 0;
+    const totalMinimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
+    const perColorwayMin = this.getPerColorwayMinimum(garment.type, colorwayCount);
     
-    console.log(`📊 Updating totals for ${garmentId}: ${garment.total}/${minimum} (${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'})`);
+    // NEW LOGIC: Check if ALL colorways meet their individual minimums
+    const isSufficient = this.checkColorwaysSufficient(garmentId);
+    
+    // Log detailed info for debugging
+    console.log(`📊 Updating totals for ${garmentId}:`);
+    console.log(`   Total: ${garment.total}/${totalMinimum}`);
+    console.log(`   Per colorway min: ${perColorwayMin}`);
+    garment.colorways.forEach((cw, id) => {
+      const meets = cw.subtotal >= perColorwayMin;
+      console.log(`   Colorway ${cw.name}: ${cw.subtotal} units (${meets ? '✓' : '✗'})`);
+    });
+    console.log(`   Status: ${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'}`);
     
     // Try multiple selectors to find the card
     const card = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`) ||
@@ -4260,10 +4386,14 @@ class V10_QuantityStudioManager {
         card.classList.remove('v10-garment-quantity-card--complete');
       }
       
-      // Update minimum display
+      // Update minimum display to show per-colorway requirement
       const minEl = card.querySelector('.v10-garment-min');
       if (minEl) {
-        minEl.textContent = `${minimum} MIN`;
+        if (colorwayCount > 1) {
+          minEl.textContent = `${perColorwayMin} MIN/COLOR`;
+        } else {
+          minEl.textContent = `${perColorwayMin} MIN`;
+        }
       }
       
       // Update total display
@@ -4275,7 +4405,7 @@ class V10_QuantityStudioManager {
       // Update full total text
       const totalTextEl = card.querySelector('.v10-garment-total');
       if (totalTextEl) {
-        totalTextEl.innerHTML = `TOTAL: <strong>${garment.total}</strong> / ${minimum} MIN`;
+        totalTextEl.innerHTML = `TOTAL: <strong>${garment.total}</strong> / ${totalMinimum} MIN`;
       }
       
       // Update status indicator
