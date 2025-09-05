@@ -3409,8 +3409,18 @@ class V10_QuantityStudioManager {
     });
     
     this.garments.clear();
+    
+    console.log('📦 Loading garments from V10_State:', V10_State.garments.size);
+    
     V10_State.garments.forEach((garment, id) => {
-      if (garment.type && (garment.fabricType || garment.sampleReference)) {
+      console.log(`  Checking garment ${id}:`, {
+        type: garment.type,
+        fabricType: garment.fabricType,
+        sampleReference: garment.sampleReference
+      });
+      
+      // Only require type to be set - fabric/sample can be added later
+      if (garment.type) {
         const garmentData = {
           ...garment,
           colorways: existingColorways.get(id) || new Map(),
@@ -3424,8 +3434,13 @@ class V10_QuantityStudioManager {
         }
         
         this.garments.set(id, garmentData);
+        console.log(`  ✅ Added garment ${id} to quantity studio`);
+      } else {
+        console.log(`  ❌ Skipped garment ${id} - no type set`);
       }
     });
+    
+    console.log(`📊 Loaded ${this.garments.size} garments into quantity studio`);
   }
   
   restoreQuantityData() {
