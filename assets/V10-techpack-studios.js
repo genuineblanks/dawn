@@ -3321,7 +3321,10 @@ class V10_QuantityStudioManager {
       const saved = sessionStorage.getItem('v10_quantity_studio_state');
       if (saved) {
         const state = JSON.parse(saved);
-        console.log('📦 Loading saved quantity studio state:', state);
+        console.log('📦 Loading saved quantity studio state');
+        
+        // Clear existing and restore from saved state
+        this.garments.clear();
         
         // Restore garments with colorways
         if (state.garments) {
@@ -3331,16 +3334,23 @@ class V10_QuantityStudioManager {
               colorways: new Map()
             };
             
-            // Restore colorways
+            // Restore colorways with their quantities
             if (garmentData.colorways && Array.isArray(garmentData.colorways)) {
               garmentData.colorways.forEach(colorway => {
+                // Ensure quantities object exists
+                if (!colorway.quantities) {
+                  colorway.quantities = {};
+                }
                 garmentState.colorways.set(colorway.id, colorway);
               });
             }
             
             this.garments.set(garmentData.id, garmentState);
+            console.log(`  Restored garment ${garmentData.id}: ${garmentState.colorways.size} colorways, ${garmentData.total} units`);
           });
         }
+        
+        console.log(`📦 Restored ${this.garments.size} garments from saved state`);
       }
     } catch (error) {
       console.error('Error loading saved state:', error);
@@ -3375,7 +3385,7 @@ class V10_QuantityStudioManager {
     // Make this idempotent - safe to call multiple times
     if (this.initialized) {
       console.log('♻️ V10 Quantity Studio Manager already initialized, refreshing view...');
-      // IMPORTANT: Reload garments from V10_State to get fresh data
+      // IMPORTANT: Reload garments from V10_State but preserve colorways/quantities
       this.loadGarments();
       this.renderAllGarments();
       this.updateStats();
@@ -3387,9 +3397,11 @@ class V10_QuantityStudioManager {
     // Set up modal first
     this.setupColorPickerModal();
     
-    // Load saved state and garments
-    this.loadSavedState();
+    // Load garments first to get the structure
     this.loadGarments();
+    
+    // Then merge with any saved state (this will add colorways/quantities to existing garments)
+    this.mergeSavedState();
     
     // Update statistics
     this.updateStats();
@@ -3401,19 +3413,60 @@ class V10_QuantityStudioManager {
     console.log('✅ V10 Quantity Studio Manager initialized successfully');
   }
   
+  mergeSavedState() {
+    try {
+      const saved = sessionStorage.getItem('v10_quantity_studio_state');
+      if (saved) {
+        const state = JSON.parse(saved);
+        console.log('📦 Merging saved quantity studio state');
+        
+        // Merge saved state with current garments
+        if (state.garments) {
+          state.garments.forEach(savedGarment => {
+            const currentGarment = this.garments.get(savedGarment.id);
+            if (currentGarment) {
+              // Merge colorways
+              if (savedGarment.colorways && Array.isArray(savedGarment.colorways)) {
+                savedGarment.colorways.forEach(colorway => {
+                  if (!colorway.quantities) {
+                    colorway.quantities = {};
+                  }
+                  currentGarment.colorways.set(colorway.id, colorway);
+                });
+              }
+              
+              // Update total
+              currentGarment.total = savedGarment.total || 0;
+              
+              console.log(`  Merged state for garment ${savedGarment.id}: ${currentGarment.colorways.size} colorways`);
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error merging saved state:', error);
+    }
+  }
+  
   
   loadGarments() {
-    // Keep existing colorways when reloading garments
-    const existingColorways = new Map();
+    // IMPORTANT: Save existing colorways and quantities BEFORE clearing
+    const existingData = new Map();
     this.garments.forEach((garment, id) => {
       if (garment.colorways && garment.colorways.size > 0) {
-        existingColorways.set(id, garment.colorways);
+        // Save both colorways and the total
+        existingData.set(id, {
+          colorways: garment.colorways,
+          total: garment.total || 0
+        });
       }
     });
     
+    // Now safe to clear
     this.garments.clear();
     
     console.log('📦 Loading garments from V10_State:', V10_State.garments.size);
+    console.log('📦 Preserving data for:', existingData.size, 'garments');
     
     V10_State.garments.forEach((garment, id) => {
       console.log(`  Checking garment ${id}:`, {
@@ -3424,12 +3477,27 @@ class V10_QuantityStudioManager {
       
       // Only require type to be set - fabric/sample can be added later
       if (garment.type) {
+        // Get preserved data for this garment
+        const preserved = existingData.get(id);
+        
         const garmentData = {
           ...garment,
-          colorways: existingColorways.get(id) || new Map(),
+          colorways: preserved?.colorways || new Map(),
           quantities: {},
-          total: 0
+          total: preserved?.total || 0
         };
+        
+        // Recalculate total from colorways if we have them
+        if (garmentData.colorways.size > 0) {
+          let recalculatedTotal = 0;
+          garmentData.colorways.forEach(colorway => {
+            if (colorway.quantities) {
+              colorway.subtotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+              recalculatedTotal += colorway.subtotal;
+            }
+          });
+          garmentData.total = recalculatedTotal;
+        }
         
         // Check if design reference should be enabled
         if (garment.sampleReference && garment.sampleReference.toLowerCase().includes('design')) {
@@ -3437,7 +3505,7 @@ class V10_QuantityStudioManager {
         }
         
         this.garments.set(id, garmentData);
-        console.log(`  ✅ Added garment ${id} to quantity studio`);
+        console.log(`  ✅ Added garment ${id} to quantity studio (${garmentData.colorways.size} colorways, ${garmentData.total} units)`);
       } else {
         console.log(`  ❌ Skipped garment ${id} - no type set`);
       }
@@ -3852,26 +3920,60 @@ class V10_QuantityStudioManager {
     const quantityStudioContainer = document.getElementById('quantities-studio');
     const isQuantityView = quantityStudioContainer && quantityStudioContainer.style.display !== 'none';
     
-    if (isQuantityView) {
-      // We're in quantity studio - need to refresh the garment card
-      const garmentCard = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
-      if (garmentCard) {
-        // Re-render the colorways section of this specific card
-        this.renderColorways(garmentId);
-        
-        // Make sure the first colorway is active
-        if (garment.colorways && garment.colorways.size > 0) {
-          const firstColorwayId = garment.colorways.keys().next().value;
-          this.switchColorwayTab(garmentId, firstColorwayId);
+    // Always try to update the garment card if it exists
+    const garmentCard = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
+    
+    if (garmentCard) {
+      // Check if this is the first colorway being added
+      const wasEmpty = garmentCard.querySelector('.v10-add-colorway-btn');
+      const hasColorways = garment.colorways && garment.colorways.size > 0;
+      
+      if (wasEmpty && hasColorways) {
+        // First colorway added - need to rebuild the colorway section
+        const colorwaySection = garmentCard.querySelector('.v10-colorway-section');
+        if (colorwaySection) {
+          colorwaySection.innerHTML = `
+            <div class="v10-colorway-tabs-container">
+              <div class="v10-colorway-tabs" id="tabs-${garmentId}">
+                <!-- Colorway tabs will be added here -->
+              </div>
+              <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="v10-colorways-content" id="colorways-${garmentId}">
+              <!-- Colorway content will be added here -->
+            </div>
+          `;
         }
       }
+      
+      // Re-render the colorways
+      this.renderColorways(garmentId);
+      
+      // Make sure the first or newest colorway is active
+      if (garment.colorways && garment.colorways.size > 0) {
+        // Get the newest colorway (last one added)
+        const colorwayIds = Array.from(garment.colorways.keys());
+        const activeColorwayId = colorwayIds[colorwayIds.length - 1];
+        this.switchColorwayTab(garmentId, activeColorwayId);
+      }
+      
+      // Update the garment footer totals
+      this.updateGarmentTotals(garmentId);
+    } else if (isQuantityView) {
+      // Card doesn't exist but we're in quantity view - might need to re-render all
+      console.log(`⚠️ Garment card not found for ${garmentId} in quantity view, triggering full refresh`);
+      this.renderAllGarments();
     }
     
     // Update statistics
     this.updateStats();
-    this.updateGarmentTotals(garmentId);
     
-    console.log(`🔄 Updated UI for garment ${garmentId} (Quantity View: ${isQuantityView})`);
+    console.log(`🔄 Updated UI for garment ${garmentId} (View: ${isQuantityView ? 'Quantity' : 'Other'}, Card: ${!!garmentCard})`);
   }
   
   renderColorways(garmentId) {
