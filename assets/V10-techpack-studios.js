@@ -3295,6 +3295,7 @@ class V10_StudioNavigator {
 
 class V10_QuantityStudioManager {
   constructor() {
+    this.initialized = false;
     this.garments = new Map();
     this.minimums = {
       't-shirt': { single: 100, multi: 75 },
@@ -3310,24 +3311,9 @@ class V10_QuantityStudioManager {
       'default': { single: 75, multi: 50 }
     };
     
-    // Color presets for visual guidance
-    this.colorPresets = [
-      { name: 'Black', hex: '#000000', pantone: '19-4005 TPX' },
-      { name: 'White', hex: '#FFFFFF', pantone: '11-0601 TPX' },
-      { name: 'Navy Blue', hex: '#002F6C', pantone: '19-4052 TPX' },
-      { name: 'Royal Blue', hex: '#4169E1', pantone: '18-3949 TPX' },
-      { name: 'Red', hex: '#ED1C24', pantone: '18-1664 TPX' },
-      { name: 'Forest Green', hex: '#228B22', pantone: '18-0130 TPX' },
-      { name: 'Grey', hex: '#808080', pantone: '17-0000 TPX' },
-      { name: 'Charcoal', hex: '#36454F', pantone: '19-0303 TPX' },
-      { name: 'Burgundy', hex: '#800020', pantone: '19-1629 TPX' },
-      { name: 'Pink', hex: '#FFC0CB', pantone: '13-1906 TPX' },
-      { name: 'Orange', hex: '#FF6600', pantone: '16-1364 TPX' },
-      { name: 'Yellow', hex: '#FFD700', pantone: '14-0755 TPX' }
-    ];
+    // Color presets removed - no longer needed
     
-    // Load saved state from sessionStorage
-    this.loadSavedState();
+    // Note: Don't load state in constructor - wait for initialize()
   }
   
   loadSavedState() {
@@ -3386,19 +3372,21 @@ class V10_QuantityStudioManager {
   }
   
   initialize() {
+    // Make this idempotent - safe to call multiple times
+    if (this.initialized) {
+      console.log('♻️ V10 Quantity Studio Manager already initialized, refreshing view...');
+      this.renderAllGarments();
+      return;
+    }
+    
     console.log('🚀 Initializing V10 Quantity Studio Manager');
     
-    // Ensure modal is set up first
+    // Set up modal first
     this.setupColorPickerModal();
     
-    // Load garments from state
-    this.loadGarments();
-    
-    // Restore saved quantity data
-    this.restoreQuantityData();
-    
-    // Restore saved state including colorways
+    // Load saved state and garments
     this.loadSavedState();
+    this.loadGarments();
     
     // Update statistics
     this.updateStats();
@@ -3406,34 +3394,10 @@ class V10_QuantityStudioManager {
     // Render all garments with their colorways
     this.renderAllGarments();
     
-    // Set up event listeners for dynamic updates
-    this.setupEventListeners();
-    
+    this.initialized = true;
     console.log('✅ V10 Quantity Studio Manager initialized successfully');
   }
   
-  setupEventListeners() {
-    // Listen for custom events
-    document.addEventListener('colorwayAdded', (e) => {
-      console.log('📢 Colorway added event received:', e.detail);
-    });
-    
-    // Ensure color picker modal works properly
-    const modal = document.getElementById('v10-color-picker-modal');
-    if (modal) {
-      // Prevent modal from closing when clicking inside
-      modal.querySelector('.v10-modal-content')?.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-      
-      // Close modal when clicking outside
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          this.closeColorPicker();
-        }
-      });
-    }
-  }
   
   loadGarments() {
     // Keep existing colorways when reloading garments
@@ -3774,78 +3738,6 @@ class V10_QuantityStudioManager {
     this.selectedVisualColor = hex;
   }
   
-  validateColorCode() {
-    const codeInput = document.getElementById('v10-color-code');
-    const applyBtn = document.getElementById('apply-colorway-btn');
-    
-    if (codeInput && codeInput.value.trim()) {
-      const code = codeInput.value.trim().toUpperCase();
-      this.validatedCode = code;
-      
-      // Enable apply button
-      if (applyBtn) {
-        applyBtn.disabled = false;
-        applyBtn.style.background = '#10b981';
-        applyBtn.style.cursor = 'pointer';
-      }
-      
-      // Show success feedback
-      codeInput.style.borderColor = '#10b981';
-      console.log(`✅ Validated color code: ${code}`);
-    }
-  }
-  
-  validateColorCodeInput(value) {
-    const applyBtn = document.getElementById('apply-colorway-btn');
-    if (value.trim().length < 3) {
-      if (applyBtn) {
-        applyBtn.disabled = true;
-        applyBtn.style.background = '#6b7280';
-        applyBtn.style.cursor = 'not-allowed';
-      }
-    }
-  }
-  
-  switchColorTab(tab) {
-    const presetTab = document.getElementById('preset-tab');
-    const pickerTab = document.getElementById('picker-tab');
-    const presetContent = document.getElementById('preset-colors-tab');
-    const pickerContent = document.getElementById('color-picker-tab');
-    
-    if (tab === 'preset') {
-      presetTab.style.background = '#10b981';
-      presetTab.style.color = '#ffffff';
-      pickerTab.style.background = 'transparent';
-      pickerTab.style.color = '#9ca3af';
-      presetContent.style.display = 'block';
-      pickerContent.style.display = 'none';
-    } else {
-      pickerTab.style.background = '#10b981';
-      pickerTab.style.color = '#ffffff';
-      presetTab.style.background = 'transparent';
-      presetTab.style.color = '#9ca3af';
-      pickerContent.style.display = 'block';
-      presetContent.style.display = 'none';
-    }
-  }
-  
-  updateVisualColorDisplay(hex) {
-    const nameEl = document.getElementById('selected-color-name');
-    const hexEl = document.getElementById('selected-color-hex');
-    
-    if (hexEl) hexEl.textContent = hex.toUpperCase();
-    
-    // Try to find a matching preset color
-    const matchedPreset = this.colorPresets.find(c => 
-      c.hex.toLowerCase() === hex.toLowerCase()
-    );
-    
-    if (nameEl) {
-      nameEl.textContent = matchedPreset ? matchedPreset.name : 'Custom Color';
-    }
-    
-    this.selectedVisualColor = hex;
-  }
   
   applyColorway() {
     const codeInput = document.getElementById('v10-color-code');
@@ -3885,35 +3777,6 @@ class V10_QuantityStudioManager {
     this.closeColorPicker();
   }
   
-  renderColorPresets() {
-    const container = document.getElementById('v10-color-presets');
-    if (!container) return;
-    
-    // Enhanced presets with better visual styling
-    container.innerHTML = this.colorPresets.map(color => `
-      <button type="button" class="v10-color-preset" 
-              onclick="window.v10QuantityStudio.selectPresetColor('${color.name}', '${color.hex}', '${color.pantone}')"
-              title="${color.name} - ${color.pantone}"
-              style="background: #1a1a1a; border: 2px solid transparent; transition: all 0.2s;">
-        <div class="v10-color-preset-swatch" 
-             style="background-color: ${color.hex}; width: 60px; height: 60px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>
-        <div class="v10-color-preset-name" style="color: #fff; font-size: 12px; font-weight: 600; margin-bottom: 4px;">${color.name}</div>
-        <div class="v10-color-preset-code" style="color: #888; font-size: 10px;">${color.pantone}</div>
-      </button>
-    `).join('');
-    
-    // Add hover effects via inline styles
-    container.querySelectorAll('.v10-color-preset').forEach(preset => {
-      preset.addEventListener('mouseenter', () => {
-        preset.style.borderColor = '#10b981';
-        preset.style.transform = 'translateY(-2px)';
-      });
-      preset.addEventListener('mouseleave', () => {
-        preset.style.borderColor = 'transparent';
-        preset.style.transform = 'translateY(0)';
-      });
-    });
-  }
   
   showColorPicker(garmentId) {
     this.currentGarmentId = garmentId;
@@ -3938,35 +3801,6 @@ class V10_QuantityStudioManager {
     if (hexInput) hexInput.value = '';
   }
   
-  selectPresetColor(name, hex, pantone) {
-    if (!this.currentGarmentId) return;
-    
-    this.addColorway(this.currentGarmentId, {
-      name: `${name} (${pantone})`,
-      color: hex,
-      pantone: pantone
-    });
-    
-    this.closeColorPicker();
-  }
-  
-  applyCustomColor() {
-    const nameInput = document.getElementById('v10-custom-color-name');
-    const hexInput = document.getElementById('v10-custom-color-hex');
-    
-    const name = nameInput?.value || 'Custom Color';
-    const hex = hexInput?.value || '#808080';
-    
-    if (!this.currentGarmentId) return;
-    
-    this.addColorway(this.currentGarmentId, {
-      name: name,
-      color: hex,
-      pantone: 'Custom'
-    });
-    
-    this.closeColorPicker();
-  }
   
   addColorway(garmentId, colorwayData) {
     const garment = this.garments.get(garmentId);
@@ -3993,26 +3827,33 @@ class V10_QuantityStudioManager {
   }
   
   updateColorwayUI(garmentId) {
-    // Show colorway content area
-    const contentArea = document.getElementById(`colorways-${garmentId}`);
-    if (contentArea) {
-      contentArea.style.display = '';
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    // Check if we're in the quantity studio view
+    const quantityStudioContainer = document.getElementById('quantities-studio');
+    const isQuantityView = quantityStudioContainer && quantityStudioContainer.style.display !== 'none';
+    
+    if (isQuantityView) {
+      // We're in quantity studio - need to refresh the garment card
+      const garmentCard = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
+      if (garmentCard) {
+        // Re-render the colorways section of this specific card
+        this.renderColorways(garmentId);
+        
+        // Make sure the first colorway is active
+        if (garment.colorways && garment.colorways.size > 0) {
+          const firstColorwayId = garment.colorways.keys().next().value;
+          this.switchColorwayTab(garmentId, firstColorwayId);
+        }
+      }
     }
     
-    // Update all UI components
+    // Update statistics
     this.updateStats();
-    this.renderColorways(garmentId);
     this.updateGarmentTotals(garmentId);
     
-    // Force re-render of the garment card if it exists
-    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
-    if (garmentCard) {
-      // Trigger any necessary UI updates
-      const event = new CustomEvent('colorwayAdded', { detail: { garmentId } });
-      garmentCard.dispatchEvent(event);
-    }
-    
-    console.log(`🔄 Updated UI for garment ${garmentId}`);
+    console.log(`🔄 Updated UI for garment ${garmentId} (Quantity View: ${isQuantityView})`);
   }
   
   renderColorways(garmentId) {
@@ -9244,52 +9085,17 @@ class V10_GarmentStudio {
   }
 
   populateQuantityStudio() {
-    console.log('🔄 populateQuantityStudio() called - Using new V10_QuantityStudioManager');
+    console.log('🔄 populateQuantityStudio() called - Using V10_QuantityStudioManager');
     
     // Initialize the new quantity studio manager if not already created
     if (!window.v10QuantityStudio) {
       window.v10QuantityStudio = new V10_QuantityStudioManager();
     }
     
-    // Initialize the quantity studio
+    // Initialize the quantity studio (idempotent - safe to call multiple times)
     window.v10QuantityStudio.initialize();
-    
-    return; // Exit here - the new manager handles everything
-    
-    // OLD CODE BELOW - KEPT FOR REFERENCE BUT NOT EXECUTED
-    console.log('🔄 populateQuantityStudio() called');
-    
-    // Performance monitoring
-    const startTime = performance.now();
-    
-    // Add singleton protection to prevent duplicate execution
-    if (this._populatingQuantityStudio) {
-      console.log('🔄 Quantity studio population already in progress, skipping...');
-      return;
-    }
-    
-    try {
-      this._populatingQuantityStudio = true;
-      
-      const container = document.getElementById('garment-quantities-container');
-      if (!container) {
-        console.error('❌ Quantity container not found');
-        return;
-      }
-      
-      // Save current quantities before any DOM manipulation
-      this.saveCurrentQuantitiesToState();
-      
-      // Clean up any existing event listeners before rebuilding
-      this.cleanupQuantityStudioEventListeners();
-      
-      // Clear existing content completely to prevent multiplication
-      container.innerHTML = '';
-      console.log('🧹 Saved quantities, cleared DOM content and event listeners');
-      
-      // Create fresh structure (validation summary removed)
-      
-      const responsiveGrid = document.createElement('div');
+  }
+
       responsiveGrid.className = 'responsive-garment-grid';
       responsiveGrid.id = 'responsive-garment-grid';
       
@@ -9439,14 +9245,6 @@ class V10_GarmentStudio {
         console.warn(`⚠️ Slow quantity studio population: ${duration.toFixed(2)}ms`);
       }
     
-    } catch (error) {
-      console.error('❌ Error in populateQuantityStudio:', error);
-    } finally {
-      // Always reset singleton protection flag, even if error occurs
-      this._populatingQuantityStudio = false;
-      console.log('🔄 populateQuantityStudio() completed, flag reset');
-    }
-  }
 
   createProfessionalQuantityCard(garment, index) {
     console.log(`🎨 Creating professional quantity card for garment ${garment.id}`);
