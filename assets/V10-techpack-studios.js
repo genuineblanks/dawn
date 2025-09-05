@@ -3375,7 +3375,10 @@ class V10_QuantityStudioManager {
     // Make this idempotent - safe to call multiple times
     if (this.initialized) {
       console.log('♻️ V10 Quantity Studio Manager already initialized, refreshing view...');
+      // IMPORTANT: Reload garments from V10_State to get fresh data
+      this.loadGarments();
       this.renderAllGarments();
+      this.updateStats();
       return;
     }
     
