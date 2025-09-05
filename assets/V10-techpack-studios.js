@@ -3682,7 +3682,7 @@ class V10_QuantityStudioManager {
   
   createGarmentCard(garment, garmentId, index) {
     const div = document.createElement('div');
-    div.className = 'v10-garment-quantity-card';
+    div.className = 'garment-quantity-card';
     div.dataset.garmentId = garmentId;
     
     const colorwayCount = garment.colorways?.size || 0;
@@ -3690,7 +3690,7 @@ class V10_QuantityStudioManager {
     const isSufficient = garment.total >= minimum && colorwayCount > 0;
     
     if (isSufficient) {
-      div.classList.add('v10-garment-quantity-card--complete');
+      div.classList.add('garment-quantity-card--complete');
     }
     
     // Determine what to show: fabric or sample reference
@@ -4001,7 +4001,7 @@ class V10_QuantityStudioManager {
     const isQuantityView = quantityStudioContainer && quantityStudioContainer.style.display !== 'none';
     
     // Always try to update the garment card if it exists
-    const garmentCard = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
+    const garmentCard = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
     
     if (garmentCard) {
       // Check if this is the first colorway being added
@@ -4383,15 +4383,15 @@ class V10_QuantityStudioManager {
     console.log(`   Status: ${isSufficient ? 'SUFFICIENT' : 'INSUFFICIENT'}`);
     
     // Try multiple selectors to find the card
-    const card = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`) ||
+    const card = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`) ||
                  document.querySelector(`[data-garment-id="${garmentId}"]`);
     
     if (card) {
       // Update card complete status
       if (isSufficient) {
-        card.classList.add('v10-garment-quantity-card--complete');
+        card.classList.add('garment-quantity-card--complete');
       } else {
-        card.classList.remove('v10-garment-quantity-card--complete');
+        card.classList.remove('garment-quantity-card--complete');
       }
       
       // Update minimum display to show per-colorway requirement
@@ -4451,7 +4451,7 @@ class V10_QuantityStudioManager {
     
     // If no colorways left, show the add button again
     if (garment.colorways.size === 0) {
-      const card = document.querySelector(`.v10-garment-quantity-card[data-garment-id="${garmentId}"]`);
+      const card = document.querySelector(`.garment-quantity-card[data-garment-id="${garmentId}"]`);
       if (card) {
         const section = card.querySelector('.v10-colorway-section');
         if (section) {
