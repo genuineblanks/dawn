@@ -3595,7 +3595,7 @@ class V10_QuantityStudioManager {
       modal.className = 'v10-modal-overlay';
       modal.style.display = 'none';
       modal.innerHTML = `
-        <div class="v10-modal-content v10-color-picker-content" style="background: #1a1a1a !important;">
+        <div class="v10-modal-content v10-color-picker-content" style="background: #1a1a1a !important; max-width: 500px;">
           <div class="v10-modal-header" style="background: #252525; padding: 20px; border-bottom: 1px solid #404040;">
             <h2 style="color: #ffffff;">Add Colorway</h2>
             <button type="button" class="v10-modal-close" onclick="window.v10QuantityStudio.closeColorPicker()" style="background: #333333; padding: 8px; border-radius: 8px;">
@@ -3607,82 +3607,51 @@ class V10_QuantityStudioManager {
           </div>
           
           <div class="v10-modal-body" style="padding: 24px; background: #1a1a1a;">
-            <!-- Required Code Input Section -->
-            <div style="background: #252525; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-              <h3 style="color: #10b981; margin-bottom: 16px; font-size: 1.1rem; font-weight: 700;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: inline; vertical-align: -4px; margin-right: 8px;">
-                  <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
-                </svg>
-                Required: Color Reference Code
+            <!-- Required: Pantone/Lab-Dip Code -->
+            <div style="margin-bottom: 24px;">
+              <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
+                Step 1: Enter Pantone/Lab-Dip Code (Required)
               </h3>
-              <div style="display: flex; gap: 12px;">
+              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px;">
                 <input type="text" 
                        id="v10-color-code" 
-                       placeholder="Enter Pantone TPX/TCX or Lab-Dip Code" 
-                       style="flex: 1; padding: 12px; background: #1a1a1a; border: 1px solid #404040; border-radius: 8px; color: #ffffff; font-size: 1rem;"
-                       required />
-                <button type="button" 
-                        class="v10-btn v10-btn--primary" 
-                        onclick="window.v10QuantityStudio.validateColorCode()"
-                        style="padding: 12px 24px; background: #10b981; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                  Validate
-                </button>
+                       placeholder="e.g., 19-4005 TPX, TCX-2134, or LAB-001"
+                       style="width: 100%; padding: 12px; background: #1a1a1a; border: 2px solid #404040; border-radius: 6px; color: #fff; font-size: 14px;"
+                       oninput="window.v10QuantityStudio.checkBothFieldsFilled()">
+                <p style="color: #888; font-size: 12px; margin-top: 8px;">
+                  Enter the official Pantone TPX/TCX code or your Lab-Dip reference code
+                </p>
               </div>
-              <p style="color: #6b7280; font-size: 0.85rem; margin-top: 8px; margin-bottom: 0;">
-                Examples: 19-4052 TPX, 18-1664 TCX, LAB-001, CUSTOM-NAVY
-              </p>
             </div>
-
-            <!-- Visual Reference Section -->
-            <div style="background: #252525; border: 1px solid #404040; border-radius: 12px; padding: 20px;">
-              <h3 style="color: #9ca3af; margin-bottom: 16px; font-size: 1rem; font-weight: 600;">
-                Optional: Visual Color Reference
+            
+            <!-- Required: Color Selection -->
+            <div>
+              <h3 style="color: #10b981; font-size: 14px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
+                Step 2: Select Color (Required)
               </h3>
               
-              <p class="v10-color-disclaimer" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: #10b981;">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                </svg>
-                Colors below are for visual guidance only. Production will match your specified code.
-              </p>
-              
-              <!-- Tab Navigation -->
-              <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #404040; padding-bottom: 12px;">
-                <button type="button" 
-                        id="preset-tab" 
-                        class="active" 
-                        onclick="window.v10QuantityStudio.switchColorTab('preset')"
-                        style="padding: 8px 16px; background: #10b981; color: #ffffff; border: none; border-radius: 8px 8px 0 0; font-weight: 600; cursor: pointer;">
-                  Common Colors
-                </button>
-                <button type="button" 
-                        id="picker-tab" 
-                        onclick="window.v10QuantityStudio.switchColorTab('picker')"
-                        style="padding: 8px 16px; background: transparent; color: #9ca3af; border: none; border-radius: 8px 8px 0 0; font-weight: 600; cursor: pointer;">
-                  Color Picker
-                </button>
-              </div>
-              
-              <!-- Preset Colors Tab -->
-              <div id="preset-colors-tab" style="display: block;">
-                <div class="v10-color-grid" id="v10-color-presets" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px;">
-                  <!-- Color presets will be added here -->
-                </div>
-              </div>
-              
-              <!-- Color Picker Tab -->
-              <div id="color-picker-tab" style="display: none;">
+              <div style="background: #0f0f0f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px;">
                 <div style="display: flex; align-items: center; gap: 20px;">
                   <input type="color" 
                          id="v10-visual-color-picker" 
-                         value="#10b981"
-                         style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 8px; cursor: pointer;" />
-                  <div>
-                    <div id="selected-color-name" style="color: #ffffff; font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">Forest Green</div>
-                    <div id="selected-color-hex" style="color: #6b7280; font-size: 0.9rem;">#10b981</div>
+                         value="#808080"
+                         style="width: 100px; height: 100px; border: 2px solid #404040; border-radius: 8px; cursor: pointer; background: transparent;"
+                         oninput="window.v10QuantityStudio.updateVisualColorDisplay(this.value); window.v10QuantityStudio.checkBothFieldsFilled()">
+                  <div style="flex: 1;">
+                    <div id="v10-visual-color-display" 
+                         style="padding: 12px 20px; background: #808080; color: #fff; border-radius: 8px; font-weight: 600; margin-bottom: 12px; text-align: center; font-size: 16px;">
+                      #808080
+                    </div>
+                    <p style="color: #888; font-size: 13px;">
+                      Click the color box to select your color
+                    </p>
                   </div>
                 </div>
               </div>
+              
+              <p style="color: #666; font-size: 11px; margin-top: 16px; padding: 12px; background: #0f0f0f; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                <strong>Note:</strong> Both Pantone code and color selection are required. The visual color helps with digital representation while the Pantone code ensures accurate production matching.
+              </p>
             </div>
             
             <!-- Action Buttons -->
@@ -3690,7 +3659,7 @@ class V10_QuantityStudioManager {
               <button type="button" 
                       class="v10-btn v10-btn--secondary" 
                       onclick="window.v10QuantityStudio.closeColorPicker()"
-                      style="flex: 1; padding: 14px; background: #2a2a2a; color: #9ca3af; border: 1px solid #404040; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                      style="flex: 1; padding: 14px; background: #2a2a2a; color: #9ca3af; border: 1px solid #404040; border-radius: 8px; font-weight: 700;">
                 Cancel
               </button>
               <button type="button" 
@@ -3706,26 +3675,40 @@ class V10_QuantityStudioManager {
         </div>
       `;
       document.body.appendChild(modal);
-      
-      // Add color presets
-      this.renderColorPresets();
-      
-      // Setup visual color picker
-      const visualPicker = document.getElementById('v10-visual-color-picker');
-      if (visualPicker) {
-        visualPicker.addEventListener('input', (e) => {
-          this.updateVisualColorDisplay(e.target.value);
-        });
-      }
-      
-      // Setup code validation
-      const codeInput = document.getElementById('v10-color-code');
-      if (codeInput) {
-        codeInput.addEventListener('input', (e) => {
-          this.validateColorCodeInput(e.target.value);
-        });
+    }
+  }
+  
+  checkBothFieldsFilled() {
+    const codeInput = document.getElementById('v10-color-code');
+    const colorPicker = document.getElementById('v10-visual-color-picker');
+    const applyBtn = document.getElementById('apply-colorway-btn');
+    
+    // Check if both fields are filled
+    const hasCode = codeInput && codeInput.value.trim().length > 0;
+    const hasColor = colorPicker && colorPicker.value !== '#808080';
+    
+    if (applyBtn) {
+      if (hasCode && hasColor) {
+        // Enable button when both fields are filled
+        applyBtn.disabled = false;
+        applyBtn.style.background = '#10b981';
+        applyBtn.style.cursor = 'pointer';
+      } else {
+        // Disable button if either field is missing
+        applyBtn.disabled = true;
+        applyBtn.style.background = '#6b7280';
+        applyBtn.style.cursor = 'not-allowed';
       }
     }
+  }
+  
+  updateVisualColorDisplay(hex) {
+    const display = document.getElementById('v10-visual-color-display');
+    if (display) {
+      display.textContent = hex.toUpperCase();
+      display.style.background = hex;
+    }
+    this.selectedVisualColor = hex;
   }
   
   validateColorCode() {
@@ -3802,17 +3785,38 @@ class V10_QuantityStudioManager {
   }
   
   applyColorway() {
-    if (!this.currentGarmentId || !this.validatedCode) return;
+    const codeInput = document.getElementById('v10-color-code');
+    const colorPicker = document.getElementById('v10-visual-color-picker');
     
-    const visualColor = this.selectedVisualColor || 
-                        document.getElementById('v10-visual-color-picker')?.value || 
-                        '#808080';
+    // Validate both fields are filled
+    if (!this.currentGarmentId || !codeInput?.value.trim() || !colorPicker?.value) {
+      console.error('Cannot apply colorway: missing required fields');
+      return;
+    }
+    
+    const code = codeInput.value.trim().toUpperCase();
+    const color = colorPicker.value;
+    
+    // Make sure we're not using default grey
+    if (color === '#808080') {
+      alert('Please select a color before adding the colorway');
+      return;
+    }
     
     this.addColorway(this.currentGarmentId, {
-      name: this.validatedCode,
-      color: visualColor,
-      pantone: this.validatedCode
+      name: code,
+      color: color,
+      pantone: code
     });
+    
+    // Reset modal inputs
+    codeInput.value = '';
+    colorPicker.value = '#808080';
+    const display = document.getElementById('v10-visual-color-display');
+    if (display) {
+      display.textContent = '#808080';
+      display.style.background = '#808080';
+    }
     
     this.closeColorPicker();
   }
