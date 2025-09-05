@@ -3720,26 +3720,30 @@ class V10_QuantityStudioManager {
               <!-- Colorway tabs will be added here -->
             </div>
             <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway" style="
-              display: flex;
+              display: inline-flex;
               align-items: center;
-              gap: 6px;
-              padding: 8px 12px;
+              justify-content: center;
+              gap: 8px;
+              padding: 10px 16px;
               background: rgba(255,255,255,0.05);
               border: 1px dashed rgba(255,255,255,0.3);
               border-radius: 4px;
               color: rgba(255,255,255,0.8);
-              font-size: 12px;
+              font-size: 13px;
               font-weight: 500;
               cursor: pointer;
               transition: all 0.2s;
               white-space: nowrap;
+              line-height: 1;
+              min-height: 36px;
+              margin-left: 8px;
             " onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.5)';" 
                onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.3)';">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              <span>Add Colorway</span>
+              <span style="display: inline-block;">Add Colorway</span>
             </button>
           </div>
         `}
@@ -4014,26 +4018,30 @@ class V10_QuantityStudioManager {
                 <!-- Colorway tabs will be added here -->
               </div>
               <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add another colorway" style="
-                display: flex;
+                display: inline-flex;
                 align-items: center;
-                gap: 6px;
-                padding: 8px 12px;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 16px;
                 background: rgba(255,255,255,0.05);
                 border: 1px dashed rgba(255,255,255,0.3);
                 border-radius: 4px;
                 color: rgba(255,255,255,0.8);
-                font-size: 12px;
+                font-size: 13px;
                 font-weight: 500;
                 cursor: pointer;
                 transition: all 0.2s;
                 white-space: nowrap;
+                line-height: 1;
+                min-height: 36px;
+                margin-left: 8px;
               " onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.5)';" 
                  onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.3)';">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                <span>Add Colorway</span>
+                <span style="display: inline-block;">Add Colorway</span>
               </button>
             </div>
             <div class="v10-colorways-content" id="colorways-${garmentId}">

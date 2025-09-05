@@ -9618,32 +9618,36 @@ div[class*="circle"][style*="background-color"],
 
 /* Enhanced Garment Quantity Card - Fixed Styling */
 .v10-garment-quantity-card {
-  background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
-  border: 2px solid #404040;
-  border-radius: 12px;
-  padding: 24px;
+  background: rgba(26, 26, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .v10-garment-quantity-card:hover {
-  border-color: #505050;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
 .v10-garment-quantity-card--complete {
-  border-color: #10b981;
-  background: linear-gradient(135deg, #2a2a2a 0%, rgba(16, 185, 129, 0.08) 100%);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(26, 26, 30, 0.95);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
 }
 
 .v10-garment-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 16px;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 8px;
@@ -9652,21 +9656,22 @@ div[class*="circle"][style*="background-color"],
 }
 
 .v10-garment-title {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   color: #ffffff;
-  margin-bottom: 4px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 6px;
+  letter-spacing: 0.025em;
 }
 
 .v10-garment-title span {
   color: #10b981;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .v10-garment-subtitle {
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
 }
 
 .v10-garment-min {
@@ -9987,33 +9992,36 @@ div[class*="circle"][style*="background-color"],
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
-  border: 2px solid #404040;
-  border-radius: 10px;
+  padding: 14px 18px;
+  background: rgba(26, 26, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  min-width: 140px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .v10-colorway-tab.active {
-  border-color: #10b981;
-  background: linear-gradient(135deg, #2a2a2a 0%, rgba(16, 185, 129, 0.15) 100%);
-  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 4px 6px -1px rgba(16, 185, 129, 0.1);
 }
 
 .v10-colorway-tab:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  border-color: #505050;
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(26, 26, 30, 1);
 }
 
 .v10-colorway-tab-color {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
   border: 2px solid #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
@@ -10372,4 +10380,290 @@ div[class*="circle"][style*="background-color"],
   background: rgba(16, 185, 129, 0.1);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* ==============================================
+   V10 QUANTITY STUDIO - COMPLETE REDESIGN
+   Matching Color Studio Professional Design
+   ============================================== */
+
+/* Quantity Studio Header Stats */
+.quantity-studio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: rgba(26, 26, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.quantity-stat-item {
+  text-align: center;
+}
+
+.quantity-stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.quantity-stat-value.sufficient {
+  color: #10b981;
+}
+
+.quantity-stat-value.insufficient {
+  color: #ef4444;
+}
+
+.quantity-stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Enhanced Add Colorway Button */
+.v10-add-colorway-btn {
+  width: 100%;
+  padding: 20px;
+  background: rgba(26, 26, 30, 0.95);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.v10-add-colorway-btn:hover {
+  background: rgba(26, 26, 30, 1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+/* Size Input Refinements */
+.v10-size-input-wrapper {
+  position: relative;
+}
+
+.v10-size-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.v10-size-input {
+  width: 100%;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.v10-size-input:focus {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.v10-size-input:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Action Buttons Refinement */
+.v10-colorway-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.v10-colorway-actions .v10-btn {
+  flex: 1;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v10-colorway-actions .v10-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Colorway Subtotal */
+.v10-colorway-subtotal {
+  margin-left: auto;
+  padding: 10px 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #10b981;
+}
+
+/* Footer Stats Enhancement */
+.v10-garment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.v10-garment-total {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.v10-garment-total strong {
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0 4px;
+}
+
+/* Remove Button Icon Fix */
+.v10-colorway-tab-remove {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v10-colorway-tab-remove:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.v10-colorway-tab-remove svg {
+  width: 12px;
+  height: 12px;
+  stroke: #ef4444;
+}
+
+/* Design Reference Input */
+.v10-design-reference-input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.v10-design-reference-input:focus {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(16, 185, 129, 0.5);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Minimum Badge Enhancement */
+.v10-garment-min {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f59e0b;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Colorway Tabs Container */
+.v10-colorway-tabs-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.v10-colorway-tabs {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+/* Responsive Grid for Size Inputs */
+.v10-size-inputs-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Color Indicator Circle */
+.v10-size-color-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Quantities Container Background */
+#quantities-studio {
+  background: transparent;
+  padding: 0;
+}
+
+.responsive-garment-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .responsive-garment-grid {
+    grid-template-columns: 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 }
