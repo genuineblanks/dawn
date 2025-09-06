@@ -3744,7 +3744,7 @@ class V10_QuantityStudioManager {
           </button>
         </div>
         
-        <div class="v10-colorways-content" id="colorways-${garmentId}">
+        <div class="v10-colorways-content" id="colorways-${garmentId}" style="${colorwayCount === 0 ? 'display: none;' : ''}">
           <!-- Colorway content will be added here -->
         </div>
       </div>
@@ -4033,6 +4033,18 @@ class V10_QuantityStudioManager {
       const hasColorways = garment.colorways && garment.colorways.size > 0;
       
       // Don't rebuild the structure - it's already correct from the start
+      
+      // Show the colorways content container when first colorway is added
+      const colorwaysContent = document.getElementById(`colorways-${garmentId}`);
+      if (colorwaysContent && garment.colorways && garment.colorways.size > 0) {
+        colorwaysContent.style.display = '';
+      }
+      
+      // Update the Add Colorway button text
+      const addColorwayBtn = document.querySelector(`.v10-quantity-garment-full[data-garment-id="${garmentId}"] .v10-add-colorway-tab span`);
+      if (addColorwayBtn) {
+        addColorwayBtn.textContent = garment.colorways && garment.colorways.size > 0 ? 'Add Colorway' : 'Add Colorway to Set Quantities';
+      }
       
       // Re-render the colorways
       this.renderColorways(garmentId);
