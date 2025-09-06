@@ -4382,8 +4382,16 @@ class V10_QuantityStudioManager {
                   onclick="window.v10QuantityStudio.clearColorwayQuantities('${garmentId}', '${colorwayId}')">
             Clear All
           </button>
-          <div class="v10-colorway-subtotal">
-            Subtotal: <strong style="color: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size)}">${colorway.subtotal}</strong> units
+          <div class="v10-colorway-subtotal" style="
+            padding: 10px 16px;
+            background: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).background};
+            border: 1px solid ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).border};
+            border-radius: 4px;
+            color: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).text};
+            font-weight: 600;
+            display: inline-block;
+          ">
+            Subtotal: <strong>${colorway.subtotal}</strong> units
           </div>
         </div>
       </div>
@@ -4395,11 +4403,23 @@ class V10_QuantityStudioManager {
     const percentage = (subtotal / perColorwayMin) * 100;
     
     if (percentage < 50) {
-      return '#ef4444'; // Red
+      return {
+        background: 'rgba(239, 68, 68, 0.1)',
+        border: '#ef4444',
+        text: '#ef4444'
+      };
     } else if (percentage < 100) {
-      return '#f59e0b'; // Orange
+      return {
+        background: 'rgba(245, 158, 11, 0.1)',
+        border: '#f59e0b',
+        text: '#f59e0b'
+      };
     } else {
-      return '#10b981'; // Green
+      return {
+        background: 'rgba(16, 185, 129, 0.1)',
+        border: '#10b981',
+        text: '#10b981'
+      };
     }
   }
   
@@ -4443,10 +4463,17 @@ class V10_QuantityStudioManager {
     }
     
     // Update subtotal in content with dynamic color
-    const subtotalEl = document.querySelector(`#colorways-${garmentId} .v10-colorway-subtotal strong`);
-    if (subtotalEl) {
-      subtotalEl.textContent = colorway.subtotal;
-      subtotalEl.style.color = this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size);
+    const subtotalDiv = document.querySelector(`#colorways-${garmentId} .v10-colorway-subtotal`);
+    if (subtotalDiv) {
+      const colors = this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size);
+      subtotalDiv.style.background = colors.background;
+      subtotalDiv.style.borderColor = colors.border;
+      subtotalDiv.style.color = colors.text;
+      
+      const subtotalEl = subtotalDiv.querySelector('strong');
+      if (subtotalEl) {
+        subtotalEl.textContent = colorway.subtotal;
+      }
     }
     
     this.updateStats();
