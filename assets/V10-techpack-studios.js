@@ -3691,7 +3691,7 @@ class V10_QuantityStudioManager {
     
     const colorwayCount = garment.colorways?.size || 0;
     const minimum = this.calculateGarmentMinimum(garment.type, colorwayCount);
-    const isSufficient = garment.total >= minimum && colorwayCount > 0;
+    const isSufficient = this.checkColorwaysSufficient(garmentId);
     
     if (isSufficient) {
       div.classList.add('garment-quantity-card--complete');
@@ -3700,81 +3700,88 @@ class V10_QuantityStudioManager {
     // Determine what to show: fabric or sample reference
     const subtitle = garment.sampleReference || garment.fabricType || 'with-design-applied';
     
-    // Full professional dark layout with improved structure
+    // Unified professional dark layout with cohesive structure
     div.innerHTML = `
+      <!-- Header Section with background -->
       <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 0;
-        margin-bottom: 20px;
-        color: #ffffff;
+        background: rgba(255,255,255,0.03);
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
       ">
-        <div>
-          <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">
-            Garment ${index} - <span style="color: #10b981;">${garment.type}</span>
+        <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        ">
+          <div>
+            <div style="font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 4px;">
+              Garment ${index} - <span style="color: #10b981;">${garment.type}</span>
+            </div>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.6);">${subtitle}</div>
           </div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.6);">${subtitle}</div>
+          ${isSufficient ? '<div style="padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 11px; font-weight: 600; text-transform: uppercase;">✓ Complete</div>' : ''}
         </div>
       </div>
       
-      <div class="v10-colorway-section">
-        ${colorwayCount === 0 ? `
-          <!-- Full-width button when no colorways -->
-          <button type="button" 
-                  class="v10-add-colorway-btn-full" 
-                  onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" 
-                  style="
-                    width: 100%;
-                    padding: 16px;
-                    background: transparent;
-                    border: 2px dashed rgba(255,255,255,0.3);
-                    color: rgba(255,255,255,0.9);
-                    font-size: 14px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 12px;
-                    margin-bottom: 20px;
-                  "
-                  onmouseover="this.style.borderColor='#10b981'; this.style.color='#10b981'; this.style.background='rgba(16,185,129,0.05)';"
-                  onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.color='rgba(255,255,255,0.9)'; this.style.background='transparent';">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add Colorway to Set Quantities
-          </button>
-        ` : `
-          <!-- Tabs when colorways exist -->
-          <div class="v10-colorway-tabs-container">
-            <div class="v10-colorway-tabs" id="tabs-${garmentId}">
-              <!-- Colorway tabs will be added here -->
-            </div>
-            <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add colorway" style="margin-left: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+      <!-- Main Content Area -->
+      <div style="padding: 20px;">
+        <div class="v10-colorway-section">
+          ${colorwayCount === 0 ? `
+            <!-- Full-width button when no colorways -->
+            <button type="button" 
+                    class="v10-add-colorway-btn-full" 
+                    onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" 
+                    style="
+                      width: 100%;
+                      padding: 16px;
+                      background: transparent;
+                      border: 2px dashed rgba(255,255,255,0.3);
+                      color: rgba(255,255,255,0.9);
+                      font-size: 14px;
+                      font-weight: 600;
+                      cursor: pointer;
+                      transition: all 0.2s;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 12px;
+                    "
+                    onmouseover="this.style.borderColor='#10b981'; this.style.color='#10b981'; this.style.background='rgba(16,185,129,0.05)';"
+                    onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.color='rgba(255,255,255,0.9)'; this.style.background='transparent';">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              <span style="display: inline-block;">Add Colorway</span>
+              Add Colorway to Set Quantities
             </button>
+          ` : `
+            <!-- Tabs when colorways exist -->
+            <div class="v10-colorway-tabs-container">
+              <div class="v10-colorway-tabs" id="tabs-${garmentId}">
+                <!-- Colorway tabs will be added here -->
+              </div>
+              <button type="button" class="v10-add-colorway-tab" onclick="window.v10QuantityStudio.showColorPicker('${garmentId}')" title="Add colorway" style="margin-left: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span style="display: inline-block;">Add Colorway</span>
+              </button>
+            </div>
+          `}
+          
+          <div class="v10-colorways-content" id="colorways-${garmentId}" style="${colorwayCount === 0 ? 'display: none;' : ''}">
+            <!-- Colorway content will be added here -->
           </div>
-        `}
-        
-        <div class="v10-colorways-content" id="colorways-${garmentId}" style="${colorwayCount === 0 ? 'display: none;' : ''}">
-          <!-- Colorway content will be added here -->
         </div>
       </div>
       
+      <!-- Footer Section -->
       <div style="
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 20px;
-        margin-top: 24px;
         border-top: 1px solid rgba(255,255,255,0.08);
         background: rgba(0,0,0,0.3);
       ">
@@ -3789,9 +3796,9 @@ class V10_QuantityStudioManager {
           <span>TOTAL:</span>
           <span style="font-size: 20px; font-weight: 700; color: ${isSufficient ? '#10b981' : '#ffffff'};" id="footer-total-${garmentId}">${garment.total || 0}</span>
           <span style="color: rgba(255,255,255,0.5);">/</span>
-          <span style="color: #f59e0b; font-weight: 600;">${minimum} MIN</span>
+          <span style="color: #f59e0b; font-weight: 600;" id="footer-min-${garmentId}">${minimum} MIN</span>
         </div>
-        ${isSufficient ? '<span style="padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;">✓ SUFFICIENT</span>' : '<div></div>'}
+        <span id="footer-status-${garmentId}" style="${isSufficient ? 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;' : ''}">${isSufficient ? '✓ SUFFICIENT' : ''}</span>
       </div>
     `;
     
@@ -4460,29 +4467,37 @@ class V10_QuantityStudioManager {
         footerTotalEl.textContent = garment.total;
       }
       
-      // Update or add the status badge in the footer (right side)
-      const footerContainer = card.querySelector('div[style*="border-top"]');
-      if (footerContainer) {
-        // Find or create the badge on the right side
-        let statusBadge = footerContainer.querySelector('span[style*="SUFFICIENT"]');
-        
-        if (!statusBadge) {
-          // Check if there's an empty div placeholder
-          const lastChild = footerContainer.lastElementChild;
-          if (lastChild && lastChild.tagName === 'DIV' && !lastChild.innerHTML) {
-            // Replace empty div with badge if sufficient
-            if (isSufficient) {
-              statusBadge = document.createElement('span');
-              statusBadge.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;';
-              statusBadge.textContent = '✓ SUFFICIENT';
-              footerContainer.replaceChild(statusBadge, lastChild);
-            }
-          }
-        } else if (!isSufficient) {
-          // Replace badge with empty div if not sufficient
-          const emptyDiv = document.createElement('div');
-          footerContainer.replaceChild(emptyDiv, statusBadge);
+      // Update footer minimum display
+      const footerMinEl = card.querySelector(`#footer-min-${garmentId}`);
+      if (footerMinEl) {
+        footerMinEl.textContent = `${totalMinimum} MIN`;
+      }
+      
+      // Update footer status badge
+      const footerStatusEl = card.querySelector(`#footer-status-${garmentId}`);
+      if (footerStatusEl) {
+        if (isSufficient) {
+          footerStatusEl.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;';
+          footerStatusEl.textContent = '✓ SUFFICIENT';
+        } else {
+          footerStatusEl.style.cssText = '';
+          footerStatusEl.textContent = '';
         }
+      }
+      
+      // Update header complete badge
+      const headerBadge = card.querySelector('div[style*="rgba(255,255,255,0.03)"] div[style*="✓ Complete"]');
+      const headerContainer = card.querySelector('div[style*="rgba(255,255,255,0.03)"] > div');
+      
+      if (isSufficient && !headerBadge && headerContainer) {
+        // Add complete badge to header
+        const badge = document.createElement('div');
+        badge.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 11px; font-weight: 600; text-transform: uppercase;';
+        badge.textContent = '✓ Complete';
+        headerContainer.appendChild(badge);
+      } else if (!isSufficient && headerBadge) {
+        // Remove complete badge from header
+        headerBadge.remove();
       }
     } else {
       console.log(`⚠️ Card not found for garment ${garmentId}`);

@@ -10265,15 +10265,38 @@ div[class*="circle"][style*="background-color"],
 /* Removed duplicate .v10-add-colorway-btn styles - already defined above */
 
 /* V10 Quantity Garment Full - Professional Dark Layout */
+/* Unified Garment Card Design */
 .v10-quantity-garment-full {
-  background: transparent !important;
-  border: none !important;
+  background: rgba(0,0,0,0.4) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 4px !important;
   padding: 0 !important;
-  margin: 0 0 24px 0 !important;
+  margin: 0 0 32px 0 !important;
   width: 100% !important;
   max-width: none !important;
   box-shadow: none !important;
+  overflow: hidden !important;
+  position: relative !important;
+  transition: border-color 0.3s ease !important;
 }
+
+/* Green left border indicator for completed garments */
+.v10-quantity-garment-full.garment-quantity-card--complete {
+  border-left: 4px solid #10b981 !important;
+  padding-left: 0 !important;
+}
+
+/* Alternative with pseudo-element if border doesn't work well
+.v10-quantity-garment-full.garment-quantity-card--complete::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #10b981;
+  z-index: 1;
+} */
 
 .v10-quantity-garment-full .v10-colorway-section {
   margin-top: 20px;
@@ -10332,10 +10355,7 @@ div[class*="circle"][style*="background-color"],
   min-height: 100px;
 }
 
-.v10-quantity-garment-full--complete {
-  border-left: 4px solid #10b981;
-  padding-left: 20px;
-}
+/* Removed duplicate .v10-quantity-garment-full--complete style - now defined above with main card styles */
 
 /* Size Input Refinements */
 .v10-size-input-wrapper {
