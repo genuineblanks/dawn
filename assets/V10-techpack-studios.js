@@ -4610,7 +4610,6 @@ class V10_QuantityStudioManager {
     });
     
     // Update the colorway tab count without re-rendering all tabs
-    const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
     const isSufficient = colorway.subtotal >= perColorwayMin;
     const tabCount = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab[data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
     if (tabCount) {
