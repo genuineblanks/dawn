@@ -10514,12 +10514,7 @@ div[class*="circle"][style*="background-color"],
   flex-wrap: wrap;
 }
 
-.v10-colorway-tabs {
-  display: flex;
-  gap: 12px;
-  flex: 1;
-  flex-wrap: wrap;
-}
+/* REMOVED: Duplicate .v10-colorway-tabs definition (already exists at line 9815) */
 
 /* Responsive Grid for Size Inputs */
 .v10-size-inputs-row {
@@ -10557,5 +10552,130 @@ div[class*="circle"][style*="background-color"],
   .responsive-garment-grid {
     grid-template-columns: 1fr;
     width: 100%;
+  }
+}
+
+/* ==============================================
+   BULK QUANTITY REVIEW STYLES
+   ============================================== */
+
+.v10-bulk-garment-review {
+  background: rgba(26, 26, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.v10-bulk-garment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.v10-bulk-garment-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.v10-bulk-garment-total {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.v10-bulk-colorways-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.v10-bulk-colorway-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.v10-bulk-colorway-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.v10-bulk-colorway-visual {
+  flex-shrink: 0;
+}
+
+.v10-bulk-color-square {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.v10-bulk-colorway-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.v10-bulk-colorway-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.v10-bulk-colorway-quantity {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #10b981;
+  margin-bottom: 8px;
+}
+
+.v10-bulk-sizes-summary {
+  font-size: 0.85rem;
+  color: #a3a3a3;
+  line-height: 1.4;
+}
+
+.v10-sizes-list {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 0.8rem;
+}
+
+.v10-no-sizes, .v10-no-data {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .v10-bulk-colorways-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .v10-bulk-colorway-item {
+    padding: 12px;
+  }
+  
+  .v10-bulk-color-square {
+    width: 28px;
+    height: 28px;
   }
 }
