@@ -3725,6 +3725,16 @@ class V10_QuantityStudioManager {
     const container = document.getElementById('responsive-garment-grid');
     if (!container) return;
     
+    // Save active colorway tabs before clearing
+    const activeColorwayTabs = new Map();
+    this.garments.forEach((garment, id) => {
+      const activeTab = document.querySelector(`#tabs-${id} .v10-colorway-tab.active`);
+      if (activeTab) {
+        activeColorwayTabs.set(id, activeTab.dataset.colorwayId);
+        console.log(`💾 Saving active tab for garment ${id}: ${activeTab.dataset.colorwayId}`);
+      }
+    });
+    
     container.innerHTML = '';
     
     if (this.garments.size === 0) {
@@ -3741,9 +3751,11 @@ class V10_QuantityStudioManager {
       if (garment.colorways && garment.colorways.size > 0) {
         setTimeout(() => {
           this.renderColorways(id);
-          // Preserve active colorway or use first
-          const activeId = garment.activeColorwayId || garment.colorways.keys().next().value;
+          // Restore previously active tab or use saved activeColorwayId or use first
+          const activeId = activeColorwayTabs.get(id) || garment.activeColorwayId || garment.colorways.keys().next().value;
           if (activeId && garment.colorways.has(activeId)) {
+            // Update the garment's activeColorwayId to persist it
+            garment.activeColorwayId = activeId;
             this.switchColorwayTab(id, activeId);
           }
         }, 0);
@@ -9872,17 +9884,8 @@ class V10_GarmentStudio {
       window.v10QuantityStudio = new V10_QuantityStudioManager();
     }
     
-    // Only initialize if not already initialized to preserve active tabs
-    if (!window.v10QuantityStudio.initialized) {
-      console.log('📊 First time initialization of Quantity Studio');
-      window.v10QuantityStudio.initialize();
-    } else {
-      console.log('♻️ Quantity Studio already initialized - refreshing data only');
-      // Just refresh the data without full re-render to preserve active tabs
-      window.v10QuantityStudio.loadGarments();
-      window.v10QuantityStudio.updateStats();
-      window.v10QuantityStudio.updateQuantityStudioTabStatus();
-    }
+    // Initialize the quantity studio (idempotent - safe to call multiple times)
+    window.v10QuantityStudio.initialize();
   }
 
   // Removed duplicate createProfessionalQuantityCard and initializeProfessionalColorways functions
