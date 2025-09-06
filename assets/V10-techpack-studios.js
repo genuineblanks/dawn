@@ -4498,7 +4498,7 @@ class V10_QuantityStudioManager {
     // Update tab count with minimum shown
     const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
     const isSufficient = colorway.subtotal >= perColorwayMin;
-    const tab = document.querySelector(`#tabs-${garmentId} [data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
+    const tab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab[data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
     if (tab) {
       tab.textContent = `${colorway.subtotal} / ${perColorwayMin} units`;
       tab.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
@@ -4612,7 +4612,7 @@ class V10_QuantityStudioManager {
     // Update the colorway tab count without re-rendering all tabs
     const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
     const isSufficient = colorway.subtotal >= perColorwayMin;
-    const tabCount = document.querySelector(`#tabs-${garmentId} [data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
+    const tabCount = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab[data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
     if (tabCount) {
       tabCount.textContent = `${colorway.subtotal} / ${perColorwayMin} units`;
       tabCount.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
