@@ -3719,7 +3719,7 @@ class V10_QuantityStudioManager {
             </div>
             <div style="font-size: 13px; color: rgba(255,255,255,0.6);">${subtitle}</div>
           </div>
-          ${isSufficient ? '<div style="padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 11px; font-weight: 600; text-transform: uppercase;">✓ Complete</div>' : ''}
+          ${isSufficient ? '<div class="header-complete-badge" style="padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 11px; font-weight: 600; text-transform: uppercase;">✓ Complete</div>' : ''}
         </div>
       </div>
       
@@ -3798,7 +3798,7 @@ class V10_QuantityStudioManager {
           <span style="color: rgba(255,255,255,0.5);">/</span>
           <span style="color: #f59e0b; font-weight: 600;" id="footer-min-${garmentId}">${minimum} MIN</span>
         </div>
-        <span id="footer-status-${garmentId}" style="${isSufficient ? 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;' : ''}">${isSufficient ? '✓ SUFFICIENT' : ''}</span>
+        <span id="footer-status-${garmentId}" style="padding: 4px 12px; background: ${isSufficient ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; border: 1px solid ${isSufficient ? '#10b981' : '#ef4444'}; color: ${isSufficient ? '#10b981' : '#ef4444'}; font-size: 12px; font-weight: 600;">${isSufficient ? '✓ SUFFICIENT' : '✗ INSUFFICIENT'}</span>
       </div>
     `;
     
@@ -4107,9 +4107,9 @@ class V10_QuantityStudioManager {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
-    // Get the currently active colorway (if any)
+    // Use stored active colorway ID or fall back to current DOM or first
     const currentActiveTab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab.active`);
-    const activeColorwayId = currentActiveTab?.dataset?.colorwayId;
+    const activeColorwayId = garment.activeColorwayId || currentActiveTab?.dataset?.colorwayId;
     
     // Update tabs
     const tabsContainer = document.getElementById(`tabs-${garmentId}`);
@@ -4127,9 +4127,14 @@ class V10_QuantityStudioManager {
         if (activeColorwayId === colorwayId) {
           tab.classList.add('active');
           hasSetActive = true;
+          // Store it if it wasn't already stored
+          if (!garment.activeColorwayId) {
+            garment.activeColorwayId = colorwayId;
+          }
         } else if (tabIndex === 0 && !hasSetActive) {
           tab.classList.add('active');
           hasSetActive = true;
+          garment.activeColorwayId = colorwayId;
         }
         
         // Check if this colorway meets minimum
@@ -4206,8 +4211,7 @@ class V10_QuantityStudioManager {
     }
     
     // Render active colorway content (preserve selection)
-    const activeTab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab.active`);
-    const activeId = activeTab?.dataset?.colorwayId || Array.from(garment.colorways.keys())[0];
+    const activeId = garment.activeColorwayId || Array.from(garment.colorways.keys())[0];
     if (activeId) {
       this.renderColorwayContent(garmentId, activeId);
     }
@@ -4217,6 +4221,11 @@ class V10_QuantityStudioManager {
     // Update active tab with enhanced visual feedback
     const tabs = document.querySelectorAll(`#tabs-${garmentId} .v10-colorway-tab`);
     const garment = this.garments.get(garmentId);
+    
+    // Store the active colorway ID for persistence
+    if (garment) {
+      garment.activeColorwayId = colorwayId;
+    }
     
     tabs.forEach(tab => {
       const isActive = tab.dataset.colorwayId === colorwayId;
@@ -4309,11 +4318,24 @@ class V10_QuantityStudioManager {
             Clear All
           </button>
           <div class="v10-colorway-subtotal">
-            Subtotal: <strong>${colorway.subtotal}</strong> units
+            Subtotal: <strong style="color: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size)}">${colorway.subtotal}</strong> units
           </div>
         </div>
       </div>
     `;
+  }
+  
+  getSubtotalColor(subtotal, garmentType, colorwayCount) {
+    const perColorwayMin = this.getPerColorwayMinimum(garmentType, colorwayCount);
+    const percentage = (subtotal / perColorwayMin) * 100;
+    
+    if (percentage < 50) {
+      return '#ef4444'; // Red
+    } else if (percentage < 100) {
+      return '#f59e0b'; // Orange
+    } else {
+      return '#10b981'; // Green
+    }
   }
   
   updateDesignReference(garmentId, colorwayId, value) {
@@ -4355,9 +4377,12 @@ class V10_QuantityStudioManager {
       tab.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
     }
     
-    // Update subtotal in content
+    // Update subtotal in content with dynamic color
     const subtotalEl = document.querySelector(`#colorways-${garmentId} .v10-colorway-subtotal strong`);
-    if (subtotalEl) subtotalEl.textContent = colorway.subtotal;
+    if (subtotalEl) {
+      subtotalEl.textContent = colorway.subtotal;
+      subtotalEl.style.color = this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size);
+    }
     
     this.updateStats();
     this.updateGarmentTotals(garmentId);
@@ -4480,18 +4505,19 @@ class V10_QuantityStudioManager {
           footerStatusEl.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;';
           footerStatusEl.textContent = '✓ SUFFICIENT';
         } else {
-          footerStatusEl.style.cssText = '';
-          footerStatusEl.textContent = '';
+          footerStatusEl.style.cssText = 'padding: 4px 12px; background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; font-size: 12px; font-weight: 600;';
+          footerStatusEl.textContent = '✗ INSUFFICIENT';
         }
       }
       
       // Update header complete badge
-      const headerBadge = card.querySelector('div[style*="rgba(255,255,255,0.03)"] div[style*="✓ Complete"]');
+      const headerBadge = card.querySelector('.header-complete-badge');
       const headerContainer = card.querySelector('div[style*="rgba(255,255,255,0.03)"] > div');
       
       if (isSufficient && !headerBadge && headerContainer) {
         // Add complete badge to header
         const badge = document.createElement('div');
+        badge.className = 'header-complete-badge';
         badge.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 11px; font-weight: 600; text-transform: uppercase;';
         badge.textContent = '✓ Complete';
         headerContainer.appendChild(badge);
