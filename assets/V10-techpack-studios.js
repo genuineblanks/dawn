@@ -4674,9 +4674,7 @@ class V10_QuantityStudioManager {
       
       // Apply the saved quantities
       Object.keys(savedPattern.quantities).forEach(size => {
-        if (colorway.quantities.hasOwnProperty(size)) {
-          colorway.quantities[size] = savedPattern.quantities[size];
-        }
+        colorway.quantities[size] = savedPattern.quantities[size];
       });
       
       // Recalculate subtotal
@@ -4690,11 +4688,9 @@ class V10_QuantityStudioManager {
       
       // Update quantities in DOM directly without re-rendering to avoid clearing inputs
       Object.keys(savedPattern.quantities).forEach(size => {
-        if (colorway.quantities.hasOwnProperty(size)) {
-          const input = document.querySelector(`input[data-garment="${garmentId}"][data-colorway="${colorwayId}"][data-size="${size}"]`);
-          if (input) {
-            input.value = savedPattern.quantities[size];
-          }
+        const input = document.querySelector(`input[data-garment="${garmentId}"][data-colorway="${colorwayId}"][data-size="${size}"]`);
+        if (input) {
+          input.value = savedPattern.quantities[size];
         }
       });
       
