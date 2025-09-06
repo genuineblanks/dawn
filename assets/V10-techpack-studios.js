@@ -3594,6 +3594,71 @@ class V10_QuantityStudioManager {
     return total;
   }
   
+  checkAllStudiosComplete() {
+    // Check garment studio
+    const garmentStudioTab = document.getElementById('garment-studio-tab');
+    const garmentStudioComplete = garmentStudioTab?.classList.contains('studio-tab--complete') || false;
+    
+    // Check quantity studio
+    const quantityStudioTab = document.getElementById('quantities-studio-tab');
+    const quantityStudioComplete = quantityStudioTab?.classList.contains('studio-tab--complete') || false;
+    
+    // Find the proceed button or navigation area
+    const nextBtn = document.querySelector('.step-navigation__next');
+    
+    if (nextBtn && garmentStudioComplete && quantityStudioComplete) {
+      // Both studios complete - enable proceed to Step 4
+      nextBtn.classList.remove('v10-btn--disabled');
+      nextBtn.disabled = false;
+      nextBtn.innerHTML = `
+        Proceed to Review & Submit
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      `;
+    } else if (nextBtn) {
+      // Not all complete - show what needs completion
+      nextBtn.classList.add('v10-btn--disabled');
+      nextBtn.disabled = true;
+      nextBtn.innerHTML = 'Complete all garments';
+    }
+  }
+  
+  updateQuantityStudioTabStatus() {
+    const quantityTab = document.getElementById('quantities-studio-tab');
+    if (!quantityTab) return;
+    
+    const subtitleElement = quantityTab.querySelector('.studio-tab__subtitle');
+    if (!subtitleElement) return;
+    
+    // Check all garments in quantity studio
+    let totalGarments = 0;
+    let completeGarments = 0;
+    
+    this.garments.forEach((garment, garmentId) => {
+      totalGarments++;
+      if (this.checkColorwaysSufficient(garmentId)) {
+        completeGarments++;
+      }
+    });
+    
+    if (totalGarments === 0) {
+      subtitleElement.textContent = 'Set quantities';
+      quantityTab.classList.remove('studio-tab--complete', 'studio-tab--incomplete');
+    } else if (completeGarments === totalGarments) {
+      subtitleElement.textContent = `Complete (${totalGarments} garments)`;
+      quantityTab.classList.add('studio-tab--complete');
+      quantityTab.classList.remove('studio-tab--incomplete');
+    } else {
+      subtitleElement.textContent = `Incomplete (${completeGarments}/${totalGarments})`;
+      quantityTab.classList.add('studio-tab--incomplete');
+      quantityTab.classList.remove('studio-tab--complete');
+    }
+    
+    // Also check if we should enable Step 4
+    this.checkAllStudiosComplete();
+  }
+  
   updateStats() {
     const totalUnits = this.calculateTotalUnits();
     const totalMinimum = this.calculateTotalMinimum();
@@ -3672,10 +3737,10 @@ class V10_QuantityStudioManager {
       if (garment.colorways && garment.colorways.size > 0) {
         setTimeout(() => {
           this.renderColorways(id);
-          // Make first colorway active
-          const firstColorwayId = garment.colorways.keys().next().value;
-          if (firstColorwayId) {
-            this.switchColorwayTab(id, firstColorwayId);
+          // Preserve active colorway or use first
+          const activeId = garment.activeColorwayId || garment.colorways.keys().next().value;
+          if (activeId && garment.colorways.has(activeId)) {
+            this.switchColorwayTab(id, activeId);
           }
         }, 0);
       }
@@ -4386,6 +4451,7 @@ class V10_QuantityStudioManager {
     
     this.updateStats();
     this.updateGarmentTotals(garmentId);
+    this.updateQuantityStudioTabStatus();
     this.saveState();
   }
   
@@ -4446,6 +4512,7 @@ class V10_QuantityStudioManager {
     this.renderColorwayContent(garmentId, colorwayId);
     this.updateStats();
     this.updateGarmentTotals(garmentId);
+    this.updateQuantityStudioTabStatus();
     this.saveState();
   }
   
@@ -4590,6 +4657,7 @@ class V10_QuantityStudioManager {
     
     this.updateStats();
     this.updateGarmentTotals(garmentId);
+    this.updateQuantityStudioTabStatus();
     this.saveState();
   }
 }
@@ -7643,6 +7711,11 @@ class V10_GarmentStudio {
     const isStudioComplete = completeGarments.length === allGarments.length;
     
     this.updateStudioTabStatus(isStudioComplete, completeGarments.length, allGarments.length);
+    
+    // Also update quantity studio tab
+    if (window.v10QuantityStudio) {
+      window.v10QuantityStudio.updateQuantityStudioTabStatus();
+    }
     
     console.log(`🎯 Studio Completion: ${completeGarments.length}/${allGarments.length} garments complete`);
     
