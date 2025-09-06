@@ -3453,13 +3453,12 @@ class V10_QuantityStudioManager {
     // IMPORTANT: Save existing colorways and quantities BEFORE clearing
     const existingData = new Map();
     this.garments.forEach((garment, id) => {
-      if (garment.colorways && garment.colorways.size > 0) {
-        // Save both colorways and the total
-        existingData.set(id, {
-          colorways: garment.colorways,
-          total: garment.total || 0
-        });
-      }
+      // Save data for all garments, not just those with colorways
+      existingData.set(id, {
+        colorways: garment.colorways || new Map(),
+        total: garment.total || 0,
+        activeColorwayId: garment.activeColorwayId
+      });
     });
     
     // Now safe to clear
@@ -3484,7 +3483,8 @@ class V10_QuantityStudioManager {
           ...garment,
           colorways: preserved?.colorways || new Map(),
           quantities: {},
-          total: preserved?.total || 0
+          total: preserved?.total || 0,
+          activeColorwayId: preserved?.activeColorwayId || null
         };
         
         // Recalculate total from colorways if we have them
@@ -7777,6 +7777,11 @@ class V10_GarmentStudio {
       subtitleElement.textContent = `Incomplete (${completeCount}/${totalCount})`;
       garmentStudioTab.classList.add('studio-tab--incomplete');
       garmentStudioTab.classList.remove('studio-tab--complete');
+    }
+    
+    // Check if both studios are complete and enable Step 4 button
+    if (window.v10QuantityStudio && typeof window.v10QuantityStudio.checkAllStudiosComplete === 'function') {
+      window.v10QuantityStudio.checkAllStudiosComplete();
     }
   }
 
