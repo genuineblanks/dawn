@@ -4609,6 +4609,15 @@ class V10_QuantityStudioManager {
       garment.total += cw.subtotal;
     });
     
+    // Update the colorway tab count without re-rendering all tabs
+    const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
+    const isSufficient = colorway.subtotal >= perColorwayMin;
+    const tabCount = document.querySelector(`#tabs-${garmentId} [data-colorway-id="${colorwayId}"] .v10-colorway-tab-count`);
+    if (tabCount) {
+      tabCount.textContent = `${colorway.subtotal} / ${perColorwayMin} units`;
+      tabCount.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
+    }
+    
     // Re-render and update everything
     this.renderColorwayContent(garmentId, colorwayId);
     // Removed renderColorways call - not needed, tabs don't change when applying preset
