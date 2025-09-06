@@ -3532,9 +3532,13 @@ class V10_QuantityStudioManager {
     const type = garmentType?.toLowerCase() || 'default';
     const minimums = this.minimums[type] || this.minimums.default;
     
-    if (colorwayCount <= 1) {
+    // If no colorways, show single minimum
+    if (colorwayCount === 0) {
+      return minimums.single;
+    } else if (colorwayCount === 1) {
       return minimums.single;
     } else {
+      // Multiple colorways: total is multi * count
       return minimums.multi * colorwayCount;
     }
   }
@@ -3767,7 +3771,7 @@ class V10_QuantityStudioManager {
       
       <div style="
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         padding: 20px;
         margin-top: 24px;
@@ -3786,8 +3790,8 @@ class V10_QuantityStudioManager {
           <span style="font-size: 20px; font-weight: 700; color: ${isSufficient ? '#10b981' : '#ffffff'};" id="footer-total-${garmentId}">${garment.total || 0}</span>
           <span style="color: rgba(255,255,255,0.5);">/</span>
           <span style="color: #f59e0b; font-weight: 600;">${minimum} MIN</span>
-          ${isSufficient ? '<span style="margin-left: 16px; padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;">✓ SUFFICIENT</span>' : ''}
         </div>
+        ${isSufficient ? '<span style="padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;">✓ SUFFICIENT</span>' : '<div></div>'}
       </div>
     `;
     
@@ -4096,16 +4100,30 @@ class V10_QuantityStudioManager {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
+    // Get the currently active colorway (if any)
+    const currentActiveTab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab.active`);
+    const activeColorwayId = currentActiveTab?.dataset?.colorwayId;
+    
     // Update tabs
     const tabsContainer = document.getElementById(`tabs-${garmentId}`);
     if (tabsContainer) {
       tabsContainer.innerHTML = '';
       let tabIndex = 0;
+      let hasSetActive = false;
+      
       garment.colorways.forEach((colorway, colorwayId) => {
         const tab = document.createElement('button');
         tab.className = 'v10-colorway-tab';
         tab.dataset.colorwayId = colorwayId;
-        if (tabIndex === 0) tab.classList.add('active');
+        
+        // Preserve active tab if it exists, otherwise set first as active
+        if (activeColorwayId === colorwayId) {
+          tab.classList.add('active');
+          hasSetActive = true;
+        } else if (tabIndex === 0 && !hasSetActive) {
+          tab.classList.add('active');
+          hasSetActive = true;
+        }
         
         // Check if this colorway meets minimum
         const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
@@ -4180,10 +4198,11 @@ class V10_QuantityStudioManager {
       });
     }
     
-    // Render first colorway content by default
-    const firstColorwayId = Array.from(garment.colorways.keys())[0];
-    if (firstColorwayId) {
-      this.renderColorwayContent(garmentId, firstColorwayId);
+    // Render active colorway content (preserve selection)
+    const activeTab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab.active`);
+    const activeId = activeTab?.dataset?.colorwayId || Array.from(garment.colorways.keys())[0];
+    if (activeId) {
+      this.renderColorwayContent(garmentId, activeId);
     }
   }
   
@@ -4441,24 +4460,28 @@ class V10_QuantityStudioManager {
         footerTotalEl.textContent = garment.total;
       }
       
-      // Update or add the status badge in the footer
+      // Update or add the status badge in the footer (right side)
       const footerContainer = card.querySelector('div[style*="border-top"]');
       if (footerContainer) {
-        const footerDiv = footerContainer.querySelector('div[style*="display: flex"]');
-        if (footerDiv) {
-          // Look for existing badge
-          let statusBadge = footerDiv.querySelector('span[style*="SUFFICIENT"]');
-          
-          if (isSufficient && !statusBadge) {
-            // Add the sufficient badge
-            statusBadge = document.createElement('span');
-            statusBadge.style.cssText = 'margin-left: 16px; padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;';
-            statusBadge.textContent = '✓ SUFFICIENT';
-            footerDiv.appendChild(statusBadge);
-          } else if (!isSufficient && statusBadge) {
-            // Remove the badge if not sufficient
-            statusBadge.remove();
+        // Find or create the badge on the right side
+        let statusBadge = footerContainer.querySelector('span[style*="SUFFICIENT"]');
+        
+        if (!statusBadge) {
+          // Check if there's an empty div placeholder
+          const lastChild = footerContainer.lastElementChild;
+          if (lastChild && lastChild.tagName === 'DIV' && !lastChild.innerHTML) {
+            // Replace empty div with badge if sufficient
+            if (isSufficient) {
+              statusBadge = document.createElement('span');
+              statusBadge.style.cssText = 'padding: 4px 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; font-size: 12px; font-weight: 600;';
+              statusBadge.textContent = '✓ SUFFICIENT';
+              footerContainer.replaceChild(statusBadge, lastChild);
+            }
           }
+        } else if (!isSufficient) {
+          // Replace badge with empty div if not sufficient
+          const emptyDiv = document.createElement('div');
+          footerContainer.replaceChild(emptyDiv, statusBadge);
         }
       }
     } else {

@@ -9902,7 +9902,7 @@ div[class*="circle"][style*="background-color"],
 }
 
 .v10-add-colorway-tab {
-  width: 40px;
+  min-width: 40px;
   height: 40px;
   border-radius: 0;
   background: var(--v10-bg-primary);
@@ -9913,6 +9913,8 @@ div[class*="circle"][style*="background-color"],
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0 12px;
+  white-space: nowrap;
 }
 
 .v10-add-colorway-tab:hover {
@@ -10308,6 +10310,9 @@ div[class*="circle"][style*="background-color"],
   transition: all 0.2s;
   white-space: nowrap;
   line-height: 1;
+  min-width: auto;
+  width: auto;
+  height: auto;
   min-height: 36px;
 }
 
