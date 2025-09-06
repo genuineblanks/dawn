@@ -3331,7 +3331,6 @@ class V10_QuantityStudioManager {
           state.garments.forEach(garmentData => {
             const garmentState = {
               ...garmentData,
-              activeColorwayId: garmentData.activeColorwayId, // RESTORE ACTIVE TAB
               colorways: new Map()
             };
             
@@ -3347,7 +3346,7 @@ class V10_QuantityStudioManager {
             }
             
             this.garments.set(garmentData.id, garmentState);
-            console.log(`  Restored garment ${garmentData.id}: ${garmentState.colorways.size} colorways, active tab: ${garmentState.activeColorwayId}`);
+            console.log(`  Restored garment ${garmentData.id}: ${garmentState.colorways.size} colorways, ${garmentData.total} units`);
           });
         }
         
@@ -3367,7 +3366,7 @@ class V10_QuantityStudioManager {
       this.garments.forEach((garment, id) => {
         const garmentData = {
           ...garment,
-          activeColorwayId: garment.activeColorwayId, // PRESERVE ACTIVE TAB
+          activeColorwayId: garment.activeColorwayId,
           colorways: Array.from(garment.colorways.entries()).map(([cwId, cw]) => ({
             id: cwId,
             ...cw
@@ -3377,7 +3376,7 @@ class V10_QuantityStudioManager {
       });
       
       sessionStorage.setItem('v10_quantity_studio_state', JSON.stringify(state));
-      console.log('💾 Saved quantity studio state (with active colorway tabs)');
+      console.log('💾 Saved quantity studio state');
     } catch (error) {
       console.error('Error saving state:', error);
     }
@@ -3439,6 +3438,9 @@ class V10_QuantityStudioManager {
               
               // Update total
               currentGarment.total = savedGarment.total || 0;
+              
+              // Restore active colorway ID
+              currentGarment.activeColorwayId = savedGarment.activeColorwayId || null;
               
               console.log(`  Merged state for garment ${savedGarment.id}: ${currentGarment.colorways.size} colorways`);
             }
@@ -4292,7 +4294,6 @@ class V10_QuantityStudioManager {
     // Store the active colorway ID for persistence
     if (garment) {
       garment.activeColorwayId = colorwayId;
-      this.saveState(); // SAVE IMMEDIATELY after tab switch
     }
     
     tabs.forEach(tab => {
@@ -4608,25 +4609,22 @@ class V10_QuantityStudioManager {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
-    // Use the active colorway ID if available, fallback to passed colorwayId
-    const activeColorwayId = garment.activeColorwayId || colorwayId;
-    const colorway = garment.colorways.get(activeColorwayId);
+    const colorway = garment.colorways.get(colorwayId);
     if (!colorway) return;
     
     // Save the current distribution pattern
     const savedPattern = {
       quantities: { ...colorway.quantities },
       total: colorway.subtotal,
-      timestamp: Date.now(),
-      context: 'global' // Can be used anywhere
+      timestamp: Date.now()
     };
     
-    // Store in localStorage with global key so patterns persist and can be used anywhere
+    // Store in sessionStorage with global key so any garment can use it
     const key = `v10_saved_pattern_global`;
-    localStorage.setItem(key, JSON.stringify(savedPattern));
+    sessionStorage.setItem(key, JSON.stringify(savedPattern));
     
     // Show success message
-    console.log(`✅ Global pattern saved from garment ${garmentId}, colorway ${activeColorwayId}`);
+    console.log(`✅ Pattern saved for garment ${garmentId}`);
     
     // Visual feedback - temporarily change button color
     const saveBtn = document.querySelector(`[onclick*="saveDistribution('${garmentId}', '${colorwayId}')"]`);
@@ -4649,17 +4647,15 @@ class V10_QuantityStudioManager {
     const garment = this.garments.get(garmentId);
     if (!garment) return;
     
-    // Use the active colorway ID if available, fallback to passed colorwayId
-    const activeColorwayId = garment.activeColorwayId || colorwayId;
-    const colorway = garment.colorways.get(activeColorwayId);
+    const colorway = garment.colorways.get(colorwayId);
     if (!colorway) return;
     
-    // Load saved pattern from localStorage (global pattern available anywhere)
+    // Load saved pattern from sessionStorage (global pattern)
     const key = `v10_saved_pattern_global`;
-    const savedData = localStorage.getItem(key);
+    const savedData = sessionStorage.getItem(key);
     
     if (!savedData) {
-      console.log(`⚠️ No saved pattern found`);
+      console.log(`⚠️ No saved pattern found for garment ${garmentId}`);
       
       // Visual feedback - show no pattern saved
       const loadBtn = document.querySelector(`[onclick*="loadDistribution('${garmentId}', '${colorwayId}')"]`);
@@ -4695,7 +4691,7 @@ class V10_QuantityStudioManager {
       // Update quantities in DOM directly without re-rendering to avoid clearing inputs
       Object.keys(savedPattern.quantities).forEach(size => {
         if (colorway.quantities.hasOwnProperty(size)) {
-          const input = document.querySelector(`input[data-garment-id="${garmentId}"][data-colorway-id="${activeColorwayId}"][data-size="${size}"]`);
+          const input = document.querySelector(`input[data-garment="${garmentId}"][data-colorway="${colorwayId}"][data-size="${size}"]`);
           if (input) {
             input.value = savedPattern.quantities[size];
           }
@@ -4703,7 +4699,7 @@ class V10_QuantityStudioManager {
       });
       
       // Update the subtotal display and box styling
-      const subtotalElement = document.getElementById(`subtotal-${garmentId}-${activeColorwayId}`);
+      const subtotalElement = document.getElementById(`subtotal-${garmentId}-${colorwayId}`);
       if (subtotalElement) {
         subtotalElement.textContent = `${colorway.subtotal} units`;
         
@@ -10531,10 +10527,7 @@ class V10_GarmentStudio {
       
       // Add click handler
       tab.addEventListener('click', () => {
-        // Use the correct method from V10_QuantityStudioManager
-        if (window.v10QuantityStudio) {
-          window.v10QuantityStudio.switchColorwayTab(garmentId, labDip.id);
-        }
+        this.switchColorwayTab(garmentId, labDip.id, index);
         if (countElement) {
           countElement.textContent = `${index + 1} of ${assignedLabDips.length}`;
         }
@@ -10563,8 +10556,22 @@ class V10_GarmentStudio {
     return tab;
   }
 
-  // REMOVED: switchColorwayTab - This functionality belongs only in V10_QuantityStudioManager
-  // Use window.v10QuantityStudio.switchColorwayTab() instead
+  switchColorwayTab(garmentId, colorwayId, index) {
+    const selector = document.querySelector(`[data-garment-id="${garmentId}"] #colorway-selector`);
+    if (!selector) return;
+    
+    // Update active tab
+    const tabs = selector.querySelectorAll('.colorway-tab');
+    tabs.forEach(tab => {
+      tab.classList.toggle('colorway-tab--active', tab.dataset.colorwayId === colorwayId);
+    });
+    
+    // Switch to colorway-specific size inputs (if implemented)
+    this.updateSizeInputsForColorway(garmentId, colorwayId);
+    
+    // Update validation for active colorway
+    this.updateColorwayValidation(garmentId, colorwayId);
+  }
 
   initializeColorwayValidation(garmentId, assignedLabDips) {
     const garment = V10_State.garments.get(garmentId);
@@ -13295,7 +13302,6 @@ class V10_ReviewManager {
     this.populateGarments();
     this.populateLabDips();
     this.populateDesigns();
-    this.populateQuantities(); // NEW: Populate bulk request quantities
     this.populateCostSummary();
     this.updateSectionVisibility();
     this.updateSubmitMessage();
@@ -14297,83 +14303,6 @@ class V10_ReviewManager {
     });
     
     return `Assigned to ${assignedGarmentNames.join(', ')}`;
-  }
-
-  populateQuantities() {
-    const quantitiesContainer = document.getElementById('review-quantities');
-    if (!quantitiesContainer) return;
-    
-    // Only populate for bulk requests
-    if (V10_State.requestType !== 'bulk-order-request') {
-      return;
-    }
-    
-    console.log('🎯 Step 4: Populating quantities for bulk request...');
-    
-    // Get quantity data from V10_QuantityStudioManager
-    if (!window.v10QuantityStudio || !window.v10QuantityStudio.garments) {
-      quantitiesContainer.innerHTML = '<p class="v10-no-data">No quantity data available.</p>';
-      return;
-    }
-    
-    let html = '';
-    
-    // Iterate through garments and show colorway information
-    window.v10QuantityStudio.garments.forEach((garment, garmentId) => {
-      if (garment.colorways.size > 0) {
-        html += `
-          <div class="v10-bulk-garment-review">
-            <div class="v10-bulk-garment-header">
-              <h4 class="v10-bulk-garment-title">${garment.name || 'Garment ' + garmentId}</h4>
-              <span class="v10-bulk-garment-total">${garment.total || 0} units total</span>
-            </div>
-            <div class="v10-bulk-colorways-grid">
-        `;
-        
-        // Show each colorway as a color square with quantities
-        garment.colorways.forEach((colorway, colorwayId) => {
-          html += `
-            <div class="v10-bulk-colorway-item">
-              <div class="v10-bulk-colorway-visual">
-                <div class="v10-bulk-color-square" style="background-color: ${colorway.color || '#000000'};"></div>
-              </div>
-              <div class="v10-bulk-colorway-details">
-                <span class="v10-bulk-colorway-name">${colorway.name || 'Colorway ' + colorwayId}</span>
-                <span class="v10-bulk-colorway-quantity">${colorway.subtotal || 0} units</span>
-                <div class="v10-bulk-sizes-summary">
-                  ${this.formatSizeDistribution(colorway.quantities)}
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        
-        html += `
-            </div>
-          </div>
-        `;
-      }
-    });
-    
-    if (!html) {
-      html = '<p class="v10-no-data">No quantities configured yet.</p>';
-    }
-    
-    quantitiesContainer.innerHTML = html;
-    console.log('🎯 Step 4: Quantities populated successfully');
-  }
-  
-  formatSizeDistribution(quantities) {
-    if (!quantities || Object.keys(quantities).length === 0) {
-      return '<span class="v10-no-sizes">No sizes configured</span>';
-    }
-    
-    const sizes = Object.entries(quantities)
-      .filter(([size, qty]) => qty > 0)
-      .map(([size, qty]) => `${size}: ${qty}`)
-      .join(', ');
-      
-    return `<span class="v10-sizes-list">${sizes || 'No quantities set'}</span>`;
   }
 
   populateCostSummary() {
