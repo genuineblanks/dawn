@@ -4306,6 +4306,7 @@ class V10_QuantityStudioManager {
     // Store the active colorway ID for persistence
     if (garment) {
       garment.activeColorwayId = colorwayId;
+      this.saveState(); // Save to session storage immediately
     }
     
     tabs.forEach(tab => {
@@ -4610,7 +4611,7 @@ class V10_QuantityStudioManager {
     
     // Re-render and update everything
     this.renderColorwayContent(garmentId, colorwayId);
-    this.renderColorways(garmentId); // Update tabs
+    // Removed renderColorways call - not needed, tabs don't change when applying preset
     this.updateStats();
     this.updateGarmentTotals(garmentId);
     this.updateQuantityStudioTabStatus();
