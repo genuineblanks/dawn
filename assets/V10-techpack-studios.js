@@ -4373,7 +4373,7 @@ class V10_QuantityStudioManager {
           `).join('')}
         </div>
         
-        <div class="v10-colorway-actions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+        <div class="v10-colorway-actions" style="display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 16px; align-items: center;">
           <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
                   onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'bell-curve')"
                   title="Focus on M/L sizes">
@@ -4389,11 +4389,6 @@ class V10_QuantityStudioManager {
                   title="Focus on larger sizes">
             Large Heavy
           </button>
-          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
-                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'equal')"
-                  title="Equal distribution">
-            Equal Split
-          </button>
           <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px; background: rgba(16,185,129,0.1); border-color: #10b981; color: #10b981;"
                   onclick="window.v10QuantityStudio.saveDistribution('${garmentId}', '${colorwayId}')"
                   title="Save current pattern">
@@ -4408,9 +4403,8 @@ class V10_QuantityStudioManager {
                   onclick="window.v10QuantityStudio.clearColorwayQuantities('${garmentId}', '${colorwayId}')">
             Clear All
           </button>
-        </div>
-        <div style="margin-bottom: 16px;">
           <div class="v10-colorway-subtotal" style="
+            margin-left: auto;
             padding: 10px 16px;
             background: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).background};
             border: 1px solid ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).border};
@@ -4536,11 +4530,6 @@ class V10_QuantityStudioManager {
         'S-XL': [10, 25, 35, 30],
         'XS-XXL': [5, 10, 20, 30, 25, 10],
         'XXS-XXL': [3, 7, 15, 25, 30, 15, 5]
-      },
-      'equal': {
-        'S-XL': [25, 25, 25, 25],
-        'XS-XXL': [16.7, 16.7, 16.7, 16.7, 16.6, 16.6],
-        'XXS-XXL': [14.3, 14.3, 14.3, 14.3, 14.3, 14.3, 14.2]
       }
     };
     
@@ -4606,8 +4595,8 @@ class V10_QuantityStudioManager {
       timestamp: Date.now()
     };
     
-    // Store in sessionStorage with unique key
-    const key = `v10_saved_pattern_${garmentId}`;
+    // Store in sessionStorage with global key so any garment can use it
+    const key = `v10_saved_pattern_global`;
     sessionStorage.setItem(key, JSON.stringify(savedPattern));
     
     // Show success message
@@ -4637,8 +4626,8 @@ class V10_QuantityStudioManager {
     const colorway = garment.colorways.get(colorwayId);
     if (!colorway) return;
     
-    // Load saved pattern from sessionStorage
-    const key = `v10_saved_pattern_${garmentId}`;
+    // Load saved pattern from sessionStorage (global pattern)
+    const key = `v10_saved_pattern_global`;
     const savedData = sessionStorage.getItem(key);
     
     if (!savedData) {
@@ -4675,9 +4664,9 @@ class V10_QuantityStudioManager {
         garment.total += cw.subtotal;
       });
       
-      // Re-render and update everything
+      // Re-render and update everything (don't call renderColorways to avoid tab switch)
       this.renderColorwayContent(garmentId, colorwayId);
-      this.renderColorways(garmentId);
+      // Don't call renderColorways here to preserve active tab
       this.updateStats();
       this.updateGarmentTotals(garmentId);
       this.updateQuantityStudioTabStatus();
@@ -4724,7 +4713,17 @@ class V10_QuantityStudioManager {
     });
     
     this.renderColorwayContent(garmentId, colorwayId);
-    this.renderColorways(garmentId); // Update colorway tabs to show new totals
+    // Update only the specific colorway tab count without re-rendering all tabs
+    const tab = document.querySelector(`#tabs-${garmentId} .v10-colorway-tab[data-colorway-id="${colorwayId}"]`);
+    if (tab) {
+      const countElement = tab.querySelector('.v10-colorway-tab-count');
+      if (countElement) {
+        const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
+        const isSufficient = colorway.subtotal >= perColorwayMin;
+        countElement.style.color = isSufficient ? '#00ff88' : '#ff6b6b';
+        countElement.textContent = `${colorway.subtotal} / ${perColorwayMin} units`;
+      }
+    }
     this.updateStats();
     this.updateGarmentTotals(garmentId);
     this.updateQuantityStudioTabStatus();
@@ -12816,25 +12815,28 @@ class V10_ValidationManager {
       
       const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
 
-      // Check if quantity studio is complete instead of checking total units
+      // For bulk orders, we just need to check if both studios are complete
+      // The studios themselves already check their completion status
+      const garmentStudioTab = document.getElementById('garment-studio-tab');
+      const quantityStudioTab = document.getElementById('quantities-studio-tab');
+      
+      const garmentStudioComplete = garmentStudioTab?.classList.contains('studio-tab--complete') || false;
+      const quantityStudioComplete = quantityStudioTab?.classList.contains('studio-tab--complete') || false;
+      
+      if (!garmentStudioComplete) {
+        errors.push('Complete all garments in Garment Studio');
+      }
+      
+      if (!quantityStudioComplete) {
+        errors.push('Complete all quantity requirements in Quantity Studio');
+      }
+      
+      // Update total quantity if available
       if (window.v10QuantityStudio) {
-        // Check if all garments in quantity studio are sufficient
-        let allSufficient = true;
         let totalUnits = 0;
-        
-        window.v10QuantityStudio.garments.forEach((garment, garmentId) => {
+        window.v10QuantityStudio.garments.forEach((garment) => {
           totalUnits += garment.total || 0;
-          if (!window.v10QuantityStudio.checkColorwaysSufficient(garmentId)) {
-            allSufficient = false;
-          }
         });
-        
-        // Only add error if quantity studio has garments but they're not sufficient
-        if (window.v10QuantityStudio.garments.size > 0 && !allSufficient) {
-          errors.push(`Complete all quantity requirements in Quantity Studio`);
-        }
-        
-        // Update the total quantity in state for other uses
         V10_State.totalQuantity = totalUnits;
       }
 
