@@ -7307,42 +7307,11 @@ div[class*="circle"][style*="background-color"],
   display: grid;
   gap: var(--v10-space-4);
   margin-top: var(--v10-space-6);
+  width: 100%;
 }
 
 /* Garment Quantity Cards */
-.garment-quantity-card {
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: 0;
-  padding: var(--v10-space-5);
-  transition: var(--v10-transition-base);
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-/* Removed hover effect for solid appearance */
-
-.garment-quantity-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--v10-space-4);
-}
-
-.garment-quantity-card__title {
-  font-size: var(--v10-text-lg);
-  font-weight: 600;
-  color: var(--v10-text-primary);
-}
-
-.garment-quantity-card__type {
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-  background: var(--v10-bg-tertiary);
-  padding: var(--v10-space-1) var(--v10-space-2);
-  border-radius: var(--v10-radius-sm);
-}
+/* Removed unused .garment-quantity-card styles - using v10-quantity-garment-full instead */
 
 /* Size Grid for Bulk Orders */
 .v10-size-grid {
@@ -10295,15 +10264,18 @@ div[class*="circle"][style*="background-color"],
 
 /* V10 Quantity Garment Full - Professional Dark Layout */
 .v10-quantity-garment-full {
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin-bottom: 24px;
-  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 24px 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  box-shadow: none !important;
 }
 
 .v10-quantity-garment-full .v10-colorway-section {
   margin-top: 20px;
+  width: 100%;
 }
 
 .v10-quantity-garment-full .v10-colorway-tabs-container {
@@ -10349,6 +10321,9 @@ div[class*="circle"][style*="background-color"],
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 0;
+}
+
+.v10-quantity-garment-full .v10-colorways-content:not(:empty) {
   min-height: 100px;
 }
 
@@ -10539,12 +10514,12 @@ div[class*="circle"][style*="background-color"],
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+  width: 100%;
 }
 
 @media (min-width: 1024px) {
   .responsive-garment-grid {
     grid-template-columns: 1fr;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
   }
 }
