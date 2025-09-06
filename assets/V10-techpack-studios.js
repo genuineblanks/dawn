@@ -13642,6 +13642,7 @@ class V10_ReviewManager {
     const container = document.getElementById('review-garments');
     if (!container) return;
 
+    const requestType = V10_State.requestType;
     const garments = Array.from(V10_State.garments.values());
     
     if (garments.length === 0) {
@@ -13650,6 +13651,46 @@ class V10_ReviewManager {
           <p>No garments configured</p>
         </div>
       `;
+      return;
+    }
+    
+    // Handle bulk order request differently - show each colorway as separate item
+    if (requestType === 'bulk-order-request') {
+      // Get quantity data from V10_QuantityStudioManager
+      const quantityData = window.v10QuantityStudio?.garments || new Map();
+      
+      // Create array of garment-colorway combinations
+      const garmentColorways = [];
+      let itemNumber = 1;
+      
+      // Sort garments by their number property first
+      garments.sort((a, b) => a.number - b.number);
+      
+      garments.forEach(garment => {
+        const qData = quantityData.get(garment.id);
+        if (qData && qData.colorways && qData.colorways.size > 0) {
+          // Add each colorway as a separate item
+          qData.colorways.forEach((colorway, colorwayId) => {
+            garmentColorways.push({
+              number: itemNumber++,
+              garment: garment,
+              colorway: colorway,
+              colorwayId: colorwayId
+            });
+          });
+        } else {
+          // If no colorways, show garment without quantities
+          garmentColorways.push({
+            number: itemNumber++,
+            garment: garment,
+            colorway: null,
+            colorwayId: null
+          });
+        }
+      });
+      
+      // Render each garment-colorway as separate item
+      container.innerHTML = garmentColorways.map(item => this.renderBulkOrderGarment(item)).join('');
       return;
     }
     
@@ -14045,6 +14086,73 @@ class V10_ReviewManager {
     }
 
     return details;
+  }
+
+  renderBulkOrderGarment(item) {
+    const { number, garment, colorway } = item;
+    const hasQuantities = colorway && colorway.quantities;
+    
+    // Build size display HTML
+    let quantityHTML = '';
+    if (hasQuantities) {
+      const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      const sizeItems = sizes.map(size => {
+        const qty = colorway.quantities[size] || 0;
+        if (qty > 0) {
+          return `
+            <div class="v10-size-item">
+              <span class="v10-size-label">${size}</span>
+              <span class="v10-size-qty">${qty}</span>
+            </div>
+          `;
+        }
+        return '';
+      }).filter(item => item).join('');
+      
+      quantityHTML = `
+        <div class="v10-quantity-display">
+          <div class="v10-size-grid">${sizeItems}</div>
+          <div class="v10-quantity-total">
+            <span>Total:</span>
+            <strong>${colorway.subtotal || 0} units</strong>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Format garment display text
+    const garmentType = garment.type || 'Garment';
+    const fabricType = garment.fabricType || 'No fabric specified';
+    const colorName = colorway ? colorway.name : '';
+    const colorCode = colorway ? (colorway.code || colorway.pantone || '') : '';
+    
+    return `
+      <div class="v10-review-garment-item">
+        <div class="v10-garment-header">
+          ${colorway ? `
+            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || '#666666'}"></div>
+          ` : ''}
+          <div class="v10-garment-info">
+            <span class="v10-garment-number">${number}.</span>
+            <span class="v10-garment-type">${garmentType}</span>
+            ${colorway ? `
+              <span class="v10-garment-separator">-</span>
+              <span class="v10-garment-fabric">${fabricType}</span>
+              <span class="v10-garment-separator">-</span>
+              <span class="v10-garment-colorway">${colorName}</span>
+              ${colorCode ? `
+                <span class="v10-garment-separator">-</span>
+                <span class="v10-garment-code">${colorCode}</span>
+              ` : ''}
+            ` : `
+              <span class="v10-garment-separator">-</span>
+              <span class="v10-garment-fabric">${fabricType}</span>
+            `}
+          </div>
+        </div>
+        ${quantityHTML}
+      </div>
+    `;
   }
 
   populateLabDips() {
@@ -14543,6 +14651,25 @@ class V10_ReviewManager {
 
     if (quantitiesSection) {
       quantitiesSection.style.display = requestType === 'bulk-order-request' ? 'block' : 'none';
+    }
+    
+    // Hide unnecessary sections for bulk orders
+    if (requestType === 'bulk-order-request') {
+      // Hide Fabric Swatches section
+      const fabricSwatchesSection = document.querySelector('.v10-studio-card:has(#review-labdips-standalone), #review-labdips-section');
+      if (fabricSwatchesSection) fabricSwatchesSection.style.display = 'none';
+      
+      // Hide Design Applications section
+      const designSection = document.querySelector('.v10-studio-card:has(#review-designs), #review-designs-section');
+      if (designSection) designSection.style.display = 'none';
+      
+      // Hide Cost Summary section completely for bulk orders
+      const costSection = document.querySelector('.v10-studio-card:has(#cost-breakdown), #review-cost-section');
+      if (costSection) costSection.style.display = 'none';
+      
+      // Hide empty Production Quantities section
+      const productionSection = document.querySelector('.v10-studio-card:has(#review-quantities-section), #review-quantities-section');
+      if (productionSection) productionSection.style.display = 'none';
     }
   }
 
