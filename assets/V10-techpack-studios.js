@@ -4373,15 +4373,43 @@ class V10_QuantityStudioManager {
           `).join('')}
         </div>
         
-        <div class="v10-colorway-actions">
-          <button type="button" class="v10-btn v10-btn--ghost" 
-                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'bell-curve')">
-            Apply Bell Curve
+        <div class="v10-colorway-actions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
+                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'bell-curve')"
+                  title="Focus on M/L sizes">
+            Bell Curve
           </button>
-          <button type="button" class="v10-btn v10-btn--ghost" 
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
+                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'medium-heavy')"
+                  title="Strong focus on M">
+            Medium Heavy
+          </button>
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
+                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'large-heavy')"
+                  title="Focus on larger sizes">
+            Large Heavy
+          </button>
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px;"
+                  onclick="window.v10QuantityStudio.applyPreset('${garmentId}', '${colorwayId}', 'equal')"
+                  title="Equal distribution">
+            Equal Split
+          </button>
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px; background: rgba(16,185,129,0.1); border-color: #10b981; color: #10b981;"
+                  onclick="window.v10QuantityStudio.saveDistribution('${garmentId}', '${colorwayId}')"
+                  title="Save current pattern">
+            Save Pattern
+          </button>
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px; background: rgba(168,85,247,0.1); border-color: #a855f7; color: #a855f7;"
+                  onclick="window.v10QuantityStudio.loadDistribution('${garmentId}', '${colorwayId}')"
+                  title="Load saved pattern">
+            Load Pattern
+          </button>
+          <button type="button" class="v10-btn v10-btn--ghost" style="font-size: 12px; padding: 6px 12px; background: rgba(239,68,68,0.1); border-color: #ef4444; color: #ef4444;"
                   onclick="window.v10QuantityStudio.clearColorwayQuantities('${garmentId}', '${colorwayId}')">
             Clear All
           </button>
+        </div>
+        <div style="margin-bottom: 16px;">
           <div class="v10-colorway-subtotal" style="
             padding: 10px 16px;
             background: ${this.getSubtotalColor(colorway.subtotal, garment.type, garment.colorways.size).background};
@@ -4489,33 +4517,192 @@ class V10_QuantityStudioManager {
     const colorway = garment.colorways.get(colorwayId);
     if (!colorway) return;
     
-    // Calculate total to distribute
-    const currentTotal = colorway.subtotal || 100;
-    const targetTotal = Math.max(currentTotal, 100);
+    // Get the minimum required for this colorway
+    const perColorwayMin = this.getPerColorwayMinimum(garment.type, garment.colorways.size);
     
-    const presets = {
-      'bell-curve': [5, 10, 20, 30, 20, 10, 5],  // XXS to XXL percentages
-      'medium-heavy': [5, 10, 15, 30, 25, 10, 5],
-      'large-heavy': [5, 5, 15, 25, 30, 15, 5],
-      'equal': [14.3, 14.3, 14.3, 14.3, 14.3, 14.3, 14.2]
+    // Define preset percentages based on common size ranges
+    const presetDistributions = {
+      'bell-curve': {
+        'S-XL': [15, 35, 35, 15],  // S, M, L, XL
+        'XS-XXL': [8, 17, 25, 25, 17, 8],  // XS, S, M, L, XL, XXL
+        'XXS-XXL': [5, 10, 20, 30, 20, 10, 5]  // XXS, XS, S, M, L, XL, XXL
+      },
+      'medium-heavy': {
+        'S-XL': [15, 40, 30, 15],
+        'XS-XXL': [8, 17, 35, 25, 10, 5],
+        'XXS-XXL': [5, 10, 15, 35, 20, 10, 5]
+      },
+      'large-heavy': {
+        'S-XL': [10, 25, 35, 30],
+        'XS-XXL': [5, 10, 20, 30, 25, 10],
+        'XXS-XXL': [3, 7, 15, 25, 30, 15, 5]
+      },
+      'equal': {
+        'S-XL': [25, 25, 25, 25],
+        'XS-XXL': [16.7, 16.7, 16.7, 16.7, 16.6, 16.6],
+        'XXS-XXL': [14.3, 14.3, 14.3, 14.3, 14.3, 14.3, 14.2]
+      }
     };
     
-    const distribution = presets[presetType] || presets['bell-curve'];
-    const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    // For now, default to most common S-XL range
+    // In future, could detect which sizes are actually shown
+    const activeSizes = ['S', 'M', 'L', 'XL'];
+    const distribution = presetDistributions[presetType]?.['S-XL'] || presetDistributions['bell-curve']['S-XL'];
     
-    sizes.forEach((size, index) => {
-      colorway.quantities[size] = Math.round(targetTotal * distribution[index] / 100);
+    // Clear all quantities first
+    ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(size => {
+      colorway.quantities[size] = 0;
     });
     
-    // Adjust for rounding errors
-    const actualTotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
-    if (actualTotal !== targetTotal) {
-      colorway.quantities['M'] += targetTotal - actualTotal;
+    // Apply distribution to active sizes
+    let runningTotal = 0;
+    activeSizes.forEach((size, index) => {
+      if (index < distribution.length) {
+        const percentage = distribution[index] / 100;
+        const quantity = Math.round(perColorwayMin * percentage);
+        colorway.quantities[size] = quantity;
+        runningTotal += quantity;
+      }
+    });
+    
+    // Adjust to ensure we meet exactly the minimum
+    if (runningTotal < perColorwayMin) {
+      // Add the difference to M size
+      colorway.quantities['M'] += (perColorwayMin - runningTotal);
+    } else if (runningTotal > perColorwayMin) {
+      // Subtract from M size
+      colorway.quantities['M'] -= (runningTotal - perColorwayMin);
     }
     
-    // Re-render and update
+    // Recalculate subtotal
+    colorway.subtotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+    
+    // Update garment total
+    garment.total = 0;
+    garment.colorways.forEach(cw => {
+      garment.total += cw.subtotal;
+    });
+    
+    // Re-render and update everything
     this.renderColorwayContent(garmentId, colorwayId);
-    this.updateQuantity(garmentId, colorwayId, 'XXS', colorway.quantities['XXS']);
+    this.renderColorways(garmentId); // Update tabs
+    this.updateStats();
+    this.updateGarmentTotals(garmentId);
+    this.updateQuantityStudioTabStatus();
+    this.saveState();
+  }
+  
+  saveDistribution(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    // Save the current distribution pattern
+    const savedPattern = {
+      quantities: { ...colorway.quantities },
+      total: colorway.subtotal,
+      timestamp: Date.now()
+    };
+    
+    // Store in sessionStorage with unique key
+    const key = `v10_saved_pattern_${garmentId}`;
+    sessionStorage.setItem(key, JSON.stringify(savedPattern));
+    
+    // Show success message
+    console.log(`✅ Pattern saved for garment ${garmentId}`);
+    
+    // Visual feedback - temporarily change button color
+    const saveBtn = document.querySelector(`[onclick*="saveDistribution('${garmentId}', '${colorwayId}')"]`);
+    if (saveBtn) {
+      const originalBg = saveBtn.style.background;
+      const originalColor = saveBtn.style.color;
+      saveBtn.style.background = 'rgba(16,185,129,0.3)';
+      saveBtn.style.color = '#10b981';
+      saveBtn.textContent = '✓ Saved';
+      
+      setTimeout(() => {
+        saveBtn.style.background = originalBg;
+        saveBtn.style.color = originalColor;
+        saveBtn.textContent = 'Save Pattern';
+      }, 2000);
+    }
+  }
+  
+  loadDistribution(garmentId, colorwayId) {
+    const garment = this.garments.get(garmentId);
+    if (!garment) return;
+    
+    const colorway = garment.colorways.get(colorwayId);
+    if (!colorway) return;
+    
+    // Load saved pattern from sessionStorage
+    const key = `v10_saved_pattern_${garmentId}`;
+    const savedData = sessionStorage.getItem(key);
+    
+    if (!savedData) {
+      console.log(`⚠️ No saved pattern found for garment ${garmentId}`);
+      
+      // Visual feedback - show no pattern saved
+      const loadBtn = document.querySelector(`[onclick*="loadDistribution('${garmentId}', '${colorwayId}')"]`);
+      if (loadBtn) {
+        const originalText = loadBtn.textContent;
+        loadBtn.textContent = '⚠ No Pattern';
+        setTimeout(() => {
+          loadBtn.textContent = originalText;
+        }, 2000);
+      }
+      return;
+    }
+    
+    try {
+      const savedPattern = JSON.parse(savedData);
+      
+      // Apply the saved quantities
+      Object.keys(savedPattern.quantities).forEach(size => {
+        if (colorway.quantities.hasOwnProperty(size)) {
+          colorway.quantities[size] = savedPattern.quantities[size];
+        }
+      });
+      
+      // Recalculate subtotal
+      colorway.subtotal = Object.values(colorway.quantities).reduce((sum, q) => sum + q, 0);
+      
+      // Update garment total
+      garment.total = 0;
+      garment.colorways.forEach(cw => {
+        garment.total += cw.subtotal;
+      });
+      
+      // Re-render and update everything
+      this.renderColorwayContent(garmentId, colorwayId);
+      this.renderColorways(garmentId);
+      this.updateStats();
+      this.updateGarmentTotals(garmentId);
+      this.updateQuantityStudioTabStatus();
+      this.saveState();
+      
+      console.log(`✅ Pattern loaded for garment ${garmentId}`);
+      
+      // Visual feedback
+      const loadBtn = document.querySelector(`[onclick*="loadDistribution('${garmentId}', '${colorwayId}')"]`);
+      if (loadBtn) {
+        const originalBg = loadBtn.style.background;
+        const originalColor = loadBtn.style.color;
+        loadBtn.style.background = 'rgba(168,85,247,0.3)';
+        loadBtn.style.color = '#a855f7';
+        loadBtn.textContent = '✓ Loaded';
+        
+        setTimeout(() => {
+          loadBtn.style.background = originalBg;
+          loadBtn.style.color = originalColor;
+          loadBtn.textContent = 'Load Pattern';
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error loading saved pattern:', error);
+    }
   }
   
   clearColorwayQuantities(garmentId, colorwayId) {
@@ -4537,6 +4724,7 @@ class V10_QuantityStudioManager {
     });
     
     this.renderColorwayContent(garmentId, colorwayId);
+    this.renderColorways(garmentId); // Update colorway tabs to show new totals
     this.updateStats();
     this.updateGarmentTotals(garmentId);
     this.updateQuantityStudioTabStatus();
@@ -12628,11 +12816,26 @@ class V10_ValidationManager {
       
       const errors = Array.isArray(garmentValidation.errors) ? [...garmentValidation.errors] : [];
 
-      // Additional validation for bulk orders
-      // Check quantity requirements for bulk orders
-      const totalQuantity = V10_State.totalQuantity || 0;
-      if (totalQuantity < 75) {
-        errors.push(`Minimum quantity is 75 units (currently: ${totalQuantity})`);
+      // Check if quantity studio is complete instead of checking total units
+      if (window.v10QuantityStudio) {
+        // Check if all garments in quantity studio are sufficient
+        let allSufficient = true;
+        let totalUnits = 0;
+        
+        window.v10QuantityStudio.garments.forEach((garment, garmentId) => {
+          totalUnits += garment.total || 0;
+          if (!window.v10QuantityStudio.checkColorwaysSufficient(garmentId)) {
+            allSufficient = false;
+          }
+        });
+        
+        // Only add error if quantity studio has garments but they're not sufficient
+        if (window.v10QuantityStudio.garments.size > 0 && !allSufficient) {
+          errors.push(`Complete all quantity requirements in Quantity Studio`);
+        }
+        
+        // Update the total quantity in state for other uses
+        V10_State.totalQuantity = totalUnits;
       }
 
       return {
