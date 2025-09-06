@@ -4697,7 +4697,7 @@ class V10_QuantityStudioManager {
       // Update the subtotal display and box styling
       const subtotalElement = document.getElementById(`subtotal-${garmentId}-${colorwayId}`);
       if (subtotalElement) {
-        subtotalElement.textContent = `${colorway.subtotal} units`;
+        subtotalElement.textContent = colorway.subtotal;
         
         // Update the parent box styling
         const subtotalBox = subtotalElement.closest('.v10-colorway-subtotal');
@@ -9872,8 +9872,17 @@ class V10_GarmentStudio {
       window.v10QuantityStudio = new V10_QuantityStudioManager();
     }
     
-    // Initialize the quantity studio (idempotent - safe to call multiple times)
-    window.v10QuantityStudio.initialize();
+    // Only initialize if not already initialized to preserve active tabs
+    if (!window.v10QuantityStudio.initialized) {
+      console.log('📊 First time initialization of Quantity Studio');
+      window.v10QuantityStudio.initialize();
+    } else {
+      console.log('♻️ Quantity Studio already initialized - refreshing data only');
+      // Just refresh the data without full re-render to preserve active tabs
+      window.v10QuantityStudio.loadGarments();
+      window.v10QuantityStudio.updateStats();
+      window.v10QuantityStudio.updateQuantityStudioTabStatus();
+    }
   }
 
   // Removed duplicate createProfessionalQuantityCard and initializeProfessionalColorways functions
