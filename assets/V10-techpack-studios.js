@@ -14113,41 +14113,49 @@ class V10_ReviewManager {
         <div class="v10-quantity-display">
           <div class="v10-size-grid">${sizeItems}</div>
           <div class="v10-quantity-total">
-            <span>Total:</span>
+            <span>TOTAL:</span>
+            <div class="v10-total-color-preview" style="background-color: ${colorway.color || colorway.hex || '#666666'}"></div>
             <strong>${colorway.subtotal || 0} units</strong>
           </div>
         </div>
       `;
     }
     
+    // Determine production type and design info
+    const isDesignApplied = colorway?.designReference || garment.designReference;
+    const productionType = isDesignApplied ? "Design Applied" : "Blank";
+    const designName = colorway?.designReference || garment.designReference || '';
+    
     // Format garment display text
     const garmentType = garment.type || 'Garment';
-    const fabricType = garment.fabricType || 'No fabric specified';
     const colorName = colorway ? colorway.name : '';
-    const colorCode = colorway ? (colorway.code || colorway.pantone || '') : '';
+    
+    // Fix duplicate pantone - use only one source
+    const colorCode = colorway?.code || colorway?.pantone || '';
     
     return `
       <div class="v10-review-garment-item">
         <div class="v10-garment-header">
           ${colorway ? `
-            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || '#666666'}"></div>
+            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'}; border: 2px solid rgba(255,255,255,0.3); display: block;"></div>
           ` : ''}
           <div class="v10-garment-info">
             <span class="v10-garment-number">${number}.</span>
             <span class="v10-garment-type">${garmentType}</span>
+            <span class="v10-garment-separator">-</span>
+            <span class="v10-garment-production">${productionType}</span>
+            ${designName ? `
+              <span class="v10-garment-separator">-</span>
+              <span class="v10-design-name">${designName}</span>
+            ` : ''}
             ${colorway ? `
               <span class="v10-garment-separator">-</span>
-              <span class="v10-garment-fabric">${fabricType}</span>
+              <span class="v10-colorway-name">${colorName}</span>
+            ` : ''}
+            ${colorCode ? `
               <span class="v10-garment-separator">-</span>
-              <span class="v10-garment-colorway">${colorName}</span>
-              ${colorCode ? `
-                <span class="v10-garment-separator">-</span>
-                <span class="v10-garment-code">${colorCode}</span>
-              ` : ''}
-            ` : `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-garment-fabric">${fabricType}</span>
-            `}
+              <span class="v10-pantone-code">${colorCode}</span>
+            ` : ''}
           </div>
         </div>
         ${quantityHTML}
