@@ -13989,7 +13989,7 @@ class V10_ReviewManager {
   // Enhanced garment population completed above
 
   buildFullGarmentName(garment) {
-    // Build full garment name with proper colorway handling
+    // Build full garment name like: "Hoodie with Design (pedro) - 18-1664 TPX 100% Organic Cotton Brushed Fleece"
     const clientData = this.getClientData();
     const clientName = clientData.name || clientData.firstName || 'Client';
     
@@ -14006,7 +14006,7 @@ class V10_ReviewManager {
     // Add client name
     name += ` (${clientName})`;
     
-    // Add lab dip info - but only once to prevent duplicates
+    // Add lab dip info and fabric type
     if (hasLabDips) {
       const firstLabDipId = Array.from(garment.assignedLabDips)[0];
       const labDip = V10_State.labDips.get(firstLabDipId);
@@ -14137,7 +14137,7 @@ class V10_ReviewManager {
       <div class="v10-review-garment-item">
         <div class="v10-garment-header">
           ${colorway ? `
-            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'};"></div>
+            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'}; border: 2px solid rgba(255,255,255,0.3); display: block;"></div>
           ` : ''}
           <div class="v10-garment-info">
             <span class="v10-garment-number">${number}.</span>
