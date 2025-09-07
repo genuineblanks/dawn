@@ -30,66 +30,37 @@
 .v10-garment-header {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 20px;
 }
 
 .v10-garment-color-swatch {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   flex-shrink: 0;
   display: block;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
 }
 
 .v10-garment-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
   gap: 8px;
+  flex-wrap: wrap;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.9);
-}
-
-.v10-garment-title-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
 }
 
 .v10-garment-number {
   font-weight: 700;
   color: #10b981;
-  font-size: 18px;
-  padding: 4px 8px;
-  background: rgba(16, 185, 129, 0.15);
-  border-radius: 6px;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 16px;
 }
 
 .v10-garment-type {
-  font-weight: 700;
-  color: #ffffff;
-  font-size: 18px;
-  text-transform: capitalize;
-}
-
-.v10-color-name {
   font-weight: 600;
-  color: #f59e0b;
-  font-size: 16px;
-  margin: 8px 0;
-  padding: 6px 12px;
-  background: rgba(245, 158, 11, 0.15);
-  border-radius: 8px;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #ffffff;
 }
 
 .v10-garment-separator {
@@ -212,66 +183,18 @@
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
-  .v10-review-garment-item {
-    padding: 20px 16px;
-    margin-bottom: 16px;
-  }
-  
   .v10-garment-header {
     flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  
-  .v10-garment-color-swatch {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .v10-garment-title-row {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .v10-garment-number {
-    font-size: 16px;
-  }
-  
-  .v10-garment-type {
-    font-size: 16px;
-  }
-  
-  .v10-color-name {
-    font-size: 14px;
-    padding: 4px 8px;
+    align-items: flex-start;
   }
   
   .v10-size-grid {
-    gap: 8px;
-    justify-content: center;
-  }
-  
-  .v10-size-item {
-    min-width: 50px;
-    padding: 10px 6px;
-  }
-  
-  .v10-size-label {
-    font-size: 11px;
-  }
-  
-  .v10-size-qty {
-    font-size: 18px;
-  }
-  
-  .v10-quantity-total {
-    font-size: 14px;
     gap: 12px;
   }
   
-  .v10-quantity-total strong {
-    font-size: 20px;
+  .v10-size-item {
+    min-width: 40px;
+    padding: 6px;
   }
 }
 
