@@ -14092,33 +14092,12 @@ class V10_ReviewManager {
     const { number, garment, colorway } = item;
     const hasQuantities = colorway && colorway.quantities;
     
-    // Build size display HTML
-    let quantityHTML = '';
+    // Build horizontal size display (inline)
+    let sizeDisplay = '';
     if (hasQuantities) {
       const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
-      const sizeItems = sizes.map(size => {
-        const qty = colorway.quantities[size] || 0;
-        if (qty > 0) {
-          return `
-            <div class="v10-size-item">
-              <span class="v10-size-label">${size}</span>
-              <span class="v10-size-qty">${qty}</span>
-            </div>
-          `;
-        }
-        return '';
-      }).filter(item => item).join('');
-      
-      quantityHTML = `
-        <div class="v10-quantity-display">
-          <div class="v10-size-grid">${sizeItems}</div>
-          <div class="v10-quantity-total">
-            <span>TOTAL:</span>
-            <div class="v10-total-color-preview" style="background-color: ${colorway.color || colorway.hex || '#666666'}"></div>
-            <strong>${colorway.subtotal || 0} units</strong>
-          </div>
-        </div>
-      `;
+      const activeSizes = sizes.filter(size => (colorway.quantities[size] || 0) > 0);
+      sizeDisplay = activeSizes.map(size => `${size}:${colorway.quantities[size]}`).join(' ');
     }
     
     // Determine production type and design info
@@ -14134,31 +14113,34 @@ class V10_ReviewManager {
     const colorCode = colorway?.code || colorway?.pantone || '';
     
     return `
-      <div class="v10-review-garment-item">
-        <div class="v10-garment-header">
-          ${colorway ? `
-            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'}; border: 2px solid rgba(255,255,255,0.3); display: block;"></div>
-          ` : ''}
-          <div class="v10-garment-info">
-            <span class="v10-garment-number">${number}.</span>
-            <span class="v10-garment-type">${garmentType}</span>
+      <div class="v10-garment-row">
+        <div class="v10-garment-color-square" style="background-color: ${colorway?.color || colorway?.hex || '#666666'}"></div>
+        <div class="v10-garment-info-section">
+          <span class="v10-garment-number">${number}.</span>
+          <span class="v10-garment-type">${garmentType}</span>
+          <span class="v10-garment-separator">-</span>
+          <span class="v10-garment-production">${productionType}</span>
+          ${designName ? `
             <span class="v10-garment-separator">-</span>
-            <span class="v10-garment-production">${productionType}</span>
-            ${designName ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-design-name">${designName}</span>
-            ` : ''}
-            ${colorway ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-colorway-name">${colorName}</span>
-            ` : ''}
-            ${colorCode ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-pantone-code">${colorCode}</span>
-            ` : ''}
-          </div>
+            <span class="v10-design-name">${designName}</span>
+          ` : ''}
+          ${colorway ? `
+            <span class="v10-garment-separator">-</span>
+            <span class="v10-colorway-name">${colorName}</span>
+          ` : ''}
+          ${colorCode ? `
+            <span class="v10-garment-separator">-</span>
+            <span class="v10-pantone-code">${colorCode}</span>
+          ` : ''}
         </div>
-        ${quantityHTML}
+        ${hasQuantities ? `
+          <div class="v10-size-section">
+            ${sizeDisplay}
+          </div>
+          <div class="v10-total-section">
+            TOTAL: <strong>${colorway.subtotal || 0} units</strong>
+          </div>
+        ` : ''}
       </div>
     `;
   }
