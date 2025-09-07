@@ -29,10 +29,12 @@
 }
 
 .v10-garment-color-swatch {
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   flex-shrink: 0;
+  display: block;
+  border-radius: 0;
 }
 
 .v10-garment-info {
@@ -61,8 +63,22 @@
 
 .v10-garment-fabric,
 .v10-garment-colorway,
-.v10-garment-code {
+.v10-garment-code,
+.v10-garment-production,
+.v10-design-name,
+.v10-colorway-name,
+.v10-pantone-code {
   color: rgba(255, 255, 255, 0.7);
+}
+
+.v10-garment-production {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.v10-design-name {
+  color: #f59e0b;
+  font-weight: 600;
 }
 
 .v10-quantity-display {
@@ -106,9 +122,18 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 12px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 16px;
   font-size: 14px;
+}
+
+.v10-total-color-preview {
+  width: 60px;
+  height: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  flex-shrink: 0;
 }
 
 .v10-quantity-total span {
