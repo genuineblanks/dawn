@@ -5229,79 +5229,7 @@ body[style*="overflow: hidden"] {
    REVIEW SYSTEM
    ============================================== */
 
-.review-garments-grid {
-  display: grid;
-  gap: var(--v10-space-4);
-  margin: var(--v10-space-6) 0;
-}
 
-.review-garment-card {
-  background: var(--v10-bg-card);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-lg);
-  padding: var(--v10-space-5);
-  transition: var(--v10-transition);
-}
-
-.review-garment-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--v10-space-4);
-}
-
-.review-garment-card__main {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-3);
-  flex: 1;
-}
-
-.review-garment-card__visual {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-}
-
-.review-garment-card__info {
-  flex: 1;
-}
-
-.review-garment-card__title {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-2);
-  margin-bottom: var(--v10-space-1);
-}
-
-.review-garment-card__color-name {
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-}
-
-.review-garment-card__status {
-  align-self: flex-start;
-}
-
-.review-garment-card__content {
-  margin-top: var(--v10-space-4);
-  padding-top: var(--v10-space-4);
-  border-top: 1px solid var(--v10-border-primary);
-}
-
-.review-garment-detail {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--v10-space-2) 0;
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-  border-bottom: 1px solid var(--v10-border-secondary);
-}
-
-.review-garment-detail:last-child {
-  border-bottom: none;
-}
 
 /* ==============================================
    STEP 4 REVIEW - MISSING CLASSES & ENHANCEMENTS
@@ -8800,76 +8728,11 @@ div[class*="circle"][style*="background-color"],
   }
 }
 
-/* ===== Garment Specifications Grid Layout ===== */
+/* ===== Garment Specifications Single Row Layout ===== */
 #review-garments {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--v10-space-4);
-}
-
-@media (max-width: 768px) {
-  #review-garments {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
-  }
-}
-
-/* ===== Simple Garment Item Display (Step 4) ===== */
-.v10-garment-item {
   display: flex;
-  align-items: center;
-  gap: var(--v10-space-4);
-  padding: var(--v10-space-4);
-  background: var(--v10-bg-tertiary);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: var(--v10-radius-lg);
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.v10-garment-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--v10-border-light);
-  border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
-}
-
-.v10-garment-item:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-border-light);
-  transform: translateX(2px);
-}
-
-.v10-garment-color {
-  width: 32px;
-  height: 32px;
-  border-radius: 0;
-  border: 2px solid var(--v10-border-light);
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.v10-garment-color::after {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border-radius: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.v10-garment-text {
-  color: var(--v10-text-secondary);
-  font-size: var(--v10-text-base);
-  line-height: 1.5;
-  font-weight: 500;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .v10-empty-state {
