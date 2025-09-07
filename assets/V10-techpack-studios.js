@@ -13654,65 +13654,42 @@ class V10_ReviewManager {
       return;
     }
     
-    // Handle bulk order request differently - show each colorway as separate item
-    if (requestType === 'bulk-order-request') {
-      // Get quantity data from V10_QuantityStudioManager
-      const quantityData = window.v10QuantityStudio?.garments || new Map();
-      
-      // Create array of garment-colorway combinations
-      const garmentColorways = [];
-      let itemNumber = 1;
-      
-      // Sort garments by their number property first
-      garments.sort((a, b) => a.number - b.number);
-      
-      garments.forEach(garment => {
-        const qData = quantityData.get(garment.id);
-        if (qData && qData.colorways && qData.colorways.size > 0) {
-          // Add each colorway as a separate item
-          qData.colorways.forEach((colorway, colorwayId) => {
-            garmentColorways.push({
-              number: itemNumber++,
-              garment: garment,
-              colorway: colorway,
-              colorwayId: colorwayId
-            });
-          });
-        } else {
-          // If no colorways, show garment without quantities
+    // UNIVERSAL HORIZONTAL LAYOUT - Always show garments with colorway separation
+    // Get quantity data from V10_QuantityStudioManager (for any request type that has colorways)
+    const quantityData = window.v10QuantityStudio?.garments || new Map();
+    
+    // Create array of garment-colorway combinations
+    const garmentColorways = [];
+    let itemNumber = 1;
+    
+    // Sort garments by their number property first
+    garments.sort((a, b) => a.number - b.number);
+    
+    garments.forEach(garment => {
+      const qData = quantityData.get(garment.id);
+      if (qData && qData.colorways && qData.colorways.size > 0) {
+        // Add each colorway as a separate item
+        qData.colorways.forEach((colorway, colorwayId) => {
           garmentColorways.push({
             number: itemNumber++,
             garment: garment,
-            colorway: null,
-            colorwayId: null
+            colorway: colorway,
+            colorwayId: colorwayId
           });
-        }
-      });
-      
-      // Render each garment-colorway as separate item
-      container.innerHTML = garmentColorways.map(item => this.renderBulkOrderGarment(item)).join('');
-      return;
-    }
+        });
+      } else {
+        // If no colorways, show garment without quantities
+        garmentColorways.push({
+          number: itemNumber++,
+          garment: garment,
+          colorway: null,
+          colorwayId: null
+        });
+      }
+    });
     
-    // Sort garments by their number property to ensure proper order
-    garments.sort((a, b) => a.number - b.number);
-
-    container.innerHTML = garments.map(garment => {
-      // Get color display
-      const colorDisplay = this.getGarmentColorDisplay(garment);
-      
-      // Create simple garment display: Color Circle + "Name - Fabric - Color/Pantone"
-      return `
-        <div class="v10-garment-item">
-          <div class="v10-garment-color" style="background-color: ${colorDisplay.color}; ${colorDisplay.overlay || ''}">
-            <!-- Color pattern overlay -->
-          </div>
-          <div class="v10-garment-text">
-            ${garment.number}. ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
-          </div>
-        </div>
-      `;
-    }).join('');
+    // Render each garment-colorway as separate horizontal row
+    container.innerHTML = garmentColorways.map(item => this.renderBulkOrderGarment(item)).join('');
   }
 
   getGarmentColorInfo(garment) {
@@ -14091,6 +14068,7 @@ class V10_ReviewManager {
   renderBulkOrderGarment(item) {
     const { number, garment, colorway } = item;
     const hasQuantities = colorway && colorway.quantities;
+    const requestType = V10_State.requestType;
     
     // Build horizontal size display (inline)
     let sizeDisplay = '';
@@ -14100,21 +14078,25 @@ class V10_ReviewManager {
       sizeDisplay = activeSizes.map(size => `${size}:${colorway.quantities[size]}`).join(' ');
     }
     
-    // Determine production type and design info
-    const isDesignApplied = colorway?.designReference || garment.designReference;
-    const productionType = isDesignApplied ? "Design Applied" : "Blank";
-    const designName = colorway?.designReference || garment.designReference || '';
+    // Get color information - handle all request types
+    let colorInfo = this.getUnifiedColorInfo(garment, colorway);
+    
+    // Determine production type based on request type
+    let productionType = 'Blank';
+    if (requestType === 'bulk-order-request') {
+      const isDesignApplied = colorway?.designReference || garment.designReference;
+      productionType = isDesignApplied ? "Design Applied" : "Blank";
+    } else if (requestType === 'sample-request' && garment.sampleType) {
+      productionType = garment.sampleType === 'stock' ? 'Stock Color' : 'Custom Color';
+    }
     
     // Format garment display text
     const garmentType = garment.type || 'Garment';
-    const colorName = colorway ? colorway.name : '';
-    
-    // Fix duplicate pantone - use only one source
-    const colorCode = colorway?.code || colorway?.pantone || '';
+    const designName = colorway?.designReference || garment.designReference || '';
     
     return `
       <div class="v10-garment-row">
-        <div class="v10-garment-color-square" style="background-color: ${colorway?.color || colorway?.hex || '#666666'}"></div>
+        <div class="v10-garment-color-square" style="background-color: ${colorInfo.color}"></div>
         <div class="v10-garment-info-section">
           <span class="v10-garment-number">${number}.</span>
           <span class="v10-garment-type">${garmentType}</span>
@@ -14124,13 +14106,13 @@ class V10_ReviewManager {
             <span class="v10-garment-separator">-</span>
             <span class="v10-design-name">${designName}</span>
           ` : ''}
-          ${colorway ? `
+          ${colorInfo.name ? `
             <span class="v10-garment-separator">-</span>
-            <span class="v10-colorway-name">${colorName}</span>
+            <span class="v10-colorway-name">${colorInfo.name}</span>
           ` : ''}
-          ${colorCode ? `
+          ${colorInfo.code ? `
             <span class="v10-garment-separator">-</span>
-            <span class="v10-pantone-code">${colorCode}</span>
+            <span class="v10-pantone-code">${colorInfo.code}</span>
           ` : ''}
         </div>
         ${hasQuantities ? `
@@ -14143,6 +14125,65 @@ class V10_ReviewManager {
         ` : ''}
       </div>
     `;
+  }
+
+  getUnifiedColorInfo(garment, colorway) {
+    // Unified color information handler - prevents duplicates
+    let colorInfo = {
+      color: '#666666',  // Default gray
+      name: '',
+      code: ''
+    };
+
+    // Priority 1: Colorway data (for bulk orders with colorways)
+    if (colorway) {
+      colorInfo.color = colorway.color || colorway.hex || '#666666';
+      colorInfo.name = colorway.name || '';
+      colorInfo.code = colorway.code || colorway.pantone || '';
+      return colorInfo;
+    }
+
+    // Priority 2: Garment sample data (for sample requests)
+    if (garment.sampleType === 'stock' && garment.sampleSubValue) {
+      // Stock sample - use selected color name
+      colorInfo.name = garment.sampleSubValue;
+      // Try to get color from color mapping if available
+      const colorMapping = this.getStockColorMapping(garment.sampleSubValue);
+      if (colorMapping) {
+        colorInfo.color = colorMapping.hex || colorMapping.color || '#666666';
+        colorInfo.code = colorMapping.pantone || '';
+      }
+    } else if (garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size > 0) {
+      // Custom sample with lab dips
+      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
+      const labDip = V10_State.labDips.get(firstLabDipId);
+      if (labDip) {
+        colorInfo.color = labDip.color || labDip.hex || '#666666';
+        colorInfo.name = labDip.name || 'Custom Color';
+        colorInfo.code = labDip.pantone || labDip.tcx || '';
+      }
+    }
+
+    return colorInfo;
+  }
+
+  getStockColorMapping(colorName) {
+    // Simple color mapping for stock colors - extend as needed
+    const colorMap = {
+      'Black': { hex: '#000000', pantone: '19-0303 TPX' },
+      'White': { hex: '#FFFFFF', pantone: '11-0601 TPX' },
+      'Navy': { hex: '#1B2951', pantone: '19-4024 TPX' },
+      'Gray': { hex: '#808080', pantone: '18-0201 TPX' },
+      'Red': { hex: '#DC2626', pantone: '18-1664 TPX' },
+      'Blue': { hex: '#2563EB', pantone: '19-4056 TPX' },
+      'Green': { hex: '#16A34A', pantone: '17-6153 TPX' },
+      'Purple': { hex: '#8B5CF6', pantone: '18-3838 TPX' },
+      'Pink': { hex: '#EC4899', pantone: '17-1926 TPX' },
+      'Orange': { hex: '#EA580C', pantone: '16-1449 TPX' },
+      'Yellow': { hex: '#EAB308', pantone: '13-0859 TPX' }
+    };
+    
+    return colorMap[colorName] || null;
   }
 
   populateLabDips() {

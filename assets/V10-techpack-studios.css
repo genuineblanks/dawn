@@ -9383,19 +9383,6 @@ div[class*="circle"][style*="background-color"],
     gap: var(--v10-space-3) !important;
   }
 
-  .v10-garment-item {
-    padding: var(--v10-space-3);
-    gap: var(--v10-space-3);
-  }
-
-  .v10-garment-color {
-    width: 28px;
-    height: 28px;
-  }
-
-  .v10-garment-text {
-    font-size: var(--v10-text-sm);
-  }
 
   .v10-cost-item {
     padding: var(--v10-space-3);
