@@ -100,6 +100,17 @@ Enhanced with Visual Studio Guide System
 
         <div class="studio-content">
           
+          <!-- Garment Tabs Navigation (hidden until 2+ garments) -->
+          <div class="garment-tabs-container" id="garment-tabs-container" style="display: none;">
+            <div class="garment-tabs-header">
+              <h5>Switch Between Garments</h5>
+              <span class="garment-count" id="garment-count">1 garment</span>
+            </div>
+            <div class="garment-tabs" id="garment-tabs">
+              <!-- Tabs will be dynamically generated here -->
+            </div>
+          </div>
+          
           <!-- Garments Container -->
           <div class="garments-grid" id="garments-container">
             <!-- Garments will be dynamically added here -->
@@ -1490,6 +1501,23 @@ Enhanced with Visual Studio Guide System
       </div>
     </div>
   </div>
+</template>
+
+<!-- Garment Tab Template -->
+<template id="V10-garment-tab-template">
+  <button type="button" class="garment-tab" data-garment-id="">
+    <div class="garment-tab__number">1</div>
+    <div class="garment-tab__content">
+      <span class="garment-tab__title">Select garment type</span>
+      <span class="garment-tab__status">Incomplete</span>
+    </div>
+    <button type="button" class="garment-tab__close" title="Remove garment">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </button>
 </template>
 
 <!-- V10 Colorway Template -->
