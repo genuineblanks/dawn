@@ -13989,7 +13989,7 @@ class V10_ReviewManager {
   // Enhanced garment population completed above
 
   buildFullGarmentName(garment) {
-    // Build full garment name like: "Hoodie with Design (pedro) - 18-1664 TPX 100% Organic Cotton Brushed Fleece"
+    // Build clean garment name without duplicate colorway info
     const clientData = this.getClientData();
     const clientName = clientData.name || clientData.firstName || 'Client';
     
@@ -14006,17 +14006,9 @@ class V10_ReviewManager {
     // Add client name
     name += ` (${clientName})`;
     
-    // Add lab dip info and fabric type
-    if (hasLabDips) {
-      const firstLabDipId = Array.from(garment.assignedLabDips)[0];
-      const labDip = V10_State.labDips.get(firstLabDipId);
-      if (labDip && labDip.pantone) {
-        name += ` - ${labDip.pantone}`;
-      }
-    }
-    
+    // Only add fabric type, not color info (color is shown separately)
     if (garment.fabricType) {
-      name += ` ${garment.fabricType}`;
+      name += ` - ${garment.fabricType}`;
     }
     
     return name;
@@ -14137,25 +14129,18 @@ class V10_ReviewManager {
       <div class="v10-review-garment-item">
         <div class="v10-garment-header">
           ${colorway ? `
-            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'}; border: 2px solid rgba(255,255,255,0.3); display: block;"></div>
+            <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'};"></div>
           ` : ''}
           <div class="v10-garment-info">
-            <span class="v10-garment-number">${number}.</span>
-            <span class="v10-garment-type">${garmentType}</span>
-            <span class="v10-garment-separator">-</span>
-            <span class="v10-garment-production">${productionType}</span>
-            ${designName ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-design-name">${designName}</span>
+            <div class="v10-garment-title-row">
+              <span class="v10-garment-number">${number}</span>
+              <span class="v10-garment-type">${garmentType}</span>
+              ${designName ? `<span class="v10-design-name">${designName}</span>` : ''}
+            </div>
+            ${(colorName || colorCode) ? `
+              <div class="v10-color-name">${colorName || colorCode}</div>
             ` : ''}
-            ${colorway ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-colorway-name">${colorName}</span>
-            ` : ''}
-            ${colorCode ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-pantone-code">${colorCode}</span>
-            ` : ''}
+            <div class="v10-garment-production">${productionType}</div>
           </div>
         </div>
         ${quantityHTML}
