@@ -5,54 +5,63 @@
    ==================================================== */
 
 /* ====================================================
-   BULK ORDER GARMENT CARDS - MATCHING SAMPLE REQUEST DESIGN
+   PROFESSIONAL BULK ORDER GARMENT CARDS - ENHANCED DESIGN
    ==================================================== */
 
-/* Container styling to match sample request cards exactly */
+/* Container with professional depth and linear design */
 .v10-review-garment-item {
-  background: #2a2a2a;
-  border: 1px solid #404040;
-  border-radius: 6px;
-  padding: 16px;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%);
+  border: 1px solid #3a3a3a;
+  border-radius: 0; /* Linear corners */
+  padding: 0;
   margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   transition: all 0.2s ease;
+  overflow: hidden;
 }
 
 .v10-review-garment-item:hover {
-  border-color: #505050;
+  border-color: #4a4a4a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
-/* Garment header layout */
+/* Garment header with enhanced background */
 .v10-garment-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* Center align with color square */
   gap: 16px;
   width: 100%;
+  background: rgba(255,255,255,0.02);
+  padding: 16px;
+  border-bottom: 1px solid #3a3a3a;
 }
 
-/* Color swatch styling to match sample request */
+/* Linear color swatch with professional shadow */
 .v10-garment-color-swatch {
   width: 32px;
   height: 32px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0; /* Linear corners */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   flex-shrink: 0;
   display: block !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
-/* Garment info container */
+/* Garment info container with vertical centering */
 .v10-garment-info {
   flex: 1;
   color: white;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* Header row with title and total */
+/* Header row with title and prominent total */
 .v10-garment-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
   gap: 16px;
 }
 
@@ -65,28 +74,31 @@
   flex-wrap: wrap;
 }
 
-/* Typography matching sample request */
+/* Enhanced typography */
 .v10-garment-number {
   color: #10b981;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 800;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.7);
 }
 
 .v10-garment-type,
 .v10-garment-production {
   color: white;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .v10-garment-separator {
   color: rgba(255, 255, 255, 0.5);
-  margin: 0 2px;
+  margin: 0 4px;
 }
 
 .v10-color-name {
   color: rgba(255, 255, 255, 0.8);
   font-size: 13px;
+  font-weight: 500;
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
@@ -94,44 +106,59 @@
   flex: none !important;
 }
 
-/* Total units styling */
+/* Prominent total units with green highlight */
 .v10-garment-total-section {
-  color: white;
-  font-weight: 600;
-  font-size: 16px;
   flex-shrink: 0;
 }
 
-/* Size distribution styling */
-.v10-quantity-display {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #404040;
-}
-
-.v10-size-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.v10-size-chip {
-  background: #1a1a1a;
-  color: white;
+.v10-garment-total {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 18px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  background: rgba(16, 185, 129, 0.1);
   padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid #333;
-  min-width: 40px;
+  border-radius: 0;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: inline-block;
+}
+
+/* Enhanced size distribution section */
+.v10-quantity-display {
+  background: rgba(0,0,0,0.2);
+  border-top: 2px solid #404040;
+  padding: 16px;
+}
+
+/* Responsive size grid that always fills full width */
+.v10-size-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+/* Professional size chips with linear design */
+.v10-size-chip {
+  background: linear-gradient(135deg, #1f1f1f 0%, #151515 100%);
+  color: white;
+  padding: 12px 8px;
+  border-radius: 0; /* Linear corners */
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid #404040;
   text-align: center;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.05);
   transition: all 0.2s ease;
 }
 
 .v10-size-chip:hover {
-  background: #333;
+  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
   border-color: #555;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 
@@ -10888,8 +10915,3 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
-
-
-
-
-
