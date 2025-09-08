@@ -325,6 +325,13 @@ const V10_State = {
     colorwayMinimums: new Map() // garmentId-colorwayId -> minimum required per colorway
   },
   
+  // Edit Mode Lock System - prevents navigation during garment editing
+  editMode: {
+    isLocked: false,        // Global edit mode lock
+    currentGarmentId: null, // ID of garment currently being edited
+    blockedAttempts: 0      // Counter for blocked navigation attempts
+  },
+  
   // Clear all data (in-memory only, no persistence)
   clear() {
     this.requestType = null;
@@ -341,7 +348,11 @@ const V10_State = {
     this.quantities.globalMinimum = 0;
     this.quantities.globalTotal = 0;
     this.quantities.progressPercentage = 0;
-    console.log('🗑️ V10 State cleared (including quantities)');
+    // Clear edit mode lock
+    this.editMode.isLocked = false;
+    this.editMode.currentGarmentId = null;
+    this.editMode.blockedAttempts = 0;
+    console.log('🗑️ V10 State cleared (including quantities and edit mode)');
   }
 };
 
@@ -3188,6 +3199,16 @@ class V10_StudioNavigator {
     document.querySelectorAll('.studio-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
         const studio = tab.dataset.studio;
+        
+        // CHECK EDIT MODE LOCK - BLOCK NAVIGATION IF LOCKED
+        if (V10_State.editMode.isLocked) {
+          console.log(`🚫 Navigation blocked: Edit mode is locked for garment ${V10_State.editMode.currentGarmentId}`);
+          e.preventDefault();
+          e.stopPropagation();
+          this.handleBlockedNavigation('studio-tab', studio);
+          return false;
+        }
+        
         this.switchStudio(studio);
       });
     });
@@ -3244,6 +3265,70 @@ class V10_StudioNavigator {
     // Auto-save
 
     console.log(`🎛️ Switched to ${studioName} studio`);
+  }
+
+  // Handle blocked navigation attempts during edit mode
+  handleBlockedNavigation(elementType, targetLocation) {
+    // Increment blocked attempts counter
+    V10_State.editMode.blockedAttempts++;
+    
+    console.log(`🚫 Blocked navigation attempt #${V10_State.editMode.blockedAttempts}: ${elementType} -> ${targetLocation}`);
+    
+    // Trigger finalize button attention animation
+    this.triggerFinalizeButtonAttention();
+    
+    // Show user feedback (optional toast/notification)
+    this.showEditModeBlockedFeedback(elementType, targetLocation);
+  }
+
+  // Trigger the premium red pulse animation on the finalize button
+  triggerFinalizeButtonAttention() {
+    if (!V10_State.editMode.currentGarmentId) return;
+    
+    const garmentCard = document.querySelector(`[data-garment-id="${V10_State.editMode.currentGarmentId}"]`);
+    const finalizeBtn = garmentCard?.querySelector('.garment-card__finalize');
+    
+    if (finalizeBtn && finalizeBtn.style.display !== 'none') {
+      // Add attention class for red pulse animation
+      finalizeBtn.classList.add('garment-card__finalize--attention');
+      
+      // Remove class after animation completes (2 seconds)
+      setTimeout(() => {
+        finalizeBtn.classList.remove('garment-card__finalize--attention');
+      }, 2000);
+      
+      console.log(`✨ Triggered finalize button attention animation for garment ${V10_State.editMode.currentGarmentId}`);
+    }
+  }
+
+  // Show subtle user feedback when navigation is blocked
+  showEditModeBlockedFeedback(elementType, targetLocation) {
+    // Create or update a subtle notification
+    let notification = document.getElementById('edit-mode-notification');
+    if (!notification) {
+      notification = document.createElement('div');
+      notification.id = 'edit-mode-notification';
+      notification.className = 'edit-mode-notification';
+      document.body.appendChild(notification);
+    }
+    
+    // Set notification content
+    notification.innerHTML = `
+      <div class="notification-content">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        <span>Please finalize your current garment to continue</span>
+      </div>
+    `;
+    
+    // Show notification
+    notification.classList.add('show');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 3000);
   }
 
   updateVisibility() {
@@ -8408,6 +8493,12 @@ class V10_GarmentStudio {
       // Set edit mode flag - unified for both new and existing garments
       garmentData.isInEditMode = true;
       
+      // ACTIVATE EDIT MODE LOCK SYSTEM
+      V10_State.editMode.isLocked = true;
+      V10_State.editMode.currentGarmentId = garmentId;
+      V10_State.editMode.blockedAttempts = 0;
+      console.log(`🔒 Edit mode LOCKED for garment ${garmentId}`);
+      
       // Remove configured class - design toggle should hide during editing
       garmentCard.classList.remove('garment-card--configured');
       
@@ -8646,6 +8737,12 @@ class V10_GarmentStudio {
 
     // Clear edit mode flag
     garmentData.isInEditMode = false;
+    
+    // RELEASE EDIT MODE LOCK SYSTEM
+    V10_State.editMode.isLocked = false;
+    V10_State.editMode.currentGarmentId = null;
+    V10_State.editMode.blockedAttempts = 0;
+    console.log(`🔓 Edit mode UNLOCKED for garment ${garmentId}`);
     
     // Hide finalize edit button and reset its state
     const finalizeBtn = garmentCard.querySelector('.garment-card__finalize');
@@ -15291,13 +15388,33 @@ class V10_TechPackSystem {
     const nextBtn = document.getElementById('step-3-next');
 
     if (backBtn) {
-      backBtn.addEventListener('click', () => {
+      backBtn.addEventListener('click', (e) => {
+        // CHECK EDIT MODE LOCK - BLOCK NAVIGATION IF LOCKED
+        if (V10_State.editMode.isLocked) {
+          console.log(`🚫 Previous step blocked: Edit mode is locked for garment ${V10_State.editMode.currentGarmentId}`);
+          e.preventDefault();
+          e.stopPropagation();
+          if (this.navigator) {
+            this.navigator.handleBlockedNavigation('step-button', 'previous');
+          }
+          return false;
+        }
         this.goBackToStep2();
       });
     }
 
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
+      nextBtn.addEventListener('click', (e) => {
+        // CHECK EDIT MODE LOCK - BLOCK NAVIGATION IF LOCKED
+        if (V10_State.editMode.isLocked) {
+          console.log(`🚫 Next step blocked: Edit mode is locked for garment ${V10_State.editMode.currentGarmentId}`);
+          e.preventDefault();
+          e.stopPropagation();
+          if (this.navigator) {
+            this.navigator.handleBlockedNavigation('step-button', 'next');
+          }
+          return false;
+        }
         if (this.validateStep().isValid) {
           this.proceedToStep4();
         }
@@ -15307,10 +15424,54 @@ class V10_TechPackSystem {
 
     // Setup help system for all help buttons
     this.setupHelpSystem();
+    
+    // Setup global click interceptor for edit mode
+    this.setupEditModeClickInterceptor();
 
     // Auto-save on window unload
     window.addEventListener('beforeunload', () => {
       });
+  }
+
+  // Setup global click interceptor for edit mode
+  setupEditModeClickInterceptor() {
+    document.addEventListener('click', (e) => {
+      // Only intercept clicks when edit mode is locked
+      if (!V10_State.editMode.isLocked) {
+        return;
+      }
+
+      // Get the garment box that's currently being edited
+      const currentGarmentCard = document.querySelector(`[data-garment-id="${V10_State.editMode.currentGarmentId}"]`);
+      if (!currentGarmentCard) {
+        return;
+      }
+
+      // Check if the click is inside the garment box
+      const clickedInsideGarmentBox = currentGarmentCard.contains(e.target);
+      
+      // Check if the click is on the finalize button (should not be blocked)
+      const clickedFinalizeButton = e.target.closest('.garment-card__finalize');
+      
+      // Check if click is on a help button or modal (should not be blocked)
+      const clickedHelpElement = e.target.closest('[data-help], .v10-modal, .v10-modal-overlay');
+
+      // If clicked outside the garment box and not on finalize button or help elements
+      if (!clickedInsideGarmentBox && !clickedFinalizeButton && !clickedHelpElement) {
+        // Block the click
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log(`🚫 Click blocked: Outside garment box while edit mode locked for garment ${V10_State.editMode.currentGarmentId}`);
+        
+        // Trigger finalize button attention if navigator is available
+        if (this.navigator) {
+          this.navigator.handleBlockedNavigation('outside-click', 'general');
+        }
+        
+        return false;
+      }
+    }, true); // Use capture phase to intercept before other handlers
   }
 
   setupAutoValidation() {

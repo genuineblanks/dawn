@@ -4095,6 +4095,87 @@ body[style*="overflow: hidden"] {
   transform: translateY(-1px);
 }
 
+/* EDIT MODE LOCK: Premium Red Pulse Animation for Finalize Button */
+.garment-card__finalize--attention {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+  border-color: #dc2626 !important;
+  animation: finalizePulseAttention 2s ease-in-out;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+}
+
+@keyframes finalizePulseAttention {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  25% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.2);
+  }
+  75% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+}
+
+/* Edit Mode Notification - Subtle Premium Feedback */
+.edit-mode-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #4b5563;
+  z-index: 10000;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 300px;
+}
+
+.edit-mode-notification.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.edit-mode-notification .notification-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-mode-notification .notification-content svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* Mobile responsiveness for notification */
+@media (max-width: 768px) {
+  .edit-mode-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    font-size: 13px;
+  }
+}
+
 /* Garment Card Content (Form State) */
 .garment-card__content {
   padding: var(--v10-space-5);
@@ -10915,3 +10996,8 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
+
+
+
+
+
