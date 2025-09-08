@@ -8850,11 +8850,28 @@ class V10_GarmentStudio {
   
   // Trigger premium attention animation for Color Studio tab
   triggerColorStudioAttention() {
+    console.log('🎨 Triggering Color Studio attention animation...');
+    
     const designTab = document.getElementById('design-studio-tab');
-    if (!designTab) return;
+    if (!designTab) {
+      console.warn('❌ Design Studio tab not found - cannot trigger animation');
+      return;
+    }
+    
+    // Check if tab is visible
+    const isVisible = designTab.style.display !== 'none' && 
+                     designTab.offsetParent !== null;
+    console.log(`👁️ Tab visibility: ${isVisible ? 'VISIBLE' : 'HIDDEN'}`);
+    
+    // Make tab visible if it's hidden
+    if (!isVisible) {
+      console.log('🔄 Making tab visible for animation...');
+      designTab.style.display = 'block';
+    }
     
     // Add attention class for 8-second animation
     designTab.classList.add('studio-tab--needs-attention');
+    console.log('✨ Animation class added to tab');
     
     // Update tab text to show urgency
     const subtitleElement = designTab.querySelector('.studio-tab__subtitle');
@@ -8902,21 +8919,70 @@ class V10_GarmentStudio {
   // COLOR STUDIO ONBOARDING SYSTEM
   // Initialize comprehensive onboarding for first-time Color Studio entry
   initializeColorStudioOnboarding() {
+    console.log('🎯 Onboarding Debug - Checking trigger conditions...');
+    
     // Check if user has seen onboarding before
     const hasSeenOnboarding = localStorage.getItem('v10-color-studio-onboarding-seen');
-    if (hasSeenOnboarding) return;
+    console.log(`📚 localStorage check: ${hasSeenOnboarding ? 'BLOCKED (seen before)' : 'CLEAR (first time)'}`);
+    if (hasSeenOnboarding) {
+      console.log('❌ Onboarding blocked by localStorage');
+      return;
+    }
+    
+    // Debug current state
+    const currentStudio = V10_State.currentStudio;
+    const garmentsNeedingColors = this.countGarmentsNeedingColors();
+    console.log(`🏗️ Current Studio: "${currentStudio}" (need: "design")`);
+    console.log(`🎨 Garments needing colors: ${garmentsNeedingColors} (need: > 0)`);
+    
+    // Debug garments in detail
+    console.log('👕 Garment Analysis:');
+    V10_State.garments.forEach((garment, id) => {
+      console.log(`  Garment ${id}:`, {
+        sampleType: garment.sampleType,
+        sampleSubValue: garment.sampleSubValue,
+        assignedLabDips: garment.assignedLabDips?.size || 0,
+        needsColors: V10_State.requestType === 'sample-request' &&
+          garment.sampleType === 'custom' &&
+          garment.sampleSubValue === 'design-studio' &&
+          (!garment.assignedLabDips || garment.assignedLabDips.size === 0)
+      });
+    });
     
     // Check if we're in Color Studio and have colors to assign
     if (V10_State.currentStudio === 'design' && this.countGarmentsNeedingColors() > 0) {
+      console.log('✅ All conditions met! Starting onboarding with 500ms delay...');
       // Delay to allow Color Studio to fully load
       setTimeout(() => {
         this.showColorStudioOnboarding();
       }, 500);
+    } else {
+      console.log('❌ Onboarding conditions not met');
     }
   }
   
   // Show the guided onboarding tour
   showColorStudioOnboarding() {
+    console.log('🚀 Starting onboarding tour...');
+    
+    // Check if required elements exist
+    const requiredElements = [
+      { selector: '#lab-dip-color-picker', name: 'Color Picker' },
+      { selector: '#manual-pantone-code', name: 'Pantone Input' },
+      { selector: '.popular-colors-grid', name: 'Popular Colors Grid' }
+    ];
+    
+    const missingElements = requiredElements.filter(el => !document.querySelector(el.selector));
+    
+    if (missingElements.length > 0) {
+      console.log('⏳ Some elements not ready yet:', missingElements.map(el => el.name).join(', '));
+      // Retry after a longer delay
+      setTimeout(() => this.showColorStudioOnboarding(), 1000);
+      return;
+    }
+    
+    console.log('✅ All onboarding target elements found!');
+    
     // Create onboarding overlay
     let overlay = document.getElementById('color-studio-onboarding-overlay');
     if (!overlay) {
@@ -9067,6 +9133,52 @@ class V10_GarmentStudio {
       message.classList.remove('show');
       setTimeout(() => message.remove(), 300);
     }, 4000);
+  }
+  
+  // DEBUG & TESTING FUNCTIONS
+  // Manual override functions for debugging and testing
+  
+  // Clear onboarding localStorage and force trigger
+  debugForceOnboarding() {
+    console.log('🔧 DEBUG: Forcing onboarding trigger...');
+    localStorage.removeItem('v10-color-studio-onboarding-seen');
+    console.log('✅ localStorage cleared');
+    
+    // Force trigger onboarding
+    setTimeout(() => {
+      this.showColorStudioOnboarding();
+    }, 500);
+  }
+  
+  // Test red pulse animation
+  debugTriggerRedPulse() {
+    console.log('🔧 DEBUG: Manually triggering red pulse animation...');
+    this.triggerColorStudioAttention();
+  }
+  
+  // Reset onboarding completely
+  debugResetOnboarding() {
+    console.log('🔧 DEBUG: Resetting onboarding completely...');
+    localStorage.removeItem('v10-color-studio-onboarding-seen');
+    
+    // Remove existing overlay if present
+    const overlay = document.getElementById('color-studio-onboarding-overlay');
+    if (overlay) overlay.remove();
+    
+    console.log('✅ Onboarding reset complete');
+  }
+  
+  // Show current state debug info
+  debugShowState() {
+    console.log('🔧 DEBUG: Current State Analysis');
+    console.log('=====================');
+    console.log('V10_State.currentStudio:', V10_State.currentStudio);
+    console.log('V10_State.requestType:', V10_State.requestType);
+    console.log('Garments count:', V10_State.garments.size);
+    console.log('Garments needing colors:', this.countGarmentsNeedingColors());
+    console.log('localStorage onboarding:', localStorage.getItem('v10-color-studio-onboarding-seen'));
+    console.log('Design tab visible:', document.getElementById('design-studio-tab')?.style.display !== 'none');
+    console.log('=====================');
   }
 
   finalizeGarmentAppearance(garmentCard, garmentData) {
@@ -15646,6 +15758,12 @@ class V10_TechPackSystem {
     
     // Make design studio globally accessible for lab dip assignments
     window.v10ColorStudio = this.designStudio;
+    
+    // Make debug functions globally accessible for testing
+    window.debugOnboardingForce = () => this.garmentStudio.debugForceOnboarding();
+    window.debugOnboardingReset = () => this.garmentStudio.debugResetOnboarding();
+    window.debugRedPulse = () => this.garmentStudio.debugTriggerRedPulse();
+    window.debugShowState = () => this.garmentStudio.debugShowState();
     window.v10DesignStudio = this.designStudio;
     
     // Make review manager globally accessible for assignments text
