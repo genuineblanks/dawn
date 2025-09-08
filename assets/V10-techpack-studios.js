@@ -8943,19 +8943,19 @@ class V10_GarmentStudio {
     this.currentOnboardingStep = 0;
     this.onboardingSteps = [
       {
-        target: '#v10-color-code',
-        title: 'Method 1: Enter Pantone Code',
-        description: 'Type your exact Pantone code (like "19-4005 TPX") for precise color matching. This is the most accurate method for professional production.',
+        target: '#lab-dip-color-picker',
+        title: 'Method 1: Visual Color Picker',
+        description: 'Use our color picker to select your desired color visually. Perfect for quick color selection and visual matching.',
         position: 'top'
       },
       {
-        target: '#v10-visual-color-picker',
-        title: 'Method 2: Visual Color Picker', 
-        description: 'Use our color wheel to pick visually. Great for getting close to your desired color when you don\'t have a specific Pantone code.',
+        target: '#manual-pantone-code',
+        title: 'Method 2: Enter Pantone Code',
+        description: 'Type your exact Pantone code (like "19-4005 TPX" or "19-4005 TCX") for precise color matching. This is the most accurate method for professional production.',
         position: 'top'
       },
       {
-        target: '.color-swatches-grid',
+        target: '.popular-colors-grid',
         title: 'Method 3: Popular Colors',
         description: 'Choose from our curated selection of trending colors. These are popular choices that work well with most garment types.',
         position: 'bottom'
