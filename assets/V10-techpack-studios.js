@@ -8825,6 +8825,14 @@ class V10_GarmentStudio {
     // CRITICAL: Clear edit mode flag FIRST before any DOM manipulation
     garmentData.isInEditMode = false;
     
+    // GLOBAL EDIT MODE LOCK CLEANUP: Clear global edit mode lock if this garment was being edited
+    if (V10_State.editMode.isLocked && V10_State.editMode.currentGarmentId === garmentData.id) {
+      V10_State.editMode.isLocked = false;
+      V10_State.editMode.currentGarmentId = null;
+      V10_State.editMode.blockedAttempts = 0;
+      console.log(`🔓 Global edit mode lock cleared in finalizeGarmentAppearance for ${garmentData.id}`);
+    }
+    
     const summaryContainer = garmentCard.querySelector('.garment-card__summary');
     const contentContainer = garmentCard.querySelector('.garment-card__content');
     
@@ -8952,6 +8960,14 @@ class V10_GarmentStudio {
       
       // Immediately validate and finalize the variant since it has all required data
       this.updateGarmentStatus(newVariant.id);
+      
+      // SAFETY CHECK: Ensure global edit mode is not accidentally locked to this variant
+      if (V10_State.editMode.isLocked && V10_State.editMode.currentGarmentId === newVariant.id) {
+        V10_State.editMode.isLocked = false;
+        V10_State.editMode.currentGarmentId = null;
+        V10_State.editMode.blockedAttempts = 0;
+        console.log(`🔓 Cleared accidental edit lock for variant ${newVariant.id} in createColorVariant`);
+      }
       
       // Ensure the variant displays in collapsed state immediately
       setTimeout(() => {
