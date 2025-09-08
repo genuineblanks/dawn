@@ -4,6 +4,14 @@
    Reduced from 10,956 lines to essential styles only
    ==================================================== */
 
+/* Override color name styling for bulk order review context */
+.v10-review-garment-item .v10-color-name {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  flex: none !important;
+}
 
 
 
@@ -10759,8 +10767,3 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
-
-
-
-
-
