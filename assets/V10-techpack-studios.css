@@ -6,30 +6,6 @@
 
 
 
-.v10-garment-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-
-.v10-garment-number {
-  font-weight: 700;
-  color: #10b981;
-  font-size: 16px;
-}
-
-.v10-garment-type {
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.v10-garment-separator {
-  color: rgba(255, 255, 255, 0.3);
-}
 
 .v10-garment-fabric,
 .v10-garment-colorway,
@@ -51,20 +27,6 @@
   font-weight: 600;
 }
 
-.v10-quantity-display {
-  background: transparent;
-  padding: 12px 0;
-  border: none;
-  margin-top: 8px;
-}
-
-.v10-size-grid {
-  display: none; /* Hide old grid - we use v10-size-chips now */
-}
-
-.v10-size-item {
-  display: none; /* Hide old size items - we use v10-size-chip now */
-}
 
 .v10-size-label {
   font-size: 11px;
@@ -10799,87 +10761,6 @@ div[class*="circle"][style*="background-color"],
 }
 
 
-/* Responsive Size Chips Layout */
-.v10-size-chips {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  align-items: stretch;
-}
-
-.v10-size-chip {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 4px;
-  background: #1a1a1a;
-  color: #ffffff;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-}
-
-/* Dynamic sizing based on count */
-.v10-size-chips[data-size-count="1"] .v10-size-chip { 
-  min-width: 80px; 
-  font-size: 13px;
-}
-
-.v10-size-chips[data-size-count="2"] .v10-size-chip { 
-  min-width: 60px; 
-  font-size: 12px;
-}
-
-.v10-size-chips[data-size-count="3"] .v10-size-chip { 
-  min-width: 50px; 
-  font-size: 12px;
-}
-
-.v10-size-chips[data-size-count="4"] .v10-size-chip { 
-  min-width: 40px; 
-  font-size: 11px;
-}
-
-.v10-size-chips[data-size-count="5"] .v10-size-chip { 
-  min-width: 35px; 
-  font-size: 11px;
-}
-
-.v10-size-chips[data-size-count="6"] .v10-size-chip { 
-  min-width: 30px; 
-  font-size: 10px;
-}
-
-.v10-size-chips[data-size-count="7"] .v10-size-chip { 
-  min-width: 28px; 
-  font-size: 10px;
-}
-
-/* Size chip hover effect */
-.v10-size-chip:hover {
-  background: #2a2a2a;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Light theme size chips */
-[data-theme="light"] .v10-size-chip {
-  background: #f5f5f5;
-  color: #1a1a1a;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .v10-size-chip:hover {
-  background: #e5e5e5;
-  border-color: rgba(0, 0, 0, 0.2);
-}
 
 
 
