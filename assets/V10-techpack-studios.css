@@ -977,6 +977,19 @@ button:focus,
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
+.v10-btn--tour {
+  background-color: #f97316; /* Orange-500 */
+  color: white;
+  border-color: #f97316;
+}
+
+.v10-btn--tour:hover {
+  background-color: #ea580c; /* Orange-600 */
+  border-color: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
 .v10-btn--ghost {
   background-color: transparent;
   color: var(--v10-text-secondary);
@@ -11167,3 +11180,8 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
+
+
+
+
+

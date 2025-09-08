@@ -3233,20 +3233,7 @@ class V10_StudioNavigator {
         console.warn('⚠️ v10ColorStudio not found');
       }
       
-      // ONBOARDING: Check if user should see Color Studio onboarding
-      console.log('🎯 Checking onboarding conditions...');
-      console.log(`- window.v10GarmentStudio exists: ${!!window.v10GarmentStudio}`);
-      console.log(`- initializeColorStudioOnboarding function exists: ${!!(window.v10GarmentStudio?.initializeColorStudioOnboarding)}`);
-      
-      if (window.v10GarmentStudio && window.v10GarmentStudio.initializeColorStudioOnboarding) {
-        console.log('✅ Scheduling onboarding initialization in 800ms...');
-        setTimeout(() => {
-          console.log('⏰ 800ms delay complete - calling initializeColorStudioOnboarding()');
-          window.v10GarmentStudio.initializeColorStudioOnboarding();
-        }, 800);
-      } else {
-        console.warn('❌ Cannot trigger onboarding - missing v10GarmentStudio or function');
-      }
+      // Color Studio initialized - TOUR button will be visible for manual guidance
     }
 
     // Update tab UI
@@ -3262,6 +3249,14 @@ class V10_StudioNavigator {
       container.style.display = isActive ? 'block' : 'none';
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
+    
+    // Show/hide TOUR button based on studio
+    const tourButton = document.getElementById('color-studio-tour');
+    if (tourButton) {
+      const shouldShowTour = studioName === 'design';
+      tourButton.style.display = shouldShowTour ? 'block' : 'none';
+      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName})`);
+    }
 
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
@@ -8934,50 +8929,14 @@ class V10_GarmentStudio {
   
   // COLOR STUDIO ONBOARDING SYSTEM
   // Initialize comprehensive onboarding for first-time Color Studio entry
-  initializeColorStudioOnboarding(debugMode = false) {
-    console.log(`🎯 Onboarding Debug - Checking trigger conditions... ${debugMode ? '(DEBUG MODE)' : ''}`);
+  // NOTE: This function is now primarily called manually via TOUR button
+  initializeColorStudioOnboarding() {
+    console.log('🎯 Manual onboarding initialization');
     
-    // Check if user has seen onboarding before
-    const hasSeenOnboarding = localStorage.getItem('v10-color-studio-onboarding-seen');
-    console.log(`📚 localStorage check: ${hasSeenOnboarding ? 'BLOCKED (seen before)' : 'CLEAR (first time)'}`);
-    
-    if (hasSeenOnboarding && !debugMode) {
-      console.log('❌ Onboarding blocked by localStorage');
-      return;
-    } else if (hasSeenOnboarding && debugMode) {
-      console.log('🔧 DEBUG MODE: Bypassing localStorage block');
-    }
-    
-    // Debug current state
-    const currentStudio = V10_State.currentStudio;
-    const garmentsNeedingColors = this.countGarmentsNeedingColors();
-    console.log(`🏗️ Current Studio: "${currentStudio}" (need: "design")`);
-    console.log(`🎨 Garments needing colors: ${garmentsNeedingColors} (need: > 0)`);
-    
-    // Debug garments in detail
-    console.log('👕 Garment Analysis:');
-    V10_State.garments.forEach((garment, id) => {
-      console.log(`  Garment ${id}:`, {
-        sampleType: garment.sampleType,
-        sampleSubValue: garment.sampleSubValue,
-        assignedLabDips: garment.assignedLabDips?.size || 0,
-        needsColors: V10_State.requestType === 'sample-request' &&
-          garment.sampleType === 'custom' &&
-          garment.sampleSubValue === 'design-studio' &&
-          (!garment.assignedLabDips || garment.assignedLabDips.size === 0)
-      });
-    });
-    
-    // Check if we're in Color Studio and have colors to assign
-    if (V10_State.currentStudio === 'design' && this.countGarmentsNeedingColors() > 0) {
-      console.log('✅ All conditions met! Starting onboarding with 500ms delay...');
-      // Delay to allow Color Studio to fully load
-      setTimeout(() => {
-        this.showColorStudioOnboarding();
-      }, 500);
-    } else {
-      console.log('❌ Onboarding conditions not met');
-    }
+    // Simple delay to ensure Color Studio is loaded, then show onboarding
+    setTimeout(() => {
+      this.showColorStudioOnboarding();
+    }, 100);
   }
   
   // Show the guided onboarding tour
@@ -9107,13 +9066,11 @@ class V10_GarmentStudio {
   
   // Skip onboarding tour
   skipOnboarding() {
-    localStorage.setItem('v10-color-studio-onboarding-seen', 'true');
     this.hideOnboarding();
   }
   
   // Complete onboarding tour
   completeOnboarding() {
-    localStorage.setItem('v10-color-studio-onboarding-seen', 'true');
     this.hideOnboarding();
     
     // Show completion message
@@ -9154,48 +9111,19 @@ class V10_GarmentStudio {
     }, 4000);
   }
   
-  // DEBUG & TESTING FUNCTIONS
-  // Manual override functions for debugging and testing
+  // MANUAL TOUR FUNCTIONS
+  // Simple functions for manual tour triggering
   
-  // Clear onboarding localStorage and force trigger
-  debugForceOnboarding() {
-    console.log('🔧 DEBUG: Forcing onboarding trigger with debug mode...');
-    
-    // Force trigger onboarding with debug mode (bypasses localStorage)
-    setTimeout(() => {
-      this.initializeColorStudioOnboarding(true);
-    }, 500);
+  // Manual tour trigger (same as TOUR button)
+  manualTourTrigger() {
+    console.log('🎯 Manual tour triggered');
+    this.showColorStudioOnboarding();
   }
   
-  // Test red pulse animation
+  // Test red pulse animation (keep for testing color tab attention)
   debugTriggerRedPulse() {
     console.log('🔧 DEBUG: Manually triggering red pulse animation...');
     this.triggerColorStudioAttention();
-  }
-  
-  // Reset onboarding completely
-  debugResetOnboarding() {
-    console.log('🔧 DEBUG: Resetting onboarding completely...');
-    localStorage.removeItem('v10-color-studio-onboarding-seen');
-    
-    // Remove existing overlay if present
-    const overlay = document.getElementById('color-studio-onboarding-overlay');
-    if (overlay) overlay.remove();
-    
-    console.log('✅ Onboarding reset complete');
-  }
-  
-  // Show current state debug info
-  debugShowState() {
-    console.log('🔧 DEBUG: Current State Analysis');
-    console.log('=====================');
-    console.log('V10_State.currentStudio:', V10_State.currentStudio);
-    console.log('V10_State.requestType:', V10_State.requestType);
-    console.log('Garments count:', V10_State.garments.size);
-    console.log('Garments needing colors:', this.countGarmentsNeedingColors());
-    console.log('localStorage onboarding:', localStorage.getItem('v10-color-studio-onboarding-seen'));
-    console.log('Design tab visible:', document.getElementById('design-studio-tab')?.style.display !== 'none');
-    console.log('=====================');
   }
 
   finalizeGarmentAppearance(garmentCard, garmentData) {
@@ -15776,15 +15704,9 @@ class V10_TechPackSystem {
     // Make design studio globally accessible for lab dip assignments
     window.v10ColorStudio = this.designStudio;
     
-    // Make debug functions globally accessible for testing
-    window.debugOnboardingForce = () => this.garmentStudio.debugForceOnboarding();
-    window.debugOnboardingReset = () => this.garmentStudio.debugResetOnboarding();
+    // Make tour functions globally accessible for testing
+    window.tourManualTrigger = () => this.garmentStudio.manualTourTrigger();
     window.debugRedPulse = () => this.garmentStudio.debugTriggerRedPulse();
-    window.debugShowState = () => this.garmentStudio.debugShowState();
-    window.debugSwitchToDesign = () => {
-      console.log('🔧 DEBUG: Manually switching to design studio...');
-      this.navigator.switchStudio('design');
-    };
     window.v10DesignStudio = this.designStudio;
     
     // Make review manager globally accessible for assignments text
@@ -15865,7 +15787,19 @@ class V10_TechPackSystem {
         }
       });
     }
-
+    
+    // TOUR button (only visible in Color Studio)
+    const tourBtn = document.getElementById('color-studio-tour');
+    if (tourBtn) {
+      tourBtn.addEventListener('click', () => {
+        console.log('🎯 TOUR button clicked - starting onboarding tour');
+        if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
+          window.v10GarmentStudio.showColorStudioOnboarding();
+        } else {
+          console.warn('⚠️ Onboarding system not available');
+        }
+      });
+    }
 
     // Setup help system for all help buttons
     this.setupHelpSystem();
