@@ -3692,8 +3692,8 @@ class V10_QuantityStudioManager {
     const quantityStudioTab = document.getElementById('quantities-studio-tab');
     const quantityStudioComplete = quantityStudioTab?.classList.contains('studio-tab--complete') || false;
     
-    // Find the proceed button or navigation area
-    const nextBtn = document.querySelector('.step-navigation__next');
+    // Find the proceed button (FIXED SELECTOR to match actual HTML)
+    const nextBtn = document.getElementById('step-3-next');
     
     if (nextBtn && garmentStudioComplete && quantityStudioComplete) {
       // Both studios complete - enable proceed to Step 4
@@ -12873,6 +12873,31 @@ class V10_ValidationManager {
         const nextBtn = this.nextBtn;
         if (nextBtn) {
           // Buttons remain always enabled - validation feedback shown on click instead
+          
+          // PRIORITY: Check if both studios are complete for bulk orders
+          // This overrides individual garment validation
+          if (requestType === 'bulk-order-request') {
+            const garmentStudioTab = document.getElementById('garment-studio-tab');
+            const quantityStudioTab = document.getElementById('quantities-studio-tab');
+            
+            const garmentStudioComplete = garmentStudioTab?.classList.contains('studio-tab--complete') || false;
+            const quantityStudioComplete = quantityStudioTab?.classList.contains('studio-tab--complete') || false;
+            
+            if (garmentStudioComplete && quantityStudioComplete) {
+              // Both studios complete - OVERRIDE validation and enable "Proceed to Review"
+              console.log('🎯 STUDIO PRIORITY: Both studios complete - enabling Proceed to Review (overriding garment validation)');
+              nextBtn.innerHTML = `
+                <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+                Proceed to Review
+              `;
+              nextBtn.title = 'Both studios complete - proceed to review and submit';
+              nextBtn.classList.remove('v10-btn--disabled');
+              nextBtn.removeAttribute('disabled');
+              return validation; // Return early, skip individual garment validation UI
+            }
+          }
           
           // Enhanced button text and styling based on validation
           if (validation.isValid) {
