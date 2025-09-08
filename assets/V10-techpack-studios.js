@@ -14092,30 +14092,25 @@ class V10_ReviewManager {
     const { number, garment, colorway } = item;
     const hasQuantities = colorway && colorway.quantities;
     
-    // Build size display HTML
+    // Build size display HTML with responsive layout
     let quantityHTML = '';
     if (hasQuantities) {
       const sizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'];
       const sizeItems = sizes.map(size => {
         const qty = colorway.quantities[size] || 0;
         if (qty > 0) {
-          return `
-            <div class="v10-size-item">
-              <span class="v10-size-label">${size}</span>
-              <span class="v10-size-qty">${qty}</span>
-            </div>
-          `;
+          return `<div class="v10-size-chip">${size}: ${qty}</div>`;
         }
         return '';
-      }).filter(item => item).join('');
+      }).filter(item => item);
+      
+      // Count active sizes for responsive layout
+      const activeSizeCount = sizeItems.length;
       
       quantityHTML = `
         <div class="v10-quantity-display">
-          <div class="v10-size-grid">${sizeItems}</div>
-          <div class="v10-quantity-total">
-            <span>TOTAL:</span>
-            <div class="v10-total-color-preview" style="background-color: ${colorway.color || colorway.hex || '#666666'}"></div>
-            <strong>${colorway.subtotal || 0} units</strong>
+          <div class="v10-size-chips" data-size-count="${activeSizeCount}">
+            ${sizeItems.join('')}
           </div>
         </div>
       `;
@@ -14130,8 +14125,11 @@ class V10_ReviewManager {
     const garmentType = garment.type || 'Garment';
     const colorName = colorway ? colorway.name : '';
     
-    // Fix duplicate pantone - use only one source
-    const colorCode = colorway?.code || colorway?.pantone || '';
+    // FIXED: Single color source - use colorway name OR code, not both
+    const colorDisplay = colorway ? (colorName || colorway.code || colorway.pantone || '') : '';
+    
+    // Calculate total units for header display
+    const totalUnits = hasQuantities ? (colorway.subtotal || 0) : 0;
     
     return `
       <div class="v10-review-garment-item">
@@ -14140,22 +14138,27 @@ class V10_ReviewManager {
             <div class="v10-garment-color-swatch" style="background-color: ${colorway.color || colorway.hex || '#666666'}; border: 2px solid rgba(255,255,255,0.3); display: block;"></div>
           ` : ''}
           <div class="v10-garment-info">
-            <span class="v10-garment-number">${number}.</span>
-            <span class="v10-garment-type">${garmentType}</span>
-            <span class="v10-garment-separator">-</span>
-            <span class="v10-garment-production">${productionType}</span>
-            ${designName ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-design-name">${designName}</span>
-            ` : ''}
-            ${colorway ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-colorway-name">${colorName}</span>
-            ` : ''}
-            ${colorCode ? `
-              <span class="v10-garment-separator">-</span>
-              <span class="v10-pantone-code">${colorCode}</span>
-            ` : ''}
+            <div class="v10-garment-header-row">
+              <div class="v10-garment-title-section">
+                <span class="v10-garment-number">${number}.</span>
+                <span class="v10-garment-type">${garmentType}</span>
+                <span class="v10-garment-separator">-</span>
+                <span class="v10-garment-production">${productionType}</span>
+                ${designName ? `
+                  <span class="v10-garment-separator">-</span>
+                  <span class="v10-design-name">${designName}</span>
+                ` : ''}
+                ${colorDisplay ? `
+                  <span class="v10-garment-separator">-</span>
+                  <span class="v10-color-name">${colorDisplay}</span>
+                ` : ''}
+              </div>
+              ${totalUnits > 0 ? `
+                <div class="v10-garment-total-section">
+                  <span class="v10-garment-total">${totalUnits}</span>
+                </div>
+              ` : ''}
+            </div>
           </div>
         </div>
         ${quantityHTML}
