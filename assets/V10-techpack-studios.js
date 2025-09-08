@@ -3290,6 +3290,25 @@ class V10_StudioNavigator {
     console.log(`🎛️ Switched to ${studioName} studio`);
   }
 
+  // Trigger first-time tour button pulse animation
+  triggerFirstTimeTourPulse() {
+    const tourButton = document.getElementById('color-studio-tour');
+    if (tourButton) {
+      console.log('🟠 Triggering first-time tour button pulse animation');
+      
+      // Add the pulse class immediately
+      tourButton.classList.add('first-time-pulse');
+      
+      // Remove the pulse class after 3 seconds (animation runs 2 cycles of 1.5s each)
+      setTimeout(() => {
+        tourButton.classList.remove('first-time-pulse');
+        console.log('⚫ First-time tour button pulse animation completed');
+      }, 3000);
+    } else {
+      console.warn('⚠️ Could not find tour button for first-time pulse');
+    }
+  }
+
   // Handle blocked navigation attempts during edit mode
   handleBlockedNavigation(elementType, targetLocation) {
     // Increment blocked attempts counter
