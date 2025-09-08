@@ -12791,6 +12791,18 @@ class V10_ValidationManager {
             nextBtn.classList.remove('v10-btn--disabled');
             nextBtn.removeAttribute('disabled'); // Ensure HTML disabled attribute is removed
           } else {
+            // Check if both studios are actually complete before overriding button
+            const garmentStudioTab = document.getElementById('garment-studio-tab');
+            const quantityStudioTab = document.getElementById('quantities-studio-tab');
+            const garmentStudioComplete = garmentStudioTab?.classList.contains('studio-tab--complete') || false;
+            const quantityStudioComplete = quantityStudioTab?.classList.contains('studio-tab--complete') || false;
+            
+            // Don't override if both studios are complete - checkAllStudiosComplete() has already set correct state
+            if (garmentStudioComplete && quantityStudioComplete) {
+              console.log(`✅ Both studios complete - preserving correct button state set by checkAllStudiosComplete()`);
+              return; // Don't override the button state
+            }
+            
             // Show progress in button when incomplete
             const stats = validation.stats;
             if (stats) {
