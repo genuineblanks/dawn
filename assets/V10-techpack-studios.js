@@ -3256,6 +3256,11 @@ class V10_StudioNavigator {
       const shouldShowTour = studioName === 'design';
       tourButton.style.display = shouldShowTour ? 'block' : 'none';
       console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName})`);
+      
+      // Trigger first-time pulse if this is the first visit to Color Studio
+      if (shouldShowTour && !localStorage.getItem('color-studio-tour-seen')) {
+        this.triggerFirstTimeTourPulse();
+      }
     }
 
     // Special handling for quantity studio with debouncing
@@ -8974,12 +8979,14 @@ class V10_GarmentStudio {
       <div class="onboarding-highlight" id="onboarding-highlight"></div>
       <div class="onboarding-tooltip" id="onboarding-tooltip"></div>
       <div class="onboarding-controls">
+        <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-previous">Previous</button>
         <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-skip">Skip Tour</button>
         <button class="onboarding-btn onboarding-btn--primary" id="onboarding-next">Next</button>
       </div>
     `;
     
     // Bind controls
+    document.getElementById('onboarding-previous').addEventListener('click', () => this.previousOnboardingStep());
     document.getElementById('onboarding-skip').addEventListener('click', () => this.skipOnboarding());
     document.getElementById('onboarding-next').addEventListener('click', () => this.nextOnboardingStep());
     
@@ -9002,6 +9009,12 @@ class V10_GarmentStudio {
         target: '.popular-colors-grid',
         title: 'Method 3: Popular Colors',
         description: 'Choose from our curated selection of trending colors. These are popular choices that work well with most garment types.',
+        position: 'bottom'
+      },
+      {
+        target: '#garment-assignments-overview',
+        title: 'Step 4: Fabric Swatches & Assignments',
+        description: 'This section shows your garment assignments. You can assign specific fabric swatches to individual garments here. If a garment has no assignment, you\'ll receive a fabric swatch with your order to help with color matching.',
         position: 'bottom'
       }
     ];
@@ -9030,6 +9043,11 @@ class V10_GarmentStudio {
       return;
     }
     
+    // Special handling for assignment overview section - ensure it's visible
+    if (step.target === '#garment-assignments-overview') {
+      targetElement.style.display = 'block';
+    }
+    
     // Position highlight around target
     const rect = targetElement.getBoundingClientRect();
     highlight.style.left = (rect.left - 8) + 'px';
@@ -9054,14 +9072,28 @@ class V10_GarmentStudio {
       <p style="margin: 8px 0 0 0; color: #d1d5db;">${step.description}</p>
     `;
     
-    // Update next button
+    // Update navigation buttons
+    const previousBtn = document.getElementById('onboarding-previous');
     nextBtn.textContent = this.currentOnboardingStep === this.onboardingSteps.length - 1 ? 'Got It!' : 'Next';
+    
+    // Show/hide Previous button based on current step
+    if (previousBtn) {
+      previousBtn.style.display = this.currentOnboardingStep === 0 ? 'none' : 'block';
+    }
   }
   
   // Move to next onboarding step
   nextOnboardingStep() {
     this.currentOnboardingStep++;
     this.showOnboardingStep();
+  }
+  
+  // Move to previous onboarding step
+  previousOnboardingStep() {
+    if (this.currentOnboardingStep > 0) {
+      this.currentOnboardingStep--;
+      this.showOnboardingStep();
+    }
   }
   
   // Skip onboarding tour
@@ -15793,6 +15825,12 @@ class V10_TechPackSystem {
     if (tourBtn) {
       tourBtn.addEventListener('click', () => {
         console.log('🎯 TOUR button clicked - starting onboarding tour');
+        
+        // Mark as seen and return to black normal state permanently
+        localStorage.setItem('color-studio-tour-seen', 'true');
+        tourBtn.classList.remove('first-time-pulse');
+        console.log('✅ Tour button returned to normal black state');
+        
         if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
           window.v10GarmentStudio.showColorStudioOnboarding();
         } else {
