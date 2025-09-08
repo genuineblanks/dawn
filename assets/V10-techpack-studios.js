@@ -7140,6 +7140,15 @@ class V10_GarmentManager {
         return false;
       }
 
+      // EDIT MODE LOCK CLEANUP: Check if this garment is currently being edited
+      if (V10_State.editMode.isLocked && V10_State.editMode.currentGarmentId === garmentId) {
+        // Clear edit mode lock before removing garment to prevent navigation bugs
+        V10_State.editMode.isLocked = false;
+        V10_State.editMode.currentGarmentId = null;
+        V10_State.editMode.blockedAttempts = 0;
+        console.log(`🔓 Edit mode lock cleared before removing garment ${garmentId}`);
+      }
+
       // Check assignments and confirm if needed
       const hasAssignments = garmentData.assignedLabDips.size > 0 || garmentData.assignedDesigns.size > 0;
       
