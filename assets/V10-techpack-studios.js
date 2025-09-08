@@ -8934,15 +8934,18 @@ class V10_GarmentStudio {
   
   // COLOR STUDIO ONBOARDING SYSTEM
   // Initialize comprehensive onboarding for first-time Color Studio entry
-  initializeColorStudioOnboarding() {
-    console.log('🎯 Onboarding Debug - Checking trigger conditions...');
+  initializeColorStudioOnboarding(debugMode = false) {
+    console.log(`🎯 Onboarding Debug - Checking trigger conditions... ${debugMode ? '(DEBUG MODE)' : ''}`);
     
     // Check if user has seen onboarding before
     const hasSeenOnboarding = localStorage.getItem('v10-color-studio-onboarding-seen');
     console.log(`📚 localStorage check: ${hasSeenOnboarding ? 'BLOCKED (seen before)' : 'CLEAR (first time)'}`);
-    if (hasSeenOnboarding) {
+    
+    if (hasSeenOnboarding && !debugMode) {
       console.log('❌ Onboarding blocked by localStorage');
       return;
+    } else if (hasSeenOnboarding && debugMode) {
+      console.log('🔧 DEBUG MODE: Bypassing localStorage block');
     }
     
     // Debug current state
@@ -9156,13 +9159,11 @@ class V10_GarmentStudio {
   
   // Clear onboarding localStorage and force trigger
   debugForceOnboarding() {
-    console.log('🔧 DEBUG: Forcing onboarding trigger...');
-    localStorage.removeItem('v10-color-studio-onboarding-seen');
-    console.log('✅ localStorage cleared');
+    console.log('🔧 DEBUG: Forcing onboarding trigger with debug mode...');
     
-    // Force trigger onboarding
+    // Force trigger onboarding with debug mode (bypasses localStorage)
     setTimeout(() => {
-      this.showColorStudioOnboarding();
+      this.initializeColorStudioOnboarding(true);
     }, 500);
   }
   
