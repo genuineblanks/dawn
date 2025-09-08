@@ -11000,3 +11000,23 @@ div[class*="circle"][style*="background-color"],
     font-size: 10px !important;
   }
 }
+
+/* Header enhancements for step 4 garment specifications */
+.v10-garment-header {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.v10-garment-total-section {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.v10-garment-header-row {
+  position: relative !important;
+  padding-right: 80px !important;
+}
