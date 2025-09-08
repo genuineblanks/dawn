@@ -15653,14 +15653,8 @@ class V10_TechPackSystem {
       });
     }
 
-    // Add click event to backdrop with better targeting
-    modal.addEventListener('click', (e) => {
-      // Only close if clicking the backdrop (modal overlay), not the modal content
-      if (e.target === modal || e.target.classList.contains('v10-modal-overlay')) {
-        e.preventDefault();
-        closeModal();
-      }
-    });
+    // Backdrop clicks DISABLED - users must use close/cancel buttons
+    // Overlay click prevention is now handled by universal function
 
     // Add ESC key support
     const handleKeyDown = (e) => {
@@ -17484,12 +17478,8 @@ class V10_ModalManager {
       });
     });
 
-    // Modal overlay clicks (close modal) - using event delegation
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('v10-modal-overlay')) {
-        this.closeModal(e.target);
-      }
-    });
+    // Modal overlay clicks DISABLED - users must use close/cancel buttons
+    // Overlay click prevention is now handled by universal function
 
     // Escape key to close modals
     document.addEventListener('keydown', (e) => {
@@ -18226,6 +18216,51 @@ const V10_BadgeManager = {
 };
 
 // ==============================================
+// UNIVERSAL MODAL OVERLAY CLICK PREVENTION
+// ==============================================
+// Prevents ALL modals from closing when clicking outside/overlay
+// Simple function that works with any existing modal system
+function initializeModalOverlayPrevention() {
+  // Add global click listener with highest priority (capture phase)
+  document.addEventListener('click', function(e) {
+    // Check if click is on any modal overlay/backdrop
+    const isModalOverlay = e.target.classList.contains('v10-modal-overlay') ||
+                          e.target.classList.contains('wholesale-modal-overlay') ||
+                          e.target.classList.contains('modal-overlay') ||
+                          e.target.classList.contains('techpack-modal__backdrop') ||
+                          (e.target.tagName === 'DIV' && 
+                           e.target.style.position === 'fixed' && 
+                           e.target.style.background && 
+                           e.target.style.background.includes('rgba'));
+
+    // If clicking on modal overlay, prevent the click from closing the modal
+    if (isModalOverlay) {
+      console.log('🚫 Modal overlay click prevented - user must use close/cancel buttons');
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    }
+
+    // Also check if clicking on modal containers themselves (some systems check for this)
+    const modalContainer = e.target.closest('[class*="modal"]');
+    if (modalContainer && e.target === modalContainer) {
+      // Only prevent if this is the modal background, not modal content
+      const hasModalContent = modalContainer.querySelector('.v10-modal, .wholesale-modal-content, .modal__content, .techpack-modal__content');
+      if (hasModalContent) {
+        console.log('🚫 Modal container background click prevented');
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+      }
+    }
+  }, true); // Use capture phase to intercept before other handlers
+
+  console.log('✅ Universal modal overlay click prevention initialized');
+}
+
+// ==============================================
 // INITIALIZATION
 // ==============================================
 
@@ -18233,6 +18268,10 @@ const V10_BadgeManager = {
 document.addEventListener('DOMContentLoaded', () => {
   try {
     console.log('🚀 V10 TechPack Studios - Initializing System...');
+    
+    // Initialize modal overlay click prevention FIRST
+    // This must run before any modal systems are initialized
+    initializeModalOverlayPrevention();
     
     
     // Initialize badge manager
