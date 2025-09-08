@@ -3224,6 +3224,13 @@ class V10_StudioNavigator {
       if (window.v10ColorStudio) {
         window.v10ColorStudio.switchMode('labdips');
       }
+      
+      // ONBOARDING: Check if user should see Color Studio onboarding
+      if (window.v10GarmentStudio && window.v10GarmentStudio.initializeColorStudioOnboarding) {
+        setTimeout(() => {
+          window.v10GarmentStudio.initializeColorStudioOnboarding();
+        }, 800);
+      }
     }
 
     // Update tab UI
@@ -8185,8 +8192,15 @@ class V10_GarmentStudio {
       designStudioTab.classList.add('studio-tab--complete');
       designStudioTab.classList.remove('studio-tab--incomplete');
     } else {
-      // Some requirements unfulfilled = incomplete with fraction
-      subtitleElement.textContent = `Incomplete (${fulfilledRequirements}/${totalRequirements})`;
+      // Some requirements unfulfilled = show user-friendly color requirement message
+      const colorsNeeded = totalRequirements - fulfilledRequirements;
+      if (colorsNeeded === totalRequirements) {
+        // No colors assigned yet - more urgent message
+        subtitleElement.textContent = `Colors Required (${colorsNeeded} garment${colorsNeeded !== 1 ? 's' : ''})`;
+      } else {
+        // Some colors assigned - show progress
+        subtitleElement.textContent = `${colorsNeeded} more color${colorsNeeded !== 1 ? 's' : ''} needed`;
+      }
       designStudioTab.classList.add('studio-tab--incomplete');
       designStudioTab.classList.remove('studio-tab--complete');
     }
@@ -8811,6 +8825,248 @@ class V10_GarmentStudio {
         }
       }
     }, 150);
+    
+    // COLOR STUDIO ATTENTION: Check if this garment needs color assignment
+    this.checkColorRequirement(garmentId);
+  }
+  
+  // Check if garment needs color assignment and trigger Color Studio attention
+  checkColorRequirement(garmentId) {
+    const garmentData = V10_State.garments.get(garmentId);
+    if (!garmentData) return;
+    
+    // Only trigger for sample requests with custom colorways requiring design studio
+    const needsColorAssignment = 
+      V10_State.requestType === 'sample-request' &&
+      garmentData.sampleType === 'custom' &&
+      garmentData.sampleSubValue === 'design-studio' &&
+      (!garmentData.assignedLabDips || garmentData.assignedLabDips.size === 0);
+    
+    if (needsColorAssignment) {
+      console.log(`🎨 Garment ${garmentId} needs color assignment - triggering Color Studio attention`);
+      this.triggerColorStudioAttention();
+    }
+  }
+  
+  // Trigger premium attention animation for Color Studio tab
+  triggerColorStudioAttention() {
+    const designTab = document.getElementById('design-studio-tab');
+    if (!designTab) return;
+    
+    // Add attention class for 8-second animation
+    designTab.classList.add('studio-tab--needs-attention');
+    
+    // Update tab text to show urgency
+    const subtitleElement = designTab.querySelector('.studio-tab__subtitle');
+    if (subtitleElement) {
+      const currentText = subtitleElement.textContent;
+      if (!currentText.includes('Colors Required')) {
+        // Count garments that need colors
+        const garmentsNeedingColors = this.countGarmentsNeedingColors();
+        if (garmentsNeedingColors > 0) {
+          subtitleElement.textContent = `Colors Required (${garmentsNeedingColors})`;
+        }
+      }
+    }
+    
+    // Remove attention class after animation completes
+    setTimeout(() => {
+      designTab.classList.remove('studio-tab--needs-attention');
+      
+      // Revert tab text if colors still needed (will be handled by updateDesignStudioTabStatus)
+      setTimeout(() => {
+        if (window.v10GarmentStudio) {
+          window.v10GarmentStudio.updateDesignStudioTabStatus();
+        }
+      }, 100);
+    }, 8000);
+    
+    console.log('✨ Triggered Color Studio attention animation');
+  }
+  
+  // Count how many garments need color assignment
+  countGarmentsNeedingColors() {
+    let count = 0;
+    V10_State.garments.forEach(garment => {
+      const needsColors = 
+        V10_State.requestType === 'sample-request' &&
+        garment.sampleType === 'custom' &&
+        garment.sampleSubValue === 'design-studio' &&
+        (!garment.assignedLabDips || garment.assignedLabDips.size === 0);
+      
+      if (needsColors) count++;
+    });
+    return count;
+  }
+  
+  // COLOR STUDIO ONBOARDING SYSTEM
+  // Initialize comprehensive onboarding for first-time Color Studio entry
+  initializeColorStudioOnboarding() {
+    // Check if user has seen onboarding before
+    const hasSeenOnboarding = localStorage.getItem('v10-color-studio-onboarding-seen');
+    if (hasSeenOnboarding) return;
+    
+    // Check if we're in Color Studio and have colors to assign
+    if (V10_State.currentStudio === 'design' && this.countGarmentsNeedingColors() > 0) {
+      // Delay to allow Color Studio to fully load
+      setTimeout(() => {
+        this.showColorStudioOnboarding();
+      }, 500);
+    }
+  }
+  
+  // Show the guided onboarding tour
+  showColorStudioOnboarding() {
+    // Create onboarding overlay
+    let overlay = document.getElementById('color-studio-onboarding-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'color-studio-onboarding-overlay';
+      overlay.className = 'color-studio-onboarding';
+      document.body.appendChild(overlay);
+    }
+    
+    overlay.innerHTML = `
+      <div class="onboarding-highlight" id="onboarding-highlight"></div>
+      <div class="onboarding-tooltip" id="onboarding-tooltip"></div>
+      <div class="onboarding-controls">
+        <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-skip">Skip Tour</button>
+        <button class="onboarding-btn onboarding-btn--primary" id="onboarding-next">Next</button>
+      </div>
+    `;
+    
+    // Bind controls
+    document.getElementById('onboarding-skip').addEventListener('click', () => this.skipOnboarding());
+    document.getElementById('onboarding-next').addEventListener('click', () => this.nextOnboardingStep());
+    
+    // Start the tour
+    this.currentOnboardingStep = 0;
+    this.onboardingSteps = [
+      {
+        target: '#v10-color-code',
+        title: 'Method 1: Enter Pantone Code',
+        description: 'Type your exact Pantone code (like "19-4005 TPX") for precise color matching. This is the most accurate method for professional production.',
+        position: 'top'
+      },
+      {
+        target: '#v10-visual-color-picker',
+        title: 'Method 2: Visual Color Picker', 
+        description: 'Use our color wheel to pick visually. Great for getting close to your desired color when you don\'t have a specific Pantone code.',
+        position: 'top'
+      },
+      {
+        target: '.color-swatches-grid',
+        title: 'Method 3: Popular Colors',
+        description: 'Choose from our curated selection of trending colors. These are popular choices that work well with most garment types.',
+        position: 'bottom'
+      }
+    ];
+    
+    overlay.classList.add('show');
+    this.showOnboardingStep();
+  }
+  
+  // Show current onboarding step
+  showOnboardingStep() {
+    if (this.currentOnboardingStep >= this.onboardingSteps.length) {
+      this.completeOnboarding();
+      return;
+    }
+    
+    const step = this.onboardingSteps[this.currentOnboardingStep];
+    const highlight = document.getElementById('onboarding-highlight');
+    const tooltip = document.getElementById('onboarding-tooltip');
+    const nextBtn = document.getElementById('onboarding-next');
+    
+    // Find target element
+    const targetElement = document.querySelector(step.target);
+    if (!targetElement) {
+      console.warn(`Onboarding target not found: ${step.target}`);
+      this.nextOnboardingStep();
+      return;
+    }
+    
+    // Position highlight around target
+    const rect = targetElement.getBoundingClientRect();
+    highlight.style.left = (rect.left - 8) + 'px';
+    highlight.style.top = (rect.top - 8) + 'px';
+    highlight.style.width = (rect.width + 16) + 'px';
+    highlight.style.height = (rect.height + 16) + 'px';
+    
+    // Position tooltip
+    const tooltipX = rect.left + (rect.width / 2);
+    let tooltipY = step.position === 'top' ? rect.top - 20 : rect.bottom + 20;
+    
+    tooltip.className = `onboarding-tooltip onboarding-tooltip--${step.position}`;
+    tooltip.style.left = tooltipX + 'px';
+    tooltip.style.top = tooltipY + 'px';
+    tooltip.style.transform = 'translateX(-50%)';
+    
+    tooltip.innerHTML = `
+      <div>
+        <span class="onboarding-step-counter">${this.currentOnboardingStep + 1}</span>
+        <strong>${step.title}</strong>
+      </div>
+      <p style="margin: 8px 0 0 0; color: #d1d5db;">${step.description}</p>
+    `;
+    
+    // Update next button
+    nextBtn.textContent = this.currentOnboardingStep === this.onboardingSteps.length - 1 ? 'Got It!' : 'Next';
+  }
+  
+  // Move to next onboarding step
+  nextOnboardingStep() {
+    this.currentOnboardingStep++;
+    this.showOnboardingStep();
+  }
+  
+  // Skip onboarding tour
+  skipOnboarding() {
+    localStorage.setItem('v10-color-studio-onboarding-seen', 'true');
+    this.hideOnboarding();
+  }
+  
+  // Complete onboarding tour
+  completeOnboarding() {
+    localStorage.setItem('v10-color-studio-onboarding-seen', 'true');
+    this.hideOnboarding();
+    
+    // Show completion message
+    setTimeout(() => {
+      this.showOnboardingCompletionMessage();
+    }, 300);
+  }
+  
+  // Hide onboarding overlay
+  hideOnboarding() {
+    const overlay = document.getElementById('color-studio-onboarding-overlay');
+    if (overlay) {
+      overlay.classList.remove('show');
+      setTimeout(() => {
+        overlay.remove();
+      }, 300);
+    }
+  }
+  
+  // Show brief completion message
+  showOnboardingCompletionMessage() {
+    const message = document.createElement('div');
+    message.className = 'edit-mode-notification show';
+    message.innerHTML = `
+      <div class="notification-content">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        <span>Great! Now you know how to add colors. Choose your preferred method above.</span>
+      </div>
+    `;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+      message.classList.remove('show');
+      setTimeout(() => message.remove(), 300);
+    }, 4000);
   }
 
   finalizeGarmentAppearance(garmentCard, garmentData) {
