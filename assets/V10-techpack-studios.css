@@ -10842,12 +10842,13 @@ div[class*="circle"][style*="background-color"],
 
 /* Garment Header Row Layout - Title + Total Units */
 .v10-garment-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
   width: 100%;
   margin-bottom: 8px;
   gap: 16px;
+  min-height: 20px;
 }
 
 .v10-garment-title-section {
@@ -10858,6 +10859,10 @@ div[class*="circle"][style*="background-color"],
 .v10-garment-total-section {
   flex: 0 0 auto;
   text-align: right;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .v10-garment-total {
@@ -10865,25 +10870,25 @@ div[class*="circle"][style*="background-color"],
   font-size: 14px;
   font-weight: 600;
   color: var(--color-foreground, #ffffff);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  min-width: 60px;
-  text-align: center;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  min-width: auto;
+  text-align: right;
 }
 
 /* Dark theme adjustments */
 [data-theme="dark"] .v10-garment-total {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: transparent;
+  border: none;
   color: rgba(255, 255, 255, 0.9);
 }
 
 /* Light theme adjustments */
 [data-theme="light"] .v10-garment-total {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: transparent;
+  border: none;
   color: var(--color-foreground, #1a1a1a);
 }
 
