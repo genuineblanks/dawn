@@ -3215,21 +3215,37 @@ class V10_StudioNavigator {
   }
 
   switchStudio(studioName) {
+    console.log(`🏗️ STUDIO SWITCH: Switching to "${studioName}" studio`);
+    
     // Update state
     V10_State.currentStudio = studioName;
+    console.log(`✅ V10_State.currentStudio set to: "${V10_State.currentStudio}"`);
 
     // Initialize mode for design studio
     if (studioName === 'design') {
+      console.log('🎨 Design studio selected - initializing...');
       V10_State.currentMode = 'labdips'; // Default to labdips mode
+      
       if (window.v10ColorStudio) {
+        console.log('✅ v10ColorStudio found, switching mode to labdips');
         window.v10ColorStudio.switchMode('labdips');
+      } else {
+        console.warn('⚠️ v10ColorStudio not found');
       }
       
       // ONBOARDING: Check if user should see Color Studio onboarding
+      console.log('🎯 Checking onboarding conditions...');
+      console.log(`- window.v10GarmentStudio exists: ${!!window.v10GarmentStudio}`);
+      console.log(`- initializeColorStudioOnboarding function exists: ${!!(window.v10GarmentStudio?.initializeColorStudioOnboarding)}`);
+      
       if (window.v10GarmentStudio && window.v10GarmentStudio.initializeColorStudioOnboarding) {
+        console.log('✅ Scheduling onboarding initialization in 800ms...');
         setTimeout(() => {
+          console.log('⏰ 800ms delay complete - calling initializeColorStudioOnboarding()');
           window.v10GarmentStudio.initializeColorStudioOnboarding();
         }, 800);
+      } else {
+        console.warn('❌ Cannot trigger onboarding - missing v10GarmentStudio or function');
       }
     }
 
@@ -15764,6 +15780,10 @@ class V10_TechPackSystem {
     window.debugOnboardingReset = () => this.garmentStudio.debugResetOnboarding();
     window.debugRedPulse = () => this.garmentStudio.debugTriggerRedPulse();
     window.debugShowState = () => this.garmentStudio.debugShowState();
+    window.debugSwitchToDesign = () => {
+      console.log('🔧 DEBUG: Manually switching to design studio...');
+      this.navigator.switchStudio('design');
+    };
     window.v10DesignStudio = this.designStudio;
     
     // Make review manager globally accessible for assignments text
