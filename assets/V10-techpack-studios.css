@@ -4,13 +4,134 @@
    Reduced from 10,956 lines to essential styles only
    ==================================================== */
 
-/* Override color name styling for bulk order review context */
-.v10-review-garment-item .v10-color-name {
+/* ====================================================
+   BULK ORDER GARMENT CARDS - MATCHING SAMPLE REQUEST DESIGN
+   ==================================================== */
+
+/* Container styling to match sample request cards exactly */
+.v10-review-garment-item {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.v10-review-garment-item:hover {
+  border-color: #505050;
+}
+
+/* Garment header layout */
+.v10-garment-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Color swatch styling to match sample request */
+.v10-garment-color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  display: block !important;
+}
+
+/* Garment info container */
+.v10-garment-info {
+  flex: 1;
+  color: white;
+  min-width: 0;
+}
+
+/* Header row with title and total */
+.v10-garment-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+
+/* Title section */
+.v10-garment-title-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Typography matching sample request */
+.v10-garment-number {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.v10-garment-type,
+.v10-garment-production {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.v10-garment-separator {
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 2px;
+}
+
+.v10-color-name {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
   border-radius: 0 !important;
   flex: none !important;
+}
+
+/* Total units styling */
+.v10-garment-total-section {
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Size distribution styling */
+.v10-quantity-display {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #404040;
+}
+
+.v10-size-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.v10-size-chip {
+  background: #1a1a1a;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #333;
+  min-width: 40px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.v10-size-chip:hover {
+  background: #333;
+  border-color: #555;
 }
 
 
@@ -10767,3 +10888,8 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
+
+
+
+
+
