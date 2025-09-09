@@ -9194,54 +9194,93 @@ class V10_GarmentStudio {
       scrollY: window.scrollY
     };
     
-    const tooltipWidth = 320; // max-width from CSS
-    const tooltipHeight = 120; // estimated height
-    const margin = 20;
+    // Mobile detection and responsive dimensions
+    const isMobile = window.innerWidth <= 768;
+    const tooltipWidth = isMobile ? Math.min(window.innerWidth * 0.9, 300) : 320;
+    const tooltipHeight = isMobile ? 140 : 120; // Slightly taller on mobile for better readability
+    const margin = isMobile ? 12 : 20; // Smaller margins on mobile
     
     let tooltipX, tooltipY, transform, finalPosition = step.position;
     
-    // Initial positioning based on preferred position
-    if (step.position === 'left') {
-      tooltipX = rect.left - margin;
-      tooltipY = rect.top + (rect.height / 2);
-      transform = 'translate(-100%, -50%)';
+    // Mobile-first positioning logic
+    if (isMobile) {
+      // On mobile, prefer bottom positioning to avoid keyboard overlap
+      // and ensure tooltip doesn't go off screen edges
+      tooltipX = Math.max(margin, Math.min(
+        viewport.width - tooltipWidth - margin,
+        rect.left + (rect.width / 2) - (tooltipWidth / 2)
+      ));
       
-      // Check if tooltip would go off left edge
-      if (tooltipX - tooltipWidth < viewport.scrollX) {
-        finalPosition = 'right';
-        tooltipX = rect.right + margin;
-        transform = 'translate(0, -50%)';
-      }
-    } else if (step.position === 'right') {
-      tooltipX = rect.right + margin;
-      tooltipY = rect.top + (rect.height / 2);
-      transform = 'translate(0, -50%)';
+      // Check if element is in top half of screen
+      const elementMiddle = rect.top + (rect.height / 2);
+      const screenMiddle = viewport.height / 2;
       
-      // Check if tooltip would go off right edge
-      if (tooltipX + tooltipWidth > viewport.scrollX + viewport.width) {
-        finalPosition = 'left';
-        tooltipX = rect.left - margin;
-        transform = 'translate(-100%, -50%)';
-      }
-    } else {
-      tooltipX = rect.left + (rect.width / 2);
-      transform = 'translateX(-50%)';
-      
-      if (step.position === 'top') {
-        tooltipY = rect.top - margin;
-        // Check if tooltip would go off top edge
-        if (tooltipY - tooltipHeight < viewport.scrollY) {
-          finalPosition = 'bottom';
-          tooltipY = rect.bottom + margin;
-        }
-      } else { // bottom
+      if (elementMiddle < screenMiddle) {
+        // Element in top half - place tooltip below
+        finalPosition = 'bottom';
         tooltipY = rect.bottom + margin;
-        // Check if tooltip would go off bottom edge
-        if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height) {
-          finalPosition = 'top';
+        transform = 'translateX(0)';
+      } else {
+        // Element in bottom half - place tooltip above
+        finalPosition = 'top';
+        tooltipY = rect.top - margin - tooltipHeight;
+        transform = 'translateX(0)';
+      }
+      
+      // Final boundary check for mobile
+      if (tooltipY < viewport.scrollY + margin) {
+        finalPosition = 'bottom';
+        tooltipY = rect.bottom + margin;
+      } else if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height - margin) {
+        finalPosition = 'top';
+        tooltipY = rect.top - margin - tooltipHeight;
+      }
+      
+    } else {
+      // Desktop positioning logic (original)
+      if (step.position === 'left') {
+        tooltipX = rect.left - margin;
+        tooltipY = rect.top + (rect.height / 2);
+        transform = 'translate(-100%, -50%)';
+        
+        // Check if tooltip would go off left edge
+        if (tooltipX - tooltipWidth < viewport.scrollX) {
+          finalPosition = 'right';
+          tooltipX = rect.right + margin;
+          transform = 'translate(0, -50%)';
+        }
+      } else if (step.position === 'right') {
+        tooltipX = rect.right + margin;
+        tooltipY = rect.top + (rect.height / 2);
+        transform = 'translate(0, -50%)';
+        
+        // Check if tooltip would go off right edge
+        if (tooltipX + tooltipWidth > viewport.scrollX + viewport.width) {
+          finalPosition = 'left';
+          tooltipX = rect.left - margin;
+          transform = 'translate(-100%, -50%)';
+        }
+      } else {
+        tooltipX = rect.left + (rect.width / 2);
+        transform = 'translateX(-50%)';
+        
+        if (step.position === 'top') {
           tooltipY = rect.top - margin;
+          // Check if tooltip would go off top edge
+          if (tooltipY - tooltipHeight < viewport.scrollY) {
+            finalPosition = 'bottom';
+            tooltipY = rect.bottom + margin;
+          }
+        } else { // bottom
+          tooltipY = rect.bottom + margin;
+          // Check if tooltip would go off bottom edge
+          if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height) {
+            finalPosition = 'top';
+            tooltipY = rect.top - margin;
+          }
         }
       }
+    }
       
       // Check horizontal centering doesn't go off edges
       const halfTooltipWidth = tooltipWidth / 2;
@@ -9284,6 +9323,44 @@ class V10_GarmentStudio {
       previousBtn.style.display = 'block'; // Always visible
       previousBtn.disabled = this.currentOnboardingStep === 0;
       previousBtn.classList.toggle('disabled', this.currentOnboardingStep === 0);
+    }
+    
+    // Mobile-specific adjustments
+    if (isMobile) {
+      // Ensure highlighted element is visible on mobile
+      setTimeout(() => {
+        const highlightedElement = document.querySelector('.onboarding-highlight');
+        const tooltip = document.querySelector('.onboarding-tooltip');
+        
+        if (highlightedElement && tooltip) {
+          // Calculate the area that needs to be visible (element + tooltip)
+          const elementRect = highlightedElement.getBoundingClientRect();
+          const tooltipRect = tooltip.getBoundingClientRect();
+          
+          const topBound = Math.min(elementRect.top, tooltipRect.top) - 20;
+          const bottomBound = Math.max(elementRect.bottom, tooltipRect.bottom) + 20;
+          
+          // Only scroll if content is not fully visible
+          const viewportTop = window.scrollY;
+          const viewportBottom = viewportTop + window.innerHeight;
+          
+          if (topBound < viewportTop || bottomBound > viewportBottom) {
+            const targetScroll = topBound + window.scrollY - 50;
+            window.scrollTo({
+              top: Math.max(0, targetScroll),
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 100); // Small delay to ensure elements are positioned
+      
+      // Add mobile touch feedback
+      if (nextBtn) {
+        nextBtn.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
+      }
+      if (previousBtn) {
+        previousBtn.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
+      }
     }
   }
   
