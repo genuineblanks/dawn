@@ -8967,6 +8967,13 @@ class V10_GarmentStudio {
   showColorStudioOnboarding() {
     console.log('🚀 Starting onboarding tour...');
     
+    // 🔝 MOBILE FIX: Immediately scroll to top for consistent positioning
+    console.log('📱 Scrolling to top for consistent mobile positioning...');
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
     // Check if required elements exist
     const requiredElements = [
       { selector: '#lab-dip-color-picker', name: 'Color Picker' },
@@ -9045,7 +9052,46 @@ class V10_GarmentStudio {
     ];
     
     overlay.classList.add('show');
-    this.showOnboardingStep();
+    
+    // 🔝 MOBILE FIX: Wait for scroll completion before positioning elements
+    // Use robust scroll completion detection
+    let scrollCheckInterval;
+    let lastScrollPosition = window.scrollY;
+    let scrollStabilityCount = 0;
+    const maxWaitTime = 1000; // Maximum wait time
+    let waitTime = 0;
+    
+    const checkScrollComplete = () => {
+      const currentScrollPosition = window.scrollY;
+      
+      // Check if we've reached the top and scroll has stabilized
+      if (currentScrollPosition <= 5 && currentScrollPosition === lastScrollPosition) {
+        scrollStabilityCount++;
+        
+        // Require 3 consecutive checks with stable position (150ms total)
+        if (scrollStabilityCount >= 3 || waitTime >= maxWaitTime) {
+          clearInterval(scrollCheckInterval);
+          console.log('✅ Scroll completed and stabilized - starting element positioning...');
+          this.showOnboardingStep();
+          return;
+        }
+      } else {
+        scrollStabilityCount = 0;
+      }
+      
+      lastScrollPosition = currentScrollPosition;
+      waitTime += 50;
+      
+      // Fallback: start positioning after max wait time
+      if (waitTime >= maxWaitTime) {
+        clearInterval(scrollCheckInterval);
+        console.log('⏰ Max wait time reached - starting element positioning...');
+        this.showOnboardingStep();
+      }
+    };
+    
+    // Start checking scroll completion every 50ms
+    scrollCheckInterval = setInterval(checkScrollComplete, 50);
   }
   
   // Show current onboarding step
@@ -9106,6 +9152,38 @@ class V10_GarmentStudio {
       highlightTop = rect.top + 10; // Move highlight down into the content area
       highlightHeight = rect.height - 20; // Reduce height to stay within content
     }
+    
+    // 🔒 VIEWPORT BOUNDARY SAFETY CHECKS - Ensure highlight stays within screen bounds
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const margin = 8; // Minimum margin from viewport edge
+    
+    // Horizontal boundary checks
+    if (highlightLeft < margin) {
+      const adjustment = margin - highlightLeft;
+      highlightLeft = margin;
+      highlightWidth = Math.max(highlightWidth - adjustment, 16); // Minimum width
+    }
+    if (highlightLeft + highlightWidth > viewportWidth - margin) {
+      highlightWidth = Math.max(viewportWidth - margin - highlightLeft, 16);
+    }
+    
+    // Vertical boundary checks  
+    if (highlightTop < margin) {
+      const adjustment = margin - highlightTop;
+      highlightTop = margin;
+      highlightHeight = Math.max(highlightHeight - adjustment, 16); // Minimum height
+    }
+    if (highlightTop + highlightHeight > viewportHeight - margin) {
+      highlightHeight = Math.max(viewportHeight - margin - highlightTop, 16);
+    }
+    
+    console.log('🔒 Viewport boundary check completed:', {
+      finalLeft: highlightLeft,
+      finalTop: highlightTop, 
+      finalWidth: highlightWidth,
+      finalHeight: highlightHeight
+    });
     
     // Apply styles with !important flags to prevent CSS conflicts
     highlight.style.setProperty('left', highlightLeft + 'px', 'important');
@@ -9326,42 +9404,18 @@ class V10_GarmentStudio {
       previousBtn.classList.toggle('disabled', this.currentOnboardingStep === 0);
     }
     
-    // Mobile-specific adjustments
+    // Mobile-specific adjustments - simplified since we start from top
     if (isMobile) {
-      // Ensure highlighted element is visible on mobile
-      setTimeout(() => {
-        const highlightedElement = document.querySelector('.onboarding-highlight');
-        const tooltip = document.querySelector('.onboarding-tooltip');
-        
-        if (highlightedElement && tooltip) {
-          // Calculate the area that needs to be visible (element + tooltip)
-          const elementRect = highlightedElement.getBoundingClientRect();
-          const tooltipRect = tooltip.getBoundingClientRect();
-          
-          const topBound = Math.min(elementRect.top, tooltipRect.top) - 20;
-          const bottomBound = Math.max(elementRect.bottom, tooltipRect.bottom) + 20;
-          
-          // Only scroll if content is not fully visible
-          const viewportTop = window.scrollY;
-          const viewportBottom = viewportTop + window.innerHeight;
-          
-          if (topBound < viewportTop || bottomBound > viewportBottom) {
-            const targetScroll = topBound + window.scrollY - 50;
-            window.scrollTo({
-              top: Math.max(0, targetScroll),
-              behavior: 'smooth'
-            });
-          }
-        }
-      }, 100); // Small delay to ensure elements are positioned
-      
-      // Add mobile touch feedback
+      // Add mobile touch feedback (keeping this simple enhancement)
       if (nextBtn) {
         nextBtn.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
       }
       if (previousBtn) {
         previousBtn.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
       }
+      
+      // 📱 MOBILE FIX: Simple mobile optimizations now that we start from top
+      console.log('📱 Applied mobile-specific touch optimizations');
     }
   }
   
