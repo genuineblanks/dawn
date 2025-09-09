@@ -979,9 +979,9 @@ button:focus,
 
 .v10-btn--tour {
   /* Default black state */
-  background-color: var(--gb-neutral-700);
-  color: var(--gb-neutral-100);
-  border-color: var(--gb-neutral-700);
+  background-color: var(--gb-neutral-700, #374151);
+  color: var(--gb-neutral-100, #f9fafb);
+  border-color: var(--gb-neutral-700, #374151);
   min-width: 220px; /* Ensure button is wide enough for longer text */
   white-space: nowrap; /* Prevent text wrapping */
   font-size: 13px; /* Slightly smaller font to fit better */
@@ -989,8 +989,8 @@ button:focus,
 }
 
 .v10-btn--tour:hover {
-  background-color: var(--gb-neutral-600);
-  border-color: var(--gb-neutral-600);
+  background-color: var(--gb-neutral-600, #4b5563);
+  border-color: var(--gb-neutral-600, #4b5563);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
@@ -1010,19 +1010,22 @@ button:focus,
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-/* Subtle pulse animation for tour button */
+/* Subtle glassmorphism pulse animation for tour button */
 @keyframes tourButtonPulse {
   0% { 
-    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(249, 115, 22, 0.15);
     transform: scale(1);
+    backdrop-filter: blur(0px);
   }
   50% { 
-    box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.1);
-    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(249, 115, 22, 0.08);
+    transform: scale(1.01);
+    backdrop-filter: blur(1px);
   }
   100% { 
-    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(249, 115, 22, 0.15);
     transform: scale(1);
+    backdrop-filter: blur(0px);
   }
 }
 
@@ -4314,16 +4317,18 @@ body[style*="overflow: hidden"] {
 
 .onboarding-tooltip {
   position: absolute;
-  background: var(--gb-neutral-800);
-  color: var(--gb-neutral-50);
+  background: var(--gb-neutral-800, #1f2937);
+  color: var(--gb-neutral-50, #ffffff);
   padding: 16px 20px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--gb-neutral-700);
+  border: 1px solid var(--gb-neutral-700, #374151);
   max-width: 300px;
   font-size: 14px;
   line-height: 1.4;
   z-index: 10001;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .onboarding-tooltip::before {
@@ -4335,14 +4340,14 @@ body[style*="overflow: hidden"] {
 }
 
 .onboarding-tooltip--top::before {
-  border-top-color: var(--gb-neutral-800);
+  border-top-color: var(--gb-neutral-800, #1f2937);
   bottom: -16px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .onboarding-tooltip--bottom::before {
-  border-bottom-color: var(--gb-neutral-800);
+  border-bottom-color: var(--gb-neutral-800, #1f2937);
   top: -16px;
   left: 50%;
   transform: translateX(-50%);
@@ -4350,8 +4355,8 @@ body[style*="overflow: hidden"] {
 
 .onboarding-step-counter {
   display: inline-block;
-  background: var(--gb-neutral-600);
-  color: var(--gb-neutral-50);
+  background: var(--gb-neutral-600, #4b5563);
+  color: var(--gb-neutral-50, #ffffff);
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -4383,24 +4388,24 @@ body[style*="overflow: hidden"] {
 }
 
 .onboarding-btn--primary {
-  background: var(--gb-neutral-700);
-  color: var(--gb-neutral-50);
+  background: var(--gb-neutral-700, #374151);
+  color: var(--gb-neutral-50, #ffffff);
 }
 
 .onboarding-btn--primary:hover {
-  background: var(--gb-neutral-600);
+  background: var(--gb-neutral-600, #4b5563);
   transform: translateY(-1px);
 }
 
 .onboarding-btn--secondary {
-  background: var(--gb-neutral-800);
-  color: var(--gb-neutral-300);
-  border: 1px solid var(--gb-neutral-700);
+  background: var(--gb-neutral-800, #1f2937);
+  color: var(--gb-neutral-300, #d1d5db);
+  border: 1px solid var(--gb-neutral-700, #374151);
 }
 
 .onboarding-btn--secondary:hover {
-  background: var(--gb-neutral-700);
-  color: var(--gb-neutral-100);
+  background: var(--gb-neutral-700, #374151);
+  color: var(--gb-neutral-100, #f9fafb);
 }
 
 /* Garment Card Content (Form State) */
@@ -11223,3 +11228,8 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
+
+
+
+
+
