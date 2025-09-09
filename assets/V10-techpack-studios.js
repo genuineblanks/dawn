@@ -9156,26 +9156,26 @@ class V10_GarmentStudio {
     // 🔒 VIEWPORT BOUNDARY SAFETY CHECKS - Ensure highlight stays within screen bounds
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const margin = 8; // Minimum margin from viewport edge
+    const boundaryMargin = 8; // Minimum margin from viewport edge
     
     // Horizontal boundary checks
-    if (highlightLeft < margin) {
-      const adjustment = margin - highlightLeft;
-      highlightLeft = margin;
+    if (highlightLeft < boundaryMargin) {
+      const adjustment = boundaryMargin - highlightLeft;
+      highlightLeft = boundaryMargin;
       highlightWidth = Math.max(highlightWidth - adjustment, 16); // Minimum width
     }
-    if (highlightLeft + highlightWidth > viewportWidth - margin) {
-      highlightWidth = Math.max(viewportWidth - margin - highlightLeft, 16);
+    if (highlightLeft + highlightWidth > viewportWidth - boundaryMargin) {
+      highlightWidth = Math.max(viewportWidth - boundaryMargin - highlightLeft, 16);
     }
     
     // Vertical boundary checks  
-    if (highlightTop < margin) {
-      const adjustment = margin - highlightTop;
-      highlightTop = margin;
+    if (highlightTop < boundaryMargin) {
+      const adjustment = boundaryMargin - highlightTop;
+      highlightTop = boundaryMargin;
       highlightHeight = Math.max(highlightHeight - adjustment, 16); // Minimum height
     }
-    if (highlightTop + highlightHeight > viewportHeight - margin) {
-      highlightHeight = Math.max(viewportHeight - margin - highlightTop, 16);
+    if (highlightTop + highlightHeight > viewportHeight - boundaryMargin) {
+      highlightHeight = Math.max(viewportHeight - boundaryMargin - highlightTop, 16);
     }
     
     console.log('🔒 Viewport boundary check completed:', {
