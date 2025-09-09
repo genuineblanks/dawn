@@ -159,7 +159,6 @@
 }
 
 
-
 .v10-garment-fabric,
 .v10-garment-colorway,
 .v10-garment-code,
@@ -226,11 +225,11 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .v10-size-grid {
     gap: 12px;
   }
-  
+
   .v10-size-item {
     min-width: 40px;
     padding: 6px;
@@ -259,10 +258,10 @@ body[class*="techpack"] *,
   --color-scheme-5-background: transparent;
   --color-scheme-5-button-label: inherit;
   --color-foreground: var(--color-base-text, 18, 18, 18);
-  
+
   /* Ensure backgrounds are not forced to black */
   background-color: transparent;
-  
+
   /* Ensure text colors use theme defaults */
   color: inherit;
 }
@@ -343,7 +342,7 @@ body[class*="techpack"] *,
   --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
   --v10-shadow-focus: 0 0 0 3px rgba(163, 163, 163, 0.3);
-  
+
   /* Lightweight shadows for interactive elements - Performance Optimized */
   --v10-shadow-hover: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   --v10-shadow-interactive: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
@@ -361,7 +360,7 @@ body[class*="techpack"] *,
   --v10-transition-fast: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease-out;
   --v10-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out;
   --v10-transition-slow: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out;
-  
+
   /* Specific property transitions for better performance */
   --v10-transition-colors: background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out;
   --v10-transition-shadow: box-shadow 0.15s ease-out;
@@ -397,7 +396,6 @@ body[class*="techpack"] *,
   --v10-z-modal: 1050;
   --v10-z-tooltip: 1070;
 }
-
 
 
 /* ==============================================
@@ -515,8 +513,8 @@ button:focus,
 .v10-guidance-btn:focus,
 .selection-help:focus,
 .studio-help-btn:focus,
-.v10-techpack-step button:focus, 
-[id^="techpack-v10"] button:focus, 
+.v10-techpack-step button:focus,
+[id^="techpack-v10"] button:focus,
 .v10-modal-overlay button:focus {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
   outline: none !important;
@@ -539,12 +537,7 @@ button:focus,
 }
 
 /* Keep min-height only for mobile if needed */
-@media (max-width: 768px) {
-  .v10-techpack-landing {
-    min-height: 100vh;
-    padding: 3.5rem 0; /* 75% less than 14rem */
-  }
-}
+
 
 .v10-techpack-step {
   min-height: 100vh;
@@ -569,15 +562,7 @@ button:focus,
   backdrop-filter: var(--v10-backdrop-blur);
 }
 
-@media (max-width: 768px) {
-  .techpack-container {
-    padding: 0; /* Remove mobile padding too */
-  }
-  
-  .techpack-content {
-    padding: var(--v10-space-6);
-    border-radius: var(--v10-radius-lg);
-  }
+
 }
 
 /* ==============================================
@@ -683,25 +668,16 @@ button:focus,
   transform: scale(1.02);
 }
 
-@media (max-width: 768px) {
-  .simple-progress-container {
-    padding: var(--v10-space-3);
-    margin-bottom: var(--v10-space-3);
-  }
-  
-  .simple-progress-steps {
-    gap: var(--v10-space-1);
-  }
-  
+
   .simple-step {
     padding: var(--v10-space-1);
     gap: var(--v10-space-1);
   }
-  
+
   .simple-step span {
     font-size: var(--v10-text-xs);
   }
-  
+
   .simple-step-circle {
     width: 28px;
     height: 28px;
@@ -745,15 +721,7 @@ button:focus,
   font-weight: 400;
 }
 
-@media (max-width: 768px) {
-  .techpack-header-with-help {
-    flex-direction: column;
-    gap: var(--v10-space-4);
-  }
-  
-  .techpack-title {
-    font-size: var(--v10-text-2xl);
-  }
+
 }
 
 /* ==============================================
@@ -780,7 +748,7 @@ button:focus,
   border: 1px solid transparent;
   text-decoration: none;
   font-family: inherit;
-  
+
   /* Default Primary Style */
   background-color: var(--v10-accent-primary);
   color: white;
@@ -901,29 +869,20 @@ button:focus,
 }
 
 /* Mobile Responsive Design for Guidance Modal */
-@media (max-width: 768px) {
-  .v10-guidance-modal {
-    padding: var(--v10-space-2);
-  }
-  
-  .v10-guidance-modal-content {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-  }
-  
+
+
   .v10-guidance-modal-header {
     padding: var(--v10-space-4);
   }
-  
+
   .v10-guidance-modal-body {
     padding: var(--v10-space-4);
   }
-  
+
   .v10-guidance-modal-title {
     font-size: var(--v10-text-lg);
   }
-  
+
   .guidance-cards-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
@@ -983,7 +942,7 @@ button:focus,
   white-space: nowrap; /* Prevent text wrapping */
   font-size: 13px; /* Slightly smaller font to fit better */
   font-weight: 600; /* Make text more prominent */
-  
+
   /* 🔧 STRONGER DESKTOP ALIGNMENT: Force horizontal layout with !important */
   display: inline-flex !important;
   align-items: center !important;
@@ -1026,17 +985,17 @@ button:focus,
 
 /* Subtle glassmorphism pulse animation for tour button */
 @keyframes tourButtonPulse {
-  0% { 
+  0% {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(249, 115, 22, 0.15);
     transform: scale(1);
     backdrop-filter: blur(0px);
   }
-  50% { 
+  50% {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(249, 115, 22, 0.08);
     transform: scale(1.01);
     backdrop-filter: blur(1px);
   }
-  100% { 
+  100% {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(249, 115, 22, 0.15);
     transform: scale(1);
     backdrop-filter: blur(0px);
@@ -1050,23 +1009,8 @@ button:focus,
 }
 
 /* Responsive Design for Onboarding System */
-@media (max-width: 768px) {
-  /* Mobile tooltip adjustments */
-  .onboarding-tooltip {
-    max-width: 90vw;
-    padding: 16px 18px;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  
-  .onboarding-step-counter {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 11px;
-    margin-right: 8px;
-  }
-  
+
+
   /* Mobile controls */
   .onboarding-controls {
     bottom: 20px;
@@ -1078,7 +1022,7 @@ button:focus,
     gap: 8px;
     flex-wrap: wrap;
   }
-  
+
   .onboarding-btn {
     padding: 10px 14px;
     font-size: 13px;
@@ -1086,16 +1030,16 @@ button:focus,
     flex: 1;
     max-width: 120px;
   }
-  
+
   /* Reduce highlight padding on mobile */
   .onboarding-highlight {
     border-width: 1px;
     border-radius: 6px;
   }
-  
+
   /* Subtle spotlight effect adjustment for mobile */
   .onboarding-highlight {
-    box-shadow: 
+    box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.05),
       0 0 0 9999px rgba(0, 0, 0, 0.8),
       0 0 6px rgba(255, 255, 255, 0.08);
@@ -1109,20 +1053,20 @@ button:focus,
     padding: 14px 16px;
     font-size: 12px;
   }
-  
+
   .onboarding-controls {
     bottom: 15px;
     left: 15px;
     right: 15px;
     gap: 6px;
   }
-  
+
   .onboarding-btn {
     padding: 8px 12px;
     font-size: 12px;
     min-width: 70px;
   }
-  
+
   .onboarding-step-counter {
     width: 22px;
     height: 22px;
@@ -1137,10 +1081,10 @@ button:focus,
   .onboarding-tooltip {
     border: 2px solid rgba(255, 255, 255, 0.9);
   }
-  
+
   .onboarding-highlight {
     border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 
+    box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.06),
       0 0 0 9999px rgba(0, 0, 0, 0.85),
       0 0 10px rgba(255, 255, 255, 0.12);
@@ -1154,7 +1098,7 @@ button:focus,
   .onboarding-btn {
     transition: none;
   }
-  
+
   .color-studio-onboarding {
     transition: opacity 0.1s ease;
   }
@@ -1246,17 +1190,7 @@ button:focus,
   border-top: 1px solid var(--v10-border-primary);
 }
 
-@media (max-width: 768px) {
-  .v10-step-actions {
-    flex-direction: row;
-    gap: var(--v10-space-3);
-    justify-content: space-between;
-  }
-  
-  .v10-btn {
-    flex: 1;
-    justify-content: center;
-  }
+
 }
 
 /* ==============================================
@@ -1301,15 +1235,7 @@ button:focus,
   color: var(--v10-text-secondary);
 }
 
-@media (max-width: 768px) {
-  .v10-theme-toggle {
-    margin-top: var(--v10-space-2);
-  }
-  
-  .v10-theme-btn {
-    padding: var(--v10-space-2);
-    font-size: var(--v10-text-xs);
-  }
+
 }
 
 /* ==============================================
@@ -1441,8 +1367,6 @@ button:focus,
 }
 
 
-
-
 .v10-upload-title {
   font-size: var(--v10-text-xl);
   font-weight: 600;
@@ -1482,16 +1406,7 @@ button:focus,
   gap: var(--v10-space-4);
 }
 
-@media (max-width: 768px) {
-  .v10-upload-zone {
-    padding: var(--v10-space-8);
-    min-height: 160px;
-  }
-  
-  .v10-upload-specs {
-    flex-direction: column;
-    gap: var(--v10-space-1);
-  }
+
 }
 
 /* ==============================================
@@ -1751,7 +1666,7 @@ button:focus,
   text-decoration: none;
   font-family: inherit;
   width: 100%;
-  
+
   /* Secondary button styling - exact copy from .v10-btn--secondary */
   background-color: var(--v10-bg-card);
   color: var(--v10-text-primary);
@@ -1992,36 +1907,27 @@ button:focus,
 }
 
 /* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .v10-stock-colors-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--v10-space-3);
-  }
-  
-  .v10-stock-color-button {
-    padding: var(--v10-space-3);
-    gap: var(--v10-space-2);
-  }
-  
+
+
   .v10-stock-color-preview {
     width: 40px;
     height: 40px;
   }
-  
+
   .v10-colorway-modal .v10-submission-card {
     gap: var(--v10-space-3);
   }
-  
+
   .v10-colorway-modal .v10-submission-icon {
     width: 40px;
     height: 40px;
   }
-  
+
   .v10-custom-input-row {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .v10-custom-input-card,
   .v10-custom-color-reference-card {
     padding: var(--v10-space-4);
@@ -2085,7 +1991,7 @@ body[style*="overflow: hidden"] {
 .v10-modal {
   background: var(--v10-bg-modal);
   border-radius: 0;
-  box-shadow: 
+  box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.8),
     0 10px 20px -5px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -2258,7 +2164,7 @@ body[style*="overflow: hidden"] {
   transition: var(--v10-transition-interactive);
   position: relative;
   overflow: hidden;
-  
+
   /* Hardware acceleration hints for smooth performance */
   will-change: transform;
   backface-visibility: hidden;
@@ -2309,27 +2215,17 @@ body[style*="overflow: hidden"] {
   transform: scale3d(1.1, 1.1, 1); /* GPU-accelerated scale */
 }
 
-@media (max-width: 768px) {
-  .v10-modal {
-    width: 95vw;
-    max-width: none;
-    margin: var(--v10-space-2);
-  }
-  
-  .v10-modal-header {
-    padding: var(--v10-space-4);
-  }
-  
+
   .v10-modal-body {
     padding: var(--v10-space-4);
   }
-  
+
   .v10-modal-actions {
     flex-direction: row;
     gap: var(--v10-space-2);
     justify-content: space-between;
   }
-  
+
   .v10-modal-actions .v10-btn {
     flex: 1;
   }
@@ -2433,32 +2329,21 @@ body[style*="overflow: hidden"] {
 }
 
 /* Mobile responsiveness for new terms modal */
-@media (max-width: 768px) {
-  .v10-new-terms-modal {
-    width: 95%;
-    max-height: 85vh;
-    margin: 2.5vh auto;
-  }
-  
-  .v10-new-terms-modal .v10-modal-header,
-  .v10-new-terms-content,
-  .v10-new-terms-modal-actions {
-    padding: var(--v10-space-4);
-  }
-  
+
+
   .v10-new-terms-modal .v10-modal-body {
     max-height: calc(85vh - 120px);
   }
-  
+
   .v10-new-terms-understand {
     width: 100%;
     min-width: unset;
   }
-  
+
   .v10-terms-section h4 {
     font-size: 1rem;
   }
-  
+
   .v10-terms-section p {
     font-size: 0.9rem;
   }
@@ -2631,26 +2516,17 @@ body[style*="overflow: hidden"] {
 }
 
 /* Mobile Help Content */
-@media (max-width: 768px) {
-  .help-content h4 {
-    font-size: var(--v10-text-base);
-    margin-bottom: var(--v10-space-2);
-  }
-  
-  .help-content ol,
-  .help-content ul {
-    padding-left: var(--v10-space-5); /* Increased for mobile consistency */
-  }
-  
+
+
   .help-content ol {
     padding-left: var(--v10-space-6); /* Increased for mobile consistency */
   }
-  
+
   .help-content ol > li {
     margin-bottom: var(--v10-space-4); /* Maintain good spacing on mobile */
     min-height: 28px; /* Adjusted for smaller mobile circles */
   }
-  
+
   .help-content ol > li::before {
     width: 20px;
     height: 20px;
@@ -2658,24 +2534,13 @@ body[style*="overflow: hidden"] {
     left: calc(-1 * var(--v10-space-6)); /* Adjusted to match new mobile padding */
     top: 2px; /* Adjusted alignment for mobile */
   }
-  
+
   .help-content li ul,
   .help-content li ol {
     padding-left: var(--v10-space-4); /* Adjusted nested indentation for mobile */
   }
 }
 
-@media (max-width: 768px) {
-  .v10-client-options-horizontal {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--v10-space-3);
-    margin: var(--v10-space-4) 0;
-  }
-
-  .v10-client-btn {
-    min-height: 120px;
-    padding: var(--v10-space-4);
-  }
 
   .v10-client-btn-title {
     font-size: var(--v10-text-base);
@@ -2785,26 +2650,15 @@ body[style*="overflow: hidden"] {
   opacity: 0.7;
 }
 
-@media (max-width: 768px) {
-  .v10-process-step {
-    padding: var(--v10-space-3);
-    gap: var(--v10-space-3);
-  }
-  
-  .v10-process-number {
-    width: 28px;
-    height: 28px;
-    font-size: var(--v10-text-xs);
-  }
-  
+
   .v10-process-content strong {
     font-size: var(--v10-text-sm);
   }
-  
+
   .v10-process-content p {
     font-size: var(--v10-text-xs);
   }
-  
+
   .v10-vat-notice {
     font-size: var(--v10-text-xs);
     padding: var(--v10-space-2);
@@ -2812,12 +2666,7 @@ body[style*="overflow: hidden"] {
 }
 
 /* Keep access studio modal (submission options) vertical on mobile */
-@media (max-width: 768px) {
-  .v10-submission-options-grid {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-}
+
 
 /* Submission Type Modal Styling */
 .v10-submission-description {
@@ -2845,7 +2694,7 @@ body[style*="overflow: hidden"] {
   transition: var(--v10-transition-interactive);
   font-size: var(--v10-text-base);
   font-weight: 500;
-  
+
   /* Hardware acceleration hints for smooth performance */
   will-change: transform;
   backface-visibility: hidden;
@@ -2974,37 +2823,24 @@ body[style*="overflow: hidden"] {
   opacity: 0.7;
 }
 
-@media (max-width: 768px) {
-  .v10-submission-card {
-    flex-direction: row;
-    gap: var(--v10-space-3);
-    text-align: left;
-    align-items: flex-start;
-  }
-  
-  .v10-submission-icon {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-  }
-  
+
   .v10-submission-title {
     font-size: var(--v10-text-base);
   }
-  
+
   .v10-submission-description {
     font-size: var(--v10-text-xs);
   }
-  
+
   .v10-submission-badges {
     justify-content: flex-start;
   }
-  
+
   .v10-submission-badge {
     font-size: var(--v10-text-xs);
     padding: var(--v10-space-1);
   }
-  
+
   .v10-submission-note {
     font-size: var(--v10-text-xs);
     padding: var(--v10-space-2);
@@ -3309,17 +3145,7 @@ body[style*="overflow: hidden"] {
   margin-top: var(--v10-space-1);
 }
 
-@media (max-width: 768px) {
-  .v10-form-section {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
-  }
-  
-  .v10-form-field--half,
-  .v10-form-field--full {
-    grid-column: span 1;
-  }
-  
+
   .v10-form-field {
     margin-bottom: var(--v10-space-3);
   }
@@ -3373,7 +3199,7 @@ body[style*="overflow: hidden"] {
 .v10-delivery-option-enhanced input[type="radio"]:checked + .v10-delivery-option-content-enhanced {
   border-color: rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -1px 0 rgba(0, 0, 0, 0.1),
     0 4px 12px rgba(0, 0, 0, 0.15);
@@ -3454,7 +3280,7 @@ body[style*="overflow: hidden"] {
 .v10-shipping-method input[type="radio"]:checked + .v10-shipping-method-content {
   border-color: rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -1px 0 rgba(0, 0, 0, 0.1),
     0 4px 12px rgba(0, 0, 0, 0.15);
@@ -3535,7 +3361,7 @@ body[style*="overflow: hidden"] {
 .v10-insurance-option input[type="radio"]:checked + .v10-insurance-option-content {
   border-color: rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -1px 0 rgba(0, 0, 0, 0.1),
     0 4px 12px rgba(0, 0, 0, 0.15);
@@ -3573,29 +3399,14 @@ body[style*="overflow: hidden"] {
 }
 
 /* Mobile responsive adjustments for radio buttons */
-@media (max-width: 768px) {
-  .v10-delivery-option-content-enhanced,
-  .v10-shipping-method-content,
-  .v10-insurance-option-content {
-    padding: var(--v10-space-3);
-    gap: var(--v10-space-2);
-    min-height: 50px;
-  }
-  
-  .v10-delivery-option-icon,
-  .v10-shipping-method-icon,
-  .v10-insurance-option-icon {
-    width: 28px;
-    height: 28px;
-    font-size: var(--v10-text-lg);
-  }
-  
+
+
   .v10-delivery-option-text strong,
   .v10-shipping-method-text strong,
   .v10-insurance-option-text strong {
     font-size: var(--v10-text-sm);
   }
-  
+
   .v10-delivery-option-text small,
   .v10-shipping-method-text small,
   .v10-insurance-option-text small {
@@ -3632,30 +3443,16 @@ body[style*="overflow: hidden"] {
 }
 
 /* Mobile responsive adjustments for Step 3 control bar */
-@media (max-width: 768px) {
-  .step3-control-bar {
-    flex-direction: column;
-    gap: var(--v10-space-3);
-    align-items: center;
-    padding: var(--v10-space-3) 0;
-  }
-  
-  .step3-control-left,
-  .step3-control-center,
-  .step3-control-right {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
+
+
   .step3-control-center {
     order: 2;
   }
-  
+
   .step3-control-left {
     order: 1;
   }
-  
+
   .step3-control-right {
     order: 3;
   }
@@ -3939,19 +3736,6 @@ body[style*="overflow: hidden"] {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-}
-
-/* Removed hover effect for solid appearance */
-
-.garment-card--configured {
-  border-color: #404040;
-  background: var(--v10-bg-primary);
-}
-
-.garment-card--selected {
-  border-color: var(--v10-accent-primary);
-  background: rgba(75, 85, 99, 0.08);
-  box-shadow: var(--v10-shadow-md);
 }
 
 .garment-header {
@@ -4356,15 +4140,7 @@ body[style*="overflow: hidden"] {
 }
 
 /* Mobile responsiveness for notification */
-@media (max-width: 768px) {
-  .edit-mode-notification {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    max-width: none;
-    font-size: 13px;
-  }
-}
+
 
 /* COLOR STUDIO ATTENTION SYSTEM */
 /* Premium red pulse animation for Color Studio tab when colors are required */
@@ -4408,15 +4184,7 @@ body[style*="overflow: hidden"] {
 }
 
 /* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .studio-tab--needs-attention {
-    animation: none;
-  }
-  
-  .studio-tab--needs-attention .studio-tab__subtitle {
-    color: #ef4444 !important;
-    font-weight: 600;
-  }
+
 }
 
 /* Color Studio Onboarding Overlay System */
@@ -4431,7 +4199,7 @@ body[style*="overflow: hidden"] {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease-out;
-  
+
   /* 🚫 PREVENT SCROLLING: Disable all scroll and touch behaviors */
   overflow: hidden !important;
   touch-action: none !important;
@@ -4462,13 +4230,13 @@ html.onboarding-active {
   z-index: 9999 !important;
   display: block !important;
   visibility: visible !important;
-  
+
   /* Prevent element collapse - ensure minimum size */
   min-width: 16px !important;
   min-height: 16px !important;
-  
+
   /* Subtle spotlight effect using box-shadow */
-  box-shadow: 
+  box-shadow:
     /* Very subtle inner glow */
     inset 0 0 0 1px rgba(255, 255, 255, 0.05),
     /* Dark overlay everywhere else */
@@ -4483,7 +4251,7 @@ html.onboarding-active {
   color: #f9fafb;
   padding: 18px 22px;
   border-radius: 8px;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.25),
     0 2px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -4546,7 +4314,7 @@ html.onboarding-active {
   font-size: 12px;
   font-weight: 600;
   margin-right: 10px;
-  box-shadow: 
+  box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -4578,7 +4346,7 @@ html.onboarding-active {
 .onboarding-btn--primary {
   background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
   color: #ffffff;
-  box-shadow: 
+  box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -4586,7 +4354,7 @@ html.onboarding-active {
 .onboarding-btn--primary:hover {
   background: linear-gradient(135deg, #5a5a5a 0%, #4a4a4a 100%);
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -4602,7 +4370,7 @@ html.onboarding-active {
   background: linear-gradient(135deg, #3a3a3a 0%, #333333 100%);
   color: #f9fafb;
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 3px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.12);
@@ -5163,7 +4931,7 @@ html.onboarding-active {
 /* ==============================================
    CUSTOM COLOR RESTRICTION WARNING BOX
    ============================================== */
-   
+
 /* Orange warning box for custom color restrictions */
 .v10-custom-color-restriction-warning {
   margin-top: var(--v10-space-4);
@@ -5331,12 +5099,12 @@ html.onboarding-active {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-4);
   }
-  
+
   .sample-type-options,
   .sample-type-selection {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .compact-radio-grid {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   }
@@ -5349,34 +5117,34 @@ html.onboarding-active {
     grid-template-columns: 1fr;
     gap: var(--v10-space-3);
   }
-  
+
   /* Keep sample type options side by side on mobile too, but with smaller gap */
   .sample-type-options,
   .sample-type-selection {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-2);
   }
-  
+
   /* Larger touch targets */
   .compact-selection-widget {
     min-height: 60px;
   }
-  
+
   .selection-placeholder {
     padding: var(--v10-space-4);
     min-height: 60px;
   }
-  
+
   .compact-radio-card__content {
     min-height: 70px;
     padding: var(--v10-space-4);
   }
-  
+
   .compact-radio-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: var(--v10-space-2);
   }
-  
+
   /* Garment card adjustments */
   .garment-card__header {
     padding: var(--v10-space-3) var(--v10-space-4);
@@ -5384,103 +5152,87 @@ html.onboarding-active {
     align-items: stretch;
     gap: var(--v10-space-3);
   }
-  
+
   .garment-card__title {
     justify-content: space-between;
   }
-  
+
   .garment-card__actions {
     justify-content: center;
     gap: var(--v10-space-1);
   }
-  
+
   .garment-card__actions button {
     flex: 1;
     justify-content: center;
     padding: var(--v10-space-2) var(--v10-space-3);
   }
-  
+
   .garment-card__content {
     padding: var(--v10-space-4);
   }
-  
+
   /* Summary adjustments */
   .garment-summary {
     flex-direction: column;
     align-items: stretch;
     gap: var(--v10-space-3);
   }
-  
+
   .garment-summary__title {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--v10-space-2);
   }
-  
+
   .garment-summary__edit-btn {
     align-self: center;
     width: 100%;
     justify-content: center;
   }
-  
+
   /* Selection headers */
   .selection-header {
     margin-bottom: var(--v10-space-3);
   }
-  
+
   .selection-header h5 {
     font-size: var(--v10-text-base);
   }
-  
+
   /* Expanded selections full width */
   .selection-expanded {
     max-height: 250px;
   }
-  
+
 }
 
 /* Extra small devices */
-@media (max-width: 480px) {
-  .garment-card {
-    margin: 0 calc(-1 * var(--v10-space-2));
-  }
-  
-  .compact-radio-grid {
-    grid-template-columns: 1fr;
-  }
-  
+
+
   .sample-type-options,
   .sample-type-selection {
     grid-template-columns: 1fr 1fr;
     gap: var(--v10-space-2);
   }
-  
+
   .garment-card__actions button {
     font-size: var(--v10-text-xs);
     padding: var(--v10-space-2);
   }
-  
+
   .garment-card__actions button span {
     display: none;
   }
-  
+
   .garment-card__actions button svg {
     margin: 0;
   }
 }
 
 /* Enhanced accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .compact-selection-widget,
-  .compact-radio-card__content,
-  .placeholder-arrow {
-    transition: none !important;
-  }
-  
-  .selection-expanded {
-    animation: none !important;
-  }
-  
+
+
   .compact-selection-widget--loading::after {
     animation: none !important;
   }
@@ -5491,15 +5243,15 @@ html.onboarding-active {
   .compact-selection-widget {
     border-width: 3px;
   }
-  
+
   .compact-radio-card__content {
     border-width: 3px;
   }
-  
+
   .status-indicator {
     border-width: 2px;
   }
-  
+
 }
 
 
@@ -6264,43 +6016,32 @@ html.onboarding-active {
    RESPONSIVE DESIGN
    ============================================== */
 
-@media (max-width: 768px) {
-  .v10-studio-card {
-    padding: var(--v10-space-4);
-    margin-bottom: var(--v10-space-4);
-  }
-  
-  .v10-file-header {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--v10-space-2);
-  }
-  
+
   .v10-measurement-item {
     padding: var(--v10-space-3);
     gap: var(--v10-space-2);
   }
-  
+
   .studio-tabs {
     flex-direction: row;
     gap: var(--v10-space-2);
     flex-wrap: wrap;
   }
-  
+
   .studio-tab {
     padding: var(--v10-space-3) var(--v10-space-4);
   }
-  
+
   .garments-grid {
     grid-template-columns: 1fr;
     gap: var(--v10-space-4);
   }
-  
+
   .compact-radio-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: var(--v10-space-2);
   }
-  
+
   .review-garment-card__header {
     flex-direction: column;
     align-items: stretch;
@@ -6343,55 +6084,55 @@ html.onboarding-active {
   .currency-toggle {
     align-self: center;
   }
-  
+
   /* Landing page mobile fixes */
   .v10-entrance-unified {
     padding: 2rem 1.5rem; /* Back to original for mobile */
     border-radius: 8px;
   }
-  
+
   .v10-unified-header-box {
     grid-template-columns: auto 1fr auto;
     gap: var(--v10-space-2);
     padding: var(--v10-space-4);
   }
-  
+
   .v10-title-spectacular {
     font-size: var(--v10-text-xl);
     line-height: 1.2;
     word-break: break-word;
   }
-  
+
   /* Mobile: Download button shows icon only */
   .v10-download-new .v10-btn-download-new .v10-btn-text {
     display: none !important;
   }
-  
+
   .v10-download-new .v10-btn-download-new {
     padding: var(--v10-space-2) !important;
     min-width: 40px !important;
     justify-content: center !important;
   }
-  
+
   .v10-requirements-grid-premium {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--v10-space-4);
   }
-  
+
   .v10-requirement-card-premium {
     padding: var(--v10-space-4);
   }
-  
+
   .v10-actions-section {
     margin: var(--v10-space-6) 0;
   }
-  
+
   .v10-requirements-section {
     margin: var(--v10-space-12) 0;
   }
 }
 
-/* 
+/*
 ===========================================
 DESIGN STUDIO SYSTEM - LAB DIPS
 ===========================================
@@ -6507,7 +6248,7 @@ DESIGN STUDIO SYSTEM - LAB DIPS
   font-size: 0.875rem;
 }
 
-/* 
+/*
 ===========================================
 COLOR PICKER & DESIGN FORM COMPONENTS
 ===========================================
@@ -6682,45 +6423,24 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 /* Mobile pantone display formatting - split name and code into separate lines */
-@media (max-width: 768px) {
-  .pantone-code {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-  
-  .pantone-code::before {
-    content: attr(data-color-name);
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--v10-text-primary);
-    margin-bottom: 2px;
-  }
-  
+
+
   .pantone-code::after {
     content: attr(data-pantone-code);
     font-size: 0.8rem;
     font-weight: 500;
     color: var(--v10-text-secondary);
   }
-  
+
   /* Hide the original text content on mobile when using data attributes */
   .pantone-code[data-color-name][data-pantone-code] {
     font-size: 0;
   }
-  
+
   /* Hide "automatically" word from tip text on mobile to fix overflow */
   .collection-tip .mobile-hide-auto {
     display: none !important;
   }
-}
-
-/* Lab Dip Color Indicators */
-.garment-labdip-indicators {
-  display: flex;
-  align-items: center;
-  gap: var(--v10-space-1);
-  margin-top: var(--v10-space-2);
 }
 
 .labdip-color-circle {
@@ -7091,14 +6811,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 /* Responsive design for smaller screens */
-@media (max-width: 480px) {
-  .add-fabric-swatch-btn,
-  .add-fabric-design-btn {
-    min-width: 100%;
-    font-size: 0.8rem;
-    padding: var(--v10-space-2) var(--v10-space-3);
-  }
-}
+
 
 /* Collection Grid - Full Width Single Column */
 .collection-grid {
@@ -7553,30 +7266,15 @@ COLOR PICKER & DESIGN FORM COMPONENTS
 }
 
 /* Responsive Design for Studio Layouts */
-@media (max-width: 768px) {
-  .color-studio,
-  .design-studio {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: var(--v10-space-4);
-  }
-  
-  .color-selection-area,
-  .labdips-collection,
-  .designs-collection,
-  .design-input-area {
-    width: 100% !important;
-    max-width: none !important;
-    flex: none !important;
-  }
-  
+
+
   .popular-colors-grid {
     grid-template-columns: repeat(6, 1fr);
     gap: var(--v10-space-1);
     width: 100%;
     padding: 0;
   }
-  
+
   .popular-color-circle {
     width: 32px !important;
     height: 24px !important;
@@ -7584,7 +7282,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
     margin: 0 auto;
     border-width: 1px !important;
   }
-  
+
   /* Fix mobile color picker alignment */
   .color-picker-row {
     flex-direction: row !important;
@@ -7592,27 +7290,27 @@ COLOR PICKER & DESIGN FORM COMPONENTS
     gap: var(--v10-space-2) !important;
     margin-bottom: var(--v10-space-3) !important;
   }
-  
+
   .color-picker-left {
     flex: 0 0 60px !important;
   }
-  
+
   .color-picker-wrapper {
     width: 60px !important;
     height: 60px !important;
   }
-  
+
   .color-picker-input {
     width: 60px !important;
     height: 60px !important;
     border-radius: var(--v10-radius-md) !important;
   }
-  
+
   .pantone-display-right {
     flex: 1 !important;
     margin-left: 0 !important;
   }
-  
+
   .add-labdip-actions,
   .add-design-actions {
     gap: var(--v10-space-3);
@@ -7629,7 +7327,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   .garments-colors-grid {
     grid-template-columns: 1fr;
   }
-  
+
   /* Make tip text smaller on mobile to prevent cropping */
   .collection-tip {
     font-size: var(--v10-text-xs) !important;
@@ -7637,24 +7335,13 @@ COLOR PICKER & DESIGN FORM COMPONENTS
     padding: var(--v10-space-2) !important;
     margin-bottom: var(--v10-space-2) !important;
   }
-  
+
   .popular-colors-section {
     max-width: 100% !important;
   }
 }
 
-@media (max-width: 480px) {
-  .popular-colors-grid {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 2px;
-  }
-  
-  .popular-color-circle {
-    width: 28px !important;
-    height: 20px !important;
-    border-radius: 2px !important;
-  }
-  
+
   .color-picker-wrapper {
     flex-direction: column;
     align-items: flex-start;
@@ -7761,31 +7448,14 @@ div[class*="circle"][style*="background-color"],
    ================================================================= */
 
 /* Mobile responsive title sizing - restore previous mobile optimization */
-@media (max-width: 768px) {
-  .v10-title-spectacular {
-    font-size: calc(var(--v10-text-3xl) * 0.5) !important; /* 50% smaller for mobile */
-    line-height: 1.1 !important;
-    word-break: break-word !important;
-    letter-spacing: 0.02em !important;
-  }
-}
+
 
 /* =================================================================
    MOBILE THEME TOGGLE WIDTH REDUCTION - TARGETED ONLY
    ================================================================= */
 
 /* Reduce theme toggle width on mobile for better text centering */
-@media (max-width: 768px) {
-  .v10-theme-toggle {
-    padding: 2px !important; /* Much smaller container padding */
-    gap: 2px !important; /* Reduce gap between buttons */
-  }
-  
-  .v10-theme-btn {
-    padding: 6px 8px !important; /* Much smaller button padding */
-    font-size: 10px !important; /* Even smaller font size */
-    min-width: auto !important; /* Remove any minimum width */
-  }
+
 }
 
 /* =================================================================
@@ -8141,31 +7811,21 @@ div[class*="circle"][style*="background-color"],
    MOBILE RESPONSIVE COLORWAY SYSTEM
    ================================================================= */
 
-@media (max-width: 768px) {
-  .v10-colorway-content {
-    gap: var(--v10-space-3);
-  }
-  
-  .v10-color-selection {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--v10-space-2);
-  }
-  
+
   .v10-color-picker-wrapper {
     justify-content: center;
   }
-  
+
   .v10-pantone-details {
     flex-direction: column;
   }
-  
+
   .v10-size-grid {
     display: flex;
     flex-direction: column;
     gap: var(--v10-space-2);
   }
-  
+
   .v10-size-grid .size-row {
     display: flex;
     align-items: center;
@@ -8174,13 +7834,13 @@ div[class*="circle"][style*="background-color"],
     background: var(--v10-bg-secondary);
     border-radius: var(--v10-radius-sm);
   }
-  
+
   .v10-size-grid .size-row .size-label {
     min-width: 50px;
     font-weight: 600;
     font-size: var(--v10-text-sm);
   }
-  
+
   .v10-size-grid .size-row .size-input {
     flex: 1;
     max-width: 80px;
@@ -8190,7 +7850,7 @@ div[class*="circle"][style*="background-color"],
     border-radius: var(--v10-radius-sm);
     background: var(--v10-bg-primary);
   }
-  
+
   .garment-actions-integrated {
     flex-direction: column;
     gap: var(--v10-space-2);
@@ -8451,10 +8111,6 @@ div[class*="circle"][style*="background-color"],
 
 /* Removed duplicate .garment-quantity-card - no longer used */
 
-@keyframes shimmer {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
 
 /* Status Badges */
 .status-badge {
@@ -8826,30 +8482,22 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* Mobile Responsive Design */
-@media (max-width: 768px) {
-  .quantity-tracker-enhanced__stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--v10-space-3);
-  }
-  
-  .quantity-stat__value {
-    font-size: 2rem;
-  }
-  
+
+
   .bulk-tools-header {
     flex-direction: column;
     gap: var(--v10-space-3);
     align-items: stretch;
   }
-  
+
   .bulk-tools-actions {
     justify-content: center;
   }
-  
+
   .size-grid-header {
     display: none;
   }
-  
+
   .size-grid-row {
     display: flex;
     align-items: center;
@@ -8860,43 +8508,43 @@ div[class*="circle"][style*="background-color"],
     margin-bottom: var(--v10-space-2);
     gap: var(--v10-space-2);
   }
-  
+
   .size-grid-row .size-label {
     min-width: 60px;
     font-weight: 600;
     font-size: var(--v10-text-sm);
   }
-  
+
   .size-grid-row .size-input {
     flex: 1;
     max-width: 60px;
     text-align: center;
   }
-  
+
   .size-label {
     padding: var(--v10-space-1);
     font-size: var(--v10-text-xs);
   }
-  
+
   .size-input {
     padding: var(--v10-space-1);
     font-size: var(--v10-text-xs);
   }
-  
+
   .garment-quantity-card__header {
     flex-direction: column;
     gap: var(--v10-space-3);
   }
-  
+
   .garment-quantity-card__stats {
     justify-content: space-around;
   }
-  
+
   .instructions-icon {
     width: 32px;
     height: 32px;
   }
-  
+
   .quantities-instructions {
     gap: var(--v10-space-3);
     padding: var(--v10-space-4);
@@ -9371,55 +9019,47 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* Mobile Responsive Distribution Analysis */
-@media (max-width: 768px) {
-  .distribution-summary-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--v10-space-3);
-  }
-  
-  .distribution-summary-card__value {
-    font-size: 2rem;
-  }
-  
+
+
   .health-circle {
     width: 80px;
     height: 80px;
   }
-  
+
   .health-score {
     font-size: 1.5rem;
   }
-  
+
   .distribution-chart__sizes {
     height: 80px;
     padding: var(--v10-space-2);
   }
-  
+
   .size-bar__column {
     max-width: 24px;
   }
-  
+
   .distribution-chart__legend {
     flex-wrap: wrap;
     gap: var(--v10-space-2);
   }
-  
+
   .garment-analytics-card__header {
     flex-direction: column;
     gap: var(--v10-space-2);
     align-items: stretch;
   }
-  
+
   .garment-analytics-card__stats {
     justify-content: space-around;
   }
-  
+
   .recommendations-panel__header {
     flex-direction: column;
     text-align: center;
     gap: var(--v10-space-2);
   }
-  
+
   .recommendation-item__header {
     flex-direction: column;
     gap: var(--v10-space-2);
@@ -9434,12 +9074,6 @@ div[class*="circle"][style*="background-color"],
   gap: var(--v10-space-4);
 }
 
-@media (max-width: 768px) {
-  #review-garments {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
-  }
-}
 
 /* ===== Simple Garment Item Display (Step 4) ===== */
 .v10-garment-item {
@@ -9690,11 +9324,6 @@ div[class*="circle"][style*="background-color"],
   text-align: center;
 }
 
-.v10-submit-icon {
-  color: var(--v10-text-success);
-  flex-shrink: 0;
-}
-
 .v10-submit-title {
   color: var(--v10-text-primary);
   font-size: var(--v10-text-lg);
@@ -9737,16 +9366,7 @@ div[class*="circle"][style*="background-color"],
   background: var(--v10-border-secondary);
 }
 
-@media (max-width: 768px) {
-  .v10-timeline {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--v10-space-2);
-  }
-  
-  .v10-timeline-separator {
-    display: none;
-  }
+
 }
 
 /* Submit Card (existing structure) */
@@ -9901,12 +9521,6 @@ div[class*="circle"][style*="background-color"],
   min-width: 0; /* Allow flex shrinking */
 }
 
-@media (max-width: 768px) {
-  .v10-review-grid {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-4);
-  }
-}
 
 /* Terms and Submit Actions Centering */
 .v10-terms-section {
@@ -10024,12 +9638,6 @@ div[class*="circle"][style*="background-color"],
   margin: var(--v10-space-4) 0;
 }
 
-@media (max-width: 768px) {
-  .v10-submit-actions {
-    flex-direction: column;
-    gap: var(--v10-space-3);
-  }
-}
 
 .techpack-header-with-help {
   margin-bottom: var(--v10-space-8);
@@ -10097,18 +9705,7 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* ===== Mobile Responsive Improvements - Step 4 uses unified .techpack-content ===== */
-@media (max-width: 768px) {
-  .v10-studio-card {
-    padding: var(--v10-space-4);
-    margin-bottom: var(--v10-space-4);
-  }
 
-  .v10-studio-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--v10-space-2);
-  }
 
   /* Mobile Currency Toggle - Show only symbols */
   .v10-currency-btn {
@@ -10116,7 +9713,7 @@ div[class*="circle"][style*="background-color"],
     padding: var(--v10-space-1) var(--v10-space-2);
     min-width: 28px;
   }
-  
+
   .v10-currency-btn[data-currency="EUR"] {
     font-size: 0; /* Hide original text */
   }
@@ -10124,7 +9721,7 @@ div[class*="circle"][style*="background-color"],
     content: "€";
     font-size: var(--v10-text-sm);
   }
-  
+
   .v10-currency-btn[data-currency="USD"] {
     font-size: 0; /* Hide original text */
   }
@@ -10190,9 +9787,9 @@ div[class*="circle"][style*="background-color"],
   }
 }
 
-/* ============================================== */
+
 /* V10 QUANTITY STUDIO REBUILD - NEW STYLES */
-/* ============================================== */
+
 
 /* Simplified Quantity Studio Stats Bar */
 .v10-quantity-stats-bar {
@@ -10334,24 +9931,6 @@ div[class*="circle"][style*="background-color"],
   text-transform: uppercase;
 }
 
-.v10-size-input {
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-secondary);
-  border-radius: 0;
-  padding: 8px;
-  text-align: center;
-  color: var(--v10-text-primary);
-  font-weight: 600;
-  font-size: 14px;
-  width: 100%;
-  transition: all 0.2s ease;
-}
-
-.v10-size-input:focus {
-  outline: none;
-  border-color: var(--v10-accent-primary);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
 
 .v10-colorway-footer {
   display: flex;
@@ -10703,19 +10282,6 @@ div[class*="circle"][style*="background-color"],
   font-size: 0.95rem;
 }
 
-.v10-size-inputs-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.v10-size-input-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  position: relative;
-}
 
 .v10-size-color-indicator {
   position: absolute;
@@ -10735,27 +10301,6 @@ div[class*="circle"][style*="background-color"],
   padding-top: 6px;
 }
 
-.v10-size-input {
-  padding: 8px;
-  background: var(--v10-bg-primary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: 0;
-  color: var(--v10-text-primary);
-  text-align: center;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.v10-size-input:focus {
-  border-color: var(--v10-accent-primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--v10-accent-rgb), 0.1);
-}
-
-.v10-size-input:hover {
-  background: var(--v10-bg-secondary);
-}
 
 /* Colorway Actions */
 .v10-colorway-actions {
@@ -10798,42 +10343,9 @@ div[class*="circle"][style*="background-color"],
   font-weight: 700;
 }
 
-.v10-garment-status {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.v10-garment-status--insufficient {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.v10-garment-status--sufficient {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
 /* Mobile Responsive */
-@media (max-width: 768px) {
-  .v10-size-inputs-row {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .v10-colorway-tabs-container {
-    flex-direction: column;
-  }
-  
-  .v10-colorway-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
+
+
   .v10-colorway-subtotal {
     margin-left: 0;
     width: 100%;
@@ -10841,21 +10353,7 @@ div[class*="circle"][style*="background-color"],
   }
 }
 
-@media (max-width: 480px) {
-  .v10-size-inputs-row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .v10-garment-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .v10-garment-footer {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
+
 }
 
 
@@ -10906,19 +10404,7 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* Size Input Fields Enhanced */
-.v10-size-input {
-  background: #1a1a1a !important;
-  border: 1px solid #404040 !important;
-  color: #ffffff !important;
-  text-align: center;
-  font-weight: 600;
-}
 
-.v10-size-input:focus {
-  border-color: #10b981 !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
-}
 
 /* Garment Footer Enhanced */
 .v10-garment-footer {
@@ -11105,9 +10591,7 @@ div[class*="circle"][style*="background-color"],
 /* Removed duplicate .v10-quantity-garment-full--complete style - now defined above with main card styles */
 
 /* Size Input Refinements */
-.v10-size-input-wrapper {
-  position: relative;
-}
+
 
 .v10-size-label {
   font-size: 11px;
@@ -11118,29 +10602,6 @@ div[class*="circle"][style*="background-color"],
   margin-bottom: 4px;
 }
 
-.v10-size-input {
-  width: 100%;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px;
-  color: #ffffff !important;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.v10-size-input:focus {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border-color: rgba(16, 185, 129, 0.5) !important;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-.v10-size-input:hover {
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
 
 /* Action Buttons Refinement */
 .v10-colorway-actions {
@@ -11253,12 +10714,7 @@ div[class*="circle"][style*="background-color"],
 /* REMOVED: Duplicate .v10-colorway-tabs definition (already exists at line 9815) */
 
 /* Responsive Grid for Size Inputs */
-.v10-size-inputs-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-  margin-top: 20px;
-}
+
 
 /* Color Indicator Circle */
 .v10-size-color-indicator {
@@ -11398,15 +10854,8 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* Mobile responsive */
-@media (max-width: 768px) {
-  .v10-bulk-colorways-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .v10-bulk-colorway-item {
-    padding: 12px;
-  }
-  
+
+
   .v10-bulk-color-square {
     width: 28px;
     height: 28px;
@@ -11509,30 +10958,21 @@ div[class*="circle"][style*="background-color"],
 }
 
 /* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .field-error-message {
-    font-size: 0.8rem;
-    margin-top: 4px;
-  }
-  
-  .form-field.error input,
-  .form-field.error textarea {
-    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
-  }
-  
+
+
   /* =====================================================
      MOBILE TOUR BUTTON OPTIMIZATION
      ===================================================== */
-  
+
   /* Switch text visibility on mobile */
   .tour-btn-text-desktop {
     display: none !important; /* Hide long text on mobile */
   }
-  
+
   .tour-btn-text-mobile {
     display: inline !important; /* Show short text on mobile */
   }
-  
+
   /* Mobile-specific tour button adjustments */
   .v10-btn--tour {
     min-width: 180px !important; /* Reduce minimum width for mobile */
@@ -11540,7 +10980,7 @@ div[class*="circle"][style*="background-color"],
     padding: 10px 16px !important; /* Adjust padding for mobile touch targets */
     gap: 6px !important; /* Reduce gap between icon and text */
   }
-  
+
   /* Ensure mobile button has proper touch target size */
   .v10-btn--tour {
     min-height: 44px; /* Apple's recommended touch target size */
@@ -11548,11 +10988,11 @@ div[class*="circle"][style*="background-color"],
     align-items: center !important;
     justify-content: center !important;
   }
-  
+
   /* =====================================================
      MOBILE COMPLETE ALL GARMENTS BUTTON FIX
      ===================================================== */
-  
+
   /* Fix Complete All Garments button text wrapping on mobile */
   #step-3-next {
     white-space: normal !important;      /* Allow text wrapping */
@@ -11571,46 +11011,26 @@ div[class*="circle"][style*="background-color"],
    MOBILE ONBOARDING IMPROVEMENTS
    ==================================================== */
 
-@media (max-width: 768px) {
-  /* Mobile onboarding overlay */
-  .color-studio-onboarding {
-    padding: 8px;
-  }
-  
-  /* Mobile tooltip improvements */
-  .onboarding-tooltip {
-    max-width: 90vw !important;
-    padding: 16px 18px !important;
-    font-size: 14px !important;
-    line-height: 1.4 !important;
-    border-radius: 12px !important;
-    
-    /* Better shadows for mobile */
-    box-shadow: 
-      0 8px 24px rgba(0, 0, 0, 0.4),
-      0 4px 8px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  }
-  
+
   /* Mobile highlight adjustments */
   .onboarding-highlight {
     border-width: 2px !important;
     border-color: rgba(255, 255, 255, 0.3) !important;
     border-radius: 8px !important;
-    
+
     /* More visible spotlight on mobile */
-    box-shadow: 
+    box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.08),
       0 0 0 9999px rgba(0, 0, 0, 0.85),
       0 0 12px rgba(255, 255, 255, 0.15) !important;
   }
-  
+
   /* Mobile button improvements */
   .onboarding-controls {
     padding: 16px 20px !important;
     gap: 12px !important;
   }
-  
+
   .onboarding-btn {
     padding: 12px 20px !important;
     font-size: 15px !important;
@@ -11618,11 +11038,11 @@ div[class*="circle"][style*="background-color"],
     min-height: 44px !important; /* Touch-friendly size */
     min-width: 60px !important;
   }
-  
+
   .onboarding-btn--primary {
     min-width: 80px !important;
   }
-  
+
   /* Mobile step counter */
   .onboarding-step-counter {
     width: 28px !important;
@@ -11630,48 +11050,35 @@ div[class*="circle"][style*="background-color"],
     font-size: 13px !important;
     line-height: 28px !important;
   }
-  
+
   /* Mobile tooltip arrows */
   .onboarding-tooltip::before {
     border-width: 10px !important;
   }
-  
+
   .onboarding-tooltip--top::before {
     bottom: -20px !important;
   }
-  
+
   .onboarding-tooltip--bottom::before {
     top: -20px !important;
   }
-  
+
   .onboarding-tooltip--left::before {
     right: -20px !important;
   }
-  
+
   .onboarding-tooltip--right::before {
     left: -20px !important;
   }
 }
 
-@media (max-width: 480px) {
-  /* Extra small mobile adjustments */
-  .onboarding-tooltip {
-    max-width: 95vw !important;
-    padding: 14px 16px !important;
-    font-size: 13px !important;
-  }
-  
-  .onboarding-btn {
-    padding: 10px 16px !important;
-    font-size: 14px !important;
-    min-width: 50px !important;
-  }
-  
+
   .onboarding-controls {
     padding: 12px 16px !important;
     gap: 8px !important;
   }
-  
+
   /* Smaller highlight borders on very small screens */
   .onboarding-highlight {
     border-width: 1.5px !important;
@@ -11685,7 +11092,7 @@ div[class*="circle"][style*="background-color"],
     max-height: 80vh !important;
     overflow-y: auto !important;
   }
-  
+
   /* Reduce margins in landscape to fit better */
   .onboarding-highlight {
     margin: 4px !important;
