@@ -9280,24 +9280,25 @@ class V10_GarmentStudio {
           }
         }
       }
-    }
       
-      // Check horizontal centering doesn't go off edges
-      const halfTooltipWidth = tooltipWidth / 2;
-      if (tooltipX - halfTooltipWidth < viewport.scrollX + 10) {
-        tooltipX = viewport.scrollX + halfTooltipWidth + 10;
-      } else if (tooltipX + halfTooltipWidth > viewport.scrollX + viewport.width - 10) {
-        tooltipX = viewport.scrollX + viewport.width - halfTooltipWidth - 10;
+      // Check horizontal centering doesn't go off edges for top/bottom positions
+      if (step.position === 'top' || step.position === 'bottom') {
+        const halfTooltipWidth = tooltipWidth / 2;
+        if (tooltipX - halfTooltipWidth < viewport.scrollX + 10) {
+          tooltipX = viewport.scrollX + halfTooltipWidth + 10;
+        } else if (tooltipX + halfTooltipWidth > viewport.scrollX + viewport.width - 10) {
+          tooltipX = viewport.scrollX + viewport.width - halfTooltipWidth - 10;
+        }
       }
-    }
-    
-    // Ensure vertical positioning stays within viewport for left/right positions
-    if ((finalPosition === 'left' || finalPosition === 'right') && tooltipY) {
-      const halfTooltipHeight = tooltipHeight / 2;
-      if (tooltipY - halfTooltipHeight < viewport.scrollY + 10) {
-        tooltipY = viewport.scrollY + halfTooltipHeight + 10;
-      } else if (tooltipY + halfTooltipHeight > viewport.scrollY + viewport.height - 10) {
-        tooltipY = viewport.scrollY + viewport.height - halfTooltipHeight - 10;
+      
+      // Ensure vertical positioning stays within viewport for left/right positions
+      if ((finalPosition === 'left' || finalPosition === 'right') && tooltipY) {
+        const halfTooltipHeight = tooltipHeight / 2;
+        if (tooltipY - halfTooltipHeight < viewport.scrollY + 10) {
+          tooltipY = viewport.scrollY + halfTooltipHeight + 10;
+        } else if (tooltipY + halfTooltipHeight > viewport.scrollY + viewport.height - 10) {
+          tooltipY = viewport.scrollY + viewport.height - halfTooltipHeight - 10;
+        }
       }
     }
     
