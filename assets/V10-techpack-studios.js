@@ -9013,7 +9013,7 @@ class V10_GarmentStudio {
     this.currentOnboardingStep = 0;
     this.onboardingSteps = [
       {
-        target: '.color-picker-wrapper',
+        target: 'input#lab-dip-color-picker',
         title: 'Method 1: Visual Color Picker',
         description: 'Use our color picker to select your desired color visually. Perfect for quick color selection and visual matching.',
         position: 'top'
