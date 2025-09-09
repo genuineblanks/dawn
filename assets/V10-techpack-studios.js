@@ -17364,6 +17364,28 @@ class V10_ClientManager {
           deliveryField.classList.add('v10-form-field--invalid');
         } else {
           deliveryField.classList.remove('v10-form-field--invalid');
+          
+          // 🔧 DIFFERENT ADDRESS FIELDS VALIDATION: Validate required fields when "different" is selected
+          if (selectedDelivery.value === 'different') {
+            const differentAddressForm = document.getElementById('v10-different-address-form');
+            if (differentAddressForm && differentAddressForm.style.display !== 'none') {
+              // Validate all required-if-different fields
+              const conditionalFields = differentAddressForm.querySelectorAll('[data-validate="required-if-different"]');
+              
+              conditionalFields.forEach(field => {
+                const fieldContainer = field.closest('.v10-form-field');
+                if (fieldContainer) {
+                  if (!field.value?.trim()) {
+                    // Add error state for empty required conditional fields
+                    fieldContainer.classList.add('v10-form-field--invalid');
+                  } else {
+                    // Remove error state for filled conditional fields
+                    fieldContainer.classList.remove('v10-form-field--invalid');
+                  }
+                }
+              });
+            }
+          }
         }
       }
     }
@@ -18595,20 +18617,39 @@ class V10_ModalManager {
           differentAddressForm.classList.add('v10-form-animate-in');
         }, 50);
         
-        // Clear any previous validation states when showing different address form
+        // 🔧 ENHANCED ERROR CLEARING: Clear all validation states when showing different address form
         const fields = differentAddressForm.querySelectorAll('.v10-form-field');
-        fields.forEach(field => field.classList.remove('v10-form-field--invalid'));
+        fields.forEach(field => {
+          // Clear old validation classes
+          field.classList.remove('v10-form-field--invalid', 'error');
+          
+          // Clear Universal Form Validator error messages
+          const errorMessage = field.querySelector('.field-error-message');
+          if (errorMessage) {
+            errorMessage.remove();
+          }
+        });
       } else {
         differentAddressForm.classList.remove('v10-form-animate-in');
         setTimeout(() => {
           differentAddressForm.style.display = 'none';
         }, 300);
         
-        // Clear different address fields when hidden
+        // 🔧 COMPREHENSIVE FIELD CLEARING: Clear different address fields and all validation states when hidden
         const inputs = differentAddressForm.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
           input.value = '';
           this.clearFieldValidation(input);
+          
+          // Also clear Universal Form Validator errors
+          const fieldContainer = input.closest('.v10-form-field');
+          if (fieldContainer) {
+            fieldContainer.classList.remove('error', 'v10-form-field--invalid');
+            const errorMessage = fieldContainer.querySelector('.field-error-message');
+            if (errorMessage) {
+              errorMessage.remove();
+            }
+          }
         });
       }
     }
@@ -19525,6 +19566,55 @@ class UniversalFormValidator {
       }
     });
 
+    // 🔧 CONDITIONAL SECTION VALIDATION: Check "Different Address" fields for sample-request and bulk-order-request
+    const requestType = window.V10_State?.requestType;
+    if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+      const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
+      if (selectedDelivery?.value === 'different') {
+        const differentAddressForm = document.getElementById('v10-different-address-form');
+        if (differentAddressForm && differentAddressForm.style.display !== 'none') {
+          // Validate all fields with data-validate="required-if-different" in the different address form
+          const conditionalFields = differentAddressForm.querySelectorAll('[data-validate="required-if-different"]');
+          
+          conditionalFields.forEach(field => {
+            if (!field.value?.trim()) {
+              isFormValid = false;
+              
+              // Add visual error state
+              const fieldContainer = field.closest('.v10-form-field');
+              if (fieldContainer) {
+                fieldContainer.classList.add('error');
+                
+                // Add error message if not already present
+                if (!fieldContainer.querySelector('.field-error-message')) {
+                  const errorElement = document.createElement('div');
+                  errorElement.className = 'field-error-message';
+                  errorElement.textContent = 'This field is required for different address';
+                  fieldContainer.appendChild(errorElement);
+                }
+              }
+              
+              // Add to field errors array for comprehensive tracking
+              fieldErrors.push({
+                field: field,
+                errors: ['This field is required for different address']
+              });
+            } else {
+              // Clear errors for valid conditional fields
+              const fieldContainer = field.closest('.v10-form-field');
+              if (fieldContainer) {
+                fieldContainer.classList.remove('error');
+                const errorMessage = fieldContainer.querySelector('.field-error-message');
+                if (errorMessage) {
+                  errorMessage.remove();
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+
     return {
       isValid: isFormValid,
       errors: fieldErrors
@@ -19600,8 +19690,21 @@ class UniversalFormValidator {
   validateAndProceed(formElement) {
     const validation = this.validateForm(formElement);
     if (!validation.isValid) {
-      // Scroll to first error
-      const firstError = formElement.querySelector('.error');
+      // Scroll to first error - check main form first
+      let firstError = formElement.querySelector('.error');
+      
+      // 🔧 CONDITIONAL SECTION ERROR SCROLLING: If no error in main form, check conditional sections
+      if (!firstError) {
+        const requestType = window.V10_State?.requestType;
+        if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+          const differentAddressForm = document.getElementById('v10-different-address-form');
+          if (differentAddressForm && differentAddressForm.style.display !== 'none') {
+            firstError = differentAddressForm.querySelector('.error');
+          }
+        }
+      }
+      
+      // Scroll to first error found (main form or conditional section)
       if (firstError) {
         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
