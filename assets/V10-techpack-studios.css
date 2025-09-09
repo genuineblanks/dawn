@@ -1079,12 +1079,12 @@ button:focus,
     border-radius: 6px;
   }
   
-  /* Spotlight effect adjustment for mobile */
+  /* Subtle spotlight effect adjustment for mobile */
   .onboarding-highlight {
     box-shadow: 
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05),
       0 0 0 9999px rgba(0, 0, 0, 0.8),
-      0 0 15px rgba(255, 255, 255, 0.15);
+      0 0 6px rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -1125,11 +1125,11 @@ button:focus,
   }
   
   .onboarding-highlight {
-    border-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.25);
     box-shadow: 
-      inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
       0 0 0 9999px rgba(0, 0, 0, 0.85),
-      0 0 25px rgba(255, 255, 255, 0.3);
+      0 0 10px rgba(255, 255, 255, 0.12);
   }
 }
 
@@ -4420,20 +4420,20 @@ body[style*="overflow: hidden"] {
 .onboarding-highlight {
   position: absolute;
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 9999;
   
-  /* Spotlight effect using box-shadow */
+  /* Subtle spotlight effect using box-shadow */
   box-shadow: 
-    /* Inner glow to brighten the highlighted area */
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-    /* Massive box-shadow to create the dark overlay everywhere else */
+    /* Very subtle inner glow */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    /* Dark overlay everywhere else */
     0 0 0 9999px rgba(0, 0, 0, 0.75),
-    /* Subtle highlight glow around the border */
-    0 0 20px rgba(255, 255, 255, 0.2);
+    /* Much gentler highlight glow */
+    0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 .onboarding-tooltip {
