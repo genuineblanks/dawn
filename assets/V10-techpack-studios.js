@@ -9101,10 +9101,50 @@ class V10_GarmentStudio {
       highlightHeight = rect.height - 20; // Reduce height to stay within content
     }
     
-    highlight.style.left = highlightLeft + 'px';
-    highlight.style.top = highlightTop + 'px';
-    highlight.style.width = highlightWidth + 'px';
-    highlight.style.height = highlightHeight + 'px';
+    // Apply styles with !important flags to prevent CSS conflicts
+    highlight.style.setProperty('left', highlightLeft + 'px', 'important');
+    highlight.style.setProperty('top', highlightTop + 'px', 'important');
+    highlight.style.setProperty('width', highlightWidth + 'px', 'important');
+    highlight.style.setProperty('height', highlightHeight + 'px', 'important');
+    highlight.style.setProperty('position', 'fixed', 'important');
+    highlight.style.setProperty('z-index', '9999', 'important');
+    highlight.style.setProperty('display', 'block', 'important');
+    highlight.style.setProperty('visibility', 'visible', 'important');
+    
+    // Force a reflow to ensure styles are applied
+    highlight.offsetHeight;
+    
+    // Check element size after style application with slight delay
+    setTimeout(() => {
+      const finalRect = highlight.getBoundingClientRect();
+      console.log('🔧 POST-FIX VERIFICATION:');
+      console.log('Final highlight element dimensions:', finalRect);
+      console.log('Expected vs Actual:', {
+        expectedWidth: highlightWidth,
+        actualWidth: finalRect.width,
+        expectedHeight: highlightHeight,
+        actualHeight: finalRect.height,
+        expectedX: highlightLeft,
+        actualX: finalRect.left,
+        expectedY: highlightTop,
+        actualY: finalRect.top
+      });
+      
+      if (finalRect.width === 0 || finalRect.height === 0) {
+        console.error('⚠️ HIGHLIGHT ELEMENT STILL COLLAPSED AFTER FIX!');
+        console.error('Applied styles:', {
+          left: highlight.style.left,
+          top: highlight.style.top,
+          width: highlight.style.width,
+          height: highlight.style.height,
+          position: highlight.style.position,
+          display: highlight.style.display,
+          visibility: highlight.style.visibility
+        });
+      } else {
+        console.log('✅ HIGHLIGHT ELEMENT SUCCESSFULLY POSITIONED!');
+      }
+    }, 50);
     
     // 🎯 HIGHLIGHT POSITIONING DEBUG
     console.log('📍 HIGHLIGHT CALCULATED POSITION:');
