@@ -1035,6 +1035,117 @@ button:focus,
   align-items: center; /* Ensure all buttons align properly */
 }
 
+/* Responsive Design for Onboarding System */
+@media (max-width: 768px) {
+  /* Mobile tooltip adjustments */
+  .onboarding-tooltip {
+    max-width: 90vw;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .onboarding-step-counter {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+  
+  /* Mobile controls */
+  .onboarding-controls {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    transform: none;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .onboarding-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-width: 80px;
+    flex: 1;
+    max-width: 120px;
+  }
+  
+  /* Reduce highlight padding on mobile */
+  .onboarding-highlight {
+    border-width: 1px;
+    border-radius: 6px;
+  }
+  
+  /* Spotlight effect adjustment for mobile */
+  .onboarding-highlight {
+    box-shadow: 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 0 0 9999px rgba(0, 0, 0, 0.8),
+      0 0 15px rgba(255, 255, 255, 0.15);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small mobile adjustments */
+  .onboarding-tooltip {
+    max-width: 95vw;
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  
+  .onboarding-controls {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    gap: 6px;
+  }
+  
+  .onboarding-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+  
+  .onboarding-step-counter {
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 10px;
+    margin-right: 6px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .onboarding-tooltip {
+    border: 2px solid rgba(255, 255, 255, 0.9);
+  }
+  
+  .onboarding-highlight {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+      0 0 0 9999px rgba(0, 0, 0, 0.85),
+      0 0 25px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-highlight,
+  .onboarding-tooltip,
+  .onboarding-btn {
+    transition: none;
+  }
+  
+  .color-studio-onboarding {
+    transition: opacity 0.1s ease;
+  }
+}
+
 .v10-btn--ghost {
   background-color: transparent;
   color: var(--v10-text-secondary);
@@ -4294,7 +4405,7 @@ body[style*="overflow: hidden"] {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: transparent;
   z-index: 10000;
   display: none;
   opacity: 0;
@@ -4308,27 +4419,42 @@ body[style*="overflow: hidden"] {
 
 .onboarding-highlight {
   position: absolute;
-  background: rgba(163, 163, 163, 0.15);
-  border: 2px solid var(--gb-neutral-400);
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 8px;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 9999;
+  
+  /* Spotlight effect using box-shadow */
+  box-shadow: 
+    /* Inner glow to brighten the highlighted area */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    /* Massive box-shadow to create the dark overlay everywhere else */
+    0 0 0 9999px rgba(0, 0, 0, 0.75),
+    /* Subtle highlight glow around the border */
+    0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .onboarding-tooltip {
   position: absolute;
-  background: var(--gb-neutral-800, #1f2937);
-  color: var(--gb-neutral-50, #ffffff);
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--gb-neutral-700, #374151);
-  max-width: 300px;
+  background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+  color: #f9fafb;
+  padding: 18px 22px;
+  border-radius: 8px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 320px;
   font-size: 14px;
-  line-height: 1.4;
+  font-weight: 500;
+  line-height: 1.5;
   z-index: 10001;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .onboarding-tooltip::before {
@@ -4340,31 +4466,49 @@ body[style*="overflow: hidden"] {
 }
 
 .onboarding-tooltip--top::before {
-  border-top-color: var(--gb-neutral-800, #1f2937);
+  border-top-color: #2d2d2d;
   bottom: -16px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .onboarding-tooltip--bottom::before {
-  border-bottom-color: var(--gb-neutral-800, #1f2937);
+  border-bottom-color: #2d2d2d;
   top: -16px;
   left: 50%;
   transform: translateX(-50%);
 }
 
+.onboarding-tooltip--left::before {
+  border-left-color: #2d2d2d;
+  right: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.onboarding-tooltip--right::before {
+  border-right-color: #2d2d2d;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .onboarding-step-counter {
   display: inline-block;
-  background: var(--gb-neutral-600, #4b5563);
-  color: var(--gb-neutral-50, #ffffff);
-  width: 24px;
-  height: 24px;
+  background: linear-gradient(135deg, #5a5a5a 0%, #444444 100%);
+  color: #ffffff;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   text-align: center;
-  line-height: 24px;
+  line-height: 26px;
   font-size: 12px;
   font-weight: 600;
-  margin-right: 8px;
+  margin-right: 10px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .onboarding-controls {
@@ -4378,34 +4522,49 @@ body[style*="overflow: hidden"] {
 }
 
 .onboarding-btn {
-  padding: 12px 20px;
-  border-radius: 6px;
-  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .onboarding-btn--primary {
-  background: var(--gb-neutral-700, #374151);
-  color: var(--gb-neutral-50, #ffffff);
+  background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+  color: #ffffff;
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .onboarding-btn--primary:hover {
-  background: var(--gb-neutral-600, #4b5563);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #5a5a5a 0%, #4a4a4a 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .onboarding-btn--secondary {
-  background: var(--gb-neutral-800, #1f2937);
-  color: var(--gb-neutral-300, #d1d5db);
-  border: 1px solid var(--gb-neutral-700, #374151);
+  background: linear-gradient(135deg, #333333 0%, #2a2a2a 100%);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .onboarding-btn--secondary:hover {
-  background: var(--gb-neutral-700, #374151);
-  color: var(--gb-neutral-100, #f9fafb);
+  background: linear-gradient(135deg, #3a3a3a 0%, #333333 100%);
+  color: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* Garment Card Content (Form State) */
@@ -11228,8 +11387,3 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
-
-
-
-
-

@@ -8998,8 +8998,8 @@ class V10_GarmentStudio {
       <div class="onboarding-highlight" id="onboarding-highlight"></div>
       <div class="onboarding-tooltip" id="onboarding-tooltip"></div>
       <div class="onboarding-controls">
-        <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-previous">Previous</button>
         <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-skip">Skip Tour</button>
+        <button class="onboarding-btn onboarding-btn--secondary" id="onboarding-previous">Previous</button>
         <button class="onboarding-btn onboarding-btn--primary" id="onboarding-next">Next</button>
       </div>
     `;
@@ -9031,10 +9031,10 @@ class V10_GarmentStudio {
         position: 'bottom'
       },
       {
-        target: '#garment-assignments-overview',
-        title: 'Step 4: Fabric Swatches & Assignments',
-        description: 'This section shows your garment assignments. You can assign specific fabric swatches to individual garments here. If a garment has no assignment, you\'ll receive a fabric swatch with your order to help with color matching.',
-        position: 'bottom'
+        target: '.labdips-collection',
+        title: 'Step 4: Lab Dip Collection',
+        description: 'This section shows all your selected lab dip colors. Here you can manage your color collection and assign different colors to garments. Each color becomes a fabric swatch for precision matching.',
+        position: 'left'
       }
     ];
     
@@ -9062,11 +9062,6 @@ class V10_GarmentStudio {
       return;
     }
     
-    // Special handling for assignment overview section - ensure it's visible
-    if (step.target === '#garment-assignments-overview') {
-      targetElement.style.display = 'block';
-    }
-    
     // Position highlight around target
     const rect = targetElement.getBoundingClientRect();
     highlight.style.left = (rect.left - 8) + 'px';
@@ -9074,21 +9069,93 @@ class V10_GarmentStudio {
     highlight.style.width = (rect.width + 16) + 'px';
     highlight.style.height = (rect.height + 16) + 'px';
     
-    // Position tooltip
-    const tooltipX = rect.left + (rect.width / 2);
-    let tooltipY = step.position === 'top' ? rect.top - 20 : rect.bottom + 20;
+    // Position tooltip with boundary detection
+    const viewport = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY
+    };
     
-    tooltip.className = `onboarding-tooltip onboarding-tooltip--${step.position}`;
+    const tooltipWidth = 320; // max-width from CSS
+    const tooltipHeight = 120; // estimated height
+    const margin = 20;
+    
+    let tooltipX, tooltipY, transform, finalPosition = step.position;
+    
+    // Initial positioning based on preferred position
+    if (step.position === 'left') {
+      tooltipX = rect.left - margin;
+      tooltipY = rect.top + (rect.height / 2);
+      transform = 'translate(-100%, -50%)';
+      
+      // Check if tooltip would go off left edge
+      if (tooltipX - tooltipWidth < viewport.scrollX) {
+        finalPosition = 'right';
+        tooltipX = rect.right + margin;
+        transform = 'translate(0, -50%)';
+      }
+    } else if (step.position === 'right') {
+      tooltipX = rect.right + margin;
+      tooltipY = rect.top + (rect.height / 2);
+      transform = 'translate(0, -50%)';
+      
+      // Check if tooltip would go off right edge
+      if (tooltipX + tooltipWidth > viewport.scrollX + viewport.width) {
+        finalPosition = 'left';
+        tooltipX = rect.left - margin;
+        transform = 'translate(-100%, -50%)';
+      }
+    } else {
+      tooltipX = rect.left + (rect.width / 2);
+      transform = 'translateX(-50%)';
+      
+      if (step.position === 'top') {
+        tooltipY = rect.top - margin;
+        // Check if tooltip would go off top edge
+        if (tooltipY - tooltipHeight < viewport.scrollY) {
+          finalPosition = 'bottom';
+          tooltipY = rect.bottom + margin;
+        }
+      } else { // bottom
+        tooltipY = rect.bottom + margin;
+        // Check if tooltip would go off bottom edge
+        if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height) {
+          finalPosition = 'top';
+          tooltipY = rect.top - margin;
+        }
+      }
+      
+      // Check horizontal centering doesn't go off edges
+      const halfTooltipWidth = tooltipWidth / 2;
+      if (tooltipX - halfTooltipWidth < viewport.scrollX + 10) {
+        tooltipX = viewport.scrollX + halfTooltipWidth + 10;
+      } else if (tooltipX + halfTooltipWidth > viewport.scrollX + viewport.width - 10) {
+        tooltipX = viewport.scrollX + viewport.width - halfTooltipWidth - 10;
+      }
+    }
+    
+    // Ensure vertical positioning stays within viewport for left/right positions
+    if ((finalPosition === 'left' || finalPosition === 'right') && tooltipY) {
+      const halfTooltipHeight = tooltipHeight / 2;
+      if (tooltipY - halfTooltipHeight < viewport.scrollY + 10) {
+        tooltipY = viewport.scrollY + halfTooltipHeight + 10;
+      } else if (tooltipY + halfTooltipHeight > viewport.scrollY + viewport.height - 10) {
+        tooltipY = viewport.scrollY + viewport.height - halfTooltipHeight - 10;
+      }
+    }
+    
+    tooltip.className = `onboarding-tooltip onboarding-tooltip--${finalPosition}`;
     tooltip.style.left = tooltipX + 'px';
     tooltip.style.top = tooltipY + 'px';
-    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.transform = transform;
     
     tooltip.innerHTML = `
       <div>
         <span class="onboarding-step-counter">${this.currentOnboardingStep + 1}</span>
         <strong>${step.title}</strong>
       </div>
-      <p style="margin: 8px 0 0 0; color: #d1d5db;">${step.description}</p>
+      <p style="margin: 8px 0 0 0; color: #e5e7eb; opacity: 0.9;">${step.description}</p>
     `;
     
     // Update navigation buttons
