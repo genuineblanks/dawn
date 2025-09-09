@@ -9032,14 +9032,14 @@ class V10_GarmentStudio {
       },
       {
         target: '.add-labdip-actions',
-        title: 'Step 4: Choose Your Next Action',
-        description: 'After selecting a color, choose how to use it: "Add to Garment" applies the color directly to your garment, or "Add to Lab Dip Collection" saves it as a fabric swatch for later use.',
-        position: 'top'
+        title: 'Add Your Color',
+        description: 'Now add your selected color to the garment directly, or save it as a fabric swatch in your Lab Dip Collection for later use.',
+        position: 'left'
       },
       {
         target: '.labdips-collection',
-        title: 'Step 5: Lab Dip Collection',
-        description: 'Your saved fabric swatches appear here. You can assign any swatch to garments using "+ Add to Garment" or remove unwanted swatches. This collection helps you organize colors for multiple garments.',
+        title: 'Lab Dip Collection',
+        description: 'All your colors appear here - items marked "Lab Dip" are fabric swatches, while others are already assigned to garments. You can assign swatches to garments, remove colors, or keep them organized for your project.',
         position: 'bottom'
       }
     ];
