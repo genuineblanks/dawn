@@ -8974,6 +8974,11 @@ class V10_GarmentStudio {
       behavior: 'smooth'
     });
     
+    // 🚫 PREVENT SCROLLING: Disable page scrolling when visual guide is open
+    document.body.classList.add('onboarding-active');
+    document.documentElement.classList.add('onboarding-active');
+    console.log('🔒 Page scrolling disabled during visual guide');
+    
     // Check if required elements exist
     const requiredElements = [
       { selector: '#lab-dip-color-picker', name: 'Color Picker' },
@@ -9105,6 +9110,16 @@ class V10_GarmentStudio {
     const highlight = document.getElementById('onboarding-highlight');
     const tooltip = document.getElementById('onboarding-tooltip');
     const nextBtn = document.getElementById('onboarding-next');
+    
+    // 🛡️ NULL CHECKS: Ensure all onboarding elements exist
+    if (!highlight || !tooltip || !nextBtn) {
+      console.error('❌ Critical onboarding elements missing:', {
+        highlight: !!highlight,
+        tooltip: !!tooltip,
+        nextBtn: !!nextBtn
+      });
+      return;
+    }
     
     // Find target element
     const targetElement = document.querySelector(step.target);
@@ -9457,6 +9472,11 @@ class V10_GarmentStudio {
         overlay.remove();
       }, 300);
     }
+    
+    // 🚫 RE-ENABLE SCROLLING: Restore page scrolling when visual guide is closed
+    document.body.classList.remove('onboarding-active');
+    document.documentElement.classList.remove('onboarding-active');
+    console.log('🔓 Page scrolling re-enabled after visual guide');
   }
   
   // Show brief completion message

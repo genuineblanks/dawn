@@ -983,6 +983,12 @@ button:focus,
   white-space: nowrap; /* Prevent text wrapping */
   font-size: 13px; /* Slightly smaller font to fit better */
   font-weight: 600; /* Make text more prominent */
+  
+  /* Improved alignment for icon and text */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Consistent spacing between icon and text */
+  line-height: 1.2; /* Better text alignment with icon */
 }
 
 .v10-btn--tour:hover {
@@ -990,6 +996,15 @@ button:focus,
   border-color: var(--gb-neutral-600, #4b5563);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Text Control for Tour Button */
+.tour-btn-text-mobile {
+  display: none; /* Hidden by default on desktop */
+}
+
+.tour-btn-text-desktop {
+  display: inline; /* Visible by default on desktop */
 }
 
 /* Orange pulse state - triggered on first Color Studio visit */
@@ -1201,9 +1216,12 @@ button:focus,
 /* Button Icons */
 .v10-btn-icon,
 .v10-btn-icon--left {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Step Actions */
@@ -4402,11 +4420,25 @@ body[style*="overflow: hidden"] {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease-out;
+  
+  /* 🚫 PREVENT SCROLLING: Disable all scroll and touch behaviors */
+  overflow: hidden !important;
+  touch-action: none !important;
+  overscroll-behavior: contain !important;
 }
 
 .color-studio-onboarding.show {
   display: block;
   opacity: 1;
+}
+
+/* 🚫 PREVENT BODY SCROLLING: When modal is active, completely disable scrolling */
+body.onboarding-active,
+html.onboarding-active {
+  overflow: hidden !important;
+  height: 100% !important;
+  position: fixed !important;
+  width: 100% !important;
 }
 
 .onboarding-highlight {
@@ -11475,6 +11507,35 @@ div[class*="circle"][style*="background-color"],
   .form-field.error input,
   .form-field.error textarea {
     box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
+  }
+  
+  /* =====================================================
+     MOBILE TOUR BUTTON OPTIMIZATION
+     ===================================================== */
+  
+  /* Switch text visibility on mobile */
+  .tour-btn-text-desktop {
+    display: none !important; /* Hide long text on mobile */
+  }
+  
+  .tour-btn-text-mobile {
+    display: inline !important; /* Show short text on mobile */
+  }
+  
+  /* Mobile-specific tour button adjustments */
+  .v10-btn--tour {
+    min-width: 180px !important; /* Reduce minimum width for mobile */
+    font-size: 12px !important; /* Slightly smaller font for better fit */
+    padding: 10px 16px !important; /* Adjust padding for mobile touch targets */
+    gap: 6px !important; /* Reduce gap between icon and text */
+  }
+  
+  /* Ensure mobile button has proper touch target size */
+  .v10-btn--tour {
+    min-height: 44px; /* Apple's recommended touch target size */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
 
