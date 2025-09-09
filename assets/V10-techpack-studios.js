@@ -3250,12 +3250,23 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // Show/hide TOUR button based on studio
+    // Show/hide TOUR button based on studio AND request type
     const tourButton = document.getElementById('color-studio-tour');
     if (tourButton) {
-      const shouldShowTour = studioName === 'design';
+      const isDesignStudio = studioName === 'design';
+      const isValidRequestType = V10_State.requestType === 'sample-request';
+      const shouldShowTour = isDesignStudio && isValidRequestType;
+      
       tourButton.style.display = shouldShowTour ? 'block' : 'none';
-      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName})`);
+      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, requestType: ${V10_State.requestType})`);
+      
+      // Add detailed logging for debugging
+      if (!isValidRequestType && isDesignStudio) {
+        console.log(`🚫 TOUR button hidden: Request type is "${V10_State.requestType}" (requires "sample-request")`);
+      }
+      if (!isDesignStudio && isValidRequestType) {
+        console.log(`🚫 TOUR button hidden: Studio is "${studioName}" (requires "design")`);
+      }
       
       // Trigger first-time pulse if this is the first visit to Color Studio
       if (shouldShowTour && !localStorage.getItem('color-studio-tour-seen')) {
