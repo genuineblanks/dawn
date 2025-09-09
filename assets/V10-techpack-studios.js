@@ -9013,7 +9013,7 @@ class V10_GarmentStudio {
     this.currentOnboardingStep = 0;
     this.onboardingSteps = [
       {
-        target: '.color-picker-wrapper',
+        target: 'input#lab-dip-color-picker.color-picker-input',
         title: 'Method 1: Visual Color Picker',
         description: 'Use our color picker to select your desired color visually. Perfect for quick color selection and visual matching.',
         position: 'top'
@@ -9064,10 +9064,21 @@ class V10_GarmentStudio {
     
     // Position highlight around target
     const rect = targetElement.getBoundingClientRect();
-    highlight.style.left = (rect.left - 8) + 'px';
-    highlight.style.top = (rect.top - 8) + 'px';
-    highlight.style.width = (rect.width + 16) + 'px';
-    highlight.style.height = (rect.height + 16) + 'px';
+    let highlightLeft = rect.left - 8;
+    let highlightTop = rect.top - 8;
+    let highlightWidth = rect.width + 16;
+    let highlightHeight = rect.height + 16;
+    
+    // Special positioning adjustment for Lab Dip Collection
+    if (step.target === '.labdips-collection') {
+      highlightTop = rect.top + 10; // Move highlight down into the content area
+      highlightHeight = rect.height - 20; // Reduce height to stay within content
+    }
+    
+    highlight.style.left = highlightLeft + 'px';
+    highlight.style.top = highlightTop + 'px';
+    highlight.style.width = highlightWidth + 'px';
+    highlight.style.height = highlightHeight + 'px';
     
     // Position tooltip with boundary detection
     const viewport = {
@@ -9162,9 +9173,11 @@ class V10_GarmentStudio {
     const previousBtn = document.getElementById('onboarding-previous');
     nextBtn.textContent = this.currentOnboardingStep === this.onboardingSteps.length - 1 ? 'Got It!' : 'Next';
     
-    // Show/hide Previous button based on current step
+    // Enable/disable Previous button based on current step
     if (previousBtn) {
-      previousBtn.style.display = this.currentOnboardingStep === 0 ? 'none' : 'block';
+      previousBtn.style.display = 'block'; // Always visible
+      previousBtn.disabled = this.currentOnboardingStep === 0;
+      previousBtn.classList.toggle('disabled', this.currentOnboardingStep === 0);
     }
   }
   

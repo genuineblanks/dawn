@@ -4557,7 +4557,7 @@ body[style*="overflow: hidden"] {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.onboarding-btn--secondary:hover {
+.onboarding-btn--secondary:hover:not(:disabled):not(.disabled) {
   background: linear-gradient(135deg, #3a3a3a 0%, #333333 100%);
   color: #f9fafb;
   transform: translateY(-2px);
@@ -4565,6 +4565,26 @@ body[style*="overflow: hidden"] {
     0 3px 6px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Disabled button states */
+.onboarding-btn:disabled,
+.onboarding-btn.disabled {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%) !important;
+  color: #6b7280 !important;
+  border-color: rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.6;
+}
+
+.onboarding-btn:disabled:hover,
+.onboarding-btn.disabled:hover {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%) !important;
+  color: #6b7280 !important;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Garment Card Content (Form State) */
