@@ -11413,3 +11413,111 @@ div[class*="circle"][style*="background-color"],
     height: 28px;
   }
 }
+
+/* ====================================================
+   UNIVERSAL FORM VALIDATION STYLES
+   ==================================================== */
+
+/* Required field indicators */
+.form-label.required::after,
+.v10-form-label-enhanced.required::after {
+  content: " *";
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Error states for input fields */
+.form-field.error input,
+.form-field.error textarea,
+.form-field.error select,
+.v10-form-field.error .v10-form-input-enhanced,
+.v10-form-field.error .v10-form-textarea-enhanced {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Error states for radio button groups */
+.radio-group.error {
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* Error messages */
+.field-error-message {
+  display: block;
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 6px;
+  margin-bottom: 0;
+  animation: fadeInError 0.3s ease-out;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error state for custom components */
+.form-group.error,
+.form-section.error {
+  position: relative;
+}
+
+.form-group.error::before,
+.form-section.error::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  pointer-events: none;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+/* Hover and focus states for error fields */
+.form-field.error input:focus,
+.form-field.error textarea:focus,
+.form-field.error select:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3) !important;
+  outline: none;
+}
+
+/* Success states (optional - for when field is corrected) */
+.form-field.success input,
+.form-field.success textarea,
+.form-field.success select {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* Error styling for specific TechPack components */
+.v10-step-container.error {
+  border-left: 4px solid #ef4444;
+  background: rgba(239, 68, 68, 0.02);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .field-error-message {
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+  
+  .form-field.error input,
+  .form-field.error textarea {
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
+  }
+}

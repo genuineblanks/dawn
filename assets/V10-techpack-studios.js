@@ -19165,6 +19165,300 @@ function showShippingGuidance() {
   window.V10_GuidanceModal.show('Shipping & Insurance Options', content);
 }
 
+// ====================================================
+// UNIVERSAL FORM VALIDATION ENGINE
+// ====================================================
+
+class UniversalFormValidator {
+  constructor() {
+    this.errorMessages = {
+      required: 'This field is required',
+      email: 'Please enter a valid email address',
+      minLength: 'This field is too short',
+      maxLength: 'This field is too long',
+      pattern: 'Please enter a valid format',
+      radio: 'Please select an option',
+      checkbox: 'This field must be checked',
+      file: 'Please select a file'
+    };
+  }
+
+  // Validate a single field
+  validateField(field) {
+    const value = field.value?.trim() || '';
+    const type = field.type;
+    const required = field.hasAttribute('required');
+    const errors = [];
+
+    // Check if required field is empty
+    if (required && (!value || (type === 'radio' && !this.isRadioGroupSelected(field)))) {
+      if (type === 'radio') {
+        errors.push(this.errorMessages.radio);
+      } else if (type === 'checkbox') {
+        errors.push(this.errorMessages.checkbox);
+      } else if (type === 'file') {
+        errors.push(this.errorMessages.file);
+      } else {
+        errors.push(this.errorMessages.required);
+      }
+    }
+
+    // Email validation
+    if (value && type === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        errors.push(this.errorMessages.email);
+      }
+    }
+
+    // Pattern validation
+    if (value && field.hasAttribute('pattern')) {
+      const pattern = new RegExp(field.getAttribute('pattern'));
+      if (!pattern.test(value)) {
+        errors.push(this.errorMessages.pattern);
+      }
+    }
+
+    // Length validation
+    const minLength = field.getAttribute('minlength');
+    const maxLength = field.getAttribute('maxlength');
+    
+    if (value && minLength && value.length < parseInt(minLength)) {
+      errors.push(`${this.errorMessages.minLength} (minimum ${minLength} characters)`);
+    }
+    
+    if (value && maxLength && value.length > parseInt(maxLength)) {
+      errors.push(`${this.errorMessages.maxLength} (maximum ${maxLength} characters)`);
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors: errors
+    };
+  }
+
+  // Check if any radio button in a group is selected
+  isRadioGroupSelected(radioField) {
+    const name = radioField.name;
+    if (!name) return false;
+    
+    const radioButtons = document.querySelectorAll(`input[type="radio"][name="${name}"]`);
+    return Array.from(radioButtons).some(radio => radio.checked);
+  }
+
+  // Show error for a field
+  showFieldError(field, message) {
+    this.clearFieldError(field);
+    
+    // Add error class to field container
+    const fieldContainer = this.getFieldContainer(field);
+    if (fieldContainer) {
+      fieldContainer.classList.add('error');
+    }
+    
+    // Add error class directly to field
+    field.classList.add('error');
+    
+    // Create and show error message
+    if (message) {
+      const errorElement = document.createElement('div');
+      errorElement.className = 'field-error-message';
+      errorElement.textContent = message;
+      errorElement.setAttribute('data-field-error', field.name || field.id || 'unknown');
+      
+      // Insert error message after the field
+      field.parentNode.insertBefore(errorElement, field.nextSibling);
+    }
+  }
+
+  // Clear error for a field
+  clearFieldError(field) {
+    // Remove error class from field container
+    const fieldContainer = this.getFieldContainer(field);
+    if (fieldContainer) {
+      fieldContainer.classList.remove('error');
+    }
+    
+    // Remove error class from field
+    field.classList.remove('error');
+    
+    // Remove error message
+    const errorMessage = field.parentNode.querySelector('.field-error-message');
+    if (errorMessage) {
+      errorMessage.remove();
+    }
+  }
+
+  // Find the field container (parent with form-field or v10-form-field class)
+  getFieldContainer(field) {
+    let container = field.parentNode;
+    while (container && container !== document.body) {
+      if (container.classList.contains('form-field') || 
+          container.classList.contains('v10-form-field') ||
+          container.classList.contains('form-group') ||
+          container.classList.contains('form-section')) {
+        return container;
+      }
+      container = container.parentNode;
+    }
+    return null;
+  }
+
+  // Validate entire form
+  validateForm(formElement) {
+    const fields = formElement.querySelectorAll('input, textarea, select');
+    let isFormValid = true;
+    const fieldErrors = [];
+
+    fields.forEach(field => {
+      const validation = this.validateField(field);
+      
+      if (!validation.isValid) {
+        isFormValid = false;
+        fieldErrors.push({
+          field: field,
+          errors: validation.errors
+        });
+        
+        // Show error for first error message
+        this.showFieldError(field, validation.errors[0]);
+      } else {
+        // Clear any existing errors for valid fields
+        this.clearFieldError(field);
+      }
+    });
+
+    // Handle radio button group validation
+    const radioGroups = this.getRadioGroups(formElement);
+    radioGroups.forEach(group => {
+      const requiredRadio = group.find(radio => radio.hasAttribute('required'));
+      if (requiredRadio && !this.isRadioGroupSelected(requiredRadio)) {
+        isFormValid = false;
+        
+        // Add error styling to radio group container
+        const groupContainer = this.getRadioGroupContainer(group[0]);
+        if (groupContainer) {
+          groupContainer.classList.add('error');
+          
+          // Add error message if not already present
+          if (!groupContainer.querySelector('.field-error-message')) {
+            const errorElement = document.createElement('div');
+            errorElement.className = 'field-error-message';
+            errorElement.textContent = this.errorMessages.radio;
+            groupContainer.appendChild(errorElement);
+          }
+        }
+      }
+    });
+
+    return {
+      isValid: isFormValid,
+      errors: fieldErrors
+    };
+  }
+
+  // Get radio button groups
+  getRadioGroups(formElement) {
+    const radioButtons = formElement.querySelectorAll('input[type="radio"]');
+    const groups = {};
+    
+    radioButtons.forEach(radio => {
+      const name = radio.name;
+      if (name) {
+        if (!groups[name]) {
+          groups[name] = [];
+        }
+        groups[name].push(radio);
+      }
+    });
+    
+    return Object.values(groups);
+  }
+
+  // Find radio group container
+  getRadioGroupContainer(radioField) {
+    let container = radioField.parentNode;
+    while (container && container !== document.body) {
+      if (container.classList.contains('radio-group') || 
+          container.classList.contains('form-group') ||
+          container.classList.contains('form-section')) {
+        return container;
+      }
+      container = container.parentNode;
+    }
+    return null;
+  }
+
+  // Set up real-time validation for a form
+  setupRealTimeValidation(formElement) {
+    const fields = formElement.querySelectorAll('input, textarea, select');
+    
+    fields.forEach(field => {
+      // Clear errors on input/change
+      const clearError = () => {
+        if (field.classList.contains('error')) {
+          const validation = this.validateField(field);
+          if (validation.isValid) {
+            this.clearFieldError(field);
+          }
+        }
+      };
+      
+      // Add event listeners
+      if (field.type === 'radio' || field.type === 'checkbox') {
+        field.addEventListener('change', clearError);
+      } else {
+        field.addEventListener('input', clearError);
+        field.addEventListener('blur', () => {
+          // Validate on blur
+          const validation = this.validateField(field);
+          if (!validation.isValid) {
+            this.showFieldError(field, validation.errors[0]);
+          }
+        });
+      }
+    });
+  }
+
+  // Initialize validation for all forms on page
+  initializeAll() {
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+      this.setupRealTimeValidation(form);
+      
+      // Prevent form submission if validation fails
+      form.addEventListener('submit', (e) => {
+        const validation = this.validateForm(form);
+        if (!validation.isValid) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Scroll to first error
+          const firstError = form.querySelector('.error');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          
+          return false;
+        }
+      });
+    });
+  }
+}
+
+// Create global instance
+window.FormValidator = new UniversalFormValidator();
+
+// Auto-initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.FormValidator.initializeAll();
+  });
+} else {
+  window.FormValidator.initializeAll();
+}
+
 // Export for global access
 window.V10_TechPackSystem = V10_TechPackSystem;
 window.V10_ClientManager = V10_ClientManager;
