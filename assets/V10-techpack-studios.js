@@ -9013,7 +9013,7 @@ class V10_GarmentStudio {
     this.currentOnboardingStep = 0;
     this.onboardingSteps = [
       {
-        target: '#lab-dip-color-picker',
+        target: '.color-picker-wrapper',
         title: 'Method 1: Visual Color Picker',
         description: 'Use our color picker to select your desired color visually. Perfect for quick color selection and visual matching.',
         position: 'top'
@@ -9022,7 +9022,7 @@ class V10_GarmentStudio {
         target: '#manual-pantone-code',
         title: 'Method 2: Enter Pantone Code',
         description: 'Type your exact Pantone code (like "19-4005 TPX" or "19-4005 TCX") for precise color matching. This is the most accurate method for professional production.',
-        position: 'top'
+        position: 'bottom'
       },
       {
         target: '.popular-colors-grid',
@@ -9034,7 +9034,7 @@ class V10_GarmentStudio {
         target: '.labdips-collection',
         title: 'Step 4: Lab Dip Collection',
         description: 'This section shows all your selected lab dip colors. Here you can manage your color collection and assign different colors to garments. Each color becomes a fabric swatch for precision matching.',
-        position: 'left'
+        position: 'bottom'
       }
     ];
     
