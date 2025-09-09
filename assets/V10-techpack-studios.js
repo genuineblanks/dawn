@@ -16924,10 +16924,20 @@ class V10_ClientManager {
     
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        const isValid = this.validateForm(true); // Force validate all fields on submit
-        if (isValid) {
-          this.proceedToStep2();
+        // Find the form that contains required fields
+        const form = nextBtn.closest('form') || document.querySelector('form');
+        
+        // Use universal validation system
+        if (window.FormValidator && form) {
+          const isValid = window.FormValidator.validateAndProceed(form);
+          if (!isValid) {
+            console.log('❌ Form validation failed, cannot proceed');
+            return;
+          }
         }
+        
+        // Proceed to step 2 (old validation method removed)
+        this.proceedToStep2();
       });
     }
     
@@ -17419,6 +17429,18 @@ class V10_FileManager {
       nextBtn.addEventListener('click', (e) => {
         console.log('🖱️ V10 Step 2 Next button clicked');
         e.preventDefault();
+        
+        // Find the form that contains required fields
+        const form = nextBtn.closest('form') || document.querySelector('form');
+        
+        // Use universal validation system first
+        if (window.FormValidator && form) {
+          const isValid = window.FormValidator.validateAndProceed(form);
+          if (!isValid) {
+            console.log('❌ Form validation failed, cannot proceed');
+            return;
+          }
+        }
         
         console.log('📋 Calling validateStep() for files...');
         if (!this.validateStep()) {
@@ -19389,12 +19411,12 @@ class UniversalFormValidator {
     return null;
   }
 
-  // Set up real-time validation for a form
-  setupRealTimeValidation(formElement) {
+  // Set up error clearing when user fixes fields
+  setupErrorClearing(formElement) {
     const fields = formElement.querySelectorAll('input, textarea, select');
     
     fields.forEach(field => {
-      // Clear errors on input/change
+      // Only clear errors when user types/changes, don't show new errors
       const clearError = () => {
         if (field.classList.contains('error')) {
           const validation = this.validateField(field);
@@ -19404,46 +19426,36 @@ class UniversalFormValidator {
         }
       };
       
-      // Add event listeners
+      // Add event listeners to clear errors only
       if (field.type === 'radio' || field.type === 'checkbox') {
         field.addEventListener('change', clearError);
       } else {
         field.addEventListener('input', clearError);
-        field.addEventListener('blur', () => {
-          // Validate on blur
-          const validation = this.validateField(field);
-          if (!validation.isValid) {
-            this.showFieldError(field, validation.errors[0]);
-          }
-        });
       }
     });
   }
 
-  // Initialize validation for all forms on page
+  // Initialize validation for all forms on page (error clearing only)
   initializeAll() {
     const forms = document.querySelectorAll('form');
     
     forms.forEach(form => {
-      this.setupRealTimeValidation(form);
-      
-      // Prevent form submission if validation fails
-      form.addEventListener('submit', (e) => {
-        const validation = this.validateForm(form);
-        if (!validation.isValid) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // Scroll to first error
-          const firstError = form.querySelector('.error');
-          if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          
-          return false;
-        }
-      });
+      this.setupErrorClearing(form);
     });
+  }
+
+  // Manual validation trigger for button clicks
+  validateAndProceed(formElement) {
+    const validation = this.validateForm(formElement);
+    if (!validation.isValid) {
+      // Scroll to first error
+      const firstError = formElement.querySelector('.error');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+    return true;
   }
 }
 

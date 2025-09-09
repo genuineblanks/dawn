@@ -20,10 +20,7 @@
   overflow: hidden;
 }
 
-.v10-review-garment-item:hover {
-  border-color: #4a4a4a;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
+/* Removed hover effect for solid appearance */
 
 /* Garment header with enhanced background */
 .v10-garment-header {
@@ -1313,12 +1310,7 @@ button:focus,
   border-radius: var(--v10-radius-lg) var(--v10-radius-lg) 0 0;
 }
 
-.v10-studio-card:hover {
-  background: var(--v10-bg-card-hover);
-  box-shadow: var(--v10-glass-shadow-strong);
-  transform: translateY(-1px);
-  border-color: var(--v10-border-light);
-}
+/* Removed hover effect for solid appearance */
 
 .v10-studio-header {
   display: flex;
@@ -4822,11 +4814,7 @@ body[style*="overflow: hidden"] {
   text-align: center !important;
 }
 
-.compact-radio-card:hover .compact-radio-card__content {
-  border-color: var(--v10-accent-primary);
-  background: var(--v10-bg-hover);
-  transform: translateY(-1px);
-}
+/* Removed hover effect for solid appearance */
 
 .compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
   border-color: var(--v10-accent-primary);
@@ -4834,18 +4822,7 @@ body[style*="overflow: hidden"] {
   box-shadow: var(--v10-shadow-sm);
 }
 
-/* Enhanced specificity for garment and fabric type hover/selected states */
-#garment-type-grid .compact-radio-card:hover .compact-radio-card__content,
-#fabric-type-grid .compact-radio-card:hover .compact-radio-card__content,
-[id*="garment-type"] .compact-radio-card:hover .compact-radio-card__content,
-[class*="garment-type"] .compact-radio-card:hover .compact-radio-card__content {
-  border-color: var(--v10-accent-primary) !important;
-  background: var(--v10-bg-hover) !important;
-  transform: translateY(-1px) !important;
-  /* Glass morphism effect */
-  backdrop-filter: blur(10px) !important;
-  background: rgba(75, 85, 99, 0.15) !important;
-}
+/* Removed enhanced hover effects for solid appearance */
 
 #garment-type-grid .compact-radio-card input[type="radio"]:checked + .compact-radio-card__content,
 #fabric-type-grid .compact-radio-card input[type="radio"]:checked + .compact-radio-card__content {
@@ -5950,10 +5927,7 @@ body[style*="overflow: hidden"] {
   transition: all 0.2s ease;
 }
 
-.review-card:hover {
-  box-shadow: var(--v10-shadow-md);
-  border-color: var(--v10-border-focus);
-}
+/* Removed hover effect for solid appearance */
 
 .review-card__header {
   padding: var(--v10-space-4) var(--v10-space-5);
@@ -7001,10 +6975,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   transition: var(--v10-transition);
 }
 
-.assignment-item:hover {
-  border-color: var(--v10-accent-primary);
-  background: var(--v10-bg-hover);
-}
+/* Removed hover effect for solid appearance */
 
 .assignment-item__garment {
   display: flex;
@@ -7106,10 +7077,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   gap: var(--v10-space-4);
 }
 
-.collection-item:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-}
+/* Removed hover effect for solid appearance */
 
 .collection-item__visual {
   display: flex;
@@ -7824,10 +7792,7 @@ div[class*="circle"][style*="background-color"],
   transition: var(--v10-transition-base);
 }
 
-.v10-colorway:hover {
-  border-color: var(--v10-border-focus);
-  background: var(--v10-bg-card);
-}
+/* Removed hover effect for solid appearance */
 
 /* Colorway Header */
 .v10-colorway-header {
@@ -8705,10 +8670,7 @@ div[class*="circle"][style*="background-color"],
   transition: var(--v10-transition-base);
 }
 
-.quantity-colorway-card:hover {
-  border-color: var(--v10-border-focus);
-  background: var(--v10-bg-card);
-}
+/* Removed hover effect for solid appearance */
 
 .colorway-color-preview {
   width: 32px;
@@ -8927,10 +8889,7 @@ div[class*="circle"][style*="background-color"],
   transition: var(--v10-transition-base);
 }
 
-.distribution-summary-card:hover {
-  border-color: var(--v10-border-focus);
-  background: var(--v10-bg-card);
-}
+/* Removed hover effect for solid appearance */
 
 .distribution-summary-card__value {
   font-size: 3rem;
@@ -11343,10 +11302,7 @@ div[class*="circle"][style*="background-color"],
   transition: all 0.2s ease;
 }
 
-.v10-bulk-colorway-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-}
+/* Removed hover effect for solid appearance */
 
 .v10-bulk-colorway-visual {
   flex-shrink: 0;
