@@ -17251,36 +17251,8 @@ class V10_ClientManager {
       }
     }
     
-    // Check delivery address radio (ONLY for sample/bulk/lab-dips requests, NOT quotation)
-    if (this.currentRequestType !== 'quotation') {
-      const deliveryField = document.getElementById('v10-delivery-address-field');
-      
-      if (deliveryField && deliveryField.style.display !== 'none') {
-        const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-        
-        if (!selectedDelivery) {
-          isValid = false;
-          deliveryField.classList.add('v10-form-field--invalid');
-        }
-        
-        // If different address selected, check required fields
-        if (selectedDelivery?.value === 'different') {
-          const differentForm = document.getElementById('v10-different-address-form');
-          if (differentForm && differentForm.style.display !== 'none') {
-            const requiredDifferentFields = differentForm.querySelectorAll('input[data-validate="required-if-different"]');
-            requiredDifferentFields.forEach(field => {
-              if (!field.value.trim()) {
-                isValid = false;
-                const fieldContainer = field.closest('.v10-form-field');
-                if (fieldContainer) {
-                  fieldContainer.classList.add('v10-form-field--invalid');
-                }
-              }
-            });
-          }
-        }
-      }
-    }
+    // 🗑️ REMOVED: Duplicate different address validation - now handled by Universal Form Validator
+    // The Universal Form Validator system now handles all conditional address field validation
     
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
@@ -17339,17 +17311,8 @@ class V10_ClientManager {
       return false;
     }
 
-    // Check conditional required fields (data-validate)
-    if (field.hasAttribute('data-validate')) {
-      const validateType = field.getAttribute('data-validate');
-      if ((validateType === 'required-if-different' || validateType === 'required-if-different-alt')) {
-        const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-        if (selectedDelivery?.value === 'different' && !field.value.trim()) {
-          fieldContainer.classList.add('v10-form-field--invalid');
-          return false;
-        }
-      }
-    }
+    // 🗑️ REMOVED: Duplicate conditional field validation - now handled by Universal Form Validator
+    // The Universal Form Validator system now handles all data-validate attributes
 
     return true;
   }
@@ -17365,27 +17328,8 @@ class V10_ClientManager {
         } else {
           deliveryField.classList.remove('v10-form-field--invalid');
           
-          // 🔧 DIFFERENT ADDRESS FIELDS VALIDATION: Validate required fields when "different" is selected
-          if (selectedDelivery.value === 'different') {
-            const differentAddressForm = document.getElementById('v10-different-address-form');
-            if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-              // Validate all required-if-different fields
-              const conditionalFields = differentAddressForm.querySelectorAll('[data-validate="required-if-different"]');
-              
-              conditionalFields.forEach(field => {
-                const fieldContainer = field.closest('.v10-form-field');
-                if (fieldContainer) {
-                  if (!field.value?.trim()) {
-                    // Add error state for empty required conditional fields
-                    fieldContainer.classList.add('v10-form-field--invalid');
-                  } else {
-                    // Remove error state for filled conditional fields
-                    fieldContainer.classList.remove('v10-form-field--invalid');
-                  }
-                }
-              });
-            }
-          }
+          // 🗑️ REMOVED: Duplicate field-level validation - now handled by Universal Form Validator
+          // Only keeping radio selection validation here, field validation handled comprehensively by Universal Form Validator
         }
       }
     }
