@@ -9062,8 +9062,34 @@ class V10_GarmentStudio {
       return;
     }
     
+    // 🎯 COMPREHENSIVE DEBUG LOGGING
+    console.log('🔍 ONBOARDING DEBUG - ELEMENT TARGETING:');
+    console.log('Step target selector:', step.target);
+    console.log('Found target element:', targetElement);
+    console.log('Element tagName:', targetElement.tagName);
+    console.log('Element ID:', targetElement.id);
+    console.log('Element classes:', targetElement.className);
+    
+    // Check for multiple elements with same selector
+    const allMatches = document.querySelectorAll(step.target);
+    console.log('Total elements matching selector:', allMatches.length);
+    if (allMatches.length > 1) {
+      console.warn('⚠️ MULTIPLE ELEMENTS FOUND:', allMatches);
+      allMatches.forEach((el, index) => {
+        console.log(`Element ${index}:`, el, el.getBoundingClientRect());
+      });
+    }
+    
+    // Check element visibility and display
+    const computedStyles = window.getComputedStyle(targetElement);
+    console.log('Element visibility:', computedStyles.visibility);
+    console.log('Element display:', computedStyles.display);
+    console.log('Element z-index:', computedStyles.zIndex);
+    
     // Position highlight around target
     const rect = targetElement.getBoundingClientRect();
+    console.log('🎯 ELEMENT POSITIONING:');
+    console.log('Target getBoundingClientRect():', rect);
     let highlightLeft = rect.left - 8;
     let highlightTop = rect.top - 8;
     let highlightWidth = rect.width + 16;
@@ -9079,6 +9105,40 @@ class V10_GarmentStudio {
     highlight.style.top = highlightTop + 'px';
     highlight.style.width = highlightWidth + 'px';
     highlight.style.height = highlightHeight + 'px';
+    
+    // 🎯 HIGHLIGHT POSITIONING DEBUG
+    console.log('📍 HIGHLIGHT CALCULATED POSITION:');
+    console.log('highlightLeft:', highlightLeft);
+    console.log('highlightTop:', highlightTop);
+    console.log('highlightWidth:', highlightWidth);
+    console.log('highlightHeight:', highlightHeight);
+    console.log('Final highlight element position:', highlight.getBoundingClientRect());
+    
+    // 🔍 COMPARE WITH POPULAR COLORS (WHERE SPOTLIGHT APPEARS WRONGLY)
+    const firstPopularColor = document.querySelector('.popular-color-circle');
+    if (firstPopularColor) {
+      const popularRect = firstPopularColor.getBoundingClientRect();
+      console.log('🔴 POPULAR COLORS COMPARISON:');
+      console.log('First popular color element:', firstPopularColor);
+      console.log('First popular color position:', popularRect);
+      console.log('Distance from target to popular color:', {
+        deltaX: Math.abs(rect.left - popularRect.left),
+        deltaY: Math.abs(rect.top - popularRect.top)
+      });
+    }
+    
+    // 🔍 CHECK ALL COLOR INPUT ELEMENTS
+    const allColorInputs = document.querySelectorAll('input[type="color"]');
+    console.log('🎨 ALL COLOR INPUTS ON PAGE:', allColorInputs.length);
+    allColorInputs.forEach((input, index) => {
+      const inputRect = input.getBoundingClientRect();
+      console.log(`Color input ${index}:`, {
+        element: input,
+        id: input.id || 'no-id',
+        position: inputRect,
+        isTarget: input === targetElement
+      });
+    });
     
     // Position tooltip with boundary detection
     const viewport = {
