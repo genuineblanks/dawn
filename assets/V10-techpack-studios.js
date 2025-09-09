@@ -9016,7 +9016,7 @@ class V10_GarmentStudio {
         target: 'input#lab-dip-color-picker',
         title: 'Method 1: Visual Color Picker',
         description: 'Use our color picker to select your desired color visually. Perfect for quick color selection and visual matching.',
-        position: 'right'
+        position: 'left'
       },
       {
         target: '#manual-pantone-code',
