@@ -2673,15 +2673,17 @@ body[style*="overflow: hidden"] {
   }
 
   .v10-client-btn {
-    min-height: 120px;
-    padding: var(--v10-space-4);
+    min-height: 140px; /* Increased height for better text accommodation */
+    padding: var(--v10-space-4) var(--v10-space-3); /* Adjust padding for mobile */
+    overflow: visible !important; /* Fix: Remove clipping of overflowing text */
+    white-space: normal !important; /* Fix: Allow text wrapping */
   }
 
   .v10-client-btn-title {
     font-size: var(--v10-text-base);
-    white-space: normal !important; /* Allow text wrapping on mobile */
-    text-align: center !important; /* Center multi-line text */
     line-height: 1.2 !important; /* Better line spacing for wrapped text */
+    word-wrap: break-word; /* Allow long words to break if necessary */
+    hyphens: auto; /* Add hyphenation for better text flow */
   }
 
   .v10-client-btn-description {
