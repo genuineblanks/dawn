@@ -2679,6 +2679,9 @@ body[style*="overflow: hidden"] {
 
   .v10-client-btn-title {
     font-size: var(--v10-text-base);
+    white-space: normal !important; /* Allow text wrapping on mobile */
+    text-align: center !important; /* Center multi-line text */
+    line-height: 1.2 !important; /* Better line spacing for wrapped text */
   }
 
   .v10-client-btn-description {
