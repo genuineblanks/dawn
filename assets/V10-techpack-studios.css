@@ -894,8 +894,9 @@ button:focus,
   transition: var(--v10-transition);
   /* Absolute positioning to not interfere with title centering */
   position: absolute;
-  top: var(--v10-space-6);
+  top: 50%;
   right: var(--v10-space-6);
+  transform: translateY(-50%);
   z-index: 10;
 }
 .v10-guidance-modal-close:hover {
@@ -924,8 +925,8 @@ button:focus,
   
   /* Adjust guidance modal close button position for mobile */
   .v10-guidance-modal-close {
-    top: var(--v10-space-4);
     right: var(--v10-space-4);
+    /* Keep the 50% top and transform for vertical centering */
   }
   
   .v10-guidance-modal-body {
@@ -2196,8 +2197,9 @@ body[style*="overflow: hidden"] {
   flex-shrink: 0;
   /* Absolute positioning to not interfere with title centering */
   position: absolute;
-  top: var(--v10-space-6);
+  top: 50%;
   right: var(--v10-space-6);
+  transform: translateY(-50%);
   z-index: 10;
 }
 
@@ -2339,8 +2341,8 @@ body[style*="overflow: hidden"] {
   
   /* Adjust close button position for mobile */
   .v10-modal-close {
-    top: var(--v10-space-4);
     right: var(--v10-space-4);
+    /* Keep the 50% top and transform for vertical centering */
   }
   
   .v10-modal-body {
