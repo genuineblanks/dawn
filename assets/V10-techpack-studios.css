@@ -470,7 +470,57 @@ body[class*="techpack"] *,
   font-family: inherit;
 }
 
-/* Global focus management removed - let individual elements handle their own focus states */
+/* UNIVERSAL FOCUS FIX - Prevent ALL elements from losing shadows on focus */
+*:focus {
+  outline: none !important;
+}
+
+/* Catch-all for ANY clickable element with cursor pointer */
+[style*="cursor: pointer"]:focus,
+[style*="cursor:pointer"]:focus,
+*[onclick]:focus {
+  box-shadow: inherit !important;
+  outline: none !important;
+}
+
+/* Maintain shadows on ALL interactive elements when focused */
+button:focus,
+[type="button"]:focus,
+[type="submit"]:focus,
+[role="button"]:focus,
+.v10-btn:focus,
+.btn:focus,
+[class*="btn"]:focus,
+[class*="button"]:focus,
+.studio-tab:focus,
+.studio-toggle__btn:focus,
+.garment-card__actions button:focus,
+.garment-card__edit:focus,
+.garment-card__duplicate:focus,
+.garment-card__delete:focus,
+.garment-card__finalize:focus,
+.collection-item__actions button:focus,
+.collection-item__edit:focus,
+.collection-item__remove:focus,
+.collection-item__assign:focus,
+.add-garment-btn:focus,
+.add-design-btn:focus,
+.add-colorway:focus,
+.remove-colorway-btn:focus,
+.v10-submission-option:focus,
+.v10-client-btn:focus,
+.currency-btn:focus,
+.v10-file-remove:focus,
+.bulk-tool-btn:focus,
+.v10-guidance-btn:focus,
+.selection-help:focus,
+.studio-help-btn:focus,
+.v10-techpack-step button:focus, 
+[id^="techpack-v10"] button:focus, 
+.v10-modal-overlay button:focus {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  outline: none !important;
+}
 .v10-techpack-step input, .v10-techpack-step textarea, .v10-techpack-step select,
 [id^="techpack-v10"] input, [id^="techpack-v10"] textarea, [id^="techpack-v10"] select,
 .v10-modal-overlay input, .v10-modal-overlay textarea, .v10-modal-overlay select {
@@ -893,7 +943,10 @@ body[class*="techpack"] *,
   }
 }
 
-/* v10-btn focus rule removed - let buttons maintain their natural focus states */
+.v10-btn:focus {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  outline: none;
+}
 
 .v10-btn:disabled,
 .v10-btn--disabled {
@@ -2148,13 +2201,6 @@ body[style*="overflow: hidden"] {
   right: var(--v10-space-6);
   transform: translateY(-50%);
   z-index: 10;
-}
-
-/* Ensure modal close button maintains border in all states */
-.v10-modal-close:focus,
-.v10-modal-close:active {
-  border: 1px solid var(--v10-border-primary) !important;
-  outline: none;
 }
 
 .v10-modal-close:hover {
