@@ -66,14 +66,6 @@
         "max_files": 10
       }
     },
-    "lab_dips_step_2_v10": {
-      "type": "lab-dips-v10-step-2-color-studio",
-      "settings": {
-        "step_title": "Color Studio",
-        "step_subtitle": "Create lab dips and select brand accessories for your order",
-        "max_colors": 20
-      }
-    },
     "step_3_v10": {
       "type": "techpack-v10-step-3-garment-specs",
       "settings": {
@@ -149,5 +141,5 @@
       }
     }
   },
-  "order": ["rich_text_intro_v10", "step_1_v10", "step_2_v10", "lab_dips_step_2_v10", "step_3_v10", "step_4_v10", "faq_v10"]
+  "order": ["rich_text_intro_v10", "step_1_v10", "step_2_v10", "step_3_v10", "step_4_v10", "faq_v10"]
 }
