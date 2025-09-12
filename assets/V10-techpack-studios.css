@@ -872,10 +872,11 @@ button:focus,
 .v10-guidance-modal-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Center the title */
   padding: var(--v10-space-6);
   border-bottom: 1px solid var(--v10-border-primary);
   background: var(--v10-bg-secondary);
+  position: relative; /* For absolute positioning of close button */
 }
 .v10-guidance-modal-title {
   font-size: var(--v10-text-xl);
@@ -891,6 +892,11 @@ button:focus,
   padding: var(--v10-space-2);
   border-radius: var(--v10-radius-md);
   transition: var(--v10-transition);
+  /* Absolute positioning to not interfere with title centering */
+  position: absolute;
+  top: var(--v10-space-6);
+  right: var(--v10-space-6);
+  z-index: 10;
 }
 .v10-guidance-modal-close:hover {
   background: var(--v10-bg-hover);
@@ -914,6 +920,12 @@ button:focus,
   
   .v10-guidance-modal-header {
     padding: var(--v10-space-4);
+  }
+  
+  /* Adjust guidance modal close button position for mobile */
+  .v10-guidance-modal-close {
+    top: var(--v10-space-4);
+    right: var(--v10-space-4);
   }
   
   .v10-guidance-modal-body {
@@ -2125,7 +2137,7 @@ body[style*="overflow: hidden"] {
 .v10-modal-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Center content */
   gap: var(--v10-space-4);
   padding: var(--v10-space-6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -2141,7 +2153,7 @@ body[style*="overflow: hidden"] {
   color: var(--v10-text-primary);
   margin: 0;
   line-height: 1.2;
-  flex: 1;
+  text-align: center; /* Ensure text is centered */
 }
 
 .v10-modal-header-spacer {
@@ -2182,6 +2194,11 @@ body[style*="overflow: hidden"] {
   cursor: pointer;
   transition: var(--v10-transition);
   flex-shrink: 0;
+  /* Absolute positioning to not interfere with title centering */
+  position: absolute;
+  top: var(--v10-space-6);
+  right: var(--v10-space-6);
+  z-index: 10;
 }
 
 .v10-modal-close:hover {
@@ -2320,6 +2337,12 @@ body[style*="overflow: hidden"] {
     padding: var(--v10-space-4);
   }
   
+  /* Adjust close button position for mobile */
+  .v10-modal-close {
+    top: var(--v10-space-4);
+    right: var(--v10-space-4);
+  }
+  
   .v10-modal-body {
     padding: var(--v10-space-4);
   }
@@ -2366,6 +2389,8 @@ body[style*="overflow: hidden"] {
   padding: var(--v10-space-6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
+  /* Follow the same centering pattern as other modals */
+  justify-content: center;
 }
 
 .v10-new-terms-modal .v10-modal-title {
@@ -2700,7 +2725,7 @@ body[style*="overflow: hidden"] {
   font-size: var(--v10-text-xl);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: 0 0 var(--v10-space-6);
+  margin: var(--v10-space-6) 0; /* Equal top and bottom spacing */
 }
 
 .v10-process-steps {
