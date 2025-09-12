@@ -317,7 +317,7 @@ body[class*="techpack"] *,
   --v10-text-error: #ef4444;          /* Error text */
 
   /* Enhanced Border Colors */
-  --v10-border-primary: #3f3f3f;      /* Primary borders - subtle but visible */
+  --v10-border-primary: #555555;      /* Primary borders - more visible contrast */
   --v10-border-secondary: #333333;    /* Secondary borders */
   --v10-border-light: rgba(255, 255, 255, 0.1); /* Light accent borders */
   --v10-border-focus: #6b7280;        /* Focus borders */
