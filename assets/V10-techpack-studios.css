@@ -2207,7 +2207,7 @@ body[style*="overflow: hidden"] {
   background: rgba(255, 255, 255, 0.1);
   color: var(--v10-text-primary);
   border-color: var(--v10-accent-primary);
-  transform: scale(1.05);
+  transform: translateY(-50%) scale(1.05); /* Combine centering and scale transforms */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2727,7 +2727,7 @@ body[style*="overflow: hidden"] {
   font-size: var(--v10-text-xl);
   font-weight: 600;
   color: var(--v10-text-primary);
-  margin: var(--v10-space-6) 0; /* Equal top and bottom spacing */
+  margin: 0 0 var(--v10-space-6) 0; /* Remove top margin to avoid double-spacing with modal body padding */
 }
 
 .v10-process-steps {
