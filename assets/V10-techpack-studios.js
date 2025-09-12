@@ -17985,6 +17985,15 @@ class V10_FileManager {
     try {
       console.log('🚀 Attempting to proceed to step 3...');
       
+      // Check if this is a lab dips & accessories submission
+      const requestType = V10_State.requestType || window.v10ClientManager?.currentRequestType;
+      console.log('🔍 Current request type:', requestType);
+      
+      if (requestType === 'lab-dips-accessories') {
+        console.log('🎨 Lab Dips & Accessories workflow detected, routing to Color Studio');
+        return this.proceedToLabDipsColorStudio();
+      }
+      
       // Try multiple times to find elements if they're not immediately available
       let step2 = document.getElementById('techpack-v10-step-2');
       let step3 = document.getElementById('techpack-v10-step-3');
@@ -18187,6 +18196,359 @@ class V10_FileManager {
     if (window.v10FileManager === this) {
       window.v10FileManager = null;
     }
+  }
+
+  proceedToLabDipsColorStudio() {
+    try {
+      console.log('🎨 Proceeding to Lab Dips Color Studio...');
+      
+      // Find step 2 and lab dips color studio step
+      const step2 = document.getElementById('techpack-v10-step-2');
+      const labDipsStep = document.getElementById('lab-dips-v10-step-2');
+      
+      console.log('🔍 Lab Dips step search:', {
+        step2Found: !!step2,
+        labDipsStepFound: !!labDipsStep,
+        allLabDipsElements: document.querySelectorAll('[id*="lab-dips"]').length,
+        allLabDipsIds: Array.from(document.querySelectorAll('[id*="lab-dips"]')).map(el => el.id)
+      });
+      
+      if (!step2 || !labDipsStep) {
+        console.warn('⚠️ Lab Dips step elements not found, attempting retry...');
+        
+        return new Promise((resolve) => {
+          let retryCount = 0;
+          const maxRetries = 3;
+          
+          const tryFind = () => {
+            retryCount++;
+            const step2Retry = document.getElementById('techpack-v10-step-2');
+            const labDipsStepRetry = document.getElementById('lab-dips-v10-step-2');
+            
+            console.log(`🔄 Lab Dips Retry ${retryCount}/${maxRetries}:`, {
+              step2Found: !!step2Retry,
+              labDipsStepFound: !!labDipsStepRetry
+            });
+            
+            if (step2Retry && labDipsStepRetry) {
+              this.executeLabDipsStepTransition(step2Retry, labDipsStepRetry);
+              resolve(true);
+              return;
+            }
+            
+            if (retryCount < maxRetries) {
+              setTimeout(tryFind, 100);
+            } else {
+              console.error('❌ Cannot find Lab Dips step elements after all retries');
+              resolve(false);
+            }
+          };
+          
+          setTimeout(tryFind, 50);
+        });
+      }
+      
+      this.executeLabDipsStepTransition(step2, labDipsStep);
+      return true;
+      
+    } catch (error) {
+      console.error('❌ Error proceeding to Lab Dips Color Studio:', error);
+      return false;
+    }
+  }
+
+  executeLabDipsStepTransition(step2, labDipsStep) {
+    console.log('🔄 Executing Lab Dips step transition...');
+    
+    step2.style.display = 'none';
+    labDipsStep.style.display = 'block';
+    
+    // Scroll to top for mobile navigation
+    window.scrollTo(0, 0);
+    
+    // Update current step to 2 (Color Studio)
+    try {
+      sessionStorage.setItem('v10_current_step', '2-lab-dips');
+    } catch (storageError) {
+      console.error('Error updating session storage:', storageError);
+    }
+    
+    console.log('✅ Successfully transitioned to Lab Dips Color Studio');
+    
+    // Initialize lab dips functionality
+    if (typeof this.initializeLabDipsStudio === 'function') {
+      this.initializeLabDipsStudio();
+    } else {
+      // Initialize basic lab dips functionality
+      this.initializeLabDipsColorStudio();
+    }
+  }
+
+  initializeLabDipsColorStudio() {
+    console.log('🎨 Initializing Lab Dips Color Studio...');
+    
+    // Initialize studio tabs
+    this.initializeStudioTabs();
+    
+    // Initialize color selection
+    this.initializeColorSelection();
+    
+    // Initialize brand accessories toggles
+    this.initializeBrandAccessories();
+    
+    // Initialize file upload for accessories
+    this.initializeAccessoryFileUpload();
+    
+    // Initialize navigation buttons
+    this.initializeLabDipsNavigation();
+  }
+
+  initializeStudioTabs() {
+    const tabButtons = document.querySelectorAll('.v10-studio-tab');
+    const contentPanels = document.querySelectorAll('.v10-studio-content');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+        
+        // Update active states
+        tabButtons.forEach(btn => btn.classList.remove('v10-studio-tab--active'));
+        button.classList.add('v10-studio-tab--active');
+        
+        contentPanels.forEach(panel => {
+          panel.classList.remove('v10-studio-content--active');
+          panel.style.display = 'none';
+        });
+        
+        const targetPanel = document.getElementById(`${targetTab === 'color' ? 'lab-dips' : 'brand-accessories'}-studio-content`);
+        if (targetPanel) {
+          targetPanel.classList.add('v10-studio-content--active');
+          targetPanel.style.display = 'block';
+        }
+        
+        console.log(`🔄 Switched to ${targetTab} tab`);
+      });
+    });
+  }
+
+  initializeColorSelection() {
+    // Initialize Pantone input
+    const pantoneInput = document.getElementById('lab-dips-pantone-input');
+    if (pantoneInput) {
+      pantoneInput.addEventListener('input', this.handlePantoneInput.bind(this));
+    }
+    
+    // Initialize color option buttons
+    const colorOptions = document.querySelectorAll('.v10-color-option');
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const colorData = {
+          color: option.getAttribute('data-color'),
+          name: option.getAttribute('data-name'),
+          code: option.getAttribute('data-code')
+        };
+        this.selectColor(colorData);
+      });
+    });
+    
+    // Initialize action buttons
+    const addToCollectionBtn = document.getElementById('lab-dips-add-to-collection');
+    if (addToCollectionBtn) {
+      addToCollectionBtn.addEventListener('click', this.addToLabDipCollection.bind(this));
+    }
+  }
+
+  handlePantoneInput(event) {
+    const input = event.target.value.trim();
+    if (input.length > 3) {
+      // Auto-detect Pantone format and update preview
+      this.updateColorPreview(input);
+    }
+  }
+
+  selectColor(colorData) {
+    console.log('🎨 Color selected:', colorData);
+    
+    // Update selected color display
+    const selectedColorDiv = document.getElementById('lab-dips-selected-color');
+    const colorSwatch = document.getElementById('lab-dips-color-swatch');
+    const colorName = document.getElementById('lab-dips-color-name');
+    const colorCode = document.getElementById('lab-dips-color-code');
+    
+    if (selectedColorDiv && colorSwatch && colorName && colorCode) {
+      selectedColorDiv.style.display = 'block';
+      colorSwatch.style.backgroundColor = colorData.color;
+      colorName.textContent = colorData.name;
+      colorCode.textContent = colorData.code;
+      
+      // Enable action buttons
+      const addToCollectionBtn = document.getElementById('lab-dips-add-to-collection');
+      if (addToCollectionBtn) {
+        addToCollectionBtn.disabled = false;
+      }
+    }
+    
+    // Store current color selection
+    this.currentColorSelection = colorData;
+  }
+
+  addToLabDipCollection() {
+    if (!this.currentColorSelection) {
+      console.warn('No color selected for lab dip collection');
+      return;
+    }
+    
+    console.log('➕ Adding color to lab dip collection:', this.currentColorSelection);
+    
+    // Add to collection (this would integrate with existing V10_State.labDips)
+    const labDipId = `lab-dip-${Date.now()}`;
+    const labDipData = {
+      id: labDipId,
+      ...this.currentColorSelection
+    };
+    
+    // Update collection display
+    this.updateLabDipCollection(labDipData);
+    
+    // Clear selection
+    this.clearColorSelection();
+  }
+
+  updateLabDipCollection(labDipData) {
+    // This would integrate with the existing lab dips collection system
+    console.log('🔄 Updating lab dip collection with:', labDipData);
+    
+    // Update count
+    const countElement = document.getElementById('lab-dips-collection-count');
+    if (countElement) {
+      const currentCount = parseInt(countElement.textContent) || 0;
+      countElement.textContent = (currentCount + 1).toString();
+    }
+    
+    // Hide empty state, show collection
+    const emptyState = document.getElementById('lab-dips-collection-empty');
+    const collectionList = document.getElementById('lab-dips-collection-list');
+    
+    if (emptyState) emptyState.style.display = 'none';
+    if (collectionList) collectionList.style.display = 'block';
+  }
+
+  clearColorSelection() {
+    const selectedColorDiv = document.getElementById('lab-dips-selected-color');
+    const addToCollectionBtn = document.getElementById('lab-dips-add-to-collection');
+    
+    if (selectedColorDiv) selectedColorDiv.style.display = 'none';
+    if (addToCollectionBtn) addToCollectionBtn.disabled = true;
+    
+    this.currentColorSelection = null;
+  }
+
+  initializeBrandAccessories() {
+    const accessoryToggles = document.querySelectorAll('.v10-toggle-input');
+    
+    accessoryToggles.forEach(toggle => {
+      toggle.addEventListener('change', (event) => {
+        const accessoryId = event.target.id;
+        const quantitySection = document.querySelector(`[data-accessory="${accessoryId.replace('accessory-', '')}"]`);
+        
+        if (quantitySection) {
+          quantitySection.style.display = event.target.checked ? 'block' : 'none';
+        }
+        
+        // Show/hide file upload section if any accessory is selected
+        this.updateAccessoryUploadVisibility();
+      });
+    });
+    
+    // Initialize order type buttons
+    const orderTypeButtons = document.querySelectorAll('.v10-order-type-btn');
+    orderTypeButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const buttonGroup = event.target.closest('.v10-order-type');
+        buttonGroup.querySelectorAll('.v10-order-type-btn').forEach(btn => {
+          btn.classList.remove('v10-order-type-btn--active');
+        });
+        event.target.classList.add('v10-order-type-btn--active');
+      });
+    });
+  }
+
+  updateAccessoryUploadVisibility() {
+    const selectedAccessories = document.querySelectorAll('.v10-toggle-input:checked');
+    const uploadSection = document.getElementById('accessories-upload-section');
+    
+    if (uploadSection) {
+      uploadSection.style.display = selectedAccessories.length > 0 ? 'block' : 'none';
+    }
+  }
+
+  initializeAccessoryFileUpload() {
+    const uploadZone = document.getElementById('accessories-upload-zone');
+    const fileInput = document.getElementById('accessories-file-input');
+    
+    if (uploadZone && fileInput) {
+      uploadZone.addEventListener('click', () => fileInput.click());
+      uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('v10-upload-zone--dragover');
+      });
+      uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove('v10-upload-zone--dragover');
+      });
+      uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('v10-upload-zone--dragover');
+        this.handleAccessoryFiles(e.dataTransfer.files);
+      });
+      
+      fileInput.addEventListener('change', (e) => {
+        this.handleAccessoryFiles(e.target.files);
+      });
+    }
+  }
+
+  handleAccessoryFiles(files) {
+    console.log('📁 Handling accessory files:', files.length);
+    // This would integrate with the existing file upload system
+    Array.from(files).forEach(file => {
+      console.log('📄 Accessory file:', file.name);
+      // Process file upload similar to existing file manager
+    });
+  }
+
+  initializeLabDipsNavigation() {
+    const backBtn = document.getElementById('lab-dips-v10-step-2-back');
+    const nextBtn = document.getElementById('lab-dips-v10-step-2-next');
+    
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        this.goBackToStep1FromLabDips();
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        this.proceedToLabDipsReview();
+      });
+    }
+  }
+
+  goBackToStep1FromLabDips() {
+    const labDipsStep = document.getElementById('lab-dips-v10-step-2');
+    const step1 = document.getElementById('techpack-v10-step-1');
+    
+    if (labDipsStep && step1) {
+      labDipsStep.style.display = 'none';
+      step1.style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+  }
+
+  proceedToLabDipsReview() {
+    console.log('🚀 Proceeding to Lab Dips Review...');
+    // This would create or navigate to a lab dips review step
+    // For now, just log the action
+    console.log('📋 Lab Dips Review functionality to be implemented');
   }
 }
 
