@@ -17409,8 +17409,42 @@ class V10_ClientManager {
   }
 
   proceedToStep2() {
-    // Hide step 1 and show step 2
+    // Check if this is a lab dips & accessories submission
+    const requestType = this.currentRequestType || V10_State.requestType;
+    console.log('🔍 Step 2 routing - Current request type:', requestType);
+    
     const step1 = document.getElementById('techpack-v10-step-1');
+    
+    if (requestType === 'lab-dips-accessories') {
+      console.log('🎨 Lab Dips & Accessories workflow - routing to Color Studio');
+      const labDipsStep = document.getElementById('lab-dips-v10-step-2');
+      
+      if (step1 && labDipsStep) {
+        step1.style.display = 'none';
+        labDipsStep.style.display = 'block';
+        
+        // Scroll to top for mobile navigation
+        window.scrollTo(0, 0);
+        
+        // Update current step
+        sessionStorage.setItem('v10_current_step', '2-lab-dips');
+        
+        // Initialize lab dips functionality
+        if (window.v10FileManager && typeof window.v10FileManager.initializeLabDipsColorStudio === 'function') {
+          window.v10FileManager.initializeLabDipsColorStudio();
+        }
+        
+        console.log('✅ Successfully routed to Lab Dips Color Studio');
+        return;
+      } else {
+        console.error('❌ Lab Dips step element not found:', {
+          step1Found: !!step1,
+          labDipsStepFound: !!labDipsStep
+        });
+      }
+    }
+    
+    // Default routing to regular file upload step
     const step2 = document.getElementById('techpack-v10-step-2');
     
     if (step1 && step2) {
@@ -17985,16 +18019,8 @@ class V10_FileManager {
     try {
       console.log('🚀 Attempting to proceed to step 3...');
       
-      // Check if this is a lab dips & accessories submission
-      const requestType = V10_State.requestType || window.v10ClientManager?.currentRequestType;
-      console.log('🔍 Current request type:', requestType);
-      
-      if (requestType === 'lab-dips-accessories') {
-        console.log('🎨 Lab Dips & Accessories workflow detected, routing to Color Studio');
-        return this.proceedToLabDipsColorStudio();
-      }
-      
       // Try multiple times to find elements if they're not immediately available
+      // Note: For lab dips workflow, we skip step 3 and go directly to step 4 (review)
       let step2 = document.getElementById('techpack-v10-step-2');
       let step3 = document.getElementById('techpack-v10-step-3');
       
@@ -18546,9 +18572,38 @@ class V10_FileManager {
 
   proceedToLabDipsReview() {
     console.log('🚀 Proceeding to Lab Dips Review...');
-    // This would create or navigate to a lab dips review step
-    // For now, just log the action
-    console.log('📋 Lab Dips Review functionality to be implemented');
+    
+    // Navigate to step 4 (review step) from lab dips
+    const labDipsStep = document.getElementById('lab-dips-v10-step-2');
+    const step4 = document.getElementById('techpack-v10-step-4');
+    
+    if (labDipsStep && step4) {
+      labDipsStep.style.display = 'none';
+      step4.style.display = 'block';
+      
+      // Scroll to top for mobile navigation
+      window.scrollTo(0, 0);
+      
+      // Update current step
+      sessionStorage.setItem('v10_current_step', '4');
+      
+      // Initialize review functionality if available
+      if (window.v10ReviewManager) {
+        try {
+          window.v10ReviewManager.populateReview();
+          console.log('✅ Review populated for lab dips workflow');
+        } catch (error) {
+          console.error('❌ Error populating review:', error);
+        }
+      }
+      
+      console.log('✅ Successfully navigated to review from lab dips');
+    } else {
+      console.error('❌ Could not find required elements for lab dips review navigation:', {
+        labDipsStepFound: !!labDipsStep,
+        step4Found: !!step4
+      });
+    }
   }
 }
 
