@@ -17123,11 +17123,10 @@ class V10_ClientManager {
     
     if (!this.currentRequestType) return;
     
-    // Show delivery address for sample, bulk, and lab-dips requests (NOT quotation)
+    // Show delivery address for sample and bulk requests (NOT quotation)
     if (deliveryAddressField) {
       if (this.currentRequestType === 'sample-request' || 
-          this.currentRequestType === 'bulk-order-request' || 
-          this.currentRequestType === 'lab-dips-accessories') {
+          this.currentRequestType === 'bulk-order-request') {
         deliveryAddressField.style.display = 'block';
         
         // Fix: Force CSS :checked state to re-apply when field becomes visible
@@ -18453,8 +18452,7 @@ class V10_ModalManager {
       const subtitles = {
         'quotation': 'Enter your information to begin pricing development',
         'sample-request': 'Enter your information to begin sample development',
-        'bulk-order-request': 'Enter your information to begin bulk order processing',
-        'lab-dips-accessories': 'Enter your information to begin lab dip and accessory orders'
+        'bulk-order-request': 'Enter your information to begin bulk order processing'
       };
       subtitle.textContent = subtitles[submissionType] || subtitles['quotation'];
     }
@@ -18491,13 +18489,6 @@ class V10_ModalManager {
           shippingSection.style.display = 'block';
         }
         break;
-        
-      case 'lab-dips-accessories':
-        // Show delivery address field for lab dips/accessories
-        if (deliveryAddressField) {
-          deliveryAddressField.style.display = 'block';
-        }
-        break;
     }
     
     // Setup delivery address toggle functionality
@@ -18524,8 +18515,7 @@ class V10_ModalManager {
       const submissionNames = {
         'quotation': 'Garment Quotation',
         'sample-request': 'Sample Request',
-        'bulk-order-request': 'Bulk Order Request',
-        'lab-dips-accessories': 'Lab Dips & Accessories'
+        'bulk-order-request': 'Bulk Order Request'
       };
       changeBtn.innerHTML = `
         <svg class="v10-btn-icon v10-btn-icon--left" width="16" height="16" viewBox="0 0 16 16">
