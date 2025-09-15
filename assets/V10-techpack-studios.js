@@ -3250,22 +3250,24 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // Show/hide TOUR button based on studio AND request type
+    // Show/hide TOUR button - ONLY in Color Studio during Sample Requests
     const tourButton = document.getElementById('color-studio-tour');
     if (tourButton) {
-      const isColorStudio = studioName === 'design' && V10_State.currentMode === 'labdips';
-      const isValidRequestType = V10_State.requestType === 'sample-request';
-      const shouldShowTour = isColorStudio && isValidRequestType;
-      
-      tourButton.style.display = shouldShowTour ? 'block' : 'none';
-      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, mode: ${V10_State.currentMode}, requestType: ${V10_State.requestType})`);
+      // Explicit conditions: ONLY Color Studio (design) + ONLY Sample Requests
+      const isColorStudio = (studioName === 'design');
+      const isSampleRequest = (V10_State.requestType === 'sample-request');
+      const shouldShowTour = isColorStudio && isSampleRequest;
 
-      // Add detailed logging for debugging
-      if (!isValidRequestType && isColorStudio) {
-        console.log(`🚫 TOUR button hidden: Request type is "${V10_State.requestType}" (requires "sample-request")`);
-      }
-      if (!isColorStudio && isValidRequestType) {
-        console.log(`🚫 TOUR button hidden: Not in Color Studio (requires design studio + labdips mode)`);
+      // Force hide in all other cases
+      if (studioName === 'garment' || studioName === 'quantities') {
+        tourButton.style.display = 'none';
+        console.log(`🚫 TOUR button HIDDEN: In ${studioName} studio (only show in Color Studio)`);
+      } else if (V10_State.requestType === 'quotation' || V10_State.requestType === 'bulk-order') {
+        tourButton.style.display = 'none';
+        console.log(`🚫 TOUR button HIDDEN: Request type "${V10_State.requestType}" (only show in sample-request)`);
+      } else {
+        tourButton.style.display = shouldShowTour ? 'block' : 'none';
+        console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, requestType: ${V10_State.requestType})`);
       }
       
       // Trigger first-time pulse if this is the first visit to Color Studio
