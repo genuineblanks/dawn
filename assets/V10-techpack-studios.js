@@ -3253,19 +3253,19 @@ class V10_StudioNavigator {
     // Show/hide TOUR button based on studio AND request type
     const tourButton = document.getElementById('color-studio-tour');
     if (tourButton) {
-      const isDesignStudio = studioName === 'design';
+      const isColorStudio = studioName === 'design' && V10_State.currentMode === 'labdips';
       const isValidRequestType = V10_State.requestType === 'sample-request';
-      const shouldShowTour = isDesignStudio && isValidRequestType;
+      const shouldShowTour = isColorStudio && isValidRequestType;
       
       tourButton.style.display = shouldShowTour ? 'block' : 'none';
-      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, requestType: ${V10_State.requestType})`);
-      
+      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, mode: ${V10_State.currentMode}, requestType: ${V10_State.requestType})`);
+
       // Add detailed logging for debugging
-      if (!isValidRequestType && isDesignStudio) {
+      if (!isValidRequestType && isColorStudio) {
         console.log(`🚫 TOUR button hidden: Request type is "${V10_State.requestType}" (requires "sample-request")`);
       }
-      if (!isDesignStudio && isValidRequestType) {
-        console.log(`🚫 TOUR button hidden: Studio is "${studioName}" (requires "design")`);
+      if (!isColorStudio && isValidRequestType) {
+        console.log(`🚫 TOUR button hidden: Not in Color Studio (requires design studio + labdips mode)`);
       }
       
       // Trigger first-time pulse if this is the first visit to Color Studio
