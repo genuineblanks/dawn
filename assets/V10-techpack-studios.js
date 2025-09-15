@@ -3250,26 +3250,24 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // Show/hide TOUR button based on studio AND request type
+    // FORCE HIDE TOUR BUTTON EVERYWHERE EXCEPT Color Studio + Sample Request
     const tourButton = document.getElementById('color-studio-tour');
     if (tourButton) {
-      const isDesignStudio = studioName === 'design';
-      const isValidRequestType = V10_State.requestType === 'sample-request';
-      const shouldShowTour = isDesignStudio && isValidRequestType;
-      
-      tourButton.style.display = shouldShowTour ? 'block' : 'none';
-      console.log(`🎯 TOUR button: ${shouldShowTour ? 'SHOWN' : 'HIDDEN'} (studio: ${studioName}, requestType: ${V10_State.requestType})`);
-      
-      // Add detailed logging for debugging
-      if (!isValidRequestType && isDesignStudio) {
-        console.log(`🚫 TOUR button hidden: Request type is "${V10_State.requestType}" (requires "sample-request")`);
+      // ALWAYS HIDE FIRST
+      tourButton.style.display = 'none !important';
+      tourButton.style.visibility = 'hidden';
+
+      // ONLY show if EXACTLY: Color Studio (design) AND Sample Request
+      if (studioName === 'design' && V10_State.requestType === 'sample-request') {
+        tourButton.style.display = 'block';
+        tourButton.style.visibility = 'visible';
+        console.log(`✅ TOUR button SHOWN: Color Studio + Sample Request`);
+      } else {
+        console.log(`🚫 TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
       }
-      if (!isDesignStudio && isValidRequestType) {
-        console.log(`🚫 TOUR button hidden: Studio is "${studioName}" (requires "design")`);
-      }
-      
+
       // Trigger first-time pulse if this is the first visit to Color Studio
-      if (shouldShowTour && !localStorage.getItem('color-studio-tour-seen')) {
+      if (studioName === 'design' && V10_State.requestType === 'sample-request' && !localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
       }
     }
