@@ -3291,6 +3291,9 @@ class V10_StudioNavigator {
       }
     }
 
+    // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
+    this.updateStepActionsLayout();
+
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
       // Clear any existing timeout to debounce rapid switches
@@ -3316,6 +3319,30 @@ class V10_StudioNavigator {
     // Auto-save
 
     console.log(`🎛️ Switched to ${studioName} studio`);
+  }
+
+  // Update step actions layout based on visible tour buttons
+  updateStepActionsLayout() {
+    const stepActions = document.querySelector('.v10-step-actions');
+    if (!stepActions) return;
+
+    const colorTourButton = document.getElementById('color-studio-tour');
+    const garmentTourButton = document.getElementById('garment-studio-tour');
+
+    // Check if any tour button is visible
+    const colorVisible = colorTourButton && colorTourButton.style.display === 'block';
+    const garmentVisible = garmentTourButton && garmentTourButton.style.display === 'block';
+    const anyTourButtonVisible = colorVisible || garmentVisible;
+
+    if (anyTourButtonVisible) {
+      // 3-button layout: Previous | Tour Button | Next
+      stepActions.classList.add('v10-step-actions--three-button');
+      console.log('✅ Applied three-button layout: tour button visible');
+    } else {
+      // 2-button layout: Previous | Next (no tour button)
+      stepActions.classList.remove('v10-step-actions--three-button');
+      console.log('✅ Applied two-button layout: no tour buttons visible');
+    }
   }
 
   // Trigger first-time tour button pulse animation
