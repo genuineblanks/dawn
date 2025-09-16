@@ -6253,6 +6253,18 @@ html.onboarding-active {
 
 .v10-step-actions--three-button .v10-btn--tour {
   justify-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: relative !important;
+  left: 0 !important;
+  transform: translateX(0) !important;
+}
+
+/* Higher specificity rule for tour button centering */
+.v10-step-actions.v10-step-actions--three-button .v10-btn.v10-btn--tour {
+  justify-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Terms Agreement */
