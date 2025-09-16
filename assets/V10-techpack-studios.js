@@ -9588,7 +9588,7 @@ class V10_GarmentStudio {
     // STEP 2: Force the demo garment into edit mode
     setTimeout(() => {
       console.log('✏️ Putting demo garment into edit mode...');
-      this.editGarment(demoGarmentId);
+      this.expandGarmentForEdit(demoGarmentId);
 
       // STEP 3: Start the tour after garment is in edit mode
       setTimeout(() => {
@@ -9603,6 +9603,16 @@ class V10_GarmentStudio {
 
     // Store demo garment ID for cleanup
     this.currentDemoGarmentId = demoGarmentId;
+
+    // Hide finalize button during tour since it's a demo garment
+    const demoGarmentCard = document.querySelector(`[data-garment-id="${demoGarmentId}"]`);
+    if (demoGarmentCard) {
+      const finalizeBtn = demoGarmentCard.querySelector('.garment-card__finalize');
+      if (finalizeBtn) {
+        finalizeBtn.style.display = 'none';
+        console.log('🚫 Hidden finalize button during tour');
+      }
+    }
 
     // Check if required elements exist (garment form should be expanded now)
     const requiredElements = [
@@ -16582,6 +16592,13 @@ class V10_TechPackSystem {
         return;
       }
 
+      // TOUR EXEMPTION: Don't block clicks during onboarding tours
+      const isOnboardingActive = document.body.classList.contains('onboarding-active');
+      if (isOnboardingActive) {
+        console.log('🎯 Click allowed: Onboarding tour is active');
+        return;
+      }
+
       // Get the garment box that's currently being edited
       const currentGarmentCard = document.querySelector(`[data-garment-id="${V10_State.editMode.currentGarmentId}"]`);
       if (!currentGarmentCard) {
@@ -16590,15 +16607,18 @@ class V10_TechPackSystem {
 
       // Check if the click is inside the garment box
       const clickedInsideGarmentBox = currentGarmentCard.contains(e.target);
-      
+
       // Check if the click is on the finalize button (should not be blocked)
       const clickedFinalizeButton = e.target.closest('.garment-card__finalize');
-      
+
       // Check if click is on a help button or modal (should not be blocked)
       const clickedHelpElement = e.target.closest('[data-help], .v10-modal, .v10-modal-overlay');
 
-      // If clicked outside the garment box and not on finalize button or help elements
-      if (!clickedInsideGarmentBox && !clickedFinalizeButton && !clickedHelpElement) {
+      // Check if click is on tour elements (should not be blocked)
+      const clickedTourElement = e.target.closest('.onboarding-highlight, .onboarding-tooltip, .onboarding-controls, .onboarding-btn');
+
+      // If clicked outside the garment box and not on finalize button or help/tour elements
+      if (!clickedInsideGarmentBox && !clickedFinalizeButton && !clickedHelpElement && !clickedTourElement) {
         // Block the click
         e.preventDefault();
         e.stopPropagation();
