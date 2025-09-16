@@ -3192,6 +3192,7 @@ class V10_StudioNavigator {
   init() {
     this.bindEvents();
     this.updateVisibility();
+    this.setupStep3Observer();
   }
 
   bindEvents() {
@@ -3255,7 +3256,7 @@ class V10_StudioNavigator {
     const nextButton = document.getElementById('step-3-next');
 
     // Only proceed if we're in step 3 and both elements exist
-    if (stepActions && nextButton && stepActions.contains(nextButton)) {
+    if (stepActions && nextButton) {
       // Remove any existing tour button
       const existingTourButton = stepActions.querySelector('.v10-btn--tour');
       if (existingTourButton) {
@@ -3340,6 +3341,11 @@ class V10_StudioNavigator {
 
     // Tour button layout is now handled by normal flexbox - no special layout needed
 
+    // Also ensure tour buttons are available if we're currently in Step 3
+    setTimeout(() => {
+      this.ensureTourButtonsOnStep3();
+    }, 100);
+
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
       // Clear any existing timeout to debounce rapid switches
@@ -3365,6 +3371,123 @@ class V10_StudioNavigator {
     // Auto-save
 
     console.log(`🎛️ Switched to ${studioName} studio`);
+  }
+
+  // Ensure tour buttons are created when Step 3 becomes visible
+  ensureTourButtonsOnStep3() {
+    // Check if we're currently in Step 3
+    const step3Section = document.getElementById('techpack-v10-step-3');
+    const stepActions = document.querySelector('.v10-step-actions');
+    const nextButton = document.getElementById('step-3-next');
+
+    if (step3Section && stepActions && nextButton) {
+      const isStep3Visible = step3Section.style.display !== 'none' &&
+                           window.getComputedStyle(step3Section).display !== 'none';
+
+      if (isStep3Visible) {
+        console.log('🎯 Step 3 is visible - ensuring tour buttons are created');
+
+        // Remove any existing tour button first
+        const existingTourButton = stepActions.querySelector('.v10-btn--tour');
+        if (existingTourButton) {
+          existingTourButton.remove();
+          console.log('🗑️ Removed existing tour button before recreating');
+        }
+
+        // Create appropriate tour button based on current studio
+        const currentStudio = V10_State.currentStudio || 'garment';
+        const requestType = V10_State.requestType;
+
+        let shouldCreateTourButton = false;
+        let tourButtonHTML = '';
+        let tourButtonId = '';
+
+        if (currentStudio === 'design' && requestType === 'sample-request') {
+          shouldCreateTourButton = true;
+          tourButtonId = 'color-studio-tour';
+          tourButtonHTML = `
+            <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h20v18H2z"/>
+              <path d="m8 21 4-7-4-7"/>
+              <path d="M16 14h4"/>
+              <path d="M16 10h4"/>
+            </svg>
+            <span class="tour-btn-text-desktop">COLOR STUDIO VISUAL GUIDE</span>
+            <span class="tour-btn-text-mobile">COLOR STUDIO GUIDE</span>
+          `;
+          console.log('✅ Recreating COLOR TOUR button for Step 3');
+        } else if (currentStudio === 'garment') {
+          shouldCreateTourButton = true;
+          tourButtonId = 'garment-studio-tour';
+          tourButtonHTML = `
+            <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+              <line x1="16" y1="8" x2="2" y2="22"/>
+              <line x1="17.5" y1="15" x2="9" y2="15"/>
+            </svg>
+            <span class="tour-btn-text-desktop">GARMENT STUDIO VISUAL GUIDE</span>
+            <span class="tour-btn-text-mobile">GARMENT STUDIO GUIDE</span>
+          `;
+          console.log('✅ Recreating GARMENT TOUR button for Step 3');
+        }
+
+        if (shouldCreateTourButton) {
+          const tourButton = document.createElement('button');
+          tourButton.type = 'button';
+          tourButton.className = 'v10-btn v10-btn--tour';
+          tourButton.id = tourButtonId;
+          tourButton.innerHTML = tourButtonHTML;
+
+          try {
+            stepActions.insertBefore(tourButton, nextButton);
+            this.attachTourButtonEvents(tourButton, tourButtonId);
+            console.log(`🎯 Tour button recreated for Step 3: ${tourButtonId}`);
+          } catch (error) {
+            console.error('❌ Error recreating tour button:', error);
+          }
+        }
+      }
+    }
+  }
+
+  // Set up observer to detect when Step 3 becomes visible
+  setupStep3Observer() {
+    const step3Section = document.getElementById('techpack-v10-step-3');
+    if (!step3Section) {
+      console.log('⚠️ Step 3 section not found for observer setup');
+      return;
+    }
+
+    // Create a mutation observer to watch for display changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const isVisible = step3Section.style.display !== 'none' &&
+                           window.getComputedStyle(step3Section).display !== 'none';
+
+          if (isVisible) {
+            console.log('👁️ Step 3 became visible - ensuring tour buttons');
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+              this.ensureTourButtonsOnStep3();
+            }, 50);
+          }
+        }
+      });
+    });
+
+    // Start observing
+    observer.observe(step3Section, {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+
+    // Also check on page load if Step 3 is already visible
+    setTimeout(() => {
+      this.ensureTourButtonsOnStep3();
+    }, 500);
+
+    console.log('👁️ Step 3 observer set up successfully');
   }
 
   // Attach event listeners to dynamically created tour button
