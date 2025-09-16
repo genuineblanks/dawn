@@ -3250,25 +3250,44 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // FORCE HIDE TOUR BUTTON EVERYWHERE EXCEPT Color Studio + Sample Request
-    const tourButton = document.getElementById('color-studio-tour');
-    if (tourButton) {
+    // CONTROL TOUR BUTTON VISIBILITY - Color Studio + Garment Studio
+    const colorTourButton = document.getElementById('color-studio-tour');
+    const garmentTourButton = document.getElementById('garment-studio-tour');
+
+    // Color Studio Tour Button - ONLY in Color Studio + Sample Request
+    if (colorTourButton) {
       // ALWAYS HIDE FIRST
-      tourButton.style.display = 'none !important';
-      tourButton.style.visibility = 'hidden';
+      colorTourButton.style.display = 'none !important';
+      colorTourButton.style.visibility = 'hidden';
 
       // ONLY show if EXACTLY: Color Studio (design) AND Sample Request
       if (studioName === 'design' && V10_State.requestType === 'sample-request') {
-        tourButton.style.display = 'block';
-        tourButton.style.visibility = 'visible';
-        console.log(`✅ TOUR button SHOWN: Color Studio + Sample Request`);
+        colorTourButton.style.display = 'block';
+        colorTourButton.style.visibility = 'visible';
+        console.log(`✅ COLOR TOUR button SHOWN: Color Studio + Sample Request`);
       } else {
-        console.log(`🚫 TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
+        console.log(`🚫 COLOR TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
       }
 
       // Trigger first-time pulse if this is the first visit to Color Studio
       if (studioName === 'design' && V10_State.requestType === 'sample-request' && !localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
+      }
+    }
+
+    // Garment Studio Tour Button - ONLY in Garment Studio
+    if (garmentTourButton) {
+      // ALWAYS HIDE FIRST
+      garmentTourButton.style.display = 'none !important';
+      garmentTourButton.style.visibility = 'hidden';
+
+      // ONLY show if EXACTLY: Garment Studio
+      if (studioName === 'garment') {
+        garmentTourButton.style.display = 'block';
+        garmentTourButton.style.visibility = 'visible';
+        console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      } else {
+        console.log(`🚫 GARMENT TOUR button HIDDEN: studio="${studioName}"`);
       }
     }
 
@@ -9522,6 +9541,326 @@ class V10_GarmentStudio {
   debugTriggerRedPulse() {
     console.log('🔧 DEBUG: Manually triggering red pulse animation...');
     this.triggerColorStudioAttention();
+  }
+
+  // ========================================
+  // GARMENT STUDIO ONBOARDING SYSTEM
+  // ========================================
+
+  // Initialize comprehensive onboarding for Garment Studio
+  initializeGarmentStudioOnboarding() {
+    console.log('🎯 Garment Studio manual onboarding initialization');
+
+    // Simple delay to ensure Garment Studio is loaded, then show onboarding
+    setTimeout(() => {
+      this.showGarmentStudioOnboarding();
+    }, 100);
+  }
+
+  // Show the guided onboarding tour for Garment Studio
+  showGarmentStudioOnboarding() {
+    console.log('🚀 Starting Garment Studio onboarding tour...');
+
+    // 🔝 MOBILE FIX: Immediately scroll to top for consistent positioning
+    console.log('📱 Scrolling to top for consistent mobile positioning...');
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+    // 🚫 PREVENT SCROLLING: Disable page scrolling when visual guide is open
+    document.body.classList.add('onboarding-active');
+    document.documentElement.classList.add('onboarding-active');
+    console.log('🔒 Page scrolling disabled during visual guide');
+
+    // STEP 1: Auto-create demo garment for tour
+    console.log('👕 Creating demo garment for tour...');
+    const demoGarmentData = {
+      name: 'Tour Demo Garment',
+      isTourDemo: true,
+      isInEditMode: false,
+      isComplete: false
+    };
+
+    const demoGarmentId = this.addGarment(demoGarmentData);
+    console.log(`✅ Demo garment created with ID: ${demoGarmentId}`);
+
+    // STEP 2: Force the demo garment into edit mode
+    setTimeout(() => {
+      console.log('✏️ Putting demo garment into edit mode...');
+      this.editGarment(demoGarmentId);
+
+      // STEP 3: Start the tour after garment is in edit mode
+      setTimeout(() => {
+        this.startGarmentOnboardingTour(demoGarmentId);
+      }, 500);
+    }, 200);
+  }
+
+  // Start the actual garment onboarding tour
+  startGarmentOnboardingTour(demoGarmentId) {
+    console.log('🎯 Starting garment onboarding tour steps...');
+
+    // Store demo garment ID for cleanup
+    this.currentDemoGarmentId = demoGarmentId;
+
+    // Check if required elements exist (garment form should be expanded now)
+    const requiredElements = [
+      { selector: '#garment-expanded', name: 'Garment Type Selection' },
+      { selector: '#fabric-expanded', name: 'Fabric Selection' },
+      { selector: '#sample-custom-expanded', name: 'Sample Custom Options' }
+    ];
+
+    const missingElements = requiredElements.filter(el => !document.querySelector(el.selector));
+
+    if (missingElements.length > 0) {
+      console.log('⏳ Some garment form elements not ready yet:', missingElements.map(el => el.name).join(', '));
+      // Force expand all form sections for tour
+      this.expandAllGarmentSections();
+
+      // Retry after expansion
+      setTimeout(() => this.startGarmentOnboardingTour(demoGarmentId), 1000);
+      return;
+    }
+
+    console.log('✅ All garment onboarding target elements found!');
+
+    // Create garment onboarding overlay
+    let overlay = document.getElementById('garment-studio-onboarding-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'garment-studio-onboarding-overlay';
+      overlay.className = 'color-studio-onboarding'; // Reuse same CSS classes
+      document.body.appendChild(overlay);
+    }
+
+    overlay.innerHTML = `
+      <div class="onboarding-highlight" id="garment-onboarding-highlight"></div>
+      <div class="onboarding-tooltip" id="garment-onboarding-tooltip"></div>
+      <div class="onboarding-controls">
+        <button class="onboarding-btn onboarding-btn--secondary" id="garment-onboarding-skip">Skip Tour</button>
+        <button class="onboarding-btn onboarding-btn--secondary" id="garment-onboarding-previous">Previous</button>
+        <button class="onboarding-btn onboarding-btn--primary" id="garment-onboarding-next">Next</button>
+      </div>
+    `;
+
+    // Bind garment tour controls
+    document.getElementById('garment-onboarding-previous').addEventListener('click', () => this.previousGarmentOnboardingStep());
+    document.getElementById('garment-onboarding-skip').addEventListener('click', () => this.skipGarmentOnboarding());
+    document.getElementById('garment-onboarding-next').addEventListener('click', () => this.nextGarmentOnboardingStep());
+
+    // Define garment tour steps
+    this.currentGarmentOnboardingStep = 0;
+    this.garmentOnboardingSteps = [
+      {
+        target: '#garment-expanded',
+        title: 'Step 1: Choose Your Garment Type',
+        description: 'Select the type of garment you want to produce. Each type has different specifications and requirements. Choose from t-shirts, hoodies, sweatshirts, and more.',
+        position: 'bottom'
+      },
+      {
+        target: '#fabric-expanded',
+        title: 'Step 2: Select Fabric Type',
+        description: 'Choose the fabric material for your garment. This affects texture, durability, and production cost. Common options include cotton, polyester, and blends.',
+        position: 'bottom'
+      },
+      {
+        target: '#sample-stock-expanded',
+        title: 'Step 3: Stock Fabric Colors',
+        description: 'Choose this option to use our standard fabric colors. This is quick and cost-effective for basic color needs without custom requirements.',
+        position: 'bottom'
+      },
+      {
+        target: '#sample-custom-expanded',
+        title: 'Step 4: Custom Colors & Patterns',
+        description: 'For custom colors, select "Choose from our PANTONE Library" to access the Color Studio where you can create precise color matches. Or choose custom patterns for unique designs.',
+        position: 'bottom'
+      }
+    ];
+
+    overlay.classList.add('show');
+
+    // Start first step after scroll completes
+    setTimeout(() => {
+      this.showGarmentOnboardingStep();
+    }, 500);
+  }
+
+  // Force expand all garment form sections for the tour
+  expandAllGarmentSections() {
+    console.log('📂 Expanding all garment form sections for tour...');
+
+    // Expand garment type section
+    const garmentExpanded = document.getElementById('garment-expanded');
+    const garmentDisplay = document.getElementById('garment-display');
+    if (garmentExpanded && garmentDisplay) {
+      garmentExpanded.style.display = 'block';
+      garmentDisplay.style.display = 'none';
+    }
+
+    // Expand fabric section
+    const fabricExpanded = document.getElementById('fabric-expanded');
+    const fabricDisplay = document.getElementById('fabric-display');
+    if (fabricExpanded && fabricDisplay) {
+      fabricExpanded.style.display = 'block';
+      fabricDisplay.style.display = 'none';
+    }
+
+    // Expand sample sections
+    const sampleStockExpanded = document.getElementById('sample-stock-expanded');
+    const sampleCustomExpanded = document.getElementById('sample-custom-expanded');
+    if (sampleStockExpanded) sampleStockExpanded.style.display = 'block';
+    if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'block';
+
+    console.log('✅ All garment form sections expanded');
+  }
+
+  // Show current garment onboarding step
+  showGarmentOnboardingStep() {
+    if (this.currentGarmentOnboardingStep >= this.garmentOnboardingSteps.length) {
+      this.completeGarmentOnboarding();
+      return;
+    }
+
+    const step = this.garmentOnboardingSteps[this.currentGarmentOnboardingStep];
+    const highlight = document.getElementById('garment-onboarding-highlight');
+    const tooltip = document.getElementById('garment-onboarding-tooltip');
+    const nextBtn = document.getElementById('garment-onboarding-next');
+
+    // 🛡️ NULL CHECKS: Ensure all onboarding elements exist
+    if (!highlight || !tooltip || !nextBtn) {
+      console.error('❌ Critical garment onboarding elements missing:', {
+        highlight: !!highlight,
+        tooltip: !!tooltip,
+        nextBtn: !!nextBtn
+      });
+      return;
+    }
+
+    // Find target element
+    const targetElement = document.querySelector(step.target);
+    if (!targetElement) {
+      console.warn(`Garment onboarding target not found: ${step.target}`);
+      this.nextGarmentOnboardingStep();
+      return;
+    }
+
+    console.log('🎯 Garment onboarding highlighting:', step.target);
+
+    // Position highlight around target
+    const rect = targetElement.getBoundingClientRect();
+    const highlightLeft = rect.left - 8;
+    const highlightTop = rect.top - 8;
+    const highlightWidth = rect.width + 16;
+    const highlightHeight = rect.height + 16;
+
+    // Apply highlight positioning
+    highlight.style.left = `${highlightLeft}px`;
+    highlight.style.top = `${highlightTop}px`;
+    highlight.style.width = `${highlightWidth}px`;
+    highlight.style.height = `${highlightHeight}px`;
+
+    // Position tooltip
+    let tooltipTop = rect.bottom + 20;
+    let tooltipLeft = rect.left;
+
+    // Adjust tooltip position if it goes off screen
+    if (tooltipTop + 200 > window.innerHeight) {
+      tooltipTop = rect.top - 220;
+    }
+    if (tooltipLeft + 400 > window.innerWidth) {
+      tooltipLeft = window.innerWidth - 420;
+    }
+
+    tooltip.style.left = `${Math.max(20, tooltipLeft)}px`;
+    tooltip.style.top = `${Math.max(20, tooltipTop)}px`;
+
+    // Set tooltip content
+    tooltip.innerHTML = `
+      <h3>${step.title}</h3>
+      <p>${step.description}</p>
+      <div class="onboarding-progress">
+        Step ${this.currentGarmentOnboardingStep + 1} of ${this.garmentOnboardingSteps.length}
+      </div>
+    `;
+
+    // Update button text
+    nextBtn.textContent = this.currentGarmentOnboardingStep === this.garmentOnboardingSteps.length - 1 ? 'Finish' : 'Next';
+
+    console.log(`📍 Showing garment step ${this.currentGarmentOnboardingStep + 1}/${this.garmentOnboardingSteps.length}: ${step.title}`);
+  }
+
+  // Navigate to next garment onboarding step
+  nextGarmentOnboardingStep() {
+    this.currentGarmentOnboardingStep++;
+    this.showGarmentOnboardingStep();
+  }
+
+  // Navigate to previous garment onboarding step
+  previousGarmentOnboardingStep() {
+    if (this.currentGarmentOnboardingStep > 0) {
+      this.currentGarmentOnboardingStep--;
+      this.showGarmentOnboardingStep();
+    }
+  }
+
+  // Skip garment onboarding tour
+  skipGarmentOnboarding() {
+    this.hideGarmentOnboarding();
+  }
+
+  // Complete garment onboarding tour
+  completeGarmentOnboarding() {
+    this.hideGarmentOnboarding();
+
+    // Show completion message
+    setTimeout(() => {
+      this.showGarmentOnboardingCompletionMessage();
+    }, 100);
+  }
+
+  // Hide garment onboarding overlay
+  hideGarmentOnboarding() {
+    const overlay = document.getElementById('garment-studio-onboarding-overlay');
+    if (overlay) {
+      overlay.classList.remove('show');
+      setTimeout(() => {
+        overlay.remove();
+      }, 300);
+    }
+
+    // Clean up demo garment
+    if (this.currentDemoGarmentId) {
+      console.log(`🗑️ Cleaning up demo garment: ${this.currentDemoGarmentId}`);
+      this.removeGarment(this.currentDemoGarmentId);
+      this.currentDemoGarmentId = null;
+    }
+
+    // 🚫 RE-ENABLE SCROLLING: Restore page scrolling when visual guide is closed
+    document.body.classList.remove('onboarding-active');
+    document.documentElement.classList.remove('onboarding-active');
+    console.log('🔓 Page scrolling re-enabled after garment visual guide');
+  }
+
+  // Show brief completion message
+  showGarmentOnboardingCompletionMessage() {
+    const message = document.createElement('div');
+    message.className = 'edit-mode-notification show';
+    message.innerHTML = `
+      <div class="notification-content">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        <span>Great! Now you know how to create garments. Click "Add Garment" to start building your specification.</span>
+      </div>
+    `;
+
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+      message.classList.remove('show');
+      setTimeout(() => message.remove(), 300);
+    }, 5000);
   }
 
   finalizeGarmentAppearance(garmentCard, garmentData) {
@@ -16186,21 +16525,40 @@ class V10_TechPackSystem {
       });
     }
     
-    // TOUR button (only visible in Color Studio)
+    // COLOR STUDIO TOUR button (only visible in Color Studio)
     const tourBtn = document.getElementById('color-studio-tour');
     if (tourBtn) {
       tourBtn.addEventListener('click', () => {
-        console.log('🎯 TOUR button clicked - starting onboarding tour');
-        
+        console.log('🎯 COLOR TOUR button clicked - starting onboarding tour');
+
         // Mark as seen and return to black normal state permanently
         localStorage.setItem('color-studio-tour-seen', 'true');
         tourBtn.classList.remove('first-time-pulse');
         console.log('✅ Tour button returned to normal black state');
-        
+
         if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
           window.v10GarmentStudio.showColorStudioOnboarding();
         } else {
           console.warn('⚠️ Onboarding system not available');
+        }
+      });
+    }
+
+    // GARMENT STUDIO TOUR button (only visible in Garment Studio)
+    const garmentTourBtn = document.getElementById('garment-studio-tour');
+    if (garmentTourBtn) {
+      garmentTourBtn.addEventListener('click', () => {
+        console.log('🎯 GARMENT TOUR button clicked - starting garment onboarding tour');
+
+        // Mark as seen and return to black normal state permanently
+        localStorage.setItem('garment-studio-tour-seen', 'true');
+        garmentTourBtn.classList.remove('first-time-pulse');
+        console.log('✅ Garment tour button returned to normal black state');
+
+        if (window.v10GarmentStudio && window.v10GarmentStudio.showGarmentStudioOnboarding) {
+          window.v10GarmentStudio.showGarmentStudioOnboarding();
+        } else {
+          console.warn('⚠️ Garment onboarding system not available');
         }
       });
     }
