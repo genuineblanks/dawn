@@ -9829,7 +9829,7 @@ class V10_GarmentStudio {
       {
         target: '#sample-custom-grid',
         title: 'Step 4: Custom Colors & Patterns',
-        description: 'For custom colors, select "Choose from our PANTONE Library" to access the Color Studio where you can create precise color matches. Or choose custom patterns for unique designs.',
+        description: 'PANTONE Library: Develop your colorway in Color Studio. Custom Pattern: Use when you have TCX/TPX codes or unique patterns.',
         position: 'bottom'
       }
     ];
