@@ -3326,22 +3326,50 @@ class V10_StudioNavigator {
     const stepActions = document.querySelector('.v10-step-actions');
     if (!stepActions) return;
 
-    const colorTourButton = document.getElementById('color-studio-tour');
-    const garmentTourButton = document.getElementById('garment-studio-tour');
+    // Get current step - try multiple methods
+    let currentStep = 1;
 
-    // Check if any tour button is visible
-    const colorVisible = colorTourButton && colorTourButton.style.display === 'block';
-    const garmentVisible = garmentTourButton && garmentTourButton.style.display === 'block';
-    const anyTourButtonVisible = colorVisible || garmentVisible;
-
-    if (anyTourButtonVisible) {
-      // 3-button layout: Previous | Tour Button | Next
-      stepActions.classList.add('v10-step-actions--three-button');
-      console.log('✅ Applied three-button layout: tour button visible');
+    // Method 1: Check techPackProgress system
+    if (window.techPackProgress && window.techPackProgress.currentStep) {
+      currentStep = window.techPackProgress.currentStep;
     } else {
-      // 2-button layout: Previous | Next (no tour button)
+      // Method 2: Check visible step section
+      const visibleStep = document.querySelector('.v10-techpack-step:not([style*="display: none"]) .techpack-progress[data-step]');
+      if (visibleStep) {
+        currentStep = parseInt(visibleStep.dataset.step) || 1;
+      } else {
+        // Method 3: Check specific step sections
+        if (document.querySelector('#techpack-v10-step-1:not([style*="display: none"])')) currentStep = 1;
+        else if (document.querySelector('#techpack-v10-step-2:not([style*="display: none"])')) currentStep = 2;
+        else if (document.querySelector('#techpack-v10-step-3:not([style*="display: none"])')) currentStep = 3;
+        else if (document.querySelector('#techpack-v10-step-4:not([style*="display: none"])')) currentStep = 4;
+      }
+    }
+
+    // Count visible buttons in step actions
+    const visibleButtons = Array.from(stepActions.querySelectorAll('.v10-btn')).filter(btn => {
+      const style = window.getComputedStyle(btn);
+      return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+
+    const visibleButtonCount = visibleButtons.length;
+
+    // Apply layout based on visible button count and step context
+    if (visibleButtonCount >= 3) {
+      // 3+ buttons: Use three-button grid layout
+      stepActions.classList.add('v10-step-actions--three-button');
+      console.log(`✅ Applied three-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
+    } else if (visibleButtonCount === 1 && currentStep === 1) {
+      // Special case: Step 1 with only "Continue to Files" button should be right-aligned
       stepActions.classList.remove('v10-step-actions--three-button');
-      console.log('✅ Applied two-button layout: no tour buttons visible');
+      // Ensure single button is right-aligned using flex
+      stepActions.style.justifyContent = 'flex-end';
+      console.log(`✅ Applied single-button right-align layout: step ${currentStep} with 1 button`);
+    } else {
+      // 2 buttons or other cases: Use default flex layout
+      stepActions.classList.remove('v10-step-actions--three-button');
+      stepActions.style.justifyContent = 'space-between';
+      console.log(`✅ Applied two-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
     }
   }
 
