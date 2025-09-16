@@ -9590,11 +9590,87 @@ class V10_GarmentStudio {
       console.log('✏️ Putting demo garment into edit mode...');
       this.expandGarmentForEdit(demoGarmentId);
 
-      // STEP 3: Start the tour after garment is in edit mode
+      // STEP 3: Start the tour after garment is in edit mode with better timing
+      setTimeout(() => {
+        this.verifyEditModeAndStartTour(demoGarmentId);
+      }, 800); // Increased timeout for edit mode to fully initialize
+    }, 200);
+  }
+
+  // Verify edit mode is active and start tour with proper checks
+  verifyEditModeAndStartTour(demoGarmentId) {
+    console.log('🔍 Verifying garment edit mode before starting tour...');
+
+    // Check if garment is actually in edit mode
+    const garmentCard = document.querySelector(`[data-garment-id="${demoGarmentId}"]`);
+    if (!garmentCard) {
+      console.error('❌ Demo garment card not found!');
+      this.hideGarmentOnboarding();
+      return;
+    }
+
+    const contentContainer = garmentCard.querySelector('.garment-card__content');
+    const isInEditMode = contentContainer && contentContainer.style.display === 'block';
+
+    if (!isInEditMode) {
+      console.warn('⚠️ Garment not in edit mode yet, retrying...');
+      setTimeout(() => {
+        this.verifyEditModeAndStartTour(demoGarmentId);
+      }, 500);
+      return;
+    }
+
+    console.log('✅ Garment confirmed in edit mode, forcing form expansion...');
+
+    // Force expand all sections
+    this.expandAllGarmentSections();
+
+    // Wait for form expansion and verify before starting tour
+    setTimeout(() => {
+      this.verifyFormExpansionAndStartTour(demoGarmentId);
+    }, 400);
+  }
+
+  // Verify form sections are expanded and start the actual tour
+  verifyFormExpansionAndStartTour(demoGarmentId) {
+    console.log('🔍 Verifying form sections are expanded...');
+
+    const garmentGrid = document.getElementById('garment-type-grid');
+    const fabricGrid = document.getElementById('fabric-type-grid');
+    const sampleStockGrid = document.getElementById('sample-stock-grid');
+    const sampleCustomGrid = document.getElementById('sample-custom-grid');
+
+    const sectionsVisible = [
+      { grid: garmentGrid, name: 'Garment Type' },
+      { grid: fabricGrid, name: 'Fabric Type' },
+      { grid: sampleStockGrid, name: 'Sample Stock' },
+      { grid: sampleCustomGrid, name: 'Sample Custom' }
+    ];
+
+    const visibleSections = sectionsVisible.filter(section =>
+      section.grid && section.grid.offsetParent !== null
+    );
+
+    console.log(`📊 Form visibility status: ${visibleSections.length}/${sectionsVisible.length} sections visible`);
+    visibleSections.forEach(section => console.log(`✅ ${section.name} grid is visible`));
+
+    const hiddenSections = sectionsVisible.filter(section =>
+      !section.grid || section.grid.offsetParent === null
+    );
+
+    if (hiddenSections.length > 0) {
+      console.warn('⚠️ Some sections still hidden:', hiddenSections.map(s => s.name).join(', '));
+
+      // Retry expansion once more
+      this.expandAllGarmentSections();
+
       setTimeout(() => {
         this.startGarmentOnboardingTour(demoGarmentId);
-      }, 500);
-    }, 200);
+      }, 300);
+    } else {
+      console.log('🎯 All form sections ready, starting tour!');
+      this.startGarmentOnboardingTour(demoGarmentId);
+    }
   }
 
   // Start the actual garment onboarding tour
@@ -9614,26 +9690,46 @@ class V10_GarmentStudio {
       }
     }
 
-    // Check if required elements exist (garment form should be expanded now)
+    // Check if required elements exist AND are visible (garment form should be expanded now)
     const requiredElements = [
-      { selector: '#garment-expanded', name: 'Garment Type Selection' },
-      { selector: '#fabric-expanded', name: 'Fabric Selection' },
-      { selector: '#sample-custom-expanded', name: 'Sample Custom Options' }
+      { selector: '#garment-type-grid', name: 'Garment Type Grid' },
+      { selector: '#fabric-type-grid', name: 'Fabric Type Grid' },
+      { selector: '#sample-stock-grid', name: 'Sample Stock Grid' },
+      { selector: '#sample-custom-grid', name: 'Sample Custom Grid' }
     ];
 
-    const missingElements = requiredElements.filter(el => !document.querySelector(el.selector));
+    // Check both existence AND visibility
+    const missingElements = requiredElements.filter(el => {
+      const element = document.querySelector(el.selector);
+      return !element || element.offsetParent === null;
+    });
 
     if (missingElements.length > 0) {
-      console.log('⏳ Some garment form elements not ready yet:', missingElements.map(el => el.name).join(', '));
-      // Force expand all form sections for tour
+      console.warn('⚠️ Some garment form elements not ready yet:', missingElements.map(el => el.name).join(', '));
+
+      // Check if this is a retry attempt
+      if (!this.tourRetryCount) this.tourRetryCount = 0;
+      this.tourRetryCount++;
+
+      if (this.tourRetryCount >= 3) {
+        console.error('❌ Tour failed after 3 attempts - form sections not available');
+        this.showTourErrorMessage();
+        this.hideGarmentOnboarding();
+        return;
+      }
+
+      console.log(`🔄 Retry attempt ${this.tourRetryCount}/3 - forcing form expansion...`);
       this.expandAllGarmentSections();
 
-      // Retry after expansion
-      setTimeout(() => this.startGarmentOnboardingTour(demoGarmentId), 1000);
+      // Retry after expansion with backoff
+      setTimeout(() => this.startGarmentOnboardingTour(demoGarmentId), 1000 * this.tourRetryCount);
       return;
     }
 
     console.log('✅ All garment onboarding target elements found!');
+
+    // Reset retry count on success
+    this.tourRetryCount = 0;
 
     // Create garment onboarding overlay
     let overlay = document.getElementById('garment-studio-onboarding-overlay');
@@ -9659,29 +9755,29 @@ class V10_GarmentStudio {
     document.getElementById('garment-onboarding-skip').addEventListener('click', () => this.skipGarmentOnboarding());
     document.getElementById('garment-onboarding-next').addEventListener('click', () => this.nextGarmentOnboardingStep());
 
-    // Define garment tour steps
+    // Define garment tour steps with CORRECT selectors
     this.currentGarmentOnboardingStep = 0;
     this.garmentOnboardingSteps = [
       {
-        target: '#garment-expanded',
+        target: '#garment-type-grid',
         title: 'Step 1: Choose Your Garment Type',
         description: 'Select the type of garment you want to produce. Each type has different specifications and requirements. Choose from t-shirts, hoodies, sweatshirts, and more.',
         position: 'bottom'
       },
       {
-        target: '#fabric-expanded',
+        target: '#fabric-type-grid',
         title: 'Step 2: Select Fabric Type',
         description: 'Choose the fabric material for your garment. This affects texture, durability, and production cost. Common options include cotton, polyester, and blends.',
         position: 'bottom'
       },
       {
-        target: '#sample-stock-expanded',
+        target: '#sample-stock-grid',
         title: 'Step 3: Stock Fabric Colors',
         description: 'Choose this option to use our standard fabric colors. This is quick and cost-effective for basic color needs without custom requirements.',
         position: 'bottom'
       },
       {
-        target: '#sample-custom-expanded',
+        target: '#sample-custom-grid',
         title: 'Step 4: Custom Colors & Patterns',
         description: 'For custom colors, select "Choose from our PANTONE Library" to access the Color Studio where you can create precise color matches. Or choose custom patterns for unique designs.',
         position: 'bottom'
@@ -9700,29 +9796,77 @@ class V10_GarmentStudio {
   expandAllGarmentSections() {
     console.log('📂 Expanding all garment form sections for tour...');
 
-    // Expand garment type section
+    // FORCE EXPAND: Show all expanded sections
     const garmentExpanded = document.getElementById('garment-expanded');
-    const garmentDisplay = document.getElementById('garment-display');
-    if (garmentExpanded && garmentDisplay) {
-      garmentExpanded.style.display = 'block';
-      garmentDisplay.style.display = 'none';
-    }
-
-    // Expand fabric section
     const fabricExpanded = document.getElementById('fabric-expanded');
-    const fabricDisplay = document.getElementById('fabric-display');
-    if (fabricExpanded && fabricDisplay) {
-      fabricExpanded.style.display = 'block';
-      fabricDisplay.style.display = 'none';
-    }
-
-    // Expand sample sections
     const sampleStockExpanded = document.getElementById('sample-stock-expanded');
     const sampleCustomExpanded = document.getElementById('sample-custom-expanded');
-    if (sampleStockExpanded) sampleStockExpanded.style.display = 'block';
-    if (sampleCustomExpanded) sampleCustomExpanded.style.display = 'block';
 
-    console.log('✅ All garment form sections expanded');
+    if (garmentExpanded) {
+      garmentExpanded.style.display = 'block';
+      garmentExpanded.style.visibility = 'visible';
+      console.log('✅ Garment expanded section forced visible');
+    }
+
+    if (fabricExpanded) {
+      fabricExpanded.style.display = 'block';
+      fabricExpanded.style.visibility = 'visible';
+      console.log('✅ Fabric expanded section forced visible');
+    }
+
+    if (sampleStockExpanded) {
+      sampleStockExpanded.style.display = 'block';
+      sampleStockExpanded.style.visibility = 'visible';
+      console.log('✅ Sample stock section forced visible');
+    }
+
+    if (sampleCustomExpanded) {
+      sampleCustomExpanded.style.display = 'block';
+      sampleCustomExpanded.style.visibility = 'visible';
+      console.log('✅ Sample custom section forced visible');
+    }
+
+    // FORCE HIDE: Hide all collapsed/summary sections
+    const garmentDisplay = document.getElementById('garment-display');
+    const fabricDisplay = document.getElementById('fabric-display');
+    const sampleStockDisplay = document.getElementById('sample-stock-display');
+    const sampleCustomDisplay = document.getElementById('sample-custom-display');
+
+    if (garmentDisplay) {
+      garmentDisplay.style.display = 'none';
+      console.log('🚫 Garment summary hidden');
+    }
+
+    if (fabricDisplay) {
+      fabricDisplay.style.display = 'none';
+      console.log('🚫 Fabric summary hidden');
+    }
+
+    if (sampleStockDisplay) {
+      sampleStockDisplay.style.display = 'none';
+      console.log('🚫 Sample stock summary hidden');
+    }
+
+    if (sampleCustomDisplay) {
+      sampleCustomDisplay.style.display = 'none';
+      console.log('🚫 Sample custom summary hidden');
+    }
+
+    // VERIFICATION: Check if grids are now visible
+    setTimeout(() => {
+      const garmentGrid = document.getElementById('garment-type-grid');
+      const fabricGrid = document.getElementById('fabric-type-grid');
+      const sampleStockGrid = document.getElementById('sample-stock-grid');
+      const sampleCustomGrid = document.getElementById('sample-custom-grid');
+
+      console.log('🔍 Form section visibility check:');
+      console.log('- Garment grid visible:', garmentGrid && garmentGrid.offsetParent !== null);
+      console.log('- Fabric grid visible:', fabricGrid && fabricGrid.offsetParent !== null);
+      console.log('- Sample stock grid visible:', sampleStockGrid && sampleStockGrid.offsetParent !== null);
+      console.log('- Sample custom grid visible:', sampleCustomGrid && sampleCustomGrid.offsetParent !== null);
+    }, 100);
+
+    console.log('✅ All garment form sections expansion completed');
   }
 
   // Show current garment onboarding step
@@ -9871,6 +10015,29 @@ class V10_GarmentStudio {
       message.classList.remove('show');
       setTimeout(() => message.remove(), 300);
     }, 5000);
+  }
+
+  // Show error message when tour fails
+  showTourErrorMessage() {
+    const message = document.createElement('div');
+    message.className = 'edit-mode-notification show';
+    message.innerHTML = `
+      <div class="notification-content">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        <span>Tour could not start - the garment form sections are not available. Try creating a garment manually.</span>
+      </div>
+    `;
+
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+      message.classList.remove('show');
+      setTimeout(() => message.remove(), 300);
+    }, 6000);
   }
 
   finalizeGarmentAppearance(garmentCard, garmentData) {
