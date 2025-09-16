@@ -3192,7 +3192,6 @@ class V10_StudioNavigator {
   init() {
     this.bindEvents();
     this.updateVisibility();
-    this.setupStep3Observer();
   }
 
   bindEvents() {
@@ -3251,109 +3250,49 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // DYNAMIC TOUR BUTTON CREATION - Only in Step 3
-    const stepActions = document.querySelector('.v10-step-actions');
-    const nextButton = document.getElementById('step-3-next');
+    // CONTROL TOUR BUTTON VISIBILITY - Color Studio + Garment Studio
+    const colorTourButton = document.getElementById('color-studio-tour');
+    const garmentTourButton = document.getElementById('garment-studio-tour');
 
-    // Only proceed if we're in step 3 and both elements exist
-    if (stepActions && nextButton) {
-      // Remove any existing tour button
-      const existingTourButton = stepActions.querySelector('.v10-btn--tour');
-      if (existingTourButton) {
-        existingTourButton.remove();
-        console.log('🗑️ Removed existing tour button');
-      }
+    // Color Studio Tour Button - ONLY in Color Studio + Sample Request
+    if (colorTourButton) {
+      // ALWAYS HIDE FIRST
+      colorTourButton.style.display = 'none !important';
+      colorTourButton.style.visibility = 'hidden';
 
-      // Create appropriate tour button based on studio
-      let shouldCreateTourButton = false;
-      let tourButtonHTML = '';
-      let tourButtonId = '';
-
+      // ONLY show if EXACTLY: Color Studio (design) AND Sample Request
       if (studioName === 'design' && V10_State.requestType === 'sample-request') {
-        // Color Studio Tour Button
-        shouldCreateTourButton = true;
-        tourButtonId = 'color-studio-tour';
-        tourButtonHTML = `
-          <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M2 3h20v18H2z"/>
-            <path d="m8 21 4-7-4-7"/>
-            <path d="M16 14h4"/>
-            <path d="M16 10h4"/>
-          </svg>
-          <span class="tour-btn-text-desktop">COLOR STUDIO VISUAL GUIDE</span>
-          <span class="tour-btn-text-mobile">COLOR STUDIO GUIDE</span>
-        `;
-        console.log('✅ Creating COLOR TOUR button: Color Studio + Sample Request');
-      } else if (studioName === 'garment') {
-        // Garment Studio Tour Button
-        shouldCreateTourButton = true;
-        tourButtonId = 'garment-studio-tour';
-        tourButtonHTML = `
-          <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-            <line x1="16" y1="8" x2="2" y2="22"/>
-            <line x1="17.5" y1="15" x2="9" y2="15"/>
-          </svg>
-          <span class="tour-btn-text-desktop">GARMENT STUDIO VISUAL GUIDE</span>
-          <span class="tour-btn-text-mobile">GARMENT STUDIO GUIDE</span>
-        `;
-        console.log('✅ Creating GARMENT TOUR button: Garment Studio');
+        colorTourButton.style.display = 'block';
+        colorTourButton.style.visibility = 'visible';
+        console.log(`✅ COLOR TOUR button SHOWN: Color Studio + Sample Request`);
+      } else {
+        console.log(`🚫 COLOR TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
       }
 
-      if (shouldCreateTourButton) {
-        // Create the tour button
-        const tourButton = document.createElement('button');
-        tourButton.type = 'button';
-        tourButton.className = 'v10-btn v10-btn--tour';
-        tourButton.id = tourButtonId;
-        tourButton.innerHTML = tourButtonHTML;
-
-        // Find the correct insert position - append to stepActions instead of using insertBefore
-        try {
-          // First, find if nextButton is actually inside stepActions
-          const isNextButtonInside = stepActions.contains(nextButton);
-
-          if (isNextButtonInside) {
-            // nextButton is inside stepActions - use insertBefore
-            stepActions.insertBefore(tourButton, nextButton);
-          } else {
-            // nextButton is somewhere else - just append tour button to stepActions
-            stepActions.appendChild(tourButton);
-          }
-
-          // Re-attach event listeners for the tour button
-          this.attachTourButtonEvents(tourButton, tourButtonId);
-
-          // Trigger first-time pulse if this is the first visit to Color Studio
-          if (tourButtonId === 'color-studio-tour' && !localStorage.getItem('color-studio-tour-seen')) {
-            this.triggerFirstTimeTourPulse();
-          }
-
-          console.log(`🎯 Dynamic tour button created and inserted: ${tourButtonId}`);
-        } catch (error) {
-          console.error('❌ Error inserting tour button:', error);
-          console.log('📍 Debug info:', {
-            stepActions: stepActions,
-            nextButton: nextButton,
-            contains: stepActions.contains(nextButton),
-            stepActionsHTML: stepActions.innerHTML
-          });
-        }
+      // Trigger first-time pulse if this is the first visit to Color Studio
+      if (studioName === 'design' && V10_State.requestType === 'sample-request' && !localStorage.getItem('color-studio-tour-seen')) {
+        this.triggerFirstTimeTourPulse();
       }
-    } else {
-      console.log('⏭️ Skipping tour button creation - not in step 3 or elements not found', {
-        stepActions: !!stepActions,
-        nextButton: !!nextButton,
-        contains: stepActions && nextButton ? stepActions.contains(nextButton) : 'N/A'
-      });
     }
 
-    // Tour button layout is now handled by normal flexbox - no special layout needed
+    // Garment Studio Tour Button - ONLY in Garment Studio
+    if (garmentTourButton) {
+      // ALWAYS HIDE FIRST
+      garmentTourButton.style.display = 'none !important';
+      garmentTourButton.style.visibility = 'hidden';
 
-    // Also ensure tour buttons are available if we're currently in Step 3
-    setTimeout(() => {
-      this.ensureTourButtonsOnStep3();
-    }, 100);
+      // ONLY show if EXACTLY: Garment Studio
+      if (studioName === 'garment') {
+        garmentTourButton.style.display = 'block';
+        garmentTourButton.style.visibility = 'visible';
+        console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      } else {
+        console.log(`🚫 GARMENT TOUR button HIDDEN: studio="${studioName}"`);
+      }
+    }
+
+    // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
+    this.updateStepActionsLayout();
 
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
@@ -3380,154 +3319,6 @@ class V10_StudioNavigator {
     // Auto-save
 
     console.log(`🎛️ Switched to ${studioName} studio`);
-  }
-
-  // Ensure tour buttons are created when Step 3 becomes visible
-  ensureTourButtonsOnStep3() {
-    // Check if we're currently in Step 3
-    const step3Section = document.getElementById('techpack-v10-step-3');
-    const stepActions = document.querySelector('.v10-step-actions');
-    const nextButton = document.getElementById('step-3-next');
-
-    if (step3Section && stepActions && nextButton) {
-      const isStep3Visible = step3Section.style.display !== 'none' &&
-                           window.getComputedStyle(step3Section).display !== 'none';
-
-      if (isStep3Visible) {
-        console.log('🎯 Step 3 is visible - ensuring tour buttons are created');
-
-        // Remove any existing tour button first
-        const existingTourButton = stepActions.querySelector('.v10-btn--tour');
-        if (existingTourButton) {
-          existingTourButton.remove();
-          console.log('🗑️ Removed existing tour button before recreating');
-        }
-
-        // Create appropriate tour button based on current studio
-        const currentStudio = V10_State.currentStudio || 'garment';
-        const requestType = V10_State.requestType;
-
-        let shouldCreateTourButton = false;
-        let tourButtonHTML = '';
-        let tourButtonId = '';
-
-        if (currentStudio === 'design' && requestType === 'sample-request') {
-          shouldCreateTourButton = true;
-          tourButtonId = 'color-studio-tour';
-          tourButtonHTML = `
-            <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M2 3h20v18H2z"/>
-              <path d="m8 21 4-7-4-7"/>
-              <path d="M16 14h4"/>
-              <path d="M16 10h4"/>
-            </svg>
-            <span class="tour-btn-text-desktop">COLOR STUDIO VISUAL GUIDE</span>
-            <span class="tour-btn-text-mobile">COLOR STUDIO GUIDE</span>
-          `;
-          console.log('✅ Recreating COLOR TOUR button for Step 3');
-        } else if (currentStudio === 'garment') {
-          shouldCreateTourButton = true;
-          tourButtonId = 'garment-studio-tour';
-          tourButtonHTML = `
-            <svg class="v10-btn-icon v10-btn-icon--left" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-              <line x1="16" y1="8" x2="2" y2="22"/>
-              <line x1="17.5" y1="15" x2="9" y2="15"/>
-            </svg>
-            <span class="tour-btn-text-desktop">GARMENT STUDIO VISUAL GUIDE</span>
-            <span class="tour-btn-text-mobile">GARMENT STUDIO GUIDE</span>
-          `;
-          console.log('✅ Recreating GARMENT TOUR button for Step 3');
-        }
-
-        if (shouldCreateTourButton) {
-          const tourButton = document.createElement('button');
-          tourButton.type = 'button';
-          tourButton.className = 'v10-btn v10-btn--tour';
-          tourButton.id = tourButtonId;
-          tourButton.innerHTML = tourButtonHTML;
-
-          try {
-            // Check if nextButton is actually inside stepActions
-            const isNextButtonInside = stepActions.contains(nextButton);
-
-            if (isNextButtonInside) {
-              // nextButton is inside stepActions - use insertBefore
-              stepActions.insertBefore(tourButton, nextButton);
-            } else {
-              // nextButton is somewhere else - just append tour button to stepActions
-              stepActions.appendChild(tourButton);
-            }
-
-            this.attachTourButtonEvents(tourButton, tourButtonId);
-            console.log(`🎯 Tour button recreated for Step 3: ${tourButtonId}`);
-          } catch (error) {
-            console.error('❌ Error recreating tour button:', error);
-          }
-        }
-      }
-    }
-  }
-
-  // Set up observer to detect when Step 3 becomes visible
-  setupStep3Observer() {
-    const step3Section = document.getElementById('techpack-v10-step-3');
-    if (!step3Section) {
-      console.log('⚠️ Step 3 section not found for observer setup');
-      return;
-    }
-
-    // Create a mutation observer to watch for display changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          const isVisible = step3Section.style.display !== 'none' &&
-                           window.getComputedStyle(step3Section).display !== 'none';
-
-          if (isVisible) {
-            console.log('👁️ Step 3 became visible - ensuring tour buttons');
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-              this.ensureTourButtonsOnStep3();
-            }, 50);
-          }
-        }
-      });
-    });
-
-    // Start observing
-    observer.observe(step3Section, {
-      attributes: true,
-      attributeFilter: ['style']
-    });
-
-    // Also check on page load if Step 3 is already visible
-    setTimeout(() => {
-      this.ensureTourButtonsOnStep3();
-    }, 500);
-
-    console.log('👁️ Step 3 observer set up successfully');
-  }
-
-  // Attach event listeners to dynamically created tour button
-  attachTourButtonEvents(tourButton, tourButtonId) {
-    if (!tourButton) return;
-
-    if (tourButtonId === 'color-studio-tour') {
-      tourButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.showColorStudioOnboarding();
-      });
-    } else if (tourButtonId === 'garment-studio-tour') {
-      tourButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.showGarmentStudioOnboarding();
-      });
-    }
-
-    console.log(`🎯 Event listeners attached to: ${tourButtonId}`);
   }
 
   // Update step actions layout based on visible tour buttons

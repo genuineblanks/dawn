@@ -6234,7 +6234,18 @@ html.onboarding-active {
   background: rgba(163, 163, 163, 0.05);
 }
 
-/* Three Button Layout - No longer needed since we have dynamic button creation */
+/* Three Button Layout */
+.v10-step-actions--three-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--v10-space-4);
+  margin-top: var(--v10-space-6);
+}
+
+.v10-step-actions--three-button .v10-btn--tour {
+  margin: 0 auto;
+}
 
 /* Terms Agreement */
 .terms-agreement {
