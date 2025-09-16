@@ -9246,12 +9246,23 @@ class V10_GarmentStudio {
     }
 
     // 🎯 Special positioning adjustment for custom colors grid (Step 4)
+    let tooltipRect = rect; // Default to original rect for tooltip positioning
     if (step.target === '#sample-custom-grid') {
       // Adjust highlight to properly surround the two radio button options
       highlightLeft = rect.left - 12; // More padding on the left
       highlightTop = rect.top - 12; // More padding on top
       highlightWidth = rect.width + 24; // More padding width
       highlightHeight = rect.height + 24; // More padding height
+
+      // Create adjusted rect for tooltip positioning to match highlight
+      tooltipRect = {
+        left: highlightLeft,
+        top: highlightTop,
+        right: highlightLeft + highlightWidth,
+        bottom: highlightTop + highlightHeight,
+        width: highlightWidth,
+        height: highlightHeight
+      };
     }
     
     // 🔒 VIEWPORT BOUNDARY SAFETY CHECKS - Ensure highlight stays within screen bounds
@@ -9387,75 +9398,75 @@ class V10_GarmentStudio {
       // and ensure tooltip doesn't go off screen edges
       tooltipX = Math.max(margin, Math.min(
         viewport.width - tooltipWidth - margin,
-        rect.left + (rect.width / 2) - (tooltipWidth / 2)
+        tooltipRect.left + (tooltipRect.width / 2) - (tooltipWidth / 2)
       ));
       
       // Check if element is in top half of screen
-      const elementMiddle = rect.top + (rect.height / 2);
+      const elementMiddle = tooltipRect.top + (tooltipRect.height / 2);
       const screenMiddle = viewport.height / 2;
-      
+
       if (elementMiddle < screenMiddle) {
         // Element in top half - place tooltip below
         finalPosition = 'bottom';
-        tooltipY = rect.bottom + margin;
+        tooltipY = tooltipRect.bottom + margin;
         transform = 'translateX(0)';
       } else {
         // Element in bottom half - place tooltip above
         finalPosition = 'top';
-        tooltipY = rect.top - margin - tooltipHeight;
+        tooltipY = tooltipRect.top - margin - tooltipHeight;
         transform = 'translateX(0)';
       }
       
       // Final boundary check for mobile
       if (tooltipY < viewport.scrollY + margin) {
         finalPosition = 'bottom';
-        tooltipY = rect.bottom + margin;
+        tooltipY = tooltipRect.bottom + margin;
       } else if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height - margin) {
         finalPosition = 'top';
-        tooltipY = rect.top - margin - tooltipHeight;
+        tooltipY = tooltipRect.top - margin - tooltipHeight;
       }
       
     } else {
-      // Desktop positioning logic (original)
+      // Desktop positioning logic (using adjusted tooltipRect)
       if (step.position === 'left') {
-        tooltipX = rect.left - margin;
-        tooltipY = rect.top + (rect.height / 2);
+        tooltipX = tooltipRect.left - margin;
+        tooltipY = tooltipRect.top + (tooltipRect.height / 2);
         transform = 'translate(-100%, -50%)';
-        
+
         // Check if tooltip would go off left edge
         if (tooltipX - tooltipWidth < viewport.scrollX) {
           finalPosition = 'right';
-          tooltipX = rect.right + margin;
+          tooltipX = tooltipRect.right + margin;
           transform = 'translate(0, -50%)';
         }
       } else if (step.position === 'right') {
-        tooltipX = rect.right + margin;
-        tooltipY = rect.top + (rect.height / 2);
+        tooltipX = tooltipRect.right + margin;
+        tooltipY = tooltipRect.top + (tooltipRect.height / 2);
         transform = 'translate(0, -50%)';
-        
+
         // Check if tooltip would go off right edge
         if (tooltipX + tooltipWidth > viewport.scrollX + viewport.width) {
           finalPosition = 'left';
-          tooltipX = rect.left - margin;
+          tooltipX = tooltipRect.left - margin;
           transform = 'translate(-100%, -50%)';
         }
       } else {
-        tooltipX = rect.left + (rect.width / 2);
+        tooltipX = tooltipRect.left + (tooltipRect.width / 2);
         transform = 'translateX(-50%)';
-        
+
         if (step.position === 'top') {
-          tooltipY = rect.top - margin;
+          tooltipY = tooltipRect.top - margin;
           // Check if tooltip would go off top edge
           if (tooltipY - tooltipHeight < viewport.scrollY) {
             finalPosition = 'bottom';
-            tooltipY = rect.bottom + margin;
+            tooltipY = tooltipRect.bottom + margin;
           }
         } else { // bottom
-          tooltipY = rect.bottom + margin;
+          tooltipY = tooltipRect.bottom + margin;
           // Check if tooltip would go off bottom edge
           if (tooltipY + tooltipHeight > viewport.scrollY + viewport.height) {
             finalPosition = 'top';
-            tooltipY = rect.top - margin;
+            tooltipY = tooltipRect.top - margin;
           }
         }
       }
