@@ -3250,11 +3250,12 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // DYNAMIC TOUR BUTTON CREATION - Remove existing and create appropriate one
+    // DYNAMIC TOUR BUTTON CREATION - Only in Step 3
     const stepActions = document.querySelector('.v10-step-actions');
     const nextButton = document.getElementById('step-3-next');
 
-    if (stepActions && nextButton) {
+    // Only proceed if we're in step 3 and both elements exist
+    if (stepActions && nextButton && stepActions.contains(nextButton)) {
       // Remove any existing tour button
       const existingTourButton = stepActions.querySelector('.v10-btn--tour');
       if (existingTourButton) {
@@ -3306,19 +3307,35 @@ class V10_StudioNavigator {
         tourButton.id = tourButtonId;
         tourButton.innerHTML = tourButtonHTML;
 
-        // Insert it before the Next button
-        stepActions.insertBefore(tourButton, nextButton);
+        // Safely insert it before the Next button
+        try {
+          stepActions.insertBefore(tourButton, nextButton);
 
-        // Re-attach event listeners for the tour button
-        this.attachTourButtonEvents(tourButton, tourButtonId);
+          // Re-attach event listeners for the tour button
+          this.attachTourButtonEvents(tourButton, tourButtonId);
 
-        // Trigger first-time pulse if this is the first visit to Color Studio
-        if (tourButtonId === 'color-studio-tour' && !localStorage.getItem('color-studio-tour-seen')) {
-          this.triggerFirstTimeTourPulse();
+          // Trigger first-time pulse if this is the first visit to Color Studio
+          if (tourButtonId === 'color-studio-tour' && !localStorage.getItem('color-studio-tour-seen')) {
+            this.triggerFirstTimeTourPulse();
+          }
+
+          console.log(`🎯 Dynamic tour button created and inserted: ${tourButtonId}`);
+        } catch (error) {
+          console.error('❌ Error inserting tour button:', error);
+          console.log('📍 Debug info:', {
+            stepActions: stepActions,
+            nextButton: nextButton,
+            contains: stepActions.contains(nextButton),
+            stepActionsHTML: stepActions.innerHTML
+          });
         }
-
-        console.log(`🎯 Dynamic tour button created and inserted: ${tourButtonId}`);
       }
+    } else {
+      console.log('⏭️ Skipping tour button creation - not in step 3 or elements not found', {
+        stepActions: !!stepActions,
+        nextButton: !!nextButton,
+        contains: stepActions && nextButton ? stepActions.contains(nextButton) : 'N/A'
+      });
     }
 
     // Tour button layout is now handled by normal flexbox - no special layout needed
