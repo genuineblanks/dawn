@@ -6782,11 +6782,17 @@ class V10_GarmentUIManager {
    */
   updateSelectionDependencies(garmentCard, garmentData) {
     const requestType = V10_State.requestType;
-    
+
+    // 🎯 TOUR EXEMPTION: During garment studio tour, bypass fabric type restriction
+    const isTourActive = document.body.classList.contains('onboarding-active');
+
     // Enable/disable fabric selection based on garment type
-    if (garmentData.type) {
+    if (garmentData.type || isTourActive) {
       this.enableFabricSelection(garmentCard);
-      this.populateFabricOptions(garmentCard, garmentData.type);
+      // Only populate fabric options if we have a garment type (not during tour)
+      if (garmentData.type) {
+        this.populateFabricOptions(garmentCard, garmentData.type);
+      }
     } else {
       this.disableFabricSelection(garmentCard);
       this.disableSampleSelection(garmentCard);
@@ -9194,6 +9200,15 @@ class V10_GarmentStudio {
     if (step.target === '.labdips-collection') {
       highlightTop = rect.top + 10; // Move highlight down into the content area
       highlightHeight = rect.height - 20; // Reduce height to stay within content
+    }
+
+    // 🎯 Special positioning adjustment for custom colors grid (Step 4)
+    if (step.target === '#sample-custom-grid') {
+      // Adjust highlight to properly surround the two radio button options
+      highlightLeft = rect.left - 12; // More padding on the left
+      highlightTop = rect.top - 12; // More padding on top
+      highlightWidth = rect.width + 24; // More padding width
+      highlightHeight = rect.height + 24; // More padding height
     }
     
     // 🔒 VIEWPORT BOUNDARY SAFETY CHECKS - Ensure highlight stays within screen bounds
