@@ -6551,7 +6551,47 @@ class V10_GarmentUIManager {
       console.error('❌ [UI] Error populating fabric options:', error);
     }
   }
-  
+
+  /**
+   * 🎯 Populate demo fabric options during tour mode
+   * Provides sample fabric options for demonstration when no garment type is selected
+   */
+  populateDemoFabricOptions(garmentCard) {
+    try {
+      const fabricGrid = garmentCard.querySelector('#fabric-type-grid');
+      if (!fabricGrid) {
+        console.warn('❌ [UI] Fabric grid not found during tour');
+        return;
+      }
+
+      const garmentId = garmentCard.dataset.garmentId;
+
+      // Demo fabric options for tour demonstration
+      const demoFabrics = [
+        '100% Cotton',
+        '100% Polyester',
+        'Cotton/Polyester Blend',
+        'Premium Cotton',
+        'Organic Cotton'
+      ];
+
+      const isCompactInterface = fabricGrid.classList.contains('compact-radio-grid');
+      const template = isCompactInterface ? 'compact-radio-card' : 'radio-card';
+
+      fabricGrid.innerHTML = demoFabrics.map(fabric =>
+        this.createFabricOptionHTML(fabric, garmentId, template)
+      ).join('');
+
+      // Add event listeners for restrictions
+      this.addFabricChangeListeners(fabricGrid, garmentCard);
+
+      console.log(`✅ [TOUR] Populated ${demoFabrics.length} demo fabric options for tour`);
+
+    } catch (error) {
+      console.error('❌ [TOUR] Error populating demo fabric options:', error);
+    }
+  }
+
   /**
    * Create fabric option HTML using template approach
    */
@@ -6789,9 +6829,12 @@ class V10_GarmentUIManager {
     // Enable/disable fabric selection based on garment type
     if (garmentData.type || isTourActive) {
       this.enableFabricSelection(garmentCard);
-      // Only populate fabric options if we have a garment type (not during tour)
+      // Populate fabric options - use demo fabrics during tour
       if (garmentData.type) {
         this.populateFabricOptions(garmentCard, garmentData.type);
+      } else if (isTourActive) {
+        // During tour, populate with demo fabric options for demonstration
+        this.populateDemoFabricOptions(garmentCard);
       }
     } else {
       this.disableFabricSelection(garmentCard);
