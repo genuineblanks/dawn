@@ -9673,8 +9673,8 @@ class V10_GarmentStudio {
 
     console.log('✅ Garment confirmed in edit mode, forcing form expansion...');
 
-    // Force expand all sections
-    this.expandAllGarmentSections();
+    // Force expand all sections for the demo garment
+    this.expandAllGarmentSections(demoGarmentId);
 
     // Wait for form expansion and verify before starting tour
     setTimeout(() => {
@@ -9719,8 +9719,8 @@ class V10_GarmentStudio {
     if (hiddenSections.length > 0) {
       console.warn('⚠️ Some sections still hidden:', hiddenSections.map(s => s.name).join(', '));
 
-      // Retry expansion once more
-      this.expandAllGarmentSections();
+      // Retry expansion once more for the demo garment
+      this.expandAllGarmentSections(demoGarmentId);
 
       setTimeout(() => {
         this.startGarmentOnboardingTour(demoGarmentId);
@@ -9776,8 +9776,8 @@ class V10_GarmentStudio {
         return;
       }
 
-      console.log(`🔄 Retry attempt ${this.tourRetryCount}/3 - forcing form expansion...`);
-      this.expandAllGarmentSections();
+      console.log(`🔄 Retry attempt ${this.tourRetryCount}/3 - forcing demo garment form expansion...`);
+      this.expandAllGarmentSections(demoGarmentId);
 
       // Retry after expansion with backoff
       setTimeout(() => this.startGarmentOnboardingTour(demoGarmentId), 1000 * this.tourRetryCount);
@@ -9850,15 +9850,22 @@ class V10_GarmentStudio {
     }, 500);
   }
 
-  // Force expand all garment form sections for the tour
-  expandAllGarmentSections() {
-    console.log('📂 Expanding all garment form sections for tour...');
+  // Force expand all garment form sections for the tour - DEMO GARMENT SPECIFIC
+  expandAllGarmentSections(demoGarmentId) {
+    console.log('📂 Expanding all garment form sections for demo garment:', demoGarmentId);
 
-    // FORCE EXPAND: Show all expanded sections
-    const garmentExpanded = document.getElementById('garment-expanded');
-    const fabricExpanded = document.getElementById('fabric-expanded');
-    const sampleStockExpanded = document.getElementById('sample-stock-expanded');
-    const sampleCustomExpanded = document.getElementById('sample-custom-expanded');
+    // Find the demo garment card first
+    const demoGarmentCard = document.querySelector(`[data-garment-id="${demoGarmentId}"]`);
+    if (!demoGarmentCard) {
+      console.error('❌ Demo garment card not found for expansion!');
+      return;
+    }
+
+    // FORCE EXPAND: Show all expanded sections WITHIN THE DEMO GARMENT
+    const garmentExpanded = demoGarmentCard.querySelector('#garment-expanded');
+    const fabricExpanded = demoGarmentCard.querySelector('#fabric-expanded');
+    const sampleStockExpanded = demoGarmentCard.querySelector('#sample-stock-expanded');
+    const sampleCustomExpanded = demoGarmentCard.querySelector('#sample-custom-expanded');
 
     if (garmentExpanded) {
       garmentExpanded.style.display = 'block';
@@ -9884,11 +9891,11 @@ class V10_GarmentStudio {
       console.log('✅ Sample custom section forced visible');
     }
 
-    // FORCE HIDE: Hide all collapsed/summary sections
-    const garmentDisplay = document.getElementById('garment-display');
-    const fabricDisplay = document.getElementById('fabric-display');
-    const sampleStockDisplay = document.getElementById('sample-stock-display');
-    const sampleCustomDisplay = document.getElementById('sample-custom-display');
+    // FORCE HIDE: Hide all collapsed/summary sections WITHIN THE DEMO GARMENT
+    const garmentDisplay = demoGarmentCard.querySelector('#garment-display');
+    const fabricDisplay = demoGarmentCard.querySelector('#fabric-display');
+    const sampleStockDisplay = demoGarmentCard.querySelector('#sample-stock-display');
+    const sampleCustomDisplay = demoGarmentCard.querySelector('#sample-custom-display');
 
     if (garmentDisplay) {
       garmentDisplay.style.display = 'none';
