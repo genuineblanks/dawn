@@ -6237,7 +6237,7 @@ html.onboarding-active {
 /* Three Button Layout */
 .v10-step-actions--three-button {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: 1fr auto 1fr;
   gap: var(--v10-space-4);
   align-items: center;
   margin-top: var(--v10-space-6);
@@ -6252,19 +6252,7 @@ html.onboarding-active {
 }
 
 .v10-step-actions--three-button .v10-btn--tour {
-  justify-self: center !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  position: relative !important;
-  left: 0 !important;
-  transform: translateX(0) !important;
-}
-
-/* Higher specificity rule for tour button centering */
-.v10-step-actions.v10-step-actions--three-button .v10-btn.v10-btn--tour {
-  justify-self: center !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  justify-self: center;
 }
 
 /* Terms Agreement */
