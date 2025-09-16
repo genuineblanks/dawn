@@ -6825,15 +6825,16 @@ class V10_GarmentUIManager {
 
     // 🎯 TOUR EXEMPTION: During garment studio tour, bypass fabric type restriction
     const isTourActive = document.body.classList.contains('onboarding-active');
+    const isDemoGarment = garmentData.isTourDemo;
 
-    // Enable/disable fabric selection based on garment type
-    if (garmentData.type || isTourActive) {
+    // Enable/disable fabric selection based on garment type OR if it's a tour demo garment
+    if (garmentData.type || isTourActive || isDemoGarment) {
       this.enableFabricSelection(garmentCard);
-      // Populate fabric options - use demo fabrics during tour
-      if (garmentData.type) {
+      // Populate fabric options - use demo fabrics for tour demo garments
+      if (garmentData.type && !isDemoGarment) {
         this.populateFabricOptions(garmentCard, garmentData.type);
-      } else if (isTourActive) {
-        // During tour, populate with demo fabric options for demonstration
+      } else if (isTourActive || isDemoGarment) {
+        // During tour or for demo garments, populate with demo fabric options for demonstration
         this.populateDemoFabricOptions(garmentCard);
       }
     } else {
@@ -9683,12 +9684,19 @@ class V10_GarmentStudio {
 
   // Verify form sections are expanded and start the actual tour
   verifyFormExpansionAndStartTour(demoGarmentId) {
-    console.log('🔍 Verifying form sections are expanded...');
+    console.log('🔍 Verifying form sections are expanded for demo garment...');
 
-    const garmentGrid = document.getElementById('garment-type-grid');
-    const fabricGrid = document.getElementById('fabric-type-grid');
-    const sampleStockGrid = document.getElementById('sample-stock-grid');
-    const sampleCustomGrid = document.getElementById('sample-custom-grid');
+    const demoGarmentCard = document.querySelector(`[data-garment-id="${demoGarmentId}"]`);
+    if (!demoGarmentCard) {
+      console.error('❌ Demo garment card not found!');
+      this.hideGarmentOnboarding();
+      return;
+    }
+
+    const garmentGrid = demoGarmentCard.querySelector('#garment-type-grid');
+    const fabricGrid = demoGarmentCard.querySelector('#fabric-type-grid');
+    const sampleStockGrid = demoGarmentCard.querySelector('#sample-stock-grid');
+    const sampleCustomGrid = demoGarmentCard.querySelector('#sample-custom-grid');
 
     const sectionsVisible = [
       { grid: garmentGrid, name: 'Garment Type' },
@@ -9742,10 +9750,10 @@ class V10_GarmentStudio {
 
     // Check if required elements exist AND are visible (garment form should be expanded now)
     const requiredElements = [
-      { selector: '#garment-type-grid', name: 'Garment Type Grid' },
-      { selector: '#fabric-type-grid', name: 'Fabric Type Grid' },
-      { selector: '#sample-stock-grid', name: 'Sample Stock Grid' },
-      { selector: '#sample-custom-grid', name: 'Sample Custom Grid' }
+      { selector: `[data-garment-id="${demoGarmentId}"] #garment-type-grid`, name: 'Garment Type Grid' },
+      { selector: `[data-garment-id="${demoGarmentId}"] #fabric-type-grid`, name: 'Fabric Type Grid' },
+      { selector: `[data-garment-id="${demoGarmentId}"] #sample-stock-grid`, name: 'Sample Stock Grid' },
+      { selector: `[data-garment-id="${demoGarmentId}"] #sample-custom-grid`, name: 'Sample Custom Grid' }
     ];
 
     // Check both existence AND visibility
@@ -9805,29 +9813,29 @@ class V10_GarmentStudio {
     document.getElementById('garment-onboarding-skip').addEventListener('click', () => this.skipGarmentOnboarding());
     document.getElementById('garment-onboarding-next').addEventListener('click', () => this.nextGarmentOnboardingStep());
 
-    // Define garment tour steps with CORRECT selectors
+    // Define garment tour steps with GARMENT-SPECIFIC selectors
     this.currentGarmentOnboardingStep = 0;
     this.garmentOnboardingSteps = [
       {
-        target: '#garment-type-grid',
+        target: `[data-garment-id="${demoGarmentId}"] #garment-type-grid`,
         title: 'Step 1: Choose Your Garment Type',
         description: 'Select the type of garment you want to produce. Each type has different specifications and requirements. Choose from t-shirts, hoodies, sweatshirts, and more.',
         position: 'bottom'
       },
       {
-        target: '#fabric-type-grid',
+        target: `[data-garment-id="${demoGarmentId}"] #fabric-type-grid`,
         title: 'Step 2: Select Fabric Type',
         description: 'Choose the fabric material for your garment. This affects texture, durability, and production cost. Common options include cotton, polyester, and blends.',
         position: 'bottom'
       },
       {
-        target: '#sample-stock-grid',
+        target: `[data-garment-id="${demoGarmentId}"] #sample-stock-grid`,
         title: 'Step 3: Stock Fabric Colors',
         description: 'Choose this option to use our standard fabric colors. This is quick and cost-effective for basic color needs without custom requirements.',
         position: 'bottom'
       },
       {
-        target: '#sample-custom-grid',
+        target: `[data-garment-id="${demoGarmentId}"] #sample-custom-grid`,
         title: 'Step 4: Custom Colors & Patterns',
         description: 'PANTONE Library: Develop your colorway in Color Studio. Custom Pattern: Use when you have TCX/TPX codes or unique patterns.',
         position: 'bottom'
@@ -9902,18 +9910,26 @@ class V10_GarmentStudio {
       console.log('🚫 Sample custom summary hidden');
     }
 
-    // VERIFICATION: Check if grids are now visible
+    // VERIFICATION: Check if demo garment grids are now visible
     setTimeout(() => {
-      const garmentGrid = document.getElementById('garment-type-grid');
-      const fabricGrid = document.getElementById('fabric-type-grid');
-      const sampleStockGrid = document.getElementById('sample-stock-grid');
-      const sampleCustomGrid = document.getElementById('sample-custom-grid');
+      // Find the most recently added garment (should be our demo garment)
+      const demoGarmentCards = document.querySelectorAll('.garment-card');
+      const lastGarmentCard = demoGarmentCards[demoGarmentCards.length - 1];
 
-      console.log('🔍 Form section visibility check:');
-      console.log('- Garment grid visible:', garmentGrid && garmentGrid.offsetParent !== null);
-      console.log('- Fabric grid visible:', fabricGrid && fabricGrid.offsetParent !== null);
-      console.log('- Sample stock grid visible:', sampleStockGrid && sampleStockGrid.offsetParent !== null);
-      console.log('- Sample custom grid visible:', sampleCustomGrid && sampleCustomGrid.offsetParent !== null);
+      if (lastGarmentCard) {
+        const garmentGrid = lastGarmentCard.querySelector('#garment-type-grid');
+        const fabricGrid = lastGarmentCard.querySelector('#fabric-type-grid');
+        const sampleStockGrid = lastGarmentCard.querySelector('#sample-stock-grid');
+        const sampleCustomGrid = lastGarmentCard.querySelector('#sample-custom-grid');
+
+        console.log('🔍 Demo garment form section visibility check:');
+        console.log('- Garment grid visible:', garmentGrid && garmentGrid.offsetParent !== null);
+        console.log('- Fabric grid visible:', fabricGrid && fabricGrid.offsetParent !== null);
+        console.log('- Sample stock grid visible:', sampleStockGrid && sampleStockGrid.offsetParent !== null);
+        console.log('- Sample custom grid visible:', sampleCustomGrid && sampleCustomGrid.offsetParent !== null);
+      } else {
+        console.warn('⚠️ Demo garment card not found for verification');
+      }
     }, 100);
 
     console.log('✅ All garment form sections expansion completed');
