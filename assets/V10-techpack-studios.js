@@ -3308,9 +3308,18 @@ class V10_StudioNavigator {
         tourButton.id = tourButtonId;
         tourButton.innerHTML = tourButtonHTML;
 
-        // Safely insert it before the Next button
+        // Find the correct insert position - append to stepActions instead of using insertBefore
         try {
-          stepActions.insertBefore(tourButton, nextButton);
+          // First, find if nextButton is actually inside stepActions
+          const isNextButtonInside = stepActions.contains(nextButton);
+
+          if (isNextButtonInside) {
+            // nextButton is inside stepActions - use insertBefore
+            stepActions.insertBefore(tourButton, nextButton);
+          } else {
+            // nextButton is somewhere else - just append tour button to stepActions
+            stepActions.appendChild(tourButton);
+          }
 
           // Re-attach event listeners for the tour button
           this.attachTourButtonEvents(tourButton, tourButtonId);
@@ -3439,7 +3448,17 @@ class V10_StudioNavigator {
           tourButton.innerHTML = tourButtonHTML;
 
           try {
-            stepActions.insertBefore(tourButton, nextButton);
+            // Check if nextButton is actually inside stepActions
+            const isNextButtonInside = stepActions.contains(nextButton);
+
+            if (isNextButtonInside) {
+              // nextButton is inside stepActions - use insertBefore
+              stepActions.insertBefore(tourButton, nextButton);
+            } else {
+              // nextButton is somewhere else - just append tour button to stepActions
+              stepActions.appendChild(tourButton);
+            }
+
             this.attachTourButtonEvents(tourButton, tourButtonId);
             console.log(`🎯 Tour button recreated for Step 3: ${tourButtonId}`);
           } catch (error) {
