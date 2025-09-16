@@ -4530,6 +4530,17 @@ html.onboarding-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.onboarding-tooltip h3 {
+  color: #ffffff !important;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .onboarding-tooltip::before {
   content: '';
   position: absolute;

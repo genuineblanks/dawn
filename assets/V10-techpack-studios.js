@@ -10006,9 +10006,6 @@ class V10_GarmentStudio {
     tooltip.innerHTML = `
       <h3>${step.title}</h3>
       <p>${step.description}</p>
-      <div class="onboarding-progress">
-        Step ${this.currentGarmentOnboardingStep + 1} of ${this.garmentOnboardingSteps.length}
-      </div>
     `;
 
     // Update button text
