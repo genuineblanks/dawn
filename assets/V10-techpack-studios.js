@@ -3326,10 +3326,6 @@ class V10_StudioNavigator {
     const stepActions = document.querySelector('.v10-step-actions');
     if (!stepActions) return;
 
-    // 🔥 MOBILE/DESKTOP CHECK: Apply appropriate layout for each
-    const isMobile = window.innerWidth <= 768;
-
-    // 🖥️ DESKTOP ONLY: Apply dynamic layout logic
     // Get current step - try multiple methods
     let currentStep = 1;
 
@@ -3360,25 +3356,20 @@ class V10_StudioNavigator {
 
     // Apply layout based on visible button count and step context
     if (visibleButtonCount >= 3) {
-      // 3+ buttons: Use three-button layout
+      // 3+ buttons: Use three-button grid layout
       stepActions.classList.add('v10-step-actions--three-button');
-      console.log(`✅ Applied three-button layout: ${visibleButtonCount} buttons visible on step ${currentStep} (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
+      console.log(`✅ Applied three-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
     } else if (visibleButtonCount === 1 && currentStep === 1) {
       // Special case: Step 1 with only "Continue to Files" button should be right-aligned
       stepActions.classList.remove('v10-step-actions--three-button');
-      // ONLY set inline styles on DESKTOP - let CSS handle mobile
-      if (!isMobile) {
-        stepActions.style.justifyContent = 'flex-end';
-      }
-      console.log(`✅ Applied single-button right-align layout: step ${currentStep} with 1 button (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
+      // Ensure single button is right-aligned using flex
+      stepActions.style.justifyContent = 'flex-end';
+      console.log(`✅ Applied single-button right-align layout: step ${currentStep} with 1 button`);
     } else {
       // 2 buttons or other cases: Use default flex layout
       stepActions.classList.remove('v10-step-actions--three-button');
-      // ONLY set inline styles on DESKTOP - let CSS handle mobile
-      if (!isMobile) {
-        stepActions.style.justifyContent = 'space-between';
-      }
-      console.log(`✅ Applied two-button layout: ${visibleButtonCount} buttons visible on step ${currentStep} (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
+      stepActions.style.justifyContent = 'space-between';
+      console.log(`✅ Applied two-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
     }
   }
 
@@ -3843,12 +3834,7 @@ class V10_QuantityStudioManager {
       // Not all complete - show what needs completion
       nextBtn.classList.add('v10-btn--disabled');
       nextBtn.disabled = true;
-      nextBtn.innerHTML = `
-        Complete all garments
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      `;
+      nextBtn.innerHTML = 'Complete all garments';
     }
   }
   
@@ -14308,21 +14294,11 @@ class V10_ValidationManager {
             const stats = validation.stats;
             if (stats) {
               console.log(`⏳ Garments incomplete - showing progress (${stats.complete}/${stats.total})`);
-              nextBtn.innerHTML = `
-                Complete All Garments (${stats.complete}/${stats.total})
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              `;
+              nextBtn.innerHTML = `Complete All Garments (${stats.complete}/${stats.total})`;
               nextBtn.title = `${stats.incomplete} garment(s) incomplete - complete all garments to proceed`;
             } else if (Array.isArray(validation.errors) && validation.errors.length > 0) {
               console.log(`❌ Validation errors:`, validation.errors);
-              nextBtn.innerHTML = `
-                Complete All Garments
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              `;
+              nextBtn.innerHTML = 'Complete All Garments';
               nextBtn.title = validation.errors.join(', ');
             }
             nextBtn.classList.add('v10-btn--disabled');
