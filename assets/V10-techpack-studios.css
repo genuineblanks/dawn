@@ -11647,23 +11647,22 @@ lid #404040 !important;
     justify-content: center !important;
   }
 
-  /* Next button: Hide initial "Next Step" but show dynamic text */
+  /* Next button: Show only greyed-out arrow on mobile */
   #step-3-next {
-    text-indent: -9999px !important;     /* Hide initial "Next Step" text */
-    font-size: 12px !important;          /* Keep font size for dynamic text */
-    padding: 8px 16px !important;        /* More padding for text content */
+    font-size: 0 !important;             /* Hide all text completely */
+    padding: 12px !important;            /* Same as Previous button */
     min-height: 48px !important;         /* Maintain touch target */
+    min-width: 48px !important;          /* Square touch target */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    white-space: nowrap !important;      /* Prevent text wrapping */
-    overflow: hidden !important;         /* Hide overflowing text-indent */
+    opacity: 0.4 !important;             /* Greyed out by default (disabled state) */
+    transition: opacity 0.2s ease !important;
   }
 
-  /* When JavaScript updates innerHTML, show the dynamic text */
-  #step-3-next.v10-btn--disabled,
+  /* When enabled, make arrow normal opacity */
   #step-3-next:not(.v10-btn--disabled) {
-    text-indent: 0 !important;           /* Show dynamic text like "Complete All Garments" */
+    opacity: 1 !important;               /* Full opacity when enabled */
   }
 
   /* Keep arrow icons visible and properly sized */
@@ -11673,12 +11672,12 @@ lid #404040 !important;
     flex-shrink: 0 !important;
   }
 
-  /* Next button icons (for dynamic content) */
+  /* Next button arrow icon (arrow-only like Previous) */
   #step-3-next svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 20px !important;              /* Same size as Previous arrow */
+    height: 20px !important;
     flex-shrink: 0 !important;
-    margin-left: 8px !important;         /* Space between text and icon */
+    margin: 0 !important;                /* No margin needed for icon-only */
   }
 
   /* Fix tour button absolute positioning chaos on mobile */
@@ -11692,6 +11691,12 @@ lid #404040 !important;
   /* Ensure proper button order on mobile */
   #step-3-prev { order: 1 !important; }   /* Previous first */
   #step-3-next { order: 3 !important; }   /* Next last */
+
+  /* CRITICAL: Ensure step actions are always visible on all studios */
+  .v10-step-actions {
+    display: flex !important;            /* Force visibility */
+    visibility: visible !important;      /* Override any hidden state */
+  }
 }
 
 /* ====================================================
