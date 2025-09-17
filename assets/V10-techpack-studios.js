@@ -9226,7 +9226,8 @@ class V10_GarmentStudio {
         if (scrollStabilityCount >= 3 || waitTime >= maxWaitTime) {
           clearInterval(scrollCheckInterval);
           console.log('✅ Scroll completed and stabilized - starting element positioning...');
-          this.showOnboardingStep();
+          // Add small delay for first step to ensure DOM readiness
+          setTimeout(() => this.showOnboardingStep(), 100);
           return;
         }
       } else {
@@ -9240,7 +9241,8 @@ class V10_GarmentStudio {
       if (waitTime >= maxWaitTime) {
         clearInterval(scrollCheckInterval);
         console.log('⏰ Max wait time reached - starting element positioning...');
-        this.showOnboardingStep();
+        // Add small delay for first step to ensure DOM readiness
+        setTimeout(() => this.showOnboardingStep(), 100);
       }
     };
     
@@ -9272,7 +9274,7 @@ class V10_GarmentStudio {
     }
     
     // Find target element
-    const targetElement = document.querySelector(step.target);
+    let targetElement = document.querySelector(step.target);
     if (!targetElement) {
       console.warn(`Onboarding target not found: ${step.target}`);
       this.nextOnboardingStep();
@@ -9332,6 +9334,26 @@ class V10_GarmentStudio {
       });
     } else {
       console.log('🖥️ Desktop detected - maintaining original view position for tour');
+    }
+
+    // 🔄 FORCE ELEMENT RE-DETECTION: Ensure we have the latest element position
+    const reDetectedElement = document.querySelector(step.target);
+    if (reDetectedElement && reDetectedElement !== targetElement) {
+      console.log('🔄 Re-detected different element instance, updating reference');
+      targetElement = reDetectedElement;
+    }
+
+    // 🖥️ DESKTOP FIRST STEP FIX: Add small delay for initial step to ensure proper positioning
+    if (!isMobile && this.currentOnboardingStep === 0) {
+      console.log('🖥️ First step on desktop - adding positioning delay for element readiness');
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      // Re-query element after delay to ensure latest position
+      const finalElement = document.querySelector(step.target);
+      if (finalElement) {
+        targetElement = finalElement;
+        console.log('🔄 Updated element reference after desktop delay');
+      }
     }
 
     // 🎯 COMPREHENSIVE DEBUG LOGGING
