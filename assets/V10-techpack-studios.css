@@ -6402,16 +6402,13 @@ html.onboarding-active {
   }
 
   .v10-step-actions--three-button {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    gap: var(--v10-space-3) !important;
-    flex-direction: row !important;
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
   }
 
   .v10-step-actions--three-button .v10-btn {
-    flex: none !important;
-    width: auto !important;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .cost-summary-header-actions {
