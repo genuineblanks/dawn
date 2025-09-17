@@ -3294,6 +3294,17 @@ class V10_StudioNavigator {
     // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
     this.updateStepActionsLayout();
 
+    // 🎯 VALIDATION: Trigger validation manager to update step-3-next button state
+    if (window.v10TechPackSystem?.validationManager) {
+      try {
+        console.log(`🔄 Triggering validation after studio switch to "${studioName}"`);
+        const validation = window.v10TechPackSystem.validationManager.validateStep();
+        console.log(`📋 Post-switch validation result:`, validation);
+      } catch (validationError) {
+        console.warn('Error triggering validation after studio switch:', validationError);
+      }
+    }
+
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
       // Clear any existing timeout to debounce rapid switches
