@@ -3275,11 +3275,11 @@ class V10_StudioNavigator {
       if (!localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
       }
-    } else if (studioName === 'garment' && garmentTourButton) {
-      // Garment Studio Tour Button
+    } else if (studioName === 'garment' && V10_State.requestType !== 'quotation' && garmentTourButton) {
+      // Garment Studio Tour Button (hidden for quotation requests)
       garmentTourButton.style.display = 'block';
       garmentTourButton.style.visibility = 'visible';
-      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio (${V10_State.requestType})`);
     } else {
       // No tour button should be shown
       console.log(`🚫 NO TOUR button shown: studio="${studioName}", requestType="${V10_State.requestType}"`);
