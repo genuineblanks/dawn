@@ -3275,11 +3275,11 @@ class V10_StudioNavigator {
       if (!localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
       }
-    } else if (studioName === 'garment' && garmentTourButton) {
-      // Garment Studio Tour Button
+    } else if (studioName === 'garment' && V10_State.requestType !== 'quotation' && garmentTourButton) {
+      // Garment Studio Tour Button (hidden for quotation requests)
       garmentTourButton.style.display = 'block';
       garmentTourButton.style.visibility = 'visible';
-      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio (${V10_State.requestType})`);
     } else {
       // No tour button should be shown
       console.log(`🚫 NO TOUR button shown: studio="${studioName}", requestType="${V10_State.requestType}"`);
@@ -10205,31 +10205,113 @@ class V10_GarmentStudio {
 
     // Position highlight around target
     const rect = targetElement.getBoundingClientRect();
-    const highlightLeft = rect.left - 8;
-    const highlightTop = rect.top - 8;
-    const highlightWidth = rect.width + 16;
-    const highlightHeight = rect.height + 16;
+    let highlightLeft = rect.left - 8;
+    let highlightTop = rect.top - 8;
+    let highlightWidth = rect.width + 16;
+    let highlightHeight = rect.height + 16;
 
-    // Apply highlight positioning
-    highlight.style.left = `${highlightLeft}px`;
-    highlight.style.top = `${highlightTop}px`;
-    highlight.style.width = `${highlightWidth}px`;
-    highlight.style.height = `${highlightHeight}px`;
+    // 🔒 VIEWPORT BOUNDARY SAFETY CHECKS - Ensure highlight stays within screen bounds
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const boundaryMargin = 8; // Minimum margin from viewport edge
 
-    // Position tooltip
-    let tooltipTop = rect.bottom + 20;
-    let tooltipLeft = rect.left;
-
-    // Adjust tooltip position if it goes off screen
-    if (tooltipTop + 200 > window.innerHeight) {
-      tooltipTop = rect.top - 220;
+    // Horizontal boundary checks
+    if (highlightLeft < boundaryMargin) {
+      const adjustment = boundaryMargin - highlightLeft;
+      highlightLeft = boundaryMargin;
+      highlightWidth = Math.max(highlightWidth - adjustment, 16); // Minimum width
     }
-    if (tooltipLeft + 400 > window.innerWidth) {
-      tooltipLeft = window.innerWidth - 420;
+    if (highlightLeft + highlightWidth > viewportWidth - boundaryMargin) {
+      highlightWidth = Math.max(viewportWidth - boundaryMargin - highlightLeft, 16);
     }
 
-    tooltip.style.left = `${Math.max(20, tooltipLeft)}px`;
-    tooltip.style.top = `${Math.max(20, tooltipTop)}px`;
+    // Vertical boundary checks
+    if (highlightTop < boundaryMargin) {
+      const adjustment = boundaryMargin - highlightTop;
+      highlightTop = boundaryMargin;
+      highlightHeight = Math.max(highlightHeight - adjustment, 16); // Minimum height
+    }
+    if (highlightTop + highlightHeight > viewportHeight - boundaryMargin) {
+      highlightHeight = Math.max(viewportHeight - boundaryMargin - highlightTop, 16);
+    }
+
+    console.log('🔒 Garment tour viewport boundary check completed:', {
+      finalLeft: highlightLeft,
+      finalTop: highlightTop,
+      finalWidth: highlightWidth,
+      finalHeight: highlightHeight
+    });
+
+    // Apply styles with !important flags to prevent CSS conflicts
+    highlight.style.setProperty('left', highlightLeft + 'px', 'important');
+    highlight.style.setProperty('top', highlightTop + 'px', 'important');
+    highlight.style.setProperty('width', highlightWidth + 'px', 'important');
+    highlight.style.setProperty('height', highlightHeight + 'px', 'important');
+    highlight.style.setProperty('position', 'fixed', 'important');
+    highlight.style.setProperty('z-index', '9999', 'important');
+    highlight.style.setProperty('display', 'block', 'important');
+    highlight.style.setProperty('visibility', 'visible', 'important');
+
+    // Position tooltip with mobile-responsive boundary detection
+    const viewport = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY
+    };
+
+    // Mobile detection and responsive dimensions
+    const tooltipWidth = isMobile ? Math.min(window.innerWidth * 0.9, 300) : 320;
+    const tooltipHeight = isMobile ? 140 : 120; // Slightly taller on mobile for better readability
+    const margin = isMobile ? 12 : 20; // Smaller margins on mobile
+
+    let tooltipX, tooltipY, transform, finalPosition = step.position;
+
+    // Mobile-first positioning logic
+    if (isMobile) {
+      // On mobile, prefer bottom positioning to avoid keyboard overlap
+      tooltipX = Math.max(margin, Math.min(
+        viewport.width - tooltipWidth - margin,
+        rect.left + (rect.width / 2) - (tooltipWidth / 2)
+      ));
+
+      // Check if element is in top half of screen
+      const elementMiddle = rect.top + (rect.height / 2);
+      const screenMiddle = viewport.height / 2;
+
+      if (elementMiddle < screenMiddle) {
+        // Element in top half - place tooltip below
+        finalPosition = 'bottom';
+        tooltipY = rect.bottom + margin;
+        transform = 'translateX(0)';
+      } else {
+        // Element in bottom half - place tooltip above
+        finalPosition = 'top';
+        tooltipY = rect.top - margin - tooltipHeight;
+        transform = 'translateX(0)';
+      }
+    } else {
+      // Desktop positioning (original logic)
+      tooltipX = rect.left;
+      tooltipY = rect.bottom + 20;
+
+      // Adjust tooltip position if it goes off screen
+      if (tooltipY + 200 > window.innerHeight) {
+        tooltipY = rect.top - 220;
+      }
+      if (tooltipX + 400 > window.innerWidth) {
+        tooltipX = window.innerWidth - 420;
+      }
+    }
+
+    tooltip.style.left = `${Math.max(20, tooltipX)}px`;
+    tooltip.style.top = `${Math.max(20, tooltipY)}px`;
+
+    // Apply mobile-responsive width
+    if (isMobile) {
+      tooltip.style.width = `${tooltipWidth}px`;
+      tooltip.style.maxWidth = `${tooltipWidth}px`;
+    }
 
     // Set tooltip content
     tooltip.innerHTML = `
@@ -18113,9 +18195,12 @@ class V10_ClientManager {
       }
     }
     
-    // 🗑️ REMOVED: Duplicate different address validation - now handled by Universal Form Validator
-    // The Universal Form Validator system now handles all conditional address field validation
-    
+    // 🆕 ENHANCED: Include conditional sections validation
+    const conditionalValidation = this.validateConditionalSections();
+    if (!conditionalValidation) {
+      isValid = false;
+    }
+
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
       console.log('🔍 Checking bulk request requirements (shipping & insurance)');
@@ -18180,21 +18265,75 @@ class V10_ClientManager {
   }
 
   validateConditionalSections() {
+    let isValid = true;
+
     // Only validate delivery address radio if not quotation type
     if (this.currentRequestType !== 'quotation') {
-      const deliveryField = document.getElementById('v10-delivery-address-field');
+      // Check delivery address selection for sample-request and bulk-order-request
+      const deliveryField = document.getElementById('delivery-row');
       if (deliveryField && deliveryField.style.display !== 'none') {
         const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
         if (!selectedDelivery) {
-          deliveryField.classList.add('v10-form-field--invalid');
+          console.log('❌ No delivery address selected');
+          isValid = false;
+          // Add error styling to the delivery address field group
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.add('v10-form-field--invalid');
+          }
         } else {
-          deliveryField.classList.remove('v10-form-field--invalid');
-          
-          // 🗑️ REMOVED: Duplicate field-level validation - now handled by Universal Form Validator
-          // Only keeping radio selection validation here, field validation handled comprehensively by Universal Form Validator
+          console.log('✅ Delivery address selected:', selectedDelivery.value);
+          // Remove error styling
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.remove('v10-form-field--invalid');
+          }
+        }
+      }
+
+      // Check bulk order specific fields
+      if (this.currentRequestType === 'bulk-order-request') {
+        const shippingSection = document.getElementById('shipping-section');
+        if (shippingSection && shippingSection.style.display !== 'none') {
+
+          // Validate shipping method selection
+          const selectedShipping = document.querySelector('input[name="shippingMethod"]:checked');
+          if (!selectedShipping) {
+            console.log('❌ No shipping method selected for bulk order');
+            isValid = false;
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Shipping method selected:', selectedShipping.value);
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
+
+          // Validate insurance selection
+          const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
+          if (!selectedInsurance) {
+            console.log('❌ No insurance option selected for bulk order');
+            isValid = false;
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Insurance option selected:', selectedInsurance.value);
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
         }
       }
     }
+
+    return isValid;
   }
 
   saveData() {
@@ -20318,100 +20457,60 @@ class UniversalFormValidator {
 
   // Validate entire form
   validateForm(formElement) {
+    console.log('🔍 Starting form validation...');
     const fields = formElement.querySelectorAll('input, textarea, select');
     let isFormValid = true;
     const fieldErrors = [];
 
     fields.forEach(field => {
+      // Skip validation for hidden fields or fields in hidden containers
+      if (!this.isFieldVisible(field)) {
+        console.log(`⏭️ Skipping validation for hidden field: ${field.name || field.id || field.type}`);
+        // Clear any existing errors for hidden fields
+        this.clearFieldError(field);
+        return;
+      }
+
+      console.log(`✅ Validating visible field: ${field.name || field.id || field.type}`);
       const validation = this.validateField(field);
-      
+
       if (!validation.isValid) {
         isFormValid = false;
         fieldErrors.push({
           field: field,
           errors: validation.errors
         });
-        
+
         // Show error for first error message
         this.showFieldError(field, validation.errors[0]);
+        console.log(`❌ Validation failed for visible field: ${field.name || field.id || field.type} - ${validation.errors[0]}`);
       } else {
         // Clear any existing errors for valid fields
         this.clearFieldError(field);
       }
     });
 
-    // Handle radio button group validation
+    // Handle radio button group validation (simplified)
+    console.log('🔍 Checking radio button groups...');
     const radioGroups = this.getRadioGroups(formElement);
     radioGroups.forEach(group => {
       const requiredRadio = group.find(radio => radio.hasAttribute('required'));
-      if (requiredRadio && !this.isRadioGroupSelected(requiredRadio)) {
-        isFormValid = false;
-        
-        // Add error styling to radio group container
-        const groupContainer = this.getRadioGroupContainer(group[0]);
-        if (groupContainer) {
-          groupContainer.classList.add('error');
-          
-          // Add error message if not already present
-          if (!groupContainer.querySelector('.field-error-message')) {
-            const errorElement = document.createElement('div');
-            errorElement.className = 'field-error-message';
-            errorElement.textContent = this.errorMessages.radio;
-            groupContainer.appendChild(errorElement);
-          }
+
+      if (requiredRadio) {
+        const isVisible = this.isFieldVisible(requiredRadio);
+        const isSelected = this.isRadioGroupSelected(requiredRadio);
+        console.log(`📻 Radio group ${requiredRadio.name}: visible=${isVisible}, selected=${isSelected}`);
+
+        // Only validate visible radio groups
+        if (isVisible && !isSelected) {
+          isFormValid = false;
+          this.showFieldError(requiredRadio, this.errorMessages.radio);
+          console.log(`❌ Radio group validation failed: ${requiredRadio.name}`);
         }
       }
     });
 
-    // 🔧 CONDITIONAL SECTION VALIDATION: Check "Different Address" fields for sample-request and bulk-order-request
-    const requestType = window.V10_State?.requestType;
-    if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-      const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-      if (selectedDelivery?.value === 'different') {
-        const differentAddressForm = document.getElementById('v10-different-address-form');
-        if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-          // Validate all fields with data-validate="required-if-different" in the different address form
-          const conditionalFields = differentAddressForm.querySelectorAll('[data-validate="required-if-different"]');
-          
-          conditionalFields.forEach(field => {
-            if (!field.value?.trim()) {
-              isFormValid = false;
-              
-              // Add visual error state
-              const fieldContainer = field.closest('.v10-form-field');
-              if (fieldContainer) {
-                fieldContainer.classList.add('error');
-                
-                // Add error message if not already present
-                if (!fieldContainer.querySelector('.field-error-message')) {
-                  const errorElement = document.createElement('div');
-                  errorElement.className = 'field-error-message';
-                  errorElement.textContent = 'This field is required for different address';
-                  fieldContainer.appendChild(errorElement);
-                }
-              }
-              
-              // Add to field errors array for comprehensive tracking
-              fieldErrors.push({
-                field: field,
-                errors: ['This field is required for different address']
-              });
-            } else {
-              // Clear errors for valid conditional fields
-              const fieldContainer = field.closest('.v10-form-field');
-              if (fieldContainer) {
-                fieldContainer.classList.remove('error');
-                const errorMessage = fieldContainer.querySelector('.field-error-message');
-                if (errorMessage) {
-                  errorMessage.remove();
-                }
-              }
-            }
-          });
-        }
-      }
-    }
-
+    console.log(`🔍 Form validation complete. Valid: ${isFormValid}`);
     return {
       isValid: isFormValid,
       errors: fieldErrors
@@ -20440,7 +20539,7 @@ class UniversalFormValidator {
   getRadioGroupContainer(radioField) {
     let container = radioField.parentNode;
     while (container && container !== document.body) {
-      if (container.classList.contains('radio-group') || 
+      if (container.classList.contains('radio-group') ||
           container.classList.contains('form-group') ||
           container.classList.contains('form-section')) {
         return container;
@@ -20448,6 +20547,27 @@ class UniversalFormValidator {
       container = container.parentNode;
     }
     return null;
+  }
+
+  // Check if field is visible and should be validated
+  isFieldVisible(field) {
+    // Check if the field itself is hidden
+    if (field.type === 'hidden') {
+      return false;
+    }
+
+    // Check if any parent container is hidden
+    let element = field;
+    while (element && element !== document.body) {
+      const style = window.getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden') {
+        console.log(`⏭️ Field ${field.name || field.id} is in hidden container:`, element.id || element.className);
+        return false;
+      }
+      element = element.parentElement;
+    }
+
+    return true;
   }
 
   // Set up error clearing when user fixes fields
@@ -20487,21 +20607,8 @@ class UniversalFormValidator {
   validateAndProceed(formElement) {
     const validation = this.validateForm(formElement);
     if (!validation.isValid) {
-      // Scroll to first error - check main form first
-      let firstError = formElement.querySelector('.error');
-      
-      // 🔧 CONDITIONAL SECTION ERROR SCROLLING: If no error in main form, check conditional sections
-      if (!firstError) {
-        const requestType = window.V10_State?.requestType;
-        if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-          const differentAddressForm = document.getElementById('v10-different-address-form');
-          if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-            firstError = differentAddressForm.querySelector('.error');
-          }
-        }
-      }
-      
-      // Scroll to first error found (main form or conditional section)
+      // Scroll to first error
+      const firstError = formElement.querySelector('.error');
       if (firstError) {
         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
