@@ -1287,14 +1287,18 @@ button:focus,
 @media (max-width: 768px) {
   .v10-step-actions {
     flex-direction: row;
-    gap: var(--v10-space-3);
-    justify-content: center;
-    position: relative; /* Ensure relative positioning for mobile too */
+    gap: 8px;                    /* 🔥 BALANCED: Smaller consistent gap */
+    justify-content: space-between; /* 🔥 BALANCED: Distribute evenly */
+    align-items: center;         /* Center align all buttons */
+    position: relative;
+    padding: 0 12px;             /* Container padding for edge spacing */
   }
 
   .v10-btn {
-    flex: 1;
+    flex: 0 0 auto;              /* 🔥 FIX: Don't expand, use content size */
     justify-content: center;
+    min-width: 80px;             /* Minimum touch target */
+    max-width: 120px;            /* Prevent oversized buttons */
   }
 
   /* MOBILE: Tour button flex properties only - positioning handled at line 11709 */
@@ -11620,17 +11624,18 @@ lid #404040 !important;
     line-height: 1.2 !important;     /* Tight line height */
   }
   
-  /* 🔥 ENHANCED: Consistent mobile tour button sizing to prevent layout shifts */
+  /* 🔥 BALANCED: Tour button sizing for three-button layout */
   .v10-btn--tour {
-    min-width: 140px !important;      /* Fixed consistent width */
-    max-width: 140px !important;      /* Prevent expansion */
-    font-size: 11px !important;       /* Smaller font to fit all text */
-    padding: 8px 12px !important;     /* Tighter padding for mobile */
-    gap: 4px !important;              /* Smaller gap between icon and text */
+    min-width: 160px !important;      /* Larger for better balance */
+    max-width: 160px !important;      /* Consistent width */
+    font-size: 12px !important;       /* Slightly larger font */
+    padding: 10px 14px !important;    /* More comfortable padding */
+    gap: 6px !important;              /* Better icon-text spacing */
     text-align: center !important;    /* Center align text */
     overflow: hidden !important;      /* Hide overflow */
     white-space: nowrap !important;   /* Prevent line breaks */
     box-sizing: border-box !important; /* Include padding in width */
+    flex: 0 0 160px !important;       /* Fixed flex basis */
   }
   
   /* Ensure mobile button has proper touch target size */
@@ -11712,13 +11717,14 @@ lid #404040 !important;
     margin-left: 8px !important;         /* Space between text and icon */
   }
 
-  /* Fix tour button positioning - use absolute like desktop for proper hidden behavior */
+  /* 🔥 BALANCED: Tour button in flex flow for three-button layout */
   .v10-step-actions .v10-btn--tour {
-    position: absolute !important;       /* Same as desktop - removes from document flow */
-    left: 50% !important;                /* Center horizontally */
-    transform: translateX(-50%) !important; /* Complete centering */
-    font-size: 14px !important;          /* Keep tour button text visible */
-    order: 2 !important;                 /* Fallback for non-absolute context */
+    position: static !important;         /* Use flex instead of absolute */
+    left: auto !important;               /* Clear absolute positioning */
+    transform: none !important;          /* Clear transforms */
+    font-size: 12px !important;          /* Match mobile sizing */
+    order: 2 !important;                 /* Position between prev/next */
+    margin: 0 !important;               /* Clear any margins */
   }
 
   /* Ensure proper button order on mobile */
