@@ -3326,15 +3326,8 @@ class V10_StudioNavigator {
     const stepActions = document.querySelector('.v10-step-actions');
     if (!stepActions) return;
 
-    // 🔥 MOBILE CHECK: Skip desktop layout logic on mobile to preserve CSS media queries
+    // 🔥 MOBILE/DESKTOP CHECK: Apply appropriate layout for each
     const isMobile = window.innerWidth <= 768;
-    if (isMobile) {
-      // On mobile, clear any desktop inline styles and let CSS media queries handle layout
-      stepActions.style.removeProperty('justify-content');
-      stepActions.classList.remove('v10-step-actions--three-button'); // Remove any desktop classes
-      console.log('📱 Mobile detected - clearing desktop styles and classes, using CSS media queries only');
-      return; // Let mobile CSS media queries control everything
-    }
 
     // 🖥️ DESKTOP ONLY: Apply dynamic layout logic
     // Get current step - try multiple methods
@@ -3367,20 +3360,25 @@ class V10_StudioNavigator {
 
     // Apply layout based on visible button count and step context
     if (visibleButtonCount >= 3) {
-      // 3+ buttons: Use three-button grid layout
+      // 3+ buttons: Use three-button layout
       stepActions.classList.add('v10-step-actions--three-button');
-      console.log(`✅ Applied three-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
+      console.log(`✅ Applied three-button layout: ${visibleButtonCount} buttons visible on step ${currentStep} (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
     } else if (visibleButtonCount === 1 && currentStep === 1) {
       // Special case: Step 1 with only "Continue to Files" button should be right-aligned
       stepActions.classList.remove('v10-step-actions--three-button');
-      // Ensure single button is right-aligned using flex
-      stepActions.style.justifyContent = 'flex-end';
-      console.log(`✅ Applied single-button right-align layout: step ${currentStep} with 1 button`);
+      // ONLY set inline styles on DESKTOP - let CSS handle mobile
+      if (!isMobile) {
+        stepActions.style.justifyContent = 'flex-end';
+      }
+      console.log(`✅ Applied single-button right-align layout: step ${currentStep} with 1 button (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
     } else {
       // 2 buttons or other cases: Use default flex layout
       stepActions.classList.remove('v10-step-actions--three-button');
-      stepActions.style.justifyContent = 'space-between';
-      console.log(`✅ Applied two-button layout: ${visibleButtonCount} buttons visible on step ${currentStep}`);
+      // ONLY set inline styles on DESKTOP - let CSS handle mobile
+      if (!isMobile) {
+        stepActions.style.justifyContent = 'space-between';
+      }
+      console.log(`✅ Applied two-button layout: ${visibleButtonCount} buttons visible on step ${currentStep} (${isMobile ? 'MOBILE' : 'DESKTOP'})`);
     }
   }
 
