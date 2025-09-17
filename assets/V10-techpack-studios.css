@@ -1296,7 +1296,22 @@ button:focus,
     justify-content: center;
   }
 
-  /* MOBILE: Remove absolute positioning conflicts - handled in specific mobile section */
+  /* MOBILE: Ensure tour buttons stay centered */
+  .v10-step-actions .v10-btn--tour {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%); /* Remove !important to allow animation */
+    flex: none !important; /* Don't let it flex like other buttons */
+    width: auto !important; /* Keep original width, not flex width */
+  }
+
+  /* MOBILE: Hidden buttons must not affect layout */
+  .v10-step-actions .v10-btn--tour[style*="display: none"],
+  .v10-step-actions .v10-btn--tour[style*="display:none"],
+  .v10-step-actions .v10-btn--tour.hidden {
+    display: none !important;
+    position: static !important;
+  }
 }
 
 /* ==============================================
@@ -11632,27 +11647,23 @@ lid #404040 !important;
     justify-content: center !important;
   }
 
-  /* Next button: Clean arrow-only mobile style */
+  /* Next button: Hide initial "Next Step" but show dynamic text */
   #step-3-next {
-    font-size: 0 !important;             /* Hide all text completely */
-    padding: 12px !important;            /* Same as Previous button */
+    text-indent: -9999px !important;     /* Hide initial "Next Step" text */
+    font-size: 12px !important;          /* Keep font size for dynamic text */
+    padding: 8px 16px !important;        /* More padding for text content */
     min-height: 48px !important;         /* Maintain touch target */
-    min-width: 48px !important;          /* Square touch target */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    /* Ensure proper button appearance */
-    background-color: var(--v10-accent-primary) !important;
-    border: 1px solid var(--v10-accent-primary) !important;
-    color: white !important;
+    white-space: nowrap !important;      /* Prevent text wrapping */
+    overflow: hidden !important;         /* Hide overflowing text-indent */
   }
 
-  /* Disabled state with proper visibility */
-  #step-3-next.v10-btn--disabled {
-    background-color: #666 !important;   /* Grey background */
-    border-color: #666 !important;       /* Grey border */
-    opacity: 0.8 !important;             /* Slightly transparent but visible */
-    cursor: not-allowed !important;
+  /* When JavaScript updates innerHTML, show the dynamic text */
+  #step-3-next.v10-btn--disabled,
+  #step-3-next:not(.v10-btn--disabled) {
+    text-indent: 0 !important;           /* Show dynamic text like "Complete All Garments" */
   }
 
   /* Keep arrow icons visible and properly sized */
@@ -11662,12 +11673,12 @@ lid #404040 !important;
     flex-shrink: 0 !important;
   }
 
-  /* Next button arrow icon (arrow-only like Previous) */
+  /* Next button icons (for dynamic content) */
   #step-3-next svg {
-    width: 20px !important;              /* Same size as Previous arrow */
-    height: 20px !important;
+    width: 16px !important;
+    height: 16px !important;
     flex-shrink: 0 !important;
-    margin: 0 !important;                /* No margin needed for icon-only */
+    margin-left: 8px !important;         /* Space between text and icon */
   }
 
   /* Fix tour button absolute positioning chaos on mobile */
@@ -11681,14 +11692,6 @@ lid #404040 !important;
   /* Ensure proper button order on mobile */
   #step-3-prev { order: 1 !important; }   /* Previous first */
   #step-3-next { order: 3 !important; }   /* Next last */
-
-  /* CRITICAL: Ensure step actions are always visible on all studios */
-  .v10-step-actions {
-    display: flex !important;            /* Force visibility */
-    visibility: visible !important;      /* Override any hidden state */
-    position: relative !important;       /* Ensure proper positioning */
-    z-index: 10 !important;              /* Above other elements */
-  }
 }
 
 /* ====================================================
