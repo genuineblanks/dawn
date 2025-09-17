@@ -20462,17 +20462,26 @@ class UniversalFormValidator {
     const fieldErrors = [];
 
     fields.forEach(field => {
+      // Skip validation for hidden fields or fields in hidden containers
+      if (!this.isFieldVisible(field)) {
+        console.log(`⏭️ Skipping validation for hidden field: ${field.name || field.id || field.type}`);
+        // Clear any existing errors for hidden fields
+        this.clearFieldError(field);
+        return;
+      }
+
       const validation = this.validateField(field);
-      
+
       if (!validation.isValid) {
         isFormValid = false;
         fieldErrors.push({
           field: field,
           errors: validation.errors
         });
-        
+
         // Show error for first error message
         this.showFieldError(field, validation.errors[0]);
+        console.log(`❌ Validation failed for visible field: ${field.name || field.id || field.type} - ${validation.errors[0]}`);
       } else {
         // Clear any existing errors for valid fields
         this.clearFieldError(field);
@@ -20483,20 +20492,36 @@ class UniversalFormValidator {
     const radioGroups = this.getRadioGroups(formElement);
     radioGroups.forEach(group => {
       const requiredRadio = group.find(radio => radio.hasAttribute('required'));
-      if (requiredRadio && !this.isRadioGroupSelected(requiredRadio)) {
+
+      // Only validate if the radio group is visible
+      if (requiredRadio && this.isFieldVisible(requiredRadio) && !this.isRadioGroupSelected(requiredRadio)) {
         isFormValid = false;
-        
+
         // Add error styling to radio group container
         const groupContainer = this.getRadioGroupContainer(group[0]);
         if (groupContainer) {
           groupContainer.classList.add('error');
-          
+
           // Add error message if not already present
           if (!groupContainer.querySelector('.field-error-message')) {
             const errorElement = document.createElement('div');
             errorElement.className = 'field-error-message';
             errorElement.textContent = this.errorMessages.radio;
             groupContainer.appendChild(errorElement);
+          }
+        }
+
+        console.log(`❌ Radio group validation failed for: ${requiredRadio.name} - ${this.errorMessages.radio}`);
+      } else if (requiredRadio && !this.isFieldVisible(requiredRadio)) {
+        console.log(`⏭️ Skipping radio group validation for hidden group: ${requiredRadio.name}`);
+
+        // Clear any existing errors for hidden radio groups
+        const groupContainer = this.getRadioGroupContainer(group[0]);
+        if (groupContainer) {
+          groupContainer.classList.remove('error');
+          const errorMessage = groupContainer.querySelector('.field-error-message');
+          if (errorMessage) {
+            errorMessage.remove();
           }
         }
       }
@@ -20579,7 +20604,7 @@ class UniversalFormValidator {
   getRadioGroupContainer(radioField) {
     let container = radioField.parentNode;
     while (container && container !== document.body) {
-      if (container.classList.contains('radio-group') || 
+      if (container.classList.contains('radio-group') ||
           container.classList.contains('form-group') ||
           container.classList.contains('form-section')) {
         return container;
@@ -20587,6 +20612,48 @@ class UniversalFormValidator {
       container = container.parentNode;
     }
     return null;
+  }
+
+  // Check if field is visible and should be validated
+  isFieldVisible(field) {
+    // Check if the field itself is hidden
+    if (field.type === 'hidden' || field.style.display === 'none' || field.style.visibility === 'hidden') {
+      return false;
+    }
+
+    // Check if any parent container is hidden
+    let element = field;
+    while (element && element !== document.body) {
+      const computedStyle = window.getComputedStyle(element);
+      if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+        return false;
+      }
+      element = element.parentElement;
+    }
+
+    // Special check for radio buttons based on request type
+    if (field.type === 'radio') {
+      const requestType = window.V10_State?.requestType;
+
+      // For quotation requests, certain radio buttons should not be validated
+      if (requestType === 'quotation') {
+        // Hide shipping method and insurance validation for quotations
+        if (field.name === 'shippingMethod' || field.name === 'insurance') {
+          return false;
+        }
+      }
+
+      // Check if radio button is in a conditionally hidden section
+      const radioSection = field.closest('.radio-section, .form-section, .conditional-section');
+      if (radioSection) {
+        const computedStyle = window.getComputedStyle(radioSection);
+        if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   // Set up error clearing when user fixes fields
