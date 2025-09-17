@@ -3331,7 +3331,8 @@ class V10_StudioNavigator {
     if (isMobile) {
       // On mobile, clear any desktop inline styles and let CSS media queries handle layout
       stepActions.style.removeProperty('justify-content');
-      console.log('📱 Mobile detected - skipping desktop layout logic, using CSS media queries');
+      stepActions.classList.remove('v10-step-actions--three-button'); // Remove any desktop classes
+      console.log('📱 Mobile detected - clearing desktop styles and classes, using CSS media queries only');
       return; // Let mobile CSS media queries control everything
     }
 
