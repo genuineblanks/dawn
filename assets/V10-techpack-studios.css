@@ -1287,11 +1287,11 @@ button:focus,
 @media (max-width: 768px) {
   .v10-step-actions {
     flex-direction: row;
-    gap: 8px;                    /* 🔥 BALANCED: Smaller consistent gap */
-    justify-content: space-between; /* 🔥 BALANCED: Distribute evenly */
-    align-items: center;         /* Center align all buttons */
+    gap: 6px;                    /* Tight spacing for mobile */
+    justify-content: center;     /* Center the button group */
+    align-items: center;
     position: relative;
-    padding: 0 12px;             /* Container padding for edge spacing */
+    padding: 0 8px;              /* Minimal container padding */
   }
 
   .v10-btn {
@@ -1299,17 +1299,30 @@ button:focus,
     justify-content: center;
   }
 
-  /* 🔥 TARGETED: Only fix navigation buttons in step-actions */
+  /* 🔥 SMART: Prev/Next buttons - icon only approach */
   .v10-step-actions .v10-btn:not(.v10-btn--tour) {
-    flex: 0 0 auto !important;   /* Prevent prev/next from expanding */
-    min-width: 80px !important;  /* Minimum touch target */
-    max-width: 100px !important; /* Prevent oversized buttons */
+    flex: 0 0 auto !important;
+    width: 48px !important;      /* Icon-only width */
+    min-width: 48px !important;
+    max-width: 48px !important;
+    padding: 12px 8px !important;
+    font-size: 0 !important;     /* Hide text */
+    gap: 0 !important;
   }
 
-  /* MOBILE: Tour button flex properties */
+  /* Show only icons for prev/next buttons */
+  .v10-step-actions .v10-btn:not(.v10-btn--tour) .v10-btn-icon {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 🔥 OPTIMIZED: Tour button gets most space and proper text */
   .v10-step-actions .v10-btn--tour {
-    flex: 0 0 160px !important;  /* Fixed size for tour button */
-    width: auto !important;
+    flex: 1 !important;          /* Take remaining space */
+    min-width: 200px !important; /* Ensure text fits */
+    max-width: none !important;  /* Allow expansion */
+    margin: 0 8px !important;    /* Space from icon buttons */
   }
 
   /* MOBILE: Hidden buttons must not affect layout */
@@ -11623,24 +11636,23 @@ lid #404040 !important;
   
   .tour-btn-text-mobile {
     display: inline !important;      /* Show short text on mobile */
-    width: 100% !important;          /* Fill available space */
-    text-overflow: ellipsis !important; /* Add ellipsis if needed */
-    overflow: hidden !important;     /* Hide overflow */
+    text-overflow: clip !important;  /* Don't truncate text */
+    overflow: visible !important;    /* Show all text */
     line-height: 1.2 !important;     /* Tight line height */
+    font-weight: 600 !important;     /* Slightly bolder for readability */
   }
   
-  /* 🔥 BALANCED: Tour button sizing for three-button layout */
+  /* 🔥 SMART: Tour button optimized for mobile text display */
   .v10-btn--tour {
-    min-width: 160px !important;      /* Larger for better balance */
-    max-width: 160px !important;      /* Consistent width */
-    font-size: 12px !important;       /* Slightly larger font */
-    padding: 10px 14px !important;    /* More comfortable padding */
-    gap: 6px !important;              /* Better icon-text spacing */
+    min-width: 200px !important;      /* More space for text */
+    font-size: 11px !important;       /* Compact but readable */
+    padding: 12px 16px !important;    /* Comfortable touch target */
+    gap: 6px !important;              /* Icon-text spacing */
     text-align: center !important;    /* Center align text */
-    overflow: hidden !important;      /* Hide overflow */
-    white-space: nowrap !important;   /* Prevent line breaks */
-    box-sizing: border-box !important; /* Include padding in width */
-    flex: 0 0 160px !important;       /* Fixed flex basis */
+    overflow: visible !important;     /* Allow text to show */
+    white-space: nowrap !important;   /* Keep text on one line */
+    box-sizing: border-box !important;
+    line-height: 1.2 !important;      /* Tight line height */
   }
   
   /* Ensure mobile button has proper touch target size */
