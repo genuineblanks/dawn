@@ -12053,3 +12053,14 @@ select:focus {
   font-weight: 400;
   color: var(--v10-text-primary);
 }
+
+/* ====================================================
+   INPUT FIELD TEXT CLIPPING FIX
+   ==================================================== */
+
+/* Fix text clipping in input fields by increasing left padding */
+.v10-form-input-enhanced,
+.v10-form-select-enhanced,
+.v10-form-textarea-enhanced {
+  padding-left: var(--v10-space-5) !important; /* Increase from 16px to 20px to prevent text clipping */
+}
