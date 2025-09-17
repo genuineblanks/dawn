@@ -11926,3 +11926,88 @@ input[type="radio"].error {
   border-radius: 4px;
   border: 1px solid rgba(255, 68, 68, 0.3);
 }
+
+/* ====================================================
+   TEXT SELECTION STYLING - DARK THEME OPTIMIZED
+   ==================================================== */
+
+/* Global text selection with proper contrast */
+::selection {
+  background: var(--v10-accent-primary, #10b981);
+  color: #ffffff;
+  text-shadow: none;
+}
+
+::-moz-selection {
+  background: var(--v10-accent-primary, #10b981);
+  color: #ffffff;
+  text-shadow: none;
+}
+
+/* Input field and textarea specific text selection */
+input::selection,
+textarea::selection,
+.v10-form-input-enhanced::selection,
+.v10-form-textarea-enhanced::selection,
+.v10-pantone-input::selection,
+.v10-notes-input::selection,
+.v10-size-input::selection,
+.size-input::selection,
+.design-form-input::selection,
+.v10-design-reference-input::selection {
+  background: var(--v10-accent-primary, #10b981);
+  color: #ffffff;
+  text-shadow: none;
+}
+
+input::-moz-selection,
+textarea::-moz-selection,
+.v10-form-input-enhanced::-moz-selection,
+.v10-form-textarea-enhanced::-moz-selection,
+.v10-pantone-input::-moz-selection,
+.v10-notes-input::-moz-selection,
+.v10-size-input::-moz-selection,
+.size-input::-moz-selection,
+.design-form-input::-moz-selection,
+.v10-design-reference-input::-moz-selection {
+  background: var(--v10-accent-primary, #10b981);
+  color: #ffffff;
+  text-shadow: none;
+}
+
+/* ====================================================
+   INPUT FOCUS BACKGROUND IMPROVEMENTS
+   ==================================================== */
+
+/* Improve input focus backgrounds for better text contrast */
+.v10-form-input-enhanced:focus,
+.v10-form-select-enhanced:focus,
+.v10-form-textarea-enhanced:focus,
+.size-input:focus,
+.v10-pantone-input:focus,
+.v10-notes-input:focus,
+.v10-size-input:focus,
+.design-form-input:focus,
+.v10-design-reference-input:focus,
+.v10-size-grid__input:focus {
+  background: #2a2a2a !important; /* Slightly lighter than v10-bg-primary for better text contrast */
+}
+
+/* Focused inputs with rgba backgrounds */
+input:focus,
+textarea:focus,
+select:focus {
+  background: rgba(42, 42, 42, 0.95) !important; /* Slightly lighter with transparency */
+}
+
+/* Ensure focused inputs maintain proper text color */
+.v10-form-input-enhanced:focus,
+.v10-form-textarea-enhanced:focus,
+.size-input:focus,
+.v10-pantone-input:focus,
+.v10-notes-input:focus,
+.v10-size-input:focus,
+.design-form-input:focus,
+.v10-design-reference-input:focus {
+  color: #ffffff !important;
+}

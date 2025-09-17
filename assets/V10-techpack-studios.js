@@ -18347,14 +18347,22 @@ class V10_ClientManager {
           }
       return;
     }
-    
+
     const formData = new FormData(form);
     const data = {};
-    
+
+    // Fields to exclude from saving (optional fields that shouldn't persist)
+    const excludedFields = ['project_details'];
+
     for (let [key, value] of formData.entries()) {
-      data[key] = value;
+      // Skip saving excluded fields
+      if (!excludedFields.includes(key)) {
+        data[key] = value;
+      } else {
+        console.log(`⏭️ Excluding field from save: ${key}`);
+      }
     }
-    
+
     data.submission_type = this.currentRequestType;
     
     // Save to localStorage
@@ -18369,12 +18377,21 @@ class V10_ClientManager {
   loadSavedData() {
     const savedData = localStorage.getItem('v10_step1_data');
     if (!savedData) return;
-    
+
     try {
       const data = JSON.parse(savedData);
-      
+
+      // Fields to exclude from loading (same as save exclusions)
+      const excludedFields = ['project_details'];
+
       // Restore form values
       Object.entries(data).forEach(([key, value]) => {
+        // Skip loading excluded fields even if they exist in saved data
+        if (excludedFields.includes(key)) {
+          console.log(`⏭️ Excluding field from load: ${key}`);
+          return;
+        }
+
         const field = document.querySelector(`[name="${key}"]`);
         if (field) {
           if (field.type === 'radio') {
