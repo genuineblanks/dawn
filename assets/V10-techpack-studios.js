@@ -3292,10 +3292,7 @@ class V10_StudioNavigator {
     }
 
     // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
-    // Add small delay to ensure DOM updates are complete (especially for mobile)
-    setTimeout(() => {
-      this.updateStepActionsLayout();
-    }, 50);
+    this.updateStepActionsLayout();
 
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
@@ -3329,6 +3326,16 @@ class V10_StudioNavigator {
     const stepActions = document.querySelector('.v10-step-actions');
     if (!stepActions) return;
 
+    // 🔥 MOBILE CHECK: Skip desktop layout logic on mobile to preserve CSS media queries
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      // On mobile, clear any desktop inline styles and let CSS media queries handle layout
+      stepActions.style.removeProperty('justify-content');
+      console.log('📱 Mobile detected - skipping desktop layout logic, using CSS media queries');
+      return; // Let mobile CSS media queries control everything
+    }
+
+    // 🖥️ DESKTOP ONLY: Apply dynamic layout logic
     // Get current step - try multiple methods
     let currentStep = 1;
 
