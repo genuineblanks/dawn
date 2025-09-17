@@ -1312,12 +1312,6 @@ button:focus,
     display: none !important;
     position: static !important;
   }
-  
-  /* 🔥 MOBILE: Keep Previous/Next step buttons compact - don't let them expand */
-  .v10-step-actions .v10-btn:not(.v10-btn--tour) {
-    flex: none !important;
-    width: auto !important;
-  }
 }
 
 /* ==============================================
