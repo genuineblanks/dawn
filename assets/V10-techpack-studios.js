@@ -3275,11 +3275,11 @@ class V10_StudioNavigator {
       if (!localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
       }
-    } else if (studioName === 'garment' && garmentTourButton) {
-      // Garment Studio Tour Button
+    } else if (studioName === 'garment' && V10_State.requestType !== 'quotation' && garmentTourButton) {
+      // Garment Studio Tour Button (hidden for quotation requests)
       garmentTourButton.style.display = 'block';
       garmentTourButton.style.visibility = 'visible';
-      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio (${V10_State.requestType})`);
     } else {
       // No tour button should be shown
       console.log(`🚫 NO TOUR button shown: studio="${studioName}", requestType="${V10_State.requestType}"`);
@@ -18195,9 +18195,12 @@ class V10_ClientManager {
       }
     }
     
-    // 🗑️ REMOVED: Duplicate different address validation - now handled by Universal Form Validator
-    // The Universal Form Validator system now handles all conditional address field validation
-    
+    // 🆕 ENHANCED: Include conditional sections validation
+    const conditionalValidation = this.validateConditionalSections();
+    if (!conditionalValidation) {
+      isValid = false;
+    }
+
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
       console.log('🔍 Checking bulk request requirements (shipping & insurance)');
@@ -18262,21 +18265,75 @@ class V10_ClientManager {
   }
 
   validateConditionalSections() {
+    let isValid = true;
+
     // Only validate delivery address radio if not quotation type
     if (this.currentRequestType !== 'quotation') {
-      const deliveryField = document.getElementById('v10-delivery-address-field');
+      // Check delivery address selection for sample-request and bulk-order-request
+      const deliveryField = document.getElementById('delivery-row');
       if (deliveryField && deliveryField.style.display !== 'none') {
         const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
         if (!selectedDelivery) {
-          deliveryField.classList.add('v10-form-field--invalid');
+          console.log('❌ No delivery address selected');
+          isValid = false;
+          // Add error styling to the delivery address field group
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.add('v10-form-field--invalid');
+          }
         } else {
-          deliveryField.classList.remove('v10-form-field--invalid');
-          
-          // 🗑️ REMOVED: Duplicate field-level validation - now handled by Universal Form Validator
-          // Only keeping radio selection validation here, field validation handled comprehensively by Universal Form Validator
+          console.log('✅ Delivery address selected:', selectedDelivery.value);
+          // Remove error styling
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.remove('v10-form-field--invalid');
+          }
+        }
+      }
+
+      // Check bulk order specific fields
+      if (this.currentRequestType === 'bulk-order-request') {
+        const shippingSection = document.getElementById('shipping-section');
+        if (shippingSection && shippingSection.style.display !== 'none') {
+
+          // Validate shipping method selection
+          const selectedShipping = document.querySelector('input[name="shippingMethod"]:checked');
+          if (!selectedShipping) {
+            console.log('❌ No shipping method selected for bulk order');
+            isValid = false;
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Shipping method selected:', selectedShipping.value);
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
+
+          // Validate insurance selection
+          const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
+          if (!selectedInsurance) {
+            console.log('❌ No insurance option selected for bulk order');
+            isValid = false;
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Insurance option selected:', selectedInsurance.value);
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
         }
       }
     }
+
+    return isValid;
   }
 
   saveData() {
@@ -20343,43 +20400,87 @@ class UniversalFormValidator {
   // Show error for a field
   showFieldError(field, message) {
     this.clearFieldError(field);
-    
-    // Add error class to field container
-    const fieldContainer = this.getFieldContainer(field);
-    if (fieldContainer) {
-      fieldContainer.classList.add('error');
-    }
-    
-    // Add error class directly to field
-    field.classList.add('error');
-    
-    // Create and show error message
-    if (message) {
-      const errorElement = document.createElement('div');
-      errorElement.className = 'field-error-message';
-      errorElement.textContent = message;
-      errorElement.setAttribute('data-field-error', field.name || field.id || 'unknown');
-      
-      // Insert error message after the field
-      field.parentNode.insertBefore(errorElement, field.nextSibling);
+
+    // Special handling for radio buttons
+    if (field.type === 'radio') {
+      // Find all radio buttons in the same group
+      const radioGroup = document.querySelectorAll(`input[type="radio"][name="${field.name}"]`);
+
+      // Add error styling to all radio buttons in the group
+      radioGroup.forEach(radio => {
+        radio.classList.add('error');
+        // Add error class to the radio option container
+        const radioOption = radio.closest('.v10-delivery-option-enhanced, .v10-shipping-method, .v10-insurance-option');
+        if (radioOption) {
+          radioOption.classList.add('error');
+        }
+      });
+
+      // Add error message to the radio group container
+      const groupContainer = field.closest('.v10-delivery-options-enhanced, .v10-shipping-methods, .v10-insurance-options');
+      if (groupContainer && message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'v10-radio-error-message';
+        errorElement.textContent = message;
+        errorElement.setAttribute('data-field-error', field.name);
+        groupContainer.appendChild(errorElement);
+      }
+    } else {
+      // Regular field handling
+      const fieldContainer = this.getFieldContainer(field);
+      if (fieldContainer) {
+        fieldContainer.classList.add('error');
+      }
+
+      field.classList.add('error');
+
+      if (message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'field-error-message';
+        errorElement.textContent = message;
+        errorElement.setAttribute('data-field-error', field.name || field.id || 'unknown');
+        field.parentNode.insertBefore(errorElement, field.nextSibling);
+      }
     }
   }
 
   // Clear error for a field
   clearFieldError(field) {
-    // Remove error class from field container
-    const fieldContainer = this.getFieldContainer(field);
-    if (fieldContainer) {
-      fieldContainer.classList.remove('error');
-    }
-    
-    // Remove error class from field
-    field.classList.remove('error');
-    
-    // Remove error message
-    const errorMessage = field.parentNode.querySelector('.field-error-message');
-    if (errorMessage) {
-      errorMessage.remove();
+    // Special handling for radio buttons
+    if (field.type === 'radio') {
+      // Find all radio buttons in the same group
+      const radioGroup = document.querySelectorAll(`input[type="radio"][name="${field.name}"]`);
+
+      // Remove error styling from all radio buttons in the group
+      radioGroup.forEach(radio => {
+        radio.classList.remove('error');
+        const radioOption = radio.closest('.v10-delivery-option-enhanced, .v10-shipping-method, .v10-insurance-option');
+        if (radioOption) {
+          radioOption.classList.remove('error');
+        }
+      });
+
+      // Remove error message from radio group container
+      const groupContainer = field.closest('.v10-delivery-options-enhanced, .v10-shipping-methods, .v10-insurance-options');
+      if (groupContainer) {
+        const errorMessage = groupContainer.querySelector('.v10-radio-error-message');
+        if (errorMessage) {
+          errorMessage.remove();
+        }
+      }
+    } else {
+      // Regular field handling
+      const fieldContainer = this.getFieldContainer(field);
+      if (fieldContainer) {
+        fieldContainer.classList.remove('error');
+      }
+
+      field.classList.remove('error');
+
+      const errorMessage = field.parentNode.querySelector('.field-error-message');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
     }
   }
 
@@ -20400,100 +20501,60 @@ class UniversalFormValidator {
 
   // Validate entire form
   validateForm(formElement) {
+    console.log('🔍 Starting form validation...');
     const fields = formElement.querySelectorAll('input, textarea, select');
     let isFormValid = true;
     const fieldErrors = [];
 
     fields.forEach(field => {
+      // Skip validation for hidden fields or fields in hidden containers
+      if (!this.isFieldVisible(field)) {
+        console.log(`⏭️ Skipping validation for hidden field: ${field.name || field.id || field.type}`);
+        // Clear any existing errors for hidden fields
+        this.clearFieldError(field);
+        return;
+      }
+
+      console.log(`✅ Validating visible field: ${field.name || field.id || field.type}`);
       const validation = this.validateField(field);
-      
+
       if (!validation.isValid) {
         isFormValid = false;
         fieldErrors.push({
           field: field,
           errors: validation.errors
         });
-        
+
         // Show error for first error message
         this.showFieldError(field, validation.errors[0]);
+        console.log(`❌ Validation failed for visible field: ${field.name || field.id || field.type} - ${validation.errors[0]}`);
       } else {
         // Clear any existing errors for valid fields
         this.clearFieldError(field);
       }
     });
 
-    // Handle radio button group validation
+    // Handle radio button group validation (simplified)
+    console.log('🔍 Checking radio button groups...');
     const radioGroups = this.getRadioGroups(formElement);
     radioGroups.forEach(group => {
       const requiredRadio = group.find(radio => radio.hasAttribute('required'));
-      if (requiredRadio && !this.isRadioGroupSelected(requiredRadio)) {
-        isFormValid = false;
-        
-        // Add error styling to radio group container
-        const groupContainer = this.getRadioGroupContainer(group[0]);
-        if (groupContainer) {
-          groupContainer.classList.add('error');
-          
-          // Add error message if not already present
-          if (!groupContainer.querySelector('.field-error-message')) {
-            const errorElement = document.createElement('div');
-            errorElement.className = 'field-error-message';
-            errorElement.textContent = this.errorMessages.radio;
-            groupContainer.appendChild(errorElement);
-          }
+
+      if (requiredRadio) {
+        const isVisible = this.isFieldVisible(requiredRadio);
+        const isSelected = this.isRadioGroupSelected(requiredRadio);
+        console.log(`📻 Radio group ${requiredRadio.name}: visible=${isVisible}, selected=${isSelected}`);
+
+        // Only validate visible radio groups
+        if (isVisible && !isSelected) {
+          isFormValid = false;
+          this.showFieldError(requiredRadio, this.errorMessages.radio);
+          console.log(`❌ Radio group validation failed: ${requiredRadio.name}`);
         }
       }
     });
 
-    // 🔧 CONDITIONAL SECTION VALIDATION: Check "Different Address" fields for sample-request and bulk-order-request
-    const requestType = window.V10_State?.requestType;
-    if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-      const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
-      if (selectedDelivery?.value === 'different') {
-        const differentAddressForm = document.getElementById('v10-different-address-form');
-        if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-          // Validate all fields with data-validate="required-if-different" in the different address form
-          const conditionalFields = differentAddressForm.querySelectorAll('[data-validate="required-if-different"]');
-          
-          conditionalFields.forEach(field => {
-            if (!field.value?.trim()) {
-              isFormValid = false;
-              
-              // Add visual error state
-              const fieldContainer = field.closest('.v10-form-field');
-              if (fieldContainer) {
-                fieldContainer.classList.add('error');
-                
-                // Add error message if not already present
-                if (!fieldContainer.querySelector('.field-error-message')) {
-                  const errorElement = document.createElement('div');
-                  errorElement.className = 'field-error-message';
-                  errorElement.textContent = 'This field is required for different address';
-                  fieldContainer.appendChild(errorElement);
-                }
-              }
-              
-              // Add to field errors array for comprehensive tracking
-              fieldErrors.push({
-                field: field,
-                errors: ['This field is required for different address']
-              });
-            } else {
-              // Clear errors for valid conditional fields
-              const fieldContainer = field.closest('.v10-form-field');
-              if (fieldContainer) {
-                fieldContainer.classList.remove('error');
-                const errorMessage = fieldContainer.querySelector('.field-error-message');
-                if (errorMessage) {
-                  errorMessage.remove();
-                }
-              }
-            }
-          });
-        }
-      }
-    }
-
+    console.log(`🔍 Form validation complete. Valid: ${isFormValid}`);
     return {
       isValid: isFormValid,
       errors: fieldErrors
@@ -20522,7 +20583,7 @@ class UniversalFormValidator {
   getRadioGroupContainer(radioField) {
     let container = radioField.parentNode;
     while (container && container !== document.body) {
-      if (container.classList.contains('radio-group') || 
+      if (container.classList.contains('radio-group') ||
           container.classList.contains('form-group') ||
           container.classList.contains('form-section')) {
         return container;
@@ -20530,6 +20591,27 @@ class UniversalFormValidator {
       container = container.parentNode;
     }
     return null;
+  }
+
+  // Check if field is visible and should be validated
+  isFieldVisible(field) {
+    // Check if the field itself is hidden
+    if (field.type === 'hidden') {
+      return false;
+    }
+
+    // Check if any parent container is hidden
+    let element = field;
+    while (element && element !== document.body) {
+      const style = window.getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden') {
+        console.log(`⏭️ Field ${field.name || field.id} is in hidden container:`, element.id || element.className);
+        return false;
+      }
+      element = element.parentElement;
+    }
+
+    return true;
   }
 
   // Set up error clearing when user fixes fields
@@ -20569,21 +20651,8 @@ class UniversalFormValidator {
   validateAndProceed(formElement) {
     const validation = this.validateForm(formElement);
     if (!validation.isValid) {
-      // Scroll to first error - check main form first
-      let firstError = formElement.querySelector('.error');
-      
-      // 🔧 CONDITIONAL SECTION ERROR SCROLLING: If no error in main form, check conditional sections
-      if (!firstError) {
-        const requestType = window.V10_State?.requestType;
-        if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-          const differentAddressForm = document.getElementById('v10-different-address-form');
-          if (differentAddressForm && differentAddressForm.style.display !== 'none') {
-            firstError = differentAddressForm.querySelector('.error');
-          }
-        }
-      }
-      
-      // Scroll to first error found (main form or conditional section)
+      // Scroll to first error
+      const firstError = formElement.querySelector('.error');
       if (firstError) {
         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
