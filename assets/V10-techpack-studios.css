@@ -12016,13 +12016,16 @@ select:focus {
    STEP 4 CARD BACKGROUND CONSISTENCY FIX
    ==================================================== */
 
-/* Ensure all cards and file elements in Step 4 use the medium grey background, not the dark step background */
+/* Ensure all cards in Step 4 use the medium grey background, but file cards match the icon dark background */
 #techpack-v10-step-4 .v10-studio-card,
 .v10-review-grid .v10-studio-card,
-#techpack-v10-step-4 #review-uploaded-files,
-#techpack-v10-step-4 #review-uploaded-files .v10-file-card,
-#techpack-v10-step-4 #review-uploaded-files .file-item,
 #review-client-info,
 #review-garment-specifications {
-  background: var(--v10-bg-card) !important; /* Force medium grey background for all cards and file elements */
+  background: var(--v10-bg-card) !important; /* Force medium grey background for main cards */
+}
+
+/* Make uploaded file cards match the dark icon background */
+#techpack-v10-step-4 #review-uploaded-files .v10-file-card,
+#techpack-v10-step-4 #review-uploaded-files .file-item {
+  background: var(--v10-bg-secondary) !important; /* Dark background to match file icon */
 }
