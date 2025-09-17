@@ -20341,6 +20341,11 @@ class UniversalFormValidator {
     const required = field.hasAttribute('required');
     const errors = [];
 
+    // Skip conditional fields - they're handled separately
+    if (field.hasAttribute('data-validate') && field.getAttribute('data-validate') === 'required-if-different') {
+      return { isValid: true, errors: [] };
+    }
+
     // Check if required field is empty
     if (required && (!value || (type === 'radio' && !this.isRadioGroupSelected(field)))) {
       if (type === 'radio') {
@@ -20554,6 +20559,38 @@ class UniversalFormValidator {
       }
     });
 
+    // Conditional validation for "Different Address" fields
+    console.log('🔍 Checking conditional different address validation...');
+    const deliveryAddressInput = formElement.querySelector('input[name="deliveryAddress"]:checked');
+    if (deliveryAddressInput?.value === 'different') {
+      console.log('📍 Different address selected, validating conditional fields...');
+
+      // Find all fields with data-validate="required-if-different"
+      const conditionalFields = formElement.querySelectorAll('[data-validate="required-if-different"]');
+
+      conditionalFields.forEach(field => {
+        if (this.isFieldVisible(field)) {
+          const value = field.value?.trim();
+          if (!value) {
+            isFormValid = false;
+            this.showFieldError(field, 'This field is required for different address');
+            console.log(`❌ Conditional validation failed for: ${field.name}`);
+
+            fieldErrors.push({
+              field: field,
+              errors: ['This field is required for different address']
+            });
+          }
+        }
+      });
+    } else {
+      // Clear any existing errors on conditional fields when "Company Address" is selected
+      const conditionalFields = formElement.querySelectorAll('[data-validate="required-if-different"]');
+      conditionalFields.forEach(field => {
+        this.clearFieldError(field);
+      });
+    }
+
     console.log(`🔍 Form validation complete. Valid: ${isFormValid}`);
     return {
       isValid: isFormValid,
@@ -20641,9 +20678,25 @@ class UniversalFormValidator {
   // Initialize validation for all forms on page (error clearing only)
   initializeAll() {
     const forms = document.querySelectorAll('form');
-    
+
     forms.forEach(form => {
       this.setupErrorClearing(form);
+      this.setupConditionalValidation(form);
+    });
+  }
+
+  // Set up conditional validation for delivery address changes
+  setupConditionalValidation(formElement) {
+    const deliveryRadios = formElement.querySelectorAll('input[name="deliveryAddress"]');
+
+    deliveryRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        // Clear any existing errors on conditional fields when switching options
+        const conditionalFields = formElement.querySelectorAll('[data-validate="required-if-different"]');
+        conditionalFields.forEach(field => {
+          this.clearFieldError(field);
+        });
+      });
     });
   }
 
