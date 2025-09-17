@@ -3275,8 +3275,8 @@ class V10_StudioNavigator {
       if (!localStorage.getItem('color-studio-tour-seen')) {
         this.triggerFirstTimeTourPulse();
       }
-    } else if (studioName === 'garment' && V10_State.requestType !== 'quotation' && garmentTourButton) {
-      // Garment Studio Tour Button (hidden for quotation requests)
+    } else if (studioName === 'garment' && V10_State.requestType !== 'quotation' && V10_State.requestType !== 'bulk-order-request' && garmentTourButton) {
+      // Garment Studio Tour Button (hidden for quotation and bulk order requests)
       garmentTourButton.style.display = 'block';
       garmentTourButton.style.visibility = 'visible';
       console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio (${V10_State.requestType})`);
