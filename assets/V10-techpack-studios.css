@@ -11636,9 +11636,9 @@ lid #404040 !important;
      MOBILE COMPLETE ALL GARMENTS BUTTON FIX
      ===================================================== */
   
-  /* MOBILE: Arrow-only Previous/Next buttons, keep tour button text */
-  #step-3-prev, #step-3-next {
-    font-size: 0 !important;             /* Hide text completely */
+  /* MOBILE: Arrow-only Previous, smart Next button text handling */
+  #step-3-prev {
+    font-size: 0 !important;             /* Hide "Previous" text completely */
     padding: 12px !important;            /* Smaller padding for icon-only */
     min-height: 48px !important;         /* Maintain touch target */
     min-width: 48px !important;          /* Square touch target */
@@ -11647,11 +11647,38 @@ lid #404040 !important;
     justify-content: center !important;
   }
 
+  /* Next button: Hide initial "Next Step" but show dynamic text */
+  #step-3-next {
+    text-indent: -9999px !important;     /* Hide initial "Next Step" text */
+    font-size: 12px !important;          /* Keep font size for dynamic text */
+    padding: 8px 16px !important;        /* More padding for text content */
+    min-height: 48px !important;         /* Maintain touch target */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;      /* Prevent text wrapping */
+    overflow: hidden !important;         /* Hide overflowing text-indent */
+  }
+
+  /* When JavaScript updates innerHTML, show the dynamic text */
+  #step-3-next.v10-btn--disabled,
+  #step-3-next:not(.v10-btn--disabled) {
+    text-indent: 0 !important;           /* Show dynamic text like "Complete All Garments" */
+  }
+
   /* Keep arrow icons visible and properly sized */
-  #step-3-prev svg, #step-3-next svg {
+  #step-3-prev svg {
     width: 20px !important;
     height: 20px !important;
     flex-shrink: 0 !important;
+  }
+
+  /* Next button icons (for dynamic content) */
+  #step-3-next svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+    margin-left: 8px !important;         /* Space between text and icon */
   }
 
   /* Fix tour button absolute positioning chaos on mobile */
