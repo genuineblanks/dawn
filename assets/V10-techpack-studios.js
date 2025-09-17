@@ -3294,17 +3294,6 @@ class V10_StudioNavigator {
     // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
     this.updateStepActionsLayout();
 
-    // 🎯 VALIDATION: Trigger validation manager to update step-3-next button state
-    if (window.v10TechPackSystem?.validationManager) {
-      try {
-        console.log(`🔄 Triggering validation after studio switch to "${studioName}"`);
-        const validation = window.v10TechPackSystem.validationManager.validateStep();
-        console.log(`📋 Post-switch validation result:`, validation);
-      } catch (validationError) {
-        console.warn('Error triggering validation after studio switch:', validationError);
-      }
-    }
-
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
       // Clear any existing timeout to debounce rapid switches
@@ -3845,12 +3834,7 @@ class V10_QuantityStudioManager {
       // Not all complete - show what needs completion
       nextBtn.classList.add('v10-btn--disabled');
       nextBtn.disabled = true;
-      nextBtn.innerHTML = `
-        Complete all garments
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      `;
+      nextBtn.innerHTML = 'Complete all garments';
     }
   }
   
@@ -14310,21 +14294,11 @@ class V10_ValidationManager {
             const stats = validation.stats;
             if (stats) {
               console.log(`⏳ Garments incomplete - showing progress (${stats.complete}/${stats.total})`);
-              nextBtn.innerHTML = `
-                Complete All Garments (${stats.complete}/${stats.total})
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              `;
+              nextBtn.innerHTML = `Complete All Garments (${stats.complete}/${stats.total})`;
               nextBtn.title = `${stats.incomplete} garment(s) incomplete - complete all garments to proceed`;
             } else if (Array.isArray(validation.errors) && validation.errors.length > 0) {
               console.log(`❌ Validation errors:`, validation.errors);
-              nextBtn.innerHTML = `
-                Complete All Garments
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              `;
+              nextBtn.innerHTML = 'Complete All Garments';
               nextBtn.title = validation.errors.join(', ');
             }
             nextBtn.classList.add('v10-btn--disabled');
