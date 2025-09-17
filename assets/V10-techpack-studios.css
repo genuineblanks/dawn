@@ -1303,24 +1303,12 @@ button:focus,
     width: auto !important; /* Keep original width, not flex width */
   }
 
-  /* 🔥 NUCLEAR OPTION: Hidden buttons absolutely removed from existence on mobile */
+  /* MOBILE: Hidden buttons must not affect layout */
   .v10-step-actions .v10-btn--tour[style*="display: none"],
   .v10-step-actions .v10-btn--tour[style*="display:none"],
   .v10-step-actions .v10-btn--tour.hidden {
     display: none !important;
-    position: absolute !important;   /* Remove from flow completely */
-    left: -9999px !important;        /* Move off-screen */
-    top: -9999px !important;         /* Move off-screen */
-    width: 0 !important;             /* No width */
-    height: 0 !important;            /* No height */
-    padding: 0 !important;           /* No padding */
-    margin: 0 !important;            /* No margin */
-    border: none !important;         /* No border */
-    opacity: 0 !important;           /* Invisible */
-    flex: none !important;           /* No flex properties */
-    order: -1 !important;            /* Send to beginning so it doesn't interfere */
-    pointer-events: none !important; /* No interactions */
-    visibility: hidden !important;   /* Double-hidden */
+    position: static !important;
   }
 }
 
@@ -11724,16 +11712,13 @@ lid #404040 !important;
     margin-left: 8px !important;         /* Space between text and icon */
   }
 
-  /* 🔥 STRONGER MOBILE FIX: Force mobile layout with no absolute positioning */
+  /* Fix tour button positioning - use absolute like desktop for proper hidden behavior */
   .v10-step-actions .v10-btn--tour {
-    position: static !important;         /* Never use absolute on mobile */
-    left: auto !important;               /* Clear any absolute positioning */
-    transform: none !important;          /* Clear any transforms */
+    position: absolute !important;       /* Same as desktop - removes from document flow */
+    left: 50% !important;                /* Center horizontally */
+    transform: translateX(-50%) !important; /* Complete centering */
     font-size: 14px !important;          /* Keep tour button text visible */
-    order: 2 !important;                 /* Position between prev/next */
-    flex: 0 0 auto !important;           /* Don't grow/shrink */
-    width: auto !important;              /* Let content determine width */
-    margin: 0 auto !important;          /* Center in available space */
+    order: 2 !important;                 /* Fallback for non-absolute context */
   }
 
   /* Ensure proper button order on mobile */
