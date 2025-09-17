@@ -1296,11 +1296,8 @@ button:focus,
     justify-content: center;
   }
 
-  /* MOBILE: Ensure tour buttons stay centered */
+  /* MOBILE: Tour button flex properties only - positioning handled at line 11709 */
   .v10-step-actions .v10-btn--tour {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translateX(-50%); /* Remove !important to allow animation */
     flex: none !important; /* Don't let it flex like other buttons */
     width: auto !important; /* Keep original width, not flex width */
   }
