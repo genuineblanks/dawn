@@ -9279,7 +9279,7 @@ class V10_GarmentStudio {
       return;
     }
 
-    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility (reuse isMobile from above)
+    // 📱 MOBILE ONLY: Smart element scrolling for mobile tour visibility (desktop has enough space)
     if (isMobile) {
       console.log('📱 Mobile detected - scrolling to element for tour visibility');
 
@@ -9330,6 +9330,8 @@ class V10_GarmentStudio {
         // Start checking scroll completion every 50ms
         scrollCheckInterval = setInterval(checkScrollComplete, 50);
       });
+    } else {
+      console.log('🖥️ Desktop detected - maintaining original view position for tour');
     }
 
     // 🎯 COMPREHENSIVE DEBUG LOGGING
@@ -10102,7 +10104,7 @@ class V10_GarmentStudio {
       return;
     }
 
-    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility (reuse isMobile from above)
+    // 📱 MOBILE ONLY: Smart element scrolling for mobile tour visibility (desktop has enough space)
     if (isMobile) {
       console.log('📱 Mobile detected - scrolling to garment element for tour visibility');
 
@@ -10153,6 +10155,8 @@ class V10_GarmentStudio {
         // Start checking scroll completion every 50ms
         scrollCheckInterval = setInterval(checkScrollComplete, 50);
       });
+    } else {
+      console.log('🖥️ Desktop detected - maintaining original view position for garment tour');
     }
 
     console.log('🎯 Garment onboarding highlighting:', step.target);
