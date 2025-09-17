@@ -1287,7 +1287,7 @@ button:focus,
   .v10-step-actions {
     flex-direction: row;
     gap: var(--v10-space-3);
-    justify-content: space-between;
+    justify-content: center;
     position: relative; /* Ensure relative positioning for mobile too */
   }
 
@@ -6402,13 +6402,15 @@ html.onboarding-active {
   }
 
   .v10-step-actions--three-button {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
+    display: flex !important;
+    justify-content: center !important;
+    gap: var(--v10-space-3) !important;
+    flex-direction: row !important;
   }
 
   .v10-step-actions--three-button .v10-btn {
-    justify-self: stretch;
-    width: 100%;
+    flex: none !important;
+    width: auto !important;
   }
 
   .cost-summary-header-actions {
