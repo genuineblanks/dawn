@@ -1296,22 +1296,7 @@ button:focus,
     justify-content: center;
   }
 
-  /* MOBILE: Ensure tour buttons stay centered */
-  .v10-step-actions .v10-btn--tour {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translateX(-50%); /* Remove !important to allow animation */
-    flex: none !important; /* Don't let it flex like other buttons */
-    width: auto !important; /* Keep original width, not flex width */
-  }
-
-  /* MOBILE: Hidden buttons must not affect layout */
-  .v10-step-actions .v10-btn--tour[style*="display: none"],
-  .v10-step-actions .v10-btn--tour[style*="display:none"],
-  .v10-step-actions .v10-btn--tour.hidden {
-    display: none !important;
-    position: static !important;
-  }
+  /* MOBILE: Remove absolute positioning conflicts - handled in specific mobile section */
 }
 
 /* ==============================================
@@ -11647,7 +11632,7 @@ lid #404040 !important;
     justify-content: center !important;
   }
 
-  /* Next button: Show only greyed-out arrow on mobile */
+  /* Next button: Clean arrow-only mobile style */
   #step-3-next {
     font-size: 0 !important;             /* Hide all text completely */
     padding: 12px !important;            /* Same as Previous button */
@@ -11656,13 +11641,18 @@ lid #404040 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    opacity: 0.4 !important;             /* Greyed out by default (disabled state) */
-    transition: opacity 0.2s ease !important;
+    /* Ensure proper button appearance */
+    background-color: var(--v10-accent-primary) !important;
+    border: 1px solid var(--v10-accent-primary) !important;
+    color: white !important;
   }
 
-  /* When enabled, make arrow normal opacity */
-  #step-3-next:not(.v10-btn--disabled) {
-    opacity: 1 !important;               /* Full opacity when enabled */
+  /* Disabled state with proper visibility */
+  #step-3-next.v10-btn--disabled {
+    background-color: #666 !important;   /* Grey background */
+    border-color: #666 !important;       /* Grey border */
+    opacity: 0.8 !important;             /* Slightly transparent but visible */
+    cursor: not-allowed !important;
   }
 
   /* Keep arrow icons visible and properly sized */
@@ -11696,6 +11686,8 @@ lid #404040 !important;
   .v10-step-actions {
     display: flex !important;            /* Force visibility */
     visibility: visible !important;      /* Override any hidden state */
+    position: relative !important;       /* Ensure proper positioning */
+    z-index: 10 !important;              /* Above other elements */
   }
 }
 
