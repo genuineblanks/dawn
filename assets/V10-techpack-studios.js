@@ -3277,6 +3277,9 @@ class V10_StudioNavigator {
         tourButton.style.visibility = 'visible';
         console.log(`✅ TOUR button SHOWN: Garment Studio`);
       } else {
+        // Hide button for other studios (like quantities)
+        tourButton.style.display = 'none';
+        tourButton.style.visibility = 'hidden';
         console.log(`🚫 TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
       }
     }
