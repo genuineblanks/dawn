@@ -1295,16 +1295,21 @@ button:focus,
   }
 
   .v10-btn {
-    flex: 0 0 auto;              /* 🔥 FIX: Don't expand, use content size */
+    flex: 1;
     justify-content: center;
-    min-width: 80px;             /* Minimum touch target */
-    max-width: 120px;            /* Prevent oversized buttons */
   }
 
-  /* MOBILE: Tour button flex properties only - positioning handled at line 11709 */
+  /* 🔥 TARGETED: Only fix navigation buttons in step-actions */
+  .v10-step-actions .v10-btn:not(.v10-btn--tour) {
+    flex: 0 0 auto !important;   /* Prevent prev/next from expanding */
+    min-width: 80px !important;  /* Minimum touch target */
+    max-width: 100px !important; /* Prevent oversized buttons */
+  }
+
+  /* MOBILE: Tour button flex properties */
   .v10-step-actions .v10-btn--tour {
-    flex: none !important; /* Don't let it flex like other buttons */
-    width: auto !important; /* Keep original width, not flex width */
+    flex: 0 0 160px !important;  /* Fixed size for tour button */
+    width: auto !important;
   }
 
   /* MOBILE: Hidden buttons must not affect layout */
