@@ -1269,25 +1269,26 @@ button:focus,
   margin: 0 !important; /* Remove any existing margins */
 }
 
-/* CRITICAL: Hidden tour buttons must not take space or affect layout */
+/* 🔥 ENHANCED: Hidden tour buttons completely removed from layout - desktop */
 .v10-step-actions .v10-btn--tour[style*="display: none"],
-.v10-step-actions .v10-btn--tour[style*="display:none"] {
-  display: none !important;
-  position: static !important; /* Remove absolute positioning when hidden */
-}
-
-/* Alternative class-based hiding */
+.v10-step-actions .v10-btn--tour[style*="display:none"],
 .v10-step-actions .v10-btn--tour.hidden,
 .v10-step-actions .v10-btn--tour.hide {
   display: none !important;
-  position: static !important;
+  position: static !important;     /* Remove absolute positioning when hidden */
+  width: 0 !important;             /* No width */
+  height: 0 !important;            /* No height */
+  padding: 0 !important;           /* No padding */
+  margin: 0 !important;            /* No margin */
+  border: none !important;         /* No border */
+  opacity: 0 !important;           /* Invisible */
 }
 
 @media (max-width: 768px) {
   .v10-step-actions {
     flex-direction: row;
     gap: var(--v10-space-3);
-    justify-content: space-between;
+    justify-content: center;
     position: relative; /* Ensure relative positioning for mobile too */
   }
 
@@ -1296,21 +1297,26 @@ button:focus,
     justify-content: center;
   }
 
-  /* MOBILE: Ensure tour buttons stay centered */
+  /* MOBILE: Tour button flex properties only - positioning handled at line 11709 */
   .v10-step-actions .v10-btn--tour {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translateX(-50%); /* Remove !important to allow animation */
     flex: none !important; /* Don't let it flex like other buttons */
     width: auto !important; /* Keep original width, not flex width */
   }
 
-  /* MOBILE: Hidden buttons must not affect layout */
+  /* 🔥 ENHANCED: Hidden buttons completely removed from layout - no space reservation */
   .v10-step-actions .v10-btn--tour[style*="display: none"],
   .v10-step-actions .v10-btn--tour[style*="display:none"],
   .v10-step-actions .v10-btn--tour.hidden {
     display: none !important;
     position: static !important;
+    width: 0 !important;             /* No width */
+    height: 0 !important;            /* No height */
+    padding: 0 !important;           /* No padding */
+    margin: 0 !important;            /* No margin */
+    border: none !important;         /* No border */
+    opacity: 0 !important;           /* Invisible */
+    flex: none !important;           /* No flex properties */
+    order: 0 !important;             /* Remove from order */
   }
 }
 
@@ -6402,13 +6408,15 @@ html.onboarding-active {
   }
 
   .v10-step-actions--three-button {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
+    display: flex !important;
+    justify-content: center !important;
+    gap: var(--v10-space-3) !important;
+    flex-direction: row !important;
   }
 
   .v10-step-actions--three-button .v10-btn {
-    justify-self: stretch;
-    width: 100%;
+    flex: none !important;
+    width: auto !important;
   }
 
   .cost-summary-header-actions {
@@ -11613,15 +11621,24 @@ lid #404040 !important;
   }
   
   .tour-btn-text-mobile {
-    display: inline !important; /* Show short text on mobile */
+    display: inline !important;      /* Show short text on mobile */
+    width: 100% !important;          /* Fill available space */
+    text-overflow: ellipsis !important; /* Add ellipsis if needed */
+    overflow: hidden !important;     /* Hide overflow */
+    line-height: 1.2 !important;     /* Tight line height */
   }
   
-  /* Mobile-specific tour button adjustments */
+  /* 🔥 ENHANCED: Consistent mobile tour button sizing to prevent layout shifts */
   .v10-btn--tour {
-    min-width: 180px !important; /* Reduce minimum width for mobile */
-    font-size: 12px !important; /* Slightly smaller font for better fit */
-    padding: 10px 16px !important; /* Adjust padding for mobile touch targets */
-    gap: 6px !important; /* Reduce gap between icon and text */
+    min-width: 140px !important;      /* Fixed consistent width */
+    max-width: 140px !important;      /* Prevent expansion */
+    font-size: 11px !important;       /* Smaller font to fit all text */
+    padding: 8px 12px !important;     /* Tighter padding for mobile */
+    gap: 4px !important;              /* Smaller gap between icon and text */
+    text-align: center !important;    /* Center align text */
+    overflow: hidden !important;      /* Hide overflow */
+    white-space: nowrap !important;   /* Prevent line breaks */
+    box-sizing: border-box !important; /* Include padding in width */
   }
   
   /* Ensure mobile button has proper touch target size */
@@ -11665,6 +11682,28 @@ lid #404040 !important;
   #step-3-next:not(.v10-btn--disabled) {
     text-indent: 0 !important;           /* Show dynamic text like "Complete All Garments" */
   }
+  
+  /* MOBILE: Hide text for "Complete All Garments" - show arrow only like Previous button */
+  #step-3-next.v10-btn--disabled {
+    font-size: 0 !important;             /* Hide "Complete All Garments" text on mobile */
+    padding: 12px !important;            /* Match previous button padding for consistency */
+    min-width: 48px !important;          /* Square touch target like previous button */
+    text-indent: 0 !important;           /* Reset text-indent since we're hiding with font-size */
+  }
+  
+  /* MOBILE: Keep "Proceed to Review" text visible when enabled */
+  #step-3-next:not(.v10-btn--disabled) {
+    font-size: 12px !important;          /* Show text for "Proceed to Review" */
+    padding: 8px 16px !important;        /* More padding for text content */
+  }
+  
+  /* MOBILE: Ensure SVG icons are visible and properly sized for disabled state */
+  #step-3-next.v10-btn--disabled svg {
+    width: 20px !important;              /* Match previous button icon size */
+    height: 20px !important;
+    flex-shrink: 0 !important;
+    margin-left: 0 !important;           /* Remove text margin since no text */
+  }
 
   /* Keep arrow icons visible and properly sized */
   #step-3-prev svg {
@@ -11681,12 +11720,14 @@ lid #404040 !important;
     margin-left: 8px !important;         /* Space between text and icon */
   }
 
-  /* Fix tour button absolute positioning chaos on mobile */
+  /* 🔥 FIX: Use flex positioning instead of absolute for proper mobile layout */
   .v10-step-actions .v10-btn--tour {
-    position: static !important;         /* Remove absolute positioning */
-    transform: none !important;          /* Remove centering transform */
+    position: static !important;         /* Use flex instead of absolute */
+    left: auto !important;               /* Clear absolute left */
+    transform: none !important;          /* Clear absolute transform */
     font-size: 14px !important;          /* Keep tour button text visible */
-    order: 2 !important;                 /* Put tour button in middle */
+    order: 2 !important;                 /* Position between prev/next */
+    flex: 0 0 auto !important;           /* Don't grow/shrink */
   }
 
   /* Ensure proper button order on mobile */
