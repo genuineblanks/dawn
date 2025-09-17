@@ -1287,11 +1287,12 @@ button:focus,
 @media (max-width: 768px) {
   .v10-step-actions {
     flex-direction: row;
-    gap: 6px;                    /* Tight spacing for mobile */
-    justify-content: center;     /* Center the button group */
+    gap: 0;                      /* No gap - buttons distribute naturally */
+    justify-content: space-between; /* 🔥 PERFECT: Spread across full width */
     align-items: center;
     position: relative;
-    padding: 0 8px;              /* Minimal container padding */
+    padding: 0;                  /* No padding - use full width */
+    width: 100%;                 /* Ensure full container width */
   }
 
   .v10-btn {
@@ -1317,12 +1318,12 @@ button:focus,
     flex-shrink: 0 !important;
   }
 
-  /* 🔥 OPTIMIZED: Tour button gets most space and proper text */
+  /* 🔥 PERFECT: Tour button fills center space beautifully */
   .v10-step-actions .v10-btn--tour {
-    flex: 1 !important;          /* Take remaining space */
+    flex: 1 !important;          /* Fill all available center space */
     min-width: 200px !important; /* Ensure text fits */
-    max-width: none !important;  /* Allow expansion */
-    margin: 0 8px !important;    /* Space from icon buttons */
+    max-width: none !important;  /* Allow expansion to fill */
+    margin: 0 12px !important;   /* Nice spacing from edge buttons */
   }
 
   /* MOBILE: Hidden buttons must not affect layout */
