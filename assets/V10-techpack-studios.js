@@ -9278,8 +9278,7 @@ class V10_GarmentStudio {
       return;
     }
 
-    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility
-    const isMobile = window.innerWidth <= 768;
+    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility (reuse isMobile from above)
     if (isMobile) {
       console.log('📱 Mobile detected - scrolling to element for tour visibility');
 
@@ -9491,8 +9490,7 @@ class V10_GarmentStudio {
       scrollY: window.scrollY
     };
     
-    // Mobile detection and responsive dimensions
-    const isMobile = window.innerWidth <= 768;
+    // Mobile detection and responsive dimensions (reuse isMobile from above)
     const tooltipWidth = isMobile ? Math.min(window.innerWidth * 0.9, 300) : 320;
     const tooltipHeight = isMobile ? 140 : 120; // Slightly taller on mobile for better readability
     const margin = isMobile ? 12 : 20; // Smaller margins on mobile
@@ -10102,8 +10100,7 @@ class V10_GarmentStudio {
       return;
     }
 
-    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility
-    const isMobile = window.innerWidth <= 768;
+    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility (reuse isMobile from above)
     if (isMobile) {
       console.log('📱 Mobile detected - scrolling to garment element for tour visibility');
 
