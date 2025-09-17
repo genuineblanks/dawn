@@ -3292,7 +3292,10 @@ class V10_StudioNavigator {
     }
 
     // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
-    this.updateStepActionsLayout();
+    // Add small delay to ensure DOM updates are complete (especially for mobile)
+    setTimeout(() => {
+      this.updateStepActionsLayout();
+    }, 50);
 
     // Special handling for quantity studio with debouncing
     if (studioName === 'quantities') {
