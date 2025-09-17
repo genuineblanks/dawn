@@ -10119,7 +10119,7 @@ class V10_GarmentStudio {
     }
 
     // Find target element
-    const targetElement = document.querySelector(step.target);
+    let targetElement = document.querySelector(step.target);
     if (!targetElement) {
       console.warn(`Garment onboarding target not found: ${step.target}`);
       this.nextGarmentOnboardingStep();
@@ -10179,6 +10179,26 @@ class V10_GarmentStudio {
       });
     } else {
       console.log('🖥️ Desktop detected - maintaining original view position for garment tour');
+    }
+
+    // 🔄 FORCE ELEMENT RE-DETECTION: Ensure we have the latest element position
+    const reDetectedElement = document.querySelector(step.target);
+    if (reDetectedElement && reDetectedElement !== targetElement) {
+      console.log('🔄 Re-detected different garment element instance, updating reference');
+      targetElement = reDetectedElement;
+    }
+
+    // 🖥️ DESKTOP FIRST STEP FIX: Add small delay for initial garment step to ensure proper positioning
+    if (!isMobile && this.currentGarmentOnboardingStep === 0) {
+      console.log('🖥️ First garment step on desktop - adding positioning delay for element readiness');
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      // Re-query element after delay to ensure latest position
+      const finalElement = document.querySelector(step.target);
+      if (finalElement) {
+        targetElement = finalElement;
+        console.log('🔄 Updated garment element reference after desktop delay');
+      }
     }
 
     console.log('🎯 Garment onboarding highlighting:', step.target);
