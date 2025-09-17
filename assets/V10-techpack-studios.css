@@ -12011,3 +12011,16 @@ select:focus {
 .v10-design-reference-input:focus {
   color: #ffffff !important;
 }
+
+/* ====================================================
+   STEP 4 CARD BACKGROUND CONSISTENCY FIX
+   ==================================================== */
+
+/* Ensure all cards in Step 4 use the medium grey background, not the dark step background */
+#techpack-v10-step-4 .v10-studio-card,
+.v10-review-grid .v10-studio-card,
+#review-uploaded-files,
+#review-client-info,
+#review-garment-specifications {
+  background: var(--v10-bg-card) !important; /* Force medium grey background for all cards */
+}
