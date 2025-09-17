@@ -18195,9 +18195,12 @@ class V10_ClientManager {
       }
     }
     
-    // 🗑️ REMOVED: Duplicate different address validation - now handled by Universal Form Validator
-    // The Universal Form Validator system now handles all conditional address field validation
-    
+    // 🆕 ENHANCED: Include conditional sections validation
+    const conditionalValidation = this.validateConditionalSections();
+    if (!conditionalValidation) {
+      isValid = false;
+    }
+
     // Check shipping method and insurance (for bulk requests)
     if (this.currentRequestType === 'bulk-order-request') {
       console.log('🔍 Checking bulk request requirements (shipping & insurance)');
@@ -18262,21 +18265,75 @@ class V10_ClientManager {
   }
 
   validateConditionalSections() {
+    let isValid = true;
+
     // Only validate delivery address radio if not quotation type
     if (this.currentRequestType !== 'quotation') {
-      const deliveryField = document.getElementById('v10-delivery-address-field');
+      // Check delivery address selection for sample-request and bulk-order-request
+      const deliveryField = document.getElementById('delivery-row');
       if (deliveryField && deliveryField.style.display !== 'none') {
         const selectedDelivery = document.querySelector('input[name="deliveryAddress"]:checked');
         if (!selectedDelivery) {
-          deliveryField.classList.add('v10-form-field--invalid');
+          console.log('❌ No delivery address selected');
+          isValid = false;
+          // Add error styling to the delivery address field group
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.add('v10-form-field--invalid');
+          }
         } else {
-          deliveryField.classList.remove('v10-form-field--invalid');
-          
-          // 🗑️ REMOVED: Duplicate field-level validation - now handled by Universal Form Validator
-          // Only keeping radio selection validation here, field validation handled comprehensively by Universal Form Validator
+          console.log('✅ Delivery address selected:', selectedDelivery.value);
+          // Remove error styling
+          const deliveryGroup = document.querySelector('.techpack-form__group--required:has(input[name="deliveryAddress"])');
+          if (deliveryGroup) {
+            deliveryGroup.classList.remove('v10-form-field--invalid');
+          }
+        }
+      }
+
+      // Check bulk order specific fields
+      if (this.currentRequestType === 'bulk-order-request') {
+        const shippingSection = document.getElementById('shipping-section');
+        if (shippingSection && shippingSection.style.display !== 'none') {
+
+          // Validate shipping method selection
+          const selectedShipping = document.querySelector('input[name="shippingMethod"]:checked');
+          if (!selectedShipping) {
+            console.log('❌ No shipping method selected for bulk order');
+            isValid = false;
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Shipping method selected:', selectedShipping.value);
+            const shippingGroup = document.querySelector('.techpack-form__group--required:has(input[name="shippingMethod"])');
+            if (shippingGroup) {
+              shippingGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
+
+          // Validate insurance selection
+          const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
+          if (!selectedInsurance) {
+            console.log('❌ No insurance option selected for bulk order');
+            isValid = false;
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.add('v10-form-field--invalid');
+            }
+          } else {
+            console.log('✅ Insurance option selected:', selectedInsurance.value);
+            const insuranceGroup = document.querySelector('.techpack-form__group--required:has(input[name="insurance"])');
+            if (insuranceGroup) {
+              insuranceGroup.classList.remove('v10-form-field--invalid');
+            }
+          }
         }
       }
     }
+
+    return isValid;
   }
 
   saveData() {
