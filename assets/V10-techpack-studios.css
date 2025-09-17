@@ -12029,3 +12029,27 @@ select:focus {
 #techpack-v10-step-4 #review-uploaded-files .file-item {
   background: var(--v10-bg-secondary) !important; /* Dark background to match file icon */
 }
+
+/* ====================================================
+   STEP 4 REVIEW DETAIL LABELS AND VALUES
+   ==================================================== */
+
+/* Review detail container */
+.review-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--v10-space-2);
+}
+
+/* Labels - bold and slightly muted for hierarchy */
+.detail-label {
+  font-weight: 600;
+  color: var(--v10-text-secondary);
+  margin-right: var(--v10-space-2);
+}
+
+/* Values - normal weight with primary text color */
+.detail-value {
+  font-weight: 400;
+  color: var(--v10-text-primary);
+}
