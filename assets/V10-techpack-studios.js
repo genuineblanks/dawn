@@ -9256,6 +9256,7 @@ class V10_GarmentStudio {
     }
     
     const step = this.onboardingSteps[this.currentOnboardingStep];
+    const isMobile = window.innerWidth <= 768; // Mobile detection for this function scope
     const highlight = document.getElementById('onboarding-highlight');
     const tooltip = document.getElementById('onboarding-tooltip');
     const nextBtn = document.getElementById('onboarding-next');
