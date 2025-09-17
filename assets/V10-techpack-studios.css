@@ -1300,22 +1300,9 @@ button:focus,
     justify-content: center;
   }
 
-  /* 🔥 SMART: Prev/Next buttons - icon only approach */
+  /* 🔥 CLEAN: Prev/Next buttons basic layout only */
   .v10-step-actions .v10-btn:not(.v10-btn--tour) {
     flex: 0 0 auto !important;
-    width: 48px !important;      /* Icon-only width */
-    min-width: 48px !important;
-    max-width: 48px !important;
-    padding: 12px 8px !important;
-    font-size: 0 !important;     /* Hide text */
-    gap: 0 !important;
-  }
-
-  /* Show only icons for prev/next buttons */
-  .v10-step-actions .v10-btn:not(.v10-btn--tour) .v10-btn-icon {
-    width: 20px !important;
-    height: 20px !important;
-    flex-shrink: 0 !important;
   }
 
   /* 🔥 PERFECT: Tour button fills center space beautifully */
@@ -1323,7 +1310,8 @@ button:focus,
     flex: 1 !important;          /* Fill all available center space */
     min-width: 200px !important; /* Ensure text fits */
     max-width: none !important;  /* Allow expansion to fill */
-    margin: 0 12px !important;   /* Nice spacing from edge buttons */
+    margin: 0 16px !important;   /* Balanced spacing from larger edge buttons */
+    height: 48px !important;     /* Match height of side buttons */
   }
 
   /* MOBILE: Hidden buttons must not affect layout */
@@ -11671,9 +11659,9 @@ lid #404040 !important;
   /* MOBILE: Arrow-only Previous, smart Next button text handling */
   #step-3-prev {
     font-size: 0 !important;             /* Hide "Previous" text completely */
-    padding: 12px !important;            /* Smaller padding for icon-only */
-    min-height: 48px !important;         /* Maintain touch target */
-    min-width: 48px !important;          /* Square touch target */
+    padding: 16px !important;            /* 🔥 BIGGER padding for bigger button */
+    min-height: 56px !important;         /* 🔥 BIGGER touch target */
+    min-width: 56px !important;          /* 🔥 BIGGER touch target */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11701,8 +11689,9 @@ lid #404040 !important;
   /* MOBILE: Hide text for "Complete All Garments" - show arrow only like Previous button */
   #step-3-next.v10-btn--disabled {
     font-size: 0 !important;             /* Hide "Complete All Garments" text on mobile */
-    padding: 12px !important;            /* Match previous button padding for consistency */
-    min-width: 48px !important;          /* Square touch target like previous button */
+    padding: 16px !important;            /* 🔥 BIGGER padding to match previous button */
+    min-width: 56px !important;          /* 🔥 BIGGER touch target like previous button */
+    min-height: 56px !important;         /* 🔥 BIGGER height to match */
     text-indent: 0 !important;           /* Reset text-indent since we're hiding with font-size */
   }
   
