@@ -6234,17 +6234,36 @@ html.onboarding-active {
   background: rgba(163, 163, 163, 0.05);
 }
 
-/* Three Button Layout */
+/* Three Button Layout - FIXED CENTERING FOR HIDDEN BUTTONS */
 .v10-step-actions--three-button {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Changed from space-between to center */
   align-items: center;
   gap: var(--v10-space-4);
   margin-top: var(--v10-space-6);
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
+/* Ensure proper spacing between visible buttons */
+.v10-step-actions--three-button > * {
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+/* CRITICAL FIX: Hidden buttons should not take space */
+.v10-step-actions--three-button .v10-btn--tour[style*="display: none"],
+.v10-step-actions--three-button .v10-btn--tour[style*="display:none"] {
+  display: none !important;
+}
+
+/* Alternative class-based hiding (if you use classes instead of inline styles) */
+.v10-step-actions--three-button .v10-btn--tour.hidden,
+.v10-step-actions--three-button .v10-btn--tour.hide {
+  display: none !important;
+}
+
+/* Tour button centering when it's the only visible element */
 .v10-step-actions--three-button .v10-btn--tour {
-  margin: 0 auto;
+  margin: 0; /* Remove auto margins since container now centers */
 }
 
 /* Terms Agreement */
@@ -6360,13 +6379,23 @@ html.onboarding-active {
   }
 
   .v10-step-actions--three-button {
-    grid-template-columns: 1fr;
-    gap: var(--v10-space-3);
+    display: flex !important; /* Override grid with flex */
+    flex-direction: column !important; /* Stack vertically on mobile */
+    justify-content: center !important; /* Center the buttons */
+    align-items: center !important;
+    gap: var(--v10-space-3) !important;
   }
 
   .v10-step-actions--three-button .v10-btn {
-    justify-self: stretch;
-    width: 100%;
+    width: 100% !important;
+    max-width: 300px !important; /* Prevent buttons from being too wide */
+  }
+
+  /* MOBILE: Ensure hidden tour buttons don't interfere with centering */
+  .v10-step-actions--three-button .v10-btn--tour[style*="display: none"],
+  .v10-step-actions--three-button .v10-btn--tour[style*="display:none"],
+  .v10-step-actions--three-button .v10-btn--tour.hidden {
+    display: none !important;
   }
 
   .cost-summary-header-actions {
