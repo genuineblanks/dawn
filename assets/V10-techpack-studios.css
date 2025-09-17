@@ -1303,12 +1303,14 @@ button:focus,
     width: auto !important; /* Keep original width, not flex width */
   }
 
-  /* 🔥 ENHANCED: Hidden buttons completely removed from layout - no space reservation */
+  /* 🔥 NUCLEAR OPTION: Hidden buttons absolutely removed from existence on mobile */
   .v10-step-actions .v10-btn--tour[style*="display: none"],
   .v10-step-actions .v10-btn--tour[style*="display:none"],
   .v10-step-actions .v10-btn--tour.hidden {
     display: none !important;
-    position: static !important;
+    position: absolute !important;   /* Remove from flow completely */
+    left: -9999px !important;        /* Move off-screen */
+    top: -9999px !important;         /* Move off-screen */
     width: 0 !important;             /* No width */
     height: 0 !important;            /* No height */
     padding: 0 !important;           /* No padding */
@@ -1316,7 +1318,9 @@ button:focus,
     border: none !important;         /* No border */
     opacity: 0 !important;           /* Invisible */
     flex: none !important;           /* No flex properties */
-    order: 0 !important;             /* Remove from order */
+    order: -1 !important;            /* Send to beginning so it doesn't interfere */
+    pointer-events: none !important; /* No interactions */
+    visibility: hidden !important;   /* Double-hidden */
   }
 }
 
@@ -11720,14 +11724,16 @@ lid #404040 !important;
     margin-left: 8px !important;         /* Space between text and icon */
   }
 
-  /* 🔥 FIX: Use flex positioning instead of absolute for proper mobile layout */
+  /* 🔥 STRONGER MOBILE FIX: Force mobile layout with no absolute positioning */
   .v10-step-actions .v10-btn--tour {
-    position: static !important;         /* Use flex instead of absolute */
-    left: auto !important;               /* Clear absolute left */
-    transform: none !important;          /* Clear absolute transform */
+    position: static !important;         /* Never use absolute on mobile */
+    left: auto !important;               /* Clear any absolute positioning */
+    transform: none !important;          /* Clear any transforms */
     font-size: 14px !important;          /* Keep tour button text visible */
     order: 2 !important;                 /* Position between prev/next */
     flex: 0 0 auto !important;           /* Don't grow/shrink */
+    width: auto !important;              /* Let content determine width */
+    margin: 0 auto !important;          /* Center in available space */
   }
 
   /* Ensure proper button order on mobile */

@@ -3250,37 +3250,44 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // 🔥 SINGLE DYNAMIC TOUR BUTTON - Update content based on studio
-    const tourButton = document.getElementById('studio-tour-btn');
+    // CONTROL TOUR BUTTON VISIBILITY - Color Studio + Garment Studio
+    const colorTourButton = document.getElementById('color-studio-tour');
+    const garmentTourButton = document.getElementById('garment-studio-tour');
 
-    if (tourButton) {
-      // Always hide first
-      tourButton.style.display = 'none';
-      tourButton.style.visibility = 'hidden';
+    // Color Studio Tour Button - ONLY in Color Studio + Sample Request
+    if (colorTourButton) {
+      // ALWAYS HIDE FIRST
+      colorTourButton.style.display = 'none !important';
+      colorTourButton.style.visibility = 'hidden';
 
-      // Show and configure based on studio type
+      // ONLY show if EXACTLY: Color Studio (design) AND Sample Request
       if (studioName === 'design' && V10_State.requestType === 'sample-request') {
-        // Color Studio configuration
-        this.updateTourButtonContent(tourButton, 'color');
-        tourButton.style.display = 'block';
-        tourButton.style.visibility = 'visible';
-        console.log(`✅ TOUR button SHOWN: Color Studio + Sample Request`);
-
-        // Trigger first-time pulse if this is the first visit to Color Studio
-        if (!localStorage.getItem('color-studio-tour-seen')) {
-          this.triggerFirstTimeTourPulse();
-        }
-      } else if (studioName === 'garment') {
-        // Garment Studio configuration
-        this.updateTourButtonContent(tourButton, 'garment');
-        tourButton.style.display = 'block';
-        tourButton.style.visibility = 'visible';
-        console.log(`✅ TOUR button SHOWN: Garment Studio`);
+        colorTourButton.style.display = 'block';
+        colorTourButton.style.visibility = 'visible';
+        console.log(`✅ COLOR TOUR button SHOWN: Color Studio + Sample Request`);
       } else {
-        // Hide button for other studios (like quantities)
-        tourButton.style.display = 'none';
-        tourButton.style.visibility = 'hidden';
-        console.log(`🚫 TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
+        console.log(`🚫 COLOR TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
+      }
+
+      // Trigger first-time pulse if this is the first visit to Color Studio
+      if (studioName === 'design' && V10_State.requestType === 'sample-request' && !localStorage.getItem('color-studio-tour-seen')) {
+        this.triggerFirstTimeTourPulse();
+      }
+    }
+
+    // Garment Studio Tour Button - ONLY in Garment Studio
+    if (garmentTourButton) {
+      // ALWAYS HIDE FIRST
+      garmentTourButton.style.display = 'none !important';
+      garmentTourButton.style.visibility = 'hidden';
+
+      // ONLY show if EXACTLY: Garment Studio
+      if (studioName === 'garment') {
+        garmentTourButton.style.display = 'block';
+        garmentTourButton.style.visibility = 'visible';
+        console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+      } else {
+        console.log(`🚫 GARMENT TOUR button HIDDEN: studio="${studioName}"`);
       }
     }
 
@@ -3379,7 +3386,7 @@ class V10_StudioNavigator {
 
   // Trigger first-time tour button pulse animation
   triggerFirstTimeTourPulse() {
-    const tourButton = document.getElementById('studio-tour-btn');
+    const tourButton = document.getElementById('color-studio-tour');
     if (tourButton) {
       console.log('🟠 Triggering first-time tour button pulse animation');
       
@@ -3396,40 +3403,6 @@ class V10_StudioNavigator {
     }
   }
 
-  // 🔥 NEW: Update tour button content dynamically based on studio type
-  updateTourButtonContent(button, studioType) {
-    if (!button) return;
-
-    const svg = button.querySelector('svg');
-    const desktopText = button.querySelector('.tour-btn-text-desktop');
-    const mobileText = button.querySelector('.tour-btn-text-mobile');
-
-    // Set studio type data attribute
-    button.setAttribute('data-studio', studioType);
-
-    if (studioType === 'color') {
-      // Color Studio SVG and text
-      svg.innerHTML = `
-        <path d="M2 3h20v18H2z"/>
-        <path d="m8 21 4-7-4-7"/>
-        <path d="M16 14h4"/>
-        <path d="M16 10h4"/>
-      `;
-      if (desktopText) desktopText.textContent = 'COLOR STUDIO VISUAL GUIDE';
-      if (mobileText) mobileText.textContent = 'COLOR STUDIO GUIDE';
-    } else if (studioType === 'garment') {
-      // Garment Studio SVG and text
-      svg.innerHTML = `
-        <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
-        <line x1="16" y1="8" x2="2" y2="22"/>
-        <line x1="17.5" y1="15" x2="9" y2="15"/>
-      `;
-      if (desktopText) desktopText.textContent = 'GARMENT STUDIO VISUAL GUIDE';
-      if (mobileText) mobileText.textContent = 'GARMENT STUDIO GUIDE';
-    }
-
-    console.log(`🔄 Updated tour button content for ${studioType} studio`);
-  }
 
   // Handle blocked navigation attempts during edit mode
   handleBlockedNavigation(elementType, targetLocation) {
@@ -16881,37 +16854,41 @@ class V10_TechPackSystem {
       });
     }
     
-    // 🔥 SINGLE DYNAMIC TOUR button (handles both Color and Garment studio tours)
-    const tourBtn = document.getElementById('studio-tour-btn');
+    // COLOR STUDIO TOUR button (only visible in Color Studio)
+    const tourBtn = document.getElementById('color-studio-tour');
     if (tourBtn) {
       tourBtn.addEventListener('click', () => {
-        const studioType = tourBtn.getAttribute('data-studio');
-        console.log(`🎯 TOUR button clicked - starting ${studioType} studio tour`);
+        console.log('🎯 COLOR TOUR button clicked - starting onboarding tour');
 
-        // Mark tour as seen and return to normal state permanently
-        if (studioType === 'color') {
-          localStorage.setItem('color-studio-tour-seen', 'true');
-          console.log('✅ Color studio tour marked as seen');
-
-          if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
-            window.v10GarmentStudio.showColorStudioOnboarding();
-          } else {
-            console.warn('⚠️ Color studio onboarding system not available');
-          }
-        } else if (studioType === 'garment') {
-          localStorage.setItem('garment-studio-tour-seen', 'true');
-          console.log('✅ Garment studio tour marked as seen');
-
-          if (window.v10GarmentStudio && window.v10GarmentStudio.showGarmentStudioOnboarding) {
-            window.v10GarmentStudio.showGarmentStudioOnboarding();
-          } else {
-            console.warn('⚠️ Garment studio onboarding system not available');
-          }
-        }
-
-        // Remove pulse animation
+        // Mark as seen and return to black normal state permanently
+        localStorage.setItem('color-studio-tour-seen', 'true');
         tourBtn.classList.remove('first-time-pulse');
-        console.log('✅ Tour button returned to normal state');
+        console.log('✅ Tour button returned to normal black state');
+
+        if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
+          window.v10GarmentStudio.showColorStudioOnboarding();
+        } else {
+          console.warn('⚠️ Onboarding system not available');
+        }
+      });
+    }
+
+    // GARMENT STUDIO TOUR button (only visible in Garment Studio)
+    const garmentTourBtn = document.getElementById('garment-studio-tour');
+    if (garmentTourBtn) {
+      garmentTourBtn.addEventListener('click', () => {
+        console.log('🎯 GARMENT TOUR button clicked - starting garment onboarding tour');
+
+        // Mark as seen and return to black normal state permanently
+        localStorage.setItem('garment-studio-tour-seen', 'true');
+        garmentTourBtn.classList.remove('first-time-pulse');
+        console.log('✅ Garment tour button returned to normal black state');
+
+        if (window.v10GarmentStudio && window.v10GarmentStudio.showGarmentStudioOnboarding) {
+          window.v10GarmentStudio.showGarmentStudioOnboarding();
+        } else {
+          console.warn('⚠️ Garment onboarding system not available');
+        }
       });
     }
 
