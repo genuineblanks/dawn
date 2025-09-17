@@ -1287,7 +1287,7 @@ button:focus,
   .v10-step-actions {
     flex-direction: row;
     gap: var(--v10-space-3);
-    justify-content: center;
+    justify-content: space-between;
     position: relative; /* Ensure relative positioning for mobile too */
   }
 
@@ -1296,8 +1296,11 @@ button:focus,
     justify-content: center;
   }
 
-  /* MOBILE: Tour button flex properties only - positioning handled at line 11709 */
+  /* MOBILE: Ensure tour buttons stay centered */
   .v10-step-actions .v10-btn--tour {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%); /* Remove !important to allow animation */
     flex: none !important; /* Don't let it flex like other buttons */
     width: auto !important; /* Keep original width, not flex width */
   }
@@ -6399,15 +6402,13 @@ html.onboarding-active {
   }
 
   .v10-step-actions--three-button {
-    display: flex !important;
-    justify-content: center !important;
-    gap: var(--v10-space-3) !important;
-    flex-direction: row !important;
+    grid-template-columns: 1fr;
+    gap: var(--v10-space-3);
   }
 
   .v10-step-actions--three-button .v10-btn {
-    flex: none !important;
-    width: auto !important;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .cost-summary-header-actions {
@@ -11664,28 +11665,6 @@ lid #404040 !important;
   #step-3-next:not(.v10-btn--disabled) {
     text-indent: 0 !important;           /* Show dynamic text like "Complete All Garments" */
   }
-  
-  /* MOBILE: Hide text for "Complete All Garments" - show arrow only like Previous button */
-  #step-3-next.v10-btn--disabled {
-    font-size: 0 !important;             /* Hide "Complete All Garments" text on mobile */
-    padding: 12px !important;            /* Match previous button padding for consistency */
-    min-width: 48px !important;          /* Square touch target like previous button */
-    text-indent: 0 !important;           /* Reset text-indent since we're hiding with font-size */
-  }
-  
-  /* MOBILE: Keep "Proceed to Review" text visible when enabled */
-  #step-3-next:not(.v10-btn--disabled) {
-    font-size: 12px !important;          /* Show text for "Proceed to Review" */
-    padding: 8px 16px !important;        /* More padding for text content */
-  }
-  
-  /* MOBILE: Ensure SVG icons are visible and properly sized for disabled state */
-  #step-3-next.v10-btn--disabled svg {
-    width: 20px !important;              /* Match previous button icon size */
-    height: 20px !important;
-    flex-shrink: 0 !important;
-    margin-left: 0 !important;           /* Remove text margin since no text */
-  }
 
   /* Keep arrow icons visible and properly sized */
   #step-3-prev svg {
@@ -11702,13 +11681,12 @@ lid #404040 !important;
     margin-left: 8px !important;         /* Space between text and icon */
   }
 
-  /* Fix tour button positioning - use absolute like desktop for proper hidden behavior */
+  /* Fix tour button absolute positioning chaos on mobile */
   .v10-step-actions .v10-btn--tour {
-    position: absolute !important;       /* Same as desktop - removes from document flow */
-    left: 50% !important;                /* Center horizontally */
-    transform: translateX(-50%) !important; /* Complete centering */
+    position: static !important;         /* Remove absolute positioning */
+    transform: none !important;          /* Remove centering transform */
     font-size: 14px !important;          /* Keep tour button text visible */
-    order: 2 !important;                 /* Fallback for non-absolute context */
+    order: 2 !important;                 /* Put tour button in middle */
   }
 
   /* Ensure proper button order on mobile */
