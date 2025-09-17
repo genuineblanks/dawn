@@ -4656,6 +4656,40 @@ html.onboarding-active {
   z-index: 10002;
 }
 
+/* 📱 MOBILE TOUR CONTROLS: Optimized positioning for mobile viewport */
+@media (max-width: 768px) {
+  .onboarding-controls {
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 32px) !important;
+    max-width: 400px !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .onboarding-btn {
+    min-height: 48px !important;
+    min-width: 80px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    flex: 1 !important;
+    max-width: 120px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* Ensure tour controls stay above mobile keyboard */
+  .onboarding-controls {
+    position: fixed !important;
+    z-index: 10002 !important;
+  }
+}
+
 .onboarding-btn {
   padding: 12px 18px;
   border-radius: 8px;

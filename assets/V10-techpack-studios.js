@@ -9111,13 +9111,18 @@ class V10_GarmentStudio {
   showColorStudioOnboarding() {
     console.log('🚀 Starting onboarding tour...');
     
-    // 🔝 MOBILE FIX: Immediately scroll to top for consistent positioning
-    console.log('📱 Scrolling to top for consistent mobile positioning...');
-    window.scrollTo({
-      top: 0,
+    // 🔝 DESKTOP ONLY: Scroll to top for consistent positioning (mobile will scroll to elements naturally)
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      console.log('🖥️ Desktop detected - scrolling to top for consistent positioning...');
+      window.scrollTo({
+        top: 0,
       behavior: 'smooth'
-    });
-    
+      });
+    } else {
+      console.log('📱 Mobile detected - skipping initial scroll, elements will scroll naturally during tour');
+    }
+
     // 🚫 PREVENT SCROLLING: Disable page scrolling when visual guide is open
     document.body.classList.add('onboarding-active');
     document.documentElement.classList.add('onboarding-active');
@@ -9244,7 +9249,7 @@ class V10_GarmentStudio {
   }
   
   // Show current onboarding step
-  showOnboardingStep() {
+  async showOnboardingStep() {
     if (this.currentOnboardingStep >= this.onboardingSteps.length) {
       this.completeOnboarding();
       return;
@@ -9272,7 +9277,61 @@ class V10_GarmentStudio {
       this.nextOnboardingStep();
       return;
     }
-    
+
+    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      console.log('📱 Mobile detected - scrolling to element for tour visibility');
+
+      // Scroll element into view with center positioning for optimal mobile experience
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center'
+      });
+
+      // Wait for scroll completion before positioning highlight
+      await new Promise(resolve => {
+        let scrollCheckInterval;
+        let lastScrollPosition = window.scrollY;
+        let scrollStabilityCount = 0;
+        const maxWaitTime = 1500; // Maximum wait time
+        const startTime = Date.now();
+
+        const checkScrollComplete = () => {
+          const currentScrollPosition = window.scrollY;
+          const waitTime = Date.now() - startTime;
+
+          // Check if scroll has stabilized (3 consecutive checks with same position)
+          if (Math.abs(currentScrollPosition - lastScrollPosition) < 5) {
+            scrollStabilityCount++;
+
+            // Consider scroll complete after 3 stable checks or max wait time
+            if (scrollStabilityCount >= 3 || waitTime >= maxWaitTime) {
+              clearInterval(scrollCheckInterval);
+              console.log('📱 Mobile scroll completed, proceeding with highlight positioning');
+              resolve();
+              return;
+            }
+          } else {
+            scrollStabilityCount = 0;
+          }
+
+          lastScrollPosition = currentScrollPosition;
+
+          // Fallback: stop waiting after max time
+          if (waitTime >= maxWaitTime) {
+            clearInterval(scrollCheckInterval);
+            console.log('📱 Mobile scroll timeout, proceeding with highlight positioning');
+            resolve();
+          }
+        };
+
+        // Start checking scroll completion every 50ms
+        scrollCheckInterval = setInterval(checkScrollComplete, 50);
+      });
+    }
+
     // 🎯 COMPREHENSIVE DEBUG LOGGING
     console.log('🔍 ONBOARDING DEBUG - ELEMENT TARGETING:');
     console.log('Step target selector:', step.target);
@@ -9678,12 +9737,17 @@ class V10_GarmentStudio {
   showGarmentStudioOnboarding() {
     console.log('🚀 Starting Garment Studio onboarding tour...');
 
-    // 🔝 MOBILE FIX: Immediately scroll to top for consistent positioning
-    console.log('📱 Scrolling to top for consistent mobile positioning...');
-    window.scrollTo({
-      top: 0,
+    // 🔝 DESKTOP ONLY: Scroll to top for consistent positioning (mobile will scroll to elements naturally)
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      console.log('🖥️ Desktop detected - scrolling to top for consistent positioning...');
+      window.scrollTo({
+        top: 0,
       behavior: 'smooth'
-    });
+      });
+    } else {
+      console.log('📱 Mobile detected - skipping initial garment scroll, elements will scroll naturally during tour');
+    }
 
     // 🚫 PREVENT SCROLLING: Disable page scrolling when visual guide is open
     document.body.classList.add('onboarding-active');
@@ -10009,7 +10073,7 @@ class V10_GarmentStudio {
   }
 
   // Show current garment onboarding step
-  showGarmentOnboardingStep() {
+  async showGarmentOnboardingStep() {
     if (this.currentGarmentOnboardingStep >= this.garmentOnboardingSteps.length) {
       this.completeGarmentOnboarding();
       return;
@@ -10036,6 +10100,60 @@ class V10_GarmentStudio {
       console.warn(`Garment onboarding target not found: ${step.target}`);
       this.nextGarmentOnboardingStep();
       return;
+    }
+
+    // 📱 MOBILE FIX: Smart element scrolling for mobile tour visibility
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      console.log('📱 Mobile detected - scrolling to garment element for tour visibility');
+
+      // Scroll element into view with center positioning for optimal mobile experience
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center'
+      });
+
+      // Wait for scroll completion before positioning highlight
+      await new Promise(resolve => {
+        let scrollCheckInterval;
+        let lastScrollPosition = window.scrollY;
+        let scrollStabilityCount = 0;
+        const maxWaitTime = 1500; // Maximum wait time
+        const startTime = Date.now();
+
+        const checkScrollComplete = () => {
+          const currentScrollPosition = window.scrollY;
+          const waitTime = Date.now() - startTime;
+
+          // Check if scroll has stabilized (3 consecutive checks with same position)
+          if (Math.abs(currentScrollPosition - lastScrollPosition) < 5) {
+            scrollStabilityCount++;
+
+            // Consider scroll complete after 3 stable checks or max wait time
+            if (scrollStabilityCount >= 3 || waitTime >= maxWaitTime) {
+              clearInterval(scrollCheckInterval);
+              console.log('📱 Mobile garment scroll completed, proceeding with highlight positioning');
+              resolve();
+              return;
+            }
+          } else {
+            scrollStabilityCount = 0;
+          }
+
+          lastScrollPosition = currentScrollPosition;
+
+          // Fallback: stop waiting after max time
+          if (waitTime >= maxWaitTime) {
+            clearInterval(scrollCheckInterval);
+            console.log('📱 Mobile garment scroll timeout, proceeding with highlight positioning');
+            resolve();
+          }
+        };
+
+        // Start checking scroll completion every 50ms
+        scrollCheckInterval = setInterval(checkScrollComplete, 50);
+      });
     }
 
     console.log('🎯 Garment onboarding highlighting:', step.target);
