@@ -3250,45 +3250,39 @@ class V10_StudioNavigator {
       console.log(`📦 Studio container ${container.id}: ${isActive ? 'SHOWN' : 'HIDDEN'}`);
     });
     
-    // CONTROL TOUR BUTTON VISIBILITY - Color Studio + Garment Studio
+    // 🔥 FIXED: MUTUAL EXCLUSIVE TOUR BUTTON VISIBILITY
     const colorTourButton = document.getElementById('color-studio-tour');
     const garmentTourButton = document.getElementById('garment-studio-tour');
 
-    // Color Studio Tour Button - ONLY in Color Studio + Sample Request
+    // 🚫 STEP 1: Hide BOTH buttons first (ensure mutual exclusivity)
     if (colorTourButton) {
-      // ALWAYS HIDE FIRST
-      colorTourButton.style.display = 'none !important';
+      colorTourButton.style.display = 'none';
       colorTourButton.style.visibility = 'hidden';
-
-      // ONLY show if EXACTLY: Color Studio (design) AND Sample Request
-      if (studioName === 'design' && V10_State.requestType === 'sample-request') {
-        colorTourButton.style.display = 'block';
-        colorTourButton.style.visibility = 'visible';
-        console.log(`✅ COLOR TOUR button SHOWN: Color Studio + Sample Request`);
-      } else {
-        console.log(`🚫 COLOR TOUR button HIDDEN: studio="${studioName}", requestType="${V10_State.requestType}"`);
-      }
-
-      // Trigger first-time pulse if this is the first visit to Color Studio
-      if (studioName === 'design' && V10_State.requestType === 'sample-request' && !localStorage.getItem('color-studio-tour-seen')) {
-        this.triggerFirstTimeTourPulse();
-      }
+    }
+    if (garmentTourButton) {
+      garmentTourButton.style.display = 'none';
+      garmentTourButton.style.visibility = 'hidden';
     }
 
-    // Garment Studio Tour Button - ONLY in Garment Studio
-    if (garmentTourButton) {
-      // ALWAYS HIDE FIRST
-      garmentTourButton.style.display = 'none !important';
-      garmentTourButton.style.visibility = 'hidden';
+    // ✅ STEP 2: Show ONLY the appropriate button
+    if (studioName === 'design' && V10_State.requestType === 'sample-request' && colorTourButton) {
+      // Color Studio Tour Button
+      colorTourButton.style.display = 'block';
+      colorTourButton.style.visibility = 'visible';
+      console.log(`✅ COLOR TOUR button SHOWN: Color Studio + Sample Request`);
 
-      // ONLY show if EXACTLY: Garment Studio
-      if (studioName === 'garment') {
-        garmentTourButton.style.display = 'block';
-        garmentTourButton.style.visibility = 'visible';
-        console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
-      } else {
-        console.log(`🚫 GARMENT TOUR button HIDDEN: studio="${studioName}"`);
+      // Trigger first-time pulse if this is the first visit to Color Studio
+      if (!localStorage.getItem('color-studio-tour-seen')) {
+        this.triggerFirstTimeTourPulse();
       }
+    } else if (studioName === 'garment' && garmentTourButton) {
+      // Garment Studio Tour Button
+      garmentTourButton.style.display = 'block';
+      garmentTourButton.style.visibility = 'visible';
+      console.log(`✅ GARMENT TOUR button SHOWN: Garment Studio`);
+    } else {
+      // No tour button should be shown
+      console.log(`🚫 NO TOUR button shown: studio="${studioName}", requestType="${V10_State.requestType}"`);
     }
 
     // 🎯 DYNAMIC LAYOUT: Update step actions class based on visible tour buttons
