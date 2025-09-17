@@ -16975,10 +16975,10 @@ class V10_TechPackSystem {
         tourBtn.classList.remove('first-time-pulse');
         console.log('✅ Tour button returned to normal black state');
 
-        if (window.v10GarmentStudio && window.v10GarmentStudio.showColorStudioOnboarding) {
-          window.v10GarmentStudio.showColorStudioOnboarding();
+        if (window.v10ColorStudio && window.v10ColorStudio.showColorStudioOnboarding) {
+          window.v10ColorStudio.showColorStudioOnboarding();
         } else {
-          console.warn('⚠️ Onboarding system not available');
+          console.warn('⚠️ Color Studio onboarding system not available');
         }
       });
     }
