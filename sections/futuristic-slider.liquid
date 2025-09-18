@@ -1103,40 +1103,73 @@
           
           <!-- Information Panel -->
           <div class="factory-info-{{ section.id }}">
-            {% for block in section.blocks %}
-              <div class="factory-item-info-{{ section.id }}" 
-                   data-product="{{ forloop.index0 }}"
-                   data-filter="{{ block.settings.collection_type | default: 'products' }}">
-                
-                {% if block.settings.product_name != blank %}
-                  <h3 class="factory-item-title-{{ section.id }}">{{ block.settings.product_name }}</h3>
-                {% endif %}
 
-                {% if block.settings.product_description != blank %}
-                  <div class="factory-item-description-{{ section.id }}">
-                    {{ block.settings.product_description }}
-                  </div>
-                {% endif %}
+            <!-- OUR FACILITY Content -->
+            <div class="factory-item-info-{{ section.id }} active"
+                 data-product="0"
+                 data-filter="factory">
 
-                {% if block.settings.details != blank %}
-                  <div class="factory-item-details-{{ section.id }}">
-                    <h4 class="factory-details-title-{{ section.id }}">
-                      {% case block.settings.collection_type %}
-                        {% when 'factory' %}
-                          Facility Details
-                        {% when 'team' %}
-                          Team Member Info
-                        {% else %}
-                          Product Details
-                      {% endcase %}
-                    </h4>
-                    <div class="factory-details-content-{{ section.id }}">
-                      {{ block.settings.details }}
-                    </div>
-                  </div>
-                {% endif %}
+              <h3 class="factory-item-title-{{ section.id }}">OUR FACILITY</h3>
+
+              <div class="factory-item-description-{{ section.id }}">
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Advanced Equipment</h4>
+                <p style="margin-bottom: 1.5rem;">Automated cutting tables, precision sewing stations, and in-house finishing lines built for consistency at any scale.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Expert Team</h4>
+                <p style="margin-bottom: 1.5rem;">Skilled technicians, pattern-makers, and quality inspectors working seamlessly together from cut to pack.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Certified Standards</h4>
+                <p style="margin-bottom: 1.5rem;">ISO 9001 and SA8000 compliant with full traceability and social audits.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Flexible Capacity</h4>
+                <p style="margin-bottom: 0;">From prototypes to high-volume runs, our modular lines adapt to meet your deadlines.</p>
               </div>
-            {% endfor %}
+            </div>
+
+            <!-- OUR TEAM Content -->
+            <div class="factory-item-info-{{ section.id }}"
+                 data-product="1"
+                 data-filter="team">
+
+              <h3 class="factory-item-title-{{ section.id }}">OUR TEAM</h3>
+
+              <div class="factory-item-description-{{ section.id }}">
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Leadership</h4>
+                <p style="margin-bottom: 1.5rem;">Strategic thinkers who align market insights with sustainable growth plans.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Design & Development</h4>
+                <p style="margin-bottom: 1.5rem;">Creative directors and technical designers who transform concepts into production-ready patterns.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Quality Control</h4>
+                <p style="margin-bottom: 1.5rem;">Dedicated QA engineers ensuring ethical production and flawless output.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Your Partners</h4>
+                <p style="margin-bottom: 0;">Account managers who keep you updated every step of the way.</p>
+              </div>
+            </div>
+
+            <!-- OUR SERVICES Content -->
+            <div class="factory-item-info-{{ section.id }}"
+                 data-product="2"
+                 data-filter="products">
+
+              <h3 class="factory-item-title-{{ section.id }}">OUR SERVICES</h3>
+
+              <div class="factory-item-description-{{ section.id }}">
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Premium Materials</h4>
+                <p style="margin-bottom: 1.5rem;">Visit our showroom. Feel the difference in our organic cottons, recycled blends, and performance fabrics.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Complete Production</h4>
+                <p style="margin-bottom: 1.5rem;">Cut & sew, screen printing, embroidery, custom trims, labeling, and finishing. Flexible MOQs for any brand size.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">Quality Promise</h4>
+                <p style="margin-bottom: 1.5rem;">Multi-stage quality checks and certified sustainable practices guarantee responsible craftsmanship.</p>
+
+                <h4 style="color: rgba(255, 255, 255, 0.9); font-weight: 500; margin: 2rem 0 1rem 0; font-size: 1.1rem; letter-spacing: 0.05em;">On-Time Delivery</h4>
+                <p style="margin-bottom: 0;">Fast sampling, clear communication, and reliable global shipping.</p>
+              </div>
+            </div>
+
           </div>
         </div>
         
