@@ -688,6 +688,19 @@
     background: rgba(255, 255, 255, 1);
     transform: translate(-50%, -50%) scale(1.1);
   }
+
+  /* Static content display rules */
+  .factory-item-info-{{ section.id }} {
+    display: none;
+  }
+
+  .factory-item-info-{{ section.id }}.active {
+    display: block !important;
+  }
+
+  .factory-item-info-{{ section.id }}[data-filter="factory"] {
+    display: block;
+  }
   
   .factory-thumb-slide-{{ section.id }}.active {
     border-color: rgba(255, 255, 255, 0.4);
@@ -1773,9 +1786,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Manual tab switching for static content
+  function initializeStaticContentSwitching() {
+    const filterTabs = section.querySelectorAll('.factory-filter-tab-' + sectionId);
+    const infoItems = section.querySelectorAll('.factory-item-info-' + sectionId);
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+
+        // Remove active class from all tabs
+        filterTabs.forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        this.classList.add('active');
+
+        // Hide all info panels
+        infoItems.forEach(info => {
+          info.style.display = 'none';
+          info.classList.remove('active');
+        });
+
+        // Show matching panel
+        const activeInfo = section.querySelector(`.factory-item-info-${sectionId}[data-filter="${filter}"]`);
+        if (activeInfo) {
+          activeInfo.style.display = 'block';
+          activeInfo.classList.add('active');
+        }
+
+        // Update current filter
+        currentFilter = filter;
+      });
+    });
+  }
+
   // Initialize
   buildCategoryMapping();
   addImageProtection();
+  initializeStaticContentSwitching();
 
   // Add video event listeners after DOM is ready
   setTimeout(() => {
