@@ -99,7 +99,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
     font-size: 1rem;
@@ -144,8 +144,20 @@
   }
 
   .factory-filter-tab-{{ section.id }}:focus {
-    outline: none;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    outline: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .factory-filter-tab-{{ section.id }}:focus-visible {
+    outline: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* Override global button focus styles */
+  .factory-filter-tab-{{ section.id }}:focus:not(:focus-visible) {
+    outline: none !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
   }
   
   .factory-filter-icon-{{ section.id }} {
@@ -686,7 +698,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.3s ease;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -698,6 +710,7 @@
     -o-user-drag: none;
     user-drag: none;
     pointer-events: none;
+    display: block;
   }
 
   .factory-thumb-video-icon-{{ section.id }} {
@@ -1655,11 +1668,60 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Event listeners
   
-  // Filter tabs
+  // Filter tabs with immediate visual feedback
   section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
-    tab.addEventListener('click', function() {
+    // Add mousedown for instant visual feedback (even before click)
+    tab.addEventListener('mousedown', function() {
+      // Remove active from all tabs immediately on mouse press
+      section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(t => {
+        t.classList.remove('active');
+        t.blur(); // Remove focus to prevent focus styling conflicts
+      });
+      // Add active to pressed tab immediately
+      this.classList.add('active');
+    });
+
+    tab.addEventListener('click', function(e) {
       const category = this.getAttribute('data-filter');
+
+      // Ensure visual feedback (in case mousedown didn't fire)
+      section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(t => {
+        t.classList.remove('active');
+        t.blur(); // Remove focus to prevent focus styling conflicts
+      });
+      this.classList.add('active');
+
+      // Update current filter immediately
+      currentFilter = category;
+
+      // Handle content switching for static content
+      const infoItems = section.querySelectorAll('.factory-item-info-' + sectionId);
+      infoItems.forEach(info => {
+        info.style.display = 'none';
+        info.classList.remove('active');
+      });
+
+      const activeInfo = section.querySelector(`.factory-item-info-${sectionId}[data-filter="${category}"]`);
+      if (activeInfo) {
+        activeInfo.style.display = 'block';
+        activeInfo.classList.add('active');
+      }
+
+      // Then handle slide navigation
       jumpToCategory(category);
+
+      // Prevent any default button behavior
+      e.preventDefault();
+      e.stopPropagation();
+      this.blur(); // Ensure focus is removed after click
+    });
+
+    // Handle keyboard accessibility
+    tab.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
     });
   });
   
@@ -1835,43 +1897,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Manual tab switching for static content
-  function initializeStaticContentSwitching() {
-    const filterTabs = section.querySelectorAll('.factory-filter-tab-' + sectionId);
-    const infoItems = section.querySelectorAll('.factory-item-info-' + sectionId);
-
-    filterTabs.forEach(tab => {
-      tab.addEventListener('click', function() {
-        const filter = this.dataset.filter;
-
-        // Remove active class from all tabs
-        filterTabs.forEach(t => t.classList.remove('active'));
-        // Add active class to clicked tab
-        this.classList.add('active');
-
-        // Hide all info panels
-        infoItems.forEach(info => {
-          info.style.display = 'none';
-          info.classList.remove('active');
-        });
-
-        // Show matching panel
-        const activeInfo = section.querySelector(`.factory-item-info-${sectionId}[data-filter="${filter}"]`);
-        if (activeInfo) {
-          activeInfo.style.display = 'block';
-          activeInfo.classList.add('active');
-        }
-
-        // Update current filter
-        currentFilter = filter;
-      });
-    });
-  }
 
   // Initialize
   buildCategoryMapping();
   addImageProtection();
-  initializeStaticContentSwitching();
 
   // Add video event listeners after DOM is ready
   setTimeout(() => {
