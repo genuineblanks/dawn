@@ -235,8 +235,41 @@
     user-drag: none;
     pointer-events: none;
   }
+
+  .factory-video-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+    transition: transform 0.6s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .factory-video-{{ section.id }}::-webkit-media-controls-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 4px;
+  }
+
+  .factory-video-{{ section.id }}::-webkit-media-controls-play-button,
+  .factory-video-{{ section.id }}::-webkit-media-controls-volume-slider,
+  .factory-video-{{ section.id }}::-webkit-media-controls-timeline {
+    filter: brightness(0) invert(1);
+  }
   
-  .factory-slide-{{ section.id }}:hover .factory-image-{{ section.id }} {
+  .factory-slide-{{ section.id }}:hover .factory-image-{{ section.id }},
+  .factory-slide-{{ section.id }}:hover .factory-video-{{ section.id }} {
     transform: scale(1.02);
   }
   
@@ -604,6 +637,57 @@
     user-drag: none;
     pointer-events: none;
   }
+
+  .factory-thumb-video-wrapper-{{ section.id }} {
+    position: relative;
+    width: 100px;
+    height: 75px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .factory-thumb-video-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+  }
+
+  .factory-thumb-video-icon-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .factory-thumb-slide-{{ section.id }}:hover .factory-thumb-video-icon-{{ section.id }} {
+    background: rgba(255, 255, 255, 1);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
   
   .factory-thumb-slide-{{ section.id }}.active {
     border-color: rgba(255, 255, 255, 0.4);
@@ -669,6 +753,30 @@
     max-width: 90vw;
     max-height: 90vh;
     border-radius: 8px;
+  }
+
+  .factory-lightbox-video-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-panel {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 6px;
+  }
+
+  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-play-button,
+  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-volume-slider,
+  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-timeline {
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
   }
   
   .factory-lightbox-close-{{ section.id }} {
@@ -901,16 +1009,19 @@
               {% for block in section.blocks %}
                 {% assign block_filter = block.settings.collection_type | default: 'products' %}
                 {% assign block_index = forloop.index0 %}
+
+                {% comment %} Render Images {% endcomment %}
                 {% for i in (1..15) %}
                   {% assign image_key = 'image_' | append: i %}
                   {% assign current_image = block.settings[image_key] %}
                   {% if current_image != blank %}
-                    <div class="factory-slide-{{ section.id }}" 
-                         data-filter="{{ block_filter }}" 
+                    <div class="factory-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
                          data-product="{{ block_index }}"
-                         data-slide-index="{{ slide_index }}">
-                      <img src="{{ current_image | image_url: width: 1200 }}" 
-                           class="factory-image-{{ section.id }}" 
+                         data-slide-index="{{ slide_index }}"
+                         data-media-type="image">
+                      <img src="{{ current_image | image_url: width: 1200 }}"
+                           class="factory-image-{{ section.id }}"
                            loading="lazy"
                            alt="{{ block.settings.product_name | escape }}"
                            width="1200"
@@ -920,9 +1031,55 @@
                            onselectstart="return false;"
                            ondragstart="return false;">
                       <div class="factory-slide-overlay-{{ section.id }}">
-                        <button class="factory-zoom-btn-{{ section.id }}" data-image="{{ current_image | image_url: width: 1600 }}">
+                        <button class="factory-zoom-btn-{{ section.id }}"
+                                data-image="{{ current_image | image_url: width: 1600 }}"
+                                data-media-type="image">
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    {% assign slide_index = slide_index | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+
+                {% comment %} Render Videos {% endcomment %}
+                {% for i in (1..15) %}
+                  {% assign video_key = 'video_' | append: i %}
+                  {% assign current_video = block.settings[video_key] %}
+                  {% if current_video != blank %}
+                    <div class="factory-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
+                         data-product="{{ block_index }}"
+                         data-slide-index="{{ slide_index }}"
+                         data-media-type="video">
+                      <video class="factory-video-{{ section.id }}"
+                             {% if section.settings.video_autoplay %}autoplay{% endif %}
+                             {% if section.settings.video_muted %}muted{% endif %}
+                             {% if section.settings.video_loop %}loop{% endif %}
+                             {% if section.settings.video_controls %}controls{% endif %}
+                             playsinline
+                             preload="metadata"
+                             draggable="false"
+                             oncontextmenu="return false;"
+                             onselectstart="return false;"
+                             ondragstart="return false;">
+                        <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
+                        {% if current_video.sources[1] %}
+                          <source src="{{ current_video.sources[1].url }}" type="{{ current_video.sources[1].mime_type }}">
+                        {% endif %}
+                        {% if current_video.sources[2] %}
+                          <source src="{{ current_video.sources[2].url }}" type="{{ current_video.sources[2].mime_type }}">
+                        {% endif %}
+                        <p>Your browser doesn't support video playback.</p>
+                      </video>
+                      <div class="factory-slide-overlay-{{ section.id }}">
+                        <button class="factory-zoom-btn-{{ section.id }}"
+                                data-video="{{ current_video.sources[0].url }}"
+                                data-media-type="video">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </button>
                       </div>
@@ -1009,16 +1166,19 @@
               {% for block in section.blocks %}
                 {% assign block_filter = block.settings.collection_type | default: 'products' %}
                 {% assign block_index = forloop.index0 %}
+
+                {% comment %} Image Thumbnails {% endcomment %}
                 {% for i in (1..15) %}
                   {% assign image_key = 'image_' | append: i %}
                   {% assign current_image = block.settings[image_key] %}
                   {% if current_image != blank %}
-                    <div class="factory-thumb-slide-{{ section.id }}" 
-                         data-filter="{{ block_filter }}" 
+                    <div class="factory-thumb-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
                          data-product="{{ block_index }}"
-                         data-thumb-index="{{ thumb_index }}">
-                      <img src="{{ current_image | image_url: width: 200 }}" 
-                           class="factory-thumb-image-{{ section.id }}" 
+                         data-thumb-index="{{ thumb_index }}"
+                         data-media-type="image">
+                      <img src="{{ current_image | image_url: width: 200 }}"
+                           class="factory-thumb-image-{{ section.id }}"
                            loading="lazy"
                            width="200"
                            height="150"
@@ -1026,6 +1186,49 @@
                            oncontextmenu="return false;"
                            onselectstart="return false;"
                            ondragstart="return false;">
+                    </div>
+                    {% assign thumb_index = thumb_index | plus: 1 %}
+                  {% endif %}
+                {% endfor %}
+
+                {% comment %} Video Thumbnails {% endcomment %}
+                {% for i in (1..15) %}
+                  {% assign video_key = 'video_' | append: i %}
+                  {% assign current_video = block.settings[video_key] %}
+                  {% if current_video != blank %}
+                    <div class="factory-thumb-slide-{{ section.id }}"
+                         data-filter="{{ block_filter }}"
+                         data-product="{{ block_index }}"
+                         data-thumb-index="{{ thumb_index }}"
+                         data-media-type="video">
+                      <div class="factory-thumb-video-wrapper-{{ section.id }}">
+                        {% if current_video.preview_image %}
+                          <img src="{{ current_video.preview_image | image_url: width: 200 }}"
+                               class="factory-thumb-image-{{ section.id }}"
+                               loading="lazy"
+                               width="200"
+                               height="150"
+                               draggable="false"
+                               oncontextmenu="return false;"
+                               onselectstart="return false;"
+                               ondragstart="return false;">
+                        {% else %}
+                          <video class="factory-thumb-video-{{ section.id }}"
+                                 muted
+                                 preload="metadata"
+                                 draggable="false"
+                                 oncontextmenu="return false;"
+                                 onselectstart="return false;"
+                                 ondragstart="return false;">
+                            <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
+                          </video>
+                        {% endif %}
+                        <div class="factory-thumb-video-icon-{{ section.id }}">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     {% assign thumb_index = thumb_index | plus: 1 %}
                   {% endif %}
@@ -1045,7 +1248,14 @@
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <img src="" alt="" class="factory-lightbox-image-{{ section.id }}">
+          <img src="" alt="" class="factory-lightbox-image-{{ section.id }}" style="display: none;">
+          <video class="factory-lightbox-video-{{ section.id }}"
+                 style="display: none;"
+                 controls
+                 playsinline
+                 preload="metadata">
+            <p>Your browser doesn't support video playback.</p>
+          </video>
         </div>
       </div>
       
@@ -1116,22 +1326,53 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+  // Video management functions
+  function pauseAllVideos() {
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    videos.forEach(video => {
+      if (!video.paused) {
+        video.pause();
+      }
+    });
+  }
+
+  function playCurrentVideo(slideIndex) {
+    const currentSlide = allSlides[slideIndex];
+    if (currentSlide && currentSlide.dataset.mediaType === 'video') {
+      const video = currentSlide.querySelector('.factory-video-' + sectionId);
+      if (video && video.paused && section.settings?.video_autoplay) {
+        // Small delay to ensure slide transition is complete
+        setTimeout(() => {
+          video.play().catch(err => {
+            console.log('Video autoplay failed:', err);
+          });
+        }, 300);
+      }
+    }
+  }
+
   // Show specific slide
   function showSlide(slideIndex) {
+    // Pause all videos first
+    pauseAllVideos();
+
     allSlides.forEach((slide, index) => {
       slide.style.opacity = index === slideIndex ? '1' : '0';
       slide.classList.toggle('active', index === slideIndex);
     });
-    
+
     // Update thumbnails
     const thumbSlides = section.querySelectorAll('.factory-thumb-slide-' + sectionId);
     thumbSlides.forEach((thumb, index) => {
       thumb.classList.toggle('active', index === slideIndex);
     });
-    
+
     currentSlideIndex = slideIndex;
     updateProductInfo(slideIndex);
     updateActiveFilterTab(slideIndex);
+
+    // Play video if current slide is a video
+    playCurrentVideo(slideIndex);
   }
   
   // Update product information
@@ -1231,28 +1472,64 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Lightbox functionality
-  function openLightbox(imageSrc) {
+  function openLightbox(src, mediaType = 'image') {
     const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
     const lightboxImage = section.querySelector('.factory-lightbox-image-' + sectionId);
+    const lightboxVideo = section.querySelector('.factory-lightbox-video-' + sectionId);
     const spinner = section.querySelector('.factory-spinner-' + sectionId);
-    
-    spinner.style.display = 'flex';
+
+    // Hide both elements initially
+    lightboxImage.style.display = 'none';
+    lightboxVideo.style.display = 'none';
     lightboxImage.src = '';
-    
-    const preload = new Image();
-    preload.onload = function() {
-      spinner.style.display = 'none';
-      lightboxImage.src = imageSrc;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    };
-    preload.src = imageSrc;
+    lightboxVideo.src = '';
+
+    spinner.style.display = 'flex';
+
+    if (mediaType === 'video') {
+      lightboxVideo.style.display = 'block';
+      lightboxVideo.src = src;
+      lightboxVideo.load();
+
+      const handleVideoLoad = function() {
+        spinner.style.display = 'none';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        lightboxVideo.removeEventListener('loadedmetadata', handleVideoLoad);
+      };
+
+      lightboxVideo.addEventListener('loadedmetadata', handleVideoLoad);
+
+      // Fallback timeout in case metadata doesn't load
+      setTimeout(() => {
+        if (spinner.style.display === 'flex') {
+          handleVideoLoad();
+        }
+      }, 3000);
+    } else {
+      const preload = new Image();
+      preload.onload = function() {
+        spinner.style.display = 'none';
+        lightboxImage.src = src;
+        lightboxImage.style.display = 'block';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+      preload.src = src;
+    }
   }
   
   function closeLightbox() {
     const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
+    const lightboxVideo = section.querySelector('.factory-lightbox-video-' + sectionId);
     const spinner = section.querySelector('.factory-spinner-' + sectionId);
-    
+
+    // Pause and reset video if it's playing
+    if (lightboxVideo && lightboxVideo.style.display !== 'none') {
+      lightboxVideo.pause();
+      lightboxVideo.currentTime = 0;
+    }
+
     lightbox.classList.remove('active');
     spinner.style.display = 'none';
     document.body.style.overflow = '';
@@ -1298,10 +1575,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (zoomBtn) {
       e.preventDefault();
       e.stopPropagation();
-      
+
+      const mediaType = zoomBtn.dataset.mediaType || 'image';
       const imageUrl = zoomBtn.dataset.image;
-      if (imageUrl) {
-        openLightbox(imageUrl);
+      const videoUrl = zoomBtn.dataset.video;
+
+      if (mediaType === 'video' && videoUrl) {
+        openLightbox(videoUrl, 'video');
+      } else if (mediaType === 'image' && imageUrl) {
+        openLightbox(imageUrl, 'image');
       }
     }
   });
@@ -1364,10 +1646,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
+  // Pause videos when page visibility changes
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      pauseAllVideos();
+    } else {
+      // Resume current video if autoplay is enabled
+      if (typeof playCurrentVideo === 'function') {
+        playCurrentVideo(currentSlideIndex);
+      }
+    }
+  });
+
   // Initialize
   buildCategoryMapping();
   addImageProtection();
-  
+
   // Set initial state
   setTimeout(() => {
     showSlide(0);
@@ -1589,13 +1883,13 @@ document.addEventListener('DOMContentLoaded', function() {
           "label": "Image 6"
         },
         {
-          "type": "image_picker", 
+          "type": "image_picker",
           "id": "image_7",
           "label": "Image 7"
         },
         {
           "type": "image_picker",
-          "id": "image_8", 
+          "id": "image_8",
           "label": "Image 8"
         },
         {
@@ -1614,13 +1908,13 @@ document.addEventListener('DOMContentLoaded', function() {
           "label": "Image 11"
         },
         {
-          "type": "image_picker", 
+          "type": "image_picker",
           "id": "image_12",
           "label": "Image 12"
         },
         {
           "type": "image_picker",
-          "id": "image_13", 
+          "id": "image_13",
           "label": "Image 13"
         },
         {
@@ -1632,6 +1926,117 @@ document.addEventListener('DOMContentLoaded', function() {
           "type": "image_picker",
           "id": "image_15",
           "label": "Image 15"
+        },
+        {
+          "type": "header",
+          "content": "Videos (up to 15)"
+        },
+        {
+          "type": "video",
+          "id": "video_1",
+          "label": "Video 1"
+        },
+        {
+          "type": "video",
+          "id": "video_2",
+          "label": "Video 2"
+        },
+        {
+          "type": "video",
+          "id": "video_3",
+          "label": "Video 3"
+        },
+        {
+          "type": "video",
+          "id": "video_4",
+          "label": "Video 4"
+        },
+        {
+          "type": "video",
+          "id": "video_5",
+          "label": "Video 5"
+        },
+        {
+          "type": "video",
+          "id": "video_6",
+          "label": "Video 6"
+        },
+        {
+          "type": "video",
+          "id": "video_7",
+          "label": "Video 7"
+        },
+        {
+          "type": "video",
+          "id": "video_8",
+          "label": "Video 8"
+        },
+        {
+          "type": "video",
+          "id": "video_9",
+          "label": "Video 9"
+        },
+        {
+          "type": "video",
+          "id": "video_10",
+          "label": "Video 10"
+        },
+        {
+          "type": "video",
+          "id": "video_11",
+          "label": "Video 11"
+        },
+        {
+          "type": "video",
+          "id": "video_12",
+          "label": "Video 12"
+        },
+        {
+          "type": "video",
+          "id": "video_13",
+          "label": "Video 13"
+        },
+        {
+          "type": "video",
+          "id": "video_14",
+          "label": "Video 14"
+        },
+        {
+          "type": "video",
+          "id": "video_15",
+          "label": "Video 15"
+        },
+        {
+          "type": "header",
+          "content": "Video Settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_autoplay",
+          "label": "Auto-play videos",
+          "default": true,
+          "info": "Videos will play automatically when they come into view"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_muted",
+          "label": "Mute videos by default",
+          "default": true,
+          "info": "Videos will start muted (recommended for autoplay)"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_loop",
+          "label": "Loop videos",
+          "default": true,
+          "info": "Videos will repeat continuously"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_controls",
+          "label": "Show video controls",
+          "default": true,
+          "info": "Display play/pause, volume, and progress controls"
         }
       ]
     }
