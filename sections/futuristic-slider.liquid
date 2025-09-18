@@ -1055,16 +1055,19 @@
                          data-slide-index="{{ slide_index }}"
                          data-media-type="video">
                       <video class="factory-video-{{ section.id }}"
-                             {% if section.settings.video_autoplay %}autoplay{% endif %}
-                             {% if section.settings.video_muted %}muted{% endif %}
-                             {% if section.settings.video_loop %}loop{% endif %}
-                             {% if section.settings.video_controls %}controls{% endif %}
+                             autoplay
+                             muted
+                             loop
                              playsinline
-                             preload="metadata"
+                             webkit-playsinline
+                             x5-playsinline
+                             preload="auto"
                              draggable="false"
                              oncontextmenu="return false;"
                              onselectstart="return false;"
-                             ondragstart="return false;">
+                             ondragstart="return false;"
+                             onloadeddata="this.play()"
+                             oncanplay="this.play()">
                         <source src="{{ current_video.sources[0].url }}" type="{{ current_video.sources[0].mime_type }}">
                         {% if current_video.sources[1] %}
                           <source src="{{ current_video.sources[1].url }}" type="{{ current_video.sources[1].mime_type }}">
@@ -1074,15 +1077,6 @@
                         {% endif %}
                         <p>Your browser doesn't support video playback.</p>
                       </video>
-                      <div class="factory-slide-overlay-{{ section.id }}">
-                        <button class="factory-zoom-btn-{{ section.id }}"
-                                data-video="{{ current_video.sources[0].url }}"
-                                data-media-type="video">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M8 5V19L19 12L8 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
-                      </div>
                     </div>
                     {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
@@ -1340,15 +1334,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentSlide = allSlides[slideIndex];
     if (currentSlide && currentSlide.dataset.mediaType === 'video') {
       const video = currentSlide.querySelector('.factory-video-' + sectionId);
-      if (video && video.paused && section.settings?.video_autoplay) {
-        // Small delay to ensure slide transition is complete
-        setTimeout(() => {
+      if (video) {
+        // Reset video to beginning and force play immediately
+        video.currentTime = 0;
+
+        // Multiple aggressive play attempts
+        const tryPlay = () => {
           video.play().catch(err => {
-            console.log('Video autoplay failed:', err);
+            console.log('Video autoplay attempt failed:', err);
+            // Try again after a short delay
+            setTimeout(tryPlay, 100);
           });
-        }, 300);
+        };
+
+        // Immediate play attempt
+        tryPlay();
+
+        // Ensure video is visible and playing
+        if (video.paused) {
+          // Force play on next frame
+          requestAnimationFrame(() => {
+            tryPlay();
+          });
+        }
       }
     }
+  }
+
+  // Force play all videos when page becomes visible
+  function forcePlayAllVideos() {
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    videos.forEach(video => {
+      if (video.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+        video.currentTime = 0;
+        video.play().catch(err => {
+          console.log('Force play failed:', err);
+        });
+      }
+    });
   }
 
   // Show specific slide
@@ -1651,16 +1674,99 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.hidden) {
       pauseAllVideos();
     } else {
-      // Resume current video if autoplay is enabled
-      if (typeof playCurrentVideo === 'function') {
+      // Force play videos when page becomes visible
+      setTimeout(() => {
+        forcePlayAllVideos();
         playCurrentVideo(currentSlideIndex);
-      }
+      }, 100);
     }
   });
+
+  // Add user interaction fallback for strict browsers
+  let hasUserInteracted = false;
+  const enableAutoplayAfterInteraction = () => {
+    hasUserInteracted = true;
+    forcePlayAllVideos();
+    document.removeEventListener('click', enableAutoplayAfterInteraction);
+    document.removeEventListener('touchstart', enableAutoplayAfterInteraction);
+  };
+
+  document.addEventListener('click', enableAutoplayAfterInteraction);
+  document.addEventListener('touchstart', enableAutoplayAfterInteraction);
+
+  // Add seamless looping support for videos
+  function addVideoEventListeners() {
+    const videos = section.querySelectorAll('.factory-video-' + sectionId);
+    videos.forEach(video => {
+      // Ensure seamless looping
+      video.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play().catch(err => {
+          console.log('Loop restart failed:', err);
+        });
+      });
+
+      // Force play when video loads
+      video.addEventListener('loadeddata', function() {
+        if (this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+          this.play().catch(err => {
+            console.log('Auto-play on load failed:', err);
+          });
+        }
+      });
+
+      // Retry play if video stalls
+      video.addEventListener('stalled', function() {
+        setTimeout(() => {
+          if (this.paused && this.closest('.factory-slide-' + sectionId).classList.contains('active')) {
+            this.play().catch(err => {
+              console.log('Stall recovery failed:', err);
+            });
+          }
+        }, 500);
+      });
+
+      // Handle buffer issues
+      video.addEventListener('waiting', function() {
+        // Video is buffering, try to continue after a short delay
+        setTimeout(() => {
+          if (this.readyState >= 2) { // HAVE_CURRENT_DATA
+            this.play().catch(err => {
+              console.log('Buffer recovery failed:', err);
+            });
+          }
+        }, 200);
+      });
+    });
+  }
 
   // Initialize
   buildCategoryMapping();
   addImageProtection();
+
+  // Add video event listeners after DOM is ready
+  setTimeout(() => {
+    addVideoEventListeners();
+  }, 100);
+
+  // Intersection Observer for aggressive autoplay when section comes into view
+  if ('IntersectionObserver' in window) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Section is visible, force autoplay
+          setTimeout(() => {
+            forcePlayAllVideos();
+            playCurrentVideo(currentSlideIndex);
+          }, 100);
+        }
+      });
+    }, {
+      threshold: 0.1 // Trigger when 10% of section is visible
+    });
+
+    sectionObserver.observe(section);
+  }
 
   // Set initial state
   setTimeout(() => {
@@ -2015,28 +2121,28 @@ document.addEventListener('DOMContentLoaded', function() {
           "id": "video_autoplay",
           "label": "Auto-play videos",
           "default": true,
-          "info": "Videos will play automatically when they come into view"
+          "info": "Videos will play automatically when they come into view (always enabled for optimal experience)"
         },
         {
           "type": "checkbox",
           "id": "video_muted",
           "label": "Mute videos by default",
           "default": true,
-          "info": "Videos will start muted (recommended for autoplay)"
+          "info": "Videos will start muted (required for browser autoplay policies)"
         },
         {
           "type": "checkbox",
           "id": "video_loop",
           "label": "Loop videos",
           "default": true,
-          "info": "Videos will repeat continuously"
+          "info": "Videos will repeat continuously in a seamless loop"
         },
         {
           "type": "checkbox",
           "id": "video_controls",
-          "label": "Show video controls",
-          "default": true,
-          "info": "Display play/pause, volume, and progress controls"
+          "label": "Show video controls in lightbox",
+          "default": false,
+          "info": "Display video controls only in lightbox modal (main slides have no controls for seamless experience)"
         }
       ]
     }
