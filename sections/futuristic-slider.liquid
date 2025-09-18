@@ -572,7 +572,7 @@
     transform: translateY(-50%);
     z-index: 10;
     pointer-events: none;
-    padding: 0 1rem;
+    padding: 0 2.5rem;
   }
   
   .factory-thumb-nav-{{ section.id }} {
@@ -602,11 +602,11 @@
   }
   
   .factory-thumb-prev-{{ section.id }} {
-    left: 0;
+    left: 20px;
   }
-  
+
   .factory-thumb-next-{{ section.id }} {
-    right: 0;
+    right: 20px;
   }
   
   .factory-thumb-container-{{ section.id }} {
@@ -1502,6 +1502,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProductInfo(slideIndex);
     updateActiveFilterTab(slideIndex);
 
+    // Scroll thumbnail bar to show active slide
+    scrollToActiveSlide(slideIndex);
+
     // Play video if current slide is a video
     playCurrentVideo(slideIndex);
   }
@@ -1566,12 +1569,61 @@ document.addEventListener('DOMContentLoaded', function() {
   function scrollThumbnails(direction) {
     const container = section.querySelector('.factory-thumb-container-' + sectionId);
     const scrollAmount = 120;
-    
+
     if (direction === 'next') {
       container.scrollLeft += scrollAmount;
     } else {
       container.scrollLeft -= scrollAmount;
     }
+  }
+
+  // Scroll thumbnail container to show specific category
+  function scrollToCategory(category) {
+    const container = section.querySelector('.factory-thumb-container-' + sectionId);
+    if (!container) return;
+
+    // Find first thumbnail of this category
+    const firstCategoryThumb = section.querySelector(`.factory-thumb-slide-${sectionId}[data-filter="${category}"]`);
+    if (!firstCategoryThumb) return;
+
+    // Get actual thumbnail dimensions for responsive calculations
+    const thumbElement = firstCategoryThumb.querySelector('.factory-thumb-image-' + sectionId);
+    const actualThumbWidth = thumbElement ? thumbElement.offsetWidth + 24 : 134; // width + gap, fallback
+    const thumbIndex = parseInt(firstCategoryThumb.dataset.thumbIndex) || 0;
+    const containerPadding = container.offsetLeft || 48; // Dynamic padding
+    const scrollPosition = Math.max(0, (thumbIndex * actualThumbWidth) - containerPadding);
+
+    // Smooth scroll to position
+    container.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+  }
+
+  // Scroll thumbnail container to show active slide
+  function scrollToActiveSlide(slideIndex) {
+    const container = section.querySelector('.factory-thumb-container-' + sectionId);
+    if (!container) return;
+
+    // Find thumbnail corresponding to current slide
+    const activeThumb = section.querySelector(`.factory-thumb-slide-${sectionId}[data-thumb-index="${slideIndex}"]`);
+    if (!activeThumb) return;
+
+    // Get actual thumbnail dimensions for responsive calculations
+    const thumbElement = activeThumb.querySelector('.factory-thumb-image-' + sectionId);
+    const actualThumbWidth = thumbElement ? thumbElement.offsetWidth + 24 : 134; // width + gap, fallback to 110+24
+    const containerWidth = container.clientWidth;
+    const containerPadding = container.offsetLeft || 48; // Dynamic padding
+
+    // Calculate position to center the active thumbnail
+    const thumbPosition = slideIndex * actualThumbWidth;
+    const scrollPosition = Math.max(0, thumbPosition - (containerWidth / 2) + (actualThumbWidth / 2));
+
+    // Smooth scroll to position
+    container.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
   }
   
   // Image protection
@@ -1706,6 +1758,9 @@ document.addEventListener('DOMContentLoaded', function() {
         activeInfo.style.display = 'block';
         activeInfo.classList.add('active');
       }
+
+      // Scroll thumbnail bar to show category images
+      scrollToCategory(category);
 
       // Then handle slide navigation
       jumpToCategory(category);
