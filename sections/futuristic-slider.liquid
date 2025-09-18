@@ -967,13 +967,13 @@
     {% if section.settings.show_collection_filter %}
       <div class="factory-filter-{{ section.id }}">
         <div class="factory-filter-tabs-{{ section.id }}">
-          <button class="factory-filter-tab-{{ section.id }} active" data-filter="services">
+          <button class="factory-filter-tab-{{ section.id }} active" data-filter="products">
             <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 2L3 7V18H8V13H12V18H17V7L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span class="factory-filter-text-{{ section.id }}">Our Services</span>
+            <span class="factory-filter-text-{{ section.id }}">Our Products</span>
           </button>
           <button class="factory-filter-tab-{{ section.id }}" data-filter="factory">
             <span class="factory-filter-icon-{{ section.id }}">
@@ -1007,7 +1007,7 @@
               
               {% assign slide_index = 0 %}
               {% for block in section.blocks %}
-                {% assign block_filter = block.settings.collection_type | default: 'services' %}
+                {% assign block_filter = block.settings.collection_type | default: 'products' %}
                 {% assign block_index = forloop.index0 %}
 
                 {% comment %} Render Images {% endcomment %}
@@ -1106,7 +1106,7 @@
             {% for block in section.blocks %}
               <div class="factory-item-info-{{ section.id }}" 
                    data-product="{{ forloop.index0 }}"
-                   data-filter="{{ block.settings.collection_type | default: 'services' }}">
+                   data-filter="{{ block.settings.collection_type | default: 'products' }}">
                 
                 {% if block.settings.product_name != blank %}
                   <h3 class="factory-item-title-{{ section.id }}">{{ block.settings.product_name }}</h3>
@@ -1127,7 +1127,7 @@
                         {% when 'team' %}
                           Team Member Info
                         {% else %}
-                          Service Details
+                          Product Details
                       {% endcase %}
                     </h4>
                     <div class="factory-details-content-{{ section.id }}">
@@ -1158,7 +1158,7 @@
             <div class="factory-thumb-container-{{ section.id }}">
               {% assign thumb_index = 0 %}
               {% for block in section.blocks %}
-                {% assign block_filter = block.settings.collection_type | default: 'services' %}
+                {% assign block_filter = block.settings.collection_type | default: 'products' %}
                 {% assign block_index = forloop.index0 %}
 
                 {% comment %} Image Thumbnails {% endcomment %}
@@ -1278,11 +1278,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!section) return;
   
   let currentSlideIndex = 0;
-  let currentFilter = 'services';
+  let currentFilter = 'products';
   let allSlides = [];
   let categoryMap = [];
   let categoryRanges = {
-    services: { start: null, end: null },
+    products: { start: null, end: null },
     factory: { start: null, end: null },
     team: { start: null, end: null }
   };
@@ -1294,7 +1294,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reset category ranges
     categoryRanges = {
-      services: { start: null, end: null },
+      products: { start: null, end: null },
       factory: { start: null, end: null },
       team: { start: null, end: null }
     };
@@ -1422,7 +1422,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update active filter tab
   function updateActiveFilterTab(slideIndex) {
-    const category = categoryMap[slideIndex]?.filter || 'services';
+    const category = categoryMap[slideIndex]?.filter || 'products';
     currentFilter = category;
     
     section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
@@ -1922,8 +1922,8 @@ document.addEventListener('DOMContentLoaded', function() {
           "label": "Collection Type",
           "options": [
             {
-              "value": "services",
-              "label": "Our Services"
+              "value": "products",
+              "label": "Our Products"
             },
             {
               "value": "factory",
@@ -2157,7 +2157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "collection_type": "factory",
             "product_name": "Advanced Equipment",
             "product_description": "<p>Automated cutting tables, precision sewing stations, and in-house finishing lines built for consistency at any scale.</p>",
-            "details": "<p>Advanced manufacturing technology designed for precision and efficiency in textile production.</p>"
+            "details": "<p><strong>Certified Standards:</strong> ISO 9001 and SA8000 compliant with full traceability and social audits.<br><strong>Flexible Capacity:</strong> From prototypes to high-volume runs, our modular lines adapt to meet your deadlines.</p>"
           }
         },
         {
@@ -2166,25 +2166,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "collection_type": "factory",
             "product_name": "Expert Team",
             "product_description": "<p>Skilled technicians, pattern-makers, and quality inspectors working seamlessly together from cut to pack.</p>",
-            "details": "<p>Professional workforce with specialized expertise in garment manufacturing and quality control.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "factory",
-            "product_name": "Certified Standards",
-            "product_description": "<p>ISO 9001 and SA8000 compliant with full traceability and social audits.</p>",
-            "details": "<p>International quality and social compliance certifications ensuring ethical production standards.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "factory",
-            "product_name": "Flexible Capacity",
-            "product_description": "<p>From prototypes to high-volume runs, our modular lines adapt to meet your deadlines.</p>",
-            "details": "<p>Scalable production capabilities from small samples to large commercial orders.</p>"
+            "details": "<p><strong>Certified Standards:</strong> ISO 9001 and SA8000 compliant with full traceability and social audits.<br><strong>Flexible Capacity:</strong> From prototypes to high-volume runs, our modular lines adapt to meet your deadlines.</p>"
           }
         },
         {
@@ -2193,70 +2175,16 @@ document.addEventListener('DOMContentLoaded', function() {
             "collection_type": "team",
             "product_name": "Leadership",
             "product_description": "<p>Strategic thinkers who align market insights with sustainable growth plans.</p>",
-            "details": "<p>Executive leadership focused on strategic planning and sustainable business development.</p>"
+            "details": "<p><strong>Design & Development:</strong> Creative directors and technical designers who transform concepts into production-ready patterns.<br><strong>Quality Control:</strong> Dedicated QA engineers ensuring ethical production and flawless output.<br><strong>Your Partners:</strong> Account managers who keep you updated every step of the way.</p>"
           }
         },
         {
           "type": "item",
           "settings": {
-            "collection_type": "team",
-            "product_name": "Design & Development",
-            "product_description": "<p>Creative directors and technical designers who transform concepts into production-ready patterns.</p>",
-            "details": "<p>Creative and technical teams specializing in pattern development and product design.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "team",
-            "product_name": "Quality Control",
-            "product_description": "<p>Dedicated QA engineers ensuring ethical production and flawless output.</p>",
-            "details": "<p>Quality assurance specialists maintaining high standards throughout the production process.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "team",
-            "product_name": "Your Partners",
-            "product_description": "<p>Account managers who keep you updated every step of the way.</p>",
-            "details": "<p>Dedicated client service team providing transparent communication and project management.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "services",
+            "collection_type": "products",
             "product_name": "Premium Materials",
             "product_description": "<p>Visit our showroom. Feel the difference in our organic cottons, recycled blends, and performance fabrics.</p>",
-            "details": "<p>High-quality sustainable fabrics and materials for premium garment production.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "services",
-            "product_name": "Complete Production",
-            "product_description": "<p>Cut & sew, screen printing, embroidery, custom trims, labeling, and finishing. Flexible MOQs for any brand size.</p>",
-            "details": "<p>Full-service manufacturing from cutting to finishing with flexible minimum order quantities.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "services",
-            "product_name": "Quality Promise",
-            "product_description": "<p>Multi-stage quality checks and certified sustainable practices guarantee responsible craftsmanship.</p>",
-            "details": "<p>Comprehensive quality assurance with sustainable and ethical production practices.</p>"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "collection_type": "services",
-            "product_name": "On-Time Delivery",
-            "product_description": "<p>Fast sampling, clear communication, and reliable global shipping.</p>",
-            "details": "<p>Efficient production timelines with reliable logistics and worldwide shipping capabilities.</p>"
+            "details": "<p><strong>Complete Production:</strong> Cut & sew, screen printing, embroidery, custom trims, labeling, and finishing. Flexible MOQs for any brand size.<br><strong>Quality Promise:</strong> Multi-stage quality checks and certified sustainable practices guarantee responsible craftsmanship.<br><strong>On-Time Delivery:</strong> Fast sampling, clear communication, and reliable global shipping.</p>"
           }
         }
       ]
