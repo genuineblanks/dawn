@@ -288,15 +288,15 @@ body[class*="techpack"] *,
    ============================================== */
 
 :root {
-  /* Enhanced Dark Theme Colors - Professional Financial Dashboard */
-  --v10-bg-primary: #1a1a1a;          /* Darker primary background for better contrast */
-  --v10-bg-secondary: #1a1a1a;        /* Dark grey to match Step 4 background */
-  --v10-bg-tertiary: #2a2a2a;         /* Match Steps 1-3 medium dark grey */
-  --v10-bg-card: #2d2d2d;             /* Card backgrounds - medium grey */
-  --v10-bg-card-hover: #343434;       /* Card hover state */
-  --v10-bg-modal: #202020;            /* Modal backgrounds */
-  --v10-bg-input: #343434;            /* Input backgrounds */
-  --v10-bg-hover: #3f3f3f;            /* Hover states - lighter grey */
+  /* Spectacular Grey-Dark Theme - Enhanced Contrast Hierarchy */
+  --v10-bg-primary: #0f0f0f;          /* Deeper black for better card contrast */
+  --v10-bg-secondary: #141414;        /* Deep charcoal - main step backgrounds */
+  --v10-bg-tertiary: #1a1a1a;         /* Dark grey for sections */
+  --v10-bg-card: #242424;             /* Card backgrounds - enhanced contrast */
+  --v10-bg-card-hover: #2a2a2a;       /* Card hover - brighter interaction */
+  --v10-bg-modal: #1a1a1a;            /* Modal backgrounds */
+  --v10-bg-input: #2a2a2a;            /* Input backgrounds - better contrast */
+  --v10-bg-hover: #333333;            /* Hover states - pronounced difference */
   --v10-bg-active: #4a4a4a;           /* Active states */
 
   /* Enhanced Glass Morphism Effects */
@@ -325,24 +325,27 @@ body[class*="techpack"] *,
   --v10-border-warning: #f59e0b;      /* Warning borders */
   --v10-border-error: #ef4444;        /* Error borders */
 
-  /* Accent Colors */
-  --v10-accent-primary: #a3a3a3;      /* Primary accent - light grey */
-  --v10-accent-secondary: #d4d4d4;    /* Secondary accent - lighter grey */
+  /* Strategic Accent Colors - Sophisticated Grey + Orange */
+  --v10-accent-primary: #f59e0b;      /* Primary accent - strategic orange */
+  --v10-accent-secondary: #d4d4d4;    /* Secondary accent - light grey */
   --v10-accent-success: #22c55e;      /* Success accent - proper green */
-  --v10-accent-warning: #f59e0b;      /* Warning accent */
+  --v10-accent-warning: #f59e0b;      /* Warning accent - orange */
   --v10-accent-error: #ef4444;        /* Error accent */
+  --v10-accent-orange: #f59e0b;       /* Dedicated orange for highlights */
+  --v10-accent-orange-hover: #d97706; /* Darker orange for hover states */
+  --v10-accent-orange-glow: rgba(245, 158, 11, 0.3); /* Orange glow effect */
 
   /* Warning Background Colors - Dark Theme */
   --v10-bg-warning: rgba(245, 158, 11, 0.15);     /* Warning background - darker orange for contrast */
   --v10-surface-warning: rgba(245, 158, 11, 0.12); /* Warning surface - slightly lighter orange */
 
   /* Shadows - Dark Theme Optimized */
-  --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --v10-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --v10-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --v10-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --v10-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-  --v10-shadow-focus: 0 0 0 3px rgba(163, 163, 163, 0.3);
+  --v10-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --v10-shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --v10-shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --v10-shadow-lg: 0 12px 20px -4px rgba(0, 0, 0, 0.7), 0 4px 8px -2px rgba(0, 0, 0, 0.5);
+  --v10-shadow-xl: 0 24px 32px -8px rgba(0, 0, 0, 0.8), 0 12px 16px -6px rgba(0, 0, 0, 0.6);
+  --v10-shadow-focus: 0 0 0 3px rgba(245, 158, 11, 0.4);
   
   /* Lightweight shadows for interactive elements - Performance Optimized */
   --v10-shadow-hover: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
@@ -1309,7 +1312,7 @@ button:focus,
   .v10-step-actions .v10-btn--tour {
     flex: 1 !important;          /* Fill all available center space */
     min-width: 200px !important; /* Ensure text fits */
-    max-width: none !important;  /* Allow expansion to fill */
+    max-width: calc(100vw - 200px) !important;  /* Prevent overflow beyond viewport */
     margin: 0 16px !important;   /* Balanced spacing from larger edge buttons */
     height: 48px !important;     /* Match height of side buttons */
   }
@@ -7688,7 +7691,7 @@ COLOR PICKER & DESIGN FORM COMPONENTS
   .designs-collection,
   .design-input-area {
     width: 100% !important;
-    max-width: none !important;
+    max-width: 100% !important;
     flex: none !important;
   }
   
@@ -11148,7 +11151,7 @@ lid #404040 !important;
   padding: 0 !important;
   margin: 0 0 32px 0 !important;
   width: 100% !important;
-  max-width: none !important;
+  max-width: 100% !important;
   box-shadow: none !important;
   overflow: hidden !important;
   position: relative !important;
@@ -12063,4 +12066,81 @@ select:focus {
 .v10-form-select-enhanced,
 .v10-form-textarea-enhanced {
   padding-left: var(--v10-space-5) !important; /* Increase from 16px to 20px to prevent text clipping */
+}
+
+/* ====================================================
+   SPECTACULAR GREY-DARK ENHANCEMENTS
+   ==================================================== */
+
+/* Enhanced Card Depth with Subtle Gradients */
+.v10-studio-card,
+.v10-review-grid .v10-studio-card {
+  background: linear-gradient(135deg, var(--v10-bg-card) 0%, #1f1f1f 100%) !important;
+  border: 1px solid #333333 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.v10-studio-card:hover,
+.v10-review-grid .v10-studio-card:hover {
+  background: linear-gradient(135deg, var(--v10-bg-card-hover) 0%, #2a2a2a 100%) !important;
+  border-color: var(--v10-accent-orange) !important;
+  box-shadow: var(--v10-shadow-lg), 0 0 0 1px var(--v10-accent-orange-glow) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Enhanced Progress Steps with Orange Glow */
+.simple-step.completed .simple-step-circle {
+  background: linear-gradient(135deg, var(--v10-accent-orange) 0%, var(--v10-accent-orange-hover) 100%) !important;
+  box-shadow: 0 0 12px var(--v10-accent-orange-glow) !important;
+  border: 2px solid var(--v10-accent-orange-hover) !important;
+}
+
+.simple-step.active .simple-step-circle {
+  background: linear-gradient(135deg, var(--v10-accent-orange) 0%, var(--v10-accent-orange-hover) 100%) !important;
+  box-shadow: 0 0 16px var(--v10-accent-orange-glow), var(--v10-shadow-md) !important;
+  animation: pulse-orange 2s infinite !important;
+}
+
+@keyframes pulse-orange {
+  0%, 100% { box-shadow: 0 0 16px var(--v10-accent-orange-glow), var(--v10-shadow-md); }
+  50% { box-shadow: 0 0 24px var(--v10-accent-orange-glow), var(--v10-shadow-lg); }
+}
+
+/* Enhanced Button Interactions */
+.v10-btn--primary {
+  background: linear-gradient(135deg, var(--v10-accent-orange) 0%, var(--v10-accent-orange-hover) 100%) !important;
+  box-shadow: var(--v10-shadow-md) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.v10-btn--primary:hover {
+  background: linear-gradient(135deg, var(--v10-accent-orange-hover) 0%, #b45309 100%) !important;
+  box-shadow: var(--v10-shadow-lg), 0 0 20px var(--v10-accent-orange-glow) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Enhanced Focus States */
+.v10-form-input-enhanced:focus,
+.v10-form-select-enhanced:focus,
+.v10-form-textarea-enhanced:focus {
+  border-color: var(--v10-accent-orange) !important;
+  box-shadow: 0 0 0 3px var(--v10-accent-orange-glow), var(--v10-shadow-md) !important;
+}
+
+/* Subtle Background Depth */
+.v10-techpack-step {
+  background: linear-gradient(135deg, var(--v10-bg-secondary) 0%, #101010 100%) !important;
+}
+
+/* Enhanced File Upload Area */
+.v10-file-card {
+  background: linear-gradient(135deg, var(--v10-bg-card) 0%, #1f1f1f 100%) !important;
+  border: 1px solid #333333 !important;
+  transition: all 0.3s ease !important;
+}
+
+.v10-file-card:hover {
+  background: linear-gradient(135deg, var(--v10-bg-card-hover) 0%, #2a2a2a 100%) !important;
+  border-color: #444444 !important;
+  box-shadow: var(--v10-shadow-md) !important;
 }
