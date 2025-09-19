@@ -32,7 +32,6 @@
   .footer-v2 {
     background: rgba(var(--color-background), 1);
     color: rgba(var(--color-foreground), 1);
-    border-top: 1px solid rgba(var(--color-foreground), 0.08);
   }
 
   .footer-v2__container {
@@ -42,37 +41,13 @@
     width: 100%;
   }
 
-  /* Brand Header Section */
-  .footer-v2__brand {
-    text-align: center;
-    padding: 4rem 0 3rem;
-    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
-  }
-
-  .footer-v2__brand-title {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: rgba(var(--color-foreground), 1);
-    margin: 0 0 0.5rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .footer-v2__brand-subtitle {
-    font-size: 1.1rem;
-    color: rgba(var(--color-foreground), 0.7);
-    margin: 0;
-    font-weight: 400;
-    max-width: 600px;
-    margin: 0 auto;
-  }
 
   /* Main Content Grid */
   .footer-v2__content {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     gap: 4rem;
-    padding: 3rem 0;
+    padding: 4rem 0 3rem;
     align-items: start;
   }
 
@@ -117,12 +92,31 @@
   /* Newsletter Section */
   .footer-v2__newsletter {
     grid-column: 2;
+    text-align: center;
+  }
+
+  .footer-v2__newsletter-brand {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: rgba(var(--color-foreground), 1);
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer-v2__newsletter-subtitle {
+    font-size: 0.95rem;
+    color: rgba(var(--color-foreground), 0.7);
+    margin: 0 0 1.5rem;
+    line-height: 1.4;
   }
 
   .footer-v2__newsletter-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-width: 280px;
+    margin: 0 auto;
   }
 
   .footer-v2__email-input {
@@ -175,14 +169,10 @@
     color: #ef4444;
   }
 
-  /* Social & Payment Section */
-  .footer-v2__social-payment {
+  /* Social Section */
+  .footer-v2__social-only {
     grid-column: 3;
     text-align: right;
-  }
-
-  .footer-v2__social {
-    margin-bottom: 2rem;
   }
 
   .footer-v2__social-list {
@@ -216,12 +206,13 @@
     transform: translateY(-2px);
   }
 
-  .footer-v2__payment {
+  .footer-v2__payment-bottom {
     display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
+    gap: 0.75rem;
+    justify-content: center;
     flex-wrap: wrap;
     align-items: center;
+    margin-bottom: 1.5rem;
   }
 
   .footer-v2__payment-icon {
@@ -282,17 +273,13 @@
       grid-column: 2;
     }
 
-    .footer-v2__social-payment {
+    .footer-v2__social-only {
       grid-column: 1 / 3;
       text-align: center;
       margin-top: 2rem;
     }
 
     .footer-v2__social-list {
-      justify-content: center;
-    }
-
-    .footer-v2__payment {
       justify-content: center;
     }
   }
@@ -322,13 +309,9 @@
 
     .footer-v2__links,
     .footer-v2__newsletter,
-    .footer-v2__social-payment {
+    .footer-v2__social-only {
       grid-column: 1;
       text-align: center;
-    }
-
-    .footer-v2__social-payment {
-      margin-top: 0;
     }
 
     .footer-v2__heading {
@@ -350,14 +333,6 @@
       gap: 0.75rem;
     }
 
-    .footer-v2__payment {
-      justify-content: center;
-      gap: 0.75rem;
-    }
-
-    .footer-v2__social {
-      margin-bottom: 1.5rem;
-    }
   }
 
   @media screen and (max-width: 480px) {
@@ -393,11 +368,6 @@
   -%}
 
   <div class="footer-v2__container">
-    <!-- Brand Header -->
-    <div class="footer-v2__brand">
-      <h1 class="footer-v2__brand-title">{{ section.settings.brand_title | default: 'GENUINEBLANKS' }}</h1>
-      <p class="footer-v2__brand-subtitle">{{ section.settings.brand_subtitle | default: 'Exclusive deals & insider updates for fashion brands' }}</p>
-    </div>
 
     <!-- Main Content -->
     <div class="footer-v2__content">
@@ -433,7 +403,8 @@
       <!-- Newsletter -->
       {%- if section.settings.newsletter_enable -%}
         <div class="footer-v2__newsletter">
-          <h3 class="footer-v2__heading">{{ section.settings.newsletter_heading | default: 'Stay Connected' }}</h3>
+          <h1 class="footer-v2__newsletter-brand">{{ section.settings.brand_title | default: 'GENUINEBLANKS' }}</h1>
+          <p class="footer-v2__newsletter-subtitle">{{ section.settings.brand_subtitle | default: 'Exclusive deals & insider updates for fashion brands' }}</p>
           {%- form 'customer', id: 'ContactFooter', class: 'footer-v2__newsletter-form' -%}
             <input type="hidden" name="contact[tags]" value="newsletter">
             <input
@@ -473,28 +444,27 @@
         </div>
       {%- endif -%}
 
-      <!-- Social & Payment -->
-      <div class="footer-v2__social-payment">
-        {%- if section.settings.show_social and has_social_icons -%}
-          <div class="footer-v2__social">
-            <h3 class="footer-v2__heading">Follow Us</h3>
-            {%- render 'social-icons', class: 'footer-v2__social-list' -%}
-          </div>
-        {%- endif -%}
-
-        {%- if section.settings.payment_enable -%}
-          <div class="footer-v2__payment">
-            {%- assign enabled_payment_types = 'apple_pay,master,paypal,visa' | remove: ' ' | split: ',' -%}
-            {%- for type in enabled_payment_types -%}
-              {{ type | payment_type_svg_tag: class: 'footer-v2__payment-icon' }}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
+      <!-- Social -->
+      {%- if section.settings.show_social and has_social_icons -%}
+        <div class="footer-v2__social-only">
+          <h3 class="footer-v2__heading">Follow Us</h3>
+          {%- render 'social-icons', class: 'footer-v2__social-list' -%}
+        </div>
+      {%- endif -%}
     </div>
 
     <!-- Footer Bottom -->
     <div class="footer-v2__bottom">
+      <!-- Payment Icons -->
+      {%- if section.settings.payment_enable -%}
+        <div class="footer-v2__payment-bottom">
+          {%- assign enabled_payment_types = 'apple_pay,master,paypal,visa' | remove: ' ' | split: ',' -%}
+          {%- for type in enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'footer-v2__payment-icon' }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
       <!-- Policies -->
       {%- if section.settings.show_policy or section.settings.policy_menu != blank -%}
         <div class="footer-v2__policies">
@@ -515,7 +485,7 @@
 
       <!-- Copyright -->
       <p class="footer-v2__copyright">
-        {{ section.settings.copyright_text | default: '© 2025, Genuine Blanks. All rights reserved.' }}
+        {{ section.settings.copyright_text | default: '© 2025, Genuine Blanks' }}
       </p>
     </div>
   </div>
