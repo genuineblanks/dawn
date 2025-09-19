@@ -226,9 +226,6 @@
                       {%- if settings.brand_description != blank -%}
                         <div class="rte">{{ settings.brand_description }}</div>
                       {%- endif -%}
-                      {%- if block.settings.show_social and has_social_icons -%}
-                        {%- render 'social-icons', class: 'footer__list-social' -%}
-                      {%- endif -%}
                     </div>
                   {%- when 'image' -%}
                     <div class="footer-block__details-content footer-block-image {{ block.settings.alignment }}">
@@ -338,9 +335,6 @@
           {%- endif -%}
            
 
-          {%- if section.settings.show_social and has_social_icons -%}
-            {%- render 'social-icons', class: 'footer__list-social' -%}
-          {%- endif -%}
         </div>
          <div class="footer__column footer__column--info">
           {%- if section.settings.payment_enable -%} 
