@@ -16530,43 +16530,40 @@ class V10_ReviewManager {
       return;
     }
 
-    // Show loading state
-    const submitBtn = document.getElementById('submit-request-btn');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `
-        <svg class="techpack-btn__icon animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12a9 9 0 11-6.219-8.56"/>
-        </svg>
-        Submitting...
-      `;
-    }
+    // Show loading modal with progress tracking
+    this.showLoadingModal();
 
     try {
-      // Prepare submission data
-      const submissionData = this.prepareSubmissionData();
-      
-      // Simulate API call (replace with actual submission)
-      await this.simulateSubmission(submissionData);
-      
-      // Show success modal
-      this.showSuccessModal();
-      
+      // Step 1: Collect data (25%)
+      this.updateLoadingProgress('step-collect-data', 'Collecting submission data...', 25);
+      const submissionData = await this.prepareEnhancedSubmissionData();
+
+      // Step 2: Process files (50%)
+      this.updateLoadingProgress('step-process-files', 'Processing uploaded files...', 50);
+      await this.processFilesForSubmission(submissionData);
+
+      // Step 3: Send to webhook (75%)
+      this.updateLoadingProgress('step-send-webhook', 'Sending to Make.com...', 75);
+      const response = await this.sendToWebhook(submissionData);
+
+      // Step 4: Confirm (100%)
+      this.updateLoadingProgress('step-confirm', 'Confirming submission...', 100);
+      await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for UX
+
+      // Hide loading modal
+      this.hideLoadingModal();
+
+      // Show success modal with response data
+      this.showSuccessModal(response);
+
     } catch (error) {
       console.error('Submission failed:', error);
-      alert('Failed to submit request. Please try again.');
-      
-      // Reset button
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <svg class="techpack-btn__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-          </svg>
-          Submit Request
-        `;
-      }
+
+      // Hide loading modal
+      this.hideLoadingModal();
+
+      // Show error modal with retry functionality
+      this.showErrorModal(error);
     }
   }
 
@@ -16587,29 +16584,318 @@ class V10_ReviewManager {
     };
   }
 
-  async simulateSubmission(data) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Log submission data (for development)
-    console.log('📤 Submission Data:', data);
-    
-    // In real implementation, this would be:
-    // const response = await fetch('/api/techpack/submit', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data)
-    // });
-    // return response.json();
-    
+  async prepareEnhancedSubmissionData() {
+    // Generate unique submission ID
+    const submissionId = `TP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Get all data components
+    const clientData = this.getClientData();
+    const uploadedFiles = this.getUploadedFiles();
+    const garments = Array.from(V10_State.garments.values());
+    const labDips = Array.from(V10_State.labDips.values());
+    const designSamples = Array.from(V10_State.designSamples.values());
+    const costs = this.calculateCosts();
+
+    // Include quantity data for bulk orders
+    let quantityData = null;
+    if (V10_State.requestType === 'bulk-order-request') {
+      quantityData = {
+        garments: Object.fromEntries(V10_State.quantities.garments),
+        globalTotal: V10_State.quantities.globalTotal,
+        globalMinimum: V10_State.quantities.globalMinimum,
+        progressPercentage: V10_State.quantities.progressPercentage
+      };
+    }
+
     return {
-      success: true,
-      requestId: `TP-${Date.now()}`,
-      estimatedResponse: '24-48 hours'
+      submission_id: submissionId,
+      request_type: V10_State.requestType,
+      submitted_at: new Date().toISOString(),
+      client_data: clientData,
+      files: uploadedFiles.map(file => ({
+        name: file.name || file.fileName || 'Unknown file',
+        size: file.size || file.fileSize || 0,
+        type: file.type || file.fileType || 'unknown',
+        data: file.data || file.dataUrl || null // Will be processed in processFilesForSubmission
+      })),
+      records: {
+        garments: garments,
+        lab_dips: labDips,
+        design_samples: designSamples,
+        assignments: {
+          lab_dips: Object.fromEntries(V10_State.assignments.labDips),
+          designs: Object.fromEntries(V10_State.assignments.designs)
+        },
+        quantities: quantityData
+      },
+      costs: costs,
+      metadata: {
+        user_agent: navigator.userAgent,
+        screen_resolution: `${screen.width}x${screen.height}`,
+        timestamp: Date.now(),
+        session_id: sessionStorage.getItem('v10_session_id') || 'unknown'
+      }
     };
   }
 
-  showSuccessModal() {
+  async processFilesForSubmission(submissionData) {
+    // Convert files to base64 for webhook compatibility
+    for (let i = 0; i < submissionData.files.length; i++) {
+      const file = submissionData.files[i];
+
+      // If file doesn't have data, try to get it from the file object
+      if (!file.data && file.file) {
+        try {
+          file.data = await this.convertFileToBase64(file.file);
+        } catch (error) {
+          console.warn(`Failed to convert file ${file.name} to base64:`, error);
+          file.data = null;
+          file.error = 'Failed to process file';
+        }
+      }
+
+      // Remove the original file object to reduce payload size
+      delete file.file;
+    }
+
+    // Add file processing metadata
+    submissionData.files_processed = {
+      total_files: submissionData.files.length,
+      processed_files: submissionData.files.filter(f => f.data).length,
+      failed_files: submissionData.files.filter(f => f.error).length,
+      processed_at: new Date().toISOString()
+    };
+  }
+
+  async convertFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async sendToWebhook(submissionData) {
+    const webhookUrl = '/api/techpack-proxy';
+
+    console.log('🚀 Sending submission to webhook:', {
+      url: webhookUrl,
+      submissionId: submissionData.submission_id,
+      requestType: submissionData.request_type,
+      filesCount: submissionData.files.length,
+      garmentsCount: submissionData.records.garments.length
+    });
+
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(submissionData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({
+        error: 'Unknown error',
+        message: `HTTP ${response.status}: ${response.statusText}`
+      }));
+
+      throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    console.log('✅ Webhook response received:', {
+      success: result.success,
+      submissionId: result.submissionId || submissionData.submission_id
+    });
+
+    return {
+      ...result,
+      submissionId: result.submissionId || submissionData.submission_id,
+      requestType: submissionData.request_type
+    };
+  }
+
+  // Loading Modal Functions
+  showLoadingModal() {
+    const modal = document.getElementById('loading-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Reset progress
+      this.updateLoadingProgress(null, 'Preparing your submission...', 0);
+
+      // Reset all steps
+      const steps = ['step-collect-data', 'step-process-files', 'step-send-webhook', 'step-confirm'];
+      steps.forEach(stepId => {
+        const step = document.getElementById(stepId);
+        if (step) {
+          step.classList.remove('active', 'completed');
+        }
+      });
+    }
+  }
+
+  hideLoadingModal() {
+    const modal = document.getElementById('loading-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  updateLoadingProgress(activeStepId, message, percentage) {
+    // Update progress bar
+    const progressFill = document.getElementById('submission-progress');
+    const progressText = document.getElementById('progress-percentage');
+    const loadingMessage = document.getElementById('loading-message');
+
+    if (progressFill) {
+      progressFill.style.width = `${percentage}%`;
+    }
+
+    if (progressText) {
+      progressText.textContent = `${percentage}%`;
+    }
+
+    if (loadingMessage) {
+      loadingMessage.textContent = message;
+    }
+
+    // Update step states
+    const steps = ['step-collect-data', 'step-process-files', 'step-send-webhook', 'step-confirm'];
+
+    steps.forEach((stepId, index) => {
+      const step = document.getElementById(stepId);
+      if (!step) return;
+
+      // Calculate step percentage thresholds
+      const stepPercentage = (index + 1) * 25;
+
+      if (stepId === activeStepId) {
+        // This step is currently active
+        step.classList.add('active');
+        step.classList.remove('completed');
+      } else if (percentage >= stepPercentage) {
+        // This step is completed
+        step.classList.add('completed');
+        step.classList.remove('active');
+      } else {
+        // This step is pending
+        step.classList.remove('active', 'completed');
+      }
+    });
+  }
+
+  // Error Modal Functions
+  showErrorModal(error) {
+    const modal = document.getElementById('error-modal');
+    const errorMessage = document.getElementById('error-message');
+    const errorDetails = document.getElementById('error-details');
+
+    if (!modal) return;
+
+    // Determine error type and message
+    let userFriendlyMessage = 'An unexpected error occurred while processing your request.';
+    let detailsHTML = '';
+
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      userFriendlyMessage = 'Connection error: Unable to reach our servers. Please check your internet connection and try again.';
+      detailsHTML = `
+        <div class="error-detail">
+          <strong>Technical Details:</strong> Network connection failed
+        </div>
+        <div class="error-detail">
+          <strong>Suggestion:</strong> Check your internet connection and firewall settings
+        </div>
+      `;
+    } else if (error.message.includes('HTTP 4')) {
+      userFriendlyMessage = 'Request error: There was an issue with your submission data. Please review your information and try again.';
+      detailsHTML = `
+        <div class="error-detail">
+          <strong>Error Code:</strong> ${error.message}
+        </div>
+        <div class="error-detail">
+          <strong>Suggestion:</strong> Please review all required fields and try again
+        </div>
+      `;
+    } else if (error.message.includes('HTTP 5')) {
+      userFriendlyMessage = 'Server error: Our servers are currently experiencing issues. Please try again in a few minutes.';
+      detailsHTML = `
+        <div class="error-detail">
+          <strong>Error Code:</strong> ${error.message}
+        </div>
+        <div class="error-detail">
+          <strong>Suggestion:</strong> Wait a few minutes and try again, or contact support if the issue persists
+        </div>
+      `;
+    } else if (error.message.includes('Failed to process file')) {
+      userFriendlyMessage = 'File processing error: One or more of your uploaded files could not be processed.';
+      detailsHTML = `
+        <div class="error-detail">
+          <strong>Issue:</strong> File processing failed
+        </div>
+        <div class="error-detail">
+          <strong>Suggestion:</strong> Try re-uploading your files or contact support for assistance
+        </div>
+      `;
+    } else {
+      detailsHTML = `
+        <div class="error-detail">
+          <strong>Error:</strong> ${error.message}
+        </div>
+        <div class="error-detail">
+          <strong>Time:</strong> ${new Date().toLocaleString()}
+        </div>
+      `;
+    }
+
+    if (errorMessage) {
+      errorMessage.textContent = userFriendlyMessage;
+    }
+
+    if (errorDetails) {
+      errorDetails.innerHTML = detailsHTML;
+    }
+
+    // Set up retry functionality
+    const retryBtn = document.getElementById('error-retry');
+    const cancelBtn = document.getElementById('error-cancel');
+    const closeBtn = document.getElementById('error-close');
+
+    if (retryBtn) {
+      retryBtn.onclick = () => {
+        this.hideErrorModal();
+        this.submitRequest(); // Retry the submission
+      };
+    }
+
+    if (cancelBtn) {
+      cancelBtn.onclick = () => this.hideErrorModal();
+    }
+
+    if (closeBtn) {
+      closeBtn.onclick = () => this.hideErrorModal();
+    }
+
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  hideErrorModal() {
+    const modal = document.getElementById('error-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  showSuccessModal(response) {
     const modal = document.getElementById('success-modal');
     const successMessage = document.getElementById('success-message');
     const successDetails = document.getElementById('success-details');
@@ -16629,15 +16915,24 @@ class V10_ReviewManager {
 
     if (successDetails) {
       const costs = this.calculateCosts();
+      const submissionId = response?.submissionId || `TP-${Date.now()}`;
+      const requestTypeLabel = this.getRequestTypeLabel(requestType);
+
       successDetails.innerHTML = `
         <div class="success-detail">
-          <strong>Request ID:</strong> TP-${Date.now()}
+          <strong>Request ID:</strong> ${submissionId}
         </div>
         <div class="success-detail">
-          <strong>Request Type:</strong> ${V10_State.requestType}
+          <strong>Request Type:</strong> ${requestTypeLabel}
         </div>
         <div class="success-detail">
-          <strong>Total Cost:</strong> ${V10_Utils.formatCurrency(costs.total)}
+          <strong>Total Cost:</strong> ${this.formatCurrencyWithToggle(costs.total, this.getCurrentCurrency())}
+        </div>
+        <div class="success-detail">
+          <strong>Submitted:</strong> ${new Date().toLocaleString()}
+        </div>
+        <div class="success-detail">
+          <strong>Status:</strong> Successfully processed and sent to Make.com
         </div>
         <div class="success-detail">
           <strong>Next Steps:</strong> Check your email for confirmation and updates
@@ -16645,20 +16940,29 @@ class V10_ReviewManager {
       `;
     }
 
-    if (window.v10ModalManager) {
-      window.v10ModalManager.openModal(modal);
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Bind close event to continue button and close button
+    const continueBtn = document.getElementById('success-continue');
+    const closeBtn = document.getElementById('success-close');
+
+    const closeHandler = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+
+      // Clear state and redirect or refresh
+      V10_State.clear();
+      window.location.reload();
+    };
+
+    if (continueBtn) {
+      continueBtn.onclick = closeHandler;
     }
 
-    // Bind close event to continue button
-    const continueBtn = document.getElementById('success-continue');
-    if (continueBtn) {
-      continueBtn.addEventListener('click', () => {
-        window.v10ModalManager.closeModal(modal);
-        
-        // Clear state and redirect or refresh
-        V10_State.clear();
-        window.location.reload();
-      });
+    if (closeBtn) {
+      closeBtn.onclick = closeHandler;
     }
   }
 
