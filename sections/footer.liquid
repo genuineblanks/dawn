@@ -113,6 +113,7 @@
     margin: 0 auto;
     padding: 0 2rem;
     align-items: start;
+    justify-items: stretch;
   }
 
   .footer-newsletter-section {
@@ -165,12 +166,13 @@
     transform: translateY(-1px);
   }
 
-  .footer-redesign .footer-links-section {
+  .footer-links-section {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    text-align: left !important;
-    justify-self: start !important;
+    text-align: left;
+    align-items: flex-start;
+    width: 100%;
   }
 
   .footer-links-title {
@@ -281,19 +283,10 @@
       text-align: center;
     }
 
-    .footer-redesign .footer-links-section {
+    .footer-links-section {
       align-items: center;
-      text-align: center !important;
-      justify-self: center !important;
-    }
-
-    /* Keep left alignment on desktop */
-    @media screen and (min-width: 769px) {
-      .footer-redesign .footer-links-section {
-        justify-self: start !important;
-        text-align: left !important;
-        align-items: flex-start !important;
-      }
+      text-align: center;
+      justify-self: center;
     }
 
     .footer-payment-social {
