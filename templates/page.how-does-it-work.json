@@ -704,6 +704,7 @@
         "buttons_GKtRxP",
         "buttons_kHBUzh"
       ],
+      "disabled": true,
       "settings": {
         "enable_footer": false,
         "dynamic-class": "beginThisJourney",
