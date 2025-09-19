@@ -1363,12 +1363,12 @@ document.addEventListener('DOMContentLoaded', function() {
   if (mainContainer) {
     mainContainer.addEventListener('touchstart', function(e) {
       touchStartX = e.changedTouches[0].screenX;
-    });
-    
+    }, { passive: true });
+
     mainContainer.addEventListener('touchend', function(e) {
       touchEndX = e.changedTouches[0].screenX;
       handleSwipe();
-    });
+    }, { passive: true });
   }
   
   function handleSwipe() {
@@ -1407,7 +1407,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   document.addEventListener('click', enableAutoplayAfterInteraction);
-  document.addEventListener('touchstart', enableAutoplayAfterInteraction);
+  document.addEventListener('touchstart', enableAutoplayAfterInteraction, { passive: true });
 
   // Add seamless looping support for videos
   function addVideoEventListeners() {
