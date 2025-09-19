@@ -12306,6 +12306,68 @@ select:focus {
   margin-right: var(--v10-space-2);
 }
 
+/* Request ID Box Styling */
+.v10-request-id-box {
+  background: rgba(16, 185, 129, 0.1);
+  border: 2px solid var(--v10-accent-primary);
+  border-radius: var(--v10-radius-lg);
+  padding: var(--v10-space-6);
+  margin-bottom: var(--v10-space-6);
+  text-align: center;
+  position: relative;
+}
+
+.v10-request-id-label {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-secondary);
+  margin-bottom: var(--v10-space-2);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.v10-request-id-value {
+  font-size: var(--v10-text-2xl);
+  font-weight: 700;
+  color: var(--v10-accent-primary);
+  font-family: 'Courier New', monospace;
+  margin-bottom: var(--v10-space-4);
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+.v10-copy-id-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v10-space-2);
+  background: var(--v10-accent-primary);
+  color: white;
+  border: none;
+  padding: var(--v10-space-3) var(--v10-space-4);
+  border-radius: var(--v10-radius-md);
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: var(--v10-space-3);
+}
+
+.v10-copy-id-btn:hover {
+  background: var(--v10-accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.v10-copy-id-btn:active {
+  transform: translateY(0);
+}
+
+.v10-request-id-note {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-muted);
+  font-style: italic;
+}
+
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
   .v10-modal--loading,

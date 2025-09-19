@@ -16979,20 +16979,32 @@ class V10_ReviewManager {
       const requestTypeLabel = this.getRequestTypeLabel(requestType);
 
       successDetails.innerHTML = `
-        <div class="success-detail">
-          <strong>Request ID:</strong> ${submissionId}
+        <!-- Prominent Request ID Box -->
+        <div class="v10-request-id-box">
+          <div class="v10-request-id-label">Your Request ID</div>
+          <div class="v10-request-id-value">${submissionId}</div>
+          <button type="button" class="v10-copy-id-btn" onclick="navigator.clipboard.writeText('${submissionId}').then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy ID', 2000); })">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy ID
+          </button>
+          <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
         </div>
+
+        <!-- Other Details -->
         <div class="success-detail">
           <strong>Request Type:</strong> ${requestTypeLabel}
         </div>
         <div class="success-detail">
-          <strong>Total Cost:</strong> ${this.formatCurrencyWithToggle(costs.total, this.getCurrentCurrency())}
+          <strong>Estimated Costs (dependent on design):</strong> ${this.formatCurrencyWithToggle(costs.total, this.getCurrentCurrency())}
         </div>
         <div class="success-detail">
           <strong>Submitted:</strong> ${new Date().toLocaleString()}
         </div>
         <div class="success-detail">
-          <strong>Status:</strong> Successfully processed and sent to Make.com
+          <strong>Status:</strong> Successfully submitted
         </div>
         <div class="success-detail">
           <strong>Next Steps:</strong> Check your email for confirmation and updates
@@ -17047,7 +17059,12 @@ class V10_ReviewManager {
   }
 
   // Helper methods
-  getClientData() {
+  getClientData(requestType = null) {
+    // Use current request type if not provided
+    if (!requestType) {
+      requestType = V10_State.requestType;
+    }
+
     // Try to get from Step 1 client manager first
     if (window.v10ClientManager) {
       const realClientData = window.v10ClientManager.getClientData();
@@ -17056,19 +17073,44 @@ class V10_ReviewManager {
         const personalName = realClientData.firstName || realClientData.name || realClientData.Name;
         const companyName = realClientData.company || realClientData.Company || realClientData.company_name;
         const displayName = personalName || companyName || 'Not provided';
-        
-        return {
+
+        // Base data that all request types get
+        const baseData = {
           company: companyName || 'Not provided',
           name: displayName,
-          email: realClientData.email || realClientData.Email || 'Not provided',
-          phone: realClientData.phone || realClientData.Phone || 'Not provided',
-          businessType: realClientData.businessType || realClientData.BusinessType || 'Not provided',
-          expectedVolume: realClientData.expectedVolume || realClientData.ExpectedVolume || 'Not provided',
-          deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
-          address: realClientData.address || realClientData.Address || 'Not provided',
-          shippingMethod: realClientData.shippingMethod || realClientData.ShippingMethod || 'Not provided',
-          insurance: realClientData.insurance || realClientData.Insurance || 'Not provided'
+          email: realClientData.email || realClientData.Email || 'Not provided'
         };
+
+        // Add additional fields based on request type
+        if (requestType === 'quotation') {
+          // QUOTATIONS: Only name, company, email
+          return baseData;
+
+        } else if (requestType === 'sample-request') {
+          // SAMPLE REQUESTS: Add phone and delivery info
+          return {
+            ...baseData,
+            phone: realClientData.phone || realClientData.Phone || 'Not provided',
+            deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
+            address: realClientData.address || realClientData.Address || 'Not provided'
+          };
+
+        } else if (requestType === 'bulk-order-request') {
+          // BULK ORDERS: Full data including shipping and insurance
+          return {
+            ...baseData,
+            phone: realClientData.phone || realClientData.Phone || 'Not provided',
+            businessType: realClientData.businessType || realClientData.BusinessType || 'Not provided',
+            expectedVolume: realClientData.expectedVolume || realClientData.ExpectedVolume || 'Not provided',
+            deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
+            address: realClientData.address || realClientData.Address || 'Not provided',
+            shippingMethod: realClientData.shippingMethod || realClientData.ShippingMethod || 'Not provided',
+            insurance: realClientData.insurance || realClientData.Insurance || 'Not provided'
+          };
+        }
+
+        // Default fallback
+        return baseData;
       }
     }
     
@@ -17129,17 +17171,42 @@ class V10_ReviewManager {
     // Return collected data or defaults
     // Use company name as display name if no personal name (for quotations/bulk orders)
     const displayName = clientData.name || clientData.company || 'Not provided';
-    
-    return {
+
+    // Base data that all request types get
+    const baseData = {
       company: clientData.company || 'Not provided',
       name: displayName,
-      email: clientData.email || 'office@genuineblanks.com',
-      phone: clientData.phone || 'Not provided',
-      deliveryType: clientData.deliveryType || 'Not provided',
-      address: clientData.address || 'Not provided',
-      shippingMethod: clientData.shippingMethod || 'Not provided',
-      insurance: clientData.insurance || 'Not provided'
+      email: clientData.email || 'office@genuineblanks.com'
     };
+
+    // Add additional fields based on request type
+    if (requestType === 'quotation') {
+      // QUOTATIONS: Only name, company, email
+      return baseData;
+
+    } else if (requestType === 'sample-request') {
+      // SAMPLE REQUESTS: Add phone and delivery info
+      return {
+        ...baseData,
+        phone: clientData.phone || 'Not provided',
+        deliveryType: clientData.deliveryType || 'Not provided',
+        address: clientData.address || 'Not provided'
+      };
+
+    } else if (requestType === 'bulk-order-request') {
+      // BULK ORDERS: Full data including shipping and insurance
+      return {
+        ...baseData,
+        phone: clientData.phone || 'Not provided',
+        deliveryType: clientData.deliveryType || 'Not provided',
+        address: clientData.address || 'Not provided',
+        shippingMethod: clientData.shippingMethod || 'Not provided',
+        insurance: clientData.insurance || 'Not provided'
+      };
+    }
+
+    // Default fallback
+    return baseData;
   }
 
   getUploadedFiles() {
