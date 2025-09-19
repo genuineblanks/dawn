@@ -28,12 +28,33 @@
 {%- endstyle -%}
 
 <style>
+  /* Mobile Viewport Fix - Prevent white space from browser UI */
+  @media screen and (max-width: 749px) {
+    html {
+      /* Fallback for older browsers */
+      height: 100vh;
+      /* Use small viewport height that excludes browser UI */
+      height: 100svh;
+    }
+
+    body {
+      /* Prevent overflow that causes white space */
+      overflow-x: hidden;
+      position: relative;
+      /* Ensure body doesn't exceed viewport */
+      max-height: 100vh;
+      max-height: 100svh;
+    }
+  }
+
   /* Footer V2 - Clean Modern Design */
   .footer-v2 {
     background: rgba(var(--color-background), 1);
     color: rgba(var(--color-foreground), 1);
     position: relative;
     overflow-x: hidden;
+    contain: layout;
+    transform: translateZ(0);
   }
 
   .footer-v2__container {
@@ -315,14 +336,23 @@
 
   @media screen and (max-width: 749px) {
     .footer-v2 {
-      min-height: auto;
+      /* Fix mobile browser UI viewport issues */
       -webkit-overflow-scrolling: touch;
+      touch-action: manipulation;
+      /* Add safe area for device bottom indicators */
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+      /* Prevent layout shifts during browser UI changes */
+      contain: layout style;
+      transform: translate3d(0, 0, 0);
     }
 
     .footer-v2__container {
       padding: 0 1.5rem;
       width: 100%;
       box-sizing: border-box;
+      /* Ensure stable layout */
+      position: relative;
+      isolation: isolate;
     }
 
     .footer-v2__content {
