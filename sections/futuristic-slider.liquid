@@ -216,7 +216,7 @@
       0 40px 100px rgba(0,0,0,0.7),
       0 20px 60px rgba(0,0,0,0.5),
       inset 0 1px 0 rgba(255,255,255,0.1);
-    aspect-ratio: 2.5/1;
+    aspect-ratio: 1.8/1;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -380,7 +380,9 @@
     transform: translateY(-50%);
     z-index: 10;
     pointer-events: none;
-    padding: 0 2rem;
+    padding: 0 3rem;
+    max-width: 100%;
+    margin: 0;
   }
   
   .factory-nav-{{ section.id }} {
@@ -410,11 +412,11 @@
   }
   
   .factory-nav-prev-{{ section.id }} {
-    left: 0;
+    left: 20px;
   }
-  
+
   .factory-nav-next-{{ section.id }} {
-    right: 0;
+    right: 20px;
   }
   
   
