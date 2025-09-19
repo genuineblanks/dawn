@@ -1,4 +1,29 @@
 /* ===============================================
+   GLOBAL OVERFLOW FIX - PREVENT WHITE SPACING
+   =============================================== */
+
+/* CRITICAL: Prevent horizontal overflow that causes white spacing */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Ensure all containers respect viewport boundaries */
+.page-width,
+.container,
+[class*="v10-"],
+[class*="modal"],
+[class*="popup"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ===============================================
    MOBILE DYNAMIC VIEWPORT FIX
    =============================================== */
 
