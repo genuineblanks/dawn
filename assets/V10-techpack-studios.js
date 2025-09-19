@@ -16535,7 +16535,7 @@ class V10_ReviewManager {
 
     try {
       // Step 1: Collect data (25%)
-      this.updateLoadingProgress('step-collect-data', 'Collecting submission data...', 25);
+      this.updateLoadingProgress('step-collect-data', 'Preparing your request...', 25);
       const submissionData = await this.prepareEnhancedSubmissionData();
 
       // Step 2: Process files (50%)
@@ -16543,11 +16543,11 @@ class V10_ReviewManager {
       await this.processFilesForSubmission(submissionData);
 
       // Step 3: Send to webhook (75%)
-      this.updateLoadingProgress('step-send-webhook', 'Sending to Make.com...', 75);
+      this.updateLoadingProgress('step-send-webhook', 'Submitting your request...', 75);
       const response = await this.sendToWebhook(submissionData);
 
       // Step 4: Confirm (100%)
-      this.updateLoadingProgress('step-confirm', 'Confirming submission...', 100);
+      this.updateLoadingProgress('step-confirm', 'Finalizing submission...', 100);
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for UX
 
       // Hide loading modal
@@ -16588,28 +16588,17 @@ class V10_ReviewManager {
     // Generate unique submission ID
     const submissionId = `TP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Get all data components
+    // Get basic data components
     const clientData = this.getClientData();
     const uploadedFiles = this.getUploadedFiles();
     const garments = Array.from(V10_State.garments.values());
-    const labDips = Array.from(V10_State.labDips.values());
-    const designSamples = Array.from(V10_State.designSamples.values());
     const costs = this.calculateCosts();
+    const requestType = V10_State.requestType;
 
-    // Include quantity data for bulk orders
-    let quantityData = null;
-    if (V10_State.requestType === 'bulk-order-request') {
-      quantityData = {
-        garments: Object.fromEntries(V10_State.quantities.garments),
-        globalTotal: V10_State.quantities.globalTotal,
-        globalMinimum: V10_State.quantities.globalMinimum,
-        progressPercentage: V10_State.quantities.progressPercentage
-      };
-    }
-
-    return {
+    // Prepare base submission structure
+    const baseSubmission = {
       submission_id: submissionId,
-      request_type: V10_State.requestType,
+      request_type: requestType,
       submitted_at: new Date().toISOString(),
       client_data: clientData,
       files: uploadedFiles.map(file => ({
@@ -16618,16 +16607,6 @@ class V10_ReviewManager {
         type: file.type || file.fileType || 'unknown',
         data: file.data || file.dataUrl || null // Will be processed in processFilesForSubmission
       })),
-      records: {
-        garments: garments,
-        lab_dips: labDips,
-        design_samples: designSamples,
-        assignments: {
-          lab_dips: Object.fromEntries(V10_State.assignments.labDips),
-          designs: Object.fromEntries(V10_State.assignments.designs)
-        },
-        quantities: quantityData
-      },
       costs: costs,
       metadata: {
         user_agent: navigator.userAgent,
@@ -16636,6 +16615,62 @@ class V10_ReviewManager {
         session_id: sessionStorage.getItem('v10_session_id') || 'unknown'
       }
     };
+
+    // Filter data based on request type
+    if (requestType === 'quotation') {
+      // QUOTATIONS: Only garments (type + fabric), no lab dips, no designs, no quantities
+      baseSubmission.records = {
+        garments: garments.map(garment => ({
+          id: garment.id,
+          type: garment.type,
+          fabricType: garment.fabricType,
+          number: garment.number
+        }))
+      };
+
+    } else if (requestType === 'sample-request') {
+      // SAMPLE REQUESTS: Garments + assigned lab dips + assigned designs
+      const labDips = Array.from(V10_State.labDips.values());
+      const designSamples = Array.from(V10_State.designSamples.values());
+
+      // Filter lab dips to only include assigned ones
+      const assignedLabDips = labDips.filter(labDip => {
+        const assignments = V10_State.assignments.labDips.get(labDip.id);
+        return assignments && assignments.size > 0;
+      });
+
+      // Filter design samples to only include assigned ones
+      const assignedDesigns = designSamples.filter(design => {
+        const assignments = V10_State.assignments.designs.get(design.id);
+        return assignments && assignments.size > 0;
+      });
+
+      baseSubmission.records = {
+        garments: garments,
+        lab_dips: assignedLabDips,
+        design_samples: assignedDesigns,
+        assignments: {
+          lab_dips: Object.fromEntries(V10_State.assignments.labDips),
+          designs: Object.fromEntries(V10_State.assignments.designs)
+        }
+      };
+
+    } else if (requestType === 'bulk-order-request') {
+      // BULK ORDERS: Garments + quantities, no lab dips, no designs
+      const quantityData = {
+        garments: Object.fromEntries(V10_State.quantities.garments),
+        globalTotal: V10_State.quantities.globalTotal,
+        globalMinimum: V10_State.quantities.globalMinimum,
+        progressPercentage: V10_State.quantities.progressPercentage
+      };
+
+      baseSubmission.records = {
+        garments: garments,
+        quantities: quantityData
+      };
+    }
+
+    return baseSubmission;
   }
 
   async processFilesForSubmission(submissionData) {
@@ -16752,7 +16787,7 @@ class V10_ReviewManager {
       document.body.style.overflow = 'hidden';
 
       // Reset progress
-      this.updateLoadingProgress(null, 'Preparing your submission...', 0);
+      this.updateLoadingProgress(null, 'Getting ready to submit...', 0);
 
       // Reset all steps
       const steps = ['step-collect-data', 'step-process-files', 'step-send-webhook', 'step-confirm'];
