@@ -36,7 +36,9 @@
 
   .footer-brand-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin: 0 auto 3rem auto;
+    max-width: 1200px;
+    width: 100%;
   }
 
   .footer-brand-title {
@@ -57,8 +59,8 @@
 
   .footer-main-content {
     display: grid;
-    grid-template-columns: 1.2fr 2fr 0.8fr;
-    gap: 3rem;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 4rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
@@ -119,7 +121,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    padding-left: 1rem;
+    text-align: left;
+    justify-self: start;
   }
 
   .footer-links-title {
@@ -161,6 +164,7 @@
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    justify-self: end;
   }
 
   .footer-payment-icons-bottom {
@@ -231,8 +235,12 @@
 
     .footer-links-section {
       align-items: center;
-      padding-left: 0;
       text-align: center;
+      justify-self: center;
+    }
+
+    .footer-payment-social {
+      justify-self: center;
     }
 
     .footer-links-title {
@@ -309,7 +317,7 @@
           <h3 class="footer-links-title">Quick Links</h3>
           <ul class="footer-links-list">
             <li><a href="/pages/tech-pack-submission">Access our Garment Studio to upload your technical files</a></li>
-            <li><a href="/pages/futuristic-slider">Check our factory & showroom</a></li>
+            <li><a href="/pages/futuristic">Check our factory & showroom</a></li>
             <li><a href="/pages/how-does-it-work">Get Started & FAQ's</a></li>
             <li><a href="/pages/design-services">Design Services - make your ideas a reality with us</a></li>
           </ul>
