@@ -327,14 +327,15 @@
   .factory-navigation-{{ section.id }} {
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 10;
     pointer-events: none;
-    padding: 0 3rem;
-    max-width: 100%;
-    margin: 0;
+    width: calc(100% - 4rem);
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .factory-nav-{{ section.id }} {
@@ -364,11 +365,11 @@
   }
   
   .factory-nav-prev-{{ section.id }} {
-    left: 20px;
+    position: relative;
   }
 
   .factory-nav-next-{{ section.id }} {
-    right: 20px;
+    position: relative;
   }
   
   
@@ -404,12 +405,15 @@
   .factory-thumb-navigation-{{ section.id }} {
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 10;
     pointer-events: none;
-    padding: 0 1rem;
+    width: calc(100% - 2rem);
+    max-width: 1400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .factory-thumb-nav-{{ section.id }} {
@@ -440,11 +444,11 @@
   }
 
   .factory-thumb-prev-{{ section.id }} {
-    left: 0;
+    position: relative;
   }
 
   .factory-thumb-next-{{ section.id }} {
-    right: 0;
+    position: relative;
   }
   
   .factory-thumb-container-{{ section.id }} {
@@ -672,7 +676,7 @@
     }
 
     .factory-navigation-{{ section.id }} {
-      padding: 0 1rem;
+      width: calc(100% - 2rem);
     }
 
     .factory-thumb-image-{{ section.id }} {
@@ -696,15 +700,7 @@
     }
 
     .factory-thumb-navigation-{{ section.id }} {
-      padding: 0 0.5rem;
-    }
-
-    .factory-thumb-prev-{{ section.id }} {
-      left: 0.5rem;
-    }
-
-    .factory-thumb-next-{{ section.id }} {
-      right: 0.5rem;
+      width: calc(100% - 1rem);
     }
 
   }
@@ -730,7 +726,7 @@
     }
 
     .factory-navigation-{{ section.id }} {
-      padding: 0 0.5rem;
+      width: calc(100% - 1rem);
     }
 
     .factory-thumb-image-{{ section.id }} {
@@ -753,15 +749,7 @@
     }
 
     .factory-thumb-navigation-{{ section.id }} {
-      padding: 0 0.25rem;
-    }
-
-    .factory-thumb-prev-{{ section.id }} {
-      left: 0.25rem;
-    }
-
-    .factory-thumb-next-{{ section.id }} {
-      right: 0.25rem;
+      width: calc(100% - 0.5rem);
     }
   }
   
@@ -1208,7 +1196,13 @@ document.addEventListener('DOMContentLoaded', function() {
     showSlide(prevIndex);
   }
   
-  // Thumbnail navigation
+  // Thumbnail navigation with mouse drag support
+  let thumbMouseStartX = 0;
+  let thumbMouseEndX = 0;
+  let thumbIsDragging = false;
+  let thumbIsMouseDown = false;
+  let thumbStartScrollLeft = 0;
+
   function scrollThumbnails(direction) {
     const container = section.querySelector('.factory-thumb-container-' + sectionId);
     const scrollAmount = 120;
@@ -1218,6 +1212,55 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       container.scrollLeft -= scrollAmount;
     }
+  }
+
+  // Add thumbnail drag functionality
+  const thumbContainer = section.querySelector('.factory-thumb-container-' + sectionId);
+  if (thumbContainer) {
+    thumbContainer.addEventListener('mousedown', function(e) {
+      thumbIsMouseDown = true;
+      thumbMouseStartX = e.clientX;
+      thumbStartScrollLeft = thumbContainer.scrollLeft;
+      thumbContainer.style.cursor = 'grabbing';
+      thumbContainer.style.userSelect = 'none';
+      e.preventDefault();
+    });
+
+    thumbContainer.addEventListener('mousemove', function(e) {
+      if (!thumbIsMouseDown) return;
+
+      thumbIsDragging = true;
+      const currentX = e.clientX;
+      const diff = currentX - thumbMouseStartX;
+      thumbContainer.scrollLeft = thumbStartScrollLeft - diff;
+    });
+
+    thumbContainer.addEventListener('mouseup', function(e) {
+      thumbContainer.style.cursor = 'grab';
+      thumbContainer.style.userSelect = '';
+      thumbIsMouseDown = false;
+      thumbIsDragging = false;
+    });
+
+    thumbContainer.addEventListener('mouseleave', function() {
+      thumbContainer.style.cursor = 'grab';
+      thumbContainer.style.userSelect = '';
+      thumbIsMouseDown = false;
+      thumbIsDragging = false;
+    });
+
+    // Add grab cursor on hover
+    thumbContainer.addEventListener('mouseenter', function() {
+      if (!thumbIsMouseDown) {
+        thumbContainer.style.cursor = 'grab';
+      }
+    });
+
+    thumbContainer.addEventListener('mouseleave', function() {
+      if (!thumbIsMouseDown) {
+        thumbContainer.style.cursor = '';
+      }
+    });
   }
 
   // Scroll thumbnail container to show specific category
@@ -1362,9 +1405,16 @@ document.addEventListener('DOMContentLoaded', function() {
   if (thumbPrevBtn) thumbPrevBtn.addEventListener('click', () => scrollThumbnails('prev'));
   if (thumbNextBtn) thumbNextBtn.addEventListener('click', () => scrollThumbnails('next'));
   
-  // Thumbnail clicks
+  // Thumbnail clicks (prevent when dragging)
   section.querySelectorAll('.factory-thumb-slide-' + sectionId).forEach(thumb => {
-    thumb.addEventListener('click', function() {
+    thumb.addEventListener('click', function(e) {
+      // Prevent click if we were dragging
+      if (thumbIsDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
       const thumbIndex = parseInt(this.dataset.thumbIndex);
       if (!isNaN(thumbIndex)) {
         showSlide(thumbIndex);
@@ -1381,12 +1431,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Touch/swipe support
+  // Touch/swipe and mouse drag support
   let touchStartX = 0;
   let touchEndX = 0;
-  
+  let mouseStartX = 0;
+  let mouseEndX = 0;
+  let isDragging = false;
+  let isMouseDown = false;
+
   const mainContainer = section.querySelector('.factory-main-container-' + sectionId);
   if (mainContainer) {
+    // Touch events
     mainContainer.addEventListener('touchstart', function(e) {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
@@ -1395,13 +1450,83 @@ document.addEventListener('DOMContentLoaded', function() {
       touchEndX = e.changedTouches[0].screenX;
       handleSwipe();
     }, { passive: true });
+
+    // Mouse drag events
+    mainContainer.addEventListener('mousedown', function(e) {
+      isMouseDown = true;
+      mouseStartX = e.clientX;
+      mainContainer.style.cursor = 'grabbing';
+      mainContainer.style.userSelect = 'none';
+      e.preventDefault();
+    });
+
+    mainContainer.addEventListener('mousemove', function(e) {
+      if (!isMouseDown) return;
+
+      const currentX = e.clientX;
+      const diff = Math.abs(currentX - mouseStartX);
+
+      if (diff > 10) {
+        isDragging = true;
+      }
+    });
+
+    mainContainer.addEventListener('mouseup', function(e) {
+      if (isMouseDown) {
+        mouseEndX = e.clientX;
+        mainContainer.style.cursor = 'grab';
+        mainContainer.style.userSelect = '';
+
+        if (isDragging) {
+          handleMouseDrag();
+        }
+
+        isMouseDown = false;
+        isDragging = false;
+      }
+    });
+
+    mainContainer.addEventListener('mouseleave', function() {
+      if (isMouseDown) {
+        mainContainer.style.cursor = 'grab';
+        mainContainer.style.userSelect = '';
+        isMouseDown = false;
+        isDragging = false;
+      }
+    });
+
+    // Add grab cursor on hover
+    mainContainer.addEventListener('mouseenter', function() {
+      if (!isMouseDown) {
+        mainContainer.style.cursor = 'grab';
+      }
+    });
+
+    mainContainer.addEventListener('mouseleave', function() {
+      if (!isMouseDown) {
+        mainContainer.style.cursor = '';
+      }
+    });
   }
-  
+
   function handleSwipe() {
     const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
-    
+
     if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+  }
+
+  function handleMouseDrag() {
+    const dragThreshold = 50;
+    const diff = mouseStartX - mouseEndX;
+
+    if (Math.abs(diff) > dragThreshold) {
       if (diff > 0) {
         nextSlide();
       } else {
