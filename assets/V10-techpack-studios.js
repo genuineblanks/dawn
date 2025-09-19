@@ -16677,46 +16677,71 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    const webhookUrl = '/api/techpack-proxy';
+    // Primary webhook URL - Vercel deployment
+    const primaryWebhookUrl = 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy';
+
+    // Fallback URLs in case the primary doesn't work
+    const fallbackUrls = [
+      'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy',
+      // Add more fallbacks if needed
+    ];
 
     console.log('🚀 Sending submission to webhook:', {
-      url: webhookUrl,
+      url: primaryWebhookUrl,
       submissionId: submissionData.submission_id,
       requestType: submissionData.request_type,
       filesCount: submissionData.files.length,
       garmentsCount: submissionData.records.garments.length
     });
 
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(submissionData)
-    });
+    // Try primary URL first
+    try {
+      const response = await fetch(primaryWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(submissionData)
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({
-        error: 'Unknown error',
-        message: `HTTP ${response.status}: ${response.statusText}`
-      }));
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          error: 'Unknown error',
+          message: `HTTP ${response.status}: ${response.statusText}`
+        }));
 
-      throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      console.log('✅ Webhook response received:', {
+        success: result.success,
+        submissionId: result.submissionId || submissionData.submission_id
+      });
+
+      return {
+        ...result,
+        submissionId: result.submissionId || submissionData.submission_id,
+        requestType: submissionData.request_type
+      };
+
+    } catch (error) {
+      console.error('❌ Primary webhook failed:', error.message);
+
+      // Provide helpful error information for debugging
+      if (error.message.includes('404')) {
+        const helpfulError = new Error(
+          `Webhook endpoint not found. Please check that your Vercel deployment is active at: ${primaryWebhookUrl}`
+        );
+        helpfulError.originalError = error;
+        throw helpfulError;
+      }
+
+      // Re-throw other errors
+      throw error;
     }
-
-    const result = await response.json();
-
-    console.log('✅ Webhook response received:', {
-      success: result.success,
-      submissionId: result.submissionId || submissionData.submission_id
-    });
-
-    return {
-      ...result,
-      submissionId: result.submissionId || submissionData.submission_id,
-      requestType: submissionData.request_type
-    };
   }
 
   // Loading Modal Functions
