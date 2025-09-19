@@ -16767,7 +16767,7 @@ class V10_ReviewManager {
     ];
 
     console.log('🚀 Sending submission to webhook:', {
-      url: primaryWebhookUrl,
+      url: appsScriptUrl,
       submissionId: submissionData.submission_id,
       requestType: submissionData.request_type,
       filesCount: submissionData.files.length,
@@ -16818,7 +16818,7 @@ class V10_ReviewManager {
       // Provide helpful error information for debugging
       if (error.message.includes('404')) {
         const helpfulError = new Error(
-          `Webhook endpoint not found. Please check that your Vercel deployment is active at: ${primaryWebhookUrl}`
+          `Google Apps Script endpoint not found. Please check that your deployment is active at: ${appsScriptUrl}`
         );
         helpfulError.originalError = error;
         throw helpfulError;
