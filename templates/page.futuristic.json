@@ -40,6 +40,20 @@
             "video_controls": true
           }
         },
+        "item_6xbdbt": {
+          "type": "item",
+          "settings": {
+            "collection_type": "team",
+            "product_name": "Meet our team",
+            "product_description": "",
+            "details": "",
+            "video_1": "shopify://files/videos/PRINCIPAL V2.mp4",
+            "video_autoplay": true,
+            "video_muted": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
         "item_rGjhm8": {
           "type": "item",
           "settings": {
@@ -57,26 +71,12 @@
             "video_loop": true,
             "video_controls": true
           }
-        },
-        "item_6xbdbt": {
-          "type": "item",
-          "settings": {
-            "collection_type": "team",
-            "product_name": "Meet our team",
-            "product_description": "",
-            "details": "",
-            "video_1": "shopify://files/videos/PRINCIPAL V2.mp4",
-            "video_autoplay": true,
-            "video_muted": true,
-            "video_loop": true,
-            "video_controls": true
-          }
         }
       },
       "block_order": [
         "item_jdMBxi",
-        "item_rGjhm8",
-        "item_6xbdbt"
+        "item_6xbdbt",
+        "item_rGjhm8"
       ],
       "settings": {
         "item_title_size": 2.2,
