@@ -16748,9 +16748,9 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    // Direct Google Apps Script URL - bypassing Make.com
-    // TODO: Replace this with your actual Google Apps Script deployment URL
-    const appsScriptUrl = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+    // Direct Google Apps Script URL
+    // ✅ CONFIGURED: Your actual Google Apps Script deployment URL
+    const appsScriptUrl = 'https://script.google.com/a/macros/genuineblanks.com/s/AKfycbxbwG4Tnpuvjv1l862LoUO755y5IYBEnEYm6r0zqmUeN2yYXGPitZNoPtNX0suoO649Xg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -16760,26 +16760,8 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
-    // Fallback URLs in case the primary doesn't work
-    const fallbackUrls = [
-      'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy',
-      // Add more fallbacks if needed
-    ];
-
-    console.log('🚀 Sending submission to webhook:', {
-      url: appsScriptUrl,
-      submissionId: submissionData.submission_id,
-      requestType: submissionData.request_type,
-      filesCount: submissionData.files.length,
-      garmentsCount: submissionData.records.garments.length
-    });
-
     // Send directly to Google Apps Script
     try {
-      if (appsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-        throw new Error('Google Apps Script URL not configured. Please deploy your Google Apps Script and update the URL.');
-      }
-
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
         headers: {
@@ -16813,12 +16795,12 @@ class V10_ReviewManager {
       };
 
     } catch (error) {
-      console.error('❌ Primary webhook failed:', error.message);
+      console.error('❌ Google Apps Script submission failed:', error.message);
 
       // Provide helpful error information for debugging
       if (error.message.includes('404')) {
         const helpfulError = new Error(
-          `Google Apps Script endpoint not found. Please check that your deployment is active at: ${appsScriptUrl}`
+          'Google Apps Script endpoint not found. Please check that your deployment is active and accessible.'
         );
         helpfulError.originalError = error;
         throw helpfulError;
