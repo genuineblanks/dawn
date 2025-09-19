@@ -16674,19 +16674,53 @@ class V10_ReviewManager {
   }
 
   async processFilesForSubmission(submissionData) {
+    console.log('🔧 Processing files for submission...');
+
     // Convert files to base64 for webhook compatibility
     for (let i = 0; i < submissionData.files.length; i++) {
       const file = submissionData.files[i];
+      console.log(`📎 Processing file ${i + 1}: ${file.name}`);
 
-      // If file doesn't have data, try to get it from the file object
-      if (!file.data && file.file) {
-        try {
-          file.data = await this.convertFileToBase64(file.file);
-        } catch (error) {
-          console.warn(`Failed to convert file ${file.name} to base64:`, error);
-          file.data = null;
-          file.error = 'Failed to process file';
+      // If file doesn't have data, try to get it from various sources
+      if (!file.data) {
+        console.log(`⚠️ File ${file.name} has no data, attempting to retrieve...`);
+
+        // Try to get from file object
+        if (file.file) {
+          try {
+            console.log(`🔄 Converting ${file.name} from File object to base64...`);
+            file.data = await this.convertFileToBase64(file.file);
+            console.log(`✅ Successfully converted ${file.name} to base64`);
+          } catch (error) {
+            console.warn(`❌ Failed to convert file ${file.name} to base64:`, error);
+            file.data = null;
+            file.error = 'Failed to process file';
+          }
         }
+        // Try to get from file manager with actual file data
+        else if (window.v10FileManager && window.v10FileManager.getFileData) {
+          try {
+            console.log(`🔄 Attempting to get ${file.name} data from file manager...`);
+            const fileData = await window.v10FileManager.getFileData(file.name);
+            if (fileData) {
+              file.data = fileData;
+              console.log(`✅ Retrieved ${file.name} data from file manager`);
+            } else {
+              console.warn(`⚠️ File manager returned no data for ${file.name}`);
+              file.error = 'No file data available';
+            }
+          } catch (error) {
+            console.warn(`❌ Failed to get file data from manager for ${file.name}:`, error);
+            file.error = 'Failed to retrieve file data';
+          }
+        }
+        // Try to get from stored file data if available
+        else {
+          console.warn(`⚠️ No file data source available for ${file.name}`);
+          file.error = 'No file data source available';
+        }
+      } else {
+        console.log(`✅ File ${file.name} already has data`);
       }
 
       // Remove the original file object to reduce payload size
@@ -16700,6 +16734,8 @@ class V10_ReviewManager {
       failed_files: submissionData.files.filter(f => f.error).length,
       processed_at: new Date().toISOString()
     };
+
+    console.log(`📊 File processing complete: ${submissionData.files_processed.processed_files}/${submissionData.files_processed.total_files} files processed successfully`);
   }
 
   async convertFileToBase64(file) {
@@ -16712,8 +16748,17 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    // Primary webhook URL - Vercel deployment
-    const primaryWebhookUrl = 'https://genuineblanks-techpack-upload.vercel.app/api/techpack-proxy';
+    // Direct Google Apps Script URL - bypassing Make.com
+    // TODO: Replace this with your actual Google Apps Script deployment URL
+    const appsScriptUrl = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+    console.log('🚀 Sending directly to Google Apps Script:', {
+      url: appsScriptUrl,
+      submissionId: submissionData.submission_id,
+      requestType: submissionData.request_type,
+      filesCount: submissionData.files.length,
+      garmentsCount: submissionData.records.garments.length
+    });
 
     // Fallback URLs in case the primary doesn't work
     const fallbackUrls = [
@@ -16729,13 +16774,16 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
-    // Try primary URL first
+    // Send directly to Google Apps Script
     try {
-      const response = await fetch(primaryWebhookUrl, {
+      if (appsScriptUrl === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+        throw new Error('Google Apps Script URL not configured. Please deploy your Google Apps Script and update the URL.');
+      }
+
+      const response = await fetch(appsScriptUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(submissionData)
       });
@@ -16751,9 +16799,11 @@ class V10_ReviewManager {
 
       const result = await response.json();
 
-      console.log('✅ Webhook response received:', {
+      console.log('✅ Google Apps Script response received:', {
         success: result.success,
-        submissionId: result.submissionId || submissionData.submission_id
+        submissionId: result.submissionId || submissionData.submission_id,
+        folderPath: result.folderPath,
+        filesProcessed: result.filesProcessed
       });
 
       return {
@@ -16997,14 +17047,16 @@ class V10_ReviewManager {
 
         <div class="v10-request-id-box">
           <div class="v10-request-id-label">Your Request ID</div>
-          <div class="v10-request-id-value">${submissionId}</div>
-          <button type="button" class="v10-copy-id-btn" data-copy-text="${submissionId}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            Copy ID
-          </button>
+          <div class="v10-request-id-container">
+            <div class="v10-request-id-value">${submissionId}</div>
+            <button type="button" class="v10-copy-id-btn" data-copy-text="${submissionId}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy ID
+            </button>
+          </div>
           <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
         </div>
       `;
@@ -17256,9 +17308,25 @@ class V10_ReviewManager {
       } else if (window.v10FileManager.uploadedFiles) {
         realFiles = Array.from(window.v10FileManager.uploadedFiles.values());
       }
-      
+
       if (realFiles && realFiles.length > 0) {
         console.log(`📁 Found ${realFiles.length} files from file manager`);
+
+        // Ensure files have the actual file objects for processing
+        realFiles = realFiles.map(file => {
+          // If file has dataUrl but no data, use dataUrl as data
+          if (!file.data && file.dataUrl) {
+            file.data = file.dataUrl;
+          }
+
+          // If file has blob/file object, ensure it's accessible
+          if (file.file || file.blob) {
+            file.file = file.file || file.blob;
+          }
+
+          return file;
+        });
+
         return realFiles;
       }
     }
