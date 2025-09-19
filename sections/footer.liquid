@@ -32,6 +32,8 @@
   .footer-v2 {
     background: rgba(var(--color-background), 1);
     color: rgba(var(--color-foreground), 1);
+    position: relative;
+    overflow-x: hidden;
   }
 
   .footer-v2__container {
@@ -180,7 +182,7 @@
   /* Social Section */
   .footer-v2__social-only {
     grid-column: 2;
-    text-align: right;
+    text-align: left;
   }
 
   .footer-v2__social-links {
@@ -190,7 +192,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    align-items: flex-end;
+    align-items: flex-start;
   }
 
   .footer-v2__social-item {
@@ -206,6 +208,7 @@
     transition: all 0.3s ease;
     padding: 0.5rem 0;
     font-size: 1rem;
+    line-height: 1;
   }
 
   .footer-v2__social-link:hover {
@@ -218,6 +221,8 @@
     height: 24px;
     fill: currentColor;
     flex-shrink: 0;
+    vertical-align: middle;
+    display: block;
   }
 
   .footer-v2__payment-bottom {
@@ -306,14 +311,21 @@
   }
 
   @media screen and (max-width: 749px) {
+    .footer-v2 {
+      min-height: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .footer-v2__container {
       padding: 0 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .footer-v2__content {
       grid-template-columns: 1fr;
       gap: 0;
-      padding: 2rem 0;
+      padding: 1.5rem 0 2rem;
     }
 
     .footer-v2__links,
@@ -371,7 +383,7 @@
     }
 
     .footer-v2__bottom {
-      padding: 1.5rem 0;
+      padding: 1.5rem 0 2rem;
     }
   }
 </style>
