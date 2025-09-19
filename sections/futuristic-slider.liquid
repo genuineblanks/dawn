@@ -322,54 +322,6 @@
     transform: scale(1.02);
   }
   
-  .factory-slide-overlay-{{ section.id }} {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    z-index: 5;
-  }
-  
-  .factory-slide-{{ section.id }}:hover .factory-slide-overlay-{{ section.id }} {
-    opacity: 1;
-  }
-  
-  .factory-zoom-btn-{{ section.id }} {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-    transform: scale(0.8);
-    pointer-events: auto;
-  }
-  
-  .factory-slide-{{ section.id }}:hover .factory-zoom-btn-{{ section.id }} {
-    transform: scale(1);
-  }
-  
-  .factory-zoom-btn-{{ section.id }}:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.1);
-    box-shadow: 0 20px 50px rgba(255,255,255,0.1);
-  }
   
   /* Navigation */
   .factory-navigation-{{ section.id }} {
@@ -450,24 +402,27 @@
   }
   
   .factory-thumb-navigation-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 0;
     right: 0;
-    transform: translateY(-50%);
+    bottom: 0;
     z-index: 10;
     pointer-events: none;
-    padding: 0 2.5rem;
+    padding: 0 1rem;
   }
-  
+
   .factory-thumb-nav-{{ section.id }} {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px;
     cursor: pointer;
     display: flex;
@@ -475,30 +430,32 @@
     justify-content: center;
     transition: all 0.3s ease;
     pointer-events: auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    color: rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    position: relative;
   }
-  
+
   .factory-thumb-nav-{{ section.id }}:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-    box-shadow: 0 15px 40px rgba(255,255,255,0.1);
-    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
   }
-  
+
   .factory-thumb-prev-{{ section.id }} {
-    left: 20px;
+    position: relative;
   }
 
   .factory-thumb-next-{{ section.id }} {
-    right: 20px;
+    position: relative;
   }
   
   .factory-thumb-container-{{ section.id }} {
     display: flex;
     gap: 1.5rem;
     overflow-x: auto;
-    padding: 2rem 3rem;
+    padding: 2rem 4rem;
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -512,6 +469,7 @@
     max-width: 1400px;
     margin: 0 auto;
     min-height: 120px;
+    position: relative;
   }
   
   .factory-thumb-container-{{ section.id }}::-webkit-scrollbar {
@@ -639,240 +597,151 @@
     background: rgba(255, 255, 255, 0.08);
   }
   
-  /* Lightbox */
-  .factory-lightbox-{{ section.id }} {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
   
-  .factory-lightbox-{{ section.id }}.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .factory-lightbox-backdrop-{{ section.id }} {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-  
-  .factory-lightbox-content-{{ section.id }} {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    max-width: 90vw;
-    max-height: 90vh;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 50px 120px rgba(0, 0, 0, 0.6);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .factory-lightbox-{{ section.id }}.active .factory-lightbox-content-{{ section.id }} {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  
-  .factory-lightbox-image-{{ section.id }} {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    max-width: 90vw;
-    max-height: 90vh;
-    border-radius: 8px;
-  }
-
-  .factory-lightbox-video-{{ section.id }} {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    max-width: 90vw;
-    max-height: 90vh;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-panel {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 6px;
-  }
-
-  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-play-button,
-  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-volume-slider,
-  .factory-lightbox-video-{{ section.id }}::-webkit-media-controls-timeline {
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
-  }
-  
-  .factory-lightbox-close-{{ section.id }} {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-  }
-  
-  .factory-lightbox-close-{{ section.id }}:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.1);
-    box-shadow: 0 20px 50px rgba(255,255,255,0.1);
-  }
-  
-  /* Loading Spinner */
-  .factory-spinner-{{ section.id }} {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  
-  .factory-spinner-{{ section.id }}::after {
-    content: '';
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: factorySpinnerRotate-{{ section.id }} 1s linear infinite;
-  }
-  
-  @keyframes factorySpinnerRotate-{{ section.id }} {
-    to { transform: rotate(360deg); }
-  }
   
   /* Mobile Responsiveness */
   @media (max-width: 768px) {
     .factory-section-{{ section.id }} {
       overflow-x: hidden;
     }
-    
+
     .factory-filter-tabs-{{ section.id }} {
       flex-direction: column;
       width: 100%;
       max-width: 320px;
       margin: 0 auto;
       padding: 6px;
+      display: flex;
     }
-    
+
     .factory-filter-tab-{{ section.id }} {
       justify-content: center;
       padding: 14px 24px;
       font-size: 0.9rem;
     }
-    
+
+    /* Mobile filter tab reordering */
+    .factory-filter-tab-{{ section.id }}[data-filter="products"] {
+      order: 1;
+    }
+
+    .factory-filter-tab-{{ section.id }}[data-filter="factory"] {
+      order: 2;
+    }
+
+    .factory-filter-tab-{{ section.id }}[data-filter="team"] {
+      order: 3;
+    }
+
     .factory-gallery-wrapper-{{ section.id }} {
-      padding: 0 1rem;
+      padding: 0;
     }
 
     .factory-main-display-{{ section.id }} {
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
-    
-    
+
+
     .factory-main-container-{{ section.id }} {
-      aspect-ratio: 2/1;
-      border-radius: 12px;
+      aspect-ratio: 4/3;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      margin: 0;
     }
 
     .factory-main-container-{{ section.id }}:hover {
       transform: none;
+      box-shadow: none;
     }
-    
+
+    .factory-main-container-{{ section.id }}::before {
+      display: none;
+    }
+
     .factory-nav-{{ section.id }} {
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
     }
-    
+
+    .factory-navigation-{{ section.id }} {
+      padding: 0 1rem;
+    }
+
     .factory-thumb-image-{{ section.id }} {
       width: 85px;
       height: 64px;
     }
 
     .factory-thumb-container-{{ section.id }} {
-      padding: 1.5rem 2rem;
+      padding: 1.5rem 3rem;
       gap: 1rem;
     }
-    
+
+    .factory-thumb-nav-{{ section.id }} {
+      width: 32px;
+      height: 32px;
+    }
+
     .factory-thumbnails-{{ section.id }} {
-      padding: 2rem;
-      margin-top: 2rem;
+      padding: 1.5rem 0;
+      margin-top: 1rem;
     }
-    
-    .factory-zoom-btn-{{ section.id }},
-    .factory-slide-overlay-{{ section.id }} {
-      display: none !important;
+
+    .factory-thumb-navigation-{{ section.id }} {
+      padding: 0 0.5rem;
     }
+
   }
   
   @media (max-width: 480px) {
     .factory-filter-{{ section.id }} {
-      padding: 3rem 0 1.5rem;
+      padding: 2rem 0 1rem;
     }
-    
-    
+
+    .factory-main-container-{{ section.id }} {
+      aspect-ratio: 3/2;
+    }
+
     .factory-nav-{{ section.id }} {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
     }
-    
+
+    .factory-navigation-{{ section.id }} {
+      padding: 0 0.5rem;
+    }
+
     .factory-thumb-image-{{ section.id }} {
       width: 75px;
       height: 56px;
     }
 
     .factory-thumb-container-{{ section.id }} {
-      padding: 1rem 2rem;
+      padding: 1rem 2.5rem;
       gap: 0.8rem;
     }
-    
+
     .factory-thumbnails-{{ section.id }} {
-      padding: 1.5rem;
+      padding: 1rem 0;
     }
-    
-    .factory-thumb-container-{{ section.id }} {
-      padding: 0 2.5rem;
+
+    .factory-thumb-nav-{{ section.id }} {
+      width: 28px;
+      height: 28px;
+    }
+
+    .factory-thumb-navigation-{{ section.id }} {
+      padding: 0 0.25rem;
     }
   }
   
   /* Accessibility */
   .factory-filter-tab-{{ section.id }}:focus,
   .factory-nav-{{ section.id }}:focus,
-  .factory-zoom-btn-{{ section.id }}:focus,
   .factory-thumb-slide-{{ section.id }}:focus {
     outline: 2px solid rgba(255,255,255,0.8);
     outline-offset: 3px;
@@ -886,8 +755,7 @@
     }
     
     .factory-filter-tab-{{ section.id }}.active,
-    .factory-nav-{{ section.id }},
-    .factory-zoom-btn-{{ section.id }} {
+    .factory-nav-{{ section.id }} {
       border-color: rgba(255,255,255,0.8);
       background: rgba(255,255,255,0.2);
     }
@@ -914,13 +782,22 @@
     {% if section.settings.show_collection_filter %}
       <div class="factory-filter-{{ section.id }}">
         <div class="factory-filter-tabs-{{ section.id }}">
-          <button class="factory-filter-tab-{{ section.id }} active" data-filter="products">
+          <button class="factory-filter-tab-{{ section.id }}" data-filter="products">
             <span class="factory-filter-icon-{{ section.id }}">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 2L3 7V18H8V13H12V18H17V7L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
             <span class="factory-filter-text-{{ section.id }}">SHOW ROOM</span>
+          </button>
+          <button class="factory-filter-tab-{{ section.id }} active" data-filter="team">
+            <span class="factory-filter-icon-{{ section.id }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </span>
+            <span class="factory-filter-text-{{ section.id }}">PRODUCTION</span>
           </button>
           <button class="factory-filter-tab-{{ section.id }}" data-filter="factory">
             <span class="factory-filter-icon-{{ section.id }}">
@@ -929,15 +806,6 @@
               </svg>
             </span>
             <span class="factory-filter-text-{{ section.id }}">FACTORY</span>
-          </button>
-          <button class="factory-filter-tab-{{ section.id }}" data-filter="team">
-            <span class="factory-filter-icon-{{ section.id }}">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-            </span>
-            <span class="factory-filter-text-{{ section.id }}">PRODUCTION</span>
           </button>
         </div>
       </div>
@@ -977,15 +845,6 @@
                            oncontextmenu="return false;"
                            onselectstart="return false;"
                            ondragstart="return false;">
-                      <div class="factory-slide-overlay-{{ section.id }}">
-                        <button class="factory-zoom-btn-{{ section.id }}"
-                                data-image="{{ current_image | image_url: width: 1600 }}"
-                                data-media-type="image">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 21L16.514 16.506M19 10.5C19 15.194 15.194 19 10.5 19S2 15.194 2 10.5 5.806 2 10.5 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </button>
-                      </div>
                     </div>
                     {% assign slide_index = slide_index | plus: 1 %}
                   {% endif %}
@@ -1053,19 +912,19 @@
         <!-- Thumbnails -->
         {% if section.settings.show_thumbnails %}
           <div class="factory-thumbnails-{{ section.id }}">
-            <div class="factory-thumb-navigation-{{ section.id }}">
-              <button class="factory-thumb-nav-{{ section.id }} factory-thumb-prev-{{ section.id }}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <button class="factory-thumb-nav-{{ section.id }} factory-thumb-next-{{ section.id }}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
             <div class="factory-thumb-container-{{ section.id }}">
+              <div class="factory-thumb-navigation-{{ section.id }}">
+                <button class="factory-thumb-nav-{{ section.id }} factory-thumb-prev-{{ section.id }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="factory-thumb-nav-{{ section.id }} factory-thumb-next-{{ section.id }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
               {% assign thumb_index = 0 %}
               {% for block in section.blocks %}
                 {% assign block_filter = block.settings.collection_type | default: 'products' %}
@@ -1143,28 +1002,6 @@
         {% endif %}
       </div>
       
-      <!-- Lightbox -->
-      <div class="factory-lightbox-{{ section.id }}">
-        <div class="factory-lightbox-backdrop-{{ section.id }}"></div>
-        <div class="factory-lightbox-content-{{ section.id }}">
-          <button class="factory-lightbox-close-{{ section.id }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <img src="" alt="" class="factory-lightbox-image-{{ section.id }}" style="display: none;">
-          <video class="factory-lightbox-video-{{ section.id }}"
-                 style="display: none;"
-                 controls
-                 playsinline
-                 preload="metadata">
-            <p>Your browser doesn't support video playback.</p>
-          </video>
-        </div>
-      </div>
-      
-      <!-- Loading Spinner -->
-      <div class="factory-spinner-{{ section.id }}"></div>
       
     {% else %}
       <div class="factory-empty-{{ section.id }}">
@@ -1188,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!section) return;
   
   let currentSlideIndex = 0;
-  let currentFilter = 'products';
+  let currentFilter = 'team';
   let allSlides = [];
   let categoryMap = [];
   let categoryRanges = {
@@ -1313,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update active filter tab
   function updateActiveFilterTab(slideIndex) {
-    const category = categoryMap[slideIndex]?.filter || 'products';
+    const category = categoryMap[slideIndex]?.filter || 'team';
     currentFilter = category;
     
     section.querySelectorAll('.factory-filter-tab-' + sectionId).forEach(tab => {
@@ -1434,69 +1271,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Lightbox functionality
-  function openLightbox(src, mediaType = 'image') {
-    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
-    const lightboxImage = section.querySelector('.factory-lightbox-image-' + sectionId);
-    const lightboxVideo = section.querySelector('.factory-lightbox-video-' + sectionId);
-    const spinner = section.querySelector('.factory-spinner-' + sectionId);
-
-    // Hide both elements initially
-    lightboxImage.style.display = 'none';
-    lightboxVideo.style.display = 'none';
-    lightboxImage.src = '';
-    lightboxVideo.src = '';
-
-    spinner.style.display = 'flex';
-
-    if (mediaType === 'video') {
-      lightboxVideo.style.display = 'block';
-      lightboxVideo.src = src;
-      lightboxVideo.load();
-
-      const handleVideoLoad = function() {
-        spinner.style.display = 'none';
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        lightboxVideo.removeEventListener('loadedmetadata', handleVideoLoad);
-      };
-
-      lightboxVideo.addEventListener('loadedmetadata', handleVideoLoad);
-
-      // Fallback timeout in case metadata doesn't load
-      setTimeout(() => {
-        if (spinner.style.display === 'flex') {
-          handleVideoLoad();
-        }
-      }, 3000);
-    } else {
-      const preload = new Image();
-      preload.onload = function() {
-        spinner.style.display = 'none';
-        lightboxImage.src = src;
-        lightboxImage.style.display = 'block';
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      };
-      preload.src = src;
-    }
-  }
-  
-  function closeLightbox() {
-    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
-    const lightboxVideo = section.querySelector('.factory-lightbox-video-' + sectionId);
-    const spinner = section.querySelector('.factory-spinner-' + sectionId);
-
-    // Pause and reset video if it's playing
-    if (lightboxVideo && lightboxVideo.style.display !== 'none') {
-      lightboxVideo.pause();
-      lightboxVideo.currentTime = 0;
-    }
-
-    lightbox.classList.remove('active');
-    spinner.style.display = 'none';
-    document.body.style.overflow = '';
-  }
   
   // Event listeners
   
@@ -1572,47 +1346,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Zoom buttons
-  section.addEventListener('click', function(e) {
-    const zoomBtn = e.target.closest('.factory-zoom-btn-' + sectionId);
-    if (zoomBtn) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const mediaType = zoomBtn.dataset.mediaType || 'image';
-      const imageUrl = zoomBtn.dataset.image;
-      const videoUrl = zoomBtn.dataset.video;
-
-      if (mediaType === 'video' && videoUrl) {
-        openLightbox(videoUrl, 'video');
-      } else if (mediaType === 'image' && imageUrl) {
-        openLightbox(imageUrl, 'image');
-      }
-    }
-  });
-  
-  // Lightbox close events
-  const lightboxClose = section.querySelector('.factory-lightbox-close-' + sectionId);
-  const lightboxBackdrop = section.querySelector('.factory-lightbox-backdrop-' + sectionId);
-  
-  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
-  
-  // ESC key to close lightbox
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
-      if (lightbox && lightbox.classList.contains('active')) {
-        closeLightbox();
-      }
-    }
-  });
-  
   // Keyboard navigation
   document.addEventListener('keydown', function(e) {
-    const lightbox = section.querySelector('.factory-lightbox-' + sectionId);
-    if (lightbox && lightbox.classList.contains('active')) return;
-    
     if (e.key === 'ArrowLeft') {
       prevSlide();
     } else if (e.key === 'ArrowRight') {
