@@ -191,30 +191,33 @@
   }
   
   .factory-gallery-wrapper-{{ section.id }} {
-    display: flex;
-    gap: 3rem;
+    display: block;
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
-    align-items: stretch;
+    width: 100%;
   }
   
   /* Main Image Display */
   .factory-main-display-{{ section.id }} {
-    flex: 2.5;
-    min-width: 0;
+    width: 100%;
+    margin-bottom: 3rem;
   }
   
   .factory-main-container-{{ section.id }} {
     position: relative;
-    border-radius: 8px;
+    border-radius: 16px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.7),
+      0 20px 60px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.1);
     aspect-ratio: 16/10;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .factory-main-container-{{ section.id }}::before {
@@ -224,9 +227,27 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(255,255,255,0.05) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
     pointer-events: none;
     z-index: 2;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+  }
+
+  .factory-main-container-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 50px 120px rgba(0,0,0,0.8),
+      0 25px 70px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .factory-main-container-{{ section.id }}:hover::before {
+    opacity: 1;
   }
   
   .factory-slide-{{ section.id }} {
@@ -396,144 +417,6 @@
     right: 0;
   }
   
-  /* Information Panel */
-  .factory-info-{{ section.id }} {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-radius: 8px;
-    padding: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    position: sticky;
-    top: 8rem;
-    min-height: auto;
-  }
-  
-  .factory-info-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    border-radius: 8px 8px 0 0;
-  }
-  
-  .factory-item-info-{{ section.id }} {
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    display: none;
-  }
-  
-  .factory-item-info-{{ section.id }}.active {
-    display: block;
-    animation: fadeInUp-{{ section.id }} 0.6s ease-out;
-  }
-  
-  @keyframes fadeInUp-{{ section.id }} {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .factory-item-title-{{ section.id }} {
-    font-size: {{ section.settings.item_title_size }}rem;
-    font-weight: 200;
-    line-height: 1.3;
-    color: {{ section.settings.text_color }};
-    margin: 0 0 1.5rem 0;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-family: var(--font-heading-family);
-    position: relative;
-  }
-  
-  .factory-item-title-{{ section.id }}::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
-  }
-  
-  .factory-item-description-{{ section.id }} {
-    margin-bottom: 2rem;
-    font-size: {{ section.settings.description_text_size }}rem;
-    line-height: 1.7;
-    color: {{ section.settings.text_color }};
-    opacity: 0.9;
-    font-weight: 300;
-  }
-  
-  .factory-item-description-{{ section.id }} p {
-    margin: 0 0 1rem 0;
-  }
-  
-  .factory-item-description-{{ section.id }} p:last-child {
-    margin-bottom: 0;
-  }
-  
-  .factory-item-details-{{ section.id }} {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .factory-item-details-{{ section.id }}::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  }
-  
-  .factory-details-title-{{ section.id }} {
-    font-size: {{ section.settings.details_title_size }}rem;
-    font-weight: 400;
-    color: {{ section.settings.text_color }};
-    margin: 0 0 1.5rem 0;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  
-  .factory-details-content-{{ section.id }} {
-    font-size: {{ section.settings.details_text_size }}rem;
-    line-height: 1.6;
-    color: {{ section.settings.text_color }};
-    opacity: 0.85;
-  }
-  
-  .factory-details-content-{{ section.id }} p {
-    margin: 0 0 1rem 0;
-  }
-  
-  .factory-details-content-{{ section.id }} p:last-child {
-    margin-bottom: 0;
-  }
-  
-  .factory-details-content-{{ section.id }} strong {
-    color: {{ section.settings.text_color }};
-    font-weight: 500;
-    opacity: 1;
-  }
   
   /* Thumbnails */
   .factory-thumbnails-{{ section.id }} {
@@ -739,17 +622,6 @@
   }
 
   /* Static content display rules */
-  .factory-item-info-{{ section.id }} {
-    display: none;
-  }
-
-  .factory-item-info-{{ section.id }}.active {
-    display: block !important;
-  }
-
-  .factory-item-info-{{ section.id }}[data-filter="products"] {
-    display: block;
-  }
   
   .factory-thumb-slide-{{ section.id }}.active {
     border-color: rgba(255, 255, 255, 0.5);
@@ -922,19 +794,21 @@
     }
     
     .factory-gallery-wrapper-{{ section.id }} {
-      flex-direction: column;
-      gap: 2rem;
       padding: 0 1rem;
     }
-    
-    .factory-info-{{ section.id }} {
-      position: static;
-      padding: 2rem;
-      min-height: auto;
+
+    .factory-main-display-{{ section.id }} {
+      margin-bottom: 2rem;
     }
+    
     
     .factory-main-container-{{ section.id }} {
       aspect-ratio: 3/2;
+      border-radius: 12px;
+    }
+
+    .factory-main-container-{{ section.id }}:hover {
+      transform: none;
     }
     
     .factory-nav-{{ section.id }} {
@@ -968,9 +842,6 @@
       padding: 3rem 0 1.5rem;
     }
     
-    .factory-info-{{ section.id }} {
-      padding: 1.5rem;
-    }
     
     .factory-nav-{{ section.id }} {
       width: 45px;
@@ -1008,7 +879,6 @@
   /* High contrast mode */
   @media (prefers-contrast: high) {
     .factory-main-container-{{ section.id }},
-    .factory-info-{{ section.id }},
     .factory-thumbnails-{{ section.id }} {
       background-blend-mode: multiply;
     }
@@ -1176,76 +1046,6 @@
             </div>
           </div>
           
-          <!-- Information Panel -->
-          <div class="factory-info-{{ section.id }}">
-
-            <!-- OUR FACILITY Content -->
-            <div class="factory-item-info-{{ section.id }}"
-                 data-product="1"
-                 data-filter="factory">
-
-              <h3 class="factory-item-title-{{ section.id }}">OUR FACILITY</h3>
-
-              <div class="factory-item-description-{{ section.id }}">
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Advanced Equipment</h4>
-                <p style="margin-bottom: 1.5rem;">Automated cutting tables, precision sewing stations, and in-house finishing lines built for consistency at any scale.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Expert Team</h4>
-                <p style="margin-bottom: 1.5rem;">Skilled technicians, pattern-makers, and quality inspectors working seamlessly together from cut to pack.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Certified Standards</h4>
-                <p style="margin-bottom: 1.5rem;">ISO 9001 and SA8000 compliant with full traceability and social audits.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Flexible Capacity</h4>
-                <p style="margin-bottom: 0;">From prototypes to high-volume runs, our modular lines adapt to meet your deadlines.</p>
-              </div>
-            </div>
-
-            <!-- OUR TEAM Content -->
-            <div class="factory-item-info-{{ section.id }}"
-                 data-product="2"
-                 data-filter="team">
-
-              <h3 class="factory-item-title-{{ section.id }}">OUR TEAM</h3>
-
-              <div class="factory-item-description-{{ section.id }}">
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Leadership</h4>
-                <p style="margin-bottom: 1.5rem;">Strategic thinkers who align market insights with sustainable growth plans.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Design & Development</h4>
-                <p style="margin-bottom: 1.5rem;">Creative directors and technical designers who transform concepts into production-ready patterns.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Quality Control</h4>
-                <p style="margin-bottom: 1.5rem;">Dedicated QA engineers ensuring ethical production and flawless output.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Your Partners</h4>
-                <p style="margin-bottom: 0;">Account managers who keep you updated every step of the way.</p>
-              </div>
-            </div>
-
-            <!-- OUR SERVICES Content -->
-            <div class="factory-item-info-{{ section.id }} active"
-                 data-product="0"
-                 data-filter="products">
-
-              <h3 class="factory-item-title-{{ section.id }}">OUR SERVICES</h3>
-
-              <div class="factory-item-description-{{ section.id }}">
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Premium Materials</h4>
-                <p style="margin-bottom: 1.5rem;">Visit our showroom. Feel the difference in our organic cottons, recycled blends, and performance fabrics.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Complete Production</h4>
-                <p style="margin-bottom: 1.5rem;">Cut & sew, screen printing, embroidery, custom trims, labeling, and finishing. Flexible MOQs for any brand size.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">Quality Promise</h4>
-                <p style="margin-bottom: 1.5rem;">Multi-stage quality checks and certified sustainable practices guarantee responsible craftsmanship.</p>
-
-                <h4 style="color: #ffffff; font-weight: 700; margin: 2rem 0 1rem 0; font-size: 1.3rem; letter-spacing: 0.05em;">On-Time Delivery</h4>
-                <p style="margin-bottom: 0;">Fast sampling, clear communication, and reliable global shipping.</p>
-              </div>
-            </div>
-
-          </div>
         </div>
         
         <!-- Thumbnails -->
@@ -1499,7 +1299,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     currentSlideIndex = slideIndex;
-    updateProductInfo(slideIndex);
     updateActiveFilterTab(slideIndex);
 
     // Scroll thumbnail bar to show active slide
@@ -1509,27 +1308,6 @@ document.addEventListener('DOMContentLoaded', function() {
     playCurrentVideo(slideIndex);
   }
   
-  // Update product information
-  function updateProductInfo(slideIndex) {
-    if (!categoryMap[slideIndex]) return;
-    
-    const currentSlide = categoryMap[slideIndex];
-    const productIndex = currentSlide.productIndex;
-    const category = currentSlide.filter;
-    
-    // Hide all product info
-    section.querySelectorAll('.factory-item-info-' + sectionId).forEach(info => {
-      info.style.display = 'none';
-      info.classList.remove('active');
-    });
-    
-    // Show correct product info
-    const targetInfo = section.querySelector(`.factory-item-info-${sectionId}[data-product="${productIndex}"][data-filter="${category}"]`);
-    if (targetInfo) {
-      targetInfo.style.display = 'block';
-      targetInfo.classList.add('active');
-    }
-  }
   
   // Update active filter tab
   function updateActiveFilterTab(slideIndex) {
@@ -1746,18 +1524,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // Update current filter immediately
       currentFilter = category;
 
-      // Handle content switching for static content
-      const infoItems = section.querySelectorAll('.factory-item-info-' + sectionId);
-      infoItems.forEach(info => {
-        info.style.display = 'none';
-        info.classList.remove('active');
-      });
-
-      const activeInfo = section.querySelector(`.factory-item-info-${sectionId}[data-filter="${category}"]`);
-      if (activeInfo) {
-        activeInfo.style.display = 'block';
-        activeInfo.classList.add('active');
-      }
 
       // Scroll thumbnail bar to show category images
       scrollToCategory(category);
