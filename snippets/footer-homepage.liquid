@@ -39,7 +39,8 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin: 0;
+    color: rgba(var(--color-foreground), 1);
   }
 
   .footer-block__paragraph {
@@ -284,7 +285,7 @@
                         {% elsif form.posted_successfully? %}
                           aria-describedby="ContactFooter-success"
                         {% endif %}
-                        placeholder="{{ 'newsletter.label' | t }}"
+                        placeholder="Enter your email address"
                         required
                       >
                     </div>  
