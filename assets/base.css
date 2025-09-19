@@ -13,22 +13,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Ensure all containers respect viewport boundaries (excluding modals) */
-.page-width,
-.container,
-[class*="v10-"]:not(.v10-modal):not([class*="modal"]),
-[class*="popup"]:not(.v10-modal):not([class*="modal"]) {
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Specifically target problematic elements that cause overflow */
-.v10-btn--tour,
-[class*="95vw"],
-.slider__slide--full-width {
-  max-width: calc(100vw - 32px) !important;
-  box-sizing: border-box !important;
-}
+/* MINIMAL: Only fix the specific overflow issues without breaking layouts */
 
 /* ===============================================
    MOBILE DYNAMIC VIEWPORT FIX
