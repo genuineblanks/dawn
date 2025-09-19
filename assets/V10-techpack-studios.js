@@ -16979,21 +16979,6 @@ class V10_ReviewManager {
       const requestTypeLabel = this.getRequestTypeLabel(requestType);
 
       successDetails.innerHTML = `
-        <!-- Prominent Request ID Box -->
-        <div class="v10-request-id-box">
-          <div class="v10-request-id-label">Your Request ID</div>
-          <div class="v10-request-id-value">${submissionId}</div>
-          <button type="button" class="v10-copy-id-btn" onclick="navigator.clipboard.writeText('${submissionId}').then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy ID', 2000); })">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            Copy ID
-          </button>
-          <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
-        </div>
-
-        <!-- Other Details -->
         <div class="success-detail">
           <strong>Request Type:</strong> ${requestTypeLabel}
         </div>
@@ -17009,12 +16994,59 @@ class V10_ReviewManager {
         <div class="success-detail">
           <strong>Next Steps:</strong> Check your email for confirmation and updates
         </div>
+
+        <div class="v10-request-id-box">
+          <div class="v10-request-id-label">Your Request ID</div>
+          <div class="v10-request-id-value">${submissionId}</div>
+          <button type="button" class="v10-copy-id-btn" data-copy-text="${submissionId}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy ID
+          </button>
+          <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
+        </div>
       `;
     }
 
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // Add copy functionality for Request ID
+    const copyBtn = document.querySelector('.v10-copy-id-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const textToCopy = copyBtn.getAttribute('data-copy-text');
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22,4 12,14.01 9,11.01"/>
+            </svg>
+            Copied!
+          `;
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy text: ', err);
+          copyBtn.textContent = 'Copy failed';
+          setTimeout(() => {
+            copyBtn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy ID
+            `;
+          }, 2000);
+        }
+      });
+    }
 
     // Bind close event to continue button and close button
     const continueBtn = document.getElementById('success-continue');
