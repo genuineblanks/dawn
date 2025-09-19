@@ -73,21 +73,9 @@
 
   .newsletter-form__button {
     height: 50px;
-    background: rgba(var(--color-foreground), 1) !important;
-    color: rgba(var(--color-background), 1) !important;
-    border: none !important;
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.1em !important;
-    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     transition: all 0.3s ease;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 0.5rem !important;
-    font-family: inherit !important;
-    text-transform: none !important;
-    border-radius: 0 !important;
   }
 
   .newsletter-form__button:hover {
@@ -226,6 +214,9 @@
                       {%- if settings.brand_description != blank -%}
                         <div class="rte">{{ settings.brand_description }}</div>
                       {%- endif -%}
+                      {%- if block.settings.show_social and has_social_icons -%}
+                        {%- render 'social-icons', class: 'footer__list-social' -%}
+                      {%- endif -%}
                     </div>
                   {%- when 'image' -%}
                     <div class="footer-block__details-content footer-block-image {{ block.settings.alignment }}">
@@ -335,6 +326,9 @@
           {%- endif -%}
            
 
+          {%- if section.settings.show_social and has_social_icons -%}
+            {%- render 'social-icons', class: 'footer__list-social' -%}
+          {%- endif -%}
         </div>
          <div class="footer__column footer__column--info">
           {%- if section.settings.payment_enable -%} 
