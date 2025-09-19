@@ -1484,9 +1484,9 @@ document.addEventListener('DOMContentLoaded', function() {
     sectionObserver.observe(section);
   }
 
-  // Set initial state
+  // Set initial state - jump to PRODUCTION (team) category
   setTimeout(() => {
-    showSlide(0);
+    jumpToCategory('team');
   }, 100);
   
   // Auto-play functionality (optional)
