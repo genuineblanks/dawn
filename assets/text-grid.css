@@ -29,17 +29,17 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  border: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
   outline: none;
   
-  /* Modern Card Design - Match theme gray */
+  /* Embedded button design - sunken into background */
   background: #f3f3f3 !important;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 0;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* Inset shadows to create embedded appearance */
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.6);
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -51,10 +51,15 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* No color change on hover - keep everything consistent */
+/* Clear hover effect - lift button and lighten background */
 .textGrid a:hover {
-  background: #f3f3f3 !important;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #f8f8f8 !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  /* Transform from inset to elevated */
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 /* Keep text exactly the same on hover - no changes */
@@ -177,10 +182,11 @@ body .textGrid a[href]:nth-child(even) {
 @media screen and (max-width: 768px) {
   .textGrid a {
     min-height: 100px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    /* Mobile embedded appearance */
+    box-shadow:
+      inset 2px 2px 3px rgba(0, 0, 0, 0.08),
+      inset -1px -1px 2px rgba(255, 255, 255, 0.5);
   }
   
   .textGrid a:last-child {
@@ -188,8 +194,13 @@ body .textGrid a[href]:nth-child(even) {
   }
   
   .textGrid a:hover {
-    background: #f3f3f3 !important;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: #f8f8f8 !important;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    /* Mobile hover effect - slightly less dramatic */
+    box-shadow:
+      0 1px 6px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.08);
+    transform: translateY(-0.5px);
   }
   
   .textGrid .grid {
@@ -249,11 +260,17 @@ section.text-grid .textGrid a * {
   color: #000000 !important;
 }
 
-/* Clean accessibility - Match Website Style */
+/* Clean accessibility - Enhanced for embedded design */
 .textGrid a:focus {
-  outline: 2px solid rgba(44, 44, 44, 0.3);
+  outline: 2px solid rgba(44, 44, 44, 0.4);
   outline-offset: 4px;
   border-radius: 2px;
+  /* Also lift on focus for keyboard users */
+  background: #f8f8f8 !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 /* Reduced motion */
