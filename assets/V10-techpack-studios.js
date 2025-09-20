@@ -16730,7 +16730,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwqqQIJzBziWr4GMjyvRcF89UO0MeczFU_2oF_5QsP6-LFPLIafiCjovSbSxP2JQJWutw/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16772,7 +16772,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwqqQIJzBziWr4GMjyvRcF89UO0MeczFU_2oF_5QsP6-LFPLIafiCjovSbSxP2JQJWutw/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17262,6 +17262,12 @@ class V10_ReviewManager {
     // Use company name as display name if no personal name (for quotations/bulk orders)
     const displayName = clientData.name || clientData.company || 'Not provided';
 
+    // Debug modal manager state
+    console.log('🔍 DEBUG Modal Manager State:');
+    console.log('🔍 window.v10ModalManager exists:', !!window.v10ModalManager);
+    console.log('🔍 currentClientType value:', window.v10ModalManager?.currentClientType);
+    console.log('🔍 Is currentClientType === "new"?', window.v10ModalManager?.currentClientType === 'new');
+
     // Base data that all request types get
     const baseData = {
       company: clientData.company || 'Not provided',
@@ -17269,6 +17275,8 @@ class V10_ReviewManager {
       email: clientData.email || 'office@genuineblanks.com',
       isNewClient: window.v10ModalManager?.currentClientType === 'new' || false
     };
+
+    console.log('🔍 Final isNewClient value:', baseData.isNewClient);
 
     // Add additional fields based on request type
     if (requestType === 'quotation') {
