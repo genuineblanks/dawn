@@ -16748,11 +16748,11 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    // Direct Google Apps Script URL
-    // ✅ CONFIGURED: Your actual Google Apps Script deployment URL with individual setHeader() CORS
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
+    // Proxy URL - CORS-free server-side forwarding to Google Apps Script
+    // ✅ GUARANTEED: No CORS issues, server handles all external requests
+    const appsScriptUrl = '/api/techpack-proxy';
 
-    console.log('🚀 Sending directly to Google Apps Script:', {
+    console.log('🚀 Sending via proxy to Google Apps Script:', {
       url: appsScriptUrl,
       submissionId: submissionData.submission_id,
       requestType: submissionData.request_type,
@@ -16760,7 +16760,7 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
-    // Send directly to Google Apps Script
+    // Send via proxy to Google Apps Script (CORS-free)
     try {
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
@@ -16795,7 +16795,7 @@ class V10_ReviewManager {
       };
 
     } catch (error) {
-      console.error('❌ Google Apps Script submission failed:', error.message);
+      console.error('❌ Proxy submission failed:', error.message);
 
       // Provide helpful error information for debugging
       if (error.message.includes('404')) {
