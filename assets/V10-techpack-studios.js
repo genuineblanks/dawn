@@ -11,6 +11,10 @@ if (typeof window.V10_CONFIG !== 'undefined') {
   console.log('V10 TechPack Studios already loaded, skipping initialization');
 } else {
 
+// Store original fetch before Shopify overrides it
+window.ORIGINAL_FETCH = window.ORIGINAL_FETCH || window.fetch;
+console.log('💾 Original fetch function stored before Shopify overrides');
+
 const V10_CONFIG = {
   // Fabric Type Mapping (updated to match pricing table)
   FABRIC_TYPE_MAPPING: {
@@ -16747,10 +16751,98 @@ class V10_ReviewManager {
     });
   }
 
+  // Detect Shopify environment and fetch overrides
+  detectShopifyEnvironment() {
+    const shopifyIndicators = {
+      hasShopifyAnalytics: typeof window.ShopifyAnalytics !== 'undefined',
+      hasShopifyPayments: typeof window.Shopify !== 'undefined',
+      hasShopEvents: document.querySelector('script[src*="shop_events_listener"]') !== null,
+      fetchOverridden: window.fetch.toString().includes('shop_events_listener') || window.fetch.name !== 'fetch',
+      hasWindow2Fetch: typeof window.window2 !== 'undefined' && typeof window.window2.fetch === 'function',
+      userAgent: navigator.userAgent.includes('Shopify'),
+      origin: window.location.origin
+    };
+
+    console.log('🔍 Shopify Environment Detection:', shopifyIndicators);
+
+    if (shopifyIndicators.fetchOverridden || shopifyIndicators.hasShopEvents) {
+      console.warn('⚠️ Shopify fetch override detected - using XMLHttpRequest fallback');
+    }
+
+    if (shopifyIndicators.hasWindow2Fetch) {
+      console.warn('⚠️ Window2.fetch detected - this is causing CORS issues');
+    }
+
+    return shopifyIndicators;
+  }
+
+  // XMLHttpRequest method to bypass Shopify's fetch override
+  async sendViaXHR(url, data) {
+    return new Promise((resolve, reject) => {
+      console.log('🔄 Using XMLHttpRequest to bypass Shopify fetch override');
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Content-Type', 'text/plain');
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          console.log('📡 XHR Response received:', {
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseLength: xhr.responseText?.length || 0
+          });
+
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const responseData = JSON.parse(xhr.responseText);
+              resolve({
+                ok: true,
+                status: xhr.status,
+                statusText: xhr.statusText,
+                data: responseData
+              });
+            } catch (parseError) {
+              console.error('❌ Failed to parse XHR response:', parseError);
+              reject(new Error('Invalid JSON response from Google Apps Script'));
+            }
+          } else {
+            reject(new Error(`XHR Request failed: ${xhr.status} ${xhr.statusText}`));
+          }
+        }
+      };
+
+      xhr.onerror = function() {
+        console.error('❌ XHR Network error');
+        reject(new Error('Network error during XHR request'));
+      };
+
+      xhr.ontimeout = function() {
+        console.error('❌ XHR Request timeout');
+        reject(new Error('Request timeout'));
+      };
+
+      // Set timeout to 30 seconds
+      xhr.timeout = 30000;
+
+      try {
+        xhr.send(JSON.stringify(data));
+        console.log('📤 XHR Request sent successfully');
+      } catch (sendError) {
+        console.error('❌ Failed to send XHR request:', sendError);
+        reject(sendError);
+      }
+    });
+  }
+
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
     const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
+
+    // Detect if we're in Shopify environment with fetch override
+    this.detectShopifyEnvironment();
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -16760,26 +16852,16 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
-    // Send directly to Google Apps Script (avoid preflight with text/plain)
+    // SOLUTION: Use XMLHttpRequest to bypass Shopify's fetch override
+    // Shopify's shop_events_listener overrides fetch but not XHR
     try {
-      const response = await fetch(appsScriptUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: JSON.stringify(submissionData)
-      });
+      const response = await this.sendViaXHR(appsScriptUrl, submissionData);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          error: 'Unknown error',
-          message: `HTTP ${response.status}: ${response.statusText}`
-        }));
-
-        throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const result = response.data;
 
       console.log('✅ Google Apps Script response received:', {
         success: result.success,
@@ -16795,7 +16877,7 @@ class V10_ReviewManager {
       };
 
     } catch (error) {
-      console.error('❌ Proxy submission failed:', error.message);
+      console.error('❌ XHR submission failed:', error.message);
 
       // Provide helpful error information for debugging
       if (error.message.includes('404')) {
