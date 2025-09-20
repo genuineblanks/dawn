@@ -16772,7 +16772,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycby2jinSU2TRlPhYjcYM0moFiGrF5DuAwpJ3Ic-kzyFZUsSk8NjCgJt0I4ESCzTLnk7H0Q/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
