@@ -16730,7 +16730,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZpCG5zeh5kFYyECt8tmS6WqKUIytNjxosO9XDvwHER5aw56-AM6uZ4hfRoa7ojAmflg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16772,7 +16772,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZpCG5zeh5kFYyECt8tmS6WqKUIytNjxosO9XDvwHER5aw56-AM6uZ4hfRoa7ojAmflg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
