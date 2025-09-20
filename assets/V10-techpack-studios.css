@@ -12306,66 +12306,96 @@ select:focus {
   margin-right: var(--v10-space-2);
 }
 
-/* Request ID Box Styling */
+/* Request ID Box Styling - TechPack Dark Theme */
 .v10-request-id-box {
-  background: rgba(16, 185, 129, 0.1);
-  border: 2px solid var(--v10-accent-primary);
-  border-radius: var(--v10-radius-lg);
+  background: var(--v10-bg-card);
+  border: 1px solid #404040;
+  border-radius: 0;
   padding: var(--v10-space-6);
   margin-bottom: var(--v10-space-6);
-  text-align: center;
+  text-align: left;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .v10-request-id-label {
   font-size: var(--v10-text-sm);
   color: var(--v10-text-secondary);
-  margin-bottom: var(--v10-space-2);
+  margin-bottom: var(--v10-space-3);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
-.v10-request-id-value {
-  font-size: var(--v10-text-2xl);
-  font-weight: 700;
-  color: var(--v10-accent-primary);
-  font-family: 'Courier New', monospace;
+/* Unified Button Container */
+.v10-request-id-container {
+  display: flex;
+  align-items: stretch;
+  background: var(--v10-bg-input);
+  border: 1px solid #404040;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-bottom: var(--v10-space-4);
-  word-break: break-all;
-  line-height: 1.3;
 }
 
+/* Request ID styled as button/input */
+.v10-request-id-value {
+  flex: 1;
+  background: var(--v10-bg-input);
+  color: var(--v10-text-primary);
+  font-family: 'Courier New', monospace;
+  font-size: var(--v10-text-lg);
+  font-weight: 600;
+  padding: var(--v10-space-4) var(--v10-space-5);
+  border: none;
+  word-break: break-all;
+  line-height: 1.2;
+  user-select: all;
+  cursor: text;
+  transition: background-color 0.2s ease;
+}
+
+.v10-request-id-value:hover {
+  background: var(--v10-bg-hover);
+}
+
+/* Copy button attached to Request ID */
 .v10-copy-id-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--v10-space-2);
-  background: var(--v10-accent-primary);
-  color: white;
+  background: #2a2a2a;
+  color: var(--v10-text-primary);
   border: none;
-  padding: var(--v10-space-3) var(--v10-space-4);
-  border-radius: var(--v10-radius-md);
+  border-left: 1px solid #404040;
+  padding: var(--v10-space-4) var(--v10-space-5);
   font-size: var(--v10-text-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: var(--v10-space-3);
+  white-space: nowrap;
+  min-width: 120px;
+  justify-content: center;
 }
 
 .v10-copy-id-btn:hover {
-  background: var(--v10-accent-secondary);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  background: #3a3a3a;
+  color: #ffffff;
+  transform: none;
+  box-shadow: none;
 }
 
 .v10-copy-id-btn:active {
-  transform: translateY(0);
+  background: #1a1a1a;
+  transform: none;
 }
 
 .v10-request-id-note {
   font-size: var(--v10-text-xs);
   color: var(--v10-text-muted);
   font-style: italic;
+  margin-top: var(--v10-space-2);
 }
 
 /* Mobile Responsive Adjustments */
@@ -12393,5 +12423,22 @@ select:focus {
   .v10-modal-actions .v10-btn {
     width: 100%;
     min-width: unset;
+  }
+
+  /* Request ID Mobile Responsiveness */
+  .v10-request-id-container {
+    flex-direction: column;
+  }
+
+  .v10-copy-id-btn {
+    border-left: none;
+    border-top: 1px solid #404040;
+    min-width: unset;
+    padding: var(--v10-space-3) var(--v10-space-4);
+  }
+
+  .v10-request-id-value {
+    font-size: var(--v10-text-base);
+    padding: var(--v10-space-3) var(--v10-space-4);
   }
 }
