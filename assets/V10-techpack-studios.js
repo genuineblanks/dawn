@@ -16676,19 +16676,19 @@ class V10_ReviewManager {
   async processFilesForSubmission(submissionData) {
     console.log('🔧 Processing files for submission...');
 
-    // Get actual file data from file manager since we removed it from submission data
+    // Get actual file data from file manager for upload to Google Apps Script
     const uploadedFiles = this.getUploadedFiles();
     console.log(`📁 Retrieved ${uploadedFiles.length} files from file manager`);
 
-    // Clear existing files array and rebuild with actual file data
+    // Clear existing files array and rebuild with actual file data for Google Apps Script upload
     submissionData.files = [];
 
-    // Process each file from file manager and add to submission
+    // Process each file from file manager and add file data for upload
     for (let i = 0; i < uploadedFiles.length; i++) {
       const fileInfo = uploadedFiles[i];
       console.log(`📎 Processing file ${i + 1}: ${fileInfo.name}`);
 
-      // Get actual file data
+      // Get actual file data for upload
       let fileData = null;
       if (fileInfo.data || fileInfo.dataUrl) {
         fileData = fileInfo.data || fileInfo.dataUrl;
@@ -16702,7 +16702,8 @@ class V10_ReviewManager {
         }
       }
 
-      // Add file to submission data with actual data for upload
+      // Add file to submission data with file data for Google Apps Script upload
+      // Note: Google Apps Script will create clean JSON without this file data
       submissionData.files.push({
         name: fileInfo.name,
         size: fileInfo.size || fileInfo.actualSize || 0,
@@ -16711,20 +16712,11 @@ class V10_ReviewManager {
       });
     }
 
-    console.log(`📊 Files prepared for upload: ${submissionData.files.length} files`);
+    console.log(`📊 Files prepared for Google Apps Script upload: ${submissionData.files.length} files`);
 
-    // Add file processing metadata
+    // Add processing metadata
     const filesWithData = submissionData.files.filter(f => f.data);
-    const filesWithoutData = submissionData.files.filter(f => !f.data);
-
-    submissionData.files_processed = {
-      total_files: submissionData.files.length,
-      processed_files: filesWithData.length,
-      failed_files: filesWithoutData.length,
-      processed_at: new Date().toISOString()
-    };
-
-    console.log(`📊 File processing complete: ${filesWithData.length}/${submissionData.files.length} files have data`);
+    console.log(`📊 File processing complete: ${filesWithData.length}/${submissionData.files.length} files have data for upload`);
   }
 
   async convertFileToBase64(file) {
