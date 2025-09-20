@@ -16604,8 +16604,8 @@ class V10_ReviewManager {
       files: uploadedFiles.map(file => ({
         name: file.name || file.fileName || 'Unknown file',
         size: file.size || file.fileSize || 0,
-        type: file.type || file.fileType || 'unknown',
-        data: file.data || file.dataUrl || null // Will be processed in processFilesForSubmission
+        type: file.type || file.fileType || 'unknown'
+        // Removed data/dataUrl - files are uploaded separately, no need in JSON
       })),
       costs: costs,
       metadata: {
@@ -16676,77 +16676,55 @@ class V10_ReviewManager {
   async processFilesForSubmission(submissionData) {
     console.log('🔧 Processing files for submission...');
 
-    // Validate files have data before processing
-    const totalFiles = submissionData.files.length;
-    const filesWithData = submissionData.files.filter(f => f.data || f.dataUrl);
-    const filesWithoutData = submissionData.files.filter(f => !(f.data || f.dataUrl));
+    // Get actual file data from file manager since we removed it from submission data
+    const uploadedFiles = this.getUploadedFiles();
+    console.log(`📁 Retrieved ${uploadedFiles.length} files from file manager`);
 
-    console.log(`📊 File validation: ${filesWithData.length}/${totalFiles} files have data`);
+    // Clear existing files array and rebuild with actual file data
+    submissionData.files = [];
 
-    if (filesWithoutData.length > 0) {
-      console.warn('⚠️ Files missing data:', filesWithoutData.map(f => f.name));
-    }
+    // Process each file from file manager and add to submission
+    for (let i = 0; i < uploadedFiles.length; i++) {
+      const fileInfo = uploadedFiles[i];
+      console.log(`📎 Processing file ${i + 1}: ${fileInfo.name}`);
 
-    // Convert files to base64 for webhook compatibility
-    for (let i = 0; i < submissionData.files.length; i++) {
-      const file = submissionData.files[i];
-      console.log(`📎 Processing file ${i + 1}: ${file.name}`);
-
-      // If file doesn't have data, try to get it from various sources
-      if (!file.data) {
-        console.log(`⚠️ File ${file.name} has no data, attempting to retrieve...`);
-
-        // Try to get from file object
-        if (file.file) {
-          try {
-            console.log(`🔄 Converting ${file.name} from File object to base64...`);
-            file.data = await this.convertFileToBase64(file.file);
-            console.log(`✅ Successfully converted ${file.name} to base64`);
-          } catch (error) {
-            console.warn(`❌ Failed to convert file ${file.name} to base64:`, error);
-            file.data = null;
-            file.error = 'Failed to process file';
-          }
+      // Get actual file data
+      let fileData = null;
+      if (fileInfo.data || fileInfo.dataUrl) {
+        fileData = fileInfo.data || fileInfo.dataUrl;
+        console.log(`✅ File ${fileInfo.name} has data (length: ${fileData.length})`);
+      } else if (fileInfo.file) {
+        try {
+          fileData = await this.convertFileToBase64(fileInfo.file);
+          console.log(`✅ Converted ${fileInfo.name} to base64`);
+        } catch (error) {
+          console.error(`❌ Failed to convert ${fileInfo.name}:`, error);
         }
-        // Try to get from file manager with actual file data
-        else if (window.v10FileManager && window.v10FileManager.getFileData) {
-          try {
-            console.log(`🔄 Attempting to get ${file.name} data from file manager...`);
-            const fileData = await window.v10FileManager.getFileData(file.name);
-            if (fileData) {
-              file.data = fileData;
-              console.log(`✅ Retrieved ${file.name} data from file manager`);
-            } else {
-              console.warn(`⚠️ File manager returned no data for ${file.name}`);
-              file.error = 'No file data available';
-            }
-          } catch (error) {
-            console.warn(`❌ Failed to get file data from manager for ${file.name}:`, error);
-            file.error = 'Failed to retrieve file data';
-          }
-        }
-        // Try to get from stored file data if available
-        else {
-          console.warn(`⚠️ No file data source available for ${file.name}`);
-          file.error = 'No file data source available';
-        }
-      } else {
-        console.log(`✅ File ${file.name} already has data`);
       }
 
-      // Remove the original file object to reduce payload size
-      delete file.file;
+      // Add file to submission data with actual data for upload
+      submissionData.files.push({
+        name: fileInfo.name,
+        size: fileInfo.size || fileInfo.actualSize || 0,
+        type: fileInfo.type || 'unknown',
+        data: fileData
+      });
     }
 
+    console.log(`📊 Files prepared for upload: ${submissionData.files.length} files`);
+
     // Add file processing metadata
+    const filesWithData = submissionData.files.filter(f => f.data);
+    const filesWithoutData = submissionData.files.filter(f => !f.data);
+
     submissionData.files_processed = {
       total_files: submissionData.files.length,
-      processed_files: submissionData.files.filter(f => f.data).length,
-      failed_files: submissionData.files.filter(f => f.error).length,
+      processed_files: filesWithData.length,
+      failed_files: filesWithoutData.length,
       processed_at: new Date().toISOString()
     };
 
-    console.log(`📊 File processing complete: ${submissionData.files_processed.processed_files}/${submissionData.files_processed.total_files} files processed successfully`);
+    console.log(`📊 File processing complete: ${filesWithData.length}/${submissionData.files.length} files have data`);
   }
 
   async convertFileToBase64(file) {
