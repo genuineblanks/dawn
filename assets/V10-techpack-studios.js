@@ -16730,7 +16730,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbw4hNJDzgtVKNwIPpRunq__Wy-O4p_d7ZFRlbjtB5t8PkNtTYirJfRgnOCXjjnJzG24tA/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycby2jinSU2TRlPhYjcYM0moFiGrF5DuAwpJ3Ic-kzyFZUsSk8NjCgJt0I4ESCzTLnk7H0Q/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
