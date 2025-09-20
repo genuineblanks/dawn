@@ -16760,12 +16760,12 @@ class V10_ReviewManager {
       garmentsCount: submissionData.records.garments.length
     });
 
-    // Send via proxy to Google Apps Script (CORS-free)
+    // Send directly to Google Apps Script (avoid preflight with text/plain)
     try {
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain'
         },
         body: JSON.stringify(submissionData)
       });
