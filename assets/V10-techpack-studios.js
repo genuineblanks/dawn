@@ -16748,11 +16748,11 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    // Proxy URL - CORS-free server-side forwarding to Google Apps Script
-    // ✅ GUARANTEED: No CORS issues, server handles all external requests
-    const appsScriptUrl = '/api/techpack-proxy';
+    // Direct Google Apps Script URL with simplified CORS headers
+    // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
-    console.log('🚀 Sending via proxy to Google Apps Script:', {
+    console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
       submissionId: submissionData.submission_id,
       requestType: submissionData.request_type,
