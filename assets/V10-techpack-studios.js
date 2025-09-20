@@ -16676,6 +16676,17 @@ class V10_ReviewManager {
   async processFilesForSubmission(submissionData) {
     console.log('🔧 Processing files for submission...');
 
+    // Validate files have data before processing
+    const totalFiles = submissionData.files.length;
+    const filesWithData = submissionData.files.filter(f => f.data || f.dataUrl);
+    const filesWithoutData = submissionData.files.filter(f => !(f.data || f.dataUrl));
+
+    console.log(`📊 File validation: ${filesWithData.length}/${totalFiles} files have data`);
+
+    if (filesWithoutData.length > 0) {
+      console.warn('⚠️ Files missing data:', filesWithoutData.map(f => f.name));
+    }
+
     // Convert files to base64 for webhook compatibility
     for (let i = 0; i < submissionData.files.length; i++) {
       const file = submissionData.files[i];
@@ -17321,38 +17332,39 @@ class V10_ReviewManager {
   getUploadedFiles() {
     console.log('🔍 Getting uploaded files for review...');
     
-    // Try to get from Step 2 file manager first
+    // Try to get from Step 2 file manager first - ENHANCED VERSION
     if (window.v10FileManager) {
       console.log('✅ v10FileManager found');
-      
-      // Try multiple methods to get files from file manager
-      let realFiles = [];
-      
+
+      // Use the new getUploadedFiles method that includes base64 data
       if (window.v10FileManager.getUploadedFiles) {
-        realFiles = window.v10FileManager.getUploadedFiles();
-      } else if (window.v10FileManager.uploadedFiles) {
-        realFiles = Array.from(window.v10FileManager.uploadedFiles.values());
+        const realFiles = window.v10FileManager.getUploadedFiles();
+
+        if (realFiles && realFiles.length > 0) {
+          console.log(`📁 Found ${realFiles.length} files from file manager with data`);
+
+          // Validate that files have data
+          const filesWithData = realFiles.filter(file => file.hasData && (file.data || file.dataUrl));
+          const filesWithoutData = realFiles.filter(file => !file.hasData || !(file.data || file.dataUrl));
+
+          console.log(`✅ Files with data: ${filesWithData.length}`);
+          console.log(`❌ Files without data: ${filesWithoutData.length}`);
+
+          if (filesWithoutData.length > 0) {
+            console.warn('⚠️ Some files are missing data:', filesWithoutData.map(f => f.name));
+          }
+
+          return realFiles; // Return all files, even those without data for debugging
+        }
       }
 
-      if (realFiles && realFiles.length > 0) {
-        console.log(`📁 Found ${realFiles.length} files from file manager`);
-
-        // Ensure files have the actual file objects for processing
-        realFiles = realFiles.map(file => {
-          // If file has dataUrl but no data, use dataUrl as data
-          if (!file.data && file.dataUrl) {
-            file.data = file.dataUrl;
-          }
-
-          // If file has blob/file object, ensure it's accessible
-          if (file.file || file.blob) {
-            file.file = file.file || file.blob;
-          }
-
-          return file;
-        });
-
-        return realFiles;
+      // Fallback to old method if new method doesn't exist
+      else if (window.v10FileManager.uploadedFiles) {
+        const realFiles = Array.from(window.v10FileManager.uploadedFiles.values());
+        if (realFiles && realFiles.length > 0) {
+          console.log(`📁 Found ${realFiles.length} files from file manager (fallback method)`);
+          return realFiles;
+        }
       }
     }
     
@@ -19225,20 +19237,21 @@ class V10_FileManager {
     }
   }
 
-  handleFiles(files) {
+  async handleFiles(files) {
     const fileArray = Array.from(files);
-    
+
     // Check total file count
     if (this.uploadedFiles.size + fileArray.length > this.maxFiles) {
       this.showError(`Maximum ${this.maxFiles} files allowed`);
       return;
     }
-    
-    fileArray.forEach(file => {
+
+    // Process files sequentially to avoid overwhelming the system
+    for (const file of fileArray) {
       if (this.validateFile(file)) {
-        this.addFile(file);
+        await this.addFile(file);
       }
-    });
+    }
     
     this.validateStep();
   }
@@ -19260,19 +19273,45 @@ class V10_FileManager {
     return true;
   }
 
-  addFile(file) {
+  async addFile(file) {
     const fileId = Date.now() + Math.random();
+    console.log(`📎 Processing file for immediate base64 conversion: ${file.name}`);
+
+    // Convert file to base64 immediately to preserve data
+    let fileDataUrl = null;
+    try {
+      fileDataUrl = await this.convertFileToBase64(file);
+      console.log(`✅ Successfully converted ${file.name} to base64`);
+    } catch (error) {
+      console.error(`❌ Failed to convert ${file.name} to base64:`, error);
+    }
+
     const fileData = {
       id: fileId,
-      file: file,
+      file: file,                    // Keep original File object as backup
       name: file.name,
       size: this.formatFileSize(file.size),
-      uploaded: false
+      type: file.type,
+      actualSize: file.size,         // Numeric size for validation
+      data: fileDataUrl,             // Base64 data URL
+      dataUrl: fileDataUrl,          // Alternative property name
+      uploaded: false,
+      processedAt: new Date().toISOString()
     };
-    
+
     this.uploadedFiles.set(fileId, fileData);
     this.renderFileCard(fileData);
     this.saveData();
+  }
+
+  // Helper method to convert File to base64
+  async convertFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   }
 
   renderFileCard(fileData) {
@@ -19721,6 +19760,30 @@ class V10_FileManager {
     
     console.log('✅ Step transition completed successfully');
     return true;
+  }
+
+  // Get uploaded files with their actual data
+  getUploadedFiles() {
+    const filesArray = Array.from(this.uploadedFiles.values());
+    console.log(`📁 V10_FileManager returning ${filesArray.length} files with data`);
+
+    // Validate and ensure each file has data
+    return filesArray.map(fileData => {
+      const hasData = !!(fileData.data || fileData.dataUrl);
+      console.log(`📎 File ${fileData.name}: hasData=${hasData}, size=${fileData.actualSize}`);
+
+      return {
+        id: fileData.id,
+        name: fileData.name,
+        size: fileData.actualSize || 0,
+        type: fileData.type || 'unknown',
+        data: fileData.data || fileData.dataUrl || null,
+        dataUrl: fileData.dataUrl || fileData.data || null,
+        file: fileData.file,  // Keep original File object as backup
+        hasData: hasData,
+        processedAt: fileData.processedAt
+      };
+    });
   }
 
   getFileData() {
