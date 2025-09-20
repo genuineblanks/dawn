@@ -16750,7 +16750,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL
     // ✅ CONFIGURED: Your actual Google Apps Script deployment URL with CORS headers
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFtyYsuMnnNBn1n_aM8DdWRSVd6xDZrHwWEaFUDO_osmWTtwWTbXAfk2gRKU7xjmzI5A/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbxGwYStWJl6-8-PaA_7keYI8KyxD2wMHPCIfSAghNHKqWCmGBjD3rsI6CdZMQBVmmdOxQ/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
