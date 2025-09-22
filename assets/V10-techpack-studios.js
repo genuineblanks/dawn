@@ -16788,7 +16788,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+macros    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17214,7 +17214,8 @@ class V10_ReviewManager {
             deliveryAddress2: realClientData.deliveryAddress2 || '',
             deliveryCity: realClientData.deliveryCity || '',
             deliveryState: realClientData.deliveryState || '',
-            deliveryZip: realClientData.deliveryZip || ''
+            deliveryZip: realClientData.deliveryZip || '',
+            deliveryCountry: realClientData.deliveryCountry || ''
           };
 
         } else if (requestType === 'bulk-order-request') {
@@ -17235,7 +17236,8 @@ class V10_ReviewManager {
             deliveryAddress2: realClientData.deliveryAddress2 || '',
             deliveryCity: realClientData.deliveryCity || '',
             deliveryState: realClientData.deliveryState || '',
-            deliveryZip: realClientData.deliveryZip || ''
+            deliveryZip: realClientData.deliveryZip || '',
+            deliveryCountry: realClientData.deliveryCountry || ''
           };
         }
 
@@ -17255,13 +17257,14 @@ class V10_ReviewManager {
 
     // Address fields
     const deliveryAddressRadio = document.querySelector('input[name="deliveryAddress"]:checked');
-    const deliveryNameInput = document.querySelector('input[name="deliveryName"]');
+    const deliveryNameInput = document.querySelector('input[name="deliveryContactName"]'); // Fixed: was deliveryName
     const deliveryPhoneInput = document.querySelector('input[name="deliveryPhone"]');
     const address1Input = document.querySelector('input[name="deliveryAddress1"]');
     const address2Input = document.querySelector('input[name="deliveryAddress2"]');
     const cityInput = document.querySelector('input[name="deliveryCity"]');
     const stateInput = document.querySelector('input[name="deliveryState"]');
     const postalInput = document.querySelector('input[name="deliveryPostal"]');
+    const countryInput = document.querySelector('select[name="deliveryCountry"]'); // Added: country dropdown
     
     // Shipping fields (for bulk orders)
     const shippingMethodRadio = document.querySelector('input[name="shippingMethod"]:checked');
@@ -17274,6 +17277,11 @@ class V10_ReviewManager {
     if (phoneInput) clientData.phone = phoneInput.value;
     
     // Collect address data
+    console.log('🔍 DELIVERY RADIO DEBUG:');
+    console.log('🔍 deliveryAddressRadio found:', !!deliveryAddressRadio);
+    console.log('🔍 deliveryAddressRadio value:', deliveryAddressRadio?.value);
+    console.log('🔍 deliveryAddressRadio checked:', deliveryAddressRadio?.checked);
+
     if (deliveryAddressRadio) {
       clientData.deliveryType = deliveryAddressRadio.value === 'company' ? 'Company Address' : 'Different Address';
 
@@ -17291,6 +17299,13 @@ class V10_ReviewManager {
         clientData.deliveryCity = cityInput?.value || '';
         clientData.deliveryState = stateInput?.value || '';
         clientData.deliveryZip = postalInput?.value || '';
+        clientData.deliveryCountry = countryInput?.value || '';
+
+        // DEBUG: Log field collection
+        console.log('🔍 FIELD COLLECTION DEBUG:');
+        console.log('🔍 deliveryNameInput found:', !!deliveryNameInput, 'value:', deliveryNameInput?.value);
+        console.log('🔍 postalInput found:', !!postalInput, 'value:', postalInput?.value);
+        console.log('🔍 countryInput found:', !!countryInput, 'value:', countryInput?.value);
 
         // Combined address for backward compatibility
         const addressParts = [];
@@ -17311,7 +17326,8 @@ class V10_ReviewManager {
           deliveryAddress2: clientData.deliveryAddress2,
           deliveryCity: clientData.deliveryCity,
           deliveryState: clientData.deliveryState,
-          deliveryZip: clientData.deliveryZip
+          deliveryZip: clientData.deliveryZip,
+          deliveryCountry: clientData.deliveryCountry
         });
       } else {
         console.log('🔍 ADDRESS COLLECTION using company address, clearing different address fields');
@@ -17323,6 +17339,7 @@ class V10_ReviewManager {
         clientData.deliveryCity = '';
         clientData.deliveryState = '';
         clientData.deliveryZip = '';
+        clientData.deliveryCountry = '';
       }
     }
     
@@ -17382,6 +17399,7 @@ class V10_ReviewManager {
     };
 
     console.log('🔍 CLIENT DEBUG baseData.isNewClient:', baseData.isNewClient);
+    console.log('🔍 CLIENT DEBUG clientData before processing:', clientData);
 
     // Add additional fields based on request type
     if (requestType === 'quotation') {
@@ -17402,7 +17420,8 @@ class V10_ReviewManager {
         deliveryAddress2: clientData.deliveryAddress2 || '',
         deliveryCity: clientData.deliveryCity || '',
         deliveryState: clientData.deliveryState || '',
-        deliveryZip: clientData.deliveryZip || ''
+        deliveryZip: clientData.deliveryZip || '',
+        deliveryCountry: clientData.deliveryCountry || ''
       };
 
     } else if (requestType === 'bulk-order-request') {
@@ -17421,7 +17440,8 @@ class V10_ReviewManager {
         deliveryAddress2: clientData.deliveryAddress2 || '',
         deliveryCity: clientData.deliveryCity || '',
         deliveryState: clientData.deliveryState || '',
-        deliveryZip: clientData.deliveryZip || ''
+        deliveryZip: clientData.deliveryZip || '',
+        deliveryCountry: clientData.deliveryCountry || ''
       };
     }
 
