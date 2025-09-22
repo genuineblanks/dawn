@@ -16730,7 +16730,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16772,7 +16772,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17262,12 +17262,6 @@ class V10_ReviewManager {
     // Use company name as display name if no personal name (for quotations/bulk orders)
     const displayName = clientData.name || clientData.company || 'Not provided';
 
-    // Debug modal manager state
-    console.log('🔍 DEBUG Modal Manager State:');
-    console.log('🔍 window.v10ModalManager exists:', !!window.v10ModalManager);
-    console.log('🔍 currentClientType value:', window.v10ModalManager?.currentClientType);
-    console.log('🔍 Is currentClientType === "new"?', window.v10ModalManager?.currentClientType === 'new');
-
     // BACKUP DETECTION: Check DOM state as fallback
     const statusBadge = document.getElementById('v10-client-status-badge');
     let isNewClientFromDOM = false;
@@ -17275,21 +17269,33 @@ class V10_ReviewManager {
       const badgeText = statusBadge.textContent?.trim().toLowerCase();
       const hasNewClientClass = statusBadge.classList.contains('v10-badge--new-client');
       isNewClientFromDOM = badgeText === 'new client' || hasNewClientClass;
-
-      console.log('🔍 BACKUP DETECTION from DOM:');
-      console.log('🔍 Status badge text:', badgeText);
-      console.log('🔍 Has new client class:', hasNewClientClass);
-      console.log('🔍 isNewClientFromDOM:', isNewClientFromDOM);
     }
 
-    // ROBUST DETECTION: Use multiple sources
+    // THIRD DETECTION: Check if modal manager exists and is initialized
+    let modalManagerExists = false;
+    let modalManagerClientType = null;
+    if (window.v10ModalManager) {
+      modalManagerExists = true;
+      modalManagerClientType = window.v10ModalManager.currentClientType;
+    }
+
+    // ROBUST DETECTION: Use multiple sources with priority
     const modalManagerIsNew = window.v10ModalManager?.currentClientType === 'new';
     const finalIsNewClient = modalManagerIsNew || isNewClientFromDOM;
 
-    console.log('🔍 ROBUST CLIENT TYPE DETECTION:');
-    console.log('🔍 Modal manager says new:', modalManagerIsNew);
-    console.log('🔍 DOM state says new:', isNewClientFromDOM);
-    console.log('🔍 Final isNewClient decision:', finalIsNewClient);
+    // ENHANCED DEBUG: Log all detection methods
+    console.log('🔍 ENHANCED CLIENT DETECTION:');
+    console.log('🔍 Modal manager exists:', modalManagerExists);
+    console.log('🔍 Modal manager client type:', modalManagerClientType);
+    console.log('🔍 Status badge exists:', !!statusBadge);
+    console.log('🔍 Status badge text:', statusBadge?.textContent?.trim());
+    console.log('🔍 Status badge has new class:', statusBadge?.classList.contains('v10-badge--new-client'));
+
+    // TEMPORARY DEBUG: Check what we're sending
+    console.log('🔍 CLIENT DEBUG modalManagerIsNew:', modalManagerIsNew);
+    console.log('🔍 CLIENT DEBUG isNewClientFromDOM:', isNewClientFromDOM);
+    console.log('🔍 CLIENT DEBUG finalIsNewClient:', finalIsNewClient);
+    console.log('🔍 CLIENT DEBUG finalIsNewClient type:', typeof finalIsNewClient);
 
     // Base data that all request types get
     const baseData = {
@@ -17299,7 +17305,7 @@ class V10_ReviewManager {
       isNewClient: finalIsNewClient
     };
 
-    console.log('🔍 Final isNewClient value in baseData:', baseData.isNewClient);
+    console.log('🔍 CLIENT DEBUG baseData.isNewClient:', baseData.isNewClient);
 
     // Add additional fields based on request type
     if (requestType === 'quotation') {
@@ -19824,15 +19830,12 @@ class V10_FileManager {
 
 class V10_ModalManager {
   constructor() {
-    console.log('🚀 V10_ModalManager constructor called');
     this.initialized = false;
     this.currentClientType = null;
     this.currentSubmissionType = null;
     this.modals = new Map();
 
-    console.log('🚀 Initial state - currentClientType:', this.currentClientType);
     this.init();
-    console.log('🚀 V10_ModalManager initialization completed');
   }
 
   init() {
@@ -19931,14 +19934,7 @@ class V10_ModalManager {
   }
 
   selectClientType(clientType) {
-    console.log('🎯 selectClientType called with:', clientType);
-    console.log('🎯 Before assignment - currentClientType was:', this.currentClientType);
-
     this.currentClientType = clientType;
-
-    console.log('🎯 After assignment - currentClientType now:', this.currentClientType);
-    console.log('🎯 Verification check - this.currentClientType === "new":', this.currentClientType === 'new');
-
     this.closeModal('client-verification');
 
     // Update submission modal for client type
@@ -20083,21 +20079,10 @@ class V10_ModalManager {
       const badgeText = isNew ? 'New Client' : 'Registered Client';
       const badgeClass = isNew ? 'v10-badge--new-client' : 'v10-badge--registered';
 
-      console.log('🏷️ UPDATING STATUS BADGE:');
-      console.log('🏷️ currentClientType:', this.currentClientType);
-      console.log('🏷️ isNew calculation:', isNew);
-      console.log('🏷️ Setting badge text to:', badgeText);
-      console.log('🏷️ Setting badge class to:', badgeClass);
-
       statusBadge.textContent = badgeText;
       // Use CSS classes for badge styling
       statusBadge.classList.remove('v10-badge--new-client', 'v10-badge--registered');
       statusBadge.classList.add(badgeClass);
-
-      console.log('🏷️ Badge updated - final text:', statusBadge.textContent);
-      console.log('🏷️ Badge updated - final classes:', Array.from(statusBadge.classList).join(', '));
-    } else {
-      console.warn('🏷️ Status badge element not found!');
     }
     
     // Update subtitle based on submission type
@@ -20483,16 +20468,8 @@ class V10_ModalManager {
   }
 
   resetWorkflow() {
-    console.log('🔄 RESET WORKFLOW CALLED');
-    console.log('🔄 Before reset - currentClientType:', this.currentClientType);
-    console.log('🔄 Before reset - currentSubmissionType:', this.currentSubmissionType);
-
     this.currentClientType = null;
     this.currentSubmissionType = null;
-
-    console.log('🔄 After reset - currentClientType:', this.currentClientType);
-    console.log('🔄 After reset - currentSubmissionType:', this.currentSubmissionType);
-
     this.closeAllModals();
 
     // Show landing page, hide form
@@ -20728,11 +20705,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('techpack-v10-landing') ||
             document.getElementById('v10-client-verification-modal') ||
             document.getElementById('v10-submission-type-modal')) {
-          console.log('🚀 INITIALIZING MODAL MANAGER...');
-          console.log('🚀 Timestamp:', new Date().toISOString());
           window.v10ModalManager = new V10_ModalManager();
-          console.log('✅ Modal Manager initialized successfully');
-          console.log('✅ window.v10ModalManager available:', !!window.v10ModalManager);
+          console.log('✅ Modal Manager initialized');
         }
       } catch (modalError) {
         console.error('❌ Error initializing Modal Manager:', modalError);
