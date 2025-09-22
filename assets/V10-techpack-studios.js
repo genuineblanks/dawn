@@ -16776,7 +16776,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16818,7 +16818,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17205,9 +17205,6 @@ class V10_ReviewManager {
     if (window.v10ClientManager) {
       const realClientData = window.v10ClientManager.getClientData();
 
-      // DEBUG: Log what client manager returned
-      console.log('🔍 MAIN getClientData - client manager returned:', realClientData);
-      console.log('🔍 MAIN getClientData - isNewClient from client manager:', realClientData?.isNewClient);
 
       if (realClientData && Object.keys(realClientData).length > 0) {
         // For quotations and bulk orders, use company name as the display name if no personal name
@@ -17223,7 +17220,6 @@ class V10_ReviewManager {
           isNewClient: realClientData.isNewClient || false  // Include isNewClient from client manager
         };
 
-        console.log('🔍 MAIN getClientData - baseData with isNewClient:', baseData);
 
         // Add additional fields based on request type
         if (requestType === 'quotation') {
@@ -17327,19 +17323,12 @@ class V10_ReviewManager {
     if (phoneInput) clientData.phone = phoneInput.value;
     
     // Collect address data
-    console.log('🔍 DELIVERY RADIO DEBUG:');
-    console.log('🔍 deliveryAddressRadio found:', !!deliveryAddressRadio);
-    console.log('🔍 deliveryAddressRadio value:', deliveryAddressRadio?.value);
-    console.log('🔍 deliveryAddressRadio checked:', deliveryAddressRadio?.checked);
 
     if (deliveryAddressRadio) {
       clientData.deliveryType = deliveryAddressRadio.value === 'company' ? 'Company Address' : 'Different Address';
 
-      console.log('🔍 ADDRESS COLLECTION deliveryType set to:', clientData.deliveryType);
-
       if (deliveryAddressRadio.value === 'different') {
         // Collect individual address fields for different address
-        console.log('🔍 ADDRESS COLLECTION collecting different address fields');
 
         // Individual fields for JSON
         clientData.deliveryName = deliveryNameInput?.value || '';
@@ -17354,21 +17343,6 @@ class V10_ReviewManager {
           ? countryInput.options[countryInput.selectedIndex].text || ''
           : '';
 
-        // DEBUG: Log field collection
-        console.log('🔍 FIELD COLLECTION DEBUG:');
-        console.log('🔍 deliveryNameInput found:', !!deliveryNameInput, 'value:', deliveryNameInput?.value);
-        console.log('🔍 postalInput found:', !!postalInput, 'value:', postalInput?.value);
-        console.log('🔍 postalInput element:', postalInput);
-        console.log('🔍 postalInput attributes:', postalInput ? {
-          id: postalInput.id,
-          name: postalInput.name,
-          type: postalInput.type,
-          value: postalInput.value,
-          placeholder: postalInput.placeholder
-        } : 'null');
-        console.log('🔍 countryInput found:', !!countryInput, 'value:', countryInput?.value);
-        console.log('🔍 countryInput selectedIndex:', countryInput?.selectedIndex);
-        console.log('🔍 countryInput selected text:', countryInput?.selectedIndex >= 0 ? countryInput.options[countryInput.selectedIndex].text : 'none');
 
         // Combined address for backward compatibility
         const addressParts = [];
@@ -17382,18 +17356,7 @@ class V10_ReviewManager {
           clientData.address = addressParts.join(', ');
         }
 
-        console.log('🔍 ADDRESS COLLECTION individual fields:', {
-          deliveryName: clientData.deliveryName,
-          deliveryPhone: clientData.deliveryPhone,
-          deliveryAddress1: clientData.deliveryAddress1,
-          deliveryAddress2: clientData.deliveryAddress2,
-          deliveryCity: clientData.deliveryCity,
-          deliveryState: clientData.deliveryState,
-          deliveryZip: clientData.deliveryZip,
-          deliveryCountry: clientData.deliveryCountry
-        });
       } else {
-        console.log('🔍 ADDRESS COLLECTION using company address, clearing different address fields');
         // Clear different address fields when company address is selected
         clientData.deliveryName = '';
         clientData.deliveryPhone = '';
@@ -17439,19 +17402,7 @@ class V10_ReviewManager {
     const modalManagerIsNew = window.v10ModalManager?.currentClientType === 'new';
     const finalIsNewClient = modalManagerIsNew || isNewClientFromDOM;
 
-    // ENHANCED DEBUG: Log all detection methods
-    console.log('🔍 ENHANCED CLIENT DETECTION:');
-    console.log('🔍 Modal manager exists:', modalManagerExists);
-    console.log('🔍 Modal manager client type:', modalManagerClientType);
-    console.log('🔍 Status badge exists:', !!statusBadge);
-    console.log('🔍 Status badge text:', statusBadge?.textContent?.trim());
-    console.log('🔍 Status badge has new class:', statusBadge?.classList.contains('v10-badge--new-client'));
 
-    // TEMPORARY DEBUG: Check what we're sending
-    console.log('🔍 CLIENT DEBUG modalManagerIsNew:', modalManagerIsNew);
-    console.log('🔍 CLIENT DEBUG isNewClientFromDOM:', isNewClientFromDOM);
-    console.log('🔍 CLIENT DEBUG finalIsNewClient:', finalIsNewClient);
-    console.log('🔍 CLIENT DEBUG finalIsNewClient type:', typeof finalIsNewClient);
 
     // Base data that all request types get
     const baseData = {
@@ -17461,8 +17412,6 @@ class V10_ReviewManager {
       isNewClient: finalIsNewClient
     };
 
-    console.log('🔍 CLIENT DEBUG baseData.isNewClient:', baseData.isNewClient);
-    console.log('🔍 CLIENT DEBUG clientData before processing:', clientData);
 
     // Add additional fields based on request type
     if (requestType === 'quotation') {
@@ -19221,12 +19170,6 @@ class V10_ClientManager {
     // Final detection using multiple sources
     const isNewClient = modalManagerIsNew || isNewClientFromDOM;
 
-    // DEBUG: Log what client manager is returning
-    console.log('🔍 CLIENT MANAGER getClientData():');
-    console.log('🔍 Modal manager says new:', modalManagerIsNew);
-    console.log('🔍 DOM badge says new:', isNewClientFromDOM);
-    console.log('🔍 Final isNewClient value:', isNewClient);
-    console.log('🔍 Real-time form data:', realTimeData);
 
     // Merge localStorage data with real-time form data (real-time takes priority)
     return {
@@ -19282,7 +19225,6 @@ class V10_ClientManager {
           for (const selector of altPostalSelectors) {
             postalInput = document.querySelector(selector);
             if (postalInput) {
-              console.log('🔍 CLIENT MANAGER found postal field with selector:', selector);
               break;
             }
           }
@@ -19304,13 +19246,6 @@ class V10_ClientManager {
           ? countryInput.options[countryInput.selectedIndex].text || ''
           : '';
 
-        // DEBUG: Log field collection
-        console.log('🔍 CLIENT MANAGER FIELD COLLECTION:');
-        console.log('🔍 postalInput found:', !!postalInput, 'value:', postalInput?.value);
-        console.log('🔍 countryInput found:', !!countryInput, 'value:', countryInput?.value);
-        console.log('🔍 countryInput display text:', currentData.deliveryCountry);
-        console.log('🔍 deliveryZip collected:', currentData.deliveryZip);
-        console.log('🔍 deliveryCountry collected:', currentData.deliveryCountry);
       }
     }
 
