@@ -16730,7 +16730,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZpCG5zeh5kFYyECt8tmS6WqKUIytNjxosO9XDvwHER5aw56-AM6uZ4hfRoa7ojAmflg/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16772,7 +16772,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZpCG5zeh5kFYyECt8tmS6WqKUIytNjxosO9XDvwHER5aw56-AM6uZ4hfRoa7ojAmflg/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17268,15 +17268,38 @@ class V10_ReviewManager {
     console.log('🔍 currentClientType value:', window.v10ModalManager?.currentClientType);
     console.log('🔍 Is currentClientType === "new"?', window.v10ModalManager?.currentClientType === 'new');
 
+    // BACKUP DETECTION: Check DOM state as fallback
+    const statusBadge = document.getElementById('v10-client-status-badge');
+    let isNewClientFromDOM = false;
+    if (statusBadge) {
+      const badgeText = statusBadge.textContent?.trim().toLowerCase();
+      const hasNewClientClass = statusBadge.classList.contains('v10-badge--new-client');
+      isNewClientFromDOM = badgeText === 'new client' || hasNewClientClass;
+
+      console.log('🔍 BACKUP DETECTION from DOM:');
+      console.log('🔍 Status badge text:', badgeText);
+      console.log('🔍 Has new client class:', hasNewClientClass);
+      console.log('🔍 isNewClientFromDOM:', isNewClientFromDOM);
+    }
+
+    // ROBUST DETECTION: Use multiple sources
+    const modalManagerIsNew = window.v10ModalManager?.currentClientType === 'new';
+    const finalIsNewClient = modalManagerIsNew || isNewClientFromDOM;
+
+    console.log('🔍 ROBUST CLIENT TYPE DETECTION:');
+    console.log('🔍 Modal manager says new:', modalManagerIsNew);
+    console.log('🔍 DOM state says new:', isNewClientFromDOM);
+    console.log('🔍 Final isNewClient decision:', finalIsNewClient);
+
     // Base data that all request types get
     const baseData = {
       company: clientData.company || 'Not provided',
       name: displayName,
       email: clientData.email || 'office@genuineblanks.com',
-      isNewClient: window.v10ModalManager?.currentClientType === 'new' || false
+      isNewClient: finalIsNewClient
     };
 
-    console.log('🔍 Final isNewClient value:', baseData.isNewClient);
+    console.log('🔍 Final isNewClient value in baseData:', baseData.isNewClient);
 
     // Add additional fields based on request type
     if (requestType === 'quotation') {
@@ -19801,12 +19824,15 @@ class V10_FileManager {
 
 class V10_ModalManager {
   constructor() {
+    console.log('🚀 V10_ModalManager constructor called');
     this.initialized = false;
     this.currentClientType = null;
     this.currentSubmissionType = null;
     this.modals = new Map();
-    
+
+    console.log('🚀 Initial state - currentClientType:', this.currentClientType);
     this.init();
+    console.log('🚀 V10_ModalManager initialization completed');
   }
 
   init() {
@@ -19905,9 +19931,16 @@ class V10_ModalManager {
   }
 
   selectClientType(clientType) {
+    console.log('🎯 selectClientType called with:', clientType);
+    console.log('🎯 Before assignment - currentClientType was:', this.currentClientType);
+
     this.currentClientType = clientType;
+
+    console.log('🎯 After assignment - currentClientType now:', this.currentClientType);
+    console.log('🎯 Verification check - this.currentClientType === "new":', this.currentClientType === 'new');
+
     this.closeModal('client-verification');
-    
+
     // Update submission modal for client type
     this.updateSubmissionModalForClientType(clientType);
     this.openModal('submission-type');
@@ -20046,10 +20079,25 @@ class V10_ModalManager {
     // Update client status badge
     const statusBadge = document.getElementById('v10-client-status-badge');
     if (statusBadge) {
-      statusBadge.textContent = this.currentClientType === 'new' ? 'New Client' : 'Registered Client';
+      const isNew = this.currentClientType === 'new';
+      const badgeText = isNew ? 'New Client' : 'Registered Client';
+      const badgeClass = isNew ? 'v10-badge--new-client' : 'v10-badge--registered';
+
+      console.log('🏷️ UPDATING STATUS BADGE:');
+      console.log('🏷️ currentClientType:', this.currentClientType);
+      console.log('🏷️ isNew calculation:', isNew);
+      console.log('🏷️ Setting badge text to:', badgeText);
+      console.log('🏷️ Setting badge class to:', badgeClass);
+
+      statusBadge.textContent = badgeText;
       // Use CSS classes for badge styling
       statusBadge.classList.remove('v10-badge--new-client', 'v10-badge--registered');
-      statusBadge.classList.add(this.currentClientType === 'new' ? 'v10-badge--new-client' : 'v10-badge--registered');
+      statusBadge.classList.add(badgeClass);
+
+      console.log('🏷️ Badge updated - final text:', statusBadge.textContent);
+      console.log('🏷️ Badge updated - final classes:', Array.from(statusBadge.classList).join(', '));
+    } else {
+      console.warn('🏷️ Status badge element not found!');
     }
     
     // Update subtitle based on submission type
@@ -20435,10 +20483,18 @@ class V10_ModalManager {
   }
 
   resetWorkflow() {
+    console.log('🔄 RESET WORKFLOW CALLED');
+    console.log('🔄 Before reset - currentClientType:', this.currentClientType);
+    console.log('🔄 Before reset - currentSubmissionType:', this.currentSubmissionType);
+
     this.currentClientType = null;
     this.currentSubmissionType = null;
+
+    console.log('🔄 After reset - currentClientType:', this.currentClientType);
+    console.log('🔄 After reset - currentSubmissionType:', this.currentSubmissionType);
+
     this.closeAllModals();
-    
+
     // Show landing page, hide form
     const landingSection = document.getElementById('techpack-v10-landing');
     const formSection = document.getElementById('techpack-v10-step-1');
@@ -20669,11 +20725,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const initializeCore = async () => {
       // Initialize Modal System first (required for landing page workflow)
       try {
-        if (document.getElementById('techpack-v10-landing') || 
+        if (document.getElementById('techpack-v10-landing') ||
             document.getElementById('v10-client-verification-modal') ||
             document.getElementById('v10-submission-type-modal')) {
+          console.log('🚀 INITIALIZING MODAL MANAGER...');
+          console.log('🚀 Timestamp:', new Date().toISOString());
           window.v10ModalManager = new V10_ModalManager();
-          console.log('✅ Modal Manager initialized');
+          console.log('✅ Modal Manager initialized successfully');
+          console.log('✅ window.v10ModalManager available:', !!window.v10ModalManager);
         }
       } catch (modalError) {
         console.error('❌ Error initializing Modal Manager:', modalError);
