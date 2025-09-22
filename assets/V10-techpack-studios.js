@@ -19200,6 +19200,9 @@ class V10_ClientManager {
   getClientData() {
     const baseData = JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
 
+    // ENHANCED: Read real-time form values to ensure current data
+    const realTimeData = this.collectCurrentFormData();
+
     // NEW CLIENT DETECTION: Add isNewClient property based on modal manager state
     // This is the same detection logic from the main getClientData function
 
@@ -19223,12 +19226,106 @@ class V10_ClientManager {
     console.log('🔍 Modal manager says new:', modalManagerIsNew);
     console.log('🔍 DOM badge says new:', isNewClientFromDOM);
     console.log('🔍 Final isNewClient value:', isNewClient);
+    console.log('🔍 Real-time form data:', realTimeData);
 
-    // Add isNewClient to the returned data
+    // Merge localStorage data with real-time form data (real-time takes priority)
     return {
       ...baseData,
+      ...realTimeData,
       isNewClient: isNewClient
     };
+  }
+
+  /**
+   * Collect current form data in real-time (including delivery address fields)
+   */
+  collectCurrentFormData() {
+    const currentData = {};
+
+    // Basic fields
+    const companyInput = document.querySelector('input[name="company_name"], input[name="company"], #company');
+    const nameInput = document.querySelector('input[name="firstName"], input[name="name"], #firstName');
+    const emailInput = document.querySelector('input[name="email"], #email');
+    const phoneInput = document.querySelector('input[name="phone"], #phone');
+
+    if (companyInput) currentData.company = companyInput.value;
+    if (nameInput) currentData.name = nameInput.value;
+    if (emailInput) currentData.email = emailInput.value;
+    if (phoneInput) currentData.phone = phoneInput.value;
+
+    // Address fields - especially important for delivery zip and country
+    const deliveryAddressRadio = document.querySelector('input[name="deliveryAddress"]:checked');
+    if (deliveryAddressRadio) {
+      currentData.deliveryType = deliveryAddressRadio.value === 'company' ? 'Company Address' : 'Different Address';
+
+      if (deliveryAddressRadio.value === 'different') {
+        // Collect individual address fields for different address
+        const deliveryNameInput = document.querySelector('input[name="deliveryContactName"]');
+        const deliveryPhoneInput = document.querySelector('input[name="deliveryPhone"]');
+        const address1Input = document.querySelector('input[name="deliveryAddress1"]');
+        const address2Input = document.querySelector('input[name="deliveryAddress2"]');
+        const cityInput = document.querySelector('input[name="deliveryCity"]');
+        const stateInput = document.querySelector('input[name="deliveryState"]');
+
+        // Enhanced postal field collection with multiple selectors
+        let postalInput = document.querySelector('input[name="deliveryPostal"]');
+        if (!postalInput) {
+          const altPostalSelectors = [
+            'input[name="deliveryZip"]',
+            'input[name="postal"]',
+            'input[name="zip"]',
+            'input[id="delivery-postal"]',
+            'input[id*="postal"]',
+            'input[id*="zip"]'
+          ];
+
+          for (const selector of altPostalSelectors) {
+            postalInput = document.querySelector(selector);
+            if (postalInput) {
+              console.log('🔍 CLIENT MANAGER found postal field with selector:', selector);
+              break;
+            }
+          }
+        }
+
+        // Enhanced country field collection with display text extraction
+        const countryInput = document.querySelector('select[name="deliveryCountry"]');
+
+        currentData.deliveryName = deliveryNameInput?.value || '';
+        currentData.deliveryPhone = deliveryPhoneInput?.value || '';
+        currentData.deliveryAddress1 = address1Input?.value || '';
+        currentData.deliveryAddress2 = address2Input?.value || '';
+        currentData.deliveryCity = cityInput?.value || '';
+        currentData.deliveryState = stateInput?.value || '';
+        currentData.deliveryZip = postalInput?.value || '';
+
+        // Get country display text instead of value (e.g., "🇵🇹 Portugal" instead of "PT")
+        currentData.deliveryCountry = countryInput?.selectedIndex >= 0
+          ? countryInput.options[countryInput.selectedIndex].text || ''
+          : '';
+
+        // DEBUG: Log field collection
+        console.log('🔍 CLIENT MANAGER FIELD COLLECTION:');
+        console.log('🔍 postalInput found:', !!postalInput, 'value:', postalInput?.value);
+        console.log('🔍 countryInput found:', !!countryInput, 'value:', countryInput?.value);
+        console.log('🔍 countryInput display text:', currentData.deliveryCountry);
+        console.log('🔍 deliveryZip collected:', currentData.deliveryZip);
+        console.log('🔍 deliveryCountry collected:', currentData.deliveryCountry);
+      }
+    }
+
+    // Shipping fields (for bulk orders)
+    const shippingMethodRadio = document.querySelector('input[name="shippingMethod"]:checked');
+    const insuranceRadio = document.querySelector('input[name="insurance"]:checked');
+
+    if (shippingMethodRadio) {
+      currentData.shippingMethod = shippingMethodRadio.value === 'air' ? 'Air Freight' : 'Sea Freight';
+    }
+    if (insuranceRadio) {
+      currentData.insurance = insuranceRadio.value === 'yes' ? 'Yes' : 'No';
+    }
+
+    return currentData;
   }
 
   /**
