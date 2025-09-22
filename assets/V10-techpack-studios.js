@@ -15250,10 +15250,26 @@ class V10_ReviewManager {
     
     // Add delivery type for sample requests and bulk orders
     if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-      const deliveryType = clientData.deliveryType && clientData.deliveryType !== 'Not provided' 
-        ? clientData.deliveryType 
-        : 'Company Address'; // Default to Company Address
-      
+      // DEBUG: Check what deliveryType we have
+      console.log('🔍 REVIEW deliveryType from clientData:', clientData.deliveryType);
+
+      // Try to get deliveryType from clientData first, then fallback to DOM detection
+      let deliveryType = clientData.deliveryType;
+
+      // If not found in clientData, check the DOM directly
+      if (!deliveryType || deliveryType === 'Not provided') {
+        const deliveryRadio = document.querySelector('input[name="deliveryAddress"]:checked');
+        if (deliveryRadio) {
+          deliveryType = deliveryRadio.value === 'company' ? 'Company Address' : 'Different Address';
+          console.log('🔍 REVIEW deliveryType from DOM fallback:', deliveryType);
+        } else {
+          deliveryType = 'Company Address'; // Final fallback
+          console.log('🔍 REVIEW deliveryType using final fallback:', deliveryType);
+        }
+      }
+
+      console.log('🔍 REVIEW final deliveryType displayed:', deliveryType);
+
       clientFields += `
         <div class="review-detail">
           <span class="detail-label">Delivery Address:</span>
@@ -16730,7 +16746,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16772,7 +16788,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwFH2X_zoErJuAWAunNdsPfzwwcmiBybok-cYpVmHwm4sNUsvQaQ92i_bO2DJLJCn_6tg/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -17185,16 +17201,24 @@ class V10_ReviewManager {
           return baseData;
 
         } else if (requestType === 'sample-request') {
-          // SAMPLE REQUESTS: Add phone and delivery info
+          // SAMPLE REQUESTS: Add phone and delivery info + individual address fields
           return {
             ...baseData,
             phone: realClientData.phone || realClientData.Phone || 'Not provided',
             deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
-            address: realClientData.address || realClientData.Address || 'Not provided'
+            address: realClientData.address || realClientData.Address || 'Not provided',
+            // Individual address fields for different address
+            deliveryName: realClientData.deliveryName || '',
+            deliveryPhone: realClientData.deliveryPhone || '',
+            deliveryAddress1: realClientData.deliveryAddress1 || '',
+            deliveryAddress2: realClientData.deliveryAddress2 || '',
+            deliveryCity: realClientData.deliveryCity || '',
+            deliveryState: realClientData.deliveryState || '',
+            deliveryZip: realClientData.deliveryZip || ''
           };
 
         } else if (requestType === 'bulk-order-request') {
-          // BULK ORDERS: Full data including shipping and insurance
+          // BULK ORDERS: Full data including shipping and insurance + individual address fields
           return {
             ...baseData,
             phone: realClientData.phone || realClientData.Phone || 'Not provided',
@@ -17203,7 +17227,15 @@ class V10_ReviewManager {
             deliveryType: realClientData.deliveryType || realClientData.DeliveryType || 'Not provided',
             address: realClientData.address || realClientData.Address || 'Not provided',
             shippingMethod: realClientData.shippingMethod || realClientData.ShippingMethod || 'Not provided',
-            insurance: realClientData.insurance || realClientData.Insurance || 'Not provided'
+            insurance: realClientData.insurance || realClientData.Insurance || 'Not provided',
+            // Individual address fields for different address
+            deliveryName: realClientData.deliveryName || '',
+            deliveryPhone: realClientData.deliveryPhone || '',
+            deliveryAddress1: realClientData.deliveryAddress1 || '',
+            deliveryAddress2: realClientData.deliveryAddress2 || '',
+            deliveryCity: realClientData.deliveryCity || '',
+            deliveryState: realClientData.deliveryState || '',
+            deliveryZip: realClientData.deliveryZip || ''
           };
         }
 
@@ -17220,9 +17252,11 @@ class V10_ReviewManager {
     const nameInput = document.querySelector('input[name="deliveryContactName"], input[name="firstName"], input[name="name"], #firstName');
     const emailInput = document.querySelector('input[name="email"], #email');
     const phoneInput = document.querySelector('input[name="deliveryPhone"], input[name="phone"], #phone');
-    
+
     // Address fields
     const deliveryAddressRadio = document.querySelector('input[name="deliveryAddress"]:checked');
+    const deliveryNameInput = document.querySelector('input[name="deliveryName"]');
+    const deliveryPhoneInput = document.querySelector('input[name="deliveryPhone"]');
     const address1Input = document.querySelector('input[name="deliveryAddress1"]');
     const address2Input = document.querySelector('input[name="deliveryAddress2"]');
     const cityInput = document.querySelector('input[name="deliveryCity"]');
@@ -17242,19 +17276,53 @@ class V10_ReviewManager {
     // Collect address data
     if (deliveryAddressRadio) {
       clientData.deliveryType = deliveryAddressRadio.value === 'company' ? 'Company Address' : 'Different Address';
-      
+
+      console.log('🔍 ADDRESS COLLECTION deliveryType set to:', clientData.deliveryType);
+
       if (deliveryAddressRadio.value === 'different') {
-        // Collect full address details for different address
+        // Collect individual address fields for different address
+        console.log('🔍 ADDRESS COLLECTION collecting different address fields');
+
+        // Individual fields for JSON
+        clientData.deliveryName = deliveryNameInput?.value || '';
+        clientData.deliveryPhone = deliveryPhoneInput?.value || '';
+        clientData.deliveryAddress1 = address1Input?.value || '';
+        clientData.deliveryAddress2 = address2Input?.value || '';
+        clientData.deliveryCity = cityInput?.value || '';
+        clientData.deliveryState = stateInput?.value || '';
+        clientData.deliveryZip = postalInput?.value || '';
+
+        // Combined address for backward compatibility
         const addressParts = [];
         if (address1Input?.value) addressParts.push(address1Input.value);
         if (address2Input?.value) addressParts.push(address2Input.value);
         if (cityInput?.value) addressParts.push(cityInput.value);
         if (stateInput?.value) addressParts.push(stateInput.value);
         if (postalInput?.value) addressParts.push(postalInput.value);
-        
+
         if (addressParts.length > 0) {
           clientData.address = addressParts.join(', ');
         }
+
+        console.log('🔍 ADDRESS COLLECTION individual fields:', {
+          deliveryName: clientData.deliveryName,
+          deliveryPhone: clientData.deliveryPhone,
+          deliveryAddress1: clientData.deliveryAddress1,
+          deliveryAddress2: clientData.deliveryAddress2,
+          deliveryCity: clientData.deliveryCity,
+          deliveryState: clientData.deliveryState,
+          deliveryZip: clientData.deliveryZip
+        });
+      } else {
+        console.log('🔍 ADDRESS COLLECTION using company address, clearing different address fields');
+        // Clear different address fields when company address is selected
+        clientData.deliveryName = '';
+        clientData.deliveryPhone = '';
+        clientData.deliveryAddress1 = '';
+        clientData.deliveryAddress2 = '';
+        clientData.deliveryCity = '';
+        clientData.deliveryState = '';
+        clientData.deliveryZip = '';
       }
     }
     
@@ -17321,23 +17389,39 @@ class V10_ReviewManager {
       return baseData;
 
     } else if (requestType === 'sample-request') {
-      // SAMPLE REQUESTS: Add phone and delivery info
+      // SAMPLE REQUESTS: Add phone and delivery info + individual address fields
       return {
         ...baseData,
         phone: clientData.phone || 'Not provided',
         deliveryType: clientData.deliveryType || 'Not provided',
-        address: clientData.address || 'Not provided'
+        address: clientData.address || 'Not provided',
+        // Individual address fields for different address
+        deliveryName: clientData.deliveryName || '',
+        deliveryPhone: clientData.deliveryPhone || '',
+        deliveryAddress1: clientData.deliveryAddress1 || '',
+        deliveryAddress2: clientData.deliveryAddress2 || '',
+        deliveryCity: clientData.deliveryCity || '',
+        deliveryState: clientData.deliveryState || '',
+        deliveryZip: clientData.deliveryZip || ''
       };
 
     } else if (requestType === 'bulk-order-request') {
-      // BULK ORDERS: Full data including shipping and insurance
+      // BULK ORDERS: Full data including shipping and insurance + individual address fields
       return {
         ...baseData,
         phone: clientData.phone || 'Not provided',
         deliveryType: clientData.deliveryType || 'Not provided',
         address: clientData.address || 'Not provided',
         shippingMethod: clientData.shippingMethod || 'Not provided',
-        insurance: clientData.insurance || 'Not provided'
+        insurance: clientData.insurance || 'Not provided',
+        // Individual address fields for different address
+        deliveryName: clientData.deliveryName || '',
+        deliveryPhone: clientData.deliveryPhone || '',
+        deliveryAddress1: clientData.deliveryAddress1 || '',
+        deliveryAddress2: clientData.deliveryAddress2 || '',
+        deliveryCity: clientData.deliveryCity || '',
+        deliveryState: clientData.deliveryState || '',
+        deliveryZip: clientData.deliveryZip || ''
       };
     }
 
