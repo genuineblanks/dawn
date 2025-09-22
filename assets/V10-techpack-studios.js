@@ -17158,6 +17158,11 @@ class V10_ReviewManager {
     // Try to get from Step 1 client manager first
     if (window.v10ClientManager) {
       const realClientData = window.v10ClientManager.getClientData();
+
+      // DEBUG: Log what client manager returned
+      console.log('🔍 MAIN getClientData - client manager returned:', realClientData);
+      console.log('🔍 MAIN getClientData - isNewClient from client manager:', realClientData?.isNewClient);
+
       if (realClientData && Object.keys(realClientData).length > 0) {
         // For quotations and bulk orders, use company name as the display name if no personal name
         const personalName = realClientData.firstName || realClientData.name || realClientData.Name;
@@ -17168,12 +17173,15 @@ class V10_ReviewManager {
         const baseData = {
           company: companyName || 'Not provided',
           name: displayName,
-          email: realClientData.email || realClientData.Email || 'Not provided'
+          email: realClientData.email || realClientData.Email || 'Not provided',
+          isNewClient: realClientData.isNewClient || false  // Include isNewClient from client manager
         };
+
+        console.log('🔍 MAIN getClientData - baseData with isNewClient:', baseData);
 
         // Add additional fields based on request type
         if (requestType === 'quotation') {
-          // QUOTATIONS: Only name, company, email
+          // QUOTATIONS: Include isNewClient property
           return baseData;
 
         } else if (requestType === 'sample-request') {
@@ -19023,7 +19031,37 @@ class V10_ClientManager {
   }
 
   getClientData() {
-    return JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+    const baseData = JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+
+    // NEW CLIENT DETECTION: Add isNewClient property based on modal manager state
+    // This is the same detection logic from the main getClientData function
+
+    // Check modal manager state
+    const modalManagerIsNew = window.v10ModalManager?.currentClientType === 'new';
+
+    // Backup detection via DOM status badge
+    let isNewClientFromDOM = false;
+    const statusBadge = document.getElementById('v10-client-status-badge');
+    if (statusBadge) {
+      const badgeText = statusBadge.textContent?.trim().toLowerCase();
+      const hasNewClientClass = statusBadge.classList.contains('v10-badge--new-client');
+      isNewClientFromDOM = badgeText === 'new client' || hasNewClientClass;
+    }
+
+    // Final detection using multiple sources
+    const isNewClient = modalManagerIsNew || isNewClientFromDOM;
+
+    // DEBUG: Log what client manager is returning
+    console.log('🔍 CLIENT MANAGER getClientData():');
+    console.log('🔍 Modal manager says new:', modalManagerIsNew);
+    console.log('🔍 DOM badge says new:', isNewClientFromDOM);
+    console.log('🔍 Final isNewClient value:', isNewClient);
+
+    // Add isNewClient to the returned data
+    return {
+      ...baseData,
+      isNewClient: isNewClient
+    };
   }
 
   /**
