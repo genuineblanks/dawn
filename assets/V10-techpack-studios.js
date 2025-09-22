@@ -16680,8 +16680,38 @@ class V10_ReviewManager {
         progressPercentage: V10_State.quantities.progressPercentage
       };
 
+      // Enhanced garments data with colorway and size quantity breakdown
+      const enhancedGarments = garments.map(garment => {
+        const baseGarmentData = {
+          id: garment.id,
+          type: garment.type,
+          fabricType: garment.fabricType,
+          sampleReference: garment.sampleReference,
+          number: garment.number
+        };
+
+        // Get quantity data from V10_QuantityStudioManager if available
+        const quantityStudioData = window.v10QuantityStudio?.garments?.get(garment.id);
+        if (quantityStudioData && quantityStudioData.colorways && quantityStudioData.colorways.size > 0) {
+          // Convert colorways Map to regular object for JSON serialization
+          const colorwaysData = {};
+          quantityStudioData.colorways.forEach((colorway, colorwayId) => {
+            colorwaysData[colorwayId] = {
+              name: colorway.name || `Colorway ${colorwayId}`,
+              quantities: colorway.quantities || {},
+              subtotal: colorway.subtotal || 0
+            };
+          });
+
+          baseGarmentData.colorways = colorwaysData;
+          baseGarmentData.totalQuantity = quantityStudioData.total || 0;
+        }
+
+        return baseGarmentData;
+      });
+
       baseSubmission.records = {
-        garments: garments,
+        garments: enhancedGarments,
         quantities: quantityData
       };
     }
@@ -17263,7 +17293,27 @@ class V10_ReviewManager {
     const address2Input = document.querySelector('input[name="deliveryAddress2"]');
     const cityInput = document.querySelector('input[name="deliveryCity"]');
     const stateInput = document.querySelector('input[name="deliveryState"]');
-    const postalInput = document.querySelector('input[name="deliveryPostal"]');
+    // Try multiple selectors for postal field since it might vary
+    let postalInput = document.querySelector('input[name="deliveryPostal"]');
+    if (!postalInput) {
+      const altPostalSelectors = [
+        'input[name="deliveryZip"]',
+        'input[name="postal"]',
+        'input[name="zip"]',
+        'input[id="delivery-postal"]',
+        'input[id*="postal"]',
+        'input[id*="zip"]'
+      ];
+
+      for (const selector of altPostalSelectors) {
+        postalInput = document.querySelector(selector);
+        if (postalInput) {
+          console.log('🔍 Found postal field with alternative selector:', selector);
+          break;
+        }
+      }
+    }
+
     const countryInput = document.querySelector('select[name="deliveryCountry"]'); // Added: country dropdown
     
     // Shipping fields (for bulk orders)
@@ -17299,13 +17349,26 @@ class V10_ReviewManager {
         clientData.deliveryCity = cityInput?.value || '';
         clientData.deliveryState = stateInput?.value || '';
         clientData.deliveryZip = postalInput?.value || '';
-        clientData.deliveryCountry = countryInput?.value || '';
+        // Get country display text instead of value (e.g., "Portugal" instead of "PT")
+        clientData.deliveryCountry = countryInput?.selectedIndex >= 0
+          ? countryInput.options[countryInput.selectedIndex].text || ''
+          : '';
 
         // DEBUG: Log field collection
         console.log('🔍 FIELD COLLECTION DEBUG:');
         console.log('🔍 deliveryNameInput found:', !!deliveryNameInput, 'value:', deliveryNameInput?.value);
         console.log('🔍 postalInput found:', !!postalInput, 'value:', postalInput?.value);
+        console.log('🔍 postalInput element:', postalInput);
+        console.log('🔍 postalInput attributes:', postalInput ? {
+          id: postalInput.id,
+          name: postalInput.name,
+          type: postalInput.type,
+          value: postalInput.value,
+          placeholder: postalInput.placeholder
+        } : 'null');
         console.log('🔍 countryInput found:', !!countryInput, 'value:', countryInput?.value);
+        console.log('🔍 countryInput selectedIndex:', countryInput?.selectedIndex);
+        console.log('🔍 countryInput selected text:', countryInput?.selectedIndex >= 0 ? countryInput.options[countryInput.selectedIndex].text : 'none');
 
         // Combined address for backward compatibility
         const addressParts = [];
