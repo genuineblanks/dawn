@@ -455,7 +455,7 @@ const V10_Utils = {
 
     // Registered clients get sequential numbering
     try {
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
@@ -16912,7 +16912,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16954,7 +16954,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -20507,7 +20507,7 @@ class V10_ModalManager {
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
       // Real API validation
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
