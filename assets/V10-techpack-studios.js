@@ -17,7 +17,7 @@ const V10_CONFIG = {
     // Original submission webhook (handles file uploads and Drive storage)
     SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec',
     // Request ID webhook (handles ID validation and tracking)
-    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbwKRVg8g6y4JSoMggqmw2vhKwb3cZ2UNub4PQvX_oQU1pii1_SzOphPbdPiAxX0fDNp/exec'
+    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbwJtdANAWnQpMyYcAR2Qa3v3y9INF0Vlk6vLKJvjap9sB7GVCG_iw8MF-NJg6-jwduOtg/exec'
   },
 
   // Fabric Type Mapping (updated to match pricing table)
