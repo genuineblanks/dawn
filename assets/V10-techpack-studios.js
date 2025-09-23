@@ -12,6 +12,14 @@ if (typeof window.V10_CONFIG !== 'undefined') {
 } else {
 
 const V10_CONFIG = {
+  // Webhook URLs Configuration
+  WEBHOOKS: {
+    // Original submission webhook (handles file uploads and Drive storage)
+    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec',
+    // Request ID webhook (handles ID validation and tracking)
+    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbz0QGrGj-J3UQ3DNgPH77HHUf8HhB_6jnhTgHzF880yeKs7DA-V5CwRL6RxhXW_TsCV0g/exec'
+  },
+
   // Fabric Type Mapping (updated to match pricing table)
   FABRIC_TYPE_MAPPING: {
     'Zip-Up Hoodie': [
@@ -365,12 +373,14 @@ const V10_Utils = {
   generateId: (prefix = 'item') => `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
 
   // NEW: Generate TechPack Request IDs
-  generateTechPackId: async (companyName, clientType = 'new') => {
+  generateTechPackId: async (companyName, clientType = 'new', email = '', brandName = '') => {
     try {
       const clientCode = V10_Utils.generateClientCode(companyName);
       const dateCode = V10_Utils.formatDateDDMMYY(new Date());
-      const sequence = await V10_Utils.getDailySequence(clientCode, dateCode, clientType);
+      const actualBrandName = brandName || companyName; // Use brandName if provided, otherwise use companyName
+      const sequence = await V10_Utils.getDailySequence(clientCode, dateCode, clientType, email, actualBrandName);
 
+      console.log('🔢 Generated ID components:', { clientCode, dateCode, sequence, companyName, actualBrandName });
       return `${clientCode}-${dateCode}-${sequence}`;
     } catch (error) {
       console.error('Error generating TechPack ID:', error);
@@ -380,6 +390,8 @@ const V10_Utils = {
   },
 
   generateClientCode: (companyName) => {
+    console.log('🏷️ Generating client code for company:', companyName);
+
     // Clean company name
     const cleaned = companyName.toUpperCase()
       .replace(/&/g, 'AND')
@@ -387,22 +399,28 @@ const V10_Utils = {
       .replace(/\s+/g, ' ')
       .trim();
 
+    console.log('🧹 Cleaned company name:', cleaned);
+
     if (!cleaned) return 'UNKN';
 
     const words = cleaned.split(' ');
 
+    let result;
     if (words.length === 1) {
       // Single word: extract consonants and vowels strategically
-      return V10_Utils.extractFourChars(words[0]);
+      result = V10_Utils.extractFourChars(words[0]);
     } else if (words.length === 2) {
       // Two words: 2 chars from each
       const first = words[0].substring(0, 2);
       const second = words[1].substring(0, 2);
-      return (first + second).padEnd(4, 'X');
+      result = (first + second).padEnd(4, 'X');
     } else {
       // Multiple words: first char of first 4 words
-      return words.slice(0, 4).map(w => w[0] || 'X').join('').padEnd(4, 'X');
+      result = words.slice(0, 4).map(w => w[0] || 'X').join('').padEnd(4, 'X');
     }
+
+    console.log('🎯 Generated client code:', result);
+    return result;
   },
 
   extractFourChars: (word) => {
@@ -447,7 +465,7 @@ const V10_Utils = {
     return `${day}${month}${year}`;
   },
 
-  getDailySequence: async (clientCode, dateCode, clientType) => {
+  getDailySequence: async (clientCode, dateCode, clientType, email = '', brandName = '') => {
     if (clientType === 'new') {
       // New clients get random sequence - no Sheet check needed
       return Math.floor(Math.random() * 900 + 100).toString(); // Random 3-digit: 100-999
@@ -455,7 +473,9 @@ const V10_Utils = {
 
     // Registered clients get sequential numbering
     try {
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbz0QGrGj-J3UQ3DNgPH77HHUf8HhB_6jnhTgHzF880yeKs7DA-V5CwRL6RxhXW_TsCV0g/exec';
+      const appsScriptUrl = V10_CONFIG.WEBHOOKS.REQUEST_ID;
+
+      console.log('📞 Calling getNextSequence with:', { clientCode, dateCode, email, brandName });
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
@@ -467,8 +487,8 @@ const V10_Utils = {
           action: 'getNextSequence',
           clientCode: clientCode,
           dateCode: dateCode,
-          email: clientData?.email || '',
-          brandName: companyName
+          email: email,
+          brandName: brandName
         })
       });
 
@@ -16735,11 +16755,14 @@ class V10_ReviewManager {
       submissionId = window.v10ClientManager.parentRequestId;
     } else {
       // For quotation requests - generate new TechPack ID
-      const companyName = clientData.company_name || 'Unknown Company';
+      const companyName = clientData.company || clientData.company_name || clientData.Company || 'Unknown Company';
       const clientType = V10_State.clientType || 'new'; // From modal selection
 
+      console.log('🏢 Company name for ID generation:', companyName);
+      console.log('📋 Full client data:', clientData);
+
       try {
-        submissionId = await V10_Utils.generateTechPackId(companyName, clientType);
+        submissionId = await V10_Utils.generateTechPackId(companyName, clientType, clientData.email, companyName);
       } catch (error) {
         console.error('Error generating TechPack ID:', error);
         // Fallback to original format
@@ -16912,7 +16935,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16954,7 +16977,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
@@ -16978,6 +17001,29 @@ class V10_ReviewManager {
       // Note: no-cors mode prevents reading response details
       // We'll assume success if no network error occurred
       console.log('✅ Request sent successfully (no-cors mode)');
+
+      // CRITICAL: Store Request ID in tracking sheet after successful submission
+      try {
+        console.log('📝 Storing Request ID in tracking sheet...');
+        await fetch(V10_CONFIG.WEBHOOKS.REQUEST_ID, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify({
+            action: 'storeRequestId',
+            request_id: submissionData.submission_id,
+            client_data: submissionData.client_data,
+            request_type: submissionData.request_type,
+            client_type: submissionData.client_data?.isNewClient ? 'new' : 'registered'
+          })
+        });
+        console.log('✅ Request ID stored in tracking sheet');
+      } catch (storageError) {
+        console.warn('⚠️ Failed to store Request ID in tracking sheet:', storageError);
+        // Don't fail the whole submission if Request ID storage fails
+      }
 
       // Return a simulated success response since we can't read the actual response
       const result = {
@@ -20506,8 +20552,8 @@ class V10_ModalManager {
       validationMsg.textContent = 'Validating...';
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
-      // Real API validation
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbz0QGrGj-J3UQ3DNgPH77HHUf8HhB_6jnhTgHzF880yeKs7DA-V5CwRL6RxhXW_TsCV0g/exec';
+      // Real API validation - using dedicated Request ID webhook
+      const appsScriptUrl = V10_CONFIG.WEBHOOKS.REQUEST_ID;
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
