@@ -15,7 +15,7 @@ const V10_CONFIG = {
   // Webhook URLs Configuration
   WEBHOOKS: {
     // Original submission webhook (handles file uploads and Drive storage)
-    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbwKRVg8g6y4JSoMggqmw2vhKwb3cZ2UNub4PQvX_oQU1pii1_SzOphPbdPiAxX0fDNp/exec',
+    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec',
     // Request ID webhook (handles ID validation and tracking)
     REQUEST_ID: 'https://script.google.com/macros/s/AKfycbyw72CpJ1Au7M8gH4U4ZYZv-BbBoGwCCWOTWdt1xS6SNZY6icNZK85V6GjcHuMDFK1SjQ/exec'
   },
@@ -16912,7 +16912,7 @@ class V10_ReviewManager {
 
   // Test Google Apps Script independently to verify it's working
   async testGoogleAppsScript() {
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwKRVg8g6y4JSoMggqmw2vhKwb3cZ2UNub4PQvX_oQU1pii1_SzOphPbdPiAxX0fDNp/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
 
     console.log('🧪 Testing Google Apps Script independently...');
 
@@ -16954,7 +16954,7 @@ class V10_ReviewManager {
   async sendToWebhook(submissionData) {
     // Direct Google Apps Script URL with simplified CORS headers
     // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwKRVg8g6y4JSoMggqmw2vhKwb3cZ2UNub4PQvX_oQU1pii1_SzOphPbdPiAxX0fDNp/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
 
     console.log('🚀 Sending directly to Google Apps Script:', {
       url: appsScriptUrl,
