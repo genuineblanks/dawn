@@ -17,7 +17,7 @@ const V10_CONFIG = {
     // Original submission webhook (handles file uploads and Drive storage)
     SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec',
     // Request ID webhook (handles ID validation and tracking)
-    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbwJtdANAWnQpMyYcAR2Qa3v3y9INF0Vlk6vLKJvjap9sB7GVCG_iw8MF-NJg6-jwduOtg/exec'
+    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbwKRVg8g6y4JSoMggqmw2vhKwb3cZ2UNub4PQvX_oQU1pii1_SzOphPbdPiAxX0fDNp/exec'
   },
 
   // Fabric Type Mapping (updated to match pricing table)
@@ -465,55 +465,20 @@ const V10_Utils = {
     return `${day}${month}${year}`;
   },
 
-  getDailySequence: async (clientCode, dateCode, clientType, email = '', brandName = '') => {
+  getDailySequence: (clientCode, dateCode, clientType, email = '', brandName = '') => {
     if (clientType === 'new') {
       // New clients get random sequence - no Sheet check needed
       return Math.floor(Math.random() * 900 + 100).toString(); // Random 3-digit: 100-999
     }
 
-    // Registered clients get sequential numbering
-    try {
-      const appsScriptUrl = V10_CONFIG.WEBHOOKS.REQUEST_ID;
+    // Registered clients: Use temporary sequence that will be corrected by Apps Script
+    console.log('🔍 Getting sequence for registered client - using temporary sequence');
+    console.log('📋 Apps Script will generate correct sequence based on existing data');
 
-      console.log('📞 Calling getNextSequence with:', { clientCode, dateCode, email, brandName });
-
-      // TRY CORS MODE for sequence generation to read actual response
-      const response = await fetch(appsScriptUrl, {
-        method: 'POST',
-        mode: 'cors', // CHANGED: Use CORS to read the actual sequence response
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'getNextSequence',
-          clientCode: clientCode,
-          dateCode: dateCode,
-          email: email,
-          brandName: brandName
-        })
-      });
-
-      console.log('📡 Sequence response status:', response.status);
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Sequence response:', result);
-
-        if (result.success && result.nextSequence) {
-          console.log('🎯 Using sequence from sheet:', result.nextSequence);
-          return result.nextSequence;
-        }
-      }
-
-      // Fallback if response failed
-      console.warn('⚠️ Using fallback sequence 001');
-      return '001';
-
-    } catch (error) {
-      console.error('Error getting sequence from Sheets:', error);
-      return '001'; // Fallback
-    }
+    // Return temporary sequence - Apps Script will replace with correct sequence
+    return 'TEMP';
   },
+
 
   // Pantone validation
   validatePantone: (code) => {
@@ -17031,7 +16996,8 @@ class V10_ReviewManager {
             client_type: submissionData.client_data?.isNewClient ? 'new' : 'registered'
           })
         });
-        console.log('✅ Request ID stored in tracking sheet');
+
+        console.log('✅ Request ID sent to tracking sheet (Apps Script will generate final sequence)');
       } catch (storageError) {
         console.warn('⚠️ Failed to store Request ID in tracking sheet:', storageError);
         // Don't fail the whole submission if Request ID storage fails
