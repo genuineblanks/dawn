@@ -477,11 +477,12 @@ const V10_Utils = {
 
       console.log('📞 Calling getNextSequence with:', { clientCode, dateCode, email, brandName });
 
+      // TRY CORS MODE for sequence generation to read actual response
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
-        mode: 'no-cors', // Same as existing webhook setup
+        mode: 'cors', // CHANGED: Use CORS to read the actual sequence response
         headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           action: 'getNextSequence',
@@ -492,9 +493,20 @@ const V10_Utils = {
         })
       });
 
-      // Since we're using no-cors, we can't read the response
-      // For registered clients, assume sequence starts at 001
-      // TODO: Implement proper sequence tracking once Google Sheets are set up
+      console.log('📡 Sequence response status:', response.status);
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Sequence response:', result);
+
+        if (result.success && result.nextSequence) {
+          console.log('🎯 Using sequence from sheet:', result.nextSequence);
+          return result.nextSequence;
+        }
+      }
+
+      // Fallback if response failed
+      console.warn('⚠️ Using fallback sequence 001');
       return '001';
 
     } catch (error) {
