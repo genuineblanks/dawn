@@ -455,7 +455,7 @@ const V10_Utils = {
 
     // Registered clients get sequential numbering
     try {
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbz0QGrGj-J3UQ3DNgPH77HHUf8HhB_6jnhTgHzF880yeKs7DA-V5CwRL6RxhXW_TsCV0g/exec';
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
@@ -20507,7 +20507,7 @@ class V10_ModalManager {
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
       // Real API validation
-      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwZkfLd27JgFl_OnFGgcMaF2lWt499Pc2JjStWx1qgE9lWONE_2m27tJoKrT8pATfQuTw/exec';
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbz0QGrGj-J3UQ3DNgPH77HHUf8HhB_6jnhTgHzF880yeKs7DA-V5CwRL6RxhXW_TsCV0g/exec';
 
       const response = await fetch(appsScriptUrl, {
         method: 'POST',
