@@ -17228,8 +17228,13 @@ class V10_ReviewManager {
     const submissionId = response?.submissionId || `TP-${Date.now()}`;
     const isUsingParentId = window.v10ClientManager && window.v10ClientManager.parentRequestId;
 
+    // Conditional messages based on ID type and request type
+    const isTempId = submissionId.includes('TEMP');
+
     const messages = {
-      'quotation': `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours. <br><br><strong>Important:</strong> Save your Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> - you'll need this ID for any future sample requests or bulk orders.`,
+      'quotation': isTempId
+        ? `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.<br><br><strong>Important:</strong> Your final Request ID will be sent via email within 24 hours. You'll need this ID for any future sample requests or bulk orders.`
+        : `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours. <br><br><strong>Important:</strong> Save your Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> - you'll need this ID for any future sample requests or bulk orders.`,
       'sample-request': `Your sample request has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Production will begin immediately and samples will be shipped according to the specified timeframes. <br><br><strong>Important:</strong> Use this same Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> when placing your bulk order to maintain continuity.`,
       'bulk-order-request': `Your bulk order has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit. <br><br><strong>Order Tracking:</strong> All correspondence will reference Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>.`
     };
@@ -17262,20 +17267,29 @@ class V10_ReviewManager {
           <strong>Next Steps:</strong> Check your email for confirmation and updates
         </div>
 
-        <div class="v10-request-id-box">
-          <div class="v10-request-id-label">Your Request ID</div>
-          <div class="v10-request-id-container">
-            <div class="v10-request-id-value">${submissionId}</div>
-            <button type="button" class="v10-copy-id-btn" data-copy-text="${submissionId}">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-              Copy ID
-            </button>
-          </div>
-          <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
-        </div>
+        ${(requestType === 'quotation' && isTempId)
+          ? `<div class="v10-email-notification-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%); border: 1px solid #90caf9; border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center;">
+              <div class="v10-email-icon" style="font-size: 32px; margin-bottom: 12px;">📧</div>
+              <div class="v10-email-content">
+                <div class="v10-email-title" style="font-weight: 600; color: #1976d2; margin-bottom: 8px; font-size: 18px;">Final Request ID Delivery</div>
+                <div class="v10-email-message" style="color: #424242; line-height: 1.5;">Your unique Request ID is being processed and will be sent to your email within 24 hours. This ID will be required for any sample requests or bulk orders.</div>
+              </div>
+            </div>`
+          : `<div class="v10-request-id-box">
+              <div class="v10-request-id-label">Your Request ID</div>
+              <div class="v10-request-id-container">
+                <div class="v10-request-id-value">${submissionId}</div>
+                <button type="button" class="v10-copy-id-btn" data-copy-text="${submissionId}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  Copy ID
+                </button>
+              </div>
+              <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
+            </div>`
+        }
       `;
     }
 
@@ -17283,9 +17297,9 @@ class V10_ReviewManager {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    // Add copy functionality for Request ID
+    // Add copy functionality for Request ID (only for non-TEMP IDs)
     const copyBtn = document.querySelector('.v10-copy-id-btn');
-    if (copyBtn) {
+    if (copyBtn && !isTempId) {
       copyBtn.addEventListener('click', async () => {
         const textToCopy = copyBtn.getAttribute('data-copy-text');
         try {
