@@ -361,8 +361,127 @@ const V10_State = {
 // ==============================================
 
 const V10_Utils = {
-  // Generate unique IDs
+  // Generate unique IDs (legacy - keep for existing functionality)
   generateId: (prefix = 'item') => `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+
+  // NEW: Generate TechPack Request IDs
+  generateTechPackId: async (companyName, clientType = 'new') => {
+    try {
+      const clientCode = V10_Utils.generateClientCode(companyName);
+      const dateCode = V10_Utils.formatDateDDMMYY(new Date());
+      const sequence = await V10_Utils.getDailySequence(clientCode, dateCode, clientType);
+
+      return `${clientCode}-${dateCode}-${sequence}`;
+    } catch (error) {
+      console.error('Error generating TechPack ID:', error);
+      // Fallback to timestamp-based ID
+      return `UNKN-${V10_Utils.formatDateDDMMYY(new Date())}-${Math.floor(Math.random() * 900 + 100)}`;
+    }
+  },
+
+  generateClientCode: (companyName) => {
+    // Clean company name
+    const cleaned = companyName.toUpperCase()
+      .replace(/&/g, 'AND')
+      .replace(/[^A-Z\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!cleaned) return 'UNKN';
+
+    const words = cleaned.split(' ');
+
+    if (words.length === 1) {
+      // Single word: extract consonants and vowels strategically
+      return V10_Utils.extractFourChars(words[0]);
+    } else if (words.length === 2) {
+      // Two words: 2 chars from each
+      const first = words[0].substring(0, 2);
+      const second = words[1].substring(0, 2);
+      return (first + second).padEnd(4, 'X');
+    } else {
+      // Multiple words: first char of first 4 words
+      return words.slice(0, 4).map(w => w[0] || 'X').join('').padEnd(4, 'X');
+    }
+  },
+
+  extractFourChars: (word) => {
+    if (word.length <= 4) return word.padEnd(4, 'X');
+
+    // Strategy: first char + strategic middle chars + last char
+    const first = word[0];
+    const last = word[word.length - 1];
+    const middle = word.slice(1, -1);
+
+    // Try to get consonants first, then vowels
+    const consonants = middle.match(/[BCDFGHJKLMNPQRSTVWXYZ]/g) || [];
+    const vowels = middle.match(/[AEIOU]/g) || [];
+
+    let result = first;
+
+    // Add consonants first
+    for (let i = 0; i < consonants.length && result.length < 3; i++) {
+      result += consonants[i];
+    }
+
+    // Fill with vowels if needed
+    for (let i = 0; i < vowels.length && result.length < 3; i++) {
+      result += vowels[i];
+    }
+
+    // Fill with remaining chars if needed
+    for (let i = 1; i < middle.length && result.length < 3; i++) {
+      if (!result.includes(middle[i])) {
+        result += middle[i];
+      }
+    }
+
+    result += last;
+    return result.substring(0, 4);
+  },
+
+  formatDateDDMMYY: (date) => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}${month}${year}`;
+  },
+
+  getDailySequence: async (clientCode, dateCode, clientType) => {
+    if (clientType === 'new') {
+      // New clients get random sequence - no Sheet check needed
+      return Math.floor(Math.random() * 900 + 100).toString(); // Random 3-digit: 100-999
+    }
+
+    // Registered clients get sequential numbering
+    try {
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+
+      const response = await fetch(appsScriptUrl, {
+        method: 'POST',
+        mode: 'no-cors', // Same as existing webhook setup
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'getNextSequence',
+          clientCode: clientCode,
+          dateCode: dateCode,
+          email: clientData?.email || '',
+          brandName: companyName
+        })
+      });
+
+      // Since we're using no-cors, we can't read the response
+      // For registered clients, assume sequence starts at 001
+      // TODO: Implement proper sequence tracking once Google Sheets are set up
+      return '001';
+
+    } catch (error) {
+      console.error('Error getting sequence from Sheets:', error);
+      return '001'; // Fallback
+    }
+  },
 
   // Pantone validation
   validatePantone: (code) => {
@@ -16601,15 +16720,32 @@ class V10_ReviewManager {
   }
 
   async prepareEnhancedSubmissionData() {
-    // Generate unique submission ID
-    const submissionId = `TP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    // Get basic data components
+    // Get basic data components first
     const clientData = this.getClientData();
     const uploadedFiles = this.getUploadedFiles();
     const garments = Array.from(V10_State.garments.values());
     const costs = this.calculateCosts();
     const requestType = V10_State.requestType;
+
+    // Generate new TechPack ID or use validated parent ID
+    let submissionId;
+
+    if (window.v10ClientManager && window.v10ClientManager.parentRequestId) {
+      // For sample/bulk requests - use the validated parent ID
+      submissionId = window.v10ClientManager.parentRequestId;
+    } else {
+      // For quotation requests - generate new TechPack ID
+      const companyName = clientData.company_name || 'Unknown Company';
+      const clientType = V10_State.clientType || 'new'; // From modal selection
+
+      try {
+        submissionId = await V10_Utils.generateTechPackId(companyName, clientType);
+      } catch (error) {
+        console.error('Error generating TechPack ID:', error);
+        // Fallback to original format
+        submissionId = `TP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      }
+    }
 
     // Prepare base submission structure
     const baseSubmission = {
@@ -17065,22 +17201,27 @@ class V10_ReviewManager {
     if (!modal) return;
 
     const requestType = V10_State.requestType;
+    const submissionId = response?.submissionId || `TP-${Date.now()}`;
+    const isUsingParentId = window.v10ClientManager && window.v10ClientManager.parentRequestId;
+
     const messages = {
-      'quotation': 'Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.',
-      'sample-request': 'Your sample request has been submitted successfully. Production will begin immediately and samples will be shipped according to the specified timeframes.',
-      'bulk-order-request': 'Your bulk order has been submitted successfully. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit.'
+      'quotation': `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours. <br><br><strong>Important:</strong> Save your Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> - you'll need this ID for any future sample requests or bulk orders.`,
+      'sample-request': `Your sample request has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Production will begin immediately and samples will be shipped according to the specified timeframes. <br><br><strong>Important:</strong> Use this same Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> when placing your bulk order to maintain continuity.`,
+      'bulk-order-request': `Your bulk order has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit. <br><br><strong>Order Tracking:</strong> All correspondence will reference Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>.`
     };
 
     if (successMessage) {
-      successMessage.textContent = messages[requestType] || messages['quotation'];
+      successMessage.innerHTML = messages[requestType] || messages['quotation'];
     }
 
     if (successDetails) {
       const costs = this.calculateCosts();
-      const submissionId = response?.submissionId || `TP-${Date.now()}`;
       const requestTypeLabel = this.getRequestTypeLabel(requestType);
 
       successDetails.innerHTML = `
+        <div class="success-detail" style="background: #f8f9fa; padding: 12px; border-radius: 6px; border-left: 4px solid #007bff;">
+          <strong>Request ID:</strong> <span style="color: #007bff; font-family: monospace; font-size: 1.1em; font-weight: bold;">${submissionId}</span>
+        </div>
         <div class="success-detail">
           <strong>Request Type:</strong> ${requestTypeLabel}
         </div>
@@ -20150,13 +20291,19 @@ class V10_ModalManager {
       });
     }
 
-    // Submission type selection
+    // Submission type selection with validation intercept
     const submissionBtns = document.querySelectorAll('.v10-submission-option');
     submissionBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const submissionType = btn.getAttribute('data-submission-type');
         if (submissionType && !btn.disabled) {
-          this.selectSubmissionType(submissionType);
+          // Check if this requires Request ID validation
+          if (submissionType === 'sample-request' || submissionType === 'bulk-order-request') {
+            this.openRequestIdValidation(submissionType);
+          } else {
+            // Quotation and other types proceed normally
+            this.selectSubmissionType(submissionType);
+          }
         }
       });
     });
@@ -20168,6 +20315,9 @@ class V10_ModalManager {
         this.openModal('submission-type');
       });
     }
+
+    // Request ID validation modal events
+    this.setupRequestIdValidation();
   }
 
   selectClientType(clientType) {
@@ -20278,6 +20428,208 @@ class V10_ModalManager {
     // Show the actual form and hide landing page
     this.showClientForm();
     this.updateFormForSubmissionType(submissionType);
+  }
+
+  // NEW: Request ID validation methods
+  openRequestIdValidation(submissionType) {
+    this.pendingSubmissionType = submissionType;
+    this.closeModal('submission-type');
+
+    // Register the new modal
+    const requestIdModal = document.getElementById('v10-request-id-modal');
+    if (requestIdModal) {
+      this.modals.set('request-id', requestIdModal);
+    }
+
+    this.openModal('request-id');
+
+    // Update modal title based on type
+    const titleElement = document.querySelector('#v10-request-id-modal .v10-modal-title');
+    if (titleElement) {
+      const titles = {
+        'sample-request': 'Sample Request Verification',
+        'bulk-order-request': 'Bulk Order Verification'
+      };
+      titleElement.textContent = titles[submissionType] || 'Request ID Verification';
+    }
+  }
+
+  setupRequestIdValidation() {
+    const modal = document.getElementById('v10-request-id-modal');
+    const input = document.getElementById('v10-request-id-input');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
+    const cancelBtn = document.getElementById('v10-request-id-cancel');
+    const validationMsg = document.getElementById('v10-request-id-validation');
+
+    if (!modal || !input || !proceedBtn) return;
+
+    // Real-time validation as user types
+    let validationTimeout;
+    input.addEventListener('input', (e) => {
+      clearTimeout(validationTimeout);
+      const value = e.target.value.toUpperCase();
+      e.target.value = value; // Force uppercase
+
+      if (value.length >= 15) {
+        validationTimeout = setTimeout(() => {
+          this.validateRequestId(value);
+        }, 500);
+      } else {
+        this.clearValidation();
+      }
+    });
+
+    // Proceed button
+    if (proceedBtn) {
+      proceedBtn.addEventListener('click', () => {
+        if (this.isValidRequestId) {
+          this.proceedWithValidatedId();
+        }
+      });
+    }
+
+    // Cancel button
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        this.closeModal('request-id');
+        this.openModal('submission-type');
+      });
+    }
+  }
+
+  async validateRequestId(requestId) {
+    const validationMsg = document.getElementById('v10-request-id-validation');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
+
+    try {
+      // Show loading state
+      validationMsg.textContent = 'Validating...';
+      validationMsg.className = 'v10-validation-message v10-validation--loading';
+
+      // Real API validation
+      const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyq2VUJVgkftKTeUb3K4fOVZATgSwQ9saEtmgBnvG6uKNSbEY8peTECBA7WfiyV_LMC2w/exec';
+
+      const response = await fetch(appsScriptUrl, {
+        method: 'POST',
+        mode: 'no-cors', // Same as existing webhook setup
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'validateRequestId',
+          requestId: requestId,
+          expectedStage: this.getExpectedStage(),
+          email: this.getClientEmail(),
+          brandName: this.getClientBrandName()
+        })
+      });
+
+      // Since we're using no-cors, we can't read the response
+      // For now, fall back to format validation
+      // TODO: Switch to CORS mode once Google Sheets are set up and tested
+
+      const isValidFormat = /^[A-Z]{4}-\d{6}-\d{3}$/.test(requestId);
+
+      if (isValidFormat) {
+        this.showValidationSuccess({ requestId, status: 'approved' });
+      } else {
+        this.showValidationError('Invalid Request ID format');
+      }
+
+    } catch (error) {
+      this.showValidationError('Validation service unavailable');
+    }
+  }
+
+  getExpectedStage() {
+    // Determine what stage the ID should be at
+    const stageRequirements = {
+      'sample-request': ['quotation_approved', 'quotation_completed'],
+      'bulk-order-request': ['sample_completed', 'sample_approved']
+    };
+
+    return stageRequirements[this.pendingSubmissionType] || [];
+  }
+
+  getClientEmail() {
+    // Try to get email from current form or saved client manager data
+    const emailInput = document.querySelector('input[name="email"], #client_email');
+    if (emailInput && emailInput.value) {
+      return emailInput.value.trim();
+    }
+
+    // Try from client manager
+    if (window.v10ClientManager && window.v10ClientManager.currentRequestType) {
+      const savedData = JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+      if (savedData.email) {
+        return savedData.email.trim();
+      }
+    }
+
+    return '';
+  }
+
+  getClientBrandName() {
+    // Try to get company name from current form or saved client manager data
+    const companyInput = document.querySelector('input[name="company_name"], #company_name');
+    if (companyInput && companyInput.value) {
+      return companyInput.value.trim();
+    }
+
+    // Try from client manager
+    if (window.v10ClientManager && window.v10ClientManager.currentRequestType) {
+      const savedData = JSON.parse(localStorage.getItem('v10_step1_data') || '{}');
+      if (savedData.company_name) {
+        return savedData.company_name.trim();
+      }
+    }
+
+    return '';
+  }
+
+  showValidationSuccess(result) {
+    const validationMsg = document.getElementById('v10-request-id-validation');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
+
+    validationMsg.textContent = '✅ Valid Request ID';
+    validationMsg.className = 'v10-validation-message v10-validation--success';
+
+    proceedBtn.disabled = false;
+    this.isValidRequestId = true;
+    this.validatedRequestData = result;
+  }
+
+  showValidationError(error) {
+    const validationMsg = document.getElementById('v10-request-id-validation');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
+
+    validationMsg.textContent = `❌ ${error}`;
+    validationMsg.className = 'v10-validation-message v10-validation--error';
+
+    proceedBtn.disabled = true;
+    this.isValidRequestId = false;
+  }
+
+  clearValidation() {
+    const validationMsg = document.getElementById('v10-request-id-validation');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
+
+    validationMsg.textContent = '';
+    validationMsg.className = 'v10-validation-message';
+
+    proceedBtn.disabled = true;
+    this.isValidRequestId = false;
+  }
+
+  proceedWithValidatedId() {
+    // Store validated ID for use in the form
+    if (window.v10ClientManager) {
+      window.v10ClientManager.parentRequestId = this.validatedRequestData.requestId;
+    }
+
+    // Close validation modal and proceed with submission type
+    this.closeModal('request-id');
+    this.selectSubmissionType(this.pendingSubmissionType);
   }
 
   showClientForm() {

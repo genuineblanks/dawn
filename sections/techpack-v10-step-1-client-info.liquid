@@ -795,6 +795,71 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   </div>
 </div>
 
+<!-- Request ID Validation Modal -->
+<div class="v10-modal-overlay" id="v10-request-id-modal" style="display: none;">
+  <div class="v10-modal v10-modal--validation">
+    <div class="v10-modal-header">
+      <div class="v10-modal-header-spacer"></div>
+      <h3 class="v10-modal-title v10-text-center">Request ID Verification</h3>
+      <button type="button" class="v10-modal-close" id="v10-close-request-id-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="v10-modal-body">
+      <div class="v10-request-id-verification">
+
+        <!-- Orange Warning Message -->
+        <div class="v10-warning-box-enhanced">
+          <div class="v10-warning-icon">⚠️</div>
+          <div class="v10-warning-content">
+            <strong>Critical Request ID Verification</strong><br>
+            Please enter your TechPack Request ID to proceed. If the ID provided is incorrect or invalid, we will not be able to associate your request with your previous submissions. Please double-check this code before proceeding.
+          </div>
+        </div>
+
+        <!-- Request ID Input -->
+        <div class="v10-form-field v10-form-field--full">
+          <label class="v10-form-label-enhanced">
+            <span class="v10-required">TECHPACK REQUEST ID</span>
+            <input
+              type="text"
+              id="v10-request-id-input"
+              class="v10-form-input-enhanced"
+              placeholder="XXXX-DDMMYY-XXX"
+              pattern="^[A-Z]{4}-\d{6}-\d{3}$"
+              maxlength="15"
+              required
+            >
+          </label>
+          <div class="v10-validation-message" id="v10-request-id-validation"></div>
+        </div>
+
+        <!-- Status Display -->
+        <div class="v10-request-status" id="v10-request-status" style="display: none;">
+          <div class="v10-status-icon"></div>
+          <div class="v10-status-text"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="v10-modal-actions">
+          <button type="button" class="v10-btn v10-btn--ghost" id="v10-request-id-cancel">
+            Cancel
+          </button>
+          <button type="button" class="v10-btn v10-btn--primary" id="v10-request-id-proceed" disabled>
+            <span class="v10-btn-text">Verify & Continue</span>
+            <svg class="v10-btn-icon" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
