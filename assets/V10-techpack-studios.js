@@ -14,10 +14,9 @@ if (typeof window.V10_CONFIG !== 'undefined') {
 const V10_CONFIG = {
   // Webhook URLs Configuration
   WEBHOOKS: {
-    // Original submission webhook (handles file uploads and Drive storage)
-    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec',
-    // Request ID webhook (handles ID validation and tracking)
-    REQUEST_ID: 'https://script.google.com/macros/s/AKfycbyw72CpJ1Au7M8gH4U4ZYZv-BbBoGwCCWOTWdt1xS6SNZY6icNZK85V6GjcHuMDFK1SjQ/exec'
+    // Main submission webhook (handles file uploads, JSON creation, and triggers NEW Request ID system)
+    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec'
+    // ✅ Removed REQUEST_ID webhook - now handled automatically by main Apps Script
   },
 
   // Fabric Type Mapping (updated to match pricing table)
@@ -16979,29 +16978,9 @@ class V10_ReviewManager {
       // We'll assume success if no network error occurred
       console.log('✅ Request sent successfully (no-cors mode)');
 
-      // CRITICAL: Store Request ID in tracking sheet after successful submission
-      try {
-        console.log('📝 Storing Request ID in tracking sheet...');
-        await fetch(V10_CONFIG.WEBHOOKS.REQUEST_ID, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          body: JSON.stringify({
-            action: 'storeRequestId',
-            request_id: submissionData.submission_id,
-            client_data: submissionData.client_data,
-            request_type: submissionData.request_type,
-            client_type: submissionData.client_data?.isNewClient ? 'new' : 'registered'
-          })
-        });
-
-        console.log('✅ Request ID sent to tracking sheet (Apps Script will generate final sequence)');
-      } catch (storageError) {
-        console.warn('⚠️ Failed to store Request ID in tracking sheet:', storageError);
-        // Don't fail the whole submission if Request ID storage fails
-      }
+      // ✅ Request ID tracking now handled automatically by main Apps Script
+      // After JSON file creation, main Apps Script triggers NEW Request ID system
+      console.log('✅ Request ID will be handled by NEW Request ID system via main Apps Script');
 
       // Return a simulated success response since we can't read the actual response
       const result = {
@@ -20544,27 +20523,9 @@ class V10_ModalManager {
       validationMsg.textContent = 'Validating...';
       validationMsg.className = 'v10-validation-message v10-validation--loading';
 
-      // Real API validation - using dedicated Request ID webhook
-      const appsScriptUrl = V10_CONFIG.WEBHOOKS.REQUEST_ID;
-
-      const response = await fetch(appsScriptUrl, {
-        method: 'POST',
-        mode: 'no-cors', // Same as existing webhook setup
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
-        body: JSON.stringify({
-          action: 'validateRequestId',
-          requestId: requestId,
-          expectedStage: this.getExpectedStage(),
-          email: this.getClientEmail(),
-          brandName: this.getClientBrandName()
-        })
-      });
-
-      // Since we're using no-cors, we can't read the response
-      // For now, fall back to format validation
-      // TODO: Switch to CORS mode once Google Sheets are set up and tested
+      // ✅ Validation now uses format validation only
+      // Real API validation will be available through NEW Request ID system
+      // For now, using client-side format validation
 
       const isValidFormat = /^[A-Z]{4}-\d{6}-\d{3}$/.test(requestId);
 
