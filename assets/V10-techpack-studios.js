@@ -391,34 +391,37 @@ const V10_Utils = {
   generateClientCode: (companyName) => {
     console.log('🏷️ Generating client code for company:', companyName);
 
-    // Clean company name
-    const cleaned = companyName.toUpperCase()
+    // Clean company name but keep spaces for length calculation
+    const cleaned = companyName.trim()
       .replace(/&/g, 'AND')
-      .replace(/[^A-Z\s]/g, '')
+      .replace(/[^A-Za-z\s]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
 
     console.log('🧹 Cleaned company name:', cleaned);
+    console.log('📏 Company name length (with spaces):', cleaned.length);
 
     if (!cleaned) return 'UNKN';
 
-    const words = cleaned.split(' ');
-
     let result;
-    if (words.length === 1) {
-      // Single word: extract consonants and vowels strategically
-      result = V10_Utils.extractFourChars(words[0]);
-    } else if (words.length === 2) {
-      // Two words: 2 chars from each
-      const first = words[0].substring(0, 2);
-      const second = words[1].substring(0, 2);
-      result = (first + second).padEnd(4, 'X');
+
+    if (cleaned.length <= 8) {
+      // Use full company name if 8 characters or less (including spaces)
+      result = cleaned.toUpperCase().replace(/\s/g, ''); // Remove spaces for final code
+      console.log('✅ Using full company name (≤8 chars):', result);
     } else {
-      // Multiple words: first char of first 4 words
-      result = words.slice(0, 4).map(w => w[0] || 'X').join('').padEnd(4, 'X');
+      // Use smart 4-character extraction for long company names
+      const cleanedForExtraction = cleaned.toUpperCase().replace(/\s/g, '');
+      result = this.extractFourChars(cleanedForExtraction);
+      console.log('✅ Using 4-char extraction for long name (>8 chars):', result);
     }
 
-    console.log('🎯 Generated client code:', result);
+    // Ensure minimum length of 3 characters
+    if (result.length < 3) {
+      result = result.padEnd(3, 'X');
+    }
+
+    console.log('🎯 Final generated client code:', result);
     return result;
   },
 
