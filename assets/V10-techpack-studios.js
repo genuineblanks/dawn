@@ -412,7 +412,7 @@ const V10_Utils = {
     } else {
       // Use smart 4-character extraction for long company names
       const cleanedForExtraction = cleaned.toUpperCase().replace(/\s/g, '');
-      result = this.extractFourChars(cleanedForExtraction);
+      result = V10_Utils.extractFourChars(cleanedForExtraction);
       console.log('✅ Using 4-char extraction for long name (>8 chars):', result);
     }
 
