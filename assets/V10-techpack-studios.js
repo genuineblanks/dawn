@@ -16796,14 +16796,48 @@ class V10_ReviewManager {
         return assignments && assignments.size > 0;
       });
 
+      // ✅ FIX: Convert Set objects to arrays in garments
+      const garmentsWithArrays = garments.map(garment => {
+        console.log(`🎨 LAB DIP ASSIGNMENTS DEBUG - Garment ${garment.id}:`);
+        console.log(`🎨 assignedLabDips before conversion:`, garment.assignedLabDips);
+        console.log(`🎨 assignedLabDips type:`, typeof garment.assignedLabDips);
+        console.log(`🎨 assignedLabDips size:`, garment.assignedLabDips?.size || 'undefined');
+
+        const convertedGarment = {
+          ...garment,
+          assignedLabDips: garment.assignedLabDips ? Array.from(garment.assignedLabDips) : [],
+          assignedDesigns: garment.assignedDesigns ? Array.from(garment.assignedDesigns) : []
+        };
+
+        console.log(`🎨 assignedLabDips after conversion:`, convertedGarment.assignedLabDips);
+        console.log(`🎨 assignedLabDips array length:`, convertedGarment.assignedLabDips.length);
+        return convertedGarment;
+      });
+
+      // ✅ FIX: Convert Set objects to arrays in assignments
+      const assignmentsWithArrays = {
+        lab_dips: {},
+        designs: {}
+      };
+
+      // Convert lab dip assignments (Map<labDipId, Set<garmentId>> -> Object<labDipId, Array<garmentId>>)
+      V10_State.assignments.labDips.forEach((garmentSet, labDipId) => {
+        assignmentsWithArrays.lab_dips[labDipId] = Array.from(garmentSet);
+        console.log(`🎨 ASSIGNMENT DEBUG - Lab Dip ${labDipId} assigned to garments:`, assignmentsWithArrays.lab_dips[labDipId]);
+      });
+
+      // Convert design assignments
+      V10_State.assignments.designs.forEach((garmentSet, designId) => {
+        assignmentsWithArrays.designs[designId] = Array.from(garmentSet);
+      });
+
+      console.log(`🎨 FINAL ASSIGNMENTS DEBUG:`, assignmentsWithArrays);
+
       baseSubmission.records = {
-        garments: garments,
+        garments: garmentsWithArrays,
         lab_dips: assignedLabDips,
         design_samples: assignedDesigns,
-        assignments: {
-          lab_dips: Object.fromEntries(V10_State.assignments.labDips),
-          designs: Object.fromEntries(V10_State.assignments.designs)
-        }
+        assignments: assignmentsWithArrays
       };
 
     } else if (requestType === 'bulk-order-request') {
@@ -16817,12 +16851,17 @@ class V10_ReviewManager {
 
       // Enhanced garments data with colorway and size quantity breakdown
       const enhancedGarments = garments.map(garment => {
+        console.log(`🎨 BULK ORDER DEBUG - Garment ${garment.id} assignedLabDips:`, garment.assignedLabDips);
+
         const baseGarmentData = {
           id: garment.id,
           type: garment.type,
           fabricType: garment.fabricType,
           sampleReference: garment.sampleReference,
-          number: garment.number
+          number: garment.number,
+          // ✅ FIX: Convert Set objects to arrays for bulk orders too
+          assignedLabDips: garment.assignedLabDips ? Array.from(garment.assignedLabDips) : [],
+          assignedDesigns: garment.assignedDesigns ? Array.from(garment.assignedDesigns) : []
         };
 
         // Get quantity data from V10_QuantityStudioManager if available
@@ -19416,6 +19455,17 @@ class V10_ClientManager {
     }
     if (insuranceRadio) {
       currentData.insurance = insuranceRadio.value === 'yes' ? 'Yes' : 'No';
+    }
+
+    // ✅ COLLECT PROJECT NOTES AND DELIVERY NOTES
+    const projectDetailsInput = document.querySelector('textarea[name="project_details"]');
+    const deliveryNotesInput = document.querySelector('textarea[name="deliveryNotes"]');
+
+    if (projectDetailsInput) {
+      currentData.project_notes = projectDetailsInput.value;
+    }
+    if (deliveryNotesInput) {
+      currentData.delivery_notes = deliveryNotesInput.value;
     }
 
     return currentData;
