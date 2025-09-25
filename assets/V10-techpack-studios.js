@@ -15614,10 +15614,13 @@ class V10_ReviewManager {
   getGarmentColorInfo(garment) {
     // Get color information for cost summary format
     let colorInfo = '';
-    
+
     if (garment.sampleType === 'stock' && garment.sampleSubValue) {
       // Stock sample with specific color - use the selected color name directly
       colorInfo = ` - ${garment.sampleSubValue}`;
+    } else if (garment.sampleType === 'custom' && garment.sampleSubValue === 'exact-pantone') {
+      // ✅ FIX: Custom sample with exact pantone from techpack
+      colorInfo = ' - Techpack Pantone/TCX';
     } else if (garment.sampleType === 'custom' && garment.assignedLabDips && garment.assignedLabDips.size > 0) {
       // Custom sample with lab dips
       const firstLabDipId = Array.from(garment.assignedLabDips)[0];
@@ -15628,7 +15631,7 @@ class V10_ReviewManager {
         colorInfo = ` - ${colorName}${tcxCode ? ' - ' + tcxCode : ''}`;
       }
     }
-    
+
     return colorInfo;
   }
 
@@ -16459,10 +16462,13 @@ class V10_ReviewManager {
             'stock'
           ) || V10_CONFIG.PRICING.STOCK_SAMPLE;
           
+          // Get color information for complete description
+          const colorInfo = this.getGarmentColorInfo(garment);
+
           items.push({
             label: `Garment ${garment.number} - Pricing Estimate`,
             description: `${garment.type} ${garment.fabricType}`,
-            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
             amount: dynamicPrice,
             garment: garment // Add garment data for color circles
           });
@@ -16832,10 +16838,12 @@ class V10_ReviewManager {
       });
 
       console.log(`🎨 FINAL ASSIGNMENTS DEBUG:`, assignmentsWithArrays);
+      console.log(`🎨 LAB DIPS DEBUG - Sending ${labDips.length} total lab dips:`, labDips.map(ld => ({id: ld.id, name: ld.name, pantone: ld.pantone})));
+      console.log(`🎨 ASSIGNED LAB DIPS DEBUG - ${assignedLabDips.length} assigned lab dips:`, assignedLabDips.map(ld => ({id: ld.id, name: ld.name})));
 
       baseSubmission.records = {
         garments: garmentsWithArrays,
-        lab_dips: assignedLabDips,
+        lab_dips: labDips,           // ✅ FIX: Send ALL lab dips (not just assigned ones)
         design_samples: assignedDesigns,
         assignments: assignmentsWithArrays
       };
