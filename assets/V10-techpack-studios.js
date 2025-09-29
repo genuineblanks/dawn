@@ -16618,7 +16618,7 @@ class V10_ReviewManager {
           items.push({
             label: `Garment ${garment.number} - Pricing Estimate`,
             description: `${garment.type} ${garment.fabricType}`,
-            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}${garment.sampleSize ? ' - ' + garment.sampleSize : ''}`,
             amount: dynamicPrice,
             garment: garment // Add garment data for color circles
           });
@@ -16637,7 +16637,7 @@ class V10_ReviewManager {
           items.push({
             label: `Garment ${garment.number} - Stock Sample`,
             description: `${garment.type} ${garment.fabricType || 'Standard'}${colorInfo}`,
-            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}${garment.sampleSize ? ' - ' + garment.sampleSize : ''}`,
             amount: dynamicPrice,
             garment: garment // Add garment data for color circles
           });
@@ -16656,7 +16656,7 @@ class V10_ReviewManager {
           items.push({
             label: `Garment ${garment.number} - Custom Sample`,
             description: `${garment.type} ${garment.fabricType || 'Standard'}${colorInfo}`,
-            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}`,
+            fullDescription: `Garment ${garment.number} - ${garment.type} ${garment.fabricType}${colorInfo}${garment.sampleSize ? ' - ' + garment.sampleSize : ''}`,
             amount: dynamicPrice,
             garment: garment // Add garment data for color circles
           });
