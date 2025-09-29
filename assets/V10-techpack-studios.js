@@ -8817,6 +8817,16 @@ class V10_GarmentStudio {
     // Update garment status - check if now complete
     this.updateGarmentStatus(garmentId);
 
+    // Debug logging to verify flow
+    console.log(`🔍 [SIZE_DEBUG] After status update:`, {
+      garmentId: garmentId,
+      sampleSize: garmentData.sampleSize,
+      isComplete: garmentData.isComplete,
+      type: garmentData.type,
+      fabric: garmentData.fabricType,
+      sampleType: garmentData.sampleType
+    });
+
     // Save state
     V10_StateManager.saveState();
 
@@ -9192,7 +9202,7 @@ class V10_GarmentStudio {
         let isComplete = false;
         
         if (requestType === 'sample-request') {
-          const basicComplete = updatedGarmentData.type && updatedGarmentData.fabricType && updatedGarmentData.sampleType;
+          const basicComplete = updatedGarmentData.type && updatedGarmentData.fabricType && updatedGarmentData.sampleType && updatedGarmentData.sampleSize;
           if (basicComplete && updatedGarmentData.sampleType === 'custom') {
             // Only 'design-studio' requires lab dip assignment
             // 'exact-pantone' (I have TCX/TPX pantone) is complete immediately
@@ -15393,16 +15403,23 @@ class V10_ReviewManager {
   isGarmentComplete(garment, requestType) {
     // Basic validation logic (simplified from existing)
     const hasBasicSpecs = garment.type && garment.fabricType;
-    
+
     switch (requestType) {
       case 'quotation':
         return hasBasicSpecs;
       case 'sample-request':
         const hasSampleType = garment.sampleType;
+        const hasSampleSize = garment.sampleSize; // REQUIRED for sample requests
         if (garment.sampleType === 'stock') {
-          return hasBasicSpecs && hasSampleType && garment.sampleSubValue;
+          return hasBasicSpecs && hasSampleType && garment.sampleSubValue && hasSampleSize;
         } else if (garment.sampleType === 'custom') {
-          return hasBasicSpecs && hasSampleType && garment.assignedLabDips?.size > 0;
+          // Custom samples need size + lab dips (if design-studio)
+          if (garment.sampleSubValue === 'design-studio') {
+            return hasBasicSpecs && hasSampleType && hasSampleSize && garment.assignedLabDips?.size > 0;
+          } else {
+            // exact-pantone doesn't need lab dips, just size
+            return hasBasicSpecs && hasSampleType && hasSampleSize;
+          }
         }
         return false;
       case 'bulk-order-request':

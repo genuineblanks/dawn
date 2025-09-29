@@ -5135,31 +5135,56 @@ html.onboarding-active {
   gap: 6px;
 }
 
-.size-option-inline {
-  padding: 6px 12px;
-  border: 2px solid var(--v10-border-primary);
-  background: var(--v10-bg-card);
-  border-radius: var(--v10-radius-sm);
-  font-weight: 600;
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-primary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 44px;
-  text-align: center;
+/* High specificity to override global button reset at line 466 */
+.garment-summary__sample-size-inline .size-option-inline,
+[id^="techpack-v10"] .size-option-inline,
+.v10-techpack-step .size-option-inline {
+  padding: 6px 12px !important;
+  border: 2px solid var(--v10-border-primary) !important;
+  background: var(--v10-bg-card) !important;
+  border-radius: var(--v10-radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: var(--v10-text-sm) !important;
+  color: var(--v10-text-primary) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  min-width: 44px !important;
+  text-align: center !important;
 }
 
-.size-option-inline:hover {
-  background: var(--v10-bg-hover);
-  border-color: var(--v10-accent-primary);
-  transform: translateY(-1px);
+.garment-summary__sample-size-inline .size-option-inline:hover,
+[id^="techpack-v10"] .size-option-inline:hover,
+.v10-techpack-step .size-option-inline:hover {
+  background: var(--v10-bg-hover) !important;
+  border-color: var(--v10-accent-primary) !important;
+  transform: translateY(-1px) !important;
 }
 
-.size-option-inline.selected {
-  background: var(--v10-accent-primary);
-  color: white;
-  border-color: var(--v10-accent-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+.garment-summary__sample-size-inline .size-option-inline.selected,
+[id^="techpack-v10"] .size-option-inline.selected,
+.v10-techpack-step .size-option-inline.selected {
+  background: var(--v10-accent-primary) !important;
+  color: white !important;
+  border-color: var(--v10-accent-primary) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Preserve styles on focus - override global focus resets */
+.garment-summary__sample-size-inline .size-option-inline:focus,
+[id^="techpack-v10"] .size-option-inline:focus,
+.v10-techpack-step .size-option-inline:focus {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+  outline: none !important;
+}
+
+/* Keep selected state even when focused */
+.garment-summary__sample-size-inline .size-option-inline.selected:focus,
+[id^="techpack-v10"] .size-option-inline.selected:focus,
+.v10-techpack-step .size-option-inline.selected:focus {
+  background: var(--v10-accent-primary) !important;
+  color: white !important;
+  border-color: var(--v10-accent-primary) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
 }
 
 .size-option-inline.required-highlight {
