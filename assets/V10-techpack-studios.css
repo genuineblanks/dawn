@@ -9751,6 +9751,29 @@ div[class*="circle"][style*="background-color"],
   font-size: var(--v10-text-base);
   line-height: 1.5;
   font-weight: 500;
+  flex: 1;
+}
+
+/* Sample size badge on right side */
+.v10-garment-size-badge {
+  margin-left: auto;
+  padding: 6px 16px;
+  background: var(--v10-bg-secondary);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-sm);
+  color: var(--v10-text-primary);
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.v10-garment-item:hover .v10-garment-size-badge {
+  background: var(--v10-bg-tertiary);
+  border-color: var(--v10-border-light);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .v10-empty-state {
@@ -10413,6 +10436,11 @@ div[class*="circle"][style*="background-color"],
 
   .v10-garment-text {
     font-size: var(--v10-text-sm);
+  }
+
+  .v10-garment-size-badge {
+    padding: 4px 12px;
+    font-size: var(--v10-text-xs);
   }
 
   .v10-cost-item {

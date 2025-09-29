@@ -15729,8 +15729,9 @@ class V10_ReviewManager {
             <!-- Color pattern overlay -->
           </div>
           <div class="v10-garment-text">
-            ${garment.number}. ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}${garment.sampleSize ? ' - Size ' + garment.sampleSize : ''}
+            ${garment.number}. ${garment.type} - ${garment.fabricType}${colorDisplay.name ? ' - ' + colorDisplay.name : ''}
           </div>
+          ${garment.sampleSize ? `<div class="v10-garment-size-badge">${garment.sampleSize}</div>` : ''}
         </div>
       `;
     }).join('');
