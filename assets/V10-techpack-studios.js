@@ -7411,6 +7411,7 @@ class V10_GarmentManager {
         sampleType: data?.sampleType || '',
         sampleSubValue: data?.sampleSubValue || '',
         sampleReference: data?.sampleReference || '',
+        sampleSize: data?.sampleSize || null, // Sample size for sample requests (XS, S, M, L, XL, XXL)
         assignedLabDips: new Set(data?.assignedLabDips || []),
         assignedDesigns: new Set(data?.assignedDesigns || []),
         isComplete: data?.isComplete || false,
@@ -7588,7 +7589,7 @@ class V10_GarmentManager {
       case 'quotation':
         return garment.type && garment.fabricType;
       case 'sample-request': {
-        const basicComplete = garment.type && garment.fabricType && garment.sampleType;
+        const basicComplete = garment.type && garment.fabricType && garment.sampleType && garment.sampleSize;
         // For custom samples, check sub-value to determine completion requirements
         if (basicComplete && garment.sampleType === 'custom') {
           // Only 'design-studio' requires lab dip assignment
@@ -8732,8 +8733,102 @@ class V10_GarmentStudio {
     } else {
       console.log('[GARMENT_DEBUG] Fabric span element not found!');
     }
-    
+
+    // Show and populate sample size selector for sample requests
+    const requestType = V10_State.requestType;
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+
+    if (sampleSizeContainer && requestType === 'sample-request') {
+      // Show the size selector
+      sampleSizeContainer.style.display = 'block';
+
+      // Get all size buttons
+      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+
+      // Remove all previous selections
+      sizeButtons.forEach(btn => btn.classList.remove('selected'));
+
+      // Highlight selected size if one is set
+      if (garmentData.sampleSize) {
+        const selectedBtn = Array.from(sizeButtons).find(btn => btn.dataset.size === garmentData.sampleSize);
+        if (selectedBtn) {
+          selectedBtn.classList.add('selected');
+          console.log(`✅ Sample size ${garmentData.sampleSize} selected for garment ${garmentData.id}`);
+        }
+      }
+
+      // Attach event handlers if not already attached
+      if (!sampleSizeContainer.dataset.handlersAttached) {
+        sizeButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const size = btn.dataset.size;
+            this.handleSampleSizeSelection(garmentData.id, size);
+          });
+        });
+        sampleSizeContainer.dataset.handlersAttached = 'true';
+        console.log('📎 Size selection handlers attached for garment', garmentData.id);
+      }
+    } else if (sampleSizeContainer) {
+      // Hide size selector for non-sample requests
+      sampleSizeContainer.style.display = 'none';
+    }
+
     // Status span removed - redundant with badge indicator
+  }
+
+  // Handle sample size selection
+  handleSampleSizeSelection(garmentId, size) {
+    const garmentData = V10_State.garments.get(garmentId);
+    const garmentCard = document.querySelector(`[data-garment-id="${garmentId}"]`);
+
+    if (!garmentData || !garmentCard) return;
+
+    console.log(`📏 Setting sample size to ${size} for garment ${garmentId}`);
+
+    // Update garment data
+    garmentData.sampleSize = size;
+
+    // Update UI - highlight selected size
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+    if (sampleSizeContainer) {
+      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+      sizeButtons.forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
+      // Remove any validation highlight
+      sizeButtons.forEach(btn => btn.classList.remove('required-highlight'));
+    }
+
+    // Update garment status - check if now complete
+    this.updateGarmentStatus(garmentId);
+
+    // Save state
+    V10_StateManager.saveState();
+
+    console.log(`✅ Sample size ${size} saved for garment ${garmentId}`);
+  }
+
+  // Highlight size selector when size is required but not selected
+  highlightRequiredSampleSize(garmentCard) {
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+    if (!sampleSizeContainer) return;
+
+    const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+    sizeButtons.forEach(btn => {
+      btn.classList.add('required-highlight');
+    });
+
+    // Pulse animation to draw attention
+    setTimeout(() => {
+      sizeButtons.forEach(btn => btn.classList.remove('required-highlight'));
+    }, 3000);
+
+    console.log('🔴 Highlighted required sample size selection');
   }
 
   // Show appropriate color indicators for different sample types
@@ -19260,7 +19355,7 @@ class V10_ClientManager {
     const data = {};
 
     // Fields to exclude from saving (optional fields that shouldn't persist)
-    const excludedFields = ['project_details'];
+    const excludedFields = []; // ✅ FIXED: Allow project_details to be saved to localStorage
 
     for (let [key, value] of formData.entries()) {
       // Skip saving excluded fields
