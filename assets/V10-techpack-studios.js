@@ -7743,9 +7743,9 @@ class V10_GarmentManager {
     if (requestType === 'quotation') {
       isComplete = garmentData.type && garmentData.fabricType;
     } else if (requestType === 'sample-request') {
-      // Basic completion: type, fabric, and sample type selected
-      const basicComplete = garmentData.type && garmentData.fabricType && garmentData.sampleType;
-      
+      // Basic completion: type, fabric, sample type, AND SIZE selected
+      const basicComplete = garmentData.type && garmentData.fabricType && garmentData.sampleType && garmentData.sampleSize;
+
       // For custom samples, check the sub-value to determine completion requirements
       if (basicComplete && garmentData.sampleType === 'custom') {
         // Only 'design-studio' requires lab dip assignment
@@ -8326,15 +8326,20 @@ class V10_GarmentStudio {
 
     if (statusIndicator) {
       let statusText = isComplete ? 'Complete' : 'Incomplete';
-      
-      // Add specific message for design-studio samples needing color assignment
-      if (!isComplete && garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
-        const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
-        if (!hasLabDips) {
-          statusText = 'Incomplete - Color assignment required in Color Studio';
+
+      // Add specific messages for incomplete garments
+      if (!isComplete) {
+        if (requestType === 'sample-request' && garmentData.type && garmentData.fabricType && garmentData.sampleType && !garmentData.sampleSize) {
+          // Missing size specifically
+          statusText = 'Incomplete - Select sample size';
+        } else if (garmentData.sampleType === 'custom' && garmentData.sampleSubValue === 'design-studio') {
+          const hasLabDips = garmentData.assignedLabDips && garmentData.assignedLabDips.size > 0;
+          if (!hasLabDips) {
+            statusText = 'Incomplete - Color assignment required in Color Studio';
+          }
         }
       }
-      
+
       statusIndicator.textContent = statusText;
       statusIndicator.className = `status-indicator ${isComplete ? 'status-indicator--complete' : 'status-indicator--incomplete'}`;
     }
@@ -8736,25 +8741,30 @@ class V10_GarmentStudio {
 
     // Show and populate sample size selector for sample requests
     const requestType = V10_State.requestType;
-    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size-inline');
 
     if (sampleSizeContainer && requestType === 'sample-request') {
       // Show the size selector
-      sampleSizeContainer.style.display = 'block';
+      sampleSizeContainer.style.display = 'flex';
 
       // Get all size buttons
-      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option-inline');
 
       // Remove all previous selections
       sizeButtons.forEach(btn => btn.classList.remove('selected'));
 
-      // Highlight selected size if one is set
-      if (garmentData.sampleSize) {
-        const selectedBtn = Array.from(sizeButtons).find(btn => btn.dataset.size === garmentData.sampleSize);
-        if (selectedBtn) {
-          selectedBtn.classList.add('selected');
-          console.log(`✅ Sample size ${garmentData.sampleSize} selected for garment ${garmentData.id}`);
-        }
+      // If no size is selected yet, pre-select M as default
+      if (!garmentData.sampleSize) {
+        garmentData.sampleSize = 'M';
+        V10_StateManager.saveState();
+        console.log(`📏 Pre-selected size M for garment ${garmentData.id}`);
+      }
+
+      // Highlight selected size
+      const selectedBtn = Array.from(sizeButtons).find(btn => btn.dataset.size === garmentData.sampleSize);
+      if (selectedBtn) {
+        selectedBtn.classList.add('selected');
+        console.log(`✅ Sample size ${garmentData.sampleSize} selected for garment ${garmentData.id}`);
       }
 
       // Attach event handlers if not already attached
@@ -8789,9 +8799,9 @@ class V10_GarmentStudio {
     garmentData.sampleSize = size;
 
     // Update UI - highlight selected size
-    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size-inline');
     if (sampleSizeContainer) {
-      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+      const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option-inline');
       sizeButtons.forEach(btn => {
         if (btn.dataset.size === size) {
           btn.classList.add('selected');
@@ -8815,10 +8825,10 @@ class V10_GarmentStudio {
 
   // Highlight size selector when size is required but not selected
   highlightRequiredSampleSize(garmentCard) {
-    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size');
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size-inline');
     if (!sampleSizeContainer) return;
 
-    const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option');
+    const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option-inline');
     sizeButtons.forEach(btn => {
       btn.classList.add('required-highlight');
     });
@@ -15928,9 +15938,20 @@ class V10_ReviewManager {
     const sizeChips = clone.querySelector('.v10-size-chips');
     
     if (requestType === 'sample-request') {
+      // Show sample size for sample requests
+      if (garment.sampleSize && sizesSection && sizeChips) {
+        sizesSection.style.display = 'block';
+        sizeChips.innerHTML = `
+          <div class="v10-size-chip v10-size-chip--sample">
+            <span class="v10-size-label">Sample Size:</span>
+            <span class="v10-size-value">${garment.sampleSize}</span>
+          </div>
+        `;
+      }
+
       // Show assignments for sample requests
       const assignments = this.getGarmentAssignments(garment);
-      
+
       if (assignments.length > 0 && assignmentsSection && assignmentsList) {
         assignmentsSection.style.display = 'block';
         assignmentsList.innerHTML = assignments.map(assignment => `
@@ -15940,7 +15961,7 @@ class V10_ReviewManager {
           </div>
         `).join('');
       }
-      
+
     } else if (requestType === 'bulk-order-request') {
       // Show size distribution for bulk orders
       if (garment.quantities && sizesSection && sizeChips) {
