@@ -9280,10 +9280,15 @@ class V10_GarmentStudio {
       console.log('🔄 Making tab visible for animation...');
       designTab.style.display = 'block';
     }
-    
+
+    // ANIMATION RESET: Remove class first, force reflow, then re-add to trigger fresh animation
+    designTab.classList.remove('studio-tab--needs-attention');
+    // Force browser reflow to reset animation
+    void designTab.offsetHeight;
+
     // Add attention class for 8-second animation
     designTab.classList.add('studio-tab--needs-attention');
-    console.log('✨ Animation class added to tab');
+    console.log('✨ Animation class added to tab (fresh animation triggered)');
     
     // Update tab text to show urgency
     const subtitleElement = designTab.querySelector('.studio-tab__subtitle');
