@@ -3771,7 +3771,7 @@ body[style*="overflow: hidden"] {
   border: 2px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   cursor: pointer;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--v10-text-secondary);
   flex: 1;
   min-width: 0;
@@ -4452,7 +4452,7 @@ body[style*="overflow: hidden"] {
 /* COLOR STUDIO ATTENTION SYSTEM */
 /* Premium red pulse animation for Color Studio tab when colors are required */
 .studio-tab--needs-attention {
-  animation: colorStudioAttention 8s ease-in-out !important;
+  animation: colorStudioAttention 8s ease-in-out;
   position: relative;
   z-index: 10;
 }
@@ -5160,15 +5160,6 @@ html.onboarding-active {
   transform: translateY(-1px) !important;
 }
 
-/* Active state - when button is being clicked */
-.garment-summary__sample-size-inline .size-option-inline:active,
-[id^="techpack-v10"] .size-option-inline:active,
-.v10-techpack-step .size-option-inline:active {
-  background: var(--v10-bg-hover) !important;
-  border-color: var(--v10-accent-primary) !important;
-  transform: scale(0.98) !important;
-}
-
 .garment-summary__sample-size-inline .size-option-inline.selected,
 [id^="techpack-v10"] .size-option-inline.selected,
 .v10-techpack-step .size-option-inline.selected {
@@ -5176,16 +5167,6 @@ html.onboarding-active {
   color: white !important;
   border-color: var(--v10-accent-primary) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Keep selected state during click */
-.garment-summary__sample-size-inline .size-option-inline.selected:active,
-[id^="techpack-v10"] .size-option-inline.selected:active,
-.v10-techpack-step .size-option-inline.selected:active {
-  background: var(--v10-accent-primary) !important;
-  color: white !important;
-  border-color: var(--v10-accent-primary) !important;
-  transform: scale(0.98) !important;
 }
 
 /* Preserve styles on focus - override global focus resets */
@@ -5206,6 +5187,21 @@ html.onboarding-active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
 }
 
+.size-option-inline.required-highlight {
+  border-color: var(--v10-accent-danger);
+  animation: pulse-size-border 1s ease-in-out 3;
+}
+
+@keyframes pulse-size-border {
+  0%, 100% {
+    border-color: var(--v10-accent-danger);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    border-color: var(--v10-accent-danger);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+  }
+}
 
 /* Mobile responsive */
 @media (max-width: 768px) {
@@ -9736,29 +9732,6 @@ div[class*="circle"][style*="background-color"],
   font-size: var(--v10-text-base);
   line-height: 1.5;
   font-weight: 500;
-  flex: 1;
-}
-
-/* Sample size badge on right side */
-.v10-garment-size-badge {
-  margin-left: auto;
-  padding: 6px 16px;
-  background: var(--v10-bg-secondary);
-  border: 1px solid var(--v10-border-primary);
-  border-radius: var(--v10-radius-sm);
-  color: var(--v10-text-primary);
-  font-size: var(--v10-text-sm);
-  font-weight: 600;
-  white-space: nowrap;
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.v10-garment-item:hover .v10-garment-size-badge {
-  background: var(--v10-bg-tertiary);
-  border-color: var(--v10-border-light);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .v10-empty-state {
@@ -10421,11 +10394,6 @@ div[class*="circle"][style*="background-color"],
 
   .v10-garment-text {
     font-size: var(--v10-text-sm);
-  }
-
-  .v10-garment-size-badge {
-    padding: 4px 12px;
-    font-size: var(--v10-text-xs);
   }
 
   .v10-cost-item {

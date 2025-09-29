@@ -8833,6 +8833,23 @@ class V10_GarmentStudio {
     console.log(`✅ Sample size ${size} saved for garment ${garmentId}`);
   }
 
+  // Highlight size selector when size is required but not selected
+  highlightRequiredSampleSize(garmentCard) {
+    const sampleSizeContainer = garmentCard.querySelector('.garment-summary__sample-size-inline');
+    if (!sampleSizeContainer) return;
+
+    const sizeButtons = sampleSizeContainer.querySelectorAll('.size-option-inline');
+    sizeButtons.forEach(btn => {
+      btn.classList.add('required-highlight');
+    });
+
+    // Pulse animation to draw attention
+    setTimeout(() => {
+      sizeButtons.forEach(btn => btn.classList.remove('required-highlight'));
+    }, 3000);
+
+    console.log('🔴 Highlighted required sample size selection');
+  }
 
   // Show appropriate color indicators for different sample types
   showSampleTypeColorIndicator(garmentData, colorCircle, colorName, separator) {
@@ -9218,42 +9235,25 @@ class V10_GarmentStudio {
             }, 200);
           }
         }
-
-        // COLOR STUDIO ATTENTION: Check if this garment needs color assignment
-        // Delayed to ensure all UI updates (including size pre-selection) complete first
-        setTimeout(() => {
-          this.checkColorRequirement(garmentId);
-        }, 100);
       }
     }, 150);
+    
+    // COLOR STUDIO ATTENTION: Check if this garment needs color assignment
+    this.checkColorRequirement(garmentId);
   }
   
   // Check if garment needs color assignment and trigger Color Studio attention
   checkColorRequirement(garmentId) {
     const garmentData = V10_State.garments.get(garmentId);
-    if (!garmentData) {
-      console.log(`⚠️ checkColorRequirement: No garment data found for ${garmentId}`);
-      return;
-    }
-
-    // Log current garment state for debugging
-    console.log(`🔍 checkColorRequirement called for garment ${garmentId}:`, {
-      requestType: V10_State.requestType,
-      sampleType: garmentData.sampleType,
-      sampleSubValue: garmentData.sampleSubValue,
-      hasLabDips: garmentData.assignedLabDips?.size > 0,
-      labDipsCount: garmentData.assignedLabDips?.size || 0
-    });
-
+    if (!garmentData) return;
+    
     // Only trigger for sample requests with custom colorways requiring design studio
-    const needsColorAssignment =
+    const needsColorAssignment = 
       V10_State.requestType === 'sample-request' &&
       garmentData.sampleType === 'custom' &&
       garmentData.sampleSubValue === 'design-studio' &&
       (!garmentData.assignedLabDips || garmentData.assignedLabDips.size === 0);
-
-    console.log(`🎯 Color assignment needed: ${needsColorAssignment ? 'YES' : 'NO'}`);
-
+    
     if (needsColorAssignment) {
       console.log(`🎨 Garment ${garmentId} needs color assignment - triggering Color Studio attention`);
       this.triggerColorStudioAttention();
@@ -9280,15 +9280,10 @@ class V10_GarmentStudio {
       console.log('🔄 Making tab visible for animation...');
       designTab.style.display = 'block';
     }
-
-    // ANIMATION RESET: Remove class first, force reflow, then re-add to trigger fresh animation
-    designTab.classList.remove('studio-tab--needs-attention');
-    // Force browser reflow to reset animation
-    void designTab.offsetHeight;
-
+    
     // Add attention class for 8-second animation
     designTab.classList.add('studio-tab--needs-attention');
-    console.log('✨ Animation class added to tab (fresh animation triggered)');
+    console.log('✨ Animation class added to tab');
     
     // Update tab text to show urgency
     const subtitleElement = designTab.querySelector('.studio-tab__subtitle');
