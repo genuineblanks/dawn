@@ -8753,18 +8753,18 @@ class V10_GarmentStudio {
       // Remove all previous selections
       sizeButtons.forEach(btn => btn.classList.remove('selected'));
 
-      // If no size is selected yet, pre-select M as default
+      // If no size is selected yet, pre-select M as default and trigger completion update
       if (!garmentData.sampleSize) {
-        garmentData.sampleSize = 'M';
-        V10_StateManager.saveState();
-        console.log(`📏 Pre-selected size M for garment ${garmentData.id}`);
-      }
-
-      // Highlight selected size
-      const selectedBtn = Array.from(sizeButtons).find(btn => btn.dataset.size === garmentData.sampleSize);
-      if (selectedBtn) {
-        selectedBtn.classList.add('selected');
-        console.log(`✅ Sample size ${garmentData.sampleSize} selected for garment ${garmentData.id}`);
+        console.log(`📏 Pre-selecting size M for garment ${garmentData.id}`);
+        // Use existing handler to ensure all updates happen correctly (sets size, updates status, saves state)
+        this.handleSampleSizeSelection(garmentData.id, 'M');
+      } else {
+        // Highlight already selected size
+        const selectedBtn = Array.from(sizeButtons).find(btn => btn.dataset.size === garmentData.sampleSize);
+        if (selectedBtn) {
+          selectedBtn.classList.add('selected');
+          console.log(`✅ Sample size ${garmentData.sampleSize} already selected for garment ${garmentData.id}`);
+        }
       }
 
       // Attach event handlers if not already attached

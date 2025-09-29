@@ -5160,6 +5160,15 @@ html.onboarding-active {
   transform: translateY(-1px) !important;
 }
 
+/* Active state - when button is being clicked */
+.garment-summary__sample-size-inline .size-option-inline:active,
+[id^="techpack-v10"] .size-option-inline:active,
+.v10-techpack-step .size-option-inline:active {
+  background: var(--v10-bg-hover) !important;
+  border-color: var(--v10-accent-primary) !important;
+  transform: scale(0.98) !important;
+}
+
 .garment-summary__sample-size-inline .size-option-inline.selected,
 [id^="techpack-v10"] .size-option-inline.selected,
 .v10-techpack-step .size-option-inline.selected {
@@ -5167,6 +5176,16 @@ html.onboarding-active {
   color: white !important;
   border-color: var(--v10-accent-primary) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Keep selected state during click */
+.garment-summary__sample-size-inline .size-option-inline.selected:active,
+[id^="techpack-v10"] .size-option-inline.selected:active,
+.v10-techpack-step .size-option-inline.selected:active {
+  background: var(--v10-accent-primary) !important;
+  color: white !important;
+  border-color: var(--v10-accent-primary) !important;
+  transform: scale(0.98) !important;
 }
 
 /* Preserve styles on focus - override global focus resets */
