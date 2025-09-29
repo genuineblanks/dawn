@@ -8390,6 +8390,15 @@ class V10_GarmentStudio {
         }
       }, 150); // 150ms debounce
     }
+
+    // COLOR STUDIO ATTENTION: Check if this garment needs color assignment
+    // This is the central check that covers ALL garment creation paths:
+    // - New garments in edit mode
+    // - Duplicated garments
+    // - Loaded garments from saved state
+    // - Variant garments
+    // This ensures the red pulsing animation works regardless of how the garment was created
+    this.checkColorRequirement(garmentId);
   }
 
   // Check if all garments are complete and update studio status
