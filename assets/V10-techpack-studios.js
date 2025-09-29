@@ -27,6 +27,35 @@ const V10_CONFIG = {
       '70/30 Cotton-Poly',
       '50/50 Cotton-Poly',
       '100% Polyester'
+    ],/* V10 TechPack Studios - Advanced Studio Management System */
+/* Complete rewrite with studio-based architecture */
+/* Cache refresh: 2025-01-16 - Fixed dark mode Step 1 seamless background */
+
+// ==============================================
+// GLOBAL CONFIGURATION
+// ==============================================
+
+// Prevent multiple script loading
+if (typeof window.V10_CONFIG !== 'undefined') {
+  console.log('V10 TechPack Studios already loaded, skipping initialization');
+} else {
+
+const V10_CONFIG = {
+  // Webhook URLs Configuration
+  WEBHOOKS: {
+    // Main submission webhook (handles file uploads, JSON creation, and triggers NEW Request ID system)
+    SUBMISSIONS: 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec'
+    // ✅ Removed REQUEST_ID webhook - now handled automatically by main Apps Script
+  },
+
+  // Fabric Type Mapping (updated to match pricing table)
+  FABRIC_TYPE_MAPPING: {
+    'Zip-Up Hoodie': [
+      '100% Organic Cotton Brushed Fleece',
+      '100% Organic Cotton French Terry',
+      '70/30 Cotton-Poly',
+      '50/50 Cotton-Poly',
+      '100% Polyester'
     ],
     'Hoodie': [
       '100% Organic Cotton Brushed Fleece',
@@ -8831,6 +8860,10 @@ class V10_GarmentStudio {
     V10_StateManager.saveState();
 
     console.log(`✅ Sample size ${size} saved for garment ${garmentId}`);
+
+    // COLOR STUDIO ATTENTION: Check if this garment needs color assignment after size is set
+    // This is crucial for design-studio sample type to trigger the red pulsing animation
+    this.checkColorRequirement(garmentId);
   }
 
   // Highlight size selector when size is required but not selected
