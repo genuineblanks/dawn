@@ -385,10 +385,10 @@ const V10_Utils = {
         return `${clientCode}-${randomDigits}-${randomSequence}`;
         // Result: GNBL-47-856 ✅
       } else {
-        // REGISTERED CLIENTS: Just prefix + TEMP (Apps Script adds the XX digits)
+        // REGISTERED CLIENTS: Use literal "XX" + TEMP (Apps Script replaces with access code digits)
         console.log('🔢 Generated ID components (registered client):', { clientCode, companyName, actualBrandName });
-        return `${clientCode}-TEMP`;
-        // Result: ASDS-TEMP ✅
+        return `${clientCode}-XX-TEMP`;
+        // Result: ASDS-XX-TEMP ✅ (always the same for this client)
       }
     } catch (error) {
       console.error('Error generating TechPack ID:', error);
