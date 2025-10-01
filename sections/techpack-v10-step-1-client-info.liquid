@@ -816,21 +816,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           <div class="v10-warning-icon">⚠️</div>
           <div class="v10-warning-content">
             <strong>Critical Request ID Verification</strong><br>
-            Please enter your TechPack Request ID to proceed. If the ID provided is incorrect or invalid, we will not be able to associate your request with your previous submissions. Please double-check this code before proceeding.
+            <span style="font-size: 1.1em; font-weight: 700; display: block; margin: 8px 0;">Enter the Request ID from THE QUOTATION YOU WANT TO PROCEED WITH.</span>
+            Using an incorrect or unrelated ID will delay your order and require multiple emails to correct. Double-check before proceeding.
           </div>
         </div>
 
         <!-- Request ID Input -->
-        <div class="v10-form-field v10-form-field--full">
-          <label class="v10-form-label-enhanced">
+        <div class="v10-form-field v10-form-field--full" style="text-align: center;">
+          <label class="v10-form-label-enhanced" style="display: block; text-align: center;">
             <span class="v10-required">TECHPACK REQUEST ID</span>
             <input
               type="text"
               id="v10-request-id-input"
               class="v10-form-input-enhanced"
-              placeholder="XXXX-DDMMYY-XXX"
-              pattern="^[A-Z]{4}-\d{6}-\d{3}$"
-              maxlength="15"
+              placeholder="Enter your Request ID"
+              pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
+              maxlength="16"
               required
             >
           </label>
