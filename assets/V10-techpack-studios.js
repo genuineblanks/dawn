@@ -375,16 +375,26 @@ const V10_Utils = {
   generateTechPackId: async (companyName, clientType = 'new', email = '', brandName = '') => {
     try {
       const clientCode = V10_Utils.generateClientCode(companyName);
-      const dateCode = V10_Utils.formatDateDDMMYY(new Date());
-      const actualBrandName = brandName || companyName; // Use brandName if provided, otherwise use companyName
-      const sequence = await V10_Utils.getDailySequence(clientCode, dateCode, clientType, email, actualBrandName);
+      const actualBrandName = brandName || companyName;
 
-      console.log('🔢 Generated ID components:', { clientCode, dateCode, sequence, companyName, actualBrandName });
-      return `${clientCode}-${dateCode}-${sequence}`;
+      if (clientType === 'new') {
+        // NEW CLIENTS: Generate with random 2 digits + random 3-digit sequence
+        const randomDigits = V10_Utils.generateTwoRandomDigits();
+        const randomSequence = Math.floor(Math.random() * 900 + 100).toString();
+        console.log('🔢 Generated ID components (new client):', { clientCode, randomDigits, randomSequence, companyName });
+        return `${clientCode}-${randomDigits}-${randomSequence}`;
+        // Result: GNBL-47-856 ✅
+      } else {
+        // REGISTERED CLIENTS: Just prefix + TEMP (Apps Script adds the XX digits)
+        console.log('🔢 Generated ID components (registered client):', { clientCode, companyName, actualBrandName });
+        return `${clientCode}-TEMP`;
+        // Result: ASDS-TEMP ✅
+      }
     } catch (error) {
       console.error('Error generating TechPack ID:', error);
       // Fallback to timestamp-based ID
-      return `UNKN-${V10_Utils.formatDateDDMMYY(new Date())}-${Math.floor(Math.random() * 900 + 100)}`;
+      const randomDigits = V10_Utils.generateTwoRandomDigits();
+      return `UNKN-${randomDigits}-${Math.floor(Math.random() * 900 + 100)}`;
     }
   },
 
@@ -460,25 +470,9 @@ const V10_Utils = {
     return result.substring(0, 4);
   },
 
-  formatDateDDMMYY: (date) => {
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear().toString().slice(-2);
-    return `${day}${month}${year}`;
-  },
-
-  getDailySequence: (clientCode, dateCode, clientType, email = '', brandName = '') => {
-    if (clientType === 'new') {
-      // New clients get random sequence - no Sheet check needed
-      return Math.floor(Math.random() * 900 + 100).toString(); // Random 3-digit: 100-999
-    }
-
-    // Registered clients: Use temporary sequence that will be corrected by Apps Script
-    console.log('🔍 Getting sequence for registered client - using temporary sequence');
-    console.log('📋 Apps Script will generate correct sequence based on existing data');
-
-    // Return temporary sequence - Apps Script will replace with correct sequence
-    return 'TEMP';
+  generateTwoRandomDigits: () => {
+    // Generate 2 random digits (00-99)
+    return Math.floor(Math.random() * 100).toString().padStart(2, '0');
   },
 
 
@@ -20735,7 +20729,7 @@ class V10_ModalManager {
       // Real API validation will be available through NEW Request ID system
       // For now, using client-side format validation
 
-      const isValidFormat = /^[A-Z]{4}-\d{6}-\d{3}$/.test(requestId);
+      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(requestId);
 
       if (isValidFormat) {
         this.showValidationSuccess({ requestId, status: 'approved' });
