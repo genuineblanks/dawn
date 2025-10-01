@@ -7,7 +7,21 @@ V10 Registration - Standalone Design
 <script src="{{ 'v10-registration.js' | asset_url }}" defer></script>
 
 <style>
-  /* Only layout overrides - backgrounds handled by V10 CSS */
+  /* FORCE OVERRIDE SHOPIFY THEME COLORS */
+  body {
+    background-color: #1a1f2e !important;
+    background-image: none !important;
+  }
+
+  /* Override Shopify color scheme variables */
+  #v10-registration {
+    --color-background: 26, 31, 46 !important;
+    --color-foreground: 243, 244, 246 !important;
+    --color-button: 16, 185, 129 !important;
+    --color-button-text: 255, 255, 255 !important;
+  }
+
+  /* Layout overrides */
   .techpack-container {
     max-width: 1200px;
     margin: 0 auto;
