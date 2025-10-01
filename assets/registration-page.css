@@ -1,0 +1,478 @@
+/* ============================================================
+   GENUINEBLANKS REGISTRATION PAGE - CLEAN STANDALONE STYLES
+   No V10 dependencies, no !important flags, pure CSS
+   ============================================================ */
+
+/* Override Shopify Theme Body Background */
+body {
+  background-color: #1a1f2e;
+  background-image: none;
+  background: #1a1f2e;
+}
+
+/* Reset and Base */
+.registration-page-wrapper {
+  min-height: 100vh;
+  background: #1a1f2e;
+  padding: 3rem 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.registration-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.registration-page-card {
+  background: #1f2937;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+.registration-page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #374151;
+}
+
+.registration-page-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #f3f4f6;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.025em;
+}
+
+.registration-page-subtitle {
+  font-size: 1.125rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Form Grid System */
+.registration-page-section {
+  margin-bottom: 3rem;
+}
+
+.registration-page-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #374151;
+}
+
+.registration-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+}
+
+.registration-page-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.registration-page-field-full {
+  grid-column: span 2;
+}
+
+.registration-page-field-half {
+  grid-column: span 1;
+}
+
+/* Labels */
+.registration-page-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  line-height: 1;
+}
+
+.registration-page-label.required::after {
+  content: " *";
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Input Fields */
+.registration-page-input,
+.registration-page-select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0;
+  color: #f3f4f6;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  line-height: 1.5;
+}
+
+.registration-page-input:focus,
+.registration-page-select:focus {
+  outline: none;
+  border-color: #10b981;
+  background: #0f172a;
+}
+
+.registration-page-input::placeholder {
+  color: #6b7280;
+  opacity: 0.6;
+}
+
+.registration-page-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%239ca3af' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
+/* Hint Text */
+.registration-page-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* Address Grid - City/State/Postal */
+.registration-page-address-group {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr;
+  gap: 0.75rem;
+}
+
+/* VAT Conditional Field */
+.registration-page-field[data-conditional="vat"] {
+  display: none;
+}
+
+.registration-page-field[data-conditional="vat"].show {
+  display: flex;
+}
+
+/* Agreement Section */
+.registration-page-agreement {
+  background: rgba(75, 85, 99, 0.1);
+  padding: 1.5rem;
+  border: 1px solid #4b5563;
+  margin-bottom: 2rem;
+}
+
+.registration-page-checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.registration-page-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.125rem;
+  accent-color: #10b981;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.registration-page-checkbox-label {
+  font-size: 0.9375rem;
+  color: #f3f4f6;
+  cursor: pointer;
+  line-height: 1.6;
+  user-select: none;
+  flex: 1;
+}
+
+.registration-page-link {
+  color: #10b981;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.registration-page-link:hover {
+  color: #059669;
+}
+
+/* Submit Button */
+.registration-page-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid #374151;
+}
+
+.registration-page-submit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 3rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4);
+  min-width: 320px;
+}
+
+.registration-page-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.6);
+}
+
+.registration-page-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.registration-page-submit-icon {
+  display: flex;
+  transition: transform 0.2s ease;
+}
+
+.registration-page-submit:hover:not(:disabled) .registration-page-submit-icon {
+  transform: translateX(4px);
+}
+
+/* Success Modal */
+.registration-page-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.registration-page-modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.registration-page-modal {
+  background: #1f2937;
+  border-radius: 0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 10px 20px -5px rgba(0, 0, 0, 0.6);
+  max-width: 500px;
+  width: 100%;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.registration-page-modal-overlay.show .registration-page-modal {
+  transform: scale(1) translateY(0);
+}
+
+.registration-page-modal-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.registration-page-modal-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.registration-page-modal-icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+  stroke-width: 3;
+}
+
+.registration-page-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.registration-page-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.registration-page-modal-close:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
+.registration-page-modal-body {
+  padding: 2rem;
+}
+
+.registration-page-modal-message {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #d1d5db;
+  text-align: center;
+  margin: 0;
+}
+
+.registration-page-modal-actions {
+  padding: 1.5rem 2rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.registration-page-modal-button {
+  padding: 0.875rem 2rem;
+  border-radius: 0;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  min-width: 140px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4);
+}
+
+.registration-page-modal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.6);
+}
+
+/* Validation States */
+.registration-page-input.error,
+.registration-page-select.error {
+  border-color: #f97316;
+}
+
+.registration-page-error-message {
+  color: #f97316;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Alert */
+.registration-page-alert {
+  padding: 1rem 1.5rem;
+  border-radius: 0;
+  margin-bottom: 2rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .registration-page-wrapper {
+    padding: 1.5rem 0;
+  }
+
+  .registration-page-container {
+    padding: 0 1rem;
+  }
+
+  .registration-page-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .registration-page-title {
+    font-size: 2rem;
+  }
+
+  .registration-page-subtitle {
+    font-size: 1rem;
+  }
+
+  .registration-page-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .registration-page-field-half,
+  .registration-page-field-full {
+    grid-column: span 1;
+  }
+
+  .registration-page-address-group {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .registration-page-agreement {
+    padding: 1rem;
+  }
+
+  .registration-page-submit {
+    width: 100%;
+    min-width: auto;
+    font-size: 1rem;
+    padding: 0.875rem 2rem;
+  }
+
+  .registration-page-section-title {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .registration-page-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .registration-page-title {
+    font-size: 1.5rem;
+  }
+
+  .registration-page-subtitle {
+    font-size: 0.9375rem;
+  }
+}
