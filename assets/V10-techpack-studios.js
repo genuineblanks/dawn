@@ -20683,7 +20683,7 @@ class V10_ModalManager {
       const value = e.target.value.toUpperCase();
       e.target.value = value; // Force uppercase
 
-      if (value.length >= 15) {
+      if (value.length >= 10) {
         validationTimeout = setTimeout(() => {
           this.validateRequestId(value);
         }, 500);
