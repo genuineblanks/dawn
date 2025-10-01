@@ -5,38 +5,6 @@
    ==================================================== */
 
 /* ====================================================
-   FORCE OVERRIDE SHOPIFY THEME - CRITICAL
-   MUST BE FIRST TO OVERRIDE ALL SHOPIFY COLORS
-   ==================================================== */
-
-/* Override body background when registration page is present */
-body:has(#v10-registration),
-body {
-  background-color: #1a1f2e !important;
-  background-image: none !important;
-  background: #1a1f2e !important;
-}
-
-/* Force override Shopify color scheme variables */
-#v10-registration,
-.v10-techpack-step,
-.techpack-container,
-.techpack-content {
-  --color-background: 26, 31, 46 !important;
-  --color-foreground: 243, 244, 246 !important;
-  --gradient-background: #1a1f2e !important;
-  --color-button: 16, 185, 129 !important;
-  --color-button-text: 255, 255, 255 !important;
-  --color-link: 16, 185, 129 !important;
-}
-
-/* Nuclear option - override everything in registration section */
-#v10-registration,
-#v10-registration * {
-  background-color: inherit !important;
-}
-
-/* ====================================================
    BASE SECTION & CONTAINER - DARK THEME
    ==================================================== */
 
