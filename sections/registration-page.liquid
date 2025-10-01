@@ -6,6 +6,14 @@
 <link href="{{ 'registration-page.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <script src="{{ 'registration-page.js' | asset_url }}" defer></script>
 
+<style>
+  /* Force override Shopify body background - inline style for maximum specificity */
+  body {
+    background-color: #1a1f2e;
+    background-image: none;
+  }
+</style>
+
 <div class="registration-page-wrapper">
   <div class="registration-page-container">
     <div class="registration-page-card">
