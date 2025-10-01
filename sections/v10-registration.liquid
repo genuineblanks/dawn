@@ -3,7 +3,7 @@ V10 Registration - Integrated Design Matching TechPack Sections
 {% endcomment %}
 
 <link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
-<link href="{{ 'v10-registration.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<link href="{{ 'v10-registration-new.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}" defer></script>
 <script src="{{ 'v10-registration.js' | asset_url }}" defer></script>
 
@@ -19,16 +19,6 @@ V10 Registration - Integrated Design Matching TechPack Sections
 <!-- V10 Registration Section - Full Integration -->
 <section id="v10-registration" class="v10-techpack-step">
   <div class="techpack-container">
-    <!-- Theme Toggle Button - Matching V10 Style -->
-    <div class="v10-theme-toggle v10-theme-toggle--floating">
-      <button type="button" class="v10-theme-btn v10-theme-btn--light v10-theme-btn--active" data-theme="light">
-        ☀️ Light
-      </button>
-      <button type="button" class="v10-theme-btn v10-theme-btn--dark" data-theme="dark">
-        🌙 Dark
-      </button>
-    </div>
-
     <div class="techpack-content">
       <!-- Hero Section -->
       <div class="v10-landing-hero">
@@ -86,7 +76,7 @@ V10 Registration - Integrated Design Matching TechPack Sections
             </div>
 
             <!-- Company Email -->
-            <div class="v10-form-group v10-form-group--half">
+            <div class="v10-form-group v10-form-group--full">
               <label for="RegisterForm-Email" class="v10-form-label-enhanced required">
                 Company Email
               </label>
@@ -101,24 +91,6 @@ V10 Registration - Integrated Design Matching TechPack Sections
                 {% if form.email %}value="{{ form.email }}"{% endif %}
               >
               <div class="v10-form-hint">Primary Email for Business Correspondence</div>
-            </div>
-
-            <!-- Password -->
-            <div class="v10-form-group v10-form-group--half">
-              <label for="RegisterForm-Password" class="v10-form-label-enhanced required">
-                Password
-              </label>
-              <input
-                type="password"
-                name="customer[password]"
-                id="RegisterForm-Password"
-                class="v10-form-input-enhanced"
-                placeholder="Create a secure password"
-                required
-                aria-required="true"
-                minlength="5"
-              >
-              <div class="v10-form-hint">Minimum 5 characters</div>
             </div>
           </div>
         </div>
@@ -276,23 +248,22 @@ V10 Registration - Integrated Design Matching TechPack Sections
         <!-- Business Information Section -->
         <div class="v10-step-section">
           <h2 class="v10-step-title">Business Details</h2>
-          
+
           <div class="v10-form-grid">
-            <!-- VAT/EIN/SSN Number -->
-            <div class="v10-form-group v10-form-group--half">
+            <!-- VAT Number (EU Only - Conditional) -->
+            <div class="v10-form-group v10-form-group--half" data-conditional-field="vat" id="vat-field-wrapper">
               <label for="RegisterForm-VatNumber" class="v10-form-label-enhanced required">
-                VAT / EIN / SSN / Business Registration Number
+                VAT Number (EU Only)
               </label>
               <input
                 type="text"
                 name="customer[note][vat_number]"
                 id="RegisterForm-VatNumber"
                 class="v10-form-input-enhanced"
-                placeholder="European businesses must provide a VAT number"
-                required
-                aria-required="true"
+                placeholder="Enter your VAT number"
+                aria-required="false"
               >
-              <div class="v10-form-hint">Non-European businesses must provide an EIN, SSN, or equivalent legal ID</div>
+              <div class="v10-form-hint">Required for European Union businesses only</div>
             </div>
 
             <!-- Phone Number -->
