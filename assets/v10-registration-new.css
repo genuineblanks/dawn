@@ -22,7 +22,7 @@
 
 .techpack-content {
   background: #1f2937; /* Dark card background */
-  border-radius: 1rem;
+  border-radius: 0; /* Sharp corners */
   padding: 3rem;
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
@@ -137,7 +137,7 @@
   padding: 0.75rem 1rem;
   background: #111827; /* Very dark input background */
   border: 1px solid #374151; /* Dark border */
-  border-radius: 0.5rem;
+  border-radius: 0; /* Sharp corners */
   color: #f3f4f6; /* Light text */
   font-size: 0.9375rem;
   font-family: inherit;
@@ -222,7 +222,7 @@
 .v10-agreement-section {
   background: rgba(75, 85, 99, 0.1);
   padding: 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: 0; /* Sharp corners */
   border: 1px solid #4b5563; /* Dark border */
   margin-bottom: 2rem;
 }
@@ -294,7 +294,7 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 0; /* Sharp corners */
   font-size: 1.125rem;
   font-weight: 600;
   cursor: pointer;
@@ -661,7 +661,7 @@
 
 .v10-modal {
   background: #1f2937;
-  border-radius: 1rem;
+  border-radius: 0; /* Sharp corners */
   box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.8),
     0 10px 20px -5px rgba(0, 0, 0, 0.6),
@@ -756,7 +756,7 @@
 
 .v10-modal-actions .v10-btn {
   padding: 0.875rem 2rem;
-  border-radius: 0.5rem;
+  border-radius: 0; /* Sharp corners */
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
