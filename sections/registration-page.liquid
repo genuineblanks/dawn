@@ -1,0 +1,392 @@
+{% comment %}
+  GenuineBlanks Customer Registration Page
+  Clean standalone implementation
+{% endcomment %}
+
+<link href="{{ 'registration-page.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<script src="{{ 'registration-page.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+
+<style>
+  /* Force override Shopify body background - TRUE GREY - inline style for maximum specificity */
+  body {
+    background-color: #1a1a1a;
+    background-image: none;
+  }
+</style>
+
+<div class="registration-page-wrapper">
+  <div class="registration-page-container">
+    <div class="registration-page-card">
+
+      <!-- Header -->
+      <div class="registration-page-header">
+        <h1 class="registration-page-title">
+          {{ section.settings.title | default: 'GENUINEBLANKS - Customer Registration' }}
+        </h1>
+        <p class="registration-page-subtitle">
+          {{ section.settings.subtitle | default: 'Join our exclusive network of premium fashion brands and designers' }}
+        </p>
+      </div>
+
+      <!-- Registration Form -->
+      <form id="registration-form" novalidate>
+
+        <!-- Error messages will be shown here by JavaScript -->
+        <div class="registration-page-alert" id="form-errors" style="display: none;" role="alert">
+          <h3 style="margin: 0 0 0.5rem 0; font-weight: 600;">Please correct the following errors:</h3>
+          <ul id="error-list" style="margin: 0; padding-left: 1.25rem;"></ul>
+        </div>
+
+        <!-- Company Information -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Company Information</h2>
+
+          <div class="registration-page-grid">
+            <!-- Company Name -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="company-name" class="registration-page-label required">Company Name</label>
+              <input
+                type="text"
+                name="company_name"
+                id="company-name"
+                class="registration-page-input"
+                placeholder="Registered business name or DBA"
+                required
+              >
+              <span class="registration-page-hint">Your registered business name or DBA</span>
+            </div>
+
+            <!-- Company Email -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="email" class="registration-page-label required">Company Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="registration-page-input"
+                placeholder="Primary business email address"
+                required
+              >
+              <span class="registration-page-hint">Primary business correspondence email</span>
+            </div>
+
+            <!-- Annual Revenue -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="annual-revenue" class="registration-page-label required">Annual Revenue</label>
+              <select
+                name="annual_revenue"
+                id="annual-revenue"
+                class="registration-page-select"
+                required
+              >
+                <option value="">Select revenue range</option>
+                <option value="0-100k">Under $100K</option>
+                <option value="100k-500k">$100K - $500K</option>
+                <option value="500k-1m">$500K - $1M</option>
+                <option value="1m-5m">$1M - $5M</option>
+                <option value="5m-10m">$5M - $10M</option>
+                <option value="10m+">$10M+</option>
+              </select>
+              <span class="registration-page-hint">Approximate annual revenue</span>
+            </div>
+
+            <!-- Company Size -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="company-size" class="registration-page-label required">Company Size</label>
+              <select
+                name="company_size"
+                id="company-size"
+                class="registration-page-select"
+                required
+              >
+                <option value="">Select number of employees</option>
+                <option value="1-10">1-10 employees</option>
+                <option value="11-50">11-50 employees</option>
+                <option value="51-200">51-200 employees</option>
+                <option value="201-500">201-500 employees</option>
+                <option value="500+">500+ employees</option>
+              </select>
+              <span class="registration-page-hint">Total number of employees</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Contact Details</h2>
+
+          <div class="registration-page-grid">
+            <!-- First Name -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="first-name" class="registration-page-label required">First Name</label>
+              <input
+                type="text"
+                name="first_name"
+                id="first-name"
+                class="registration-page-input"
+                placeholder="Your First Name"
+                required
+              >
+            </div>
+
+            <!-- Last Name -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="last-name" class="registration-page-label required">Last Name</label>
+              <input
+                type="text"
+                name="last_name"
+                id="last-name"
+                class="registration-page-input"
+                placeholder="Your Last Name"
+                required
+              >
+            </div>
+
+            <!-- Company Address -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="address" class="registration-page-label required">Company Address</label>
+              <input
+                type="text"
+                name="address"
+                id="address"
+                class="registration-page-input"
+                placeholder="Your Company Address"
+                required
+              >
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="address-line-2" class="registration-page-label">Address Line 2</label>
+              <input
+                type="text"
+                name="address_line_2"
+                id="address-line-2"
+                class="registration-page-input"
+                placeholder="Address line 2 (optional)"
+              >
+            </div>
+
+            <!-- City, State, Postal -->
+            <div class="registration-page-field registration-page-field-half">
+              <div class="registration-page-address-group">
+                <div>
+                  <label for="city" class="registration-page-label required">City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    class="registration-page-input"
+                    placeholder="City"
+                    required
+                  >
+                </div>
+                <div>
+                  <label for="state" class="registration-page-label">State / Province</label>
+                  <input
+                    type="text"
+                    name="state"
+                    id="state"
+                    class="registration-page-input"
+                    placeholder="State or Province"
+                  >
+                </div>
+                <div>
+                  <label for="postal" class="registration-page-label required">Postal Code</label>
+                  <input
+                    type="text"
+                    name="postal_code"
+                    id="postal"
+                    class="registration-page-input"
+                    placeholder="Postal"
+                    required
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="country" class="registration-page-label required">Country</label>
+              <select
+                name="country"
+                id="country"
+                class="registration-page-select"
+                required
+              >
+                <option value="">Select a country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="PT">Portugal</option>
+                <option value="ES">Spain</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+                <option value="IT">Italy</option>
+                <option value="NL">Netherlands</option>
+                <option value="BE">Belgium</option>
+                <option value="CH">Switzerland</option>
+                <option value="AT">Austria</option>
+                <option value="SE">Sweden</option>
+                <option value="NO">Norway</option>
+                <option value="DK">Denmark</option>
+                <option value="FI">Finland</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand</option>
+                <option value="JP">Japan</option>
+                <option value="CN">China</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Details -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Business Details</h2>
+
+          <div class="registration-page-grid">
+            <!-- Phone Number with Country Code -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="phone" class="registration-page-label required">Phone Number</label>
+              <div class="registration-page-phone-group">
+                <div class="registration-page-phone-prefix" id="phone-prefix">+1</div>
+                <input
+                  type="tel"
+                  name="phone"
+                  id="phone"
+                  class="registration-page-input registration-page-phone-input"
+                  placeholder="Your phone number"
+                  required
+                >
+              </div>
+              <span class="registration-page-hint">Company or personal contact number</span>
+            </div>
+
+            <!-- VAT Number -->
+            <div class="registration-page-field registration-page-field-half" id="vat-field">
+              <label for="vat-number" class="registration-page-label" id="vat-label">VAT Number <span class="registration-page-label-hint">(Optional)</span></label>
+              <input
+                type="text"
+                name="vat_number"
+                id="vat-number"
+                class="registration-page-input"
+                placeholder="Enter your VAT number"
+              >
+              <span class="registration-page-hint">Required for EU businesses, optional for others</span>
+            </div>
+
+            <!-- Website -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="website" class="registration-page-label">Website</label>
+              <input
+                type="url"
+                name="website"
+                id="website"
+                class="registration-page-input"
+                placeholder="Include your website for higher chances to being accepted & contacted"
+              >
+              <span class="registration-page-hint">Include your website for higher chances to being accepted & contacted</span>
+            </div>
+
+            <!-- Brand Social Network -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="social" class="registration-page-label">Brand Social Network</label>
+              <input
+                type="text"
+                name="social_network"
+                id="social"
+                class="registration-page-input"
+                placeholder="Instagram / LinkedIn / Other"
+              >
+              <span class="registration-page-hint">Your main social @ for networking</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="registration-page-agreement">
+          <div class="registration-page-checkbox-group">
+            <input
+              type="checkbox"
+              id="terms"
+              name="accepts_terms"
+              class="registration-page-checkbox"
+              required
+            >
+            <label for="terms" class="registration-page-checkbox-label">
+              I agree to the <button type="button" class="registration-page-link" data-modal="terms">Terms & conditions</button>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="registration-page-actions">
+          <button type="submit" class="registration-page-submit" id="submit-button">
+            <span>Submit Access Request</span>
+            <span class="registration-page-submit-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="registration-page-modal-overlay" id="success-modal">
+  <div class="registration-page-modal">
+    <div class="registration-page-modal-header">
+      <div class="registration-page-modal-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <h3 class="registration-page-modal-title">Application Submitted Successfully!</h3>
+      <button type="button" class="registration-page-modal-close" id="modal-close">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="registration-page-modal-body">
+      <p class="registration-page-modal-message">
+        Thank you for your interest in partnering with GenuineBlanks! Your application has been successfully submitted. Our team will carefully review your brand profile and business information. We'll be in touch via email within 2-3 business days to discuss the next steps in our partnership process.
+      </p>
+    </div>
+    <div class="registration-page-modal-actions">
+      <button type="button" class="registration-page-modal-button" id="modal-continue">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Registration Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "GENUINEBLANKS - Customer Registration"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join our exclusive network of premium fashion brands and designers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Registration Page"
+    }
+  ]
+}
+{% endschema %}
