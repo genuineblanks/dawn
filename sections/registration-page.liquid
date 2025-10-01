@@ -1,0 +1,357 @@
+{% comment %}
+  GenuineBlanks Customer Registration Page
+  Clean standalone implementation
+{% endcomment %}
+
+<link href="{{ 'registration-page.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<script src="{{ 'registration-page.js' | asset_url }}" defer></script>
+
+<div class="registration-page-wrapper">
+  <div class="registration-page-container">
+    <div class="registration-page-card">
+
+      <!-- Header -->
+      <div class="registration-page-header">
+        <h1 class="registration-page-title">
+          {{ section.settings.title | default: 'GENUINEBLANKS - Customer Registration' }}
+        </h1>
+        <p class="registration-page-subtitle">
+          {{ section.settings.subtitle | default: 'Join our exclusive network of premium fashion brands and designers' }}
+        </p>
+      </div>
+
+      <!-- Registration Form -->
+      {%- form 'create_customer', novalidate: 'novalidate', id: 'registration-form' -%}
+
+        {%- if form.errors -%}
+          <div class="registration-page-alert" role="alert">
+            <h3 style="margin: 0 0 0.5rem 0; font-weight: 600;">Please correct the following errors:</h3>
+            <ul style="margin: 0; padding-left: 1.25rem;">
+              {%- for field in form.errors -%}
+                <li style="font-size: 0.875rem;">
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    {{ form.errors.translated_fields[field] | capitalize }}: {{ form.errors.messages[field] }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <!-- Company Information -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Company Information</h2>
+
+          <div class="registration-page-grid">
+            <!-- Company Name -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="company-name" class="registration-page-label required">Company Name</label>
+              <input
+                type="text"
+                name="customer[note][company_name]"
+                id="company-name"
+                class="registration-page-input"
+                placeholder="Registered Business Name (or DBA, if applicable)"
+                required
+              >
+              <span class="registration-page-hint">Registered Business Name (or DBA, if applicable)</span>
+            </div>
+
+            <!-- Company Email -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="email" class="registration-page-label required">Company Email</label>
+              <input
+                type="email"
+                name="customer[email]"
+                id="email"
+                class="registration-page-input"
+                placeholder="Primary Email for Business Correspondence"
+                required
+                {% if form.email %}value="{{ form.email }}"{% endif %}
+              >
+              <span class="registration-page-hint">Primary Email for Business Correspondence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Contact Details</h2>
+
+          <div class="registration-page-grid">
+            <!-- First Name -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="first-name" class="registration-page-label required">First Name</label>
+              <input
+                type="text"
+                name="customer[first_name]"
+                id="first-name"
+                class="registration-page-input"
+                placeholder="Your First Name"
+                required
+                {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+              >
+            </div>
+
+            <!-- Last Name -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="last-name" class="registration-page-label required">Last Name</label>
+              <input
+                type="text"
+                name="customer[last_name]"
+                id="last-name"
+                class="registration-page-input"
+                placeholder="Your Last Name"
+                required
+                {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+              >
+            </div>
+
+            <!-- Company Address -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="address" class="registration-page-label required">Company Address</label>
+              <input
+                type="text"
+                name="customer[note][address]"
+                id="address"
+                class="registration-page-input"
+                placeholder="Your Company Address"
+                required
+              >
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="address-line-2" class="registration-page-label">Address Line 2</label>
+              <input
+                type="text"
+                name="customer[note][address_line_2]"
+                id="address-line-2"
+                class="registration-page-input"
+                placeholder="Address line 2 (optional)"
+              >
+            </div>
+
+            <!-- City, State, Postal -->
+            <div class="registration-page-field registration-page-field-half">
+              <div class="registration-page-address-group">
+                <div>
+                  <label for="city" class="registration-page-label required">City</label>
+                  <input
+                    type="text"
+                    name="customer[note][city]"
+                    id="city"
+                    class="registration-page-input"
+                    placeholder="City"
+                    required
+                  >
+                </div>
+                <div>
+                  <label for="state" class="registration-page-label required">State</label>
+                  <input
+                    type="text"
+                    name="customer[note][state]"
+                    id="state"
+                    class="registration-page-input"
+                    placeholder="State"
+                    required
+                  >
+                </div>
+                <div>
+                  <label for="postal" class="registration-page-label required">Postal Code</label>
+                  <input
+                    type="text"
+                    name="customer[note][postal_code]"
+                    id="postal"
+                    class="registration-page-input"
+                    placeholder="Postal"
+                    required
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Country -->
+            <div class="registration-page-field registration-page-field-full">
+              <label for="country" class="registration-page-label required">Country</label>
+              <select
+                name="customer[note][country]"
+                id="country"
+                class="registration-page-select"
+                required
+              >
+                <option value="">Select a country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="PT">Portugal</option>
+                <option value="ES">Spain</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+                <option value="IT">Italy</option>
+                <option value="NL">Netherlands</option>
+                <option value="BE">Belgium</option>
+                <option value="CH">Switzerland</option>
+                <option value="AT">Austria</option>
+                <option value="SE">Sweden</option>
+                <option value="NO">Norway</option>
+                <option value="DK">Denmark</option>
+                <option value="FI">Finland</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand</option>
+                <option value="JP">Japan</option>
+                <option value="CN">China</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Business Details -->
+        <div class="registration-page-section">
+          <h2 class="registration-page-section-title">Business Details</h2>
+
+          <div class="registration-page-grid">
+            <!-- VAT Number (EU Only - Conditional) -->
+            <div class="registration-page-field registration-page-field-half" data-conditional="vat" id="vat-field">
+              <label for="vat-number" class="registration-page-label required">VAT Number (EU Only)</label>
+              <input
+                type="text"
+                name="customer[note][vat_number]"
+                id="vat-number"
+                class="registration-page-input"
+                placeholder="Enter your VAT number"
+              >
+              <span class="registration-page-hint">Required for European Union businesses only</span>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="phone" class="registration-page-label required">Phone Number</label>
+              <input
+                type="tel"
+                name="customer[note][phone]"
+                id="phone"
+                class="registration-page-input"
+                placeholder="Your Company or Personal Phone Number"
+                required
+              >
+              <span class="registration-page-hint">Your Company or Personal Phone Number</span>
+            </div>
+
+            <!-- Website -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="website" class="registration-page-label">Website</label>
+              <input
+                type="url"
+                name="customer[note][website]"
+                id="website"
+                class="registration-page-input"
+                placeholder="Include your website for higher chances to being accepted & contacted"
+              >
+              <span class="registration-page-hint">Include your website for higher chances to being accepted & contacted</span>
+            </div>
+
+            <!-- Brand Social Network -->
+            <div class="registration-page-field registration-page-field-half">
+              <label for="social" class="registration-page-label">Brand Social Network</label>
+              <input
+                type="text"
+                name="customer[note][social_network]"
+                id="social"
+                class="registration-page-input"
+                placeholder="Instagram / LinkedIn / Other"
+              >
+              <span class="registration-page-hint">Your main social @ for networking</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="registration-page-agreement">
+          <div class="registration-page-checkbox-group">
+            <input
+              type="checkbox"
+              id="terms"
+              name="customer[accepts_marketing]"
+              class="registration-page-checkbox"
+              required
+            >
+            <label for="terms" class="registration-page-checkbox-label">
+              I agree to the <button type="button" class="registration-page-link" data-modal="terms">Terms & conditions</button>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="registration-page-actions">
+          <button type="submit" class="registration-page-submit" id="submit-button">
+            <span>Submit Access Request</span>
+            <span class="registration-page-submit-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="registration-page-modal-overlay" id="success-modal">
+  <div class="registration-page-modal">
+    <div class="registration-page-modal-header">
+      <div class="registration-page-modal-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <h3 class="registration-page-modal-title">Application Submitted Successfully!</h3>
+      <button type="button" class="registration-page-modal-close" id="modal-close">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="registration-page-modal-body">
+      <p class="registration-page-modal-message">
+        Thank you for your interest in partnering with GenuineBlanks! Your application has been successfully submitted. Our team will carefully review your brand profile and business information. We'll be in touch via email within 2-3 business days to discuss the next steps in our partnership process.
+      </p>
+    </div>
+    <div class="registration-page-modal-actions">
+      <button type="button" class="registration-page-modal-button" id="modal-continue">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Registration Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "GENUINEBLANKS - Customer Registration"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join our exclusive network of premium fashion brands and designers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Registration Page"
+    }
+  ]
+}
+{% endschema %}
