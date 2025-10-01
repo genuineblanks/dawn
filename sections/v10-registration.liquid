@@ -2,6 +2,7 @@
 V10 Registration - Integrated Design Matching TechPack Sections
 {% endcomment %}
 
+<link href="{{ 'V10-techpack-studios.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <link href="{{ 'v10-registration-new.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}" defer></script>
 <script src="{{ 'v10-registration.js' | asset_url }}" defer></script>
@@ -335,7 +336,7 @@ V10 Registration - Integrated Design Matching TechPack Sections
         <div class="v10-form-actions">
           <button type="submit" class="v10-btn v10-btn--primary v10-btn-hero">
             <div class="v10-btn-hero-content">
-              <span>Welcome to Genuineblanks</span>
+              <span>Submit Access Request</span>
               <div class="v10-btn-hero-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M9 18l6-6-6-6"/>
@@ -349,6 +350,36 @@ V10 Registration - Integrated Design Matching TechPack Sections
     </div>
   </div>
 </section>
+
+<!-- Success Modal -->
+<div class="v10-modal-overlay" id="registration-success-modal">
+  <div class="v10-modal v10-modal--success">
+    <div class="v10-modal-header">
+      <div class="v10-modal-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22,4 12,14.01 9,11.01"/>
+        </svg>
+      </div>
+      <h3 class="v10-modal-title">Application Submitted Successfully!</h3>
+      <button type="button" class="v10-modal-close" id="success-modal-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="v10-modal-body">
+      <p class="v10-modal-message">
+        Thank you for your interest in partnering with GenuineBlanks! Your application has been successfully submitted. Our team will carefully review your brand profile and business information. We'll be in touch via email within 2-3 business days to discuss the next steps in our partnership process.
+      </p>
+    </div>
+    <div class="v10-modal-actions">
+      <button type="button" class="v10-btn v10-btn--primary" id="success-modal-continue">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- Terms & Conditions Modal -->
 {% render 'v10-terms-modal' %}
