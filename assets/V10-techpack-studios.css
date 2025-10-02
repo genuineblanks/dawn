@@ -3346,18 +3346,6 @@ body[style*="overflow: hidden"] {
   margin-left: var(--v10-space-1);
 }
 
-/* Warning badge for registered clients */
-.v10-warning-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  background: #fff3cd;
-  color: #856404;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.85em;
-  letter-spacing: 0.5px;
-}
-
 /* Enhanced form inputs */
 .v10-form-input-enhanced,
 .v10-form-select-enhanced,
