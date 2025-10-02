@@ -17405,8 +17405,8 @@ class V10_ReviewManager {
       'quotation': isTempId
         ? `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.<br><br><strong>Important:</strong> Your final Request ID will be sent via email within 24 hours. You'll need this ID for any future sample requests or bulk orders.`
         : `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.<br><br>Your Request ID has been sent to your email.`,
-      'sample-request': `Your sample request has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Production will begin immediately and samples will be shipped according to the specified timeframes. <br><br><strong>Important:</strong> Use this same Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span> when placing your bulk order to maintain continuity.`,
-      'bulk-order-request': `Your bulk order has been submitted successfully using Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit. <br><br><strong>Order Tracking:</strong> All correspondence will reference Request ID <span style="color: #007bff; font-family: monospace;">${submissionId}</span>.`
+      'sample-request': `Your sample request has been submitted successfully. Production will begin immediately and samples will be shipped according to the specified timeframes.<br><br>Use this same Request ID when placing your bulk order to maintain continuity.`,
+      'bulk-order-request': `Your bulk order has been submitted successfully. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit.<br><br>All correspondence will reference your Request ID shown below.`
     };
 
     if (successMessage) {
@@ -20536,6 +20536,12 @@ class V10_ModalManager {
   selectClientType(clientType) {
     this.currentClientType = clientType;
     this.closeModal('client-verification');
+
+    // Show/hide email warning based on client type
+    const emailWarning = document.getElementById('v10-registered-email-warning');
+    if (emailWarning) {
+      emailWarning.style.display = (clientType === 'registered') ? 'block' : 'none';
+    }
 
     // Update submission modal for client type
     this.updateSubmissionModalForClientType(clientType);
