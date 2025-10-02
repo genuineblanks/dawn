@@ -19815,9 +19815,9 @@ class V10_FileManager {
     const measurementStudio = document.getElementById('techpack-v10-measurement-studio');
     const designPlacementItem = document.getElementById('techpack-v10-design-placement-item');
     
-    // Show measurement requirements for sample requests AND quotations
+    // Show measurement requirements for quotations ONLY
     if (measurementStudio) {
-      if (requestType === 'sample-request' || requestType === 'quotation') {
+      if (requestType === 'quotation') {
         measurementStudio.style.display = 'block';
         console.log('✅ Showing measurement studio for:', requestType);
       } else {
