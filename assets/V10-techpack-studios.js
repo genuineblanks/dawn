@@ -21472,6 +21472,78 @@ function initializeModalOverlayPrevention() {
 }
 
 // ==============================================
+// STEP 3 IMPORTANCE MODAL
+// ==============================================
+
+function initializeStep3ImportanceModal() {
+  const modal = document.getElementById('v10-step3-importance-modal');
+  const closeBtn = document.getElementById('v10-close-step3-modal');
+  const understandBtn = document.getElementById('v10-step3-understand-btn');
+  const messageEl = document.getElementById('v10-step3-modal-message');
+
+  if (!modal) return;
+
+  let modalShown = false; // Track if modal was shown this session
+
+  // Function to show modal
+  function showStep3Modal() {
+    if (modalShown) return; // Don't show again in same session
+
+    // Get request type from client data
+    const clientData = window.v10ClientManager?.getClientData() || {};
+    const requestType = clientData.submission_type;
+
+    // Set dynamic message based on request type
+    if (messageEl) {
+      if (requestType === 'quotation') {
+        messageEl.innerHTML = '⚠️ <strong>Important:</strong> We will <strong>ONLY QUOTE</strong> the garments you configure in this step.';
+      } else if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+        messageEl.innerHTML = '⚠️ <strong>Important:</strong> We will <strong>ONLY PRODUCE</strong> the garments you configure in this step.';
+      } else {
+        messageEl.innerHTML = '⚠️ <strong>Important:</strong> We will only quote/produce the garments you configure in this step.';
+      }
+    }
+
+    modal.style.display = 'flex';
+    modalShown = true;
+    console.log('✅ Step 3 importance modal shown');
+  }
+
+  // Function to hide modal
+  function hideStep3Modal() {
+    modal.style.display = 'none';
+  }
+
+  // Close button handlers
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideStep3Modal);
+  }
+
+  if (understandBtn) {
+    understandBtn.addEventListener('click', hideStep3Modal);
+  }
+
+  // Observe Step 3 visibility
+  const step3Element = document.getElementById('techpack-v10-step-3');
+  if (step3Element) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const isVisible = step3Element.style.display !== 'none';
+          if (isVisible && !modalShown) {
+            // Small delay to ensure step is fully rendered
+            setTimeout(showStep3Modal, 300);
+          }
+        }
+      });
+    });
+
+    observer.observe(step3Element, { attributes: true });
+    console.log('✅ Step 3 importance modal observer initialized');
+  }
+}
+
+// ==============================================
 // INITIALIZATION
 // ==============================================
 
@@ -21550,6 +21622,9 @@ document.addEventListener('DOMContentLoaded', () => {
           window.v10TechPackSystem.setRequestType(requestType);
           console.log(`🎯 Request type configured: ${requestType}`);
           
+          // Initialize Step 3 importance modal
+          initializeStep3ImportanceModal();
+
           // Initialize review manager for assignment tracking on Step 3
           if (!window.v10ReviewManager) {
             try {

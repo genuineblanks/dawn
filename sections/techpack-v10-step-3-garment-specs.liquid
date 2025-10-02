@@ -1569,6 +1569,48 @@ Enhanced with Visual Studio Guide System
   </div>
 </template>
 
+<!-- Step 3 Importance Modal -->
+<div class="v10-modal-overlay" id="v10-step3-importance-modal" style="display: none;">
+  <div class="v10-modal">
+    <div class="v10-modal-header">
+      <div class="v10-modal-icon v10-modal-icon--info">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="v10-modal-title">Important: Garment Configuration</h3>
+      <button type="button" class="v10-modal-close" id="v10-close-step3-modal">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="v10-modal-body">
+      <p class="v10-modal-message" id="v10-step3-modal-message" style="margin-bottom: 16px;">
+        <!-- Dynamic message based on request type -->
+      </p>
+
+      <p class="v10-modal-message" style="margin-bottom: 16px;">
+        Your TechPack provides guidance and specifications, but <strong>we will only quote/produce the garments you configure in this step</strong>. Please double-check all information before proceeding.
+      </p>
+
+      <div class="v10-modal-details" style="background: var(--v10-bg-tertiary); padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--v10-accent-primary);">
+        <p style="margin: 0; font-size: 14px; color: var(--v10-text-secondary);">
+          💡 <strong>Need help?</strong> Use the <strong>Garment Studio Visual Guide</strong> and <strong>Color Studio Visual Guide</strong> buttons below to learn how this step works.
+        </p>
+      </div>
+    </div>
+
+    <div class="v10-modal-actions">
+      <button type="button" class="v10-btn v10-btn--primary" id="v10-step3-understand-btn">
+        I Understand, Continue
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ 'V10-techpack-studios.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer="defer"></script>
