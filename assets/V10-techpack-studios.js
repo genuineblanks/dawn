@@ -20933,6 +20933,11 @@ class V10_ModalManager {
       window.v10ClientManager.parentRequestId = this.validatedRequestId || 'TEMP';
     }
 
+    // Save Request ID prefix for future use
+    if (this.validatedRequestId) {
+      this.saveRequestIdPrefix(this.validatedRequestId);
+    }
+
     // Close modal immediately (hidden under black overlay)
     this.closeModal('request-id');
 
@@ -20964,6 +20969,11 @@ class V10_ModalManager {
     // Store validated ID for use in the form
     if (window.v10ClientManager) {
       window.v10ClientManager.parentRequestId = this.validatedRequestId || 'TEMP';
+    }
+
+    // Save Request ID prefix for future use
+    if (this.validatedRequestId) {
+      this.saveRequestIdPrefix(this.validatedRequestId);
     }
 
     // Close validation modal and proceed with submission type
