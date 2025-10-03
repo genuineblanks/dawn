@@ -17470,9 +17470,9 @@ class V10_ReviewManager {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    // Add copy functionality for Request ID (only for non-TEMP IDs)
+    // Add copy functionality for Request ID (sample/bulk requests only)
     const copyBtn = document.querySelector('.v10-copy-id-btn');
-    if (copyBtn && !isTempId) {
+    if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
         const textToCopy = copyBtn.getAttribute('data-copy-text');
         try {
