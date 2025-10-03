@@ -1573,6 +1573,11 @@ Enhanced with Visual Studio Guide System
 <div class="v10-modal-overlay" id="v10-step3-importance-modal" style="display: none;">
   <div class="v10-modal v10-modal--step3">
     <div class="v10-modal-header v10-modal-header--step3">
+      <div class="v10-modal-icon v10-modal-icon--info">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+      </div>
       <h3 class="v10-modal-title">Garment Configuration</h3>
       <button type="button" class="v10-modal-close" id="v10-close-step3-modal">
         <svg width="20" height="20" viewBox="0 0 20 20">
@@ -1587,7 +1592,7 @@ Enhanced with Visual Studio Guide System
       </p>
 
       <div class="v10-step3-secondary-message">
-        <p><strong>Important:</strong> Your TechPack provides guidance, but only garments configured here will be processed.</p>
+        <p>Your TechPack provides guidance, but only garments configured here will be processed.</p>
         <p class="v10-instruction-note">Double-check all details before proceeding.</p>
       </div>
 
@@ -1607,14 +1612,20 @@ Enhanced with Visual Studio Guide System
 <style>
 /* Step 3 Modal - Compact & Clean Design */
 .v10-modal.v10-modal--step3 .v10-modal-header.v10-modal-header--step3 {
+  display: flex !important;
+  align-items: center !important;
   justify-content: center !important;
+  gap: 12px !important;
   padding: 18px 24px 14px !important;
   border-bottom: 1px solid var(--v10-border-primary) !important;
 }
 
+.v10-modal.v10-modal--step3 .v10-modal-icon {
+  margin: 0 !important;
+}
+
 .v10-modal.v10-modal--step3 h3.v10-modal-title {
   text-align: center !important;
-  width: 100% !important;
   margin: 0 !important;
   font-size: 16px !important;
   font-weight: 600 !important;
@@ -1631,21 +1642,11 @@ Enhanced with Visual Studio Guide System
 }
 
 .v10-modal.v10-modal--step3 .v10-step3-primary-message p {
-  margin: 4px 0 !important;
+  margin: 0 !important;
   line-height: 1.5 !important;
-}
-
-.v10-modal.v10-modal--step3 .v10-step3-primary-message p:first-child {
-  font-size: 14px !important;
-  font-weight: 600 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
   color: var(--v10-text-primary) !important;
-  margin-bottom: 8px !important;
-}
-
-.v10-modal.v10-modal--step3 .v10-step3-primary-message .v10-step3-detail {
-  font-size: 12px !important;
-  color: var(--v10-text-secondary) !important;
-  font-weight: 400 !important;
 }
 
 .v10-modal.v10-modal--step3 div.v10-step3-secondary-message {
@@ -1667,10 +1668,12 @@ Enhanced with Visual Studio Guide System
 }
 
 .v10-modal.v10-modal--step3 .v10-step3-secondary-message .v10-instruction-note {
-  font-size: 10px !important;
-  color: var(--v10-text-secondary) !important;
-  font-style: italic !important;
-  margin-top: 6px !important;
+  font-size: 11px !important;
+  color: #f59e0b !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  margin-top: 12px !important;
+  text-align: center !important;
 }
 
 .v10-modal.v10-modal--step3 div.v10-step3-help-note {
