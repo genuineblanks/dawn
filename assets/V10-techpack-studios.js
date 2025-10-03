@@ -378,17 +378,16 @@ const V10_Utils = {
       const actualBrandName = brandName || companyName;
 
       if (clientType === 'new') {
-        // NEW CLIENTS: Generate with random 2 digits + random 3-digit sequence
+        // NEW CLIENTS: Generate with random 2 digits + TEMP
         const randomDigits = V10_Utils.generateTwoRandomDigits();
-        const randomSequence = Math.floor(Math.random() * 900 + 100).toString();
-        console.log('🔢 Generated ID components (new client):', { clientCode, randomDigits, randomSequence, companyName });
-        return `${clientCode}-${randomDigits}-${randomSequence}`;
-        // Result: GNBL-47-856 ✅
+        console.log('🔢 Generated ID components (new client):', { clientCode, randomDigits, companyName });
+        return `${clientCode}-${randomDigits}-TEMP`;
+        // Result: GNBL-47-TEMP ✅
       } else {
-        // REGISTERED CLIENTS: Use literal "XX" + TEMP (Apps Script replaces with access code digits)
+        // REGISTERED CLIENTS: Use QUOTE suffix (no digits, backend will add access code)
         console.log('🔢 Generated ID components (registered client):', { clientCode, companyName, actualBrandName });
-        return `${clientCode}-XX-TEMP`;
-        // Result: ASDS-XX-TEMP ✅ (always the same for this client)
+        return `${clientCode}-QUOTE`;
+        // Result: GNBL-QUOTE ✅
       }
     } catch (error) {
       console.error('Error generating TechPack ID:', error);
@@ -17427,9 +17426,6 @@ class V10_ReviewManager {
     const submissionId = response?.submissionId || `TP-${Date.now()}`;
     const isUsingParentId = window.v10ClientManager && window.v10ClientManager.parentRequestId;
 
-    // Conditional messages based on ID type and request type
-    const isTempId = submissionId.includes('TEMP');
-
     const messages = {
       'quotation': `Quotation submitted! We'll send you a detailed quote within 24-48 hours.`,
       'sample-request': `Sample request submitted! Production begins immediately.`,
@@ -17442,7 +17438,7 @@ class V10_ReviewManager {
 
     if (successDetails) {
       successDetails.innerHTML = `
-        ${(requestType === 'quotation' && isTempId)
+        ${requestType === 'quotation'
           ? `<div class="v10-email-notification-box">
               <div class="v10-email-notification-header">
                 <span class="v10-email-notification-icon">📧</span>
