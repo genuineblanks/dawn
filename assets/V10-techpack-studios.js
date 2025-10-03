@@ -20856,6 +20856,14 @@ class V10_ModalManager {
   }
 
   showUnlockAnimation() {
+    // Store validated ID for use in the form
+    if (window.v10ClientManager) {
+      window.v10ClientManager.parentRequestId = this.validatedRequestId || 'TEMP';
+    }
+
+    // Close modal immediately (hidden under black overlay)
+    this.closeModal('request-id');
+
     // Create unlock overlay
     const overlay = document.createElement('div');
     overlay.className = 'v10-unlock-overlay';
@@ -20868,9 +20876,13 @@ class V10_ModalManager {
     // Activate animation
     setTimeout(() => overlay.classList.add('active'), 10);
 
-    // Complete unlock sequence
+    // Prepare Step 1 underneath (hidden by black overlay)
     setTimeout(() => {
-      this.proceedWithValidatedId();
+      this.selectSubmissionType(this.pendingSubmissionType);
+    }, 100);
+
+    // Remove overlay after animation completes, revealing Step 1
+    setTimeout(() => {
       overlay.classList.remove('active');
       setTimeout(() => overlay.remove(), 300);
     }, 1200);
