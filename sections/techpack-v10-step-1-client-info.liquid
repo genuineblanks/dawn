@@ -232,9 +232,10 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
         <!-- Warning for Registered Clients - Full Width -->
         <div class="v10-form-field v10-form-field--full" id="v10-registered-email-warning" style="display: none;">
-          <span class="studio-header__badge studio-header__badge--incomplete">
-            ⚠️ IMPORTANT - USE THE SAME COMPANY NAME AND EMAIL ADDRESS FROM YOUR REGISTRATION
-          </span>
+          <div class="v10-registration-warning">
+            <span class="v10-warning-icon">⚠️</span>
+            <span class="v10-warning-text">Use the same company name and email from your registration</span>
+          </div>
         </div>
 
         <!-- Delivery Address -->
@@ -1080,6 +1081,34 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 @keyframes v10-unlock-text {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Registration Warning Box */
+.v10-registration-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 6px;
+  padding: 10px 16px;
+  box-shadow: inset 0 0 15px rgba(245, 158, 11, 0.2);
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.v10-warning-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.v10-warning-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--v10-text-primary);
+  letter-spacing: 0.025em;
+  text-align: center;
 }
 </style>
 
