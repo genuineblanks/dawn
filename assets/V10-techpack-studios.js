@@ -20671,6 +20671,9 @@ class V10_ModalManager {
       };
       titleElement.textContent = titles[submissionType] || 'Request ID Verification';
     }
+
+    // Pre-fill with saved prefix if exists
+    this.loadSavedPrefix();
   }
 
   setupRequestIdValidation() {
@@ -20831,6 +20834,9 @@ class V10_ModalManager {
     proceedBtn.disabled = false;
     this.isValidRequestId = true;
     this.validatedRequestData = result;
+
+    // Save Request ID prefix for future use
+    this.saveRequestIdPrefix(result.requestId);
   }
 
   showValidationError(error) {
@@ -20853,6 +20859,72 @@ class V10_ModalManager {
 
     proceedBtn.disabled = true;
     this.isValidRequestId = false;
+  }
+
+  saveRequestIdPrefix(requestId) {
+    // Extract prefix (first 2 segments: LETTERS-DD-)
+    const parts = requestId.split('-');
+    if (parts.length === 3) {
+      const prefix = `${parts[0]}-${parts[1]}-`;
+
+      // Save to localStorage for registered clients
+      localStorage.setItem('v10_request_id_prefix', prefix);
+
+      console.log(`✅ Saved Request ID prefix: ${prefix}`);
+    }
+  }
+
+  loadSavedPrefix() {
+    const input = document.getElementById('v10-request-id-input');
+    if (!input) return;
+
+    // Check if client has a saved prefix
+    const savedPrefix = localStorage.getItem('v10_request_id_prefix');
+
+    if (savedPrefix) {
+      // Pre-fill input with prefix
+      input.value = savedPrefix;
+
+      // Move cursor to end so they can type the last segment
+      setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(savedPrefix.length, savedPrefix.length);
+      }, 100);
+
+      // Show helpful hint
+      this.showPrefixHint(savedPrefix);
+
+      console.log(`📋 Pre-filled Request ID prefix: ${savedPrefix}`);
+    }
+  }
+
+  showPrefixHint(prefix) {
+    const instructions = document.querySelector('.v10-request-id-instructions');
+    if (!instructions) return;
+
+    // Remove existing hint if any
+    const existingHint = instructions.querySelector('.v10-prefix-hint');
+    if (existingHint) existingHint.remove();
+
+    // Add helpful hint above the warning box
+    const hint = document.createElement('div');
+    hint.className = 'v10-prefix-hint';
+    hint.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <span>Prefix remembered: <strong>${prefix}</strong> — Update the last 3 digits for your new quotation</span>
+    `;
+
+    // Insert before the warning highlight
+    const warningBox = instructions.querySelector('.v10-warning-highlight');
+    if (warningBox) {
+      instructions.insertBefore(hint, warningBox);
+    } else {
+      // If no warning box, insert at the end
+      instructions.appendChild(hint);
+    }
   }
 
   showUnlockAnimation() {
