@@ -16843,17 +16843,30 @@ class V10_ReviewManager {
     this.showLoadingModal();
 
     try {
-      // Step 1: Collect data (25%)
+      // Step 1: Collect data (25%) - with realistic delay
       this.updateLoadingProgress('step-collect-data', 'Preparing your request...', 25);
+      await new Promise(resolve => setTimeout(resolve, 800)); // Fake delay for UX
       const submissionData = await this.prepareEnhancedSubmissionData();
 
-      // Step 2: Process files (50%)
+      // Step 2: Process files (50%) - with realistic delay
       this.updateLoadingProgress('step-process-files', 'Processing uploaded files...', 50);
+      await new Promise(resolve => setTimeout(resolve, 800)); // Fake delay for UX
       await this.processFilesForSubmission(submissionData);
 
-      // Step 3: Send to webhook (75%)
+      // Step 3: Send to webhook (75% → 95% animated during request)
       this.updateLoadingProgress('step-send-webhook', 'Submitting your request...', 75);
-      const response = await this.sendToWebhook(submissionData);
+
+      // Start slow progress animation while waiting for network response
+      const progressInterval = this.animateProgressSlowly(75, 95, 10000); // Animate over max 10 seconds
+
+      let response;
+      try {
+        response = await this.sendToWebhook(submissionData);
+        clearInterval(progressInterval); // Stop animation when request completes
+      } catch (webhookError) {
+        clearInterval(progressInterval); // Stop animation on error
+        throw webhookError; // Re-throw to outer catch
+      }
 
       // Step 4: Confirm (100%)
       this.updateLoadingProgress('step-confirm', 'Finalizing submission...', 100);
@@ -17309,6 +17322,25 @@ class V10_ReviewManager {
         step.classList.remove('active', 'completed');
       }
     });
+  }
+
+  animateProgressSlowly(startPercent, endPercent, maxDuration) {
+    const startTime = Date.now();
+    const totalIncrease = endPercent - startPercent;
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / maxDuration, 1); // Cap at 1 (100%)
+      const currentPercent = startPercent + (totalIncrease * progress);
+
+      if (currentPercent < endPercent) {
+        this.updateLoadingProgress(null, 'Submitting your request...', Math.floor(currentPercent));
+      } else {
+        clearInterval(interval);
+      }
+    }, 100); // Update every 100ms for smooth animation
+
+    return interval;
   }
 
   // Error Modal Functions
