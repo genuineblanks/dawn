@@ -21505,7 +21505,7 @@ function initializeStep3ImportanceModal() {
     }
 
     // Show help note only for sample requests
-    const helpNote = document.querySelector('.v10-step3-help-note');
+    const helpNote = document.getElementById('v10-step3-help-note');
     if (helpNote) {
       if (requestType === 'sample-request') {
         helpNote.style.display = 'block';
