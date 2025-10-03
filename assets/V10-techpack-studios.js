@@ -19425,7 +19425,7 @@ class V10_ClientManager {
       const data = JSON.parse(savedData);
 
       // Fields to exclude from loading (same as save exclusions)
-      const excludedFields = [];
+      const excludedFields = ['project_details'];
 
       // Restore form values
       Object.entries(data).forEach(([key, value]) => {
