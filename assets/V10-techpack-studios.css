@@ -3229,13 +3229,112 @@ body[style*="overflow: hidden"] {
   flex: 1;
   font-size: var(--v10-text-sm);
   color: var(--v10-text-primary);
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+.v10-warning-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--v10-text-primary);
+  line-height: 1.3;
+}
+
+.v10-warning-content p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 4px 0;
+  color: var(--v10-text-secondary);
 }
 
 .v10-warning-content strong {
   font-weight: 600;
-  display: block;
-  margin-bottom: var(--v10-space-1);
+  color: var(--v10-text-primary);
+}
+
+.v10-warning-content .v10-instruction-note {
+  font-size: 12px;
+  color: var(--v10-text-secondary);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.v10-warning-content .v10-detail-note {
+  font-size: 12px;
+  color: var(--v10-text-secondary);
+}
+
+/* Warning highlight box for critical messages */
+.v10-warning-highlight {
+  background: rgba(251, 146, 60, 0.1);
+  border-left: 3px solid #fb923c;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: 4px;
+  color: var(--v10-text-primary);
+}
+
+.v10-warning-highlight strong {
+  color: #fb923c;
+}
+
+/* Status list for client verification */
+.v10-status-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.v10-status-list li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--v10-text-secondary);
+  line-height: 1.4;
+}
+
+.v10-status-list li strong {
+  color: var(--v10-text-primary);
+  font-weight: 600;
+}
+
+/* Verification description wrapper */
+.v10-verification-description p {
+  font-size: 14px;
+  margin: 0 0 4px 0;
+  color: var(--v10-text-primary);
+}
+
+/* Modal message styling */
+.v10-modal-message {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.v10-modal-message strong {
+  font-weight: 600;
+  color: var(--v10-text-primary);
+}
+
+.v10-modal-message p {
+  margin: 6px 0;
+}
+
+/* Request ID instructions */
+.v10-request-id-primary-text {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 4px 0;
+}
+
+.v10-request-id-secondary-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--v10-text-secondary);
+  margin: 8px 0 0 0;
 }
 
 /* Warning box styling - Dark theme only */
@@ -12600,118 +12699,5 @@ select:focus {
   .v10-request-id-value {
     font-size: var(--v10-text-base);
     padding: var(--v10-space-3) var(--v10-space-4);
-  }
-}
-
-/* ==============================================
-   MODAL CONTENT HIERARCHY & STRUCTURE
-   ============================================== */
-
-/* Warning box content structure */
-.v10-warning-content h4 {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  color: var(--v10-text-primary);
-  line-height: 1.3;
-}
-
-.v10-warning-content p {
-  font-size: 13px;
-  line-height: 1.6;
-  margin: 0;
-  color: var(--v10-text-secondary);
-}
-
-.v10-warning-content strong {
-  color: var(--v10-text-primary);
-  font-weight: 600;
-}
-
-/* Critical warning highlight box */
-.v10-warning-highlight {
-  background: rgba(251, 146, 60, 0.1);
-  border-left: 3px solid #fb923c;
-  padding: 10px 14px;
-  margin: 12px 0;
-  font-size: 13px;
-  line-height: 1.5;
-  border-radius: 4px;
-  color: var(--v10-text-primary);
-}
-
-.v10-warning-highlight strong {
-  color: #fb923c;
-}
-
-/* Instruction note styling */
-.v10-instruction-note {
-  font-size: 12px;
-  color: var(--v10-text-secondary);
-  font-style: italic;
-  margin: 8px 0 0 0;
-  text-align: center;
-}
-
-/* Status list for client verification */
-.v10-status-list {
-  list-style: none;
-  padding: 0;
-  margin: 12px 0 0 0;
-  text-align: left;
-  display: inline-block;
-}
-
-.v10-status-list li {
-  padding: 8px 0;
-  font-size: 14px;
-  color: var(--v10-text-secondary);
-  line-height: 1.4;
-}
-
-.v10-status-list li strong {
-  color: var(--v10-text-primary);
-  font-weight: 600;
-}
-
-/* Verification description wrapper */
-.v10-verification-description p {
-  font-size: 14px;
-  margin: 0 0 4px 0;
-  color: var(--v10-text-primary);
-}
-
-/* Request ID instructions styling improvements */
-.v10-request-id-primary-text {
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0 0 4px 0;
-}
-
-.v10-request-id-secondary-text {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--v10-text-secondary);
-  margin: 8px 0 0 0;
-}
-
-/* Mobile adjustments for new structures */
-@media (max-width: 768px) {
-  .v10-warning-content h4 {
-    font-size: 14px;
-  }
-
-  .v10-warning-content p {
-    font-size: 12px;
-  }
-
-  .v10-warning-highlight {
-    font-size: 12px;
-    padding: 8px 12px;
-  }
-
-  .v10-status-list li {
-    font-size: 13px;
-    padding: 6px 0;
   }
 }

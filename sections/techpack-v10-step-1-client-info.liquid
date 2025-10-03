@@ -270,7 +270,9 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           <div class="v10-warning-box-enhanced">
             <div class="v10-warning-icon">⚠️</div>
             <div class="v10-warning-content">
-              <strong>Critical: Delivery address cannot be changed once order processing begins.</strong> Double-check your selection - this is where your garments will be delivered. Any address changes after submission require a new order.
+              <h4>Critical Delivery Notice</h4>
+              <p><strong>Delivery address cannot be changed</strong> once order processing begins.</p>
+              <p>Double-check your selection. Address changes require a new order.</p>
             </div>
           </div>
         </div>
@@ -589,9 +591,13 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
     <div class="v10-modal-body">
       <div class="v10-verification-process">
-        <p class="v10-verification-description v10-text-center">
-          Select your status to begin. New clients start with quotations, registered clients can request samples or bulk orders.
-        </p>
+        <div class="v10-verification-description v10-text-center">
+          <p><strong>Select your status to begin:</strong></p>
+          <ul class="v10-status-list">
+            <li><strong>New Clients</strong> → Start with quotations</li>
+            <li><strong>Registered Clients</strong> → Request samples or bulk orders</li>
+          </ul>
+        </div>
         
         <div class="v10-client-options-horizontal">
           <!-- New Client - Left Side -->
@@ -655,8 +661,8 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-warning-box-enhanced v10-warning-box-enhanced--blue" id="v10-registration-notice" style="display: none;">
           <div class="v10-warning-icon">ℹ️</div>
           <div class="v10-warning-content">
-            <strong>New Client Path</strong>
-            Start with a quotation. After approval, you'll register to unlock samples and bulk orders.
+            <h4>New Client Path</h4>
+            <p>Start with a <strong>quotation</strong>. After approval, you'll register to unlock samples and bulk orders.</p>
           </div>
         </div>
 
@@ -664,8 +670,9 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-warning-box-enhanced" id="v10-registration-warning" style="display: none;">
           <div class="v10-warning-icon">⚠️</div>
           <div class="v10-warning-content">
-            <strong>Verification Required</strong>
-            Your registration will be verified. Unregistered submissions are rejected.
+            <h4>Verification Required</h4>
+            <p>Your registration will be verified.<br>
+            <strong>Unregistered submissions are automatically rejected.</strong></p>
           </div>
         </div>
 
@@ -785,11 +792,14 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <!-- Instruction Text -->
         <div class="v10-request-id-instructions">
           <p class="v10-request-id-primary-text">
-            Enter the Request ID from the quotation you're continuing with. This links your order to the correct quote.
+            <strong>Enter your Request ID</strong> from the quotation you're continuing with.
           </p>
-          <p class="v10-request-id-secondary-text">
-            Incorrect IDs cause processing errors and link to wrong quotations. Please verify your ID before proceeding.
-          </p>
+
+          <div class="v10-warning-highlight">
+            ⚠️ <strong>Critical:</strong> Incorrect IDs link to wrong quotations and cause processing errors.
+          </div>
+
+          <p class="v10-instruction-note">Double-check your ID before proceeding.</p>
         </div>
 
         <!-- Robotic Request ID Input -->
