@@ -20691,10 +20691,13 @@ class V10_ModalManager {
       input.classList.remove('valid', 'invalid');
       if (statusDiv) {
         statusDiv.classList.remove('valid', 'invalid');
-        statusDiv.textContent = '';
       }
 
       if (value.length === 0) {
+        // Reset to waiting state when empty
+        if (statusDiv) {
+          statusDiv.textContent = '⏳ WAITING FOR VALIDATION...';
+        }
         proceedBtn.disabled = true;
         return;
       }
@@ -20719,6 +20722,12 @@ class V10_ModalManager {
         }
         proceedBtn.disabled = true;
         this.isValidRequestId = false;
+      } else {
+        // Still typing, not enough characters yet
+        if (statusDiv) {
+          statusDiv.textContent = '⏳ WAITING FOR VALIDATION...';
+        }
+        proceedBtn.disabled = true;
       }
     });
 
