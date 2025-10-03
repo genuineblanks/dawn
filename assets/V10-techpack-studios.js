@@ -15597,7 +15597,7 @@ class V10_ReviewManager {
 
     // Add project notes if available (truncated to preserve layout)
     if (clientData.project_notes && clientData.project_notes.trim() && clientData.project_notes !== 'Not provided') {
-      const maxLength = 100;
+      const maxLength = 50;
       const truncatedNotes = clientData.project_notes.length > maxLength
         ? clientData.project_notes.substring(0, maxLength) + '...'
         : clientData.project_notes;
@@ -15612,7 +15612,7 @@ class V10_ReviewManager {
 
     // Add delivery notes if available (truncated to preserve layout)
     if (clientData.delivery_notes && clientData.delivery_notes.trim() && clientData.delivery_notes !== 'Not provided') {
-      const maxLength = 100;
+      const maxLength = 50;
       const truncatedNotes = clientData.delivery_notes.length > maxLength
         ? clientData.delivery_notes.substring(0, maxLength) + '...'
         : clientData.delivery_notes;
@@ -20913,39 +20913,7 @@ class V10_ModalManager {
         input.setSelectionRange(savedPrefix.length, savedPrefix.length);
       }, 100);
 
-      // Show helpful hint
-      this.showPrefixHint(savedPrefix);
-
       console.log(`📋 Pre-filled Request ID prefix: ${savedPrefix}`);
-    }
-  }
-
-  showPrefixHint(prefix) {
-    const instructions = document.querySelector('.v10-request-id-instructions');
-    if (!instructions) return;
-
-    // Remove existing hint if any
-    const existingHint = instructions.querySelector('.v10-prefix-hint');
-    if (existingHint) existingHint.remove();
-
-    // Add helpful hint above the warning box
-    const hint = document.createElement('div');
-    hint.className = 'v10-prefix-hint';
-    hint.innerHTML = `
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 16v-4M12 8h.01"/>
-      </svg>
-      <span>Prefix remembered: <strong>${prefix}</strong> — Update the last 3 digits for your new quotation</span>
-    `;
-
-    // Insert before the warning highlight
-    const warningBox = instructions.querySelector('.v10-warning-highlight');
-    if (warningBox) {
-      instructions.insertBefore(hint, warningBox);
-    } else {
-      // If no warning box, insert at the end
-      instructions.appendChild(hint);
     }
   }
 
