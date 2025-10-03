@@ -19987,9 +19987,16 @@ class V10_FileManager {
     if (details) details.innerHTML = '<p class="v10-detail-note">Body measurements or size charts are mandatory for accurate quotations.</p>';
     
     // Configure buttons
-    if (proceedBtn) proceedBtn.style.display = 'none';
+    if (proceedBtn) {
+      proceedBtn.style.display = 'none';
+      // Center the modal actions when only one button is visible
+      const modalActions = modal.querySelector('.v10-modal-actions');
+      if (modalActions) modalActions.style.justifyContent = 'center';
+    }
     if (backBtn) {
       backBtn.style.display = 'inline-flex';
+      backBtn.style.width = '100%';
+      backBtn.style.maxWidth = '300px';
       backBtn.textContent = 'I Understand';
       backBtn.onclick = () => window.v10ModalManager.closeModal(modal);
     }
