@@ -1648,7 +1648,7 @@ button:focus,
 
 .v10-progress-fill {
   height: 100%;
-  background: var(--v10-accent-primary);
+  background: #10b981;
   border-radius: var(--v10-radius-sm);
   transition: width 0.3s ease;
 }
@@ -12397,7 +12397,7 @@ select:focus {
 
 .v10-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--v10-accent-primary) 0%, var(--v10-accent-secondary) 100%);
+  background: linear-gradient(90deg, #10b981 0%, #22c55e 100%);
   border-radius: 4px;
   transition: width 0.3s ease;
   width: 0%;
