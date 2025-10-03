@@ -3358,31 +3358,6 @@ body[style*="overflow: hidden"] {
   margin: 8px 0 0 0;
 }
 
-/* Request ID prefix hint (memory feature) */
-.v10-prefix-hint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(16, 185, 129, 0.1);
-  border-left: 3px solid #10b981;
-  padding: 10px 14px;
-  margin: 12px 0;
-  font-size: 13px;
-  line-height: 1.5;
-  border-radius: 4px;
-  color: var(--v10-text-primary);
-}
-
-.v10-prefix-hint svg {
-  color: #10b981;
-  flex-shrink: 0;
-}
-
-.v10-prefix-hint strong {
-  color: #10b981;
-  font-weight: 600;
-}
-
 /* Warning box styling - Dark theme only */
 .v10-warning-box-enhanced {
   background: var(--v10-surface-warning);
