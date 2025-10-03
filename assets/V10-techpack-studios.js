@@ -21508,10 +21508,10 @@ function initializeStep3ImportanceModal() {
     const helpNote = document.getElementById('v10-step3-help-note');
     if (helpNote) {
       if (requestType === 'sample-request') {
-        helpNote.style.setProperty('display', 'block', 'important');
+        helpNote.classList.remove('v10-hidden');
         console.log('✅ Help note shown for sample request');
       } else {
-        helpNote.style.setProperty('display', 'none', 'important');
+        helpNote.classList.add('v10-hidden');
         console.log('🔒 Help note hidden for:', requestType);
       }
     }
