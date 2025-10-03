@@ -17402,11 +17402,9 @@ class V10_ReviewManager {
     const isTempId = submissionId.includes('TEMP');
 
     const messages = {
-      'quotation': isTempId
-        ? `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.<br><br><strong>Important:</strong> Your final Request ID will be sent via email within 24 hours. You'll need this ID for any future sample requests or bulk orders.`
-        : `Your quotation request has been submitted successfully. Our team will review your specifications and send you a detailed quote within 24-48 hours.<br><br>Your Request ID has been sent to your email.`,
-      'sample-request': `Your sample request has been submitted successfully. Production will begin immediately and samples will be shipped according to the specified timeframes.<br><br>Use this same Request ID when placing your bulk order to maintain continuity.`,
-      'bulk-order-request': `Your bulk order has been submitted successfully. Our team will review your order and contact you within 24 hours to confirm details and arrange the deposit.<br><br>All correspondence will reference your Request ID shown below.`
+      'quotation': `Quotation submitted! We'll send you a detailed quote within 24-48 hours.`,
+      'sample-request': `Sample request submitted! Production begins immediately.`,
+      'bulk-order-request': `Bulk order submitted! We'll contact you within 24 hours to confirm details.`
     };
 
     if (successMessage) {
@@ -17414,29 +17412,15 @@ class V10_ReviewManager {
     }
 
     if (successDetails) {
-      const costs = this.calculateCosts();
-      const requestTypeLabel = this.getRequestTypeLabel(requestType);
-
       successDetails.innerHTML = `
-        <div class="success-detail">
-          <strong>Request Type:</strong> ${requestTypeLabel}
-        </div>
-        <div class="success-detail">
-          <strong>Submitted:</strong> ${new Date().toLocaleString()}
-        </div>
-        <div class="success-detail">
-          <strong>Status:</strong> Successfully submitted
-        </div>
-        <div class="success-detail">
-          <strong>Next Steps:</strong> Check your email for confirmation and updates
-        </div>
-
         ${(requestType === 'quotation' && isTempId)
-          ? `<div class="v10-email-notification-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%); border: 1px solid #90caf9; border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center;">
-              <div class="v10-email-icon" style="font-size: 32px; margin-bottom: 12px;">📧</div>
-              <div class="v10-email-content">
-                <div class="v10-email-title" style="font-weight: 600; color: #1976d2; margin-bottom: 8px; font-size: 18px;">Final Request ID Delivery</div>
-                <div class="v10-email-message" style="color: #424242; line-height: 1.5;">Your unique Request ID is being processed and will be sent to your email within 24 hours. This ID will be required for any sample requests or bulk orders.</div>
+          ? `<div class="v10-email-notification-box">
+              <div class="v10-email-notification-header">
+                <span class="v10-email-notification-icon">📧</span>
+                <h3 class="v10-email-notification-title">Request ID Delivery</h3>
+              </div>
+              <div class="v10-email-notification-content">
+                <p class="v10-email-notification-text">Your Request ID will be sent via email within 24 hours. You'll need it for future orders.</p>
               </div>
             </div>`
           : `<div class="v10-request-id-box">
@@ -17451,7 +17435,7 @@ class V10_ReviewManager {
                   Copy ID
                 </button>
               </div>
-              <div class="v10-request-id-note">Keep this ID to contact us about your order</div>
+              <div class="v10-request-id-note">Your Request ID has been sent to your email.</div>
             </div>`
         }
       `;

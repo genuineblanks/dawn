@@ -12587,22 +12587,6 @@ select:focus {
   background: rgba(16, 185, 129, 0.1);
 }
 
-.success-detail {
-  margin-bottom: var(--v10-space-2);
-  padding: var(--v10-space-2) 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.success-detail:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.success-detail strong {
-  color: var(--v10-text-primary);
-  margin-right: var(--v10-space-2);
-}
-
 /* Request ID Box Styling - TechPack Dark Theme */
 .v10-request-id-box {
   background: var(--v10-bg-card);
@@ -12695,6 +12679,49 @@ select:focus {
   margin-top: var(--v10-space-2);
 }
 
+/* Email Notification Box - Request ID Verification Modal Style */
+.v10-email-notification-box {
+  margin-top: var(--v10-space-4);
+  margin-bottom: 0;
+}
+
+.v10-email-notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px 20px;
+  box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.3), 0 0 10px rgba(245, 158, 11, 0.2);
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-email-notification-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.v10-email-notification-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--v10-text-primary);
+  letter-spacing: 0.025em;
+}
+
+.v10-email-notification-content {
+  text-align: center;
+}
+
+.v10-email-notification-text {
+  font-size: 14px;
+  color: var(--v10-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
   .v10-modal--loading,
@@ -12737,5 +12764,23 @@ select:focus {
   .v10-request-id-value {
     font-size: var(--v10-text-base);
     padding: var(--v10-space-3) var(--v10-space-4);
+  }
+
+  /* Email Notification Mobile Responsiveness */
+  .v10-email-notification-header {
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .v10-email-notification-icon {
+    font-size: 18px;
+  }
+
+  .v10-email-notification-title {
+    font-size: 14px;
+  }
+
+  .v10-email-notification-text {
+    font-size: 13px;
   }
 }
