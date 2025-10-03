@@ -2276,6 +2276,7 @@ body[style*="overflow: hidden"] {
   color: var(--v10-text-primary);
   margin-bottom: var(--v10-space-4);
   line-height: 1.6;
+  text-align: center;
 }
 
 .v10-modal-details {
@@ -3330,6 +3331,7 @@ body[style*="overflow: hidden"] {
 .v10-modal-message {
   font-size: 14px;
   line-height: 1.6;
+  text-align: center;
 }
 
 .v10-modal-message strong {
