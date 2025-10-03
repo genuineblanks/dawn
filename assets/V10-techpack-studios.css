@@ -2299,12 +2299,20 @@ body[style*="overflow: hidden"] {
 .v10-modal-icon {
   width: 48px;
   height: 48px;
-  margin-bottom: var(--v10-space-4);
+  border-radius: 50%;
+  padding: var(--v10-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   color: var(--v10-text-muted);
+  background: var(--v10-bg-tertiary);
 }
 
-.v10-modal-icon--warning {
-  color: var(--v10-accent-warning);
+.v10-modal-icon svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 /* Client Verification Button Layout */
@@ -6119,12 +6127,17 @@ html.onboarding-active {
 .v10-btn-inner {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--v10-space-4);
 }
 
-.v10-btn-icon {
+.v10-btn-access-studio .v10-btn-icon {
   width: 28px;
   height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .v10-btn-text {
