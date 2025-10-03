@@ -21634,11 +21634,11 @@ function initializeStep3ImportanceModal() {
     // Set dynamic message based on request type
     if (messageEl) {
       if (requestType === 'quotation') {
-        messageEl.innerHTML = 'We will <strong>ONLY QUOTE</strong> the garments you configure in this step.';
+        messageEl.innerHTML = '<p><strong>Configure the garments you want quoted.</strong></p><p class="v10-step3-detail">We will quote only what you specify in this step.</p>';
       } else if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
-        messageEl.innerHTML = 'We will <strong>ONLY PRODUCE</strong> the garments you configure in this step.';
+        messageEl.innerHTML = '<p><strong>Configure the garments for production.</strong></p><p class="v10-step3-detail">We will produce only what you specify in this step.</p>';
       } else {
-        messageEl.innerHTML = 'We will only quote/produce the garments you configure in this step.';
+        messageEl.innerHTML = '<p><strong>Configure your garments.</strong></p><p class="v10-step3-detail">We will process only what you specify in this step.</p>';
       }
     }
 
