@@ -227,11 +227,14 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
               required
               placeholder="contact@company.com"
             >
-            <!-- Warning for Registered Clients -->
-            <div class="v10-email-warning" id="v10-registered-email-warning" style="display: none; margin-top: 8px; padding: 8px 12px; background: #fff3cd; border-left: 3px solid #ffc107; border-radius: 4px; font-size: 0.9em; color: #856404;">
-              <span style="font-weight: 600;">⚠️ Important:</span> Use the same email address from your registration
-            </div>
           </label>
+        </div>
+
+        <!-- Warning for Registered Clients - Full Width -->
+        <div class="v10-form-field v10-form-field--full" id="v10-registered-email-warning" style="display: none;">
+          <span class="studio-header__badge studio-header__badge--incomplete">
+            ⚠️ IMPORTANT - USE THE SAME COMPANY NAME AND EMAIL ADDRESS FROM YOUR REGISTRATION
+          </span>
         </div>
 
         <!-- Delivery Address -->
@@ -814,36 +817,36 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     <div class="v10-modal-body">
       <div class="v10-request-id-verification">
 
-        <!-- Orange Warning Message -->
-        <div class="v10-warning-box-enhanced" style="flex-direction: column; align-items: center; text-align: center;">
-          <div class="v10-warning-icon">⚠️</div>
-          <div class="v10-warning-content">
-            <strong style="font-size: 1.05em;">Critical Request ID Verification</strong>
-
-            <p style="font-size: 1.1em; font-weight: 700; margin: 12px 0 8px 0;">
-              Enter the Request ID from THE QUOTATION YOU WANT TO PROCEED WITH.
-            </p>
-
-            <p style="margin: 8px 0 0 0; font-size: 0.95em;">
-              Using an incorrect or unrelated ID will delay your order and require multiple emails to correct. Double-check before proceeding.
-            </p>
-          </div>
+        <!-- Compact Orange Header -->
+        <div class="v10-warning-header">
+          <span class="v10-warning-icon-inline">⚠️</span>
+          <strong>Critical Request ID Verification</strong>
         </div>
 
-        <!-- Request ID Input -->
-        <div class="v10-form-field v10-form-field--full" style="text-align: center;">
-          <label class="v10-form-label-enhanced" style="display: block; text-align: center;">
-            <span class="v10-required">TECHPACK REQUEST ID</span>
-            <input
-              type="text"
-              id="v10-request-id-input"
-              class="v10-form-input-enhanced"
-              placeholder="Enter your Request ID"
-              pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
-              maxlength="16"
-              required
-            >
+        <!-- Instructions (Outside Orange Box) -->
+        <div class="v10-instructions-text">
+          <p class="v10-instruction-primary">
+            Enter the Request ID from <strong>THE QUOTATION YOU WANT TO PROCEED WITH.</strong>
+          </p>
+          <p class="v10-instruction-secondary">
+            Using an incorrect or unrelated ID will delay your order and require multiple emails to correct. Double-check before proceeding.
+          </p>
+        </div>
+
+        <!-- Clean Request ID Input -->
+        <div class="v10-input-group">
+          <label class="v10-input-label">
+            TECHPACK REQUEST ID <span class="v10-required-dot">*</span>
           </label>
+          <input
+            type="text"
+            id="v10-request-id-input"
+            class="v10-input-clean"
+            placeholder="e.g., GNNS-37-001"
+            pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
+            maxlength="16"
+            required
+          />
           <div class="v10-validation-message" id="v10-request-id-validation"></div>
         </div>
 
@@ -870,6 +873,127 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     </div>
   </div>
 </div>
+
+<style>
+/* Request ID Verification Modal - Clean Design */
+.v10-warning-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.v10-warning-icon-inline {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.v10-instructions-text {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.v10-instruction-primary {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--v10-text-primary);
+  line-height: 1.5;
+}
+
+.v10-instruction-secondary {
+  font-size: 12px;
+  margin: 0;
+  color: var(--v10-text-secondary);
+  line-height: 1.6;
+}
+
+.v10-input-group {
+  margin-bottom: 20px;
+}
+
+.v10-input-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  color: var(--v10-text-secondary);
+}
+
+.v10-required-dot {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.v10-input-clean {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  border: 2px solid var(--v10-border-primary);
+  border-radius: 8px;
+  background: var(--v10-bg-secondary);
+  color: var(--v10-text-primary);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.v10-input-clean:focus {
+  outline: none;
+  border-color: var(--v10-accent-primary);
+  background: var(--v10-bg-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.v10-input-clean::placeholder {
+  color: var(--v10-text-tertiary);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.v10-validation-message {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v10-validation--loading {
+  color: var(--v10-text-secondary);
+}
+
+.v10-validation--success {
+  color: #10b981;
+}
+
+.v10-validation--success::before {
+  content: "✓";
+  font-weight: 700;
+}
+
+.v10-validation--error {
+  color: #ef4444;
+}
+
+.v10-validation--error::before {
+  content: "✕";
+  font-weight: 700;
+}
+</style>
 
 <!-- Load TechPack V10 Application -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
