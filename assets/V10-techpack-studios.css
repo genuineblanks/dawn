@@ -1637,27 +1637,6 @@ button:focus,
   border-top: 1px solid var(--v10-border-primary);
 }
 
-.v10-progress-bar {
-  width: 100%;
-  height: 6px;
-  background: var(--v10-bg-secondary);
-  border-radius: var(--v10-radius-sm);
-  overflow: hidden;
-  margin-bottom: var(--v10-space-2);
-}
-
-.v10-progress-fill {
-  height: 100%;
-  background: #10b981;
-  border-radius: var(--v10-radius-sm);
-  transition: width 0.3s ease;
-}
-
-.v10-progress-text {
-  font-size: var(--v10-text-sm);
-  color: var(--v10-text-secondary);
-}
-
 /* ==============================================
    COLORWAY MODAL SYSTEM - CLEAN IMPLEMENTATION
    ============================================== */
@@ -12380,29 +12359,31 @@ select:focus {
   to { transform: rotate(360deg); }
 }
 
-/* Progress Bar Styles */
+/* Progress Bar Styles - v3 - 2025-10-03 - Cache Buster */
 .v10-progress-container {
   margin: var(--v10-space-4) 0;
   position: relative;
 }
 
 .v10-progress-bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  width: 100% !important;
+  height: 8px !important;
+  background: rgba(107, 114, 128, 0.5) !important;
   border-radius: 4px;
   overflow: hidden;
   position: relative;
+  display: block !important;
 }
 
 .v10-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, #22c55e 100%);
+  height: 100% !important;
+  background: linear-gradient(90deg, #10b981 0%, #22c55e 100%) !important;
   border-radius: 4px;
   transition: width 0.3s ease;
   width: 0%;
   position: relative;
   overflow: hidden;
+  display: block !important;
 }
 
 .v10-progress-fill::after {
