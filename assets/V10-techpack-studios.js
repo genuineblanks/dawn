@@ -21057,7 +21057,10 @@ class V10_ModalManager {
         }
         break;
     }
-    
+
+    // Update Project Details section to Delivery Notes for bulk orders
+    this.updateProjectDetailsSection(submissionType);
+
     // Setup delivery address toggle functionality
     this.setupDeliveryAddressToggle();
     
@@ -21271,7 +21274,57 @@ class V10_ModalManager {
       });
     }
   }
-  
+
+  updateProjectDetailsSection(submissionType) {
+    // Get all elements of the Project Details section
+    const toggleBtn = document.getElementById('v10-project-details-toggle');
+    const section = document.getElementById('v10-project-details-section');
+
+    if (!toggleBtn || !section) return;
+
+    const btnTitle = toggleBtn.querySelector('.add-garment-btn__title');
+    const btnSubtitle = toggleBtn.querySelector('.add-garment-btn__subtitle');
+    const sectionTitle = section.querySelector('.v10-studio-title');
+    const sectionSubtitle = section.querySelector('.v10-studio-subtitle');
+    const label = section.querySelector('.v10-form-label-enhanced');
+    const textarea = section.querySelector('textarea');
+
+    if (submissionType === 'bulk-order-request') {
+      // Update to Delivery Notes for bulk orders
+      if (btnTitle) btnTitle.textContent = 'Add Delivery Notes';
+      if (btnSubtitle) btnSubtitle.textContent = 'Optional: Special delivery instructions or requirements';
+      if (sectionTitle) sectionTitle.textContent = 'Delivery Notes';
+      if (sectionSubtitle) sectionSubtitle.textContent = 'Provide any special delivery instructions or requirements';
+      if (label) {
+        // Update label text (preserve the textarea element)
+        const labelText = label.childNodes[0];
+        if (labelText && labelText.nodeType === Node.TEXT_NODE) {
+          labelText.textContent = 'DELIVERY INSTRUCTIONS';
+        }
+      }
+      if (textarea) {
+        textarea.name = 'deliveryNotes';
+        textarea.placeholder = 'Enter any special delivery instructions, access codes, contact preferences, or other delivery-related requirements...';
+      }
+    } else {
+      // Default to Project Details for quotation and sample requests
+      if (btnTitle) btnTitle.textContent = 'Add Project Details';
+      if (btnSubtitle) btnSubtitle.textContent = 'Optional: Describe your project requirements and specifications';
+      if (sectionTitle) sectionTitle.textContent = 'Project Details';
+      if (sectionSubtitle) sectionSubtitle.textContent = 'Describe your project requirements and specifications';
+      if (label) {
+        const labelText = label.childNodes[0];
+        if (labelText && labelText.nodeType === Node.TEXT_NODE) {
+          labelText.textContent = 'PROJECT DESCRIPTION';
+        }
+      }
+      if (textarea) {
+        textarea.name = 'project_details';
+        textarea.placeholder = 'Describe your project requirements, quantities, specific materials, or any other important details...';
+      }
+    }
+  }
+
   setupEnhancedCountryDropdowns() {
     // Country dropdowns now use native select elements - no setup needed
     console.log('✅ Country dropdowns using native select elements');
