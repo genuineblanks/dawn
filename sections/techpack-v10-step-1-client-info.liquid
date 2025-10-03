@@ -817,37 +817,37 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
     <div class="v10-modal-body">
       <div class="v10-request-id-verification">
 
-        <!-- Compact Orange Header -->
-        <div class="v10-warning-header">
-          <span class="v10-warning-icon-inline">⚠️</span>
-          <strong>Critical Request ID Verification</strong>
+        <!-- Compact Orange Warning Header -->
+        <div class="v10-request-id-header">
+          <span class="v10-request-id-icon">⚠️</span>
+          <h3 class="v10-request-id-title">Critical Request ID Verification</h3>
         </div>
 
-        <!-- Instructions (Outside Orange Box) -->
-        <div class="v10-instructions-text">
-          <p class="v10-instruction-primary">
-            Enter the Request ID from <strong>THE QUOTATION YOU WANT TO PROCEED WITH.</strong>
+        <!-- Instruction Text -->
+        <div class="v10-request-id-instructions">
+          <p class="v10-request-id-primary-text">
+            Enter the Request ID from THE QUOTATION YOU WANT TO PROCEED WITH.
           </p>
-          <p class="v10-instruction-secondary">
+          <p class="v10-request-id-secondary-text">
             Using an incorrect or unrelated ID will delay your order and require multiple emails to correct. Double-check before proceeding.
           </p>
         </div>
 
         <!-- Clean Request ID Input -->
-        <div class="v10-input-group">
-          <label class="v10-input-label">
-            TECHPACK REQUEST ID <span class="v10-required-dot">*</span>
+        <div class="v10-request-id-input-wrapper">
+          <label class="v10-request-id-label">
+            TECHPACK REQUEST ID <span class="v10-request-id-required">*</span>
           </label>
           <input
             type="text"
             id="v10-request-id-input"
-            class="v10-input-clean"
-            placeholder="e.g., GNNS-37-001"
+            class="v10-request-id-input"
+            placeholder="e.g., GNNS-89-174"
             pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
             maxlength="16"
             required
-          />
-          <div class="v10-validation-message" id="v10-request-id-validation"></div>
+          >
+          <div class="v10-request-id-validation" id="v10-request-id-validation"></div>
         </div>
 
         <!-- Status Display -->
@@ -875,123 +875,113 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 </div>
 
 <style>
-/* Request ID Verification Modal - Clean Design */
-.v10-warning-header {
-  display: inline-flex;
+/* Request ID Verification Modal - Clean Modern Design */
+.v10-request-id-header {
+  display: flex;
   align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
-  border: 1px solid #f59e0b;
-  border-radius: 6px;
-  padding: 10px 16px;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px 20px;
   margin-bottom: 20px;
-  color: #f59e0b;
-  font-weight: 700;
-  font-size: 14px;
 }
 
-.v10-warning-icon-inline {
-  font-size: 18px;
+.v10-request-id-icon {
+  font-size: 20px;
   line-height: 1;
 }
 
-.v10-instructions-text {
-  margin-bottom: 24px;
-  text-align: left;
+.v10-request-id-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--v10-text-primary);
+  letter-spacing: 0.025em;
 }
 
-.v10-instruction-primary {
+.v10-request-id-instructions {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.v10-request-id-primary-text {
   font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 12px 0;
+  font-weight: 700;
   color: var(--v10-text-primary);
+  margin: 0 0 12px 0;
   line-height: 1.5;
 }
 
-.v10-instruction-secondary {
+.v10-request-id-secondary-text {
   font-size: 12px;
-  margin: 0;
   color: var(--v10-text-secondary);
+  margin: 0;
   line-height: 1.6;
 }
 
-.v10-input-group {
+.v10-request-id-input-wrapper {
   margin-bottom: 20px;
 }
 
-.v10-input-label {
+.v10-request-id-label {
   display: block;
   font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  color: var(--v10-text-secondary);
-}
-
-.v10-required-dot {
-  color: #ef4444;
-  margin-left: 2px;
-}
-
-.v10-input-clean {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
   font-weight: 600;
-  font-family: 'Courier New', monospace;
-  letter-spacing: 1px;
+  color: var(--v10-text-secondary);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.v10-request-id-required {
+  color: var(--v10-accent-error);
+}
+
+.v10-request-id-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--v10-text-primary);
+  background: var(--v10-bg-input);
   border: 2px solid var(--v10-border-primary);
   border-radius: 8px;
-  background: var(--v10-bg-secondary);
-  color: var(--v10-text-primary);
   transition: all 0.2s ease;
-  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
 }
 
-.v10-input-clean:focus {
+.v10-request-id-input::placeholder {
+  color: var(--v10-text-disabled);
+  opacity: 0.6;
+}
+
+.v10-request-id-input:focus {
   outline: none;
   border-color: var(--v10-accent-primary);
-  background: var(--v10-bg-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: #2a2a2a;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.v10-input-clean::placeholder {
-  color: var(--v10-text-tertiary);
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.v10-validation-message {
+.v10-request-id-validation {
   margin-top: 8px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
 }
 
-.v10-validation--loading {
-  color: var(--v10-text-secondary);
+.v10-request-id-validation.valid {
+  color: var(--v10-accent-success);
 }
 
-.v10-validation--success {
-  color: #10b981;
-}
-
-.v10-validation--success::before {
-  content: "✓";
-  font-weight: 700;
-}
-
-.v10-validation--error {
-  color: #ef4444;
-}
-
-.v10-validation--error::before {
-  content: "✕";
-  font-weight: 700;
+.v10-request-id-validation.invalid {
+  color: var(--v10-accent-error);
 }
 </style>
 
