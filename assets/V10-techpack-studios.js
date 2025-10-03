@@ -17573,7 +17573,9 @@ class V10_ReviewManager {
           company: companyName || 'Not provided',
           name: displayName,
           email: realClientData.email || realClientData.Email || 'Not provided',
-          isNewClient: realClientData.isNewClient || false  // Include isNewClient from client manager
+          isNewClient: realClientData.isNewClient || false,  // Include isNewClient from client manager
+          project_notes: realClientData.project_notes || '',
+          delivery_notes: realClientData.delivery_notes || ''
         };
 
 

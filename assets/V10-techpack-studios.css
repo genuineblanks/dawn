@@ -2283,6 +2283,7 @@ body[style*="overflow: hidden"] {
   font-size: var(--v10-text-sm);
   color: var(--v10-text-secondary);
   line-height: 1.5;
+  text-align: center;
 }
 
 .v10-modal-actions {
