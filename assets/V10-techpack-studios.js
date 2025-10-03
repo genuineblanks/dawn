@@ -19998,9 +19998,9 @@ class V10_FileManager {
     const backBtn = document.getElementById('techpack-v10-warning-back');
     const proceedBtn = document.getElementById('techpack-v10-warning-proceed');
     
-    if (title) title.textContent = 'Fit Measurements Required';
-    if (message) message.textContent = 'This request type requires fit measurements to proceed. Please select "Fit Measurements" to continue.';
-    if (details) details.innerHTML = '<p><strong>Required:</strong> Body measurements or size charts are mandatory for accurate quotations and proper garment fitting.</p>';
+    if (title) title.textContent = 'Measurement Check';
+    if (message) message.innerHTML = '<p><strong>Fit measurements required</strong> to proceed with this request type.</p>';
+    if (details) details.innerHTML = '<p class="v10-detail-note">Body measurements or size charts are mandatory for accurate quotations.</p>';
     
     // Configure buttons
     if (proceedBtn) proceedBtn.style.display = 'none';
@@ -20030,9 +20030,9 @@ class V10_FileManager {
     const backBtn = document.getElementById('v10-measurement-modal-back');
     const proceedBtn = document.getElementById('v10-measurement-modal-proceed');
     
-    if (title) title.textContent = 'Incomplete Measurements';
+    if (title) title.textContent = 'Measurement Check';
     if (message) {
-      message.textContent = "Some measurements are missing from your submission. Please review the requirements below and add the missing measurements for more accurate results.";
+      message.innerHTML = '<p><strong>Some measurements are missing.</strong></p><p class="v10-instruction-note">Review requirements and add missing measurements for accurate results.</p>';
     }
     
     // Generate measurements status
@@ -20060,12 +20060,12 @@ class V10_FileManager {
     // Configure buttons
     if (backBtn) {
       backBtn.style.display = 'inline-flex';
-      backBtn.textContent = 'Go Back & Add Measurements';
+      backBtn.textContent = 'Add Measurements';
       backBtn.onclick = () => window.v10ModalManager.closeModal(modal);
     }
     if (proceedBtn) {
       proceedBtn.style.display = 'inline-flex';
-      proceedBtn.textContent = 'Continue Anyway';
+      proceedBtn.textContent = 'Skip for Now';
       proceedBtn.onclick = () => {
         window.v10ModalManager.closeModal(modal);
         this.proceedToStep3();
