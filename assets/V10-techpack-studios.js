@@ -15594,7 +15594,37 @@ class V10_ReviewManager {
         </div>
       `;
     }
-    
+
+    // Add project notes if available (truncated to preserve layout)
+    if (clientData.project_notes && clientData.project_notes.trim() && clientData.project_notes !== 'Not provided') {
+      const maxLength = 100;
+      const truncatedNotes = clientData.project_notes.length > maxLength
+        ? clientData.project_notes.substring(0, maxLength) + '...'
+        : clientData.project_notes;
+
+      clientFields += `
+        <div class="review-detail review-detail--full">
+          <span class="detail-label">Project Notes:</span>
+          <span class="detail-value detail-value--notes">${truncatedNotes}</span>
+        </div>
+      `;
+    }
+
+    // Add delivery notes if available (truncated to preserve layout)
+    if (clientData.delivery_notes && clientData.delivery_notes.trim() && clientData.delivery_notes !== 'Not provided') {
+      const maxLength = 100;
+      const truncatedNotes = clientData.delivery_notes.length > maxLength
+        ? clientData.delivery_notes.substring(0, maxLength) + '...'
+        : clientData.delivery_notes;
+
+      clientFields += `
+        <div class="review-detail review-detail--full">
+          <span class="detail-label">Delivery Notes:</span>
+          <span class="detail-value detail-value--notes">${truncatedNotes}</span>
+        </div>
+      `;
+    }
+
     container.innerHTML = clientFields;
   }
   
@@ -15782,7 +15812,6 @@ class V10_ReviewManager {
       // Use multi-colored gradient for quotations instead of default gray
       colorDisplay.color = 'transparent';
       colorDisplay.overlay = 'background: conic-gradient(#ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b); border: 1px solid #9ca3af;';
-      colorDisplay.name = 'Standard Configuration';
     } else if (requestType === 'sample-request' && garment.sampleType) {
       if (garment.sampleType === 'stock' && garment.sampleSubValue) {
         // Stock color samples with proper patterns matching Step 3
