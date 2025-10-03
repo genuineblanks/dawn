@@ -20676,25 +20676,46 @@ class V10_ModalManager {
   setupRequestIdValidation() {
     const modal = document.getElementById('v10-request-id-modal');
     const input = document.getElementById('v10-request-id-input');
+    const boxes = document.getElementById('v10-request-id-boxes');
     const proceedBtn = document.getElementById('v10-request-id-proceed');
     const cancelBtn = document.getElementById('v10-request-id-cancel');
     const validationMsg = document.getElementById('v10-request-id-validation');
 
-    if (!modal || !input || !proceedBtn) return;
+    if (!modal || !input || !proceedBtn || !boxes) return;
 
-    // Real-time validation as user types
-    let validationTimeout;
-    input.addEventListener('input', (e) => {
-      clearTimeout(validationTimeout);
-      const value = e.target.value.toUpperCase();
-      e.target.value = value; // Force uppercase
+    // Setup character box interaction
+    const charBoxes = boxes.querySelectorAll('.v10-char-box');
+    let currentValue = '';
 
-      if (value.length >= 10) {
-        validationTimeout = setTimeout(() => {
-          this.validateRequestId(value);
-        }, 500);
-      } else {
-        this.clearValidation();
+    // Click on boxes to focus input
+    boxes.addEventListener('click', () => {
+      input.focus();
+    });
+
+    // Listen for keyboard input
+    document.addEventListener('keydown', (e) => {
+      if (modal.style.display !== 'flex') return;
+
+      const key = e.key.toUpperCase();
+      const isLetter = /^[A-Z]$/.test(key);
+      const isNumber = /^[0-9]$/.test(key);
+      const isBackspace = key === 'BACKSPACE';
+      const isDelete = key === 'DELETE';
+
+      if (isLetter || isNumber) {
+        e.preventDefault();
+        if (currentValue.length < 9) {
+          currentValue += key;
+          this.updateCharacterBoxes(currentValue);
+          input.value = this.formatRequestId(currentValue);
+        }
+      } else if (isBackspace || isDelete) {
+        e.preventDefault();
+        if (currentValue.length > 0) {
+          currentValue = currentValue.slice(0, -1);
+          this.updateCharacterBoxes(currentValue);
+          input.value = this.formatRequestId(currentValue);
+        }
       }
     });
 
@@ -20702,7 +20723,7 @@ class V10_ModalManager {
     if (proceedBtn) {
       proceedBtn.addEventListener('click', () => {
         if (this.isValidRequestId) {
-          this.proceedWithValidatedId();
+          this.triggerUnlockAnimation();
         }
       });
     }
@@ -20710,37 +20731,95 @@ class V10_ModalManager {
     // Cancel button
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => {
+        currentValue = '';
+        this.updateCharacterBoxes('');
         this.closeModal('request-id');
         this.openModal('submission-type');
       });
     }
   }
 
-  async validateRequestId(requestId) {
+  updateCharacterBoxes(value) {
+    const boxes = document.querySelectorAll('.v10-char-box');
     const validationMsg = document.getElementById('v10-request-id-validation');
-    const proceedBtn = document.getElementById('v10-request-id-proceed');
+    const boxesContainer = document.getElementById('v10-request-id-boxes');
 
-    try {
-      // Show loading state
-      validationMsg.textContent = 'Validating...';
-      validationMsg.className = 'v10-validation-message v10-validation--loading';
+    // Clear all boxes first
+    boxes.forEach((box, index) => {
+      const charSpan = box.querySelector('.v10-char');
+      charSpan.textContent = '';
+      box.classList.remove('filled', 'active');
+    });
 
-      // ✅ Validation now uses format validation only
-      // Real API validation will be available through NEW Request ID system
-      // For now, using client-side format validation
-
-      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(requestId);
-
-      if (isValidFormat) {
-        this.showValidationSuccess({ requestId, status: 'approved' });
-      } else {
-        this.showValidationError('Invalid Request ID format');
+    // Fill boxes with current value
+    for (let i = 0; i < value.length; i++) {
+      if (boxes[i]) {
+        const charSpan = boxes[i].querySelector('.v10-char');
+        charSpan.textContent = value[i];
+        boxes[i].classList.add('filled');
       }
+    }
 
-    } catch (error) {
-      this.showValidationError('Validation service unavailable');
+    // Mark next box as active
+    if (value.length < 9 && boxes[value.length]) {
+      boxes[value.length].classList.add('active');
+    }
+
+    // Validation
+    if (value.length === 9) {
+      const formatted = this.formatRequestId(value);
+      const isValid = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(formatted);
+
+      if (isValid) {
+        boxesContainer.classList.remove('invalid');
+        boxesContainer.classList.add('valid');
+        validationMsg.textContent = '✓ VALID REQUEST ID';
+        validationMsg.className = 'v10-request-id-validation valid';
+        this.isValidRequestId = true;
+        document.getElementById('v10-request-id-proceed').disabled = false;
+      } else {
+        boxesContainer.classList.remove('valid');
+        boxesContainer.classList.add('invalid');
+        validationMsg.textContent = 'INVALID';
+        validationMsg.className = 'v10-request-id-validation invalid';
+        this.isValidRequestId = false;
+        document.getElementById('v10-request-id-proceed').disabled = true;
+      }
+    } else {
+      // Clear validation when typing
+      boxesContainer.classList.remove('valid', 'invalid');
+      validationMsg.textContent = '';
+      validationMsg.className = 'v10-request-id-validation';
+      this.isValidRequestId = false;
+      document.getElementById('v10-request-id-proceed').disabled = true;
     }
   }
+
+  formatRequestId(value) {
+    // Format: XXXX-XX-XXX (first 4 chars, then 2, then 3)
+    if (value.length <= 4) return value;
+    if (value.length <= 6) return value.slice(0, 4) + '-' + value.slice(4);
+    return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 9);
+  }
+
+  triggerUnlockAnimation() {
+    const overlay = document.getElementById('v10-unlock-overlay');
+    if (!overlay) {
+      this.proceedWithValidatedId();
+      return;
+    }
+
+    // Show overlay with animation
+    overlay.classList.add('active');
+
+    // After 1.2s, proceed to next step
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      this.proceedWithValidatedId();
+    }, 1200);
+  }
+
+  // validateRequestId now handled in updateCharacterBoxes
 
   getExpectedStage() {
     // Determine what stage the ID should be at
@@ -21509,10 +21588,8 @@ function initializeStep3ImportanceModal() {
     if (helpNote) {
       if (requestType === 'sample-request') {
         helpNote.classList.remove('v10-hidden');
-        console.log('✅ Help note shown for sample request');
       } else {
         helpNote.classList.add('v10-hidden');
-        console.log('🔒 Help note hidden for:', requestType);
       }
     }
 

@@ -834,16 +834,37 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         </div>
 
         <!-- Clean Request ID Input -->
-        <div class="v10-request-id-input-wrapper">
+        <!-- Game-Like Request ID Input -->
+        <div class="v10-request-id-game-wrapper">
+          <div class="v10-request-id-label">TECHPACK REQUEST ID *</div>
+
+          <!-- Hidden input for form submission -->
           <input
             type="text"
             id="v10-request-id-input"
-            class="v10-request-id-input"
-            placeholder="TECHPACK REQUEST ID *"
+            class="v10-request-id-hidden-input"
             pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
             maxlength="16"
             required
+            style="position: absolute; opacity: 0; pointer-events: none;"
           >
+
+          <!-- Visual character boxes -->
+          <div class="v10-request-id-boxes" id="v10-request-id-boxes">
+            <div class="v10-char-box" data-index="0"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="1"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="2"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="3"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-separator">-</div>
+            <div class="v10-char-box" data-index="4"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="5"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-separator">-</div>
+            <div class="v10-char-box" data-index="6"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="7"><span class="v10-char"></span><div class="v10-underline"></div></div>
+            <div class="v10-char-box" data-index="8"><span class="v10-char"></span><div class="v10-underline"></div></div>
+          </div>
+
+          <!-- Validation message -->
           <div class="v10-request-id-validation" id="v10-request-id-validation"></div>
         </div>
 
@@ -869,6 +890,11 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
   </div>
+</div>
+
+<!-- Legendary Unlock Animation Overlay -->
+<div class="v10-unlock-overlay" id="v10-unlock-overlay">
+  <div class="v10-unlock-icon">🔓</div>
 </div>
 
 <style>
@@ -918,68 +944,205 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   line-height: 1.6;
 }
 
-.v10-request-id-input-wrapper {
-  margin-bottom: 20px;
+/* Game-Like Request ID Input System */
+.v10-request-id-game-wrapper {
+  margin-bottom: 24px;
   position: relative;
 }
 
-.v10-request-id-input {
-  width: 100%;
-  padding: 28px 24px;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--v10-text-primary);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
-  border: 2px solid var(--v10-border-primary);
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 2px;
-  text-align: center;
-  text-transform: uppercase;
-  font-family: 'Courier New', monospace;
-}
-
-.v10-request-id-input::placeholder {
-  color: var(--v10-text-disabled);
-  opacity: 0.4;
-  font-size: 13px;
+.v10-request-id-label {
+  font-size: 11px;
   font-weight: 600;
+  color: var(--v10-text-secondary);
+  text-align: center;
+  margin-bottom: 16px;
   letter-spacing: 0.1em;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-transform: uppercase;
 }
 
-.v10-request-id-input:focus {
-  outline: none;
-  border-color: var(--v10-accent-primary);
+.v10-request-id-boxes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.01) 100%);
+  border: 2px solid var(--v10-border-primary);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: text;
+  user-select: none;
+}
+
+.v10-request-id-boxes:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
+}
+
+.v10-char-box {
+  position: relative;
+  width: 42px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.v10-char-box .v10-char {
+  font-size: 40px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  color: var(--v10-text-primary);
+  line-height: 1;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v10-char-box .v10-underline {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 90%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), transparent);
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v10-char-box.filled .v10-underline {
+  transform: translateX(-50%) scaleX(1);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.v10-char-box.active {
+  animation: v10-pulse 1.5s ease-in-out infinite;
+}
+
+.v10-char-box.active .v10-underline {
+  transform: translateX(-50%) scaleX(1);
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.8), transparent);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+.v10-char-separator {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--v10-text-secondary);
+  margin: 0 4px;
+  opacity: 0.5;
+}
+
+/* Validation States */
+.v10-request-id-boxes.valid {
+  border-color: rgba(16, 185, 129, 0.6);
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
-  box-shadow:
-    0 0 0 4px rgba(16, 185, 129, 0.15),
-    0 8px 24px rgba(16, 185, 129, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15), 0 8px 24px rgba(16, 185, 129, 0.2);
 }
 
-.v10-request-id-input:focus::placeholder {
-  opacity: 0;
+.v10-request-id-boxes.invalid {
+  border-color: rgba(239, 68, 68, 0.6);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+  animation: v10-shake 0.5s ease-in-out;
+}
+
+@keyframes v10-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes v10-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
 }
 
 .v10-request-id-validation {
-  margin-top: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  min-height: 24px;
+  transition: all 0.3s ease;
 }
 
 .v10-request-id-validation.valid {
-  color: var(--v10-accent-success);
+  color: rgba(16, 185, 129, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .v10-request-id-validation.invalid {
-  color: var(--v10-accent-error);
+  color: rgba(239, 68, 68, 1);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  animation: v10-invalid-appear 0.3s ease;
+}
+
+@keyframes v10-invalid-appear {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Legendary Unlock Animation */
+.v10-unlock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(16, 185, 129, 0);
+  z-index: 99999;
+  pointer-events: none;
+  transition: background 0.4s ease;
+  display: none;
+}
+
+.v10-unlock-overlay.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.2);
+  animation: v10-green-flash 0.6s ease;
+}
+
+.v10-unlock-icon {
+  font-size: 120px;
+  animation: v10-unlock-zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.8));
+}
+
+@keyframes v10-green-flash {
+  0% { background: rgba(16, 185, 129, 0); }
+  30% { background: rgba(16, 185, 129, 0.3); }
+  100% { background: rgba(16, 185, 129, 0); }
+}
+
+@keyframes v10-unlock-zoom {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 </style>
 
