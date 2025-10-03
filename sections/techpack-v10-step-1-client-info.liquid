@@ -833,39 +833,17 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </p>
         </div>
 
-        <!-- Clean Request ID Input -->
-        <!-- Game-Like Request ID Input -->
-        <div class="v10-request-id-game-wrapper">
-          <div class="v10-request-id-label">TECHPACK REQUEST ID *</div>
-
-          <!-- Hidden input for form submission -->
+        <!-- Robotic Request ID Input -->
+        <div class="v10-request-id-input-wrapper">
+          <div class="v10-request-id-status" id="v10-request-id-status"></div>
           <input
             type="text"
             id="v10-request-id-input"
-            class="v10-request-id-hidden-input"
-            pattern="^[A-Z]{3,8}-\d{2}-\d{3}$"
-            maxlength="16"
-            required
-            style="position: absolute; opacity: 0; pointer-events: none;"
+            class="v10-request-id-input"
+            autocomplete="off"
+            spellcheck="false"
           >
-
-          <!-- Visual character boxes -->
-          <div class="v10-request-id-boxes" id="v10-request-id-boxes">
-            <div class="v10-char-box" data-index="0"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="1"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="2"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="3"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-separator">-</div>
-            <div class="v10-char-box" data-index="4"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="5"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-separator">-</div>
-            <div class="v10-char-box" data-index="6"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="7"><span class="v10-char"></span><div class="v10-underline"></div></div>
-            <div class="v10-char-box" data-index="8"><span class="v10-char"></span><div class="v10-underline"></div></div>
-          </div>
-
-          <!-- Validation message -->
-          <div class="v10-request-id-validation" id="v10-request-id-validation"></div>
+          <div class="v10-request-id-underline"></div>
         </div>
 
         <!-- Status Display -->
@@ -890,11 +868,6 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
       </div>
     </div>
   </div>
-</div>
-
-<!-- Legendary Unlock Animation Overlay -->
-<div class="v10-unlock-overlay" id="v10-unlock-overlay">
-  <div class="v10-unlock-icon">🔓</div>
 </div>
 
 <style>
@@ -944,117 +917,40 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   line-height: 1.6;
 }
 
-/* Game-Like Request ID Input System */
-.v10-request-id-game-wrapper {
-  margin-bottom: 24px;
+/* Robotic Request ID Input System */
+.v10-request-id-input-wrapper {
+  margin-bottom: 20px;
   position: relative;
+  padding-top: 40px;
 }
 
-.v10-request-id-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--v10-text-secondary);
-  text-align: center;
-  margin-bottom: 16px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.v10-request-id-boxes {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 20px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.01) 100%);
-  border: 2px solid var(--v10-border-primary);
-  border-radius: 16px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: text;
-  user-select: none;
-}
-
-.v10-request-id-boxes:hover {
-  border-color: rgba(16, 185, 129, 0.3);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
-}
-
-.v10-char-box {
-  position: relative;
-  width: 42px;
-  height: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.v10-char-box .v10-char {
-  font-size: 40px;
-  font-weight: 700;
-  font-family: 'Courier New', monospace;
-  color: var(--v10-text-primary);
-  line-height: 1;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  text-transform: uppercase;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.v10-char-box .v10-underline {
+.v10-request-id-status {
   position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 90%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), transparent);
-  border-radius: 2px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.v10-char-box.filled .v10-underline {
-  transform: translateX(-50%) scaleX(1);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-}
-
-.v10-char-box.active {
-  animation: v10-pulse 1.5s ease-in-out infinite;
-}
-
-.v10-char-box.active .v10-underline {
-  transform: translateX(-50%) scaleX(1);
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.8), transparent);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-}
-
-.v10-char-separator {
-  font-size: 32px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--v10-text-secondary);
-  margin: 0 4px;
-  opacity: 0.5;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
-/* Validation States */
-.v10-request-id-boxes.valid {
-  border-color: rgba(16, 185, 129, 0.6);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15), 0 8px 24px rgba(16, 185, 129, 0.2);
+.v10-request-id-status.valid {
+  color: #10b981;
+  opacity: 1;
 }
 
-.v10-request-id-boxes.invalid {
-  border-color: rgba(239, 68, 68, 0.6);
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
-  animation: v10-shake 0.5s ease-in-out;
-}
-
-@keyframes v10-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+.v10-request-id-status.invalid {
+  color: #ef4444;
+  opacity: 1;
+  animation: v10-shake 0.4s ease;
 }
 
 @keyframes v10-shake {
@@ -1063,86 +959,110 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   75% { transform: translateX(8px); }
 }
 
-.v10-request-id-validation {
-  margin-top: 12px;
-  font-size: 14px;
+.v10-request-id-input {
+  width: 100%;
+  padding: 32px 24px;
+  font-size: 42px;
   font-weight: 700;
+  color: var(--v10-text-primary);
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 0;
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 24px;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.v10-request-id-input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.v10-request-id-input.valid {
+  color: #10b981;
+}
+
+.v10-request-id-input.invalid {
+  color: #ef4444;
+  animation: v10-shake 0.4s ease;
+}
+
+.v10-request-id-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--v10-border-primary);
   transition: all 0.3s ease;
 }
 
-.v10-request-id-validation.valid {
-  color: rgba(16, 185, 129, 1);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+.v10-request-id-input:focus ~ .v10-request-id-underline {
+  height: 3px;
+  background: var(--v10-text-primary);
 }
 
-.v10-request-id-validation.invalid {
-  color: rgba(239, 68, 68, 1);
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  animation: v10-invalid-appear 0.3s ease;
+.v10-request-id-input.valid ~ .v10-request-id-underline {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
-@keyframes v10-invalid-appear {
-  0% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
+.v10-request-id-input.invalid ~ .v10-request-id-underline {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
-/* Legendary Unlock Animation */
+/* Robotic Unlock Overlay */
 .v10-unlock-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(16, 185, 129, 0);
-  z-index: 99999;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 185, 129, 0.95);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
   pointer-events: none;
-  transition: background 0.4s ease;
-  display: none;
+  transition: opacity 0.3s ease;
 }
 
 .v10-unlock-overlay.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(16, 185, 129, 0.2);
-  animation: v10-green-flash 0.6s ease;
+  opacity: 1;
+  pointer-events: all;
 }
 
 .v10-unlock-icon {
-  font-size: 120px;
-  animation: v10-unlock-zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-  filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.8));
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: v10-unlock-rotate 0.6s ease forwards;
 }
 
-@keyframes v10-green-flash {
-  0% { background: rgba(16, 185, 129, 0); }
-  30% { background: rgba(16, 185, 129, 0.3); }
-  100% { background: rgba(16, 185, 129, 0); }
+@keyframes v10-unlock-rotate {
+  0% { transform: rotate(0deg) scale(0.8); opacity: 0; }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); opacity: 1; }
 }
 
-@keyframes v10-unlock-zoom {
-  0% {
-    transform: scale(0) rotate(-180deg);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2) rotate(10deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
+.v10-unlock-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  opacity: 0;
+  animation: v10-unlock-text 0.4s ease 0.3s forwards;
+}
+
+@keyframes v10-unlock-text {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 </style>
 

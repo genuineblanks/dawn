@@ -20676,54 +20676,57 @@ class V10_ModalManager {
   setupRequestIdValidation() {
     const modal = document.getElementById('v10-request-id-modal');
     const input = document.getElementById('v10-request-id-input');
-    const boxes = document.getElementById('v10-request-id-boxes');
     const proceedBtn = document.getElementById('v10-request-id-proceed');
     const cancelBtn = document.getElementById('v10-request-id-cancel');
-    const validationMsg = document.getElementById('v10-request-id-validation');
+    const statusDiv = document.getElementById('v10-request-id-status');
 
-    if (!modal || !input || !proceedBtn || !boxes) return;
+    if (!modal || !input || !proceedBtn) return;
 
-    // Setup character box interaction
-    const charBoxes = boxes.querySelectorAll('.v10-char-box');
-    let currentValue = '';
+    // Real-time robotic validation as user types
+    input.addEventListener('input', (e) => {
+      const value = e.target.value.toUpperCase();
+      e.target.value = value; // Force uppercase
 
-    // Click on boxes to focus input
-    boxes.addEventListener('click', () => {
-      input.focus();
-    });
+      // Clear previous states
+      input.classList.remove('valid', 'invalid');
+      if (statusDiv) {
+        statusDiv.classList.remove('valid', 'invalid');
+        statusDiv.textContent = '';
+      }
 
-    // Listen for keyboard input
-    document.addEventListener('keydown', (e) => {
-      if (modal.style.display !== 'flex') return;
+      if (value.length === 0) {
+        proceedBtn.disabled = true;
+        return;
+      }
 
-      const key = e.key.toUpperCase();
-      const isLetter = /^[A-Z]$/.test(key);
-      const isNumber = /^[0-9]$/.test(key);
-      const isBackspace = key === 'BACKSPACE';
-      const isDelete = key === 'DELETE';
+      // Instant validation check
+      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(value);
 
-      if (isLetter || isNumber) {
-        e.preventDefault();
-        if (currentValue.length < 9) {
-          currentValue += key;
-          this.updateCharacterBoxes(currentValue);
-          input.value = this.formatRequestId(currentValue);
+      if (isValidFormat) {
+        input.classList.add('valid');
+        if (statusDiv) {
+          statusDiv.classList.add('valid');
+          statusDiv.textContent = '✓ VALID REQUEST ID';
         }
-      } else if (isBackspace || isDelete) {
-        e.preventDefault();
-        if (currentValue.length > 0) {
-          currentValue = currentValue.slice(0, -1);
-          this.updateCharacterBoxes(currentValue);
-          input.value = this.formatRequestId(currentValue);
+        proceedBtn.disabled = false;
+        this.isValidRequestId = true;
+        this.validatedRequestId = value;
+      } else if (value.length >= 10) {
+        input.classList.add('invalid');
+        if (statusDiv) {
+          statusDiv.classList.add('invalid');
+          statusDiv.textContent = '✗ INVALID';
         }
+        proceedBtn.disabled = true;
+        this.isValidRequestId = false;
       }
     });
 
-    // Proceed button
+    // Proceed button with unlock animation
     if (proceedBtn) {
       proceedBtn.addEventListener('click', () => {
         if (this.isValidRequestId) {
-          this.triggerUnlockAnimation();
+          this.showUnlockAnimation();
         }
       });
     }
@@ -20731,95 +20734,37 @@ class V10_ModalManager {
     // Cancel button
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => {
-        currentValue = '';
-        this.updateCharacterBoxes('');
         this.closeModal('request-id');
         this.openModal('submission-type');
       });
     }
   }
 
-  updateCharacterBoxes(value) {
-    const boxes = document.querySelectorAll('.v10-char-box');
+  async validateRequestId(requestId) {
     const validationMsg = document.getElementById('v10-request-id-validation');
-    const boxesContainer = document.getElementById('v10-request-id-boxes');
+    const proceedBtn = document.getElementById('v10-request-id-proceed');
 
-    // Clear all boxes first
-    boxes.forEach((box, index) => {
-      const charSpan = box.querySelector('.v10-char');
-      charSpan.textContent = '';
-      box.classList.remove('filled', 'active');
-    });
+    try {
+      // Show loading state
+      validationMsg.textContent = 'Validating...';
+      validationMsg.className = 'v10-validation-message v10-validation--loading';
 
-    // Fill boxes with current value
-    for (let i = 0; i < value.length; i++) {
-      if (boxes[i]) {
-        const charSpan = boxes[i].querySelector('.v10-char');
-        charSpan.textContent = value[i];
-        boxes[i].classList.add('filled');
-      }
-    }
+      // ✅ Validation now uses format validation only
+      // Real API validation will be available through NEW Request ID system
+      // For now, using client-side format validation
 
-    // Mark next box as active
-    if (value.length < 9 && boxes[value.length]) {
-      boxes[value.length].classList.add('active');
-    }
+      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(requestId);
 
-    // Validation
-    if (value.length === 9) {
-      const formatted = this.formatRequestId(value);
-      const isValid = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(formatted);
-
-      if (isValid) {
-        boxesContainer.classList.remove('invalid');
-        boxesContainer.classList.add('valid');
-        validationMsg.textContent = '✓ VALID REQUEST ID';
-        validationMsg.className = 'v10-request-id-validation valid';
-        this.isValidRequestId = true;
-        document.getElementById('v10-request-id-proceed').disabled = false;
+      if (isValidFormat) {
+        this.showValidationSuccess({ requestId, status: 'approved' });
       } else {
-        boxesContainer.classList.remove('valid');
-        boxesContainer.classList.add('invalid');
-        validationMsg.textContent = 'INVALID';
-        validationMsg.className = 'v10-request-id-validation invalid';
-        this.isValidRequestId = false;
-        document.getElementById('v10-request-id-proceed').disabled = true;
+        this.showValidationError('Invalid Request ID format');
       }
-    } else {
-      // Clear validation when typing
-      boxesContainer.classList.remove('valid', 'invalid');
-      validationMsg.textContent = '';
-      validationMsg.className = 'v10-request-id-validation';
-      this.isValidRequestId = false;
-      document.getElementById('v10-request-id-proceed').disabled = true;
+
+    } catch (error) {
+      this.showValidationError('Validation service unavailable');
     }
   }
-
-  formatRequestId(value) {
-    // Format: XXXX-XX-XXX (first 4 chars, then 2, then 3)
-    if (value.length <= 4) return value;
-    if (value.length <= 6) return value.slice(0, 4) + '-' + value.slice(4);
-    return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 9);
-  }
-
-  triggerUnlockAnimation() {
-    const overlay = document.getElementById('v10-unlock-overlay');
-    if (!overlay) {
-      this.proceedWithValidatedId();
-      return;
-    }
-
-    // Show overlay with animation
-    overlay.classList.add('active');
-
-    // After 1.2s, proceed to next step
-    setTimeout(() => {
-      overlay.classList.remove('active');
-      this.proceedWithValidatedId();
-    }, 1200);
-  }
-
-  // validateRequestId now handled in updateCharacterBoxes
 
   getExpectedStage() {
     // Determine what stage the ID should be at
@@ -20901,10 +20846,31 @@ class V10_ModalManager {
     this.isValidRequestId = false;
   }
 
+  showUnlockAnimation() {
+    // Create unlock overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'v10-unlock-overlay';
+    overlay.innerHTML = `
+      <div class="v10-unlock-icon">🔓</div>
+      <div class="v10-unlock-text">ACCESS GRANTED</div>
+    `;
+    document.body.appendChild(overlay);
+
+    // Activate animation
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    // Complete unlock sequence
+    setTimeout(() => {
+      this.proceedWithValidatedId();
+      overlay.classList.remove('active');
+      setTimeout(() => overlay.remove(), 300);
+    }, 1200);
+  }
+
   proceedWithValidatedId() {
     // Store validated ID for use in the form
     if (window.v10ClientManager) {
-      window.v10ClientManager.parentRequestId = this.validatedRequestData.requestId;
+      window.v10ClientManager.parentRequestId = this.validatedRequestId || 'TEMP';
     }
 
     // Close validation modal and proceed with submission type
