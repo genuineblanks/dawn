@@ -21493,26 +21493,26 @@ function initializeStep3ImportanceModal() {
     const clientData = window.v10ClientManager?.getClientData() || {};
     const requestType = clientData.submission_type;
 
-    // Only show modal for sample-request and bulk-order-request
-    if (requestType !== 'sample-request' && requestType !== 'bulk-order-request') {
-      console.log('🔒 Step 3 modal skipped for request type:', requestType);
-      modalShown = true; // Mark as shown to prevent future checks
-      return;
-    }
-
-    // Set dynamic message (only for sample/bulk)
+    // Set dynamic message based on request type
     if (messageEl) {
-      messageEl.innerHTML = 'We will <strong>ONLY PRODUCE</strong> the garments you configure in this step.';
+      if (requestType === 'quotation') {
+        messageEl.innerHTML = 'We will <strong>ONLY QUOTE</strong> the garments you configure in this step.';
+      } else if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+        messageEl.innerHTML = 'We will <strong>ONLY PRODUCE</strong> the garments you configure in this step.';
+      } else {
+        messageEl.innerHTML = 'We will only quote/produce the garments you configure in this step.';
+      }
     }
 
-    // Hide help note for bulk orders (no visual guides available)
-    const helpNote = document.getElementById('v10-step3-help-note');
+    // Show help note only for sample requests
+    const helpNote = document.querySelector('.v10-step3-help-note');
     if (helpNote) {
-      if (requestType === 'bulk-order-request') {
-        helpNote.style.display = 'none';
-        console.log('🔒 Help note hidden for bulk order');
-      } else {
+      if (requestType === 'sample-request') {
         helpNote.style.display = 'block';
+        console.log('✅ Help note shown for sample request');
+      } else {
+        helpNote.style.display = 'none';
+        console.log('🔒 Help note hidden for:', requestType);
       }
     }
 
