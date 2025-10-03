@@ -2296,6 +2296,16 @@ body[style*="overflow: hidden"] {
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Full width button when it's the only button in modal actions */
+.v10-modal-actions .v10-btn:only-child,
+.v10-modal-actions .v10-btn:first-child:last-child,
+.v10-modal-actions--step3 .v10-btn:only-child,
+.v10-new-terms-modal-actions .v10-btn:only-child {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
 .v10-modal-icon {
   width: 48px;
   height: 48px;
