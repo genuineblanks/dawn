@@ -21723,6 +21723,16 @@ function initializeStep3ImportanceModal() {
       }
     }
 
+    // Set dynamic instruction note based on request type
+    const instructionNote = modal.querySelector('.v10-instruction-note');
+    if (instructionNote) {
+      if (requestType === 'sample-request' || requestType === 'bulk-order-request') {
+        instructionNote.innerHTML = '⚠️ <strong>Important:</strong> Add separate garment for each design & color variation you need.';
+      } else {
+        instructionNote.innerHTML = '⚠️ <strong>Important:</strong> Add separate garment for each design variation you need.';
+      }
+    }
+
     // Show help note only for sample requests
     const helpNote = document.getElementById('v10-step3-help-note');
     if (helpNote) {
