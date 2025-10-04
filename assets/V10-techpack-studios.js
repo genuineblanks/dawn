@@ -19077,13 +19077,15 @@ class V10_ClientManager {
         console.log('✏️ Field input:', fieldKey);
       });
       
-      // Add blur event for interacted fields
-      input.addEventListener('blur', () => {
-        if (this.interactedFields.has(fieldKey)) {
-          this.validateSingleField(input);
-          console.log('👋 Field blurred (validated):', fieldKey);
-        }
-      });
+      // Add blur event for interacted fields (skip range inputs)
+      if (input.type !== 'range') {
+        input.addEventListener('blur', () => {
+          if (this.interactedFields.has(fieldKey)) {
+            this.validateSingleField(input);
+            console.log('👋 Field blurred (validated):', fieldKey);
+          }
+        });
+      }
       
       // Add change event for radio buttons and checkboxes
       if (input.type === 'radio' || input.type === 'checkbox') {
