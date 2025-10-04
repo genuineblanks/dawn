@@ -21321,34 +21321,30 @@ class V10_ModalManager {
 
     if (!slider || !display) return;
 
-    // Map slider value (0-100) to display value (50-500)
-    const mapValueToDisplay = (sliderValue) => {
-      if (sliderValue <= 50) {
-        // 0-50 maps to 50-150 (first half: 100 units)
-        return Math.round(50 + (sliderValue * 2));
+    // Update slider background gradient with non-linear percentage
+    const updateSliderBackground = (value) => {
+      let percentage;
+      if (value <= 150) {
+        // 50-150 fills first 50% of bar
+        percentage = ((value - 50) / (150 - 50)) * 50; // 50→0%, 150→50%
       } else {
-        // 50-100 maps to 150-500 (second half: 350 units)
-        return Math.round(150 + ((sliderValue - 50) * 7));
+        // 150-500 fills second 50% of bar
+        percentage = 50 + ((value - 150) / (500 - 150)) * 50; // 150→50%, 500→100%
       }
-    };
 
-    // Update slider background gradient (linear to match thumb position)
-    const updateSliderBackground = (sliderValue) => {
-      const percentage = sliderValue; // 0-100 directly = percentage
       const gradient = `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #343434 ${percentage}%, #343434 100%)`;
       slider.style.setProperty('background', gradient, 'important');
     };
 
     // Update display value and slider background
     const updateDisplay = () => {
-      const sliderValue = parseInt(slider.value);
-      const displayValue = mapValueToDisplay(sliderValue);
+      const value = parseInt(slider.value);
 
       // Show "500+" when at maximum
-      display.textContent = displayValue >= 500 ? '500+' : displayValue;
-      updateSliderBackground(sliderValue);
+      display.textContent = value >= 500 ? '500+' : value;
+      updateSliderBackground(value);
 
-      console.log('🎚️ Slider:', sliderValue, '→ Display:', displayValue, '| Bar:', sliderValue + '%');
+      console.log('🎚️ Value:', value, '| Bar:', ((value <= 150 ? ((value - 50) / 100) * 50 : 50 + ((value - 150) / 350) * 50).toFixed(1)) + '%');
     };
 
     // Remove existing listeners
