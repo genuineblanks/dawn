@@ -214,7 +214,7 @@ const RegistrationPage = {
       console.log('📋 Registration Form Data:', data);
 
       // Shopify Customer API via Vercel Edge Function
-      const SHOPIFY_REGISTRATION_URL = '/api/shopify-registration';
+      const SHOPIFY_REGISTRATION_URL = 'https://dawn-main-theme.vercel.app/api/shopify-registration';
 
       console.log('📤 Sending registration to Shopify...');
 
