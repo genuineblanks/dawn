@@ -16843,21 +16843,26 @@ class V10_ReviewManager {
     this.showLoadingModal();
 
     try {
-      // Step 1: Collect data (25%) - with realistic delay
-      this.updateLoadingProgress('step-collect-data', 'Preparing your request...', 25);
-      await new Promise(resolve => setTimeout(resolve, 800)); // Fake delay for UX
+      // Step 1: Animate 0% → 25% smoothly over 3 seconds
+      let progressInterval = this.animateProgressSlowly(0, 25, 3000);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      clearInterval(progressInterval);
       const submissionData = await this.prepareEnhancedSubmissionData();
 
-      // Step 2: Process files (50%) - with realistic delay
-      this.updateLoadingProgress('step-process-files', 'Processing uploaded files...', 50);
-      await new Promise(resolve => setTimeout(resolve, 800)); // Fake delay for UX
+      // Step 2: Animate 25% → 50% smoothly over 3 seconds
+      progressInterval = this.animateProgressSlowly(25, 50, 3000);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      clearInterval(progressInterval);
       await this.processFilesForSubmission(submissionData);
 
-      // Step 3: Send to webhook (75% → 95% animated during request)
-      this.updateLoadingProgress('step-send-webhook', 'Submitting your request...', 75);
+      // Step 2.5: Animate 50% → 75% smoothly over 3 seconds
+      progressInterval = this.animateProgressSlowly(50, 75, 3000);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      clearInterval(progressInterval);
 
+      // Step 3: Send to webhook (75% → 99% animated during request)
       // Start slow progress animation while waiting for network response
-      const progressInterval = this.animateProgressSlowly(75, 95, 10000); // Animate over max 10 seconds
+      progressInterval = this.animateProgressSlowly(75, 99, 10000); // Animate to 99% over max 10 seconds
 
       let response;
       try {
@@ -20725,6 +20730,7 @@ class V10_ModalManager {
     // Show/hide OR separator and Access Code option based on submission type
     const orSeparator = document.getElementById('v10-request-id-or-separator');
     const accessCodeOption = document.getElementById('v10-request-id-access-code-option');
+    const instructionText = document.getElementById('v10-request-id-instruction-text');
 
     if (orSeparator && accessCodeOption) {
       if (submissionType === 'sample-request') {
@@ -20735,6 +20741,15 @@ class V10_ModalManager {
         // Hide for bulk orders (must use full Request ID)
         orSeparator.style.display = 'none';
         accessCodeOption.style.display = 'none';
+      }
+    }
+
+    // Update instruction text based on submission type
+    if (instructionText) {
+      if (submissionType === 'bulk-order-request') {
+        instructionText.innerHTML = '<strong>Enter your Request ID</strong> from the samples you\'re continuing with.';
+      } else {
+        instructionText.innerHTML = '<strong>Enter your Request ID</strong> from the quotation you\'re continuing with.';
       }
     }
 
