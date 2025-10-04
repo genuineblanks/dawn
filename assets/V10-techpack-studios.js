@@ -19656,6 +19656,21 @@ class V10_ClientManager {
       currentData.delivery_notes = deliveryNotesInput.value;
     }
 
+    // ✅ COLLECT ESTIMATED QUANTITY (quotations only)
+    // Map slider value (0-450) to display value (50-500) for data submission
+    const quantitySlider = document.querySelector('input[name="estimated_quantity"]');
+    if (quantitySlider) {
+      const sliderValue = parseInt(quantitySlider.value) || 0;
+      let displayValue;
+      if (sliderValue <= 225) {
+        displayValue = Math.round(50 + (sliderValue * 100 / 225));
+      } else {
+        displayValue = Math.round(150 + ((sliderValue - 225) * 350 / 225));
+      }
+      currentData.estimated_quantity = displayValue;
+      console.log('📊 Estimated quantity collected:', currentData.estimated_quantity, '(slider:', sliderValue, ')');
+    }
+
     return currentData;
   }
 
@@ -21321,20 +21336,22 @@ class V10_ModalManager {
 
     if (!slider || !display) return;
 
-    // Map slider value (0-100) to display value (50-500)
-    const mapValueToDisplay = (sliderValue) => {
-      if (sliderValue <= 50) {
-        // 0-50 maps to 50-150 (first half: 100 units)
-        return Math.round(50 + (sliderValue * 2));
+    // Map slider value (0-450) to display value (50-500)
+    // First 50% (0-225) covers 50-150 units
+    // Second 50% (225-450) covers 150-500 units
+    const mapSliderToDisplay = (sliderValue) => {
+      if (sliderValue <= 225) {
+        // First half: 0-225 → 50-150 (100 units)
+        return Math.round(50 + (sliderValue * 100 / 225));
       } else {
-        // 50-100 maps to 150-500 (second half: 350 units)
-        return Math.round(150 + ((sliderValue - 50) * 7));
+        // Second half: 225-450 → 150-500 (350 units)
+        return Math.round(150 + ((sliderValue - 225) * 350 / 225));
       }
     };
 
-    // Update slider background gradient (linear to match thumb position)
+    // Update slider background gradient (linear to match thumb)
     const updateSliderBackground = (sliderValue) => {
-      const percentage = sliderValue; // 0-100 directly = percentage
+      const percentage = (sliderValue / 450) * 100; // Linear: 0-450 → 0-100%
       const gradient = `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #343434 ${percentage}%, #343434 100%)`;
       slider.style.setProperty('background', gradient, 'important');
     };
@@ -21342,13 +21359,13 @@ class V10_ModalManager {
     // Update display value and slider background
     const updateDisplay = () => {
       const sliderValue = parseInt(slider.value);
-      const displayValue = mapValueToDisplay(sliderValue);
+      const displayValue = mapSliderToDisplay(sliderValue);
 
       // Show "500+" when at maximum
       display.textContent = displayValue >= 500 ? '500+' : displayValue;
       updateSliderBackground(sliderValue);
 
-      console.log('🎚️ Slider:', sliderValue, '→ Display:', displayValue, '| Bar:', sliderValue + '%');
+      console.log('🎚️ Slider:', sliderValue, '→ Display:', displayValue, '| Bar:', ((sliderValue / 450) * 100).toFixed(1) + '%');
     };
 
     // Remove existing listeners
