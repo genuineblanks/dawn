@@ -3577,12 +3577,12 @@ body[style*="overflow: hidden"] {
   background: linear-gradient(to right,
     #10b981 0%,
     #10b981 0%,
-    var(--v10-bg-input) 0%,
-    var(--v10-bg-input) 100%
+    #343434 0%,
+    #343434 100%
   );
   border-radius: 4px;
   outline: none;
-  transition: background 0.15s ease;
+  transition: none;
   cursor: pointer;
 }
 

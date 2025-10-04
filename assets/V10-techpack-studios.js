@@ -21330,8 +21330,8 @@ class V10_ModalManager {
       slider.style.background = `linear-gradient(to right,
         #10b981 0%,
         #10b981 ${percentage}%,
-        var(--v10-bg-input) ${percentage}%,
-        var(--v10-bg-input) 100%
+        #343434 ${percentage}%,
+        #343434 100%
       )`;
     };
 
