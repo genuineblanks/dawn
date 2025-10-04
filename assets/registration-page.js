@@ -213,37 +213,42 @@ const RegistrationPage = {
 
       console.log('📋 Registration Form Data:', data);
 
-      // Google Apps Script Web App URL (NEW-REQUEST-ID-SYSTEM.js)
-      // Same URL as your TechPack V10 system
-      const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyw72CpJ1Au7M8gH4U4ZYZv-BbBoGwCCWOTWdt1xS6SNZY6icNZK85V6GjcHuMDFK1SjQ/exec';
+      // Shopify Customer API via Vercel Edge Function
+      const SHOPIFY_REGISTRATION_URL = '/api/shopify-registration';
 
-      // Prepare data for Apps Script with action
-      const registrationPayload = {
-        action: 'storeRegistration',
-        ...data
-      };
+      console.log('📤 Sending registration to Shopify...');
 
-      console.log('📤 Sending registration to Apps Script:', registrationPayload);
-
-      // Submit to Google Sheets via Apps Script
-      const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      // Submit to Shopify via Vercel Edge Function
+      const response = await fetch(SHOPIFY_REGISTRATION_URL, {
         method: 'POST',
-        mode: 'no-cors', // Important for Google Apps Script
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(registrationPayload)
+        body: JSON.stringify(data)
       });
 
-      // Note: no-cors mode doesn't allow reading response, so we assume success
-      console.log('✅ Registration submitted to Google Sheets');
+      // Parse response
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Registration failed');
+      }
+
+      console.log('✅ Customer created in Shopify:', result.customer_id);
 
       // Show success modal
       this.showSuccessModal();
 
     } catch (error) {
       console.error('❌ Registration error:', error);
-      alert('Registration failed. Please try again.');
+
+      // Show user-friendly error message
+      let errorMessage = 'Registration failed. Please try again.';
+      if (error.message.includes('Email already registered')) {
+        errorMessage = 'This email is already registered. Please use a different email or contact support.';
+      }
+
+      alert(errorMessage);
       this.submitButton.disabled = false;
       this.submitButton.querySelector('span').textContent = originalText;
     }
