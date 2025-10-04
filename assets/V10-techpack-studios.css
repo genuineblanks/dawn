@@ -3496,14 +3496,191 @@ body[style*="overflow: hidden"] {
     grid-template-columns: 1fr;
     gap: var(--v10-space-3);
   }
-  
+
   .v10-form-field--half,
   .v10-form-field--full {
     grid-column: span 1;
   }
-  
+
   .v10-form-field {
     margin-bottom: var(--v10-space-3);
+  }
+}
+
+/* ==============================================
+   QUANTITY SLIDER - PREMIUM DESIGN
+   ============================================== */
+
+.v10-quantity-slider-container {
+  background: var(--v10-bg-card);
+  border: 1px solid var(--v10-border-primary);
+  border-radius: var(--v10-radius-md);
+  padding: var(--v10-space-6);
+  box-shadow: var(--v10-shadow-sm);
+}
+
+.v10-quantity-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--v10-space-4);
+}
+
+.v10-quantity-slider-header .v10-form-label-enhanced {
+  margin-bottom: 0;
+}
+
+.v10-quantity-slider-header .v10-form-label-enhanced span {
+  font-size: var(--v10-text-sm);
+  font-weight: 600;
+  color: var(--v10-text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.v10-quantity-value-display {
+  display: flex;
+  align-items: baseline;
+  gap: var(--v10-space-2);
+  background: rgba(16, 185, 129, 0.1);
+  padding: var(--v10-space-3) var(--v10-space-5);
+  border-radius: var(--v10-radius-md);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.v10-quantity-number {
+  font-size: var(--v10-text-4xl);
+  font-weight: 700;
+  color: #10b981;
+  line-height: 1;
+  min-width: 80px;
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+.v10-quantity-label {
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-tertiary);
+  font-weight: 500;
+}
+
+.v10-quantity-slider-wrapper {
+  margin-bottom: var(--v10-space-3);
+  position: relative;
+}
+
+/* Custom Range Input Styling */
+.v10-quantity-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(to right,
+    #10b981 0%,
+    #10b981 0%,
+    var(--v10-bg-input) 0%,
+    var(--v10-bg-input) 100%
+  );
+  border-radius: 4px;
+  outline: none;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.v10-quantity-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #10b981;
+  border: 3px solid var(--v10-bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 0 0 0 rgba(16, 185, 129, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.v10-quantity-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 6px rgba(16, 185, 129, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.v10-quantity-range::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 10px rgba(16, 185, 129, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Firefox */
+.v10-quantity-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #10b981;
+  border: 3px solid var(--v10-bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow:
+    0 0 0 0 rgba(16, 185, 129, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.v10-quantity-range::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 6px rgba(16, 185, 129, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.v10-quantity-range::-moz-range-thumb:active {
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 10px rgba(16, 185, 129, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.v10-quantity-range::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  background: var(--v10-bg-input);
+  border-radius: 4px;
+}
+
+.v10-quantity-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--v10-space-2);
+  padding: 0 var(--v10-space-1);
+}
+
+.v10-quantity-slider-labels span {
+  font-size: var(--v10-text-xs);
+  color: var(--v10-text-muted);
+  font-weight: 600;
+}
+
+.v10-quantity-help-text {
+  margin: 0;
+  font-size: var(--v10-text-sm);
+  color: var(--v10-text-tertiary);
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .v10-quantity-slider-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--v10-space-3);
+  }
+
+  .v10-quantity-value-display {
+    align-self: flex-end;
   }
 }
 

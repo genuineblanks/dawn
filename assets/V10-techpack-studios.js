@@ -21102,16 +21102,21 @@ class V10_ModalManager {
     const deliveryAddressField = document.getElementById('v10-delivery-address-field');
     const deliverySection = document.getElementById('v10-delivery-section');
     const shippingSection = document.getElementById('v10-shipping-section');
-    
+    const quantitySliderField = document.getElementById('v10-quantity-slider-field');
+
     // Hide all conditional sections first (using inline styles to ensure they override any defaults)
     if (deliveryAddressField) deliveryAddressField.style.display = 'none';
     if (deliverySection) deliverySection.style.display = 'none';
     if (shippingSection) shippingSection.style.display = 'none';
-    
+    if (quantitySliderField) quantitySliderField.style.display = 'none';
+
     // Show sections based on submission type
     switch (submissionType) {
       case 'quotation':
-        // Only show base form for quotations
+        // Show quantity slider for quotations only
+        if (quantitySliderField) {
+          quantitySliderField.style.display = 'block';
+        }
         break;
         
       case 'sample-request':
@@ -21137,13 +21142,16 @@ class V10_ModalManager {
 
     // Setup delivery address toggle functionality
     this.setupDeliveryAddressToggle();
-    
+
+    // Setup quantity slider for quotations
+    this.setupQuantitySlider();
+
     // Setup character counter for delivery notes
     this.setupCharacterCounter();
-    
+
     // Setup project details toggle
     this.setupProjectDetailsToggle();
-    
+
     // Setup enhanced country dropdowns
     this.setupEnhancedCountryDropdowns();
 
@@ -21290,11 +21298,11 @@ class V10_ModalManager {
   updateCharacterCount() {
     const deliveryNotesTextarea = document.querySelector('textarea[name="deliveryNotes"]');
     const counterElement = document.getElementById('v10-delivery-notes-count');
-    
+
     if (deliveryNotesTextarea && counterElement) {
       const currentLength = deliveryNotesTextarea.value.length;
       counterElement.textContent = currentLength;
-      
+
       // Add visual feedback when approaching limit
       const parent = counterElement.closest('.v10-char-count');
       if (currentLength > 120) {
@@ -21303,6 +21311,47 @@ class V10_ModalManager {
         parent?.classList.remove('v10-char-count--warning');
       }
     }
+  }
+
+  setupQuantitySlider() {
+    const slider = document.getElementById('v10-quantity-slider');
+    const display = document.getElementById('v10-quantity-display');
+
+    if (!slider || !display) return;
+
+    // Update slider background gradient
+    const updateSliderBackground = (value) => {
+      const min = parseInt(slider.min);
+      const max = parseInt(slider.max);
+      const percentage = ((value - min) / (max - min)) * 100;
+
+      slider.style.background = `linear-gradient(to right,
+        #10b981 0%,
+        #10b981 ${percentage}%,
+        var(--v10-bg-input) ${percentage}%,
+        var(--v10-bg-input) 100%
+      )`;
+    };
+
+    // Update display value and slider background
+    const updateDisplay = () => {
+      const value = parseInt(slider.value);
+      // Show "500+" when at maximum
+      display.textContent = value >= 500 ? '500+' : value;
+      updateSliderBackground(value);
+    };
+
+    // Remove existing listeners
+    slider.removeEventListener('input', this.quantitySliderInputHandler);
+
+    // Store handler for future removal
+    this.quantitySliderInputHandler = updateDisplay;
+
+    // Add event listener
+    slider.addEventListener('input', this.quantitySliderInputHandler);
+
+    // Initialize display
+    updateDisplay();
   }
 
   setupProjectDetailsToggle() {

@@ -238,6 +238,40 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
           </div>
         </div>
 
+        <!-- Quantity Slider for Quotations Only - Full Width -->
+        <div class="v10-form-field v10-form-field--full" id="v10-quantity-slider-field" style="display: none;">
+          <div class="v10-quantity-slider-container">
+            <div class="v10-quantity-slider-header">
+              <label class="v10-form-label-enhanced">
+                <span>ESTIMATED QUANTITY PER GARMENT</span>
+              </label>
+              <div class="v10-quantity-value-display">
+                <span class="v10-quantity-number" id="v10-quantity-display">50</span>
+                <span class="v10-quantity-label">units</span>
+              </div>
+            </div>
+            <div class="v10-quantity-slider-wrapper">
+              <input
+                type="range"
+                id="v10-quantity-slider"
+                name="estimated_quantity"
+                class="v10-quantity-range"
+                min="50"
+                max="500"
+                value="50"
+                step="10"
+              >
+              <div class="v10-quantity-slider-labels">
+                <span>50</span>
+                <span>500+</span>
+              </div>
+            </div>
+            <p class="v10-quantity-help-text">
+              Approximate quantity needed for each individual garment design
+            </p>
+          </div>
+        </div>
+
         <!-- Delivery Address -->
         <div class="v10-form-field v10-form-field--full" id="v10-delivery-address-field" style="display: none;">
           <label class="v10-form-label-enhanced">
@@ -657,7 +691,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-warning-box-enhanced v10-warning-box-enhanced--blue" id="v10-registration-notice" style="display: none;">
           <div class="v10-warning-icon">ℹ️</div>
           <div class="v10-warning-content">
-            <h4>New Client Path</h4>
+            <h4>New Client</h4>
             <p>Start with a <strong>quotation</strong>. After approval, you'll register to unlock samples and bulk orders.</p>
           </div>
         </div>
@@ -666,7 +700,7 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
         <div class="v10-warning-box-enhanced" id="v10-registration-warning" style="display: none;">
           <div class="v10-warning-icon">⚠️</div>
           <div class="v10-warning-content">
-            <h4>Verification Required</h4>
+            <h4>Registered Client</h4>
             <p>Your registration will be verified.<br>
             <strong>Unregistered submissions are automatically rejected.</strong></p>
           </div>
