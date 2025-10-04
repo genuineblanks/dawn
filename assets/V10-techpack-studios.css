@@ -6072,7 +6072,7 @@ html.onboarding-active {
   border: 1px solid var(--v10-border-primary);
   border-radius: var(--v10-radius-md);
   padding: calc(var(--v10-space-4) * 2.4) calc(var(--v10-space-8) * 8); /* 40% less height: x2.4 height, x8 width */
-  font-size: calc(var(--v10-text-base) * 2); /* Double the font size */
+  font-size: calc(var(--v10-text-base) * 2.5); /* Bigger font size */
   font-weight: 600;
   cursor: pointer;
   transition: var(--v10-transition);
@@ -6099,8 +6099,8 @@ html.onboarding-active {
 }
 
 .v10-btn-access-studio .v10-btn-icon {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
