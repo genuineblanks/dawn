@@ -16843,31 +16843,41 @@ class V10_ReviewManager {
     this.showLoadingModal();
 
     try {
-      // Step 1: Animate 0% → 25% smoothly over 3 seconds
-      let progressInterval = this.animateProgressSlowly(0, 25, 3000);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Step 1: Animate 0% → 25% smoothly over 5 seconds
+      let progressInterval = this.animateProgressSlowly(0, 25, 5000);
+      await new Promise(resolve => setTimeout(resolve, 5000));
       clearInterval(progressInterval);
       const submissionData = await this.prepareEnhancedSubmissionData();
 
-      // Step 2: Animate 25% → 50% smoothly over 3 seconds
-      progressInterval = this.animateProgressSlowly(25, 50, 3000);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Step 2: Animate 25% → 50% smoothly over 5 seconds
+      progressInterval = this.animateProgressSlowly(25, 50, 5000);
+      await new Promise(resolve => setTimeout(resolve, 5000));
       clearInterval(progressInterval);
       await this.processFilesForSubmission(submissionData);
 
-      // Step 2.5: Animate 50% → 75% smoothly over 3 seconds
-      progressInterval = this.animateProgressSlowly(50, 75, 3000);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Step 2.5: Animate 50% → 75% smoothly over 5 seconds
+      progressInterval = this.animateProgressSlowly(50, 75, 5000);
+      await new Promise(resolve => setTimeout(resolve, 5000));
       clearInterval(progressInterval);
 
       // Step 3: Send to webhook (75% → 99% animated during request)
       // Start slow progress animation while waiting for network response
-      progressInterval = this.animateProgressSlowly(75, 99, 10000); // Animate to 99% over max 10 seconds
+      progressInterval = this.animateProgressSlowly(75, 99, 8000); // Animate to 99% over max 8 seconds
 
       let response;
       try {
         response = await this.sendToWebhook(submissionData);
         clearInterval(progressInterval); // Stop animation when request completes
+
+        // Fast catch-up if needed
+        const progressBar = document.querySelector('.v10-progress-fill');
+        const currentProgress = parseInt(progressBar?.style.width) || 75;
+        if (currentProgress < 99) {
+          // Speed up to 99% over 1.5 seconds
+          const catchUpInterval = this.animateProgressSlowly(currentProgress, 99, 1500);
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          clearInterval(catchUpInterval);
+        }
       } catch (webhookError) {
         clearInterval(progressInterval); // Stop animation on error
         throw webhookError; // Re-throw to outer catch
@@ -17465,8 +17475,8 @@ class V10_ReviewManager {
 
     const messages = {
       'quotation': `Quotation submitted! We'll send you a detailed quote within 24-48 hours.`,
-      'sample-request': `Sample request submitted! Production begins immediately.`,
-      'bulk-order-request': `Bulk order submitted! We'll contact you within 24 hours to confirm details.`
+      'sample-request': `Sample request submitted! We'll contact you within 24-48h to confirm details.`,
+      'bulk-order-request': `Bulk order submitted! We'll contact you within 24-48h to confirm details.`
     };
 
     if (successMessage) {
@@ -17475,17 +17485,8 @@ class V10_ReviewManager {
 
     if (successDetails) {
       successDetails.innerHTML = `
-        ${requestType === 'quotation'
-          ? `<div class="v10-email-notification-box">
-              <div class="v10-email-notification-header">
-                <span class="v10-email-notification-icon">📧</span>
-                <h3 class="v10-email-notification-title">Request ID Delivery</h3>
-              </div>
-              <div class="v10-email-notification-content">
-                <p class="v10-email-notification-text">Your Request ID will be sent via email within 24 hours. You'll need it for future orders.</p>
-              </div>
-            </div>`
-          : `<div class="v10-request-id-box">
+        ${requestType !== 'quotation'
+          ? `<div class="v10-request-id-box">
               <div class="v10-request-id-label">Your Request ID</div>
               <div class="v10-request-id-container">
                 <div class="v10-request-id-value">${submissionId}</div>
@@ -17499,6 +17500,7 @@ class V10_ReviewManager {
               </div>
               <div class="v10-request-id-note">Your Request ID has been sent to your email.</div>
             </div>`
+          : ''
         }
       `;
     }
