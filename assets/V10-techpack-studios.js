@@ -20722,6 +20722,22 @@ class V10_ModalManager {
       titleElement.textContent = titles[submissionType] || 'Request ID Verification';
     }
 
+    // Show/hide OR separator and Access Code option based on submission type
+    const orSeparator = document.getElementById('v10-request-id-or-separator');
+    const accessCodeOption = document.getElementById('v10-request-id-access-code-option');
+
+    if (orSeparator && accessCodeOption) {
+      if (submissionType === 'sample-request') {
+        // Show for sample requests (Access Code feature applies)
+        orSeparator.style.display = 'block';
+        accessCodeOption.style.display = 'block';
+      } else {
+        // Hide for bulk orders (must use full Request ID)
+        orSeparator.style.display = 'none';
+        accessCodeOption.style.display = 'none';
+      }
+    }
+
     // Pre-fill with saved prefix if exists
     this.loadSavedPrefix();
   }
