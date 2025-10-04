@@ -3647,7 +3647,7 @@ body[style*="overflow: hidden"] {
 .v10-quantity-range::-moz-range-track {
   width: 100%;
   height: 8px;
-  background: var(--v10-bg-input);
+  background: #343434;
   border-radius: 4px;
 }
 

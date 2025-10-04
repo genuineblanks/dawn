@@ -21321,18 +21321,24 @@ class V10_ModalManager {
 
     if (!slider || !display) return;
 
-    // Update slider background gradient
+    // Update slider background gradient with custom non-linear scale
     const updateSliderBackground = (value) => {
-      const min = parseInt(slider.min);
-      const max = parseInt(slider.max);
-      const percentage = ((value - min) / (max - min)) * 100;
+      const min = 50;
+      const midpoint = 250; // 50% of bar at 250 units
+      const max = 500;
 
-      slider.style.background = `linear-gradient(to right,
-        #10b981 0%,
-        #10b981 ${percentage}%,
-        #343434 ${percentage}%,
-        #343434 100%
-      )`;
+      let percentage;
+      if (value <= midpoint) {
+        // First 50% of bar: 50 to 250 units (200 unit range)
+        percentage = ((value - min) / (midpoint - min)) * 50;
+      } else {
+        // Last 50% of bar: 250 to 500 units (250 unit range)
+        percentage = 50 + ((value - midpoint) / (max - midpoint)) * 50;
+      }
+
+      const gradient = `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #343434 ${percentage}%, #343434 100%)`;
+      slider.style.setProperty('background', gradient, 'important');
+      console.log('🎚️ Slider updated:', value, 'percentage:', percentage.toFixed(1) + '%');
     };
 
     // Update display value and slider background
@@ -21345,12 +21351,15 @@ class V10_ModalManager {
 
     // Remove existing listeners
     slider.removeEventListener('input', this.quantitySliderInputHandler);
+    slider.removeEventListener('change', this.quantitySliderChangeHandler);
 
     // Store handler for future removal
     this.quantitySliderInputHandler = updateDisplay;
+    this.quantitySliderChangeHandler = updateDisplay;
 
-    // Add event listener
+    // Add both event listeners (input for real-time, change as fallback)
     slider.addEventListener('input', this.quantitySliderInputHandler);
+    slider.addEventListener('change', this.quantitySliderChangeHandler);
 
     // Initialize display
     updateDisplay();
