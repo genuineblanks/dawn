@@ -21321,32 +21321,34 @@ class V10_ModalManager {
 
     if (!slider || !display) return;
 
-    // Update slider background gradient with custom non-linear scale
-    const updateSliderBackground = (value) => {
-      const min = 50;
-      const midpoint = 250; // 50% of bar at 250 units
-      const max = 500;
-
-      let percentage;
-      if (value <= midpoint) {
-        // First 50% of bar: 50 to 250 units (200 unit range)
-        percentage = ((value - min) / (midpoint - min)) * 50;
+    // Map slider value (0-100) to display value (50-500)
+    const mapValueToDisplay = (sliderValue) => {
+      if (sliderValue <= 50) {
+        // 0-50 maps to 50-150 (first half: 100 units)
+        return Math.round(50 + (sliderValue * 2));
       } else {
-        // Last 50% of bar: 250 to 500 units (250 unit range)
-        percentage = 50 + ((value - midpoint) / (max - midpoint)) * 50;
+        // 50-100 maps to 150-500 (second half: 350 units)
+        return Math.round(150 + ((sliderValue - 50) * 7));
       }
+    };
 
+    // Update slider background gradient (linear to match thumb position)
+    const updateSliderBackground = (sliderValue) => {
+      const percentage = sliderValue; // 0-100 directly = percentage
       const gradient = `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #343434 ${percentage}%, #343434 100%)`;
       slider.style.setProperty('background', gradient, 'important');
-      console.log('🎚️ Slider updated:', value, 'percentage:', percentage.toFixed(1) + '%');
     };
 
     // Update display value and slider background
     const updateDisplay = () => {
-      const value = parseInt(slider.value);
+      const sliderValue = parseInt(slider.value);
+      const displayValue = mapValueToDisplay(sliderValue);
+
       // Show "500+" when at maximum
-      display.textContent = value >= 500 ? '500+' : value;
-      updateSliderBackground(value);
+      display.textContent = displayValue >= 500 ? '500+' : displayValue;
+      updateSliderBackground(sliderValue);
+
+      console.log('🎚️ Slider:', sliderValue, '→ Display:', displayValue, '| Bar:', sliderValue + '%');
     };
 
     // Remove existing listeners
