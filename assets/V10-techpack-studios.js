@@ -20815,12 +20815,27 @@ class V10_ModalManager {
       // Real API validation will be available through NEW Request ID system
       // For now, using client-side format validation
 
-      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(requestId);
+      const fullFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/;
+      const partialFormat = /^[A-Z]{3,8}-\d{2}$/; // ASDS-33 (samples only)
+
+      let isValidFormat = false;
+
+      if (fullFormat.test(requestId)) {
+        // Full format accepted for both sample and bulk requests
+        isValidFormat = true;
+      } else if (partialFormat.test(requestId) && this.pendingSubmissionType === 'sample-request') {
+        // Partial format accepted ONLY for sample requests
+        isValidFormat = true;
+      }
 
       if (isValidFormat) {
         this.showValidationSuccess({ requestId, status: 'approved' });
       } else {
-        this.showValidationError('Invalid Request ID format');
+        if (this.pendingSubmissionType === 'bulk-order-request') {
+          this.showValidationError('Bulk orders require full Request ID (e.g., ASDS-33-001)');
+        } else {
+          this.showValidationError('Invalid Request ID format');
+        }
       }
 
     } catch (error) {
