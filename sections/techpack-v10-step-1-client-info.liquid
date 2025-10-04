@@ -803,7 +803,9 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
             Enter your <strong>Access Code</strong> without <code>-001</code> to skip quotation & proceed immediately for samples.
           </p>
 
-          <p class="v10-instruction-note">Double-check your ID before proceeding.</p>
+          <p class="v10-instruction-note v10-instruction-note--warning">
+            ⚠️ <strong>Important:</strong> Add separate garment for each design variation you need.
+          </p>
         </div>
 
         <!-- Robotic Request ID Input -->
@@ -1139,6 +1141,24 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
   color: var(--v10-text-primary);
   letter-spacing: 0.025em;
   text-align: center;
+}
+
+/* Instruction Note */
+.v10-instruction-note {
+  font-size: 12px;
+  color: var(--v10-text-secondary);
+  margin: 12px 0 0 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.v10-instruction-note--warning {
+  color: #f59e0b;
+}
+
+.v10-instruction-note--warning strong {
+  color: #f59e0b;
+  font-weight: 600;
 }
 </style>
 
