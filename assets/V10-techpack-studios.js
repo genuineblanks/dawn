@@ -15483,7 +15483,17 @@ class V10_ReviewManager {
         <span class="detail-value">${this.getRequestTypeLabel(requestType)}</span>
       </div>
     `;
-    
+
+    // Add estimated quantity for quotations only
+    if (requestType === 'quotation' && clientData.estimated_quantity) {
+      clientFields += `
+        <div class="review-detail">
+          <span class="detail-label">Est. Quantity per Garment:</span>
+          <span class="detail-value">${clientData.estimated_quantity} units</span>
+        </div>
+      `;
+    }
+
     // Add phone if available (for sample requests and bulk orders)
     if ((requestType === 'sample-request' || requestType === 'bulk-order-request') && clientData.phone && clientData.phone !== 'Not provided') {
       clientFields += `
@@ -17600,7 +17610,8 @@ class V10_ReviewManager {
           email: realClientData.email || realClientData.Email || 'Not provided',
           isNewClient: realClientData.isNewClient || false,  // Include isNewClient from client manager
           project_notes: realClientData.project_notes || '',
-          delivery_notes: realClientData.delivery_notes || ''
+          delivery_notes: realClientData.delivery_notes || '',
+          estimated_quantity: realClientData.estimated_quantity  // Include estimated quantity for quotations
         };
 
 
@@ -19657,9 +19668,11 @@ class V10_ClientManager {
     }
 
     // ✅ COLLECT ESTIMATED QUANTITY (quotations only)
-    // Map slider value (0-450) to display value (50-500) for data submission
+    console.log('🔍 DEBUG: Attempting to collect estimated_quantity...');
     const quantitySlider = document.querySelector('input[name="estimated_quantity"]');
-    if (quantitySlider) {
+    console.log('🔍 DEBUG: Slider found?', !!quantitySlider, 'Value:', quantitySlider?.value);
+
+    if (quantitySlider && quantitySlider.value !== undefined) {
       const sliderValue = parseInt(quantitySlider.value) || 0;
       let displayValue;
       if (sliderValue <= 225) {
@@ -19669,6 +19682,9 @@ class V10_ClientManager {
       }
       currentData.estimated_quantity = displayValue;
       console.log('📊 Estimated quantity collected:', currentData.estimated_quantity, '(slider:', sliderValue, ')');
+    } else {
+      console.warn('⚠️ Quantity slider not found or has no value - using default');
+      currentData.estimated_quantity = 150; // Default fallback
     }
 
     return currentData;
