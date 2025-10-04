@@ -20755,8 +20755,16 @@ class V10_ModalManager {
         return;
       }
 
-      // Instant validation check
-      const isValidFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/.test(value);
+      // Instant validation check (support partial IDs for samples)
+      const fullFormat = /^[A-Z]{3,8}-\d{2}-\d{3}$/;
+      const partialFormat = /^[A-Z]{3,8}-\d{2}$/;
+
+      let isValidFormat = false;
+      if (fullFormat.test(value)) {
+        isValidFormat = true;
+      } else if (partialFormat.test(value) && this.pendingSubmissionType === 'sample-request') {
+        isValidFormat = true;
+      }
 
       if (isValidFormat) {
         input.classList.add('valid');
