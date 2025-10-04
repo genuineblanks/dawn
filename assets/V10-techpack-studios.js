@@ -16868,16 +16868,6 @@ class V10_ReviewManager {
       try {
         response = await this.sendToWebhook(submissionData);
         clearInterval(progressInterval); // Stop animation when request completes
-
-        // Fast catch-up if needed
-        const progressBar = document.querySelector('.v10-progress-fill');
-        const currentProgress = parseInt(progressBar?.style.width) || 75;
-        if (currentProgress < 99) {
-          // Speed up to 99% over 1.5 seconds
-          const catchUpInterval = this.animateProgressSlowly(currentProgress, 99, 1500);
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          clearInterval(catchUpInterval);
-        }
       } catch (webhookError) {
         clearInterval(progressInterval); // Stop animation on error
         throw webhookError; // Re-throw to outer catch
