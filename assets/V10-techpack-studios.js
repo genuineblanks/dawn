@@ -17276,7 +17276,12 @@ class V10_ReviewManager {
    */
   async storeSubmissionInDatabase(submissionData) {
     try {
+      console.log('📊 ============ DATABASE STORAGE DEBUG ============');
       console.log('📊 Storing submission in database...');
+      console.log('📧 Customer Email:', submissionData.client_data.email);
+      console.log('🏢 Company:', submissionData.client_data.company);
+      console.log('📝 Submission Type:', submissionData.request_type);
+      console.log('🆔 Request ID:', submissionData.submission_id);
 
       const databaseUrl = 'https://dawn-main-theme.vercel.app/api/submissions';
 
@@ -17297,6 +17302,17 @@ class V10_ReviewManager {
         }))
       };
 
+      console.log('📦 Payload Summary:', {
+        email: payload.customer_email,
+        type: payload.submission_type,
+        request_id: payload.request_id,
+        access_code: payload.access_code,
+        files_count: payload.files.length,
+        garments_count: submissionData.records?.garments?.length || 0
+      });
+
+      console.log('🌐 Sending POST request to:', databaseUrl);
+
       const response = await fetch(databaseUrl, {
         method: 'POST',
         headers: {
@@ -17305,25 +17321,35 @@ class V10_ReviewManager {
         body: JSON.stringify(payload)
       });
 
+      console.log('📡 Response Status:', response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error(`Database storage failed: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('❌ Response Error Body:', errorText);
+        throw new Error(`Database storage failed: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
       const result = await response.json();
 
-      console.log('✅ Submission stored in database:', {
+      console.log('✅ SUCCESS! Submission stored in database:', {
         id: result.data.id,
         request_id: result.data.request_id,
-        email: submissionData.client_data.email
+        email: submissionData.client_data.email,
+        created_at: result.data.created_at
       });
+      console.log('📊 ============================================');
 
       return result;
 
     } catch (error) {
       // Don't fail the entire submission if database storage fails
       // Google Sheets backup is the primary source of truth
-      console.error('⚠️ Failed to store in database (non-critical):', error.message);
+      console.error('❌ ============ DATABASE STORAGE FAILED ============');
+      console.error('⚠️ Error Type:', error.name);
+      console.error('⚠️ Error Message:', error.message);
+      console.error('⚠️ Full Error:', error);
       console.error('⚠️ Submission still saved to Google Sheets');
+      console.error('❌ ===============================================');
     }
   }
 
@@ -19098,7 +19124,46 @@ class V10_ClientManager {
     this.setupFormValidation();
     this.setupNavigation();
     this.setupConditionalSections();
+    this.autoPopulateLoggedInCustomer(); // NEW: Auto-fill for logged-in customers
     this.loadSavedData();
+  }
+
+  /**
+   * Auto-populate form fields for logged-in wholesale customers
+   */
+  autoPopulateLoggedInCustomer() {
+    // Check if customer is logged in and data is available
+    if (!window.V10_LOGGED_IN_CUSTOMER) {
+      console.log('⏭️ No logged-in customer data');
+      return;
+    }
+
+    const customerData = window.V10_LOGGED_IN_CUSTOMER;
+    console.log('✅ Auto-populating customer data:', customerData);
+
+    // Get form fields
+    const companyField = document.querySelector('input[name="company_name"]');
+    const emailField = document.querySelector('input[name="email"]');
+
+    // Auto-populate company name
+    if (companyField && customerData.companyName) {
+      companyField.value = customerData.companyName;
+      console.log('📝 Auto-filled company name:', customerData.companyName);
+    }
+
+    // Auto-populate email
+    if (emailField && customerData.email) {
+      emailField.value = customerData.email;
+      console.log('📝 Auto-filled email:', customerData.email);
+    }
+
+    // If wholesale customer, show a helpful message
+    if (customerData.isWholesale && customerData.accessCode) {
+      const subtitleEl = document.getElementById('v10-client-info-subtitle');
+      if (subtitleEl) {
+        subtitleEl.innerHTML = `Welcome back! Your access code: <strong>${customerData.accessCode}</strong>`;
+      }
+    }
   }
 
   setupRequestTypeHandling() {
@@ -20838,7 +20903,30 @@ class V10_ModalManager {
       }
     }
 
-    // Pre-fill with saved prefix if exists
+    // ✅ NEW: Auto-fill access code for logged-in wholesale customers
+    const requestIdInput = document.getElementById('v10-request-id-input');
+    if (requestIdInput && window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.accessCode) {
+      const accessCode = window.V10_LOGGED_IN_CUSTOMER.accessCode;
+
+      // Only auto-fill if there's a valid access code (not empty or "PENDING")
+      if (accessCode && accessCode !== '' && accessCode !== 'PENDING') {
+        requestIdInput.value = accessCode;
+        console.log('✅ Auto-filled access code for logged-in customer:', accessCode);
+
+        // Trigger validation after auto-filling
+        requestIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // Focus and move cursor to end
+        setTimeout(() => {
+          requestIdInput.focus();
+          requestIdInput.setSelectionRange(accessCode.length, accessCode.length);
+        }, 100);
+
+        return; // Skip loadSavedPrefix() if we auto-filled the access code
+      }
+    }
+
+    // Pre-fill with saved prefix if exists (only if access code wasn't auto-filled)
     this.loadSavedPrefix();
   }
 
