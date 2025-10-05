@@ -1,5 +1,15 @@
 {{ 'customer.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  Check if customer is a wholesale/brand client
+{%- endcomment -%}
+{%- assign is_wholesale = false -%}
+{%- if customer.tags contains 'brand-client' -%}
+  {%- assign is_wholesale = true -%}
+  {{ 'v10-account-dashboard.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'v10-account-dashboard.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+{%- endif -%}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -29,8 +39,15 @@
       </a>
     </h1>
 
+    {%- if is_wholesale -%}
+      <!-- WHOLESALE CUSTOMER DASHBOARD -->
+      {% render 'v10-wholesale-dashboard', customer: customer %}
+    {%- else -%}
+      <!-- RETAIL CUSTOMER VIEW (Original Shopify Account) -->
+    {%- endif -%}
+
     <!-- TechPack content wrapper -->
-    <div class="account-content">
+    <div class="account-content" {% if is_wholesale %}style="display: none;"{% endif %}>
       <div class="account-grid">
         
         <!-- Order History Section (keep ALL existing functionality) -->
