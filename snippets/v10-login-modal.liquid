@@ -1,0 +1,105 @@
+{% comment %}
+  V10 Login/Register Modal
+  Shows choice between Retail Customer and Wholesale/Brand Client
+{% endcomment %}
+
+<link href="{{ 'v10-login-modal.css' | asset_url }}?v={{ 'now' | date: '%s' }}" rel="stylesheet">
+<script src="{{ 'v10-login-modal.js' | asset_url }}?v={{ 'now' | date: '%s' }}" defer></script>
+
+<!-- Modal Overlay -->
+<div class="v10-login-modal-overlay" id="v10-login-modal" style="display: none;">
+  <div class="v10-login-modal-container">
+
+    <!-- Close Button -->
+    <button type="button" class="v10-login-modal-close" id="v10-login-modal-close" aria-label="Close modal">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <!-- Modal Content -->
+    <div class="v10-login-modal-content">
+
+      <!-- Header -->
+      <div class="v10-login-modal-header">
+        <h2 class="v10-login-modal-title">Welcome to GenuineBlanks</h2>
+        <p class="v10-login-modal-subtitle">Choose your account type to continue</p>
+      </div>
+
+      <!-- Account Type Selection -->
+      <div class="v10-login-modal-options">
+
+        <!-- Retail Customer Option -->
+        <a href="/account/register" class="v10-login-option v10-login-option-retail" id="v10-login-retail">
+          <div class="v10-login-option-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <path d="M20 8v6M23 11h-6"/>
+            </svg>
+          </div>
+          <div class="v10-login-option-content">
+            <h3 class="v10-login-option-title">Retail Customer</h3>
+            <p class="v10-login-option-description">
+              Shop our ready-to-wear collection and standard products
+            </p>
+            <ul class="v10-login-option-features">
+              <li>Browse product catalog</li>
+              <li>Place retail orders</li>
+              <li>Standard pricing</li>
+            </ul>
+          </div>
+          <div class="v10-login-option-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Wholesale/Brand Client Option -->
+        <a href="/pages/company-registration" class="v10-login-option v10-login-option-wholesale" id="v10-login-wholesale">
+          <div class="v10-login-option-badge">RECOMMENDED FOR BRANDS</div>
+          <div class="v10-login-option-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <div class="v10-login-option-content">
+            <h3 class="v10-login-option-title">Wholesale / Brand Client</h3>
+            <p class="v10-login-option-description">
+              Custom garment development, tech packs, and bulk production
+            </p>
+            <ul class="v10-login-option-features">
+              <li>Custom garment development</li>
+              <li>Tech pack submissions</li>
+              <li>Bulk order pricing</li>
+              <li>Dedicated account manager</li>
+            </ul>
+          </div>
+          <div class="v10-login-option-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Footer Note -->
+      <div class="v10-login-modal-footer">
+        <p class="v10-login-modal-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          Already have an account?
+          <a href="/account/login" class="v10-login-modal-link">Sign in here</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

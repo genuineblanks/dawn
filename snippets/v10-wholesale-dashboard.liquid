@@ -1,0 +1,149 @@
+{% comment %}
+  V10 Wholesale Customer Dashboard
+  Shows submission history for brand clients
+{% endcomment %}
+
+{%- assign access_code = customer.metafields.custom.access_code | default: 'PENDING' -%}
+{%- assign company_name = customer.metafields.custom.company_name | default: customer.first_name -%}
+
+<div class="v10-wholesale-dashboard" id="v10-wholesale-dashboard" data-customer-email="{{ customer.email }}">
+
+  <!-- Welcome Section with Access Code -->
+  <div class="v10-dashboard-welcome">
+    <div class="v10-welcome-content">
+      <h2 class="v10-welcome-title">Welcome back, {{ company_name }}!</h2>
+      <p class="v10-welcome-subtitle">Manage your garment development projects and track submissions</p>
+    </div>
+    <div class="v10-access-code-card">
+      <div class="v10-access-code-label">Your Access Code</div>
+      <div class="v10-access-code-value">{{ access_code }}</div>
+      <div class="v10-access-code-hint">Use this code for new submissions</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="v10-quick-actions">
+    <a href="/pages/tech-pack-submission" class="v10-action-card v10-action-primary">
+      <div class="v10-action-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </div>
+      <div class="v10-action-content">
+        <h3>New Submission</h3>
+        <p>Start a new garment development project</p>
+      </div>
+      <div class="v10-action-arrow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </a>
+
+    <div class="v10-action-card v10-action-secondary">
+      <div class="v10-action-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <div class="v10-action-content">
+        <h3>Total Submissions</h3>
+        <p class="v10-stat-number" id="v10-total-submissions">0</p>
+      </div>
+    </div>
+
+    <div class="v10-action-card v10-action-secondary">
+      <div class="v10-action-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="v10-action-content">
+        <h3>In Progress</h3>
+        <p class="v10-stat-number" id="v10-in-progress">0</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submissions Section -->
+  <div class="v10-submissions-section">
+
+    <!-- Section Header with Filters -->
+    <div class="v10-submissions-header">
+      <h2 class="v10-section-title">Your Submissions</h2>
+      <div class="v10-filter-tabs" id="v10-filter-tabs">
+        <button class="v10-filter-tab active" data-filter="all">
+          All
+          <span class="v10-tab-count" id="count-all">0</span>
+        </button>
+        <button class="v10-filter-tab" data-filter="quotation">
+          Quotations
+          <span class="v10-tab-count" id="count-quotation">0</span>
+        </button>
+        <button class="v10-filter-tab" data-filter="sample-request">
+          Samples
+          <span class="v10-tab-count" id="count-sample">0</span>
+        </button>
+        <button class="v10-filter-tab" data-filter="bulk-order-request">
+          Bulk Orders
+          <span class="v10-tab-count" id="count-bulk">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="v10-loading-state" id="v10-loading-state">
+      <div class="v10-spinner"></div>
+      <p>Loading your submissions...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="v10-empty-state" id="v10-empty-state" style="display: none;">
+      <div class="v10-empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <h3>No submissions yet</h3>
+      <p>Start your first garment development project by creating a new submission</p>
+      <a href="/pages/tech-pack-submission" class="v10-btn-primary">
+        Create First Submission
+      </a>
+    </div>
+
+    <!-- Submissions Grid -->
+    <div class="v10-submissions-grid" id="v10-submissions-grid">
+      <!-- Submissions will be loaded here via JavaScript -->
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Submission Details Modal -->
+<div class="v10-modal-overlay" id="v10-submission-modal" style="display: none;">
+  <div class="v10-modal-container v10-modal-large">
+
+    <!-- Modal Header -->
+    <div class="v10-modal-header">
+      <div>
+        <h2 class="v10-modal-title" id="modal-title">Submission Details</h2>
+        <p class="v10-modal-subtitle" id="modal-subtitle"></p>
+      </div>
+      <button type="button" class="v10-modal-close" id="modal-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="v10-modal-body" id="modal-body">
+      <!-- Content will be loaded dynamically -->
+    </div>
+
+  </div>
+</div>
