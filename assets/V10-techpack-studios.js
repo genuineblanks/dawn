@@ -17223,7 +17223,10 @@ class V10_ReviewManager {
 
       // Note: no-cors mode prevents reading response details
       // We'll assume success if no network error occurred
-      console.log('✅ Request sent successfully (no-cors mode)');
+      console.log('✅ Request sent successfully to Google Apps Script (no-cors mode)');
+
+      // ✅ NEW: Also store submission in database for wholesale customer dashboard
+      await this.storeSubmissionInDatabase(submissionData);
 
       // ✅ Request ID tracking now handled automatically by main Apps Script
       // After JSON file creation, main Apps Script triggers NEW Request ID system
@@ -17264,6 +17267,63 @@ class V10_ReviewManager {
 
       // Re-throw other errors
       throw error;
+    }
+  }
+
+  /**
+   * Store submission in Vercel Postgres database
+   * Enables wholesale customers to view submission history in their account
+   */
+  async storeSubmissionInDatabase(submissionData) {
+    try {
+      console.log('📊 Storing submission in database...');
+
+      const databaseUrl = 'https://dawn-main-theme.vercel.app/api/submissions';
+
+      // Prepare database payload
+      const payload = {
+        customer_email: submissionData.client_data.email,
+        customer_id: null, // Will be populated if customer is logged in
+        access_code: submissionData.client_data.access_code || 'PENDING',
+        submission_type: submissionData.request_type,
+        request_id: submissionData.submission_id,
+        status: 'pending',
+        data: submissionData,
+        files: submissionData.files.map(file => ({
+          file_type: file.type || 'unknown',
+          file_name: file.name,
+          file_url: file.url || file.dataUrl || '', // Will need to upload files to Vercel Blob
+          file_size: file.size
+        }))
+      };
+
+      const response = await fetch(databaseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Database storage failed: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      console.log('✅ Submission stored in database:', {
+        id: result.data.id,
+        request_id: result.data.request_id,
+        email: submissionData.client_data.email
+      });
+
+      return result;
+
+    } catch (error) {
+      // Don't fail the entire submission if database storage fails
+      // Google Sheets backup is the primary source of truth
+      console.error('⚠️ Failed to store in database (non-critical):', error.message);
+      console.error('⚠️ Submission still saved to Google Sheets');
     }
   }
 
