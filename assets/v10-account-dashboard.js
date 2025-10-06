@@ -314,47 +314,37 @@ const V10_AccountDashboard = {
     const getGarmentColor = (garment) => {
       console.log('🎨 Getting color for garment:', garment.type);
 
-      // Try direct color properties first
-      if (garment.mainColor) {
-        console.log('✅ Found mainColor:', garment.mainColor);
-        return garment.mainColor;
-      }
-      if (garment.selectedColor) {
-        console.log('✅ Found selectedColor:', garment.selectedColor);
-        return garment.selectedColor;
-      }
-      if (garment.color) {
-        console.log('✅ Found color:', garment.color);
-        return garment.color;
-      }
-      if (garment.fabricColor) {
-        console.log('✅ Found fabricColor:', garment.fabricColor);
-        return garment.fabricColor;
-      }
+      // STOCK SAMPLES: Check sampleSubValue first (e.g., "white", "black")
+      if (garment.sampleSubValue) {
+        const colorName = garment.sampleSubValue.toLowerCase();
+        console.log('✅ Found sampleSubValue:', colorName);
 
-      // Try to extract from fabric swatches if available
-      if (garment.fabricSwatches && garment.fabricSwatches.length > 0) {
-        const firstSwatch = garment.fabricSwatches[0];
-        if (firstSwatch.hex) {
-          console.log('✅ Found color in fabricSwatches[0].hex:', firstSwatch.hex);
-          return firstSwatch.hex;
-        }
-        if (firstSwatch.color) {
-          console.log('✅ Found color in fabricSwatches[0].color:', firstSwatch.color);
-          return firstSwatch.color;
+        // Convert common color names to hex
+        const colorMap = {
+          'white': '#FFFFFF',
+          'black': '#000000',
+          'gray': '#808080',
+          'grey': '#808080',
+          'red': '#FF0000',
+          'blue': '#0000FF',
+          'green': '#00FF00',
+          'yellow': '#FFFF00',
+          'navy': '#000080',
+          'beige': '#F5F5DC'
+        };
+
+        if (colorMap[colorName]) {
+          return colorMap[colorName];
         }
       }
 
-      // Try to extract from lab dips if available
-      if (garment.labDips && garment.labDips.length > 0) {
-        const firstDip = garment.labDips[0];
-        if (firstDip.hex) {
-          console.log('✅ Found color in labDips[0].hex:', firstDip.hex);
-          return firstDip.hex;
-        }
-        if (firstDip.color) {
-          console.log('✅ Found color in labDips[0].color:', firstDip.color);
-          return firstDip.color;
+      // CUSTOM SAMPLES: Get color from assigned lab dips
+      if (garment.assignedLabDips && garment.assignedLabDips.length > 0 && data.records?.lab_dips) {
+        const firstLabDipId = garment.assignedLabDips[0];
+        const labDip = data.records.lab_dips.find(ld => ld.id === firstLabDipId);
+        if (labDip && labDip.hex) {
+          console.log('✅ Found color from assigned lab dip:', labDip.hex, labDip.pantone);
+          return labDip.hex;
         }
       }
 
@@ -391,10 +381,14 @@ const V10_AccountDashboard = {
         <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">GARMENT SPECIFICATIONS</h4>
         <div style="display: grid; gap: 0.75rem;">
           ${garments.map((garment, index) => {
-            // Get assigned lab dips for this garment
-            const assignedLabDips = garment.assignedLabDips || garment.labDips || [];
-            const labDipsText = assignedLabDips.length > 0
-              ? assignedLabDips.map(dip => dip.name || dip.pantone || dip.code).filter(Boolean).join(', ')
+            // Get assigned lab dips for this garment by cross-referencing IDs
+            const assignedLabDipIds = garment.assignedLabDips || [];
+            const assignedLabDipObjects = assignedLabDipIds
+              .map(labDipId => data.records?.lab_dips?.find(ld => ld.id === labDipId))
+              .filter(Boolean);
+
+            const labDipsText = assignedLabDipObjects.length > 0
+              ? assignedLabDipObjects.map(dip => dip.pantone || dip.name || dip.code).filter(Boolean).join(', ')
               : '';
 
             return `
@@ -409,7 +403,7 @@ const V10_AccountDashboard = {
                   <span style="font-weight: 700; color: #ffffff; font-size: 0.9375rem;">${index + 1}. ${garment.type || 'Garment'}</span>
                   ${garment.fabricType ? `<span style="font-size: 0.75rem; color: #cccccc; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.05); border-radius: 4px; border: 1px solid #3a3a3a;">${garment.fabricType}</span>` : ''}
                 </div>
-                ${garment.fabricComposition ? `<p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #999999;">${garment.fabricComposition}</p>` : ''}
+                ${garment.fabricType ? `<p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #999999;">${garment.fabricType}</p>` : ''}
                 ${labDipsText ? `<p style="margin: 0.375rem 0 0 0; font-size: 0.8125rem; color: #10b981; font-weight: 500;">Lab Dips: ${labDipsText}</p>` : ''}
               </div>
 
@@ -446,51 +440,34 @@ const V10_AccountDashboard = {
       ` : ''}
 
       ${(() => {
-        // Get unassigned fabric swatches and lab dips
-        const unassignedSwatches = data?.records?.unassignedFabricSwatches || data?.unassignedFabricSwatches || [];
-        const unassignedLabDips = data?.records?.unassignedLabDips || data?.unassignedLabDips || [];
-        const hasUnassigned = unassignedSwatches.length > 0 || unassignedLabDips.length > 0;
+        // Get all lab dips and filter out assigned ones
+        const allLabDips = data?.records?.lab_dips || [];
+        const assignedLabDipIds = Object.keys(data?.records?.assignments?.lab_dips || {});
 
-        if (!hasUnassigned) return '';
+        // Filter to get only unassigned lab dips
+        const unassignedLabDips = allLabDips.filter(labDip => !assignedLabDipIds.includes(labDip.id));
+
+        if (unassignedLabDips.length === 0) return '';
 
         return `
         <!-- Unassigned Fabric Swatches & Lab Dips Section -->
         <div style="margin-bottom: 2rem;">
           <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS</h4>
 
-          ${unassignedSwatches.length > 0 ? `
-          <div style="margin-bottom: 1rem;">
-            <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Fabric Swatches (${unassignedSwatches.length})</p>
-            <div style="display: grid; gap: 0.5rem;">
-              ${unassignedSwatches.map(swatch => `
-                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                  <div style="width: 32px; height: 32px; background: ${swatch.hex || swatch.color || '#555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
-                  <div style="flex: 1; min-width: 0;">
-                    <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${swatch.name || swatch.pantone || swatch.code || 'Unnamed'}</p>
-                    ${swatch.pantone || swatch.tpx ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${swatch.pantone || swatch.tpx}</p>` : ''}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          ` : ''}
-
-          ${unassignedLabDips.length > 0 ? `
           <div>
-            <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Lab Dips (${unassignedLabDips.length})</p>
+            <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Unassigned Lab Dips (${unassignedLabDips.length})</p>
             <div style="display: grid; gap: 0.5rem;">
               ${unassignedLabDips.map(dip => `
                 <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                  <div style="width: 32px; height: 32px; background: ${dip.hex || dip.color || '#555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
+                  <div style="width: 32px; height: 32px; background: ${dip.hex || '#555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
                   <div style="flex: 1; min-width: 0;">
-                    <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.name || dip.pantone || dip.code || 'Unnamed'}</p>
-                    ${dip.pantone || dip.tpx ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.pantone || dip.tpx}</p>` : ''}
+                    <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
+                    ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
                   </div>
                 </div>
               `).join('')}
             </div>
           </div>
-          ` : ''}
         </div>
         `;
       })()}
