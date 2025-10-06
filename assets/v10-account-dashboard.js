@@ -199,7 +199,9 @@ const V10_AccountDashboard = {
     const formattedDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
 
     // Get type label
