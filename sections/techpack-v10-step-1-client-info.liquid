@@ -4,6 +4,22 @@ TechPack V10 Step 1: Client Information - Premium Studio Design with Modal Workf
 
 {{ 'V10-techpack-studios.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  Pass logged-in customer data to JavaScript for auto-population
+{%- endcomment -%}
+{%- if customer -%}
+<script>
+  window.V10_LOGGED_IN_CUSTOMER = {
+    email: {{ customer.email | json }},
+    companyName: {{ customer.metafields.custom.company_name | default: customer.first_name | json }},
+    accessCode: {{ customer.metafields.custom.access_code | default: '' | json }},
+    isWholesale: {% if customer.tags contains 'brand-client' %}true{% else %}false{% endif %}
+  };
+  console.log('✅ Customer logged in:', window.V10_LOGGED_IN_CUSTOMER);
+  console.log('🏷️ Customer tags:', {{ customer.tags | json }});
+</script>
+{%- endif -%}
+
 <style>
   /* Only layout overrides - backgrounds handled by external V10 CSS */
   .techpack-container {
