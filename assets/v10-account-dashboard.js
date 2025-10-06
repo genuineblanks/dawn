@@ -483,21 +483,19 @@ const V10_AccountDashboard = {
           return `
           <div>
             <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS (${unassignedLabDips.length})</h4>
-            <div>
-              <div style="display: grid; gap: 0.5rem;">
-                ${unassignedLabDips.map(dip => {
-                  const dipColor = dip.hex || '#555555';
-                  return `
-                  <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                    <div style="width: 26px; height: 26px; min-width: 26px; min-height: 26px; background: ${getGradientBackground(dipColor)}; border-radius: 0; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(dipColor)}; display: block;"></div>
-                    <div style="flex: 1; min-width: 0;">
-                      <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
-                      ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
-                    </div>
+            <div style="display: grid; gap: 0.75rem;">
+              ${unassignedLabDips.map(dip => {
+                const dipColor = dip.hex || 'MULTI_COLOR';
+                return `
+                <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
+                  <div style="width: 26px; height: 26px; min-width: 26px; min-height: 26px; background: ${getGradientBackground(dipColor)}; border-radius: 0; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(dipColor)}; display: block;"></div>
+                  <div style="flex: 1; min-width: 0;">
+                    <p style="margin: 0 0 0.25rem 0; font-size: 0.9375rem; font-weight: 700; color: #ffffff; line-height: 1.3;">${dip.pantone || dip.name || 'Unnamed'}</p>
+                    ${dip.hex ? `<p style="margin: 0; font-size: 0.875rem; font-weight: 400; color: #cccccc; line-height: 1.5;">${dip.hex.toUpperCase()}</p>` : ''}
                   </div>
-                  `;
-                }).join('')}
-              </div>
+                </div>
+                `;
+              }).join('')}
             </div>
           </div>
           `;
