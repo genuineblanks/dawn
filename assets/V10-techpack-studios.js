@@ -19602,14 +19602,37 @@ class V10_ClientManager {
     try {
       const data = JSON.parse(savedData);
 
-      // Fields to exclude from loading (same as save exclusions)
+      // ✅ NEW: Check if user is logged in as wholesale customer
+      const isLoggedInWholesale = window.V10_LOGGED_IN_CUSTOMER && window.V10_LOGGED_IN_CUSTOMER.isWholesale;
+
+      // Fields to exclude from loading
       const excludedFields = ['project_details'];
+
+      // ✅ NEW: For logged-in wholesale customers, also exclude identity fields
+      // These will be populated from their account instead of cache
+      const loggedInExcludedFields = [
+        'email',           // Use account email
+        'company',         // Use account company
+        'company_name',    // Use account company
+        'Company',         // Variation
+        'Email'            // Variation
+      ];
+
+      if (isLoggedInWholesale) {
+        console.log('🔐 Logged-in wholesale customer detected - preserving account data, skipping cache for identity fields');
+      }
 
       // Restore form values
       Object.entries(data).forEach(([key, value]) => {
-        // Skip loading excluded fields even if they exist in saved data
+        // Skip loading excluded fields
         if (excludedFields.includes(key)) {
           console.log(`⏭️ Excluding field from load: ${key}`);
+          return;
+        }
+
+        // ✅ NEW: For logged-in wholesale customers, skip identity fields
+        if (isLoggedInWholesale && loggedInExcludedFields.includes(key)) {
+          console.log(`🔐 Skipping cached "${key}" - using logged-in account data instead`);
           return;
         }
 
@@ -19624,13 +19647,19 @@ class V10_ClientManager {
               }
             }
           } else {
+            // ✅ ENHANCED: Only set value if field is empty (for logged-in customers)
+            // This prevents overwriting auto-populated logged-in data
+            if (isLoggedInWholesale && field.value) {
+              console.log(`⏭️ Skipping "${key}" - field already has value from logged-in data`);
+              return;
+            }
             field.value = value;
           }
         }
       });
-      
+
       this.updateConditionalSections();
-      
+
     } catch (error) {
       console.error('Error loading saved data:', error);
     }
