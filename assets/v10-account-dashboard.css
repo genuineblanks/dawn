@@ -31,24 +31,10 @@
 }
 
 /* ==============================================
-   RESET THEME STYLES
+   MINIMAL THEME OVERRIDES
    ============================================== */
 
-/* Override any theme button styles */
-.v10-wholesale-dashboard button,
-.v10-wholesale-dashboard .button,
-.v10-wholesale-dashboard a.button {
-  all: unset !important;
-  box-sizing: border-box !important;
-  cursor: pointer !important;
-  display: inline-block !important;
-}
-
-/* Override any theme link styles */
-.v10-wholesale-dashboard a {
-  color: inherit !important;
-  text-decoration: none !important;
-}
+/* Only override specific conflicting properties - DO NOT use 'all: unset' */
 
 /* ==============================================
    WELCOME SECTION
