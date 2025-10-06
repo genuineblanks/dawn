@@ -376,46 +376,78 @@ const V10_AccountDashboard = {
       ` : ''}
 
       ${garments.length > 0 ? `
-      <!-- Garment Specifications (V10 Professional Style) -->
-      <div style="margin-bottom: 2rem;">
-        <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">GARMENT SPECIFICATIONS</h4>
-        <div style="display: grid; gap: 0.75rem;">
-          ${garments.map((garment, index) => {
-            // Get assigned lab dips for this garment by cross-referencing IDs
-            const assignedLabDipIds = garment.assignedLabDips || [];
-            const assignedLabDipObjects = assignedLabDipIds
-              .map(labDipId => data.records?.lab_dips?.find(ld => ld.id === labDipId))
-              .filter(Boolean);
+      <!-- 2-Column Grid Layout -->
+      <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2rem;">
 
-            const labDipsText = assignedLabDipObjects.length > 0
-              ? assignedLabDipObjects.map(dip => dip.pantone || dip.name || dip.code).filter(Boolean).join(', ')
-              : '';
+        <!-- LEFT: Garment Specifications -->
+        <div>
+          <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">GARMENT SPECIFICATIONS</h4>
+          <div style="display: grid; gap: 0.75rem;">
+            ${data.costs?.items?.filter(item => item.garment).map((costItem, index) => {
+              const garment = costItem.garment;
+              const fullDesc = costItem.fullDescription || '';
 
-            return `
-            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
+              return `
+              <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
 
-              <!-- Colored Square (V10 Style) -->
-              <div style="width: 40px; height: 40px; background: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
+                <!-- Colored Square -->
+                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
 
-              <!-- Garment Details -->
-              <div style="flex: 1; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                  <span style="font-weight: 700; color: #ffffff; font-size: 0.9375rem;">${index + 1}. ${garment.type || 'Garment'}</span>
-                  ${garment.fabricType ? `<span style="font-size: 0.75rem; color: #cccccc; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.05); border-radius: 4px; border: 1px solid #3a3a3a;">${garment.fabricType}</span>` : ''}
+                <!-- Full Description from Costs -->
+                <div style="flex: 1; min-width: 0;">
+                  <p style="margin: 0; font-size: 0.9375rem; font-weight: 600; color: #ffffff; line-height: 1.5;">${fullDesc}</p>
                 </div>
-                ${garment.fabricType ? `<p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #999999;">${garment.fabricType}</p>` : ''}
-                ${labDipsText ? `<p style="margin: 0.375rem 0 0 0; font-size: 0.8125rem; color: #10b981; font-weight: 500;">Lab Dips: ${labDipsText}</p>` : ''}
               </div>
-
-              <!-- Size Badge (V10 Style) -->
-              ${garment.sampleSize ? `
-              <div style="padding: 0.5rem 1rem; background: #242424; border: 1px solid #3a3a3a; border-radius: 6px; font-weight: 700; color: #ffffff; font-size: 0.875rem; letter-spacing: 0.5px;">${garment.sampleSize}</div>
-              ` : ''}
-            </div>
-            `;
-          }).join('')}
+              `;
+            }).join('') || garments.map((garment, index) => `
+              <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
+                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                <div style="flex: 1;">
+                  <p style="margin: 0; font-size: 0.9375rem; font-weight: 600; color: #ffffff;">${index + 1}. ${garment.type} - ${garment.fabricType}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
         </div>
+
+        <!-- RIGHT: Fabric Swatches & Lab Dips -->
+        ${(() => {
+          const allLabDips = data?.records?.lab_dips || [];
+          const assignedLabDipIds = Object.keys(data?.records?.assignments?.lab_dips || {});
+          const unassignedLabDips = allLabDips.filter(labDip => !assignedLabDipIds.includes(labDip.id));
+
+          if (unassignedLabDips.length === 0) return '';
+
+          return `
+          <div>
+            <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS</h4>
+            <div>
+              <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Unassigned Lab Dips (${unassignedLabDips.length})</p>
+              <div style="display: grid; gap: 0.5rem;">
+                ${unassignedLabDips.map(dip => `
+                  <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
+                    <div style="width: 32px; height: 32px; min-width: 32px; min-height: 32px; background-color: ${dip.hex || '#555555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                    <div style="flex: 1; min-width: 0;">
+                      <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
+                      ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          `;
+        })()}
+
       </div>
+
+      <style>
+        @media (min-width: 768px) {
+          .v10-modal-body > div:has(> div > h4:first-child) {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+      </style>
       ` : ''}
 
       ${files.length > 0 ? `
@@ -439,38 +471,6 @@ const V10_AccountDashboard = {
       </div>
       ` : ''}
 
-      ${(() => {
-        // Get all lab dips and filter out assigned ones
-        const allLabDips = data?.records?.lab_dips || [];
-        const assignedLabDipIds = Object.keys(data?.records?.assignments?.lab_dips || {});
-
-        // Filter to get only unassigned lab dips
-        const unassignedLabDips = allLabDips.filter(labDip => !assignedLabDipIds.includes(labDip.id));
-
-        if (unassignedLabDips.length === 0) return '';
-
-        return `
-        <!-- Unassigned Fabric Swatches & Lab Dips Section -->
-        <div style="margin-bottom: 2rem;">
-          <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS</h4>
-
-          <div>
-            <p style="font-size: 0.75rem; color: #cccccc; margin: 0 0 0.75rem 0; font-weight: 600;">Unassigned Lab Dips (${unassignedLabDips.length})</p>
-            <div style="display: grid; gap: 0.5rem;">
-              ${unassignedLabDips.map(dip => `
-                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                  <div style="width: 32px; height: 32px; background: ${dip.hex || '#555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
-                  <div style="flex: 1; min-width: 0;">
-                    <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
-                    ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        `;
-      })()}
 
       <!-- Contact Section -->
       <div style="padding-top: 1.5rem; border-top: 1px solid #3a3a3a;">
