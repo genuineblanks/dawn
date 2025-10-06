@@ -353,6 +353,42 @@ const V10_AccountDashboard = {
       return '#555555';
     };
 
+    // Generate darker shade for beautiful gradient effect (matches V10 TechPack App)
+    const getDarkerShade = (hex) => {
+      // Remove # if present
+      const cleanHex = hex.replace('#', '');
+
+      // Parse RGB values
+      const r = parseInt(cleanHex.slice(0, 2), 16);
+      const g = parseInt(cleanHex.slice(2, 4), 16);
+      const b = parseInt(cleanHex.slice(4, 6), 16);
+
+      // Darken by 25% for gradient effect
+      const darker = (val) => Math.max(0, Math.floor(val * 0.75));
+
+      // Convert back to hex
+      const toHex = (val) => val.toString(16).padStart(2, '0');
+
+      return `#${toHex(darker(r))}${toHex(darker(g))}${toHex(darker(b))}`;
+    };
+
+    // Generate beautiful gradient background like V10 TechPack App
+    const getGradientBackground = (hex) => {
+      const darkerShade = getDarkerShade(hex);
+      return `linear-gradient(135deg, ${hex}, ${darkerShade})`;
+    };
+
+    // Generate box shadow for depth (matches V10 TechPack App)
+    const getColorShadow = (hex) => {
+      // Remove # for rgba conversion
+      const cleanHex = hex.replace('#', '');
+      const r = parseInt(cleanHex.slice(0, 2), 16);
+      const g = parseInt(cleanHex.slice(2, 4), 16);
+      const b = parseInt(cleanHex.slice(4, 6), 16);
+
+      return `0 2px 8px rgba(${r}, ${g}, ${b}, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)`;
+    };
+
     let html = `
       <!-- Status Row -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #3a3a3a;">
@@ -396,11 +432,13 @@ const V10_AccountDashboard = {
               const title = dashIndex > 0 ? fullDesc.substring(0, dashIndex) : fullDesc;
               const description = dashIndex > 0 ? fullDesc.substring(dashIndex + 3) : '';
 
+              const garmentColor = getGarmentColor(fullGarment);
+
               return `
               <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
 
-                <!-- Colored Square -->
-                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(fullGarment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                <!-- Colored Square (V10 Beautiful Style) -->
+                <div style="width: 48px; height: 48px; min-width: 48px; min-height: 48px; background: ${getGradientBackground(garmentColor)}; border-radius: 10px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
 
                 <!-- Full Description from Costs -->
                 <div style="flex: 1; min-width: 0;">
@@ -409,14 +447,17 @@ const V10_AccountDashboard = {
                 </div>
               </div>
               `;
-            }).join('') || garments.map((garment, index) => `
+            }).join('') || garments.map((garment, index) => {
+              const garmentColor = getGarmentColor(garment);
+              return `
               <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
-                <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background-color: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                <div style="width: 48px; height: 48px; min-width: 48px; min-height: 48px; background: ${getGradientBackground(garmentColor)}; border-radius: 10px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(garmentColor)}; display: block;"></div>
                 <div style="flex: 1;">
                   <p style="margin: 0; font-size: 0.9375rem; font-weight: 600; color: #ffffff;">${index + 1}. ${garment.type} - ${garment.fabricType}</p>
                 </div>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
         </div>
 
@@ -433,15 +474,18 @@ const V10_AccountDashboard = {
             <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FABRIC SWATCHES & LAB DIPS (${unassignedLabDips.length})</h4>
             <div>
               <div style="display: grid; gap: 0.5rem;">
-                ${unassignedLabDips.map(dip => `
+                ${unassignedLabDips.map(dip => {
+                  const dipColor = dip.hex || '#555555';
+                  return `
                   <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
-                    <div style="width: 32px; height: 32px; min-width: 32px; min-height: 32px; background-color: ${dip.hex || '#555555'}; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); display: block;"></div>
+                    <div style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; background: ${getGradientBackground(dipColor)}; border-radius: 8px; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.2); box-shadow: ${getColorShadow(dipColor)}; display: block;"></div>
                     <div style="flex: 1; min-width: 0;">
                       <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff;">${dip.pantone || dip.name || 'Unnamed'}</p>
                       ${dip.hex ? `<p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${dip.hex.toUpperCase()}</p>` : ''}
                     </div>
                   </div>
-                `).join('')}
+                  `;
+                }).join('')}
               </div>
             </div>
           </div>
