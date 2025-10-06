@@ -39,33 +39,6 @@
         </svg>
       </div>
     </a>
-
-    <div class="v10-action-card v10-action-secondary">
-      <div class="v10-action-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-      </div>
-      <div class="v10-action-content">
-        <h3>Total Submissions</h3>
-        <p class="v10-stat-number" id="v10-total-submissions">0</p>
-      </div>
-    </div>
-
-    <div class="v10-action-card v10-action-secondary">
-      <div class="v10-action-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
-      </div>
-      <div class="v10-action-content">
-        <h3>In Progress</h3>
-        <p class="v10-stat-number" id="v10-in-progress">0</p>
-      </div>
-    </div>
   </div>
 
   <!-- Submissions Section -->
@@ -73,7 +46,28 @@
 
     <!-- Section Header with Filters -->
     <div class="v10-submissions-header">
-      <h2 class="v10-section-title">Your Submissions</h2>
+      <div class="v10-header-left">
+        <h2 class="v10-section-title">Your Submissions</h2>
+        <div class="v10-stat-badges">
+          <div class="v10-stat-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Total:</span>
+            <span class="v10-stat-value" id="v10-total-submissions">0</span>
+          </div>
+          <div class="v10-stat-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            <span>In Progress:</span>
+            <span class="v10-stat-value" id="v10-in-progress">0</span>
+          </div>
+        </div>
+      </div>
       <div class="v10-filter-tabs" id="v10-filter-tabs">
         <button class="v10-filter-tab active" data-filter="all">
           All
