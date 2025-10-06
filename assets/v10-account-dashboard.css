@@ -1,6 +1,6 @@
 /**
  * V10 Wholesale Account Dashboard Styles
- * Matches V10 TechPack Studios Design System
+ * Matches V10 TechPack Studios Design System - DARK THEME ONLY
  *
  * IMPORTANT: All selectors are scoped under .v10-wholesale-dashboard
  * to prevent theme CSS conflicts
@@ -31,12 +31,6 @@
 }
 
 /* ==============================================
-   MINIMAL THEME OVERRIDES
-   ============================================== */
-
-/* Only override specific conflicting properties - DO NOT use 'all: unset' */
-
-/* ==============================================
    WELCOME SECTION
    ============================================== */
 
@@ -46,7 +40,7 @@
   gap: 1.5rem;
   margin-bottom: 2.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%);
   border-radius: 16px;
   border: 1px solid #3a3a3a;
 }
@@ -59,35 +53,18 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-dashboard-welcome {
-    background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%);
-    border-color: #3a3a3a;
-  }
-}
-
 .v10-welcome-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #242424;
+  color: #ffffff;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.02em;
 }
 
 .v10-welcome-subtitle {
   font-size: 1rem;
-  color: #999999;
+  color: #cccccc;
   margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-welcome-title {
-    color: #ffffff;
-  }
-
-  .v10-welcome-subtitle {
-    color: #cccccc;
-  }
 }
 
 /* Access Code Card */
@@ -127,25 +104,10 @@
    QUICK ACTIONS
    ============================================== */
 
-/* Quick Actions Grid */
+/* Quick Actions - Single Button */
 .v10-wholesale-dashboard .v10-quick-actions {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 1rem !important;
   margin-bottom: 3rem !important;
   width: 100% !important;
-}
-
-@media (min-width: 640px) {
-  .v10-wholesale-dashboard .v10-quick-actions {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  .v10-wholesale-dashboard .v10-quick-actions {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
 }
 
 /* Action Cards - SUPER STRONG SELECTORS */
@@ -156,7 +118,7 @@
   justify-content: flex-start !important;
   gap: 1.25rem !important;
   padding: 1.5rem !important;
-  background: #ffffff !important;
+  background: #2d2d2d !important;
   border: 2px solid #3a3a3a !important;
   border-radius: 12px !important;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
@@ -170,42 +132,20 @@
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-card:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+  border-color: #555555 !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card {
-    background: #2d2d2d !important;
-    border-color: #3a3a3a !important;
-  }
-
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card:hover {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4) !important;
-  }
-}
-
-/* Primary Action (New Submission) - Light Theme */
+/* Primary Action (New Submission) - Dark Theme with Green Accent */
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary {
-  grid-column: 1 / -1 !important;
   border-color: #10b981 !important;
-  background: #ffffff !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
 }
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary:hover {
   border-color: #10b981 !important;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15) !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), #ffffff) !important;
-}
-
-/* Primary Action (New Submission) - Dark Theme */
-@media (prefers-color-scheme: dark) {
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary {
-    background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
-  }
-
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-primary:hover {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #2d2d2d 50%, #242424 100%) !important;
-  }
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25) !important;
+  background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%) !important;
 }
 
 /* Action Icon - SUPER STRONG */
@@ -214,7 +154,7 @@
   height: 56px !important;
   min-width: 56px !important;
   min-height: 56px !important;
-  background: rgba(16, 185, 129, 0.1) !important;
+  background: rgba(16, 185, 129, 0.15) !important;
   border-radius: 12px !important;
   display: flex !important;
   align-items: center !important;
@@ -231,19 +171,8 @@
 }
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-secondary .v10-action-icon {
-  background: rgba(107, 114, 128, 0.1) !important;
-  color: #999999 !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-icon {
-    background: rgba(16, 185, 129, 0.15) !important;
-  }
-
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-secondary .v10-action-icon {
-    background: rgba(156, 163, 175, 0.15) !important;
-    color: #cccccc !important;
-  }
+  background: rgba(156, 163, 175, 0.15) !important;
+  color: #cccccc !important;
 }
 
 /* Action Content - SUPER STRONG */
@@ -255,26 +184,16 @@
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-content h3 {
   font-size: 1.125rem !important;
   font-weight: 600 !important;
-  color: #242424 !important;
+  color: #ffffff !important;
   margin: 0 0 0.25rem 0 !important;
   line-height: 1.4 !important;
 }
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-content p {
   font-size: 0.875rem !important;
-  color: #999999 !important;
+  color: #cccccc !important;
   margin: 0 !important;
   line-height: 1.5 !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-content h3 {
-    color: #ffffff !important;
-  }
-
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-content p {
-    color: #cccccc !important;
-  }
 }
 
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-stat-number {
@@ -285,7 +204,7 @@
 
 /* Action Arrow - SUPER STRONG */
 .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-arrow {
-  color: #e5e5e5 !important;
+  color: #555555 !important;
   transition: all 0.3s ease !important;
   flex-shrink: 0 !important;
   display: flex !important;
@@ -298,29 +217,16 @@
   transform: translateX(4px) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-wholesale-dashboard .v10-quick-actions .v10-action-card .v10-action-arrow {
-    color: #555555 !important;
-  }
-}
-
 /* ==============================================
    SUBMISSIONS SECTION
    ============================================== */
 
 .v10-submissions-section {
-  background: #ffffff;
+  background: #2d2d2d;
   border: 1px solid #3a3a3a;
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-submissions-section {
-    background: #2d2d2d;
-    border-color: #3a3a3a;
-  }
 }
 
 .v10-submissions-header {
@@ -340,23 +246,49 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-submissions-header {
-    border-bottom-color: #3a3a3a;
-  }
+.v10-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .v10-section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #242424;
+  color: #ffffff;
   margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-section-title {
-    color: #ffffff;
-  }
+/* Stat Badges */
+.v10-stat-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.v10-stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #242424;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cccccc;
+}
+
+.v10-stat-badge svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.v10-stat-badge .v10-stat-value {
+  font-weight: 700;
+  color: #10b981;
+  font-size: 1rem;
 }
 
 /* Filter Tabs */
@@ -371,19 +303,19 @@
   align-items: center !important;
   gap: 0.5rem !important;
   padding: 0.5rem 1rem !important;
-  background: #f3f4f6 !important;
+  background: #242424 !important;
   border: 1px solid #3a3a3a !important;
   border-radius: 8px !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
-  color: #999999 !important;
+  color: #cccccc !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
 }
 
 .v10-wholesale-dashboard .v10-filter-tab:hover {
   background: #3a3a3a !important;
-  color: #242424 !important;
+  color: #ffffff !important;
 }
 
 .v10-wholesale-dashboard .v10-filter-tab.active {
@@ -407,19 +339,6 @@
 
 .v10-filter-tab.active .v10-tab-count {
   background: rgba(255, 255, 255, 0.25);
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-filter-tab {
-    background: #242424;
-    border-color: #3a3a3a;
-    color: #cccccc;
-  }
-
-  .v10-filter-tab:hover {
-    background: #3a3a3a;
-    color: #ffffff;
-  }
 }
 
 /* ==============================================
@@ -449,20 +368,20 @@
 }
 
 .v10-empty-icon {
-  color: #e5e5e5;
+  color: #555555;
   margin-bottom: 1.5rem;
 }
 
 .v10-empty-state h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #242424;
+  color: #ffffff;
   margin: 0 0 0.5rem 0;
 }
 
 .v10-empty-state p {
   font-size: 0.95rem;
-  color: #999999;
+  color: #cccccc;
   margin: 0 0 1.5rem 0;
 }
 
@@ -485,25 +404,6 @@
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  .v10-spinner {
-    border-color: #3a3a3a;
-    border-top-color: #10b981;
-  }
-
-  .v10-empty-icon {
-    color: #555555;
-  }
-
-  .v10-empty-state h3 {
-    color: #ffffff;
-  }
-
-  .v10-empty-state p {
-    color: #cccccc;
-  }
-}
-
 /* ==============================================
    SUBMISSIONS GRID
    ============================================== */
@@ -521,7 +421,7 @@
 }
 
 .v10-submission-card {
-  background: #f9fafb;
+  background: #242424;
   border: 1px solid #3a3a3a;
   border-radius: 12px;
   padding: 1.5rem;
@@ -531,19 +431,8 @@
 
 .v10-submission-card:hover {
   border-color: #10b981;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-submission-card {
-    background: #242424;
-    border-color: #3a3a3a;
-  }
-
-  .v10-submission-card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
 }
 
 .v10-submission-header {
@@ -616,13 +505,13 @@
   font-family: 'Courier New', monospace;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #242424;
+  color: #ffffff;
   margin: 0 0 0.5rem 0;
 }
 
 .v10-submission-date {
   font-size: 0.875rem;
-  color: #999999;
+  color: #cccccc;
 }
 
 .v10-submission-meta {
@@ -639,26 +528,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #999999;
+  color: #cccccc;
 }
 
 .v10-meta-item svg {
   color: #10b981;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-submission-id {
-    color: #ffffff;
-  }
-
-  .v10-submission-date,
-  .v10-meta-item {
-    color: #cccccc;
-  }
-
-  .v10-submission-meta {
-    border-top-color: #3a3a3a;
-  }
 }
 
 /* ==============================================
@@ -687,9 +561,9 @@
 }
 
 .v10-modal-container {
-  background: #ffffff;
+  background: #2d2d2d;
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
@@ -700,13 +574,6 @@
 
 .v10-modal-overlay.show .v10-modal-container {
   transform: scale(1);
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-modal-container {
-    background: #2d2d2d;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  }
 }
 
 .v10-modal-header {
@@ -725,14 +592,14 @@
 .v10-modal-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #242424;
+  color: #ffffff;
   margin: 0;
   letter-spacing: -0.01em;
 }
 
 .v10-modal-subtitle {
   font-size: 0.875rem;
-  color: #999999;
+  color: #cccccc;
   margin: 0.375rem 0 0 0;
   font-weight: 500;
 }
@@ -747,38 +614,15 @@
   justify-content: center;
   border-radius: 8px;
   cursor: pointer;
-  color: #999999;
+  color: #cccccc;
   transition: all 0.2s ease;
 }
 
 .v10-modal-close:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #242424;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
 }
 
 .v10-modal-body {
   padding: 2rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .v10-modal-header {
-    border-bottom-color: #3a3a3a;
-  }
-
-  .v10-modal-title {
-    color: #ffffff;
-  }
-
-  .v10-modal-subtitle {
-    color: #cccccc;
-  }
-
-  .v10-modal-close {
-    color: #cccccc;
-  }
-
-  .v10-modal-close:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-  }
 }

@@ -287,6 +287,18 @@ const V10_AccountDashboard = {
     const garments = data?.records?.garments || [];
     const files = submission.files || [];
 
+    // DEBUG: Log submission structure
+    console.log('🔍 ============ MODAL DATA DEBUG ============');
+    console.log('📦 Full submission data:', submission);
+    console.log('👕 Garments array:', garments);
+    if (garments.length > 0) {
+      console.log('👕 First garment structure:', garments[0]);
+      console.log('🎨 First garment keys:', Object.keys(garments[0]));
+    }
+    console.log('🎨 Unassigned swatches:', data?.records?.unassignedFabricSwatches || data?.unassignedFabricSwatches);
+    console.log('🎨 Unassigned lab dips:', data?.records?.unassignedLabDips || data?.unassignedLabDips);
+    console.log('🔍 =========================================');
+
     const date = new Date(submission.created_at);
     const formattedDate = date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -298,27 +310,54 @@ const V10_AccountDashboard = {
 
     // Extract main color from garment - try multiple sources
     const getGarmentColor = (garment) => {
+      console.log('🎨 Getting color for garment:', garment.type);
+
       // Try direct color properties first
-      if (garment.mainColor) return garment.mainColor;
-      if (garment.selectedColor) return garment.selectedColor;
-      if (garment.color) return garment.color;
-      if (garment.fabricColor) return garment.fabricColor;
+      if (garment.mainColor) {
+        console.log('✅ Found mainColor:', garment.mainColor);
+        return garment.mainColor;
+      }
+      if (garment.selectedColor) {
+        console.log('✅ Found selectedColor:', garment.selectedColor);
+        return garment.selectedColor;
+      }
+      if (garment.color) {
+        console.log('✅ Found color:', garment.color);
+        return garment.color;
+      }
+      if (garment.fabricColor) {
+        console.log('✅ Found fabricColor:', garment.fabricColor);
+        return garment.fabricColor;
+      }
 
       // Try to extract from fabric swatches if available
       if (garment.fabricSwatches && garment.fabricSwatches.length > 0) {
         const firstSwatch = garment.fabricSwatches[0];
-        if (firstSwatch.hex) return firstSwatch.hex;
-        if (firstSwatch.color) return firstSwatch.color;
+        if (firstSwatch.hex) {
+          console.log('✅ Found color in fabricSwatches[0].hex:', firstSwatch.hex);
+          return firstSwatch.hex;
+        }
+        if (firstSwatch.color) {
+          console.log('✅ Found color in fabricSwatches[0].color:', firstSwatch.color);
+          return firstSwatch.color;
+        }
       }
 
       // Try to extract from lab dips if available
       if (garment.labDips && garment.labDips.length > 0) {
         const firstDip = garment.labDips[0];
-        if (firstDip.hex) return firstDip.hex;
-        if (firstDip.color) return firstDip.color;
+        if (firstDip.hex) {
+          console.log('✅ Found color in labDips[0].hex:', firstDip.hex);
+          return firstDip.hex;
+        }
+        if (firstDip.color) {
+          console.log('✅ Found color in labDips[0].color:', firstDip.color);
+          return firstDip.color;
+        }
       }
 
       // Fallback to neutral gray
+      console.log('⚠️ No color found, using fallback gray');
       return '#555555';
     };
 
