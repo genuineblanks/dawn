@@ -16929,27 +16929,20 @@ class V10_ReviewManager {
     const costs = this.calculateCosts();
     const requestType = V10_State.requestType;
 
-    // Generate new TechPack ID or use validated parent ID
+    // ✨ NEW SYSTEM: Backend generates all Request IDs
+    // Frontend just sends placeholder - backend will assign final sequential ID
     let submissionId;
 
     if (window.v10ClientManager && window.v10ClientManager.parentRequestId) {
-      // For sample/bulk requests - use the validated parent ID
+      // For sample/bulk requests - send the parent ID (e.g., "GNNA-83")
+      // Backend will generate: GNNA-83-001, GNNA-83-002, etc.
       submissionId = window.v10ClientManager.parentRequestId;
+      console.log('📋 Sample/Bulk request - Parent ID:', submissionId);
     } else {
-      // For quotation requests - generate new TechPack ID
-      const companyName = clientData.company || clientData.company_name || clientData.Company || 'Unknown Company';
-      const clientType = V10_State.clientType || 'new'; // From modal selection
-
-      console.log('🏢 Company name for ID generation:', companyName);
-      console.log('📋 Full client data:', clientData);
-
-      try {
-        submissionId = await V10_Utils.generateTechPackId(companyName, clientType, clientData.email, companyName);
-      } catch (error) {
-        console.error('Error generating TechPack ID:', error);
-        // Fallback to original format
-        submissionId = `TP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      }
+      // For quotation requests - send placeholder
+      // Backend will generate: GNNA-001, GNNA-002, etc.
+      submissionId = 'PLACEHOLDER-QUOTATION';
+      console.log('📋 Quotation request - Backend will assign final ID');
     }
 
     // Prepare base submission structure
