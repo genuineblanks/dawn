@@ -279,7 +279,7 @@ const V10_AccountDashboard = {
   },
 
   /**
-   * Build submission details HTML
+   * Build submission details HTML - V10 TechPack Studios Professional Style
    */
   buildSubmissionDetailsHTML(submission) {
     const data = submission.data;
@@ -296,37 +296,57 @@ const V10_AccountDashboard = {
       minute: '2-digit'
     });
 
+    // Extract main color from garment or use default
+    const getGarmentColor = (garment) => {
+      return garment.mainColor || garment.selectedColor || garment.color || '#555555';
+    };
+
     let html = `
-      <div style="margin-bottom: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <span style="font-size: 0.875rem; color: #6b7280;">Status</span>
-          <span class="v10-submission-status ${submission.status}">${submission.status}</span>
+      <!-- Status Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #3a3a3a;">
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 600; color: #999999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Status</div>
+          <span class="v10-submission-status ${submission.status}">${submission.status.toUpperCase()}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 0.875rem; color: #6b7280;">Submitted</span>
-          <span style="font-size: 0.875rem; color: #111827; font-weight: 500;">${formattedDate}</span>
+        <div style="text-align: right;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #999999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Submitted</div>
+          <div style="font-size: 0.875rem; color: #ffffff; font-weight: 500;">${formattedDate}</div>
         </div>
       </div>
 
       ${client.company_name || client.company ? `
-      <div style="margin-bottom: 2rem; padding: 1rem; background: #f9fafb; border-radius: 8px;">
-        <h4 style="font-size: 0.875rem; font-weight: 600; color: #6b7280; margin: 0 0 0.5rem 0; text-transform: uppercase;">Client Information</h4>
-        <p style="margin: 0; color: #111827;"><strong>${client.company_name || client.company}</strong></p>
-        ${client.email ? `<p style="margin: 0.25rem 0 0 0; color: #6b7280; font-size: 0.875rem;">${client.email}</p>` : ''}
+      <!-- Client Information -->
+      <div style="margin-bottom: 2rem; padding: 1.25rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
+        <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 0.75rem 0; text-transform: uppercase; letter-spacing: 1px;">CLIENT INFORMATION</h4>
+        <p style="margin: 0; color: #ffffff; font-size: 1rem; font-weight: 600;">${client.company_name || client.company}</p>
+        ${client.email ? `<p style="margin: 0.5rem 0 0 0; color: #cccccc; font-size: 0.875rem;">${client.email}</p>` : ''}
       </div>
       ` : ''}
 
       ${garments.length > 0 ? `
+      <!-- Garment Specifications (V10 Professional Style) -->
       <div style="margin-bottom: 2rem;">
-        <h4 style="font-size: 1rem; font-weight: 600; color: #111827; margin: 0 0 1rem 0;">Garments (${garments.length})</h4>
-        <div style="display: grid; gap: 1rem;">
+        <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">GARMENT SPECIFICATIONS</h4>
+        <div style="display: grid; gap: 0.75rem;">
           ${garments.map((garment, index) => `
-            <div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-weight: 600; color: #111827;">${garment.type || 'Garment ' + (index + 1)}</span>
-                ${garment.fabricType ? `<span style="font-size: 0.75rem; color: #6b7280; background: white; padding: 0.25rem 0.5rem; border-radius: 4px;">${garment.fabricType}</span>` : ''}
+            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 8px;">
+
+              <!-- Colored Square (V10 Style) -->
+              <div style="width: 40px; height: 40px; background: ${getGarmentColor(garment)}; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);"></div>
+
+              <!-- Garment Details -->
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                  <span style="font-weight: 700; color: #ffffff; font-size: 0.9375rem;">${index + 1}. ${garment.type || 'Garment'}</span>
+                  ${garment.fabricType ? `<span style="font-size: 0.75rem; color: #cccccc; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.05); border-radius: 4px; border: 1px solid #3a3a3a;">${garment.fabricType}</span>` : ''}
+                </div>
+                ${garment.fabricComposition ? `<p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #999999;">${garment.fabricComposition}</p>` : ''}
               </div>
-              ${garment.sampleSize ? `<p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #6b7280;">Size: ${garment.sampleSize}</p>` : ''}
+
+              <!-- Size Badge (V10 Style) -->
+              ${garment.sampleSize ? `
+              <div style="padding: 0.5rem 1rem; background: #242424; border: 1px solid #3a3a3a; border-radius: 6px; font-weight: 700; color: #ffffff; font-size: 0.875rem; letter-spacing: 0.5px;">${garment.sampleSize}</div>
+              ` : ''}
             </div>
           `).join('')}
         </div>
@@ -334,18 +354,19 @@ const V10_AccountDashboard = {
       ` : ''}
 
       ${files.length > 0 ? `
+      <!-- Files Section -->
       <div style="margin-bottom: 2rem;">
-        <h4 style="font-size: 1rem; font-weight: 600; color: #111827; margin: 0 0 1rem 0;">Files (${files.length})</h4>
+        <h4 style="font-size: 0.75rem; font-weight: 700; color: #999999; margin: 0 0 1rem 0; text-transform: uppercase; letter-spacing: 1px;">FILES (${files.length})</h4>
         <div style="display: grid; gap: 0.5rem;">
           ${files.map(file => `
-            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #f9fafb; border-radius: 8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #2d2d2d 0%, #242424 100%); border: 1px solid #3a3a3a; border-radius: 6px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981; flex-shrink: 0;">
                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
                 <polyline points="13 2 13 9 20 9"/>
               </svg>
               <div style="flex: 1; min-width: 0;">
-                <p style="margin: 0; font-size: 0.875rem; font-weight: 500; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.file_name}</p>
-                <p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #6b7280;">${file.file_type}</p>
+                <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.file_name}</p>
+                <p style="margin: 0.125rem 0 0 0; font-size: 0.75rem; color: #999999;">${file.file_type}</p>
               </div>
             </div>
           `).join('')}
@@ -353,9 +374,10 @@ const V10_AccountDashboard = {
       </div>
       ` : ''}
 
-      <div style="padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
-        <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">
-          Need help with this submission? Contact us at <a href="mailto:office@genuineblanks.com" style="color: #10b981; text-decoration: none; font-weight: 500;">office@genuineblanks.com</a>
+      <!-- Contact Section -->
+      <div style="padding-top: 1.5rem; border-top: 1px solid #3a3a3a;">
+        <p style="font-size: 0.875rem; color: #999999; margin: 0;">
+          Need help with this submission? Contact us at <a href="mailto:office@genuineblanks.com" style="color: #10b981; text-decoration: none; font-weight: 600;">office@genuineblanks.com</a>
         </p>
       </div>
     `;
