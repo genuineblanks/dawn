@@ -17198,135 +17198,51 @@ class V10_ReviewManager {
   }
 
   async sendToWebhook(submissionData) {
-    // Direct Google Apps Script URL with simplified CORS headers
-    // Using ChatGPT's solution: individual setHeader() calls, Execute as Me, Access Anyone
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyxD2Yw4MigMfblqtRvc3nt4bYoa3t0hsXAk3x6ne_3aGFWiBKLiOUKrpi2JwhxPMHwBQ/exec';
+    // 🔒 SECURE: Use Vercel proxy instead of direct Google Apps Script call
+    // This hides the Google Apps Script URL from frontend (security)
+    // And allows fast response (3s) while background processing continues
+    const secureProxyUrl = 'https://dawn-main-theme.vercel.app/api/submit-techpack';
 
-    console.log('🚀 Sending directly to Google Apps Script:', {
-      url: appsScriptUrl,
+    console.log('⚡ FAST SUBMISSION: Sending to secure proxy:', {
+      url: secureProxyUrl,
       submissionId: submissionData.submission_id,
       requestType: submissionData.request_type,
       filesCount: submissionData.files.length,
       garmentsCount: submissionData.records.garments.length
     });
 
-    // CORS FIX: Use text/plain to bypass preflight + no-cors mode for Shopify
     try {
-      const response = await fetch(appsScriptUrl, {
+      const response = await fetch(secureProxyUrl, {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(submissionData)
       });
 
-      // Note: no-cors mode prevents reading response details
-      // We'll assume success if no network error occurred
-      console.log('✅ Request sent successfully to Google Apps Script (no-cors mode)');
-
-      // ✅ NEW: Also store submission in database for wholesale customer dashboard
-      await this.storeSubmissionInDatabase(submissionData);
-
-      // ✅ Request ID tracking now handled automatically by main Apps Script
-      // After JSON file creation, main Apps Script triggers NEW Request ID system
-      console.log('✅ Request ID will be handled by NEW Request ID system via main Apps Script');
-
-      // Return a simulated success response since we can't read the actual response
-      const result = {
-        success: true,
-        submissionId: submissionData.submission_id,
-        message: 'Submission sent successfully (no-cors mode)',
-        timestamp: new Date().toISOString()
-      };
-
-      console.log('✅ Google Apps Script response received:', {
-        success: result.success,
-        submissionId: result.submissionId || submissionData.submission_id,
-        folderPath: result.folderPath,
-        filesProcessed: result.filesProcessed
-      });
-
-      return {
-        ...result,
-        submissionId: result.submissionId || submissionData.submission_id,
-        requestType: submissionData.request_type
-      };
-
-    } catch (error) {
-      console.error('❌ Submission failed:', error.message);
-
-      // Provide helpful error information for debugging
-      if (error.message.includes('404')) {
-        const helpfulError = new Error(
-          'Google Apps Script endpoint not found. Please check that your deployment is active and accessible.'
-        );
-        helpfulError.originalError = error;
-        throw helpfulError;
-      }
-
-      // Re-throw other errors
-      throw error;
-    }
-  }
-
-  /**
-   * ✅ NEW: Store submission in Vercel Postgres + Update Shopify Metafields
-   * Single API call handles both database storage and metafield updates
-   */
-  async storeSubmissionInDatabase(submissionData) {
-    try {
-      console.log('📊 ============ DATABASE STORAGE + SHOPIFY UPDATE ============');
-      console.log('📊 Storing submission in database AND updating Shopify metafields...');
-      console.log('📧 Customer Email:', submissionData.client_data.email);
-      console.log('🏢 Company:', submissionData.client_data.company);
-      console.log('📝 Submission Type:', submissionData.request_type);
-      console.log('🆔 Request ID:', submissionData.submission_id);
-
-      // ✅ NEW: Use store-submission API (handles Postgres + Shopify metafields)
-      const apiUrl = 'https://dawn-main-theme.vercel.app/api/store-submission';
-
-      console.log('📦 Sending complete submission data...');
-      console.log('🌐 POST request to:', apiUrl);
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData)
-      });
-
-      console.log('📡 Response Status:', response.status, response.statusText);
+      console.log('📡 Response Status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Response Error Body:', errorText);
-        throw new Error(`Storage failed: ${response.status} ${response.statusText}`);
+        console.error('❌ Response Error:', errorText);
+        throw new Error(`Submission failed: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
 
-      console.log('✅ SUCCESS! Submission stored:', {
-        id: result.data.id,
-        request_id: result.data.request_id,
-        created_at: result.data.created_at,
-        shopify_updated: result.data.shopify_updated
+      console.log('✅ FAST SUBMISSION COMPLETE (3s):', {
+        success: result.success,
+        submissionId: result.submissionId,
+        message: result.message
       });
-      console.log('✅ Database: Stored in Postgres');
-      console.log('✅ Shopify: Metafields updated with summary');
-      console.log('📊 ========================================================');
+
+      console.log('🔄 Background processing: Google Apps Script will update Google Sheets with Column T status');
 
       return result;
 
     } catch (error) {
-      // Don't fail the entire submission if database/Shopify storage fails
-      // Google Sheets is the backup source of truth
-      console.error('❌ ============ STORAGE FAILED ============');
-      console.error('⚠️ Error Type:', error.name);
-      console.error('⚠️ Error Message:', error.message);
-      console.error('⚠️ Submission still saved to Google Sheets (backup)');
-      console.error('❌ ==========================================');
+      console.error('❌ Submission failed:', error.message);
+      throw error;
     }
   }
 
